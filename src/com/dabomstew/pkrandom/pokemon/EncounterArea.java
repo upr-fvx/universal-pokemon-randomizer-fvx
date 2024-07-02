@@ -35,12 +35,12 @@ public class EncounterArea extends ArrayList<Encounter> {
     //The index of the map this area is contained in, as determined by the RomHandler.
     //Note that not all RomHandlers currently set this variable,
     //and of those that do, not all use it in the same way.
-    private int mapIndex;
+    //However, in general, a particular index number will apply to exactly one map.
+    private int mapIndex = -1;
 
     private String locationTag;
 
     //The type of encounter this area is, as determined by the RomHandler.
-    //Note that currently, only ORAS sets this variable.
     private EncounterType encounterType;
 
     private boolean postGame;
@@ -113,6 +113,32 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     public void setEncounterType(EncounterType type) {
         this.encounterType = type;
+    }
+
+    /**
+     * Sets several pieces of initial info about the area, used to identify it.
+     * @param displayName The area's display name.
+     * @param mapIndex The mapIndex for the area.
+     * @param encounterType The area's encounter type.
+     */
+    public void setIdentifiers(String displayName, int mapIndex, EncounterType encounterType) {
+        this.setDisplayName(displayName);
+        this.setMapIndex(mapIndex);
+        this.setEncounterType(encounterType);
+    }
+
+    /**
+     * Sets several pieces of initial info about the area, used to identify it.
+     * @param displayName The area's display name.
+     * @param mapIndex The mapIndex for the area.
+     * @param encounterType The area's encounter type.
+     * @param locationTag The name of the Location this area is contained in.
+     */
+    public void setIdentifiers(String displayName, int mapIndex, EncounterType encounterType, String locationTag) {
+        this.setDisplayName(displayName);
+        this.setMapIndex(mapIndex);
+        this.setEncounterType(encounterType);
+        this.setLocationTag(locationTag);
     }
 
     public boolean isPostGame() {

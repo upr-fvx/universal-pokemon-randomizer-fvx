@@ -1623,7 +1623,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void locationTagsAndDisplayNamesMatchUp(String romName) {
         loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(false);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
 
         String lastTag = "NOT A LOCATION TAG";
         int count = 0;
@@ -1674,5 +1674,42 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
 
     }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void hasMapIndices(String romName) {
+        loadROM(romName);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+
+        int lastIndex = -1;
+        for(EncounterArea area : encounterAreas) {
+            int idx = area.getMapIndex();
+            if(idx != lastIndex) {
+                System.out.println("\t" + area.getMapIndex() + ":");
+                lastIndex = idx;
+            }
+            System.out.println("\t\t" + area.getDisplayName());
+            assertNotEquals(-1, idx);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void hasEncounterTypes(String romName) {
+        loadROM(romName);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+
+        String lastLocation = "NOT A LOCATION";
+        for(EncounterArea area : encounterAreas) {
+            if(!area.getLocationTag().equals(lastLocation)) {
+                System.out.println("\t" + area.getLocationTag() + ":");
+                lastLocation = area.getLocationTag();
+            }
+            assertNotNull(area.getEncounterType());
+            System.out.println("\t\t" + area.getEncounterType().name() + ": " + area.getDisplayName());
+        }
+    }
+
+    //TODO: global family-to-family works
 
 }

@@ -75,6 +75,15 @@ public class Gen5Constants {
     public static final String[] encounterTypeNames = { "Grass/Cave", "Doubles Grass", "Shaking Spots", "Surfing",
             "Surfing Spots", "Fishing", "Fishing Spots" };
 
+    public static final EncounterType[] encounterTypeValues = {EncounterType.WALKING, //Grass/Cave
+            EncounterType.WALKING, //Dark grass
+            EncounterType.WALKING, //Shaking Grass
+            EncounterType.SURFING, //Surfing
+            EncounterType.SURFING, //Surfing Spots
+            EncounterType.FISHING, //Fishing
+            EncounterType.FISHING //Fishing spots
+    };
+
     public static final int[] habitatClassificationOfEachType = { 0, 0, 0, 1, 1, 2, 2 };
 
     public static final int bw2Route4AreaIndex = 40, bw2VictoryRoadAreaIndex = 76, bw2ReversalMountainAreaIndex = 73;

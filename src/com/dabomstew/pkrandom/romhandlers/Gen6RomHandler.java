@@ -1102,74 +1102,75 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // TODO: Is there some rate we can check like in older gens?
             // First, 12 grass encounters, 12 rough terrain encounters, and 12 encounters each for yellow/purple/red flowers
             EncounterArea grassArea = readEncounterArea(encounterData, 0, 12);
-            if (grassArea.size() > 0) {
-                grassArea.setDisplayName(mapName + " Grass/Cave");
+            if (!grassArea.isEmpty()) {
+                grassArea.setIdentifiers(mapName + " Grass/Cave", i, EncounterType.WALKING);
                 encounterAreas.add(grassArea);
             }
             EncounterArea yellowFlowerArea = readEncounterArea(encounterData, 48, 12);
-            if (yellowFlowerArea.size() > 0) {
-                yellowFlowerArea.setDisplayName(mapName + " Yellow Flowers");
+            if (!yellowFlowerArea.isEmpty()) {
+                yellowFlowerArea.setIdentifiers(mapName + " Yellow Flowers", i, EncounterType.WALKING);
                 encounterAreas.add(yellowFlowerArea);
             }
             EncounterArea purpleFlowerArea = readEncounterArea(encounterData, 96, 12);
-            if (purpleFlowerArea.size() > 0) {
-                purpleFlowerArea.setDisplayName(mapName + " Purple Flowers");
+            if (!purpleFlowerArea.isEmpty()) {
+                purpleFlowerArea.setIdentifiers(mapName + " Purple Flowers", i, EncounterType.WALKING);
                 encounterAreas.add(purpleFlowerArea);
             }
             EncounterArea redFlowerArea = readEncounterArea(encounterData, 144, 12);
-            if (redFlowerArea.size() > 0) {
-                redFlowerArea.setDisplayName(mapName + " Red Flowers");
+            if (!redFlowerArea.isEmpty()) {
+                redFlowerArea.setIdentifiers(mapName + " Red Flowers", i, EncounterType.WALKING);
                 encounterAreas.add(redFlowerArea);
             }
             EncounterArea roughTerrainArea = readEncounterArea(encounterData, 192, 12);
-            if (roughTerrainArea.size() > 0) {
-                roughTerrainArea.setDisplayName(mapName + " Rough Terrain/Tall Grass");
+            if (!roughTerrainArea.isEmpty()) {
+                roughTerrainArea.setIdentifiers(mapName + " Rough Terrain/Tall Grass",
+                        i, EncounterType.WALKING);
                 encounterAreas.add(roughTerrainArea);
             }
 
             // 5 surf and 5 rock smash encounters
             EncounterArea surfArea = readEncounterArea(encounterData, 240, 5);
-            if (surfArea.size() > 0) {
-                surfArea.setDisplayName(mapName + " Surf");
+            if (!surfArea.isEmpty()) {
+                surfArea.setIdentifiers(mapName + " Surf", i, EncounterType.SURFING);
                 encounterAreas.add(surfArea);
             }
             EncounterArea rockSmashArea = readEncounterArea(encounterData, 260, 5);
-            if (rockSmashArea.size() > 0) {
-                rockSmashArea.setDisplayName(mapName + " Rock Smash");
+            if (!rockSmashArea.isEmpty()) {
+                rockSmashArea.setIdentifiers(mapName + " Rock Smash", i, EncounterType.INTERACT);
                 encounterAreas.add(rockSmashArea);
             }
 
             // 3 Encounters for each type of rod
             EncounterArea oldRodArea = readEncounterArea(encounterData, 280, 3);
-            if (oldRodArea.size() > 0) {
-                oldRodArea.setDisplayName(mapName + " Old Rod");
+            if (!oldRodArea.isEmpty()) {
+                oldRodArea.setIdentifiers(mapName + " Old Rod", i, EncounterType.FISHING);
                 encounterAreas.add(oldRodArea);
             }
             EncounterArea goodRodArea = readEncounterArea(encounterData, 292, 3);
-            if (goodRodArea.size() > 0) {
-                goodRodArea.setDisplayName(mapName + " Good Rod");
+            if (!goodRodArea.isEmpty()) {
+                goodRodArea.setIdentifiers(mapName + " Good Rod", i, EncounterType.FISHING);
                 encounterAreas.add(goodRodArea);
             }
             EncounterArea superRodArea = readEncounterArea(encounterData, 304, 3);
-            if (superRodArea.size() > 0) {
-                superRodArea.setDisplayName(mapName + " Super Rod");
+            if (!superRodArea.isEmpty()) {
+                superRodArea.setIdentifiers(mapName + " Super Rod", i, EncounterType.FISHING);
                 encounterAreas.add(superRodArea);
             }
 
             // Lastly, 5 for each kind of Horde
             EncounterArea hordeCommonArea = readEncounterArea(encounterData, 316, 5);
-            if (hordeCommonArea.size() > 0) {
-                hordeCommonArea.setDisplayName(mapName + " Common Horde");
+            if (!hordeCommonArea.isEmpty()) {
+                hordeCommonArea.setIdentifiers(mapName + " Common Horde", i, EncounterType.WALKING);
                 encounterAreas.add(hordeCommonArea);
             }
             EncounterArea hordeUncommonArea = readEncounterArea(encounterData, 336, 5);
-            if (hordeUncommonArea.size() > 0) {
-                hordeUncommonArea.setDisplayName(mapName + " Uncommon Horde");
+            if (!hordeUncommonArea.isEmpty()) {
+                hordeUncommonArea.setIdentifiers(mapName + " Uncommon Horde", i, EncounterType.WALKING);
                 encounterAreas.add(hordeUncommonArea);
             }
             EncounterArea hordeRareArea = readEncounterArea(encounterData, 356, 5);
-            if (hordeRareArea.size() > 0) {
-                hordeRareArea.setDisplayName(mapName + " Rare Horde");
+            if (!hordeRareArea.isEmpty()) {
+                hordeRareArea.setIdentifiers(mapName + " Rare Horde", i, EncounterType.WALKING);
                 encounterAreas.add(hordeRareArea);
             }
         }
@@ -1186,7 +1187,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 startingOffsetOfCurrentName = i;
             }
             int encounterNumber = (i - startingOffsetOfCurrentName) + 1;
-            fallingArea.setDisplayName(currentName + " #" + encounterNumber);
+            fallingArea.setIdentifiers(currentName + " #" + encounterNumber, i, EncounterType.AMBUSH);
             encounterAreas.add(fallingArea);
         }
         currentName = Gen6Constants.rustlingBushEncounterNameMap.get(0);
@@ -1199,7 +1200,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 startingOffsetOfCurrentName = i;
             }
             int encounterNumber = (i - startingOffsetOfCurrentName) + 1;
-            rustlingBushArea.setDisplayName(currentName + " #" + encounterNumber);
+            rustlingBushArea.setIdentifiers(currentName + " #" + encounterNumber, i, EncounterType.AMBUSH);
             encounterAreas.add(rustlingBushArea);
         }
         return encounterAreas;

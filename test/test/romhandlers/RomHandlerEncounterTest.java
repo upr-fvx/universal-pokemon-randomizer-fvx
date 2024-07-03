@@ -408,8 +408,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     private double calcPowerLevelDiff(Pokemon a, Pokemon b) {
-        return Math.abs((double) a.bstForPowerLevels() /
-                b.bstForPowerLevels() - 1);
+        return Math.abs((double) a.getBSTForPowerLevels() /
+                b.getBSTForPowerLevels() - 1);
     }
 
     @ParameterizedTest

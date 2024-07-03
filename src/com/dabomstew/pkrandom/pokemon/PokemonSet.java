@@ -937,7 +937,7 @@ public class PokemonSet extends HashSet<Pokemon> {
         // start with within 10% and add 5% either direction until the pool is big enough
         int matchBST;
         if(overrideBST < 0) {
-            matchBST = match.bstForPowerLevels();
+            matchBST = match.getBSTForPowerLevels();
         } else {
             matchBST = overrideBST;
         }
@@ -949,7 +949,7 @@ public class PokemonSet extends HashSet<Pokemon> {
             Iterator<Pokemon> itor = availablePool.iterator();
             while (itor.hasNext()) {
                 Pokemon poke = itor.next();
-                if(poke.bstForPowerLevels() >= minTarget && poke.bstForPowerLevels() <= maxTarget) {
+                if(poke.getBSTForPowerLevels() >= minTarget && poke.getBSTForPowerLevels() <= maxTarget) {
                     canPick.add(poke);
                     itor.remove();
                 }

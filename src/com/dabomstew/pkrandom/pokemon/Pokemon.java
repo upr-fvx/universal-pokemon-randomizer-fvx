@@ -136,7 +136,7 @@ public class Pokemon implements Comparable<Pokemon> {
     public void randomizeStatsWithinBST(Random random) {
         if (number == Species.shedinja) {
             // Shedinja is horribly broken unless we restrict him to 1HP.
-            int bst = bst() - 51;
+            int bst = getBST() - 51;
 
             // Make weightings
             double atkW = random.nextDouble(), defW = random.nextDouble();
@@ -152,7 +152,7 @@ public class Pokemon implements Comparable<Pokemon> {
             speed = (int) Math.max(1, Math.round(speW / totW * bst)) + 10;
         } else {
             // Minimum 20 HP, 10 everything else
-            int bst = bst() - 70;
+            int bst = getBST() - 70;
 
             // Make weightings
             double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
@@ -177,8 +177,8 @@ public class Pokemon implements Comparable<Pokemon> {
     }
 
     public void copyRandomizedStatsUpEvolution(Pokemon evolvesFrom) {
-        double ourBST = bst();
-        double theirBST = evolvesFrom.bst();
+        double ourBST = getBST();
+        double theirBST = evolvesFrom.getBST();
 
         double bstRatio = ourBST / theirBST;
 
@@ -192,8 +192,8 @@ public class Pokemon implements Comparable<Pokemon> {
 
     public void assignNewStatsForEvolution(Pokemon evolvesFrom, Random random) {
 
-        double ourBST = bst();
-        double theirBST = evolvesFrom.bst();
+        double ourBST = getBST();
+        double theirBST = evolvesFrom.getBST();
 
         double bstDiff = ourBST - theirBST;
 
@@ -218,11 +218,11 @@ public class Pokemon implements Comparable<Pokemon> {
         spdef = (int) Math.min(255, Math.max(1, evolvesFrom.spdef + spdDiff));
     }
 
-    protected int bst() {
+    protected int getBST() {
         return hp + attack + defense + spatk + spdef + speed;
     }
 
-    public int bstForPowerLevels() {
+    public int getBSTForPowerLevels() {
         // Take into account Shedinja's purposefully nerfed HP
         if (number == Species.shedinja) {
             return (attack + defense + spatk + spdef + speed) * 6 / 5;

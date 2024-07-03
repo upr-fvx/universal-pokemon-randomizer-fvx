@@ -69,7 +69,7 @@ public class Gen1Pokemon extends Pokemon {
 	@Override
 	public void randomizeStatsWithinBST(Random random) {
 		// Minimum 20 HP, 10 everything else
-		int bst = bst() - 60;
+		int bst = getBST() - 60;
 
 		// Make weightings
 		double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
@@ -92,8 +92,8 @@ public class Gen1Pokemon extends Pokemon {
 
 	@Override
 	public void copyRandomizedStatsUpEvolution(Pokemon evolvesFrom) {
-		double ourBST = bst();
-		double theirBST = evolvesFrom.bst();
+		double ourBST = getBST();
+		double theirBST = evolvesFrom.getBST();
 
 		double bstRatio = ourBST / theirBST;
 
@@ -106,8 +106,8 @@ public class Gen1Pokemon extends Pokemon {
 
 	@Override
 	public void assignNewStatsForEvolution(Pokemon evolvesFrom, Random random) {
-		double ourBST = bst();
-		double theirBST = evolvesFrom.bst();
+		double ourBST = getBST();
+		double theirBST = evolvesFrom.getBST();
 
 		double bstDiff = ourBST - theirBST;
 
@@ -131,12 +131,12 @@ public class Gen1Pokemon extends Pokemon {
     }
 
     @Override
-    protected int bst() {
+    protected int getBST() {
         return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
     }
 
     @Override
-    public int bstForPowerLevels() {
+    public int getBSTForPowerLevels() {
         return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
     }
 

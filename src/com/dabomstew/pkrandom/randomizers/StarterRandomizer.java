@@ -315,7 +315,7 @@ public class StarterRandomizer extends Randomizer {
             available.removeIf(p -> p.getStagesAfter(false) < 2);
         }
         if(bstMin != 0 || bstMax != 1530) {
-            available.removeIf(p -> p.bstForPowerLevels() < bstMin || p.bstForPowerLevels() > bstMax);
+            available.removeIf(p -> p.getBSTForPowerLevels() < bstMin || p.getBSTForPowerLevels() > bstMax);
         }
 
         //all constraints except type done!

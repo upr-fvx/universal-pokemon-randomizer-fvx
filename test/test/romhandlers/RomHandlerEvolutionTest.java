@@ -347,8 +347,8 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     }
 
     private double calcPowerLevelDiff(Pokemon a, Pokemon b) {
-        return Math.abs((double) a.bstForPowerLevels() /
-                b.bstForPowerLevels() - 1);
+        return Math.abs((double) a.getBSTForPowerLevels() /
+                b.getBSTForPowerLevels() - 1);
     }
 
     @ParameterizedTest
@@ -362,10 +362,10 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Pokemon pk : romHandler.getPokemonSet()) {
-            System.out.println(pk.fullName() + " BST=" + pk.bstForPowerLevels() + " ->");
+            System.out.println(pk.fullName() + " BST=" + pk.getBSTForPowerLevels() + " ->");
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                System.out.println("\t" + evo.getTo().fullName() + " BST=" + evo.getTo().bstForPowerLevels());
-                assertTrue(evo.getTo().bstForPowerLevels() > pk.bstForPowerLevels());
+                System.out.println("\t" + evo.getTo().fullName() + " BST=" + evo.getTo().getBSTForPowerLevels());
+                assertTrue(evo.getTo().getBSTForPowerLevels() > pk.getBSTForPowerLevels());
             }
         }
     }

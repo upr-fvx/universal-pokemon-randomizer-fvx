@@ -361,6 +361,98 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void keepTypeThemedOrPrimaryWorks(String romName) {
+        loadROM(romName);
+
+        Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
+        Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
+        Map<Trainer, List<Pokemon>> nonTypeThemedTrainers;
+        recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
+        nonTypeThemedTrainers = recordTrainerPokemon();
+        typeThemedTrainers.keySet().forEach(nonTypeThemedTrainers::remove);
+
+        Settings s = new Settings();
+        s.setTrainersMod(Settings.TrainersMod.KEEP_THEME_OR_PRIMARY);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, nonTypeThemedTrainers);
+    }
+
+    /**
+     * Checks that trainers which had themes before randomizing still have them.
+     * If nonTypeThemedTrainers is not null, also checks if trainers that did not have themes
+     * have preserved the primary type of their Pokemon.
+     */
+    private void keepTypeThemeOrPrimaryCheck(Map<Trainer, List<String>> beforeTrainerStrings,
+                                             Map<Trainer, Type> typeThemedTrainers,
+                                             Map<Trainer, List<Pokemon>> nonTypeThemedTrainers) {
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            List<String> beforeStrings = beforeTrainerStrings.get(tr);
+            System.out.println("Before: " + beforeStrings.get(0));
+            for (int i = 1; i < beforeStrings.size(); i++) {
+                System.out.println("\t" + beforeStrings.get(i));
+            }
+
+            if (typeThemedTrainers.containsKey(tr)) {
+                Type theme = typeThemedTrainers.get(tr);
+                System.out.println("Type Theme: " + theme);
+                System.out.println("After: " + tr);
+                for (TrainerPokemon tp : tr.pokemon) {
+                    Pokemon pk = tp.pokemon;
+                    System.out.println("\t" + pk);
+                    assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
+                }
+            } else {
+                System.out.println("Not Type Themed");
+                if(nonTypeThemedTrainers != null) {
+                    System.out.println("After: " + tr);
+
+                    List<Pokemon> before = nonTypeThemedTrainers.get(tr);
+                    List<TrainerPokemon> after = tr.pokemon;
+
+                    if (before.size() < after.size()) {
+                        throw new IllegalStateException("Trainer removed Pokemon!");
+                    }
+
+                    for (int i = 0; i < before.size(); i++) {
+                        Pokemon beforePoke = before.get(i);
+                        Pokemon afterPoke = after.get(i).pokemon;
+
+                        System.out.println("\t\tBefore: " + beforePoke.getName() + "; Primary type: "
+                                + beforePoke.getPrimaryType(true).name());
+                        System.out.println("\t\tAfter: " + afterPoke.getName() + "; Types: "
+                                + afterPoke.getPrimaryType(false).name()
+                                + (afterPoke.hasSecondaryType(false) ?
+                                ", " + afterPoke.getSecondaryType(false) : ""));
+
+                        assertTrue(afterPoke.hasType(beforePoke.getPrimaryType(true), false));
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Records the species (in order) of the Pokemon for every trainer in the romHandler.
+     * @return A Map of every trainer to a list of their Pokemon's species.
+     */
+    private Map<Trainer, List<Pokemon>> recordTrainerPokemon() {
+        Map<Trainer, List<Pokemon>> trainersWithPokemonTypes = new HashMap<>();
+        for(Trainer trainer : romHandler.getTrainers()) {
+            List<Pokemon> pokemonPrimaryTypes = new ArrayList<>();
+            for (TrainerPokemon pokemon : trainer.pokemon) {
+                pokemonPrimaryTypes.add(pokemon.pokemon);
+            }
+            trainersWithPokemonTypes.put(trainer, pokemonPrimaryTypes);
+        }
+
+        return trainersWithPokemonTypes;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void keepTypeThemedWorksWithRandomPokemonTypes(String romName) {
         loadROM(romName);
 
@@ -378,6 +470,8 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     }
 
     private void recordTypeThemeBefore(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers) {
+        Map <String, Type> gymTypeMap = romHandler.getGymAndEliteTypeThemes();
+
         for (Trainer tr : romHandler.getTrainers()) {
             List<String> beforeStrings = new ArrayList<>();
             beforeTrainerStrings.put(tr, beforeStrings);
@@ -389,9 +483,21 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             // the rival in yellow is forced to always have eevee, which causes a mess if eevee's type is randomized
             if (tr.tag != null && tr.tag.contains("RIVAL") && romHandler.isYellow()) continue;
 
-            //TODO: check trainers for gym type themes
+            String gymTag = tr.tag;
+            if(gymTag != null) {
+                gymTag = gymTag.split("-")[0];
+
+                //special Giovanni case
+                if(gymTag.contains("GIO")) {
+                    gymTag = "GYM8";
+                }
+            }
 
             Type theme = getThemedTrainerType(tr);
+            if(gymTypeMap.containsKey(gymTag)) {
+                beforeStrings.add("Forced theme from " + gymTag);
+                theme = gymTypeMap.get(gymTag);
+            }
             if (theme != null) {
                 typeThemedTrainers.put(tr, theme);
             }
@@ -430,27 +536,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     }
 
     private void keepTypeThemedCheck(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers) {
-        for (Trainer tr : romHandler.getTrainers()) {
-            List<String> beforeStrings = beforeTrainerStrings.get(tr);
-            System.out.println("Before: " + beforeStrings.get(0));
-            for (int i = 1; i < beforeStrings.size(); i++) {
-                System.out.println("\t" + beforeStrings.get(i));
-            }
-
-            if (typeThemedTrainers.containsKey(tr)) {
-                Type theme = typeThemedTrainers.get(tr);
-                System.out.println("Type Theme: " + theme);
-                System.out.println("After: " + tr);
-                for (TrainerPokemon tp : tr.pokemon) {
-                    Pokemon pk = tp.pokemon;
-                    System.out.println("\t" + pk);
-                    assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
-                }
-            } else {
-                System.out.println("Not Type Themed");
-            }
-            System.out.println();
-        }
+        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, null);
     }
 
     @ParameterizedTest

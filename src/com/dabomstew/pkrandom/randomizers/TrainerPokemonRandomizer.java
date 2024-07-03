@@ -418,11 +418,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (usePlacementHistory) {
             // "Distributed" settings
             double placementAverage = getPlacementAverage();
-            pickFrom = pickFrom.filter(pk -> getPlacementHistory(pk) < placementAverage * 2);
-            if (pickFrom.isEmpty()) {
-                pickFrom = cacheOrReplacement;
+            PokemonSet belowAverage = pickFrom.filter(pk -> getPlacementHistory(pk) < placementAverage * 2);
+            if (!belowAverage.isEmpty()) {
+                pickFrom = belowAverage;
             }
-        } else if (type != null && cachedByType != null) {
+        }
+        if (type != null && cachedByType != null) {
             // "Type Themed" settings
             PokemonSet pokemonOfType;
 
@@ -468,43 +469,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //if we didn't... well, if it's banned anyway, it might as well be from the substitution set
         }
 
-        if (usePowerLevels) {
-            // start with within 10% and add 5% either direction till we find
-            // something
-            int currentBST = current.bstForPowerLevels();
-            int minTarget = currentBST - currentBST / 10;
-            int maxTarget = currentBST + currentBST / 10;
-            PokemonSet canPick = new PokemonSet();
-            int expandRounds = 0;
-            while (canPick.isEmpty() || (canPick.size() < 3 && expandRounds < 2)) {
-                for (Pokemon pk : pickFrom) {
-                    if (pk.bstForPowerLevels() >= minTarget
-                            && pk.bstForPowerLevels() <= maxTarget) {
-                        canPick.add(pk);
-                    }
-                }
-                minTarget -= currentBST / 20;
-                maxTarget += currentBST / 20;
-                expandRounds++;
-            }
-            // If usePlacementHistory is True, then we need to do some
-            // extra checking to make sure the randomly chosen pokemon
-            // is actually below the current average placement
-            // if not, re-roll
-
-            Pokemon chosenPokemon = canPick.getRandomPokemon(random);
-            if (usePlacementHistory) {
-                double placementAverage = getPlacementAverage();
-                PokemonSet filteredPickList = canPick.filter(pk -> getPlacementHistory(pk) < placementAverage);
-                if (filteredPickList.isEmpty()) {
-                    filteredPickList = canPick;
-                }
-                chosenPokemon = filteredPickList.getRandomPokemon(random);
-            }
-            return chosenPokemon;
-        } else {
-            return pickFrom.getRandomPokemon(random);
-        }
+        return usePowerLevels ?
+                pickFrom.getRandomSimilarStrengthPokemon(current, random) :
+                pickFrom.getRandomPokemon(random);
     }
 
     /**

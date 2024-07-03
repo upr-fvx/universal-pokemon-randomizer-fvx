@@ -163,11 +163,6 @@ public class EncounterRandomizer extends Randomizer {
         //ORAS's DexNav will crash if the load is higher than this value.
         final int ORAS_CRASH_THRESHOLD = 18;
 
-        //Similar Strength will keep expanding until it reaches the smaller of
-        //MINIMUM_POOL or total_pool / MINIMUM_POOL_FACTOR
-        final int SS_MINIMUM_POOL = 5;
-        final int SS_MINIMUM_POOL_FACTOR = 4;
-
         public InnerRandomizer(PokemonSet allowed, PokemonSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass) {
@@ -583,11 +578,14 @@ public class EncounterRandomizer extends Randomizer {
             if (catchEmAll && banned.contains(current)) {
                 replacement = current;
             } else if (similarStrength) {
-                replacement = balanceShakingGrass ?
-                        pickWildPowerLvlReplacement(allowedForReplacement, current, false,
-                                (enc.getLevel() + enc.getMaxLevel()) / 2) :
-                        pickWildPowerLvlReplacement(allowedForReplacement, current, false,
-                                100);
+                if(balanceShakingGrass) {
+                    int bstToUse = current.getBSTForPowerLevels();
+                    int avgLevel = (enc.getLevel() + enc.getMaxLevel()) / 2;
+                    bstToUse = Math.min(bstToUse, avgLevel * 10 + 250);
+                    replacement = allowedForReplacement.getRandomSimilarStrengthPokemon(bstToUse, random);
+                } else {
+                    replacement = allowedForReplacement.getRandomSimilarStrengthPokemon(current, random);
+                }
             } else {
                 replacement = allowedForReplacement.getRandomPokemon(random);
             }
@@ -892,66 +890,8 @@ public class EncounterRandomizer extends Randomizer {
 
         private Pokemon pickGame1to1ReplacementInner(Pokemon pokemon) {
             return similarStrength ?
-                    pickWildPowerLvlReplacement(allowedForReplacement, pokemon, true, 100) :
+                    allowedForReplacement.getRandomSimilarStrengthPokemon(pokemon, true, random) :
                     allowedForReplacement.getRandomPokemon(random);
-        }
-
-        /**
-         * Chooses a Pokemon similar in power level to the given Pokemon.
-         * @param pokemonPool The set of Pokemon to choose from.
-         * @param current The Pokemon to match the power level of.
-         * @param banSamePokemon Whether to disallow choosing the Pokemon the power level is matching to.
-         *                       Ignored if this is the only Pokemon in the pool.
-         * @param bstBalanceLevel A factor used to calculate a maximum BST using the formula 10 * level + 250.
-         *                        If the given Pokemon's BST is higher than the calculated value, looks for Pokemon
-         *                        of strength similar to the calculated value instead.
-         * @return A Pokemon of similar strength to the given Pokemon.
-         */
-        private Pokemon pickWildPowerLvlReplacement(PokemonSet pokemonPool, Pokemon current, boolean banSamePokemon,
-                                                    int bstBalanceLevel) {
-            PokemonSet availablePool = new PokemonSet(pokemonPool); //clone for draining
-            if(banSamePokemon) {
-                availablePool.remove(current);
-            }
-
-            if(availablePool.isEmpty()) {
-                if(pokemonPool.isEmpty()) {
-                    throw new RandomizationException("Attempted to choose a wild Pokemon from an empty set!");
-                } else {
-                    //if availablePool is empty, but pokemonPool isn't, the current Pokemon must be the only one.
-                    return current;
-                }
-            }
-
-            int minimumPool = Math.min(SS_MINIMUM_POOL, pokemonPool.size() / SS_MINIMUM_POOL_FACTOR);
-            if(minimumPool < 1) {
-                minimumPool = 1;
-            }
-            if (minimumPool >= availablePool.size()) {
-                //must use the whole pool
-                //(I think this only happens if there's exactly one Pokemon to choose.)
-                return availablePool.getRandomPokemon(random);
-            }
-
-            // start with within 10% and add 5% either direction until the pool is big enough
-            int balancedBST = bstBalanceLevel * 10 + 250;
-            int currentBST = Math.min(current.bstForPowerLevels(), balancedBST);
-            int minTarget = currentBST - currentBST / 10;
-            int maxTarget = currentBST + currentBST / 10;
-            PokemonSet canPick = new PokemonSet();
-            while (canPick.size() < minimumPool) {
-                Iterator<Pokemon> itor = availablePool.iterator();
-                while (itor.hasNext()) {
-                    Pokemon poke = itor.next();
-                    if(poke.bstForPowerLevels() >= minTarget && poke.bstForPowerLevels() <= maxTarget) {
-                        canPick.add(poke);
-                        itor.remove();
-                    }
-                }
-                minTarget -= currentBST / 20;
-                maxTarget += currentBST / 20;
-            }
-            return canPick.getRandomPokemon(random);
         }
 
         /**

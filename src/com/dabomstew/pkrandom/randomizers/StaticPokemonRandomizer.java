@@ -173,7 +173,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 if (old.forme > 0) {
                     oldPK = romHandler.getAltFormeOfPokemon(oldPK, old.forme);
                 }
-                Integer oldBST = oldPK.bstForPowerLevels();
+                Integer oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         newPK = getMegaEvoPokemon(rPokeService.getAll(false), pokemonLeft, newStatic);
@@ -204,6 +204,13 @@ public class StaticPokemonRandomizer extends Randomizer {
                                     .map(mega -> mega.from)
                                     .filter(rPokeService.getAll(false)::contains)
                                     .collect(Collectors.toCollection(PokemonSet::new));
+                        }
+                        if(limitBST) {
+                            int bstMax = oldPK.getBSTForPowerLevels();
+                            PokemonSet lowerStrengthMEs = megaEvoPokemonLeft.filter(p -> p.getBSTForPowerLevels() <= bstMax);
+                            if(!lowerStrengthMEs.isEmpty()) {
+                                megaEvoPokemonLeft = lowerStrengthMEs;
+                            }
                         }
                         newPK = pickStaticPowerLvlReplacement(
                                 megaEvoPokemonLeft,
@@ -519,25 +526,13 @@ public class StaticPokemonRandomizer extends Randomizer {
 
     private Pokemon pickStaticPowerLvlReplacement(PokemonSet pokemonPool, Pokemon current,
                                                   boolean banSamePokemon, boolean limitBST) {
-        // start with within 10% and add 5% either direction till we find
-        // something
-        int currentBST = current.bstForPowerLevels();
-        int minTarget = limitBST ? currentBST - currentBST / 5 : currentBST - currentBST / 10;
-        int maxTarget = limitBST ? currentBST : currentBST + currentBST / 10;
-        PokemonSet canPick = new PokemonSet();
-        int expandRounds = 0;
-        while (canPick.isEmpty() || (canPick.size() < 3 && expandRounds < 3)) {
-            for (Pokemon pk : pokemonPool) {
-                if (pk.bstForPowerLevels() >= minTarget && pk.bstForPowerLevels() <= maxTarget
-                        && (!banSamePokemon || pk != current)) {
-                    canPick.add(pk);
-                }
-            }
-            minTarget -= currentBST / 20;
-            maxTarget += currentBST / 20;
-            expandRounds++;
+        PokemonSet finalPool = pokemonPool;
+        if(limitBST) {
+            int maxBST = current.getBSTForPowerLevels();
+            finalPool = finalPool.filter(p -> p.getBSTForPowerLevels() <= maxBST);
         }
-        return canPick.getRandomPokemon(random);
+
+        return finalPool.getRandomSimilarStrengthPokemon(current, banSamePokemon, random);
     }
 
     private void setFormeForStaticEncounter(StaticEncounter newStatic, Pokemon pk) {

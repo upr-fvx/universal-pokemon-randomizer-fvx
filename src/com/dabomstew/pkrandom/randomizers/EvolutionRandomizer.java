@@ -125,7 +125,7 @@ public class EvolutionRandomizer extends Randomizer {
                     if (possible.isEmpty()) {
                         return false;
                     }
-                    Pokemon picked = similarStrength ? pickEvoPowerLvlReplacement(possible, evo.getTo())
+                    Pokemon picked = similarStrength ? possible.getRandomSimilarStrengthPokemon(evo.getTo(), random)
                             : possible.getRandomPokemon(random);
 
                     Evolution newEvo = prepareNewEvolution(from, evo, picked);
@@ -160,30 +160,6 @@ public class EvolutionRandomizer extends Randomizer {
             } else {
                 return allOriginalEvos.get(from);
             }
-        }
-
-        private Pokemon pickEvoPowerLvlReplacement(PokemonSet pokemonPool, Pokemon current) {
-            if (pokemonPool.isEmpty()) {
-                throw new IllegalArgumentException("empty pokemonPool");
-            }
-            // start with within 10% and add 5% either direction till we find
-            // something
-            int currentBST = current.bstForPowerLevels();
-            int minTarget = currentBST - currentBST / 10;
-            int maxTarget = currentBST + currentBST / 10;
-            List<Pokemon> canPick = new ArrayList<>();
-            int expandRounds = 0;
-            while (canPick.isEmpty() || (canPick.size() < 3 && expandRounds < 3)) {
-                for (Pokemon pk : pokemonPool) {
-                    if (pk.bstForPowerLevels() >= minTarget && pk.bstForPowerLevels() <= maxTarget && !canPick.contains(pk)) {
-                        canPick.add(pk);
-                    }
-                }
-                minTarget -= currentBST / 20;
-                maxTarget += currentBST / 20;
-                expandRounds++;
-            }
-            return canPick.get(random.nextInt(canPick.size()));
         }
 
         private Evolution prepareNewEvolution(Pokemon from, Evolution evo, Pokemon picked) {
@@ -232,7 +208,7 @@ public class EvolutionRandomizer extends Randomizer {
                 filters.add(to -> !isAnOriginalEvo(from, to));
             }
             if (forceGrowth) {
-                filters.add(to -> to.bstForPowerLevels() > from.bstForPowerLevels());
+                filters.add(to -> to.getBSTForPowerLevels() > from.getBSTForPowerLevels());
             }
             if (sameType) {
                 if (from.getNumber() == Species.eevee && !evolveEveryLevel) {

@@ -886,6 +886,19 @@ public class PokemonSet extends HashSet<Pokemon> {
     }
 
     /**
+     * Gets a random Pokemon from the set with BST "similar" to the given Pokemon's, or to the
+     * given integer if it is not negative.
+     * @param match The Pokemon to find a "similar" BST to.
+     * @param overrideBST If not negative, use this value instead of the given Pokemon's actual BST.
+     *                    Ignored if negative.
+     * @param random A seeded random number generator.
+     * @return A random Pokemon from the set with "similar" BST.
+     */
+    public Pokemon getRandomSimilarStrengthPokemon(Pokemon match, int overrideBST, Random random) {
+        return getRandomSimilarStrengthPokemon(match, false, overrideBST, random);
+    }
+
+    /**
      * Gets a random Pokemon from the set with BST "similar" to the given Pokemon's.
      * @param match The Pokemon to find a "similar" BST to.
      * @param notSamePokemon If true, will exclude the given Pokemon from the possible returns.

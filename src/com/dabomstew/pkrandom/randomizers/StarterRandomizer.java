@@ -38,7 +38,7 @@ public class StarterRandomizer extends Randomizer {
                 return;
             } else if (pickedStarters.size() > starterCount) {
                 //what.
-                throw new RandomizationException("Custom starter list exceeded starter count?!");
+                throw new IllegalStateException("Custom starter list exceeded starter count?!");
             }
         }
 
@@ -284,6 +284,8 @@ public class StarterRandomizer extends Randomizer {
         boolean noDualTypes = settings.isStartersNoDualTypes();
         boolean triStageOnly = settings.getStartersMod() == Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
         boolean basicOnly = triStageOnly || settings.getStartersMod() == Settings.StartersMod.RANDOM_BASIC;
+        int bstMin = settings.getStartersBSTMinimum();
+        int bstMax = settings.getStartersBSTMaximum() == 0 ? 1530 : settings.getStartersBSTMaximum();
 
         PokemonSet available;
 
@@ -311,6 +313,9 @@ public class StarterRandomizer extends Randomizer {
         }
         if (triStageOnly) {
             available.removeIf(p -> p.getStagesAfter(false) < 2);
+        }
+        if(bstMin != 0 || bstMax != 1530) {
+            available.removeIf(p -> p.bstForPowerLevels() < bstMin || p.bstForPowerLevels() > bstMax);
         }
 
         //all constraints except type done!

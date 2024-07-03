@@ -3,6 +3,7 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.pokemon.Pokemon;
 import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -398,5 +399,41 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void noDualTypesWorks(String romName) {
+        loadROM(romName);
+        Settings s = new Settings();
+        s.setStartersMod(false, false, false, false, false);
+        s.setStartersTypeMod(false, false, false, false, false);
+        s.setStartersNoDualTypes(true);
 
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        noDualTypesCheck();
+    }
+
+    private void noDualTypesCheck() {
+        List<Pokemon> starters = romHandler.getStarters();
+        System.out.println(starters);
+        for(Pokemon starter : starters) {
+            assertNull(starter.getSecondaryType(false));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void noDualTypesWorksWithRandomTypes(String romName) {
+        loadROM(romName);
+        Settings s = new Settings();
+        s.setTypesMod(Settings.TypesMod.COMPLETELY_RANDOM);
+        s.setStartersMod(false, false, false, false, false);
+        s.setStartersTypeMod(false, false, false, false, false);
+        s.setStartersNoDualTypes(true);
+
+        new PokemonTypeRandomizer(romHandler, s, RND).randomizePokemonTypes();
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        noDualTypesCheck();
+    }
 }

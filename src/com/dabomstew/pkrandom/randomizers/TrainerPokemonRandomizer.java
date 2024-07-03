@@ -326,7 +326,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 Pokemon newPK = pickTrainerPokeReplacement(
                         oldPK,
                         usePowerLevels,
-                        typeForTrainer,
+                        (keepThemeOrPrimaryTypes && typeForTrainer == null ? oldPK.getPrimaryType(true) : typeForTrainer),
                         distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index)),
                         swapThisMegaEvo,
                         cacheReplacement

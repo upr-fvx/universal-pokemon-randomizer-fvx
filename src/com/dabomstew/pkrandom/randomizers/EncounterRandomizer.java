@@ -368,7 +368,7 @@ public class EncounterRandomizer extends Randomizer {
             List<EncounterArea> prepped = new ArrayList<>(unprepped);
 
             prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
-                    || area.getLocationTag().equals("UNUSED"));
+                    || "UNUSED".equals(area.getLocationTag()));
             //don't randomize unused areas
             //mostly important for catch 'em all
 

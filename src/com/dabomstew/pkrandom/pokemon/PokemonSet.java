@@ -1,5 +1,7 @@
 package com.dabomstew.pkrandom.pokemon;
 
+import com.dabomstew.pkrandom.exceptions.RandomizationException;
+
 import javax.print.attribute.UnmodifiableSetException;
 import java.util.*;
 import java.util.function.Function;
@@ -35,10 +37,14 @@ public class PokemonSet extends HashSet<Pokemon> {
         this.add(pokemon);
     }
 
-    private ArrayList<Pokemon> randomCache = null;
-    
-    private static final double CACHE_RESET_FACTOR = 0.5;
 
+    //getRandomPokemon related variables
+    private ArrayList<Pokemon> randomCache = null;
+    private static final double CACHE_RESET_FACTOR = 0.5;
+    //Similar Strength will keep expanding until it reaches the smaller of
+    //MINIMUM_POOL or total_pool / MINIMUM_POOL_FACTOR
+    final int SS_MINIMUM_POOL = 5;
+    final int SS_MINIMUM_POOL_FACTOR = 4;
 
     //How much of the cache must consist of removed Pokemon before resetting
 
@@ -807,7 +813,7 @@ public class PokemonSet extends HashSet<Pokemon> {
 
     //end evolution and family methods
 
-    //Various Functions
+    //randoms
 
     /**
      * Chooses a random Pokemon from the set.
@@ -855,6 +861,108 @@ public class PokemonSet extends HashSet<Pokemon> {
         }
 
     }
+
+    /**
+     * Gets a random Pokemon from the set with BST "similar" to the given value.
+     * @param bst The BST to find Pokemon near. Cannot be negative.
+     * @param random A seeded random number generator.
+     * @return A random Pokemon from the set with "similar" BST.
+     */
+    public Pokemon getRandomSimilarStrengthPokemon(int bst, Random random) {
+        if(bst < 0) {
+            throw new IllegalArgumentException("Cannot find similar to a negative BST!");
+        }
+        return getRandomSimilarStrengthPokemon(null, false, bst, random);
+    }
+
+    /**
+     * Gets a random Pokemon from the set with BST "similar" to the given Pokemon's.
+     * @param match The Pokemon to find a "similar" BST to.
+     * @param random A seeded random number generator.
+     * @return A random Pokemon from the set with "similar" BST.
+     */
+    public Pokemon getRandomSimilarStrengthPokemon(Pokemon match, Random random) {
+        return getRandomSimilarStrengthPokemon(match, false, -1, random);
+    }
+
+    /**
+     * Gets a random Pokemon from the set with BST "similar" to the given Pokemon's.
+     * @param match The Pokemon to find a "similar" BST to.
+     * @param notSamePokemon If true, will exclude the given Pokemon from the possible returns.
+     *                       Ignored if the given Pokemon is the only Pokemon in the set.
+     * @param random A seeded random number generator.
+     * @return A random Pokemon from the set with "similar" BST.
+     */
+    public Pokemon getRandomSimilarStrengthPokemon(Pokemon match, boolean notSamePokemon, Random random) {
+        return getRandomSimilarStrengthPokemon(match, notSamePokemon, -1, random);
+    }
+
+    /**
+     * Gets a random Pokemon from the set with BST "similar" to the given Pokemon's, or to the
+     * given integer if it is not negative.
+     * @param match The Pokemon to find a "similar" BST to.
+     * @param notSamePokemon If true, will exclude the given Pokemon from the possible returns.
+     *                       Ignored if the given Pokemon is the only Pokemon in the set.
+     * @param overrideBST If not negative, use this value instead of the given Pokemon's actual BST.
+     *                    Ignored if negative.
+     * @param random A seeded random number generator.
+     * @return A random Pokemon from the set with "similar" BST.
+     */
+    public Pokemon getRandomSimilarStrengthPokemon(Pokemon match, boolean notSamePokemon,
+                                                   int overrideBST, Random random) {
+        PokemonSet availablePool = new PokemonSet(this); //clone for draining
+        if(notSamePokemon) {
+            availablePool.remove(match);
+        }
+
+        if(availablePool.isEmpty()) {
+            if(this.isEmpty()) {
+                throw new RandomizationException("Attempted to choose a wild Pokemon from an empty set!");
+            } else {
+                //if availablePool is empty, but this set isn't, match must be the only Pokemon in the set.
+                return match;
+            }
+        }
+
+        int minimumPool = Math.min(SS_MINIMUM_POOL, availablePool.size() / SS_MINIMUM_POOL_FACTOR);
+        if(minimumPool < 1) {
+            minimumPool = 1;
+        }
+        if (minimumPool >= availablePool.size()) {
+            //must use the whole pool
+            //(I think this only happens if there's exactly one Pokemon to choose.)
+            return availablePool.getRandomPokemon(random);
+        }
+
+        // start with within 10% and add 5% either direction until the pool is big enough
+        int matchBST;
+        if(overrideBST < 0) {
+            matchBST = match.bstForPowerLevels();
+        } else {
+            matchBST = overrideBST;
+        }
+
+        int minTarget = matchBST - matchBST / 10;
+        int maxTarget = matchBST + matchBST / 10;
+        PokemonSet canPick = new PokemonSet();
+        while (canPick.size() < minimumPool) {
+            Iterator<Pokemon> itor = availablePool.iterator();
+            while (itor.hasNext()) {
+                Pokemon poke = itor.next();
+                if(poke.bstForPowerLevels() >= minTarget && poke.bstForPowerLevels() <= maxTarget) {
+                    canPick.add(poke);
+                    itor.remove();
+                }
+            }
+            minTarget -= matchBST / 20;
+            maxTarget += matchBST / 20;
+        }
+        return canPick.getRandomPokemon(random);
+    }
+
+    //end randoms
+
+    //Various Functions
 
     /**
      * Returns all Pokemon in the set which are cosmetic formes.

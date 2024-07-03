@@ -437,4 +437,32 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
         noDualTypesCheck();
     }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void starterBSTLimitsWorks(String romName) {
+        loadROM(romName);
+        Settings s = new Settings();
+
+        final int MINIMUM_BST = 245;
+        final int MAXIMUM_BST = 255;
+        //arbitrary narrow range that has at least 3 Pokemon in all gens
+        //(and 12 in gen 6)
+
+        s.setStartersMod(Settings.StartersMod.COMPLETELY_RANDOM);
+        s.setStartersBSTMinimum(MINIMUM_BST);
+        s.setStartersBSTMaximum(MAXIMUM_BST);
+
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        startersInBSTRangeCheck(MINIMUM_BST, MAXIMUM_BST);
+    }
+
+    private void startersInBSTRangeCheck(int minimumBST, int maximumBST) {
+        for(Pokemon starter : romHandler.getStarters()) {
+            System.out.println(starter);
+            assertTrue(starter.getBSTForPowerLevels() >= minimumBST &&
+                    starter.getBSTForPowerLevels() <= maximumBST);
+        }
+    }
 }

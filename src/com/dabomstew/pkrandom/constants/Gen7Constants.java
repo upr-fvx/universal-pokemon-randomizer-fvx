@@ -1733,8 +1733,7 @@ public class Gen7Constants {
         addCopies(tags, 6, "ROUTE 6");
         addCopies(tags, 18, "ROUTE 7");
         addCopies(tags, 24, "ROUTE 8");
-        addCopies(tags, 2, "ROUTE 9");
-        addCopies(tags, 2, "UNUSED");
+        addCopies(tags, 4, "ROUTE 9");
         addCopies(tags, 8, "HANO BEACH");
         addCopies(tags, 6, "DIVIDING PEAK TUNNEL");
         addCopies(tags, 4, "MEMORIAL HILL");
@@ -1863,8 +1862,7 @@ public class Gen7Constants {
         addCopies(tags, 2, EncounterType.INTERACT);
         addCopies(tags, 2, EncounterType.SURFING);
         addCopies(tags, 10, EncounterType.WALKING);
-        addCopies(tags, 2, EncounterType.FISHING); //Route 9
-        addCopies(tags, 2, EncounterType.UNUSED);
+        addCopies(tags, 4, EncounterType.FISHING); //Route 9
         addCopies(tags, 2, EncounterType.AMBUSH); //Hano Beach
         addCopies(tags, 2, EncounterType.SURFING);
         addCopies(tags, 4, EncounterType.AMBUSH);

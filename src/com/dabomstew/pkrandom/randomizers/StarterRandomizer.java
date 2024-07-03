@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 public class StarterRandomizer extends Randomizer {
 
-    private static final int MAX_TYPE_TRIANGLE_STARTER_TRIES = 500;
-
     public StarterRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }

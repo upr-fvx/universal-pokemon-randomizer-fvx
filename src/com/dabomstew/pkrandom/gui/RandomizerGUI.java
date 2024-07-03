@@ -347,6 +347,11 @@ public class RandomizerGUI {
     private JRadioButton teInverseRadioButton;
     private JCheckBox teAddRandomImmunitiesCheckBox;
     private JCheckBox teUpdateTypeEffectivenessCheckbox;
+    private JLabel spBstLimitsLabel;
+    private JCheckBox spBSTMinimumCheckbox;
+    private JCheckBox spBSTMaximumCheckbox;
+    private JSpinner spBSTMinimumSpinner;
+    private JSpinner spBSTMaximumSpinner;
 
     private static final Random RND = new Random();
 
@@ -485,6 +490,10 @@ public class RandomizerGUI {
         spTypeFwgRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spTypeTriangleRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spTypeSingleRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        spBSTMinimumCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        spBSTMaximumCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        spBSTMinimumSpinner.addChangeListener(e -> checkSpMaximumNeedsRaise());
+        spBSTMaximumSpinner.addChangeListener(e -> checkSpMinimumNeedsLower());
         stpUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         stpSwapLegendariesSwapStandardsRadioButton.addActionListener(e -> enableOrDisableSubControls());
         stpRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -651,6 +660,18 @@ public class RandomizerGUI {
             }
         });
         batchRandomizationMenuItem.addActionListener(e -> batchRandomizationSettingsDialog());
+    }
+
+    private void checkSpMinimumNeedsLower() {
+        if((int)spBSTMaximumSpinner.getValue() < (int)spBSTMinimumSpinner.getValue()) {
+            spBSTMinimumSpinner.setValue(spBSTMaximumSpinner.getValue());
+        }
+    }
+
+    private void checkSpMaximumNeedsRaise() {
+        if((int)spBSTMaximumSpinner.getValue() < (int)spBSTMinimumSpinner.getValue()) {
+            spBSTMaximumSpinner.setValue(spBSTMinimumSpinner.getValue());
+        }
     }
 
     private void showInitialPopup() {
@@ -1596,6 +1617,18 @@ public class RandomizerGUI {
         spBanBadItemsCheckBox.setSelected(settings.isBanBadRandomStarterHeldItems());
         spAllowAltFormesCheckBox.setSelected(settings.isAllowStarterAltFormes());
         spNoLegendariesCheckBox.setSelected(settings.isStartersNoLegendaries());
+        if(settings.getStartersBSTMinimum() != 0) {
+            spBSTMinimumCheckbox.setSelected(true);
+            spBSTMinimumSpinner.setValue(settings.getStartersBSTMinimum());
+        } else {
+            spBSTMinimumCheckbox.setSelected(false);
+        }
+        if(settings.getStartersBSTMaximum() != 0) {
+            spBSTMaximumCheckbox.setSelected(true);
+            spBSTMaximumSpinner.setValue(settings.getStartersBSTMaximum());
+        } else {
+            spBSTMaximumCheckbox.setSelected(false);
+        }
 
         int[] customStarters = settings.getCustomStarters();
         spComboBox1.setSelectedIndex(customStarters[0]);
@@ -1864,6 +1897,9 @@ public class RandomizerGUI {
         settings.setBanBadRandomStarterHeldItems(spBanBadItemsCheckBox.isSelected() && spBanBadItemsCheckBox.isVisible());
         settings.setAllowStarterAltFormes(spAllowAltFormesCheckBox.isSelected() && spAllowAltFormesCheckBox.isVisible());
         settings.setStartersNoLegendaries(spNoLegendariesCheckBox.isSelected());
+        settings.setStartersBSTMinimum(spBSTMinimumCheckbox.isSelected() ? (int)spBSTMinimumSpinner.getValue() : 0);
+        settings.setStartersBSTMaximum(spBSTMaximumCheckbox.isSelected() ? (int)spBSTMaximumSpinner.getValue() : 0);
+
 
         int[] customStarters = new int[] { spComboBox1.getSelectedIndex(),
                 spComboBox2.getSelectedIndex(), spComboBox3.getSelectedIndex()};
@@ -2205,7 +2241,8 @@ public class RandomizerGUI {
 		Arrays.asList(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
 				spRandomTwoEvosRadioButton, spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
 				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox, spNoLegendariesCheckBox,
-				spRandomizeStarterHeldItemsCheckBox, spBanBadItemsCheckBox, spAllowAltFormesCheckBox)
+				spRandomizeStarterHeldItemsCheckBox, spBanBadItemsCheckBox, spAllowAltFormesCheckBox,
+                spBSTMinimumCheckbox, spBSTMaximumCheckbox)
                 .forEach(this::setInitialButtonState);
 		spComboBox1.setVisible(true);
 		spComboBox1.setEnabled(false);
@@ -2219,6 +2256,12 @@ public class RandomizerGUI {
 		spComboBox3.setEnabled(false);
 		spComboBox3.setSelectedIndex(0);
 		spComboBox3.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
+        spBSTMinimumSpinner.setVisible(true);
+        spBSTMinimumSpinner.setEnabled(false);
+        spBSTMinimumSpinner.setValue(0);
+        spBSTMaximumSpinner.setVisible(true);
+        spBSTMaximumSpinner.setEnabled(false);
+        spBSTMaximumSpinner.setValue(0);
 
 		Arrays.asList(stpUnchangedRadioButton, stpSwapLegendariesSwapStandardsRadioButton,
 				stpRandomCompletelyRadioButton, stpRandomSimilarStrengthRadioButton, stpPercentageLevelModifierCheckBox,
@@ -2498,6 +2541,14 @@ public class RandomizerGUI {
             spRandomizeStarterHeldItemsCheckBox.setVisible(supportsStarterHeldItems);
             spBanBadItemsCheckBox.setEnabled(false);
             spBanBadItemsCheckBox.setVisible(supportsStarterHeldItems);
+            //TODO: pull these numbers from the romHandler rather than nowhere
+            if(romHandler.generationOfPokemon() == 1) {
+                spBSTMinimumSpinner.setModel(new SpinnerNumberModel(249, 1, 1275, 1));
+                spBSTMaximumSpinner.setModel(new SpinnerNumberModel(253, 1, 1275, 1));
+            } else {
+                spBSTMinimumSpinner.setModel(new SpinnerNumberModel(307, 1, 1530, 1));
+                spBSTMaximumSpinner.setModel(new SpinnerNumberModel(320, 1, 1530, 1));
+            }
 
             stpUnchangedRadioButton.setEnabled(true);
             stpUnchangedRadioButton.setSelected(true);
@@ -2880,7 +2931,7 @@ public class RandomizerGUI {
     }
 
     private void enableOrDisableSubControls() {
-        //TODO: split this into smaller listeners for each panel or so
+        //TODO: split this into smaller listeners for each tab or so
 
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);
@@ -3094,6 +3145,8 @@ public class RandomizerGUI {
             spAllowAltFormesCheckBox.setSelected(false);
             spNoLegendariesCheckBox.setEnabled(false);
             spNoLegendariesCheckBox.setSelected(false);
+            spBSTMinimumCheckbox.setEnabled(false);
+            spBSTMaximumCheckbox.setEnabled(false);
         } else {
             spTypeNoneRadioButton.setEnabled(true);
 
@@ -3109,7 +3162,12 @@ public class RandomizerGUI {
 
             spAllowAltFormesCheckBox.setEnabled(true);
             spNoLegendariesCheckBox.setEnabled(true);
+            spBSTMinimumCheckbox.setEnabled(true);
+            spBSTMaximumCheckbox.setEnabled(true);
         }
+
+        spBSTMinimumSpinner.setEnabled(spBSTMinimumCheckbox.isSelected());
+        spBSTMaximumSpinner.setEnabled(spBSTMaximumCheckbox.isSelected());
 
         spTypeSingleComboBox.setEnabled(spTypeSingleRadioButton.isSelected());
 

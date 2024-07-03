@@ -5,9 +5,9 @@ The **Universal Pokemon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a co
 Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. 
 For a full list of new features, see [the wiki](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki).
 
-True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 (but Let's Go, Pikachu!/Eevee!). 
+True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 
-It also contains a bunch of refactoring for ease-of-development.
+For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a PokemonSet class with many helper functions, and automated tests for most features.
 
 # Feature requests
 
@@ -20,9 +20,11 @@ If you want to contribute something to the codebase, we recommended to create an
 
 [This page on ZX's wiki](https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Building-Universal-Pokemon-Randomizer-ZX) explains how to set up to build/test locally.
 
+If you are adding a new setting, make sure you follow the new setting checklist in the root folder of the repository.
+
 ### What is a good fit for the randomizer?
 
-In general, the UPR should have settings as universal as possible. This means that an idea preferably should work in as many games as possible, and also that it is something that many people will find useful/fun. If the setting is very niche, it will mostly just bloat the GUI.
+In general, the UPR should have settings as universal as possible. This means that an idea preferably should work in as many games as possible, and also that it is something that many people will find useful/fun. If the setting is very niche, it will mostly just bloat the GUI. FVX is more laissez-faire than other forks, but still follows this general design guideline.
 
 If your idea is a change to an existing setting rather than a new setting, it needs to be well motivated.
 

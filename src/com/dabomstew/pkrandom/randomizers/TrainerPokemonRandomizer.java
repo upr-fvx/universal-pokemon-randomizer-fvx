@@ -230,6 +230,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             }
         }
         //TODO: choose all Elite 4 Unique Pokemon before other Elite 4 Pokemon
+        //Wait, hold on... that's already supposed to be covered? ...
 
         List<Integer> mainPlaythroughTrainers = romHandler.getMainPlaythroughTrainers();
 

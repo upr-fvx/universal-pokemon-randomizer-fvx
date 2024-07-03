@@ -1034,7 +1034,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    // TODO: We should be editing the script file so that the game reads in our new
+    //TODO: We should be editing the script file so that the game reads in our new
     // starters; this way, strings that depend on the starter defined in the script
     // would work without any modification. Instead, we're just manually editing all
     // strings here, and if a string originally referred to the starter in the script,

@@ -63,7 +63,8 @@ public class Version {
         map.put(319, "4.5.0");
         map.put(320, "4.5.1");
         map.put(321, "4.6.0");
-        
+
+        //TODO: figure out if this conflict is solvable.
         //Conflict - possibly unsolvable
         map.put(322, "4.7.0");
         map.put(323, "4.7.1");

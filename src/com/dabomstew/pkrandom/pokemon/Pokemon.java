@@ -978,7 +978,10 @@ public class Pokemon implements Comparable<Pokemon> {
      * E.g. if the Pokémon is Gloom, this would return a List with two elements, one being the Evolution from
      * Gloom to Vileplume, and the other being the Evolution from Gloom to Bellossom.
      */
-    //oh, gods. why is that how it works?!?!?!
+    //TODO: Make this (and getEvolutionsTo) return unmodifiable lists and use setEvolutions methods instead.
+    // (Or, alternatively, addEvolution and clearEvolutions methods, wherein the first call to clear
+    // sets the original evolutions.)
+    //(And then make setEvolutions also set original evolutions when first called.)
     public List<Evolution> getEvolutionsFrom() {
         return evolutionsFrom;
     }

@@ -12,7 +12,7 @@ RandomizerGUI.java:
     restoreStateFromSettings, createSettingsFromState
     enableOrDisableSubControls
     romLoaded (to reset)
-    may also need to add event listeners to the constructor
+    may also need to add action listeners to the constructor
 bundle.properties:
     strings for setting label & tooltip
 SettingsUpdater.java:

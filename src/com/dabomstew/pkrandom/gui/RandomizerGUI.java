@@ -475,6 +475,9 @@ public class RandomizerGUI {
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox1.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox2.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox3.addActionListener(e -> enableOrDisableSubControls());
         spRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spRandomTwoEvosRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spRandomBasicRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -3075,7 +3078,10 @@ public class RandomizerGUI {
             spBanBadItemsCheckBox.setSelected(false);
         }
 
-        if (spUnchangedRadioButton.isSelected() || spCustomRadioButton.isSelected()) {
+        boolean isCustomRandom = (spComboBox1.getSelectedIndex() == 0 || spComboBox2.getSelectedIndex() == 0
+                || spComboBox3.getSelectedIndex() == 0) && spCustomRadioButton.isSelected();
+
+        if (spUnchangedRadioButton.isSelected() || (spCustomRadioButton.isSelected() && !isCustomRandom)) {
             spTypeNoneRadioButton.setSelected(true);
             spTypeNoneRadioButton.setEnabled(false);
             spTypeFwgRadioButton.setEnabled(false);
@@ -3090,31 +3096,22 @@ public class RandomizerGUI {
             spNoLegendariesCheckBox.setSelected(false);
         } else {
             spTypeNoneRadioButton.setEnabled(true);
-            spTypeFwgRadioButton.setEnabled(true);
-            spTypeTriangleRadioButton.setEnabled(true);
+
+            //we can't do triangles when we don't have control of all three starters
+            spTypeFwgRadioButton.setEnabled(!isCustomRandom);
+            spTypeTriangleRadioButton.setEnabled(!isCustomRandom);
+
             spTypeUniqueRadioButton.setEnabled(true);
             spTypeSingleRadioButton.setEnabled(true);
 
-            if(ptIsDualTypeCheckBox.isSelected()) {
-                spTypeNoDualCheckbox.setEnabled(false);
-            } else {
-                spTypeNoDualCheckbox.setEnabled(true);
-            }
-            if(spTypeNoDualCheckbox.isSelected()) {
-                ptIsDualTypeCheckBox.setEnabled(false);
-            } else {
-                ptIsDualTypeCheckBox.setEnabled(true);
-            }
+            spTypeNoDualCheckbox.setEnabled(!ptIsDualTypeCheckBox.isSelected());
+            ptIsDualTypeCheckBox.setEnabled(!spTypeNoDualCheckbox.isSelected());
 
             spAllowAltFormesCheckBox.setEnabled(true);
             spNoLegendariesCheckBox.setEnabled(true);
         }
 
-        if(spTypeSingleRadioButton.isSelected()) {
-            spTypeSingleComboBox.setEnabled(true);
-        } else {
-            spTypeSingleComboBox.setEnabled(false);
-        }
+        spTypeSingleComboBox.setEnabled(spTypeSingleRadioButton.isSelected());
 
         if (stpUnchangedRadioButton.isSelected()) {
             stpRandomize600BSTCheckBox.setEnabled(false);

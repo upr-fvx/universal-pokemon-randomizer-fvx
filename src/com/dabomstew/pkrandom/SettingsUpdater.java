@@ -356,6 +356,9 @@ public class SettingsUpdater {
         }
 
         if (oldVersion < 324) {
+            //TODO: check for conflicts between updaters.
+            // If nothing else, they ought to be in a different order
+
             //insert two additional wild pokemon bytes and reorganize
             insertExtraByte(17, (byte) 0);
             insertExtraByte(18, (byte) 0);
@@ -387,6 +390,13 @@ public class SettingsUpdater {
             dataBlock[17] = types;
             dataBlock[18] = various;
 
+        }
+
+        if (oldVersion < 333) {
+            //add 3 bytes for starter BST limits
+            insertExtraByte(58, (byte) 0);
+            insertExtraByte(59, (byte) 0);
+            insertExtraByte(60, (byte) 0);
         }
 
         // fix checksum

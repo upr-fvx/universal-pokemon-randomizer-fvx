@@ -18,10 +18,10 @@ bundle.properties:
 SettingsUpdater.java:
     make update, if needed
 Version.java:
-    increase version number (and log old)
+    increase version number (and log old) if first feature in version
 appropriate Randomizer:
     implement the actual effect
-Randomizer.java:
+GameRandomizer.java:
     If adding a top-level setting, add method call.
 Tests:
     Make at least one new unit test to verify the new setting works consistently

@@ -1778,6 +1778,14 @@ public class RandomizerGUI {
         puRandomRadioButton.setSelected(settings.getPickupItemsMod() == Settings.PickupItemsMod.RANDOM);
         puBanBadItemsCheckBox.setSelected(settings.isBanBadRandomPickupItems());
 
+        teUnchangedRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.UNCHANGED);
+        teRandomRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.RANDOM);
+        teRandomBalancedRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.RANDOM_BALANCED);
+        teKeepTypeIdentitiesRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.KEEP_IDENTITIES);
+        teInverseRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.INVERSE);
+        teAddRandomImmunitiesCheckBox.setSelected(settings.isInverseTypesRandomImmunities());
+        teUpdateTypeEffectivenessCheckbox.setSelected(settings.isUpdateTypeEffectiveness());
+
         ppalUnchangedRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.UNCHANGED);
         ppalRandomRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.RANDOM);
         ppalFollowTypesCheckBox.setSelected(settings.isPokemonPalettesFollowTypes());

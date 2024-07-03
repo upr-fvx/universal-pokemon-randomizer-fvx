@@ -795,9 +795,9 @@ public class Settings {
         settings.setCatchEmAllEncounters(restoreState(data[16], 2));
         settings.setWildPokemonTypeMod(restoreEnum(WildPokemonTypeMod.class, data[17], 0, // NONE
                 2, // THEMED_AREAS
-                1, // KEEP_PRIMARY
-                3  // KEEP_THEMES
+                1 // KEEP_PRIMARY
         ));
+        settings.setKeepWildTypeThemes(restoreState(data[17], 3));
         
         settings.setUseTimeBasedEncounters(restoreState(data[18], 0));
         settings.setUseMinimumCatchRate(restoreState(data[18], 1));
@@ -1000,19 +1000,24 @@ public class Settings {
             settings.setStartersSingleType(Type.fromInt((data[54] & 0x1F) - 1));
         }
 
-        settings.setKeepWildTypeThemes(restoreState(data[54], 0));
+        settings.setPokemonPalettesMod(restoreEnum(PokemonPalettesMod.class, data[55], 0, // UNCHANGED
+                1 // RANDOM
+        ));
+        settings.setPokemonPalettesFollowTypes(restoreState(data[55], 2));
+        settings.setPokemonPalettesFollowEvolutions(restoreState(data[55], 3));
+        settings.setPokemonPalettesShinyFromNormal(restoreState(data[55], 4));
 
-        settings.setTypeEffectivenessMod(restoreEnum(TypeEffectivenessMod.class, data[55], 0, // UNCHANGED
+        settings.setTypeEffectivenessMod(restoreEnum(TypeEffectivenessMod.class, data[56], 0, // UNCHANGED
                 1, // RANDOM
                 2, // RANDOM_BALANCED
                 3, // KEEP_IDENTITIES
                 4  // REVERSE
         ));
-        settings.setInverseTypesRandomImmunities(restoreState(data[55], 5));
-        settings.setUpdateTypeEffectiveness(restoreState(data[55], 6));
+        settings.setInverseTypesRandomImmunities(restoreState(data[56], 5));
+        settings.setUpdateTypeEffectiveness(restoreState(data[56], 6));
 
-        settings.setEvosForceGrowth(restoreState(data[56], 0));
-        settings.setEvosNoConvergence(restoreState(data[56], 1));
+        settings.setEvosForceGrowth(restoreState(data[57], 0));
+        settings.setEvosNoConvergence(restoreState(data[57], 1));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

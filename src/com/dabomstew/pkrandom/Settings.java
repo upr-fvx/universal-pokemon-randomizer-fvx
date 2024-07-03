@@ -52,7 +52,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 55;
+    public static final int LENGTH_OF_SETTINGS_DATA = 60;
 
     private CustomNamesSet customNames;
 
@@ -69,6 +69,22 @@ public class Settings {
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
     private boolean dualTypeOnly;
+
+    public int getStartersBSTMinimum() {
+        return startersBSTMinimum;
+    }
+
+    public void setStartersBSTMinimum(int startersBSTMinimum) {
+        this.startersBSTMinimum = startersBSTMinimum;
+    }
+
+    public int getStartersBSTMaximum() {
+        return startersBSTMaximum;
+    }
+
+    public void setStartersBSTMaximum(int startersBSTMaximum) {
+        this.startersBSTMaximum = startersBSTMaximum;
+    }
 
     public enum BaseStatisticsMod {
         UNCHANGED, SHUFFLE, RANDOM,
@@ -125,6 +141,8 @@ public class Settings {
     private boolean limitMainGameLegendaries;
     private boolean limit600;
     private boolean banBadRandomStarterHeldItems;
+
+    private int startersBSTMinimum, startersBSTMaximum;
 
     public enum TypesMod {
         UNCHANGED, RANDOM_FOLLOW_EVOLUTIONS, COMPLETELY_RANDOM
@@ -679,6 +697,12 @@ public class Settings {
         // 57 evolutions 2
         out.write(makeByteSelected(evosForceGrowth, evosNoConvergence));
 
+        // 58-60 starter BST limits
+        byte highEndByte = (byte)(startersBSTMinimum >> 8 | 0x0F + startersBSTMaximum >> 4 | 0xF0);
+        out.write(highEndByte);
+        out.write((byte) startersBSTMinimum);
+        out.write((byte) startersBSTMaximum);
+
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -1018,6 +1042,16 @@ public class Settings {
 
         settings.setEvosForceGrowth(restoreState(data[57], 0));
         settings.setEvosNoConvergence(restoreState(data[57], 1));
+
+        /*
+        byte highEndByte = (byte)(starterBSTMinimum >> 8 | 0x0F + starterBSTMaximum >> 4 | 0xF0);
+        out.write(highEndByte);
+        out.write((byte)starterBSTMinimum);
+        out.write((byte)starterBSTMaximum);
+         */
+
+        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) | 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
+        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) | 0xF0) << 8) + Byte.toUnsignedInt(data[60]));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

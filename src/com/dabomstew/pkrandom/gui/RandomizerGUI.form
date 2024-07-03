@@ -808,16 +808,10 @@
                   </component>
                   <hspacer id="8b022">
                     <constraints>
-                      <grid row="1" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="14" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                   </hspacer>
-                  <vspacer id="499d4">
-                    <constraints>
-                      <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
                   <hspacer id="1b3c2">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -899,17 +893,6 @@
                       </model>
                     </properties>
                   </component>
-                  <component id="9ddd3" class="javax.swing.JCheckBox" binding="spRandomizeStarterHeldItemsCheckBox">
-                    <constraints>
-                      <grid row="2" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
                   <component id="4b2ef" class="javax.swing.JRadioButton" binding="spRandomBasicRadioButton">
                     <constraints>
                       <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -923,7 +906,7 @@
                   </component>
                   <grid id="33c18" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="1" column="6" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="6" row-span="7" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -984,18 +967,6 @@
                           </model>
                         </properties>
                       </component>
-                      <hspacer id="5513f">
-                        <constraints>
-                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <vspacer id="ea50e">
-                        <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
                       <hspacer id="e9948">
                         <constraints>
                           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -1024,14 +995,20 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spTypeNoDualCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <hspacer id="5513f">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="1a591">
+                        <constraints>
+                          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
                     </children>
                   </grid>
-                  <vspacer id="4575b">
-                    <constraints>
-                      <grid row="7" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
                   <hspacer id="1193a">
                     <constraints>
                       <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -1046,7 +1023,7 @@
                   </hspacer>
                   <component id="a1ea2" class="javax.swing.JCheckBox" binding="spBanBadItemsCheckBox" default-binding="true">
                     <constraints>
-                      <grid row="3" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="8" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1057,7 +1034,7 @@
                   </component>
                   <component id="cad77" class="javax.swing.JCheckBox" binding="spAllowAltFormesCheckBox">
                     <constraints>
-                      <grid row="4" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1068,7 +1045,7 @@
                   </component>
                   <component id="d05d5" class="javax.swing.JCheckBox" binding="spNoLegendariesCheckBox">
                     <constraints>
-                      <grid row="1" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1076,6 +1053,111 @@
                       <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spNoLegendariesCheckBox.text"/>
                     </properties>
                   </component>
+                  <component id="20e0d" class="javax.swing.JLabel" binding="spBstLimitsLabel">
+                    <constraints>
+                      <grid row="5" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBstLimitsLabel.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBstLimitsLabel.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="82349" class="javax.swing.JCheckBox" binding="spBSTMinimumCheckbox">
+                    <constraints>
+                      <grid row="6" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMinimumCheckbox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMinimumCheckbox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="99766" class="javax.swing.JCheckBox" binding="spBSTMaximumCheckbox">
+                    <constraints>
+                      <grid row="6" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMaximumCheckbox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMaximumCheckbox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="9ddd3" class="javax.swing.JCheckBox" binding="spRandomizeStarterHeldItemsCheckBox">
+                    <constraints>
+                      <grid row="2" column="8" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <hspacer id="3b78f">
+                    <constraints>
+                      <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="51e00" class="javax.swing.JSpinner" binding="spBSTMinimumSpinner">
+                    <constraints>
+                      <grid row="7" column="9" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMinimumSpinner.toolTipText"/>
+                    </properties>
+                  </component>
+                  <hspacer id="12bbb">
+                    <constraints>
+                      <grid row="7" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="9b528" class="javax.swing.JSpinner" binding="spBSTMaximumSpinner">
+                    <constraints>
+                      <grid row="7" column="12" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.spBSTMaximumSpinner.toolTipText"/>
+                    </properties>
+                  </component>
+                  <hspacer id="24ca2">
+                    <constraints>
+                      <grid row="7" column="11" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <vspacer id="ea50e">
+                    <constraints>
+                      <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <vspacer id="157d3">
+                    <constraints>
+                      <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <hspacer id="eb5e7">
+                    <constraints>
+                      <grid row="6" column="13" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
+                  <vspacer id="71dca">
+                    <constraints>
+                      <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
                 </children>
               </grid>
               <hspacer id="48447">

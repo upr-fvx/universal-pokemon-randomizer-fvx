@@ -1,22 +1,30 @@
-Universal Pokemon Randomizer ZX - V branch
+# Universal Pokemon Randomizer FVX
 
-A fork of the Universal Pokemon Randomizer focused on adding new features, especially those that make the randomized ROMs into a more "Vanilla-like" experience. For now, this has largely been Type-focused randomizations.
-in turn based on the Universal Pokemon Randomizer by Dabomstew
-and a bunch of refactoring for ease-of-development. 
+The **Universal Pokemon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a continuation of the [Universal Pokemon Randomizer](https://github.com/Dabomstew/universal-pokemon-randomizer) by Dabomstew. It was born of a merge of branches by [foxoftheasterisk](https://github.com/foxoftheasterisk) and [voliol](https://github.com/voliol/universal-pokemon-randomizer), both based on Ajarmar's [UPR ZX](https://github.com/Ajarmar/universal-pokemon-randomizer-zx). 
 
-For a full list of new features, see the wiki.
-[The main branch Wiki Page](https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Building-Universal-Pokemon-Randomizer-ZX) explains how to set up to build/test locally, with the caveat that the V branch runs off Java 18.
+Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. 
+For a full list of new features, see [the wiki](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki).
 
-### What is a good fit for the randomizer?
+True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 (but Let's Go, Pikachu!/Eevee!). 
 
-In general, the UPR should have settings as universal as possible (up to Gen V). This means that an idea preferably should work in as many games as possible, and also that it's something that many people will find useful/fun. If the setting is very niche, it will mostly just bloat the GUI.
-
-If your idea is a change to an existing setting rather than a new setting, it needs to be well motivated.
+It also contains a bunch of refactoring for ease-of-development.
 
 # Feature requests
 
-I gladly take feature requests to know what the user-base wants, but be aware that I am a single person working on this, and will implement them (or not) at my own discretion and pace. 
-Features related to other ones in the V branch (like palette randomization) are more likely to get picked up, but the above still applies. If you want to guarantee your feature makes it in, the only way is to pick up Java and code it yourself. It's fun :) 
+We gladly take feature requests to know what the user-base wants, but be aware that we are just two people working on this at our own discretion and pace, and will implement them (or not) according to that. 
+If you want to guarantee your feature makes it in, the only way is to pick up Java and code it yourself. It is fun :)
+
+# Contributing
+
+If you want to contribute something to the codebase, we recommended to create an issue for it first (using the`Contribution Idea` template). This way, we can discuss how to accomplish this, and possibly whether it is a good fit for the randomizer. 
+
+[This page on ZX's wiki](https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Building-Universal-Pokemon-Randomizer-ZX) explains how to set up to build/test locally.
+
+### What is a good fit for the randomizer?
+
+In general, the UPR should have settings as universal as possible. This means that an idea preferably should work in as many games as possible, and also that it is something that many people will find useful/fun. If the setting is very niche, it will mostly just bloat the GUI.
+
+If your idea is a change to an existing setting rather than a new setting, it needs to be well motivated.
 
 # Bug reports
 

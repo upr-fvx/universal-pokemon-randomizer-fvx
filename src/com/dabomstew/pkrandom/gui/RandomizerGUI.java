@@ -475,6 +475,9 @@ public class RandomizerGUI {
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox1.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox2.addActionListener(e -> enableOrDisableSubControls());
+        spComboBox3.addActionListener(e -> enableOrDisableSubControls());
         spRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spRandomTwoEvosRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spRandomBasicRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -2355,6 +2358,7 @@ public class RandomizerGUI {
         cpgCustomInfo.setEnabled(false);
 
         // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
+        //Well, this lets them be named variables, which helps for code readability if nothing else...
 		Arrays.asList(miscBWExpPatchCheckBox, miscNerfXAccuracyCheckBox, miscFixCritRateCheckBox,
 				miscFastestTextCheckBox, miscRunningShoesIndoorsCheckBox, miscRandomizePCPotionCheckBox,
 				miscAllowPikachuEvolutionCheckBox, miscGiveNationalDexAtCheckBox,
@@ -2876,6 +2880,7 @@ public class RandomizerGUI {
     }
 
     private void enableOrDisableSubControls() {
+        //TODO: split this into smaller listeners for each panel or so
 
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);
@@ -3073,7 +3078,10 @@ public class RandomizerGUI {
             spBanBadItemsCheckBox.setSelected(false);
         }
 
-        if (spUnchangedRadioButton.isSelected() || spCustomRadioButton.isSelected()) {
+        boolean isCustomRandom = (spComboBox1.getSelectedIndex() == 0 || spComboBox2.getSelectedIndex() == 0
+                || spComboBox3.getSelectedIndex() == 0) && spCustomRadioButton.isSelected();
+
+        if (spUnchangedRadioButton.isSelected() || (spCustomRadioButton.isSelected() && !isCustomRandom)) {
             spTypeNoneRadioButton.setSelected(true);
             spTypeNoneRadioButton.setEnabled(false);
             spTypeFwgRadioButton.setEnabled(false);
@@ -3088,31 +3096,22 @@ public class RandomizerGUI {
             spNoLegendariesCheckBox.setSelected(false);
         } else {
             spTypeNoneRadioButton.setEnabled(true);
-            spTypeFwgRadioButton.setEnabled(true);
-            spTypeTriangleRadioButton.setEnabled(true);
+
+            //we can't do triangles when we don't have control of all three starters
+            spTypeFwgRadioButton.setEnabled(!isCustomRandom);
+            spTypeTriangleRadioButton.setEnabled(!isCustomRandom);
+
             spTypeUniqueRadioButton.setEnabled(true);
             spTypeSingleRadioButton.setEnabled(true);
 
-            if(ptIsDualTypeCheckBox.isSelected()) {
-                spTypeNoDualCheckbox.setEnabled(false);
-            } else {
-                spTypeNoDualCheckbox.setEnabled(true);
-            }
-            if(spTypeNoDualCheckbox.isSelected()) {
-                ptIsDualTypeCheckBox.setEnabled(false);
-            } else {
-                ptIsDualTypeCheckBox.setEnabled(true);
-            }
+            spTypeNoDualCheckbox.setEnabled(!ptIsDualTypeCheckBox.isSelected());
+            ptIsDualTypeCheckBox.setEnabled(!spTypeNoDualCheckbox.isSelected());
 
             spAllowAltFormesCheckBox.setEnabled(true);
             spNoLegendariesCheckBox.setEnabled(true);
         }
 
-        if(spTypeSingleRadioButton.isSelected()) {
-            spTypeSingleComboBox.setEnabled(true);
-        } else {
-            spTypeSingleComboBox.setEnabled(false);
-        }
+        spTypeSingleComboBox.setEnabled(spTypeSingleRadioButton.isSelected());
 
         if (stpUnchangedRadioButton.isSelected()) {
             stpRandomize600BSTCheckBox.setEnabled(false);

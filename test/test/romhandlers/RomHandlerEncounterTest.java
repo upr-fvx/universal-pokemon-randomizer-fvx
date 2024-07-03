@@ -1133,7 +1133,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
                 Iterator<Encounter> afterEncIterator = afterArea.iterator();
                 while (beforeEncIterator.hasNext()) {
-                    Encounter beforeEnc = afterEncIterator.next();
+                    Encounter beforeEnc = beforeEncIterator.next();
                     Pokemon beforePk = romHandler.getAltFormeOfPokemon(beforeEnc.getPokemon(), beforeEnc.getFormeNumber());
                     Encounter afterEnc = afterEncIterator.next();
                     Pokemon afterPk = romHandler.getAltFormeOfPokemon(afterEnc.getPokemon(), afterEnc.getFormeNumber());

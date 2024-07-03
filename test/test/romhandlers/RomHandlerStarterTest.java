@@ -358,10 +358,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void singleTypeWorksWithRandomWithTwoEvos(String romName) {
+    public void singleTypeWorksWithRandomWithTwoEvosForEveryType(String romName) {
         // fails on all vanilla games before gen 4, as until then there are only two for Dragon.
         assumeTrue(getGenerationNumberOf(romName) >= 4);
         loadROM(romName);
+        assumeFalse(romHandler.isORAS());
         Settings s = new Settings();
         s.setStartersMod(false, false, false, true, false);
         s.setStartersTypeMod(false, false, false, false, true);

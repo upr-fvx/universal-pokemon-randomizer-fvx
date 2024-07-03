@@ -2355,6 +2355,7 @@ public class RandomizerGUI {
         cpgCustomInfo.setEnabled(false);
 
         // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
+        //Well, this lets them be named variables, which helps for code readability if nothing else...
 		Arrays.asList(miscBWExpPatchCheckBox, miscNerfXAccuracyCheckBox, miscFixCritRateCheckBox,
 				miscFastestTextCheckBox, miscRunningShoesIndoorsCheckBox, miscRandomizePCPotionCheckBox,
 				miscAllowPikachuEvolutionCheckBox, miscGiveNationalDexAtCheckBox,
@@ -2876,6 +2877,7 @@ public class RandomizerGUI {
     }
 
     private void enableOrDisableSubControls() {
+        //TODO: split this into smaller listeners for each panel or so
 
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);

@@ -2696,7 +2696,10 @@ public class RandomizerGUI {
 
             // Types
             boolean typeSupport = romHandler.hasTypeEffectivenessSupport();
-            typesPanel.setVisible(typeSupport);
+            //typesPanel.setVisible(typeSupport);
+            //We shouldn't use setVisible on the panels directly in the tabbedPane; it causes strange bleedover
+            //Disable it instead
+            tabbedPane1.setEnabledAt(7, typeSupport);
             teUnchangedRadioButton.setEnabled(typeSupport);
             teUnchangedRadioButton.setSelected(typeSupport);
             teRandomRadioButton.setEnabled(typeSupport);
@@ -2769,7 +2772,7 @@ public class RandomizerGUI {
                 }
             }
 
-            if (usableCheckBoxes.size() > 0) {
+            if (!usableCheckBoxes.isEmpty()) {
                 setTweaksPanel(usableCheckBoxes);
                 //tabbedPane1.setComponentAt(7,makeTweaksLayout(usableCheckBoxes));
                 //miscTweaksPanel.setLayout(makeTweaksLayout(usableCheckBoxes));

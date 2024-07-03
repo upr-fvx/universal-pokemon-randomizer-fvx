@@ -698,7 +698,7 @@ public class Settings {
         out.write(makeByteSelected(evosForceGrowth, evosNoConvergence));
 
         // 58-60 starter BST limits
-        byte highEndByte = (byte)(startersBSTMinimum >> 8 | 0x0F + startersBSTMaximum >> 4 | 0xF0);
+        byte highEndByte = (byte)(startersBSTMinimum >> 8 & 0x0F + startersBSTMaximum >> 4 & 0xF0);
         out.write(highEndByte);
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);
@@ -1050,8 +1050,8 @@ public class Settings {
         out.write((byte)starterBSTMaximum);
          */
 
-        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) | 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
-        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) | 0xF0) << 8) + Byte.toUnsignedInt(data[60]));
+        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
+        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0xF0) << 8) + Byte.toUnsignedInt(data[60]));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

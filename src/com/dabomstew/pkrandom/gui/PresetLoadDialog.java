@@ -43,6 +43,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -174,10 +176,16 @@ public class PresetLoadDialog extends JDialog {
             // it's for a newer version
             JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.newerVersionRequired"));
         } else {
-            // tell them which older version to use to load this preset
-            // this should be the newest version that used that value
-            // for the constant PRESET_FILE_VERSION
-            String versionWanted = Version.oldVersions.getOrDefault(presetVN,"Unknown");
+            // Tell them which older version to use to load this preset.
+            // Occasionally it can't tell and gives you all the possible ones.
+            String versionWanted;
+            List<String> posVersions = new ArrayList<>();
+            for (Version v : Version.ALL_VERSIONS) {
+                if (v.id == presetVN) {
+                    posVersions.add(v.name);
+                }
+            }
+            versionWanted = posVersions.isEmpty() ? "Unknown" : String.join(" OR ", posVersions);
             JOptionPane.showMessageDialog(this,
                     String.format(bundle.getString("PresetLoadDialog.olderVersionRequired"), versionWanted));
         }

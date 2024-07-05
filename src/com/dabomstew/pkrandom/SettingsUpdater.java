@@ -317,6 +317,19 @@ public class SettingsUpdater {
             dataBlock[50] |= ((oldMinimumCatchRate - 1) << 3);
         }
 
+        if (oldVersion > Version.v4_6_0.id && oldVersion < Version.FVX_0_1_0.id) {
+            // TODO: is this the way to do it?
+            if (isCTVVersion(oldVersion)) {
+                updateCTV();
+            } else if (isVBranchVersion(oldVersion)){
+                updateVBranch();
+            } else {
+                throw new RuntimeException("Old settings are from a version between " + Version.v4_6_0.name +
+                        " and " + Version.FVX_0_1_0 + ". Despite this, they are not recognized as coming from either " +
+                        " of the \"closer-to-vanilla\" or \"V Branch\" forks.");
+            }
+        }
+
         if (oldVersion < 322) {
             // Pokemon palettes
             insertExtraByte(51, (byte) 0x1);
@@ -338,21 +351,6 @@ public class SettingsUpdater {
             insertExtraByte(53, (byte) 0);
             // new wild pokes byte
             insertExtraByte(54, (byte) 0);
-        }
-
-        if (oldVersion < 330) {
-            // type effectiveness
-            insertExtraByte(55, (byte) 0x1);
-            // move the former Update Type Effectiveness misctweak to a proper setting
-            int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
-            boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
-            if (updateTypeEffectiveness) {
-                dataBlock[55] &= 0x40;
-            }
-
-            // new evolutions byte
-            insertExtraByte(56, (byte) 0);
-
         }
 
         if (oldVersion < 324) {
@@ -389,10 +387,24 @@ public class SettingsUpdater {
             dataBlock[16] = restriction;
             dataBlock[17] = types;
             dataBlock[18] = various;
+        }
+
+        if (oldVersion < 330) {
+            // type effectiveness
+            insertExtraByte(55, (byte) 0x1);
+            // move the former Update Type Effectiveness misctweak to a proper setting
+            int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
+            boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
+            if (updateTypeEffectiveness) {
+                dataBlock[55] &= 0x40;
+            }
+
+            // new evolutions byte
+            insertExtraByte(56, (byte) 0);
 
         }
 
-        if (oldVersion < 333) {
+        if (oldVersion < Version.FVX_0_1_0.id) {
             //add 3 bytes for starter BST limits
             insertExtraByte(58, (byte) 0);
             insertExtraByte(59, (byte) 0);

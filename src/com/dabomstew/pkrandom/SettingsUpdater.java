@@ -317,95 +317,18 @@ public class SettingsUpdater {
             dataBlock[50] |= ((oldMinimumCatchRate - 1) << 3);
         }
 
-        if (oldVersion > Version.v4_6_0.id && oldVersion < Version.FVX_0_1_0.id) {
-            // TODO: is this the way to do it?
-            if (isCTVVersion(oldVersion)) {
-                updateCTV();
-            } else if (isVBranchVersion(oldVersion)){
-                updateVBranch();
-            } else {
-                throw new RuntimeException("Old settings are from a version between " + Version.v4_6_0.name +
-                        " and " + Version.FVX_0_1_0 + ". Despite this, they are not recognized as coming from either " +
-                        " of the \"closer-to-vanilla\" or \"V Branch\" forks.");
-            }
-        }
-
-        if (oldVersion < 322) {
-            // Pokemon palettes
-            insertExtraByte(51, (byte) 0x1);
-        }
-        
-        if (oldVersion < 326) {
-            //added new enum WildPokemonTypeMod and moved TypeThemed to it,
-            //so we need to select None on RestrictionMod if TypeThemed is selected,
-            //and select None on TypeMod otherwise
-            int typeThemed = dataBlock[15] & 0x08;
-            if (typeThemed != 0) {
-                dataBlock[15] |= 0x04;
-            } else {
-                dataBlock[16] |= 0x20;
-            }
-            // starter type mod / starter no legendaries / starter no dual type checkbox
-            insertExtraByte(52, (byte) 0x1);
-            // starter single-type type choice
-            insertExtraByte(53, (byte) 0);
-            // new wild pokes byte
-            insertExtraByte(54, (byte) 0);
-        }
-
-        if (oldVersion < 324) {
-            //TODO: check for conflicts between updaters.
-            // If nothing else, they ought to be in a different order
-
-            //insert two additional wild pokemon bytes and reorganize
-            insertExtraByte(17, (byte) 0);
-            insertExtraByte(18, (byte) 0);
-            byte areaMethod = 0, restriction = 0,
-                    types = 0, various = 0;
-
-            areaMethod |= (dataBlock[15] & 0x40) >> 6;
-            areaMethod |= (dataBlock[15] & 0x20) >> 4;
-            areaMethod |= (dataBlock[15] & 0x02) << 1;
-            areaMethod |= (dataBlock[15] & 0x10) >> 1;
-
-            restriction |= (dataBlock[15] & 0x04) >> 2;
-            restriction |= (dataBlock[16] & 0x04) >> 1;
-            restriction |= (dataBlock[15] & 0x01) << 2;
-
-            types |= (dataBlock[16] & 0x20) >> 5;
-            types |= (dataBlock[16] & 0x40) >> 5;
-            types |= (dataBlock[15] & 0x08) >> 1;
-
-            various |= (dataBlock[15] & 0x80) >> 7;
-            various |= (dataBlock[16] & 0x01) << 1;
-            various |= (dataBlock[16] & 0x02) << 1;
-            various |= dataBlock[16] & 0x08;
-            various |= dataBlock[16] & 0x10;
-            various |= dataBlock[16] & 0x80 >> 2;
-
-            dataBlock[15] = areaMethod;
-            dataBlock[16] = restriction;
-            dataBlock[17] = types;
-            dataBlock[18] = various;
-        }
-
-        if (oldVersion < 330) {
-            // type effectiveness
-            insertExtraByte(55, (byte) 0x1);
-            // move the former Update Type Effectiveness misctweak to a proper setting
-            int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
-            boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
-            if (updateTypeEffectiveness) {
-                dataBlock[55] &= 0x40;
-            }
-
-            // new evolutions byte
-            insertExtraByte(56, (byte) 0);
-
-        }
-
         if (oldVersion < Version.FVX_0_1_0.id) {
-            //add 3 bytes for starter BST limits
+            // The first version of FVX was a merge between two branches with different versions/updaters.
+            // Thus, to ensure settings end up the same, they must take the according branching path.
+            // Older settings also have to take one of these paths, but which is arbitrary.
+            if (isFromCTVVersion(oldVersion)) {
+                updateCTV();
+            } else {
+                updateVBranch();
+            }
+
+            // Then there are settings updates which apply regardless of branch:
+            // add 3 bytes for starter BST limits
             insertExtraByte(58, (byte) 0);
             insertExtraByte(59, (byte) 0);
             insertExtraByte(60, (byte) 0);
@@ -423,6 +346,13 @@ public class SettingsUpdater {
         byte[] finalConfigString = new byte[actualDataLength];
         System.arraycopy(dataBlock, 0, finalConfigString, 0, actualDataLength);
         return Base64.getEncoder().encodeToString(finalConfigString);
+    }
+
+    private boolean isFromCTVVersion(int oldVersion) {
+        // TODO: is the settings length equal to actualDataLength?
+        // The overlapping V branch versions all have settings length 52.
+        // Luckily, the CTV versions miss that value, skipping from 51 to 53 between 4.7.0 and 4.7.1.
+        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id && actualDataLength != 52;
     }
 
     private static byte getRemappedByte(byte old, int[] oldIndexes) {

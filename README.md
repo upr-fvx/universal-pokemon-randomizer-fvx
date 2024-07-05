@@ -18,7 +18,7 @@ If you want to guarantee your feature makes it in, the only way is to pick up Ja
 
 If you want to contribute something to the codebase, we recommended to create an issue for it first (using the`Contribution Idea` template). This way, we can discuss how to accomplish this, and possibly whether it is a good fit for the randomizer. 
 
-[This page on ZX's wiki](https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Building-Universal-Pokemon-Randomizer-ZX) explains how to set up to build/test locally.
+[This page on the wiki](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/Building-Universal-Pokemon-Randomizer-FVX) explains how to set up to build/test locally.
 
 If you are adding a new setting, make sure you follow the new setting checklist in the root folder of the repository.
 

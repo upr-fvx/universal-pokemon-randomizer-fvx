@@ -52,7 +52,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 60;
+    public static final int LENGTH_OF_SETTINGS_DATA = 61;
 
     private CustomNamesSet customNames;
 

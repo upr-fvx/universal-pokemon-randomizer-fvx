@@ -322,9 +322,13 @@ public class SettingsUpdater {
             // The first version of FVX was a merge between two branches with different versions/updaters.
             // Thus, to ensure settings end up the same, they must take the according branching path.
             // Older settings also have to take one of these paths, but which is arbitrary.
+
+            System.out.println("actualDataLength:"+actualDataLength);
             if (isFromCTVVersion(oldVersion)) {
+                System.out.println("from CTV");
                 updateCTV(oldVersion);
             } else {
+                System.out.println("from V branch");
                 updateVBranch(oldVersion);
             }
 
@@ -353,7 +357,9 @@ public class SettingsUpdater {
         // TODO: is the settings length equal to actualDataLength?
         // The overlapping V branch versions all have settings length 52.
         // Luckily, the CTV versions miss that value, skipping from 51 to 53 between 4.7.0 and 4.7.1.
-        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id && actualDataLength != 52;
+        // "-25" because there's 25 extra bytes after the main data that we want to ignore.
+        // Don't ask me where I found this number, it was through mysterious means (trial and error and guessing).
+        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id && (actualDataLength - 25) != 52;
     }
 
     private void updateCTV(int oldVersion) {

@@ -315,20 +315,16 @@ public class SettingsUpdater {
             // Read the old one, clear it out, then write it to the new location.
             int oldMinimumCatchRate = ((dataBlock[16] & 0x60) >> 5) + 1;
             dataBlock[16] &= ~0x60;
-            dataBlock[50] |= ((oldMinimumCatchRate - 1) << 3);
+            dataBlock[50] |= (byte) ((oldMinimumCatchRate - 1) << 3);
         }
 
         if (oldVersion < Version.FVX_0_1_0.id) {
             // The first version of FVX was a merge between two branches with different versions/updaters.
             // Thus, to ensure settings end up the same, they must take the according branching path.
             // Older settings also have to take one of these paths, but which is arbitrary.
-
-            System.out.println("actualDataLength:"+actualDataLength);
             if (isFromCTVVersion(oldVersion)) {
-                System.out.println("from CTV");
                 updateCTV(oldVersion);
             } else {
-                System.out.println("from V branch");
                 updateVBranch(oldVersion);
             }
 
@@ -354,12 +350,11 @@ public class SettingsUpdater {
     }
 
     private boolean isFromCTVVersion(int oldVersion) {
-        // TODO: is the settings length equal to actualDataLength?
-        // The overlapping V branch versions all have settings length 52.
-        // Luckily, the CTV versions miss that value, skipping from 51 to 53 between 4.7.0 and 4.7.1.
-        // "-25" because there's 25 extra bytes after the main data that we want to ignore.
-        // Don't ask me where I found this number, it was through mysterious means (trial and error and guessing).
-        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id && (actualDataLength - 25) != 52;
+        // Just checks the version ids.
+        // This means V branch versions 0_9_0 to 0_9_3, which have overlapping version ids,
+        // cannot have their settings read correctly. However, there was no easy way to
+        // differentiate them and these versions had very few downloads, so we simply let this be.
+        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id;
     }
 
     private void updateCTV(int oldVersion) {
@@ -444,10 +439,13 @@ public class SettingsUpdater {
             //and select None on TypeMod otherwise
             int typeThemed = dataBlock[15] & 0x08;
             if (typeThemed != 0) {
-                dataBlock[15] |= 0x04;
+                dataBlock[15] |= 0x08;
             } else {
                 dataBlock[16] |= 0x20;
             }
+            // we also need to zero out LocationMapping
+            dataBlock[15] &= ~0x4;
+
             // starter type mod / starter no legendaries / starter no dual type checkbox
             insertExtraByte(52, (byte) 0x1);
             // starter single-type type choice
@@ -507,7 +505,7 @@ public class SettingsUpdater {
         );
 
         // move palette randomization
-        moveByte(51, 55);
+        moveByte(53, 55);
     }
 
     // TODO: temp copy from Settings; reconcile these to be in one place

@@ -681,6 +681,8 @@ public class EncounterRandomizer extends Randomizer {
             PokemonSet pokemonToRandomize = new PokemonSet();
             setupAreaInfoMap(encounterAreas, pokemonToRandomize);
 
+            spreadThemesThroughFamilies(pokemonToRandomize);
+
             //assumes that the longest evo line to randomize is 3 (or shorter)
             //this seems a safe assumption given no 4-length evo line exists in Pokemon
             //(Anyway, it would still include it.)
@@ -698,6 +700,42 @@ public class EncounterRandomizer extends Randomizer {
 
 
             applyGlobalMap(encounterAreas, translateMap);
+        }
+
+        /**
+         * Given a set of Pokemon, for each that has a type theme, adds that theme to each evolutionary relative
+         * (before randomization) in the set. <br>
+         * setupAreaInfoMap() must be called before this method!
+         * @param families The Pokemon to spread type themes through.
+         * @throws IllegalStateException if areaInformationMap is null.
+         * @throws IllegalArgumentException if families contains a Pokemon which has no
+         * information in areaInformationMap.
+         */
+        private void spreadThemesThroughFamilies(PokemonSet families) {
+            if(areaInformationMap == null) {
+                throw new IllegalStateException("Cannot spread themes before determining themes!");
+            }
+            for(Pokemon poke : families) {
+                PokemonAreaInformation info = areaInformationMap.get(poke);
+                if(info == null) {
+                    throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
+                }
+
+                if(info.getTheme(false) != null) {
+                    Set<Type> themes = info.getAllPossibleThemes();
+                    PokemonSet family = families.filterFamily(poke, true);
+                    for(Pokemon relative : family) {
+                        PokemonAreaInformation relativeInfo = areaInformationMap.get(relative);
+                        if(relativeInfo == null) {
+                            throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
+                        }
+                        for(Type theme : themes) {
+                            relativeInfo.addTypeTheme(theme);
+                        }
+                    }
+                }
+
+            }
         }
 
         /**
@@ -831,15 +869,6 @@ public class EncounterRandomizer extends Randomizer {
                    PokemonSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
                    sameRelations.retainAll(remainingFamilyRestricted);
                    sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                   if(theme == null) {
-                       //check if this has type restrictions
-                       //(We want to apply only one type restriction at a time, and this typically works)
-                       //(Feels a bit hacky, though...)
-                       Type type = areaInformationMap.get(relative).getTheme(keepPrimaryType);
-                       if(type != null) {
-                           sameRelations = sameRelations.filterByType(type, false);
-                       }
-                   }
                    return !sameRelations.isEmpty();
                 });
             }
@@ -861,15 +890,6 @@ public class EncounterRandomizer extends Randomizer {
                         PokemonSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
                         sameRelations.retainAll(allowed);
                         sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                        if(theme == null) {
-                            //check if this has type restrictions
-                            //(We want to apply only one type restriction at a time, and this typically works)
-                            //(Feels a bit hacky, though...)
-                            Type type = areaInformationMap.get(relative).getTheme(keepPrimaryType);
-                            if(type != null) {
-                                sameRelations = sameRelations.filterByType(type, false);
-                            }
-                        }
                         return !sameRelations.isEmpty();
                     });
                 }
@@ -1032,7 +1052,7 @@ public class EncounterRandomizer extends Randomizer {
 
             /**
              * Gets the type of this Pokemon's area theming.
-             * If there are two themes, it will always default to the original primary type.
+             * If there are two or more themes, it will always default to the original primary type.
              * If there are no themes, it will default to the original primary only if defaultToPrimary is true;
              * otherwise, it will default to null.
              * @param defaultToPrimary Whether the type should default to the Pokemon's primary type
@@ -1049,11 +1069,17 @@ public class EncounterRandomizer extends Randomizer {
                     }
                 } else if(themeCount == 1) {
                     return possibleThemes.iterator().next();
-                } else if(themeCount == 2) {
-                    return pokemon.getPrimaryType(true);
                 } else {
-                    throw new IllegalStateException("Too many themes for one Pokemon!");
+                    return pokemon.getPrimaryType(true);
                 }
+            }
+
+            /**
+             * Returns the set of all desired themes for this Pokemon.
+             * @return A new Set containing all the possible themes.
+             */
+            Set<Type> getAllPossibleThemes() {
+                return EnumSet.copyOf(possibleThemes);
             }
 
             /**

@@ -1712,4 +1712,40 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     //TODO: global family-to-family works
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void game1To1KeepTypeThemesWorks(String romName) {
+        loadROM(romName);
+
+        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        Map<Integer, Type> typeThemedAreas = new HashMap<>();
+        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+
+        Settings settings = new Settings();
+        settings.setWildPokemonMod(Settings.WildPokemonMod.GLOBAL_MAPPING);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void globalFamilyToFamilyKeepTypeThemesWorks(String romName) {
+        loadROM(romName);
+
+        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        Map<Integer, Type> typeThemedAreas = new HashMap<>();
+        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+
+        Settings settings = new Settings();
+        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        //TODO: check the global family to family part works
+        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+    }
 }

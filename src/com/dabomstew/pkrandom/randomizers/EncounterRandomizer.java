@@ -650,8 +650,10 @@ public class EncounterRandomizer extends Randomizer {
         public void game1to1Encounters(List<EncounterArea> encounterAreas) {
             refillRemainingPokemon();
             Map<Pokemon, Pokemon> translateMap = new HashMap<>();
+            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
+            //mostly to skip unused areas, since the order doesn't matter
 
-            setupAreaInfoMap(encounterAreas, null);
+            setupAreaInfoMap(prepped, null);
 
             // shuffle to not give certain Pokémon priority when picking replacements
             // matters for similar strength
@@ -663,7 +665,7 @@ public class EncounterRandomizer extends Randomizer {
                 translateMap.put(current.getPokemon(), replacement);
             }
 
-            applyGlobalMap(encounterAreas, translateMap);
+            applyGlobalMap(prepped, translateMap);
         }
 
         /**
@@ -829,6 +831,15 @@ public class EncounterRandomizer extends Randomizer {
                    PokemonSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
                    sameRelations.retainAll(remainingFamilyRestricted);
                    sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
+                   if(theme == null) {
+                       //check if this has type restrictions
+                       //(We want to apply only one type restriction at a time, and this typically works)
+                       //(Feels a bit hacky, though...)
+                       Type type = areaInformationMap.get(relative).getTheme(keepPrimaryType);
+                       if(type != null) {
+                           sameRelations = sameRelations.filterByType(type, false);
+                       }
+                   }
                    return !sameRelations.isEmpty();
                 });
             }
@@ -850,6 +861,15 @@ public class EncounterRandomizer extends Randomizer {
                         PokemonSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
                         sameRelations.retainAll(allowed);
                         sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
+                        if(theme == null) {
+                            //check if this has type restrictions
+                            //(We want to apply only one type restriction at a time, and this typically works)
+                            //(Feels a bit hacky, though...)
+                            Type type = areaInformationMap.get(relative).getTheme(keepPrimaryType);
+                            if(type != null) {
+                                sameRelations = sameRelations.filterByType(type, false);
+                            }
+                        }
                         return !sameRelations.isEmpty();
                     });
                 }

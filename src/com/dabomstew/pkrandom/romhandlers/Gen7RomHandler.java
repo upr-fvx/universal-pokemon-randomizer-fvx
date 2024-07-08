@@ -1270,6 +1270,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
+    @Override
+    public boolean hasEncounterLocations() {
+        return true;
+    }
+
     private void writeEncounterTable(byte[] encounterTable, int offset, List<Encounter> encounters) {
         Iterator<Encounter> encounterIterator = encounters.iterator();
         Encounter firstEncounter = encounters.get(0);

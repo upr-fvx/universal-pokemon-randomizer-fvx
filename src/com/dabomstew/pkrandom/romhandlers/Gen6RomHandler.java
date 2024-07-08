@@ -1386,6 +1386,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
     }
 
+    @Override
+    public boolean hasEncounterLocations() {
+        return true;
+    }
+
     private void setEncountersXY(List<EncounterArea> encounterAreas) throws IOException {
         String encountersFile = romEntry.getFile("WildPokemon");
         GARCArchive encounterGarc = readGARC(encountersFile, false);

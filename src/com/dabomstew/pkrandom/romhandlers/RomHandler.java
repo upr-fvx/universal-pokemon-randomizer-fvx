@@ -188,7 +188,9 @@ public interface RomHandler {
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 
-    boolean hasEncounterLocations();
+    default boolean hasEncounterLocations() {
+        return false;
+    }
 
     boolean hasTimeBasedEncounters();
 

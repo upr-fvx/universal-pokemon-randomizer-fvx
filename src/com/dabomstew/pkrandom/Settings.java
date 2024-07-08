@@ -698,7 +698,7 @@ public class Settings {
         out.write(makeByteSelected(evosForceGrowth, evosNoConvergence));
 
         // 58-60 starter BST limits
-        byte highEndByte = (byte)(startersBSTMinimum >> 8 & 0x0F + startersBSTMaximum >> 4 & 0xF0);
+        byte highEndByte = (byte)(((startersBSTMinimum >> 8) & 0x0F) + ((startersBSTMaximum >> 4) & 0xF0));
         out.write(highEndByte);
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);

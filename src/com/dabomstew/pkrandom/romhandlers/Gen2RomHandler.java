@@ -786,14 +786,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void readFishingEncounters(List<EncounterArea> encounterAreas, boolean useTimeOfDay) {
-        // TODO: The Remoraid fishing group is not used in Crystal, nor the Remoraid swarm one;
-        //       they should thusly be skipped.
         int offset = romEntry.getIntValue("FishingWildsOffset");
         int rootOffset = offset;
         for (int k = 0; k < Gen2Constants.fishingAreaCount; k++) {
             EncounterArea area = new EncounterArea();
             area.setDisplayName("Fishing " + Gen2Constants.fishingAreaNames[k]);
-            area.setEncounterType(EncounterType.FISHING);
+            area.setEncounterType(romEntry.isCrystal() && Gen2Constants.crystalUnusedFishingAreas.contains(k)
+                    ? EncounterType.UNUSED : EncounterType.FISHING);
             for (int i = 0; i < Gen2Constants.pokesPerFishingArea; i++) {
                 offset++;
                 int pokeNum = rom[offset++] & 0xFF;

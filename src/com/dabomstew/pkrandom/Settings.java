@@ -52,7 +52,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 60;
+    public static final int LENGTH_OF_SETTINGS_DATA = 61;
 
     private CustomNamesSet customNames;
 
@@ -811,9 +811,9 @@ public class Settings {
         settings.setWildPokemonMod(restoreEnum(WildPokemonMod.class, data[15], 0, // UNCHANGED
                 1, // RANDOM
                 2, // AREA_MAPPING
+                5, //LOCATION_MAPPING
                 3, // GLOBAL_MAPPING
-                4, // FAMILY_MAPPING
-                5 //LOCATION_MAPPING
+                4 // FAMILY_MAPPING
         ));
         settings.setSimilarStrengthEncounters(restoreState(data[16], 1));
         settings.setCatchEmAllEncounters(restoreState(data[16], 2));
@@ -1000,15 +1000,7 @@ public class Settings {
         settings.setEliteFourUniquePokemonNumber(data[52] & 0x7);
         settings.setMinimumCatchRateLevel(((data[52] & 0x38) >> 3) + 1);
 
-        settings.setPokemonPalettesMod(restoreEnum(PokemonPalettesMod.class, data[51],
-                0, // UNCHANGED
-                1 // RANDOM
-        ));
-        settings.setPokemonPalettesFollowTypes(restoreState(data[51], 2));
-        settings.setPokemonPalettesFollowEvolutions(restoreState(data[51], 3));
-        settings.setPokemonPalettesShinyFromNormal(restoreState(data[51], 4));
-
-        settings.setStartersTypeMod(restoreEnum(StartersTypeMod.class, data[52], 0, //NONE
+        settings.setStartersTypeMod(restoreEnum(StartersTypeMod.class, data[53], 0, //NONE
                 1, //FIRE_WATER_GRASS
                 2, //TRIANGLE
                 3, //UNIQUE
@@ -1043,15 +1035,8 @@ public class Settings {
         settings.setEvosForceGrowth(restoreState(data[57], 0));
         settings.setEvosNoConvergence(restoreState(data[57], 1));
 
-        /*
-        byte highEndByte = (byte)(starterBSTMinimum >> 8 | 0x0F + starterBSTMaximum >> 4 | 0xF0);
-        out.write(highEndByte);
-        out.write((byte)starterBSTMinimum);
-        out.write((byte)starterBSTMaximum);
-         */
-
         settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
-        settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0xF0) << 8) + Byte.toUnsignedInt(data[60]));
+        settings.setStartersBSTMaximum(((Byte.toUnsignedInt(data[58]) & 0xF0) << 4) + Byte.toUnsignedInt(data[60]));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

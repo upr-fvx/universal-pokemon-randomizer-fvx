@@ -182,7 +182,7 @@ public class PresetLoadDialog extends JDialog {
             List<String> posVersions = new ArrayList<>();
             for (Version v : Version.ALL_VERSIONS) {
                 if (v.id == presetVN) {
-                    posVersions.add(v.name);
+                    posVersions.add(v.name + "(" + v.branchName + ")");
                 }
             }
             versionWanted = posVersions.isEmpty() ? "Unknown" : String.join(" OR ", posVersions);

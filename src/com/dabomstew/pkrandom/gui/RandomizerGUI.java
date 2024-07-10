@@ -430,7 +430,7 @@ public class RandomizerGUI {
 
             try {
 
-                URL url = new URL(SysConstants.API_URL);
+                URL url = new URL(SysConstants.RELEASES_API_URL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");
@@ -552,7 +552,7 @@ public class RandomizerGUI {
             public void mouseClicked(MouseEvent e) {
                 Desktop desktop = java.awt.Desktop.getDesktop();
                 try {
-                    desktop.browse(new URI(SysConstants.WEBSITE_URL));
+                    desktop.browse(new URI(SysConstants.RELEASES_URL));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

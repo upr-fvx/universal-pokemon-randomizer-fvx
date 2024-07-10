@@ -26,8 +26,6 @@ import com.dabomstew.pkrandom.SysConstants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -40,7 +38,7 @@ public class Launcher {
 
     public static void main(String[] args) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("java", "-Xmx4096M", "-jar", "./PokeRandoZX.jar", "please-use-the-launcher");
+            ProcessBuilder pb = new ProcessBuilder("java", "-Xmx4096M", "-jar", "./PokeRandoFVX.jar", "please-use-the-launcher");
             File log = new File(SysConstants.ROOT_PATH + "launcher-log.txt");
             if (!log.exists()) {
                 log.createNewFile();
@@ -93,13 +91,13 @@ public class Launcher {
                     String message = "The launcher encountered an error. Error message can be found in launcher-log.txt.";
                     if (logContentStr.contains("Invalid maximum heap size") && logContentStr.contains("exceeds the maximum representable size")) {
                         String extraMessage = "Most likely, the launcher failed because you have an incompatible version of Java.";
-                        JLabel label = new JLabel("<html><a href=\"https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/About-Java\">For more information about Java requirements, click here.</a>");
+                        JLabel label = new JLabel("<html><a href=\"https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/About-Java\">For more information about Java requirements, click here.</a>");
                         label.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
                                 Desktop desktop = java.awt.Desktop.getDesktop();
                                 try {
-                                    desktop.browse(new URI("https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/About-Java"));
+                                    desktop.browse(new URI("https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/About-Java"));
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }

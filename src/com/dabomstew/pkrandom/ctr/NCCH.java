@@ -299,7 +299,7 @@ public class NCCH {
 
         // Update the SMDH so that Citra displays the seed in the title
         smdh.setAllDescriptions(gameAcronym + " randomizer seed: " + seed);
-        smdh.setAllPublishers("Universal Pokemon Randomizer ZX");
+        smdh.setAllPublishers("Universal Pokemon Randomizer FVX");
 
         // Now, reconstruct the exefs based on our new version of .code and our new SMDH
         long newExefsOffset = header_and_exheader_size + logoLength + plainLength;

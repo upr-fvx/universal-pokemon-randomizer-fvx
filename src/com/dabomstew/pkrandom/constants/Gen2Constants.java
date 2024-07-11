@@ -58,6 +58,8 @@ public class Gen2Constants {
     public static final int fishingAreaCount = 12, pokesPerFishingArea = 11, fishingAreaEntryLength = 3,
             timeSpecificFishingAreaCount = 11, pokesPerTSFishingArea = 4;
 
+    public static final List<Integer> crystalUnusedFishingAreas = Collections.unmodifiableList(Arrays.asList(6, 11));
+
     public static final String[] fishingAreaNames = new String[]{"Shore", "Ocean", "Lake", "Pond",
             "Dratini 1 (Ice Path, Dragon's Den)", "Qwilfish Swarm (Route 32)", "Remoraid Swarm (Route 44)",
             "Gyarados (Lake of Rage, Fuchsia City)", "Dratini 2 (Route 45)", "Whirl Islands",

@@ -223,7 +223,7 @@ public class CliRandomizer {
     }
 
     private static void printUsage() {
-        System.err.println("Usage: java [-Xmx4096M] -jar PokeRandoZX.jar cli -s <path to settings file> " +
+        System.err.println("Usage: java [-Xmx4096M] -jar PokeRandoFVX.jar cli -s <path to settings file> " +
                 "-i <path to source ROM> -o <path for new ROM> [-d][-u <path to 3DS game update>][-l]");
         System.err.println("-d: Save 3DS game as directory (LayeredFS)");
     }

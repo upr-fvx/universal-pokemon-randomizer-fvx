@@ -30,17 +30,23 @@ public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the
     //  forking-and-then-merging that is bound to happen with an open-source project like this.
 
-    public static final int VERSION = 400; // Increment by 1 for new version. Updated for FVX 0.1.0
-    public static final String VERSION_STRING = "FVX 0.1.0";
     // LAST_VERSION is a bit superfluous, but refactoring VERSION/VERSION_STRING felt like a project for later
-    public static final Version LAST_VERSION = new Version(VERSION, VERSION_STRING);
+    public static final Version LAST_VERSION = new Version(400, "0.1.0", "FVX");
+    public static final int VERSION = LAST_VERSION.id; // Increment by 1 for new version. Updated for FVX 0.1.0
+    public static final String VERSION_STRING = LAST_VERSION.name;
 
     public final int id;
     public final String name;
+    public final String branchName;
 
     private Version(int id, String name) {
+        this(id, name, "");
+    }
+
+    private Version(int id, String name, String branchName) {
         this.id = id;
         this.name = name;
+        this.branchName = branchName;
     }
 
     public static final Version v1_0_1a = new Version(100, "1.0.1a");
@@ -71,22 +77,22 @@ public class Version {
     public static final Version v4_6_0 = new Version(321, "4.6.0");
 
     // Due to UPR FVX's origin as a merge of two branches, these share IDs with V branch Versions, and vice versa.
-    public static final Version CTV_4_7_0 = new Version(322, "4.7.0 (closer-to-vanilla)");
-    public static final Version CTV_4_7_1 = new Version(323, "4.7.1 (closer-to-vanilla)");
-    public static final Version CTV_4_7_2 = new Version(324, "4.7.2 (closer-to-vanilla)");
-    public static final Version CTV_4_8_0 = new Version(325, "4.8.0 (closer-to-vanilla)");
+    public static final Version CTV_4_7_0 = new Version(322, "4.7.0", "closer-to-vanilla");
+    public static final Version CTV_4_7_1 = new Version(323, "4.7.1", "closer-to-vanilla");
+    public static final Version CTV_4_7_2 = new Version(324, "4.7.2", "closer-to-vanilla");
+    public static final Version CTV_4_8_0 = new Version(325, "4.8.0", "closer-to-vanilla");
 
-    public static final Version Vb_0_9_0 = new Version(322, "4.6.0 + V0.9.0 (V branch)");
-    public static final Version Vb_0_9_1 = new Version(323, "4.6.0 + V0.9.1 (V branch)");
-    public static final Version Vb_0_9_2 = new Version(324, "4.6.0 + V0.9.2 (V branch)");
-    public static final Version Vb_0_9_3 = new Version(325, "4.6.0 + V0.9.3 (V branch)");
-    public static final Version Vb_0_10_0 = new Version(326, "4.6.0 + V0.10.0 (V branch)");
-    public static final Version Vb_0_10_1 = new Version(327, "4.6.0 + V0.10.1 (V branch)");
-    public static final Version Vb_0_10_2 = new Version(328, "4.6.0 + V0.10.2 (V branch)");
-    public static final Version Vb_0_10_3 = new Version(329, "4.6.0 + V0.10.3 (V branch)");
-    public static final Version Vb_0_11_0 = new Version(330, "4.6.0 + V0.11.0 (V branch)");
-    public static final Version Vb_0_12_0 = new Version(331, "4.6.0 + V0.12.0 (V branch)");
-    public static final Version Vb_0_12_0a = new Version(332, "4.6.0 + V0.12.0a (V branch)");
+    public static final Version Vb_0_9_0 = new Version(322, "4.6.0 + V0.9.0", "V branch");
+    public static final Version Vb_0_9_1 = new Version(323, "4.6.0 + V0.9.1", "V branch");
+    public static final Version Vb_0_9_2 = new Version(324, "4.6.0 + V0.9.2", "V branch");
+    public static final Version Vb_0_9_3 = new Version(325, "4.6.0 + V0.9.3", "V branch");
+    public static final Version Vb_0_10_0 = new Version(326, "4.6.0 + V0.10.0", "V branch");
+    public static final Version Vb_0_10_1 = new Version(327, "4.6.0 + V0.10.1", "V branch");
+    public static final Version Vb_0_10_2 = new Version(328, "4.6.0 + V0.10.2", "V branch");
+    public static final Version Vb_0_10_3 = new Version(329, "4.6.0 + V0.10.3", "V branch");
+    public static final Version Vb_0_11_0 = new Version(330, "4.6.0 + V0.11.0", "V branch");
+    public static final Version Vb_0_12_0 = new Version(331, "4.6.0 + V0.12.0", "V branch");
+    public static final Version Vb_0_12_0a = new Version(332, "4.6.0 + V0.12.0a", "V branch");
 
     public static final Version FVX_0_1_0 = LAST_VERSION;
 

@@ -56,7 +56,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * The main GUI for the Universal Pokemon Randomizer ZX, containing the various options available and such.
+ * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
  */
 public class RandomizerGUI {
     private JTabbedPane tabbedPane1;
@@ -430,7 +430,7 @@ public class RandomizerGUI {
 
             try {
 
-                URL url = new URL(SysConstants.API_URL_CTV);
+                URL url = new URL(SysConstants.RELEASES_API_URL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");
@@ -552,7 +552,7 @@ public class RandomizerGUI {
             public void mouseClicked(MouseEvent e) {
                 Desktop desktop = java.awt.Desktop.getDesktop();
                 try {
-                    desktop.browse(new URI(SysConstants.WEBSITE_URL_CTV));
+                    desktop.browse(new URI(SysConstants.RELEASES_URL));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -563,7 +563,7 @@ public class RandomizerGUI {
             public void mouseClicked(MouseEvent e) {
                 Desktop desktop = java.awt.Desktop.getDesktop();
                 try {
-                    desktop.browse(new URI(SysConstants.WIKI_URL_CTV));
+                    desktop.browse(new URI(SysConstants.WIKI_URL));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -682,13 +682,13 @@ public class RandomizerGUI {
         }
         if (initialPopup) {
             String message = String.format(bundle.getString("GUI.firstStart"),Version.VERSION_STRING);
-            JLabel label = new JLabel("<html><a href=\"https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Important-Information\">Checking out the \"Important Information\" page on the original UPR-ZX Wiki is highly recommended.</a>");
+            JLabel label = new JLabel("<html><a href=\"" + SysConstants.WIKI_IMPORTANT_INFO_URL + "\">Checking out the \"Important Information\" page on the Wiki is highly recommended.</a>");
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     Desktop desktop = java.awt.Desktop.getDesktop();
                     try {
-                        desktop.browse(new URI("https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Important-Information"));
+                        desktop.browse(new URI(SysConstants.WIKI_IMPORTANT_INFO_URL));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -1313,19 +1313,19 @@ public class RandomizerGUI {
         SaveType saveType = SaveType.FILE;
         if (romHandler.hasGameUpdateLoaded()) {
             String text = bundle.getString("GUI.savingWithGameUpdate");
-            String url = "https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Randomizing-the-3DS-games#managing-game-updates";
+            String url = SysConstants.WIKI_3DS_INFO_URL + "#managing-game-updates";
             showMessageDialogWithLink(text, url);
             saveType = SaveType.DIRECTORY;
         } else if (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7) {
             Object[] options3DS = {"CXI", "LayeredFS"};
             String question = "Would you like to output your 3DS game as a CXI file or as a LayeredFS directory?";
-            JLabel label = new JLabel("<html><a href=\"https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Randomizing-the-3DS-games#changes-to-saving-a-rom-when-working-with-3ds-games\">For more information, click here.</a>");
+            JLabel label = new JLabel("<html><a href=\"" +  SysConstants.WIKI_3DS_INFO_URL + "#changes-to-saving-a-rom-when-working-with-3ds-games\">For more information, click here.</a>");
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     Desktop desktop = java.awt.Desktop.getDesktop();
                     try {
-                        desktop.browse(new URI("https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Randomizing-the-3DS-games#changes-to-saving-a-rom-when-working-with-3ds-games"));
+                        desktop.browse(new URI(SysConstants.WIKI_3DS_INFO_URL  + "#changes-to-saving-a-rom-when-working-with-3ds-games"));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -1386,7 +1386,7 @@ public class RandomizerGUI {
                 removeGameUpdateMenuItem.setVisible(true);
                 setRomNameLabel();
                 String text = String.format(bundle.getString("GUI.gameUpdateApplied"), romHandler.getROMName());
-                String url = "https://github.com/Ajarmar/universal-pokemon-randomizer-zx/wiki/Randomizing-the-3DS-games#3ds-game-updates";
+                String url = SysConstants.WIKI_3DS_INFO_URL + "#3ds-game-updates";
                 showMessageDialogWithLink(text, url);
             } else {
                 // Error: update is not for the correct game

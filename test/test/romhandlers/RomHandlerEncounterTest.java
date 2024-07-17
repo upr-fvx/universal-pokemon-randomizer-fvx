@@ -424,7 +424,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -439,7 +439,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -454,7 +454,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -470,7 +470,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -485,7 +485,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -500,35 +500,24 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1ConsequentReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, false);
     }
 
-    private void area1to1ConsequentReplacementCheck(List<EncounterArea> before, List<EncounterArea> after) {
+    /**
+     * Given a list of EncounterAreas, checks that each one has an internally-correct 1-to-1 replacement of Pokemon.
+     * @param before The list of EncounterAreas, in the pre-randomization state.
+     * @param after The same list of EncounterAreas after randomization.
+     * @param checkUnique Whether to also check that no Pokemon replaces two or more Pokemon in one area.
+     */
+    private void checkEachAreaIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
         Iterator<EncounterArea> beforeIterator = before.iterator();
         Iterator<EncounterArea> afterIterator = after.iterator();
         while (beforeIterator.hasNext()) {
             Map<Pokemon, Pokemon> map = new HashMap<>();
             EncounterArea beforeArea = beforeIterator.next();
             EncounterArea afterArea = afterIterator.next();
-            if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                        + afterArea.getDisplayName());
-            }
 
-            System.out.println(beforeArea.getDisplayName() + ":");
-            System.out.println(beforeArea);
-            System.out.println(afterArea);
-            Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-            Iterator<Encounter> afterEncIterator = afterArea.iterator();
-            while (beforeEncIterator.hasNext()) {
-                Pokemon beforePk = beforeEncIterator.next().getPokemon();
-                Pokemon afterPk = afterEncIterator.next().getPokemon();
-
-                if (!map.containsKey(beforePk)) {
-                    map.put(beforePk, afterPk);
-                }
-                assertEquals(map.get(beforePk), afterPk);
-            }
+            checkAreaIsReplaced1To1(beforeArea, afterArea, null, checkUnique ? new PokemonSet() : null);
         }
     }
 
@@ -544,7 +533,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -559,7 +548,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -575,7 +564,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -592,7 +581,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -608,7 +597,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -623,37 +612,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        area1to1UniqueReplacementCheck(before, after);
-    }
-
-    private void area1to1UniqueReplacementCheck(List<EncounterArea> before, List<EncounterArea> after) {
-        Iterator<EncounterArea> beforeIterator = before.iterator();
-        Iterator<EncounterArea> afterIterator = after.iterator();
-        while (beforeIterator.hasNext()) {
-            Map<Pokemon, Pokemon> map = new HashMap<>();
-
-            EncounterArea beforeArea = beforeIterator.next();
-            EncounterArea afterArea = afterIterator.next();
-            if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                        + afterArea.getDisplayName());
-            }
-
-            System.out.println(beforeArea.getDisplayName() + ":");
-            System.out.println(beforeArea);
-            System.out.println(afterArea);
-            Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-            Iterator<Encounter> afterEncIterator = afterArea.iterator();
-            while (beforeEncIterator.hasNext()) {
-                Pokemon beforePk = beforeEncIterator.next().getPokemon();
-                Pokemon afterPk = afterEncIterator.next().getPokemon();
-
-                if (!map.containsKey(afterPk)) {
-                    map.put(afterPk, beforePk);
-                }
-                assertEquals(map.get(afterPk), beforePk);
-            }
-        }
+        checkEachAreaIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1044,7 +1003,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        locations1to1ConsequentReplacementCheck(before, after);
+        checkIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1059,7 +1018,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        locations1to1ConsequentReplacementCheck(before, after);
+        checkIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1074,7 +1033,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        locations1to1ConsequentReplacementCheck(before, after);
+        checkIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1089,7 +1048,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        locations1to1ConsequentReplacementCheck(before, after);
+        checkIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1104,47 +1063,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        locations1to1ConsequentReplacementCheck(before, after);
-    }
-
-    private void locations1to1ConsequentReplacementCheck(List<EncounterArea> before, List<EncounterArea> after) {
-
-        Map<String, List<EncounterArea>> groupedBefore = groupEncountersByLocation(before);
-        Map<String, List<EncounterArea>> groupedAfter = groupEncountersByLocation(after);
-
-        for (String tag : groupedBefore.keySet()) {
-            Map<Pokemon, Pokemon> map = new HashMap<>();
-
-            System.out.println("\nLocation: " + tag);
-            Iterator<EncounterArea> beforeIterator = groupedBefore.get(tag).iterator();
-            Iterator<EncounterArea> afterIterator = groupedAfter.get(tag).iterator();
-
-            while (beforeIterator.hasNext()) {
-                EncounterArea beforeArea = beforeIterator.next();
-                EncounterArea afterArea = afterIterator.next();
-                if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                    throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                            + afterArea.getDisplayName());
-                }
-
-                System.out.println(beforeArea.getDisplayName() + ":");
-                System.out.println(beforeArea);
-                System.out.println(afterArea);
-                Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-                Iterator<Encounter> afterEncIterator = afterArea.iterator();
-                while (beforeEncIterator.hasNext()) {
-                    Encounter beforeEnc = beforeEncIterator.next();
-                    Pokemon beforePk = romHandler.getAltFormeOfPokemon(beforeEnc.getPokemon(), beforeEnc.getFormeNumber());
-                    Encounter afterEnc = afterEncIterator.next();
-                    Pokemon afterPk = romHandler.getAltFormeOfPokemon(afterEnc.getPokemon(), afterEnc.getFormeNumber());
-
-                    if (!map.containsKey(beforePk)) {
-                        map.put(beforePk, afterPk);
-                    }
-                    assertEquals(map.get(beforePk), afterPk);
-                }
-            }
-        }
+        checkIsReplaced1To1(before, after, false);
     }
 
     private Map<String, List<EncounterArea>> groupEncountersByLocation(List<EncounterArea> ungrouped) {
@@ -1250,32 +1169,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             Map<Pokemon, Pokemon> map = new HashMap<>();
 
             System.out.println("\nLocation: " + tag);
-            Iterator<EncounterArea> beforeIterator = groupedBefore.get(tag).iterator();
-            Iterator<EncounterArea> afterIterator = groupedAfter.get(tag).iterator();
-
-            while (beforeIterator.hasNext()) {
-                EncounterArea beforeArea = beforeIterator.next();
-                EncounterArea afterArea = afterIterator.next();
-                if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                    throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                            + afterArea.getDisplayName());
-                }
-
-                System.out.println(beforeArea.getDisplayName() + ":");
-                System.out.println(beforeArea);
-                System.out.println(afterArea);
-                Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-                Iterator<Encounter> afterEncIterator = afterArea.iterator();
-                while (beforeEncIterator.hasNext()) {
-                    Pokemon beforePk = beforeEncIterator.next().getPokemon();
-                    Pokemon afterPk = afterEncIterator.next().getPokemon();
-
-                    if (!map.containsKey(afterPk)) {
-                        map.put(afterPk, beforePk);
-                    }
-                    assertEquals(map.get(afterPk), beforePk);
-                }
-            }
+            checkIsReplaced1To1(groupedBefore.get(tag), groupedAfter.get(tag), true);
         }
     }
 
@@ -1456,35 +1350,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
-        Map<Pokemon, Pokemon> map = new HashMap<>();
 
-        Iterator<EncounterArea> beforeIterator = before.iterator();
-        Iterator<EncounterArea> afterIterator = after.iterator();
-        while (beforeIterator.hasNext()) {
-            EncounterArea beforeArea = beforeIterator.next();
-            EncounterArea afterArea = afterIterator.next();
-            if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                        + afterArea.getDisplayName());
-            }
-
-            System.out.println(beforeArea.getDisplayName() + ":");
-            System.out.println(beforeArea);
-            System.out.println(afterArea);
-            Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-            Iterator<Encounter> afterEncIterator = afterArea.iterator();
-            while (beforeEncIterator.hasNext()) {
-                Pokemon beforePk = beforeEncIterator.next().getPokemon();
-                Pokemon afterPk = afterEncIterator.next().getPokemon();
-
-                if (!map.containsKey(beforePk)) {
-                    map.put(beforePk, afterPk);
-                }
-                assertEquals(map.get(beforePk), afterPk);
-            }
-        }
-
-        System.out.println(pokemapToString(map));
+        checkIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1498,38 +1365,81 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
-        Map<Pokemon, Pokemon> map = new HashMap<>();
 
+        checkIsReplaced1To1(before, after, true);
+    }
+
+    /**
+     * Given a set of EncounterAreas, ensures that for each Pokemon in the area before randomization,
+     * exactly one replacement is present after randomization.
+     * @param before The list of EncounterAreas in the state before randomization.
+     * @param after The same list of EncounterAreas, after randomization.
+     * @param checkUnique Whether to also check that no Pokemon is used as a replacement for more than one Pokemon.
+     */
+    private static void checkIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+        Map<Pokemon, Pokemon> map = new HashMap<>();
         Iterator<EncounterArea> beforeIterator = before.iterator();
         Iterator<EncounterArea> afterIterator = after.iterator();
+        PokemonSet usedPokemon = checkUnique ? new PokemonSet() : null;
         while (beforeIterator.hasNext()) {
             EncounterArea beforeArea = beforeIterator.next();
             EncounterArea afterArea = afterIterator.next();
-            if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
-                throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
-                        + afterArea.getDisplayName());
-            }
 
-            System.out.println(beforeArea.getDisplayName() + ":");
-            System.out.println(beforeArea);
-            System.out.println(afterArea);
-            Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
-            Iterator<Encounter> afterEncIterator = afterArea.iterator();
-            while (beforeEncIterator.hasNext()) {
-                Pokemon beforePk = beforeEncIterator.next().getPokemon();
-                Pokemon afterPk = afterEncIterator.next().getPokemon();
-
-                if (!map.containsKey(afterPk)) {
-                    map.put(afterPk, beforePk);
-                }
-                assertEquals(map.get(afterPk), beforePk);
-            }
+            checkAreaIsReplaced1To1(beforeArea, afterArea, map, usedPokemon);
         }
 
         System.out.println(pokemapToString(map));
     }
 
-    private String pokemapToString(Map<Pokemon, Pokemon> map) {
+    /**
+     * Checks that for each Pokemon in beforeArea, it is replaced by the Pokemon listed in the map if there is one;
+     * if not, adds its replacement to the map and ensures that any future replacements use the same Pokemon.
+     * @param beforeArea The area, in its state before randomization. If the area is marked as Unused (either by
+     *                   EncounterType, or Location tag), the method will return without performing any checks.
+     * @param afterArea The same area, after randomization.
+     * @param map The map of Pokemon to their replacements. WARNING: MODIFIED. If null, a new map will be created.
+     * @param usedPokemon A PokemonSet of Pokemon already used as replacements. If null, Pokemon will not be checked
+     *                    for uniqueness.
+     * @throws RuntimeException if the areas do not have the same display name.
+     */
+    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Pokemon, Pokemon> map, PokemonSet usedPokemon) {
+        if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
+            throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
+                    + afterArea.getDisplayName());
+        }
+
+        System.out.println(beforeArea.getDisplayName() + ":");
+        if(beforeArea.getEncounterType() == EncounterType.UNUSED || "Unused".equals(beforeArea.getLocationTag())) {
+            System.out.println("Unused; skipping.");
+            return;
+        }
+        System.out.println(beforeArea);
+        System.out.println(afterArea);
+
+        if (map == null) {
+            map = new HashMap<>();
+        }
+
+        Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
+        Iterator<Encounter> afterEncIterator = afterArea.iterator();
+        while (beforeEncIterator.hasNext()) {
+            Pokemon beforePk = beforeEncIterator.next().getPokemon();
+            Pokemon afterPk = afterEncIterator.next().getPokemon();
+
+            if (!map.containsKey(beforePk)) {
+                map.put(beforePk, afterPk);
+                if(usedPokemon != null) {
+                    System.out.println("Adding map entry: " + beforePk.getName() + beforePk.getFormeSuffix() +
+                            " to " + afterPk.getName() + afterPk.getFormeSuffix());
+                    assertFalse(usedPokemon.contains(afterPk));
+                    usedPokemon.add(afterPk);
+                }
+            }
+            assertEquals(map.get(beforePk), afterPk);
+        }
+    }
+
+    private static String pokemapToString(Map<Pokemon, Pokemon> map) {
         StringBuilder sb = new StringBuilder("{\n");
         for (Map.Entry<Pokemon, Pokemon> entry : map.entrySet()) {
             sb.append(entry.getKey().getName());
@@ -1710,7 +1620,24 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
     }
 
-    //TODO: global family-to-family works
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void globalFamilyToFamilyWorks(String romName) {
+        loadROM(romName);
+
+        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        Map<Integer, Type> typeThemedAreas = new HashMap<>();
+        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+
+        Settings settings = new Settings();
+        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        //TODO: custom test for family themes
+        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+    }
 
     @ParameterizedTest
     @MethodSource("getRomNames")

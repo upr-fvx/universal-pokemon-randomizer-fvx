@@ -1622,22 +1622,41 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void globalFamilyToFamilyWorks(String romName) {
+    public void globalFamilyToFamilyGivesConsequentReplacements(String romName) {
         loadROM(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
-        Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        List<EncounterArea> before = romHandler.getEncounters(true);
 
         Settings settings = new Settings();
         settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
-        settings.setKeepWildTypeThemes(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        //TODO: custom test for family themes
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+
+        checkIsReplaced1To1(before, after, false);
     }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void globalFamilyToFamilyGivesUniqueReplacements(String romName) {
+        loadROM(romName);
+
+        List<EncounterArea> before = romHandler.getEncounters(true);
+
+        Settings settings = new Settings();
+        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+
+        checkIsReplaced1To1(before, after, true);
+    }
+
+    //TODO: test that family 1-to-1 actually preserves families
 
     @ParameterizedTest
     @MethodSource("getRomNames")

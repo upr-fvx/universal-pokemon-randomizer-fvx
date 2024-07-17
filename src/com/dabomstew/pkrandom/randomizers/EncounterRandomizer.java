@@ -713,27 +713,50 @@ public class EncounterRandomizer extends Randomizer {
          * information in areaInformationMap.
          */
         private void spreadThemesThroughFamilies(PokemonSet families) {
+            PokemonSet remainingFamilies = new PokemonSet(families);
             if(areaInformationMap == null) {
                 throw new IllegalStateException("Cannot spread themes before determining themes!");
             }
             for(Pokemon poke : families) {
-                PokemonAreaInformation info = areaInformationMap.get(poke);
-                if(info == null) {
-                    throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
+                if(!remainingFamilies.contains(poke)) {
+                    continue;
+                }
+                PokemonSet family = remainingFamilies.filterFamily(poke, true);
+                remainingFamilies.removeAll(family);
+
+                //this algorithm weights any area which contains (for example) two Pokemon in the family twice as strongly
+                //this is probably acceptable
+                Map<Type, Integer> familyThemeInfo = new EnumMap<>(Type.class);
+                for(Pokemon relative : family) {
+
+                    //get this Pokemon's possible themes
+                    PokemonAreaInformation info = areaInformationMap.get(relative);
+                    if(info == null) {
+                        throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
+                    }
+                    Map<Type, Integer> themeInfo = info.getAllPossibleThemes();
+
+                    //add them to the total theme info
+                    for(Map.Entry<Type, Integer> possibleTheme : themeInfo.entrySet()) {
+                        Type theme = possibleTheme.getKey();
+                        int count = possibleTheme.getValue();
+
+                        if(familyThemeInfo.containsKey(theme)) {
+                            int existingCount = familyThemeInfo.get(theme);
+                            count += existingCount;
+                        }
+                        familyThemeInfo.put(theme, count);
+                    }
                 }
 
-                if(info.getTheme(false) != null) {
-                    Set<Type> themes = info.getAllPossibleThemes();
-                    PokemonSet family = families.filterFamily(poke, true);
-                    for(Pokemon relative : family) {
-                        PokemonAreaInformation relativeInfo = areaInformationMap.get(relative);
-                        if(relativeInfo == null) {
-                            throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
-                        }
-                        for(Type theme : themes) {
-                            relativeInfo.addTypeTheme(theme);
-                        }
+                //set our determined theme info to the whole family
+                for(Pokemon relative : family) {
+                    PokemonAreaInformation info = areaInformationMap.get(relative);
+                    if(info == null) {
+                        //shouldn't be possible
+                        throw new RuntimeException("Pokemon's info became null between checking and setting themes??");
                     }
+                    info.setPossibleThemes(familyThemeInfo);
                 }
 
             }
@@ -976,18 +999,11 @@ public class EncounterRandomizer extends Randomizer {
          * @param addAllPokemonTo A PokemonSet to add every Pokemon found to. Can be null.
          */
         private void setupAreaInfoMap(List<EncounterArea> areas, PokemonSet addAllPokemonTo) {
-            //TODO: flatten to encounter types in maps (for improved theme detection)
-            //(Need that information to be consistently populated first.)
 
             areaInformationMap = new HashMap<>();
             for(EncounterArea area : areas) {
                 Type areaTheme = pickAreaType(area);
-
-                if(area.getPokemonInArea().size() <= 1) {
-                    //a temporary measure to stop swarms from polluting the type pool.
-                    //TODO: remove this if block after adding flattening
-                    areaTheme = null;
-                }
+                int areaSize = area.getPokemonInArea().size();
 
                 for(Pokemon pokemon : area.getPokemonInArea()) {
                     PokemonAreaInformation info = areaInformationMap.get(pokemon);
@@ -1000,7 +1016,7 @@ public class EncounterRandomizer extends Randomizer {
                         }
                     }
 
-                    info.addTypeTheme(areaTheme);
+                    info.addTypeTheme(areaTheme, areaSize);
                     info.banAll(area.getBannedPokemon());
                 }
             }
@@ -1011,7 +1027,7 @@ public class EncounterRandomizer extends Randomizer {
          * in order to allow us to use this information later.
          */
         private class PokemonAreaInformation {
-            private Set<Type> possibleThemes;
+            private Map<Type, Integer> possibleThemes;
             private PokemonSet bannedForReplacement;
             private Pokemon pokemon;
 
@@ -1020,7 +1036,7 @@ public class EncounterRandomizer extends Randomizer {
              * @param pk The Pokemon this RandomizationInformation is about.
              */
             PokemonAreaInformation(Pokemon pk) {
-                possibleThemes = EnumSet.noneOf(Type.class);
+                possibleThemes = new EnumMap<>(Type.class);
                 bannedForReplacement = new PokemonSet();
                 pokemon = pk;
             }
@@ -1042,19 +1058,29 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             /**
-             * Adds the given type to the list of possible type themes for this Pokemon's replacement.
-             * If the given type is null, has no effect.
+             * Adds the given type and count of Pokemon to the list of existing themes for this Pokemon.
+             * If theme is null, has no effect.
              * @param theme The type to add.
+             * @throws IllegalArgumentException if count is less than 1.
              */
-            public void addTypeTheme(Type theme) {
+            public void addTypeTheme(Type theme, int count) {
+                if (count < 1) {
+                    throw new IllegalArgumentException("Number of Pokemon in theme cannot be less than 1!");
+                }
                 if(theme != null) {
-                    possibleThemes.add(theme);
+                    if(possibleThemes.containsKey(theme)) {
+                        int existingCount = possibleThemes.get(theme);
+                        count += existingCount;
+                    }
+                    possibleThemes.put(theme, count);
                 }
             }
 
             /**
-             * Gets the type of this Pokemon's area theming.
-             * If there are two or more themes, it will always default to the original primary type.
+             * Gets the type of this Pokemon's area theming. <br>
+             * If there are two or more themes, returns the one with the highest count of Pokemon. If tied,
+             * will choose the Pokemon's original primary type. If neither theme is the original primary,
+             * chooses one arbitrarily.<br>
              * If there are no themes, it will default to the original primary only if defaultToPrimary is true;
              * otherwise, it will default to null.
              * @param defaultToPrimary Whether the type should default to the Pokemon's primary type
@@ -1062,17 +1088,33 @@ public class EncounterRandomizer extends Randomizer {
              * @return The type that should be used, or null for any type.
              */
             Type getTheme(boolean defaultToPrimary) {
-                int themeCount = possibleThemes.size();
-                if(themeCount == 0) {
+                if(possibleThemes.isEmpty()) {
                     if(defaultToPrimary) {
                         return pokemon.getPrimaryType(true);
                     } else {
                         return null;
                     }
-                } else if(themeCount == 1) {
-                    return possibleThemes.iterator().next();
                 } else {
-                    return pokemon.getPrimaryType(true);
+                    Type bestTheme = null;
+                    int bestThemeCount = 0;
+                    for(Map.Entry<Type, Integer> possibleTheme : possibleThemes.entrySet()) {
+                        int possibleThemeCount = possibleTheme.getValue();
+                        if(possibleThemeCount > bestThemeCount) {
+                            bestThemeCount = possibleThemeCount;
+                            bestTheme = possibleTheme.getKey();
+                        } else if(possibleThemeCount == bestThemeCount) {
+
+                            //tie - default to primary if present
+                            Type primary = pokemon.getPrimaryType(true);
+                            if(primary == possibleTheme.getKey()) {
+                                bestTheme = primary;
+                            }
+                            //if bestTheme is already primary, then no change is needed;
+                            //if neither is primary, then we have no means of choosing & thus leave it as is.
+                            //(The latter can possibly happen with family-to-family.)
+                        }
+                    }
+                    return bestTheme;
                 }
             }
 
@@ -1080,8 +1122,17 @@ public class EncounterRandomizer extends Randomizer {
              * Returns the set of all desired themes for this Pokemon.
              * @return A new Set containing all the possible themes.
              */
-            Set<Type> getAllPossibleThemes() {
-                return EnumSet.copyOf(possibleThemes);
+            Map<Type, Integer> getAllPossibleThemes() {
+                return new EnumMap<>(possibleThemes);
+            }
+
+            /**
+             * Sets the possible themes to match the data given.
+             * @param replacementThemes A map of Types to weights of those types. (Normally, the highest weight will
+             *                          be the type used.)
+             */
+            void setPossibleThemes(Map<Type, Integer> replacementThemes) {
+                possibleThemes = new EnumMap<>(replacementThemes);
             }
 
             /**

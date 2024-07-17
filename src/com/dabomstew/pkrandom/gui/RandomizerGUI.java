@@ -2764,7 +2764,7 @@ public class RandomizerGUI {
             //Disable it instead
             tabbedPane1.setEnabledAt(7, typeSupport);
             teUnchangedRadioButton.setEnabled(typeSupport);
-            teUnchangedRadioButton.setSelected(typeSupport);
+            teUnchangedRadioButton.setSelected(true);
             teRandomRadioButton.setEnabled(typeSupport);
             teRandomBalancedRadioButton.setEnabled(typeSupport);
             teKeepTypeIdentitiesRadioButton.setEnabled(typeSupport);
@@ -2781,7 +2781,7 @@ public class RandomizerGUI {
             ppalPartiallyImplementedLabel.setVisible(ppalPartialSupport);
             ppalUnchangedRadioButton.setVisible(ppalSupport);
             ppalUnchangedRadioButton.setEnabled(ppalSupport);
-            ppalUnchangedRadioButton.setSelected(ppalSupport);
+            ppalUnchangedRadioButton.setSelected(true);
             ppalRandomRadioButton.setVisible(ppalSupport);
             ppalRandomRadioButton.setEnabled(ppalSupport);
             ppalFollowTypesCheckBox.setVisible(ppalSupport);
@@ -2795,7 +2795,7 @@ public class RandomizerGUI {
             cpgNotExistLabel.setVisible(!cpgSupport);
             cpgUnchangedRadioButton.setVisible(cpgSupport);
             cpgUnchangedRadioButton.setEnabled(cpgSupport);
-            cpgUnchangedRadioButton.setSelected(ppalSupport);
+            cpgUnchangedRadioButton.setSelected(true);
             cpgCustomRadioButton.setVisible(cpgSupport);
             cpgCustomRadioButton.setEnabled(cpgSupport);
             cpgComboBox.setVisible(cpgSupport);
@@ -2815,6 +2815,10 @@ public class RandomizerGUI {
             cpgReplaceRadioButton1.setSelected(cpgReplaceChoiceSupport);
             cpgReplaceRadioButton2.setVisible(cpgReplaceChoiceSupport);
             cpgReplaceRadioButton2.setEnabled(false);
+
+            if (!(ppalSupport || cpgSupport)) {
+                tabbedPane1.setEnabledAt(8, false);
+            }
 
             // Misc. Tweaks
             int mtsAvailable = romHandler.miscTweaksAvailable();

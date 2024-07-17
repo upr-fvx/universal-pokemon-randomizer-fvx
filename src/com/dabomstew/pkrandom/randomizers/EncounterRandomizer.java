@@ -677,15 +677,16 @@ public class EncounterRandomizer extends Randomizer {
         public void gameFamilyToFamilyEncounters(List<EncounterArea> encounterAreas) {
             refillRemainingPokemon();
             Map<Pokemon, Pokemon> translateMap = new HashMap<>();
+            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
 
             PokemonSet pokemonToRandomize = new PokemonSet();
-            setupAreaInfoMap(encounterAreas, pokemonToRandomize);
+            setupAreaInfoMap(prepped, pokemonToRandomize);
 
             spreadThemesThroughFamilies(pokemonToRandomize);
 
             //assumes that the longest evo line to randomize is 3 (or shorter)
             //this seems a safe assumption given no 4-length evo line exists in Pokemon
-            //(Anyway, it would still include it.)
+            //(Anyway, it would still include it; just wouldn't isolate it.)
 
             //starts with rarest evo lines, moving to more common.
             //(If this wasn't done, could end up with a 3-length with no replacement.)
@@ -699,7 +700,7 @@ public class EncounterRandomizer extends Randomizer {
             translateMap.putAll(pickReplacementFamiliesOfLength(1, false, pokemonToRandomize));
 
 
-            applyGlobalMap(encounterAreas, translateMap);
+            applyGlobalMap(prepped, translateMap);
         }
 
         /**
@@ -993,13 +994,14 @@ public class EncounterRandomizer extends Randomizer {
                     if(info == null) {
                         info = new PokemonAreaInformation(pokemon);
                         areaInformationMap.put(pokemon, info);
+
+                        if(addAllPokemonTo != null) {
+                            addAllPokemonTo.add(pokemon);
+                        }
                     }
+
                     info.addTypeTheme(areaTheme);
                     info.banAll(area.getBannedPokemon());
-
-                    if(addAllPokemonTo != null) {
-                        addAllPokemonTo.add(pokemon);
-                    }
                 }
             }
         }

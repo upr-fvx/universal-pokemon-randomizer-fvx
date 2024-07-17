@@ -1629,6 +1629,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         Settings settings = new Settings();
         settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1647,6 +1648,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         Settings settings = new Settings();
         settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 

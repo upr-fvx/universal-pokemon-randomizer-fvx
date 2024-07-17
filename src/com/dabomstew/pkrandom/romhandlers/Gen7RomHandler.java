@@ -3595,7 +3595,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         int ability = this.getAbilityForTrainerPokemon(tp);
         if (ability == Abilities.levitate) {
-            items.remove(Items.shucaBerry);
+            // we have to cast when removing, otherwise it defaults to removing by index
+            items.remove((Integer) Items.shucaBerry);
         } else if (byType.get(Type.GROUND) == Effectiveness.DOUBLE || byType.get(Type.GROUND) == Effectiveness.QUADRUPLE) {
             items.add(Items.airBalloon);
         }

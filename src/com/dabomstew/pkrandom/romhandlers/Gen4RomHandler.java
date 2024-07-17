@@ -5636,7 +5636,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		int ability = this.getAbilityForTrainerPokemon(tp);
 		if (ability == Abilities.levitate) {
-			items.remove(Items.shucaBerry);
+			// we have to cast when removing, otherwise it defaults to removing by index
+			items.remove((Integer) Items.shucaBerry);
 		}
 
 		if (!consumableOnly) {

@@ -241,7 +241,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private int generationOf(Pokemon pk) {
         if (pk.getFormeSuffix().equals("-Alolan") || pk.getFormeSuffix().equals("-Ash") ||
-                pk.getFormeSuffix().equals("-10%") || pk.getFormeSuffix().equals("-Complete")) {
+                pk.getFormeSuffix().equals("-10p") || pk.getFormeSuffix().equals("-Complete")) {
             return 7;
         }
         if (pk.getFormeSuffix().startsWith("-Mega") || pk.getFormeSuffix().equals("-Primal")) {

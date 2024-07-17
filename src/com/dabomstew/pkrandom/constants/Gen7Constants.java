@@ -689,7 +689,7 @@ public class Gen7Constants {
         map.put(Species.greninja, greninjaMap);
 
         Map<Integer,String> zygardeMap = new HashMap<>();
-        zygardeMap.put(1,"-10%");
+        zygardeMap.put(1,"-10p"); // using '%' causes issues with Java's string formatting, so avoid it/use 'p' instead
         zygardeMap.put(4,"-Complete");
         map.put(Species.zygarde, zygardeMap);
 

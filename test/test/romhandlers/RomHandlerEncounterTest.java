@@ -1659,6 +1659,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     //TODO: test that family 1-to-1 actually preserves families
+    // also, that it does not duplicate families
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -1688,6 +1689,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        List<EncounterArea> before = romHandler.getEncounters(true);
 
         Settings settings = new Settings();
         settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
@@ -1696,7 +1698,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        //TODO: check the global family to family part works
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        //TODO: check family integrity
+        checkIsReplaced1To1(before, after, true);
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
 }

@@ -1266,16 +1266,15 @@ public class GameRandomizer {
     }
 
     private void logShops(final PrintStream log) {
-        List<Item> items = romHandler.getItems();
         log.println("--Shops--");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
         for (int shopID : shopsDict.keySet()) {
             Shop shop = shopsDict.get(shopID);
-            log.printf("%s", shop.name);
+            log.printf("%s", shop.getName());
             log.println();
-            List<Integer> shopItems = shop.items;
-            for (int shopItemID : shopItems) {
-                log.printf("- %5s", items.get(shopItemID).getName());
+            List<Item> shopItems = shop.getItems();
+            for (Item shopItem : shopItems) {
+                log.printf("- %5s", shopItem.getName());
                 log.println();
             }
 

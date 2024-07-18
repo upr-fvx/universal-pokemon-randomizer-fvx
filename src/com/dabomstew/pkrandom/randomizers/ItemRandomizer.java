@@ -1,12 +1,14 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.pokemon.Item;
 import com.dabomstew.pkrandom.pokemon.ItemList;
 import com.dabomstew.pkrandom.pokemon.PickupItem;
 import com.dabomstew.pkrandom.pokemon.Shop;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemRandomizer extends Randomizer {
 
@@ -62,7 +64,9 @@ public class ItemRandomizer extends Randomizer {
         List<Integer> currentItems = romHandler.getRegularFieldItems();
         List<Integer> currentTMs = romHandler.getCurrentFieldTMs();
         List<Integer> requiredTMs = romHandler.getRequiredFieldTMs();
-        List<Integer> uniqueNoSellItems = romHandler.getUniqueNoSellItems();
+        List<Integer> uniqueNoSellItems = romHandler.getUniqueNoSellItems().stream()
+                .map(Item::getId)
+                .collect(Collectors.toList());
         // System.out.println("distributeItemsControl: "+ distributeItemsControl);
 
         int fieldItemCount = currentItems.size();
@@ -151,18 +155,18 @@ public class ItemRandomizer extends Randomizer {
     public void shuffleShopItems() {
         Map<Integer, Shop> currentItems = romHandler.getShopItems();
         if (currentItems == null) return;
-        List<Integer> itemList = new ArrayList<>();
+        List<Item> itemList = new ArrayList<>();
         for (Shop shop : currentItems.values()) {
-            itemList.addAll(shop.items);
+            itemList.addAll(shop.getItems());
         }
         Collections.shuffle(itemList, random);
 
-        Iterator<Integer> itemListIter = itemList.iterator();
+        Iterator<Item> itemListIter = itemList.iterator();
 
         for (Shop shop : currentItems.values()) {
-            for (int i = 0; i < shop.items.size(); i++) {
-                shop.items.remove(i);
-                shop.items.add(i, itemListIter.next());
+            for (int i = 0; i < shop.getItems().size(); i++) {
+                shop.getItems().remove(i);
+                shop.getItems().add(i, itemListIter.next());
             }
         }
 
@@ -179,7 +183,11 @@ public class ItemRandomizer extends Randomizer {
         boolean placeXItems = settings.isGuaranteeXItems();
 
         if (romHandler.getShopItems() == null) return;
-        Set<Integer> possibleItems = banBadItems ? romHandler.getNonBadItems().getNonTMSet() : romHandler.getAllowedItems().getNonTMSet();
+        List<Item> allItems = romHandler.getItems();
+        Set<Item> possibleItems = (banBadItems ? romHandler.getNonBadItems().getNonTMSet() :
+                romHandler.getAllowedItems().getNonTMSet()).stream()
+                .map(allItems::get).collect(Collectors.toSet());
+
         if (banRegularShopItems) {
             possibleItems.removeAll(romHandler.getRegularShopItems());
         }
@@ -188,11 +196,9 @@ public class ItemRandomizer extends Randomizer {
         }
         Map<Integer, Shop> currentItems = romHandler.getShopItems();
 
-        int shopItemCount = currentItems.values().stream().mapToInt(s -> s.items.size()).sum();
+        int shopItemCount = currentItems.values().stream().mapToInt(s -> s.getItems().size()).sum();
 
-        List<Integer> newItems = new ArrayList<>();
-        Map<Integer, Shop> newItemsMap = new TreeMap<>();
-        List<Integer> guaranteedItems = new ArrayList<>();
+        Set<Item> guaranteedItems = new HashSet<>();
         if (placeEvolutionItems) {
             guaranteedItems.addAll(romHandler.getEvolutionItems());
         }
@@ -200,10 +206,12 @@ public class ItemRandomizer extends Randomizer {
             guaranteedItems.addAll(romHandler.getXItems());
         }
         shopItemCount = shopItemCount - guaranteedItems.size();
-        newItems.addAll(guaranteedItems);
+
+        Map<Integer, Shop> newItemsMap = new TreeMap<>();
+        List<Item> newItems = new ArrayList<>(guaranteedItems);
         possibleItems.removeAll(guaranteedItems);
 
-        Stack<Integer> remaining = new Stack<>();
+        Stack<Item> remaining = new Stack<>();
         Collections.shuffle(remaining, random);
         for (int i = 0; i < shopItemCount; i++) {
             if (remaining.isEmpty()) {
@@ -219,7 +227,7 @@ public class ItemRandomizer extends Randomizer {
             List<Integer> mainGameShops = new ArrayList<>();
             List<Integer> nonMainGameShops = new ArrayList<>();
             for (int i : currentItems.keySet()) {
-                if (currentItems.get(i).isMainGame) {
+                if (currentItems.get(i).isMainGame()) {
                     mainGameShops.add(i);
                 } else {
                     nonMainGameShops.add(i);
@@ -230,10 +238,10 @@ public class ItemRandomizer extends Randomizer {
             Collections.shuffle(newItems, random);
             for (int i : nonMainGameShops) {
                 int j = 0;
-                List<Integer> newShopItems = new ArrayList<>();
+                List<Item> newShopItems = new ArrayList<>();
                 Shop oldShop = currentItems.get(i);
-                for (Integer ignored : oldShop.items) {
-                    Integer item = newItems.get(j);
+                for (Item ignored : oldShop.getItems()) {
+                    Item item = newItems.get(j);
                     while (guaranteedItems.contains(item)) {
                         j++;
                         item = newItems.get(j);
@@ -242,36 +250,36 @@ public class ItemRandomizer extends Randomizer {
                     newItems.remove(item);
                 }
                 Shop shop = new Shop(oldShop);
-                shop.items = newShopItems;
+                shop.setItems(newShopItems);
                 newItemsMap.put(i, shop);
             }
 
             // Place items in main-game shops
             Collections.shuffle(newItems, random);
             for (int i : mainGameShops) {
-                List<Integer> newShopItems = new ArrayList<>();
+                List<Item> newShopItems = new ArrayList<>();
                 Shop oldShop = currentItems.get(i);
-                for (Integer ignored : oldShop.items) {
-                    Integer item = newItems.get(0);
+                for (Item ignored : oldShop.getItems()) {
+                    Item item = newItems.get(0);
                     newShopItems.add(item);
                     newItems.remove(0);
                 }
                 Shop shop = new Shop(oldShop);
-                shop.items = newShopItems;
+                shop.setItems(newShopItems);
                 newItemsMap.put(i, shop);
             }
         } else {
 
-            Iterator<Integer> newItemsIter = newItems.iterator();
+            Iterator<Item> newItemsIter = newItems.iterator();
 
             for (int i : currentItems.keySet()) {
-                List<Integer> newShopItems = new ArrayList<>();
+                List<Item> newShopItems = new ArrayList<>();
                 Shop oldShop = currentItems.get(i);
-                for (Integer ignored : oldShop.items) {
+                for (Item ignored : oldShop.getItems()) {
                     newShopItems.add(newItemsIter.next());
                 }
                 Shop shop = new Shop(oldShop);
-                shop.items = newShopItems;
+                shop.setItems(newShopItems);
                 newItemsMap.put(i, shop);
             }
         }

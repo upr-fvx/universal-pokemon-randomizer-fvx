@@ -2018,8 +2018,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         while (shopNum < shopAmount) {
             int shopOffset = readPointer(tableOffset + shopNum * 2, bankOf(tableOffset));
             Shop shop = readShop(shopOffset);
-            shop.name = Gen2Constants.shopNames.get(shopNum);
-            shop.isMainGame = Gen2Constants.mainGameShops.contains(shopNum);
+            shop.setName(Gen2Constants.shopNames.get(shopNum));
+            shop.setMainGame(Gen2Constants.mainGameShops.contains(shopNum));
             shops.add(shop);
             shopNum++;
         }
@@ -2027,11 +2027,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private Shop readShop(int offset) {
+        List<Item> allItems = getItems();
         Shop shop = new Shop();
-        shop.items = new ArrayList<>();
+        shop.setItems(new ArrayList<>());
         int itemAmount = rom[offset++];
         for (int itemNum = 0; itemNum < itemAmount; itemNum++) {
-            shop.items.add((int) rom[offset++] & 0xFF);
+            shop.getItems().add(allItems.get((int) rom[offset++] & 0xFF));
         }
         if (rom[offset] != Gen2Constants.shopItemsTerminator) {
             throw new RomIOException("Invalid shop data");
@@ -2052,10 +2053,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] shopToBytes(Shop shop) {
-        byte[] data = new byte[shop.items.size() + 2];
-        data[0] = (byte) shop.items.size();
-        for (int i = 0; i < shop.items.size(); i++) {
-            data[i + 1] = (byte) (shop.items.get(i) & 0xFF);
+        byte[] data = new byte[shop.getItems().size() + 2];
+        data[0] = (byte) shop.getItems().size();
+        for (int i = 0; i < shop.getItems().size(); i++) {
+            data[i + 1] = (byte) (shop.getItems().get(i).getId() & 0xFF);
         }
         data[data.length - 1] = (byte) 0xFF;
         return data;

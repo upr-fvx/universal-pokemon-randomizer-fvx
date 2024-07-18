@@ -4328,6 +4328,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public Map<Integer, Shop> getShopItems() {
+		List<Item> allItems = getItems();
 		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
@@ -4339,20 +4340,20 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		for (int i = 0; i < shopCount; i++) {
 			if (!skipShops.contains(i)) {
-				List<Integer> items = new ArrayList<>();
+				List<Item> items = new ArrayList<>();
 				int val = (FileFunctions.read2ByteInt(arm9, offset));
 				while ((val & 0xFFFF) != 0xFFFF) {
 					if (val != 0) {
-						items.add(val);
+						items.add(allItems.get(val));
 					}
 					offset += 2;
 					val = (FileFunctions.read2ByteInt(arm9, offset));
 				}
 				offset += 2;
 				Shop shop = new Shop();
-				shop.items = items;
-				shop.name = shopNames.get(i);
-				shop.isMainGame = mainGameShops.contains(i);
+				shop.setItems(items);
+				shop.setName(shopNames.get(i));
+				shop.setMainGame(mainGameShops.contains(i));
 				shopItemsMap.put(i, shop);
 			} else {
 				while ((FileFunctions.read2ByteInt(arm9, offset) & 0xFFFF) != 0xFFFF) {
@@ -4373,18 +4374,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		for (int i = 0; i < shopCount; i++) {
 			Shop thisShop = shopItems.get(i);
-			if (thisShop == null || thisShop.items == null) {
+			if (thisShop == null || thisShop.getItems() == null) {
 				while ((FileFunctions.read2ByteInt(arm9, offset) & 0xFFFF) != 0xFFFF) {
 					offset += 2;
 				}
 				offset += 2;
 				continue;
 			}
-			Iterator<Integer> iterItems = thisShop.items.iterator();
+			Iterator<Item> iterItems = thisShop.getItems().iterator();
 			int val = (FileFunctions.read2ByteInt(arm9, offset));
 			while ((val & 0xFFFF) != 0xFFFF) {
 				if (val != 0) {
-					FileFunctions.write2ByteInt(arm9, offset, iterItems.next());
+					FileFunctions.write2ByteInt(arm9, offset, iterItems.next().getId());
 				}
 				offset += 2;
 				val = (FileFunctions.read2ByteInt(arm9, offset));

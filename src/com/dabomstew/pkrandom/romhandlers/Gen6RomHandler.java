@@ -3766,6 +3766,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
+        List<Item> allItems = getItems();
         int[] tmShops = romEntry.getArrayValue("TMShops");
         int[] regularShops = romEntry.getArrayValue("RegularShops");
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
@@ -3794,15 +3795,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
             if (!badShop) {
-                List<Integer> items = new ArrayList<>();
+                List<Item> items = new ArrayList<>();
                 for (int j = 0; j < shopItemSizes[i]; j++) {
-                    items.add(FileFunctions.read2ByteInt(code,offset));
+                    items.add(allItems.get(FileFunctions.read2ByteInt(code,offset)));
                     offset += 2;
                 }
                 Shop shop = new Shop();
-                shop.items = items;
-                shop.name = shopNames.get(i);
-                shop.isMainGame = Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i);
+                shop.setItems(items);
+                shop.setName(shopNames.get(i));
+                shop.setMainGame(Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i));
                 shopItemsMap.put(i, shop);
             }
         }
@@ -3839,11 +3840,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
             if (!badShop) {
-                List<Integer> shopContents = shopItems.get(i).items;
-                Iterator<Integer> iterItems = shopContents.iterator();
+                List<Item> shopContents = shopItems.get(i).getItems();
+                Iterator<Item> iterItems = shopContents.iterator();
                 for (int j = 0; j < shopItemSizes[i]; j++) {
-                    Integer item = iterItems.next();
-                    FileFunctions.write2ByteInt(code,offset,item);
+                    Item item = iterItems.next();
+                    FileFunctions.write2ByteInt(code, offset, item.getId());
                     offset += 2;
                 }
             }

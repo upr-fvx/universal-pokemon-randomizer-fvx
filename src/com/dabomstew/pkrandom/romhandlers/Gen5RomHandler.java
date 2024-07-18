@@ -3656,6 +3656,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
+        List<Item> allItems = getItems();
         int[] tmShops = romEntry.getArrayValue("TMShops");
         int[] regularShops = romEntry.getArrayValue("RegularShops");
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
@@ -3681,21 +3682,23 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                 }
                 if (!badShop) {
-                    List<Integer> items = new ArrayList<>();
+                    List<Item> items = new ArrayList<>();
                     if (romEntry.getRomType() == Gen5Constants.Type_BW) {
                         for (int j = 0; j < shopItemSizes[i]; j++) {
-                            items.add(readWord(shopItemOverlay, shopItemOffsets[i] + j * 2));
+                            int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
+                            items.add(allItems.get(id));
                         }
                     } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
                         byte[] shop = shopNarc.files.get(i);
                         for (int j = 0; j < shop.length; j += 2) {
-                            items.add(readWord(shop, j));
+                            int id = readWord(shop, j);
+                            items.add(allItems.get(id));
                         }
                     }
                     Shop shop = new Shop();
-                    shop.items = items;
-                    shop.name = shopNames.get(i);
-                    shop.isMainGame = Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i);
+                    shop.setItems(items);
+                    shop.setName(shopNames.get(i));
+                    shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
                     shopItemsMap.put(i, shop);
                 }
             });
@@ -3726,18 +3729,16 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     if (i == regularShop) badShop = true;
                 }
                 if (!badShop) {
-                    List<Integer> shopContents = shopItems.get(i).items;
-                    Iterator<Integer> iterItems = shopContents.iterator();
+                    List<Item> shopContents = shopItems.get(i).getItems();
+                    Iterator<Item> iterItems = shopContents.iterator();
                     if (romEntry.getRomType() == Gen5Constants.Type_BW) {
                         for (int j = 0; j < shopItemSizes[i]; j++) {
-                            Integer item = iterItems.next();
-                            writeWord(shopItemOverlay, shopItemOffsets[i] + j * 2, item);
+                            writeWord(shopItemOverlay, shopItemOffsets[i] + j * 2, iterItems.next().getId());
                         }
                     } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
                         byte[] shop = shopNarc.files.get(i);
                         for (int j = 0; j < shop.length; j += 2) {
-                            Integer item = iterItems.next();
-                            writeWord(shop, j, item);
+                            writeWord(shop, j, iterItems.next().getId());
                         }
                     }
                 }

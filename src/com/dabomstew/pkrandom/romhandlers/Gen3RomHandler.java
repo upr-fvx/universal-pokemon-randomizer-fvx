@@ -3067,6 +3067,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
+        List<Item> allItems = getItems();
         List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
         List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
         List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
@@ -3075,17 +3076,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 0; i < shopItemOffsets.length; i++) {
             if (!skipShops.contains(i)) {
                 int offset = shopItemOffsets[i];
-                List<Integer> items = new ArrayList<>();
+                List<Item> items = new ArrayList<>();
                 int val = FileFunctions.read2ByteInt(rom, offset);
                 while (val != 0x0000) {
-                    items.add(val);
+                    items.add(allItems.get(val));
                     offset += 2;
                     val = FileFunctions.read2ByteInt(rom, offset);
                 }
                 Shop shop = new Shop();
-                shop.items = items;
-                shop.name = shopNames.get(i);
-                shop.isMainGame = mainGameShops.contains(i);
+                shop.setItems(items);
+                shop.setName(shopNames.get(i));
+                shop.setMainGame(mainGameShops.contains(i));
                 shopItemsMap.put(i, shop);
             }
         }
@@ -3097,10 +3098,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
         for (int i = 0; i < shopItemOffsets.length; i++) {
             Shop thisShop = shopItems.get(i);
-            if (thisShop != null && thisShop.items != null) {
+            if (thisShop != null && thisShop.getItems() != null) {
                 int offset = shopItemOffsets[i];
-                for (Integer integer : thisShop.items) {
-                    FileFunctions.write2ByteInt(rom, offset, integer);
+                for (Item item : thisShop.getItems()) {
+                    FileFunctions.write2ByteInt(rom, offset, item.getId());
                     offset += 2;
                 }
             }

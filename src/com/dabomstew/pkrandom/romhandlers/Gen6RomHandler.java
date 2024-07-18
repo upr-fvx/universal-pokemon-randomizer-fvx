@@ -3876,6 +3876,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
+        List<Item> allItems = getItems();
         List<PickupItem> pickupItems = new ArrayList<>();
 
         // If we haven't found the pickup table for this ROM already, find it.
@@ -3890,25 +3891,25 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < Gen6Constants.numberOfPickupItems; i++) {
                 int itemOffset = pickupItemsTableOffset + (2 * i);
-                int item = FileFunctions.read2ByteInt(code, itemOffset);
-                PickupItem pickupItem = new PickupItem(item);
+                int id = FileFunctions.read2ByteInt(code, itemOffset);
+                PickupItem pickupItem = new PickupItem(allItems.get(id));
                 pickupItems.add(pickupItem);
             }
         }
 
         // Assuming we got the items from the last step, fill out the probabilities.
-        if (pickupItems.size() > 0) {
+        if (!pickupItems.isEmpty()) {
             for (int levelRange = 0; levelRange < 10; levelRange++) {
                 int startingCommonItemOffset = levelRange;
                 int startingRareItemOffset = 18 + levelRange;
-                pickupItems.get(startingCommonItemOffset).probabilities[levelRange] = 30;
+                pickupItems.get(startingCommonItemOffset).getProbabilities()[levelRange] = 30;
                 for (int i = 1; i < 7; i++) {
-                    pickupItems.get(startingCommonItemOffset + i).probabilities[levelRange] = 10;
+                    pickupItems.get(startingCommonItemOffset + i).getProbabilities()[levelRange] = 10;
                 }
-                pickupItems.get(startingCommonItemOffset + 7).probabilities[levelRange] = 4;
-                pickupItems.get(startingCommonItemOffset + 8).probabilities[levelRange] = 4;
-                pickupItems.get(startingRareItemOffset).probabilities[levelRange] = 1;
-                pickupItems.get(startingRareItemOffset + 1).probabilities[levelRange] = 1;
+                pickupItems.get(startingCommonItemOffset + 7).getProbabilities()[levelRange] = 4;
+                pickupItems.get(startingCommonItemOffset + 8).getProbabilities()[levelRange] = 4;
+                pickupItems.get(startingRareItemOffset).getProbabilities()[levelRange] = 1;
+                pickupItems.get(startingRareItemOffset + 1).getProbabilities()[levelRange] = 1;
             }
         }
         return pickupItems;
@@ -3919,8 +3920,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < Gen6Constants.numberOfPickupItems; i++) {
                 int itemOffset = pickupItemsTableOffset + (2 * i);
-                int item = pickupItems.get(i).item;
-                FileFunctions.write2ByteInt(code, itemOffset, item);
+                int id = pickupItems.get(i).getItem().getId();
+                FileFunctions.write2ByteInt(code, itemOffset, id);
             }
         }
     }

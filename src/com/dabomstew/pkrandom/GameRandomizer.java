@@ -1285,7 +1285,6 @@ public class GameRandomizer {
 
     private void logPickupItems(final PrintStream log) {
         List<PickupItem> pickupItems = romHandler.getPickupItems();
-        List<Item> items = romHandler.getItems();
         log.println("--Pickup Items--");
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
@@ -1294,12 +1293,12 @@ public class GameRandomizer {
             log.println();
             TreeMap<Integer, List<String>> itemListPerProbability = new TreeMap<>();
             for (PickupItem pickupItem : pickupItems) {
-                int probability = pickupItem.probabilities[levelRange];
+                int probability = pickupItem.getProbabilities()[levelRange];
                 if (itemListPerProbability.containsKey(probability)) {
-                    itemListPerProbability.get(probability).add(items.get(pickupItem.item).getName());
+                    itemListPerProbability.get(probability).add(pickupItem.getItem().getName());
                 } else if (probability > 0) {
                     List<String> itemList = new ArrayList<>();
-                    itemList.add(items.get(pickupItem.item).getName());
+                    itemList.add(pickupItem.getItem().getName());
                     itemListPerProbability.put(probability, itemList);
                 }
             }

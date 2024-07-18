@@ -292,21 +292,24 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void randomizePickupItems() {
+        List<Item> allItems = romHandler.getItems(); // TODO: temp
         boolean banBadItems = settings.isBanBadRandomPickupItems();
 
         ItemList possibleItems = banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems();
         List<PickupItem> currentItems = romHandler.getPickupItems();
         List<PickupItem> newItems = new ArrayList<>();
-        for (int i = 0; i < currentItems.size(); i++) {
-            int item;
+        for (PickupItem currentItem : currentItems) {
+            Item item;
             if (romHandler.generationOfPokemon() == 3 || romHandler.generationOfPokemon() == 4) {
                 // Allow TMs in Gen 3/4 since they aren't infinite (and you get TMs from Pickup in the vanilla game)
-                item = possibleItems.randomItem(random);
+                item = allItems.get(possibleItems.randomItem(random));
             } else {
-                item = possibleItems.randomNonTM(random);
+                item = allItems.get(possibleItems.randomNonTM(random));
             }
             PickupItem pickupItem = new PickupItem(item);
-            pickupItem.probabilities = Arrays.copyOf(currentItems.get(i).probabilities, currentItems.size());
+            for (int j = 0; j < PickupItem.PROBABILITY_SLOTS; j++) {
+                pickupItem.getProbabilities()[j] = currentItem.getProbabilities()[j];
+            }
             newItems.add(pickupItem);
         }
 

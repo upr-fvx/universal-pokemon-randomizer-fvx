@@ -3768,6 +3768,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
+        List<Item> allItems = getItems();
         List<PickupItem> pickupItems = new ArrayList<>();
         try {
             byte[] battleOverlay = readOverlay(romEntry.getIntValue("PickupOvlNumber"));
@@ -3784,8 +3785,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             if (pickupItemsTableOffset > 0) {
                 for (int i = 0; i < Gen5Constants.numberOfPickupItems; i++) {
                     int itemOffset = pickupItemsTableOffset + (2 * i);
-                    int item = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
-                    PickupItem pickupItem = new PickupItem(item);
+                    int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
+                    PickupItem pickupItem = new PickupItem(allItems.get(id));
                     pickupItems.add(pickupItem);
                 }
             }
@@ -3795,14 +3796,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (int levelRange = 0; levelRange < 10; levelRange++) {
                     int startingRareItemOffset = levelRange;
                     int startingCommonItemOffset = 11 + levelRange;
-                    pickupItems.get(startingCommonItemOffset).probabilities[levelRange] = 30;
+                    pickupItems.get(startingCommonItemOffset).getProbabilities()[levelRange] = 30;
                     for (int i = 1; i < 7; i++) {
-                        pickupItems.get(startingCommonItemOffset + i).probabilities[levelRange] = 10;
+                        pickupItems.get(startingCommonItemOffset + i).getProbabilities()[levelRange] = 10;
                     }
-                    pickupItems.get(startingCommonItemOffset + 7).probabilities[levelRange] = 4;
-                    pickupItems.get(startingCommonItemOffset + 8).probabilities[levelRange] = 4;
-                    pickupItems.get(startingRareItemOffset).probabilities[levelRange] = 1;
-                    pickupItems.get(startingRareItemOffset + 1).probabilities[levelRange] = 1;
+                    pickupItems.get(startingCommonItemOffset + 7).getProbabilities()[levelRange] = 4;
+                    pickupItems.get(startingCommonItemOffset + 8).getProbabilities()[levelRange] = 4;
+                    pickupItems.get(startingRareItemOffset).getProbabilities()[levelRange] = 1;
+                    pickupItems.get(startingRareItemOffset + 1).getProbabilities()[levelRange] = 1;
                 }
             }
         } catch (IOException e) {
@@ -3818,8 +3819,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] battleOverlay = readOverlay(romEntry.getIntValue("PickupOvlNumber"));
                 for (int i = 0; i < Gen5Constants.numberOfPickupItems; i++) {
                     int itemOffset = pickupItemsTableOffset + (2 * i);
-                    int item = pickupItems.get(i).item;
-                    FileFunctions.write2ByteInt(battleOverlay, itemOffset, item);
+                    int id = pickupItems.get(i).getItem().getId();
+                    FileFunctions.write2ByteInt(battleOverlay, itemOffset, id);
                 }
                 writeOverlay(romEntry.getIntValue("PickupOvlNumber"), battleOverlay);
             }

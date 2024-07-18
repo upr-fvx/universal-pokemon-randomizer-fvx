@@ -1591,15 +1591,17 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
 
-        int lastIndex = -1;
-        for(EncounterArea area : encounterAreas) {
-            int idx = area.getMapIndex();
-            if(idx != lastIndex) {
-                System.out.println("\t" + area.getMapIndex() + ":");
-                lastIndex = idx;
+        Map<Integer, List<EncounterArea>> areasByMapIndex = EncounterArea.groupAreasByMapIndex(encounterAreas);
+        assertNotEquals(areasByMapIndex.size(), 1);
+
+        List<Integer> maps = new ArrayList<>(areasByMapIndex.keySet());
+        maps.sort(null);
+
+        for(int map : maps) {
+            System.out.println("\t" + map + ":");
+            for(EncounterArea area : areasByMapIndex.get(map)) {
+                System.out.println("\t\t" + area.getDisplayName());
             }
-            System.out.println("\t\t" + area.getDisplayName());
-            assertNotEquals(-1, idx);
         }
     }
 

@@ -3412,7 +3412,7 @@ public class RandomizerGUI {
             wpTRThemedAreasRadioButton.setEnabled(true);
             wpTRKeepThemesCheckBox.setEnabled(true);
             wpBalanceShakingGrassPokemonCheckBox.setEnabled(true);
-        } else if (wpArea1To1RadioButton.isSelected()) {
+        } else if (wpArea1To1RadioButton.isSelected() || wpLocation1To1RadioButton.isSelected()) {
             wpSimilarStrengthCheckBox.setEnabled(true);
             wpCatchEmAllModeCheckBox.setEnabled(true);
             wpTRNoneRadioButton.setEnabled(true);

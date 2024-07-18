@@ -192,6 +192,10 @@ public interface RomHandler {
         return false;
     }
 
+    default boolean hasMapIndices() {
+        return false;
+    }
+
     boolean hasTimeBasedEncounters();
 
     boolean hasWildAltFormes();

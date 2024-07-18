@@ -33,9 +33,9 @@ public class EncounterArea extends ArrayList<Encounter> {
     private String displayName;
 
     //The index of the map this area is contained in, as determined by the RomHandler.
-    //Note that not all RomHandlers currently set this variable,
-    //and of those that do, not all use it in the same way.
-    //However, in general, a particular index number will apply to exactly one map.
+    //Note that not all RomHandlers currently set this variable.
+    //However, in general, a particular index number will apply to exactly one map -
+    //unless the number is negative (usually -1), in which case it indicates the area spans multiple maps.
     private int mapIndex = -1;
 
     private String locationTag;

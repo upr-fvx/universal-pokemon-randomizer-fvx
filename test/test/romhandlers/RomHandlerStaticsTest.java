@@ -1,6 +1,7 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.pokemon.Item;
 import com.dabomstew.pkrandom.pokemon.Pokemon;
 import com.dabomstew.pkrandom.pokemon.StaticEncounter;
 import com.dabomstew.pkrandom.randomizers.StaticPokemonRandomizer;
@@ -151,13 +152,13 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         if (before.size() != after.size()) {
             throw new RuntimeException("static pokemon list mismatch");
         }
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         for (int i = 0; i < before.size(); i++) {
             StaticEncounter bef = before.get(i);
             StaticEncounter aft = after.get(i);
-            System.out.println("bef=" + bef.pkmn.fullName() + (bef.heldItem == 0 ? "" : "w. " + itemNames[bef.heldItem])
+            System.out.println("bef=" + bef.pkmn.fullName() + (bef.heldItem == 0 ? "" : "w. " + items.get(bef.heldItem).getName())
                     + (bef.canMegaEvolve() ? " (can mega evolve)" : "") +
-                    ", aft=" + aft.pkmn.fullName() + (aft.heldItem == 0 ? "" : "w. " + itemNames[aft.heldItem])
+                    ", aft=" + aft.pkmn.fullName() + (aft.heldItem == 0 ? "" : "w. " + items.get(aft.heldItem).getName())
                     + (aft.canMegaEvolve() ? " (can mega evolve)" : ""));
             assertEquals(bef.canMegaEvolve(), aft.canMegaEvolve());
         }

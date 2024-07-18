@@ -768,7 +768,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     }
 
     private Map<Integer, boolean[]> findZCrystals() {
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
 
         Map<Integer, boolean[]> zCrystalsByTrainer = new HashMap<>();
         List<Trainer> trainersBefore = romHandler.getTrainers();
@@ -779,7 +779,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             boolean anyHasZCrystal = false;
             for (int pkNum = 0; pkNum < tr.pokemon.size(); pkNum++) {
                 TrainerPokemon tp = tr.pokemon.get(pkNum);
-                System.out.println(itemNames[tp.heldItem]);
+                System.out.println(items.get(tp.heldItem));
                 if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
                     zCrystals[pkNum] = true;
                     anyHasZCrystal = true;
@@ -798,14 +798,14 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) == 7);
         loadROM(romName);
 
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
 
         new TrainerPokemonRandomizer(romHandler, new Settings(), RND).randomUsableZCrystals();
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
                 if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
-                    System.out.println(tp.pokemon.getName() + " holds " + itemNames[tp.heldItem]);
+                    System.out.println(tp.pokemon.getName() + " holds " + items.get(tp.heldItem).getName());
 
                     int[] pkMoves = tp.resetMoves ?
                             RomFunctions.getMovesAtLevel(tp.pokemon.getNumber(), romHandler.getMovesLearnt(), tp.level)

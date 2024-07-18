@@ -437,6 +437,22 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public List<Item> getItems() {
+        // This is just a temporary method while figuring things out.
+        // Ideally items should be loaded in each RomHandler, like trainers etc. are,
+        // and have more properties than just name.
+        List<Item> items = new ArrayList<>();
+        String[] names = getItemNames();
+        for (int i = 0; i < names.length; i++) {
+            items.add(new Item(i, names[i]));
+        }
+        // it's fine to change the properties of the items, but we don't want them reordered
+        return Collections.unmodifiableList(items);
+    }
+
+    protected abstract String[] getItemNames();
+
+    @Override
     public List<Integer> getXItems() {
         return GlobalConstants.xItems;
     }

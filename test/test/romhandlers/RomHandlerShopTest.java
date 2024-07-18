@@ -1,6 +1,7 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.pokemon.Item;
 import com.dabomstew.pkrandom.pokemon.ItemList;
 import com.dabomstew.pkrandom.pokemon.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
@@ -278,13 +279,13 @@ public class RomHandlerShopTest extends RomHandlerTest {
         sb.append(shop.name);
         sb.append(", isMainGame=");
         sb.append(shop.isMainGame);
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         sb.append(", items=[");
         for (int i = 0; i < shop.items.size(); i++) {
             int itemID = shop.items.get(i);
             sb.append(itemID);
             sb.append("-");
-            sb.append(itemNames[itemID]);
+            sb.append(items.get(itemID).getName());
             if (i != shop.items.size() - 1) {
                 sb.append(", ");
             }
@@ -300,12 +301,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) == 2);
         loadROM(romName);
         List<Integer> prices = ((Gen2RomHandler) romHandler).getShopPrices();
-        String[] names = romHandler.getItemNames();
-        if (prices.size() != names.length) {
+        List<Item> items = romHandler.getItems();
+        if (prices.size() != items.size()) {
             throw new IllegalStateException();
         }
         for (int i = 0; i < prices.size(); i++) {
-            System.out.println(names[i] + ": " + prices.get(i) + "¥");
+            System.out.println(items.get(i).getName() + ": " + prices.get(i) + "¥");
         }
     }
 

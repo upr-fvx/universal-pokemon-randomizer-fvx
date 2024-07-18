@@ -892,7 +892,7 @@ public class GameRandomizer {
 
     private void logPokemonTraitChanges(final PrintStream log) {
         List<Pokemon> allPokes = romHandler.getPokemonInclFormes();
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         // Log base stats & types
         log.println("--Pokemon Base Stats & Types--");
         if (romHandler instanceof Gen1RomHandler) {
@@ -953,25 +953,25 @@ public class GameRandomizer {
                     }
                     log.print("|");
                     if (pkmn.getGuaranteedHeldItem() > 0) {
-                        log.print(itemNames[pkmn.getGuaranteedHeldItem()] + " (100%)");
+                        log.print(items.get(pkmn.getGuaranteedHeldItem()).getName() + " (100%)");
                     } else {
                         int itemCount = 0;
                         if (pkmn.getCommonHeldItem() > 0) {
                             itemCount++;
-                            log.print(itemNames[pkmn.getCommonHeldItem()] + " (common)");
+                            log.print(items.get(pkmn.getCommonHeldItem()).getName() + " (common)");
                         }
                         if (pkmn.getRareHeldItem() > 0) {
                             if (itemCount > 0) {
                                 log.print(", ");
                             }
                             itemCount++;
-                            log.print(itemNames[pkmn.getRareHeldItem()] + " (rare)");
+                            log.print(items.get(pkmn.getRareHeldItem()).getName() + " (rare)");
                         }
                         if (pkmn.getDarkGrassHeldItem() > 0) {
                             if (itemCount > 0) {
                                 log.print(", ");
                             }
-                            log.print(itemNames[pkmn.getDarkGrassHeldItem()] + " (dark grass only)");
+                            log.print(items.get(pkmn.getDarkGrassHeldItem()) + " (dark grass only)");
                         }
                     }
                     log.println();
@@ -1162,12 +1162,12 @@ public class GameRandomizer {
                 log.printf("@%X", t.offset);
             }
 
-            String[] itemNames = romHandler.getItemNames();
+            List<Item> items = romHandler.getItems();
             if (logTrainerMovesets) {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
+                    log.printf(tpk.toString(), items.get(tpk.heldItem).getName());
                     log.print(", Ability: " + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;
@@ -1189,7 +1189,7 @@ public class GameRandomizer {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
+                    log.printf(tpk.toString(), items.get(tpk.heldItem));
                     first = false;
                 }
             }
@@ -1228,14 +1228,14 @@ public class GameRandomizer {
 
         List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
 
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         log.println("--Totem Pokemon--");
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
             checkValue = addToCV(checkValue, newP.pkmn.getNumber());
             log.println(oldP.pkmn.fullName() + " =>");
-            log.printf(newP.toString(), itemNames[newP.heldItem]);
+            log.printf(newP.toString(), items.get(newP.heldItem).getName());
         }
         log.println();
 
@@ -1266,7 +1266,7 @@ public class GameRandomizer {
     }
 
     private void logShops(final PrintStream log) {
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         log.println("--Shops--");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
         for (int shopID : shopsDict.keySet()) {
@@ -1275,7 +1275,7 @@ public class GameRandomizer {
             log.println();
             List<Integer> shopItems = shop.items;
             for (int shopItemID : shopItems) {
-                log.printf("- %5s", itemNames[shopItemID]);
+                log.printf("- %5s", items.get(shopItemID).getName());
                 log.println();
             }
 
@@ -1286,7 +1286,7 @@ public class GameRandomizer {
 
     private void logPickupItems(final PrintStream log) {
         List<PickupItem> pickupItems = romHandler.getPickupItems();
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> items = romHandler.getItems();
         log.println("--Pickup Items--");
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
@@ -1297,10 +1297,10 @@ public class GameRandomizer {
             for (PickupItem pickupItem : pickupItems) {
                 int probability = pickupItem.probabilities[levelRange];
                 if (itemListPerProbability.containsKey(probability)) {
-                    itemListPerProbability.get(probability).add(itemNames[pickupItem.item]);
+                    itemListPerProbability.get(probability).add(items.get(pickupItem.item).getName());
                 } else if (probability > 0) {
                     List<String> itemList = new ArrayList<>();
-                    itemList.add(itemNames[pickupItem.item]);
+                    itemList.add(items.get(pickupItem.item).getName());
                     itemListPerProbability.put(probability, itemList);
                 }
             }

@@ -390,6 +390,11 @@ public interface RomHandler {
     // Items
     // =====
 
+    /**
+     * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
+     */
+    List<Item> getItems();
+
     ItemList getAllowedItems();
 
     ItemList getNonBadItems();
@@ -403,8 +408,6 @@ public interface RomHandler {
     List<Integer> getRegularShopItems();
 
     List<Integer> getOPShopItems();
-
-    String[] getItemNames();
 
     // ===========
     // Field Items

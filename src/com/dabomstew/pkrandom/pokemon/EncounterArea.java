@@ -191,12 +191,12 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     /**
      * Given a List of EncounterAreas, groups those that have the same encounter type.
-     * @param ungrouped The set of EncounterAreas to group.
+     * @param toGroup The set of EncounterAreas to group.
      * @return A Map of encounterTypes to EncounterAreas.
      */
-    public static Map<EncounterType, List<EncounterArea>> groupAreasByEncounterType(List<EncounterArea> ungrouped) {
+    public static Map<EncounterType, List<EncounterArea>> groupAreasByEncounterType(List<EncounterArea> toGroup) {
         Map<EncounterType, List<EncounterArea>> grouped = new HashMap<>();
-        for (EncounterArea area : ungrouped) {
+        for (EncounterArea area : toGroup) {
             EncounterType encType = area.getEncounterType();
             if (!grouped.containsKey(encType)) {
                 grouped.put(encType, new ArrayList<>());
@@ -206,16 +206,14 @@ public class EncounterArea extends ArrayList<Encounter> {
         return grouped;
     }
 
-
-
     /**
      * Given a List of EncounterAreas, groups those that have the same map index.
-     * @param ungrouped The set of EncounterAreas to group.
+     * @param toGroup The set of EncounterAreas to group.
      * @return A Map of mapIndexes to EncounterAreas.
      */
-    public static Map<Integer, List<EncounterArea>> groupAreasByMapIndex(List<EncounterArea> ungrouped) {
+    public static Map<Integer, List<EncounterArea>> groupAreasByMapIndex(List<EncounterArea> toGroup) {
         Map<Integer, List<EncounterArea>> grouped = new HashMap<>();
-        for (EncounterArea area : ungrouped) {
+        for (EncounterArea area : toGroup) {
             int index = area.getMapIndex();
             if (!grouped.containsKey(index)) {
                 grouped.put(index, new ArrayList<>());
@@ -227,13 +225,13 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     /**
      * Given a List of EncounterAreas, groups those that have the same location tag.
-     * @param ungrouped The set of EncounterAreas to group.
+     * @param toGroup The set of EncounterAreas to group.
      * @return A Map of locationTags to EncounterAreas.
      */
-    public static Map<String, List<EncounterArea>> groupAreasByLocation(List<EncounterArea> ungrouped) {
+    public static Map<String, List<EncounterArea>> groupAreasByLocation(List<EncounterArea> toGroup) {
         Map<String, List<EncounterArea>> grouped = new HashMap<>();
         int untagged = 1;
-        for (EncounterArea area : ungrouped) {
+        for (EncounterArea area : toGroup) {
             String tag = area.getLocationTag();
             if (tag == null) {
                 tag = "UNTAGGED-" + untagged;
@@ -249,11 +247,11 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     /**
      * Given a List of EncounterAreas, merges those that have the same Location tag.
-     * @param unflattened The set of EncounterAreas to merge.
+     * @param toFlatten The set of EncounterAreas to merge.
      * @return A List of EncounterAreas with the specified areas merged.
      */
-    public static List<EncounterArea> flattenLocations(List<EncounterArea> unflattened) {
-        Map<String, List<EncounterArea>> grouped = groupAreasByLocation(unflattened);
+    public static List<EncounterArea> flattenLocations(List<EncounterArea> toFlatten) {
+        Map<String, List<EncounterArea>> grouped = groupAreasByLocation(toFlatten);
         List<EncounterArea> flattenedLocations = new ArrayList<>();
         for (Map.Entry<String, List<EncounterArea>> locEntry : grouped.entrySet()) {
             EncounterArea flattened = new EncounterArea();
@@ -269,11 +267,11 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     /**
      * Given a List of EncounterAreas, merges those that have the same map index AND encounter type.
-     * @param unflattened The set of EncounterAreas to merge.
+     * @param toFlatten The set of EncounterAreas to merge.
      * @return A List of EncounterAreas with the specified areas merged.
      */
-    public static List<EncounterArea> flattenEncounterTypesInMaps(List<EncounterArea> unflattened) {
-        Map<Integer, List<EncounterArea>> grouped = groupAreasByMapIndex(unflattened);
+    public static List<EncounterArea> flattenEncounterTypesInMaps(List<EncounterArea> toFlatten) {
+        Map<Integer, List<EncounterArea>> grouped = groupAreasByMapIndex(toFlatten);
         List<EncounterArea> flattenedEncounters = new ArrayList<>();
         int unnamed = 1;
         for (Map.Entry<Integer, List<EncounterArea>> mapEntry : grouped.entrySet()) {
@@ -298,4 +296,6 @@ public class EncounterArea extends ArrayList<Encounter> {
         }
         return flattenedEncounters;
     }
+
+    //Note: should be two more flattens... probably. (Or, we might remove the need for them entirely.)
 }

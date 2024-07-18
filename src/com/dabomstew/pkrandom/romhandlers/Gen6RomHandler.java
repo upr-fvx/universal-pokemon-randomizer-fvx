@@ -1876,8 +1876,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
-        return Gen6Constants.evolutionItems;
+    public Set<Item> getEvolutionItems() {
+        return itemIdsToSet(Gen6Constants.evolutionItems);
     }
 
     @Override
@@ -3328,18 +3328,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        return Gen6Constants.uniqueNoSellItems;
+    public Set<Item> getUniqueNoSellItems() {
+        return itemIdsToSet(Gen6Constants.uniqueNoSellItems);
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
-        return Gen6Constants.regularShopItems;
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(Gen6Constants.regularShopItems);
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
-        return Gen6Constants.opShopItems;
+    public Set<Item> getOPShopItems() {
+        return itemIdsToSet(Gen6Constants.opShopItems);
     }
 
     @Override

@@ -2153,13 +2153,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
-        return Gen2Constants.evolutionItems;
+    public Set<Item> getEvolutionItems() {
+        return itemIdsToSet(Gen2Constants.evolutionItems);
     }
 
     @Override
-    public List<Integer> getXItems() {
-        return Gen2Constants.xItems;
+    public Set<Item> getXItems() {
+        return itemIdsToSet(Gen2Constants.xItems);
     }
 
     @Override
@@ -2450,18 +2450,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        return new ArrayList<>();
+    public Set<Item> getUniqueNoSellItems() {
+        return new HashSet<>();
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
-        return Gen2Constants.regularShopItems;
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(Gen2Constants.regularShopItems);
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
-        return Gen2Constants.opShopItems;
+    public Set<Item> getOPShopItems() {
+        return itemIdsToSet(Gen2Constants.opShopItems);
     }
 
     @Override

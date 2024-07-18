@@ -452,9 +452,15 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected abstract String[] getItemNames();
 
+    protected Set<Item> itemIdsToSet(List<Integer> ids) {
+        List<Item> allItems = getItems();
+        return ids.stream().map(allItems::get)
+                .collect(Collectors.toSet());
+    }
+
     @Override
-    public List<Integer> getXItems() {
-        return GlobalConstants.xItems;
+    public Set<Item> getXItems() {
+        return itemIdsToSet(GlobalConstants.xItems);
     }
 
     @Override

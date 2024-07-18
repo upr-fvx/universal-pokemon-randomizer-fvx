@@ -1749,13 +1749,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 	}
 
     @Override
-    public List<Integer> getEvolutionItems() {
-        return Gen3Constants.evolutionItems;
+    public Set<Item> getEvolutionItems() {
+        return itemIdsToSet(Gen3Constants.evolutionItems);
     }
 
     @Override
-    public List<Integer> getXItems() {
-        return Gen3Constants.xItems;
+    public Set<Item> getXItems() {
+        return itemIdsToSet(Gen3Constants.xItems);
     }
 
     @Override
@@ -3624,18 +3624,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        return new ArrayList<>();
+    public Set<Item> getUniqueNoSellItems() {
+        return new HashSet<>();
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
-        return Gen3Constants.regularShopItems;
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(Gen3Constants.regularShopItems);
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
-        return Gen3Constants.opShopItems;
+    public Set<Item> getOPShopItems() {
+        return itemIdsToSet(Gen3Constants.opShopItems);
     }
 
     @Override

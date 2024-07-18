@@ -1240,9 +1240,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
-            return Gen5Constants.evolutionItems;
-        }
+    public Set<Item> getEvolutionItems() {
+        return itemIdsToSet(Gen5Constants.evolutionItems);
+    }
 
     @Override
     public void setTrainers(List<Trainer> trainerData) {
@@ -3188,18 +3188,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        return new ArrayList<>();
+    public Set<Item> getUniqueNoSellItems() {
+        return new HashSet<>();
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
-        return regularShopItems;
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(regularShopItems);
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
-        return opShopItems;
+    public Set<Item> getOPShopItems() {
+        return itemIdsToSet(opShopItems);
     }
 
 

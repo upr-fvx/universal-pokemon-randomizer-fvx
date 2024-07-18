@@ -399,15 +399,15 @@ public interface RomHandler {
 
     ItemList getNonBadItems();
 
-    List<Integer> getEvolutionItems();
+    Set<Item> getEvolutionItems();
 
-    List<Integer> getXItems();
+    Set<Item> getXItems();
 
-    List<Integer> getUniqueNoSellItems();
+    Set<Item> getUniqueNoSellItems();
 
-    List<Integer> getRegularShopItems();
+    Set<Item> getRegularShopItems();
 
-    List<Integer> getOPShopItems();
+    Set<Item> getOPShopItems();
 
     // ===========
     // Field Items

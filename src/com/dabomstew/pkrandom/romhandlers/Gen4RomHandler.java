@@ -2681,8 +2681,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-	public List<Integer> getEvolutionItems() {
-		return Gen4Constants.evolutionItems;
+	public Set<Item> getEvolutionItems() {
+		return itemIdsToSet(Gen4Constants.evolutionItems);
 	}
 
 	@Override
@@ -4695,18 +4695,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<Integer> getUniqueNoSellItems() {
-		return new ArrayList<>();
+	public Set<Item> getUniqueNoSellItems() {
+		return new HashSet<>();
 	}
 
 	@Override
-	public List<Integer> getRegularShopItems() {
-		return Gen4Constants.regularShopItems;
+	public Set<Item> getRegularShopItems() {
+		return itemIdsToSet(Gen4Constants.regularShopItems);
 	}
 
 	@Override
-	public List<Integer> getOPShopItems() {
-		return Gen4Constants.opShopItems;
+	public Set<Item> getOPShopItems() {
+		return itemIdsToSet(Gen4Constants.opShopItems);
 	}
 
 	@Override

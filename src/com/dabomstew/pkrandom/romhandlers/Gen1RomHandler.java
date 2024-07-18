@@ -882,7 +882,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 List<EncounterArea> sharedAreas = usedOffsets.get(offset);
                 for(EncounterArea area : sharedAreas) {
                     area.setDisplayName(area.getDisplayName() + ", " + mapNames[mapID]);
-                    //area.setMapIndex(-1); //now spans multiple maps, so mapIndex is not fully applicable
+                    area.setMapIndex(-1); //now spans multiple maps, so mapIndex is not fully applicable
                 }
             }
             tableOffset += 2;
@@ -898,7 +898,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readOldRodEncounters(List<EncounterArea> encounterAreas) {
         int oldRodOffset = romEntry.getIntValue("OldRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setIdentifiers("Old Rod Fishing", 1, EncounterType.FISHING);
+        area.setIdentifiers("Old Rod Fishing", -2, EncounterType.FISHING);
         Encounter oldRodEnc = new Encounter();
         oldRodEnc.setLevel(rom[oldRodOffset + 2] & 0xFF);
         oldRodEnc.setPokemon(pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]]);
@@ -911,7 +911,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readGoodRodEncounters(List<EncounterArea> encounterAreas) {
         int goodRodOffset = romEntry.getIntValue("GoodRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setIdentifiers("Good Rod Fishing", 1, EncounterType.FISHING);
+        area.setIdentifiers("Good Rod Fishing", -2, EncounterType.FISHING);
         for (int slot = 0; slot < 2; slot++) {
             Encounter enc = new Encounter();
             enc.setLevel(rom[goodRodOffset + slot * 2] & 0xFF);
@@ -971,7 +971,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 } else {
                     EncounterArea sharedArea = usedSROffsets.get(areaOffset);
                     sharedArea.setDisplayName(sharedArea.getDisplayName() + ", " + mapNames[map]);
-                    //area.setMapIndex(-1); //now spans multiple maps, so mapIndex is not fully applicable
+                    sharedArea.setMapIndex(-3); //now spans multiple maps, so mapIndex is not fully applicable
                 }
             }
         }
@@ -1094,13 +1094,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasMapIndices() {
-        //Unsure how to set this one... Gen 1 has EncounterAreas that span multiple maps.
-        //So while there are map indices - and they do correctly identify areas that share maps -
-        //they do not identify ALL areas that share maps.
-        //To do that, we'd need EncounterArea to store a list of map indices, not just one.
-        //...and that would need a whole lot of special handling for anything that uses map indices.
-        //For now, setting it to false, but know it has a big asterisk.
-        return false;
+        return true;
     }
 
     @Override

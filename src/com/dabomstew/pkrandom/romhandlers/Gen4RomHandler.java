@@ -1412,7 +1412,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 		}
 		area.setDisplayName("Mt. Coronet Feebas Tiles");
-		area.setEncounterType(EncounterType.FISHING);
+		area.setEncounterType(EncounterType.SPECIAL);
+		//TODO: assign map index of correct map
 		encounterAreas.add(area);
 	}
 
@@ -1466,8 +1467,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 		}
 		area.setDisplayName("Trophy Garden Rotating Pokemon (via Mr. Backlot)");
-		area.setEncounterType(EncounterType.WALKING);
+		area.setEncounterType(EncounterType.SPECIAL);
+		//TODO: set map index of correct map
 		area.setForceMultipleSpecies(true); // prevents a possible softlock
+
 		encounterAreas.add(area);
 	}
 
@@ -1506,7 +1509,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 			String pokedexStatus = i == 0 ? "(Post-National Dex)" : "(Pre-National Dex)";
 			area.setDisplayName("Great Marsh Rotating Pokemon " + pokedexStatus);
-			area.setEncounterType(EncounterType.WALKING);
+			area.setEncounterType(EncounterType.SPECIAL);
 			encounterAreas.add(area);
 		}
 	}
@@ -1567,13 +1570,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// https://github.com/magical/pokemon-encounters/blob/master/nds/encounters-gen4-johto.py
 		// for the structure for this.
 		int[] amounts = new int[] { 0, 5, 2, 5, 5, 5 };
-		int c = -1;
+		int mapIndex = -1;
 		for (byte[] b : encounterData.files) {
-			c++;
-			if (!wildMapNames.containsKey(c)) {
-				wildMapNames.put(c, "? Unknown ?");
+			mapIndex++;
+			if (!wildMapNames.containsKey(mapIndex)) {
+				wildMapNames.put(mapIndex, "? Unknown ?");
 			}
-			String mapName = wildMapNames.get(c);
+			String mapName = wildMapNames.get(mapIndex);
 			int[] rates = new int[6];
 			rates[0] = b[0] & 0xFF;
 			rates[1] = b[1] & 0xFF;
@@ -1599,15 +1602,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// Just write "day" encounters
 					EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[1], walkingLevels));
 					walkingArea.setRate(rates[0]);
-					walkingArea.setDisplayName(mapName + " Grass/Cave");
-					walkingArea.setEncounterType(EncounterType.WALKING);
+					walkingArea.setIdentifiers(mapName + " Grass/Cave", mapIndex, EncounterType.WALKING);
 					encounterAreas.add(walkingArea);
 				} else {
 					for (int i = 0; i < 3; i++) {
 						EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
 						walkingArea.setRate(rates[0]);
-						walkingArea.setDisplayName(mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave");
-						walkingArea.setEncounterType(EncounterType.WALKING);
+						walkingArea.setIdentifiers(
+								mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
+								mapIndex, EncounterType.WALKING);
 						encounterAreas.add(walkingArea);
 					}
 				}
@@ -1617,8 +1620,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			//  should they not be excluded when useTimeOfDay == false ?
 			// Hoenn/Sinnoh Radio
 			EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
-			radioArea.setDisplayName(mapName + " Hoenn/Sinnoh Radio");
-			radioArea.setEncounterType(EncounterType.SPECIAL);
+			radioArea.setIdentifiers(mapName + " Hoenn/Sinnoh Radio", mapIndex, EncounterType.SPECIAL);
 			if (radioArea.size() > 0) {
 				encounterAreas.add(radioArea);
 			}
@@ -1632,8 +1634,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				if (rates[i] != 0) {
 					// Valid area.
 					EncounterArea seaArea = new EncounterArea(seaEncounters);
-					seaArea.setDisplayName(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i]);
-					seaArea.setEncounterType(Gen4Constants.hgssNonWalkingAreaTypes[i]);
+					seaArea.setIdentifiers(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i], mapIndex,
+							Gen4Constants.hgssNonWalkingAreaTypes[i]);
 					seaArea.setRate(rates[i]);
 					encounterAreas.add(seaArea);
 				}
@@ -1641,8 +1643,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 			// Swarms
 			EncounterArea swarmArea = readOptionalEncounterAreaHGSS(b, offset, 2);
-			swarmArea.setDisplayName(mapName + " Swarms");
-			swarmArea.setEncounterType(EncounterType.WALKING);
+			swarmArea.setIdentifiers(mapName + " Swarms", mapIndex, EncounterType.SPECIAL);
 			if (swarmArea.size() > 0) {
 				encounterAreas.add(swarmArea);
 			}
@@ -1650,14 +1651,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// TODO: Disable these... somehow when useTimeOfDay == false. It's tricky since I don't know what
 			//  encounters are being replaced in the usual fishing area/how it works
 			EncounterArea nightFishingReplacementArea = readOptionalEncounterAreaHGSS(b, offset + 4, 1);
-			nightFishingReplacementArea.setDisplayName(mapName + " Night Fishing Replacement");
-			nightFishingReplacementArea.setEncounterType(EncounterType.FISHING);
+			nightFishingReplacementArea.setIdentifiers(mapName + " Night Fishing Replacement", mapIndex,
+					EncounterType.FISHING);
 			if (nightFishingReplacementArea.size() > 0) {
 				encounterAreas.add(nightFishingReplacementArea);
 			}
 			EncounterArea fishingSwarmsArea = readOptionalEncounterAreaHGSS(b, offset + 6, 1);
-			fishingSwarmsArea.setDisplayName(mapName + " Fishing Swarm");
-			fishingSwarmsArea.setEncounterType(EncounterType.FISHING);
+			fishingSwarmsArea.setIdentifiers(mapName + " Fishing Swarm", mapIndex, EncounterType.SPECIAL);
 			if (fishingSwarmsArea.size() > 0) {
 				encounterAreas.add(fishingSwarmsArea);
 			}
@@ -1688,8 +1688,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 			String mapName = headbuttMapNames.get(c);
 			EncounterArea area = readHeadbuttEncounterAreaHGSS(b, 4, 18);
-			area.setDisplayName(mapName + " Headbutt");
-			area.setEncounterType(EncounterType.INTERACT);
+			area.setIdentifiers(mapName + " Headbutt", -2, EncounterType.INTERACT);
+			//TODO: find and set the correct map indices
 
 			// Map 24 is an unused version of Route 16, but it still has valid headbutt
 			// encounter data.
@@ -1703,27 +1703,29 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void readBugCatchingContestEncounters(List<EncounterArea> encounterAreas) throws IOException {
 		String bccEncountersFile = romEntry.getFile("BCCWilds");
 		byte[] bccEncountersData = readFile(bccEncountersFile);
+		//TODO: find and use the correct map index
+
 		EncounterArea preNationalDexArea = readBCCEncounterAreaHGSS(bccEncountersData, 0, 10);
-		preNationalDexArea.setDisplayName("Bug Catching Contest (Pre-National Dex)");
-		preNationalDexArea.setEncounterType(EncounterType.WALKING);
+		preNationalDexArea.setIdentifiers("Bug Catching Contest (Pre-National Dex)",
+				-1, EncounterType.SPECIAL);
 		if (preNationalDexArea.size() > 0) {
 			encounterAreas.add(preNationalDexArea);
 		}
 		EncounterArea postNationalDexTuesArea = readBCCEncounterAreaHGSS(bccEncountersData, 80, 10);
-		postNationalDexTuesArea.setDisplayName("Bug Catching Contest (Post-National Dex, Tuesdays)");
-		postNationalDexTuesArea.setEncounterType(EncounterType.WALKING);
+		postNationalDexTuesArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Tuesdays)",
+				-1, EncounterType.SPECIAL);
 		if (postNationalDexTuesArea.size() > 0) {
 			encounterAreas.add(postNationalDexTuesArea);
 		}
 		EncounterArea postNationalDexThursArea = readBCCEncounterAreaHGSS(bccEncountersData, 160, 10);
-		postNationalDexThursArea.setDisplayName("Bug Catching Contest (Post-National Dex, Thursdays)");
-		postNationalDexThursArea.setEncounterType(EncounterType.WALKING);
+		postNationalDexThursArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Thursdays)",
+				-1, EncounterType.SPECIAL);
 		if (postNationalDexThursArea.size() > 0) {
 			encounterAreas.add(postNationalDexThursArea);
 		}
 		EncounterArea postNationalDexSatArea = readBCCEncounterAreaHGSS(bccEncountersData, 240, 10);
-		postNationalDexSatArea.setDisplayName("Bug Catching Contest (Post-National Dex, Saturdays)");
-		postNationalDexSatArea.setEncounterType(EncounterType.WALKING);
+		postNationalDexSatArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Saturdays)",
+				-1, EncounterType.SPECIAL);
 		if (postNationalDexSatArea.size() > 0) {
 			encounterAreas.add(postNationalDexSatArea);
 		}
@@ -3950,6 +3952,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public boolean hasEncounterLocations() {
 		return true;
+	}
+
+	@Override
+	public boolean hasMapIndices() {
+		return true; //they aren't perfect, yet, but they ARE present.
 	}
 
 	@Override

@@ -1411,9 +1411,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				enc.setLevel(encounterOverlay[offset + 4]);
 			}
 		}
-		area.setDisplayName("Mt. Coronet Feebas Tiles");
-		area.setEncounterType(EncounterType.SPECIAL);
-		//TODO: assign map index of correct map
+		area.setIdentifiers("Mt. Coronet Feebas Tiles", Gen4Constants.mtCoronetFeebasLakeMapIndex,
+				EncounterType.SPECIAL);
 		encounterAreas.add(area);
 	}
 
@@ -1466,9 +1465,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				enc.setMaxLevel(Math.max(level1, level2));
 			}
 		}
-		area.setDisplayName("Trophy Garden Rotating Pokemon (via Mr. Backlot)");
-		area.setEncounterType(EncounterType.SPECIAL);
-		//TODO: set map index of correct map
+		area.setIdentifiers("Trophy Garden Rotating Pokemon (via Mr. Backlot)",
+				Gen4Constants.trophyGardenMapIndex, EncounterType.SPECIAL);
 		area.setForceMultipleSpecies(true); // prevents a possible softlock
 
 		encounterAreas.add(area);
@@ -1508,8 +1506,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				enc.setMaxLevel(maxLevel);
 			}
 			String pokedexStatus = i == 0 ? "(Post-National Dex)" : "(Pre-National Dex)";
-			area.setDisplayName("Great Marsh Rotating Pokemon " + pokedexStatus);
-			area.setEncounterType(EncounterType.SPECIAL);
+			area.setIdentifiers("Great Marsh Rotating Pokemon " + pokedexStatus, -2,
+					EncounterType.SPECIAL);
 			encounterAreas.add(area);
 		}
 	}
@@ -1573,6 +1571,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int mapIndex = -1;
 		for (byte[] b : encounterData.files) {
 			mapIndex++;
+			boolean badMapIndex = false;
+			if(mapIndex == Gen4Constants.nationalParkBadMapIndex) {
+				mapIndex = Gen4Constants.nationalParkMapIndex;
+				badMapIndex = true; //this is. a terrible way to do this, but it works.
+			}
 			if (!wildMapNames.containsKey(mapIndex)) {
 				wildMapNames.put(mapIndex, "? Unknown ?");
 			}
@@ -1661,6 +1664,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			if (fishingSwarmsArea.size() > 0) {
 				encounterAreas.add(fishingSwarmsArea);
 			}
+
+			if(badMapIndex) {
+				mapIndex = Gen4Constants.nationalParkBadMapIndex;
+			}
 		}
 	}
 
@@ -1670,12 +1677,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readHeadbuttEncounters(List<EncounterArea> encounterAreas) throws IOException {
-		int c;
+
 		String headbuttEncountersFile = romEntry.getFile("HeadbuttPokemon");
 		NARCArchive headbuttEncounterData = readNARC(headbuttEncountersFile);
-		c = -1;
+		int mapID = -1;
+		int lastCreatedID = wildMapNames.size() - 1;
 		for (byte[] b : headbuttEncounterData.files) {
-			c++;
+			mapID++;
 
 			// Each headbutt encounter file starts with four bytes, which I believe are used
 			// to indicate the number of "normal" and "special" trees that are available in
@@ -1686,46 +1694,68 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				continue;
 			}
 
-			String mapName = headbuttMapNames.get(c);
+			String mapName = headbuttMapNames.get(mapID);
 			EncounterArea area = readHeadbuttEncounterAreaHGSS(b, 4, 18);
-			area.setIdentifiers(mapName + " Headbutt", -2, EncounterType.INTERACT);
-			//TODO: find and set the correct map indices
 
 			// Map 24 is an unused version of Route 16, but it still has valid headbutt
 			// encounter data.
 			// Avoid adding it to the list of encounters to prevent confusion.
-			if (area.size() > 0 && c != 24) {
+			if (area.size() > 0 && mapID != 24) {
+				area.setDisplayName(mapName + " Headbutt");
+				area.setEncounterType(EncounterType.INTERACT);
+
+				//Headbutt encounters use a different set of map IDs than regular wild encounters
+				//To make the map IDs line up, we need to check the other map
+				for(Map.Entry<Integer, String> map : wildMapNames.entrySet()) {
+					if(map.getValue().equals(mapName)) {
+						area.setMapIndex(map.getKey());
+						break;
+					}
+				}
+				if(area.getMapIndex() == -1) {
+					//if we don't find it, it remains at the default of -1
+					//However, we don't want it to be negative, since that signifies shared maps
+					//Therefore, we will fabricate an arbitrary new index for this map
+					do {
+						lastCreatedID++;
+					} while(wildMapNames.containsKey(lastCreatedID));
+					//lastCreatedID should now be an unused index
+					area.setMapIndex(lastCreatedID);
+				}
+
 				encounterAreas.add(area);
 			}
+
+
+
 		}
 	}
 
 	private void readBugCatchingContestEncounters(List<EncounterArea> encounterAreas) throws IOException {
 		String bccEncountersFile = romEntry.getFile("BCCWilds");
 		byte[] bccEncountersData = readFile(bccEncountersFile);
-		//TODO: find and use the correct map index
 
 		EncounterArea preNationalDexArea = readBCCEncounterAreaHGSS(bccEncountersData, 0, 10);
 		preNationalDexArea.setIdentifiers("Bug Catching Contest (Pre-National Dex)",
-				-1, EncounterType.SPECIAL);
+				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
 		if (preNationalDexArea.size() > 0) {
 			encounterAreas.add(preNationalDexArea);
 		}
 		EncounterArea postNationalDexTuesArea = readBCCEncounterAreaHGSS(bccEncountersData, 80, 10);
 		postNationalDexTuesArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Tuesdays)",
-				-1, EncounterType.SPECIAL);
+				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
 		if (postNationalDexTuesArea.size() > 0) {
 			encounterAreas.add(postNationalDexTuesArea);
 		}
 		EncounterArea postNationalDexThursArea = readBCCEncounterAreaHGSS(bccEncountersData, 160, 10);
 		postNationalDexThursArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Thursdays)",
-				-1, EncounterType.SPECIAL);
+				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
 		if (postNationalDexThursArea.size() > 0) {
 			encounterAreas.add(postNationalDexThursArea);
 		}
 		EncounterArea postNationalDexSatArea = readBCCEncounterAreaHGSS(bccEncountersData, 240, 10);
 		postNationalDexSatArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Saturdays)",
-				-1, EncounterType.SPECIAL);
+				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
 		if (postNationalDexSatArea.size() > 0) {
 			encounterAreas.add(postNationalDexSatArea);
 		}

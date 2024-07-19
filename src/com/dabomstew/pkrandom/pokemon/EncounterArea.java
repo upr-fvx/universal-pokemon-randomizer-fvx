@@ -35,8 +35,8 @@ public class EncounterArea extends ArrayList<Encounter> {
     //The index of the map this area is contained in, as determined by the RomHandler.
     //Note that not all RomHandlers currently set this variable.
     //However, in general, a particular index number will apply to exactly one map -
-    //unless the number is negative, in which case it indicates the area spans multiple maps.
-    //(Or hasn't been set correctly.)
+    //unless the number is negative, in which case it indicates the encounter area spans multiple maps.
+    //(Or that the map cannot be determined.)
     //Negative map indices will still attempt to have logical groupings.
     private int mapIndex = -1;
 

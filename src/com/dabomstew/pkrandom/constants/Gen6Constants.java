@@ -1318,7 +1318,7 @@ public class Gen6Constants {
         map.put(0, "Glittering Cave Ceiling Encounter");
         map.put(4, "Reflection Cave Ceiling Encounter");
         map.put(20, "Victory Road Outside 2 Sky Encounter");
-        map.put(24, "Victory Road Inside 2 Encounter");
+        map.put(24, "Victory Road Inside 2 Ceiling Encounter");
         map.put(28, "Victory Road Outside 3 Sky Encounter");
         map.put(32, "Victory Road Inside 3 Ceiling Encounter");
         map.put(36, "Victory Road Outside 4 Sky Encounter");

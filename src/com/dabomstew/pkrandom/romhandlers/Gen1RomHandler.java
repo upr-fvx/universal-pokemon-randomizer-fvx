@@ -882,7 +882,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 List<EncounterArea> sharedAreas = usedOffsets.get(offset);
                 for(EncounterArea area : sharedAreas) {
                     area.setDisplayName(area.getDisplayName() + ", " + mapNames[mapID]);
-                    area.setMapIndex(-1); //now spans multiple maps, so mapIndex is not fully applicable
+                    if(area.getMapIndex() > 0) {
+                        //now spans multiple maps, so mapIndex should be negative
+                        area.setMapIndex(area.getMapIndex() * -1);
+                    }
                 }
             }
             tableOffset += 2;
@@ -898,7 +901,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readOldRodEncounters(List<EncounterArea> encounterAreas) {
         int oldRodOffset = romEntry.getIntValue("OldRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setIdentifiers("Old Rod Fishing", -2, EncounterType.FISHING);
+        area.setIdentifiers("Old Rod Fishing", -1, EncounterType.FISHING);
         Encounter oldRodEnc = new Encounter();
         oldRodEnc.setLevel(rom[oldRodOffset + 2] & 0xFF);
         oldRodEnc.setPokemon(pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]]);
@@ -911,7 +914,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readGoodRodEncounters(List<EncounterArea> encounterAreas) {
         int goodRodOffset = romEntry.getIntValue("GoodRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setIdentifiers("Good Rod Fishing", -2, EncounterType.FISHING);
+        area.setIdentifiers("Good Rod Fishing", -1, EncounterType.FISHING);
         for (int slot = 0; slot < 2; slot++) {
             Encounter enc = new Encounter();
             enc.setLevel(rom[goodRodOffset + slot * 2] & 0xFF);
@@ -971,7 +974,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 } else {
                     EncounterArea sharedArea = usedSROffsets.get(areaOffset);
                     sharedArea.setDisplayName(sharedArea.getDisplayName() + ", " + mapNames[map]);
-                    sharedArea.setMapIndex(-3); //now spans multiple maps, so mapIndex is not fully applicable
+                    if(sharedArea.getMapIndex() > 0) {
+                        //now spans multiple maps, so mapIndex should be negative
+                        sharedArea.setMapIndex(sharedArea.getMapIndex() * -1);
+                    }
                 }
             }
         }

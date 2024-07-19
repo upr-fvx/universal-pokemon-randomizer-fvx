@@ -3986,7 +3986,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public boolean hasMapIndices() {
-		return true; //they aren't perfect, yet, but they ARE present.
+		return true;
 	}
 
 	@Override

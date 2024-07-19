@@ -2861,7 +2861,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = !settings.getWildPokemonMod().equals(Settings.WildPokemonMod.UNCHANGED);
+        boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(arm9, Gen5Constants.friendshipValueForEvoLocator);

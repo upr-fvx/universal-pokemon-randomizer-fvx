@@ -14,7 +14,7 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     public void randomizeEncounters() {
-        Settings.WildPokemonMod mode = settings.getWildPokemonMod();
+        Settings.WildPokemonRegionMod mode = settings.getWildPokemonRegionMod();
         boolean useTimeOfDay = settings.isUseTimeBasedEncounters();
         boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.THEMED_AREAS;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
@@ -35,7 +35,7 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     // only exists for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonMod mode, Settings.WildPokemonTypeMod typeMode,
+    public void randomizeEncounters(Settings.WildPokemonRegionMod mode, Settings.WildPokemonTypeMod typeMode,
                                     boolean useTimeOfDay,
                                     boolean catchEmAll, boolean similarStrength,
                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
@@ -53,13 +53,13 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     // only public for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonMod mode,
-                                     boolean useTimeOfDay,
-                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                     boolean catchEmAll, boolean similarStrength,
-                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
-                                     boolean allowAltFormes, boolean banIrregularAltFormes,
-                                     boolean abilitiesAreRandomized) {
+    public void randomizeEncounters(Settings.WildPokemonRegionMod mode,
+                                    boolean useTimeOfDay,
+                                    boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
+                                    boolean catchEmAll, boolean similarStrength,
+                                    boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
+                                    boolean allowAltFormes, boolean banIrregularAltFormes,
+                                    boolean abilitiesAreRandomized) {
         // - prep settings
         // - get encounters
         // - setup banned + allowed
@@ -80,7 +80,7 @@ public class EncounterRandomizer extends Randomizer {
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass);
         switch (mode) {
-            case RANDOM:
+            case NONE:
                 if(romHandler.isORAS()) {
                     //this mode crashes ORAS and needs special handling to approximate
                     ir.randomEncountersORAS(encounterAreas);
@@ -88,17 +88,16 @@ public class EncounterRandomizer extends Randomizer {
                     ir.randomEncounters(encounterAreas);
                 }
                 break;
-            case AREA_MAPPING:
+            case ENCOUNTER_SET:
                 ir.area1to1Encounters(encounterAreas);
                 break;
-            case LOCATION_MAPPING:
+            case MAP:
+                //TODO: make
+            case NAMED_LOCATION:
                 ir.location1to1Encounters(encounterAreas);
                 break;
-            case GLOBAL_MAPPING:
+            case GAME:
                 ir.game1to1Encounters(encounterAreas);
-                break;
-            case FAMILY_MAPPING:
-                ir.gameFamilyToFamilyEncounters(encounterAreas);
                 break;
         }
 

@@ -2620,7 +2620,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = !settings.getWildPokemonMod().equals(Settings.WildPokemonMod.UNCHANGED);
+        boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);

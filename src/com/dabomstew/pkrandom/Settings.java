@@ -70,22 +70,6 @@ public class Settings {
     private boolean banIrregularAltFormes;
     private boolean dualTypeOnly;
 
-    public int getStartersBSTMinimum() {
-        return startersBSTMinimum;
-    }
-
-    public void setStartersBSTMinimum(int startersBSTMinimum) {
-        this.startersBSTMinimum = startersBSTMinimum;
-    }
-
-    public int getStartersBSTMaximum() {
-        return startersBSTMaximum;
-    }
-
-    public void setStartersBSTMaximum(int startersBSTMaximum) {
-        this.startersBSTMaximum = startersBSTMaximum;
-    }
-
     public enum BaseStatisticsMod {
         UNCHANGED, SHUFFLE, RANDOM,
     }
@@ -224,16 +208,18 @@ public class Settings {
     private boolean doubleBattleMode;
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
-
-    public enum WildPokemonMod {
-        UNCHANGED, RANDOM, AREA_MAPPING, LOCATION_MAPPING, GLOBAL_MAPPING, FAMILY_MAPPING
+    private boolean randomizeWildPokemon;
+    public enum WildPokemonRegionMod {
+        NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
     }
     
     public enum WildPokemonTypeMod {
         NONE, THEMED_AREAS, KEEP_PRIMARY
     }
 
-    private WildPokemonMod wildPokemonMod = WildPokemonMod.UNCHANGED;
+    private WildPokemonRegionMod wildPokemonRegionMod = WildPokemonRegionMod.GAME;
+    private boolean splitWildRegionByEncounterTypes;
+    private boolean keepWildEvolutionFamilies;
     private boolean keepWildTypeThemes;
     private boolean similarStrengthEncounters;
     private boolean catchEmAllEncounters;
@@ -483,12 +469,14 @@ public class Settings {
         out.write((trainersForceFullyEvolved ? 0x80 : 0) | trainersForceFullyEvolvedLevel);
 
         // 15 wild pokemon (areas)
-        out.write(makeByteSelected(wildPokemonMod == WildPokemonMod.UNCHANGED,
-                wildPokemonMod == WildPokemonMod.RANDOM,
-                wildPokemonMod == WildPokemonMod.AREA_MAPPING,
-                wildPokemonMod == WildPokemonMod.GLOBAL_MAPPING,
-                wildPokemonMod == WildPokemonMod.FAMILY_MAPPING,
-                wildPokemonMod == WildPokemonMod.LOCATION_MAPPING, false, false));
+        out.write(makeByteSelected(!randomizeWildPokemon,
+                wildPokemonRegionMod == WildPokemonRegionMod.NONE,
+                wildPokemonRegionMod == WildPokemonRegionMod.ENCOUNTER_SET,
+                wildPokemonRegionMod == WildPokemonRegionMod.GAME,
+                keepWildEvolutionFamilies,
+                wildPokemonRegionMod == WildPokemonRegionMod.NAMED_LOCATION,
+                wildPokemonRegionMod == WildPokemonRegionMod.MAP,
+                splitWildRegionByEncounterTypes));
 
         // 16 wild pokemon (restriction)
         out.write(makeByteSelected(false,
@@ -808,13 +796,18 @@ public class Settings {
         settings.setTrainersForceFullyEvolved(restoreState(data[14], 7));
         settings.setTrainersForceFullyEvolvedLevel(data[14] & 0x7F);
 
-        settings.setWildPokemonMod(restoreEnum(WildPokemonMod.class, data[15], 0, // UNCHANGED
-                1, // RANDOM
+        settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
+
+        settings.setWildPokemonMod(restoreEnum(WildPokemonRegionMod.class, data[15], 1, // RANDOM
                 2, // AREA_MAPPING
-                5, //LOCATION_MAPPING
-                3, // GLOBAL_MAPPING
-                4 // FAMILY_MAPPING
+                6, // MAP_MAPPING
+                5, // LOCATION_MAPPING
+                3 // GLOBAL_MAPPING
         ));
+
+        settings.setKeepWildEvolutionFamilies(restoreState(data[15], 4));
+        settings.setSplitWildRegionByEncounterTypes(restoreState(data[15], 7));
+
         settings.setSimilarStrengthEncounters(restoreState(data[16], 1));
         settings.setCatchEmAllEncounters(restoreState(data[16], 2));
         settings.setWildPokemonTypeMod(restoreEnum(WildPokemonTypeMod.class, data[17], 0, // NONE
@@ -1556,6 +1549,21 @@ public class Settings {
         this.allowStarterAltFormes = allowStarterAltFormes;
     }
 
+    public int getStartersBSTMinimum() {
+        return startersBSTMinimum;
+    }
+
+    public void setStartersBSTMinimum(int startersBSTMinimum) {
+        this.startersBSTMinimum = startersBSTMinimum;
+    }
+
+    public int getStartersBSTMaximum() {
+        return startersBSTMaximum;
+    }
+
+    public void setStartersBSTMaximum(int startersBSTMaximum) {
+        this.startersBSTMaximum = startersBSTMaximum;
+    }
     
     public TypesMod getTypesMod() {
         return typesMod;
@@ -2001,16 +2009,32 @@ public class Settings {
         this.betterTrainerMovesets = betterTrainerMovesets;
     }
 
-    public WildPokemonMod getWildPokemonMod() {
-        return wildPokemonMod;
+    public boolean isRandomizeWildPokemon() {
+        return randomizeWildPokemon;
     }
 
-    public void setWildPokemonMod(boolean... bools) {
-        setWildPokemonMod(getEnum(WildPokemonMod.class, bools));
+    public void setRandomizeWildPokemon(boolean randomizeWildPokemon) {
+        this.randomizeWildPokemon = randomizeWildPokemon;
     }
 
-    public void setWildPokemonMod(WildPokemonMod wildPokemonMod) {
-        this.wildPokemonMod = wildPokemonMod;
+    public WildPokemonRegionMod getWildPokemonRegionMod() {
+        return wildPokemonRegionMod;
+    }
+
+    public void setWildPokemonRegionMod(boolean... bools) {
+        setWildPokemonMod(getEnum(WildPokemonRegionMod.class, bools));
+    }
+
+    public void setWildPokemonMod(WildPokemonRegionMod wildPokemonMod) {
+        this.wildPokemonRegionMod = wildPokemonMod;
+    }
+
+    public void setSplitWildRegionByEncounterTypes(boolean splitWildRegionByEncounterTypes) {
+        this.splitWildRegionByEncounterTypes = splitWildRegionByEncounterTypes;
+    }
+
+    public boolean isSplitWildRegionByEncounterTypes() {
+        return splitWildRegionByEncounterTypes;
     }
 
     public boolean isKeepWildTypeThemes() {
@@ -2019,6 +2043,14 @@ public class Settings {
 
     public void setKeepWildTypeThemes(boolean keepWildTypeThemes) {
         this.keepWildTypeThemes = keepWildTypeThemes;
+    }
+
+    public boolean isKeepWildEvolutionFamilies() {
+        return keepWildEvolutionFamilies;
+    }
+
+    public void setKeepWildEvolutionFamilies(boolean keepWildEvolutionFamilies) {
+        this.keepWildEvolutionFamilies = keepWildEvolutionFamilies;
     }
 
     public boolean isSimilarStrengthEncounters() {

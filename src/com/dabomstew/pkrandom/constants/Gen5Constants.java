@@ -77,11 +77,11 @@ public class Gen5Constants {
 
     public static final EncounterType[] encounterTypeValues = {EncounterType.WALKING, //Grass/Cave
             EncounterType.WALKING, //Dark grass
-            EncounterType.WALKING, //Shaking Grass
+            EncounterType.AMBUSH, //Shaking Grass
             EncounterType.SURFING, //Surfing
-            EncounterType.SURFING, //Surfing Spots
+            EncounterType.AMBUSH, //Surfing Spots
             EncounterType.FISHING, //Fishing
-            EncounterType.FISHING //Fishing spots
+            EncounterType.AMBUSH //Fishing spots
     };
 
     public static final int[] habitatClassificationOfEachType = { 0, 0, 0, 1, 1, 2, 2 };

@@ -2672,6 +2672,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
+    public boolean hasMapIndices() {
+        return true;
+    }
+
+    @Override
     public boolean hasTimeBasedEncounters() {
         return true; // All BW/BW2 do [seasons]
     }

@@ -14,22 +14,30 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     public void randomizeEncounters() {
-        Settings.WildPokemonRegionMod mode = settings.getWildPokemonRegionMod();
         boolean useTimeOfDay = settings.isUseTimeBasedEncounters();
+        int levelModifier = settings.isWildLevelsModified() ? settings.getWildLevelModifier() : 0;
+
+        if(!settings.isRandomizeWildPokemon()) {
+            modifyLevelsOnly(useTimeOfDay, levelModifier);
+            return;
+        }
+
+        Settings.WildPokemonRegionMod mode = settings.getWildPokemonRegionMod();
+        boolean splitByEncounterType = settings.isSplitWildRegionByEncounterTypes();
         boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.THEMED_AREAS;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
+        boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
         boolean noLegendaries = settings.isBlockWildLegendaries();
         boolean balanceShakingGrass = settings.isBalanceShakingGrass();
-        int levelModifier = settings.isWildLevelsModified() ? settings.getWildLevelModifier() : 0;
         boolean allowAltFormes = settings.isAllowWildAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
 
-        randomizeEncounters(mode, useTimeOfDay,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, noLegendaries,
+        randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, keepEvolutions, catchEmAll, similarStrength, noLegendaries,
                 balanceShakingGrass, levelModifier, allowAltFormes, banIrregularAltFormes, abilitiesAreRandomized);
         changesMade = true;
     }
@@ -42,10 +50,12 @@ public class EncounterRandomizer extends Randomizer {
                                     boolean allowAltFormes, boolean banIrregularAltFormes,
                                     boolean abilitiesAreRandomized) {
         randomizeEncounters(mode,
+                false,
                 useTimeOfDay,
                 typeMode == Settings.WildPokemonTypeMod.THEMED_AREAS,
                 false,
                 typeMode == Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                false,
                 catchEmAll, similarStrength,
                 noLegendaries, balanceShakingGrass, levelModifier,
                 allowAltFormes, banIrregularAltFormes,
@@ -53,10 +63,10 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     // only public for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonRegionMod mode,
+    public void randomizeEncounters(Settings.WildPokemonRegionMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                    boolean catchEmAll, boolean similarStrength,
+                                    boolean keepEvolutions, boolean catchEmAll, boolean similarStrength,
                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
                                     boolean allowAltFormes, boolean banIrregularAltFormes,
                                     boolean abilitiesAreRandomized) {
@@ -70,37 +80,47 @@ public class EncounterRandomizer extends Randomizer {
         rPokeService.setRestrictions(settings);
 
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
+        List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
         PokemonSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
         PokemonSet allowed = new PokemonSet(rPokeService.getPokemon(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
 
-
-
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass);
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
+                keepEvolutions);
         switch (mode) {
             case NONE:
                 if(romHandler.isORAS()) {
                     //this mode crashes ORAS and needs special handling to approximate
-                    ir.randomEncountersORAS(encounterAreas);
+                    ir.randomEncountersORAS(preppedAreas);
                 } else {
-                    ir.randomEncounters(encounterAreas);
+                    ir.randomEncounters(preppedAreas);
                 }
                 break;
             case ENCOUNTER_SET:
-                ir.area1to1Encounters(encounterAreas);
+                ir.area1to1Encounters(preppedAreas);
                 break;
             case MAP:
-                //TODO: make
+                ir.map1to1Encounters(preppedAreas, splitByEncounterType);
+                break;
             case NAMED_LOCATION:
-                ir.location1to1Encounters(encounterAreas);
+                ir.location1to1Encounters(preppedAreas, splitByEncounterType);
                 break;
             case GAME:
-                ir.game1to1Encounters(encounterAreas);
+                ir.game1to1Encounters(preppedAreas, splitByEncounterType);
                 break;
         }
 
+        applyLevelModifier(levelModifier, encounterAreas);
+        romHandler.setEncounters(useTimeOfDay, encounterAreas);
+    }
+
+    /**
+     * Changes the levels of wild Pokemon encounters without randomizing them.
+     */
+    private void modifyLevelsOnly(boolean useTimeOfDay, int levelModifier) {
+        List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
         applyLevelModifier(levelModifier, encounterAreas);
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }
@@ -139,9 +159,9 @@ public class EncounterRandomizer extends Randomizer {
         private final boolean catchEmAll;
         private final boolean similarStrength;
         private final boolean balanceShakingGrass;
+        private final boolean keepEvolutions;
 
-        private boolean map1to1;
-        private boolean useLocations;
+        private boolean useMapping;
 
         private Map<Type, PokemonSet> allowedByType;
         private final PokemonSet allowed;
@@ -150,27 +170,27 @@ public class EncounterRandomizer extends Randomizer {
         private Map<Type, PokemonSet> remainingByType;
         private PokemonSet remaining;
 
-        private Type areaType;
+        private Type regionType;
         private PokemonSet allowedForArea;
-        private Map<Pokemon, Pokemon> areaMap;
+        private Map<Pokemon, Pokemon> regionMap;
         private PokemonSet allowedForReplacement;
 
         private Map<Pokemon, PokemonAreaInformation> areaInformationMap;
-        private PokemonSet remainingFamilyRestricted;
-        private Map<Type, PokemonSet> remainingFamilyRestrictedByType;
 
         //ORAS's DexNav will crash if the load is higher than this value.
         final int ORAS_CRASH_THRESHOLD = 18;
 
         public InnerRandomizer(PokemonSet allowed, PokemonSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                               boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass) {
+                               boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
+                               boolean keepEvolutions) {
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
             }
             this.randomTypeThemes = randomTypeThemes;
             this.keepTypeThemes = keepTypeThemes;
             this.keepPrimaryType = keepPrimaryType;
+            this.keepEvolutions = keepEvolutions;
             this.needsTypes = keepPrimaryType || keepTypeThemes || randomTypeThemes;
             this.catchEmAll = catchEmAll;
             this.similarStrength = similarStrength;
@@ -180,9 +200,9 @@ public class EncounterRandomizer extends Randomizer {
             if (needsTypes) {
                 this.allowedByType = allowed.sortByType(false, typeService.getTypes());
             }
-            if (catchEmAll) {
-                refillRemainingPokemon();
-            }
+            //any algorithm that uses mapping should use remaining, not just catch-em-all
+            //easiest to just always use it
+            refillRemainingPokemon();
         }
 
         private void refillRemainingPokemon() {
@@ -195,52 +215,11 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
+        //This is now the one most different, algorithm-wise
+        //but it has enough overlap to make sense here, anyway.
         public void randomEncounters(List<EncounterArea> encounterAreas) {
-            map1to1 = false;
-            useLocations = false;
+            useMapping = false;
             randomEncountersInner(encounterAreas);
-        }
-
-        public void area1to1Encounters(List<EncounterArea> encounterAreas) {
-            map1to1 = true;
-            useLocations = false;
-            randomEncountersInner(encounterAreas);
-        }
-
-        public void location1to1Encounters(List<EncounterArea> encounterAreas) {
-            map1to1 = true;
-            useLocations = true;
-            randomEncountersInner(encounterAreas);
-        }
-
-        private void randomEncountersInner(List<EncounterArea> encounterAreas) {
-            List<EncounterArea> preppedEncounterAreas = prepEncounterAreas(encounterAreas);
-            for (EncounterArea area : preppedEncounterAreas) {
-                areaType = pickAreaType(area);
-                allowedForArea = setupAllowedForArea();
-
-                areaMap = new TreeMap<>();
-
-                for (Encounter enc : area) {
-                    Pokemon replacement = pickReplacement(enc);
-                    if (map1to1) {
-                        areaMap.put(enc.getPokemon(), replacement);
-                    }
-
-                    enc.setPokemon(replacement);
-                    setFormeForEncounter(enc, replacement);
-
-                    if (catchEmAll) {
-                        removeFromRemaining(replacement);
-                        if (allowedForArea.isEmpty()) {
-                            allowedForArea = setupAllowedForArea();
-                        }
-                    }
-                }
-                if (area.isForceMultipleSpecies()) {
-                    enforceMultipleSpecies(area);
-                }
-            }
         }
 
         /**
@@ -280,6 +259,167 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
+        public void area1to1Encounters(List<EncounterArea> encounterAreas) {
+            useMapping = true;
+
+            //ok. this is dumb, but it makes it integrate well.
+            List<List<EncounterArea>> regions = new ArrayList<>();
+            for(EncounterArea area : encounterAreas) {
+                List<EncounterArea> region = new ArrayList<>();
+                region.add(area);
+                regions.add(region);
+            }
+
+            randomizeRegions(regions);
+        }
+
+        public void map1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+            Collection<List<EncounterArea>> regions = EncounterArea.groupAreasByMapIndex(encounterAreas).values();
+
+            if(splitByEncounterType) {
+                Collection<List<EncounterArea>> maps = regions;
+                regions = new ArrayList<>();
+                for(List<EncounterArea> map : maps) {
+                    regions.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                }
+            }
+
+            randomizeRegions(regions);
+        }
+
+        public void location1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+            Collection<List<EncounterArea>> regions = EncounterArea.groupAreasByLocation(encounterAreas).values();
+
+            if(splitByEncounterType) {
+                Collection<List<EncounterArea>> maps = regions;
+                regions = new ArrayList<>();
+                for(List<EncounterArea> map : maps) {
+                    regions.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                }
+            }
+
+            randomizeRegions(regions);
+        }
+
+        public void game1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+
+            Collection<List<EncounterArea>> regions;
+            if (splitByEncounterType) {
+                regions = EncounterArea.groupAreasByEncounterType(encounterAreas).values();
+            } else {
+                regions = new ArrayList<>();
+                regions.add(encounterAreas);
+            }
+
+            randomizeRegions(regions);
+        }
+
+        /**
+         * Given a Collection of regions (represented by a List of EncounterAreas),
+         * randomizes each region such that type theming, 1-to-1 map, etc., are carried
+         * throughout the region.
+         * @param regions The regions to randomize.
+         */
+        private void randomizeRegions(Collection<List<EncounterArea>> regions) {
+            //I'm taking it on faith that the shuffle performed in the outer class carries through
+            //to randomize the order of the regions.
+            //TODO: confirm that.
+
+            for(List<EncounterArea> region : regions) {
+                regionMap = new HashMap<>();
+
+                PokemonSet pokemonToRandomize = new PokemonSet();
+                setupAreaInfoMap(region, pokemonToRandomize);
+
+                if(keepEvolutions) {
+                    spreadThemesThroughFamilies(pokemonToRandomize);
+                }
+
+                // shuffle to not give certain Pokémon priority when picking replacements
+                // matters for similar strength
+                List<PokemonAreaInformation> shuffled = new ArrayList<>(areaInformationMap.values());
+                Collections.shuffle(shuffled, random);
+
+                //ignoring the prioritization of longer families originally performed in family-to-family
+                //-it's unlikely to fail anyway, and worst case it repeats a family.
+
+                for (PokemonAreaInformation current : shuffled) {
+                    Pokemon replacement = pickGame1to1Replacement(current);
+                    translateMap.put(current.getPokemon(), replacement);
+                }
+
+                applyGlobalMap(prepped, translateMap);
+
+                if(!catchEmAll) {
+                    refillRemainingPokemon();
+                }
+            }
+        }
+
+        public void gameFamilyToFamilyEncounters(List<EncounterArea> encounterAreas) {
+            refillRemainingPokemon();
+            Map<Pokemon, Pokemon> translateMap = new HashMap<>();
+            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
+
+            PokemonSet pokemonToRandomize = new PokemonSet();
+            setupAreaInfoMap(prepped, pokemonToRandomize);
+
+            spreadThemesThroughFamilies(pokemonToRandomize);
+
+            //assumes that the longest evo line to randomize is 3 (or shorter)
+            //this seems a safe assumption given no 4-length evo line exists in Pokemon
+            //(Anyway, it would still include it; just wouldn't isolate it.)
+
+            //starts with rarest evo lines, moving to more common.
+            //(If this wasn't done, could end up with a 3-length with no replacement.)
+            //3-long
+            translateMap.putAll(pickReplacementFamiliesOfLength(3, false, pokemonToRandomize));
+            //3-long with gap (I'm not sure this ever actually comes up)
+            translateMap.putAll(pickReplacementFamiliesOfLength(3, true, pokemonToRandomize));
+            //2-long
+            translateMap.putAll(pickReplacementFamiliesOfLength(2, false, pokemonToRandomize));
+            //standalone
+            translateMap.putAll(pickReplacementFamiliesOfLength(1, false, pokemonToRandomize));
+
+
+            applyGlobalMap(prepped, translateMap);
+        }
+
+        private void randomEncountersInner(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+
+            for (EncounterArea area : preppedEncounterAreas) {
+                areaType = pickAreaType(area);
+                allowedForArea = setupAllowedForArea();
+
+                areaMap = new TreeMap<>();
+
+                for (Encounter enc : area) {
+                    Pokemon replacement = pickReplacement(enc);
+                    if (useMapping) {
+                        areaMap.put(enc.getPokemon(), replacement);
+                    }
+
+                    enc.setPokemon(replacement);
+                    setFormeForEncounter(enc, replacement);
+
+                    if (catchEmAll) {
+                        removeFromRemaining(replacement);
+                        if (allowedForArea.isEmpty()) {
+                            allowedForArea = setupAllowedForArea();
+                        }
+                    }
+                }
+                if (area.isForceMultipleSpecies()) {
+                    enforceMultipleSpecies(area);
+                }
+            }
+        }
+
+
+
         /**
          * Given a list of EncounterAreas, all on the same map, randomizes them with as many
          * different Pokemon as it can without crashing.
@@ -311,7 +451,7 @@ public class EncounterRandomizer extends Randomizer {
             this.area1to1Encounters(map);
 
             //set to the proper settings, in case it matters
-            map1to1 = false;
+            useMapping = false;
             useLocations = false;
 
             //then do more randomizing!
@@ -351,31 +491,6 @@ public class EncounterRandomizer extends Randomizer {
                 }
             }
 
-        }
-
-        /**
-         * Prepares the EncounterAreas for randomization by shuffling the order and flattening them if appropriate.
-         * @param unprepped The List of EncounterAreas to prepare.
-         * @return A new List of all the same Encounters, with the areas shuffled and possibly merged as appropriate.
-         */
-        private List<EncounterArea> prepEncounterAreas(List<EncounterArea> unprepped) {
-            // Clone the original set, so that we don't mess up saving
-            List<EncounterArea> prepped = new ArrayList<>(unprepped);
-
-            prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
-                    || "UNUSED".equals(area.getLocationTag()));
-            //don't randomize unused areas
-            //mostly important for catch 'em all
-
-            if (useLocations) {
-                prepped = EncounterArea.flattenLocations(prepped);
-            } else if (romHandler.isORAS()) {
-                //some modes crash in ORAS if the maps aren't flattened
-                prepped = EncounterArea.flattenEncounterTypesInMaps(prepped);
-            }
-            // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
-            Collections.shuffle(prepped, random);
-            return prepped;
         }
 
         private Type pickAreaType(EncounterArea area) {
@@ -438,7 +553,7 @@ public class EncounterRandomizer extends Randomizer {
                 allowedForReplacement = getAllowedReplacementPreservePrimaryType(enc);
             }
 
-            if (map1to1) {
+            if (useMapping) {
                 return pickReplacement1to1(enc);
             } else {
                 return pickReplacementInner(enc);
@@ -532,64 +647,6 @@ public class EncounterRandomizer extends Randomizer {
             while (area.stream().distinct().count() == 1) {
                 area.get(0).setPokemon(rPokeService.randomPokemon(random));
             }
-        }
-
-        // quite different functionally from the other random encounter methods,
-        // but still grouped in this inner class due to conceptual cohesion
-        public void game1to1Encounters(List<EncounterArea> encounterAreas) {
-            refillRemainingPokemon();
-            Map<Pokemon, Pokemon> translateMap = new HashMap<>();
-            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
-            //mostly to skip unused areas, since the order doesn't matter
-
-            setupAreaInfoMap(prepped, null);
-
-            // shuffle to not give certain Pokémon priority when picking replacements
-            // matters for similar strength
-            List<PokemonAreaInformation> shuffled = new ArrayList<>(areaInformationMap.values());
-            Collections.shuffle(shuffled, random);
-
-            for (PokemonAreaInformation current : shuffled) {
-                Pokemon replacement = pickGame1to1Replacement(current);
-                translateMap.put(current.getPokemon(), replacement);
-            }
-
-            applyGlobalMap(prepped, translateMap);
-        }
-
-        /**
-         * Randomizes the set of EncounterAreas given such that for each Pokemon in the areas, they
-         * will be replaced by exactly one new Pokemon, and its evolutionary family will replace the
-         * original Pokemon's family.
-         * @param encounterAreas The EncounterAreas to randomize.
-         */
-        public void gameFamilyToFamilyEncounters(List<EncounterArea> encounterAreas) {
-            refillRemainingPokemon();
-            Map<Pokemon, Pokemon> translateMap = new HashMap<>();
-            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
-
-            PokemonSet pokemonToRandomize = new PokemonSet();
-            setupAreaInfoMap(prepped, pokemonToRandomize);
-
-            spreadThemesThroughFamilies(pokemonToRandomize);
-
-            //assumes that the longest evo line to randomize is 3 (or shorter)
-            //this seems a safe assumption given no 4-length evo line exists in Pokemon
-            //(Anyway, it would still include it; just wouldn't isolate it.)
-
-            //starts with rarest evo lines, moving to more common.
-            //(If this wasn't done, could end up with a 3-length with no replacement.)
-            //3-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, false, pokemonToRandomize));
-            //3-long with gap (I'm not sure this ever actually comes up)
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, true, pokemonToRandomize));
-            //2-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(2, false, pokemonToRandomize));
-            //standalone
-            translateMap.putAll(pickReplacementFamiliesOfLength(1, false, pokemonToRandomize));
-
-
-            applyGlobalMap(prepped, translateMap);
         }
 
         /**
@@ -686,13 +743,6 @@ public class EncounterRandomizer extends Randomizer {
          */
         private Map<Pokemon, Pokemon> pickReplacementFamiliesOfLength(int length, boolean allowGaps,
                                                                       PokemonSet pokemonToRandomize) {
-            PokemonSet familiesToRandomize = pokemonToRandomize.filterEvoLinesAtLeastLength(length, allowGaps, true);
-            pokemonToRandomize.removeAll(familiesToRandomize);
-
-            remainingFamilyRestricted = remaining.filterEvoLinesAtLeastLength(length, allowGaps, false);
-            if (needsTypes) {
-                remainingFamilyRestrictedByType = remainingFamilyRestricted.sortByType(false);
-            }
 
             Map<Pokemon, Pokemon> result = new HashMap<>();
 
@@ -1032,6 +1082,25 @@ public class EncounterRandomizer extends Randomizer {
                 return pokemon;
             }
         }
+    }
+
+    /**
+     * Prepares the EncounterAreas for randomization by copying them, removing unused areas, and shuffling the order.
+     * @param unprepped The List of EncounterAreas to prepare.
+     * @return A new List of all the same Encounters, with the areas shuffled and possibly merged as appropriate.
+     */
+    private List<EncounterArea> prepEncounterAreas(List<EncounterArea> unprepped) {
+        // Clone the original set, so that we don't mess up saving
+        List<EncounterArea> prepped = new ArrayList<>(unprepped);
+
+        prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
+                || "UNUSED".equals(area.getLocationTag()));
+        //don't randomize unused areas
+        //mostly important for catch 'em all
+
+        // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
+        Collections.shuffle(prepped, random);
+        return prepped;
     }
 
     private void setFormeForEncounter(Encounter enc, Pokemon pk) {

@@ -415,6 +415,8 @@ public interface RomHandler {
 
     // TMs on the field
 
+    // "Required" seems to mean that you can only get the TM as a field item in vanilla.
+    // Thus, when randomizing field items they must be included, or otherwise become unavailable.
     List<Integer> getRequiredFieldTMs();
 
     List<Integer> getCurrentFieldTMs();
@@ -423,9 +425,9 @@ public interface RomHandler {
 
     // Everything else
 
-    List<Integer> getRegularFieldItems();
+    List<Item> getRegularFieldItems();
 
-    void setRegularFieldItems(List<Integer> items);
+    void setRegularFieldItems(List<Item> items);
 
     // ============
     // Special Shops

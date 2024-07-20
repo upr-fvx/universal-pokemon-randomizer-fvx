@@ -44,7 +44,7 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void shuffleFieldItems() {
-        List<Integer> currentItems = romHandler.getRegularFieldItems();
+        List<Item> currentItems = romHandler.getRegularFieldItems();
         List<Integer> currentTMs = romHandler.getCurrentFieldTMs();
 
         Collections.shuffle(currentItems, random);
@@ -58,15 +58,17 @@ public class ItemRandomizer extends Randomizer {
     public void randomizeFieldItems() {
         boolean banBadItems = settings.isBanBadRandomFieldItems();
         boolean distributeItemsControl = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
-        boolean uniqueItems = !settings.isBalanceShopPrices();
+        boolean uniqueItems = !settings.isBalanceShopPrices(); // why is uniqueItems related to shop prices???
+
+        List<Item> allItems = romHandler.getItems();
 
         ItemList possibleItems = banBadItems ? romHandler.getNonBadItems().copy() : romHandler.getAllowedItems().copy();
-        List<Integer> currentItems = romHandler.getRegularFieldItems();
+        List<Item> currentItems = romHandler.getRegularFieldItems();
+        Set<Item> uniqueNoSellItems = romHandler.getUniqueNoSellItems();
+
         List<Integer> currentTMs = romHandler.getCurrentFieldTMs();
         List<Integer> requiredTMs = romHandler.getRequiredFieldTMs();
-        List<Integer> uniqueNoSellItems = romHandler.getUniqueNoSellItems().stream()
-                .map(Item::getId)
-                .collect(Collectors.toList());
+
         // System.out.println("distributeItemsControl: "+ distributeItemsControl);
 
         int fieldItemCount = currentItems.size();
@@ -74,7 +76,7 @@ public class ItemRandomizer extends Randomizer {
         int reqTMCount = requiredTMs.size();
         int totalTMCount = romHandler.getTMCount();
 
-        List<Integer> newItems = new ArrayList<>();
+        List<Item> newItems = new ArrayList<>();
         List<Integer> newTMs = new ArrayList<>(requiredTMs);
 
         // List<Integer> chosenItems = new ArrayList<Integer>(); // collecting chosenItems for later process
@@ -87,8 +89,8 @@ public class ItemRandomizer extends Randomizer {
                     chosenItem = possibleItems.randomNonTM(random);
                     iterNum += 1;
                 }
-                newItems.add(chosenItem);
-                if (uniqueItems && uniqueNoSellItems.contains(chosenItem)) {
+                newItems.add(allItems.get(chosenItem));
+                if (uniqueItems && uniqueNoSellItems.contains(allItems.get(chosenItem))) {
                     possibleItems.banSingles(chosenItem);
                 } else {
                     setItemPlacementHistory(chosenItem);
@@ -97,8 +99,8 @@ public class ItemRandomizer extends Randomizer {
         } else {
             for (int i = 0; i < fieldItemCount; i++) {
                 int chosenItem = possibleItems.randomNonTM(random);
-                newItems.add(chosenItem);
-                if (uniqueItems && uniqueNoSellItems.contains(chosenItem)) {
+                newItems.add(allItems.get(chosenItem));
+                if (uniqueItems && uniqueNoSellItems.contains(allItems.get(chosenItem))) {
                     possibleItems.banSingles(chosenItem);
                 }
             }

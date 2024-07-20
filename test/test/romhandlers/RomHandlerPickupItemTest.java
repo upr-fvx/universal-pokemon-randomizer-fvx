@@ -7,12 +7,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerPickupItemTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void pickupItemsDoNotChangeWithGetAndSet(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
         loadROM(romName);
         List<PickupItem> before = romHandler.getPickupItems();
         System.out.println("before:");

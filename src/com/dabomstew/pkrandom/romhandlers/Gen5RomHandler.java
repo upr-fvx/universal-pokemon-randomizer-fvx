@@ -3432,13 +3432,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
-        List<Integer> fieldItems = this.getFieldItems();
-        List<Integer> fieldRegItems = new ArrayList<>();
+    public List<Item> getRegularFieldItems() {
+        List<Integer> fieldItems = getFieldItems();
+        List<Item> allItems = getItems();
+        List<Item> fieldRegItems = new ArrayList<>();
 
         for (int item : fieldItems) {
             if (Gen5Constants.allowedItems.isAllowed(item) && !(Gen5Constants.allowedItems.isTM(item))) {
-                fieldRegItems.add(item);
+                fieldRegItems.add(allItems.get(item));
             }
         }
 
@@ -3446,15 +3447,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
-        List<Integer> fieldItems = this.getFieldItems();
+    public void setRegularFieldItems(List<Item> items) {
+        List<Integer> fieldItems = getFieldItems();
         int fiLength = fieldItems.size();
-        Iterator<Integer> iterNewItems = items.iterator();
+        Iterator<Item> iterNewItems = items.iterator();
 
         for (int i = 0; i < fiLength; i++) {
             int oldItem = fieldItems.get(i);
             if (!(Gen5Constants.allowedItems.isTM(oldItem)) && Gen5Constants.allowedItems.isAllowed(oldItem)) {
-                int newItem = iterNewItems.next();
+                int newItem = iterNewItems.next().getId();
                 fieldItems.set(i, newItem);
             }
         }

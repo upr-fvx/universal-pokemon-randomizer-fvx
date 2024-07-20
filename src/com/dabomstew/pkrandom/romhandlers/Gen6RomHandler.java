@@ -3438,14 +3438,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
-        List<Integer> fieldItems = this.getFieldItems();
-        List<Integer> fieldRegItems = new ArrayList<>();
+    public List<Item> getRegularFieldItems() {
+        List<Integer> fieldItems = getFieldItems();
+        List<Item> allItems = getItems();
+        List<Item> fieldRegItems = new ArrayList<>();
 
         ItemList allowedItems = Gen6Constants.getAllowedItems(romEntry.getRomType());
         for (int item : fieldItems) {
             if (allowedItems.isAllowed(item) && !(allowedItems.isTM(item))) {
-                fieldRegItems.add(item);
+                fieldRegItems.add(allItems.get(item));
             }
         }
 
@@ -3453,16 +3454,17 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
+    public void setRegularFieldItems(List<Item> items) {
         List<Integer> fieldItems = this.getFieldItems();
         int fiLength = fieldItems.size();
-        Iterator<Integer> iterNewItems = items.iterator();
+        Iterator<Item> iterNewItems = items.iterator();
 
         ItemList allowedItems = Gen6Constants.getAllowedItems(romEntry.getRomType());
         for (int i = 0; i < fiLength; i++) {
             int oldItem = fieldItems.get(i);
+            // TODO: why exclude master ball here?
             if (!(allowedItems.isTM(oldItem)) && allowedItems.isAllowed(oldItem) && oldItem != Items.masterBall) {
-                int newItem = iterNewItems.next();
+                int newItem = iterNewItems.next().getId();
                 fieldItems.set(i, newItem);
             }
         }

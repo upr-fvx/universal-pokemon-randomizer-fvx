@@ -3716,35 +3716,36 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
+    public List<Item> getRegularFieldItems() {
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;
         }
-        List<Integer> fieldItems = new ArrayList<>();
+        List<Item> allItems = getItems();
+        List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
             int itemHere = readWord(offset);
             if (Gen3Constants.allowedItems.isAllowed(itemHere) && !(Gen3Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(itemHere);
+                fieldItems.add(allItems.get(itemHere));
             }
         }
         return fieldItems;
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
+    public void setRegularFieldItems(List<Item> items) {
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;
         }
-        Iterator<Integer> iterItems = items.iterator();
+        Iterator<Item> iterItems = items.iterator();
 
         for (int offset : itemOffs) {
             int itemHere = readWord(offset);
             if (Gen3Constants.allowedItems.isAllowed(itemHere) && !(Gen3Constants.allowedItems.isTM(itemHere))) {
                 // Replace it
-                writeWord(offset, iterItems.next());
+                writeWord(offset, iterItems.next().getId());
             }
         }
 

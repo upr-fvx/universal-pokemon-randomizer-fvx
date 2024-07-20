@@ -2507,29 +2507,30 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
+    public List<Item> getRegularFieldItems() {
         List<Integer> itemOffsets = getItemOffsets();
-        List<Integer> fieldItems = new ArrayList<>();
+        List<Item> allItems = getItems();
+        List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
             int itemHere = rom[offset] & 0xFF;
             if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(itemHere);
+                fieldItems.add(allItems.get(itemHere));
             }
         }
         return fieldItems;
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
+    public void setRegularFieldItems(List<Item> items) {
         List<Integer> itemOffsets = getItemOffsets();
-        Iterator<Integer> iterItems = items.iterator();
+        Iterator<Item> iterItems = items.iterator();
 
         for (int offset : itemOffsets) {
             int itemHere = rom[offset] & 0xFF;
             if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
                 // Replace it
-                writeByte(offset, (byte) (iterItems.next().intValue()));
+                writeByte(offset, (byte) (iterItems.next().getId()));
             }
         }
 

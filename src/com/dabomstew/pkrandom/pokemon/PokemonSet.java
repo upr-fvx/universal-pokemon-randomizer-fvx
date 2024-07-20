@@ -313,6 +313,27 @@ public class PokemonSet extends HashSet<Pokemon> {
         }
     }
 
+    /**
+     * Finds if all Pokemon in this set share one or more types.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return The set of Types shared by all Pokemon in the set, or an empty set if none were shared.
+     */
+    public Set<Type> getSharedTypes(boolean useOriginal) {
+        if(this.isEmpty()) {
+            return EnumSet.noneOf(Type.class);
+        }
+        Set<Type> sharedTypes = EnumSet.allOf(Type.class);
+
+        for(Pokemon poke : this) {
+            sharedTypes.removeIf(t -> !poke.hasType(t, useOriginal));
+            if(sharedTypes.isEmpty()) {
+                break;
+            }
+        }
+
+        return sharedTypes;
+    }
+
     //End Type Zone
 
     //Evolution methods

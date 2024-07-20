@@ -73,8 +73,8 @@ public class EncounterArea extends ArrayList<Encounter> {
     /**
      * Returns an unmodifiable set of the {@link Pokemon} which should NOT have {@link Encounter}s in this area.
      */
-    public Set<Pokemon> getBannedPokemon() {
-        return Collections.unmodifiableSet(bannedPokemon);
+    public PokemonSet getBannedPokemon() {
+        return PokemonSet.unmodifiable(bannedPokemon);
     }
 
     public void banPokemon(Pokemon toBan) {

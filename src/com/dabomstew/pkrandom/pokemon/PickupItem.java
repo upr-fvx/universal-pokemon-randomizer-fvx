@@ -1,6 +1,7 @@
 package com.dabomstew.pkrandom.pokemon;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PickupItem {
     public static final int PROBABILITY_SLOTS = 10;
@@ -18,6 +19,20 @@ public class PickupItem {
 
     public int[] getProbabilities() {
         return probabilities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof PickupItem) {
+            PickupItem other = (PickupItem) o;
+            return item.equals(other.item) && Arrays.equals(probabilities, other.probabilities);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item, Arrays.hashCode(probabilities));
     }
 
     @Override

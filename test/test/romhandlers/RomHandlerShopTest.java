@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -32,10 +33,10 @@ public class RomHandlerShopTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        System.out.println("Before: " + toStringWithNames(shopItems));
+        System.out.println("Before: " + toMultilineString(shopItems));
         Map<Integer, Shop> before = new HashMap<>(shopItems);
         romHandler.setShopItems(shopItems);
-        System.out.println("After: " + toStringWithNames(romHandler.getShopItems()));
+        System.out.println("After: " + toMultilineString(romHandler.getShopItems()));
         assertEquals(before, romHandler.getShopItems());
     }
 
@@ -58,7 +59,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(romHandler.hasShopSupport());
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            assertNotNull(shop.name);
+            assertNotNull(shop.getName());
         }
     }
 
@@ -70,12 +71,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         boolean hasMainGameShops = false;
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            if (shop.isMainGame) {
+            if (shop.isMainGame()) {
                 hasMainGameShops = true;
                 break;
             }
         }
-        System.out.println(toStringWithNames(shopItems));
+        System.out.println(toMultilineString(shopItems));
         assertTrue(hasMainGameShops);
     }
 
@@ -108,9 +109,9 @@ public class RomHandlerShopTest extends RomHandlerTest {
         ItemList nonBad = romHandler.getNonBadItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertTrue(nonBad.isAllowed(itemID));
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                assertTrue(nonBad.isAllowed(item.getId()));
             }
         }
     }
@@ -125,12 +126,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setBanRegularShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        List<Integer> regularShop = romHandler.getRegularShopItems();
+        Set<Item> regularShop = romHandler.getRegularShopItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertFalse(regularShop.contains(itemID));
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                assertFalse(regularShop.contains(item));
             }
         }
     }
@@ -145,12 +146,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setBanOPShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        List<Integer> opShop = romHandler.getOPShopItems();
+        Set<Item> opShop = romHandler.getOPShopItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertFalse(opShop.contains(itemID));
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                assertFalse(opShop.contains(item));
             }
         }
     }
@@ -165,18 +166,18 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setGuaranteeEvolutionItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        List<Integer> evoItems = romHandler.getEvolutionItems();
-        Map<Integer, Boolean> placed = new HashMap<>();
-        for (int evoItem : evoItems) {
+        Set<Item> evoItems = romHandler.getEvolutionItems();
+        Map<Item, Boolean> placed = new HashMap<>();
+        for (Item evoItem : evoItems) {
             placed.put(evoItem, false);
         }
 
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (evoItems.contains(itemID)) {
-                    placed.put(itemID, true);
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                if (evoItems.contains(item)) {
+                    placed.put(item, true);
                 }
             }
         }
@@ -196,18 +197,18 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setGuaranteeXItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        List<Integer> xItems = romHandler.getXItems();
-        Map<Integer, Boolean> placed = new HashMap<>();
-        for (int xItem : xItems) {
+        Set<Item> xItems = romHandler.getXItems();
+        Map<Item, Boolean> placed = new HashMap<>();
+        for (Item xItem : xItems) {
             placed.put(xItem, false);
         }
 
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (xItems.contains(itemID)) {
-                    placed.put(itemID, true);
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                if (xItems.contains(item)) {
+                    placed.put(item, true);
                 }
             }
         }
@@ -228,26 +229,26 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setGuaranteeXItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        List<Integer> evoItems = romHandler.getEvolutionItems();
-        Map<Integer, Boolean> placedEvo = new HashMap<>();
-        for (int evoItem : evoItems) {
+        Set<Item> evoItems = romHandler.getEvolutionItems();
+        Map<Item, Boolean> placedEvo = new HashMap<>();
+        for (Item evoItem : evoItems) {
             placedEvo.put(evoItem, false);
         }
-        List<Integer> xItems = romHandler.getXItems();
-        Map<Integer, Boolean> placedX = new HashMap<>();
-        for (int xItem : xItems) {
+        Set<Item> xItems = romHandler.getXItems();
+        Map<Item, Boolean> placedX = new HashMap<>();
+        for (Item xItem : xItems) {
             placedX.put(xItem, false);
         }
 
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (evoItems.contains(itemID)) {
-                    placedEvo.put(itemID, true);
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                if (evoItems.contains(item)) {
+                    placedEvo.put(item, true);
                 }
-                if (xItems.contains(itemID)) {
-                    placedX.put(itemID, true);
+                if (xItems.contains(item)) {
+                    placedX.put(item, true);
                 }
             }
         }
@@ -260,38 +261,16 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assertEquals(xItems.size(), placedXCount);
     }
 
-    private String toStringWithNames(Map<Integer, Shop> shops) {
+    private String toMultilineString(Map<Integer, Shop> shops) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         for (Map.Entry<Integer, Shop> entry : shops.entrySet()) {
             sb.append(entry.getKey());
             sb.append(" -> ");
-            sb.append(toStringWithNames(entry.getValue()));
+            sb.append(entry.getValue());
             sb.append("\n");
         }
         sb.append("}\n");
-        return sb.toString();
-    }
-
-    private String toStringWithNames(Shop shop) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Shop [name=");
-        sb.append(shop.name);
-        sb.append(", isMainGame=");
-        sb.append(shop.isMainGame);
-        List<Item> items = romHandler.getItems();
-        sb.append(", items=[");
-        for (int i = 0; i < shop.items.size(); i++) {
-            int itemID = shop.items.get(i);
-            sb.append(itemID);
-            sb.append("-");
-            sb.append(items.get(itemID).getName());
-            if (i != shop.items.size() - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("]");
-        sb.append("]");
         return sb.toString();
     }
 

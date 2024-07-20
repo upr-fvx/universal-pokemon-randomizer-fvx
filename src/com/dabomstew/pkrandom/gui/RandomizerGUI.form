@@ -2638,8 +2638,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRandomRadioButton.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRandomRadioButton.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionNoneRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionNoneRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <vspacer id="94160">
@@ -2654,8 +2654,8 @@
                         <properties>
                           <enabled value="false"/>
                           <selected value="true"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpGlobal1To1RadioButton.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpGlobal1To1RadioButton.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionGlobalRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionGlobalRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="19fb8" class="javax.swing.JRadioButton" binding="wpRegionNamedLocationRadioButton">
@@ -2664,8 +2664,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpLocation1To1RadioButton.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpLocation1To1RadioButton.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionLocationRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionLocationRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="14a70" class="javax.swing.JRadioButton" binding="wpRegionMapRadioButton">
@@ -2674,7 +2674,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpMap1To1RadioButton.text"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionMapRadioButton.text"/>
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpMap1To1RadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -2694,14 +2694,14 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpArea1To1RadioButton.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpArea1To1RadioButton.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionEncounterSetRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionEncounterSetRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="c3381">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                            <minimum-size width="100" height="-1"/>
+                            <preferred-size width="17" height="-1"/>
                           </grid>
                         </constraints>
                       </hspacer>

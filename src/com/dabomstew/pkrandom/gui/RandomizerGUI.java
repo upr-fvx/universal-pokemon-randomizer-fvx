@@ -517,6 +517,7 @@ public class RandomizerGUI {
         wpRandomizeWildPokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         wpRegionNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());
         wpRegionEncounterSetRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        wpRegionMapRadioButton.addActionListener(e->enableOrDisableSubControls());
         wpRegionNamedLocationRadioButton.addActionListener(e -> enableOrDisableSubControls());
         wpRegionGameRadioButton.addActionListener(e -> enableOrDisableSubControls());
         wpTRNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());

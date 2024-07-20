@@ -193,15 +193,15 @@ public class StaticPokemonRandomizer extends Randomizer {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         PokemonSet megaEvoPokemonLeft = rPokeService.getMegaEvolutions()
                                 .stream()
-                                .filter(mega -> mega.method == 1)
-                                .map(mega -> mega.from)
+                                .filter(MegaEvolution::isNeedsItem)
+                                .map(mega -> mega.getFrom())
                                 .filter(pokemonLeft::contains)
                                 .collect(Collectors.toCollection(PokemonSet::new));
                         if (megaEvoPokemonLeft.isEmpty()) {
                             megaEvoPokemonLeft = rPokeService.getMegaEvolutions()
                                     .stream()
-                                    .filter(mega -> mega.method == 1)
-                                    .map(mega -> mega.from)
+                                    .filter(MegaEvolution::isNeedsItem)
+                                    .map(mega -> mega.getFrom())
                                     .filter(rPokeService.getAll(false)::contains)
                                     .collect(Collectors.toCollection(PokemonSet::new));
                         }
@@ -220,7 +220,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         newStatic.heldItem = newPK
                                 .getMegaEvolutionsFrom()
                                 .get(random.nextInt(newPK.getMegaEvolutionsFrom().size()))
-                                .argument;
+                                .getItem().getId();
                     } else {
                         if (old.restrictedPool) {
                             PokemonSet restrictedPool = pokemonLeft
@@ -507,8 +507,8 @@ public class StaticPokemonRandomizer extends Randomizer {
         Set<MegaEvolution> megaEvos = rPokeService.getMegaEvolutions();
         PokemonSet megaEvoPokemon = megaEvos
                 .stream()
-                .filter(mega -> mega.method == 1)
-                .map(mega -> mega.from)
+                .filter(MegaEvolution::isNeedsItem)
+                .map(mega -> mega.getFrom())
                 .collect(Collectors.toCollection(PokemonSet::new));
         PokemonSet megaEvoPokemonLeft = new PokemonSet(megaEvoPokemon).filter(pokemonLeft::contains);
         if (megaEvoPokemonLeft.isEmpty()) {
@@ -520,7 +520,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         newStatic.heldItem = newPK
                 .getMegaEvolutionsFrom()
                 .get(random.nextInt(newPK.getMegaEvolutionsFrom().size()))
-                .argument;
+                .getItem().getId();
         return newPK;
     }
 

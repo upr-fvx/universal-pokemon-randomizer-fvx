@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.pokemon;
 
 /*----------------------------------------------------------------------------*/
-/*--  MegaEvolution.java - represents an mega evolution                     --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -23,17 +21,41 @@ package com.dabomstew.pkrandom.pokemon;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Represents a mega evolution.
+ */
 public class MegaEvolution {
-    public Pokemon from;
-    public Pokemon to;
-    public int method;
-    public int argument;
-    public boolean carryStats = true;
+    private final Pokemon from;
+    private final Pokemon to;
+    private final boolean needsItem;
+    private final Item item;
 
-    public MegaEvolution(Pokemon from, Pokemon to, int method, int argument) {
+    public MegaEvolution(Pokemon from, Pokemon to, boolean needsItem, Item item) {
         this.from = from;
         this.to = to;
-        this.method = method;
-        this.argument = argument;
+        this.needsItem = needsItem;
+        this.item = item;
+    }
+
+    public Pokemon getFrom() {
+        return from;
+    }
+
+    public Pokemon getTo() {
+        return to;
+    }
+
+    public boolean isNeedsItem() {
+        return needsItem;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    @Override
+    public String toString() {
+        return "MegaEvolution[from=" + from.fullName() + ", to=" + to.fullName() + ", needsItem=" + needsItem
+                + (needsItem ? ", item=" + item : "") + "]";
     }
 }

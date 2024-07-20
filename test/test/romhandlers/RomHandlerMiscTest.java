@@ -4,6 +4,7 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.pokemon.GenRestrictions;
+import com.dabomstew.pkrandom.pokemon.MegaEvolution;
 import com.dabomstew.pkrandom.pokemon.Pokemon;
 import com.dabomstew.pkrandom.pokemon.PokemonSet;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
@@ -305,7 +306,6 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         }
     }
 
-
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void allPokemonHaveAGeneration(String romName){
@@ -316,6 +316,33 @@ public class RomHandlerMiscTest extends RomHandlerTest {
             System.out.println(pk.fullName());
             System.out.println(pk.getGeneration());
             assertNotEquals(-1, pk.getGeneration());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void megaEvosShareNameWithBaseFormes(String romName){
+        loadROM(romName);
+
+        for (MegaEvolution mev : romHandler.getMegaEvolutions()) {
+            System.out.println(mev);
+            assertEquals(mev.getFrom().getName(), mev.getTo().getName());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void megaEvosNeedItemOfAppropriateName(String romName){
+        // i.e. Venusaur is linked to Venusaurite, Sableye to Sablenite
+        loadROM(romName);
+
+        for (MegaEvolution mev : romHandler.getMegaEvolutions()) {
+            System.out.println(mev);
+            if (mev.isNeedsItem()) {
+                String prefix = mev.getFrom().getName().substring(0, 3);
+                String itemName = mev.getItem().getName();
+                assertTrue(itemName.startsWith(prefix));
+            }
         }
     }
 

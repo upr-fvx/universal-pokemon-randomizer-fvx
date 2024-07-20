@@ -3,7 +3,6 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.pokemon.*;
 import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
@@ -28,9 +27,9 @@ public class PokemonBaseStatRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1)
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
                     continue;
-                megaEvo.to.copyShuffledStatsUpEvolution(megaEvo.from);
+                megaEvo.getTo().copyShuffledStatsUpEvolution(megaEvo.getFrom());
             }
         }
         changesMade = true;
@@ -55,10 +54,10 @@ public class PokemonBaseStatRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
-                    megaEvo.to.assignNewStatsForEvolution(megaEvo.from, random);
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
+                    megaEvo.getTo().assignNewStatsForEvolution(megaEvo.getFrom(), random);
                 } else {
-                    megaEvo.to.copyRandomizedStatsUpEvolution(megaEvo.from);
+                    megaEvo.getTo().copyRandomizedStatsUpEvolution(megaEvo.getFrom());
                 }
             }
         }

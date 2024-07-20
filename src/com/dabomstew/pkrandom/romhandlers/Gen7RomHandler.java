@@ -134,13 +134,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
+        itemNames = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
+
         loadPokemonStats();
         loadMoves();
 
         pokemonListInclFormes = Arrays.asList(pokes);
         pokemonList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen7Constants.getPokemonCount(romEntry.getRomType()) + 1));
 
-        itemNames = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen7Constants.getShopNames(romEntry.getRomType());
 
@@ -474,6 +475,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void populateMegaEvolutions() {
+        List<Item> allItems = getItems();
+
         for (Pokemon pkmn : pokes) {
             if (pkmn != null) {
                 pkmn.getMegaEvolutionsFrom().clear();
@@ -492,22 +495,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int formNum = readWord(megaEvoEntry, evo * 8);
                     int method = readWord(megaEvoEntry, evo * 8 + 2);
                     if (method >= 1) {
-                        int argument = readWord(megaEvoEntry, evo * 8 + 4);
                         int megaSpecies = absolutePokeNumByBaseForme
                                 .getOrDefault(pk.getNumber(),dummyAbsolutePokeNums)
                                 .getOrDefault(formNum,0);
-                        MegaEvolution megaEvo = new MegaEvolution(pk, pokes[megaSpecies], method, argument);
+                        boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
+                        Item item = allItems.get(readWord(megaEvoEntry, evo * 8 + 4));
+                        MegaEvolution megaEvo = new MegaEvolution(pk, pokes[megaSpecies], needsItem, item);
                         if (!pk.getMegaEvolutionsFrom().contains(megaEvo)) {
                             pk.getMegaEvolutionsFrom().add(megaEvo);
                             pokes[megaSpecies].getMegaEvolutionsTo().add(megaEvo);
                         }
                         megaEvolutions.add(megaEvo);
-                    }
-                }
-                // split evos don't carry stats
-                if (pk.getMegaEvolutionsFrom().size() > 1) {
-                    for (MegaEvolution e : pk.getMegaEvolutionsFrom()) {
-                        e.carryStats = false;
                     }
                 }
             }

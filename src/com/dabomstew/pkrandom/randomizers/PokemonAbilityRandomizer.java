@@ -104,11 +104,11 @@ public class PokemonAbilityRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1)
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
                     continue;
-                megaEvo.to.setAbility1(megaEvo.from.getAbility1());
-                megaEvo.to.setAbility2(megaEvo.from.getAbility2());
-                megaEvo.to.setAbility3(megaEvo.from.getAbility3());
+                megaEvo.getTo().setAbility1(megaEvo.getFrom().getAbility1());
+                megaEvo.getTo().setAbility2(megaEvo.getFrom().getAbility2());
+                megaEvo.getTo().setAbility3(megaEvo.getFrom().getAbility3());
             }
         }
 

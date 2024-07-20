@@ -85,7 +85,7 @@ public class StaticEncounter {
     public boolean canMegaEvolve() {
         if (heldItem != 0) {
             for (MegaEvolution mega: pkmn.getMegaEvolutionsFrom()) {
-                if (mega.argument == heldItem) {
+                if (mega.getItem().getId() == heldItem) {
                     return true;
                 }
             }

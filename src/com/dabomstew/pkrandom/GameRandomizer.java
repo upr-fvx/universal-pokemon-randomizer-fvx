@@ -549,7 +549,7 @@ public class GameRandomizer {
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
             for (TrainerPokemon tpk : t.pokemon) {
-                checkValue = addToCV(checkValue, tpk.level, tpk.species.getNumber());
+                checkValue = addToCV(checkValue, tpk.getLevel(), tpk.getSpecies().getNumber());
             }
         }
 
@@ -1162,16 +1162,15 @@ public class GameRandomizer {
                 log.printf("@%X", t.offset);
             }
 
-            List<Item> items = romHandler.getItems();
             if (logTrainerMovesets) {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), items.get(tpk.heldItem).getName());
+                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
                     log.print(", Ability: " + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;
-                    for (int move : tpk.moves) {
+                    for (int move : tpk.getMoves()) {
                         if (move != 0) {
                             if (!first) {
                                 log.print(", ");
@@ -1189,7 +1188,7 @@ public class GameRandomizer {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), items.get(tpk.heldItem).getName());
+                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
                     first = false;
                 }
             }

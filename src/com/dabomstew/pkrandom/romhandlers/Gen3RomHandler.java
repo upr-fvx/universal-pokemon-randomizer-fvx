@@ -117,13 +117,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private List<Species> speciesList;
     private int numRealPokemon;
     private List<Trainer> trainers;
+    private List<Item> items;
     private Move[] moves;
     private boolean jamboMovesetHack;
     private boolean havePatchedObedience;
     private String[] tb;
     public Map<String, Byte> d;
     private String[] abilityNames;
-    private String[] itemNames;
     private boolean mapLoadingDone;
     private List<Integer> itemOffs;
     private String[][] mapNames;
@@ -1612,6 +1612,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void loadTrainers() {
+        List<Item> allItems = getItems();
         trainers = new ArrayList<>();
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
@@ -1658,30 +1659,30 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 // blocks of 8 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.IVs = ((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255;
-                    thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
-                    thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
+                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
+                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
+                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 2) {
                 // blocks of 8 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.IVs = ((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255;
-                    thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
-                    thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
-                    thisPoke.heldItem = readWord(pointerToPokes + poke * 8 + 6);
+                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
+                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
+                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
+                    thisPoke.setHeldItem(allItems.get(readWord(pointerToPokes + poke * 8 + 6)));
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 1) {
                 // blocks of 16 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.IVs = ((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255;
-                    thisPoke.level = readWord(pointerToPokes + poke * 16 + 2);
-                    thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 16 + 4)];
+                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
+                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
+                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
                     for (int move = 0; move < 4; move++) {
-                        thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
+                        thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
                     }
                     tr.pokemon.add(thisPoke);
                 }
@@ -1689,12 +1690,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 // blocks of 16 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.IVs = ((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255;
-                    thisPoke.level = readWord(pointerToPokes + poke * 16 + 2);
-                    thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 16 + 4)];
-                    thisPoke.heldItem = readWord(pointerToPokes + poke * 16 + 6);
+                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
+                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
+                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
+                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 16 + 6)));
                     for (int move = 0; move < 4; move++) {
-                        thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
+                        thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
                     tr.pokemon.add(thisPoke);
                 }
@@ -1736,11 +1737,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
 			TrainerPokemon tp = new TrainerPokemon();
-			tp.species = pokesInternal[readWord(currentOffset)];
-			tp.IVs = rom[currentOffset + 2];
-			tp.level = rom[currentOffset + 3];
+			tp.setSpecies(pokesInternal[readWord(currentOffset)]);
+			tp.setIVs(rom[currentOffset + 2]);
+			tp.setLevel(rom[currentOffset + 3]);
 			for (int move = 0; move < 4; move++) {
-				tp.moves[move] = readWord(currentOffset + 12 + (move * 2));
+				tp.getMoves()[move] = readWord(currentOffset + 12 + (move * 2));
 			}
 			mossdeepSteven.pokemon.add(tp);
 		}
@@ -1831,37 +1832,37 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			for (int tpIndex = 0; tpIndex < trainer.pokemon.size(); tpIndex++) {
 				TrainerPokemon tp = trainer.pokemon.get(tpIndex);
 				// Add 1 to offset integer division truncation
-				writeWord(pokemonData, tpIndex * 16, Math.min(255, 1 + (tp.IVs * 255) / 31));
-				writeWord(pokemonData, tpIndex * 16 + 2, tp.level);
-				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.species.getNumber()]);
+				writeWord(pokemonData, tpIndex * 16, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
+				writeWord(pokemonData, tpIndex * 16 + 2, tp.getLevel());
+				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
 				int movesStart;
 				if (trainer.pokemonHaveItems()) {
-					writeWord(pokemonData, tpIndex * 16 + 6, tp.heldItem);
+					writeWord(pokemonData, tpIndex * 16 + 6, tp.getHeldItem().getId());
 					movesStart = 8;
 				} else {
 					movesStart = 6;
 					writeWord(pokemonData, tpIndex * 16 + 14, 0);
 				}
-				if (tp.resetMoves) {
-					int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.species.getNumber(), movesets, tp.level);
+				if (tp.isResetMoves()) {
+					int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
 					for (int m = 0; m < 4; m++) {
 						writeWord(pokemonData, tpIndex * 16 + movesStart + m * 2, pokeMoves[m]);
 					}
 				} else {
-					writeWord(pokemonData, tpIndex * 16 + movesStart, tp.moves[0]);
-					writeWord(pokemonData, tpIndex * 16 + movesStart + 2, tp.moves[1]);
-					writeWord(pokemonData, tpIndex * 16 + movesStart + 4, tp.moves[2]);
-					writeWord(pokemonData, tpIndex * 16 + movesStart + 6, tp.moves[3]);
+					writeWord(pokemonData, tpIndex * 16 + movesStart, tp.getMoves()[0]);
+					writeWord(pokemonData, tpIndex * 16 + movesStart + 2, tp.getMoves()[1]);
+					writeWord(pokemonData, tpIndex * 16 + movesStart + 4, tp.getMoves()[2]);
+					writeWord(pokemonData, tpIndex * 16 + movesStart + 6, tp.getMoves()[3]);
 				}
 			}
 		} else {
 			// no moves, blocks of 8 bytes
 			for (int tpIndex = 0; tpIndex < trainer.pokemon.size(); tpIndex++) {
 				TrainerPokemon tp = trainer.pokemon.get(tpIndex);
-				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.IVs * 255) / 31));
-				writeWord(pokemonData, tpIndex * 8 + 2, tp.level);
-				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.species.getNumber()]);
-                writeWord(pokemonData, tpIndex * 8 + 6, trainer.pokemonHaveItems() ? tp.heldItem : 0);
+				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
+				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
+				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
+                writeWord(pokemonData, tpIndex * 8 + 6, trainer.pokemonHaveItems() ? tp.getHeldItem().getId() : 0);
 			}
 		}
 
@@ -1893,11 +1894,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
 			TrainerPokemon tp = mossdeepSteven.pokemon.get(i);
-			writeWord(currentOffset, pokedexToInternal[tp.species.getNumber()]);
-			writeByte(currentOffset + 2, (byte) tp.IVs);
-			writeByte(currentOffset + 3, (byte) tp.level);
+			writeWord(currentOffset, pokedexToInternal[tp.getSpecies().getNumber()]);
+			writeByte(currentOffset + 2, (byte) tp.getIVs());
+			writeByte(currentOffset + 3, (byte) tp.getLevel());
 			for (int move = 0; move < 4; move++) {
-				writeWord(currentOffset + 12 + (move * 2), tp.moves[move]);
+				writeWord(currentOffset + 12 + (move * 2), tp.getMoves()[move]);
 			}
 		}
 	}
@@ -2951,13 +2952,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         // happiness day change to Sun Stone
                         evo.setType(EvolutionType.STONE);
                         evo.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.sunStone]);
+                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(Gen3ItemIDs.sunStone));
                     }
                     if (evo.getType() == EvolutionType.HAPPINESS_NIGHT && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
                         // happiness night change to Moon Stone
                         evo.setType(EvolutionType.STONE);
                         evo.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.moonStone]);
+                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(Gen3ItemIDs.moonStone));
                     }
                     if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
                         // beauty change to level 35
@@ -2984,7 +2985,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
+                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(Gen3ItemIDs.waterStone));
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40
                             evo.setType(EvolutionType.LEVEL);
@@ -3001,7 +3002,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
+                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(Gen3ItemIDs.waterStone));
                         } else {
                             // Onix, Scyther or Porygon: Lv30
                             evo.setType(EvolutionType.LEVEL);
@@ -3048,12 +3049,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         // Eevee: Make sun stone => Espeon
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
+                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, items.get(evol.getExtraInfo()));
                     } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
                         // Eevee: Make moon stone => Umbreon
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
+                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, items.get(evol.getExtraInfo()));
                     }
                 }
             }
@@ -3374,7 +3375,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
         // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
-        return tp.species.getAbility1();
+        return tp.getSpecies().getAbility1();
     }
 
     @Override
@@ -3641,19 +3642,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void loadItemNames() {
+    public void loadItems() {
         int nameoffs = romEntry.getIntValue("ItemData");
         int structlen = romEntry.getIntValue("ItemEntrySize");
         int maxcount = romEntry.getIntValue("ItemCount");
-        itemNames = new String[maxcount + 1];
+
+        items = new ArrayList<>(maxcount);
+
         for (int i = 0; i <= maxcount; i++) {
-            itemNames[i] = readVariableLengthString(nameoffs + structlen * i);
+            items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
         }
     }
 
     @Override
-    public String[] getItemNames() {
-        return itemNames;
+    public List<Item> getItems() {
+        return items;
     }
 
     @Override
@@ -4046,7 +4049,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void setPCPotionItem(int itemID) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
             if (!getAllowedItems().getItemSet().contains(itemID)) {
-                String itemName = itemID >= itemNames.length ? "unknown item, ID=" + itemID : itemNames[itemID];
+                String itemName = itemID >= items.size() ? "unknown item, ID=" + itemID : items.get(itemID).getName();
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + itemName);
             }
             writeWord(romEntry.getIntValue("PCPotionOffset"), itemID);
@@ -4158,8 +4161,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-	public List<Integer> getAllHeldItems() {
-		return Gen3Constants.allHeldItems;
+	public Set<Item> getAllHeldItems() {
+		return itemIdsToSet(Gen3Constants.allHeldItems);
 	}
 
 	@Override
@@ -4645,15 +4648,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Gen3Constants.consumableHeldItems;
+    public Set<Item> getAllConsumableHeldItems() {
+        return itemIdsToSet(Gen3Constants.consumableHeldItems);
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        List<Integer> items = new ArrayList<>(Gen3Constants.generalPurposeConsumableItems);
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        List<Integer> ids = new ArrayList<>(Gen3Constants.generalPurposeConsumableItems);
         if (!consumableOnly) {
-            items.addAll(Gen3Constants.generalPurposeItems);
+            ids.addAll(Gen3Constants.generalPurposeItems);
         }
         for (int moveIdx : pokeMoves) {
             Move move = moves.get(moveIdx);
@@ -4661,28 +4664,28 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 continue;
             }
             if (GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                items.add(Gen3ItemIDs.liechiBerry);
+                ids.add(Gen3ItemIDs.liechiBerry);
                 if (!consumableOnly) {
-                    items.addAll(Gen3Constants.typeBoostingItems.get(move.type));
-                    items.add(Gen3ItemIDs.choiceBand);
+                    ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
+                    ids.add(Gen3ItemIDs.choiceBand);
                 }
             }
             if (!GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                items.add(Gen3ItemIDs.petayaBerry);
+                ids.add(Gen3ItemIDs.petayaBerry);
                 if (!consumableOnly) {
-                    items.addAll(Gen3Constants.typeBoostingItems.get(move.type));
+                    ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
                 }
             }
         }
         if (!consumableOnly) {
-            List<Integer> speciesItems = Gen3Constants.speciesBoostingItems.get(tp.species.getNumber());
+            List<Integer> speciesItems = Gen3Constants.speciesBoostingItems.get(tp.getSpecies().getNumber());
             if (speciesItems != null) {
                 for (int i = 0; i < 6; i++) {  // Increase the likelihood of using species specific items.
-                    items.addAll(speciesItems);
+                    ids.addAll(speciesItems);
                 }
             }
         }
-        return items;
+        return ids.stream().map(items::get).collect(Collectors.toList());
     }
 
     @Override

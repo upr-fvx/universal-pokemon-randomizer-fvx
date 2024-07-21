@@ -81,10 +81,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private List<Species> speciesList;
     private List<Species> speciesListInclFormes;
     private Move[] moves;
+    private List<Item> items;
     private Gen5RomEntry romEntry;
     private byte[] arm9;
     private List<String> abilityNames;
-    private List<String> itemNames;
     private List<String> shopNames;
     private boolean loadedWildMapNames;
     private Map<Integer, String> wildMapNames;
@@ -156,9 +156,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         speciesList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen5Constants.pokemonCount + 1));
         loadMoves();
         loadPokemonPalettes();
+        loadItems();
 
         abilityNames = getStrings(false, romEntry.getIntValue("AbilityNamesTextOffset"));
-        itemNames = getStrings(false, romEntry.getIntValue("ItemNamesTextOffset"));
         if (romEntry.getRomType() == Gen5Constants.Type_BW) {
             shopNames = Gen5Constants.bw1ShopNames;
         }
@@ -185,6 +185,19 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
             arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen5Constants.arm9Offset);
         }
+    }
+
+    private void loadItems() {
+        items = new ArrayList<>();
+        List<String> names = getStrings(false, romEntry.getIntValue("ItemNamesTextOffset"));
+        for (int i = 0; i < names.size(); i++) {
+            items.add(new Item(i, names.get(i)));
+        }
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return items;
     }
 
     private void loadPokemonStats() {
@@ -1140,22 +1153,22 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     int species = readWord(trpoke, pokeOffs + 4);
                     int formnum = readWord(trpoke, pokeOffs + 6);
                     TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.level = level;
-                    tpk.species = pokes[species];
-                    tpk.IVs = (difficulty) * 31 / 255;
+                    tpk.setLevel(level);
+                    tpk.setSpecies(pokes[species]);
+                    tpk.setIVs((difficulty) * 31 / 255);
                     int abilityAndFlag = trpoke[pokeOffs + 1];
-                    tpk.abilitySlot = (abilityAndFlag >>> 4) & 0xF;
-                    tpk.forcedGenderFlag = (abilityAndFlag & 0xF);
-                    tpk.forme = formnum;
-                    tpk.formeSuffix = Gen5Constants.getFormeSuffixByBaseForme(species,formnum);
+                    tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
+                    tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
+                    tpk.setForme(formnum);
+                    tpk.setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        tpk.heldItem = readWord(trpoke, pokeOffs);
+                        tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         for (int move = 0; move < 4; move++) {
-                            tpk.moves[move] = readWord(trpoke, pokeOffs + (move*2));
+                            tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }
                         pokeOffs += 8;
                     }
@@ -1185,12 +1198,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             byte[] pkmndata = driftveil.files.get(currentFile);
                             int species = readWord(pkmndata, 0);
                             TrainerPokemon tpk = new TrainerPokemon();
-                            tpk.level = 25;
-                            tpk.species = pokes[species];
-                            tpk.IVs = 31;
-                            tpk.heldItem = readWord(pkmndata, 12);
+                            tpk.setLevel(25);
+                            tpk.setSpecies(pokes[species]);
+                            tpk.setIVs(31);
+                            tpk.setHeldItem(items.get(readWord(pkmndata, 12)));
                             for (int move = 0; move < 4; move++) {
-                                tpk.moves[move] = readWord(pkmndata, 2 + (move*2));
+                                tpk.getMoves()[move] = readWord(pkmndata, 2 + (move*2));
                             }
                             tr.pokemon.add(tpk);
                             currentFile++;
@@ -1284,29 +1297,29 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
                     // Add 1 to offset integer division truncation
-                    int difficulty = Math.min(255, 1 + (tp.IVs * 255) / 31);
-                    byte abilityAndFlag = (byte)((tp.abilitySlot << 4) | tp.forcedGenderFlag);
+                    int difficulty = Math.min(255, 1 + (tp.getIVs() * 255) / 31);
+                    byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
                     writeWord(trpoke, pokeOffs, difficulty | abilityAndFlag << 8);
-                    writeWord(trpoke, pokeOffs + 2, tp.level);
-                    writeWord(trpoke, pokeOffs + 4, tp.species.getNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.forme);
+                    writeWord(trpoke, pokeOffs + 2, tp.getLevel());
+                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
+                    writeWord(trpoke, pokeOffs + 6, tp.getForme());
                     // no form info, so no byte 6/7
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        writeWord(trpoke, pokeOffs, tp.heldItem);
+                        writeWord(trpoke, pokeOffs, tp.getHeldItem().getId());
                         pokeOffs += 2;
                     }
                     if (tr.pokemonHaveCustomMoves()) {
-                        if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.species, tp.forme).getNumber(), movesets, tp.level);
+                        if (tp.isResetMoves()) {
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
                         } else {
-                            writeWord(trpoke, pokeOffs, tp.moves[0]);
-                            writeWord(trpoke, pokeOffs + 2, tp.moves[1]);
-                            writeWord(trpoke, pokeOffs + 4, tp.moves[2]);
-                            writeWord(trpoke, pokeOffs + 6, tp.moves[3]);
+                            writeWord(trpoke, pokeOffs, tp.getMoves()[0]);
+                            writeWord(trpoke, pokeOffs + 2, tp.getMoves()[1]);
+                            writeWord(trpoke, pokeOffs + 4, tp.getMoves()[2]);
+                            writeWord(trpoke, pokeOffs + 6, tp.getMoves()[3]);
                         }
                         pokeOffs += 8;
                     }
@@ -1331,19 +1344,19 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         byte[] pkmndata = driftveil.files.get(currentFile);
                         TrainerPokemon tp = tpks.next();
                         // pokemon and held item
-                        writeWord(pkmndata, 0, tp.species.getNumber());
-                        writeWord(pkmndata, 12, tp.heldItem);
+                        writeWord(pkmndata, 0, tp.getSpecies().getNumber());
+                        writeWord(pkmndata, 12, tp.getHeldItem().getId());
                         // handle moves
-                        if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.species.getNumber(), movesets, tp.level);
+                        if (tp.isResetMoves()) {
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(pkmndata, 2 + m * 2, pokeMoves[m]);
                             }
                         } else {
-                            writeWord(pkmndata, 2, tp.moves[0]);
-                            writeWord(pkmndata, 4, tp.moves[1]);
-                            writeWord(pkmndata, 6, tp.moves[2]);
-                            writeWord(pkmndata, 8, tp.moves[3]);
+                            writeWord(pkmndata, 2, tp.getMoves()[0]);
+                            writeWord(pkmndata, 4, tp.getMoves()[1]);
+                            writeWord(pkmndata, 6, tp.getMoves()[2]);
+                            writeWord(pkmndata, 8, tp.getMoves()[3]);
                         }
                         currentFile++;
                     }
@@ -2821,9 +2834,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, items.get(item));
                             // Replace, for this entry, w/
                             // Level up w/ Held Item at Day
                             evo.setType(EvolutionType.LEVEL_ITEM_DAY);
@@ -2904,7 +2917,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Night
                             addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
@@ -2918,7 +2931,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Day
                             addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
@@ -2931,7 +2944,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Night
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_NIGHT, item);
                             extraEvolutions.add(extraEntry);
@@ -2941,7 +2954,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Day
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_DAY, item);
                             extraEvolutions.add(extraEntry);
@@ -3202,12 +3215,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return itemIdsToSet(opShopItems);
     }
 
-
-    @Override
-    public String[] getItemNames() {
-        return itemNames.toArray(new String[0]);
-    }
-    
     @Override
     public String abilityName(int number) {
         return abilityNames.get(number);
@@ -3229,18 +3236,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         // which represents "Either Ability 1 or 2". During randomization, we make sure to
         // to set abilitySlot to some non-zero value, but if you call this method without
         // randomization, then you'll hit this case.
-        if (tp.abilitySlot < 1 || tp.abilitySlot > 3) {
+        if (tp.getAbilitySlot() < 1 || tp.getAbilitySlot() > 3) {
             return 0;
         }
 
         // In Gen 5, alt formes for Trainer Pokemon use the base forme's ability
-        Species pkmn = tp.species;
+        Species pkmn = tp.getSpecies();
         while (pkmn.getBaseForme() != null) {
             pkmn = pkmn.getBaseForme();
         }
 
         List<Integer> abilityList = Arrays.asList(pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
-        return abilityList.get(tp.abilitySlot - 1);
+        return abilityList.get(tp.getAbilitySlot() - 1);
     }
 
     @Override
@@ -3872,22 +3879,22 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getAllHeldItems() {
-        return Gen5Constants.allHeldItems;
+    public Set<Item> getAllHeldItems() {
+        return itemIdsToSet(Gen5Constants.allHeldItems);
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Gen5Constants.consumableHeldItems;
+    public Set<Item> getAllConsumableHeldItems() {
+        return itemIdsToSet(Gen5Constants.consumableHeldItems);
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        List<Integer> items = new ArrayList<>(Gen5Constants.generalPurposeConsumableItems);
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        List<Integer> ids = new ArrayList<>(Gen5Constants.generalPurposeConsumableItems);
         int frequencyBoostCount = 6; // Make some very good items more common, but not too common
         if (!consumableOnly) {
             frequencyBoostCount = 8; // bigger to account for larger item pool.
-            items.addAll(Gen5Constants.generalPurposeItems);
+            ids.addAll(Gen5Constants.generalPurposeItems);
         }
         for (int moveIdx : pokeMoves) {
             Move move = moves.get(moveIdx);
@@ -3895,70 +3902,70 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 continue;
             }
             if (move.category == MoveCategory.PHYSICAL) {
-                items.add(ItemIDs.liechiBerry);
-                items.add(Gen5Constants.consumableTypeBoostingItems.get(move.type));
+                ids.add(ItemIDs.liechiBerry);
+                ids.add(Gen5Constants.consumableTypeBoostingItems.get(move.type));
                 if (!consumableOnly) {
-                    items.addAll(Gen5Constants.typeBoostingItems.get(move.type));
-                    items.add(ItemIDs.choiceBand);
-                    items.add(ItemIDs.muscleBand);
+                    ids.addAll(Gen5Constants.typeBoostingItems.get(move.type));
+                    ids.add(ItemIDs.choiceBand);
+                    ids.add(ItemIDs.muscleBand);
                 }
             }
             if (move.category == MoveCategory.SPECIAL) {
-                items.add(ItemIDs.petayaBerry);
-                items.add(Gen5Constants.consumableTypeBoostingItems.get(move.type));
+                ids.add(ItemIDs.petayaBerry);
+                ids.add(Gen5Constants.consumableTypeBoostingItems.get(move.type));
                 if (!consumableOnly) {
-                    items.addAll(Gen5Constants.typeBoostingItems.get(move.type));
-                    items.add(ItemIDs.wiseGlasses);
-                    items.add(ItemIDs.choiceSpecs);
+                    ids.addAll(Gen5Constants.typeBoostingItems.get(move.type));
+                    ids.add(ItemIDs.wiseGlasses);
+                    ids.add(ItemIDs.choiceSpecs);
                 }
             }
             if (!consumableOnly && Gen5Constants.moveBoostingItems.containsKey(moveIdx)) {
-                items.addAll(Gen5Constants.moveBoostingItems.get(moveIdx));
+                ids.addAll(Gen5Constants.moveBoostingItems.get(moveIdx));
             }
         }
-        Map<Type, Effectiveness> byType = getTypeTable().against(tp.species.getPrimaryType(false), tp.species.getSecondaryType(false));
+        Map<Type, Effectiveness> byType = getTypeTable().against(tp.getSpecies().getPrimaryType(false), tp.getSpecies().getSecondaryType(false));
         for(Map.Entry<Type, Effectiveness> entry : byType.entrySet()) {
             Integer berry = Gen5Constants.weaknessReducingBerries.get(entry.getKey());
             if (entry.getValue() == Effectiveness.DOUBLE) {
-                items.add(berry);
+                ids.add(berry);
             } else if (entry.getValue() == Effectiveness.QUADRUPLE) {
                 for (int i = 0; i < frequencyBoostCount; i++) {
-                    items.add(berry);
+                    ids.add(berry);
                 }
             }
         }
         if (byType.get(Type.NORMAL) == Effectiveness.NEUTRAL) {
-            items.add(ItemIDs.chilanBerry);
+            ids.add(ItemIDs.chilanBerry);
         }
 
         int ability = this.getAbilityForTrainerPokemon(tp);
         if (ability == AbilityIDs.levitate) {
             // we have to cast when removing, otherwise it defaults to removing by index
-            items.remove((Integer) ItemIDs.shucaBerry);
+            ids.remove((Integer) ItemIDs.shucaBerry);
         } else if (byType.get(Type.GROUND) == Effectiveness.DOUBLE || byType.get(Type.GROUND) == Effectiveness.QUADRUPLE) {
-            items.add(ItemIDs.airBalloon);
+            ids.add(ItemIDs.airBalloon);
         }
 
         if (!consumableOnly) {
             if (Gen5Constants.abilityBoostingItems.containsKey(ability)) {
-                items.addAll(Gen5Constants.abilityBoostingItems.get(ability));
+                ids.addAll(Gen5Constants.abilityBoostingItems.get(ability));
             }
-            if (tp.species.getPrimaryType(false) == Type.POISON || tp.species.getSecondaryType(false) == Type.POISON) {
-                items.add(ItemIDs.blackSludge);
+            if (tp.getSpecies().getPrimaryType(false) == Type.POISON || tp.getSpecies().getSecondaryType(false) == Type.POISON) {
+                ids.add(ItemIDs.blackSludge);
             }
-            List<Integer> speciesItems = Gen5Constants.speciesBoostingItems.get(tp.species.getNumber());
+            List<Integer> speciesItems = Gen5Constants.speciesBoostingItems.get(tp.getSpecies().getNumber());
             if (speciesItems != null) {
                 for (int i = 0; i < frequencyBoostCount; i++) {
-                    items.addAll(speciesItems);
+                    ids.addAll(speciesItems);
                 }
             }
-            if (!tp.species.getEvolutionsFrom().isEmpty() && tp.level >= 20) {
+            if (!tp.getSpecies().getEvolutionsFrom().isEmpty() && tp.getLevel() >= 20) {
                 // eviolite can be too good for early game, so we gate it behind a minimum level.
                 // We go with the same level as the option for "No early wonder guard".
-                items.add(ItemIDs.eviolite);
+                ids.add(ItemIDs.eviolite);
             }
         }
-        return items;
+        return ids.stream().map(items::get).collect(Collectors.toList());
     }
     
     protected int calculatePokemonNormalPaletteIndex(int i) {

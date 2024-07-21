@@ -209,10 +209,10 @@ public abstract class AbstractRomHandler implements RomHandler {
                 false, false));
     }
 
-    protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
+    protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, Item item) {
         Species pkFrom = evo.getFrom();
         Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item,
+        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item.getName(),
                 false, false));
     }
 
@@ -223,10 +223,10 @@ public abstract class AbstractRomHandler implements RomHandler {
                 false, false));
     }
 
-    protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
+    protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, Item item) {
         Species pkFrom = evo.getFrom();
         Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item,
+        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item.getName(),
                 false, false));
     }
 
@@ -436,22 +436,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public List<Item> getItems() {
-        // This is just a temporary method while figuring things out.
-        // Ideally items should be loaded in each RomHandler, like trainers etc. are,
-        // and have more properties than just name.
-        List<Item> items = new ArrayList<>();
-        String[] names = getItemNames();
-        for (int i = 0; i < names.length; i++) {
-            items.add(new Item(i, names[i]));
-        }
-        // it's fine to change the properties of the items, but we don't want them reordered
-        return Collections.unmodifiableList(items);
-    }
-
-    protected abstract String[] getItemNames();
-
     protected Set<Item> itemIdsToSet(List<Integer> ids) {
         List<Item> allItems = getItems();
         return ids.stream().map(allItems::get)
@@ -464,23 +448,23 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        return Collections.singletonList(0);
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        return Collections.singletonList(Item.NOTHING);
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Collections.singletonList(0);
+    public Set<Item> getAllConsumableHeldItems() {
+        return Collections.singleton(Item.NOTHING);
     }
 
     /**
-     * Returns a list of item IDs of all items that may have an effect for enemy trainers in battle.<br>
+     * Returns a {@link Set} of all {@link Item}s that may have an effect for enemy trainers in battle.<br>
      * So e.g. Everstone is excluded, but also Metal Powder or other items that only have effects for
      * certain Pokémon species, since when picked for any other Pokémon they will do nothing.
      */
     @Override
-    public List<Integer> getAllHeldItems() {
-        return Collections.singletonList(0);
+    public Set<Item> getAllHeldItems() {
+        return Collections.singleton(Item.NOTHING);
     }
 
     @Override

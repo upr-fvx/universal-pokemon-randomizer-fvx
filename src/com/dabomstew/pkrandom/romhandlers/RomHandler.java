@@ -230,11 +230,15 @@ public interface RomHandler {
 
     boolean canAddHeldItemsToRegularTrainers();
 
-    List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
+    /**
+     * Returns a {@link List} of {@link Item}s that would be sensible/good for a {@link TrainerPokemon} to hold.
+     * The List allows duplication of Items to make them more likely when chosen at random.
+     */
+    List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
 
-    List<Integer> getAllConsumableHeldItems();
+    Set<Item> getAllConsumableHeldItems();
 
-    List<Integer> getAllHeldItems();
+    Set<Item> getAllHeldItems();
 
     boolean hasRivalFinalBattle();
 

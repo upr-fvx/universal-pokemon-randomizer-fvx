@@ -24,6 +24,8 @@ package com.dabomstew.pkrandom.game_data;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.constants.ItemIDs;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class Trainer implements Comparable<Trainer> {
             if (!first) {
                 sb.append(',');
             }
-            sb.append(p.species.getName()).append(" Lv").append(p.level);
+            sb.append(p.getSpecies().getName()).append(" Lv").append(p.getLevel());
             first = false;
         }
         sb.append(']');
@@ -138,13 +140,13 @@ public class Trainer implements Comparable<Trainer> {
     }
 
     public boolean pokemonHaveUniqueHeldItems() {
-        List<Integer> heldItemsForThisTrainer = new ArrayList<>();
+        List<Item> heldItemsForThisTrainer = new ArrayList<>();
         for (TrainerPokemon poke : this.pokemon) {
-            if (poke.heldItem > 0) {
-                if (heldItemsForThisTrainer.contains(poke.heldItem)) {
+            if (poke.getHeldItem().getId() != ItemIDs.none) {
+                if (heldItemsForThisTrainer.contains(poke.getHeldItem())) {
                     return false;
                 } else {
-                    heldItemsForThisTrainer.add(poke.heldItem);
+                    heldItemsForThisTrainer.add(poke.getHeldItem());
                 }
             }
         }

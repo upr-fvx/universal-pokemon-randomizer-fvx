@@ -86,6 +86,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Species[] pokes;
     private List<Species> speciesList;
     private List<Trainer> trainers;
+    private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private boolean havePatchedFleeing;
@@ -1063,6 +1064,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private Trainer readTrainer(int offset) {
+        List<Item> allItems = getItems();
         Trainer tr = new Trainer();
         tr.offset = offset;
         tr.name = readVariableLengthString(offset, false);
@@ -1073,16 +1075,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);
             TrainerPokemon tp = new TrainerPokemon();
-            tp.level = rom[offset] & 0xFF;
-            tp.species = pokes[rom[offset + 1] & 0xFF];
+            tp.setLevel(rom[offset] & 0xFF);
+            tp.setSpecies(pokes[rom[offset + 1] & 0xFF]);
             offset += 2;
             if ((dataType & 2) == 2) {
-                tp.heldItem = rom[offset] & 0xFF;
+                tp.setHeldItem(allItems.get(rom[offset] & 0xFF));
                 offset++;
             }
             if ((dataType & 1) == 1) {
                 for (int move = 0; move < 4; move++) {
-                    tp.moves[move] = rom[offset + move] & 0xFF;
+                    tp.getMoves()[move] = rom[offset + move] & 0xFF;
                 }
                 offset += 4;
             }
@@ -1188,21 +1190,21 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private byte[] trainerPokemonToBytes(TrainerPokemon tp, Trainer trainer) {
         byte[] data = new byte[trainerPokemonDataLength(trainer)];
         int offset = 0;
-        data[offset] = (byte) tp.level;
-        data[offset + 1] = (byte) tp.species.getNumber();
+        data[offset] = (byte) tp.getLevel();
+        data[offset + 1] = (byte) tp.getSpecies().getNumber();
         offset += 2;
         if (trainer.pokemonHaveItems()) {
-            data[offset] = (byte) tp.heldItem;
+            data[offset] = (byte) tp.getHeldItem().getId();
             offset++;
         }
         if (trainer.pokemonHaveCustomMoves()) {
-            if (tp.resetMoves) {
+            if (tp.isResetMoves()) {
                 resetTrainerPokemonMoves(tp);
             }
-            data[offset] = (byte) tp.moves[0];
-            data[offset + 1] = (byte) tp.moves[1];
-            data[offset + 2] = (byte) tp.moves[2];
-            data[offset + 3] = (byte) tp.moves[3];
+            data[offset] = (byte) tp.getMoves()[0];
+            data[offset + 1] = (byte) tp.getMoves()[1];
+            data[offset + 2] = (byte) tp.getMoves()[2];
+            data[offset + 3] = (byte) tp.getMoves()[3];
         }
         return data;
     }
@@ -1215,7 +1217,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         // made quickly while refactoring trainer writing, might be applicable in more/better places
         // (including other gens)
         // TODO: look at the above
-        tp.moves = RomFunctions.getMovesAtLevel(tp.species.getNumber(), this.getMovesLearnt(), tp.level);
+        tp.setMoves(RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), this.getMovesLearnt(), tp.getLevel()));
     }
 
     private int lengthOfTrainerClassAt(int offset, int numberOfTrainers) {
@@ -1265,38 +1267,38 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Gen2Constants.consumableHeldItems;
+    public Set<Item> getAllConsumableHeldItems() {
+        return itemIdsToSet(Gen2Constants.consumableHeldItems);
     }
 
     @Override
-    public List<Integer> getAllHeldItems() {
-        return Gen2Constants.allHeldItems;
+    public Set<Item> getAllHeldItems() {
+        return itemIdsToSet(Gen2Constants.allHeldItems);
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        List<Integer> items = new ArrayList<>(Gen2Constants.generalPurposeConsumableItems);
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        List<Integer> ids = new ArrayList<>(Gen2Constants.generalPurposeConsumableItems);
 
         if (!consumableOnly) {
-            items.addAll(Gen2Constants.generalPurposeItems);
+            ids.addAll(Gen2Constants.generalPurposeItems);
 
             for (int moveIdx : pokeMoves) {
                 Move move = moves.get(moveIdx);
                 if (move == null) {
                     continue;
                 }
-                items.addAll(Gen2Constants.typeBoostingItems.get(move.type));
+                ids.addAll(Gen2Constants.typeBoostingItems.get(move.type));
             }
 
-            List<Integer> speciesItems = Gen2Constants.speciesBoostingItems.get(tp.species.getNumber());
+            List<Integer> speciesItems = Gen2Constants.speciesBoostingItems.get(tp.getSpecies().getNumber());
             if (speciesItems != null) {
                 for (int i = 0; i < 6; i++) {  // Increase the likelihood of using species specific items.
-                    items.addAll(speciesItems);
+                    ids.addAll(speciesItems);
                 }
             }
         }
-        return items;
+        return ids.stream().map(items::get).collect(Collectors.toList());
     }
 
     @Override
@@ -1926,7 +1928,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
                             evol.setExtraInfo(Gen2ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evol, itemNames[24]);
+                            addEvoUpdateStone(impossibleEvolutionUpdates, evol, items.get(Gen2ItemIDs.waterStone));
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
@@ -1978,12 +1980,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // Eevee: Make sun stone => Espeon
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen2ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[169]);
+                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, items.get(Gen2ItemIDs.sunStone));
                     } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
                         // Eevee: Make moon stone => Umbreon
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen2ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[8]);
+                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, items.get(Gen2ItemIDs.moonStone));
                     }
                 }
             }
@@ -2466,8 +2468,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void loadItemNames() {
-        itemNames = new String[256];
+    public void loadItems() {
+        String[] names = readItemNames();
+        items = new ArrayList<>(names.length);
+        for (int i = 0; i < names.length; i++) {
+            items.add(new Item(i, names[i]));
+        }
+    }
+
+    private String[] readItemNames() {
+        String[] itemNames = new String[256];
         itemNames[0] = "glitch";
         // trying to emulate pretty much what the game does here
         // normal items
@@ -2487,11 +2497,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             itemNameOffset++;
             itemNames[index % 256] = readFixedLengthString(startOfText, 20);
         }
+        return itemNames;
     }
 
     @Override
-    public String[] getItemNames() {
-        return itemNames;
+    public List<Item> getItems() {
+        return items;
     }
 
     private void patchFleeing() {

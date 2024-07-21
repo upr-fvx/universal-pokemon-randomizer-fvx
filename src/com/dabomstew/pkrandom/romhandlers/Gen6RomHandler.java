@@ -80,6 +80,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private List<Species> speciesList;
     private List<Species> speciesListInclFormes;
     private List<MegaEvolution> megaEvolutions;
+    private List<Item> items;
     private Move[] moves;
     private Gen6RomEntry romEntry;
     private byte[] code;
@@ -87,7 +88,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private boolean loadedWildMapNames;
     private Map<Integer, String> wildMapNames;
     private int moveTutorMovesOffset;
-    private List<String> itemNames;
     private List<String> shopNames;
     private int shopItemsOffset;
     private ItemList allowedItems, nonBadItems;
@@ -136,7 +136,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        itemNames = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
+        loadItems();
 
         loadPokemonStats();
         loadMoves();
@@ -157,6 +157,19 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+    }
+
+    private void loadItems() {
+        items = new ArrayList<>();
+        List<String> names = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
+        for (int i = 0; i < names.size();i++) {
+            items.add(new Item(i, names.get(i)));
+        }
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return items;
     }
 
     private void loadPokemonStats() {
@@ -1812,28 +1825,28 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int species = readWord(trpoke, pokeOffs + 4);
                     int formnum = readWord(trpoke, pokeOffs + 6);
                     TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.level = level;
-                    tpk.species = pokes[species];
-                    tpk.strength = trpoke[pokeOffs];
+                    tpk.setLevel(level);
+                    tpk.setSpecies(pokes[species]);
+                    tpk.setStrength(trpoke[pokeOffs]);
                     if (isORAS) {
-                        tpk.IVs = (tpk.strength * 31 / 255);
+                        tpk.setIVs((tpk.getStrength() * 31 / 255));
                     } else {
-                        tpk.IVs = tpk.strength & 0x1F;
+                        tpk.setIVs(tpk.getStrength() & 0x1F);
                     }
                     int abilityAndFlag = trpoke[pokeOffs + 1];
-                    tpk.abilitySlot = (abilityAndFlag >>> 4) & 0xF;
-                    tpk.forcedGenderFlag = (abilityAndFlag & 0xF);
-                    tpk.forme = formnum;
-                    tpk.formeSuffix = Gen6Constants.getFormeSuffixByBaseForme(species,formnum);
+                    tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
+                    tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
+                    tpk.setForme(formnum);
+                    tpk.setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        tpk.heldItem = readWord(trpoke, pokeOffs);
+                        tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
-                        tpk.hasMegaStone = Gen6Constants.isMegaStone(tpk.heldItem);
+                        tpk.setHasMegaStone(Gen6Constants.isMegaStone(tpk.getHeldItem().getId())); // TODO: better way to recognize mega stones
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         for (int move = 0; move < 4; move++) {
-                            tpk.moves[move] = readWord(trpoke, pokeOffs + (move*2));
+                            tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }
                         pokeOffs += 8;
                     }
@@ -1922,28 +1935,28 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
-                    byte abilityAndFlag = (byte)((tp.abilitySlot << 4) | tp.forcedGenderFlag);
-                    trpoke[pokeOffs] = (byte) tp.strength;
+                    byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
+                    trpoke[pokeOffs] = (byte) tp.getStrength();
                     trpoke[pokeOffs + 1] = abilityAndFlag;
-                    writeWord(trpoke, pokeOffs + 2, tp.level);
-                    writeWord(trpoke, pokeOffs + 4, tp.species.getNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.forme);
+                    writeWord(trpoke, pokeOffs + 2, tp.getLevel());
+                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
+                    writeWord(trpoke, pokeOffs + 6, tp.getForme());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        writeWord(trpoke, pokeOffs, tp.heldItem);
+                        writeWord(trpoke, pokeOffs, tp.getHeldItem().getId());
                         pokeOffs += 2;
                     }
                     if (tr.pokemonHaveCustomMoves()) {
-                        if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.species, tp.forme).getNumber(), movesets, tp.level);
+                        if (tp.isResetMoves()) {
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
                         } else {
-                            writeWord(trpoke, pokeOffs, tp.moves[0]);
-                            writeWord(trpoke, pokeOffs + 2, tp.moves[1]);
-                            writeWord(trpoke, pokeOffs + 4, tp.moves[2]);
-                            writeWord(trpoke, pokeOffs + 6, tp.moves[3]);
+                            writeWord(trpoke, pokeOffs, tp.getMoves()[0]);
+                            writeWord(trpoke, pokeOffs + 2, tp.getMoves()[1]);
+                            writeWord(trpoke, pokeOffs + 4, tp.getMoves()[2]);
+                            writeWord(trpoke, pokeOffs + 6, tp.getMoves()[3]);
                         }
                         pokeOffs += 8;
                     }
@@ -2985,9 +2998,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, items.get(item));
                             // Replace, for this entry, w/
                             // Level up w/ Held Item at Day
                             evo.setType(EvolutionType.LEVEL_ITEM_DAY);
@@ -3069,7 +3082,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Night
                             addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
@@ -3083,7 +3096,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
+                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Day
                             addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
@@ -3096,7 +3109,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Night
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_NIGHT, item);
                             extraEvolutions.add(extraEntry);
@@ -3106,7 +3119,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Day
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_DAY, item);
                             extraEvolutions.add(extraEntry);
@@ -3341,11 +3354,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public String[] getItemNames() {
-        return itemNames.toArray(new String[0]);
-    }
-
-    @Override
     public String abilityName(int number) {
         return abilityNames.get(number);
     }
@@ -3366,12 +3374,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         // which represents "Either Ability 1 or 2". During randomization, we make sure to
         // to set abilitySlot to some non-zero value, but if you call this method without
         // randomization, then you'll hit this case.
-        if (tp.abilitySlot < 1 || tp.abilitySlot > 3) {
+        if (tp.getAbilitySlot() < 1 || tp.getAbilitySlot() > 3) {
             return 0;
         }
 
-        List<Integer> abilityList = Arrays.asList(tp.species.getAbility1(), tp.species.getAbility2(), tp.species.getAbility3());
-        return abilityList.get(tp.abilitySlot - 1);
+        List<Integer> abilityList = Arrays.asList(tp.getSpecies().getAbility1(), tp.getSpecies().getAbility2(), tp.getSpecies().getAbility3());
+        return abilityList.get(tp.getAbilitySlot() - 1);
     }
 
     @Override
@@ -4000,22 +4008,22 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getAllHeldItems() {
-        return Gen6Constants.allHeldItems;
+    public Set<Item> getAllHeldItems() {
+        return itemIdsToSet(Gen6Constants.allHeldItems);
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Gen6Constants.consumableHeldItems;
+    public Set<Item> getAllConsumableHeldItems() {
+        return itemIdsToSet(Gen6Constants.consumableHeldItems);
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        List<Integer> items = new ArrayList<>(Gen6Constants.generalPurposeConsumableItems);
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        List<Integer> ids = new ArrayList<>(Gen6Constants.generalPurposeConsumableItems);
         int frequencyBoostCount = 6; // Make some very good items more common, but not too common
         if (!consumableOnly) {
             frequencyBoostCount = 8; // bigger to account for larger item pool.
-            items.addAll(Gen6Constants.generalPurposeItems);
+            ids.addAll(Gen6Constants.generalPurposeItems);
         }
         int numDamagingMoves = 0;
         for (int moveIdx : pokeMoves) {
@@ -4025,74 +4033,74 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             }
             if (move.category == MoveCategory.PHYSICAL) {
                 numDamagingMoves++;
-                items.add(ItemIDs.liechiBerry);
-                items.add(Gen6Constants.consumableTypeBoostingItems.get(move.type));
+                ids.add(ItemIDs.liechiBerry);
+                ids.add(Gen6Constants.consumableTypeBoostingItems.get(move.type));
                 if (!consumableOnly) {
-                    items.addAll(Gen6Constants.typeBoostingItems.get(move.type));
-                    items.add(ItemIDs.choiceBand);
-                    items.add(ItemIDs.muscleBand);
+                    ids.addAll(Gen6Constants.typeBoostingItems.get(move.type));
+                    ids.add(ItemIDs.choiceBand);
+                    ids.add(ItemIDs.muscleBand);
                 }
             }
             if (move.category == MoveCategory.SPECIAL) {
                 numDamagingMoves++;
-                items.add(ItemIDs.petayaBerry);
-                items.add(Gen6Constants.consumableTypeBoostingItems.get(move.type));
+                ids.add(ItemIDs.petayaBerry);
+                ids.add(Gen6Constants.consumableTypeBoostingItems.get(move.type));
                 if (!consumableOnly) {
-                    items.addAll(Gen6Constants.typeBoostingItems.get(move.type));
-                    items.add(ItemIDs.wiseGlasses);
-                    items.add(ItemIDs.choiceSpecs);
+                    ids.addAll(Gen6Constants.typeBoostingItems.get(move.type));
+                    ids.add(ItemIDs.wiseGlasses);
+                    ids.add(ItemIDs.choiceSpecs);
                 }
             }
             if (!consumableOnly && Gen6Constants.moveBoostingItems.containsKey(moveIdx)) {
-                items.addAll(Gen6Constants.moveBoostingItems.get(moveIdx));
+                ids.addAll(Gen6Constants.moveBoostingItems.get(moveIdx));
             }
         }
         if (numDamagingMoves >= 2) {
-            items.add(ItemIDs.assaultVest);
+            ids.add(ItemIDs.assaultVest);
         }
-        Map<Type, Effectiveness> byType = getTypeTable().against(tp.species.getPrimaryType(false), tp.species.getSecondaryType(false));
+        Map<Type, Effectiveness> byType = getTypeTable().against(tp.getSpecies().getPrimaryType(false), tp.getSpecies().getSecondaryType(false));
         for(Map.Entry<Type, Effectiveness> entry : byType.entrySet()) {
             Integer berry = Gen6Constants.weaknessReducingBerries.get(entry.getKey());
             if (entry.getValue() == Effectiveness.DOUBLE) {
-                items.add(berry);
+                ids.add(berry);
             } else if (entry.getValue() == Effectiveness.QUADRUPLE) {
                 for (int i = 0; i < frequencyBoostCount; i++) {
-                    items.add(berry);
+                    ids.add(berry);
                 }
             }
         }
         if (byType.get(Type.NORMAL) == Effectiveness.NEUTRAL) {
-            items.add(ItemIDs.chilanBerry);
+            ids.add(ItemIDs.chilanBerry);
         }
 
         int ability = this.getAbilityForTrainerPokemon(tp);
         if (ability == AbilityIDs.levitate) {
             // we have to cast when removing, otherwise it defaults to removing by index
-            items.remove((Integer) ItemIDs.shucaBerry);
+            ids.remove((Integer) ItemIDs.shucaBerry);
         } else if (byType.get(Type.GROUND) == Effectiveness.DOUBLE || byType.get(Type.GROUND) == Effectiveness.QUADRUPLE) {
-            items.add(ItemIDs.airBalloon);
+            ids.add(ItemIDs.airBalloon);
         }
 
         if (!consumableOnly) {
             if (Gen6Constants.abilityBoostingItems.containsKey(ability)) {
-                items.addAll(Gen6Constants.abilityBoostingItems.get(ability));
+                ids.addAll(Gen6Constants.abilityBoostingItems.get(ability));
             }
-            if (tp.species.getPrimaryType(false) == Type.POISON || tp.species.getSecondaryType(false) == Type.POISON) {
-                items.add(ItemIDs.blackSludge);
+            if (tp.getSpecies().getPrimaryType(false) == Type.POISON || tp.getSpecies().getSecondaryType(false) == Type.POISON) {
+                ids.add(ItemIDs.blackSludge);
             }
-            List<Integer> speciesItems = Gen6Constants.speciesBoostingItems.get(tp.species.getNumber());
+            List<Integer> speciesItems = Gen6Constants.speciesBoostingItems.get(tp.getSpecies().getNumber());
             if (speciesItems != null) {
                 for (int i = 0; i < frequencyBoostCount; i++) {
-                    items.addAll(speciesItems);
+                    ids.addAll(speciesItems);
                 }
             }
-            if (!tp.species.getEvolutionsFrom().isEmpty() && tp.level >= 20) {
+            if (!tp.getSpecies().getEvolutionsFrom().isEmpty() && tp.getLevel() >= 20) {
                 // eviolite can be too good for early game, so we gate it behind a minimum level.
                 // We go with the same level as the option for "No early wonder guard".
-                items.add(ItemIDs.eviolite);
+                ids.add(ItemIDs.eviolite);
             }
         }
-        return items;
+        return ids.stream().map(items::get).collect(Collectors.toList());
     }
 
     @Override

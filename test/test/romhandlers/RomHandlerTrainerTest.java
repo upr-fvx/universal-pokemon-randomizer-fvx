@@ -336,7 +336,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             } else {
                 for (TrainerPokemon tp : tr.pokemon) {
                     System.out.println(tp);
-                    assertNotEquals(0, tp.heldItem);
+                    assertNotEquals(0, tp.getHeldItem().getId());
                 }
             }
         }
@@ -398,7 +398,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + tr);
                 for (TrainerPokemon tp : tr.pokemon) {
-                    Species pk = tp.species;
+                    Species pk = tp.getSpecies();
                     System.out.println("\t" + pk);
                     assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
                 }
@@ -416,7 +416,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
                     for (int i = 0; i < before.size(); i++) {
                         Species beforePoke = before.get(i);
-                        Species afterPoke = after.get(i).species;
+                        Species afterPoke = after.get(i).getSpecies();
 
                         System.out.println("\t\tBefore: " + beforePoke.getName() + "; Primary type: "
                                 + beforePoke.getPrimaryType(true).name());
@@ -442,7 +442,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
             for (TrainerPokemon pokemon : trainer.pokemon) {
-                speciesPrimaryTypes.add(pokemon.species);
+                speciesPrimaryTypes.add(pokemon.getSpecies());
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
         }
@@ -476,7 +476,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             beforeTrainerStrings.put(tr, beforeStrings);
             beforeStrings.add(tr.toString());
             for (TrainerPokemon tp : tr.pokemon) {
-                beforeStrings.add(tp.species.toString());
+                beforeStrings.add(tp.getSpecies().toString());
             }
 
             // the rival in yellow is forced to always have eevee, which causes a mess if eevee's type is randomized
@@ -504,11 +504,11 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     }
 
     private Type getThemedTrainerType(Trainer tr) {
-        Species first = tr.pokemon.get(0).species;
+        Species first = tr.pokemon.get(0).getSpecies();
         Type primary = first.getPrimaryType(true);
         Type secondary = first.getSecondaryType(true);
         for (int i = 1; i < tr.pokemon.size(); i++) {
-            Species pk = tr.pokemon.get(i).species;
+            Species pk = tr.pokemon.get(i).getSpecies();
             if (secondary != null) {
                 if (secondary != pk.getPrimaryType(true) && secondary != pk.getSecondaryType(true)) {
                     secondary = null;
@@ -563,8 +563,8 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             }
 
             for (TrainerPokemon tp : tr.pokemon) {
-                System.out.println(tp.species);
-                assertTrue(localWithRelatives.contains(tp.species));
+                System.out.println(tp.getSpecies());
+                assertTrue(localWithRelatives.contains(tp.getSpecies()));
             }
         }
     }
@@ -599,9 +599,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 System.out.println("Local: " + localWithRelatives.stream().map(Species::getName).collect(Collectors.toList()));
                 int nonLocalCount = 0;
                 for (TrainerPokemon tp : tr.pokemon) {
-                    if (nonLocal.contains(tp.species)) {
+                    if (nonLocal.contains(tp.getSpecies())) {
                         nonLocalCount++;
-                        System.out.println(tp.species.getName() + " is nonlocal");
+                        System.out.println(tp.getSpecies().getName() + " is nonlocal");
                     }
                 }
                 assertTrue(nonLocalCount == wantedNonLocal || nonLocalCount == tr.pokemon.size());
@@ -656,7 +656,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for (Trainer tr : trainers) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
-                Species pk = tp.species;
+                Species pk = tp.getSpecies();
                 pokeCount[pk.getNumber()]++;
             }
         }
@@ -673,7 +673,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 System.out.println(tr);
                 int minCount = Integer.MAX_VALUE;
                 for (TrainerPokemon tp : tr.pokemon) {
-                    Species pk = tp.species;
+                    Species pk = tp.getSpecies();
                     System.out.println(pk.getName() + ":" + pokeCount[pk.getNumber()]);
                     minCount = Math.min(minCount, pokeCount[pk.getNumber()]);
                 }
@@ -778,8 +778,8 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             boolean anyHasZCrystal = false;
             for (int pkNum = 0; pkNum < tr.pokemon.size(); pkNum++) {
                 TrainerPokemon tp = tr.pokemon.get(pkNum);
-                System.out.println(items.get(tp.heldItem));
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
+                System.out.println(items.get(tp.getHeldItem().getId()));
+                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
                     zCrystals[pkNum] = true;
                     anyHasZCrystal = true;
                 }
@@ -803,12 +803,12 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
-                    System.out.println(tp.species.getName() + " holds " + items.get(tp.heldItem).getName());
+                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
+                    System.out.println(tp.getSpecies().getName() + " holds " + items.get(tp.getHeldItem().getId()).getName());
 
-                    int[] pkMoves = tp.resetMoves ?
-                            RomFunctions.getMovesAtLevel(tp.species.getNumber(), romHandler.getMovesLearnt(), tp.level)
-                            : Arrays.stream(tp.moves).distinct().filter(mv -> mv != 0).toArray();
+                    int[] pkMoves = tp.isResetMoves() ?
+                            RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
+                            : Arrays.stream(tp.getMoves()).distinct().filter(mv -> mv != 0).toArray();
                     Set<Type> moveTypes = new HashSet<>();
                     for (int moveID : pkMoves) {
                         Move mv = romHandler.getMoves().get(moveID);
@@ -818,7 +818,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
                     boolean anyMoveTypeCorrect = false;
                     for (Type t : moveTypes) {
-                        if (Gen7Constants.heldZCrystalsByType.get(t) == tp.heldItem) {
+                        if (Gen7Constants.heldZCrystalsByType.get(t) == tp.getHeldItem().getId()) {
                             anyMoveTypeCorrect = true;
                         }
                     }

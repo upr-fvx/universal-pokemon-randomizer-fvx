@@ -93,6 +93,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private Species[] pokes;
     private List<Species> speciesList;
     private List<Trainer> trainers;
+    private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private String[] itemNames;
@@ -1191,8 +1192,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
-                tp.level = rom[offset] & 0xFF;
-                tp.species = pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]];
+                tp.setLevel(rom[offset] & 0xFF);
+                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
                 tr.pokemon.add(tp);
                 offset += 2;
             }
@@ -1201,8 +1202,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
-                tp.level = dataType;
-                tp.species = pokes[pokeRBYToNumTable[rom[offset] & 0xFF]];
+                tp.setLevel(dataType);
+                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset] & 0xFF]]);
                 tr.pokemon.add(tp);
                 offset++;
             }
@@ -1291,17 +1292,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (trainer.poketype == 0) {
             // Regular trainer
-            int fixedLevel = trainer.pokemon.get(0).level;
+            int fixedLevel = trainer.pokemon.get(0).getLevel();
             baos.write(fixedLevel);
             for (TrainerPokemon tp : trainer.pokemon) {
-                baos.write((byte) pokeNumToRBYTable[tp.species.getNumber()]);
+                baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }
         } else {
             // Special trainer
             baos.write(0xFF);
             for (TrainerPokemon tp : trainer.pokemon) {
-                baos.write(tp.level);
-                baos.write((byte) pokeNumToRBYTable[tp.species.getNumber()]);
+                baos.write(tp.getLevel());
+                baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }
         }
         baos.write(Gen1Constants.trainerDataTerminator);
@@ -2153,7 +2154,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void setPCPotionItem(int itemID) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
             if (!getAllowedItems().getItemSet().contains(itemID)) {
-                String itemName = itemID >= itemNames.length ? "unknown item, ID=" + itemID : itemNames[itemID];
+                String itemName = itemID >= items.size() ? "unknown item, ID=" + itemID : items.get(itemID).getName();
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + itemName);
             }
             writeByte(romEntry.getIntValue("PCPotionOffset"),
@@ -2222,8 +2223,16 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void loadItemNames() {
-        itemNames = new String[256];
+    public void loadItems() {
+        String[] names = readItemNames();
+        items = new ArrayList<>(names.length);
+        for (int i = 0; i < names.length; i++) {
+            items.add(new Item(i, names[i]));
+        }
+    }
+
+    public String[] readItemNames() {
+        String[] itemNames = new String[256];
         itemNames[0] = "glitch";
         // trying to emulate pretty much what the game does here
         // normal items
@@ -2251,11 +2260,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int index = Gen1Constants.tmsStartIndex; index < 0x100; index++) {
             itemNames[index] = String.format("TM%02d", index - Gen1Constants.tmsStartIndex + 1);
         }
+        return itemNames;
     }
 
     @Override
-    public String[] getItemNames() {
-        return itemNames;
+    public List<Item> getItems() {
+        return items;
     }
 
     private static class SubMap {

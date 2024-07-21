@@ -24,59 +24,41 @@ package com.dabomstew.pkrandom.game_data;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Represents a Pokemon owned by a {@link Trainer}.
+ */
 public class TrainerPokemon {
 
-    public Species species;
-    public int level;
+    private Species species;
+    private int level;
 
-    public int[] moves = {0, 0, 0, 0};
+    private int[] moves = {0, 0, 0, 0};
 
-    public int heldItem = 0;
-    public boolean hasMegaStone;
-    public boolean hasZCrystal;
-    public int abilitySlot;
-    public int forme;
-    public String formeSuffix = "";
+    private Item heldItem = Item.NOTHING;
+    private boolean hasMegaStone;
+    private boolean hasZCrystal;
+    private int abilitySlot;
+    private int forme;
+    private String formeSuffix = "";
 
-    public int forcedGenderFlag;
-    public byte nature;
-    public byte hpEVs;
-    public byte atkEVs;
-    public byte defEVs;
-    public byte spatkEVs;
-    public byte spdefEVs;
-    public byte speedEVs;
-    public int IVs;
+    private int forcedGenderFlag;
+    private byte nature;
+    private byte hpEVs;
+    private byte atkEVs;
+    private byte defEVs;
+    private byte spatkEVs;
+    private byte spdefEVs;
+    private byte speedEVs;
+    private int IVs;
     // In gens 3-5, there is a byte or word that corresponds
     // to the IVs a trainer's pokemon has. In X/Y, this byte
     // also encodes some other information, possibly related
     // to EV spread. Because of the unknown part in X/Y,
     // we store the whole "strength byte" so we can
     // write it unchanged when randomizing trainer pokemon.
-    public int strength;
+    private int strength;
     
-    public boolean resetMoves = false;
-
-    public String toString() {
-        String s = species.getName() + formeSuffix;
-        if (heldItem != 0) {
-            // This can be filled in with the actual name when written to the log.
-            s += "@%s";
-        }
-        s+= " Lv" + level;
-        return s;
-    }
-
-    public boolean canMegaEvolve() {
-        if (heldItem != 0) {
-            for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
-                if (mega.getItem().getId() == heldItem) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    private boolean resetMoves = false;
 
     public TrainerPokemon copy() {
         TrainerPokemon tpk = new TrainerPokemon();
@@ -106,5 +88,185 @@ public class TrainerPokemon {
         tpk.resetMoves = resetMoves;
 
         return tpk;
+    }
+
+    public Species getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Species species) {
+        this.species = species;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int[] getMoves() {
+        return moves;
+    }
+
+    public void setMoves(int[] moves) {
+        this.moves = moves;
+    }
+
+    public Item getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
+    }
+
+    public boolean hasMegaStone() {
+        return hasMegaStone;
+    }
+
+    public void setHasMegaStone(boolean hasMegaStone) {
+        this.hasMegaStone = hasMegaStone;
+    }
+
+    public boolean canMegaEvolve() {
+        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+            if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasZCrystal() {
+        return hasZCrystal;
+    }
+
+    public void setHasZCrystal(boolean hasZCrystal) {
+        this.hasZCrystal = hasZCrystal;
+    }
+
+    public int getAbilitySlot() {
+        return abilitySlot;
+    }
+
+    public void setAbilitySlot(int abilitySlot) {
+        this.abilitySlot = abilitySlot;
+    }
+
+    public int getForme() {
+        return forme;
+    }
+
+    public void setForme(int forme) {
+        this.forme = forme;
+    }
+
+    public String getFormeSuffix() {
+        return formeSuffix;
+    }
+
+    public void setFormeSuffix(String formeSuffix) {
+        this.formeSuffix = formeSuffix;
+    }
+
+    public int getForcedGenderFlag() {
+        return forcedGenderFlag;
+    }
+
+    public void setForcedGenderFlag(int forcedGenderFlag) {
+        this.forcedGenderFlag = forcedGenderFlag;
+    }
+
+    public byte getNature() {
+        return nature;
+    }
+
+    public void setNature(byte nature) {
+        this.nature = nature;
+    }
+
+    public byte getHpEVs() {
+        return hpEVs;
+    }
+
+    public void setHpEVs(byte hpEVs) {
+        this.hpEVs = hpEVs;
+    }
+
+    public byte getAtkEVs() {
+        return atkEVs;
+    }
+
+    public void setAtkEVs(byte atkEVs) {
+        this.atkEVs = atkEVs;
+    }
+
+    public byte getDefEVs() {
+        return defEVs;
+    }
+
+    public void setDefEVs(byte defEVs) {
+        this.defEVs = defEVs;
+    }
+
+    public byte getSpatkEVs() {
+        return spatkEVs;
+    }
+
+    public void setSpatkEVs(byte spatkEVs) {
+        this.spatkEVs = spatkEVs;
+    }
+
+    public byte getSpdefEVs() {
+        return spdefEVs;
+    }
+
+    public void setSpdefEVs(byte spdefEVs) {
+        this.spdefEVs = spdefEVs;
+    }
+
+    public byte getSpeedEVs() {
+        return speedEVs;
+    }
+
+    public void setSpeedEVs(byte speedEVs) {
+        this.speedEVs = speedEVs;
+    }
+
+    public int getIVs() {
+        return IVs;
+    }
+
+    public void setIVs(int IVs) {
+        this.IVs = IVs;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public boolean isResetMoves() {
+        return resetMoves;
+    }
+
+    public void setResetMoves(boolean resetMoves) {
+        this.resetMoves = resetMoves;
+    }
+
+    @Override
+    public String toString() {
+        String s = species.getName() + formeSuffix;
+        if (heldItem.getId() != 0) {
+            // This can be filled in with the actual name when written to the log.
+            s += "@%s";
+        }
+        s+= " Lv" + level;
+        return s;
     }
 }

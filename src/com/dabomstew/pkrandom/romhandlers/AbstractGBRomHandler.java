@@ -86,7 +86,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();
-        loadItemNames();
+        loadItems();
         loadTrainers();
     }
 
@@ -99,7 +99,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract void loadPokemonPalettes();
 
-    public abstract void loadItemNames();
+    public abstract void loadItems();
 
     public abstract void loadTrainers();
 

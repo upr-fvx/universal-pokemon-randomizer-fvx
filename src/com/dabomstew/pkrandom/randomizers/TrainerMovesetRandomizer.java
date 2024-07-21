@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Abilities;
+import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
     private Map<Integer, List<MoveLearnt>> allLevelUpMoves;
     private Map<Integer, List<Integer>> allEggMoves;
-    private Map<Pokemon, boolean[]> allTMCompat, allTutorCompat;
+    private Map<Species, boolean[]> allTMCompat, allTutorCompat;
     private List<Integer> allTMMoves, allTutorMoves;
 
     public TrainerMovesetRandomizer(RomHandler romHandler, Settings settings, Random random) {
@@ -60,7 +60,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 // Add bias for STAB
 
-                Pokemon pk = romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme);
+                Species pk = romHandler.getAltFormeOfPokemon(tp.species, tp.forme);
 
                 List<Move> stabMoves = new ArrayList<>(movesAtLevel)
                         .stream()
@@ -181,18 +181,18 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 double atkSpatkRatio = (double) pk.getAttack() / (double) pk.getSpatk();
                 switch (romHandler.getAbilityForTrainerPokemon(tp)) {
-                    case Abilities.hugePower:
-                    case Abilities.purePower:
+                    case AbilityIDs.hugePower:
+                    case AbilityIDs.purePower:
                         atkSpatkRatio *= 2;
                         break;
-                    case Abilities.hustle:
-                    case Abilities.gorillaTactics:
+                    case AbilityIDs.hustle:
+                    case AbilityIDs.gorillaTactics:
                         atkSpatkRatio *= 1.5;
                         break;
-                    case Abilities.moxie:
+                    case AbilityIDs.moxie:
                         atkSpatkRatio *= 1.1;
                         break;
-                    case Abilities.soulHeart:
+                    case AbilityIDs.soulHeart:
                         atkSpatkRatio *= 0.9;
                         break;
                 }
@@ -570,7 +570,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
 
         // Level-up Moves
-        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme).getNumber())
+        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(romHandler.getAltFormeOfPokemon(tp.species, tp.forme).getNumber())
                 .stream()
                 .filter(ml -> (ml.level <= tp.level && ml.level != 0) || (ml.level == 0 && tp.level >= 30))
                 .map(ml -> moves.get(ml.move))
@@ -579,11 +579,11 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         // Pre-Evo Moves
         if (!cyclicEvolutions) {
-            Pokemon preEvo;
+            Species preEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                preEvo = romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme);
+                preEvo = romHandler.getAltFormeOfPokemon(tp.species, tp.forme);
             } else {
-                preEvo = tp.pokemon;
+                preEvo = tp.species;
             }
             while (!preEvo.getEvolutionsTo().isEmpty()) {
                 preEvo = preEvo.getEvolutionsTo().get(0).getFrom();
@@ -597,7 +597,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
 
         // TM Moves
-        boolean[] tmCompat = allTMCompat.get(romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme));
+        boolean[] tmCompat = allTMCompat.get(romHandler.getAltFormeOfPokemon(tp.species, tp.forme));
         for (int tmMove: allTMMoves) {
             if (tmCompat[allTMMoves.indexOf(tmMove) + 1]) {
                 Move thisMove = moves.get(tmMove);
@@ -613,7 +613,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         // Move Tutor Moves
         if (romHandler.hasMoveTutors()) {
-            boolean[] tutorCompat = allTutorCompat.get(romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme));
+            boolean[] tutorCompat = allTutorCompat.get(romHandler.getAltFormeOfPokemon(tp.species, tp.forme));
             for (int tutorMove: allTutorMoves) {
                 if (tutorCompat[allTutorMoves.indexOf(tutorMove) + 1]) {
                     Move thisMove = moves.get(tutorMove);
@@ -630,11 +630,11 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         // Egg Moves
         if (!cyclicEvolutions) {
-            Pokemon firstEvo;
+            Species firstEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                firstEvo = romHandler.getAltFormeOfPokemon(tp.pokemon, tp.forme);
+                firstEvo = romHandler.getAltFormeOfPokemon(tp.species, tp.forme);
             } else {
-                firstEvo = tp.pokemon;
+                firstEvo = tp.species;
             }
             while (!firstEvo.getEvolutionsTo().isEmpty()) {
                 firstEvo = firstEvo.getEvolutionsTo().get(0).getFrom();

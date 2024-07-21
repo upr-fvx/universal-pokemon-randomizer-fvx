@@ -30,11 +30,11 @@ import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.graphics.packs.*;
-import com.dabomstew.pkrandom.pokemon.ExpCurve;
-import com.dabomstew.pkrandom.pokemon.GenRestrictions;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.ExpCurve;
+import com.dabomstew.pkrandom.game_data.GenRestrictions;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -3534,8 +3534,8 @@ public class RandomizerGUI {
     }
 
     private void populateDropdowns() {
-        List<Pokemon> currentStarters = romHandler.getStarters();
-        List<Pokemon> allPokes =
+        List<Species> currentStarters = romHandler.getStarters();
+        List<Species> allPokes =
                 romHandler.generationOfPokemon() >= 6 ?
                         romHandler.getPokemonInclFormes()
                                 .stream()

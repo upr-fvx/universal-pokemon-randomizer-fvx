@@ -5,11 +5,11 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
 import com.dabomstew.pkrandom.newnds.NDSRom;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractDSRomEntry;
 
 import javax.imageio.ImageIO;
@@ -400,7 +400,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         try {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-            for (Pokemon pk : getPokemonSet()) {
+            for (Species pk : getPokemonSet()) {
                 if (getGraphicalFormePokes().contains(pk.getNumber())) {
                     loadGraphicalFormePokemonPalettes(pk);
                 } else {
@@ -433,7 +433,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
-            for (Pokemon pk : getPokemonSet()) {
+            for (Species pk : getPokemonSet()) {
                 if (getGraphicalFormePokes().contains(pk.getNumber())) {
                     saveGraphicalFormePokemonPalettes(pk);
                 } else {
@@ -459,9 +459,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     protected abstract Collection<Integer> getGraphicalFormePokes();
 
-    protected abstract void loadGraphicalFormePokemonPalettes(Pokemon pk);
+    protected abstract void loadGraphicalFormePokemonPalettes(Species pk);
 
-    protected abstract void saveGraphicalFormePokemonPalettes(Pokemon pk);
+    protected abstract void saveGraphicalFormePokemonPalettes(Species pk);
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
@@ -476,7 +476,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 			throw new RomIOException(e);
 		}
 
-        for (Pokemon pk : getPokemonSet()) {
+        for (Species pk : getPokemonSet()) {
             DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
             bims.add(pig.getFull());
         }
@@ -520,7 +520,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public abstract DSPokemonImageGetter createPokemonImageGetter(Pokemon pk);
+    public abstract DSPokemonImageGetter createPokemonImageGetter(Species pk);
 
     public abstract class DSPokemonImageGetter extends PokemonImageGetter {
         public static final int MALE = 0;
@@ -529,7 +529,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         protected NARCArchive pokeGraphicsNARC;
         protected int gender = FEMALE;
 
-        public DSPokemonImageGetter(Pokemon pk) {
+        public DSPokemonImageGetter(Species pk) {
             super(pk);
         }
 

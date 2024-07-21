@@ -23,11 +23,10 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.graphics.palettes.*;
-import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
+import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.io.*;
@@ -64,7 +63,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 
 	private boolean typeSanity;
 	private boolean shinyFromNormal;
-	private Map<Pokemon, TypeBaseColorList> typeBaseColorLists;
+	private Map<Species, TypeBaseColorList> typeBaseColorLists;
 
 	public Gen3to5PaletteRandomizer(RomHandler romHandler, Settings settings, Random random) {
 		super(romHandler, settings, random);
@@ -95,8 +94,8 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 			throw new RandomizationException("Could not randomize palettes, unrecognized romtype.");
 		}
 
-		copyUpEvolutionsHelper.apply(evolutionSanity, true, new BasicPokemonPaletteAction(),
-				new EvolvedPokemonPaletteAction());
+		copyUpEvolutionsHelper.apply(evolutionSanity, true, new BasicSpeciesPaletteAction(),
+				new EvolvedSpeciesPaletteAction());
 		List<PaletteDescription> paletteDescriptions = getPaletteDescriptions("pokePalettes");
 		populatePokemonPalettes(paletteDescriptions);
 
@@ -106,9 +105,9 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 
 		PalettePopulator pp = new PalettePopulator(random);
 
-		for (Entry<Pokemon, TypeBaseColorList> entry : typeBaseColorLists.entrySet()) {
+		for (Entry<Species, TypeBaseColorList> entry : typeBaseColorLists.entrySet()) {
 
-			Pokemon pk = entry.getKey();
+			Species pk = entry.getKey();
 			Palette palette = pk.getNormalPalette();
 			TypeBaseColorList typeBaseColorList = entry.getValue();
 			PalettePartDescription[] palettePartDescriptions = getPalettePartDescriptions(pk, paletteDescriptions);
@@ -135,8 +134,8 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 		}
 	}
 
-	public PalettePartDescription[] getPalettePartDescriptions(Pokemon pk,
-			List<PaletteDescription> paletteDescriptions) {
+	public PalettePartDescription[] getPalettePartDescriptions(Species pk,
+                                                               List<PaletteDescription> paletteDescriptions) {
 		int paletteIndex = pk.getNumber() - 1;
 		boolean validIndex = paletteIndex <= paletteDescriptions.size();
 		return PalettePartDescription
@@ -211,10 +210,10 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 		return "src/com/dabomstew/pkrandom/graphics/resources/" + getFileName(fileKey);
 	}
 
-	private class BasicPokemonPaletteAction implements BasicPokemonAction<Pokemon> {
+	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {
 
 		@Override
-		public void applyTo(Pokemon pk) {
+		public void applyTo(Species pk) {
 			if (shinyFromNormal) {
 				setShinyPaletteFromNormal(pk);
 			}
@@ -226,10 +225,10 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 
 	}
 
-	private class EvolvedPokemonPaletteAction implements EvolvedPokemonAction<Pokemon> {
+	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction<Species> {
 
 		@Override
-		public void applyTo(Pokemon evFrom, Pokemon evTo, boolean toMonIsFinalEvo) {
+		public void applyTo(Species evFrom, Species evTo, boolean toMonIsFinalEvo) {
 			if (shinyFromNormal) {
 				setShinyPaletteFromNormal(evTo);
 			}

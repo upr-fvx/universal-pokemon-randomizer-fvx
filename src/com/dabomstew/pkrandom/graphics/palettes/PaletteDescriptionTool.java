@@ -25,8 +25,8 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.Utils;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.gui.ROMFilter;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
 import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -140,7 +140,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
             new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory()};
     private boolean romLoaded;
 
-    private final Map<Pokemon, Palette> originalPalettes = new HashMap<>();
+    private final Map<Species, Palette> originalPalettes = new HashMap<>();
 
     private JScrollPane entryScrollPane;
     private final JList<PaletteDescription> paletteDescriptions;
@@ -311,7 +311,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         }
 
         Gen3to5PaletteRandomizer paletteRandomizer = new Gen3to5PaletteRandomizer(romHandler, SETTINGS, RND);
-        for (Pokemon pk : romHandler.getPokemonSet()) {
+        for (Species pk : romHandler.getPokemonSet()) {
             originalPalettes.put(pk, pk.getNormalPalette());
         }
         paletteDescriptions
@@ -399,7 +399,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         exampleImage.setImage(getPokemonImage(getCurrentPokemon(), false));
     }
 
-    private void randomizePalette(Pokemon pk, String paletteDescriptionBody) {
+    private void randomizePalette(Species pk, String paletteDescriptionBody) {
         pk.setNormalPalette(new Palette(originalPalettes.get(pk)));
         Palette palette = pk.getNormalPalette();
         PalettePopulator pp = new PalettePopulator(RND);
@@ -422,7 +422,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
             descNoteField.setText(paletteDescriptions.getSelectedValue().getNote());
             unchangedNote = descNoteField.getText();
 
-            Pokemon pk = getCurrentPokemon();
+            Species pk = getCurrentPokemon();
             pk.setNormalPalette(new Palette(originalPalettes.get(pk)));
             originalImage.setImage(getPokemonImage(pk, false));
             shinyImage.setImage(getPokemonImage(pk, true));
@@ -430,11 +430,11 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         }
     }
 
-    private Pokemon getCurrentPokemon() {
+    private Species getCurrentPokemon() {
         return romHandler.getPokemon().get(paletteDescriptions.getSelectedIndex() + 1);
     }
 
-    private BufferedImage getPokemonImage(Pokemon pk, boolean shiny) {
+    private BufferedImage getPokemonImage(Species pk, boolean shiny) {
         PokemonImageGetter pig = romHandler.createPokemonImageGetter(pk);
         pig.setShiny(shiny);
         BufferedImage front = pig.get();

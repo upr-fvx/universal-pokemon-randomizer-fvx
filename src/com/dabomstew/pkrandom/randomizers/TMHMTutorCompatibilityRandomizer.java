@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.Move;
-import com.dabomstew.pkrandom.pokemon.MoveLearnt;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Move;
+import com.dabomstew.pkrandom.game_data.MoveLearnt;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         // Get current compatibility
         // increase HM chances if required early on
         List<Integer> requiredEarlyOn = romHandler.getEarlyRequiredHMMoves();
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
         tmHMs.addAll(romHandler.getHMMoves());
 
@@ -52,7 +52,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
                     (evFrom, evTo, toMonIsFinalEvo) -> copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo,
                             compat.get(evFrom), compat.get(evTo), tmHMs, preferSameType));
         } else {
-            for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
+            for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
                 randomizePokemonMoveCompatibility(compatEntry.getKey(), compatEntry.getValue(), tmHMs, requiredEarlyOn,
                         preferSameType);
             }
@@ -63,7 +63,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         tmhmChangesMade = true;
     }
 
-    private void randomizePokemonMoveCompatibility(Pokemon pkmn, boolean[] moveCompatibilityFlags,
+    private void randomizePokemonMoveCompatibility(Species pkmn, boolean[] moveCompatibilityFlags,
                                                    List<Integer> moveIDs, List<Integer> prioritizedMoves,
                                                    boolean preferSameType) {
         List<Move> moveData = romHandler.getMoves();
@@ -80,7 +80,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         }
     }
 
-    private void copyPokemonMoveCompatibilityUpEvolutions(Pokemon evFrom, Pokemon evTo, boolean[] prevCompatibilityFlags,
+    private void copyPokemonMoveCompatibilityUpEvolutions(Species evFrom, Species evTo, boolean[] prevCompatibilityFlags,
                                                           boolean[] toCompatibilityFlags, List<Integer> moveIDs,
                                                           boolean preferSameType) {
         List<Move> moveData = romHandler.getMoves();
@@ -109,7 +109,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         }
     }
 
-    private double getMoveCompatibilityProbability(Pokemon pkmn, Move mv, boolean requiredEarlyOn,
+    private double getMoveCompatibilityProbability(Species pkmn, Move mv, boolean requiredEarlyOn,
                                                    boolean preferSameType) {
         double probability = 0.5;
         if (preferSameType) {
@@ -129,8 +129,8 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void fullTMHMCompatibility() {
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
-        for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
+        for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
             boolean[] flags = compatEntry.getValue();
             for (int i = 1; i < flags.length; i++) {
                 flags[i] = true;
@@ -144,10 +144,10 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
      */
     public void ensureTMCompatSanity() {
         //
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
         List<Integer> tmMoves = romHandler.getTMMoves();
-        for (Pokemon pkmn : compat.keySet()) {
+        for (Species pkmn : compat.keySet()) {
             List<MoveLearnt> moveset = movesets.get(pkmn.getNumber());
             boolean[] pkmnCompat = compat.get(pkmn);
             for (MoveLearnt ml : moveset) {
@@ -162,7 +162,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void ensureTMEvolutionSanity() {
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions
         // retain learn compatibility
         copyUpEvolutionsHelper.apply(true, true, pk -> {},
@@ -178,7 +178,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void fullHMCompatibility() {
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         int tmCount = romHandler.getTMCount();
         for (boolean[] flags : compat.values()) {
             for (int i = tmCount + 1; i < flags.length; i++) {
@@ -192,10 +192,10 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void copyTMCompatibilityToCosmeticFormes() {
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
 
-        for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
-            Pokemon pkmn = compatEntry.getKey();
+        for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
+            Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
             if (pkmn.isActuallyCosmetic()) {
                 boolean[] baseFlags = compat.get(pkmn.getBaseForme());
@@ -217,7 +217,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
             return;
         }
         // Get current compatibility
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> mts = romHandler.getMoveTutorMoves();
 
         // Empty list
@@ -230,7 +230,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
                             compat.get(evFrom), compat.get(evTo), mts, preferSameType));
         }
         else {
-            for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
+            for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
                 randomizePokemonMoveCompatibility(compatEntry.getKey(), compatEntry.getValue(), mts, priorityTutors, preferSameType);
             }
         }
@@ -244,8 +244,8 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         if (!romHandler.hasMoveTutors()) {
             return;
         }
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
-        for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
             boolean[] flags = compatEntry.getValue();
             for (int i = 1; i < flags.length; i++) {
                 flags[i] = true;
@@ -262,10 +262,10 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         // if a pokemon learns a move in its moveset
         // and there is a tutor of that move, make sure
         // that tutor can be learned.
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
         List<Integer> mtMoves = romHandler.getMoveTutorMoves();
-        for (Pokemon pkmn : compat.keySet()) {
+        for (Species pkmn : compat.keySet()) {
             List<MoveLearnt> moveset = movesets.get(pkmn.getNumber());
             boolean[] pkmnCompat = compat.get(pkmn);
             for (MoveLearnt ml : moveset) {
@@ -283,7 +283,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         if (!romHandler.hasMoveTutors()) {
             return;
         }
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions retain learn compatibility
         copyUpEvolutionsHelper.apply(true, true, pk -> {},
                 (evFrom, evTo, toMonIsFinalEvo) -> {
@@ -298,10 +298,10 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void copyMoveTutorCompatibilityToCosmeticFormes() {
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
 
-        for (Map.Entry<Pokemon, boolean[]> compatEntry : compat.entrySet()) {
-            Pokemon pkmn = compatEntry.getKey();
+        for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
+            Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
             if (pkmn.isActuallyCosmetic()) {
                 boolean[] baseFlags = compat.get(pkmn.getBaseForme());

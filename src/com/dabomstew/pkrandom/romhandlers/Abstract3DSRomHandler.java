@@ -27,8 +27,8 @@ import com.dabomstew.pkrandom.ctr.NCCH;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.Type;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -38,7 +38,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * An abstract base class for 3DS {@link RomHandler}s, which standardises common 3DS functions.
@@ -394,7 +393,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 												 boolean transparentBackground, boolean includePalette);
 
 
-	public PokemonImageGetter createPokemonImageGetter(Pokemon pk) {
+	public PokemonImageGetter createPokemonImageGetter(Species pk) {
 		// No PokemonImageGetter for the 3DS games for now, in part because they can only get icons,
 		// and in part because there's no code to get the icon(s) of a specific Pokemon.
 		throw new UnsupportedOperationException();

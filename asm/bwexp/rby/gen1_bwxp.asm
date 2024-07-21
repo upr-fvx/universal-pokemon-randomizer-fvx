@@ -630,8 +630,8 @@ BWXP_FortyBitRightShift::
     ret
 
 ; EXP Yields
-; 1 word per pokemon
-; in ingame ordering, starting with pokemon 0
+; 1 word per species
+; in ingame ordering, starting with species 0
 BWXP_Gen1_ExpYieldTable:
 	dw 0
 	dw 170

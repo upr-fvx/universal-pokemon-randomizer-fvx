@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Moves;
-import com.dabomstew.pkrandom.pokemon.Move;
-import com.dabomstew.pkrandom.pokemon.MoveCategory;
+import com.dabomstew.pkrandom.constants.MoveIDs;
+import com.dabomstew.pkrandom.game_data.Move;
+import com.dabomstew.pkrandom.game_data.MoveCategory;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class MoveDataRandomizer extends Randomizer {
     public void randomizeMovePowers() {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != Moves.struggle && mv.power >= 10) {
+            if (mv != null && mv.internalId != MoveIDs.struggle && mv.power >= 10) {
                 // "Generic" damaging move to randomize power
                 if (random.nextInt(3) != 2) {
                     // "Regular" move
@@ -53,7 +53,7 @@ public class MoveDataRandomizer extends Randomizer {
     public void randomizeMovePPs() {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != Moves.struggle) {
+            if (mv != null && mv.internalId != MoveIDs.struggle) {
                 if (random.nextInt(3) != 2) {
                     // "average" PP: 15-25
                     mv.pp = random.nextInt(3) * 5 + 15;
@@ -69,7 +69,7 @@ public class MoveDataRandomizer extends Randomizer {
     public void randomizeMoveAccuracies() {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != Moves.struggle && mv.hitratio >= 5) {
+            if (mv != null && mv.internalId != MoveIDs.struggle && mv.hitratio >= 5) {
                 // "Sane" accuracy randomization
                 // Broken into three tiers based on original accuracy
                 // Designed to limit the chances of 100% accurate OHKO moves and
@@ -118,7 +118,7 @@ public class MoveDataRandomizer extends Randomizer {
     public void randomizeMoveTypes() {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != Moves.struggle && mv.type != null) {
+            if (mv != null && mv.internalId != MoveIDs.struggle && mv.type != null) {
                 mv.type = romHandler.getTypeService().randomType(random);
             }
         }
@@ -131,7 +131,7 @@ public class MoveDataRandomizer extends Randomizer {
         }
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != Moves.struggle && mv.category != MoveCategory.STATUS) {
+            if (mv != null && mv.internalId != MoveIDs.struggle && mv.category != MoveCategory.STATUS) {
                 if (random.nextInt(2) == 0) {
                     mv.category = (mv.category == MoveCategory.PHYSICAL) ? MoveCategory.SPECIAL : MoveCategory.PHYSICAL;
                 }

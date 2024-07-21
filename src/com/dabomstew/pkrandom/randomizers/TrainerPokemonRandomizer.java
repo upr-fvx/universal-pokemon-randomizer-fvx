@@ -338,16 +338,20 @@ public class TrainerPokemonRandomizer extends Randomizer {
             List<Type> remainingTypes = new ArrayList<>(typeService.getTypes());
             Collections.shuffle(remainingTypes, random);
 
-            List<String> doubleDigitGyms = new ArrayList<>();
+            List<String> shuffledGroups = new ArrayList<>(groupNames);
+            Collections.shuffle(shuffledGroups, random);
+            //shuffle groups so it's not always the same few gyms that get duplicates
+
+            List<String> post8Gyms = new ArrayList<>();
 
             Map<String, Type> typesForGroups = new HashMap<>();
 
             for (String group : groupNames) {
-                if(group.startsWith("GYM1") && group.equals("GYM1")) {
-                    //a double digit gym. This might put us past the number of types in the game.
+                if((group.startsWith("GYM1") && !group.equals("GYM1")) || group.equals("GYM9")) {
+                    //a gym beyond the 8th. This might put us past the number of types in the game.
                     //So we'll delay all these, so that if there *are* duplicate types, they're in
-                    //the post-game gyms.
-                    doubleDigitGyms.add(group);
+                    //the post-game gyms. (Since only Johto has enough gyms to require duplicate types.)
+                    post8Gyms.add(group);
                     continue;
                 }
                 if(remainingTypes.isEmpty()) {
@@ -365,7 +369,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
             }
 
-            for (String group : doubleDigitGyms) {
+            for (String group : post8Gyms) {
                 Type typeForGroup;
                 if(!remainingTypes.isEmpty()) {
                     //use the remaining types first
@@ -398,7 +402,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             Type groupType = groupTypes.get(group);
             List<Trainer> trainersInGroup = groups.get(group);
             for (Trainer t : trainersInGroup) {
-                this.trainerTypes.put(t, groupType);
+                trainerTypes.put(t, groupType);
             }
         }
     }

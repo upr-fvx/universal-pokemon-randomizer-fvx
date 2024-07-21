@@ -1,8 +1,8 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,9 +29,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void startersDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        List<Pokemon> starters = romHandler.getStarters();
+        List<Species> starters = romHandler.getStarters();
         System.out.println(starters);
-        List<Pokemon> before = new ArrayList<>(starters);
+        List<Species> before = new ArrayList<>(starters);
         romHandler.setStarters(starters);
         assertEquals(before, romHandler.getStarters());
     }
@@ -44,8 +44,8 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersMod(false, false, true);
         System.out.println(s.getStartersMod());
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
-        List<Pokemon> starters = romHandler.getStarters();
-        List<Pokemon> before = new ArrayList<>(starters);
+        List<Species> starters = romHandler.getStarters();
+        List<Species> before = new ArrayList<>(starters);
         romHandler.setStarters(starters);
         assertEquals(before, romHandler.getStarters());
     }
@@ -55,7 +55,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     public void completelyRandomChangesStarterLineup(String romName) {
         loadROM(romName);
 
-        List<Pokemon> before = new ArrayList<>(romHandler.getStarters());
+        List<Species> before = new ArrayList<>(romHandler.getStarters());
 
         Settings s = new Settings();
         s.setStartersMod(false, false, true);
@@ -81,8 +81,8 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        List<Pokemon> starters = romHandler.getStarters();
-        List<Pokemon> allPokes = romHandler.getPokemon();
+        List<Species> starters = romHandler.getStarters();
+        List<Species> allPokes = romHandler.getPokemon();
 
         StringBuilder sb = new StringBuilder("Starters");
         sb.append(" (should be ");
@@ -168,10 +168,10 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     }
 
     private void fwgCheck(int generation) {
-        List<Pokemon> starters = romHandler.getStarters();
-        Pokemon fireStarter;
-        Pokemon waterStarter;
-        Pokemon grassStarter;
+        List<Species> starters = romHandler.getStarters();
+        Species fireStarter;
+        Species waterStarter;
+        Species grassStarter;
         if(generation <= 2) {
             //early games start with Fire
             fireStarter = starters.get(0);
@@ -239,13 +239,13 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     }
 
     private void typeTriangleCheck(int generation) {
-        List<Pokemon> starters = romHandler.getStarters();
+        List<Species> starters = romHandler.getStarters();
         System.out.println(starters + "\n");
 
         typeTriangleCheckInner(starters, generation);
     }
 
-    private void typeTriangleCheckInner(List<Pokemon> starters, int generation) {
+    private void typeTriangleCheckInner(List<Species> starters, int generation) {
         // Checks only for type triangles going in the same direction as the vanilla starter's triangle
         // (or technically, how the vanilla starters are read by the randomizer),
         // since triangles in the other direction might mess up rival effectiveness
@@ -255,12 +255,12 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
         if(starters.size() > 3) {
             //recurse to check the later triangles too
-            List<Pokemon> nextSet = starters.subList(3, starters.size());
+            List<Species> nextSet = starters.subList(3, starters.size());
             typeTriangleCheckInner(nextSet, generation);
         }
     }
 
-    private boolean isSuperEffectiveAgainst(Pokemon attacker, Pokemon defender, int generation) {
+    private boolean isSuperEffectiveAgainst(Species attacker, Species defender, int generation) {
         // just checks whether any of the attacker's types is super effective against any of the defender's,
         // nothing more sophisticated
         System.out.println("Is " + attacker.getName() + " super-effective against " + defender.getName() + " ?");
@@ -321,7 +321,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     }
 
     private void uniqueTypesCheck() {
-        List<Pokemon> starters = romHandler.getStarters();
+        List<Species> starters = romHandler.getStarters();
         System.out.println(starters);
         for (int i = 0; i < starters.size(); i++) {
             for (int j = i + 1; j < starters.size(); j++) {
@@ -330,7 +330,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         }
     }
 
-    private boolean sharesTypes(Pokemon a, Pokemon b) {
+    private boolean sharesTypes(Species a, Species b) {
         if (a.getPrimaryType(false) == b.getPrimaryType(false)) {
             return true;
         }
@@ -390,10 +390,10 @@ public class RomHandlerStarterTest extends RomHandlerTest {
                 System.out.println(t);
                 new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-                List<Pokemon> starters = romHandler.getStarters();
+                List<Species> starters = romHandler.getStarters();
                 System.out.println(starters.stream().map(pk -> pk.getName() + " " + pk.getPrimaryType(false) +
                         (pk.getSecondaryType(false) == null ? "" : " / " + pk.getSecondaryType(false))).collect(Collectors.toList()));
-                for (Pokemon starter : starters) {
+                for (Species starter : starters) {
                     assertTrue(starter.getPrimaryType(false) == t || starter.getSecondaryType(false) == t);
                 }
             }
@@ -415,9 +415,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     }
 
     private void noDualTypesCheck() {
-        List<Pokemon> starters = romHandler.getStarters();
+        List<Species> starters = romHandler.getStarters();
         System.out.println(starters);
-        for(Pokemon starter : starters) {
+        for(Species starter : starters) {
             assertNull(starter.getSecondaryType(false));
         }
     }
@@ -459,7 +459,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     }
 
     private void startersInBSTRangeCheck(int minimumBST, int maximumBST) {
-        for(Pokemon starter : romHandler.getStarters()) {
+        for(Species starter : romHandler.getStarters()) {
             System.out.println(starter);
             assertTrue(starter.getBSTForPowerLevels() >= minimumBST &&
                     starter.getBSTForPowerLevels() <= maximumBST);

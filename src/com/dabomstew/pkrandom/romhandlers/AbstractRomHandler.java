@@ -34,7 +34,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedPokemonService;
 import com.dabomstew.pkrandom.services.TypeService;
@@ -69,13 +69,13 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getPokemonSet() {
-        return PokemonSet.unmodifiable(getPokemon());
+    public SpeciesSet getPokemonSet() {
+        return SpeciesSet.unmodifiable(getPokemon());
     }
 
     @Override
-    public PokemonSet getPokemonSetInclFormes() {
-        return PokemonSet.unmodifiable(getPokemonInclFormes());
+    public SpeciesSet getPokemonSetInclFormes() {
+        return SpeciesSet.unmodifiable(getPokemonInclFormes());
     }
 
     @Override
@@ -84,8 +84,8 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedForWildEncounters() {
-        return new PokemonSet();
+    public SpeciesSet getBannedForWildEncounters() {
+        return new SpeciesSet();
     }
 
     @Override
@@ -104,18 +104,18 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public PokemonSet getMainGameWildPokemon(boolean useTimeOfDay) {
-        PokemonSet wildPokemon = new PokemonSet();
+    public SpeciesSet getMainGameWildPokemon(boolean useTimeOfDay) {
+        SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
 
         for (EncounterArea area : areas) {
             if (area.isPartiallyPostGame()) {
                 for (int i = area.getPartiallyPostGameCutoff(); i < area.size(); i++) {
-                    wildPokemon.add(area.get(i).getPokemon());
+                    wildPokemon.add(area.get(i).getSpecies());
                 }
             } else if (!area.isPostGame()) {
                 for (Encounter enc : area) {
-                    wildPokemon.add(enc.getPokemon());
+                    wildPokemon.add(enc.getSpecies());
                 }
             }
         }
@@ -155,7 +155,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
         // search for level evolutions
-        for (Pokemon pk : getPokemonSet()) {
+        for (Species pk : getPokemonSet()) {
             if (pk != null) {
                 for (Evolution checkEvo : pk.getEvolutionsFrom()) {
                     if (checkEvo.getType().usesLevel()) {
@@ -202,44 +202,44 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected Set<EvolutionUpdate> easierEvolutionUpdates = new TreeSet<>();
 
     protected void addEvoUpdateLevel(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         int level = evo.getExtraInfo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
                 false, false));
     }
 
     protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item,
                 false, false));
     }
 
     protected void addEvoUpdateHappiness(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.HAPPINESS, "",
                 false, false));
     }
 
     protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item,
                 false, false));
     }
 
     protected void addEvoUpdateParty(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String otherPk) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_WITH_OTHER, otherPk,
                 false, false));
     }
 
     protected void addEvoUpdateCondensed(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, boolean additional) {
-        Pokemon pkFrom = evo.getFrom();
-        Pokemon pkTo = evo.getTo();
+        Species pkFrom = evo.getFrom();
+        Species pkTo = evo.getTo();
         int level = evo.getExtraInfo();
         evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
                 true, additional));
@@ -325,8 +325,8 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedForStaticPokemon() {
-        return new PokemonSet();
+    public SpeciesSet getBannedForStaticPokemon() {
+        return new SpeciesSet();
     }
 
     @Override
@@ -427,7 +427,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public boolean setCatchingTutorial(Pokemon opponent, Pokemon player) {
+    public boolean setCatchingTutorial(Species opponent, Species player) {
         throw new UnsupportedOperationException();
     }
 
@@ -484,8 +484,8 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedFormesForTrainerPokemon() {
-        return new PokemonSet();
+    public SpeciesSet getBannedFormesForTrainerPokemon() {
+        return new SpeciesSet();
     }
 
     @Override

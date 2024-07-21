@@ -1,9 +1,9 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.Item;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.StaticEncounter;
+import com.dabomstew.pkrandom.game_data.Item;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.StaticEncounter;
 import com.dabomstew.pkrandom.randomizers.StaticPokemonRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -65,7 +65,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         } else {
             sb.append("(");
             sb.append(se.restrictedList.stream()
-                    .map(Pokemon::fullName)
+                    .map(Species::fullName)
                     .collect(Collectors.joining(",")));
             sb.append(")");
         }
@@ -106,8 +106,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Pokemon befPk = before.get(i).pkmn;
-            Pokemon aftPk = after.get(i).pkmn;
+            Species befPk = before.get(i).pkmn;
+            Species aftPk = after.get(i).pkmn;
             System.out.println("bef=" + befPk.fullName() + (befPk.isLegendary() ? " (legendary)" : "") +
                     ", aft=" + aftPk.fullName() + (aftPk.isLegendary() ? " (legendary)" : ""));
             assertEquals(befPk.isLegendary(), aftPk.isLegendary());
@@ -129,8 +129,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Pokemon befPk = before.get(i).pkmn;
-            Pokemon aftPk = after.get(i).pkmn;
+            Species befPk = before.get(i).pkmn;
+            Species aftPk = after.get(i).pkmn;
             System.out.println("bef=" + befPk.fullName() + (isUltraBeast(befPk) ? " (ultra beast)" : "") +
                     ", aft=" + aftPk.fullName() + (isUltraBeast(aftPk) ? " (ultra beast)" : ""));
             assertEquals(isUltraBeast(befPk), isUltraBeast(aftPk));
@@ -164,7 +164,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         }
     }
 
-    private boolean isUltraBeast(Pokemon pk) {
+    private boolean isUltraBeast(Species pk) {
         return romHandler.getRestrictedPokemonService().getUltrabeasts(false).contains(pk);
     }
 

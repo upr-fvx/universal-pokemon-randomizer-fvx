@@ -23,12 +23,11 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
-import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.pokemon.Gen1Pokemon;
-import com.dabomstew.pkrandom.pokemon.PokemonSet;
-import com.dabomstew.pkrandom.pokemon.Type;
-import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
+import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.game_data.cueh.CopyUpEvolutionsHelper;
+import com.dabomstew.pkrandom.game_data.Gen1Species;
+import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.EnumMap;
@@ -74,8 +73,8 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
 
 		// has to use a separate CopyUpEvolutionsHelper which works with Gen1Pokemon
-		CopyUpEvolutionsHelper<Gen1Pokemon> cueh = new CopyUpEvolutionsHelper<>(romHandler::getPokemonSet);
-		cueh.apply(evolutionSanity, true, new BasePokemonIDAction(), new EvolvedPokemonIDAction());
+		CopyUpEvolutionsHelper<Gen1Species> cueh = new CopyUpEvolutionsHelper<>(romHandler::getPokemonSet);
+		cueh.apply(evolutionSanity, true, new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
 	}
 
 	private SGBPaletteID getRandomPaletteID() {
@@ -87,19 +86,19 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		return typeIDs == null ? DEFAULT_PALETTE_ID : typeIDs[random.nextInt(typeIDs.length)];
 	}
 
-	private class BasePokemonIDAction implements BasicPokemonAction<Gen1Pokemon> {
+	private class BaseSpeciesIDAction implements BasicSpeciesAction<Gen1Species> {
 
 		@Override
-		public void applyTo(Gen1Pokemon pk) {
+		public void applyTo(Gen1Species pk) {
 			pk.setPaletteID(typeSanity ? getRandomPaletteID(pk.getPrimaryType(false)) : getRandomPaletteID());
 		}
 
 	}
 
-	private class EvolvedPokemonIDAction implements EvolvedPokemonAction<Gen1Pokemon> {
+	private class EvolvedSpeciesIDAction implements EvolvedSpeciesAction<Gen1Species> {
 
 		@Override
-		public void applyTo(Gen1Pokemon evFrom, Gen1Pokemon evTo, boolean toMonIsFinalEvo) {
+		public void applyTo(Gen1Species evFrom, Gen1Species evTo, boolean toMonIsFinalEvo) {
 			SGBPaletteID newPaletteID;
 			if (typeSanity && !evTo.getPrimaryType(false).equals(evFrom.getPrimaryType(false))) {
 				SGBPaletteID[] typeIDs = TYPE_PALETTE_IDS.get(evTo.getPrimaryType(false));

@@ -2,7 +2,7 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -25,7 +25,7 @@ public class StarterRandomizer extends Randomizer {
         int[] customStarters = settings.getCustomStarters();
         int starterCount = romHandler.starterCount();
 
-        List<Pokemon> pickedStarters = new ArrayList<>();
+        List<Species> pickedStarters = new ArrayList<>();
 
         if (useCustomStarters) {
             pickedStarters.addAll(getCustomStarters(customStarters));
@@ -40,7 +40,7 @@ public class StarterRandomizer extends Randomizer {
             }
         }
 
-        PokemonSet choosable = getAvailableSet(pickedStarters);
+        SpeciesSet choosable = getAvailableSet(pickedStarters);
 
         //sanity check
         if (choosable.size() < starterCount - pickedStarters.size()) {
@@ -57,7 +57,7 @@ public class StarterRandomizer extends Randomizer {
         } else {
 
             //build type map
-            Map<Type, PokemonSet> choosableByType = choosable.sortByType(false);
+            Map<Type, SpeciesSet> choosableByType = choosable.sortByType(false);
 
             //assuming only one type restriction at a time (not counting noDualTypes)
             //also assuming that the triangle restrictions (typeTriangle, fireWaterGrass)
@@ -102,7 +102,7 @@ public class StarterRandomizer extends Randomizer {
      * @return A Type which has the number of Pokemon needed.
      * @throws RandomizationException if no type has the needed number of Pokemon.
      */
-    private Type chooseTypeForStarters(int numStartersNeeded, Map<Type, PokemonSet> availableByType) {
+    private Type chooseTypeForStarters(int numStartersNeeded, Map<Type, SpeciesSet> availableByType) {
         List<Type> types = new ArrayList<>(typeService.getTypes());
         Collections.shuffle(types, random);
 
@@ -121,7 +121,7 @@ public class StarterRandomizer extends Randomizer {
      * @param choosableByType The set of Pokemon to choose from, sorted by type.
      * @return A new List containing a trio of starters of Fire, Water, and Grass types in the appropriate order.
      */
-    private List<Pokemon> chooseStartersFireWaterGrass(Map<Type, PokemonSet> choosableByType) {
+    private List<Species> chooseStartersFireWaterGrass(Map<Type, SpeciesSet> choosableByType) {
         List<Type> typesInOrder;
         if(romHandler.generationOfPokemon() <= 2) {
             //the order is Fire, Water, Grass
@@ -141,7 +141,7 @@ public class StarterRandomizer extends Randomizer {
      * @return A new List containing a trio of Pokemon such that each is super-effective
      * against the previous (wrapping around).
      */
-    private List<Pokemon> chooseTypeTriangleStarters(Map<Type, PokemonSet> availablePokemonByType) {
+    private List<Species> chooseTypeTriangleStarters(Map<Type, SpeciesSet> availablePokemonByType) {
         Set<List<Type>> typeTriangles = findTypeTriangles();
         if (typeTriangles.isEmpty()) {
             throw new RandomizationException("Could not find any type triangles");
@@ -150,7 +150,7 @@ public class StarterRandomizer extends Randomizer {
         List<List<Type>> typeTriangleList = new ArrayList<>(typeTriangles);
         Collections.shuffle(typeTriangleList, random);
 
-        List<Pokemon> picks = null;
+        List<Species> picks = null;
 
         // okay, we found our triangles! now pick one and pick starters from it.
         // loop because we might find that there isn't a pokemon set of the appropriate types
@@ -182,13 +182,13 @@ public class StarterRandomizer extends Randomizer {
      * @throws RandomizationException If one of the types has no valid Pokemon (i.e., Pokemon which do not
      *              have any of the other types.)
      */
-    private List<Pokemon> chooseStartersOfTypes(Map<Type, PokemonSet> availablePokemonByType, List<Type> types) {
-        List<Pokemon> chosenStarters = new ArrayList<>();
+    private List<Species> chooseStartersOfTypes(Map<Type, SpeciesSet> availablePokemonByType, List<Type> types) {
+        List<Species> chosenStarters = new ArrayList<>();
 
         for (Type type : types) {
-            PokemonSet pokemonOfType;
+            SpeciesSet pokemonOfType;
             if(availablePokemonByType.get(type) != null) {
-                pokemonOfType = new PokemonSet(availablePokemonByType.get(type));
+                pokemonOfType = new SpeciesSet(availablePokemonByType.get(type));
                 //clone so we can safely drain it
             } else {
                 throw new RandomizationException("No valid starters of type " + type + "found!");
@@ -196,7 +196,7 @@ public class StarterRandomizer extends Randomizer {
 
             boolean noPick = true;
             while (noPick && !pokemonOfType.isEmpty()) {
-                Pokemon picked = pokemonOfType.getRandomPokemon(random, true);
+                Species picked = pokemonOfType.getRandomSpecies(random, true);
                 Type otherType;
                 if (picked.getPrimaryType(false) == type) {
                     otherType = picked.getSecondaryType(false);
@@ -223,15 +223,15 @@ public class StarterRandomizer extends Randomizer {
      * @param available The set of Pokemon to choose from.
      * @return A new {@link List} containing each starter chosen. (Not a PokemonSet so that the order remains random.)
      */
-    private List<Pokemon> chooseStartersBasic(int numberPicks, PokemonSet available) {
+    private List<Species> chooseStartersBasic(int numberPicks, SpeciesSet available) {
         if(available.size() < numberPicks) {
             throw new RandomizationException("Not enough starters to choose from!");
         }
 
-        List<Pokemon> picks = new ArrayList<>();
+        List<Species> picks = new ArrayList<>();
         //List rather than set so the order isn't deterministic
         while (picks.size() < numberPicks) {
-            Pokemon picked = available.getRandomPokemon(random);
+            Species picked = available.getRandomSpecies(random);
             picks.add(picked);
             available.remove(picked);
         }
@@ -247,16 +247,16 @@ public class StarterRandomizer extends Randomizer {
      * @param available The set of Pokemon available to choose from. WARNING: PARAMETER MODIFIED.
      * @return A new {@link List} containing each starter chosen. (Not a PokemonSet so that the order remains random.)
      */
-    private List<Pokemon> chooseUniqueTypeStarters(List<Pokemon> alreadyPicked, int numberPicks, PokemonSet available) {
-        for (Pokemon picked : alreadyPicked) {
+    private List<Species> chooseUniqueTypeStarters(List<Species> alreadyPicked, int numberPicks, SpeciesSet available) {
+        for (Species picked : alreadyPicked) {
             available.removeIf(poke -> poke.hasType(picked.getPrimaryType(false), false)
                     || poke.hasType(picked.getSecondaryType(false), false));
         }
 
-        List<Pokemon> picks = new ArrayList<>();
+        List<Species> picks = new ArrayList<>();
 
         while (picks.size() < numberPicks) {
-            Pokemon picked = available.getRandomPokemon(random);
+            Species picked = available.getRandomSpecies(random);
             picks.add(picked);
             available.remove(picked);
             available.removeIf(poke -> poke.hasType(picked.getPrimaryType(false), false)
@@ -274,7 +274,7 @@ public class StarterRandomizer extends Randomizer {
      * @param alreadyChosen The list of already-chosen (i.e. custom) starters.
      * @return A new PokemonSet containing all Pokemon which are valid starters, except the already chosen ones.
      */
-    private PokemonSet getAvailableSet(List<Pokemon> alreadyChosen) {
+    private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
         boolean abilitiesUnchanged = settings.getAbilitiesMod() == Settings.AbilitiesMod.UNCHANGED;
         boolean allowAltFormes = settings.isAllowStarterAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
@@ -285,10 +285,10 @@ public class StarterRandomizer extends Randomizer {
         int bstMin = settings.getStartersBSTMinimum();
         int bstMax = settings.getStartersBSTMaximum() == 0 ? 1530 : settings.getStartersBSTMaximum();
 
-        PokemonSet available;
+        SpeciesSet available;
 
         if (allowAltFormes) {
-            available = new PokemonSet(noLegendaries ? rPokeService.getNonLegendaries(true)
+            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(true)
                     : rPokeService.getAll(true));
             if (abilitiesUnchanged) {
                 available.removeAll(rPokeService.getAbilityDependentFormes());
@@ -296,9 +296,9 @@ public class StarterRandomizer extends Randomizer {
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
-            available.removeIf(Pokemon::isActuallyCosmetic);
+            available.removeIf(Species::isActuallyCosmetic);
         } else {
-            available = new PokemonSet(noLegendaries ? rPokeService.getNonLegendaries(false) : rPokeService.getAll(false));
+            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(false) : rPokeService.getAll(false));
         }
 
         available.removeAll(alreadyChosen);
@@ -326,16 +326,16 @@ public class StarterRandomizer extends Randomizer {
      * @return A new List of Pokemon in the same order, with any 0s skipped.
      */
     //TODO: enhance the ordering (i.e. if the first and third are given, make sure they stay in those positions)
-    private List<Pokemon> getCustomStarters(int[] starterIndices) {
-        List<Pokemon> customStarters = new ArrayList<>();
-        List<Pokemon> romPokemon = romHandler.getPokemonInclFormes()
+    private List<Species> getCustomStarters(int[] starterIndices) {
+        List<Species> customStarters = new ArrayList<>();
+        List<Species> romSpecies = romHandler.getPokemonInclFormes()
                 .stream()
                 .filter(pk -> pk == null || !pk.isActuallyCosmetic())
                 .collect(Collectors.toList());
 
         for (int customStarter : starterIndices) {
             if (!(customStarter == 0)) {
-                Pokemon starter = romPokemon.get(customStarter);
+                Species starter = romSpecies.get(customStarter);
                 customStarters.add(starter);
             }
         }

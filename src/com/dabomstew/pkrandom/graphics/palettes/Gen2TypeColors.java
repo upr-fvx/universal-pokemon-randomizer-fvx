@@ -24,7 +24,7 @@ package com.dabomstew.pkrandom.graphics.palettes;
 import java.util.Map;
 import java.util.Random;
 
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.randomizers.Gen2PaletteRandomizer;
 
 /**

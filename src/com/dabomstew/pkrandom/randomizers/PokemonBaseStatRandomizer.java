@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.*;
-import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
+import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;
@@ -40,10 +40,10 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
 
-        BasicPokemonAction<Pokemon> bpAction = pk -> pk.randomizeStatsWithinBST(random);
-        EvolvedPokemonAction<Pokemon> randomEpAction = (evFrom, evTo, toMonIsFinalEvo) -> evTo
+        BasicSpeciesAction<Species> bpAction = pk -> pk.randomizeStatsWithinBST(random);
+        EvolvedSpeciesAction<Species> randomEpAction = (evFrom, evTo, toMonIsFinalEvo) -> evTo
                 .assignNewStatsForEvolution(evFrom, random);
-        EvolvedPokemonAction<Pokemon> copyEpAction = (evFrom, evTo, toMonIsFinalEvo) -> evTo
+        EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, toMonIsFinalEvo) -> evTo
                 .copyRandomizedStatsUpEvolution(evFrom);
 
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
@@ -68,20 +68,20 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         Settings.ExpCurveMod mod = settings.getExpCurveMod();
         ExpCurve expCurve = settings.getSelectedEXPCurve();
 
-        PokemonSet pokes = romHandler.getPokemonSetInclFormes();
+        SpeciesSet pokes = romHandler.getPokemonSetInclFormes();
         switch (mod) {
             case LEGENDARIES:
-                for (Pokemon pk : pokes) {
+                for (Species pk : pokes) {
                     pk.setGrowthCurve(pk.isLegendary() ? ExpCurve.SLOW : expCurve);
                 }
                 break;
             case STRONG_LEGENDARIES:
-                for (Pokemon pk : pokes) {
+                for (Species pk : pokes) {
                     pk.setGrowthCurve(pk.isStrongLegendary() ? ExpCurve.SLOW : expCurve);
                 }
                 break;
             case ALL:
-                for (Pokemon pk : pokes) {
+                for (Species pk : pokes) {
                     pk.setGrowthCurve(expCurve);
                 }
                 break;

@@ -2,9 +2,9 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.pokemon.Effectiveness;
-import com.dabomstew.pkrandom.pokemon.Type;
-import com.dabomstew.pkrandom.pokemon.TypeTable;
+import com.dabomstew.pkrandom.game_data.Effectiveness;
+import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.game_data.TypeTable;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;

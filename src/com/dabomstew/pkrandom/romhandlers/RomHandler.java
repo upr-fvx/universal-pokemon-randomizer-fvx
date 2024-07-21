@@ -25,7 +25,7 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.services.RestrictedPokemonService;
 import com.dabomstew.pkrandom.services.TypeService;
 
@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -42,7 +41,7 @@ import java.util.Set;
  * After a Rom has been loaded with {@link #loadRom(String)}, a number of data types reflecting the contents of the
  * Rom can be acquired through getters (e.g. {@link #getPokemon()}, {@link #getStarters()}, {@link #getTrainers()}).
  * Most of the corresponding data also have setters which update the contents of the Rom (e.g.
- * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Pokemon} data from
+ * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Species} data from
  * {@link #getPokemon()}) are instead updated simply by editing the object returned by the setter.
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
@@ -102,21 +101,21 @@ public interface RomHandler {
     // Instead, you use index on the species' National Dex ID
     // ======================================================
 
-    List<Pokemon> getPokemon();
+    List<Species> getPokemon();
 
-    List<Pokemon> getPokemonInclFormes();
+    List<Species> getPokemonInclFormes();
 
-    PokemonSet getAltFormes();
+    SpeciesSet getAltFormes();
     
-    PokemonSet getPokemonSet();
+    SpeciesSet getPokemonSet();
     
-    PokemonSet getPokemonSetInclFormes();
+    SpeciesSet getPokemonSetInclFormes();
 
     List<MegaEvolution> getMegaEvolutions();
 
-    Pokemon getAltFormeOfPokemon(Pokemon pk, int forme);
+    Species getAltFormeOfPokemon(Species pk, int forme);
 
-    PokemonSet getIrregularFormes();
+    SpeciesSet getIrregularFormes();
 
     RestrictedPokemonService getRestrictedPokemonService();
 
@@ -130,9 +129,9 @@ public interface RomHandler {
     // Starter Pokemon
     // ===============
 
-    List<Pokemon> getStarters();
+    List<Species> getStarters();
 
-    boolean setStarters(List<Pokemon> newStarters);
+    boolean setStarters(List<Species> newStarters);
 
     boolean hasStarterAltFormes();
 
@@ -184,7 +183,7 @@ public interface RomHandler {
      * @param useTimeOfDay
      * @return A new PokemonSet containing all wild Pokemon found in the main game.
      */
-    PokemonSet getMainGameWildPokemon(boolean useTimeOfDay);
+    SpeciesSet getMainGameWildPokemon(boolean useTimeOfDay);
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 
@@ -196,7 +195,7 @@ public interface RomHandler {
 
     boolean hasWildAltFormes();
 
-    PokemonSet getBannedForWildEncounters();
+    SpeciesSet getBannedForWildEncounters();
 
     void enableGuaranteedPokemonCatching();
 
@@ -280,7 +279,7 @@ public interface RomHandler {
 
     boolean hasStaticAltFormes();
 
-    PokemonSet getBannedForStaticPokemon();
+    SpeciesSet getBannedForStaticPokemon();
 
     boolean forceSwapStaticMegaEvos();
 
@@ -328,9 +327,9 @@ public interface RomHandler {
      * @return Map of TM/HM compatibility
      */
 
-    Map<Pokemon, boolean[]> getTMHMCompatibility();
+    Map<Species, boolean[]> getTMHMCompatibility();
 
-    void setTMHMCompatibility(Map<Pokemon, boolean[]> compatData);
+    void setTMHMCompatibility(Map<Species, boolean[]> compatData);
 
     // ===========
     // Move Tutors
@@ -342,9 +341,9 @@ public interface RomHandler {
 
     void setMoveTutorMoves(List<Integer> moves);
 
-    Map<Pokemon, boolean[]> getMoveTutorCompatibility();
+    Map<Species, boolean[]> getMoveTutorCompatibility();
 
-    void setMoveTutorCompatibility(Map<Pokemon, boolean[]> compatData);
+    void setMoveTutorCompatibility(Map<Species, boolean[]> compatData);
 
     // =============
     // Trainer Names
@@ -529,7 +528,7 @@ public interface RomHandler {
     /**
      * Sets the Pokemon shown in the intro. Returns false if pk is not a valid intro Pokemon.
      */
-    boolean setIntroPokemon(Pokemon pk);
+    boolean setIntroPokemon(Species pk);
 
     int generationOfPokemon();
 
@@ -546,7 +545,7 @@ public interface RomHandler {
     /**
      * Sets the Pokemon shown in the catching tutorial. Returns false if the Pokemon are not valid catching tutorial Pokemon.
      */
-    boolean setCatchingTutorial(Pokemon opponent, Pokemon player);
+    boolean setCatchingTutorial(Species opponent, Species player);
 
     void setPCPotionItem(int itemID);
 
@@ -556,7 +555,7 @@ public interface RomHandler {
 
     boolean hasFunctionalFormes();
 
-    PokemonSet getBannedFormesForTrainerPokemon();
+    SpeciesSet getBannedFormesForTrainerPokemon();
     
     // ========
     // Graphics
@@ -571,11 +570,11 @@ public interface RomHandler {
     void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace);
 
     /**
-     * Returns whether {@link #createPokemonImageGetter(Pokemon)} is implemented or not.
+     * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.
      */
     boolean hasPokemonImageGetter();
 
-    PokemonImageGetter createPokemonImageGetter(Pokemon pk);
+    PokemonImageGetter createPokemonImageGetter(Species pk);
 
     // Kind of strange this is a responsibility for the romHandler, when the resources are so specific to the
     // randomizer parts, and the goal is to keep those separate. Still, it works for now.

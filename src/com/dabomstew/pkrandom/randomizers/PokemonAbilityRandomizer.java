@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Abilities;
+import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.pokemon.MegaEvolution;
+import com.dabomstew.pkrandom.game_data.MegaEvolution;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class PokemonAbilityRandomizer extends Randomizer {
         final List<Integer> bannedAbilities = romHandler.getUselessAbilities();
 
         if (!allowWonderGuard) {
-            bannedAbilities.add(Abilities.wonderGuard);
+            bannedAbilities.add(AbilityIDs.wonderGuard);
         }
 
         if (banTrappingAbilities) {
@@ -68,8 +68,8 @@ public class PokemonAbilityRandomizer extends Randomizer {
         // copy abilities straight up evolution lines
         // still keep WG as an exception, though
         copyUpEvolutionsHelper.apply(evolutionSanity, false, pk -> {
-            if (pk.getAbility1() != Abilities.wonderGuard && pk.getAbility2() != Abilities.wonderGuard
-                    && pk.getAbility3() != Abilities.wonderGuard) {
+            if (pk.getAbility1() != AbilityIDs.wonderGuard && pk.getAbility2() != AbilityIDs.wonderGuard
+                    && pk.getAbility3() != AbilityIDs.wonderGuard) {
                 // Pick first ability
                 pk.setAbility1(pickRandomAbility(maxAbility, bannedAbilities, weighDuplicatesTogether));
 
@@ -90,8 +90,8 @@ public class PokemonAbilityRandomizer extends Randomizer {
                 }
             }
         }, (evFrom, evTo, toMonIsFinalEvo) -> {
-            if (evTo.getAbility1() != Abilities.wonderGuard && evTo.getAbility2() != Abilities.wonderGuard
-                    && evTo.getAbility3() != Abilities.wonderGuard) {
+            if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
+                    && evTo.getAbility3() != AbilityIDs.wonderGuard) {
                 evTo.setAbility1(evFrom.getAbility1());
                 evTo.setAbility2(evFrom.getAbility2());
                 evTo.setAbility3(evFrom.getAbility3());

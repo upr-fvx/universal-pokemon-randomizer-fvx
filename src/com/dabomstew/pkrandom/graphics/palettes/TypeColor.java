@@ -33,8 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Type;
 
 /**
  * A {@link Color} with an associated {@link Type}.

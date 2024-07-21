@@ -1,8 +1,8 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.pokemon.Effectiveness;
-import com.dabomstew.pkrandom.pokemon.Type;
-import com.dabomstew.pkrandom.pokemon.TypeTable;
+import com.dabomstew.pkrandom.game_data.Effectiveness;
+import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.game_data.TypeTable;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 public class TypeEffectivenessUpdater extends Updater {

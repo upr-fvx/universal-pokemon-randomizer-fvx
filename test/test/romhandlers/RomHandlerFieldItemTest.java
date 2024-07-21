@@ -1,8 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.pokemon.Item;
-import com.dabomstew.pkrandom.pokemon.PickupItem;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
+import com.dabomstew.pkrandom.game_data.Item;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

@@ -49,7 +49,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
 
     private String toLongString(StaticEncounter se, boolean isLinkedEncounter) {
         StringBuilder sb = new StringBuilder();
-        sb.append(se.getPkmn().fullName());
+        sb.append(se.getSpecies().fullName());
         sb.append(" forme=").append(se.getForme());
         sb.append(" level=").append(se.getLevel());
         if (se.getMaxLevel() > 0) {
@@ -106,8 +106,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Species befPk = before.get(i).getPkmn();
-            Species aftPk = after.get(i).getPkmn();
+            Species befPk = before.get(i).getSpecies();
+            Species aftPk = after.get(i).getSpecies();
             System.out.println("bef=" + befPk.fullName() + (befPk.isLegendary() ? " (legendary)" : "") +
                     ", aft=" + aftPk.fullName() + (aftPk.isLegendary() ? " (legendary)" : ""));
             assertEquals(befPk.isLegendary(), aftPk.isLegendary());
@@ -129,8 +129,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Species befPk = before.get(i).getPkmn();
-            Species aftPk = after.get(i).getPkmn();
+            Species befPk = before.get(i).getSpecies();
+            Species aftPk = after.get(i).getSpecies();
             System.out.println("bef=" + befPk.fullName() + (isUltraBeast(befPk) ? " (ultra beast)" : "") +
                     ", aft=" + aftPk.fullName() + (isUltraBeast(aftPk) ? " (ultra beast)" : ""));
             assertEquals(isUltraBeast(befPk), isUltraBeast(aftPk));
@@ -156,9 +156,9 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         for (int i = 0; i < before.size(); i++) {
             StaticEncounter bef = before.get(i);
             StaticEncounter aft = after.get(i);
-            System.out.println("bef=" + bef.getPkmn().fullName() + (bef.getHeldItem() == 0 ? "" : "w. " + items.get(bef.getHeldItem()).getName())
+            System.out.println("bef=" + bef.getSpecies().fullName() + (bef.getHeldItem().getId() == 0 ? "" : "w. " + items.get(bef.getHeldItem().getId()).getName())
                     + (bef.canMegaEvolve() ? " (can mega evolve)" : "") +
-                    ", aft=" + aft.getPkmn().fullName() + (aft.getHeldItem() == 0 ? "" : "w. " + items.get(aft.getHeldItem()).getName())
+                    ", aft=" + aft.getSpecies().fullName() + (aft.getHeldItem().getId() == 0 ? "" : "w. " + items.get(aft.getHeldItem().getId()).getName())
                     + (aft.canMegaEvolve() ? " (can mega evolve)" : ""));
             assertEquals(bef.canMegaEvolve(), aft.canMegaEvolve());
         }

@@ -1479,7 +1479,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 int currentOffset = i;
                 StaticPokemon sp = romEntry.getStaticPokemon().get(i);
                 StaticEncounter se = new StaticEncounter();
-                se.setPkmn(sp.getPokemon(this));
+                se.setSpecies(sp.getPokemon(this));
                 se.setLevel(sp.getLevel(rom, 0));
                 se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x -> x == currentOffset));
                 statics.add(se);
@@ -1490,7 +1490,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int oeSize = romEntry.getIntValue("StaticPokemonOddEggDataSize");
             for (int i = 0; i < Gen2Constants.oddEggPokemonCount; i++) {
                 StaticEncounter se = new StaticEncounter();
-                se.setPkmn(pokes[rom[oeOffset + i * oeSize] & 0xFF]);
+                se.setSpecies(pokes[rom[oeOffset + i * oeSize] & 0xFF]);
                 se.setEgg(true);
                 statics.add(se);
             }
@@ -1520,7 +1520,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
             StaticEncounter currentStatic = statics.next();
             StaticPokemon sp = romEntry.getStaticPokemon().get(i);
-            sp.setPokemon(this, currentStatic.getPkmn());
+            sp.setPokemon(this, currentStatic.getSpecies());
             sp.setLevel(rom, currentStatic.getLevel(), 0);
         }
 
@@ -1528,7 +1528,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int oeOffset = romEntry.getIntValue("StaticPokemonOddEggOffset");
             int oeSize = romEntry.getIntValue("StaticPokemonOddEggDataSize");
             for (int i = 0; i < Gen2Constants.oddEggPokemonCount; i++) {
-                int oddEggPokemonNumber = statics.next().getPkmn().getNumber();
+                int oddEggPokemonNumber = statics.next().getSpecies().getNumber();
                 writeByte(oeOffset + i * oeSize, (byte) oddEggPokemonNumber);
                 setMovesForOddEggPokemon(oddEggPokemonNumber, oeOffset + i * oeSize);
             }

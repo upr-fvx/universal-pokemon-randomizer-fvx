@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class StaticEncounter {
-    private Species pkmn;
+    private Species species;
     private int forme = 0;
     private int level;
     private int maxLevel = 0;
-    private int heldItem;
+    private Item heldItem = Item.NOTHING;
     private boolean isEgg = false;
     private boolean resetMoves = false;
     private boolean restrictedPool = false;
@@ -51,13 +51,13 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>();
     }
 
-    public StaticEncounter(Species pkmn) {
-        this.pkmn = pkmn;
+    public StaticEncounter(Species species) {
+        this.species = species;
         this.linkedEncounters = new ArrayList<>();
     }
 
     public StaticEncounter(StaticEncounter original) {
-        this.pkmn = original.pkmn;
+        this.species = original.species;
         this.forme = original.forme;
         this.level = original.level;
         this.maxLevel = original.maxLevel;
@@ -69,7 +69,7 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
             StaticEncounter newLinked = new StaticEncounter();
-            newLinked.pkmn = oldLinked.pkmn;
+            newLinked.species = oldLinked.species;
             newLinked.forme = oldLinked.forme;
             newLinked.level = oldLinked.level;
             newLinked.maxLevel = oldLinked.maxLevel;
@@ -83,12 +83,12 @@ public class StaticEncounter {
     }
 
 
-    public Species getPkmn() {
-        return pkmn;
+    public Species getSpecies() {
+        return species;
     }
 
-    public void setPkmn(Species pkmn) {
-        this.pkmn = pkmn;
+    public void setSpecies(Species species) {
+        this.species = species;
     }
 
     public int getForme() {
@@ -115,20 +115,18 @@ public class StaticEncounter {
         this.maxLevel = maxLevel;
     }
 
-    public int getHeldItem() {
+    public Item getHeldItem() {
         return heldItem;
     }
 
-    public void setHeldItem(int heldItem) {
+    public void setHeldItem(Item heldItem) {
         this.heldItem = heldItem;
     }
 
     public boolean canMegaEvolve() {
-        if (heldItem != 0) {
-            for (MegaEvolution mega: pkmn.getMegaEvolutionsFrom()) {
-                if (mega.getItem().getId() == heldItem) {
-                    return true;
-                }
+        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+            if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
+                return true;
             }
         }
         return false;
@@ -177,7 +175,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(pkmn == null ? null : pkmn.fullName());
+        sb.append(species == null ? null : species.fullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {
@@ -206,14 +204,14 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkmn, level);
+        return Objects.hash(species, level);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof StaticEncounter) {
             StaticEncounter other = (StaticEncounter) o;
-            return Objects.equals(other.pkmn, pkmn) && other.forme == forme && other.level == level
+            return Objects.equals(other.species, species) && other.forme == forme && other.level == level
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);

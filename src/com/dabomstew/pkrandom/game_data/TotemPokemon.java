@@ -27,25 +27,45 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class TotemPokemon extends StaticEncounter {
-    public Aura aura;
-    public int ally1Offset;
-    public int ally2Offset;
-    public Map<Integer,StaticEncounter> allies = new TreeMap<>();
+    private Aura aura;
+    private Map<Integer,StaticEncounter> allies = new TreeMap<>();
 
-    public boolean unused = false;
+    private boolean unused = false;
 
-    public TotemPokemon() {
-
-    }
+    public TotemPokemon() {}
 
     public TotemPokemon(Species pkmn) {
-        this.pkmn = pkmn;
+        this.setPkmn(pkmn);
+    }
+
+    public Aura getAura() {
+        return aura;
+    }
+
+    public void setAura(Aura aura) {
+        this.aura = aura;
+    }
+
+    public Map<Integer, StaticEncounter> getAllies() {
+        return allies;
+    }
+
+    public void setAllies(Map<Integer, StaticEncounter> allies) {
+        this.allies = allies;
+    }
+
+    public boolean isUnused() {
+        return unused;
+    }
+
+    public void setUnused(boolean unused) {
+        this.unused = unused;
     }
 
     @Override
     public String toString() {
         // The %s will be formatted to include the held item.
-        String ret = pkmn.fullName() + "@%s Lv" + level + "\n    Aura: " + aura.toString() + "\n";
+        String ret = getPkmn().fullName() + "@%s Lv" + getLevel() + "\n    Aura: " + aura.toString() + "\n";
         int i = 1;
         for (StaticEncounter ally: allies.values()) {
             ret = ret.concat("    Ally " + i + ": " + ally.toString() + "\n");

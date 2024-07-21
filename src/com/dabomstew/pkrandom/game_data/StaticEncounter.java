@@ -28,15 +28,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class StaticEncounter {
-    public Species pkmn;
-    public int forme = 0;
-    public int level;
-    public int maxLevel = 0;
-    public int heldItem;
-    public boolean isEgg = false;
-    public boolean resetMoves = false;
-    public boolean restrictedPool = false;
-    public List<Species> restrictedList = new ArrayList<>();
+    private Species pkmn;
+    private int forme = 0;
+    private int level;
+    private int maxLevel = 0;
+    private int heldItem;
+    private boolean isEgg = false;
+    private boolean resetMoves = false;
+    private boolean restrictedPool = false;
+    private List<Species> restrictedList = new ArrayList<>();
 
     // In the games, sometimes what is logically an encounter or set of encounters with one specific Pokemon
     // can actually consist of multiple encounters internally. This can happen because:
@@ -45,7 +45,7 @@ public class StaticEncounter {
     // - Rebattling a Pokemon actually is different encounter entirely (e.g., Xerneas/Yveltal in XY)
     // This list tracks encounters that should logically have the same species and forme, but *may* have
     // differences in other properties like level.
-    public List<StaticEncounter> linkedEncounters;
+    private final List<StaticEncounter> linkedEncounters;
 
     public StaticEncounter() {
         this.linkedEncounters = new ArrayList<>();
@@ -82,6 +82,47 @@ public class StaticEncounter {
         }
     }
 
+
+    public Species getPkmn() {
+        return pkmn;
+    }
+
+    public void setPkmn(Species pkmn) {
+        this.pkmn = pkmn;
+    }
+
+    public int getForme() {
+        return forme;
+    }
+
+    public void setForme(int forme) {
+        this.forme = forme;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
+
+    public int getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(int heldItem) {
+        this.heldItem = heldItem;
+    }
+
     public boolean canMegaEvolve() {
         if (heldItem != 0) {
             for (MegaEvolution mega: pkmn.getMegaEvolutionsFrom()) {
@@ -91,6 +132,42 @@ public class StaticEncounter {
             }
         }
         return false;
+    }
+
+    public boolean isEgg() {
+        return isEgg;
+    }
+
+    public void setEgg(boolean egg) {
+        isEgg = egg;
+    }
+
+    public boolean isResetMoves() {
+        return resetMoves;
+    }
+
+    public void setResetMoves(boolean resetMoves) {
+        this.resetMoves = resetMoves;
+    }
+
+    public boolean isRestrictedPool() {
+        return restrictedPool;
+    }
+
+    public void setRestrictedPool(boolean restrictedPool) {
+        this.restrictedPool = restrictedPool;
+    }
+
+    public List<Species> getRestrictedList() {
+        return restrictedList;
+    }
+
+    public void setRestrictedList(List<Species> restrictedList) {
+        this.restrictedList = restrictedList;
+    }
+
+    public List<StaticEncounter> getLinkedEncounters() {
+        return linkedEncounters;
     }
 
     @Override
@@ -143,4 +220,5 @@ public class StaticEncounter {
         }
         return false;
     }
+
 }

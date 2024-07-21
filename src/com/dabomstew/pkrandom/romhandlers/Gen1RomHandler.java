@@ -1569,8 +1569,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getIntValue("StaticPokemonSupport") > 0) {
             for (StaticPokemon sp : romEntry.getStaticPokemon()) {
                 StaticEncounter se = new StaticEncounter();
-                se.pkmn = sp.getPokemon(this);
-                se.level = sp.getLevel(rom, 0);
+                se.setPkmn(sp.getPokemon(this));
+                se.setLevel(sp.getLevel(rom, 0));
                 statics.add(se);
             }
         }
@@ -1585,8 +1585,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
             StaticEncounter se = staticPokemon.get(i);
             StaticPokemon sp = romEntry.getStaticPokemon().get(i);
-            sp.setPokemon(this, se.pkmn);
-            sp.setLevel(rom, se.level, 0);
+            sp.setPokemon(this, se.getPkmn());
+            sp.setLevel(rom, se.getLevel(), 0);
         }
 
         return true;

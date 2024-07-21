@@ -1206,7 +1206,7 @@ public class GameRandomizer {
         for (int i = 0; i < oldStatics.size(); i++) {
             StaticEncounter oldP = oldStatics.get(i);
             StaticEncounter newP = newStatics.get(i);
-            checkValue = addToCV(checkValue, newP.pkmn.getNumber());
+            checkValue = addToCV(checkValue, newP.getPkmn().getNumber());
             String oldStaticString = oldP.toString(settings.isStaticLevelModified());
             log.print(oldStaticString);
             if (seenPokemon.containsKey(oldStaticString)) {
@@ -1232,9 +1232,9 @@ public class GameRandomizer {
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
-            checkValue = addToCV(checkValue, newP.pkmn.getNumber());
-            log.println(oldP.pkmn.fullName() + " =>");
-            log.printf(newP.toString(), items.get(newP.heldItem).getName());
+            checkValue = addToCV(checkValue, newP.getPkmn().getNumber());
+            log.println(oldP.getPkmn().fullName() + " =>");
+            log.printf(newP.toString(), items.get(newP.getHeldItem()).getName());
         }
         log.println();
 

@@ -28,7 +28,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private int fullyEvolvedRandomSeed = -1;
     private Set<Type> usedUberTypes = EnumSet.noneOf(Type.class);
-    private Map<Trainer, Type> trainerTypes;
+    private Map<Trainer, Type> trainerTypes = new HashMap<>();
 
     public TrainerPokemonRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
@@ -103,8 +103,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
 
-        // Type Themed related
-        Map<Trainer, Type> trainerTypes = new TreeMap<>();
         if (hasAnyTypeTheme) {
             cachedByType = cachedAll.sortByType(false);
             typeWeightings = new TreeMap<>();

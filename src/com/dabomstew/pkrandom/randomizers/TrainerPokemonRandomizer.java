@@ -9,6 +9,7 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkrandom.services.TypeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private final Map<Species, Integer> placementHistory = new HashMap<>();
 
     private int fullyEvolvedRandomSeed = -1;
+    private Set<Type> usedUberTypes = EnumSet.noneOf(Type.class);
+    private Map<Trainer, Type> trainerTypes = new HashMap<>();
 
     public TrainerPokemonRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
@@ -100,90 +103,14 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
 
-        // Type Themed related
-        Map<Trainer, Type> trainerTypes = new TreeMap<>();
-        Set<Type> usedUberTypes = new TreeSet<>();
         if (hasAnyTypeTheme) {
             cachedByType = cachedAll.sortByType(false);
-
             typeWeightings = new TreeMap<>();
             totalTypeWeighting = 0;
-            // Construct groupings for types
-            // Anything starting with GYM or ELITE or CHAMPION is a group
-            Map<String, List<Trainer>> groups = new TreeMap<>();
-            for (Trainer t : currentTrainers) {
-                if (t.tag != null && t.tag.equals("IRIVAL")) {
-                    // This is the first rival in Yellow. His Pokemon is used to determine the non-player
-                    // starter, so we can't change it here. Just skip it.
-                    continue;
-                }
-                String group = t.tag == null ? "" : t.tag;
-                if (group.contains("-")) {
-                    group = group.substring(0, group.indexOf('-'));
-                }
-                if (group.startsWith("GYM") || group.startsWith("ELITE") ||
-                        ((group.startsWith("CHAMPION") || group.startsWith("THEMED")) && !isTypeThemedEliteFourGymOnly)) {
-                    // Yep this is a group
-                    if (!groups.containsKey(group)) {
-                        groups.put(group, new ArrayList<>());
-                    }
-                    groups.get(group).add(t);
-                } else if (group.startsWith("GIO")) {
-                    // Giovanni has same grouping as his gym, gym 8
-                    if (!groups.containsKey("GYM8")) {
-                        groups.put("GYM8", new ArrayList<>());
-                    }
-                    groups.get("GYM8").add(t);
-                }
-            }
 
-
-            if(keepTypeThemes || keepThemeOrPrimaryTypes) {
-                Map<String, Type> originalThemes = romHandler.getGymAndEliteTypeThemes();
-
-                for (String group : groups.keySet()) {
-                    if (!originalThemes.containsKey(group)) {
-                        continue;
-                    }
-                    Type groupType = originalThemes.get(group);
-                    List<Trainer> trainersInGroup = groups.get(group);
-                    for (Trainer t : trainersInGroup) {
-                        trainerTypes.put(t, groupType);
-                    }
-                }
-
-            } else {
-                // Give a random type to each group
-                // Gym & elite types have to be unique
-                // So do uber types, including the type we pick for champion
-                Set<Type> usedGymTypes = new TreeSet<>();
-                Set<Type> usedEliteTypes = new TreeSet<>();
-                for (String group : groups.keySet()) {
-                    List<Trainer> trainersInGroup = groups.get(group);
-                    // Shuffle ordering within group to promote randomness
-                    Collections.shuffle(trainersInGroup, random);
-                    Type typeForGroup = pickType(weightByFrequency, noLegendaries, includeFormes);
-                    if (group.startsWith("GYM")) {
-                        while (usedGymTypes.contains(typeForGroup)) {
-                            typeForGroup = pickType(weightByFrequency, noLegendaries, includeFormes);
-                        }
-                        usedGymTypes.add(typeForGroup);
-                    }
-                    if (group.startsWith("ELITE")) {
-                        while (usedEliteTypes.contains(typeForGroup)) {
-                            typeForGroup = pickType(weightByFrequency, noLegendaries, includeFormes);
-                        }
-                        usedEliteTypes.add(typeForGroup);
-                    }
-                    if (group.equals("CHAMPION")) {
-                        usedUberTypes.add(typeForGroup);
-                    }
-
-                    for (Trainer t : trainersInGroup) {
-                        trainerTypes.put(t, typeForGroup);
-                    }
-                }
-            }
+            Map<String, List<Trainer>> groups = getTrainerGroups(currentTrainers, isTypeThemedEliteFourGymOnly);
+            Map<String, Type> themes = pickGroupTypeThemes(keepTypeThemes || keepThemeOrPrimaryTypes, groups.keySet());
+            assignTypesToGroups(groups, themes);
         }
 
         // Randomize the order trainers are randomized in.
@@ -389,6 +316,136 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // Save it all up
         romHandler.setTrainers(currentTrainers);
         changesMade = true;
+    }
+
+    /**
+     * Given a list of group names, chooses types for all those groups.
+     * @param useOriginalThemes Whether to use the types originally present in the game.
+     * @param groupNames The list of group names.
+     * @return A Map containing Types for the given groups.
+     */
+    private Map<String, Type> pickGroupTypeThemes(boolean useOriginalThemes, Collection<String> groupNames) {
+
+        if(useOriginalThemes) {
+            return romHandler.getGymAndEliteTypeThemes();
+        } else {
+            // Give a random type to each group
+            // Gym & elite/champion types have to be unique; preferably also don't have types that are both, but
+            // that's not always possible.
+            // Also, the type we choose for the champion cannot be used by any other "uber" trainers.
+            Set<Type> usedGymTypes = EnumSet.noneOf(Type.class);
+
+            List<Type> remainingTypes = new ArrayList<>(typeService.getTypes());
+            Collections.shuffle(remainingTypes, random);
+
+            List<String> shuffledGroups = new ArrayList<>(groupNames);
+            Collections.shuffle(shuffledGroups, random);
+            //shuffle groups so it's not always the same few gyms that get duplicates
+
+            List<String> post8Gyms = new ArrayList<>();
+
+            Map<String, Type> typesForGroups = new HashMap<>();
+
+            for (String group : groupNames) {
+                if((group.startsWith("GYM1") && !group.equals("GYM1")) || group.equals("GYM9")) {
+                    //a gym beyond the 8th. This might put us past the number of types in the game.
+                    //So we'll delay all these, so that if there *are* duplicate types, they're in
+                    //the post-game gyms. (Since only Johto has enough gyms to require duplicate types.)
+                    post8Gyms.add(group);
+                    continue;
+                }
+                if(remainingTypes.isEmpty()) {
+                    throw new RandomizationException(
+                            "Unexpected amount of Elite/Champions; could not assign types to all!");
+                }
+                Type typeForGroup = remainingTypes.remove(0);
+                typesForGroups.put(group, typeForGroup);
+
+                if (group.startsWith("GYM")) {
+                    usedGymTypes.add(typeForGroup);
+                }
+                if (group.equals("CHAMPION")) {
+                    usedUberTypes.add(typeForGroup);
+                }
+            }
+
+            for (String group : post8Gyms) {
+                Type typeForGroup;
+                if(!remainingTypes.isEmpty()) {
+                    //use the remaining types first
+                    typeForGroup = remainingTypes.remove(0);
+                } else {
+                    do {
+                        typeForGroup = typeService.randomType(random);
+                    } while (usedGymTypes.contains(typeForGroup));
+                }
+
+                typesForGroups.put(group, typeForGroup);
+                usedGymTypes.add(typeForGroup);
+            }
+            return typesForGroups;
+        }
+    }
+
+    /**
+     * Given a set of grouped trainers, and a set of types for those groups, assigns the corresponding type
+     * to each trainer.
+     * @param groups The trainers to assign types to.
+     * @param groupTypes The types to assign.
+     */
+    private void assignTypesToGroups(Map<String, List<Trainer>> groups, Map<String, Type> groupTypes) {
+
+        for (String group : groups.keySet()) {
+            if (!groupTypes.containsKey(group)) {
+                continue;
+            }
+            Type groupType = groupTypes.get(group);
+            List<Trainer> trainersInGroup = groups.get(group);
+            for (Trainer t : trainersInGroup) {
+                trainerTypes.put(t, groupType);
+            }
+        }
+    }
+
+    /**
+     * Given a list of trainers, sorts any that are tagged with a group-related tag into their respective groups.
+     * @param currentTrainers The list of trainers to group.
+     * @param ignoreNonLeagueGroups Whether to ignore groups that are not Gyms, Elite 4, or Champions.
+     * @return A new Map with trainers sorted into groups.
+     */
+    private static Map<String, List<Trainer>> getTrainerGroups(List<Trainer> currentTrainers,
+                                                               boolean ignoreNonLeagueGroups) {
+        Map<String, List<Trainer>> groups = new TreeMap<>();
+
+        // Construct groupings for types
+        // Anything starting with GYM or ELITE or CHAMPION is a group
+
+        for (Trainer t : currentTrainers) {
+            if (t.tag != null && t.tag.equals("IRIVAL")) {
+                // This is the first rival in Yellow. His Pokemon is used to determine the non-player
+                // starter, so we can't change it here. Just skip it.
+                continue;
+            }
+            String group = t.tag == null ? "" : t.tag;
+            if (group.contains("-")) {
+                group = group.substring(0, group.indexOf('-'));
+            }
+            if (group.startsWith("GYM") || group.startsWith("ELITE") ||
+                    ((group.startsWith("CHAMPION") || group.startsWith("THEMED")) && !ignoreNonLeagueGroups)) {
+                // Yep this is a group
+                if (!groups.containsKey(group)) {
+                    groups.put(group, new ArrayList<>());
+                }
+                groups.get(group).add(t);
+            } else if (group.startsWith("GIO")) {
+                // Giovanni has same grouping as his gym, gym 8
+                if (!groups.containsKey("GYM8")) {
+                    groups.put("GYM8", new ArrayList<>());
+                }
+                groups.get("GYM8").add(t);
+            }
+        }
+        return groups;
     }
 
 

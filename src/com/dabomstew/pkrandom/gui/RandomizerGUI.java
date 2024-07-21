@@ -2964,6 +2964,11 @@ public class RandomizerGUI {
     private void enableOrDisableSubControls() {
         //TODO: split this into smaller listeners for each tab or so
 
+        if(romHandler == null) {
+            //shouldn't be in this method right now
+            return;
+        }
+
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);
         } else {

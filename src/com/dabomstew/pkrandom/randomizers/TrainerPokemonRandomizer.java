@@ -330,8 +330,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             return romHandler.getGymAndEliteTypeThemes();
         } else {
             // Give a random type to each group
-            // Gym & elite types have to be unique; preferably also don't have types that are both, but that's not
-            // always possible.
+            // Gym & elite/champion types have to be unique; preferably also don't have types that are both, but
+            // that's not always possible.
             // Also, the type we choose for the champion cannot be used by any other "uber" trainers.
             Set<Type> usedGymTypes = EnumSet.noneOf(Type.class);
 

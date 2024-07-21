@@ -2173,6 +2173,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton,
                 loadSettingsButton, saveSettingsButton);
+        enableButtons(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton);
 
         // the buttons in the main part of the gui (randomization options):
 

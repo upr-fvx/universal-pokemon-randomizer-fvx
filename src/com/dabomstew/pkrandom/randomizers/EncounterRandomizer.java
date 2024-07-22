@@ -379,6 +379,7 @@ public class EncounterRandomizer extends Randomizer {
 
             for (Encounter enc : area) {
                 Pokemon current = enc.getPokemon();
+
                 if(useMapping && regionMap.containsKey(current)) {
                     //checking the map first lets us avoid creating a pointless allowedForReplacement set
                     Pokemon replacement = regionMap.get(current);
@@ -389,6 +390,8 @@ public class EncounterRandomizer extends Randomizer {
                     if(keepEvolutions && mapHasFamilyMember(current)) {
                         replacement = pickFamilyMemberReplacement(current);
                     } else {
+
+                        //we actually need to pick a new one
                         PokemonSet allowedForReplacement;
                         if (needsIndividualTypeRestrictions) {
                             allowedForReplacement = setupAllowedForReplacement(enc, area);
@@ -404,7 +407,7 @@ public class EncounterRandomizer extends Randomizer {
 
 
                         //ok, we have a valid set. Time to actually choose a Pokemon!
-                        replacement = pickReplacement(enc, allowedForReplacement);
+                        replacement = pickReplacement(current, allowedForReplacement);
                     }
 
                     enc.setPokemon(replacement);
@@ -856,11 +859,10 @@ public class EncounterRandomizer extends Randomizer {
             return catchEmAll && !remainingByType.get(primaryType).isEmpty()
                     ? remainingByType.get(primaryType) : allowedByType.get(primaryType);
         }
-        private Pokemon pickReplacement(Encounter enc, PokemonSet allowedForReplacement) {
+        private Pokemon pickReplacement(Pokemon current, PokemonSet allowedForReplacement) {
             if (allowedForReplacement == null || allowedForReplacement.isEmpty()) {
                 throw new IllegalArgumentException("No allowed Pokemon to pick as replacement.");
             }
-            Pokemon current = enc.getPokemon();
 
             Pokemon replacement;
             // In Catch 'Em All mode, don't randomize encounters for Pokemon that are banned for
@@ -870,13 +872,9 @@ public class EncounterRandomizer extends Randomizer {
                 replacement = current;
             } else if (similarStrength) {
                 if(balanceShakingGrass) {
-                    //TODO: check that this is a shaking grass encounter.
-                    // Alternatively, rename the setting.
-                    // ...Actually, this should use the average (or minimum) level across the whole region.
-                    // So that'll need to be added to PokemonAreaInformation, I guess.
-                    int bstToUse = current.getBSTForPowerLevels();
-                    int avgLevel = (enc.getLevel() + enc.getMaxLevel()) / 2;
-                    bstToUse = Math.min(bstToUse, avgLevel * 10 + 250);
+                    PokemonAreaInformation info = areaInformationMap.get(current);
+                    int bstToUse = Math.min(current.getBSTForPowerLevels(), info.getLowestLevel() * 10 + 250);
+
                     replacement = allowedForReplacement.getRandomSimilarStrengthPokemon(bstToUse, random);
                 } else {
                     replacement = allowedForReplacement.getRandomSimilarStrengthPokemon(current, random);
@@ -1115,6 +1113,7 @@ public class EncounterRandomizer extends Randomizer {
                 });
             }
 
+            //Try to remove any Pokemon which have a relative that has already been used
             PokemonSet withoutUsedFamilies = potentiallyAllowed.filter(p ->
                     !p.getFamily(false).containsAny(regionMap.keySet()));
 
@@ -1188,6 +1187,16 @@ public class EncounterRandomizer extends Randomizer {
                     info.addTypeTheme(areaTheme, areaSize);
                     info.banAll(area.getBannedPokemon());
                 }
+                if(balanceShakingGrass) {
+                    //TODO: either verify that this IS a shaking grass encounter,
+                    // or rename the setting.
+                    // (Leaning towards the latter.)
+                    for (Encounter enc : area) {
+                        PokemonAreaInformation info = areaInformationMap.get(enc.getPokemon());
+                        info.setLevelIfLower((enc.getLevel() + enc.getMaxLevel()) / 2);
+                        //TODO: *Should* this be average level? Or should it be lowest?
+                    }
+                }
             }
         }
 
@@ -1196,19 +1205,17 @@ public class EncounterRandomizer extends Randomizer {
          * in order to allow us to use this information later.
          */
         private class PokemonAreaInformation {
-            private Map<Type, Integer> possibleThemes;
-            private PokemonSet bannedForReplacement;
-            private PokemonSet family;
-            private Pokemon pokemon;
+            private Map<Type, Integer> possibleThemes = new EnumMap<>(Type.class);
+            private final PokemonSet bannedForReplacement = new PokemonSet();
+            private final PokemonSet family = new PokemonSet();
+            private final Pokemon pokemon;
+            private int lowestLevel = 100;
 
             /**
              * Creates a new RandomizationInformation with the given data.
              * @param pk The Pokemon this RandomizationInformation is about.
              */
             PokemonAreaInformation(Pokemon pk) {
-                possibleThemes = new EnumMap<>(Type.class);
-                bannedForReplacement = new PokemonSet();
-                family = new PokemonSet();
                 pokemon = pk;
             }
 
@@ -1328,6 +1335,22 @@ public class EncounterRandomizer extends Randomizer {
              */
             public Pokemon getPokemon() {
                 return pokemon;
+            }
+
+            /**
+             * Sets the lowest level to the level given, if it is lower than the current lowest level.
+             * @param level The level to lower to.
+             */
+            void setLevelIfLower(int level) {
+                lowestLevel = Math.min(level, lowestLevel);
+            }
+
+            /**
+             * Gets the lowest level encounter with this Species in the region.
+             * @return The lowest level.
+             */
+            public int getLowestLevel() {
+                return lowestLevel;
             }
         }
     }

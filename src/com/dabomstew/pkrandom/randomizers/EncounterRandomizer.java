@@ -378,41 +378,53 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             for (Encounter enc : area) {
-
-                PokemonSet allowedForReplacement;
-                if(needsIndividualTypeRestrictions) {
-                    allowedForReplacement = setupAllowedForReplacement(enc, area);
-                } else {
-                    allowedForReplacement = setupAllowedForReplacement(enc, allowedForArea);
-                    if(allowedForReplacement.isEmpty()) {
-                        allowedForReplacement = retrySetupAllowedForAreaAndReplacement(enc, area, regionType);
-                    }
-                }
-                if(allowedForReplacement.isEmpty()) {
-                    throw new RandomizationException("Could not find a wild Pokemon replacement for " + enc);
-                }
                 Pokemon current = enc.getPokemon();
+                if(useMapping && regionMap.containsKey(current)) {
+                    //checking the map first lets us avoid creating a pointless allowedForReplacement set
+                    Pokemon replacement = regionMap.get(current);
+                    enc.setPokemon(replacement);
+                    setFormeForEncounter(enc, replacement);
+                } else {
+                    Pokemon replacement;
+                    if(keepEvolutions && mapHasFamilyMember(current)) {
+                        replacement = pickFamilyMemberReplacement(current);
+                    } else {
+                        PokemonSet allowedForReplacement;
+                        if (needsIndividualTypeRestrictions) {
+                            allowedForReplacement = setupAllowedForReplacement(enc, area);
+                        } else {
+                            allowedForReplacement = setupAllowedForReplacement(enc, allowedForArea);
+                            if (allowedForReplacement.isEmpty()) {
+                                allowedForReplacement = retrySetupAllowedForAreaAndReplacement(enc, area, regionType);
+                            }
+                        }
+                        if (allowedForReplacement.isEmpty()) {
+                            throw new RandomizationException("Could not find a wild Pokemon replacement for " + enc);
+                        }
 
-                //ok, we have a valid set. Time to actually choose a Pokemon!
 
-                Pokemon replacement = pickReplacement(enc, allowedForReplacement);
-                enc.setPokemon(replacement);
-                setFormeForEncounter(enc, replacement);
-
-                //add to map if applicable
-                if (useMapping && regionMap.containsKey(current)) {
-                    regionMap.put(current, replacement);
-                }
-
-                //remove from possible picks if applicable
-                if(allowedForArea != null && (useMapping || catchEmAll)) {
-                    removeFromRemaining(replacement);
-                    allowedForArea.remove(replacement);
-
-                    if(allowedForArea.isEmpty()) {
-                        allowedForArea = new PokemonSet(setupAllowedForArea(regionType, area));
+                        //ok, we have a valid set. Time to actually choose a Pokemon!
+                        replacement = pickReplacement(enc, allowedForReplacement);
                     }
-                    //removeFromRemaining() already checks if remaining is empty, so we don't need to do that here.
+
+                    enc.setPokemon(replacement);
+                    setFormeForEncounter(enc, replacement);
+
+                    //add to map if applicable
+                    if (useMapping) {
+                        regionMap.put(current, replacement);
+                    }
+
+                    //remove from possible picks if applicable
+                    if (allowedForArea != null && (useMapping || catchEmAll)) {
+                        removeFromRemaining(replacement);
+                        allowedForArea.remove(replacement);
+
+                        if (allowedForArea.isEmpty()) {
+                            allowedForArea = new PokemonSet(setupAllowedForArea(regionType, area));
+                        }
+                        //removeFromRemaining() already checks if remaining is empty, so we don't need to do that here.
+                    }
                 }
 
             }
@@ -422,33 +434,72 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
-        public void gameFamilyToFamilyEncounters(List<EncounterArea> encounterAreas) {
-            refillRemainingPokemon();
-            Map<Pokemon, Pokemon> translateMap = new HashMap<>();
-            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
+        /**
+         * Given a Pokemon which has at least one evolutionary relative contained within the regionMap,
+         * chooses a replacement for it that is a corresponding relative of its relative's replacement.
+         * @param toReplace The Pokemon to find a replacement for.
+         * @return An appropriate replacement Pokemon.
+         */
+        private Pokemon pickFamilyMemberReplacement(Pokemon toReplace) {
+            PokemonAreaInformation info = areaInformationMap.get(toReplace);
+            PokemonSet family = info.getFamily();
+            for(Pokemon relative : family) {
+                if(regionMap.containsKey(relative)) {
+                    return pickFamilyMemberReplacementInner(toReplace, relative);
+                }
+            }
 
-            PokemonSet pokemonToRandomize = new PokemonSet();
-            setupAreaInfoMap(prepped, pokemonToRandomize);
+            throw new IllegalArgumentException("Tried to pick family member replacement for non-mapped Pokemon!");
+        }
 
-            spreadThemesThroughFamilies(pokemonToRandomize);
+        /**
+         * Given a Pokemon and a relative of that Pokemon which is contained in the regionMap,
+         * chooses a replacement for it that is a corresponding relative of its relative's replacement.
+         * @param toReplace The Pokemon to replace.
+         * @param relative A relative of that Pokemon, which is contained as a key in the regionMap.
+         * @return An appropriate replacement Pokemon.
+         */
+        private Pokemon pickFamilyMemberReplacementInner(Pokemon toReplace, Pokemon relative) {
+            PokemonAreaInformation info = areaInformationMap.get(toReplace);
+            int relation = relative.getRelation(info.getPokemon(), true);
+            Pokemon relativeReplacement = regionMap.get(relative);
+            if(relativeReplacement == null) {
+                throw new IllegalArgumentException("Relative had a null replacement!");
+            }
 
-            //assumes that the longest evo line to randomize is 3 (or shorter)
-            //this seems a safe assumption given no 4-length evo line exists in Pokemon
-            //(Anyway, it would still include it; just wouldn't isolate it.)
+            PokemonSet possibleReplacements = relativeReplacement.getRelativesAtPosition(relation, false);
+            possibleReplacements.retainAll(remaining);
+            possibleReplacements.removeAll(info.getBannedForReplacement());
+            if(!possibleReplacements.isEmpty()) {
+                pickReplacement(toReplace, possibleReplacements);
+            }
+            //else - remaining didn't have any valid, but allowed should.
+            possibleReplacements = relativeReplacement.getRelativesAtPosition(relation, false);
+            possibleReplacements.retainAll(allowed);
+            possibleReplacements.removeAll(info.getBannedForReplacement());
+            if(!possibleReplacements.isEmpty()) {
+                pickReplacement(toReplace, possibleReplacements);
+            }
+            //else - we messed up earlier, this Pokemon has no replacement
+            throw new IllegalStateException("Chose a family that is invalid!");
+        }
 
-            //starts with rarest evo lines, moving to more common.
-            //(If this wasn't done, could end up with a 3-length with no replacement.)
-            //3-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, false, pokemonToRandomize));
-            //3-long with gap (I'm not sure this ever actually comes up)
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, true, pokemonToRandomize));
-            //2-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(2, false, pokemonToRandomize));
-            //standalone
-            translateMap.putAll(pickReplacementFamiliesOfLength(1, false, pokemonToRandomize));
+        /**
+         * Checks if any family member (as listed in areaInformationMap) of the given Pokemon
+         * is contained in the regionMap.
+         * @param current The Pokemon to check.
+         * @return True if any family member is present, false otherwise.
+         */
+        private boolean mapHasFamilyMember(Pokemon current) {
+           PokemonAreaInformation info = areaInformationMap.get(current);
+           PokemonSet family = info.getFamily();
+           for(Pokemon relative : family) {
+               if(regionMap.containsKey(relative)) {
+                   return true;
+               }
+           }
 
-
-            applyGlobalMap(prepped, translateMap);
+           return false;
         }
 
         /**
@@ -670,20 +721,6 @@ public class EncounterRandomizer extends Randomizer {
             return startingPool;
         }
 
-        private Pokemon pickReplacement(Encounter enc, PokemonSet allowedForReplacement) {
-            //TODO: pass in a Pokemon rather than encounter.
-            // (Need to change BalanceShakingGrass implementation first.)
-
-            if (useMapping) {
-                Pokemon current = enc.getPokemon();
-                if (regionMap.containsKey(current)) {
-                    return regionMap.get(current);
-                }
-            }
-
-            return pickReplacementInner(enc, allowedForReplacement);
-        }
-
         /**
          * Given an encounter, chooses a set of potential replacements for that encounter.
          * @param enc The encounter to replace.
@@ -819,7 +856,7 @@ public class EncounterRandomizer extends Randomizer {
             return catchEmAll && !remainingByType.get(primaryType).isEmpty()
                     ? remainingByType.get(primaryType) : allowedByType.get(primaryType);
         }
-        private Pokemon pickReplacementInner(Encounter enc, PokemonSet allowedForReplacement) {
+        private Pokemon pickReplacement(Encounter enc, PokemonSet allowedForReplacement) {
             if (allowedForReplacement == null || allowedForReplacement.isEmpty()) {
                 throw new IllegalArgumentException("No allowed Pokemon to pick as replacement.");
             }
@@ -1018,9 +1055,7 @@ public class EncounterRandomizer extends Randomizer {
          * @param family The family to randomize.
          * @return A Map of each Pokemon in the family to a replacement in a new family.
          */
-        private Map<Pokemon, Pokemon> pickFamilyReplacement(Pokemon match, PokemonSet family) {
-
-            allowedForReplacement = setupAllowedForFamily(match, family);
+        private Map<Pokemon, Pokemon> pickFamilyReplacement(Pokemon match, PokemonSet allowedForReplacement) {
 
             Map<Pokemon, Pokemon> familyMap = new HashMap<>();
 
@@ -1080,7 +1115,10 @@ public class EncounterRandomizer extends Randomizer {
                 });
             }
 
-            return potentiallyAllowed;
+            PokemonSet withoutUsedFamilies = potentiallyAllowed.filter(p ->
+                    !p.getFamily(false).containsAny(regionMap.keySet()));
+
+            return withoutUsedFamilies.isEmpty() ? potentiallyAllowed : withoutUsedFamilies;
         }
 
         /**

@@ -96,6 +96,29 @@ public class PokemonSet extends HashSet<Pokemon> {
         return filtered;
     }
 
+    /**
+     * Given a Collection of Pokemon, finds whether this set shares any members with it.
+     * @param other The Collection to compare.
+     * @return True if any Pokemon is in both Collections, false otherwise.
+     */
+    public boolean containsAny(Collection<Pokemon> other) {
+        if(this.size() < other.size()) {
+            for(Pokemon pokemon : this) {
+                if(other.contains(pokemon)) {
+                    return true;
+                }
+            }
+        } else {
+            for(Pokemon pokemon : other) {
+                if(this.contains(pokemon)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     //BuildSet variants
 
     /**
@@ -1036,6 +1059,8 @@ public class PokemonSet extends HashSet<Pokemon> {
     public static PokemonSet unmodifiable(Collection<Pokemon> source) {
         return new PokemonSet.UnmodifiablePokemonSet(source);
     }
+
+
 
     /**
      * Just what it sounds like, a {@link PokemonSet} which throws {@link UnmodifiableSetException}

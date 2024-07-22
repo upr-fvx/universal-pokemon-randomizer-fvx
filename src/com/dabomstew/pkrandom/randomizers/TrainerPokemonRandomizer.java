@@ -9,7 +9,6 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.services.TypeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,7 +73,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();
-        cachedAll = new SpeciesSet(rPokeService.getPokemon(noLegendaries, includeFormes, false));
+        cachedAll = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
 
         if (useLocalPokemon) {
             SpeciesSet localWithRelatives =
@@ -86,7 +85,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         banned = romHandler.getBannedFormesForTrainerPokemon();
         if (!abilitiesAreRandomized) {
-            SpeciesSet abilityDependentFormes = rPokeService.getAbilityDependentFormes();
+            SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
         }
         if (banIrregularAltFormes) {
@@ -151,7 +150,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (useLocalPokemon) {
                 //elite four unique pokemon are excepted from local requirement
                 //and in fact, non-local pokemon should be chosen first
-                eliteFourExceptions = new SpeciesSet(rPokeService.getPokemon(noLegendaries, includeFormes, false));
+                eliteFourExceptions = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
                 eliteFourExceptions.removeAll(banned);
                 eliteFourExceptions.removeAll(cachedAll); // i.e. retains only non-local pokes
             }
@@ -225,7 +224,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 Species oldPK = tp.species;
                 if (tp.forme > 0) {
-                    oldPK = romHandler.getAltFormeOfPokemon(oldPK, tp.forme);
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, tp.forme);
                 }
 
                 banned = new SpeciesSet(usedAsUnique);
@@ -463,7 +462,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         SpeciesSet withoutBannedPokemon;
 
         if (swapMegaEvos) {
-            pickFrom = rPokeService.getMegaEvolutions()
+            pickFrom = rSpecService.getMegaEvolutions()
                     .stream()
                     .filter(mega -> mega.method == 1)
                     .map(mega -> mega.from)
@@ -568,8 +567,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
      */
     private void initTypeWeightings(boolean noLegendaries, boolean allowAltFormes) {
         // Determine weightings
-        Map<Type, SpeciesSet> pokemonByType = rPokeService
-                .getPokemon(noLegendaries, allowAltFormes, true).sortByType(false);
+        Map<Type, SpeciesSet> pokemonByType = rSpecService
+                .getSpecies(noLegendaries, allowAltFormes, true).sortByType(false);
         for (Type t : typeService.getTypes()) {
             SpeciesSet pokemonOfType = pokemonByType.get(t);
             int pkWithTyping = pokemonOfType.size();
@@ -1073,7 +1072,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     continue; // should never happen - trainer had zero pokes
                 }
                 int[] moveset = highestLevelPoke.resetMoves ?
-                        RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfPokemon(
+                        RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
                                         highestLevelPoke.species, highestLevelPoke.forme).getNumber(),
                                 movesets,
                                 highestLevelPoke.level) :
@@ -1082,7 +1081,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             } else {
                 for (TrainerPokemon tp : t.pokemon) {
                     int[] moveset = tp.resetMoves ?
-                            RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfPokemon(
+                            RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
                                             tp.species, tp.forme).getNumber(),
                                     movesets,
                                     tp.level) :
@@ -1132,7 +1131,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
                     int[] pokeMoves = tp.resetMoves ?
                             RomFunctions.getMovesAtLevel(
-                                    romHandler.getAltFormeOfPokemon(tp.species, tp.forme).getNumber(),
+                                    romHandler.getAltFormeOfSpecies(tp.species, tp.forme).getNumber(),
                                     romHandler.getMovesLearnt(), tp.level) :
                             tp.moves;
                     pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();

@@ -26,7 +26,7 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.game_data.*;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
 import java.awt.image.BufferedImage;
@@ -39,10 +39,10 @@ import java.util.Set;
  * Responsible for direct handling a Rom/game file, and the data therein.
  * <br><br>
  * After a Rom has been loaded with {@link #loadRom(String)}, a number of data types reflecting the contents of the
- * Rom can be acquired through getters (e.g. {@link #getPokemon()}, {@link #getStarters()}, {@link #getTrainers()}).
+ * Rom can be acquired through getters (e.g. {@link #getSpecies()}, {@link #getStarters()}, {@link #getTrainers()}).
  * Most of the corresponding data also have setters which update the contents of the Rom (e.g.
  * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Species} data from
- * {@link #getPokemon()}) are instead updated simply by editing the object returned by the setter.
+ * {@link #getSpecies()}) are instead updated simply by editing the object returned by the setter.
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
  * Some methods giving extra context to the main data are also provided (e.g. {@link #hasRivalFinalBattle()},
@@ -101,23 +101,23 @@ public interface RomHandler {
     // Instead, you use index on the species' National Dex ID
     // ======================================================
 
-    List<Species> getPokemon();
+    List<Species> getSpecies();
 
-    List<Species> getPokemonInclFormes();
+    List<Species> getSpeciesInclFormes();
 
     SpeciesSet getAltFormes();
     
-    SpeciesSet getPokemonSet();
+    SpeciesSet getSpeciesSet();
     
-    SpeciesSet getPokemonSetInclFormes();
+    SpeciesSet getSpeciesSetInclFormes();
 
     List<MegaEvolution> getMegaEvolutions();
 
-    Species getAltFormeOfPokemon(Species pk, int forme);
+    Species getAltFormeOfSpecies(Species pk, int forme);
 
     SpeciesSet getIrregularFormes();
 
-    RestrictedPokemonService getRestrictedPokemonService();
+    RestrictedSpeciesService getRestrictedSpeciesService();
 
     // ==================================
     // Methods to set up Gen Restrictions

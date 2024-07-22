@@ -65,9 +65,9 @@ public class TradeRandomizer extends Randomizer {
         for (IngameTrade trade : trades) {
             // pick new given pokemon
             Species oldgiven = trade.givenSpecies;
-            Species given = rPokeService.randomPokemon(random);
+            Species given = rSpecService.randomSpecies(random);
             while (usedGivens.contains(given)) {
-                given = rPokeService.randomPokemon(random);
+                given = rSpecService.randomSpecies(random);
             }
             usedGivens.add(given);
             trade.givenSpecies = given;
@@ -78,9 +78,9 @@ public class TradeRandomizer extends Randomizer {
                 trade.requestedSpecies = given;
             } else if (randomizeRequest) {
                 if (trade.requestedSpecies != null) {
-                    Species request = rPokeService.randomPokemon(random);
+                    Species request = rSpecService.randomSpecies(random);
                     while (usedRequests.contains(request) || request == given) {
-                        request = rPokeService.randomPokemon(random);
+                        request = rSpecService.randomSpecies(random);
                     }
                     usedRequests.add(request);
                     trade.requestedSpecies = request;

@@ -288,17 +288,17 @@ public class StarterRandomizer extends Randomizer {
         SpeciesSet available;
 
         if (allowAltFormes) {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(true)
-                    : rPokeService.getAll(true));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(true)
+                    : rSpecService.getAll(true));
             if (abilitiesUnchanged) {
-                available.removeAll(rPokeService.getAbilityDependentFormes());
+                available.removeAll(rSpecService.getAbilityDependentFormes());
             }
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
             available.removeIf(Species::isActuallyCosmetic);
         } else {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(false) : rPokeService.getAll(false));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(false) : rSpecService.getAll(false));
         }
 
         available.removeAll(alreadyChosen);
@@ -328,7 +328,7 @@ public class StarterRandomizer extends Randomizer {
     //TODO: enhance the ordering (i.e. if the first and third are given, make sure they stay in those positions)
     private List<Species> getCustomStarters(int[] starterIndices) {
         List<Species> customStarters = new ArrayList<>();
-        List<Species> romSpecies = romHandler.getPokemonInclFormes()
+        List<Species> romSpecies = romHandler.getSpeciesInclFormes()
                 .stream()
                 .filter(pk -> pk == null || !pk.isActuallyCosmetic())
                 .collect(Collectors.toList());

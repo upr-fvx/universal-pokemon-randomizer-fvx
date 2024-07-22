@@ -400,7 +400,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         try {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-            for (Species pk : getPokemonSet()) {
+            for (Species pk : getSpeciesSet()) {
                 if (getGraphicalFormePokes().contains(pk.getNumber())) {
                     loadGraphicalFormePokemonPalettes(pk);
                 } else {
@@ -433,7 +433,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
-            for (Species pk : getPokemonSet()) {
+            for (Species pk : getSpeciesSet()) {
                 if (getGraphicalFormePokes().contains(pk.getNumber())) {
                     saveGraphicalFormePokemonPalettes(pk);
                 } else {
@@ -476,7 +476,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 			throw new RomIOException(e);
 		}
 
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
             bims.add(pig.getFull());
         }

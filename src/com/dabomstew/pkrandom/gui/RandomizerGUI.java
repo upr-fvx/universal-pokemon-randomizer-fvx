@@ -3558,11 +3558,11 @@ public class RandomizerGUI {
         List<Species> currentStarters = romHandler.getStarters();
         List<Species> allPokes =
                 romHandler.generationOfPokemon() >= 6 ?
-                        romHandler.getPokemonInclFormes()
+                        romHandler.getSpeciesInclFormes()
                                 .stream()
                                 .filter(pk -> pk == null || !pk.isActuallyCosmetic())
                                 .collect(Collectors.toList()) :
-                        romHandler.getPokemon();
+                        romHandler.getSpecies();
         String[] pokeNames = new String[allPokes.size()];
         pokeNames[0] = "Random";
         for (int i = 1; i < allPokes.size(); i++) {

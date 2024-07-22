@@ -183,7 +183,7 @@ public class EncounterArea extends ArrayList<Encounter> {
      * Creates a {@link SpeciesSet} with all Pokemon that can be found in this area.
      * @return A {@link SpeciesSet} containing all Pokemon that can be encountered in this area.
      */
-    public SpeciesSet getPokemonInArea() {
+    public SpeciesSet getSpeciesInArea() {
         SpeciesSet speciesSet = new SpeciesSet();
         for (Encounter enc : this) {
             speciesSet.add(enc.getSpecies());
@@ -260,7 +260,7 @@ public class EncounterArea extends ArrayList<Encounter> {
             flattened.setDisplayName("All of location " + locEntry.getKey());
             for(EncounterArea area : locEntry.getValue()) {
                 flattened.addAll(area);
-                flattened.banAllPokemon(area.getBannedPokemon());
+                flattened.banAllPokemon(area.getBannedSpecies());
             }
             flattenedLocations.add(flattened);
         }
@@ -291,7 +291,7 @@ public class EncounterArea extends ArrayList<Encounter> {
                 flattened.setMapIndex(mapEntry.getKey());
                 for (EncounterArea area : typeEntry.getValue()) {
                     flattened.addAll(area);
-                    flattened.banAllPokemon(area.getBannedPokemon());
+                    flattened.banAllPokemon(area.getBannedSpecies());
                 }
                 flattenedEncounters.add(flattened);
             }

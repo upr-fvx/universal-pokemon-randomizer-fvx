@@ -7,7 +7,7 @@ import com.dabomstew.pkrandom.game_data.GenRestrictions;
 import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.game_data.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -83,14 +83,14 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void pokemonListIsNotEmpty(String romName) {
         loadROM(romName);
-        assertFalse(romHandler.getPokemon().isEmpty());
+        assertFalse(romHandler.getSpecies().isEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void firstPokemonInPokemonListIsNull(String romName) {
         loadROM(romName);
-        assertNull(romHandler.getPokemon().get(0));
+        assertNull(romHandler.getSpecies().get(0));
     }
 
     @ParameterizedTest
@@ -102,7 +102,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         assumeFalse(romHandler.generationOfPokemon() == 7);
 
         int pokemonCount = getPokemonCount();
-        assertEquals(pokemonCount + 1, romHandler.getPokemon().size());
+        assertEquals(pokemonCount + 1, romHandler.getSpecies().size());
     }
 
     private int getPokemonCount() {
@@ -128,8 +128,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void pokemonSetIncludesAllNonNullPokemonInPokemonList(String romName) {
         loadROM(romName);
-        List<Species> speciesList = romHandler.getPokemon();
-        SpeciesSet speciesSet = romHandler.getPokemonSet();
+        List<Species> speciesList = romHandler.getSpecies();
+        SpeciesSet speciesSet = romHandler.getSpeciesSet();
         for (Species pk : speciesList) {
             if (pk != null && !speciesSet.contains(pk)) {
                 fail(pk + " in Pokemon List (getPokemonList()) but not in Pokemon Set (getPokemonSet())");
@@ -141,8 +141,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void pokemonSetOnlyHasPokemonAlsoInPokemonList(String romName) {
         loadROM(romName);
-        List<Species> speciesList = romHandler.getPokemon();
-        for (Species pk : romHandler.getPokemonSet()) {
+        List<Species> speciesList = romHandler.getSpecies();
+        for (Species pk : romHandler.getSpeciesSet()) {
             if (!speciesList.contains(pk)) {
                 fail(pk + " in Pokemon Set (getPokemonSet()) but not in Pokemon List (getPokemon())");
             }
@@ -153,9 +153,9 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void restrictedPokemonAreSameAsPokemonSetWithNoRestrictionsSet(String romName) {
         loadROM(romName);
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(null);
-        assertEquals(romHandler.getPokemonSet(), rPokeService.getAll(false));
+        assertEquals(romHandler.getSpeciesSet(), rPokeService.getAll(false));
     }
 
     @ParameterizedTest
@@ -168,7 +168,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
@@ -194,7 +194,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
@@ -226,7 +226,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
         // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
@@ -252,7 +252,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
@@ -311,7 +311,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     public void allPokemonHaveAGeneration(String romName){
         loadROM(romName);
 
-        for (Species pk : romHandler.getPokemonSetInclFormes()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk);
             System.out.println(pk.fullName());
             System.out.println(pk.getGeneration());

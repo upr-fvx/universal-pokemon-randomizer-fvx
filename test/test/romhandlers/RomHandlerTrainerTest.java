@@ -550,7 +550,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
         SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
                         .buildFullFamilies(false);
-        SpeciesSet all = romHandler.getPokemonSet();
+        SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);
 
@@ -584,7 +584,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
         SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
                 .buildFullFamilies(false);
-        SpeciesSet all = romHandler.getPokemonSet();
+        SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);
 
@@ -652,7 +652,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     private void elite4UniquePokemonCheck() {
         List<Trainer> trainers = romHandler.getTrainers();
-        int[] pokeCount = new int[romHandler.getPokemon().size()];
+        int[] pokeCount = new int[romHandler.getSpecies().size()];
         for (Trainer tr : trainers) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
@@ -661,7 +661,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             }
         }
 
-        List<Species> allPokes = romHandler.getPokemon();
+        List<Species> allPokes = romHandler.getSpecies();
         for (int i = 1; i < allPokes.size(); i++) {
             System.out.println(allPokes.get(i).getName() + " : " + pokeCount[i]);
         }

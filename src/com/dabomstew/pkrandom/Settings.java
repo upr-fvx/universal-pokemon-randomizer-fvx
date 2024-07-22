@@ -1075,9 +1075,9 @@ public class Settings {
         // starters
         List<Species> romSpecies;
         if (rh.hasStarterAltFormes()) {
-            romSpecies = rh.getPokemonInclFormes();
+            romSpecies = rh.getSpeciesInclFormes();
         } else {
-            romSpecies = rh.getPokemon();
+            romSpecies = rh.getSpecies();
         }
         List<Species> romStarters = rh.getStarters();
         for (int starter = 0; starter < 3; starter++) {

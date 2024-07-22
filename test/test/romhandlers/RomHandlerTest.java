@@ -65,7 +65,7 @@ public class RomHandlerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedPokemonService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
     }
 
     protected static Generation getGenerationOf(String romName) {

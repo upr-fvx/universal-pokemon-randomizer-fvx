@@ -841,7 +841,7 @@ public class EncounterRandomizer extends Randomizer {
                 remaining.remove(replacement);
 
             if(keepEvolutions) {
-                setupAllowedForFamily(allowedForReplacement, info);
+                allowedForReplacement = setupAllowedForFamily(allowedForReplacement, info);
             }
             return allowedForReplacement;
         }

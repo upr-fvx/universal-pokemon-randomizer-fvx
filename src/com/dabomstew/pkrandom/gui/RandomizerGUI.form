@@ -2675,7 +2675,7 @@
                         <properties>
                           <enabled value="false"/>
                           <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionMapRadioButton.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpMap1To1RadioButton.toolTipText"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRegionMapRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="c529d" class="javax.swing.JCheckBox" binding="wpSplitByEncounterTypesCheckBox">

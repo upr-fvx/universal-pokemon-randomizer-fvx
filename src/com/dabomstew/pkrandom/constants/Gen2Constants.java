@@ -25,7 +25,7 @@ package com.dabomstew.pkrandom.constants;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -121,31 +121,31 @@ public class Gen2Constants {
             defenseCurlEffect = 156;
 
     // Taken from critical_hit_moves.asm; we could read this from the ROM, but it's easier to hardcode it.
-    public static final List<Integer> increasedCritMoves = Arrays.asList(Moves.karateChop, Moves.razorWind, Moves.razorLeaf,
-            Moves.crabhammer, Moves.slash, Moves.aeroblast, Moves.crossChop);
+    public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorWind, MoveIDs.razorLeaf,
+            MoveIDs.crabhammer, MoveIDs.slash, MoveIDs.aeroblast, MoveIDs.crossChop);
 
     public static final List<Integer> requiredFieldTMs = Arrays.asList(4, 20, 22, 26, 28, 34, 35, 39,
             40, 43, 44, 46);
 
     public static final List<Integer> fieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport,
-            Moves.whirlpool, Moves.waterfall, Moves.rockSmash, Moves.headbutt, Moves.sweetScent);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
+            MoveIDs.whirlpool, MoveIDs.waterfall, MoveIDs.rockSmash, MoveIDs.headbutt, MoveIDs.sweetScent);
 
-    public static final List<Integer> earlyRequiredHMMoves = Collections.singletonList(Moves.cut);
+    public static final List<Integer> earlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
     // ban thief because trainers are broken with it (items are not returned).
     // ban transform because of Transform assumption glitch
-    public static final List<Integer> bannedLevelupMoves = Arrays.asList(Moves.transform, Moves.thief);
+    public static final List<Integer> bannedLevelupMoves = Arrays.asList(MoveIDs.transform, MoveIDs.thief);
 
     public static final List<Integer> brokenMoves = Arrays.asList(
-            Moves.sonicBoom, Moves.dragonRage, Moves.hornDrill, Moves.fissure, Moves.guillotine);
+            MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.hornDrill, MoveIDs.fissure, MoveIDs.guillotine);
 
     public static final List<Integer> illegalVietCrystalMoves = Arrays.asList(
-            Moves.protect, Moves.rest, Moves.spikeCannon, Moves.detect);
+            MoveIDs.protect, MoveIDs.rest, MoveIDs.spikeCannon, MoveIDs.detect);
 
-    public static final int tmBlockOneIndex = Gen2Items.tm01, tmBlockOneSize = 4,
-            tmBlockTwoIndex = Gen2Items.tm05, tmBlockTwoSize = 24,
-            tmBlockThreeIndex = Gen2Items.tm29, tmBlockThreeSize = 22;
+    public static final int tmBlockOneIndex = Gen2ItemIDs.tm01, tmBlockOneSize = 4,
+            tmBlockTwoIndex = Gen2ItemIDs.tm05, tmBlockTwoSize = 24,
+            tmBlockThreeIndex = Gen2ItemIDs.tm29, tmBlockThreeSize = 22;
 
     public static final int priorityHitEffectIndex = 0x67, protectEffectIndex = 0x6F, endureEffectIndex = 0x74,
             forceSwitchEffectIndex = 0x1C,counterEffectIndex = 0x59, mirrorCoatEffectIndex = 0x90;
@@ -205,31 +205,31 @@ public class Gen2Constants {
 
     // Held-while-traded evo items (upgrade etc.) are not considered because players are not expected to trade. Same as in Gen3Constants.
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.sunStone, Gen2Items.moonStone, Gen2Items.fireStone, Gen2Items.thunderstone, Gen2Items.waterStone,
-            Gen2Items.leafStone
+            Gen2ItemIDs.sunStone, Gen2ItemIDs.moonStone, Gen2ItemIDs.fireStone, Gen2ItemIDs.thunderstone, Gen2ItemIDs.waterStone,
+            Gen2ItemIDs.leafStone
     ));
 
     public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.guardSpec, Gen2Items.direHit, Gen2Items.xAttack,
-            Gen2Items.xDefend, Gen2Items.xSpeed, Gen2Items.xAccuracy, Gen2Items.xSpecial
+            Gen2ItemIDs.guardSpec, Gen2ItemIDs.direHit, Gen2ItemIDs.xAttack,
+            Gen2ItemIDs.xDefend, Gen2ItemIDs.xSpeed, Gen2ItemIDs.xAccuracy, Gen2ItemIDs.xSpecial
     ));
 
     public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.psnCureBerry, Gen2Items.przCureBerry, Gen2Items.burntBerry, Gen2Items.iceBerry, Gen2Items.bitterBerry,
-            Gen2Items.mintBerry,Gen2Items.miracleBerry, Gen2Items.mysteryBerry, Gen2Items.berry, Gen2Items.goldBerry,
-            Gen2Items.berryJuice
+            Gen2ItemIDs.psnCureBerry, Gen2ItemIDs.przCureBerry, Gen2ItemIDs.burntBerry, Gen2ItemIDs.iceBerry, Gen2ItemIDs.bitterBerry,
+            Gen2ItemIDs.mintBerry, Gen2ItemIDs.miracleBerry, Gen2ItemIDs.mysteryBerry, Gen2ItemIDs.berry, Gen2ItemIDs.goldBerry,
+            Gen2ItemIDs.berryJuice
     ));
 
     public static final List<Integer> consumableHeldItems = setupConsumableHeldItems();
 
     private static List<Integer> setupConsumableHeldItems() {
         List<Integer> consumableHeldItems = new ArrayList<>(generalPurposeConsumableItems);
-        consumableHeldItems.add(Gen2Items.berserkGene);
+        consumableHeldItems.add(Gen2ItemIDs.berserkGene);
         return Collections.unmodifiableList(consumableHeldItems);
     }
 
     public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.brightPowder, Gen2Items.quickClaw, Gen2Items.kingsRock, Gen2Items.smokeBall
+            Gen2ItemIDs.brightPowder, Gen2ItemIDs.quickClaw, Gen2ItemIDs.kingsRock, Gen2ItemIDs.smokeBall
     ));
 
     public static final List<Integer> allHeldItems = setupAllHeldItems();
@@ -238,11 +238,11 @@ public class Gen2Constants {
         List<Integer> allHeldItems = new ArrayList<>(generalPurposeItems);
         allHeldItems.addAll(Collections.unmodifiableList(Arrays.asList(
                 // type-boosting items
-                Gen2Items.blackbelt, Gen2Items.blackGlasses, Gen2Items.charcoal, Gen2Items.dragonScale,
-                Gen2Items.hardStone, Gen2Items.magnet, Gen2Items.metalCoat, Gen2Items.miracleSeed,
-                Gen2Items.mysticWater, Gen2Items.neverMeltIce, Gen2Items.pinkBow, Gen2Items.polkadotBow,
-                Gen2Items.sharpBeak, Gen2Items.silverPowder, Gen2Items.softSand, Gen2Items.spellTag,
-                Gen2Items.twistedSpoon)));
+                Gen2ItemIDs.blackbelt, Gen2ItemIDs.blackGlasses, Gen2ItemIDs.charcoal, Gen2ItemIDs.dragonScale,
+                Gen2ItemIDs.hardStone, Gen2ItemIDs.magnet, Gen2ItemIDs.metalCoat, Gen2ItemIDs.miracleSeed,
+                Gen2ItemIDs.mysticWater, Gen2ItemIDs.neverMeltIce, Gen2ItemIDs.pinkBow, Gen2ItemIDs.polkadotBow,
+                Gen2ItemIDs.sharpBeak, Gen2ItemIDs.silverPowder, Gen2ItemIDs.softSand, Gen2ItemIDs.spellTag,
+                Gen2ItemIDs.twistedSpoon)));
         allHeldItems.addAll(consumableHeldItems);
         return Collections.unmodifiableList(allHeldItems);
     }
@@ -251,23 +251,23 @@ public class Gen2Constants {
 
     private static Map<Type, List<Integer>> initializeTypeBoostingItems() {
         Map<Type, List<Integer>> map = new HashMap<>();
-        map.put(Type.BUG, Collections.singletonList(Gen2Items.silverPowder));
-        map.put(Type.DARK, Collections.singletonList(Gen2Items.blackGlasses));
-        map.put(Type.DRAGON, Collections.singletonList(Gen2Items.dragonScale)); // NOT Dragon Fang due to a bug in the game's code
-        map.put(Type.ELECTRIC, Collections.singletonList(Gen2Items.magnet));
-        map.put(Type.FIGHTING, Collections.singletonList(Gen2Items.blackbelt));
-        map.put(Type.FIRE, Collections.singletonList(Gen2Items.charcoal));
-        map.put(Type.FLYING, Collections.singletonList(Gen2Items.sharpBeak));
-        map.put(Type.GHOST, Collections.singletonList(Gen2Items.spellTag));
-        map.put(Type.GRASS, Collections.singletonList(Gen2Items.miracleSeed));
-        map.put(Type.GROUND, Collections.singletonList(Gen2Items.softSand));
-        map.put(Type.ICE, Collections.singletonList(Gen2Items.neverMeltIce));
-        map.put(Type.NORMAL, Arrays.asList(Gen2Items.pinkBow, Gen2Items.polkadotBow));
-        map.put(Type.POISON, Collections.singletonList(Gen2Items.poisonBarb));
-        map.put(Type.PSYCHIC, Collections.singletonList(Gen2Items.twistedSpoon));
-        map.put(Type.ROCK, Collections.singletonList(Gen2Items.hardStone));
-        map.put(Type.STEEL, Collections.singletonList(Gen2Items.metalCoat));
-        map.put(Type.WATER, Collections.singletonList(Gen2Items.mysticWater));
+        map.put(Type.BUG, Collections.singletonList(Gen2ItemIDs.silverPowder));
+        map.put(Type.DARK, Collections.singletonList(Gen2ItemIDs.blackGlasses));
+        map.put(Type.DRAGON, Collections.singletonList(Gen2ItemIDs.dragonScale)); // NOT Dragon Fang due to a bug in the game's code
+        map.put(Type.ELECTRIC, Collections.singletonList(Gen2ItemIDs.magnet));
+        map.put(Type.FIGHTING, Collections.singletonList(Gen2ItemIDs.blackbelt));
+        map.put(Type.FIRE, Collections.singletonList(Gen2ItemIDs.charcoal));
+        map.put(Type.FLYING, Collections.singletonList(Gen2ItemIDs.sharpBeak));
+        map.put(Type.GHOST, Collections.singletonList(Gen2ItemIDs.spellTag));
+        map.put(Type.GRASS, Collections.singletonList(Gen2ItemIDs.miracleSeed));
+        map.put(Type.GROUND, Collections.singletonList(Gen2ItemIDs.softSand));
+        map.put(Type.ICE, Collections.singletonList(Gen2ItemIDs.neverMeltIce));
+        map.put(Type.NORMAL, Arrays.asList(Gen2ItemIDs.pinkBow, Gen2ItemIDs.polkadotBow));
+        map.put(Type.POISON, Collections.singletonList(Gen2ItemIDs.poisonBarb));
+        map.put(Type.PSYCHIC, Collections.singletonList(Gen2ItemIDs.twistedSpoon));
+        map.put(Type.ROCK, Collections.singletonList(Gen2ItemIDs.hardStone));
+        map.put(Type.STEEL, Collections.singletonList(Gen2ItemIDs.metalCoat));
+        map.put(Type.WATER, Collections.singletonList(Gen2ItemIDs.mysticWater));
         map.put(null, Collections.emptyList()); // ??? type
         return Collections.unmodifiableMap(map);
     }
@@ -276,28 +276,28 @@ public class Gen2Constants {
 
     private static Map<Integer, List<Integer>> initializeSpeciesBoostingItems() {
         Map<Integer, List<Integer>> map = new HashMap<>();
-        map.put(Species.pikachu, Collections.singletonList(Gen2Items.lightBall));
-        map.put(Species.chansey, Collections.singletonList(Gen2Items.luckyPunch));
-        map.put(Species.ditto, Collections.singletonList(Gen2Items.metalPowder));
-        map.put(Species.cubone, Collections.singletonList(Gen2Items.thickClub));
-        map.put(Species.marowak, Collections.singletonList(Gen2Items.thickClub));
-        map.put(Species.farfetchd, Collections.singletonList(Gen2Items.stick));
+        map.put(SpeciesIDs.pikachu, Collections.singletonList(Gen2ItemIDs.lightBall));
+        map.put(SpeciesIDs.chansey, Collections.singletonList(Gen2ItemIDs.luckyPunch));
+        map.put(SpeciesIDs.ditto, Collections.singletonList(Gen2ItemIDs.metalPowder));
+        map.put(SpeciesIDs.cubone, Collections.singletonList(Gen2ItemIDs.thickClub));
+        map.put(SpeciesIDs.marowak, Collections.singletonList(Gen2ItemIDs.thickClub));
+        map.put(SpeciesIDs.farfetchd, Collections.singletonList(Gen2ItemIDs.stick));
         return Collections.unmodifiableMap(map);
     }
 
     public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.pokeBall, Gen2Items.greatBall,
-            Gen2Items.ultraBall, Gen2Items.potion, Gen2Items.superPotion, Gen2Items.hyperPotion, Gen2Items.maxPotion,
-            Gen2Items.antidote, Gen2Items.burnHeal, Gen2Items.iceHeal, Gen2Items.awakening, Gen2Items.parlyzHeal,
-            Gen2Items.fullHeal, Gen2Items.fullRestore, Gen2Items.revive, Gen2Items.repel, Gen2Items.superRepel,
-            Gen2Items.maxRepel, Gen2Items.escapeRope
+            Gen2ItemIDs.pokeBall, Gen2ItemIDs.greatBall,
+            Gen2ItemIDs.ultraBall, Gen2ItemIDs.potion, Gen2ItemIDs.superPotion, Gen2ItemIDs.hyperPotion, Gen2ItemIDs.maxPotion,
+            Gen2ItemIDs.antidote, Gen2ItemIDs.burnHeal, Gen2ItemIDs.iceHeal, Gen2ItemIDs.awakening, Gen2ItemIDs.parlyzHeal,
+            Gen2ItemIDs.fullHeal, Gen2ItemIDs.fullRestore, Gen2ItemIDs.revive, Gen2ItemIDs.repel, Gen2ItemIDs.superRepel,
+            Gen2ItemIDs.maxRepel, Gen2ItemIDs.escapeRope
     ));
 
     // rare candy, lucky egg, and all the "valuable items"
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen2Items.rareCandy, Gen2Items.luckyEgg,
-            Gen2Items.nugget, Gen2Items.tinyMushroom, Gen2Items.bigMushroom, Gen2Items.pearl, Gen2Items.bigPearl,
-            Gen2Items.stardust, Gen2Items.stardust, Gen2Items.brickPiece, Gen2Items.silverLeaf, Gen2Items.goldLeaf
+            Gen2ItemIDs.rareCandy, Gen2ItemIDs.luckyEgg,
+            Gen2ItemIDs.nugget, Gen2ItemIDs.tinyMushroom, Gen2ItemIDs.bigMushroom, Gen2ItemIDs.pearl, Gen2ItemIDs.bigPearl,
+            Gen2ItemIDs.stardust, Gen2ItemIDs.stardust, Gen2ItemIDs.brickPiece, Gen2ItemIDs.silverLeaf, Gen2ItemIDs.goldLeaf
     ));
 
     public static ItemList allowedItems;
@@ -308,23 +308,23 @@ public class Gen2Constants {
     }
 
     private static void setupAllowedItems() {
-        allowedItems = new ItemList(Gen2Items.hm07); // 250-255 are junk and cancel
+        allowedItems = new ItemList(Gen2ItemIDs.hm07); // 250-255 are junk and cancel
         // Assorted key items
-        allowedItems.banSingles(Gen2Items.bicycle, Gen2Items.coinCase, Gen2Items.itemfinder, Gen2Items.oldRod,
-                Gen2Items.goodRod, Gen2Items.superRod, Gen2Items.gsBall, Gen2Items.blueCard, Gen2Items.basementKey,
-                Gen2Items.pass, Gen2Items.squirtBottle, Gen2Items.rainbowWing);
-        allowedItems.banRange(Gen2Items.redScale, 6);
-        allowedItems.banRange(Gen2Items.cardKey, 4);
+        allowedItems.banSingles(Gen2ItemIDs.bicycle, Gen2ItemIDs.coinCase, Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod,
+                Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod, Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey,
+                Gen2ItemIDs.pass, Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing);
+        allowedItems.banRange(Gen2ItemIDs.redScale, 6);
+        allowedItems.banRange(Gen2ItemIDs.cardKey, 4);
         // HMs
-        allowedItems.banRange(Gen2Items.hm01, 7);
+        allowedItems.banRange(Gen2ItemIDs.hm01, 7);
         // Unused items (Teru-Samas and dummy TMs)
-        allowedItems.banSingles(Gen2Items.terusama6, Gen2Items.terusama25, Gen2Items.terusama45,
-                Gen2Items.terusama50, Gen2Items.terusama56, Gen2Items.terusama90, Gen2Items.terusama100,
-                Gen2Items.terusama120, Gen2Items.terusama135, Gen2Items.terusama136, Gen2Items.terusama137,
-                Gen2Items.terusama141, Gen2Items.terusama142, Gen2Items.terusama145, Gen2Items.terusama147,
-                Gen2Items.terusama148, Gen2Items.terusama149, Gen2Items.terusama153, Gen2Items.terusama154,
-                Gen2Items.terusama155, Gen2Items.terusama162, Gen2Items.terusama171, Gen2Items.terusama176,
-                Gen2Items.terusama179, Gen2Items.terusama190, Gen2Items.tm04Unused, Gen2Items.tm28Unused);
+        allowedItems.banSingles(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
+                Gen2ItemIDs.terusama50, Gen2ItemIDs.terusama56, Gen2ItemIDs.terusama90, Gen2ItemIDs.terusama100,
+                Gen2ItemIDs.terusama120, Gen2ItemIDs.terusama135, Gen2ItemIDs.terusama136, Gen2ItemIDs.terusama137,
+                Gen2ItemIDs.terusama141, Gen2ItemIDs.terusama142, Gen2ItemIDs.terusama145, Gen2ItemIDs.terusama147,
+                Gen2ItemIDs.terusama148, Gen2ItemIDs.terusama149, Gen2ItemIDs.terusama153, Gen2ItemIDs.terusama154,
+                Gen2ItemIDs.terusama155, Gen2ItemIDs.terusama162, Gen2ItemIDs.terusama171, Gen2ItemIDs.terusama176,
+                Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused);
         // Real TMs
         allowedItems.tmRange(tmBlockOneIndex, tmBlockOneSize);
         allowedItems.tmRange(tmBlockTwoIndex, tmBlockTwoSize);
@@ -333,13 +333,13 @@ public class Gen2Constants {
         // non-bad items
         // ban specific pokemon hold items, berries, apricorns, mail
         nonBadItems = allowedItems.copy();
-        nonBadItems.banSingles(Gen2Items.luckyPunch, Gen2Items.metalPowder, Gen2Items.silverLeaf,
-                Gen2Items.goldLeaf, Gen2Items.redApricorn, Gen2Items.bluApricorn, Gen2Items.whtApricorn,
-                Gen2Items.blkApricorn, Gen2Items.pnkApricorn, Gen2Items.stick, Gen2Items.thickClub,
-                Gen2Items.flowerMail, Gen2Items.lightBall, Gen2Items.berry, Gen2Items.brickPiece);
-        nonBadItems.banRange(Gen2Items.ylwApricorn, 2);
-        nonBadItems.banRange(Gen2Items.normalBox, 2);
-        nonBadItems.banRange(Gen2Items.surfMail, 9);
+        nonBadItems.banSingles(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
+                Gen2ItemIDs.goldLeaf, Gen2ItemIDs.redApricorn, Gen2ItemIDs.bluApricorn, Gen2ItemIDs.whtApricorn,
+                Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.stick, Gen2ItemIDs.thickClub,
+                Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall, Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece);
+        nonBadItems.banRange(Gen2ItemIDs.ylwApricorn, 2);
+        nonBadItems.banRange(Gen2ItemIDs.normalBox, 2);
+        nonBadItems.banRange(Gen2ItemIDs.surfMail, 9);
     }
 
     public static final String friendshipValueForEvoLocator = "FEDCDA";
@@ -1131,79 +1131,79 @@ public class Gen2Constants {
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
 
             // general held items
-            {Gen2Items.brightPowder, 3000}, // same as in Gen3Constants
-            {Gen2Items.expShare, 6000}, // same as in Gen3Constants
-            {Gen2Items.quickClaw, 4500}, // sane as in Gen3Constants
-            {Gen2Items.kingsRock, 5000}, // same as in Gen3Constants
-            {Gen2Items.amuletCoin, 1500}, // same as in Gen3Constants, could be too low
-            {Gen2Items.smokeBall, 1200}, // vanilla value of 200 felt too low
-            {Gen2Items.everstone, 200}, // same as in Gen3Constants
-            {Gen2Items.focusBand, 3000}, // same as in Gen3Constants
-            {Gen2Items.leftovers, 10000}, // same as in Gen3Constants
-            {Gen2Items.cleanseTag, 1000}, // same as in Gen3Constants
-            {Gen2Items.luckyEgg, 10000}, // same as in Gen3Constants
-            {Gen2Items.scopeLens, 5000}, // same as in Gen3Constants
-            {Gen2Items.berserkGene, 800}, // probably not a very good item
+            {Gen2ItemIDs.brightPowder, 3000}, // same as in Gen3Constants
+            {Gen2ItemIDs.expShare, 6000}, // same as in Gen3Constants
+            {Gen2ItemIDs.quickClaw, 4500}, // sane as in Gen3Constants
+            {Gen2ItemIDs.kingsRock, 5000}, // same as in Gen3Constants
+            {Gen2ItemIDs.amuletCoin, 1500}, // same as in Gen3Constants, could be too low
+            {Gen2ItemIDs.smokeBall, 1200}, // vanilla value of 200 felt too low
+            {Gen2ItemIDs.everstone, 200}, // same as in Gen3Constants
+            {Gen2ItemIDs.focusBand, 3000}, // same as in Gen3Constants
+            {Gen2ItemIDs.leftovers, 10000}, // same as in Gen3Constants
+            {Gen2ItemIDs.cleanseTag, 1000}, // same as in Gen3Constants
+            {Gen2ItemIDs.luckyEgg, 10000}, // same as in Gen3Constants
+            {Gen2ItemIDs.scopeLens, 5000}, // same as in Gen3Constants
+            {Gen2ItemIDs.berserkGene, 800}, // probably not a very good item
 
             // type boosting items
-            {Gen2Items.softSand, 2000}, // same as in Gen3Constants
-            {Gen2Items.sharpBeak, 2000}, // same as in Gen3Constants
-            {Gen2Items.poisonBarb, 2000}, // same as in Gen3Constants
-            {Gen2Items.silverPowder, 2000}, // same as in Gen3Constants
-            {Gen2Items.mysticWater, 2000}, // same as in Gen3Constants
-            {Gen2Items.twistedSpoon, 2000}, // same as in Gen3Constants
-            {Gen2Items.blackbelt, 2000}, // same as in Gen3Constants
-            {Gen2Items.blackGlasses, 2000}, // same as in Gen3Constants
-            {Gen2Items.pinkBow, 2000}, // same as other type-boosting items
-            {Gen2Items.polkadotBow, 2000}, // same as other type-boosting items
-            {Gen2Items.neverMeltIce, 2000}, // same as in Gen3Constants
-            {Gen2Items.magnet, 2000}, // same as in Gen3Constants
-            {Gen2Items.spellTag, 2000}, // same as in Gen3Constants
-            {Gen2Items.miracleSeed, 2000}, // same as in Gen3Constants
-            {Gen2Items.hardStone, 2000}, // same as in Gen3Constants
-            {Gen2Items.charcoal, 2000}, // same as other type-boosting items; the vanilla cost is way too high
-            {Gen2Items.metalCoat, 2000}, // same as other type-boosting items
-            {Gen2Items.dragonScale, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.softSand, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.sharpBeak, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.poisonBarb, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.silverPowder, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.mysticWater, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.twistedSpoon, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.blackbelt, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.blackGlasses, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.pinkBow, 2000}, // same as other type-boosting items
+            {Gen2ItemIDs.polkadotBow, 2000}, // same as other type-boosting items
+            {Gen2ItemIDs.neverMeltIce, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.magnet, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.spellTag, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.miracleSeed, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.hardStone, 2000}, // same as in Gen3Constants
+            {Gen2ItemIDs.charcoal, 2000}, // same as other type-boosting items; the vanilla cost is way too high
+            {Gen2ItemIDs.metalCoat, 2000}, // same as other type-boosting items
+            {Gen2ItemIDs.dragonScale, 2000}, // same as in Gen3Constants
 
             // specific poke boosting items
-            {Gen2Items.luckyPunch, 1200}, // vanilla value of 10 felt too low
-            {Gen2Items.metalPowder, 1200}, // vanilla value of 10 felt too low
-            {Gen2Items.stick, 1200}, // vanilla value of 200 felt too low
-            {Gen2Items.thickClub, 2300}, // vanilla value of 500 felt too low
-            {Gen2Items.lightBall, 2300}, // vanilla value of 100 felt too low
+            {Gen2ItemIDs.luckyPunch, 1200}, // vanilla value of 10 felt too low
+            {Gen2ItemIDs.metalPowder, 1200}, // vanilla value of 10 felt too low
+            {Gen2ItemIDs.stick, 1200}, // vanilla value of 200 felt too low
+            {Gen2ItemIDs.thickClub, 2300}, // vanilla value of 500 felt too low
+            {Gen2ItemIDs.lightBall, 2300}, // vanilla value of 100 felt too low
 
             // berries
-            {Gen2Items.berry, 50}, // same as Gen3Constants Oran Berry
-            {Gen2Items.goldBerry, 500}, // same as Gen3Constants Sitrus Berry
-            {Gen2Items.psnCureBerry, 100}, // same as Gen3Constants Pecha Berry
-            {Gen2Items.przCureBerry, 200}, // same as Gen3Constants Cheri Berry
-            {Gen2Items.burntBerry, 250}, // same as Gen3Constants Aspear Berry
-            {Gen2Items.iceBerry, 250}, // same as Gen3Constants Rawst Berry
-            {Gen2Items.bitterBerry, 200}, // same as Gen3Constants Persim Berry
-            {Gen2Items.mintBerry, 250}, // same as Gen3Constants Chesto Berry
-            {Gen2Items.miracleBerry, 500}, // same as Gen3Constants Lum Berry
-            {Gen2Items.mysteryBerry, 3000}, // same as Gen3Constants Leppa Berry
-            {Gen2Items.berryJuice, 300}, // same as potion (which also heals 20 HP)
+            {Gen2ItemIDs.berry, 50}, // same as Gen3Constants Oran Berry
+            {Gen2ItemIDs.goldBerry, 500}, // same as Gen3Constants Sitrus Berry
+            {Gen2ItemIDs.psnCureBerry, 100}, // same as Gen3Constants Pecha Berry
+            {Gen2ItemIDs.przCureBerry, 200}, // same as Gen3Constants Cheri Berry
+            {Gen2ItemIDs.burntBerry, 250}, // same as Gen3Constants Aspear Berry
+            {Gen2ItemIDs.iceBerry, 250}, // same as Gen3Constants Rawst Berry
+            {Gen2ItemIDs.bitterBerry, 200}, // same as Gen3Constants Persim Berry
+            {Gen2ItemIDs.mintBerry, 250}, // same as Gen3Constants Chesto Berry
+            {Gen2ItemIDs.miracleBerry, 500}, // same as Gen3Constants Lum Berry
+            {Gen2ItemIDs.mysteryBerry, 3000}, // same as Gen3Constants Leppa Berry
+            {Gen2ItemIDs.berryJuice, 300}, // same as potion (which also heals 20 HP)
 
             // poke balls
-            {Gen2Items.masterBall, 3000},
-            {Gen2Items.parkBall, 600}, // same as Great Ball
+            {Gen2ItemIDs.masterBall, 3000},
+            {Gen2ItemIDs.parkBall, 600}, // same as Great Ball
             // all the Apricorn balls are worth 300, same as in Gen4Constants
-            {Gen2Items.heavyBall, 300},
-            {Gen2Items.levelBall, 300},
-            {Gen2Items.lureBall, 300},
-            {Gen2Items.fastBall, 300},
-            {Gen2Items.friendBall, 300},
-            {Gen2Items.moonBall, 300},
-            {Gen2Items.loveBall, 300},
+            {Gen2ItemIDs.heavyBall, 300},
+            {Gen2ItemIDs.levelBall, 300},
+            {Gen2ItemIDs.lureBall, 300},
+            {Gen2ItemIDs.fastBall, 300},
+            {Gen2ItemIDs.friendBall, 300},
+            {Gen2ItemIDs.moonBall, 300},
+            {Gen2ItemIDs.loveBall, 300},
 
             // misc
-            {Gen2Items.moonStone, 2100}, // same as other stones
-            {Gen2Items.rareCandy, 10000}, // same as in Gen3Constants
-            {Gen2Items.sacredAsh, 10000}, // same as in Gen3Constants
-            {Gen2Items.dragonFang, 100}, // it does nothing in Gen2 due to a bug
-            {Gen2Items.normalBox, 1000}, // arbitrary. these boxes should be unobtainable, but I'm not sure
-            {Gen2Items.gorgeousBox, 1000}
+            {Gen2ItemIDs.moonStone, 2100}, // same as other stones
+            {Gen2ItemIDs.rareCandy, 10000}, // same as in Gen3Constants
+            {Gen2ItemIDs.sacredAsh, 10000}, // same as in Gen3Constants
+            {Gen2ItemIDs.dragonFang, 100}, // it does nothing in Gen2 due to a bug
+            {Gen2ItemIDs.normalBox, 1000}, // arbitrary. these boxes should be unobtainable, but I'm not sure
+            {Gen2ItemIDs.gorgeousBox, 1000}
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
     public static final HashMap<String, Type> gymAndEliteThemes = setupGymAndEliteThemes();

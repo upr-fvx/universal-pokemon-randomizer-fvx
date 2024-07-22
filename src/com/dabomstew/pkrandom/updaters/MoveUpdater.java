@@ -1,10 +1,9 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Moves;
-import com.dabomstew.pkrandom.pokemon.Move;
-import com.dabomstew.pkrandom.pokemon.MoveCategory;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.constants.MoveIDs;
+import com.dabomstew.pkrandom.game_data.Move;
+import com.dabomstew.pkrandom.game_data.MoveCategory;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Arrays;
@@ -50,273 +49,273 @@ public class MoveUpdater extends Updater {
     }
 
     private void gen2Updates(List<Move> moves) {
-        updateMoveType(moves, Moves.karateChop, Type.FIGHTING);
-        updateMoveType(moves, Moves.gust, Type.FLYING);
-        updateMovePower(moves, Moves.wingAttack, 60);
-        updateMoveAccuracy(moves, Moves.whirlwind, 100);
-        updateMoveType(moves, Moves.sandAttack, Type.GROUND);
-        updateMovePower(moves, Moves.doubleEdge, 120);
-        updateMoveAccuracy(moves, Moves.blizzard, 70);
-        updateMoveAccuracy(moves, Moves.rockThrow, 90);
-        updateMoveAccuracy(moves, Moves.hypnosis, 60);
-        updateMovePower(moves, Moves.selfDestruct, 200);
-        updateMovePower(moves, Moves.explosion, 250);
-        updateMovePower(moves, Moves.dig, 60);
+        updateMoveType(moves, MoveIDs.karateChop, Type.FIGHTING);
+        updateMoveType(moves, MoveIDs.gust, Type.FLYING);
+        updateMovePower(moves, MoveIDs.wingAttack, 60);
+        updateMoveAccuracy(moves, MoveIDs.whirlwind, 100);
+        updateMoveType(moves, MoveIDs.sandAttack, Type.GROUND);
+        updateMovePower(moves, MoveIDs.doubleEdge, 120);
+        updateMoveAccuracy(moves, MoveIDs.blizzard, 70);
+        updateMoveAccuracy(moves, MoveIDs.rockThrow, 90);
+        updateMoveAccuracy(moves, MoveIDs.hypnosis, 60);
+        updateMovePower(moves, MoveIDs.selfDestruct, 200);
+        updateMovePower(moves, MoveIDs.explosion, 250);
+        updateMovePower(moves, MoveIDs.dig, 60);
         // Bite also becomes dark between Gen 1 and 2, but we can't change moves to non-existing types
     }
 
     private void gen3Updates(List<Move> moves) {
-        updateMoveAccuracy(moves, Moves.razorWind, 100);
+        updateMoveAccuracy(moves, MoveIDs.razorWind, 100);
         // Low Kick is a good example of how these "updates" don't update any mechanics,
         // just power/accuracy/pp/category/Type
         // Low Kick gets the accuracy boost of Gen 3+, but not the weight-based power.
-        updateMoveAccuracy(moves, Moves.lowKick, 100);
+        updateMoveAccuracy(moves, MoveIDs.lowKick, 100);
     }
 
     private void gen4Updates(List<Move> moves) {
-        updateMovePower(moves, Moves.fly, 90);
-        updateMovePP(moves, Moves.vineWhip, 15);
-        updateMovePP(moves, Moves.absorb, 25);
-        updateMovePP(moves, Moves.megaDrain, 15);
-        updateMovePower(moves, Moves.dig, 80);
-        updateMovePP(moves, Moves.recover, 10);
-        updateMoveAccuracy(moves, Moves.flash, 100);
-        updateMovePower(moves, Moves.petalDance, 90);
-        updateMoveAccuracy(moves, Moves.disable, 80);
-        updateMovePower(moves, Moves.jumpKick, 85);
-        updateMovePower(moves, Moves.highJumpKick, 100);
+        updateMovePower(moves, MoveIDs.fly, 90);
+        updateMovePP(moves, MoveIDs.vineWhip, 15);
+        updateMovePP(moves, MoveIDs.absorb, 25);
+        updateMovePP(moves, MoveIDs.megaDrain, 15);
+        updateMovePower(moves, MoveIDs.dig, 80);
+        updateMovePP(moves, MoveIDs.recover, 10);
+        updateMoveAccuracy(moves, MoveIDs.flash, 100);
+        updateMovePower(moves, MoveIDs.petalDance, 90);
+        updateMoveAccuracy(moves, MoveIDs.disable, 80);
+        updateMovePower(moves, MoveIDs.jumpKick, 85);
+        updateMovePower(moves, MoveIDs.highJumpKick, 100);
 
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMovePower(moves, Moves.zapCannon, 120);
-            updateMovePower(moves, Moves.outrage, 120);
-            updateMovePP(moves, Moves.outrage, 10);
-            updateMovePP(moves, Moves.gigaDrain, 10);
-            updateMovePower(moves, Moves.rockSmash, 40);
+            updateMovePower(moves, MoveIDs.zapCannon, 120);
+            updateMovePower(moves, MoveIDs.outrage, 120);
+            updateMovePP(moves, MoveIDs.outrage, 10);
+            updateMovePP(moves, MoveIDs.gigaDrain, 10);
+            updateMovePower(moves, MoveIDs.rockSmash, 40);
         }
 
         if (romHandler.generationOfPokemon() == 3) {
-            updateMovePP(moves, Moves.stockpile, 20);
-            updateMovePower(moves, Moves.dive, 80);
-            updateMovePower(moves, Moves.leafBlade, 90);
+            updateMovePP(moves, MoveIDs.stockpile, 20);
+            updateMovePower(moves, MoveIDs.dive, 80);
+            updateMovePower(moves, MoveIDs.leafBlade, 90);
         }
     }
 
     private void gen5Updates(List<Move> moves) {
-        updateMoveAccuracy(moves, Moves.bind, 85);
-        updateMovePP(moves, Moves.jumpKick, 10);
-        updateMovePower(moves, Moves.jumpKick, 100);
-        updateMovePower(moves, Moves.tackle, 50);
-        updateMoveAccuracy(moves, Moves.tackle, 100);
-        updateMoveAccuracy(moves, Moves.wrap, 90);
-        updateMovePP(moves, Moves.thrash, 10);
-        updateMovePower(moves, Moves.thrash, 120);
-        updateMoveAccuracy(moves, Moves.disable, 100);
-        updateMovePP(moves, Moves.petalDance, 10);
-        updateMovePower(moves, Moves.petalDance, 120);
-        updateMoveAccuracy(moves, Moves.fireSpin, 85);
-        updateMovePower(moves, Moves.fireSpin, 35);
-        updateMoveAccuracy(moves, Moves.toxic, 90);
-        updateMoveAccuracy(moves, Moves.clamp, 85);
-        updateMovePP(moves, Moves.clamp, 15);
-        updateMovePP(moves, Moves.highJumpKick, 10);
-        updateMovePower(moves, Moves.highJumpKick, 130);
-        updateMoveAccuracy(moves, Moves.glare, 90);
-        updateMoveAccuracy(moves, Moves.poisonGas, 80);
-        updateMoveAccuracy(moves, Moves.crabhammer, 90);
+        updateMoveAccuracy(moves, MoveIDs.bind, 85);
+        updateMovePP(moves, MoveIDs.jumpKick, 10);
+        updateMovePower(moves, MoveIDs.jumpKick, 100);
+        updateMovePower(moves, MoveIDs.tackle, 50);
+        updateMoveAccuracy(moves, MoveIDs.tackle, 100);
+        updateMoveAccuracy(moves, MoveIDs.wrap, 90);
+        updateMovePP(moves, MoveIDs.thrash, 10);
+        updateMovePower(moves, MoveIDs.thrash, 120);
+        updateMoveAccuracy(moves, MoveIDs.disable, 100);
+        updateMovePP(moves, MoveIDs.petalDance, 10);
+        updateMovePower(moves, MoveIDs.petalDance, 120);
+        updateMoveAccuracy(moves, MoveIDs.fireSpin, 85);
+        updateMovePower(moves, MoveIDs.fireSpin, 35);
+        updateMoveAccuracy(moves, MoveIDs.toxic, 90);
+        updateMoveAccuracy(moves, MoveIDs.clamp, 85);
+        updateMovePP(moves, MoveIDs.clamp, 15);
+        updateMovePP(moves, MoveIDs.highJumpKick, 10);
+        updateMovePower(moves, MoveIDs.highJumpKick, 130);
+        updateMoveAccuracy(moves, MoveIDs.glare, 90);
+        updateMoveAccuracy(moves, MoveIDs.poisonGas, 80);
+        updateMoveAccuracy(moves, MoveIDs.crabhammer, 90);
 
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMoveType(moves, Moves.curse, Type.GHOST);
-            updateMoveAccuracy(moves, Moves.cottonSpore, 100);
-            updateMoveAccuracy(moves, Moves.scaryFace, 100);
-            updateMoveAccuracy(moves, Moves.boneRush, 90);
-            updateMovePower(moves, Moves.gigaDrain, 75);
-            updateMovePower(moves, Moves.furyCutter, 20);
-            updateMovePP(moves, Moves.futureSight, 10);
-            updateMovePower(moves, Moves.futureSight, 100);
-            updateMoveAccuracy(moves, Moves.futureSight, 100);
-            updateMovePower(moves, Moves.whirlpool, 35);
-            updateMoveAccuracy(moves, Moves.whirlpool, 85);
+            updateMoveType(moves, MoveIDs.curse, Type.GHOST);
+            updateMoveAccuracy(moves, MoveIDs.cottonSpore, 100);
+            updateMoveAccuracy(moves, MoveIDs.scaryFace, 100);
+            updateMoveAccuracy(moves, MoveIDs.boneRush, 90);
+            updateMovePower(moves, MoveIDs.gigaDrain, 75);
+            updateMovePower(moves, MoveIDs.furyCutter, 20);
+            updateMovePP(moves, MoveIDs.futureSight, 10);
+            updateMovePower(moves, MoveIDs.futureSight, 100);
+            updateMoveAccuracy(moves, MoveIDs.futureSight, 100);
+            updateMovePower(moves, MoveIDs.whirlpool, 35);
+            updateMoveAccuracy(moves, MoveIDs.whirlpool, 85);
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
-            updateMovePower(moves, Moves.uproar, 90);
-            updateMovePower(moves, Moves.sandTomb, 35);
-            updateMoveAccuracy(moves, Moves.sandTomb, 85);
-            updateMovePower(moves, Moves.bulletSeed, 25);
-            updateMovePower(moves, Moves.icicleSpear, 25);
-            updateMovePower(moves, Moves.covet, 60);
-            updateMoveAccuracy(moves, Moves.rockBlast, 90);
-            updateMovePower(moves, Moves.doomDesire, 140);
-            updateMoveAccuracy(moves, Moves.doomDesire, 100);
+            updateMovePower(moves, MoveIDs.uproar, 90);
+            updateMovePower(moves, MoveIDs.sandTomb, 35);
+            updateMoveAccuracy(moves, MoveIDs.sandTomb, 85);
+            updateMovePower(moves, MoveIDs.bulletSeed, 25);
+            updateMovePower(moves, MoveIDs.icicleSpear, 25);
+            updateMovePower(moves, MoveIDs.covet, 60);
+            updateMoveAccuracy(moves, MoveIDs.rockBlast, 90);
+            updateMovePower(moves, MoveIDs.doomDesire, 140);
+            updateMoveAccuracy(moves, MoveIDs.doomDesire, 100);
         }
 
         if (romHandler.generationOfPokemon() == 4) {
-            updateMovePower(moves, Moves.feint, 30);
-            updateMovePower(moves, Moves.lastResort, 140);
-            updateMovePP(moves, Moves.drainPunch, 10);
-            updateMovePower(moves, Moves.drainPunch, 75);
-            updateMoveAccuracy(moves, Moves.magmaStorm, 75);
+            updateMovePower(moves, MoveIDs.feint, 30);
+            updateMovePower(moves, MoveIDs.lastResort, 140);
+            updateMovePP(moves, MoveIDs.drainPunch, 10);
+            updateMovePower(moves, MoveIDs.drainPunch, 75);
+            updateMoveAccuracy(moves, MoveIDs.magmaStorm, 75);
         }
     }
 
     private void gen6Updates(List<Move> moves) {
-        updateMovePP(moves, Moves.swordsDance, 20);
-        updateMoveAccuracy(moves, Moves.whirlwind, romHandler.getPerfectAccuracy());
-        updateMovePP(moves, Moves.vineWhip, 25);
-        updateMovePower(moves, Moves.vineWhip, 45);
-        updateMovePower(moves, Moves.pinMissile, 25);
-        updateMoveAccuracy(moves, Moves.pinMissile, 95);
-        updateMovePower(moves, Moves.flamethrower, 90);
-        updateMovePower(moves, Moves.hydroPump, 110);
-        updateMovePower(moves, Moves.surf, 90);
-        updateMovePower(moves, Moves.iceBeam, 90);
-        updateMovePower(moves, Moves.blizzard, 110);
-        updateMovePP(moves, Moves.growth, 20);
-        updateMovePower(moves, Moves.thunderbolt, 90);
-        updateMovePower(moves, Moves.thunder, 110);
-        updateMovePP(moves, Moves.minimize, 10);
-        updateMovePP(moves, Moves.barrier, 20);
-        updateMovePower(moves, Moves.lick, 30);
-        updateMovePower(moves, Moves.smog, 30);
-        updateMovePower(moves, Moves.fireBlast, 110);
-        updateMovePP(moves, Moves.skullBash, 10);
-        updateMovePower(moves, Moves.skullBash, 130);
-        updateMoveAccuracy(moves, Moves.glare, 100);
-        updateMoveAccuracy(moves, Moves.poisonGas, 90);
-        updateMovePower(moves, Moves.bubble, 40);
-        updateMoveAccuracy(moves, Moves.psywave, 100);
-        updateMovePP(moves, Moves.acidArmor, 20);
-        updateMovePower(moves, Moves.crabhammer, 100);
+        updateMovePP(moves, MoveIDs.swordsDance, 20);
+        updateMoveAccuracy(moves, MoveIDs.whirlwind, romHandler.getPerfectAccuracy());
+        updateMovePP(moves, MoveIDs.vineWhip, 25);
+        updateMovePower(moves, MoveIDs.vineWhip, 45);
+        updateMovePower(moves, MoveIDs.pinMissile, 25);
+        updateMoveAccuracy(moves, MoveIDs.pinMissile, 95);
+        updateMovePower(moves, MoveIDs.flamethrower, 90);
+        updateMovePower(moves, MoveIDs.hydroPump, 110);
+        updateMovePower(moves, MoveIDs.surf, 90);
+        updateMovePower(moves, MoveIDs.iceBeam, 90);
+        updateMovePower(moves, MoveIDs.blizzard, 110);
+        updateMovePP(moves, MoveIDs.growth, 20);
+        updateMovePower(moves, MoveIDs.thunderbolt, 90);
+        updateMovePower(moves, MoveIDs.thunder, 110);
+        updateMovePP(moves, MoveIDs.minimize, 10);
+        updateMovePP(moves, MoveIDs.barrier, 20);
+        updateMovePower(moves, MoveIDs.lick, 30);
+        updateMovePower(moves, MoveIDs.smog, 30);
+        updateMovePower(moves, MoveIDs.fireBlast, 110);
+        updateMovePP(moves, MoveIDs.skullBash, 10);
+        updateMovePower(moves, MoveIDs.skullBash, 130);
+        updateMoveAccuracy(moves, MoveIDs.glare, 100);
+        updateMoveAccuracy(moves, MoveIDs.poisonGas, 90);
+        updateMovePower(moves, MoveIDs.bubble, 40);
+        updateMoveAccuracy(moves, MoveIDs.psywave, 100);
+        updateMovePP(moves, MoveIDs.acidArmor, 20);
+        updateMovePower(moves, MoveIDs.crabhammer, 100);
 
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMovePP(moves, Moves.thief, 25);
-            updateMovePower(moves, Moves.thief, 60);
-            updateMovePower(moves, Moves.snore, 50);
-            updateMovePower(moves, Moves.furyCutter, 40);
-            updateMovePower(moves, Moves.futureSight, 120);
+            updateMovePP(moves, MoveIDs.thief, 25);
+            updateMovePower(moves, MoveIDs.thief, 60);
+            updateMovePower(moves, MoveIDs.snore, 50);
+            updateMovePower(moves, MoveIDs.furyCutter, 40);
+            updateMovePower(moves, MoveIDs.futureSight, 120);
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
-            updateMovePower(moves, Moves.heatWave, 95);
-            updateMoveAccuracy(moves, Moves.willOWisp, 85);
-            updateMovePower(moves, Moves.smellingSalts, 70);
-            updateMovePower(moves, Moves.knockOff, 65);
-            updateMovePower(moves, Moves.meteorMash, 90);
-            updateMoveAccuracy(moves, Moves.meteorMash, 90);
-            updateMovePower(moves, Moves.airCutter, 60);
-            updateMovePower(moves, Moves.overheat, 130);
-            updateMovePP(moves, Moves.rockTomb, 15);
-            updateMovePower(moves, Moves.rockTomb, 60);
-            updateMoveAccuracy(moves, Moves.rockTomb, 95);
-            updateMovePP(moves, Moves.extrasensory, 20);
-            updateMovePower(moves, Moves.muddyWater, 90);
-            updateMovePP(moves, Moves.covet, 25);
+            updateMovePower(moves, MoveIDs.heatWave, 95);
+            updateMoveAccuracy(moves, MoveIDs.willOWisp, 85);
+            updateMovePower(moves, MoveIDs.smellingSalts, 70);
+            updateMovePower(moves, MoveIDs.knockOff, 65);
+            updateMovePower(moves, MoveIDs.meteorMash, 90);
+            updateMoveAccuracy(moves, MoveIDs.meteorMash, 90);
+            updateMovePower(moves, MoveIDs.airCutter, 60);
+            updateMovePower(moves, MoveIDs.overheat, 130);
+            updateMovePP(moves, MoveIDs.rockTomb, 15);
+            updateMovePower(moves, MoveIDs.rockTomb, 60);
+            updateMoveAccuracy(moves, MoveIDs.rockTomb, 95);
+            updateMovePP(moves, MoveIDs.extrasensory, 20);
+            updateMovePower(moves, MoveIDs.muddyWater, 90);
+            updateMovePP(moves, MoveIDs.covet, 25);
         }
 
         if (romHandler.generationOfPokemon() >= 4) {
-            updateMovePower(moves, Moves.wakeUpSlap, 70);
-            updateMovePP(moves, Moves.tailwind, 15);
-            updateMovePower(moves, Moves.assurance, 60);
-            updateMoveAccuracy(moves, Moves.psychoShift, 100);
-            updateMovePower(moves, Moves.auraSphere, 80);
-            updateMovePP(moves, Moves.airSlash, 15);
-            updateMovePower(moves, Moves.dragonPulse, 85);
-            updateMovePower(moves, Moves.powerGem, 80);
-            updateMovePower(moves, Moves.energyBall, 90);
-            updateMovePower(moves, Moves.dracoMeteor, 130);
-            updateMovePower(moves, Moves.leafStorm, 130);
-            updateMoveAccuracy(moves, Moves.gunkShot, 80);
-            updateMovePower(moves, Moves.chatter, 65);
-            updateMovePower(moves, Moves.magmaStorm, 100);
+            updateMovePower(moves, MoveIDs.wakeUpSlap, 70);
+            updateMovePP(moves, MoveIDs.tailwind, 15);
+            updateMovePower(moves, MoveIDs.assurance, 60);
+            updateMoveAccuracy(moves, MoveIDs.psychoShift, 100);
+            updateMovePower(moves, MoveIDs.auraSphere, 80);
+            updateMovePP(moves, MoveIDs.airSlash, 15);
+            updateMovePower(moves, MoveIDs.dragonPulse, 85);
+            updateMovePower(moves, MoveIDs.powerGem, 80);
+            updateMovePower(moves, MoveIDs.energyBall, 90);
+            updateMovePower(moves, MoveIDs.dracoMeteor, 130);
+            updateMovePower(moves, MoveIDs.leafStorm, 130);
+            updateMoveAccuracy(moves, MoveIDs.gunkShot, 80);
+            updateMovePower(moves, MoveIDs.chatter, 65);
+            updateMovePower(moves, MoveIDs.magmaStorm, 100);
         }
 
         if (romHandler.generationOfPokemon() == 5) {
-            updateMovePower(moves, Moves.synchronoise, 120);
-            updateMovePower(moves, Moves.lowSweep, 65);
-            updateMovePower(moves, Moves.hex, 65);
-            updateMovePower(moves, Moves.incinerate, 60);
-            updateMovePower(moves, Moves.waterPledge, 80);
-            updateMovePower(moves, Moves.firePledge, 80);
-            updateMovePower(moves, Moves.grassPledge, 80);
-            updateMovePower(moves, Moves.struggleBug, 50);
+            updateMovePower(moves, MoveIDs.synchronoise, 120);
+            updateMovePower(moves, MoveIDs.lowSweep, 65);
+            updateMovePower(moves, MoveIDs.hex, 65);
+            updateMovePower(moves, MoveIDs.incinerate, 60);
+            updateMovePower(moves, MoveIDs.waterPledge, 80);
+            updateMovePower(moves, MoveIDs.firePledge, 80);
+            updateMovePower(moves, MoveIDs.grassPledge, 80);
+            updateMovePower(moves, MoveIDs.struggleBug, 50);
             // Frost Breath and Storm Throw 45 Power
             // Crits are 2x in these games, so we need to multiply BP by 3/4
             // Storm Throw was also updated to have a base BP of 60
-            updateMovePower(moves, Moves.frostBreath, 45);
-            updateMovePower(moves, Moves.stormThrow, 45);
-            updateMovePP(moves, Moves.sacredSword, 15);
-            updateMovePower(moves, Moves.hurricane, 110);
-            updateMovePower(moves, Moves.technoBlast, 120);
+            updateMovePower(moves, MoveIDs.frostBreath, 45);
+            updateMovePower(moves, MoveIDs.stormThrow, 45);
+            updateMovePP(moves, MoveIDs.sacredSword, 15);
+            updateMovePower(moves, MoveIDs.hurricane, 110);
+            updateMovePower(moves, MoveIDs.technoBlast, 120);
         }
     }
 
     private void gen7Updates(List<Move> moves) {
-        updateMovePower(moves, Moves.leechLife, 80);
-        updateMovePP(moves, Moves.leechLife, 10);
-        updateMovePP(moves, Moves.submission, 20);
-        updateMovePower(moves, Moves.tackle, 40);
-        updateMoveAccuracy(moves, Moves.thunderWave, 90);
+        updateMovePower(moves, MoveIDs.leechLife, 80);
+        updateMovePP(moves, MoveIDs.leechLife, 10);
+        updateMovePP(moves, MoveIDs.submission, 20);
+        updateMovePower(moves, MoveIDs.tackle, 40);
+        updateMoveAccuracy(moves, MoveIDs.thunderWave, 90);
 
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMoveAccuracy(moves, Moves.swagger, 85);
+            updateMoveAccuracy(moves, MoveIDs.swagger, 85);
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
-            updateMovePP(moves, Moves.knockOff, 20);
+            updateMovePP(moves, MoveIDs.knockOff, 20);
         }
 
         if (romHandler.generationOfPokemon() >= 4) {
-            updateMoveAccuracy(moves, Moves.darkVoid, 50);
-            updateMovePower(moves, Moves.suckerPunch, 70);
+            updateMoveAccuracy(moves, MoveIDs.darkVoid, 50);
+            updateMovePower(moves, MoveIDs.suckerPunch, 70);
         }
 
         if (romHandler.generationOfPokemon() == 6) {
-            updateMoveAccuracy(moves, Moves.aromaticMist, romHandler.getPerfectAccuracy());
-            updateMovePower(moves, Moves.fellStinger, 50);
-            updateMovePower(moves, Moves.flyingPress, 100);
-            updateMovePP(moves, Moves.matBlock, 10);
-            updateMovePower(moves, Moves.mysticalFire, 75);
-            updateMovePower(moves, Moves.parabolicCharge, 65);
-            updateMoveAccuracy(moves, Moves.topsyTurvy, romHandler.getPerfectAccuracy());
-            updateMoveCategory(moves, Moves.waterShuriken, MoveCategory.SPECIAL);
+            updateMoveAccuracy(moves, MoveIDs.aromaticMist, romHandler.getPerfectAccuracy());
+            updateMovePower(moves, MoveIDs.fellStinger, 50);
+            updateMovePower(moves, MoveIDs.flyingPress, 100);
+            updateMovePP(moves, MoveIDs.matBlock, 10);
+            updateMovePower(moves, MoveIDs.mysticalFire, 75);
+            updateMovePower(moves, MoveIDs.parabolicCharge, 65);
+            updateMoveAccuracy(moves, MoveIDs.topsyTurvy, romHandler.getPerfectAccuracy());
+            updateMoveCategory(moves, MoveIDs.waterShuriken, MoveCategory.SPECIAL);
         }
     }
 
     private void gen8Updates(List<Move> moves) {
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMovePower(moves, Moves.rapidSpin, 50);
+            updateMovePower(moves, MoveIDs.rapidSpin, 50);
         }
 
         if (romHandler.generationOfPokemon() == 7) {
-            updateMovePower(moves, Moves.multiAttack, 120);
+            updateMovePower(moves, MoveIDs.multiAttack, 120);
         }
     }
 
     private void gen9Updates(List<Move> moves) {
-        updateMovePP(moves, Moves.recover, 5);
-        updateMovePP(moves, Moves.softBoiled, 5);
-        updateMovePP(moves, Moves.rest, 5);
+        updateMovePP(moves, MoveIDs.recover, 5);
+        updateMovePP(moves, MoveIDs.softBoiled, 5);
+        updateMovePP(moves, MoveIDs.rest, 5);
 
         if (romHandler.generationOfPokemon() >= 2) {
-            updateMovePP(moves, Moves.milkDrink, 5);
+            updateMovePP(moves, MoveIDs.milkDrink, 5);
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
-            updateMovePP(moves, Moves.slackOff, 5);
+            updateMovePP(moves, MoveIDs.slackOff, 5);
         }
 
         if (romHandler.generationOfPokemon() >= 4) {
-            updateMovePP(moves, Moves.roost, 5);
+            updateMovePP(moves, MoveIDs.roost, 5);
         }
 
         if (romHandler.generationOfPokemon() >= 7) {
-            updateMovePP(moves, Moves.shoreUp, 5);
+            updateMovePP(moves, MoveIDs.shoreUp, 5);
         }
 
         if (romHandler.generationOfPokemon() >= 8) {
-            updateMovePower(moves, Moves.grassyGlide, 60);
-            updateMovePower(moves, Moves.wickedBlow, 75);
-            updateMovePower(moves, Moves.glacialLance, 120);
+            updateMovePower(moves, MoveIDs.grassyGlide, 60);
+            updateMovePower(moves, MoveIDs.wickedBlow, 75);
+            updateMovePower(moves, MoveIDs.glacialLance, 120);
         }
     }
 

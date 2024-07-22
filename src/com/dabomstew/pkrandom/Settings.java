@@ -37,11 +37,11 @@ import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
 
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.pokemon.ExpCurve;
-import com.dabomstew.pkrandom.pokemon.GenRestrictions;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.ExpCurve;
+import com.dabomstew.pkrandom.game_data.GenRestrictions;
+import com.dabomstew.pkrandom.game_data.Type;
 import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
 import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
@@ -1073,21 +1073,21 @@ public class Settings {
         }
 
         // starters
-        List<Pokemon> romPokemon;
+        List<Species> romSpecies;
         if (rh.hasStarterAltFormes()) {
-            romPokemon = rh.getPokemonInclFormes();
+            romSpecies = rh.getPokemonInclFormes();
         } else {
-            romPokemon = rh.getPokemon();
+            romSpecies = rh.getPokemon();
         }
-        List<Pokemon> romStarters = rh.getStarters();
+        List<Species> romStarters = rh.getStarters();
         for (int starter = 0; starter < 3; starter++) {
-            if (this.customStarters[starter] < 0 || this.customStarters[starter] >= romPokemon.size()) {
+            if (this.customStarters[starter] < 0 || this.customStarters[starter] >= romSpecies.size()) {
                 // invalid starter for this game
                 feedback.setChangedStarter(true);
                 if (starter >= romStarters.size()) {
                     this.customStarters[starter] = 1;
                 } else {
-                    this.customStarters[starter] = romPokemon.indexOf(romStarters.get(starter));
+                    this.customStarters[starter] = romSpecies.indexOf(romStarters.get(starter));
                 }
             }
         }

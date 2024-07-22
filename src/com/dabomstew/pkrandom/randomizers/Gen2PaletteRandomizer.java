@@ -22,14 +22,13 @@ package com.dabomstew.pkrandom.randomizers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.graphics.palettes.Color;
 import com.dabomstew.pkrandom.graphics.palettes.Gen2TypeColors;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
-import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
-import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
+import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;
@@ -58,8 +57,8 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 		this.shinyFromNormal = settings.isPokemonPalettesShinyFromNormal();
 		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
 
-		copyUpEvolutionsHelper.apply(evolutionSanity, true, new BasicPokemonPaletteAction(),
-				new EvolvedPokemonPaletteAction());
+		copyUpEvolutionsHelper.apply(evolutionSanity, true, new BasicSpeciesPaletteAction(),
+				new EvolvedSpeciesPaletteAction());
 	}
 
 	private Palette getRandom2ColorPalette() {
@@ -79,34 +78,34 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 		return palette;
 	}
 
-	private class BasicPokemonPaletteAction implements BasicPokemonAction<Pokemon> {
+	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {
 
 		@Override
-		public void applyTo(Pokemon pk) {
+		public void applyTo(Species pk) {
 			if (shinyFromNormal) {
 				setShinyPaletteFromNormal(pk);
 			}
 			setNormalPaletteRandom(pk);
 		}
 
-		private void setNormalPaletteRandom(Pokemon pk) {
+		private void setNormalPaletteRandom(Species pk) {
 			pk.setNormalPalette(typeSanity ? getRandom2ColorPalette(pk.getPrimaryType(false), pk.getSecondaryType(false))
 					: getRandom2ColorPalette());
 		}
 
 	}
 
-	private class EvolvedPokemonPaletteAction implements EvolvedPokemonAction<Pokemon> {
+	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction<Species> {
 
 		@Override
-		public void applyTo(Pokemon evFrom, Pokemon evTo, boolean toMonIsFinalEvo) {
+		public void applyTo(Species evFrom, Species evTo, boolean toMonIsFinalEvo) {
 			if (shinyFromNormal) {
 				setShinyPaletteFromNormal(evTo);
 			}
 			setNormalPaletteFromPrevo(evFrom, evTo);
 		}
 
-		private void setNormalPaletteFromPrevo(Pokemon evFrom, Pokemon evTo) {
+		private void setNormalPaletteFromPrevo(Species evFrom, Species evTo) {
 			Palette palette = new Palette(evFrom.getNormalPalette());
 
 			if (typeSanity) {

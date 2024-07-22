@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.romhandlers.romentries;
 
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
 import com.dabomstew.pkrandom.romhandlers.AbstractDSRomHandler;
 
 import java.util.Arrays;
@@ -18,13 +18,13 @@ public class DSStaticPokemon {
         this.levelEntries = levelEntries;
     }
 
-    public Pokemon getPokemon(AbstractDSRomHandler parent, NARCArchive scriptNARC) {
+    public Species getPokemon(AbstractDSRomHandler parent, NARCArchive scriptNARC) {
         // TODO: made AbstractDSRomHandler.readWord/writeWord public for this to work. Kind of ugly.
         return parent.getPokemon().get(parent.readWord(scriptNARC.files.get(speciesEntries[0].getFile()),
                 speciesEntries[0].getOffset()));
     }
 
-    public void setPokemon(AbstractDSRomHandler parent, NARCArchive scriptNARC, Pokemon pk) {
+    public void setPokemon(AbstractDSRomHandler parent, NARCArchive scriptNARC, Species pk) {
         int value = pk.getBaseNumber();
         for (InFileEntry speciesEntry : speciesEntries) {
             byte[] file = scriptNARC.files.get(speciesEntry.getFile());

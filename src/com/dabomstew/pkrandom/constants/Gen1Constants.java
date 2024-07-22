@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 
 public class Gen1Constants {
 
@@ -62,16 +62,16 @@ public class Gen1Constants {
     public static final List<Integer> singularTrainers = Arrays.asList(28, 32, 33, 34, 35, 36, 37, 38, 39, 43, 45, 46);
 
     public static final List<Integer> bannedMovesWithXAccBanned = Arrays.asList(
-            Moves.sonicBoom, Moves.dragonRage, Moves.spore);
+            MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.spore);
 
     public static final List<Integer> bannedMovesWithoutXAccBanned = Arrays.asList(
-            Moves.sonicBoom, Moves.dragonRage, Moves.spore, Moves.hornDrill, Moves.fissure, Moves.guillotine);
+            MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.spore, MoveIDs.hornDrill, MoveIDs.fissure, MoveIDs.guillotine);
 
     // ban transform because of Transform assumption glitch
-    public static final List<Integer> bannedLevelupMoves = Collections.singletonList(Moves.transform);
+    public static final List<Integer> bannedLevelupMoves = Collections.singletonList(MoveIDs.transform);
 
     public static final List<Integer> fieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport);
 
     public static final int damagePoison20PercentEffect = 2, damageAbsorbEffect = 3, damageBurn10PercentEffect = 4,
             damageFreeze10PercentEffect = 5, damageParalyze10PercentEffect = 6, dreamEaterEffect = 8,
@@ -88,11 +88,11 @@ public class Gen1Constants {
             twineedleEffect = 77, hyperBeamEffect = 80;
 
     // Taken from critical_hit_moves.asm; we could read this from the ROM, but it's easier to hardcode it.
-    public static final List<Integer> increasedCritMoves = Arrays.asList(Moves.karateChop, Moves.razorLeaf, Moves.crabhammer, Moves.slash);
+    public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorLeaf, MoveIDs.crabhammer, MoveIDs.slash);
 
-    public static final List<Integer> earlyRequiredHMs = Collections.singletonList(Moves.cut);
+    public static final List<Integer> earlyRequiredHMs = Collections.singletonList(MoveIDs.cut);
 
-    public static final int hmsStartIndex = Gen1Items.hm01, tmsStartIndex = Gen1Items.tm01;
+    public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
 
     public static final List<Integer> requiredFieldTMs = Arrays.asList(3, 4, 8, 10, 12, 14, 16, 19, 20,
             22, 25, 26, 30, 40, 43, 44, 45, 47);
@@ -172,17 +172,17 @@ public class Gen1Constants {
     public static final ItemList allowedItems = setupAllowedItems();
 
     private static ItemList setupAllowedItems() {
-        ItemList allowedItems = new ItemList(Gen1Items.tm50); // 251-255 are junk TMs
+        ItemList allowedItems = new ItemList(Gen1ItemIDs.tm50); // 251-255 are junk TMs
         // Assorted key items & junk
         // 23/01/2014: ban fake PP Up
-        allowedItems.banSingles(Gen1Items.townMap, Gen1Items.bicycle, Gen1Items.questionMark7,
-                Gen1Items.safariBall, Gen1Items.pokedex, Gen1Items.oldAmber, Gen1Items.cardKey, Gen1Items.ppUpGlitch,
-                Gen1Items.coin, Gen1Items.ssTicket, Gen1Items.goldTeeth);
-        allowedItems.banRange(Gen1Items.boulderBadge, 8);
-        allowedItems.banRange(Gen1Items.domeFossil, 5);
-        allowedItems.banRange(Gen1Items.coinCase, 10);
+        allowedItems.banSingles(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle, Gen1ItemIDs.questionMark7,
+                Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber, Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch,
+                Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket, Gen1ItemIDs.goldTeeth);
+        allowedItems.banRange(Gen1ItemIDs.boulderBadge, 8);
+        allowedItems.banRange(Gen1ItemIDs.domeFossil, 5);
+        allowedItems.banRange(Gen1ItemIDs.coinCase, 10);
         // Unused
-        allowedItems.banRange(Gen1Items.unused84, 112);
+        allowedItems.banRange(Gen1ItemIDs.unused84, 112);
         // HMs
         allowedItems.banRange(hmsStartIndex, hmCount);
         // Real TMs

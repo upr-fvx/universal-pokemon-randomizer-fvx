@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.Gen1PaletteRandomizer;
@@ -279,7 +279,7 @@ public class GameRandomizer {
             log.println("Pokemon base stats & type: unchanged" + NEWLINE);
         }
 
-        for (Pokemon pkmn : romHandler.getPokemon()) {
+        for (Species pkmn : romHandler.getPokemon()) {
             if (pkmn != null) {
                 checkValue = addToCV(checkValue, pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpeed(), pkmn.getSpatk(),
                         pkmn.getSpdef(), pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
@@ -548,7 +548,7 @@ public class GameRandomizer {
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
             for (TrainerPokemon tpk : t.pokemon) {
-                checkValue = addToCV(checkValue, tpk.level, tpk.pokemon.getNumber());
+                checkValue = addToCV(checkValue, tpk.level, tpk.species.getNumber());
             }
         }
 
@@ -609,7 +609,7 @@ public class GameRandomizer {
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeBasedEncounters);
         for (EncounterArea area : encounterAreas) {
             for (Encounter e : area) {
-                checkValue = addToCV(checkValue, e.getLevel(), e.getPokemon().getNumber());
+                checkValue = addToCV(checkValue, e.getLevel(), e.getSpecies().getNumber());
             }
         }
 
@@ -733,10 +733,10 @@ public class GameRandomizer {
             IngameTrade oldT = oldTrades.get(i);
             IngameTrade newT = newTrades.get(i);
             log.printf("Trade %-11s -> %-11s the %-11s        ->      %-11s -> %-15s the %s" + NEWLINE,
-                    oldT.requestedPokemon != null ? oldT.requestedPokemon.fullName() : "Any",
-                    oldT.nickname, oldT.givenPokemon.fullName(),
-                    newT.requestedPokemon != null ? newT.requestedPokemon.fullName() : "Any",
-                    newT.nickname, newT.givenPokemon.fullName());
+                    oldT.requestedSpecies != null ? oldT.requestedSpecies.fullName() : "Any",
+                    oldT.nickname, oldT.givenSpecies.fullName(),
+                    newT.requestedSpecies != null ? newT.requestedSpecies.fullName() : "Any",
+                    newT.nickname, newT.givenSpecies.fullName());
         }
         log.println();
     }
@@ -747,9 +747,9 @@ public class GameRandomizer {
         Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
-        List<Pokemon> pkmnList = romHandler.getPokemonInclFormes();
+        List<Species> pkmnList = romHandler.getPokemonInclFormes();
         int i = 1;
-        for (Pokemon pkmn : pkmnList) {
+        for (Species pkmn : pkmnList) {
             if (pkmn == null || pkmn.isActuallyCosmetic()) {
                 continue;
             }
@@ -867,8 +867,8 @@ public class GameRandomizer {
 
     private void logEvolutionChanges(PrintStream log) {
         log.println("--Randomized Evolutions--");
-        List<Pokemon> allPokes = romHandler.getPokemonInclFormes();
-        for (Pokemon pk : allPokes) {
+        List<Species> allPokes = romHandler.getPokemonInclFormes();
+        for (Species pk : allPokes) {
             if (pk != null && !pk.isActuallyCosmetic()) {
                 int numEvos = pk.getEvolutionsFrom().size();
                 if (numEvos > 0) {
@@ -889,13 +889,13 @@ public class GameRandomizer {
     }
 
     private void logPokemonTraitChanges(final PrintStream log) {
-        List<Pokemon> allPokes = romHandler.getPokemonInclFormes();
+        List<Species> allPokes = romHandler.getPokemonInclFormes();
         String[] itemNames = romHandler.getItemNames();
         // Log base stats & types
         log.println("--Pokemon Base Stats & Types--");
         if (romHandler instanceof Gen1RomHandler) {
             log.println("NUM|NAME      |TYPE             |  HP| ATK| DEF| SPE|SPEC");
-            for (Pokemon pkmn : allPokes) {
+            for (Species pkmn : allPokes) {
                 if (pkmn != null) {
                     String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
                     if (pkmn.getSecondaryType(false) != null) {
@@ -933,7 +933,7 @@ public class GameRandomizer {
             log.print("|ITEM");
             log.println();
             int i = 0;
-            for (Pokemon pkmn : allPokes) {
+            for (Species pkmn : allPokes) {
                 if (pkmn != null && !pkmn.isActuallyCosmetic()) {
                     i++;
                     String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
@@ -982,7 +982,7 @@ public class GameRandomizer {
 
     private void logTMHMCompatibility(final PrintStream log) {
         log.println("--TM Compatibility--");
-        Map<Pokemon, boolean[]> compat = romHandler.getTMHMCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
         tmHMs.addAll(romHandler.getHMMoves());
         List<Move> moveData = romHandler.getMoves();
@@ -992,18 +992,18 @@ public class GameRandomizer {
 
     private void logTutorCompatibility(final PrintStream log) {
         log.println("--Move Tutor Compatibility--");
-        Map<Pokemon, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
         List<Move> moveData = romHandler.getMoves();
 
         logCompatibility(log, compat, tutorMoves, moveData, false);
     }
 
-    private void logCompatibility(final PrintStream log, Map<Pokemon, boolean[]> compat, List<Integer> moveList,
+    private void logCompatibility(final PrintStream log, Map<Species, boolean[]> compat, List<Integer> moveList,
                                   List<Move> moveData, boolean includeTMNumber) {
         int tmCount = romHandler.getTMCount();
-        for (Map.Entry<Pokemon, boolean[]> entry : compat.entrySet()) {
-            Pokemon pkmn = entry.getKey();
+        for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
+            Species pkmn = entry.getKey();
             if (pkmn.isActuallyCosmetic()) continue;
             boolean[] flags = entry.getValue();
 
@@ -1072,9 +1072,9 @@ public class GameRandomizer {
                 log.println("--Random 2-Evolution Starters--");
         }
 
-        List<Pokemon> starters = romHandler.getStarters();
+        List<Species> starters = romHandler.getStarters();
         int i = 1;
-        for (Pokemon starter : starters) {
+        for (Species starter : starters) {
             log.println("Set starter " + i + " to " + starter.fullName());
             i++;
         }
@@ -1115,7 +1115,7 @@ public class GameRandomizer {
                     }
                     sb.append(stringToAppend);
                 }
-                sb.append(e.getPokemon().fullName()).append(" Lv");
+                sb.append(e.getSpecies().fullName()).append(" Lv");
                 if (e.getMaxLevel() > 0 && e.getMaxLevel() != e.getLevel()) {
                     sb.append("s ").append(e.getLevel()).append("-").append(e.getMaxLevel());
                 } else {
@@ -1125,9 +1125,9 @@ public class GameRandomizer {
                 log.printf(whitespaceFormat, sb);
                 StringBuilder sb2 = new StringBuilder();
                 if (romHandler instanceof Gen1RomHandler) {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPECIAL %-3d SPEED %-3d", e.getPokemon().getHp(), e.getPokemon().getAttack(), e.getPokemon().getDefense(), e.getPokemon().getSpecial(), e.getPokemon().getSpeed()));
+                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPECIAL %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpecial(), e.getSpecies().getSpeed()));
                 } else {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPATK %-3d SPDEF %-3d SPEED %-3d", e.getPokemon().getHp(), e.getPokemon().getAttack(), e.getPokemon().getDefense(), e.getPokemon().getSpatk(), e.getPokemon().getSpdef(), e.getPokemon().getSpeed()));
+                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPATK %-3d SPDEF %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpatk(), e.getSpecies().getSpdef(), e.getSpecies().getSpeed()));
                 }
                 log.print(sb2);
                 log.println();

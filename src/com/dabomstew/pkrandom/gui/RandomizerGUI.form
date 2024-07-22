@@ -2630,7 +2630,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title="Same Replacement Region"/>
+                    <border type="none" title="Replacements Per Pokemon"/>
                     <children>
                       <component id="17061" class="javax.swing.JRadioButton" binding="wpRegionNoneRadioButton" default-binding="true">
                         <constraints>

@@ -830,35 +830,12 @@ public class EncounterRandomizer extends Randomizer {
                 allowedForReplacement = startingPool;
             }
 
-            Pokemon replacement = pickGame1to1ReplacementInner(current.pokemon);
-            // In case it runs out of unique Pokémon, picks something already mapped to.
-            // Shouldn't happen unless restrictions are really harsh, normally [#allowed Pokémon] > [#Pokémon which appear in the wild]
-            if (replacement == null) {
-                allowedForReplacement = theme != null ? allowedByType.get(theme) : allowed;
-                allowedForReplacement.removeAll(current.getBannedForReplacement());
-                replacement = pickGame1to1ReplacementInner(current.pokemon);
-            } else {
-                remaining.remove(replacement);
-
             if(keepEvolutions) {
                 allowedForReplacement = setupAllowedForFamily(allowedForReplacement, info);
             }
             return allowedForReplacement;
         }
 
-        private Pokemon pickGame1to1ReplacementInner(Pokemon pokemon) {
-            return similarStrength ?
-                    allowedForReplacement.getRandomSimilarStrengthPokemon(pokemon, true, random) :
-                    allowedForReplacement.getRandomPokemon(random);
-        }
-
-        private PokemonSet getAllowedReplacementPreservePrimaryType(Encounter enc) {
-            //TODO: ensure this works correctly with area bans
-            Pokemon current = enc.getPokemon();
-            Type primaryType = current.getPrimaryType(true);
-            return catchEmAll && !remainingByType.get(primaryType).isEmpty()
-                    ? remainingByType.get(primaryType) : allowedByType.get(primaryType);
-        }
         private Pokemon pickReplacement(Pokemon current, PokemonSet allowedForReplacement) {
             if (allowedForReplacement == null || allowedForReplacement.isEmpty()) {
                 throw new IllegalArgumentException("No allowed Pokemon to pick as replacement.");
@@ -883,21 +860,6 @@ public class EncounterRandomizer extends Randomizer {
                 replacement = allowedForReplacement.getRandomPokemon(random);
             }
             return replacement;
-        }
-
-        private Pokemon pickReplacement1to1(Encounter enc) {
-            Pokemon current = enc.getPokemon();
-            if (areaMap.containsKey(current)) {
-                return areaMap.get(current);
-            } else {
-                // the below loop ensures no two Pokemon are given the same replacement,
-                // unless that's impossible due to the (small) size of allowedForArea
-                Pokemon replacement;
-                do {
-                    replacement = pickReplacementInner(enc);
-                } while (areaMap.containsValue(replacement) && areaMap.size() < allowedForArea.size());
-                return replacement;
-            }
         }
 
         /**
@@ -990,97 +952,6 @@ public class EncounterRandomizer extends Randomizer {
                 }
 
             }
-        }
-
-        /**
-         * Given a set of areas and a map, applies the map's replacements to each area.
-         * @param encounterAreas The areas to replace Pokemon in.
-         * @param translateMap The map of which Pokemon to replace each Pokemon with.
-         * @throws IllegalArgumentException if the map is missing a replacement for a Pokemon in one or more
-         * of the areas, or if the replacement for a Pokemon is banned in one of that Pokemon's areas.
-         */
-        private void applyGlobalMap(List<EncounterArea> encounterAreas, Map<Pokemon, Pokemon> translateMap) {
-            for (EncounterArea area : encounterAreas) {
-                for (Encounter enc : area) {
-                    Pokemon replacement = translateMap.get(enc.getPokemon());
-                    if (replacement == null) {
-                        throw new IllegalArgumentException("Map did not contain replacement for "
-                                + enc.getPokemon() + "!");
-                    }
-                    if (area.getBannedPokemon().contains(replacement)) {
-                        // This should never happen, since we already checked all the areas' banned Pokemon.
-                        throw new IllegalArgumentException("Map contained a banned Pokemon " + replacement +
-                                " as replacement for " + enc.getPokemon() + "!");
-                    }
-                    enc.setPokemon(replacement);
-                    setFormeForEncounter(enc, replacement);
-                }
-            }
-        }
-
-        /**
-         * Helper function for Global Family-To-Family.
-         * Given a set of Pokemon, randomizes each family within that set of the given length.
-         * @param length The length of the evolutionary families.
-         * @param allowGaps Whether the evolutionary families should allow gaps.
-         * @param pokemonToRandomize The set of Pokemon to randomize. Will remove each Pokemon randomized.
-         */
-        private Map<Pokemon, Pokemon> pickReplacementFamiliesOfLength(int length, boolean allowGaps,
-                                                                      PokemonSet pokemonToRandomize) {
-
-            Map<Pokemon, Pokemon> result = new HashMap<>();
-
-            while(!familiesToRandomize.isEmpty()) {
-                //Because we're randomizing a family at a time, we can't use a shuffled list.
-                //(Well, I supppose a List of PokemonSets would work, but acquiring that is harder than just
-                //choosing random Pokemon and then pulling their families.)
-                Pokemon toRandomize = familiesToRandomize.getRandomPokemon(random);
-                PokemonSet family = familiesToRandomize.filterFamily(toRandomize, true);
-
-                result.putAll(pickFamilyReplacement(toRandomize, family));
-
-                familiesToRandomize.removeAll(family);
-                PokemonSet replacementFamily = result.get(toRandomize).getFamily(false);
-                replacementFamily.forEach(this::removeFromRemaining);
-            }
-
-            return result;
-        }
-
-        /**
-         * Given a family and a primary Pokemon, maps each member of the family to a member of a random family.
-         * @param match The primary Pokemon to randomize.
-         * @param family The family to randomize.
-         * @return A Map of each Pokemon in the family to a replacement in a new family.
-         */
-        private Map<Pokemon, Pokemon> pickFamilyReplacement(Pokemon match, PokemonSet allowedForReplacement) {
-
-            Map<Pokemon, Pokemon> familyMap = new HashMap<>();
-
-            Pokemon replacement = pickGame1to1ReplacementInner(match);
-            familyMap.put(match, replacement);
-
-            //now we add the rest of the family
-            for (Pokemon relative : family) {
-                if(relative == match) {
-                    //we don't need to do it again
-                    continue;
-                }
-
-                int relation = match.getRelation(relative, true);
-                PokemonSet replaceCandidates = replacement.getRelativesAtPositionSameBranch(relation, false);
-                replaceCandidates.retainAll(allowed);
-                //We could try remaining first, but there shouldn't be any individual family members
-                //in allowed but not remaining. Only full families.
-
-                replaceCandidates.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                if(replaceCandidates.isEmpty()) {
-                    throw new RuntimeException("Chosen Pokemon does not have correct family. This shouldn't happen.");
-                }
-
-                familyMap.put(relative, replaceCandidates.getRandomPokemon(random));
-            }
-            return familyMap;
         }
 
         /**
@@ -1388,6 +1259,7 @@ public class EncounterRandomizer extends Randomizer {
             enc.setFormeNumber(enc.getFormeNumber() + pk.getCosmeticFormNumber(this.random.nextInt(pk.getCosmeticForms())));
         }
         //TODO: instead of (most of) this function, have encounter store the actual forme used and call basePokemon when needed
+        // Or.. some other solution to the problem of not recognizing formes in ORAS "enhance" logic
     }
 
     public void changeCatchRates() {

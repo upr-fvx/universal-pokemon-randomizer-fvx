@@ -34,7 +34,7 @@ public class TrainerPokemon {
 
     private int[] moves = {0, 0, 0, 0};
 
-    private Item heldItem = Item.NOTHING;
+    private Item heldItem;
     private boolean hasMegaStone;
     private boolean hasZCrystal;
     private int abilitySlot;
@@ -261,12 +261,11 @@ public class TrainerPokemon {
 
     @Override
     public String toString() {
-        String s = species.getName() + formeSuffix;
-        if (heldItem.getId() != 0) {
-            // This can be filled in with the actual name when written to the log.
-            s += "@%s";
+        StringBuilder sb = new StringBuilder(species.fullName());
+        if (heldItem != null) {
+            sb.append("@").append(heldItem.getName());
         }
-        s+= " Lv" + level;
-        return s;
+        sb.append(" Lv").append(level);
+        return sb.toString();
     }
 }

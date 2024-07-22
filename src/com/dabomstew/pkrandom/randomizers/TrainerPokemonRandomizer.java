@@ -1013,7 +1013,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables
-                newPokemon.setHeldItem(Item.NOTHING);
+                newPokemon.setHeldItem(null);
                 t.pokemon.add(secondToLastIndex, newPokemon);
             }
         }
@@ -1130,16 +1130,18 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
             for (TrainerPokemon tp : tr.pokemon) {
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
-                    int[] pokeMoves = tp.isResetMoves() ?
-                            RomFunctions.getMovesAtLevel(
-                                    romHandler.getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(),
-                                    romHandler.getMovesLearnt(), tp.getLevel()) :
-                            tp.getMoves();
-                    pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();
-                    int chosenMove = pokeMoves[random.nextInt(pokeMoves.length)];
-                    Type chosenMoveType = romHandler.getMoves().get(chosenMove).type;
-                    tp.setHeldItem(items.get(Gen7Constants.heldZCrystalsByType.get(chosenMoveType)));
+                if (tp.getHeldItem() != null) {
+                    if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
+                        int[] pokeMoves = tp.isResetMoves() ?
+                                RomFunctions.getMovesAtLevel(
+                                        romHandler.getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(),
+                                        romHandler.getMovesLearnt(), tp.getLevel()) :
+                                tp.getMoves();
+                        pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();
+                        int chosenMove = pokeMoves[random.nextInt(pokeMoves.length)];
+                        Type chosenMoveType = romHandler.getMoves().get(chosenMove).type;
+                        tp.setHeldItem(items.get(Gen7Constants.heldZCrystalsByType.get(chosenMoveType)));
+                    }
                 }
             }
         }

@@ -10,6 +10,9 @@ public class PickupItem {
     private final int[] probabilities = new int[PROBABILITY_SLOTS];
 
     public PickupItem(Item item) {
+        if (item == null) {
+            throw new IllegalArgumentException("item cannot be null");
+        }
         this.item = item;
     }
 

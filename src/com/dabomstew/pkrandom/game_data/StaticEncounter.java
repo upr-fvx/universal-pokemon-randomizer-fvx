@@ -32,7 +32,7 @@ public class StaticEncounter {
     private int forme = 0;
     private int level;
     private int maxLevel = 0;
-    private Item heldItem = Item.NOTHING;
+    private Item heldItem;
     private boolean isEgg = false;
     private boolean resetMoves = false;
     private boolean restrictedPool = false;

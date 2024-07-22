@@ -1166,7 +1166,7 @@ public class GameRandomizer {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     log.print(", Ability: " + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;
@@ -1188,7 +1188,7 @@ public class GameRandomizer {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     first = false;
                 }
             }

@@ -395,6 +395,7 @@ public interface RomHandler {
 
     /**
      * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
+     * The first element is always null, both to offset the other elements and to represent the "nothing" item.
      */
     List<Item> getItems();
 

@@ -180,8 +180,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void loadItems() {
 		items = new ArrayList<>();
+		items.add(null);
 		List<String> names = getStrings(romEntry.getIntValue("ItemNamesTextOffset"));
-		for (int i = 0; i < names.size(); i++) {
+		for (int i = 1; i < names.size(); i++) {
 			items.add(new Item(i, names.get(i)));
 		}
 	}
@@ -2761,7 +2762,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					trpoke[pokeOffs + 5] |= (tp.getForme() << 2);
 					pokeOffs += 6;
 					if (tr.pokemonHaveItems()) {
-						writeWord(trpoke, pokeOffs, tp.getHeldItem().getId());
+						int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+						writeWord(trpoke, pokeOffs, itemId);
 						pokeOffs += 2;
 					}
 					if (tr.pokemonHaveCustomMoves()) {
@@ -4341,7 +4343,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public Map<Integer, Shop> getShopItems() {
-		List<Item> allItems = getItems();
 		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
@@ -4353,18 +4354,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		for (int i = 0; i < shopCount; i++) {
 			if (!skipShops.contains(i)) {
-				List<Item> items = new ArrayList<>();
+				List<Item> shopItems = new ArrayList<>();
 				int val = (FileFunctions.read2ByteInt(arm9, offset));
 				while ((val & 0xFFFF) != 0xFFFF) {
 					if (val != 0) {
-						items.add(allItems.get(val));
+						shopItems.add(items.get(val));
 					}
 					offset += 2;
 					val = (FileFunctions.read2ByteInt(arm9, offset));
 				}
 				offset += 2;
 				Shop shop = new Shop();
-				shop.setItems(items);
+				shop.setItems(shopItems);
 				shop.setName(shopNames.get(i));
 				shop.setMainGame(mainGameShops.contains(i));
 				shopItemsMap.put(i, shop);
@@ -4432,7 +4433,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<PickupItem> getPickupItems() {
-		List<Item> allItems = getItems();
 		List<PickupItem> pickupItems = new ArrayList<>();
 		try {
 			byte[] battleOverlay = readOverlay(romEntry.getIntValue("BattleOvlNumber"));
@@ -4456,13 +4456,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int i = 0; i < Gen4Constants.numberOfCommonPickupItems; i++) {
 					int itemOffset = pickupItemsTableOffset + (2 * i);
 					int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
-					PickupItem pickupItem = new PickupItem(allItems.get(id));
+					PickupItem pickupItem = new PickupItem(items.get(id));
 					pickupItems.add(pickupItem);
 				}
 				for (int i = 0; i < Gen4Constants.numberOfRarePickupItems; i++) {
 					int itemOffset = rarePickupItemsTableOffset + (2 * i);
 					int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
-					PickupItem pickupItem = new PickupItem(allItems.get(id));
+					PickupItem pickupItem = new PickupItem(items.get(id));
 					pickupItems.add(pickupItem);
 				}
 			}
@@ -4888,12 +4888,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public List<Item> getRegularFieldItems() {
 		List<Integer> fieldItems = getFieldItems();
-		List<Item> allItems = getItems();
 		List<Item> fieldRegItems = new ArrayList<>();
 
 		for (int item : fieldItems) {
 			if (Gen4Constants.allowedItems.isAllowed(item) && !(Gen4Constants.allowedItems.isTM(item))) {
-				fieldRegItems.add(allItems.get(item));
+				fieldRegItems.add(items.get(item));
 			}
 		}
 

@@ -161,8 +161,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     private void loadItems() {
         items = new ArrayList<>();
+        items.add(null);
         List<String> names = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
-        for (int i = 0; i < names.size();i++) {
+        for (int i = 1; i < names.size();i++) {
             items.add(new Item(i, names.get(i)));
         }
     }
@@ -372,8 +373,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void populateMegaEvolutions() {
-        List<Item> allItems = getItems();
-
         for (Species pkmn : pokes) {
             if (pkmn != null) {
                 pkmn.getMegaEvolutionsFrom().clear();
@@ -396,7 +395,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                                 .getOrDefault(pk.getNumber(),dummyAbsolutePokeNums)
                                 .getOrDefault(formNum,0);
                         boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
-                        Item item = allItems.get(readWord(megaEvoEntry, evo * 8 + 4));
+                        Item item = items.get(readWord(megaEvoEntry, evo * 8 + 4));
                         MegaEvolution megaEvo = new MegaEvolution(pk, pokes[megaSpecies], needsItem, item);
                         if (!pk.getMegaEvolutionsFrom().contains(megaEvo)) {
                             pk.getMegaEvolutionsFrom().add(megaEvo);
@@ -1943,7 +1942,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs + 6, tp.getForme());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        writeWord(trpoke, pokeOffs, tp.getHeldItem().getId());
+                        int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+                        writeWord(trpoke, pokeOffs, itemId);
                         pokeOffs += 2;
                     }
                     if (tr.pokemonHaveCustomMoves()) {
@@ -2239,7 +2239,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
                 staticCRO[offset+i*size + 2] = (byte) se.getForme();
                 staticCRO[offset+i*size + 3] = (byte) se.getLevel();
-                if (se.getHeldItem().getId() == 0) {
+                if (se.getHeldItem() == null) {
                     writeWord(staticCRO,offset+i*size + 4,-1);
                 } else {
                     writeWord(staticCRO,offset+i*size + 4, se.getHeldItem().getId());
@@ -2258,7 +2258,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
                 staticCRO[offset+i*size + 4] = (byte) se.getForme();
                 staticCRO[offset+i*size + 5] = (byte) se.getLevel();
-                if (se.getHeldItem().getId() == 0) {
+                if (se.getHeldItem() == null) {
                     FileFunctions.writeFullInt(staticCRO,offset+i*size + 12,-1);
                 } else {
                     FileFunctions.writeFullInt(staticCRO,offset+i*size + 12, se.getHeldItem().getId());
@@ -3446,13 +3446,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Item> getRegularFieldItems() {
         List<Integer> fieldItems = getFieldItems();
-        List<Item> allItems = getItems();
         List<Item> fieldRegItems = new ArrayList<>();
 
         ItemList allowedItems = Gen6Constants.getAllowedItems(romEntry.getRomType());
         for (int item : fieldItems) {
             if (allowedItems.isAllowed(item) && !(allowedItems.isTM(item))) {
-                fieldRegItems.add(allItems.get(item));
+                fieldRegItems.add(items.get(item));
             }
         }
 
@@ -3774,7 +3773,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        List<Item> allItems = getItems();
         int[] tmShops = romEntry.getArrayValue("TMShops");
         int[] regularShops = romEntry.getArrayValue("RegularShops");
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
@@ -3803,13 +3801,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
             if (!badShop) {
-                List<Item> items = new ArrayList<>();
+                List<Item> shopItems = new ArrayList<>();
                 for (int j = 0; j < shopItemSizes[i]; j++) {
-                    items.add(allItems.get(FileFunctions.read2ByteInt(code,offset)));
+                    shopItems.add(items.get(FileFunctions.read2ByteInt(code,offset)));
                     offset += 2;
                 }
                 Shop shop = new Shop();
-                shop.setItems(items);
+                shop.setItems(shopItems);
                 shop.setName(shopNames.get(i));
                 shop.setMainGame(Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i));
                 shopItemsMap.put(i, shop);
@@ -3884,7 +3882,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
-        List<Item> allItems = getItems();
         List<PickupItem> pickupItems = new ArrayList<>();
 
         // If we haven't found the pickup table for this ROM already, find it.
@@ -3900,7 +3897,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < Gen6Constants.numberOfPickupItems; i++) {
                 int itemOffset = pickupItemsTableOffset + (2 * i);
                 int id = FileFunctions.read2ByteInt(code, itemOffset);
-                PickupItem pickupItem = new PickupItem(allItems.get(id));
+                PickupItem pickupItem = new PickupItem(items.get(id));
                 pickupItems.add(pickupItem);
             }
         }

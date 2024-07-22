@@ -1064,7 +1064,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private Trainer readTrainer(int offset) {
-        List<Item> allItems = getItems();
         Trainer tr = new Trainer();
         tr.offset = offset;
         tr.name = readVariableLengthString(offset, false);
@@ -1079,7 +1078,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             tp.setSpecies(pokes[rom[offset + 1] & 0xFF]);
             offset += 2;
             if ((dataType & 2) == 2) {
-                tp.setHeldItem(allItems.get(rom[offset] & 0xFF));
+                tp.setHeldItem(items.get(rom[offset] & 0xFF));
                 offset++;
             }
             if ((dataType & 1) == 1) {
@@ -1194,7 +1193,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         data[offset + 1] = (byte) tp.getSpecies().getNumber();
         offset += 2;
         if (trainer.pokemonHaveItems()) {
-            data[offset] = (byte) tp.getHeldItem().getId();
+            byte itemId = tp.getHeldItem() == null ? 0 : (byte) tp.getHeldItem().getId();
+            data[offset] = itemId;
             offset++;
         }
         if (trainer.pokemonHaveCustomMoves()) {
@@ -2029,12 +2029,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private Shop readShop(int offset) {
-        List<Item> allItems = getItems();
         Shop shop = new Shop();
         shop.setItems(new ArrayList<>());
         int itemAmount = rom[offset++];
         for (int itemNum = 0; itemNum < itemAmount; itemNum++) {
-            shop.getItems().add(allItems.get((int) rom[offset++] & 0xFF));
+            shop.getItems().add(items.get((int) rom[offset++] & 0xFF));
         }
         if (rom[offset] != Gen2Constants.shopItemsTerminator) {
             throw new RomIOException("Invalid shop data");
@@ -2471,14 +2470,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void loadItems() {
         String[] names = readItemNames();
         items = new ArrayList<>(names.length);
-        for (int i = 0; i < names.length; i++) {
+        items.add(null);
+        for (int i = 1; i < names.length; i++) {
             items.add(new Item(i, names[i]));
         }
     }
 
     private String[] readItemNames() {
         String[] itemNames = new String[256];
-        itemNames[0] = "glitch";
         // trying to emulate pretty much what the game does here
         // normal items
         int origOffset = romEntry.getIntValue("ItemNamesOffset");
@@ -2682,13 +2681,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Item> getRegularFieldItems() {
-        List<Item> allItems = getItems();
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
             int itemHere = rom[offset] & 0xFF;
             if (Gen2Constants.allowedItems.isAllowed(itemHere) && !(Gen2Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(allItems.get(itemHere));
+                fieldItems.add(items.get(itemHere));
             }
         }
         return fieldItems;

@@ -142,7 +142,7 @@ public class Trainer implements Comparable<Trainer> {
     public boolean pokemonHaveUniqueHeldItems() {
         List<Item> heldItemsForThisTrainer = new ArrayList<>();
         for (TrainerPokemon poke : this.pokemon) {
-            if (poke.getHeldItem().getId() != ItemIDs.none) {
+            if (poke.getHeldItem() != null) {
                 if (heldItemsForThisTrainer.contains(poke.getHeldItem())) {
                     return false;
                 } else {

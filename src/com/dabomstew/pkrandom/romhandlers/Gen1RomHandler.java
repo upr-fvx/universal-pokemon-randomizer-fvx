@@ -2226,14 +2226,14 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void loadItems() {
         String[] names = readItemNames();
         items = new ArrayList<>(names.length);
-        for (int i = 0; i < names.length; i++) {
+        items.add(null);
+        for (int i = 1; i < names.length; i++) {
             items.add(new Item(i, names[i]));
         }
     }
 
     public String[] readItemNames() {
         String[] itemNames = new String[256];
-        itemNames[0] = "glitch";
         // trying to emulate pretty much what the game does here
         // normal items
         int origOffset = romEntry.getIntValue("ItemNamesOffset");
@@ -2519,13 +2519,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public List<Item> getRegularFieldItems() {
         List<Integer> itemOffsets = getItemOffsets();
-        List<Item> allItems = getItems();
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
             int itemHere = rom[offset] & 0xFF;
             if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(allItems.get(itemHere));
+                fieldItems.add(items.get(itemHere));
             }
         }
         return fieldItems;

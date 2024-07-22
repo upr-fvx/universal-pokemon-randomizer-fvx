@@ -189,8 +189,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     private void loadItems() {
         items = new ArrayList<>();
+        items.add(null);
         List<String> names = getStrings(false, romEntry.getIntValue("ItemNamesTextOffset"));
-        for (int i = 0; i < names.size(); i++) {
+        for (int i = 1; i < names.size(); i++) {
             items.add(new Item(i, names.get(i)));
         }
     }
@@ -1306,7 +1307,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     // no form info, so no byte 6/7
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
-                        writeWord(trpoke, pokeOffs, tp.getHeldItem().getId());
+                        int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+                        writeWord(trpoke, pokeOffs, itemId);
                         pokeOffs += 2;
                     }
                     if (tr.pokemonHaveCustomMoves()) {
@@ -1345,7 +1347,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         TrainerPokemon tp = tpks.next();
                         // pokemon and held item
                         writeWord(pkmndata, 0, tp.getSpecies().getNumber());
-                        writeWord(pkmndata, 12, tp.getHeldItem().getId());
+                        int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+                        writeWord(pkmndata, 12, itemId);
                         // handle moves
                         if (tp.isResetMoves()) {
                             int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
@@ -3441,12 +3444,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     public List<Item> getRegularFieldItems() {
         List<Integer> fieldItems = getFieldItems();
-        List<Item> allItems = getItems();
         List<Item> fieldRegItems = new ArrayList<>();
 
         for (int item : fieldItems) {
             if (Gen5Constants.allowedItems.isAllowed(item) && !(Gen5Constants.allowedItems.isTM(item))) {
-                fieldRegItems.add(allItems.get(item));
+                fieldRegItems.add(items.get(item));
             }
         }
 
@@ -3664,7 +3666,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        List<Item> allItems = getItems();
         int[] tmShops = romEntry.getArrayValue("TMShops");
         int[] regularShops = romEntry.getArrayValue("RegularShops");
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
@@ -3690,21 +3691,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                 }
                 if (!badShop) {
-                    List<Item> items = new ArrayList<>();
+                    List<Item> shopItems = new ArrayList<>();
                     if (romEntry.getRomType() == Gen5Constants.Type_BW) {
                         for (int j = 0; j < shopItemSizes[i]; j++) {
                             int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
-                            items.add(allItems.get(id));
+                            shopItems.add(items.get(id));
                         }
                     } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
                         byte[] shop = shopNarc.files.get(i);
                         for (int j = 0; j < shop.length; j += 2) {
                             int id = readWord(shop, j);
-                            items.add(allItems.get(id));
+                            shopItems.add(items.get(id));
                         }
                     }
                     Shop shop = new Shop();
-                    shop.setItems(items);
+                    shop.setItems(shopItems);
                     shop.setName(shopNames.get(i));
                     shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
                     shopItemsMap.put(i, shop);
@@ -3776,7 +3777,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
-        List<Item> allItems = getItems();
         List<PickupItem> pickupItems = new ArrayList<>();
         try {
             byte[] battleOverlay = readOverlay(romEntry.getIntValue("PickupOvlNumber"));
@@ -3794,7 +3794,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (int i = 0; i < Gen5Constants.numberOfPickupItems; i++) {
                     int itemOffset = pickupItemsTableOffset + (2 * i);
                     int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
-                    PickupItem pickupItem = new PickupItem(allItems.get(id));
+                    PickupItem pickupItem = new PickupItem(items.get(id));
                     pickupItems.add(pickupItem);
                 }
             }

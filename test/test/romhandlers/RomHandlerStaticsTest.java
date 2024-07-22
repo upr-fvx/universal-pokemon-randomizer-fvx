@@ -156,9 +156,9 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         for (int i = 0; i < before.size(); i++) {
             StaticEncounter bef = before.get(i);
             StaticEncounter aft = after.get(i);
-            System.out.println("bef=" + bef.getSpecies().fullName() + (bef.getHeldItem().getId() == 0 ? "" : "w. " + items.get(bef.getHeldItem().getId()).getName())
+            System.out.println("bef=" + bef.getSpecies().fullName() + (bef.getHeldItem() == null ? "" : "w. " + items.get(bef.getHeldItem().getId()).getName())
                     + (bef.canMegaEvolve() ? " (can mega evolve)" : "") +
-                    ", aft=" + aft.getSpecies().fullName() + (aft.getHeldItem().getId() == 0 ? "" : "w. " + items.get(aft.getHeldItem().getId()).getName())
+                    ", aft=" + aft.getSpecies().fullName() + (aft.getHeldItem() == null ? "" : "w. " + items.get(aft.getHeldItem().getId()).getName())
                     + (aft.canMegaEvolve() ? " (can mega evolve)" : ""));
             assertEquals(bef.canMegaEvolve(), aft.canMegaEvolve());
         }

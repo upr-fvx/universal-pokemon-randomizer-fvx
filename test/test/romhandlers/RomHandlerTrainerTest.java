@@ -336,7 +336,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             } else {
                 for (TrainerPokemon tp : tr.pokemon) {
                     System.out.println(tp);
-                    assertNotEquals(0, tp.getHeldItem().getId());
+                    assertNotEquals(null, tp.getHeldItem());
                 }
             }
         }
@@ -767,8 +767,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     }
 
     private Map<Integer, boolean[]> findZCrystals() {
-        List<Item> items = romHandler.getItems();
-
         Map<Integer, boolean[]> zCrystalsByTrainer = new HashMap<>();
         List<Trainer> trainersBefore = romHandler.getTrainers();
         for (int i = 0; i < trainersBefore.size(); i++) {
@@ -777,11 +775,13 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             boolean[] zCrystals = new boolean[tr.pokemon.size()];
             boolean anyHasZCrystal = false;
             for (int pkNum = 0; pkNum < tr.pokemon.size(); pkNum++) {
-                TrainerPokemon tp = tr.pokemon.get(pkNum);
-                System.out.println(items.get(tp.getHeldItem().getId()));
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
-                    zCrystals[pkNum] = true;
-                    anyHasZCrystal = true;
+                Item heldItem = tr.pokemon.get(pkNum).getHeldItem();
+                if (heldItem != null) {
+                    System.out.println(heldItem);
+                    if (Gen7Constants.heldZCrystalsByType.containsValue(heldItem.getId())) {
+                        zCrystals[pkNum] = true;
+                        anyHasZCrystal = true;
+                    }
                 }
             }
             if (anyHasZCrystal) {
@@ -803,8 +803,10 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
-                    System.out.println(tp.getSpecies().getName() + " holds " + items.get(tp.getHeldItem().getId()).getName());
+
+                Item heldItem = tp.getHeldItem();
+                if (heldItem != null && Gen7Constants.heldZCrystalsByType.containsValue(heldItem.getId())) {
+                    System.out.println(tp.getSpecies().getName() + " holds " + items.get(heldItem.getId()).getName());
 
                     int[] pkMoves = tp.isResetMoves() ?
                             RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
@@ -818,7 +820,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
                     boolean anyMoveTypeCorrect = false;
                     for (Type t : moveTypes) {
-                        if (Gen7Constants.heldZCrystalsByType.get(t) == tp.getHeldItem().getId()) {
+                        if (Gen7Constants.heldZCrystalsByType.get(t) == heldItem.getId()) {
                             anyMoveTypeCorrect = true;
                         }
                     }

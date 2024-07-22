@@ -1612,7 +1612,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void loadTrainers() {
-        List<Item> allItems = getItems();
         trainers = new ArrayList<>();
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
@@ -1671,7 +1670,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
                     thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
-                    thisPoke.setHeldItem(allItems.get(readWord(pointerToPokes + poke * 8 + 6)));
+                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 8 + 6)));
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 1) {
@@ -1837,7 +1836,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
 				int movesStart;
 				if (trainer.pokemonHaveItems()) {
-					writeWord(pokemonData, tpIndex * 16 + 6, tp.getHeldItem().getId());
+                    int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+                    writeWord(pokemonData, tpIndex * 16 + 6, itemId);
 					movesStart = 8;
 				} else {
 					movesStart = 6;
@@ -1862,7 +1862,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
 				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
-                writeWord(pokemonData, tpIndex * 8 + 6, trainer.pokemonHaveItems() ? tp.getHeldItem().getId() : 0);
+                int itemId = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
+                writeWord(pokemonData, tpIndex * 8 + 6, itemId);
 			}
 		}
 
@@ -3068,7 +3069,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        List<Item> allItems = getItems();
         List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
         List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
         List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
@@ -3077,15 +3077,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 0; i < shopItemOffsets.length; i++) {
             if (!skipShops.contains(i)) {
                 int offset = shopItemOffsets[i];
-                List<Item> items = new ArrayList<>();
+                List<Item> shopItems = new ArrayList<>();
                 int val = FileFunctions.read2ByteInt(rom, offset);
                 while (val != 0x0000) {
-                    items.add(allItems.get(val));
+                    shopItems.add(items.get(val));
                     offset += 2;
                     val = FileFunctions.read2ByteInt(rom, offset);
                 }
                 Shop shop = new Shop();
-                shop.setItems(items);
+                shop.setItems(shopItems);
                 shop.setName(shopNames.get(i));
                 shop.setMainGame(mainGameShops.contains(i));
                 shopItemsMap.put(i, shop);
@@ -3123,7 +3123,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
-        List<Item> allItems = getItems();
         List<PickupItem> pickupItems = new ArrayList<>();
         int pickupItemCount = romEntry.getIntValue("PickupItemCount");
         int sizeOfPickupEntry = romEntry.getRomType() == Gen3Constants.RomType_Em ? 2 : 4;
@@ -3142,7 +3141,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             for (int i = 0; i < pickupItemCount; i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
                 int id = FileFunctions.read2ByteInt(rom, itemOffset);
-                PickupItem pickupItem = new PickupItem(allItems.get(id));
+                PickupItem pickupItem = new PickupItem(items.get(id));
                 pickupItems.add(pickupItem);
             }
         }
@@ -3649,7 +3648,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         items = new ArrayList<>(maxcount);
 
-        for (int i = 0; i <= maxcount; i++) {
+        items.add(null);
+        for (int i = 1; i <= maxcount; i++) {
             items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
         }
     }
@@ -3724,13 +3724,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             preprocessMaps();
             mapLoadingDone = true;
         }
-        List<Item> allItems = getItems();
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
             int itemHere = readWord(offset);
             if (Gen3Constants.allowedItems.isAllowed(itemHere) && !(Gen3Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(allItems.get(itemHere));
+                fieldItems.add(items.get(itemHere));
             }
         }
         return fieldItems;

@@ -446,7 +446,7 @@ public class StaticPokemonRandomizer extends Randomizer {
             }
 
             if (randomizeHeldItems) {
-                if (old.getHeldItem().getId() != 0) {
+                if (old.getHeldItem() != null) {
                     List<Item> consumableList = new ArrayList<>(romHandler.getAllConsumableHeldItems());
                     newTotem.setHeldItem(consumableList.get(random.nextInt(consumableList.size())));
                 }

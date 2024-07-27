@@ -549,7 +549,10 @@ public class EncounterRandomizer extends Randomizer {
                 SpeciesSet allowedForArea = null;
             }
 
-            Map<Encounter, AreaWithData> encountersToAreas = new HashMap<>();
+            Map<Encounter, AreaWithData> encountersToAreas = new IdentityHashMap<>();
+            //IdentityHashMap makes each key distinct if it has a different reference to the same value
+            //This means that identical Encounters will still map to the correct areas
+
             for(EncounterArea area : map) {
                 AreaWithData awd = new AreaWithData();
                 awd.area = area;
@@ -558,9 +561,7 @@ public class EncounterRandomizer extends Randomizer {
                 dummyRegion.add(area);
                 awd.areaType = pickRegionType(dummyRegion);
 
-                awd.areaMap = new IdentityHashMap<>();
-                //IdentityHashMap makes each key distinct if it has a different reference to the same value
-                //This means that identical Encounters will still map to the correct areas
+                awd.areaMap = new HashMap<>();
 
                 if(!keepPrimaryType) {
                     //the only individual type restrictions should be keepPrimary,

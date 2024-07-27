@@ -261,11 +261,7 @@ public class EncounterRandomizer extends Randomizer {
             //Rock smash is not affected by the crashing, so we can run the standard RandomEncounters on it.
             this.randomEncounters(rockSmashAreas);
 
-            //For other areas, run it by map
-            //(They're already shuffled)
-            for(List<EncounterArea> map : maps) {
-                randomizeMapORAS(map);
-            }
+            randomizeRegionsORAS(maps);
         }
 
         public void area1to1Encounters(List<EncounterArea> encounterAreas) {
@@ -341,7 +337,6 @@ public class EncounterRandomizer extends Randomizer {
             for(List<EncounterArea> region : shuffledRegions) {
                 regionType = pickRegionType(region);
 
-
                 if(useMapping) {
                     regionMap = new HashMap<>();
                     setupAreaInfoMap(region);
@@ -380,13 +375,12 @@ public class EncounterRandomizer extends Randomizer {
             for (Encounter enc : area) {
                 Species current = enc.getSpecies();
 
+                Species replacement;
                 if(useMapping && regionMap.containsKey(current)) {
                     //checking the map first lets us avoid creating a pointless allowedForReplacement set
-                    Species replacement = regionMap.get(current);
-                    enc.setSpecies(replacement);
-                    setFormeForEncounter(enc, replacement);
+                    replacement = regionMap.get(current);
+
                 } else {
-                    Species replacement;
                     if(keepEvolutions && mapHasFamilyMember(current)) {
                         replacement = pickFamilyMemberReplacement(current);
                     } else {
@@ -410,9 +404,6 @@ public class EncounterRandomizer extends Randomizer {
                         replacement = pickReplacement(current, allowedForReplacement);
                     }
 
-                    enc.setSpecies(replacement);
-                    setFormeForEncounter(enc, replacement);
-
                     //add to map if applicable
                     if (useMapping) {
                         regionMap.put(current, replacement);
@@ -430,6 +421,8 @@ public class EncounterRandomizer extends Randomizer {
                     }
                 }
 
+                enc.setSpecies(replacement);
+                setFormeForEncounter(enc, replacement);
             }
 
             if (area.isForceMultipleSpecies()) {
@@ -520,7 +513,24 @@ public class EncounterRandomizer extends Randomizer {
             return setupAllowedForReplacement(enc, allowedForArea);
         }
 
+        /**
+         * Given a {@link List} of maps (each represented by a {@link List} of {@link EncounterArea}s) randomizes them
+         * with as many distinct Pokemon as possible without crashing ORAS's DexNav.
+         * @param maps The list of maps to randomize.
+         */
+        private void randomizeRegionsORAS(List<List<EncounterArea>> maps) {
+            //Shuffle maps; otherwise, large maps would tend to be randomized first.
+            List<List<EncounterArea>> shuffledMaps = new ArrayList<>(maps);
+            Collections.shuffle(shuffledMaps, random);
 
+            for(List<EncounterArea> map : shuffledMaps) {
+                randomizeMapORAS(map);
+
+                if(!catchEmAll) {
+                    refillRemainingSpecies();
+                }
+            }
+        }
 
         /**
          * Given a list of EncounterAreas, all on the same map, randomizes them with as many
@@ -528,68 +538,85 @@ public class EncounterRandomizer extends Randomizer {
          * @param map The map to randomize.
          */
         private void randomizeMapORAS(List<EncounterArea> map) {
+            //a messy method, but less so than the previous versions
 
-            class EncounterWithData {
-                //fully functional and anatomically correct *is shot*
-                int areaIndex;
-                Species originalSpecies;
-                Encounter encounter;
+            class AreaWithData {
+                EncounterArea area;
+                Type areaType;
+                Map<Species, Species> areaMap;
+                SpeciesSet allowedForArea = null;
             }
 
-            //log original Species
-            List<EncounterWithData> encounters = new ArrayList<>();
-            for(int i = 0; i < map.size(); i++){
-                EncounterArea area = map.get(i);
+            Map<Encounter, AreaWithData> encountersToAreas = new HashMap<>();
+            for(EncounterArea area : map) {
+                AreaWithData awd = new AreaWithData();
+                awd.area = area;
+
+                List<EncounterArea> dummyRegion = new ArrayList<>();
+                dummyRegion.add(area);
+                awd.areaType = pickRegionType(dummyRegion);
+
+                awd.areaMap = new HashMap<>();
+
+                if(!keepPrimaryType) {
+                    //the only individual type restrictions should be keepPrimary,
+                    //since the area and region are the same
+                    awd.allowedForArea = new SpeciesSet(setupAllowedForArea(awd.areaType, area));
+                }
+
                 for(Encounter enc : area) {
-                    EncounterWithData data = new EncounterWithData();
-                    data.encounter = enc;
-                    data.originalSpecies = enc.getSpecies();
-                    data.areaIndex = i;
-                    encounters.add(data);
+                    encountersToAreas.put(enc, awd);
                 }
             }
 
-            //do area 1-to-1 to make sure everything gets SOME randomization
-            this.area1to1Encounters(map);
+            List<Encounter> shuffledEncounters = new ArrayList<>(encountersToAreas.keySet());
+            Collections.shuffle(shuffledEncounters, random);
 
-            //set to the proper settings, in case it matters
-            useMapping = false;
+            int dexNavLoad = getORASDexNavLoad(map);
 
-            //then do more randomizing!
-            Collections.shuffle(encounters, random);
-            while(getORASDexNavLoad(map) < ORAS_CRASH_THRESHOLD && !encounters.isEmpty()) {
+            SpeciesSet usedSpecies = new SpeciesSet();
 
-                EncounterWithData encData = encounters.remove(0);
+            //now we're prepared to start actually randomizing
+            for(Encounter enc : shuffledEncounters) {
+                AreaWithData awd = encountersToAreas.get(enc);
 
-                Encounter enc = encData.encounter;
-                //check if there's another encounter with the same Species - otherwise, this is a waste of time
-                //(And, if we're using catchEmAll, a removal of a used Species, which is bad.)
-                boolean anotherExists = false;
-                for(EncounterWithData otherEncData : encounters) {
-                    if(enc.getSpecies() == otherEncData.encounter.getSpecies()) {
-                        anotherExists = true;
-                        break;
+
+                Species replacement;
+
+                if(!awd.areaMap.containsKey(enc.getSpecies()) || dexNavLoad < ORAS_CRASH_THRESHOLD) {
+                    //get new species
+                    SpeciesSet allowedForReplacement;
+                    if(awd.allowedForArea != null) {
+                        awd.allowedForArea.removeAll(usedSpecies);
+                        if(awd.allowedForArea.isEmpty()){
+                            awd.allowedForArea = new SpeciesSet(setupAllowedForArea(awd.areaType, awd.area));
+                        }
+
+                        allowedForReplacement = setupAllowedForReplacement(enc, awd.area);
+                        if(allowedForReplacement.isEmpty()) {
+                            retrySetupAllowedForAreaAndReplacement(enc, awd.area, awd.areaType);
+                        }
+
+                    } else {
+                        allowedForReplacement = setupAllowedForReplacement(enc, awd.area);
                     }
+
+                    replacement = pickReplacement(enc.getSpecies(), allowedForReplacement);
+                    removeFromRemaining(replacement);
+                    usedSpecies.add(replacement);
+
+                    //either put it in the map, or increase DexNav load
+                    if(!awd.areaMap.containsKey(enc.getSpecies())) {
+                        awd.areaMap.put(enc.getSpecies(), replacement);
+                    } else {
+                        dexNavLoad++;
+                    }
+                } else {
+                    replacement = awd.areaMap.get(enc.getSpecies());
                 }
-                if(!anotherExists) {
-                    continue;
-                }
 
-                //now the standard replacement logic
-                areaType = findExistingAreaType(map.get(encData.areaIndex));
-                allowedForArea = setupAllowedForArea();
-
-                //reset the Species
-                //(Matters for keep primary, similar strength)
-                enc.setSpecies(encData.originalSpecies);
-
-                Species replacement = pickReplacement(enc);
                 enc.setSpecies(replacement);
                 setFormeForEncounter(enc, replacement);
-
-                if (catchEmAll) {
-                    removeFromRemaining(replacement);
-                }
             }
 
         }
@@ -648,8 +675,13 @@ public class EncounterRandomizer extends Randomizer {
             return picked;
         }
 
-        //This is mostly an optimization at this point, but it's somewhat useful in that capacity.
-        private Type pickAreaType(EncounterArea area) {
+        /**
+         * Given an {@link EncounterArea}, returns a shared type of that area (before randomization) iff keepTypeThemes
+         * is true.
+         * @param area The area to examine.
+         * @return A shared type if keepTypeThemes is true and such a type exists, null otherwise.
+         */
+        private Type findAreaType(EncounterArea area) {
             Type picked = null;
             if (keepTypeThemes) {
                 picked = area.getSpeciesInArea().getSharedType(true);
@@ -666,15 +698,6 @@ public class EncounterRandomizer extends Randomizer {
             } while (remainingByType.get(areaType).isEmpty() && !types.isEmpty());
             if(types.isEmpty()) {
                 throw new IllegalStateException("RemainingByType contained no Species of any valid type!");
-            }
-            return areaType;
-        }
-
-        private Type findExistingAreaType(EncounterArea area) {
-            Type areaType = null;
-            if(keepTypeThemes || randomTypeThemes) {
-                SpeciesSet inArea = area.getSpeciesInArea();
-                areaType = inArea.getSharedType(false);
             }
             return areaType;
         }
@@ -1034,7 +1057,7 @@ public class EncounterRandomizer extends Randomizer {
 
             areaInformationMap = new HashMap<>();
             for(EncounterArea area : areas) {
-                Type areaTheme = pickAreaType(area);
+                Type areaTheme = findAreaType(area);
                 int areaSize = area.getSpeciesInArea().size();
 
                 for(Species species : area.getSpeciesInArea()) {

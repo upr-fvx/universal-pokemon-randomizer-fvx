@@ -410,12 +410,14 @@ public class EncounterRandomizer extends Randomizer {
                     }
 
                     //remove from possible picks if applicable
-                    if (allowedForArea != null && (useMapping || catchEmAll)) {
+                    if (useMapping || catchEmAll) {
                         removeFromRemaining(replacement);
-                        allowedForArea.remove(replacement);
+                        if(allowedForArea != null) {
+                            allowedForArea.remove(replacement);
 
-                        if (allowedForArea.isEmpty()) {
-                            allowedForArea = new SpeciesSet(setupAllowedForArea(regionType, area));
+                            if (allowedForArea.isEmpty()) {
+                                allowedForArea = new SpeciesSet(setupAllowedForArea(regionType, area));
+                            }
                         }
                         //removeFromRemaining() already checks if remaining is empty, so we don't need to do that here.
                     }

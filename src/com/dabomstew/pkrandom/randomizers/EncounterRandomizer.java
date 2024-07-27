@@ -714,7 +714,7 @@ public class EncounterRandomizer extends Randomizer {
             do {
                 areaType = types.remove(0);
             } while (remainingByType.get(areaType).isEmpty() && !types.isEmpty());
-            if(types.isEmpty()) {
+            if(types.isEmpty() && remainingByType.get(areaType).isEmpty()) {
                 throw new IllegalStateException("RemainingByType contained no Species of any valid type!");
             }
             return areaType;

@@ -472,16 +472,17 @@ public class EncounterRandomizer extends Randomizer {
             possibleReplacements.retainAll(remaining);
             possibleReplacements.removeAll(info.getBannedForReplacement());
             if(!possibleReplacements.isEmpty()) {
-                pickReplacement(toReplace, possibleReplacements);
+                return pickReplacement(toReplace, possibleReplacements);
             }
             //else - remaining didn't have any valid, but allowed should.
             possibleReplacements = relativeReplacement.getRelativesAtPosition(relation, false);
             possibleReplacements.retainAll(allowed);
             possibleReplacements.removeAll(info.getBannedForReplacement());
             if(!possibleReplacements.isEmpty()) {
-                pickReplacement(toReplace, possibleReplacements);
+                return pickReplacement(toReplace, possibleReplacements);
             }
             //else - we messed up earlier, this Species has no replacement
+
             throw new IllegalStateException("Chose a family that is invalid!");
         }
 

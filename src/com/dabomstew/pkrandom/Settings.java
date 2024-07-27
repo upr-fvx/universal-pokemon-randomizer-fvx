@@ -214,7 +214,7 @@ public class Settings {
     }
     
     public enum WildPokemonTypeMod {
-        NONE, THEMED_AREAS, KEEP_PRIMARY
+        NONE, RANDOM_THEMES, KEEP_PRIMARY
     }
 
     private WildPokemonRegionMod wildPokemonRegionMod = WildPokemonRegionMod.GAME;
@@ -487,7 +487,7 @@ public class Settings {
         // 17 wild pokemon (types)
         out.write(makeByteSelected(wildPokemonTypeMod == WildPokemonTypeMod.NONE,
                 wildPokemonTypeMod == WildPokemonTypeMod.KEEP_PRIMARY,
-                wildPokemonTypeMod == WildPokemonTypeMod.THEMED_AREAS,
+                wildPokemonTypeMod == WildPokemonTypeMod.RANDOM_THEMES,
                 keepWildTypeThemes,
                 false, false, false, false));
 
@@ -798,7 +798,7 @@ public class Settings {
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
-        settings.setWildPokemonMod(restoreEnum(WildPokemonRegionMod.class, data[15], 1, // RANDOM
+        settings.setWildPokemonRegionMod(restoreEnum(WildPokemonRegionMod.class, data[15], 1, // RANDOM
                 2, // AREA_MAPPING
                 6, // MAP_MAPPING
                 5, // LOCATION_MAPPING
@@ -2022,10 +2022,10 @@ public class Settings {
     }
 
     public void setWildPokemonRegionMod(boolean... bools) {
-        setWildPokemonMod(getEnum(WildPokemonRegionMod.class, bools));
+        setWildPokemonRegionMod(getEnum(WildPokemonRegionMod.class, bools));
     }
 
-    public void setWildPokemonMod(WildPokemonRegionMod wildPokemonMod) {
+    public void setWildPokemonRegionMod(WildPokemonRegionMod wildPokemonMod) {
         this.wildPokemonRegionMod = wildPokemonMod;
     }
 

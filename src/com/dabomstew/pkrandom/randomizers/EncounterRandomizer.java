@@ -24,7 +24,7 @@ public class EncounterRandomizer extends Randomizer {
 
         Settings.WildPokemonRegionMod mode = settings.getWildPokemonRegionMod();
         boolean splitByEncounterType = settings.isSplitWildRegionByEncounterTypes();
-        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.THEMED_AREAS;
+        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
@@ -52,7 +52,7 @@ public class EncounterRandomizer extends Randomizer {
         randomizeEncounters(mode,
                 false,
                 useTimeOfDay,
-                typeMode == Settings.WildPokemonTypeMod.THEMED_AREAS,
+                typeMode == Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 false,
                 typeMode == Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 false,

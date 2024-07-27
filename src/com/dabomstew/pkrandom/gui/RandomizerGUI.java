@@ -1723,7 +1723,7 @@ public class RandomizerGUI {
 
         wpTRKeepThemesCheckBox.setSelected(settings.isKeepWildTypeThemes());
         wpTRNoneRadioButton.setSelected(settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.NONE);
-        wpTRThemedAreasRadioButton.setSelected(settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.THEMED_AREAS);
+        wpTRThemedAreasRadioButton.setSelected(settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES);
         wpTRKeepPrimaryRadioButton.setSelected(settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY);
         wpTRKeepThemesCheckBox.setSelected(settings.isKeepWildTypeThemes());
 

@@ -242,6 +242,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         settings.setUseTimeBasedEncounters(true);
         settings.setAllowWildAltFormes(getGenerationNumberOf(romName) >= 5); //idk why 5 and not 3 but w/e
         settings.setBanIrregularAltFormes(true);
+        settings.setBlockWildLegendaries(false);
         return settings;
     }
 

@@ -644,12 +644,22 @@ public class EncounterRandomizer extends Randomizer {
                     }
                 }
 
-                //if so, pick one, preferring it to not be Normal
+                //if so, pick one
                 if(!possibleThemes.isEmpty()) {
                     Iterator<Type> itor = possibleThemes.iterator();
                     picked = itor.next();
-                    if(picked == Type.NORMAL && itor.hasNext()) {
-                        picked = itor.next();
+                    if(itor.hasNext()) {
+                        if(picked == Type.NORMAL) {
+                            //prefer not normal
+                            picked = itor.next();
+                        } else {
+                            //prefer primary of first species
+                            Type preferredTheme = region.get(0).get(0).getSpecies().getPrimaryType(true);
+                            if(picked != preferredTheme) {
+                                picked = itor.next();
+                            }
+                        }
+                        //both assume maximum two themes, which should be a safe assumption
                     }
                 }
             }

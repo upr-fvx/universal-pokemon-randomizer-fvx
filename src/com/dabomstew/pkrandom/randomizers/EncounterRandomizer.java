@@ -558,7 +558,9 @@ public class EncounterRandomizer extends Randomizer {
                 dummyRegion.add(area);
                 awd.areaType = pickRegionType(dummyRegion);
 
-                awd.areaMap = new HashMap<>();
+                awd.areaMap = new IdentityHashMap<>();
+                //IdentityHashMap makes each key distinct if it has a different reference to the same value
+                //This means that identical Encounters will still map to the correct areas
 
                 if(!keepPrimaryType) {
                     //the only individual type restrictions should be keepPrimary,

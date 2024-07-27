@@ -393,12 +393,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
 
-        Settings settings = new Settings();
-        settings.setRandomizeWildPokemon(true);
-        settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.NONE);
-        settings.setUseTimeBasedEncounters(true);
-        settings.setAllowWildAltFormes(getGenerationNumberOf(romName) >= 5);
-        settings.setBanIrregularAltFormes(true);
+        Settings settings = getStandardSettings(romName);
 
         settings.setKeepWildTypeThemes(true);
         settings.setCatchEmAllEncounters(true);
@@ -543,6 +538,18 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             EncounterArea afterArea = afterIterator.next();
 
             checkAreaIsReplaced1To1(beforeArea, afterArea, null, checkUnique ? new SpeciesSet() : null);
+        }
+    }
+
+    private static void checkEachLocationIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+        Map<String, List<EncounterArea>> beforeLocations = EncounterArea.groupAreasByLocation(before);
+        Map<String, List<EncounterArea>> afterLocations = EncounterArea.groupAreasByLocation(after);
+        for(String location : beforeLocations.keySet()) {
+
+            List<EncounterArea> locationBefore = beforeLocations.get(location);
+            List<EncounterArea> locationAfter = afterLocations.get(location);
+
+            checkIsReplaced1To1(locationBefore, locationAfter,  checkUnique);
         }
     }
 
@@ -1030,7 +1037,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1045,7 +1052,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1053,14 +1060,15 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithRandomTypeThemes(String romName) {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonRegionMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.RANDOM_THEMES,
-                true,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.NAMED_LOCATION);
+        settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1075,7 +1083,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1090,7 +1098,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     private Map<String, List<EncounterArea>> groupEncountersByLocation(List<EncounterArea> ungrouped) {
@@ -1122,7 +1130,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1137,7 +1145,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1153,7 +1161,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1169,7 +1177,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1184,20 +1192,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
-    }
-
-    private void location1to1UniqueReplacementCheck(List<EncounterArea> before, List<EncounterArea> after) {
-
-        Map<String, List<EncounterArea>> groupedBefore = groupEncountersByLocation(before);
-        Map<String, List<EncounterArea>> groupedAfter = groupEncountersByLocation(after);
-
-        for (String tag : groupedBefore.keySet()) {
-            //Map<Species, Species> map = new HashMap<>();
-
-            System.out.println("\nLocation: " + tag);
-            checkIsReplaced1To1(groupedBefore.get(tag), groupedAfter.get(tag), true);
-        }
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1397,8 +1392,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     /**
-     * Given a set of EncounterAreas, ensures that for each Pokemon in the area before randomization,
-     * exactly one replacement is present after randomization.
+     * Given a set of EncounterAreas, ensures that for each Pokemon present before randomization,
+     * exactly one replacement is present after randomization (in all areas).
      * @param before The list of EncounterAreas in the state before randomization.
      * @param after The same list of EncounterAreas, after randomization.
      * @param checkUnique Whether to also check that no Pokemon is used as a replacement for more than one Pokemon.
@@ -1656,11 +1651,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setRandomizeWildPokemon(true);
+        Settings settings = getStandardSettings(romName);
         settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.GAME);
         settings.setKeepWildEvolutionFamilies(true);
-        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 

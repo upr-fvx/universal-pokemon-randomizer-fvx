@@ -238,6 +238,9 @@ public class EncounterRandomizer extends Randomizer {
          */
         private void randomEncountersORAS(List<EncounterArea> encounterAreas) {
 
+            //ideally, this would treat the encounter types as regions rather than flattening them
+            //however that would require ANOTHER big rewrite of this algorithm
+            //and it's just not worth it.
             List<EncounterArea> collapsedEncounters = EncounterArea.flattenEncounterTypesInMaps(encounterAreas);
             List<List<EncounterArea>> maps = new ArrayList<>(
                     EncounterArea.groupAreasByMapIndex(collapsedEncounters).values());
@@ -597,7 +600,7 @@ public class EncounterRandomizer extends Randomizer {
                             awd.allowedForArea = new SpeciesSet(setupAllowedForArea(awd.areaType, awd.area));
                         }
 
-                        allowedForReplacement = setupAllowedForReplacement(enc, awd.area);
+                        allowedForReplacement = setupAllowedForReplacement(enc, awd.allowedForArea);
                         if(allowedForReplacement.isEmpty()) {
                             retrySetupAllowedForAreaAndReplacement(enc, awd.area, awd.areaType);
                         }

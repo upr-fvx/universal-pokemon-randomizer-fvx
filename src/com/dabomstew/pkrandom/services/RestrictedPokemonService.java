@@ -2,10 +2,10 @@ package com.dabomstew.pkrandom.services;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.game_data.GenRestrictions;
-import com.dabomstew.pkrandom.game_data.MegaEvolution;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Collections;

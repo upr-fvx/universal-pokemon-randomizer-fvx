@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.services;
 
-import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;

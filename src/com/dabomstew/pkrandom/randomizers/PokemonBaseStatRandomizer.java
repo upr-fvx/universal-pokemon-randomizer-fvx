@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.*;
-import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;

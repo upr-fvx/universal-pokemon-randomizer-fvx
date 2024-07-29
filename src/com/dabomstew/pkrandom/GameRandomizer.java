@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.Gen1PaletteRandomizer;

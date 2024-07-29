@@ -2,10 +2,10 @@ package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.game_data.Evolution;
-import com.dabomstew.pkrandom.game_data.EvolutionType;
-import com.dabomstew.pkrandom.game_data.ExpCurve;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Evolution;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.randomizers.EvolutionRandomizer;
 import com.dabomstew.pkrandom.randomizers.PokemonBaseStatRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;

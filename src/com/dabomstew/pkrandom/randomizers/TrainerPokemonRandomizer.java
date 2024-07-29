@@ -9,7 +9,6 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.services.TypeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,7 +77,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         if (useLocalPokemon) {
             SpeciesSet localWithRelatives =
-                    romHandler.getMainGameWildPokemon(settings.isUseTimeBasedEncounters())
+                    romHandler.getMainGameWildSpecies(settings.isUseTimeBasedEncounters())
                     .buildFullFamilies(false);
 
             cachedAll.retainAll(localWithRelatives);

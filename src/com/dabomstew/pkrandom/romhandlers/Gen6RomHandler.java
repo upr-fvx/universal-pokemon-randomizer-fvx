@@ -848,12 +848,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesListInclFormes;
     }
 

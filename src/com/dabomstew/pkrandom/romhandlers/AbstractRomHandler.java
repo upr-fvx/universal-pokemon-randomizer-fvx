@@ -69,13 +69,13 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public SpeciesSet getPokemonSet() {
-        return SpeciesSet.unmodifiable(getPokemon());
+    public SpeciesSet getSpeciesSet() {
+        return SpeciesSet.unmodifiable(getSpecies());
     }
 
     @Override
-    public SpeciesSet getPokemonSetInclFormes() {
-        return SpeciesSet.unmodifiable(getPokemonInclFormes());
+    public SpeciesSet getSpeciesSetInclFormes() {
+        return SpeciesSet.unmodifiable(getSpeciesInclFormes());
     }
 
     @Override
@@ -104,7 +104,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public SpeciesSet getMainGameWildPokemon(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
 
@@ -155,7 +155,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
         // search for level evolutions
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             if (pk != null) {
                 for (Evolution checkEvo : pk.getEvolutionsFrom()) {
                     if (checkEvo.getType().usesLevel()) {
@@ -248,7 +248,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     /* Helper methods used by subclasses and/or this class */
 
     protected void applyCamelCaseNames() {
-        getPokemonSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
+        getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
     }
 
     /* Default Implementations */

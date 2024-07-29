@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.game_data;
 
 /*----------------------------------------------------------------------------*/
-/*--  Evolution.java - represents an evolution between 2 Pokemon.           --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,6 +22,9 @@ package com.dabomstew.pkrandom.game_data;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Represents an evolution between two {@link Species}.
+ */
 public class Evolution implements Comparable<Evolution> {
 
     private Species from;

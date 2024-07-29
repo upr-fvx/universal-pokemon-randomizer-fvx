@@ -28,7 +28,7 @@ public abstract class Randomizer {
         this.romHandler = romHandler;
         this.rPokeService = romHandler.getRestrictedPokemonService();
         this.typeService = romHandler.getTypeService();
-        this.copyUpEvolutionsHelper = new CopyUpEvolutionsHelper<>(romHandler::getPokemonSet);
+        this.copyUpEvolutionsHelper = new CopyUpEvolutionsHelper<>(romHandler::getSpeciesSet);
 
         this.settings = settings;
         this.random = random;

@@ -178,10 +178,10 @@ public class EncounterArea extends ArrayList<Encounter> {
     //Helper functions
 
     /**
-     * Creates a {@link SpeciesSet} with all Pokemon that can be found in this area.
-     * @return A {@link SpeciesSet} containing all Pokemon that can be encountered in this area.
+     * Creates a {@link SpeciesSet} with all Species that can be found in this area.
+     * @return A {@link SpeciesSet} containing all Species that can be encountered in this area.
      */
-    public SpeciesSet getPokemonInArea() {
+    public SpeciesSet getSpeciesInArea() {
         SpeciesSet speciesSet = new SpeciesSet();
         for (Encounter enc : this) {
             speciesSet.add(enc.getSpecies());

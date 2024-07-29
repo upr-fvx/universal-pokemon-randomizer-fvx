@@ -257,7 +257,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllWorks(String romName) {
         loadROM(romName);
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
                 true,
@@ -354,7 +354,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
         loadROM(romName);
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.THEMED_AREAS,
                 true,
@@ -373,7 +373,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.RANDOM,
                 true,
@@ -394,7 +394,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.RANDOM,
                 true,
@@ -660,7 +660,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllWorks(String romName) {
         loadROM(romName);
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
                 true,
@@ -672,7 +672,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     private void catchEmAllCheck(SpeciesSet allPokes) {
         SpeciesSet catchable = new SpeciesSet();
         for (EncounterArea area : romHandler.getEncounters(true)) {
-            catchable.addAll(area.getPokemonInArea());
+            catchable.addAll(area.getSpeciesInArea());
         }
         SpeciesSet notCatchable = new SpeciesSet(allPokes);
         notCatchable.removeAll(catchable);
@@ -733,10 +733,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         for (EncounterArea area : romHandler.getEncounters(true)) {
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
             Species firstPk = area.get(0).getSpecies();
-            SpeciesSet allInArea = area.getPokemonInArea();
+            SpeciesSet allInArea = area.getSpeciesInArea();
 
             Type primaryType = firstPk.getPrimaryType(false);
-            SpeciesSet ofFirstType = area.getPokemonInArea().filterByType(primaryType, false);
+            SpeciesSet ofFirstType = area.getSpeciesInArea().filterByType(primaryType, false);
             SpeciesSet notOfFirstType = new SpeciesSet(allInArea).filter(pk -> !ofFirstType.contains(pk));
             System.out.println(notOfFirstType);
 
@@ -746,7 +746,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 if (secondaryType == null) {
                     fail();
                 }
-                SpeciesSet ofSecondaryType = area.getPokemonInArea().filterByType(secondaryType, false);
+                SpeciesSet ofSecondaryType = area.getSpeciesInArea().filterByType(secondaryType, false);
                 SpeciesSet notOfSecondaryType = new SpeciesSet(allInArea)
                         .filter(pk -> !ofSecondaryType.contains(pk));
                 System.out.println(notOfSecondaryType);
@@ -928,7 +928,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
         loadROM(romName);
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
                 true,
@@ -952,7 +952,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.AREA_MAPPING,
                 true,
@@ -978,7 +978,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.AREA_MAPPING,
                 true,
@@ -1222,7 +1222,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         if (romHandler instanceof Gen5RomHandler) {
             assumeFalse(((Gen5RomHandler) romHandler).getRomEntry().getRomType() == Gen5Constants.Type_BW);
         }
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
                 true,
@@ -1274,10 +1274,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
             Species firstPk = area.get(0).getSpecies();
-            SpeciesSet allInArea = area.getPokemonInArea();
+            SpeciesSet allInArea = area.getSpeciesInArea();
 
             Type primaryType = firstPk.getPrimaryType(false);
-            SpeciesSet ofFirstType = area.getPokemonInArea().filterByType(primaryType, false);
+            SpeciesSet ofFirstType = area.getSpeciesInArea().filterByType(primaryType, false);
             SpeciesSet notOfFirstType = new SpeciesSet(allInArea).filter(pk -> !ofFirstType.contains(pk));
             System.out.println(notOfFirstType);
 
@@ -1287,7 +1287,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 if (secondaryType == null) {
                     fail();
                 }
-                SpeciesSet ofSecondaryType = area.getPokemonInArea().filterByType(secondaryType, false);
+                SpeciesSet ofSecondaryType = area.getSpeciesInArea().filterByType(secondaryType, false);
                 SpeciesSet notOfSecondaryType = new SpeciesSet(allInArea)
                         .filter(pk -> !ofSecondaryType.contains(pk));
                 System.out.println(notOfSecondaryType);
@@ -1329,7 +1329,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
         assumeFalse(romHandler instanceof Gen5RomHandler);
 
-        SpeciesSet allPokes = romHandler.getPokemonSet();
+        SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
                 true,
@@ -1392,17 +1392,17 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     /**
-     * Checks that for each Pokemon in beforeArea, it is replaced by the Pokemon listed in the map if there is one;
-     * if not, adds its replacement to the map and ensures that any future replacements use the same Pokemon.
+     * Checks that for each Species in beforeArea, it is replaced by the Species listed in the map if there is one;
+     * if not, adds its replacement to the map and ensures that any future replacements use the same Species.
      * @param beforeArea The area, in its state before randomization. If the area is marked as Unused (either by
      *                   EncounterType, or Location tag), the method will return without performing any checks.
      * @param afterArea The same area, after randomization.
-     * @param map The map of Pokemon to their replacements. WARNING: MODIFIED. If null, a new map will be created.
-     * @param usedPokemon A PokemonSet of Pokemon already used as replacements. If null, Pokemon will not be checked
+     * @param map The map of Species to their replacements. WARNING: MODIFIED. If null, a new map will be created.
+     * @param usedSpecies A SpeciesSet of Species already used as replacements. If null, Species will not be checked
      *                    for uniqueness.
      * @throws RuntimeException if the areas do not have the same display name.
      */
-    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedPokemon) {
+    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedSpecies) {
         if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
             throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
                     + afterArea.getDisplayName());
@@ -1428,11 +1428,11 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
             if (!map.containsKey(beforePk)) {
                 map.put(beforePk, afterPk);
-                if(usedPokemon != null) {
+                if(usedSpecies != null) {
                     System.out.println("Adding map entry: " + beforePk.getName() + beforePk.getFormeSuffix() +
                             " to " + afterPk.getName() + afterPk.getFormeSuffix());
-                    assertFalse(usedPokemon.contains(afterPk));
-                    usedPokemon.add(afterPk);
+                    assertFalse(usedSpecies.contains(afterPk));
+                    usedSpecies.add(afterPk);
                 }
             }
             assertEquals(map.get(beforePk), afterPk);
@@ -1549,10 +1549,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             }
             if(area.getEncounterType() != null) {
                 System.out.println("\t\t\t " + count + " " + area.getEncounterType().name()
-                        + " " + area.getPokemonInArea().toStringShort() + " " + area.getDisplayName());
+                        + " " + area.getSpeciesInArea().toStringShort() + " " + area.getDisplayName());
             } else {
                 System.out.println("\t\t\t " + count
-                        + " " + area.getPokemonInArea().toStringShort() + " " + area.getDisplayName());
+                        + " " + area.getSpeciesInArea().toStringShort() + " " + area.getDisplayName());
             }
 
             String simplifiedDisplayName = simplifyTag(area.getDisplayName());

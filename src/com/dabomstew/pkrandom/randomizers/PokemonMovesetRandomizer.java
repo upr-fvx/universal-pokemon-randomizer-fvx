@@ -432,7 +432,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
     }
 
     // Note that this is slow and somewhat hacky.
-    // TODO: add to PokemonSet, hopefully in a less hacky way.
+    // TODO: add to SpeciesSet, hopefully in a less hacky way.
     // (The non-hacky way might be to make it a TreeSet.)
     private Species findPokemonInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
         for (Species pk : speciesPool) {

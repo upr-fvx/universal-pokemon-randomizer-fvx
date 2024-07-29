@@ -99,7 +99,7 @@ public class PokemonAbilityRandomizer extends Randomizer {
         });
 
 
-        romHandler.getPokemonSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filterCosmetic()
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {

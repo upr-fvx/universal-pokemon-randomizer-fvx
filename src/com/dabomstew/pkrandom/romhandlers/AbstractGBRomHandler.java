@@ -440,7 +440,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     @Override
 	public List<BufferedImage> getAllPokemonImages() {
 		List<BufferedImage> bims = new ArrayList<>();
-		for (Species pk : getPokemonSet()) {
+		for (Species pk : getSpeciesSet()) {
 			bims.add(createPokemonImageGetter(pk).getFull());
 		}
 		return bims;

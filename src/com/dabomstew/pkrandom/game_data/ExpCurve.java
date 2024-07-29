@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.game_data;
 
 /*----------------------------------------------------------------------------*/
-/*--  ExpCurve.java - represents the EXP curves that a Pokemon can have.    --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,6 +22,9 @@ package com.dabomstew.pkrandom.game_data;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Represents the EXP curves that a {@link Species} can have.
+ */
 public enum ExpCurve {
 
     SLOW, MEDIUM_SLOW, MEDIUM_FAST, FAST, ERRATIC, FLUCTUATING;

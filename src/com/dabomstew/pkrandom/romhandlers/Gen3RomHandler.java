@@ -1471,7 +1471,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // Some encounter areas aren't allowed to have Pokemon
             // with Arena Trap, Shadow Tag etc.
             Set<Species> battleTrappers = new HashSet<>();
-            for (Species pk : getPokemon()) {
+            for (Species pk : getSpecies()) {
                 if (hasBattleTrappingAbility(pk)) {
                     battleTrappers.add(pk);
                 }
@@ -1903,12 +1903,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 	}
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesList; // No alt formes for now, should include Deoxys formes in the future
     }
 
@@ -4182,7 +4182,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void loadPokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
 
             int normalPalOffset = readPointer(normalPaletteTableOffset + pokeNumber * 8);
@@ -4202,7 +4202,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void savePokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
             int normalPalPointerOffset = normalPaletteTableOffset + pokeNumber * 8;
             int shinyPalPointerOffset = shinyPaletteTableOffset + pokeNumber * 8;

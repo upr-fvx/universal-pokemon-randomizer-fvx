@@ -492,7 +492,7 @@ public class EncounterRandomizer extends Randomizer {
         private Type pickAreaType(EncounterArea area) {
             Type picked = null;
             if (keepTypeThemes) {
-                picked = area.getPokemonInArea().getSharedType(true);
+                picked = area.getSpeciesInArea().getSharedType(true);
             }
             if (randomTypeThemes && picked == null) {
                 picked = pickRandomAreaType();
@@ -503,7 +503,7 @@ public class EncounterRandomizer extends Randomizer {
                 // because why not?
                 if (catchEmAll) {
                     SpeciesSet bannedInArea = new SpeciesSet(banned);
-                    bannedInArea.retainAll(area.getPokemonInArea());
+                    bannedInArea.retainAll(area.getSpeciesInArea());
                     Type themeOfBanned = bannedInArea.getSharedType(false);
                     if (themeOfBanned != null) {
                         picked = themeOfBanned;
@@ -526,7 +526,7 @@ public class EncounterRandomizer extends Randomizer {
         private Type findExistingAreaType(EncounterArea area) {
             Type areaType = null;
             if(keepTypeThemes || randomTypeThemes) {
-                SpeciesSet inArea = area.getPokemonInArea();
+                SpeciesSet inArea = area.getSpeciesInArea();
                 areaType = inArea.getSharedType(false);
             }
             return areaType;
@@ -809,8 +809,8 @@ public class EncounterRandomizer extends Randomizer {
 
             while(!familiesToRandomize.isEmpty()) {
                 //Because we're randomizing a family at a time, we can't use a shuffled list.
-                //(Well, I supppose a List of PokemonSets would work, but acquiring that is harder than just
-                //choosing random Pokemon and then pulling their families.)
+                //(Well, I supppose a List of SpeciesSets would work, but acquiring that is harder than just
+                //choosing random Species and then pulling their families.)
                 Species toRandomize = familiesToRandomize.getRandomSpecies(random);
                 SpeciesSet family = familiesToRandomize.filterFamily(toRandomize, true);
 
@@ -863,12 +863,12 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Narrows the family-restricted pool of Pokemon down to one that is compatible with the given Pokemon
+         * Narrows the family-restricted pool of Species down to one that is compatible with the given Species
          * and the portion of its evolutionary family given. Uses the post-randomization evolutions
          * of the pool, and pre-randomization evolutions of the family.
-         * @param match The Pokemon to make a pool for.
-         * @param family The portion of the given Pokemon's family to consider.
-         * @return A PokemonSet narrowed down as specified.
+         * @param match The Species to make a pool for.
+         * @param family The portion of the given Species's family to consider.
+         * @return A Species narrowed down as specified.
          * @throws RandomizationException if no match for the given family can be found in the allowed pool.
          */
         private SpeciesSet setupAllowedForFamily(Species match, SpeciesSet family) {
@@ -977,7 +977,7 @@ public class EncounterRandomizer extends Randomizer {
                 }
 
                 SpeciesSet pokemonInArea = new SpeciesSet();
-                for (Species poke : area.getPokemonInArea()) {
+                for (Species poke : area.getSpeciesInArea()) {
                     //Different formes of the same Pokemon do not contribute to load
                     if(poke.isBaseForme()) {
                         pokemonInArea.add(poke);
@@ -992,20 +992,20 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given a set of EncounterAreas, creates a map of every Pokemon in the areas to
-         * information about the areas that Pokemon is contained in.
-         * If addAllPokemonTo is not null, also adds every Pokemon to it.
+         * Given a set of EncounterAreas, creates a map of every Species in the areas to
+         * information about the areas that Species is contained in.
+         * If addAllPokemonTo is not null, also adds every Species to it.
          * @param areas The list of EncounterAreas to explore.
-         * @param addAllPokemonTo A PokemonSet to add every Pokemon found to. Can be null.
+         * @param addAllPokemonTo A SpeciesSet to add every Species found to. Can be null.
          */
         private void setupAreaInfoMap(List<EncounterArea> areas, SpeciesSet addAllPokemonTo) {
 
             areaInformationMap = new HashMap<>();
             for(EncounterArea area : areas) {
                 Type areaTheme = pickAreaType(area);
-                int areaSize = area.getPokemonInArea().size();
+                int areaSize = area.getSpeciesInArea().size();
 
-                for(Species species : area.getPokemonInArea()) {
+                for(Species species : area.getSpeciesInArea()) {
                     PokemonAreaInformation info = areaInformationMap.get(species);
                     if(info == null) {
                         info = new PokemonAreaInformation(species);
@@ -1191,7 +1191,7 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     private void minimumCatchRate(int rateNonLegendary, int rateLegendary) {
-        for (Species pk : romHandler.getPokemonSetInclFormes()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             int minCatchRate = pk.isLegendary() ? rateLegendary : rateNonLegendary;
             pk.setCatchRate(Math.max(pk.getCatchRate(), minCatchRate));
         }

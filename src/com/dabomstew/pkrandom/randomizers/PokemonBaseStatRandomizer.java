@@ -22,7 +22,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
                 pk -> pk.shuffleStats(random),
                 (evFrom, evTo, toMonIsFinalEvo) -> evTo.copyShuffledStatsUpEvolution(evFrom));
 
-        romHandler.getPokemonSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filterCosmetic()
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {
@@ -49,7 +49,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
                 assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
 
-        romHandler.getPokemonSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filterCosmetic()
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {
@@ -68,7 +68,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         Settings.ExpCurveMod mod = settings.getExpCurveMod();
         ExpCurve expCurve = settings.getSelectedEXPCurve();
 
-        SpeciesSet pokes = romHandler.getPokemonSetInclFormes();
+        SpeciesSet pokes = romHandler.getSpeciesSetInclFormes();
         switch (mod) {
             case LEGENDARIES:
                 for (Species pk : pokes) {

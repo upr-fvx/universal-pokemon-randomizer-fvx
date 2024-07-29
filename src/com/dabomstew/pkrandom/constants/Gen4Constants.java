@@ -485,8 +485,8 @@ public class Gen4Constants {
     private final static int bulbasaurOverworldSpriteID = 297;
 
     /**
-     * Returns the first overworld sprite ID for a given Pokemon species.
-     * Some species have more than one sprite ID, either due to gender
+     * Returns the first overworld sprite ID for a given Species.
+     * Some Species have more than one sprite ID, either due to gender
      * differences or formes, but this gives the first one only.
      */
     public static int getOverworldSpriteIDOfSpecies(int species) {

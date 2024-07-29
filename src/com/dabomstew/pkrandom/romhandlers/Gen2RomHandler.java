@@ -1300,12 +1300,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesList;
     }
 
@@ -2918,7 +2918,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public void loadPokemonPalettes() {
         int palOffset = romEntry.getIntValue("PokemonPalettes") + 8;
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int num = pk.getNumber() - 1;
 
             int normalPaletteOffset = palOffset + num * 8;
@@ -2949,7 +2949,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public void savePokemonPalettes() {
         int palOffset = romEntry.getIntValue("PokemonPalettes") + 8;
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int num = pk.getNumber() - 1;
 
             int normalPaletteOffset = palOffset + num * 8;

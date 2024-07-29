@@ -23,7 +23,7 @@ public class PokemonWildHeldItemRandomizer extends Randomizer {
         boolean banBadItems = settings.isBanBadRandomWildPokemonHeldItems();
 
         ItemList possibleItems = banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems();
-        for (Species pk : romHandler.getPokemonSetInclFormes()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.getGuaranteedHeldItem() == -1 && pk.getCommonHeldItem() == -1 && pk.getRareHeldItem() == -1
                     && pk.getDarkGrassHeldItem() == -1) {
                 // No held items at all, abort

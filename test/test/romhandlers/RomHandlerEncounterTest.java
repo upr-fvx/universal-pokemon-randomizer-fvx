@@ -571,6 +571,18 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
     }
 
+    private static void checkEachMapIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+        Map<Integer, List<EncounterArea>> beforeMaps = EncounterArea.groupAreasByMapIndex(before);
+        Map<Integer, List<EncounterArea>> afterMaps = EncounterArea.groupAreasByMapIndex(after);
+        for(int map : beforeMaps.keySet()) {
+
+            List<EncounterArea> mapBefore = beforeMaps.get(map);
+            List<EncounterArea> mapAfter = afterMaps.get(map);
+
+            checkIsReplaced1To1(mapBefore, mapAfter,  checkUnique);
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesUniqueReplacementsForEachMon(String romName) {
@@ -1779,5 +1791,28 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         //TODO: check family integrity
         checkIsReplaced1To1(before, after, true);
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+    }
+
+    /**
+     * Checks that map 1-to-1 encounters gives both consequent and unique replacements for each Species in each map.
+     * @param romName The name of the ROM to test.
+     */
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void map1to1EncountersWorks(String romName) {
+        loadROM(romName);
+
+        assumeTrue(romHandler.hasMapIndices());
+
+        List<EncounterArea> before = romHandler.getEncounters(true);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.MAP);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkEachMapIsReplaced1To1(before, after, true);
     }
 }

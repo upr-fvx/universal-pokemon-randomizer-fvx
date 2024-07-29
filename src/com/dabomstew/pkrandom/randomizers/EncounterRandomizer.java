@@ -1027,7 +1027,7 @@ public class EncounterRandomizer extends Randomizer {
 
             //Try to remove any Species which have a relative that has already been used
             SpeciesSet withoutUsedFamilies = potentiallyAllowed.filter(p ->
-                    !p.getFamily(false).containsAny(regionMap.keySet()));
+                    !p.getFamily(false).containsAny(regionMap.values()));
 
             return withoutUsedFamilies.isEmpty() ? potentiallyAllowed : withoutUsedFamilies;
         }

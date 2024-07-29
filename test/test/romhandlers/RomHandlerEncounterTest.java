@@ -290,9 +290,11 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+
+        loadROM(romName);
+
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonRegionMod.NONE, Settings.WildPokemonTypeMod.RANDOM_THEMES,
@@ -305,9 +307,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -324,9 +326,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesANDRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -345,9 +347,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepPrimaryTypeWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
@@ -380,9 +382,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
@@ -397,9 +399,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -421,9 +423,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -731,9 +733,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonRegionMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
@@ -746,9 +748,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -766,9 +768,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepPrimaryTypeWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
@@ -981,9 +983,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
+
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonRegionMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
@@ -997,9 +1000,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
+
         // for some reason fails with the Gen 3 Hoenn games
         // there's no obvious bug-related reason so I'm guessing they just have too few encounters/areas
         if (romHandler instanceof Gen3RomHandler) {
@@ -1026,9 +1030,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
+
         // for some reason fails with the Gen 3 Hoenn games
         // there's no obvious bug-related reason so I'm guessing they just have too few encounters/areas
         if (romHandler instanceof Gen3RomHandler) {
@@ -1288,9 +1293,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersRandomTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
+
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
                 Settings.WildPokemonRegionMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
@@ -1302,9 +1308,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersKeepPrimaryTypeWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
@@ -1709,11 +1715,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setRandomizeWildPokemon(true);
+        Settings settings = getStandardSettings(romName);
         settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.GAME);
         settings.setKeepWildEvolutionFamilies(true);
-        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1729,9 +1733,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void game1To1KeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
@@ -1751,9 +1755,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void globalFamilyToFamilyKeepTypeThemesWorks(String romName) {
-        loadROM(romName);
         assumeTrue(romName.length() > 1);
         //X & Y have problems testing types, which makes the test nearly always fail
+
+        loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();

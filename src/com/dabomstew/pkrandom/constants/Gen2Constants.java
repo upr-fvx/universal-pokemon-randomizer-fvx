@@ -300,46 +300,47 @@ public class Gen2Constants {
             Gen2ItemIDs.stardust, Gen2ItemIDs.stardust, Gen2ItemIDs.brickPiece, Gen2ItemIDs.silverLeaf, Gen2ItemIDs.goldLeaf
     ));
 
-    public static ItemList allowedItems;
-    public static ItemList nonBadItems;
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    public static final Set<Integer> badItems = setupBadItems();
 
-    static {
-        setupAllowedItems();
-    }
-
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(Gen2ItemIDs.hm07); // 250-255 are junk and cancel
-        // Assorted key items
-        allowedItems.banSingles(Gen2ItemIDs.bicycle, Gen2ItemIDs.coinCase, Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod,
-                Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod, Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey,
-                Gen2ItemIDs.pass, Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing);
-        allowedItems.banRange(Gen2ItemIDs.redScale, 6);
-        allowedItems.banRange(Gen2ItemIDs.cardKey, 4);
+    private static Set<Integer> setupBannedItems() {
+        // Assorted key items &
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen2ItemIDs.bicycle, Gen2ItemIDs.coinCase,
+                Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod, Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod,
+                Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey, Gen2ItemIDs.pass,
+                Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing));
+        addRange(set, Gen2ItemIDs.redScale, 6);
+        addRange(set, Gen2ItemIDs.cardKey, 4);
         // HMs
-        allowedItems.banRange(Gen2ItemIDs.hm01, 7);
+        addRange(set, Gen2ItemIDs.hm01, 7);
         // Unused items (Teru-Samas and dummy TMs)
-        allowedItems.banSingles(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
+        set.addAll(Arrays.asList(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
                 Gen2ItemIDs.terusama50, Gen2ItemIDs.terusama56, Gen2ItemIDs.terusama90, Gen2ItemIDs.terusama100,
                 Gen2ItemIDs.terusama120, Gen2ItemIDs.terusama135, Gen2ItemIDs.terusama136, Gen2ItemIDs.terusama137,
                 Gen2ItemIDs.terusama141, Gen2ItemIDs.terusama142, Gen2ItemIDs.terusama145, Gen2ItemIDs.terusama147,
                 Gen2ItemIDs.terusama148, Gen2ItemIDs.terusama149, Gen2ItemIDs.terusama153, Gen2ItemIDs.terusama154,
                 Gen2ItemIDs.terusama155, Gen2ItemIDs.terusama162, Gen2ItemIDs.terusama171, Gen2ItemIDs.terusama176,
-                Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused);
-        // Real TMs
-        allowedItems.tmRange(tmBlockOneIndex, tmBlockOneSize);
-        allowedItems.tmRange(tmBlockTwoIndex, tmBlockTwoSize);
-        allowedItems.tmRange(tmBlockThreeIndex, tmBlockThreeSize);
+                Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused));
+        // 250-255 are junk and cancel
+        addRange(set, Gen2ItemIDs.hm07, 6);
+        return set;
+    }
 
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItems = allowedItems.copy();
-        nonBadItems.banSingles(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
+    private static Set<Integer> setupBadItems() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
                 Gen2ItemIDs.goldLeaf, Gen2ItemIDs.redApricorn, Gen2ItemIDs.bluApricorn, Gen2ItemIDs.whtApricorn,
                 Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.stick, Gen2ItemIDs.thickClub,
-                Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall, Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece);
-        nonBadItems.banRange(Gen2ItemIDs.ylwApricorn, 2);
-        nonBadItems.banRange(Gen2ItemIDs.normalBox, 2);
-        nonBadItems.banRange(Gen2ItemIDs.surfMail, 9);
+                Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall, Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece));
+        addRange(set, Gen2ItemIDs.ylwApricorn, 2);
+        addRange(set, Gen2ItemIDs.normalBox, 2);
+        addRange(set, Gen2ItemIDs.surfMail, 9);
+        return set;
+    }
+
+    private static void addRange(Set<Integer> set, int start, int length) {
+        for (int i = start; i < start + length; i++) {
+            set.add(i);
+        }
     }
 
     public static final String friendshipValueForEvoLocator = "FEDCDA";

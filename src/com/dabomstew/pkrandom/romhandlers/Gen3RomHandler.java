@@ -28,6 +28,7 @@ import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.gbspace.FreedSpace;
 import com.dabomstew.pkrandom.graphics.images.GBAImage;
 import com.dabomstew.pkrandom.graphics.packs.FRLGPlayerCharacterGraphics;
@@ -35,7 +36,6 @@ import com.dabomstew.pkrandom.graphics.packs.Gen3PlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.graphics.packs.RSEPlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
-import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen3EventTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen3RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
@@ -131,7 +131,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int[] internalToPokedex, pokedexToInternal;
     private int pokedexCount;
     private String[] pokeNames;
-    private ItemList allowedItems, nonBadItems;
     private int pickupItemsTableOffset;
 
     // Misc.
@@ -184,8 +183,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     protected void loadGameData() {
         super.loadGameData();
         loadAbilityNames();
-        allowedItems = Gen3Constants.allowedItems.copy();
-        nonBadItems = Gen3Constants.getNonBadItems(romEntry.getRomType()).copy();
     }
 
     @Override
@@ -3616,13 +3613,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return allowedItems;
-    }
-
-    @Override
-    public ItemList getNonBadItems() {
-        return nonBadItems;
+    public Set<Item> getNonBadItems() {
+        Set<Item> nonBad = new HashSet<>(getAllowedItems());
+        Set<Integer> badIds = Gen3Constants.getBadItems(romEntry.getRomType());
+        nonBad.removeIf(item -> badIds.contains(item.getId()));
+        return nonBad;
     }
 
     @Override
@@ -3680,9 +3675,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         List<Integer> fieldTMs = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            int itemHere = readWord(offset);
-            if (Gen3Constants.allowedItems.isTM(itemHere)) {
-                int thisTM = itemHere - Gen3Constants.tmItemOffset + 1;
+            int itemId = readWord(offset);
+            if (items.get(itemId).isTM()) {
+                int thisTM = itemId - Gen3Constants.tmItemOffset + 1;
                 // hack for repeat TMs
                 if (!fieldTMs.contains(thisTM)) {
                     fieldTMs.add(thisTM);
@@ -3702,16 +3697,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int[] givenTMs = new int[512];
 
         for (int offset : itemOffs) {
-            int itemHere = readWord(offset);
-            if (Gen3Constants.allowedItems.isTM(itemHere)) {
+            int itemId = readWord(offset);
+            if (items.get(itemId).isTM()) {
                 // Cache replaced TMs to duplicate repeats
-                if (givenTMs[itemHere] != 0) {
-                    writeByte(offset, (byte) givenTMs[itemHere]);
+                if (givenTMs[itemId] != 0) {
+                    writeByte(offset, (byte) givenTMs[itemId]);
                 } else {
                     // Replace this with a TM from the list
                     int tm = iterTMs.next();
                     tm += Gen3Constants.tmItemOffset - 1;
-                    givenTMs[itemHere] = tm;
+                    givenTMs[itemId] = tm;
                     writeWord(offset, tm);
                 }
             }
@@ -3727,9 +3722,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            int itemHere = readWord(offset);
-            if (Gen3Constants.allowedItems.isAllowed(itemHere) && !(Gen3Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(items.get(itemHere));
+            Item item = items.get(readWord(offset));
+            if (item.isAllowed() && !item.isTM()) {
+                fieldItems.add(item);
             }
         }
         return fieldItems;
@@ -3744,8 +3739,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Iterator<Item> iterItems = items.iterator();
 
         for (int offset : itemOffs) {
-            int itemHere = readWord(offset);
-            if (Gen3Constants.allowedItems.isAllowed(itemHere) && !(Gen3Constants.allowedItems.isTM(itemHere))) {
+            Item current = items.get(readWord(offset));
+            if (current.isAllowed() && !current.isTM()) {
                 // Replace it
                 writeWord(offset, iterItems.next().getId());
             }
@@ -3916,8 +3911,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            allowedItems.banSingles(Gen3ItemIDs.luckyEgg);
-            nonBadItems.banSingles(Gen3ItemIDs.luckyEgg);
+            items.get(Gen3ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
             applyRunWithoutRunningShoesPatch();
         } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
@@ -4047,9 +4041,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public void setPCPotionItem(int itemID) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!getAllowedItems().getItemSet().contains(itemID)) {
-                String itemName = itemID >= items.size() ? "unknown item, ID=" + itemID : items.get(itemID).getName();
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + itemName);
+            if (items.get(itemID).isAllowed()) {
+                throw new IllegalArgumentException("item not allowed for PC Potion: " + items.get(itemID).getName());
             }
             writeWord(romEntry.getIntValue("PCPotionOffset"), itemID);
         }
@@ -4135,7 +4128,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         default:
                             effectivenessInternal = 0;
                             break;
-                    };
+                    }
                     part.write(Gen3Constants.typeToByte(attacker));
                     part.write(Gen3Constants.typeToByte(defender));
                     part.write(effectivenessInternal);

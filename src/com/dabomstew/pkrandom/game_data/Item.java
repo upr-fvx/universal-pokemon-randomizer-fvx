@@ -7,6 +7,10 @@ public class Item {
     private final int id;
     private final String name;
 
+    private boolean allowed;
+    private boolean bad;
+    private boolean tm;
+
     public Item(int id, String name) {
         if (id < 1) {
             throw new IllegalArgumentException("id must be at least 1");
@@ -21,6 +25,34 @@ public class Item {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns whether an Item is allowed to appear in most places, like {@link Shop}s and field items.
+     * Generally key items and unused/glitch items NOT allowed, but depending on the game more Items may be as well.
+     */
+    public boolean isAllowed() {
+        return allowed;
+    }
+
+    public void setAllowed(boolean allowed) {
+        this.allowed = allowed;
+    }
+
+    public boolean isBad() {
+        return bad;
+    }
+
+    public void setBad(boolean bad) {
+        this.bad = bad;
+    }
+
+    public boolean isTM() {
+        return tm;
+    }
+
+    public void setTM(boolean tm) {
+        this.tm = tm;
     }
 
     @Override

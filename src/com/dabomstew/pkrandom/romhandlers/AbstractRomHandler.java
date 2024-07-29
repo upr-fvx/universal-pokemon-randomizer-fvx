@@ -443,6 +443,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public Set<Item> getAllowedItems() {
+        return getItems().stream().filter(Item::isAllowed).collect(Collectors.toSet());
+    }
+
+    @Override
     public Set<Item> getXItems() {
         return itemIdsToSet(GlobalConstants.xItems);
     }

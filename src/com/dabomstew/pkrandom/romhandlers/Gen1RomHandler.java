@@ -96,7 +96,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
-    private String[] itemNames;
     private String[] mapNames;
     private SubMap[] maps;
     private boolean xAccNerfed;
@@ -2153,9 +2152,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public void setPCPotionItem(int itemID) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!getAllowedItems().getItemSet().contains(itemID)) {
-                String itemName = itemID >= items.size() ? "unknown item, ID=" + itemID : items.get(itemID).getName();
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + itemName);
+            if (!getAllowedItems().contains(items.get(itemID))) {
+                throw new IllegalArgumentException("item not allowed for PC Potion: " + items.get(itemID).getName());
             }
             writeByte(romEntry.getIntValue("PCPotionOffset"),
                     (byte) itemID);
@@ -2197,14 +2195,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return Gen1Constants.allowedItems;
-    }
-
-    @Override
-    public ItemList getNonBadItems() {
+    public Set<Item> getNonBadItems() {
         // Gen 1 has no bad items Kappa
-        return Gen1Constants.allowedItems;
+        return getAllowedItems();
     }
 
     @Override
@@ -2229,6 +2222,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         items.add(null);
         for (int i = 1; i < names.length; i++) {
             items.add(new Item(i, names[i]));
+        }
+
+        Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int i = Gen1Constants.tmsStartIndex; i < Gen1Constants.tmsStartIndex + Gen1Constants.tmCount; i++) {
+            items.get(i).setTM(true);
         }
     }
 
@@ -2493,10 +2491,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Integer> fieldTMs = new ArrayList<>();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isTM(itemHere)) {
-                fieldTMs.add(itemHere - Gen1Constants.tmsStartIndex + 1); // TM
-                                                                          // offset
+            int itemId = rom[offset] & 0xFF;
+            if (items.get(itemId).isTM()) {
+                fieldTMs.add(itemId - Gen1Constants.tmsStartIndex + 1);
             }
         }
         return fieldTMs;
@@ -2508,8 +2505,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Iterator<Integer> iterTMs = fieldTMs.iterator();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isTM(itemHere)) {
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isTM()) {
                 // Replace this with a TM from the list
                 writeByte(offset, (byte) (iterTMs.next() + Gen1Constants.tmsStartIndex - 1));
             }
@@ -2522,9 +2519,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(items.get(itemHere));
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isAllowed() && !item.isTM()) {
+                fieldItems.add(item);
             }
         }
         return fieldItems;
@@ -2536,8 +2533,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Iterator<Item> iterItems = items.iterator();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isAllowed() && !item.isTM()) {
                 // Replace it
                 writeByte(offset, (byte) (iterItems.next().getId()));
             }

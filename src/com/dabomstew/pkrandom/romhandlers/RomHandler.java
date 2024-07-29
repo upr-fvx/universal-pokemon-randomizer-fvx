@@ -399,9 +399,9 @@ public interface RomHandler {
      */
     List<Item> getItems();
 
-    ItemList getAllowedItems();
+    Set<Item> getAllowedItems();
 
-    ItemList getNonBadItems();
+    Set<Item> getNonBadItems();
 
     Set<Item> getEvolutionItems();
 

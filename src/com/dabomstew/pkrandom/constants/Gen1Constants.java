@@ -24,10 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.dabomstew.pkrandom.game_data.*;
 
@@ -169,25 +166,30 @@ public class Gen1Constants {
         }
     }
 
-    public static final ItemList allowedItems = setupAllowedItems();
+    public static final Set<Integer> bannedItems = setupBannedItems();
 
-    private static ItemList setupAllowedItems() {
-        ItemList allowedItems = new ItemList(Gen1ItemIDs.tm50); // 251-255 are junk TMs
+    private static Set<Integer> setupBannedItems() {
         // Assorted key items & junk
-        // 23/01/2014: ban fake PP Up
-        allowedItems.banSingles(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle, Gen1ItemIDs.questionMark7,
-                Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber, Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch,
-                Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket, Gen1ItemIDs.goldTeeth);
-        allowedItems.banRange(Gen1ItemIDs.boulderBadge, 8);
-        allowedItems.banRange(Gen1ItemIDs.domeFossil, 5);
-        allowedItems.banRange(Gen1ItemIDs.coinCase, 10);
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle,
+                Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
+                Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
+                Gen1ItemIDs.goldTeeth));
+        addRange(set, Gen1ItemIDs.boulderBadge, 8);
+        addRange(set, Gen1ItemIDs.domeFossil, 5);
+        addRange(set, Gen1ItemIDs.coinCase, 10);
         // Unused
-        allowedItems.banRange(Gen1ItemIDs.unused84, 112);
+        addRange(set, Gen1ItemIDs.unused84, 112);
         // HMs
-        allowedItems.banRange(hmsStartIndex, hmCount);
-        // Real TMs
-        allowedItems.tmRange(tmsStartIndex, tmCount);
-        return allowedItems;
+        addRange(set, hmsStartIndex, hmCount);
+        // Junk at end
+        addRange(set, Gen1ItemIDs.tm50, 5); // 251-255 are junk TMs
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static void addRange(Set<Integer> set, int start, int length) {
+        for (int i = start; i < start + length; i++) {
+            set.add(i);
+        }
     }
 
     public static void tagTrainersUniversal(List<Trainer> trs) {

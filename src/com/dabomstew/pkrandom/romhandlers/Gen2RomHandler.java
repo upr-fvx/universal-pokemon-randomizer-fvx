@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@link RomHandler} for Gold, Silver, Crystal.
@@ -90,12 +91,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private boolean havePatchedFleeing;
-    private String[] itemNames;
     private List<Integer> itemOffs;
     private String[][] mapNames;
     private String[] landmarkNames;
     private boolean isVietCrystal;
-    private ItemList allowedItems, nonBadItems;
 
     @Override
     public boolean detectRom(byte[] rom) {
@@ -118,13 +117,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     protected void loadGameData() {
         super.loadGameData();
-        allowedItems = Gen2Constants.allowedItems.copy();
-        nonBadItems = Gen2Constants.nonBadItems.copy();
-        // VietCrystal: exclude Burn Heal, Calcium, TwistedSpoon, and Elixir
-        // crashes your game if used, glitches out your inventory if carried
-        if (isVietCrystal) {
-            allowedItems.banSingles(Gen2ItemIDs.burnHeal, Gen2ItemIDs.calcium, Gen2ItemIDs.elixer, Gen2ItemIDs.twistedSpoon);
-        }
     }
 
     @Override
@@ -2253,8 +2245,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
             applyCamelCaseNames();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            allowedItems.banSingles(Gen2ItemIDs.luckyEgg);
-            nonBadItems.banSingles(Gen2ItemIDs.luckyEgg);
+            items.get(Gen2ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
         }
@@ -2442,13 +2433,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return allowedItems;
-    }
-
-    @Override
-    public ItemList getNonBadItems() {
-        return nonBadItems;
+    public Set<Item> getNonBadItems() {
+        Set<Item> nonBad = new HashSet<>(getAllowedItems());
+        nonBad.removeIf(item -> Gen2Constants.badItems.contains(item.getId()));
+        // VietCrystal: exclude Burn Heal, Calcium, TwistedSpoon, and Elixir
+        // crashes your game if used, glitches out your inventory if carried
+        if (isVietCrystal) {
+            Set<Item> vietBad = Stream.of(Gen2ItemIDs.burnHeal, Gen2ItemIDs.calcium, Gen2ItemIDs.elixer,
+                    Gen2ItemIDs.twistedSpoon).map(items::get).collect(Collectors.toSet());
+            nonBad.removeAll(vietBad);
+        }
+        return nonBad;
     }
 
     @Override
@@ -2624,20 +2619,20 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Integer> fieldTMs = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen2Constants.allowedItems.isTM(itemHere)) {
+            int itemId = rom[offset] & 0xFF;
+            if (items.get(itemId).isTM()) {
                 int thisTM;
-                if (itemHere >= Gen2Constants.tmBlockOneIndex
-                        && itemHere < Gen2Constants.tmBlockOneIndex + Gen2Constants.tmBlockOneSize) {
-                    thisTM = itemHere - Gen2Constants.tmBlockOneIndex + 1;
-                } else if (itemHere >= Gen2Constants.tmBlockTwoIndex
-                        && itemHere < Gen2Constants.tmBlockTwoIndex + Gen2Constants.tmBlockTwoSize) {
-                    thisTM = itemHere - Gen2Constants.tmBlockTwoIndex + 1 + Gen2Constants.tmBlockOneSize; // TM
+                if (itemId >= Gen2Constants.tmBlockOneIndex
+                        && itemId < Gen2Constants.tmBlockOneIndex + Gen2Constants.tmBlockOneSize) {
+                    thisTM = itemId - Gen2Constants.tmBlockOneIndex + 1;
+                } else if (itemId >= Gen2Constants.tmBlockTwoIndex
+                        && itemId < Gen2Constants.tmBlockTwoIndex + Gen2Constants.tmBlockTwoSize) {
+                    thisTM = itemId - Gen2Constants.tmBlockTwoIndex + 1 + Gen2Constants.tmBlockOneSize; // TM
                     // block
                     // 2
                     // offset
                 } else {
-                    thisTM = itemHere - Gen2Constants.tmBlockThreeIndex + 1 + Gen2Constants.tmBlockOneSize
+                    thisTM = itemId - Gen2Constants.tmBlockThreeIndex + 1 + Gen2Constants.tmBlockOneSize
                             + Gen2Constants.tmBlockTwoSize; // TM block 3 offset
                 }
                 // hack for the bug catching contest repeat TM28
@@ -2655,11 +2650,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         int[] givenTMs = new int[256];
 
         for (int offset : itemOffs) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen2Constants.allowedItems.isTM(itemHere)) {
+            int itemId = rom[offset] & 0xFF;
+            if (items.get(itemId).isTM()) {
                 // Cache replaced TMs to duplicate bug catching contest TM
-                if (givenTMs[itemHere] != 0) {
-                    writeByte(offset, (byte) givenTMs[itemHere]);
+                if (givenTMs[itemId] != 0) {
+                    writeByte(offset, (byte) givenTMs[itemId]);
                 } else {
                     // Replace this with a TM from the list
                     int tm = iterTMs.next();
@@ -2672,7 +2667,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         tm += Gen2Constants.tmBlockThreeIndex - 1 - Gen2Constants.tmBlockOneSize
                                 - Gen2Constants.tmBlockTwoSize;
                     }
-                    givenTMs[itemHere] = tm;
+                    givenTMs[itemId] = tm;
                     writeByte(offset, (byte) tm);
                 }
             }
@@ -2684,9 +2679,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen2Constants.allowedItems.isAllowed(itemHere) && !(Gen2Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(items.get(itemHere));
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isAllowed() && !item.isTM()) {
+                fieldItems.add(item);
             }
         }
         return fieldItems;
@@ -2697,8 +2692,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         Iterator<Item> iterItems = items.iterator();
 
         for (int offset : itemOffs) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen2Constants.allowedItems.isAllowed(itemHere) && !(Gen2Constants.allowedItems.isTM(itemHere))) {
+            Item current = items.get(rom[offset] & 0xFF);
+            if (current.isAllowed() && !current.isTM()) {
                 // Replace it
                 writeByte(offset, (byte) iterItems.next().getId());
             }

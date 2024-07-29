@@ -462,7 +462,7 @@ public class EncounterRandomizer extends Randomizer {
          */
         private Species pickFamilyMemberReplacementInner(Species toReplace, Species relative) {
             SpeciesAreaInformation info = areaInformationMap.get(toReplace);
-            int relation = relative.getRelation(info.getSpecies(), true);
+            int relation = relative.getRelation(toReplace, true);
             Species relativeReplacement = regionMap.get(relative);
             if(relativeReplacement == null) {
                 throw new IllegalArgumentException("Relative had a null replacement!");
@@ -1112,7 +1112,7 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * A class which stores some information about the areas a {@link Species} was found in,
+         * A class which stores some information about the areas and encounters a {@link Species} was found in,
          * in order to allow us to use this information later.
          */
         private class SpeciesAreaInformation {

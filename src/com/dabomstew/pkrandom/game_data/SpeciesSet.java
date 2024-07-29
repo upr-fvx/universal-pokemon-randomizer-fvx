@@ -84,7 +84,7 @@ public class SpeciesSet extends HashSet<Species> {
     /**
      * Returns the subset of this set for which the predicate function returns true.
      * @param predicate The function to test {@link Species} against.
-     * @return A {@link SpeciesSet} containing every {@link Species} in this set for which predicate returns true.
+     * @return A new {@link SpeciesSet} containing every {@link Species} in this set for which predicate returns true.
      */
     public SpeciesSet filter(Predicate<? super Species> predicate) {
         SpeciesSet filtered = new SpeciesSet();

@@ -235,7 +235,7 @@ public class EncounterRandomizer extends Randomizer {
 
             //ideally, this would treat the encounter types as regions rather than flattening them
             //however that would require ANOTHER big rewrite of this algorithm
-            //it's just not worth it.
+            //TODO: convert this from flatten to group
             List<EncounterArea> collapsedEncounters = EncounterArea.flattenEncounterTypesInMaps(encounterAreas);
             List<List<EncounterArea>> maps = new ArrayList<>(
                     EncounterArea.groupAreasByMapIndex(collapsedEncounters).values());

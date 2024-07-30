@@ -166,15 +166,10 @@ public class EncounterRandomizer extends Randomizer {
         private Map<Type, SpeciesSet> allowedByType;
         private final SpeciesSet allowed;
         private final SpeciesSet banned;
-
         private Map<Type, SpeciesSet> remainingByType;
         private SpeciesSet remaining;
 
-        private Type regionType;
-        //private SpeciesSet allowedForArea;
         private Map<Species, Species> regionMap;
-        //private SpeciesSet allowedForReplacement;
-
         private Map<Species, SpeciesAreaInformation> areaInformationMap = null;
 
         //ORAS's DexNav will crash if the load is higher than this value.
@@ -338,7 +333,7 @@ public class EncounterRandomizer extends Randomizer {
             Collections.shuffle(shuffledRegions, random);
 
             for(List<EncounterArea> region : shuffledRegions) {
-                regionType = pickRegionType(region);
+                Type regionType = pickRegionType(region);
 
                 if(useMapping) {
                     regionMap = new HashMap<>();
@@ -350,7 +345,7 @@ public class EncounterRandomizer extends Randomizer {
                 }
 
                 for(EncounterArea area : region) {
-                    randomizeArea(area);
+                    randomizeArea(area, regionType);
                 }
 
                 if(useMapping && !catchEmAll) {
@@ -360,7 +355,7 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
-        private void randomizeArea(EncounterArea area) {
+        private void randomizeArea(EncounterArea area, Type regionType) {
             //no area-level type theme, because that could foul up other type restrictions.
             //Either it's region-level, or determined per-Species (based on all areas in the region).
 

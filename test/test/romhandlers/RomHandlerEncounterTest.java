@@ -1342,11 +1342,22 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<String, List<EncounterArea>> grouped = groupEncountersByLocation(romHandler.getEncounters(true));
 
         for (Map.Entry<String, List<EncounterArea>> loc : grouped.entrySet()) {
+            if(loc.getKey().contains("UNUSED")) {
+                System.out.println("Skipping location: " + loc.getKey());
+                continue;
+            }
+
             // lazy solution mashing together all of a location's associated EncounterAreas into a single one,
             // so old code can be reused to a greater extent
             EncounterArea area = new EncounterArea();
             area.setDisplayName("All of location " + loc.getKey());
-            loc.getValue().forEach(area::addAll);
+            for(EncounterArea locArea : loc.getValue()) {
+                if(locArea.getEncounterType() == EncounterType.UNUSED) {
+                    System.out.println("Skipping area: " + locArea.getDisplayName());
+                    continue;
+                }
+                area.addAll(locArea);
+            }
 
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
             Species firstPk = area.get(0).getSpecies();
@@ -1777,12 +1788,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setRandomizeWildPokemon(true);
+        Settings settings = getStandardSettings(romName);
         settings.setWildPokemonRegionMod(Settings.WildPokemonRegionMod.GAME);
         settings.setKeepWildEvolutionFamilies(true);
         settings.setKeepWildTypeThemes(true);
-        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 

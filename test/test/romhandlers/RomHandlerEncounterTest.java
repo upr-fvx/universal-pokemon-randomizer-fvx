@@ -1677,21 +1677,30 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void hasMapIndices(String romName) {
+    public void hasMapIndicesIsCorrect(String romName) {
         loadROM(romName);
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
 
         Map<Integer, List<EncounterArea>> areasByMapIndex = EncounterArea.groupAreasByMapIndex(encounterAreas);
-        assertNotEquals(areasByMapIndex.size(), 1);
 
         List<Integer> maps = new ArrayList<>(areasByMapIndex.keySet());
         maps.sort(null);
 
-        for(int map : maps) {
-            System.out.println("\t" + map + ":");
-            for(EncounterArea area : areasByMapIndex.get(map)) {
-                System.out.println("\t\t" + area.getDisplayName());
+        if(maps.size() > 1) {
+            for (int map : maps) {
+                System.out.println("\t" + map + ":");
+                for (EncounterArea area : areasByMapIndex.get(map)) {
+                    System.out.println("\t\t" + area.getDisplayName());
+                }
             }
+        } else {
+            System.out.println("No map indices.");
+        }
+
+        if(romHandler.hasMapIndices()) {
+            assertNotEquals(areasByMapIndex.size(), 1);
+        } else {
+            assertEquals(areasByMapIndex.size(), 1);
         }
     }
 

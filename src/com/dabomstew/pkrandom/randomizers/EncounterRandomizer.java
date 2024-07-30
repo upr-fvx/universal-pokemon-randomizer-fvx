@@ -240,7 +240,7 @@ public class EncounterRandomizer extends Randomizer {
 
             //ideally, this would treat the encounter types as regions rather than flattening them
             //however that would require ANOTHER big rewrite of this algorithm
-            //and it's just not worth it.
+            //it's just not worth it.
             List<EncounterArea> collapsedEncounters = EncounterArea.flattenEncounterTypesInMaps(encounterAreas);
             List<List<EncounterArea>> maps = new ArrayList<>(
                     EncounterArea.groupAreasByMapIndex(collapsedEncounters).values());
@@ -362,19 +362,10 @@ public class EncounterRandomizer extends Randomizer {
 
         private void randomizeArea(EncounterArea area) {
             //no area-level type theme, because that could foul up other type restrictions.
+            //Either it's region-level, or determined per-Species (based on all areas in the region).
 
-            boolean needsIndividualTypeRestrictions = (needsTypes && regionType == null);
-            //efficiency-related: if each Species has its own type restrictions, faster to
-            //run area filters on remainingByType than to run type filters on AllowedForArea
-
-            SpeciesSet allowedForArea = null;
-            if(!needsIndividualTypeRestrictions) {
-                allowedForArea = setupAllowedForArea(regionType, area);
-                if (useMapping || catchEmAll) {
-                    allowedForArea = new SpeciesSet(allowedForArea);
-                }
-            }
-
+            //removing allowedForArea: it added a lot of complexity to the algorithm, and only saved
+            //a small amount of processing time in what are already the fastest-processing cases.
             for (Encounter enc : area) {
                 Species current = enc.getSpecies();
 
@@ -384,26 +375,11 @@ public class EncounterRandomizer extends Randomizer {
                     replacement = regionMap.get(current);
 
                 } else {
+                    //choose new Species
                     if(keepEvolutions && mapHasFamilyMember(current)) {
                         replacement = pickFamilyMemberReplacement(current);
                     } else {
-
-                        //we actually need to pick a new one
-                        SpeciesSet allowedForReplacement;
-                        if (needsIndividualTypeRestrictions) {
-                            allowedForReplacement = setupAllowedForReplacement(enc, area);
-                        } else {
-                            allowedForReplacement = setupAllowedForReplacement(enc, allowedForArea);
-                            if (allowedForReplacement.isEmpty()) {
-                                allowedForReplacement = retrySetupAllowedForAreaAndReplacement(enc, area, regionType);
-                            }
-                        }
-                        if (allowedForReplacement.isEmpty()) {
-                            throw new RandomizationException("Could not find a wild Species replacement for " + enc);
-                        }
-
-
-                        //ok, we have a valid set. Time to actually choose a Species!
+                        SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, area, regionType);
                         replacement = pickReplacement(current, allowedForReplacement);
                     }
 
@@ -412,16 +388,9 @@ public class EncounterRandomizer extends Randomizer {
                         regionMap.put(current, replacement);
                     }
 
-                    //remove from possible picks if applicable
+                    //remove from remaining if applicable
                     if (useMapping || catchEmAll) {
                         removeFromRemaining(replacement);
-                        if(allowedForArea != null) {
-                            allowedForArea.remove(replacement);
-
-                            if (allowedForArea.isEmpty()) {
-                                allowedForArea = new SpeciesSet(setupAllowedForArea(regionType, area));
-                            }
-                        }
                         //removeFromRemaining() already checks if remaining is empty, so we don't need to do that here.
                     }
                 }
@@ -505,21 +474,6 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given an encounter and area, and optionally a type, runs (the equivalent of) setupAllowedForArea and
-         * setupAllowedForReplacement on allowed, rather than remaining.
-         * @param enc The encounter to choose replacements for.
-         * @param areaType The type theme for the area, or null if none.
-         * @return A {@link SpeciesSet} containing the allowed replacements for this encounter and area.
-         */
-        private SpeciesSet retrySetupAllowedForAreaAndReplacement(Encounter enc, EncounterArea area, Type areaType) {
-            SpeciesSet allowedForArea = removeBannedFromArea(
-                    (areaType == null) ? allowed : allowedByType.get(areaType),
-                    area);
-
-            return setupAllowedForReplacement(enc, allowedForArea);
-        }
-
-        /**
          * Given a {@link List} of maps (each represented by a {@link List} of {@link EncounterArea}s) randomizes them
          * with as many distinct Pokemon as possible without crashing ORAS's DexNav.
          * @param maps The list of maps to randomize.
@@ -550,7 +504,6 @@ public class EncounterRandomizer extends Randomizer {
                 EncounterArea area;
                 Type areaType;
                 Map<Species, Species> areaMap;
-                SpeciesSet allowedForArea = null;
             }
 
             Map<Encounter, AreaWithData> encountersToAreas = new IdentityHashMap<>();
@@ -567,12 +520,6 @@ public class EncounterRandomizer extends Randomizer {
 
                 awd.areaMap = new HashMap<>();
 
-                if(!keepPrimaryType) {
-                    //the only individual type restrictions should be keepPrimary,
-                    //since the area and region are the same
-                    awd.allowedForArea = new SpeciesSet(setupAllowedForArea(awd.areaType, area));
-                }
-
                 for(Encounter enc : area) {
                     encountersToAreas.put(enc, awd);
                 }
@@ -583,40 +530,23 @@ public class EncounterRandomizer extends Randomizer {
 
             int dexNavLoad = getORASDexNavLoad(map);
 
-            SpeciesSet usedSpecies = new SpeciesSet();
-
             //now we're prepared to start actually randomizing
             for(Encounter enc : shuffledEncounters) {
                 AreaWithData awd = encountersToAreas.get(enc);
 
-
+                Species current = enc.getSpecies();
                 Species replacement;
 
-                if(!awd.areaMap.containsKey(enc.getSpecies()) || dexNavLoad < ORAS_CRASH_THRESHOLD) {
+                if(!awd.areaMap.containsKey(current) || dexNavLoad < ORAS_CRASH_THRESHOLD) {
                     //get new species
-                    SpeciesSet allowedForReplacement;
-                    if(awd.allowedForArea != null) {
-                        awd.allowedForArea.removeAll(usedSpecies);
-                        if(awd.allowedForArea.isEmpty()){
-                            awd.allowedForArea = new SpeciesSet(setupAllowedForArea(awd.areaType, awd.area));
-                        }
+                    SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, awd.area, awd.areaType);
 
-                        allowedForReplacement = setupAllowedForReplacement(enc, awd.allowedForArea);
-                        if(allowedForReplacement.isEmpty()) {
-                            retrySetupAllowedForAreaAndReplacement(enc, awd.area, awd.areaType);
-                        }
-
-                    } else {
-                        allowedForReplacement = setupAllowedForReplacement(enc, awd.area);
-                    }
-
-                    replacement = pickReplacement(enc.getSpecies(), allowedForReplacement);
+                    replacement = pickReplacement(current, allowedForReplacement);
                     removeFromRemaining(replacement);
-                    usedSpecies.add(replacement);
 
                     //either put it in the map, or increase DexNav load
-                    if(!awd.areaMap.containsKey(enc.getSpecies())) {
-                        awd.areaMap.put(enc.getSpecies(), replacement);
+                    if(!awd.areaMap.containsKey(current)) {
+                        awd.areaMap.put(current, replacement);
                     } else {
                         dexNavLoad++;
                     }
@@ -722,84 +652,99 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given an area and (optionally) a Type, returns a set of {@link Species} valid for placement in that area,
-         * of the given type if there was one.
+         * Given a {@link Type} (or null) and a set of banned {@link Species}, returns a set of {@link Species}
+         * valid for placement in that area, of the given type if there was one.
          * @param areaType The Type which all {@link Species} returned should have, or null.
-         * @param area The area to find allowed {@link Species} for.
+         * @param banned The set of banned species. Can be empty.
          * @return A {@link SpeciesSet} (which may be a reference to an existing set) which contains all
-         * {@link Species} allowed for the area.
+         * available {@link Species} of that type, except any banned ones.
          */
-        private SpeciesSet setupAllowedForArea(Type areaType, EncounterArea area) {
+        private SpeciesSet getTypeWithoutBanned(Type areaType, SpeciesSet banned) {
 
-            SpeciesSet allowedForArea;
+            SpeciesSet validSpecies;
             if (areaType != null) {
-                allowedForArea = removeBannedFromArea(remainingByType.get(areaType), area);
-                if(allowedForArea.isEmpty()) {
-                    allowedForArea = removeBannedFromArea(allowedByType.get(areaType), area);
+                validSpecies = removeBannedSpecies(remainingByType.get(areaType), banned);
+                if(validSpecies.isEmpty()) {
+                    validSpecies = removeBannedSpecies(allowedByType.get(areaType), banned);
                 }
             } else {
-                allowedForArea = removeBannedFromArea(remaining, area);
-                if(allowedForArea.isEmpty()) {
-                    allowedForArea = removeBannedFromArea(allowed, area);
+                validSpecies = removeBannedSpecies(remaining, banned);
+                if(validSpecies.isEmpty()) {
+                    validSpecies = removeBannedSpecies(allowed, banned);
                 }
             }
 
-            return allowedForArea;
+            return validSpecies;
         }
 
         /**
-         * Removes all {@link Species} banned from the given area from the given pool.
+         * Removes all {@link Species} contained in the banned set from the given pool.
          * Safe to pass referenced {@link SpeciesSet}s to.
          * @param startingPool The pool of {@link Species} to start from.
-         * @param area The area to check for banned {@link Species}.
-         * @return startingPool if the area had no banned {@link Species}; a new {@link SpeciesSet} with the banned
+         * @param banned The set of {@link Species} to remove.
+         * @return startingPool if banned had no {@link Species}; a new {@link SpeciesSet} with the banned
          * {@link Species} removed otherwise.
          */
-        private SpeciesSet removeBannedFromArea(SpeciesSet startingPool, EncounterArea area) {
-            SpeciesSet banned = area.getBannedSpecies();
+        private SpeciesSet removeBannedSpecies(SpeciesSet startingPool, SpeciesSet banned) {
+            SpeciesSet output = startingPool;
             if(!banned.isEmpty()) {
-                startingPool = new SpeciesSet(startingPool); //don't want to remove from the original!
-                startingPool.removeAll(banned);
+                output = new SpeciesSet(startingPool);
+                output.removeAll(banned);
             }
 
-            return startingPool;
+            return output;
         }
 
         /**
-         * Given an encounter, chooses a set of potential replacements for that encounter.
-         * @param enc The encounter to replace.
-         * @param area The area the encounter is in. Used to determine banned {@link Species} if areaInformationMap is not
-         *             populated.
+         * Given a {@link Species}, and some related information, finds a set of
+         * valid replacements for that {@link Species}.
+         * @param current The {@link Species} to find replacements for.
+         * @param area The area the encounter is in. Used to determine banned {@link Species} if
+         *             areaInformationMap is not populated.
+         * @param regionType A Type that all {@link Species} in the current region should be.
          * @return A {@link SpeciesSet} containing all valid replacements for the encounter. This may be a
          * reference to another set; do not modify!
          */
-        private SpeciesSet setupAllowedForReplacement(Encounter enc, EncounterArea area) {
+        private SpeciesSet setupAllowedForReplacement(Species current, EncounterArea area, Type regionType) {
+            SpeciesSet allowedForReplacement;
             if(areaInformationMap == null) {
-                //Since this method is only called when the Species need individual type restrictions,
-                //this should only happen if we're using keepPrimary.
-                //However, I'm not going to make that an assumed condition.
-
-                if(keepPrimaryType) {
-                    Type primary = enc.getSpecies().getPrimaryType(true);
-                    return setupAllowedForArea(primary, area);
-                } else {
-                    //this shouldn't be reached, but maybe that will change in future
-                    return setupAllowedForArea(null, area);
-                }
+                allowedForReplacement = setupAllowedForReplacementNoInfoMap(current, area, regionType);
+            } else {
+                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, regionType);
             }
-            //else
-            SpeciesAreaInformation info = areaInformationMap.get(enc.getSpecies());
+
+            if (allowedForReplacement.isEmpty()) {
+                throw new RandomizationException("Could not find a wild Species replacement for "
+                        + current.fullName() + " in area " + area.getDisplayName() + "!");
+            }
+
+            return allowedForReplacement;
+        }
+
+        /**
+         * Given a {@link Species} and (optionally) a {@link Type}, finds allowed replacements for that species,
+         * of the given type if there was one. <br>
+         * Assumes that the info map is populated and contains an entry for the given species; throws an exception
+         * otherwise. To find replacements for an unmapped Species, use setupAllowedForReplacementNoInfoMap().
+         * @param current The {@link Species} to replace.
+         * @param theme A {@link Type} that the allowed replacements should all be. Overrides any other type themes.
+         * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
+         * to a local variable; do not modify!
+         * @throws NullPointerException if the info map was not set up.
+         * @throws IllegalStateException if the info map did not contain a non-null value for the given {@link Species}.
+         */
+        private SpeciesSet setupAllowedForReplacementUsingInfoMap(Species current, Type theme) {
+            SpeciesAreaInformation info = areaInformationMap.get(current);
             if(info == null) {
-                //technically, this is the same situation as the above. However, this should not happen with the current
-                //flow, so we throw an exception.
                 throw new IllegalStateException("Info was null for encounter's species!");
             }
 
-            Type type = info.getTheme(keepPrimaryType);
+            Type typeForReplacement = (theme != null) ? theme : info.getTheme(keepPrimaryType);
             boolean needsInner = !info.bannedForReplacement.isEmpty() || keepEvolutions;
             //if neither of these is true, the only restriction is the type
 
-            SpeciesSet possiblyAllowed = (type == null) ? remaining : remainingByType.get(type);
+            SpeciesSet possiblyAllowed;
+            possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
             if(needsInner) {
                 possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
             }
@@ -808,49 +753,30 @@ public class EncounterRandomizer extends Randomizer {
             }
             //else - it didn't work looking at remaining. Let's try allowed.
 
-            possiblyAllowed = (type == null) ? allowed : allowedByType.get(type);
+            possiblyAllowed = (typeForReplacement == null) ? allowed : allowedByType.get(typeForReplacement);
             if(needsInner) {
                 possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
             }
-            if(!possiblyAllowed.isEmpty()) {
-                return possiblyAllowed;
-            }
-
-            //it didn't work for allowed, either
-            throw new RandomizationException("Could not find any replacements for wild encounter " + enc + "!");
+            return possiblyAllowed;
+            //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
         }
 
         /**
-         * Given an encounter and a set of potential replacements for that encounter, narrows it down to valid
-         * replacements for the encounter.
-         * Assumes that any type restrictions have already been applied.
-         * @param enc The encounter to set up replacements for.
-         * @param startingPool The pool to start from.
-         * @return startingPool if all {@link Species} in it were valid; a new {@link SpeciesSet} containing
-         * all valid {@link Species} from startingPool otherwise.
+         * Given a {@link Species} and (optionally) a {@link Type}, finds allowed replacements for that species,
+         * of the given type if there was one. <br>
+         * Ignores any information present in the info map.
+         * @param current The {@link Species} to replace.
+         * @param area The area that this encounter was found in. Used to determine banned Species.
+         * @param theme A {@link Type} that the allowed replacements should all be. If null,
+         *              returns Species of all Types.
+         * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
+         * to a local variable; do not modify!
          */
-        private SpeciesSet setupAllowedForReplacement(Encounter enc, SpeciesSet startingPool) {
-            if(areaInformationMap == null) {
-                //we have no information about this encounter, and assume that means it needs no individual treatment.
-                return startingPool;
-            }
-            SpeciesAreaInformation info = areaInformationMap.get(enc.getSpecies());
-            if(info == null) {
-                //technically, this is the same situation as the above. However, this should not happen with the current
-                //flow, so we throw an exception.
-                throw new IllegalStateException("Info was null for encounter's species!");
-            }
+        private SpeciesSet setupAllowedForReplacementNoInfoMap(Species current, EncounterArea area, Type theme) {
+            Type typeForReplacement = (theme != null) ? theme :
+                    (keepPrimaryType ? current.getPrimaryType(true) : null);
 
-            if(info.getBannedForReplacement().isEmpty() &&
-                    !keepEvolutions) {
-                //allowedForReplacement is exactly startingPool
-                return startingPool;
-            }
-
-            //we actually need to run the inner
-
-            return setupAllowedForReplacementInner(info, startingPool);
-            //no check if it's empty, because we don't have the information needed to retry if it is.
+            return getTypeWithoutBanned(typeForReplacement, area.getBannedSpecies());
         }
 
         /**
@@ -1269,12 +1195,12 @@ public class EncounterRandomizer extends Randomizer {
 
     /**
      * Prepares the EncounterAreas for randomization by copying them, removing unused areas, and shuffling the order.
-     * @param unprepped The List of EncounterAreas to prepare.
+     * @param originalAreas The List of EncounterAreas to prepare.
      * @return A new List of all the same Encounters, with the areas shuffled and possibly merged as appropriate.
      */
-    private List<EncounterArea> prepEncounterAreas(List<EncounterArea> unprepped) {
+    private List<EncounterArea> prepEncounterAreas(List<EncounterArea> originalAreas) {
         // Clone the original set, so that we don't mess up saving
-        List<EncounterArea> prepped = new ArrayList<>(unprepped);
+        List<EncounterArea> prepped = new ArrayList<>(originalAreas);
 
         prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
                 || "UNUSED".equals(area.getLocationTag()));

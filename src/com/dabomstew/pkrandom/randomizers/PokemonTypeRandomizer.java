@@ -1,11 +1,11 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.MegaEvolution;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.PokemonSet;
-import com.dabomstew.pkrandom.pokemon.cueh.BasicPokemonAction;
-import com.dabomstew.pkrandom.pokemon.cueh.EvolvedPokemonAction;
+import com.dabomstew.pkrandom.game_data.MegaEvolution;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -28,13 +28,13 @@ public class PokemonTypeRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
         boolean dualTypeOnly = settings.isDualTypeOnly();
 
-        BasicPokemonAction<Pokemon> basicAction = pk -> {
+        BasicSpeciesAction<Species> basicAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             double chance = pk.getEvolutionsFrom().size() == 1 ? GSTC_HAS_EVO : GSTC_NO_EVO;
             assignRandomSecondaryType(pk, chance, dualTypeOnly);
         };
-        EvolvedPokemonAction<Pokemon> evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
+        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
             evTo.setPrimaryType(evFrom.getPrimaryType(false));
             evTo.setSecondaryType(evFrom.getSecondaryType(false));
 
@@ -43,7 +43,7 @@ public class PokemonTypeRandomizer extends Randomizer {
                 assignRandomSecondaryType(evTo, chance, dualTypeOnly);
             }
         };
-        BasicPokemonAction<Pokemon> noEvoAction = pk -> {
+        BasicSpeciesAction<Species> noEvoAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);
@@ -59,8 +59,8 @@ public class PokemonTypeRandomizer extends Randomizer {
     }
 
     private void carryTypesToAltFormes() {
-        PokemonSet allPokes = romHandler.getPokemonSetInclFormes();
-        for (Pokemon pk : allPokes) {
+        SpeciesSet allPokes = romHandler.getPokemonSetInclFormes();
+        for (Species pk : allPokes) {
             if (pk != null && pk.isActuallyCosmetic()) {
                 pk.setPrimaryType(pk.getBaseForme().getPrimaryType(false));
                 pk.setSecondaryType(pk.getBaseForme().getSecondaryType(false));
@@ -88,7 +88,7 @@ public class PokemonTypeRandomizer extends Randomizer {
         }
     }
 
-    private void assignRandomSecondaryType(Pokemon pk, double chance, boolean dualTypeOnly) {
+    private void assignRandomSecondaryType(Species pk, double chance, boolean dualTypeOnly) {
         if (random.nextDouble() < chance || dualTypeOnly) {
             pk.setSecondaryType(typeService.randomType(random));
             while (pk.getSecondaryType(false) == pk.getPrimaryType(false)) {

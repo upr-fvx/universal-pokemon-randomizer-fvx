@@ -1,12 +1,12 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Species;
+import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.pokemon.Evolution;
-import com.dabomstew.pkrandom.pokemon.EvolutionType;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.PokemonSet;
+import com.dabomstew.pkrandom.game_data.Evolution;
+import com.dabomstew.pkrandom.game_data.EvolutionType;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -42,9 +42,9 @@ public class EvolutionRandomizer extends Randomizer {
                                      boolean evolveEveryLevel) {
         rPokeService.setRestrictions(settings);
 
-        PokemonSet pokemonPool = rPokeService.getPokemon(false,
+        SpeciesSet pokemonPool = rPokeService.getPokemon(false,
                 romHandler.altFormesCanHaveDifferentEvolutions(), false);
-        PokemonSet banned = new PokemonSet(rPokeService.getBannedFormesForPlayerPokemon());
+        SpeciesSet banned = new SpeciesSet(rPokeService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
             banned.addAll(rPokeService.getAbilityDependentFormes());
         }
@@ -70,16 +70,16 @@ public class EvolutionRandomizer extends Randomizer {
         private final boolean forceGrowth;
         private final boolean evolveEveryLevel;
 
-        private final PokemonSet pokemonPool;
-        private final PokemonSet banned;
+        private final SpeciesSet pokemonPool;
+        private final SpeciesSet banned;
 
-        private Map<Pokemon, List<Evolution>> allOriginalEvos;
+        private Map<Species, List<Evolution>> allOriginalEvos;
 
-        public InnerRandomizer(PokemonSet pokemonPool, PokemonSet banned,
-                                   boolean similarStrength, boolean sameType,
-                                   boolean limitToThreeStages, boolean noConvergence,
-                                   boolean forceChange, boolean forceGrowth,
-                                   boolean evolveEveryLevel) {
+        public InnerRandomizer(SpeciesSet pokemonPool, SpeciesSet banned,
+                               boolean similarStrength, boolean sameType,
+                               boolean limitToThreeStages, boolean noConvergence,
+                               boolean forceChange, boolean forceGrowth,
+                               boolean evolveEveryLevel) {
             this.pokemonPool = pokemonPool;
             this.banned = banned;
             this.similarStrength = similarStrength;
@@ -118,15 +118,15 @@ public class EvolutionRandomizer extends Randomizer {
             clearEvolutions();
 
             // TODO: iterating through this in a random order would be better
-            for (Pokemon from : pokemonPool) {
+            for (Species from : pokemonPool) {
                 List<Evolution> originalEvos = getOriginalEvos(from);
                 for (Evolution evo : originalEvos) {
-                    PokemonSet possible = findPossibleReplacements(from, evo);
+                    SpeciesSet possible = findPossibleReplacements(from, evo);
                     if (possible.isEmpty()) {
                         return false;
                     }
-                    Pokemon picked = similarStrength ? possible.getRandomSimilarStrengthPokemon(evo.getTo(), random)
-                            : possible.getRandomPokemon(random);
+                    Species picked = similarStrength ? possible.getRandomSimilarStrengthSpecies(evo.getTo(), random)
+                            : possible.getRandomSpecies(random);
 
                     Evolution newEvo = prepareNewEvolution(from, evo, picked);
                     from.getEvolutionsFrom().add(newEvo);
@@ -136,22 +136,22 @@ public class EvolutionRandomizer extends Randomizer {
             return true;
         }
 
-        private Map<Pokemon, List<Evolution>> cacheOriginalEvolutions() {
-            Map<Pokemon, List<Evolution>> originalEvos = new HashMap<>();
-            for (Pokemon pk : pokemonPool) {
+        private Map<Species, List<Evolution>> cacheOriginalEvolutions() {
+            Map<Species, List<Evolution>> originalEvos = new HashMap<>();
+            for (Species pk : pokemonPool) {
                 originalEvos.put(pk, new ArrayList<>(pk.getEvolutionsFrom()));
             }
             return originalEvos;
         }
 
         private void clearEvolutions() {
-            for (Pokemon pk : pokemonPool) {
+            for (Species pk : pokemonPool) {
                 pk.getEvolutionsFrom().clear();
                 pk.getEvolutionsTo().clear();
             }
         }
 
-        private List<Evolution> getOriginalEvos(Pokemon from) {
+        private List<Evolution> getOriginalEvos(Species from) {
             if (evolveEveryLevel) {
                 // A list containing a single dummy object; ensures we always go through all Pokemon exactly once.
                 // "originalEvos" of course becomes a misnomer here, and because it is but a dummy object,
@@ -162,7 +162,7 @@ public class EvolutionRandomizer extends Randomizer {
             }
         }
 
-        private Evolution prepareNewEvolution(Pokemon from, Evolution evo, Pokemon picked) {
+        private Evolution prepareNewEvolution(Species from, Evolution evo, Species picked) {
             Evolution newEvo;
             if (evolveEveryLevel) {
                 newEvo = new Evolution(from, picked, EvolutionType.LEVEL, 1);
@@ -177,7 +177,7 @@ public class EvolutionRandomizer extends Randomizer {
             return newEvo;
         }
 
-        private void pickCosmeticForme(Pokemon picked, Evolution newEvo) {
+        private void pickCosmeticForme(Species picked, Evolution newEvo) {
             boolean checkCosmetics = true;
             if (picked.getFormeNumber() > 0) {
                 newEvo.setForme(picked.getFormeNumber());
@@ -190,8 +190,8 @@ public class EvolutionRandomizer extends Randomizer {
             }
         }
 
-        private PokemonSet findPossibleReplacements(Pokemon from, Evolution evo) {
-            List<Predicate<Pokemon>> filters = new ArrayList<>();
+        private SpeciesSet findPossibleReplacements(Species from, Evolution evo) {
+            List<Predicate<Species>> filters = new ArrayList<>();
             filters.add(to -> !banned.contains(to));
             filters.add(to -> !to.equals(from));
             filters.add(to -> to.getGrowthCurve().equals(from.getGrowthCurve()));
@@ -211,15 +211,15 @@ public class EvolutionRandomizer extends Randomizer {
                 filters.add(to -> to.getBSTForPowerLevels() > from.getBSTForPowerLevels());
             }
             if (sameType) {
-                if (from.getNumber() == Species.eevee && !evolveEveryLevel) {
+                if (from.getNumber() == SpeciesIDs.eevee && !evolveEveryLevel) {
                     filters.add(to -> to.hasSharedType(evo.getTo()));
                 } else {
                     filters.add(to -> to.hasSharedType(from));
                 }
             }
 
-            Predicate<Pokemon> combinedFilter = to -> {
-                for (Predicate<Pokemon> filter : filters) {
+            Predicate<Species> combinedFilter = to -> {
+                for (Predicate<Species> filter : filters) {
                     if (!filter.test(to)) return false;
                 }
                 return true;
@@ -227,7 +227,7 @@ public class EvolutionRandomizer extends Randomizer {
             return pokemonPool.filter(combinedFilter);
         }
 
-        private boolean isAlreadyChosenAsOtherSplitEvo(Pokemon from, Pokemon to) {
+        private boolean isAlreadyChosenAsOtherSplitEvo(Species from, Species to) {
             return from.getEvolutionsFrom().stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
         }
 
@@ -239,17 +239,17 @@ public class EvolutionRandomizer extends Randomizer {
          * @param to   Pokemon to evolve to
          * @return True if there is an evolution cycle, else false
          */
-        private boolean createsCycle(Pokemon from, Pokemon to) {
+        private boolean createsCycle(Species from, Species to) {
             Evolution tempEvo = new Evolution(from, to, EvolutionType.NONE, 0);
             from.getEvolutionsFrom().add(tempEvo);
-            Set<Pokemon> visited = new HashSet<>();
-            Set<Pokemon> recStack = new HashSet<>();
+            Set<Species> visited = new HashSet<>();
+            Set<Species> recStack = new HashSet<>();
             boolean recur = isCyclic(from, visited, recStack);
             from.getEvolutionsFrom().remove(tempEvo);
             return recur;
         }
 
-        private boolean isCyclic(Pokemon pk, Set<Pokemon> visited, Set<Pokemon> recStack) {
+        private boolean isCyclic(Species pk, Set<Species> visited, Set<Species> recStack) {
             if (!visited.contains(pk)) {
                 visited.add(pk);
                 recStack.add(pk);
@@ -265,18 +265,18 @@ public class EvolutionRandomizer extends Randomizer {
             return false;
         }
 
-        private boolean breaksStageLimit(Pokemon from, Pokemon to) {
+        private boolean breaksStageLimit(Species from, Species to) {
             int maxFrom = numPreEvolutions(from, stageLimit);
             int maxTo = numEvolutions(to, stageLimit);
             return maxFrom + maxTo + 2 > stageLimit;
         }
 
         // Return the max depth of pre-evolutions a Pokemon has
-        private int numPreEvolutions(Pokemon pk, int maxInterested) {
+        private int numPreEvolutions(Species pk, int maxInterested) {
             return numPreEvolutions(pk, 0, maxInterested);
         }
 
-        private int numPreEvolutions(Pokemon pk, int depth, int maxInterested) {
+        private int numPreEvolutions(Species pk, int depth, int maxInterested) {
             if (pk.getEvolutionsTo().size() == 0) {
                 return 0;
             }
@@ -290,11 +290,11 @@ public class EvolutionRandomizer extends Randomizer {
             return maxPreEvos;
         }
 
-        private int numEvolutions(Pokemon pk, int maxInterested) {
+        private int numEvolutions(Species pk, int maxInterested) {
             return numEvolutions(pk, 0, maxInterested);
         }
 
-        private int numEvolutions(Pokemon pk, int depth, int maxInterested) {
+        private int numEvolutions(Species pk, int depth, int maxInterested) {
             if (pk.getEvolutionsFrom().size() == 0) {
                 // looks ahead to see if an evo MUST be given to this Pokemon in the future
                 return allOriginalEvos.get(pk).isEmpty() ? 0 : 1;
@@ -309,12 +309,12 @@ public class EvolutionRandomizer extends Randomizer {
             return maxEvos;
         }
 
-        private boolean isAnOriginalEvo(Pokemon from, Pokemon to) {
+        private boolean isAnOriginalEvo(Species from, Species to) {
             boolean isAnOriginalEvo = allOriginalEvos.get(from).stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
             // Hard-coded Cosmoem case, since the other-version evolution doesn't actually
             // exist within the game's data, but we don't want Cosmoem to evolve into Lunala in Sun, still.
-            if (from.getNumber() == Species.cosmoem) {
-                isAnOriginalEvo |= to.getNumber() == Species.solgaleo || to.getNumber() == Species.lunala;
+            if (from.getNumber() == SpeciesIDs.cosmoem) {
+                isAnOriginalEvo |= to.getNumber() == SpeciesIDs.solgaleo || to.getNumber() == SpeciesIDs.lunala;
             }
             return isAnOriginalEvo;
         }

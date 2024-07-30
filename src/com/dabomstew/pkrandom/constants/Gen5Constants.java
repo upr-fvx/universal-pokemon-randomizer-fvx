@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.game_data.*;
 
 public class Gen5Constants {
 
@@ -77,11 +77,11 @@ public class Gen5Constants {
 
     public static final EncounterType[] encounterTypeValues = {EncounterType.WALKING, //Grass/Cave
             EncounterType.WALKING, //Dark grass
-            EncounterType.WALKING, //Shaking Grass
+            EncounterType.AMBUSH, //Shaking Grass
             EncounterType.SURFING, //Surfing
-            EncounterType.SURFING, //Surfing Spots
+            EncounterType.AMBUSH, //Surfing Spots
             EncounterType.FISHING, //Fishing
-            EncounterType.FISHING //Fishing spots
+            EncounterType.AMBUSH //Fishing spots
     };
 
     public static final int[] habitatClassificationOfEachType = { 0, 0, 0, 1, 1, 2, 2 };
@@ -94,21 +94,21 @@ public class Gen5Constants {
     public static final int w2Route4EncounterFile = 105, w2VRExclusiveRoom1 = 78, w2VRExclusiveRoom2 = 79,
             w2ReversalMountainStart = 55, w2ReversalMountainEnd = 60;
 
-    public static final List<Integer> bw2HiddenHollowUnovaPokemon = Arrays.asList(Species.watchog, Species.herdier, Species.liepard,
-            Species.pansage, Species.pansear, Species.panpour, Species.pidove, Species.zebstrika, Species.boldore,
-            Species.woobat, Species.drilbur, Species.audino, Species.gurdurr, Species.tympole, Species.throh,
-            Species.sawk, Species.leavanny, Species.scolipede, Species.cottonee, Species.petilil, Species.basculin,
-            Species.krookodile, Species.maractus, Species.crustle, Species.scraggy, Species.sigilyph, Species.tirtouga,
-            Species.garbodor, Species.minccino, Species.gothorita, Species.duosion, Species.ducklett, Species.vanillish,
-            Species.emolga, Species.karrablast, Species.alomomola, Species.galvantula, Species.klinklang, Species.elgyem,
-            Species.litwick, Species.axew, Species.cubchoo, Species.shelmet, Species.stunfisk, Species.mienfoo,
-            Species.druddigon, Species.golett, Species.pawniard, Species.bouffalant, Species.braviary, Species.mandibuzz,
-            Species.heatmor, Species.durant);
+    public static final List<Integer> bw2HiddenHollowUnovaPokemon = Arrays.asList(SpeciesIDs.watchog, SpeciesIDs.herdier, SpeciesIDs.liepard,
+            SpeciesIDs.pansage, SpeciesIDs.pansear, SpeciesIDs.panpour, SpeciesIDs.pidove, SpeciesIDs.zebstrika, SpeciesIDs.boldore,
+            SpeciesIDs.woobat, SpeciesIDs.drilbur, SpeciesIDs.audino, SpeciesIDs.gurdurr, SpeciesIDs.tympole, SpeciesIDs.throh,
+            SpeciesIDs.sawk, SpeciesIDs.leavanny, SpeciesIDs.scolipede, SpeciesIDs.cottonee, SpeciesIDs.petilil, SpeciesIDs.basculin,
+            SpeciesIDs.krookodile, SpeciesIDs.maractus, SpeciesIDs.crustle, SpeciesIDs.scraggy, SpeciesIDs.sigilyph, SpeciesIDs.tirtouga,
+            SpeciesIDs.garbodor, SpeciesIDs.minccino, SpeciesIDs.gothorita, SpeciesIDs.duosion, SpeciesIDs.ducklett, SpeciesIDs.vanillish,
+            SpeciesIDs.emolga, SpeciesIDs.karrablast, SpeciesIDs.alomomola, SpeciesIDs.galvantula, SpeciesIDs.klinklang, SpeciesIDs.elgyem,
+            SpeciesIDs.litwick, SpeciesIDs.axew, SpeciesIDs.cubchoo, SpeciesIDs.shelmet, SpeciesIDs.stunfisk, SpeciesIDs.mienfoo,
+            SpeciesIDs.druddigon, SpeciesIDs.golett, SpeciesIDs.pawniard, SpeciesIDs.bouffalant, SpeciesIDs.braviary, SpeciesIDs.mandibuzz,
+            SpeciesIDs.heatmor, SpeciesIDs.durant);
 
     public static final String tmDataPrefix = "87038803";
 
-    public static final int tmCount = 95, hmCount = 6, tmBlockOneCount = 92, tmBlockOneOffset = Items.tm01,
-            tmBlockTwoOffset = Items.tm93;
+    public static final int tmCount = 95, hmCount = 6, tmBlockOneCount = 92, tmBlockOneOffset = ItemIDs.tm01,
+            tmBlockTwoOffset = ItemIDs.tm93;
 
     public static final String bw1ItemPalettesPrefix = "E903EA03020003000400050006000700",
             bw2ItemPalettesPrefix = "FD03FE03020003000400050006000700";
@@ -117,7 +117,7 @@ public class Gen5Constants {
 
     public static final int evolutionMethodCount = 27;
 
-    public static final int highestAbilityIndex = Abilities.teravolt;
+    public static final int highestAbilityIndex = AbilityIDs.teravolt;
 
     public static final int fossilPokemonFile = 877;
     public static final int fossilPokemonLevelOffset = 0x3F7;
@@ -126,20 +126,20 @@ public class Gen5Constants {
 
     private static Map<Integer,List<Integer>> setupAbilityVariations() {
         Map<Integer,List<Integer>> map = new HashMap<>();
-        map.put(Abilities.insomnia, Arrays.asList(Abilities.insomnia, Abilities.vitalSpirit));
-        map.put(Abilities.clearBody, Arrays.asList(Abilities.clearBody, Abilities.whiteSmoke));
-        map.put(Abilities.hugePower, Arrays.asList(Abilities.hugePower, Abilities.purePower));
-        map.put(Abilities.battleArmor, Arrays.asList(Abilities.battleArmor, Abilities.shellArmor));
-        map.put(Abilities.cloudNine, Arrays.asList(Abilities.cloudNine, Abilities.airLock));
-        map.put(Abilities.filter, Arrays.asList(Abilities.filter, Abilities.solidRock));
-        map.put(Abilities.roughSkin, Arrays.asList(Abilities.roughSkin, Abilities.ironBarbs));
-        map.put(Abilities.moldBreaker, Arrays.asList(Abilities.moldBreaker, Abilities.turboblaze, Abilities.teravolt));
+        map.put(AbilityIDs.insomnia, Arrays.asList(AbilityIDs.insomnia, AbilityIDs.vitalSpirit));
+        map.put(AbilityIDs.clearBody, Arrays.asList(AbilityIDs.clearBody, AbilityIDs.whiteSmoke));
+        map.put(AbilityIDs.hugePower, Arrays.asList(AbilityIDs.hugePower, AbilityIDs.purePower));
+        map.put(AbilityIDs.battleArmor, Arrays.asList(AbilityIDs.battleArmor, AbilityIDs.shellArmor));
+        map.put(AbilityIDs.cloudNine, Arrays.asList(AbilityIDs.cloudNine, AbilityIDs.airLock));
+        map.put(AbilityIDs.filter, Arrays.asList(AbilityIDs.filter, AbilityIDs.solidRock));
+        map.put(AbilityIDs.roughSkin, Arrays.asList(AbilityIDs.roughSkin, AbilityIDs.ironBarbs));
+        map.put(AbilityIDs.moldBreaker, Arrays.asList(AbilityIDs.moldBreaker, AbilityIDs.turboblaze, AbilityIDs.teravolt));
 
         return map;
     }
 
-    public static final List<Integer> uselessAbilities = Arrays.asList(Abilities.forecast, Abilities.multitype,
-            Abilities.flowerGift, Abilities.zenMode);
+    public static final List<Integer> uselessAbilities = Arrays.asList(AbilityIDs.forecast, AbilityIDs.multitype,
+            AbilityIDs.flowerGift, AbilityIDs.zenMode);
 
     public static final int normalItemSetVarCommand = 0x28, hiddenItemSetVarCommand = 0x2A, normalItemVarSet = 0x800C,
             hiddenItemVarSet = 0x8000;
@@ -188,17 +188,17 @@ public class Gen5Constants {
     }
 
     private static final List<Integer> bw1IrregularFormes = Arrays.asList(
-            Species.Gen5Formes.castformSu, Species.Gen5Formes.castformR, Species.Gen5Formes.castformSn,
-            Species.Gen5Formes.darmanitanZ,
-            Species.Gen5Formes.meloettaP
+            SpeciesIDs.Gen5Formes.castformSu, SpeciesIDs.Gen5Formes.castformR, SpeciesIDs.Gen5Formes.castformSn,
+            SpeciesIDs.Gen5Formes.darmanitanZ,
+            SpeciesIDs.Gen5Formes.meloettaP
     );
 
     private static final List<Integer> bw2IrregularFormes = Arrays.asList(
-            Species.Gen5Formes.castformSu, Species.Gen5Formes.castformR, Species.Gen5Formes.castformSn,
-            Species.Gen5Formes.darmanitanZ,
-            Species.Gen5Formes.meloettaP,
-            Species.Gen5Formes.kyuremW,
-            Species.Gen5Formes.kyuremB
+            SpeciesIDs.Gen5Formes.castformSu, SpeciesIDs.Gen5Formes.castformR, SpeciesIDs.Gen5Formes.castformSn,
+            SpeciesIDs.Gen5Formes.darmanitanZ,
+            SpeciesIDs.Gen5Formes.meloettaP,
+            SpeciesIDs.Gen5Formes.kyuremW,
+            SpeciesIDs.Gen5Formes.kyuremB
     );
 
     public static final List<Integer> emptyPlaythroughTrainers = Collections.emptyList();
@@ -342,11 +342,11 @@ public class Gen5Constants {
             "Lentimas Secondary");
 
 
-    public static final List<Integer> evolutionItems = Arrays.asList(Items.sunStone, Items.moonStone, Items.fireStone,
-            Items.thunderStone, Items.waterStone, Items.leafStone, Items.shinyStone, Items.duskStone, Items.dawnStone,
-            Items.ovalStone, Items.kingsRock, Items.deepSeaTooth, Items.deepSeaScale, Items.metalCoat, Items.dragonScale,
-            Items.upgrade, Items.protector, Items.electirizer, Items.magmarizer, Items.dubiousDisc, Items.reaperCloth,
-            Items.razorClaw, Items.razorFang, Items.prismScale);
+    public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone, ItemIDs.fireStone,
+            ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone, ItemIDs.shinyStone, ItemIDs.duskStone, ItemIDs.dawnStone,
+            ItemIDs.ovalStone, ItemIDs.kingsRock, ItemIDs.deepSeaTooth, ItemIDs.deepSeaScale, ItemIDs.metalCoat, ItemIDs.dragonScale,
+            ItemIDs.upgrade, ItemIDs.protector, ItemIDs.electirizer, ItemIDs.magmarizer, ItemIDs.dubiousDisc, ItemIDs.reaperCloth,
+            ItemIDs.razorClaw, ItemIDs.razorFang, ItemIDs.prismScale);
 
     public static final List<Integer> bw1RequiredFieldTMs = Arrays.asList(2, 3, 5, 6, 9, 12, 13, 19,
             22, 24, 26, 29, 30, 35, 36, 39, 41, 46, 47, 50, 52, 53, 55, 58, 61, 63, 65, 66, 71, 80, 81, 84, 85, 86, 90,
@@ -356,13 +356,13 @@ public class Gen5Constants {
             22, 26, 28, 29, 30, 36, 39, 41, 46, 47, 50, 52, 53, 56, 58, 61, 63, 65, 66, 67, 69, 71, 80, 81, 84, 85, 86,
             90, 91, 92, 93);
 
-    public static final List<Integer> bw1EarlyRequiredHMMoves = Collections.singletonList(Moves.cut);
+    public static final List<Integer> bw1EarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
     public static final List<Integer> bw2EarlyRequiredHMMoves = Collections.emptyList();
 
     public static final List<Integer> fieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport,
-            Moves.waterfall, Moves.sweetScent, Moves.dive);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
+            MoveIDs.waterfall, MoveIDs.sweetScent, MoveIDs.dive);
 
     public static final String shedinjaSpeciesLocator = "24010000";
 
@@ -387,10 +387,10 @@ public class Gen5Constants {
 
     private static List<Integer> setupAllConsumableItems() {
         List<Integer> list = new ArrayList<>(Gen4Constants.consumableHeldItems);
-        list.addAll(Arrays.asList(Items.airBalloon, Items.redCard, Items.absorbBulb, Items.cellBattery,
-                Items.ejectButton, Items.fireGem, Items.waterGem, Items.electricGem, Items.grassGem, Items.iceGem,
-                Items.fightingGem, Items.poisonGem, Items.groundGem, Items.flyingGem, Items.psychicGem, Items.bugGem,
-                Items.rockGem, Items.ghostGem, Items.dragonGem, Items.darkGem, Items.steelGem, Items.normalGem));
+        list.addAll(Arrays.asList(ItemIDs.airBalloon, ItemIDs.redCard, ItemIDs.absorbBulb, ItemIDs.cellBattery,
+                ItemIDs.ejectButton, ItemIDs.fireGem, ItemIDs.waterGem, ItemIDs.electricGem, ItemIDs.grassGem, ItemIDs.iceGem,
+                ItemIDs.fightingGem, ItemIDs.poisonGem, ItemIDs.groundGem, ItemIDs.flyingGem, ItemIDs.psychicGem, ItemIDs.bugGem,
+                ItemIDs.rockGem, ItemIDs.ghostGem, ItemIDs.dragonGem, ItemIDs.darkGem, ItemIDs.steelGem, ItemIDs.normalGem));
         return Collections.unmodifiableList(list);
     }
 
@@ -398,11 +398,11 @@ public class Gen5Constants {
 
     private static List<Integer> setupAllHeldItems() {
         List<Integer> list = new ArrayList<>(Gen4Constants.allHeldItems);
-        list.addAll(Arrays.asList(Items.airBalloon, Items.redCard, Items.absorbBulb, Items.cellBattery,
-                Items.ejectButton, Items.fireGem, Items.waterGem, Items.electricGem, Items.grassGem, Items.iceGem,
-                Items.fightingGem, Items.poisonGem, Items.groundGem, Items.flyingGem, Items.psychicGem, Items.bugGem,
-                Items.rockGem, Items.ghostGem, Items.dragonGem, Items.darkGem, Items.steelGem, Items.normalGem));
-        list.addAll(Arrays.asList(Items.eviolite, Items.floatStone, Items.rockyHelmet, Items.ringTarget, Items.bindingBand));
+        list.addAll(Arrays.asList(ItemIDs.airBalloon, ItemIDs.redCard, ItemIDs.absorbBulb, ItemIDs.cellBattery,
+                ItemIDs.ejectButton, ItemIDs.fireGem, ItemIDs.waterGem, ItemIDs.electricGem, ItemIDs.grassGem, ItemIDs.iceGem,
+                ItemIDs.fightingGem, ItemIDs.poisonGem, ItemIDs.groundGem, ItemIDs.flyingGem, ItemIDs.psychicGem, ItemIDs.bugGem,
+                ItemIDs.rockGem, ItemIDs.ghostGem, ItemIDs.dragonGem, ItemIDs.darkGem, ItemIDs.steelGem, ItemIDs.normalGem));
+        list.addAll(Arrays.asList(ItemIDs.eviolite, ItemIDs.floatStone, ItemIDs.rockyHelmet, ItemIDs.ringTarget, ItemIDs.bindingBand));
         return Collections.unmodifiableList(list);
     }
 
@@ -410,7 +410,7 @@ public class Gen5Constants {
 
     private static List<Integer> initializeGeneralPurposeConsumableItems() {
         List<Integer> list = new ArrayList<>(Gen4Constants.generalPurposeConsumableItems);
-        list.addAll(Arrays.asList(Items.redCard, Items.absorbBulb, Items.cellBattery, Items.ejectButton));
+        list.addAll(Arrays.asList(ItemIDs.redCard, ItemIDs.absorbBulb, ItemIDs.cellBattery, ItemIDs.ejectButton));
         return Collections.unmodifiableList(list);
     }
 
@@ -418,7 +418,7 @@ public class Gen5Constants {
 
     private static List<Integer> initializeGeneralPurposeItems() {
         List<Integer> list = new ArrayList<>(Gen4Constants.generalPurposeItems);
-        list.addAll(Arrays.asList(Items.floatStone, Items.rockyHelmet));
+        list.addAll(Arrays.asList(ItemIDs.floatStone, ItemIDs.rockyHelmet));
         return Collections.unmodifiableList(list);
     }
 
@@ -426,23 +426,23 @@ public class Gen5Constants {
 
     private static Map<Type, Integer> initializeConsumableTypeBoostingItems() {
         Map<Type, Integer> map = new HashMap<>();
-        map.put(Type.FIRE, Items.fireGem);
-        map.put(Type.WATER, Items.waterGem);
-        map.put(Type.ELECTRIC, Items.electricGem);
-        map.put(Type.GRASS, Items.grassGem);
-        map.put(Type.ICE, Items.iceGem);
-        map.put(Type.FIGHTING, Items.fightingGem);
-        map.put(Type.POISON, Items.poisonGem);
-        map.put(Type.GROUND, Items.groundGem);
-        map.put(Type.FLYING, Items.flyingGem);
-        map.put(Type.PSYCHIC, Items.psychicGem);
-        map.put(Type.BUG, Items.bugGem);
-        map.put(Type.ROCK, Items.rockGem);
-        map.put(Type.GHOST, Items.ghostGem);
-        map.put(Type.DRAGON, Items.dragonGem);
-        map.put(Type.DARK, Items.darkGem);
-        map.put(Type.STEEL, Items.steelGem);
-        map.put(Type.NORMAL, Items.normalGem);
+        map.put(Type.FIRE, ItemIDs.fireGem);
+        map.put(Type.WATER, ItemIDs.waterGem);
+        map.put(Type.ELECTRIC, ItemIDs.electricGem);
+        map.put(Type.GRASS, ItemIDs.grassGem);
+        map.put(Type.ICE, ItemIDs.iceGem);
+        map.put(Type.FIGHTING, ItemIDs.fightingGem);
+        map.put(Type.POISON, ItemIDs.poisonGem);
+        map.put(Type.GROUND, ItemIDs.groundGem);
+        map.put(Type.FLYING, ItemIDs.flyingGem);
+        map.put(Type.PSYCHIC, ItemIDs.psychicGem);
+        map.put(Type.BUG, ItemIDs.bugGem);
+        map.put(Type.ROCK, ItemIDs.rockGem);
+        map.put(Type.GHOST, ItemIDs.ghostGem);
+        map.put(Type.DRAGON, ItemIDs.dragonGem);
+        map.put(Type.DARK, ItemIDs.darkGem);
+        map.put(Type.STEEL, ItemIDs.steelGem);
+        map.put(Type.NORMAL, ItemIDs.normalGem);
         return Collections.unmodifiableMap(map);
     }
 
@@ -450,18 +450,18 @@ public class Gen5Constants {
 
     private static Map<Integer, List<Integer>> initializeMoveBoostingItems() {
         Map<Integer, List<Integer>> map = new HashMap<>(Gen4Constants.moveBoostingItems);
-        map.put(Moves.trick, Arrays.asList(Items.toxicOrb, Items.flameOrb, Items.ringTarget));
-        map.put(Moves.switcheroo, Arrays.asList(Items.toxicOrb, Items.flameOrb, Items.ringTarget));
+        map.put(MoveIDs.trick, Arrays.asList(ItemIDs.toxicOrb, ItemIDs.flameOrb, ItemIDs.ringTarget));
+        map.put(MoveIDs.switcheroo, Arrays.asList(ItemIDs.toxicOrb, ItemIDs.flameOrb, ItemIDs.ringTarget));
 
-        map.put(Moves.bind, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.clamp, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.fireSpin, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.magmaStorm, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.sandTomb, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.whirlpool, Arrays.asList(Items.gripClaw, Items.bindingBand));
-        map.put(Moves.wrap, Arrays.asList(Items.gripClaw, Items.bindingBand));
+        map.put(MoveIDs.bind, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.clamp, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.fireSpin, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.magmaStorm, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.sandTomb, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.whirlpool, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
+        map.put(MoveIDs.wrap, Arrays.asList(ItemIDs.gripClaw, ItemIDs.bindingBand));
 
-        map.put(Moves.hornLeech, Collections.singletonList(Items.bigRoot));
+        map.put(MoveIDs.hornLeech, Collections.singletonList(ItemIDs.bigRoot));
         return Collections.unmodifiableMap(map);
     }
 
@@ -650,48 +650,48 @@ public class Gen5Constants {
     private static Map<Integer,String> setupFormeSuffixes(int gameVersion) {
         Map<Integer,String> formeSuffixes = new HashMap<>();
         if (gameVersion == Gen5Constants.Type_BW) {
-            formeSuffixes.put(Species.Gen5Formes.deoxysA,"-Attack");
-            formeSuffixes.put(Species.Gen5Formes.deoxysD,"-Defense");
-            formeSuffixes.put(Species.Gen5Formes.deoxysS,"-Speed");
-            formeSuffixes.put(Species.Gen5Formes.wormadamS,"-Sandy");
-            formeSuffixes.put(Species.Gen5Formes.wormadamT,"-Trash");
-            formeSuffixes.put(Species.Gen5Formes.shayminS,"-Sky");
-            formeSuffixes.put(Species.Gen5Formes.giratinaO,"-Origin");
-            formeSuffixes.put(Species.Gen5Formes.rotomH,"-Heat");
-            formeSuffixes.put(Species.Gen5Formes.rotomW,"-Wash");
-            formeSuffixes.put(Species.Gen5Formes.rotomFr,"-Frost");
-            formeSuffixes.put(Species.Gen5Formes.rotomFa,"-Fan");
-            formeSuffixes.put(Species.Gen5Formes.rotomM,"-Mow");
-            formeSuffixes.put(Species.Gen5Formes.castformSu,"-Sunny");
-            formeSuffixes.put(Species.Gen5Formes.castformR,"-Rainy");
-            formeSuffixes.put(Species.Gen5Formes.castformSn,"-Snowy");
-            formeSuffixes.put(Species.Gen5Formes.basculinB,"-Blue");
-            formeSuffixes.put(Species.Gen5Formes.darmanitanZ,"-Zen");
-            formeSuffixes.put(Species.Gen5Formes.meloettaP,"-Pirouette");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysA,"-Attack");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysD,"-Defense");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysS,"-Speed");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamS,"-Sandy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamT,"-Trash");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.shayminS,"-Sky");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.giratinaO,"-Origin");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomH,"-Heat");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomW,"-Wash");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFr,"-Frost");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFa,"-Fan");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomM,"-Mow");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSu,"-Sunny");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformR,"-Rainy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSn,"-Snowy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.basculinB,"-Blue");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.darmanitanZ,"-Zen");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.meloettaP,"-Pirouette");
         } else if (gameVersion == Gen5Constants.Type_BW2) {
-            formeSuffixes.put(Species.Gen5Formes.deoxysA + bw2formeOffset,"-Attack");
-            formeSuffixes.put(Species.Gen5Formes.deoxysD + bw2formeOffset,"-Defense");
-            formeSuffixes.put(Species.Gen5Formes.deoxysS + bw2formeOffset,"-Speed");
-            formeSuffixes.put(Species.Gen5Formes.wormadamS + bw2formeOffset,"-Sandy");
-            formeSuffixes.put(Species.Gen5Formes.wormadamT + bw2formeOffset,"-Trash");
-            formeSuffixes.put(Species.Gen5Formes.shayminS + bw2formeOffset,"-Sky");
-            formeSuffixes.put(Species.Gen5Formes.giratinaO + bw2formeOffset,"-Origin");
-            formeSuffixes.put(Species.Gen5Formes.rotomH + bw2formeOffset,"-Heat");
-            formeSuffixes.put(Species.Gen5Formes.rotomW + bw2formeOffset,"-Wash");
-            formeSuffixes.put(Species.Gen5Formes.rotomFr + bw2formeOffset,"-Frost");
-            formeSuffixes.put(Species.Gen5Formes.rotomFa + bw2formeOffset,"-Fan");
-            formeSuffixes.put(Species.Gen5Formes.rotomM + bw2formeOffset,"-Mow");
-            formeSuffixes.put(Species.Gen5Formes.castformSu + bw2formeOffset,"-Sunny");
-            formeSuffixes.put(Species.Gen5Formes.castformR + bw2formeOffset,"-Rainy");
-            formeSuffixes.put(Species.Gen5Formes.castformSn + bw2formeOffset,"-Snowy");
-            formeSuffixes.put(Species.Gen5Formes.basculinB + bw2formeOffset,"-Blue");
-            formeSuffixes.put(Species.Gen5Formes.darmanitanZ + bw2formeOffset,"-Zen");
-            formeSuffixes.put(Species.Gen5Formes.meloettaP + bw2formeOffset,"-Pirouette");
-            formeSuffixes.put(Species.Gen5Formes.kyuremW + bw2formeOffset,"-White");
-            formeSuffixes.put(Species.Gen5Formes.kyuremB + bw2formeOffset,"-Black");
-            formeSuffixes.put(Species.Gen5Formes.tornadusT + bw2formeOffset,"-Therian");
-            formeSuffixes.put(Species.Gen5Formes.thundurusT + bw2formeOffset,"-Therian");
-            formeSuffixes.put(Species.Gen5Formes.landorusT + bw2formeOffset,"-Therian");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysA + bw2formeOffset,"-Attack");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysD + bw2formeOffset,"-Defense");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysS + bw2formeOffset,"-Speed");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamS + bw2formeOffset,"-Sandy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamT + bw2formeOffset,"-Trash");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.shayminS + bw2formeOffset,"-Sky");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.giratinaO + bw2formeOffset,"-Origin");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomH + bw2formeOffset,"-Heat");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomW + bw2formeOffset,"-Wash");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFr + bw2formeOffset,"-Frost");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFa + bw2formeOffset,"-Fan");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomM + bw2formeOffset,"-Mow");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSu + bw2formeOffset,"-Sunny");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformR + bw2formeOffset,"-Rainy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSn + bw2formeOffset,"-Snowy");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.basculinB + bw2formeOffset,"-Blue");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.darmanitanZ + bw2formeOffset,"-Zen");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.meloettaP + bw2formeOffset,"-Pirouette");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.kyuremW + bw2formeOffset,"-White");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.kyuremB + bw2formeOffset,"-Black");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.tornadusT + bw2formeOffset,"-Therian");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.thundurusT + bw2formeOffset,"-Therian");
+            formeSuffixes.put(SpeciesIDs.Gen5Formes.landorusT + bw2formeOffset,"-Therian");
         }
 
         return formeSuffixes;
@@ -704,20 +704,20 @@ public class Gen5Constants {
         deoxysMap.put(1,"-A");
         deoxysMap.put(2,"-D");
         deoxysMap.put(3,"-S");
-        map.put(Species.deoxys, deoxysMap);
+        map.put(SpeciesIDs.deoxys, deoxysMap);
 
         Map<Integer,String> wormadamMap = new HashMap<>();
         wormadamMap.put(1,"-S");
         wormadamMap.put(2,"-T");
-        map.put(Species.wormadam, wormadamMap);
+        map.put(SpeciesIDs.wormadam, wormadamMap);
 
         Map<Integer,String> shayminMap = new HashMap<>();
         shayminMap.put(1,"-S");
-        map.put(Species.shaymin, shayminMap);
+        map.put(SpeciesIDs.shaymin, shayminMap);
 
         Map<Integer,String> giratinaMap = new HashMap<>();
         giratinaMap.put(1,"-O");
-        map.put(Species.giratina, giratinaMap);
+        map.put(SpeciesIDs.giratina, giratinaMap);
 
         Map<Integer,String> rotomMap = new HashMap<>();
         rotomMap.put(1,"-H");
@@ -725,46 +725,46 @@ public class Gen5Constants {
         rotomMap.put(3,"-Fr");
         rotomMap.put(4,"-Fa");
         rotomMap.put(5,"-M");
-        map.put(Species.rotom, rotomMap);
+        map.put(SpeciesIDs.rotom, rotomMap);
 
         Map<Integer,String> castformMap = new HashMap<>();
         castformMap.put(1,"-F");
         castformMap.put(2,"-W");
         castformMap.put(3,"-I");
-        map.put(Species.castform, castformMap);
+        map.put(SpeciesIDs.castform, castformMap);
 
         Map<Integer,String> basculinMap = new HashMap<>();
         basculinMap.put(1,"-B");
-        map.put(Species.basculin, basculinMap);
+        map.put(SpeciesIDs.basculin, basculinMap);
 
         Map<Integer,String> darmanitanMap = new HashMap<>();
         darmanitanMap.put(1,"-Z");
-        map.put(Species.darmanitan, darmanitanMap);
+        map.put(SpeciesIDs.darmanitan, darmanitanMap);
 
         Map<Integer,String> meloettaMap = new HashMap<>();
         meloettaMap.put(1,"-P");
-        map.put(Species.meloetta, meloettaMap);
+        map.put(SpeciesIDs.meloetta, meloettaMap);
 
         Map<Integer,String> kyuremMap = new HashMap<>();
         kyuremMap.put(1,"-W");
         kyuremMap.put(2,"-B");
-        map.put(Species.kyurem, kyuremMap);
+        map.put(SpeciesIDs.kyurem, kyuremMap);
 
         Map<Integer,String> keldeoMap = new HashMap<>();
         keldeoMap.put(1,"-R");
-        map.put(Species.keldeo, keldeoMap);
+        map.put(SpeciesIDs.keldeo, keldeoMap);
 
         Map<Integer,String> tornadusMap = new HashMap<>();
         tornadusMap.put(1,"-T");
-        map.put(Species.tornadus, tornadusMap);
+        map.put(SpeciesIDs.tornadus, tornadusMap);
 
         Map<Integer,String> thundurusMap = new HashMap<>();
         thundurusMap.put(1,"-T");
-        map.put(Species.thundurus, thundurusMap);
+        map.put(SpeciesIDs.thundurus, thundurusMap);
 
         Map<Integer,String> landorusMap = new HashMap<>();
         landorusMap.put(1,"-T");
-        map.put(Species.landorus, landorusMap);
+        map.put(SpeciesIDs.landorus, landorusMap);
 
         return map;
     }
@@ -780,70 +780,70 @@ public class Gen5Constants {
         Map<Integer,Map<Integer,Integer>> map = new HashMap<>();
 
         Map<Integer,Integer> deoxysMap = new HashMap<>();
-        deoxysMap.put(1,Species.Gen5Formes.deoxysA);
-        deoxysMap.put(2,Species.Gen5Formes.deoxysD);
-        deoxysMap.put(3,Species.Gen5Formes.deoxysS);
-        map.put(Species.deoxys, deoxysMap);
+        deoxysMap.put(1, SpeciesIDs.Gen5Formes.deoxysA);
+        deoxysMap.put(2, SpeciesIDs.Gen5Formes.deoxysD);
+        deoxysMap.put(3, SpeciesIDs.Gen5Formes.deoxysS);
+        map.put(SpeciesIDs.deoxys, deoxysMap);
 
         Map<Integer,Integer> wormadamMap = new HashMap<>();
-        wormadamMap.put(1,Species.Gen5Formes.wormadamS);
-        wormadamMap.put(2,Species.Gen5Formes.wormadamT);
-        map.put(Species.wormadam, wormadamMap);
+        wormadamMap.put(1, SpeciesIDs.Gen5Formes.wormadamS);
+        wormadamMap.put(2, SpeciesIDs.Gen5Formes.wormadamT);
+        map.put(SpeciesIDs.wormadam, wormadamMap);
 
         Map<Integer,Integer> shayminMap = new HashMap<>();
-        shayminMap.put(1,Species.Gen5Formes.shayminS);
-        map.put(Species.shaymin, shayminMap);
+        shayminMap.put(1, SpeciesIDs.Gen5Formes.shayminS);
+        map.put(SpeciesIDs.shaymin, shayminMap);
 
         Map<Integer,Integer> giratinaMap = new HashMap<>();
-        giratinaMap.put(1,Species.Gen5Formes.giratinaO);
-        map.put(Species.giratina, giratinaMap);
+        giratinaMap.put(1, SpeciesIDs.Gen5Formes.giratinaO);
+        map.put(SpeciesIDs.giratina, giratinaMap);
 
         Map<Integer,Integer> rotomMap = new HashMap<>();
-        rotomMap.put(1,Species.Gen5Formes.rotomH);
-        rotomMap.put(2,Species.Gen5Formes.rotomW);
-        rotomMap.put(3,Species.Gen5Formes.rotomFr);
-        rotomMap.put(4,Species.Gen5Formes.rotomFa);
-        rotomMap.put(5,Species.Gen5Formes.rotomM);
-        map.put(Species.rotom, rotomMap);
+        rotomMap.put(1, SpeciesIDs.Gen5Formes.rotomH);
+        rotomMap.put(2, SpeciesIDs.Gen5Formes.rotomW);
+        rotomMap.put(3, SpeciesIDs.Gen5Formes.rotomFr);
+        rotomMap.put(4, SpeciesIDs.Gen5Formes.rotomFa);
+        rotomMap.put(5, SpeciesIDs.Gen5Formes.rotomM);
+        map.put(SpeciesIDs.rotom, rotomMap);
 
         Map<Integer,Integer> castformMap = new HashMap<>();
-        castformMap.put(1,Species.Gen5Formes.castformSu);
-        castformMap.put(2,Species.Gen5Formes.castformR);
-        castformMap.put(3,Species.Gen5Formes.castformSn);
-        map.put(Species.castform, castformMap);
+        castformMap.put(1, SpeciesIDs.Gen5Formes.castformSu);
+        castformMap.put(2, SpeciesIDs.Gen5Formes.castformR);
+        castformMap.put(3, SpeciesIDs.Gen5Formes.castformSn);
+        map.put(SpeciesIDs.castform, castformMap);
 
         Map<Integer,Integer> basculinMap = new HashMap<>();
-        basculinMap.put(1,Species.Gen5Formes.basculinB);
-        map.put(Species.basculin, basculinMap);
+        basculinMap.put(1, SpeciesIDs.Gen5Formes.basculinB);
+        map.put(SpeciesIDs.basculin, basculinMap);
 
         Map<Integer,Integer> darmanitanMap = new HashMap<>();
-        darmanitanMap.put(1,Species.Gen5Formes.darmanitanZ);
-        map.put(Species.darmanitan, darmanitanMap);
+        darmanitanMap.put(1, SpeciesIDs.Gen5Formes.darmanitanZ);
+        map.put(SpeciesIDs.darmanitan, darmanitanMap);
 
         Map<Integer,Integer> meloettaMap = new HashMap<>();
-        meloettaMap.put(1,Species.Gen5Formes.meloettaP);
-        map.put(Species.meloetta, meloettaMap);
+        meloettaMap.put(1, SpeciesIDs.Gen5Formes.meloettaP);
+        map.put(SpeciesIDs.meloetta, meloettaMap);
 
         Map<Integer,Integer> kyuremMap = new HashMap<>();
-        kyuremMap.put(1,Species.Gen5Formes.kyuremW);
-        kyuremMap.put(2,Species.Gen5Formes.kyuremB);
-        map.put(Species.kyurem, kyuremMap);
+        kyuremMap.put(1, SpeciesIDs.Gen5Formes.kyuremW);
+        kyuremMap.put(2, SpeciesIDs.Gen5Formes.kyuremB);
+        map.put(SpeciesIDs.kyurem, kyuremMap);
 
         Map<Integer,Integer> keldeoMap = new HashMap<>();
-        keldeoMap.put(1,Species.Gen5Formes.keldeoCosmetic1);
-        map.put(Species.keldeo, keldeoMap);
+        keldeoMap.put(1, SpeciesIDs.Gen5Formes.keldeoCosmetic1);
+        map.put(SpeciesIDs.keldeo, keldeoMap);
 
         Map<Integer,Integer> tornadusMap = new HashMap<>();
-        tornadusMap.put(1,Species.Gen5Formes.tornadusT);
-        map.put(Species.tornadus, tornadusMap);
+        tornadusMap.put(1, SpeciesIDs.Gen5Formes.tornadusT);
+        map.put(SpeciesIDs.tornadus, tornadusMap);
 
         Map<Integer,Integer> thundurusMap = new HashMap<>();
-        thundurusMap.put(1,Species.Gen5Formes.thundurusT);
-        map.put(Species.thundurus, thundurusMap);
+        thundurusMap.put(1, SpeciesIDs.Gen5Formes.thundurusT);
+        map.put(SpeciesIDs.thundurus, thundurusMap);
 
         Map<Integer,Integer> landorusMap = new HashMap<>();
-        landorusMap.put(1,Species.Gen5Formes.landorusT);
-        map.put(Species.landorus, landorusMap);
+        landorusMap.put(1, SpeciesIDs.Gen5Formes.landorusT);
+        map.put(SpeciesIDs.landorus, landorusMap);
 
         return map;
     }
@@ -865,60 +865,60 @@ public class Gen5Constants {
     }
 
     private static void setupAllowedItems() {
-        allowedItems = new ItemList(Items.revealGlass);
+        allowedItems = new ItemList(ItemIDs.revealGlass);
         // Key items + version exclusives
-        allowedItems.banRange(Items.explorerKit, 76);
-        allowedItems.banRange(Items.dataCard01, 32);
-        allowedItems.banRange(Items.xtransceiverMale, 18);
-        allowedItems.banSingles(Items.libertyPass, Items.propCase, Items.dragonSkull, Items.lightStone, Items.darkStone);
+        allowedItems.banRange(ItemIDs.explorerKit, 76);
+        allowedItems.banRange(ItemIDs.dataCard01, 32);
+        allowedItems.banRange(ItemIDs.xtransceiverMale, 18);
+        allowedItems.banSingles(ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull, ItemIDs.lightStone, ItemIDs.darkStone);
         // Unknown blank items or version exclusives
-        allowedItems.banRange(Items.tea, 3);
-        allowedItems.banRange(Items.unused120, 14);
+        allowedItems.banRange(ItemIDs.tea, 3);
+        allowedItems.banRange(ItemIDs.unused120, 14);
         // TMs & HMs - tms cant be held in gen5
-        allowedItems.tmRange(Items.tm01, 92);
-        allowedItems.tmRange(Items.tm93, 3);
-        allowedItems.banRange(Items.tm01, 100);
-        allowedItems.banRange(Items.tm93, 3);
+        allowedItems.tmRange(ItemIDs.tm01, 92);
+        allowedItems.tmRange(ItemIDs.tm93, 3);
+        allowedItems.banRange(ItemIDs.tm01, 100);
+        allowedItems.banRange(ItemIDs.tm93, 3);
         // Battle Launcher exclusives
-        allowedItems.banRange(Items.direHit2, 24);
+        allowedItems.banRange(ItemIDs.direHit2, 24);
 
         // non-bad items
         // ban specific pokemon hold items, berries, apricorns, mail
         nonBadItemsBW2 = allowedItems.copy();
 
-        nonBadItemsBW2.banSingles(Items.oddKeystone, Items.griseousOrb, Items.soulDew, Items.lightBall,
-                Items.oranBerry, Items.quickPowder, Items.passOrb);
-        nonBadItemsBW2.banRange(Items.growthMulch, 4); // mulch
-        nonBadItemsBW2.banRange(Items.adamantOrb, 2); // orbs
-        nonBadItemsBW2.banRange(Items.mail1, 12); // mails
-        nonBadItemsBW2.banRange(Items.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsBW2.banRange(Items.luckyPunch, 4); // pokemon specific
-        nonBadItemsBW2.banRange(Items.redScarf, 5); // contest scarves
+        nonBadItemsBW2.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
+                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb);
+        nonBadItemsBW2.banRange(ItemIDs.growthMulch, 4); // mulch
+        nonBadItemsBW2.banRange(ItemIDs.adamantOrb, 2); // orbs
+        nonBadItemsBW2.banRange(ItemIDs.mail1, 12); // mails
+        nonBadItemsBW2.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
+        nonBadItemsBW2.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
+        nonBadItemsBW2.banRange(ItemIDs.redScarf, 5); // contest scarves
 
         // Ban the shards in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
         nonBadItemsBW1 = nonBadItemsBW2.copy();
-        nonBadItemsBW1.banRange(Items.redShard, 4);
+        nonBadItemsBW1.banRange(ItemIDs.redShard, 4);
 
         regularShopItems = new ArrayList<>();
 
-        regularShopItems.addAll(IntStream.rangeClosed(Items.ultraBall, Items.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Items.potion, Items.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Items.superRepel, Items.repel).boxed().collect(Collectors.toList()));
+        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
+        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
+        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
 
         opShopItems = new ArrayList<>();
 
         // "Money items" etc
-        opShopItems.add(Items.lavaCookie);
-        opShopItems.add(Items.berryJuice);
-        opShopItems.add(Items.rareCandy);
-        opShopItems.add(Items.oldGateau);
-        opShopItems.addAll(IntStream.rangeClosed(Items.blueFlute, Items.shoalShell).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(Items.tinyMushroom, Items.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(Items.rareBone);
-        opShopItems.addAll(IntStream.rangeClosed(Items.lansatBerry, Items.rowapBerry).boxed().collect(Collectors.toList()));
-        opShopItems.add(Items.luckyEgg);
-        opShopItems.add(Items.prettyFeather);
-        opShopItems.addAll(IntStream.rangeClosed(Items.balmMushroom, Items.casteliacone).boxed().collect(Collectors.toList()));
+        opShopItems.add(ItemIDs.lavaCookie);
+        opShopItems.add(ItemIDs.berryJuice);
+        opShopItems.add(ItemIDs.rareCandy);
+        opShopItems.add(ItemIDs.oldGateau);
+        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.blueFlute, ItemIDs.shoalShell).boxed().collect(Collectors.toList()));
+        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
+        opShopItems.add(ItemIDs.rareBone);
+        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.lansatBerry, ItemIDs.rowapBerry).boxed().collect(Collectors.toList()));
+        opShopItems.add(ItemIDs.luckyEgg);
+        opShopItems.add(ItemIDs.prettyFeather);
+        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.balmMushroom, ItemIDs.casteliacone).boxed().collect(Collectors.toList()));
     }
 
     public static ItemList getNonBadItems(int romType) {
@@ -931,644 +931,644 @@ public class Gen5Constants {
 
     public static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {
             // Skip item index 0. All prices divided by 10
-            {Items.masterBall, 300},
-            {Items.ultraBall, 120},
-            {Items.greatBall, 60},
-            {Items.pokeBall, 20},
-            {Items.safariBall, 50},
-            {Items.netBall, 100},
-            {Items.diveBall, 100},
-            {Items.nestBall, 100},
-            {Items.repeatBall, 100},
-            {Items.timerBall, 100},
-            {Items.luxuryBall, 100},
-            {Items.premierBall, 20},
-            {Items.duskBall, 100},
-            {Items.healBall, 30},
-            {Items.quickBall, 100},
-            {Items.cherishBall, 20},
-            {Items.potion, 30},
-            {Items.antidote, 10},
-            {Items.burnHeal, 25},
-            {Items.iceHeal, 25},
-            {Items.awakening, 25},
-            {Items.paralyzeHeal, 20},
-            {Items.fullRestore, 300},
-            {Items.maxPotion, 250},
-            {Items.hyperPotion, 120},
-            {Items.superPotion, 70},
-            {Items.fullHeal, 60},
-            {Items.revive, 150},
-            {Items.maxRevive, 400},
-            {Items.freshWater, 40},
-            {Items.sodaPop, 60},
-            {Items.lemonade, 70},
-            {Items.moomooMilk, 80},
-            {Items.energyPowder, 40},
-            {Items.energyRoot, 110},
-            {Items.healPowder, 45},
-            {Items.revivalHerb, 280},
-            {Items.ether, 300},
-            {Items.maxEther, 450},
-            {Items.elixir, 1500},
-            {Items.maxElixir, 1800},
-            {Items.lavaCookie, 45},
-            {Items.berryJuice, 10},
-            {Items.sacredAsh, 1000},
-            {Items.hpUp, 980},
-            {Items.protein, 980},
-            {Items.iron, 980},
-            {Items.carbos, 980},
-            {Items.calcium, 980},
-            {Items.rareCandy, 1000},
-            {Items.ppUp, 980},
-            {Items.zinc, 980},
-            {Items.ppMax, 2490},
-            {Items.oldGateau, 45},
-            {Items.guardSpec, 70},
-            {Items.direHit, 65},
-            {Items.xAttack, 50},
-            {Items.xDefense, 55},
-            {Items.xSpeed, 35},
-            {Items.xAccuracy, 95},
-            {Items.xSpAtk, 35},
-            {Items.xSpDef, 35},
-            {Items.pokeDoll, 100},
-            {Items.fluffyTail, 100},
-            {Items.blueFlute, 2},
-            {Items.yellowFlute, 2},
-            {Items.redFlute, 2},
-            {Items.blackFlute, 2},
-            {Items.whiteFlute, 2},
-            {Items.shoalSalt, 2},
-            {Items.shoalShell, 2},
-            {Items.redShard, 40},
-            {Items.blueShard, 40},
-            {Items.yellowShard, 40},
-            {Items.greenShard, 40},
-            {Items.superRepel, 50},
-            {Items.maxRepel, 70},
-            {Items.escapeRope, 55},
-            {Items.repel, 35},
-            {Items.sunStone, 300},
-            {Items.moonStone, 300},
-            {Items.fireStone, 300},
-            {Items.thunderStone, 300},
-            {Items.waterStone, 300},
-            {Items.leafStone, 300},
-            {Items.tinyMushroom, 50},
-            {Items.bigMushroom, 500},
-            {Items.pearl, 140},
-            {Items.bigPearl, 750},
-            {Items.stardust, 200},
-            {Items.starPiece, 980},
-            {Items.nugget, 1000},
-            {Items.heartScale, 500},
-            {Items.honey, 50},
-            {Items.growthMulch, 20},
-            {Items.dampMulch, 20},
-            {Items.stableMulch, 20},
-            {Items.gooeyMulch, 20},
-            {Items.rootFossil, 500},
-            {Items.clawFossil, 500},
-            {Items.helixFossil, 500},
-            {Items.domeFossil, 500},
-            {Items.oldAmber, 800},
-            {Items.armorFossil, 500},
-            {Items.skullFossil, 500},
-            {Items.rareBone, 1000},
-            {Items.shinyStone, 300},
-            {Items.duskStone, 300},
-            {Items.dawnStone, 300},
-            {Items.ovalStone, 300},
-            {Items.oddKeystone, 210},
-            {Items.griseousOrb, 1000},
-            {Items.tea, 0}, // unused in Gen 5
-            {Items.unused114, 0},
-            {Items.autograph, 0}, // unused in Gen 5
-            {Items.douseDrive, 100},
-            {Items.shockDrive, 100},
-            {Items.burnDrive, 100},
-            {Items.chillDrive, 100},
-            {Items.unused120, 0},
-            {Items.pokemonBox, 0}, // unused in Gen 5
-            {Items.medicinePocket, 0}, // unused in Gen 5
-            {Items.tmCase, 0}, // unused in Gen 5
-            {Items.candyJar, 0}, // unused in Gen 5
-            {Items.powerUpPocket, 0}, // unused in Gen 5
-            {Items.clothingTrunk, 0}, // unused in Gen 5
-            {Items.catchingPocket, 0}, // unused in Gen 5
-            {Items.battlePocket, 0}, // unused in Gen 5
-            {Items.unused129, 0},
-            {Items.unused130, 0},
-            {Items.unused131, 0},
-            {Items.unused132, 0},
-            {Items.unused133, 0},
-            {Items.sweetHeart, 15},
-            {Items.adamantOrb, 1000},
-            {Items.lustrousOrb, 1000},
-            {Items.mail1, 5},
-            {Items.mail2, 5},
-            {Items.mail3, 5},
-            {Items.mail4, 5},
-            {Items.mail5, 5},
-            {Items.mail6, 5},
-            {Items.mail7, 5},
-            {Items.mail8, 5},
-            {Items.mail9, 5},
-            {Items.mail10, 5},
-            {Items.mail11, 5},
-            {Items.mail12, 5},
-            {Items.cheriBerry, 20},
-            {Items.chestoBerry, 25},
-            {Items.pechaBerry, 10},
-            {Items.rawstBerry, 25},
-            {Items.aspearBerry, 25},
-            {Items.leppaBerry, 300},
-            {Items.oranBerry, 5},
-            {Items.persimBerry, 20},
-            {Items.lumBerry, 50},
-            {Items.sitrusBerry, 50},
-            {Items.figyBerry, 10},
-            {Items.wikiBerry, 10},
-            {Items.magoBerry, 10},
-            {Items.aguavBerry, 10},
-            {Items.iapapaBerry, 10},
-            {Items.razzBerry, 50},
-            {Items.blukBerry, 50},
-            {Items.nanabBerry, 50},
-            {Items.wepearBerry, 50},
-            {Items.pinapBerry, 50},
-            {Items.pomegBerry, 50},
-            {Items.kelpsyBerry, 50},
-            {Items.qualotBerry, 50},
-            {Items.hondewBerry, 50},
-            {Items.grepaBerry, 50},
-            {Items.tamatoBerry, 50},
-            {Items.cornnBerry, 50},
-            {Items.magostBerry, 50},
-            {Items.rabutaBerry, 50},
-            {Items.nomelBerry, 50},
-            {Items.spelonBerry, 50},
-            {Items.pamtreBerry, 50},
-            {Items.watmelBerry, 50},
-            {Items.durinBerry, 50},
-            {Items.belueBerry, 50},
-            {Items.occaBerry, 100},
-            {Items.passhoBerry, 100},
-            {Items.wacanBerry, 100},
-            {Items.rindoBerry, 100},
-            {Items.yacheBerry, 100},
-            {Items.chopleBerry, 100},
-            {Items.kebiaBerry, 100},
-            {Items.shucaBerry, 100},
-            {Items.cobaBerry, 100},
-            {Items.payapaBerry, 100},
-            {Items.tangaBerry, 100},
-            {Items.chartiBerry, 100},
-            {Items.kasibBerry, 100},
-            {Items.habanBerry, 100},
-            {Items.colburBerry, 100},
-            {Items.babiriBerry, 100},
-            {Items.chilanBerry, 100},
-            {Items.liechiBerry, 100},
-            {Items.ganlonBerry, 100},
-            {Items.salacBerry, 100},
-            {Items.petayaBerry, 100},
-            {Items.apicotBerry, 100},
-            {Items.lansatBerry, 100},
-            {Items.starfBerry, 100},
-            {Items.enigmaBerry, 100},
-            {Items.micleBerry, 100},
-            {Items.custapBerry, 100},
-            {Items.jabocaBerry, 100},
-            {Items.rowapBerry, 100},
-            {Items.brightPowder, 300},
-            {Items.whiteHerb, 100},
-            {Items.machoBrace, 300},
-            {Items.expShare, 600},
-            {Items.quickClaw, 450},
-            {Items.sootheBell, 100},
-            {Items.mentalHerb, 100},
-            {Items.choiceBand, 1000},
-            {Items.kingsRock, 500},
-            {Items.silverPowder, 200},
-            {Items.amuletCoin, 1500},
-            {Items.cleanseTag, 100},
-            {Items.soulDew, 20},
-            {Items.deepSeaTooth, 300},
-            {Items.deepSeaScale, 300},
-            {Items.smokeBall, 20},
-            {Items.everstone, 20},
-            {Items.focusBand, 300},
-            {Items.luckyEgg, 1000},
-            {Items.scopeLens, 500},
-            {Items.metalCoat, 300},
-            {Items.leftovers, 1000},
-            {Items.dragonScale, 300},
-            {Items.lightBall, 10},
-            {Items.softSand, 200},
-            {Items.hardStone, 200},
-            {Items.miracleSeed, 200},
-            {Items.blackGlasses, 200},
-            {Items.blackBelt, 200},
-            {Items.magnet, 200},
-            {Items.mysticWater, 200},
-            {Items.sharpBeak, 200},
-            {Items.poisonBarb, 200},
-            {Items.neverMeltIce, 200},
-            {Items.spellTag, 200},
-            {Items.twistedSpoon, 200},
-            {Items.charcoal, 200},
-            {Items.dragonFang, 200},
-            {Items.silkScarf, 200},
-            {Items.upgrade, 300},
-            {Items.shellBell, 600},
-            {Items.seaIncense, 200},
-            {Items.laxIncense, 300},
-            {Items.luckyPunch, 1},
-            {Items.metalPowder, 1},
-            {Items.thickClub, 50},
-            {Items.leek, 20},
-            {Items.redScarf, 10},
-            {Items.blueScarf, 10},
-            {Items.pinkScarf, 10},
-            {Items.greenScarf, 10},
-            {Items.yellowScarf, 10},
-            {Items.wideLens, 150},
-            {Items.muscleBand, 200},
-            {Items.wiseGlasses, 200},
-            {Items.expertBelt, 600},
-            {Items.lightClay, 150},
-            {Items.lifeOrb, 1000},
-            {Items.powerHerb, 100},
-            {Items.toxicOrb, 150},
-            {Items.flameOrb, 150},
-            {Items.quickPowder, 1},
-            {Items.focusSash, 200},
-            {Items.zoomLens, 150},
-            {Items.metronome, 300},
-            {Items.ironBall, 100},
-            {Items.laggingTail, 100},
-            {Items.destinyKnot, 150},
-            {Items.blackSludge, 500},
-            {Items.icyRock, 20},
-            {Items.smoothRock, 20},
-            {Items.heatRock, 20},
-            {Items.dampRock, 20},
-            {Items.gripClaw, 150},
-            {Items.choiceScarf, 1000},
-            {Items.stickyBarb, 150},
-            {Items.powerBracer, 300},
-            {Items.powerBelt, 300},
-            {Items.powerLens, 300},
-            {Items.powerBand, 300},
-            {Items.powerAnklet, 300},
-            {Items.powerWeight, 300},
-            {Items.shedShell, 50},
-            {Items.bigRoot, 150},
-            {Items.choiceSpecs, 1000},
-            {Items.flamePlate, 200},
-            {Items.splashPlate, 200},
-            {Items.zapPlate, 200},
-            {Items.meadowPlate, 200},
-            {Items.iciclePlate, 200},
-            {Items.fistPlate, 200},
-            {Items.toxicPlate, 200},
-            {Items.earthPlate, 200},
-            {Items.skyPlate, 200},
-            {Items.mindPlate, 200},
-            {Items.insectPlate, 200},
-            {Items.stonePlate, 200},
-            {Items.spookyPlate, 200},
-            {Items.dracoPlate, 200},
-            {Items.dreadPlate, 200},
-            {Items.ironPlate, 200},
-            {Items.oddIncense, 200},
-            {Items.rockIncense, 200},
-            {Items.fullIncense, 100},
-            {Items.waveIncense, 200},
-            {Items.roseIncense, 200},
-            {Items.luckIncense, 1500},
-            {Items.pureIncense, 100},
-            {Items.protector, 300},
-            {Items.electirizer, 300},
-            {Items.magmarizer, 300},
-            {Items.dubiousDisc, 300},
-            {Items.reaperCloth, 300},
-            {Items.razorClaw, 500},
-            {Items.razorFang, 500},
-            {Items.tm01, 1000},
-            {Items.tm02, 1000},
-            {Items.tm03, 1000},
-            {Items.tm04, 1000},
-            {Items.tm05, 1000},
-            {Items.tm06, 1000},
-            {Items.tm07, 2000},
-            {Items.tm08, 1000},
-            {Items.tm09, 1000},
-            {Items.tm10, 1000},
-            {Items.tm11, 2000},
-            {Items.tm12, 1000},
-            {Items.tm13, 1000},
-            {Items.tm14, 2000},
-            {Items.tm15, 2000},
-            {Items.tm16, 2000},
-            {Items.tm17, 1000},
-            {Items.tm18, 2000},
-            {Items.tm19, 1000},
-            {Items.tm20, 2000},
-            {Items.tm21, 1000},
-            {Items.tm22, 1000},
-            {Items.tm23, 1000},
-            {Items.tm24, 1000},
-            {Items.tm25, 2000},
-            {Items.tm26, 1000},
-            {Items.tm27, 1000},
-            {Items.tm28, 1000},
-            {Items.tm29, 1000},
-            {Items.tm30, 1000},
-            {Items.tm31, 1000},
-            {Items.tm32, 1000},
-            {Items.tm33, 2000},
-            {Items.tm34, 1000},
-            {Items.tm35, 1000},
-            {Items.tm36, 1000},
-            {Items.tm37, 2000},
-            {Items.tm38, 2000},
-            {Items.tm39, 1000},
-            {Items.tm40, 1000},
-            {Items.tm41, 1000},
-            {Items.tm42, 1000},
-            {Items.tm43, 1000},
-            {Items.tm44, 1000},
-            {Items.tm45, 1000},
-            {Items.tm46, 1000},
-            {Items.tm47, 1000},
-            {Items.tm48, 1000},
-            {Items.tm49, 1000},
-            {Items.tm50, 1000},
-            {Items.tm51, 1000},
-            {Items.tm52, 1000},
-            {Items.tm53, 1000},
-            {Items.tm54, 1000},
-            {Items.tm55, 1000},
-            {Items.tm56, 1000},
-            {Items.tm57, 1000},
-            {Items.tm58, 1000},
-            {Items.tm59, 1000},
-            {Items.tm60, 1000},
-            {Items.tm61, 1000},
-            {Items.tm62, 1000},
-            {Items.tm63, 1000},
-            {Items.tm64, 1000},
-            {Items.tm65, 1000},
-            {Items.tm66, 1000},
-            {Items.tm67, 1000},
-            {Items.tm68, 2000},
-            {Items.tm69, 1000},
-            {Items.tm70, 1000},
-            {Items.tm71, 1000},
-            {Items.tm72, 1000},
-            {Items.tm73, 1000},
-            {Items.tm74, 1000},
-            {Items.tm75, 1000},
-            {Items.tm76, 1000},
-            {Items.tm77, 1000},
-            {Items.tm78, 1000},
-            {Items.tm79, 1000},
-            {Items.tm80, 1000},
-            {Items.tm81, 1000},
-            {Items.tm82, 1000},
-            {Items.tm83, 1000},
-            {Items.tm84, 1000},
-            {Items.tm85, 1000},
-            {Items.tm86, 1000},
-            {Items.tm87, 1000},
-            {Items.tm88, 1000},
-            {Items.tm89, 1000},
-            {Items.tm90, 1000},
-            {Items.tm91, 1000},
-            {Items.tm92, 1000},
-            {Items.hm01, 0},
-            {Items.hm02, 0},
-            {Items.hm03, 0},
-            {Items.hm04, 0},
-            {Items.hm05, 0},
-            {Items.hm06, 0},
-            {Items.hm07, 0}, // unused in Gen 5
-            {Items.hm08, 0}, // unused in Gen 5
-            {Items.explorerKit, 0},
-            {Items.lootSack, 0},
-            {Items.ruleBook, 0},
-            {Items.pokeRadar, 0},
-            {Items.pointCard, 0},
-            {Items.journal, 0},
-            {Items.sealCase, 0},
-            {Items.fashionCase, 0},
-            {Items.sealBag, 0},
-            {Items.palPad, 0},
-            {Items.worksKey, 0},
-            {Items.oldCharm, 0},
-            {Items.galacticKey, 0},
-            {Items.redChain, 0},
-            {Items.townMap, 0},
-            {Items.vsSeeker, 0},
-            {Items.coinCase, 0},
-            {Items.oldRod, 0},
-            {Items.goodRod, 0},
-            {Items.superRod, 0},
-            {Items.sprayduck, 0},
-            {Items.poffinCase, 0},
-            {Items.bike, 0},
-            {Items.suiteKey, 0},
-            {Items.oaksLetter, 0},
-            {Items.lunarWing, 0},
-            {Items.memberCard, 0},
-            {Items.azureFlute, 0},
-            {Items.ssTicketJohto, 0},
-            {Items.contestPass, 0},
-            {Items.magmaStone, 0},
-            {Items.parcelSinnoh, 0},
-            {Items.coupon1, 0},
-            {Items.coupon2, 0},
-            {Items.coupon3, 0},
-            {Items.storageKeySinnoh, 0},
-            {Items.secretPotion, 0},
-            {Items.vsRecorder, 0},
-            {Items.gracidea, 0},
-            {Items.secretKeySinnoh, 0},
-            {Items.apricornBox, 0},
-            {Items.unownReport, 0},
-            {Items.berryPots, 0},
-            {Items.dowsingMachine, 0},
-            {Items.blueCard, 0},
-            {Items.slowpokeTail, 0},
-            {Items.clearBell, 0},
-            {Items.cardKeyJohto, 0},
-            {Items.basementKeyJohto, 0},
-            {Items.squirtBottle, 0},
-            {Items.redScale, 0},
-            {Items.lostItem, 0},
-            {Items.pass, 0},
-            {Items.machinePart, 0},
-            {Items.silverWing, 0},
-            {Items.rainbowWing, 0},
-            {Items.mysteryEgg, 0},
-            {Items.redApricorn, 2},
-            {Items.blueApricorn, 2},
-            {Items.yellowApricorn, 2},
-            {Items.greenApricorn, 2},
-            {Items.pinkApricorn, 2},
-            {Items.whiteApricorn, 2},
-            {Items.blackApricorn, 2},
-            {Items.fastBall, 30},
-            {Items.levelBall, 30},
-            {Items.lureBall, 30},
-            {Items.heavyBall, 30},
-            {Items.loveBall, 30},
-            {Items.friendBall, 30},
-            {Items.moonBall, 30},
-            {Items.sportBall, 30},
-            {Items.parkBall, 0},
-            {Items.photoAlbum, 0},
-            {Items.gbSounds, 0},
-            {Items.tidalBell, 0},
-            {Items.rageCandyBar, 1500},
-            {Items.dataCard01, 0},
-            {Items.dataCard02, 0},
-            {Items.dataCard03, 0},
-            {Items.dataCard04, 0},
-            {Items.dataCard05, 0},
-            {Items.dataCard06, 0},
-            {Items.dataCard07, 0},
-            {Items.dataCard08, 0},
-            {Items.dataCard09, 0},
-            {Items.dataCard10, 0},
-            {Items.dataCard11, 0},
-            {Items.dataCard12, 0},
-            {Items.dataCard13, 0},
-            {Items.dataCard14, 0},
-            {Items.dataCard15, 0},
-            {Items.dataCard16, 0},
-            {Items.dataCard17, 0},
-            {Items.dataCard18, 0},
-            {Items.dataCard19, 0},
-            {Items.dataCard20, 0},
-            {Items.dataCard21, 0},
-            {Items.dataCard22, 0},
-            {Items.dataCard23, 0},
-            {Items.dataCard24, 0},
-            {Items.dataCard25, 0},
-            {Items.dataCard26, 0},
-            {Items.dataCard27, 0},
-            {Items.jadeOrb, 0},
-            {Items.lockCapsule, 0},
-            {Items.redOrb, 0},
-            {Items.blueOrb, 0},
-            {Items.enigmaStone, 0},
-            {Items.prismScale, 300},
-            {Items.eviolite, 1000},
-            {Items.floatStone, 100},
-            {Items.rockyHelmet, 600},
-            {Items.airBalloon, 100},
-            {Items.redCard, 100},
-            {Items.ringTarget, 100},
-            {Items.bindingBand, 200},
-            {Items.absorbBulb, 100},
-            {Items.cellBattery, 100},
-            {Items.ejectButton, 100},
-            {Items.fireGem, 100},
-            {Items.waterGem, 100},
-            {Items.electricGem, 100},
-            {Items.grassGem, 100},
-            {Items.iceGem, 100},
-            {Items.fightingGem, 100},
-            {Items.poisonGem, 100},
-            {Items.groundGem, 100},
-            {Items.flyingGem, 100},
-            {Items.psychicGem, 100},
-            {Items.bugGem, 100},
-            {Items.rockGem, 100},
-            {Items.ghostGem, 100},
-            {Items.dragonGem, 100},
-            {Items.darkGem, 100},
-            {Items.steelGem, 100},
-            {Items.normalGem, 100},
-            {Items.healthFeather, 300},
-            {Items.muscleFeather, 300},
-            {Items.resistFeather, 300},
-            {Items.geniusFeather, 300},
-            {Items.cleverFeather, 300},
-            {Items.swiftFeather, 300},
-            {Items.prettyFeather, 20},
-            {Items.coverFossil, 500},
-            {Items.plumeFossil, 500},
-            {Items.libertyPass, 0},
-            {Items.passOrb, 20},
-            {Items.dreamBall, 100},
-            {Items.pokeToy, 100},
-            {Items.propCase, 0},
-            {Items.dragonSkull, 0},
-            {Items.balmMushroom, 0},
-            {Items.bigNugget, 0},
-            {Items.pearlString, 0},
-            {Items.cometShard, 0},
-            {Items.relicCopper, 0},
-            {Items.relicSilver, 0},
-            {Items.relicGold, 0},
-            {Items.relicVase, 0},
-            {Items.relicBand, 0},
-            {Items.relicStatue, 0},
-            {Items.relicCrown, 0},
-            {Items.casteliacone, 45},
-            {Items.direHit2, 0},
-            {Items.xSpeed2, 0},
-            {Items.xSpAtk2, 0},
-            {Items.xSpDef2, 0},
-            {Items.xDefense2, 0},
-            {Items.xAttack2, 0},
-            {Items.xAccuracy2, 0},
-            {Items.xSpeed3, 0},
-            {Items.xSpAtk3, 0},
-            {Items.xSpDef3, 0},
-            {Items.xDefense3, 0},
-            {Items.xAttack3, 0},
-            {Items.xAccuracy3, 0},
-            {Items.xSpeed6, 0},
-            {Items.xSpAtk6, 0},
-            {Items.xSpDef6, 0},
-            {Items.xDefense6, 0},
-            {Items.xAttack6, 0},
-            {Items.xAccuracy6, 0},
-            {Items.abilityUrge, 0},
-            {Items.itemDrop, 0},
-            {Items.itemUrge, 0},
-            {Items.resetUrge, 0},
-            {Items.direHit3, 0},
-            {Items.lightStone, 0},
-            {Items.darkStone, 0},
-            {Items.tm93, 1000},
-            {Items.tm94, 1000},
-            {Items.tm95, 1000},
-            {Items.xtransceiverMale, 0},
-            {Items.unused622, 0},
-            {Items.gram1, 0},
-            {Items.gram2, 0},
-            {Items.gram3, 0},
-            {Items.xtransceiverFemale, 0},
-            {Items.medalBox, 0},
-            {Items.dNASplicersFuse, 0},
-            {Items.dNASplicersSeparate, 0},
-            {Items.permit, 0},
-            {Items.ovalCharm, 0},
-            {Items.shinyCharm, 0},
-            {Items.plasmaCard, 0},
-            {Items.grubbyHanky, 0},
-            {Items.colressMachine, 0},
-            {Items.droppedItemCurtis, 0},
-            {Items.droppedItemYancy, 0},
-            {Items.revealGlass, 0}
+            {ItemIDs.masterBall, 300},
+            {ItemIDs.ultraBall, 120},
+            {ItemIDs.greatBall, 60},
+            {ItemIDs.pokeBall, 20},
+            {ItemIDs.safariBall, 50},
+            {ItemIDs.netBall, 100},
+            {ItemIDs.diveBall, 100},
+            {ItemIDs.nestBall, 100},
+            {ItemIDs.repeatBall, 100},
+            {ItemIDs.timerBall, 100},
+            {ItemIDs.luxuryBall, 100},
+            {ItemIDs.premierBall, 20},
+            {ItemIDs.duskBall, 100},
+            {ItemIDs.healBall, 30},
+            {ItemIDs.quickBall, 100},
+            {ItemIDs.cherishBall, 20},
+            {ItemIDs.potion, 30},
+            {ItemIDs.antidote, 10},
+            {ItemIDs.burnHeal, 25},
+            {ItemIDs.iceHeal, 25},
+            {ItemIDs.awakening, 25},
+            {ItemIDs.paralyzeHeal, 20},
+            {ItemIDs.fullRestore, 300},
+            {ItemIDs.maxPotion, 250},
+            {ItemIDs.hyperPotion, 120},
+            {ItemIDs.superPotion, 70},
+            {ItemIDs.fullHeal, 60},
+            {ItemIDs.revive, 150},
+            {ItemIDs.maxRevive, 400},
+            {ItemIDs.freshWater, 40},
+            {ItemIDs.sodaPop, 60},
+            {ItemIDs.lemonade, 70},
+            {ItemIDs.moomooMilk, 80},
+            {ItemIDs.energyPowder, 40},
+            {ItemIDs.energyRoot, 110},
+            {ItemIDs.healPowder, 45},
+            {ItemIDs.revivalHerb, 280},
+            {ItemIDs.ether, 300},
+            {ItemIDs.maxEther, 450},
+            {ItemIDs.elixir, 1500},
+            {ItemIDs.maxElixir, 1800},
+            {ItemIDs.lavaCookie, 45},
+            {ItemIDs.berryJuice, 10},
+            {ItemIDs.sacredAsh, 1000},
+            {ItemIDs.hpUp, 980},
+            {ItemIDs.protein, 980},
+            {ItemIDs.iron, 980},
+            {ItemIDs.carbos, 980},
+            {ItemIDs.calcium, 980},
+            {ItemIDs.rareCandy, 1000},
+            {ItemIDs.ppUp, 980},
+            {ItemIDs.zinc, 980},
+            {ItemIDs.ppMax, 2490},
+            {ItemIDs.oldGateau, 45},
+            {ItemIDs.guardSpec, 70},
+            {ItemIDs.direHit, 65},
+            {ItemIDs.xAttack, 50},
+            {ItemIDs.xDefense, 55},
+            {ItemIDs.xSpeed, 35},
+            {ItemIDs.xAccuracy, 95},
+            {ItemIDs.xSpAtk, 35},
+            {ItemIDs.xSpDef, 35},
+            {ItemIDs.pokeDoll, 100},
+            {ItemIDs.fluffyTail, 100},
+            {ItemIDs.blueFlute, 2},
+            {ItemIDs.yellowFlute, 2},
+            {ItemIDs.redFlute, 2},
+            {ItemIDs.blackFlute, 2},
+            {ItemIDs.whiteFlute, 2},
+            {ItemIDs.shoalSalt, 2},
+            {ItemIDs.shoalShell, 2},
+            {ItemIDs.redShard, 40},
+            {ItemIDs.blueShard, 40},
+            {ItemIDs.yellowShard, 40},
+            {ItemIDs.greenShard, 40},
+            {ItemIDs.superRepel, 50},
+            {ItemIDs.maxRepel, 70},
+            {ItemIDs.escapeRope, 55},
+            {ItemIDs.repel, 35},
+            {ItemIDs.sunStone, 300},
+            {ItemIDs.moonStone, 300},
+            {ItemIDs.fireStone, 300},
+            {ItemIDs.thunderStone, 300},
+            {ItemIDs.waterStone, 300},
+            {ItemIDs.leafStone, 300},
+            {ItemIDs.tinyMushroom, 50},
+            {ItemIDs.bigMushroom, 500},
+            {ItemIDs.pearl, 140},
+            {ItemIDs.bigPearl, 750},
+            {ItemIDs.stardust, 200},
+            {ItemIDs.starPiece, 980},
+            {ItemIDs.nugget, 1000},
+            {ItemIDs.heartScale, 500},
+            {ItemIDs.honey, 50},
+            {ItemIDs.growthMulch, 20},
+            {ItemIDs.dampMulch, 20},
+            {ItemIDs.stableMulch, 20},
+            {ItemIDs.gooeyMulch, 20},
+            {ItemIDs.rootFossil, 500},
+            {ItemIDs.clawFossil, 500},
+            {ItemIDs.helixFossil, 500},
+            {ItemIDs.domeFossil, 500},
+            {ItemIDs.oldAmber, 800},
+            {ItemIDs.armorFossil, 500},
+            {ItemIDs.skullFossil, 500},
+            {ItemIDs.rareBone, 1000},
+            {ItemIDs.shinyStone, 300},
+            {ItemIDs.duskStone, 300},
+            {ItemIDs.dawnStone, 300},
+            {ItemIDs.ovalStone, 300},
+            {ItemIDs.oddKeystone, 210},
+            {ItemIDs.griseousOrb, 1000},
+            {ItemIDs.tea, 0}, // unused in Gen 5
+            {ItemIDs.unused114, 0},
+            {ItemIDs.autograph, 0}, // unused in Gen 5
+            {ItemIDs.douseDrive, 100},
+            {ItemIDs.shockDrive, 100},
+            {ItemIDs.burnDrive, 100},
+            {ItemIDs.chillDrive, 100},
+            {ItemIDs.unused120, 0},
+            {ItemIDs.pokemonBox, 0}, // unused in Gen 5
+            {ItemIDs.medicinePocket, 0}, // unused in Gen 5
+            {ItemIDs.tmCase, 0}, // unused in Gen 5
+            {ItemIDs.candyJar, 0}, // unused in Gen 5
+            {ItemIDs.powerUpPocket, 0}, // unused in Gen 5
+            {ItemIDs.clothingTrunk, 0}, // unused in Gen 5
+            {ItemIDs.catchingPocket, 0}, // unused in Gen 5
+            {ItemIDs.battlePocket, 0}, // unused in Gen 5
+            {ItemIDs.unused129, 0},
+            {ItemIDs.unused130, 0},
+            {ItemIDs.unused131, 0},
+            {ItemIDs.unused132, 0},
+            {ItemIDs.unused133, 0},
+            {ItemIDs.sweetHeart, 15},
+            {ItemIDs.adamantOrb, 1000},
+            {ItemIDs.lustrousOrb, 1000},
+            {ItemIDs.mail1, 5},
+            {ItemIDs.mail2, 5},
+            {ItemIDs.mail3, 5},
+            {ItemIDs.mail4, 5},
+            {ItemIDs.mail5, 5},
+            {ItemIDs.mail6, 5},
+            {ItemIDs.mail7, 5},
+            {ItemIDs.mail8, 5},
+            {ItemIDs.mail9, 5},
+            {ItemIDs.mail10, 5},
+            {ItemIDs.mail11, 5},
+            {ItemIDs.mail12, 5},
+            {ItemIDs.cheriBerry, 20},
+            {ItemIDs.chestoBerry, 25},
+            {ItemIDs.pechaBerry, 10},
+            {ItemIDs.rawstBerry, 25},
+            {ItemIDs.aspearBerry, 25},
+            {ItemIDs.leppaBerry, 300},
+            {ItemIDs.oranBerry, 5},
+            {ItemIDs.persimBerry, 20},
+            {ItemIDs.lumBerry, 50},
+            {ItemIDs.sitrusBerry, 50},
+            {ItemIDs.figyBerry, 10},
+            {ItemIDs.wikiBerry, 10},
+            {ItemIDs.magoBerry, 10},
+            {ItemIDs.aguavBerry, 10},
+            {ItemIDs.iapapaBerry, 10},
+            {ItemIDs.razzBerry, 50},
+            {ItemIDs.blukBerry, 50},
+            {ItemIDs.nanabBerry, 50},
+            {ItemIDs.wepearBerry, 50},
+            {ItemIDs.pinapBerry, 50},
+            {ItemIDs.pomegBerry, 50},
+            {ItemIDs.kelpsyBerry, 50},
+            {ItemIDs.qualotBerry, 50},
+            {ItemIDs.hondewBerry, 50},
+            {ItemIDs.grepaBerry, 50},
+            {ItemIDs.tamatoBerry, 50},
+            {ItemIDs.cornnBerry, 50},
+            {ItemIDs.magostBerry, 50},
+            {ItemIDs.rabutaBerry, 50},
+            {ItemIDs.nomelBerry, 50},
+            {ItemIDs.spelonBerry, 50},
+            {ItemIDs.pamtreBerry, 50},
+            {ItemIDs.watmelBerry, 50},
+            {ItemIDs.durinBerry, 50},
+            {ItemIDs.belueBerry, 50},
+            {ItemIDs.occaBerry, 100},
+            {ItemIDs.passhoBerry, 100},
+            {ItemIDs.wacanBerry, 100},
+            {ItemIDs.rindoBerry, 100},
+            {ItemIDs.yacheBerry, 100},
+            {ItemIDs.chopleBerry, 100},
+            {ItemIDs.kebiaBerry, 100},
+            {ItemIDs.shucaBerry, 100},
+            {ItemIDs.cobaBerry, 100},
+            {ItemIDs.payapaBerry, 100},
+            {ItemIDs.tangaBerry, 100},
+            {ItemIDs.chartiBerry, 100},
+            {ItemIDs.kasibBerry, 100},
+            {ItemIDs.habanBerry, 100},
+            {ItemIDs.colburBerry, 100},
+            {ItemIDs.babiriBerry, 100},
+            {ItemIDs.chilanBerry, 100},
+            {ItemIDs.liechiBerry, 100},
+            {ItemIDs.ganlonBerry, 100},
+            {ItemIDs.salacBerry, 100},
+            {ItemIDs.petayaBerry, 100},
+            {ItemIDs.apicotBerry, 100},
+            {ItemIDs.lansatBerry, 100},
+            {ItemIDs.starfBerry, 100},
+            {ItemIDs.enigmaBerry, 100},
+            {ItemIDs.micleBerry, 100},
+            {ItemIDs.custapBerry, 100},
+            {ItemIDs.jabocaBerry, 100},
+            {ItemIDs.rowapBerry, 100},
+            {ItemIDs.brightPowder, 300},
+            {ItemIDs.whiteHerb, 100},
+            {ItemIDs.machoBrace, 300},
+            {ItemIDs.expShare, 600},
+            {ItemIDs.quickClaw, 450},
+            {ItemIDs.sootheBell, 100},
+            {ItemIDs.mentalHerb, 100},
+            {ItemIDs.choiceBand, 1000},
+            {ItemIDs.kingsRock, 500},
+            {ItemIDs.silverPowder, 200},
+            {ItemIDs.amuletCoin, 1500},
+            {ItemIDs.cleanseTag, 100},
+            {ItemIDs.soulDew, 20},
+            {ItemIDs.deepSeaTooth, 300},
+            {ItemIDs.deepSeaScale, 300},
+            {ItemIDs.smokeBall, 20},
+            {ItemIDs.everstone, 20},
+            {ItemIDs.focusBand, 300},
+            {ItemIDs.luckyEgg, 1000},
+            {ItemIDs.scopeLens, 500},
+            {ItemIDs.metalCoat, 300},
+            {ItemIDs.leftovers, 1000},
+            {ItemIDs.dragonScale, 300},
+            {ItemIDs.lightBall, 10},
+            {ItemIDs.softSand, 200},
+            {ItemIDs.hardStone, 200},
+            {ItemIDs.miracleSeed, 200},
+            {ItemIDs.blackGlasses, 200},
+            {ItemIDs.blackBelt, 200},
+            {ItemIDs.magnet, 200},
+            {ItemIDs.mysticWater, 200},
+            {ItemIDs.sharpBeak, 200},
+            {ItemIDs.poisonBarb, 200},
+            {ItemIDs.neverMeltIce, 200},
+            {ItemIDs.spellTag, 200},
+            {ItemIDs.twistedSpoon, 200},
+            {ItemIDs.charcoal, 200},
+            {ItemIDs.dragonFang, 200},
+            {ItemIDs.silkScarf, 200},
+            {ItemIDs.upgrade, 300},
+            {ItemIDs.shellBell, 600},
+            {ItemIDs.seaIncense, 200},
+            {ItemIDs.laxIncense, 300},
+            {ItemIDs.luckyPunch, 1},
+            {ItemIDs.metalPowder, 1},
+            {ItemIDs.thickClub, 50},
+            {ItemIDs.leek, 20},
+            {ItemIDs.redScarf, 10},
+            {ItemIDs.blueScarf, 10},
+            {ItemIDs.pinkScarf, 10},
+            {ItemIDs.greenScarf, 10},
+            {ItemIDs.yellowScarf, 10},
+            {ItemIDs.wideLens, 150},
+            {ItemIDs.muscleBand, 200},
+            {ItemIDs.wiseGlasses, 200},
+            {ItemIDs.expertBelt, 600},
+            {ItemIDs.lightClay, 150},
+            {ItemIDs.lifeOrb, 1000},
+            {ItemIDs.powerHerb, 100},
+            {ItemIDs.toxicOrb, 150},
+            {ItemIDs.flameOrb, 150},
+            {ItemIDs.quickPowder, 1},
+            {ItemIDs.focusSash, 200},
+            {ItemIDs.zoomLens, 150},
+            {ItemIDs.metronome, 300},
+            {ItemIDs.ironBall, 100},
+            {ItemIDs.laggingTail, 100},
+            {ItemIDs.destinyKnot, 150},
+            {ItemIDs.blackSludge, 500},
+            {ItemIDs.icyRock, 20},
+            {ItemIDs.smoothRock, 20},
+            {ItemIDs.heatRock, 20},
+            {ItemIDs.dampRock, 20},
+            {ItemIDs.gripClaw, 150},
+            {ItemIDs.choiceScarf, 1000},
+            {ItemIDs.stickyBarb, 150},
+            {ItemIDs.powerBracer, 300},
+            {ItemIDs.powerBelt, 300},
+            {ItemIDs.powerLens, 300},
+            {ItemIDs.powerBand, 300},
+            {ItemIDs.powerAnklet, 300},
+            {ItemIDs.powerWeight, 300},
+            {ItemIDs.shedShell, 50},
+            {ItemIDs.bigRoot, 150},
+            {ItemIDs.choiceSpecs, 1000},
+            {ItemIDs.flamePlate, 200},
+            {ItemIDs.splashPlate, 200},
+            {ItemIDs.zapPlate, 200},
+            {ItemIDs.meadowPlate, 200},
+            {ItemIDs.iciclePlate, 200},
+            {ItemIDs.fistPlate, 200},
+            {ItemIDs.toxicPlate, 200},
+            {ItemIDs.earthPlate, 200},
+            {ItemIDs.skyPlate, 200},
+            {ItemIDs.mindPlate, 200},
+            {ItemIDs.insectPlate, 200},
+            {ItemIDs.stonePlate, 200},
+            {ItemIDs.spookyPlate, 200},
+            {ItemIDs.dracoPlate, 200},
+            {ItemIDs.dreadPlate, 200},
+            {ItemIDs.ironPlate, 200},
+            {ItemIDs.oddIncense, 200},
+            {ItemIDs.rockIncense, 200},
+            {ItemIDs.fullIncense, 100},
+            {ItemIDs.waveIncense, 200},
+            {ItemIDs.roseIncense, 200},
+            {ItemIDs.luckIncense, 1500},
+            {ItemIDs.pureIncense, 100},
+            {ItemIDs.protector, 300},
+            {ItemIDs.electirizer, 300},
+            {ItemIDs.magmarizer, 300},
+            {ItemIDs.dubiousDisc, 300},
+            {ItemIDs.reaperCloth, 300},
+            {ItemIDs.razorClaw, 500},
+            {ItemIDs.razorFang, 500},
+            {ItemIDs.tm01, 1000},
+            {ItemIDs.tm02, 1000},
+            {ItemIDs.tm03, 1000},
+            {ItemIDs.tm04, 1000},
+            {ItemIDs.tm05, 1000},
+            {ItemIDs.tm06, 1000},
+            {ItemIDs.tm07, 2000},
+            {ItemIDs.tm08, 1000},
+            {ItemIDs.tm09, 1000},
+            {ItemIDs.tm10, 1000},
+            {ItemIDs.tm11, 2000},
+            {ItemIDs.tm12, 1000},
+            {ItemIDs.tm13, 1000},
+            {ItemIDs.tm14, 2000},
+            {ItemIDs.tm15, 2000},
+            {ItemIDs.tm16, 2000},
+            {ItemIDs.tm17, 1000},
+            {ItemIDs.tm18, 2000},
+            {ItemIDs.tm19, 1000},
+            {ItemIDs.tm20, 2000},
+            {ItemIDs.tm21, 1000},
+            {ItemIDs.tm22, 1000},
+            {ItemIDs.tm23, 1000},
+            {ItemIDs.tm24, 1000},
+            {ItemIDs.tm25, 2000},
+            {ItemIDs.tm26, 1000},
+            {ItemIDs.tm27, 1000},
+            {ItemIDs.tm28, 1000},
+            {ItemIDs.tm29, 1000},
+            {ItemIDs.tm30, 1000},
+            {ItemIDs.tm31, 1000},
+            {ItemIDs.tm32, 1000},
+            {ItemIDs.tm33, 2000},
+            {ItemIDs.tm34, 1000},
+            {ItemIDs.tm35, 1000},
+            {ItemIDs.tm36, 1000},
+            {ItemIDs.tm37, 2000},
+            {ItemIDs.tm38, 2000},
+            {ItemIDs.tm39, 1000},
+            {ItemIDs.tm40, 1000},
+            {ItemIDs.tm41, 1000},
+            {ItemIDs.tm42, 1000},
+            {ItemIDs.tm43, 1000},
+            {ItemIDs.tm44, 1000},
+            {ItemIDs.tm45, 1000},
+            {ItemIDs.tm46, 1000},
+            {ItemIDs.tm47, 1000},
+            {ItemIDs.tm48, 1000},
+            {ItemIDs.tm49, 1000},
+            {ItemIDs.tm50, 1000},
+            {ItemIDs.tm51, 1000},
+            {ItemIDs.tm52, 1000},
+            {ItemIDs.tm53, 1000},
+            {ItemIDs.tm54, 1000},
+            {ItemIDs.tm55, 1000},
+            {ItemIDs.tm56, 1000},
+            {ItemIDs.tm57, 1000},
+            {ItemIDs.tm58, 1000},
+            {ItemIDs.tm59, 1000},
+            {ItemIDs.tm60, 1000},
+            {ItemIDs.tm61, 1000},
+            {ItemIDs.tm62, 1000},
+            {ItemIDs.tm63, 1000},
+            {ItemIDs.tm64, 1000},
+            {ItemIDs.tm65, 1000},
+            {ItemIDs.tm66, 1000},
+            {ItemIDs.tm67, 1000},
+            {ItemIDs.tm68, 2000},
+            {ItemIDs.tm69, 1000},
+            {ItemIDs.tm70, 1000},
+            {ItemIDs.tm71, 1000},
+            {ItemIDs.tm72, 1000},
+            {ItemIDs.tm73, 1000},
+            {ItemIDs.tm74, 1000},
+            {ItemIDs.tm75, 1000},
+            {ItemIDs.tm76, 1000},
+            {ItemIDs.tm77, 1000},
+            {ItemIDs.tm78, 1000},
+            {ItemIDs.tm79, 1000},
+            {ItemIDs.tm80, 1000},
+            {ItemIDs.tm81, 1000},
+            {ItemIDs.tm82, 1000},
+            {ItemIDs.tm83, 1000},
+            {ItemIDs.tm84, 1000},
+            {ItemIDs.tm85, 1000},
+            {ItemIDs.tm86, 1000},
+            {ItemIDs.tm87, 1000},
+            {ItemIDs.tm88, 1000},
+            {ItemIDs.tm89, 1000},
+            {ItemIDs.tm90, 1000},
+            {ItemIDs.tm91, 1000},
+            {ItemIDs.tm92, 1000},
+            {ItemIDs.hm01, 0},
+            {ItemIDs.hm02, 0},
+            {ItemIDs.hm03, 0},
+            {ItemIDs.hm04, 0},
+            {ItemIDs.hm05, 0},
+            {ItemIDs.hm06, 0},
+            {ItemIDs.hm07, 0}, // unused in Gen 5
+            {ItemIDs.hm08, 0}, // unused in Gen 5
+            {ItemIDs.explorerKit, 0},
+            {ItemIDs.lootSack, 0},
+            {ItemIDs.ruleBook, 0},
+            {ItemIDs.pokeRadar, 0},
+            {ItemIDs.pointCard, 0},
+            {ItemIDs.journal, 0},
+            {ItemIDs.sealCase, 0},
+            {ItemIDs.fashionCase, 0},
+            {ItemIDs.sealBag, 0},
+            {ItemIDs.palPad, 0},
+            {ItemIDs.worksKey, 0},
+            {ItemIDs.oldCharm, 0},
+            {ItemIDs.galacticKey, 0},
+            {ItemIDs.redChain, 0},
+            {ItemIDs.townMap, 0},
+            {ItemIDs.vsSeeker, 0},
+            {ItemIDs.coinCase, 0},
+            {ItemIDs.oldRod, 0},
+            {ItemIDs.goodRod, 0},
+            {ItemIDs.superRod, 0},
+            {ItemIDs.sprayduck, 0},
+            {ItemIDs.poffinCase, 0},
+            {ItemIDs.bike, 0},
+            {ItemIDs.suiteKey, 0},
+            {ItemIDs.oaksLetter, 0},
+            {ItemIDs.lunarWing, 0},
+            {ItemIDs.memberCard, 0},
+            {ItemIDs.azureFlute, 0},
+            {ItemIDs.ssTicketJohto, 0},
+            {ItemIDs.contestPass, 0},
+            {ItemIDs.magmaStone, 0},
+            {ItemIDs.parcelSinnoh, 0},
+            {ItemIDs.coupon1, 0},
+            {ItemIDs.coupon2, 0},
+            {ItemIDs.coupon3, 0},
+            {ItemIDs.storageKeySinnoh, 0},
+            {ItemIDs.secretPotion, 0},
+            {ItemIDs.vsRecorder, 0},
+            {ItemIDs.gracidea, 0},
+            {ItemIDs.secretKeySinnoh, 0},
+            {ItemIDs.apricornBox, 0},
+            {ItemIDs.unownReport, 0},
+            {ItemIDs.berryPots, 0},
+            {ItemIDs.dowsingMachine, 0},
+            {ItemIDs.blueCard, 0},
+            {ItemIDs.slowpokeTail, 0},
+            {ItemIDs.clearBell, 0},
+            {ItemIDs.cardKeyJohto, 0},
+            {ItemIDs.basementKeyJohto, 0},
+            {ItemIDs.squirtBottle, 0},
+            {ItemIDs.redScale, 0},
+            {ItemIDs.lostItem, 0},
+            {ItemIDs.pass, 0},
+            {ItemIDs.machinePart, 0},
+            {ItemIDs.silverWing, 0},
+            {ItemIDs.rainbowWing, 0},
+            {ItemIDs.mysteryEgg, 0},
+            {ItemIDs.redApricorn, 2},
+            {ItemIDs.blueApricorn, 2},
+            {ItemIDs.yellowApricorn, 2},
+            {ItemIDs.greenApricorn, 2},
+            {ItemIDs.pinkApricorn, 2},
+            {ItemIDs.whiteApricorn, 2},
+            {ItemIDs.blackApricorn, 2},
+            {ItemIDs.fastBall, 30},
+            {ItemIDs.levelBall, 30},
+            {ItemIDs.lureBall, 30},
+            {ItemIDs.heavyBall, 30},
+            {ItemIDs.loveBall, 30},
+            {ItemIDs.friendBall, 30},
+            {ItemIDs.moonBall, 30},
+            {ItemIDs.sportBall, 30},
+            {ItemIDs.parkBall, 0},
+            {ItemIDs.photoAlbum, 0},
+            {ItemIDs.gbSounds, 0},
+            {ItemIDs.tidalBell, 0},
+            {ItemIDs.rageCandyBar, 1500},
+            {ItemIDs.dataCard01, 0},
+            {ItemIDs.dataCard02, 0},
+            {ItemIDs.dataCard03, 0},
+            {ItemIDs.dataCard04, 0},
+            {ItemIDs.dataCard05, 0},
+            {ItemIDs.dataCard06, 0},
+            {ItemIDs.dataCard07, 0},
+            {ItemIDs.dataCard08, 0},
+            {ItemIDs.dataCard09, 0},
+            {ItemIDs.dataCard10, 0},
+            {ItemIDs.dataCard11, 0},
+            {ItemIDs.dataCard12, 0},
+            {ItemIDs.dataCard13, 0},
+            {ItemIDs.dataCard14, 0},
+            {ItemIDs.dataCard15, 0},
+            {ItemIDs.dataCard16, 0},
+            {ItemIDs.dataCard17, 0},
+            {ItemIDs.dataCard18, 0},
+            {ItemIDs.dataCard19, 0},
+            {ItemIDs.dataCard20, 0},
+            {ItemIDs.dataCard21, 0},
+            {ItemIDs.dataCard22, 0},
+            {ItemIDs.dataCard23, 0},
+            {ItemIDs.dataCard24, 0},
+            {ItemIDs.dataCard25, 0},
+            {ItemIDs.dataCard26, 0},
+            {ItemIDs.dataCard27, 0},
+            {ItemIDs.jadeOrb, 0},
+            {ItemIDs.lockCapsule, 0},
+            {ItemIDs.redOrb, 0},
+            {ItemIDs.blueOrb, 0},
+            {ItemIDs.enigmaStone, 0},
+            {ItemIDs.prismScale, 300},
+            {ItemIDs.eviolite, 1000},
+            {ItemIDs.floatStone, 100},
+            {ItemIDs.rockyHelmet, 600},
+            {ItemIDs.airBalloon, 100},
+            {ItemIDs.redCard, 100},
+            {ItemIDs.ringTarget, 100},
+            {ItemIDs.bindingBand, 200},
+            {ItemIDs.absorbBulb, 100},
+            {ItemIDs.cellBattery, 100},
+            {ItemIDs.ejectButton, 100},
+            {ItemIDs.fireGem, 100},
+            {ItemIDs.waterGem, 100},
+            {ItemIDs.electricGem, 100},
+            {ItemIDs.grassGem, 100},
+            {ItemIDs.iceGem, 100},
+            {ItemIDs.fightingGem, 100},
+            {ItemIDs.poisonGem, 100},
+            {ItemIDs.groundGem, 100},
+            {ItemIDs.flyingGem, 100},
+            {ItemIDs.psychicGem, 100},
+            {ItemIDs.bugGem, 100},
+            {ItemIDs.rockGem, 100},
+            {ItemIDs.ghostGem, 100},
+            {ItemIDs.dragonGem, 100},
+            {ItemIDs.darkGem, 100},
+            {ItemIDs.steelGem, 100},
+            {ItemIDs.normalGem, 100},
+            {ItemIDs.healthFeather, 300},
+            {ItemIDs.muscleFeather, 300},
+            {ItemIDs.resistFeather, 300},
+            {ItemIDs.geniusFeather, 300},
+            {ItemIDs.cleverFeather, 300},
+            {ItemIDs.swiftFeather, 300},
+            {ItemIDs.prettyFeather, 20},
+            {ItemIDs.coverFossil, 500},
+            {ItemIDs.plumeFossil, 500},
+            {ItemIDs.libertyPass, 0},
+            {ItemIDs.passOrb, 20},
+            {ItemIDs.dreamBall, 100},
+            {ItemIDs.pokeToy, 100},
+            {ItemIDs.propCase, 0},
+            {ItemIDs.dragonSkull, 0},
+            {ItemIDs.balmMushroom, 0},
+            {ItemIDs.bigNugget, 0},
+            {ItemIDs.pearlString, 0},
+            {ItemIDs.cometShard, 0},
+            {ItemIDs.relicCopper, 0},
+            {ItemIDs.relicSilver, 0},
+            {ItemIDs.relicGold, 0},
+            {ItemIDs.relicVase, 0},
+            {ItemIDs.relicBand, 0},
+            {ItemIDs.relicStatue, 0},
+            {ItemIDs.relicCrown, 0},
+            {ItemIDs.casteliacone, 45},
+            {ItemIDs.direHit2, 0},
+            {ItemIDs.xSpeed2, 0},
+            {ItemIDs.xSpAtk2, 0},
+            {ItemIDs.xSpDef2, 0},
+            {ItemIDs.xDefense2, 0},
+            {ItemIDs.xAttack2, 0},
+            {ItemIDs.xAccuracy2, 0},
+            {ItemIDs.xSpeed3, 0},
+            {ItemIDs.xSpAtk3, 0},
+            {ItemIDs.xSpDef3, 0},
+            {ItemIDs.xDefense3, 0},
+            {ItemIDs.xAttack3, 0},
+            {ItemIDs.xAccuracy3, 0},
+            {ItemIDs.xSpeed6, 0},
+            {ItemIDs.xSpAtk6, 0},
+            {ItemIDs.xSpDef6, 0},
+            {ItemIDs.xDefense6, 0},
+            {ItemIDs.xAttack6, 0},
+            {ItemIDs.xAccuracy6, 0},
+            {ItemIDs.abilityUrge, 0},
+            {ItemIDs.itemDrop, 0},
+            {ItemIDs.itemUrge, 0},
+            {ItemIDs.resetUrge, 0},
+            {ItemIDs.direHit3, 0},
+            {ItemIDs.lightStone, 0},
+            {ItemIDs.darkStone, 0},
+            {ItemIDs.tm93, 1000},
+            {ItemIDs.tm94, 1000},
+            {ItemIDs.tm95, 1000},
+            {ItemIDs.xtransceiverMale, 0},
+            {ItemIDs.unused622, 0},
+            {ItemIDs.gram1, 0},
+            {ItemIDs.gram2, 0},
+            {ItemIDs.gram3, 0},
+            {ItemIDs.xtransceiverFemale, 0},
+            {ItemIDs.medalBox, 0},
+            {ItemIDs.dNASplicersFuse, 0},
+            {ItemIDs.dNASplicersSeparate, 0},
+            {ItemIDs.permit, 0},
+            {ItemIDs.ovalCharm, 0},
+            {ItemIDs.shinyCharm, 0},
+            {ItemIDs.plasmaCard, 0},
+            {ItemIDs.grubbyHanky, 0},
+            {ItemIDs.colressMachine, 0},
+            {ItemIDs.droppedItemCurtis, 0},
+            {ItemIDs.droppedItemYancy, 0},
+            {ItemIDs.revealGlass, 0}
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
     /* @formatter:off */

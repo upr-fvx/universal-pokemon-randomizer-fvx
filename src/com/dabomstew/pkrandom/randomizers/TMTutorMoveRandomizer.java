@@ -2,7 +2,7 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.pokemon.Move;
+import com.dabomstew.pkrandom.game_data.Move;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;

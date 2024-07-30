@@ -26,7 +26,7 @@ public class MascotGetter {
     }
 
     private BufferedImage getMascotUsingPIG(RomHandler romHandler) {
-        PokemonImageGetter pig = romHandler.createPokemonImageGetter(romHandler.getPokemonSet().getRandomPokemon(random))
+        PokemonImageGetter pig = romHandler.createPokemonImageGetter(romHandler.getPokemonSet().getRandomSpecies(random))
                 .setTransparentBackground(true);
         if (romHandler.generationOfPokemon() != 1) {
             pig = pig.setShiny(random.nextInt(10) == 0);

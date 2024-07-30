@@ -5,10 +5,10 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.constants.GBConstants;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.gbspace.FreedSpace;
-import com.dabomstew.pkrandom.pokemon.Move;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Trainer;
+import com.dabomstew.pkrandom.game_data.Move;
+import com.dabomstew.pkrandom.game_data.Trainer;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractGBRomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 
@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -59,7 +58,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     /**
      * Sets up various stuff which needs to be done after the ROM file has been loaded, but which is needed for loading
-     * game data like {@link Pokemon} and {@link Trainer}s. E.g. the {@link RomEntry} and text tables.
+     * game data like {@link Species} and {@link Trainer}s. E.g. the {@link RomEntry} and text tables.
      * Expected to be overrided.
      */
     protected void midLoadingSetUp() {
@@ -79,7 +78,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     protected abstract void initTextTables();
 
     /**
-     * Loads the (randomizable) game data, i.e. stuff like the gettable lists of {@link Pokemon}, {@link Move}s,
+     * Loads the (randomizable) game data, i.e. stuff like the gettable lists of {@link Species}, {@link Move}s,
      * and {@link Trainer}s.
      */
     protected void loadGameData() {
@@ -441,7 +440,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     @Override
 	public List<BufferedImage> getAllPokemonImages() {
 		List<BufferedImage> bims = new ArrayList<>();
-		for (Pokemon pk : getPokemonSet()) {
+		for (Species pk : getPokemonSet()) {
 			bims.add(createPokemonImageGetter(pk).getFull());
 		}
 		return bims;
@@ -454,7 +453,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract static class GBPokemonImageGetter extends PokemonImageGetter {
 
-        public GBPokemonImageGetter(Pokemon pk) {
+        public GBPokemonImageGetter(Species pk) {
             super(pk);
         }
 

@@ -647,8 +647,8 @@ BWXP_CheckForEXPShare::
     ret
 
 ; EXP Yields
-; 1 word per pokemon
-; in ingame ordering, starting with pokemon 0
+; 1 word per species
+; in ingame ordering, starting with species 0
 BWXP_Gen2_ExpYieldTable:
 ; just incbinned from the old version for now
     INCBIN "gen2_expyieldstable.bin"

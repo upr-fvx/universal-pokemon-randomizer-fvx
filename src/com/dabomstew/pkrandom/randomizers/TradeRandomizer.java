@@ -2,9 +2,9 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.IngameTrade;
-import com.dabomstew.pkrandom.pokemon.ItemList;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
+import com.dabomstew.pkrandom.game_data.IngameTrade;
+import com.dabomstew.pkrandom.game_data.ItemList;
+import com.dabomstew.pkrandom.game_data.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -53,8 +53,8 @@ public class TradeRandomizer extends Randomizer {
 
         // get old trades
         List<IngameTrade> trades = romHandler.getIngameTrades();
-        List<Pokemon> usedRequests = new ArrayList<>();
-        List<Pokemon> usedGivens = new ArrayList<>();
+        List<Species> usedRequests = new ArrayList<>();
+        List<Species> usedGivens = new ArrayList<>();
         List<String> usedOTs = new ArrayList<>();
         List<String> usedNicknames = new ArrayList<>();
         ItemList possibleItems = romHandler.getAllowedItems();
@@ -64,26 +64,26 @@ public class TradeRandomizer extends Randomizer {
 
         for (IngameTrade trade : trades) {
             // pick new given pokemon
-            Pokemon oldgiven = trade.givenPokemon;
-            Pokemon given = rPokeService.randomPokemon(random);
+            Species oldgiven = trade.givenSpecies;
+            Species given = rPokeService.randomPokemon(random);
             while (usedGivens.contains(given)) {
                 given = rPokeService.randomPokemon(random);
             }
             usedGivens.add(given);
-            trade.givenPokemon = given;
+            trade.givenSpecies = given;
 
             // requested pokemon?
-            if (oldgiven == trade.requestedPokemon) {
+            if (oldgiven == trade.requestedSpecies) {
                 // preserve trades for the same pokemon
-                trade.requestedPokemon = given;
+                trade.requestedSpecies = given;
             } else if (randomizeRequest) {
-                if (trade.requestedPokemon != null) {
-                    Pokemon request = rPokeService.randomPokemon(random);
+                if (trade.requestedSpecies != null) {
+                    Species request = rPokeService.randomPokemon(random);
                     while (usedRequests.contains(request) || request == given) {
                         request = rPokeService.randomPokemon(random);
                     }
                     usedRequests.add(request);
-                    trade.requestedPokemon = request;
+                    trade.requestedSpecies = request;
                 }
             }
 
@@ -97,7 +97,7 @@ public class TradeRandomizer extends Randomizer {
                 trade.nickname = nickname;
             } else if (trade.nickname.equalsIgnoreCase(oldgiven.getName())) {
                 // change the name for sanity
-                trade.nickname = trade.givenPokemon.getName();
+                trade.nickname = trade.givenSpecies.getName();
             }
 
             if (randomOT && trnameCount > usedOTs.size()) {

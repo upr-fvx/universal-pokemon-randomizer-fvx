@@ -26,13 +26,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.game_data.Type;
 
 /**
  * A list of {@link TypeColor}s based on a Pokémon's types. Which TypeColors are
  * used, and their order, can be carried up evolutions using a
- * {@link #TypeBaseColorList(Pokemon, TypeBaseColorList, boolean, Random)
+ * {@link #TypeBaseColorList(Species, TypeBaseColorList, boolean, Random)
  * constructor taking an existing TypeBaseColorList}.
  * <p>
  * The TypeColor constants used are those from {@link Gen3to5TypeColors}.
@@ -45,17 +45,17 @@ public class TypeBaseColorList {
 
 	private Random random;
 
-	private Pokemon pokemon;
+	private Species species;
 	private List<TypeColor> typeBaseColors = new LinkedList<>();
 	private TypeBaseColorList prevo;
 	private BaseColorMap baseColorMap;
 
-	public TypeBaseColorList(Pokemon pokemon, boolean typeSanity, Random random) {
-		this(pokemon, null, typeSanity, random);
+	public TypeBaseColorList(Species species, boolean typeSanity, Random random) {
+		this(species, null, typeSanity, random);
 	}
 
-	public TypeBaseColorList(Pokemon pokemon, TypeBaseColorList prevo, boolean typeSanity, Random random) {
-		this.pokemon = pokemon;
+	public TypeBaseColorList(Species species, TypeBaseColorList prevo, boolean typeSanity, Random random) {
+		this.species = species;
 		this.prevo = prevo;
 		this.random = random;
 		// evo lines share a BaseColorMap
@@ -111,11 +111,11 @@ public class TypeBaseColorList {
 			} else {
 
 				if (!hasSamePrimaryTypeAsPrevo()) {
-					moveFirstColorOfType(0, pokemon.getPrimaryType(false));
+					moveFirstColorOfType(0, species.getPrimaryType(false));
 				}
 
 				if (!hasSameSecondaryTypeAsPrevo()) {
-					Type moveType = pokemon.getSecondaryType(false) != null ? pokemon.getSecondaryType(false) : pokemon.getPrimaryType(false);
+					Type moveType = species.getSecondaryType(false) != null ? species.getSecondaryType(false) : species.getPrimaryType(false);
 					moveFirstColorOfType(1, moveType);
 				}
 			}
@@ -123,15 +123,15 @@ public class TypeBaseColorList {
 	}
 
 	private void moveTypeColorsToStart() {
-		moveFirstColorOfType(0, pokemon.getPrimaryType(false));
+		moveFirstColorOfType(0, species.getPrimaryType(false));
 
-		Type moveType = pokemon.getSecondaryType(false) != null ? pokemon.getSecondaryType(false) : pokemon.getPrimaryType(false);
+		Type moveType = species.getSecondaryType(false) != null ? species.getSecondaryType(false) : species.getPrimaryType(false);
 		moveFirstColorOfType(1, moveType);
 
-		moveFirstColorOfType(2, pokemon.getPrimaryType(false));
+		moveFirstColorOfType(2, species.getPrimaryType(false));
 
-		if (pokemon.getSecondaryType(false) != null) {
-			moveFirstColorOfType(3, pokemon.getSecondaryType(false));
+		if (species.getSecondaryType(false) != null) {
+			moveFirstColorOfType(3, species.getSecondaryType(false));
 		}
 	}
 
@@ -189,16 +189,16 @@ public class TypeBaseColorList {
 	}
 
 	private boolean hasSamePrimaryTypeAsPrevo() {
-		return pokemon.getPrimaryType(false) == prevo.pokemon.getPrimaryType(false);
+		return species.getPrimaryType(false) == prevo.species.getPrimaryType(false);
 	}
 
 	private boolean hasSameSecondaryTypeAsPrevo() {
-		return pokemon.getSecondaryType(false) == prevo.pokemon.getSecondaryType(false);
+		return species.getSecondaryType(false) == prevo.species.getSecondaryType(false);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s prevoPk=%s %s", pokemon.getName(), (prevo == null ? null : prevo.pokemon.getName()),
+		return String.format("%s prevoPk=%s %s", species.getName(), (prevo == null ? null : prevo.species.getName()),
 				typeBaseColors);
 	}
 

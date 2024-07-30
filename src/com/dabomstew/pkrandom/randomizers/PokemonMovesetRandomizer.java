@@ -2,8 +2,8 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.constants.Moves;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.constants.MoveIDs;
+import com.dabomstew.pkrandom.game_data.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -38,7 +38,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
             List<Integer> learnt = new ArrayList<>();
             List<MoveLearnt> moves = movesets.get(pkmnNum);
             int lv1AttackingMove = 0;
-            Pokemon pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
+            Species pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }
@@ -216,7 +216,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         for (Integer pkmnNum : movesets.keySet()) {
             List<Integer> learnt = new ArrayList<>();
             List<Integer> moves = movesets.get(pkmnNum);
-            Pokemon pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
+            Species pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }
@@ -434,8 +434,8 @@ public class PokemonMovesetRandomizer extends Randomizer {
     // Note that this is slow and somewhat hacky.
     // TODO: add to PokemonSet, hopefully in a less hacky way.
     // (The non-hacky way might be to make it a TreeSet.)
-    private Pokemon findPokemonInPoolWithSpeciesID(Collection<Pokemon> pokemonPool, int speciesID) {
-        for (Pokemon pk : pokemonPool) {
+    private Species findPokemonInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
+        for (Species pk : speciesPool) {
             if (pk.getNumber() == speciesID) {
                 return pk;
             }
@@ -487,7 +487,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
 
         MoveLearnt metronomeML = new MoveLearnt();
         metronomeML.level = 1;
-        metronomeML.move = Moves.metronome;
+        metronomeML.move = MoveIDs.metronome;
 
         for (List<MoveLearnt> ms : movesets.values()) {
             if (ms != null && ms.size() > 0) {
@@ -513,7 +513,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         // tms
         List<Integer> tmMoves = romHandler.getTMMoves();
 
-        Collections.fill(tmMoves, Moves.metronome);
+        Collections.fill(tmMoves, MoveIDs.metronome);
 
         romHandler.setTMMoves(tmMoves);
 
@@ -521,7 +521,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         if (romHandler.hasMoveTutors()) {
             List<Integer> mtMoves = romHandler.getMoveTutorMoves();
 
-            Collections.fill(mtMoves, Moves.metronome);
+            Collections.fill(mtMoves, MoveIDs.metronome);
 
             romHandler.setMoveTutorMoves(mtMoves);
         }
@@ -529,7 +529,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         // move tweaks
         List<Move> moveData = romHandler.getMoves();
 
-        Move metronome = moveData.get(Moves.metronome);
+        Move metronome = moveData.get(MoveIDs.metronome);
 
         metronome.pp = 40;
 

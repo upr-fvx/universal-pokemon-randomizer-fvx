@@ -2,7 +2,7 @@ Colors used for type-based palette randomization in Gens 3-5.
 
 It is possible to add/remove colors, and even types, but each mentioned type 
 must have at least one assigned color.
-Types must also correspond to Type enumerator values found in pokemon/Type.java. 
+Types must also correspond to Type enumerator values found in game_data/Type.java.
 If you don't know what that means, don't worry about it.
 
 The standard color values for the vanilla types, not including fairy, 

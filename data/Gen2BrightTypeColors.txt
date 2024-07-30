@@ -2,7 +2,7 @@ Bright colors used for type-based palette randomization in Gen 2.
 
 It is possible to add/remove colors, and even types, but each mentioned type 
 must have at least one assigned color.
-Types must also correspond to Type enumerator values found in pokemon/Type.java. 
+Types must also correspond to Type enumerator values found in game_data/Type.java.
 If you don't know what that means, don't worry about it.
 
 [NORMAL] 	(F7DE6B) (FF7BBD) (FF5263) (EFB539) (FF7394) (FF7394) (FF73AD) (FF73AD) 

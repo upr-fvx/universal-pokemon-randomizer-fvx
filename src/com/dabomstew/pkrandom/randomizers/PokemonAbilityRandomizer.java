@@ -4,7 +4,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.game_data.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -99,7 +99,7 @@ public class PokemonAbilityRandomizer extends Randomizer {
         });
 
 
-        romHandler.getPokemonSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filterCosmetic()
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {

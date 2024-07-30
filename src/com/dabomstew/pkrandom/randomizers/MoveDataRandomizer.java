@@ -2,8 +2,8 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.MoveIDs;
-import com.dabomstew.pkrandom.game_data.Move;
-import com.dabomstew.pkrandom.game_data.MoveCategory;
+import com.dabomstew.pkrandom.gamedata.Move;
+import com.dabomstew.pkrandom.gamedata.MoveCategory;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;

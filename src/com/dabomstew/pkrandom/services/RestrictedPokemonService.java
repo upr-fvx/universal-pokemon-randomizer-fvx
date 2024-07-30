@@ -2,10 +2,10 @@ package com.dabomstew.pkrandom.services;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.game_data.GenRestrictions;
-import com.dabomstew.pkrandom.game_data.MegaEvolution;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Collections;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
  * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(Settings)},
  * you can access a number of <i>unmodifiable</i> {@link SpeciesSet}s, following those restrictions.<br>
  * When randomizing, you generally want to use these sets,
- * rather than anything provided directly by the {@link RomHandler}, like {@link RomHandler#getPokemon()} or
- * {@link RomHandler#getPokemonSetInclFormes()}.
+ * rather than anything provided directly by the {@link RomHandler}, like {@link RomHandler#getSpecies()} or
+ * {@link RomHandler#getSpeciesSetInclFormes()}.
  * <br><br>
  * This class also provides {@link #randomPokemon(Random)}, to get a random Pokemon from all allowed ones.
  * To get a random Pokemon from the other sets, use {@link SpeciesSet#getRandomSpecies(Random)}.
@@ -172,7 +172,7 @@ public class RestrictedPokemonService {
                     .collect(Collectors.toSet());
             megaEvolutions = Collections.unmodifiableSet(megaEvolutions);
         } else {
-            allInclAltFormes = SpeciesSet.unmodifiable(romHandler.getPokemonSetInclFormes());
+            allInclAltFormes = SpeciesSet.unmodifiable(romHandler.getSpeciesSetInclFormes());
             megaEvolutions = Collections.unmodifiableSet(new HashSet<>(romHandler.getMegaEvolutions()));
         }
 
@@ -195,7 +195,7 @@ public class RestrictedPokemonService {
 
     private SpeciesSet allInclAltFormesFromRestrictions(GenRestrictions restrictions) {
         SpeciesSet allInclAltFormes = new SpeciesSet();
-        SpeciesSet allNonRestricted = romHandler.getPokemonSetInclFormes();
+        SpeciesSet allNonRestricted = romHandler.getSpeciesSetInclFormes();
 
         if (restrictions.allow_gen1) {
             addFromGen(allInclAltFormes, allNonRestricted, 1);

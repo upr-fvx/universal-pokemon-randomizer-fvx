@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen4Constants {
 
@@ -485,8 +485,8 @@ public class Gen4Constants {
     private final static int bulbasaurOverworldSpriteID = 297;
 
     /**
-     * Returns the first overworld sprite ID for a given Pokemon species.
-     * Some species have more than one sprite ID, either due to gender
+     * Returns the first overworld sprite ID for a given Species.
+     * Some Species have more than one sprite ID, either due to gender
      * differences or formes, but this gives the first one only.
      */
     public static int getOverworldSpriteIDOfSpecies(int species) {
@@ -2649,7 +2649,7 @@ public class Gen4Constants {
             "OLD CHATEAU", "ETERNA CITY", "ROUTE 206", "WAYWARD CAVE", "ROUTE 207", "ROUTE 208", "ROUTE 209",
             "SOLACEON RUINS", "ROUTE 210", "ROUTE 215", "ROUTE 214", "MANIAC TUNNEL", "VALOR LAKEFRONT", "ROUTE 213",
             "PASTORIA CITY", "GREAT MARSH", "ROUTE 212", "TROPHY GARDEN", "CELESTIC TOWN", "FUEGO IRONWORKS",
-            "ROUTE 219", "ROUTE 220", "ROUTE 221", "ROUTE 218", "CANACLAVE CITY", "IRON ISLAND", "LAKE VALOR",
+            "ROUTE 219", "ROUTE 220", "ROUTE 221", "ROUTE 218", "CANALAVE CITY", "IRON ISLAND", "LAKE VALOR",
             "ROUTE 211", "MT. CORONET", "ROUTE 216", "ROUTE 217", "ACUITY LAKEFRONT", "LAKE ACUITY", "ROUTE 222",
             "SUNYSHORE CITY", "ROUTE 223", "VICTORY ROAD", "POKEMON LEAGUE", "ROUTE 224", "ROUTE 230", "ROUTE 229",
             "RESORT AREA", "ROUTE 228", "ROUTE 226", "ROUTE 227", "ROUTE 225", "STARK MOUNTAIN", "SNOWPOINT TEMPLE",

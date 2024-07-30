@@ -30,7 +30,7 @@ import com.dabomstew.pkrandom.graphics.packs.GBCPlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
@@ -1095,12 +1095,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesList;
     }
 
@@ -2769,7 +2769,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public void loadPokemonPalettes() {
 		int palIndex = romEntry.getIntValue("MonPaletteIndicesOffset");
-		for (Species pk : getPokemonSet()) {
+		for (Species pk : getSpeciesSet()) {
             // they are in Pokédex order
 			Gen1Species gen1pk = (Gen1Species) pk;
 			gen1pk.setPaletteID((SGBPaletteID.values()[rom[palIndex + gen1pk.getNumber()]]));
@@ -2779,7 +2779,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 	@Override
 	public void savePokemonPalettes() {
 		int palIndex = romEntry.getIntValue("MonPaletteIndicesOffset");
-		for (Species pk : getPokemonSet()) {
+		for (Species pk : getSpeciesSet()) {
             // they are in Pokédex order
 			Gen1Species gen1pk = (Gen1Species) pk;
 			writeByte(palIndex + gen1pk.getNumber(), (byte) gen1pk.getPaletteID().ordinal());

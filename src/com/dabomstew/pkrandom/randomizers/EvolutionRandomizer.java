@@ -3,10 +3,10 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.game_data.Evolution;
-import com.dabomstew.pkrandom.game_data.EvolutionType;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.Evolution;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;

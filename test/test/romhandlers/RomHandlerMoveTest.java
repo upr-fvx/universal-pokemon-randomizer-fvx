@@ -1,8 +1,8 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Move;
-import com.dabomstew.pkrandom.game_data.MoveLearnt;
+import com.dabomstew.pkrandom.gamedata.Move;
+import com.dabomstew.pkrandom.gamedata.MoveLearnt;
 import com.dabomstew.pkrandom.randomizers.TMTutorMoveRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;

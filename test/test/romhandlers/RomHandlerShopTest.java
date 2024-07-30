@@ -1,9 +1,9 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Item;
-import com.dabomstew.pkrandom.game_data.ItemList;
-import com.dabomstew.pkrandom.game_data.Shop;
+import com.dabomstew.pkrandom.gamedata.Item;
+import com.dabomstew.pkrandom.gamedata.ItemList;
+import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
 import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;

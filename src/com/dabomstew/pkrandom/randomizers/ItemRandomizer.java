@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Item;
-import com.dabomstew.pkrandom.game_data.ItemList;
-import com.dabomstew.pkrandom.game_data.PickupItem;
-import com.dabomstew.pkrandom.game_data.Shop;
+import com.dabomstew.pkrandom.gamedata.Item;
+import com.dabomstew.pkrandom.gamedata.ItemList;
+import com.dabomstew.pkrandom.gamedata.PickupItem;
+import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;

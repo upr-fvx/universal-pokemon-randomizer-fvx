@@ -33,7 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.gamedata.Type;
 
 /**
  * A {@link Color} with an associated {@link Type}.

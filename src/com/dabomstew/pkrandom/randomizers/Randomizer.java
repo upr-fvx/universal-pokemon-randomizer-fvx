@@ -1,8 +1,8 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.services.RestrictedPokemonService;
 import com.dabomstew.pkrandom.services.TypeService;
@@ -28,7 +28,7 @@ public abstract class Randomizer {
         this.romHandler = romHandler;
         this.rPokeService = romHandler.getRestrictedPokemonService();
         this.typeService = romHandler.getTypeService();
-        this.copyUpEvolutionsHelper = new CopyUpEvolutionsHelper<>(romHandler::getPokemonSet);
+        this.copyUpEvolutionsHelper = new CopyUpEvolutionsHelper<>(romHandler::getSpeciesSet);
 
         this.settings = settings;
         this.random = random;

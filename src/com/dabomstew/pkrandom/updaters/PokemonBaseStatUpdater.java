@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.updaters;
 
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class PokemonBaseStatUpdater extends Updater {
         if (updateToGen > updates.size() - 1) {
             throw new IllegalArgumentException("updateToGen too high, can't update to Gen " + updateToGen);
         }
-        List<Species> pokes = romHandler.getPokemonInclFormes();
+        List<Species> pokes = romHandler.getSpeciesInclFormes();
 
         for (int i = 2; i <= updates.size(); i++) {
             if (updateToGen >= i && romHandler.generationOfPokemon() < i) {

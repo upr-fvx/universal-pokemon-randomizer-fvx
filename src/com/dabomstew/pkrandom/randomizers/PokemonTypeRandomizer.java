@@ -1,11 +1,11 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.MegaEvolution;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
-import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class PokemonTypeRandomizer extends Randomizer {
     }
 
     private void carryTypesToAltFormes() {
-        SpeciesSet allPokes = romHandler.getPokemonSetInclFormes();
+        SpeciesSet allPokes = romHandler.getSpeciesSetInclFormes();
         for (Species pk : allPokes) {
             if (pk != null && pk.isActuallyCosmetic()) {
                 pk.setPrimaryType(pk.getBaseForme().getPrimaryType(false));

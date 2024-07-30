@@ -37,11 +37,11 @@ import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
 
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.game_data.ExpCurve;
-import com.dabomstew.pkrandom.game_data.GenRestrictions;
-import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
 import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
@@ -1082,9 +1082,9 @@ public class Settings {
         // starters
         List<Species> romSpecies;
         if (rh.hasStarterAltFormes()) {
-            romSpecies = rh.getPokemonInclFormes();
+            romSpecies = rh.getSpeciesInclFormes();
         } else {
-            romSpecies = rh.getPokemon();
+            romSpecies = rh.getSpecies();
         }
         List<Species> romStarters = rh.getStarters();
         for (int starter = 0; starter < 3; starter++) {

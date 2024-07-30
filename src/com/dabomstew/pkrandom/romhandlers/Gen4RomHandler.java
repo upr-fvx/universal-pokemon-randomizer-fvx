@@ -27,7 +27,7 @@ import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.DSStaticPokemon;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen4RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.InFileEntry;
@@ -888,12 +888,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<Species> getPokemon() {
+	public List<Species> getSpecies() {
 		return speciesList;
 	}
 
 	@Override
-	public List<Species> getPokemonInclFormes() {
+	public List<Species> getSpeciesInclFormes() {
 		return speciesListInclFormes; // No formes for now
 	}
 

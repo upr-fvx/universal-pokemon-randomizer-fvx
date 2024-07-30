@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.Gen1PaletteRandomizer;
@@ -279,7 +279,7 @@ public class GameRandomizer {
             log.println("Pokemon base stats & type: unchanged" + NEWLINE);
         }
 
-        for (Species pkmn : romHandler.getPokemon()) {
+        for (Species pkmn : romHandler.getSpecies()) {
             if (pkmn != null) {
                 checkValue = addToCV(checkValue, pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpeed(), pkmn.getSpatk(),
                         pkmn.getSpdef(), pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
@@ -749,7 +749,7 @@ public class GameRandomizer {
         Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
-        List<Species> pkmnList = romHandler.getPokemonInclFormes();
+        List<Species> pkmnList = romHandler.getSpeciesInclFormes();
         int i = 1;
         for (Species pkmn : pkmnList) {
             if (pkmn == null || pkmn.isActuallyCosmetic()) {
@@ -869,7 +869,7 @@ public class GameRandomizer {
 
     private void logEvolutionChanges(PrintStream log) {
         log.println("--Randomized Evolutions--");
-        List<Species> allPokes = romHandler.getPokemonInclFormes();
+        List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
             if (pk != null && !pk.isActuallyCosmetic()) {
                 int numEvos = pk.getEvolutionsFrom().size();
@@ -891,7 +891,7 @@ public class GameRandomizer {
     }
 
     private void logPokemonTraitChanges(final PrintStream log) {
-        List<Species> allPokes = romHandler.getPokemonInclFormes();
+        List<Species> allPokes = romHandler.getSpeciesInclFormes();
         List<Item> items = romHandler.getItems();
         // Log base stats & types
         log.println("--Pokemon Base Stats & Types--");

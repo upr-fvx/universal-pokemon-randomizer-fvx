@@ -26,7 +26,7 @@ package com.dabomstew.pkrandom.constants;
 
 import java.util.*;
 
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen1Constants {
 

@@ -30,11 +30,11 @@ import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.graphics.packs.*;
-import com.dabomstew.pkrandom.game_data.ExpCurve;
-import com.dabomstew.pkrandom.game_data.GenRestrictions;
-import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -3543,11 +3543,11 @@ public class RandomizerGUI {
         List<Species> currentStarters = romHandler.getStarters();
         List<Species> allPokes =
                 romHandler.generationOfPokemon() >= 6 ?
-                        romHandler.getPokemonInclFormes()
+                        romHandler.getSpeciesInclFormes()
                                 .stream()
                                 .filter(pk -> pk == null || !pk.isActuallyCosmetic())
                                 .collect(Collectors.toList()) :
-                        romHandler.getPokemon();
+                        romHandler.getSpecies();
         String[] pokeNames = new String[allPokes.size()];
         pokeNames[0] = "Random";
         for (int i = 1; i < allPokes.size(); i++) {

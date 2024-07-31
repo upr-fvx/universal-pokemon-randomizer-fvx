@@ -1,6 +1,6 @@
 package test.updaters;
 
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.updaters.PokemonBaseStatUpdater;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -79,9 +79,9 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         assumeTrue(updateToGen >= 6);
 
         loadROM(romName);
-        List<BaseStatRecord> before = toRecords(romHandler.getPokemonInclFormes());
+        List<BaseStatRecord> before = toRecords(romHandler.getSpeciesInclFormes());
         new PokemonBaseStatUpdater(romHandler).updatePokemonStats(updateToGen);
-        List<BaseStatRecord> after = toRecords(romHandler.getPokemonInclFormes());
+        List<BaseStatRecord> after = toRecords(romHandler.getSpeciesInclFormes());
         printDiff(before, after);
         assertNotEquals(before, after);
     }
@@ -95,9 +95,9 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         for (int gen = getGenerationNumberOf(romName) + 1; gen <= MAX_UPDATE_GEN; gen++) {
             bsu.updatePokemonStats(gen);
         }
-        List<BaseStatRecord> afterAllInOrder = toRecords(romHandler.getPokemonInclFormes());
+        List<BaseStatRecord> afterAllInOrder = toRecords(romHandler.getSpeciesInclFormes());
         new PokemonBaseStatUpdater(romHandler).updatePokemonStats(MAX_UPDATE_GEN);
-        assertEquals(afterAllInOrder, toRecords(romHandler.getPokemonInclFormes()));
+        assertEquals(afterAllInOrder, toRecords(romHandler.getSpeciesInclFormes()));
     }
 
     private List<BaseStatRecord> toRecords(List<Species> pokes) {

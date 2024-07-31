@@ -23,11 +23,11 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
-import com.dabomstew.pkrandom.game_data.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.game_data.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.game_data.Gen1Species;
-import com.dabomstew.pkrandom.game_data.Type;
-import com.dabomstew.pkrandom.game_data.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.dabomstew.pkrandom.gamedata.Gen1Species;
+import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.EnumMap;
@@ -73,7 +73,7 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
 
 		// has to use a separate CopyUpEvolutionsHelper which works with Gen1Pokemon
-		CopyUpEvolutionsHelper<Gen1Species> cueh = new CopyUpEvolutionsHelper<>(romHandler::getPokemonSet);
+		CopyUpEvolutionsHelper<Gen1Species> cueh = new CopyUpEvolutionsHelper<>(romHandler::getSpeciesSet);
 		cueh.apply(evolutionSanity, true, new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
 	}
 

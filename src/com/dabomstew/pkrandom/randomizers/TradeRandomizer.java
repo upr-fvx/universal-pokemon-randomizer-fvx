@@ -2,9 +2,9 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.IngameTrade;
-import com.dabomstew.pkrandom.game_data.ItemList;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.IngameTrade;
+import com.dabomstew.pkrandom.gamedata.ItemList;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -65,9 +65,9 @@ public class TradeRandomizer extends Randomizer {
         for (IngameTrade trade : trades) {
             // pick new given pokemon
             Species oldgiven = trade.givenSpecies;
-            Species given = rPokeService.randomPokemon(random);
+            Species given = rSpecService.randomSpecies(random);
             while (usedGivens.contains(given)) {
-                given = rPokeService.randomPokemon(random);
+                given = rSpecService.randomSpecies(random);
             }
             usedGivens.add(given);
             trade.givenSpecies = given;
@@ -78,9 +78,9 @@ public class TradeRandomizer extends Randomizer {
                 trade.requestedSpecies = given;
             } else if (randomizeRequest) {
                 if (trade.requestedSpecies != null) {
-                    Species request = rPokeService.randomPokemon(random);
+                    Species request = rSpecService.randomSpecies(random);
                     while (usedRequests.contains(request) || request == given) {
-                        request = rPokeService.randomPokemon(random);
+                        request = rSpecService.randomSpecies(random);
                     }
                     usedRequests.add(request);
                     trade.requestedSpecies = request;

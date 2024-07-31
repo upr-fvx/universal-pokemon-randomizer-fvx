@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;
@@ -13,9 +13,9 @@ public class IntroPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeIntroPokemon() {
-        Species pk = rPokeService.getAll(true).getRandomSpecies(random);
+        Species pk = rSpecService.getAll(true).getRandomSpecies(random);
         while (!romHandler.setIntroPokemon(pk)) {
-            pk = rPokeService.getAll(true).getRandomSpecies(random);
+            pk = rSpecService.getAll(true).getRandomSpecies(random);
         }
     }
 }

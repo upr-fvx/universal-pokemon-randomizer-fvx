@@ -2,7 +2,7 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -218,10 +218,10 @@ public class StarterRandomizer extends Randomizer {
     }
 
     /**
-     * Given a set of available Pokemon, chooses a set of unique starters with no additional constraints.
-     * @param numberPicks The number of Pokemon to choose.
-     * @param available The set of Pokemon to choose from.
-     * @return A new {@link List} containing each starter chosen. (Not a PokemonSet so that the order remains random.)
+     * Given a set of available Species, chooses a set of unique starters with no additional constraints.
+     * @param numberPicks The number of Species to choose.
+     * @param available The set of Species to choose from.
+     * @return A new {@link List} containing each starter chosen. (Not a SpeciesSet so that the order remains random.)
      */
     private List<Species> chooseStartersBasic(int numberPicks, SpeciesSet available) {
         if(available.size() < numberPicks) {
@@ -240,12 +240,12 @@ public class StarterRandomizer extends Randomizer {
     }
 
     /**
-     * Given a set of available Pokemon, chooses a set of unique starters such that none of their types are
-     * shared with any Pokemon already picked.
-     * @param alreadyPicked The list of Pokemon already picked.
-     * @param numberPicks The number of Pokemon to choose (not including those already picked).
-     * @param available The set of Pokemon available to choose from. WARNING: PARAMETER MODIFIED.
-     * @return A new {@link List} containing each starter chosen. (Not a PokemonSet so that the order remains random.)
+     * Given a set of available Species, chooses a set of unique starters such that none of their types are
+     * shared with any Species already picked.
+     * @param alreadyPicked The list of Species already picked.
+     * @param numberPicks The number of Species to choose (not including those already picked).
+     * @param available The set of Species available to choose from. WARNING: PARAMETER MODIFIED.
+     * @return A new {@link List} containing each starter chosen. (Not a SpeciesSet so that the order remains random.)
      */
     private List<Species> chooseUniqueTypeStarters(List<Species> alreadyPicked, int numberPicks, SpeciesSet available) {
         for (Species picked : alreadyPicked) {
@@ -270,9 +270,9 @@ public class StarterRandomizer extends Randomizer {
     }
 
     /**
-     * Finds all Pokemon that could be used as starters given the current settings.
+     * Finds all Species that could be used as starters given the current settings.
      * @param alreadyChosen The list of already-chosen (i.e. custom) starters.
-     * @return A new PokemonSet containing all Pokemon which are valid starters, except the already chosen ones.
+     * @return A new SpeciesSet containing all Species which are valid starters, except the already chosen ones.
      */
     private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
         boolean abilitiesUnchanged = settings.getAbilitiesMod() == Settings.AbilitiesMod.UNCHANGED;
@@ -288,17 +288,17 @@ public class StarterRandomizer extends Randomizer {
         SpeciesSet available;
 
         if (allowAltFormes) {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(true)
-                    : rPokeService.getAll(true));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(true)
+                    : rSpecService.getAll(true));
             if (abilitiesUnchanged) {
-                available.removeAll(rPokeService.getAbilityDependentFormes());
+                available.removeAll(rSpecService.getAbilityDependentFormes());
             }
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
             available.removeIf(Species::isActuallyCosmetic);
         } else {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(false) : rPokeService.getAll(false));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(false) : rSpecService.getAll(false));
         }
 
         available.removeAll(alreadyChosen);
@@ -328,7 +328,7 @@ public class StarterRandomizer extends Randomizer {
     //TODO: enhance the ordering (i.e. if the first and third are given, make sure they stay in those positions)
     private List<Species> getCustomStarters(int[] starterIndices) {
         List<Species> customStarters = new ArrayList<>();
-        List<Species> romSpecies = romHandler.getPokemonInclFormes()
+        List<Species> romSpecies = romHandler.getSpeciesInclFormes()
                 .stream()
                 .filter(pk -> pk == null || !pk.isActuallyCosmetic())
                 .collect(Collectors.toList());

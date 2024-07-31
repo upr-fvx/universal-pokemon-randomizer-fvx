@@ -1,8 +1,8 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.StaticEncounter;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.StaticEncounter;
 import com.dabomstew.pkrandom.randomizers.StaticPokemonRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -164,7 +164,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
     }
 
     private boolean isUltraBeast(Species pk) {
-        return romHandler.getRestrictedPokemonService().getUltrabeasts(false).contains(pk);
+        return romHandler.getRestrictedSpeciesService().getUltrabeasts(false).contains(pk);
     }
 
     private List<StaticEncounter> deepCopy(List<StaticEncounter> original) {

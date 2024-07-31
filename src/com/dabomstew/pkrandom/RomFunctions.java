@@ -24,7 +24,7 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.game_data.MoveLearnt;
+import com.dabomstew.pkrandom.gamedata.MoveLearnt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +34,10 @@ import java.util.Map;
 public class RomFunctions {
 
     /**
-     * Get the 4 moves known by a Pokemon at a particular level.
+     * Get the 4 moves known by a Species at a particular level.
      * 
-     * @param pkmn Pokemon index to get moves for.
-     * @param movesets Map of Pokemon indices mapped to movesets.
+     * @param pkmn Species index to get moves for.
+     * @param movesets Map of Species indices mapped to movesets.
      * @param level Level to get at.
      * @return Array with move indices.
      */

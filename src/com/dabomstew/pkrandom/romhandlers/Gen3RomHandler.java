@@ -35,7 +35,7 @@ import com.dabomstew.pkrandom.graphics.packs.Gen3PlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.graphics.packs.RSEPlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen3EventTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen3RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
@@ -1471,7 +1471,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // Some encounter areas aren't allowed to have Pokemon
             // with Arena Trap, Shadow Tag etc.
             Set<Species> battleTrappers = new HashSet<>();
-            for (Species pk : getPokemon()) {
+            for (Species pk : getSpecies()) {
                 if (hasBattleTrappingAbility(pk)) {
                     battleTrappers.add(pk);
                 }
@@ -1903,12 +1903,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 	}
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesList; // No alt formes for now, should include Deoxys formes in the future
     }
 
@@ -1923,7 +1923,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         return pk;
     }
 
@@ -4182,7 +4182,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void loadPokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
 
             int normalPalOffset = readPointer(normalPaletteTableOffset + pokeNumber * 8);
@@ -4202,7 +4202,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void savePokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
-        for (Species pk : getPokemonSet()) {
+        for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
             int normalPalPointerOffset = normalPaletteTableOffset + pokeNumber * 8;
             int shinyPalPointerOffset = shinyPaletteTableOffset + pokeNumber * 8;

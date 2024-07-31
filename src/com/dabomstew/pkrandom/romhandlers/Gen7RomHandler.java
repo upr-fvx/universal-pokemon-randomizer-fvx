@@ -31,7 +31,7 @@ import com.dabomstew.pkrandom.ctr.BFLIM;
 import com.dabomstew.pkrandom.ctr.GARCArchive;
 import com.dabomstew.pkrandom.ctr.Mini;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen7RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.ThreeDSLinkedEncounter;
 import pptxt.N3DSTxtHandler;
@@ -939,12 +939,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesListInclFormes;
     }
 
@@ -961,7 +961,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
         return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : pk;
     }
@@ -1600,7 +1600,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs, tp.heldItem);
                     pokeOffs += 4;
                     if (tp.resetMoves) {
-                        int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.species, tp.forme).getNumber(), movesets, tp.level);
+                        int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.species, tp.forme).getNumber(), movesets, tp.level);
                         for (int m = 0; m < 4; m++) {
                             writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                         }
@@ -1771,7 +1771,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     int numberOfEggMoves = readWord(movedata, 2);
@@ -1783,7 +1783,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     eggMoves.put(altForme.getNumber(), moves);
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 }
                 iter.remove();
             }
@@ -1815,7 +1815,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     List<Integer> moves = eggMoves.get(altForme.getNumber());
@@ -1824,7 +1824,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 }
                 iter.remove();
             }
@@ -2620,7 +2620,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = !settings.getWildPokemonMod().equals(Settings.WildPokemonMod.UNCHANGED);
+        boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);

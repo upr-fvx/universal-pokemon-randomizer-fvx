@@ -3,10 +3,10 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.game_data.Evolution;
-import com.dabomstew.pkrandom.game_data.EvolutionType;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.Evolution;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -40,13 +40,13 @@ public class EvolutionRandomizer extends Randomizer {
                                      boolean forceChange, boolean forceGrowth, boolean noConvergence,
                                      boolean banIrregularAltFormes, boolean abilitiesAreRandomized,
                                      boolean evolveEveryLevel) {
-        rPokeService.setRestrictions(settings);
+        rSpecService.setRestrictions(settings);
 
-        SpeciesSet pokemonPool = rPokeService.getPokemon(false,
+        SpeciesSet pokemonPool = rSpecService.getSpecies(false,
                 romHandler.altFormesCanHaveDifferentEvolutions(), false);
-        SpeciesSet banned = new SpeciesSet(rPokeService.getBannedFormesForPlayerPokemon());
+        SpeciesSet banned = new SpeciesSet(rSpecService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
-            banned.addAll(rPokeService.getAbilityDependentFormes());
+            banned.addAll(rSpecService.getAbilityDependentFormes());
         }
         if (banIrregularAltFormes) {
             banned.addAll(romHandler.getIrregularFormes());

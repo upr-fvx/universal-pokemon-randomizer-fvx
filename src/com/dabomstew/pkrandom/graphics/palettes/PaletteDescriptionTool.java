@@ -25,7 +25,7 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.Utils;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gui.ROMFilter;
 import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
@@ -311,7 +311,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         }
 
         Gen3to5PaletteRandomizer paletteRandomizer = new Gen3to5PaletteRandomizer(romHandler, SETTINGS, RND);
-        for (Species pk : romHandler.getPokemonSet()) {
+        for (Species pk : romHandler.getSpeciesSet()) {
             originalPalettes.put(pk, pk.getNormalPalette());
         }
         paletteDescriptions
@@ -431,7 +431,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private Species getCurrentPokemon() {
-        return romHandler.getPokemon().get(paletteDescriptions.getSelectedIndex() + 1);
+        return romHandler.getSpecies().get(paletteDescriptions.getSelectedIndex() + 1);
     }
 
     private BufferedImage getPokemonImage(Species pk, boolean shiny) {

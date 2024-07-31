@@ -1,8 +1,8 @@
 package test.updaters;
 
-import com.dabomstew.pkrandom.game_data.Effectiveness;
-import com.dabomstew.pkrandom.game_data.Type;
-import com.dabomstew.pkrandom.game_data.TypeTable;
+import com.dabomstew.pkrandom.gamedata.Effectiveness;
+import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.TypeTable;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

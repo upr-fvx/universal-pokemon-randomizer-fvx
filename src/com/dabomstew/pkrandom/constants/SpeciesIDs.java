@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  SpeciesIDs.java - defines a species number constant for every Pokemon.--*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -23,6 +21,11 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.Species;
+
+/**
+ * Defines an identifying number constant for every {@link Species}.
+ */
 @SuppressWarnings("unused")
 public class SpeciesIDs {
     public static final int bulbasaur = 1;

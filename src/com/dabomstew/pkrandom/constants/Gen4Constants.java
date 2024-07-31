@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen4Constants {
 
@@ -485,8 +485,8 @@ public class Gen4Constants {
     private final static int bulbasaurOverworldSpriteID = 297;
 
     /**
-     * Returns the first overworld sprite ID for a given Pokemon species.
-     * Some species have more than one sprite ID, either due to gender
+     * Returns the first overworld sprite ID for a given Species.
+     * Some Species have more than one sprite ID, either due to gender
      * differences or formes, but this gives the first one only.
      */
     public static int getOverworldSpriteIDOfSpecies(int species) {
@@ -2335,7 +2335,7 @@ public class Gen4Constants {
 
     private static List<String> initLocationTagsDP() {
         List<String> tags = new ArrayList<>();
-        addCopies(tags, 4, "CANACLAVE CITY");
+        addCopies(tags, 4, "CANALAVE CITY");
         addCopies(tags, 4, "ETERNA CITY");
         addCopies(tags, 4, "PASTORIA CITY");
         addCopies(tags, 4, "SUNYSHORE CITY");
@@ -2405,6 +2405,15 @@ public class Gen4Constants {
         addCopies(tags, 2, "GREAT MARSH");
         return Collections.unmodifiableList(tags);
     }
+
+    public static final int trophyGardenMapIndex = 117;
+    public static final int nationalParkMapIndex = 23;
+    public static final int nationalParkBadMapIndex = 24; //National Park is incorrectly considered two maps
+    //This lets us merge them
+    //(Some other areas that are debatably the same map are not merged)
+    public static final int mtCoronetFeebasLakeMapIndex = 10;
+    //(It's not the best that we're hardcoding these, but we've already got plenty of hardcoded stuff that probably
+    //shouldn't be)
 
     private static final List<String> locationTagsPt = initLocationTagsPt();
 

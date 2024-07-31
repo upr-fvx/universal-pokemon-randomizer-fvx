@@ -1,8 +1,8 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.Type;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -82,7 +82,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         List<Species> starters = romHandler.getStarters();
-        List<Species> allPokes = romHandler.getPokemon();
+        List<Species> allPokes = romHandler.getSpecies();
 
         StringBuilder sb = new StringBuilder("Starters");
         sb.append(" (should be ");

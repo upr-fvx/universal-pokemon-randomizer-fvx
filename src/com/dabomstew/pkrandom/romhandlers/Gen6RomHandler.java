@@ -28,7 +28,7 @@ import com.dabomstew.pkrandom.ctr.GARCArchive;
 import com.dabomstew.pkrandom.ctr.Mini;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen6RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.ThreeDSLinkedEncounter;
 import pptxt.N3DSTxtHandler;
@@ -848,12 +848,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Species> getPokemon() {
+    public List<Species> getSpecies() {
         return speciesList;
     }
 
     @Override
-    public List<Species> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return speciesListInclFormes;
     }
 
@@ -870,7 +870,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
         return pokeNum != 0 ? pokes[pokeNum] : pk;
     }
@@ -1176,8 +1176,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         // The ceiling/flying/rustling bush encounters are hardcoded in the Field CRO
+        //TODO: better method of finding correct map indices
+        // if that's hardcoding, so be it
         byte[] fieldCRO = readFile(romEntry.getFile("Field"));
         String currentName = Gen6Constants.fallingEncounterNameMap.get(0);
+        int currentMapIndex = -1;
         int startingOffsetOfCurrentName = 0;
         for (int i = 0; i < Gen6Constants.fallingEncounterCount; i++) {
             int offset = Gen6Constants.fallingEncounterOffset + i * Gen6Constants.fieldEncounterSize;
@@ -1185,9 +1188,23 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (Gen6Constants.fallingEncounterNameMap.containsKey(i)) {
                 currentName = Gen6Constants.fallingEncounterNameMap.get(i);
                 startingOffsetOfCurrentName = i;
+                currentMapIndex = 0;
+                String mapName = currentName.split("(?<=^\\w{1,10} \\w{1,10}) ")[0];
+                //get the first two words
+                for (Map.Entry<Integer, String> map : wildMapNames.entrySet()) {
+                    if(map.getValue().startsWith(mapName)) {
+                        if(currentMapIndex == 0) {
+                            currentMapIndex = map.getKey();
+                        } else if (currentMapIndex > 0) {
+                            //found a second map with the same name; no way to determine which is correct
+                            currentMapIndex = currentMapIndex * -1;
+                            break;
+                        }
+                    }
+                }
             }
             int encounterNumber = (i - startingOffsetOfCurrentName) + 1;
-            fallingArea.setIdentifiers(currentName + " #" + encounterNumber, i, EncounterType.AMBUSH);
+            fallingArea.setIdentifiers(currentName + " #" + encounterNumber, currentMapIndex, EncounterType.AMBUSH);
             encounterAreas.add(fallingArea);
         }
         currentName = Gen6Constants.rustlingBushEncounterNameMap.get(0);
@@ -1198,9 +1215,23 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (Gen6Constants.rustlingBushEncounterNameMap.containsKey(i)) {
                 currentName = Gen6Constants.rustlingBushEncounterNameMap.get(i);
                 startingOffsetOfCurrentName = i;
+                currentMapIndex = 0;
+                String mapName = currentName.split("(?<=^\\w{1,10} \\w{1,10}) ")[0];
+                //get the first two words
+                for (Map.Entry<Integer, String> map : wildMapNames.entrySet()) {
+                    if(map.getValue().startsWith(mapName)) {
+                        if(currentMapIndex == 0) {
+                            currentMapIndex = map.getKey();
+                        } else if (currentMapIndex > 0) {
+                            //found a second map with the same name; no way to determine which is correct
+                            currentMapIndex = currentMapIndex * -1;
+                            break;
+                        }
+                    }
+                }
             }
             int encounterNumber = (i - startingOffsetOfCurrentName) + 1;
-            rustlingBushArea.setIdentifiers(currentName + " #" + encounterNumber, i, EncounterType.AMBUSH);
+            rustlingBushArea.setIdentifiers(currentName + " #" + encounterNumber, currentMapIndex, EncounterType.AMBUSH);
             encounterAreas.add(rustlingBushArea);
         }
         return encounterAreas;
@@ -1389,6 +1420,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public boolean hasEncounterLocations() {
         return true;
+    }
+
+    @Override
+    public boolean hasMapIndices() {
+        //ORAS is fine (surprisingly), but XY needs attention
+        return romEntry.getRomType() == Gen6Constants.Type_ORAS;
     }
 
     private void setEncountersXY(List<EncounterArea> encounterAreas) throws IOException {
@@ -1937,7 +1974,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.species, tp.forme).getNumber(), movesets, tp.level);
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.species, tp.forme).getNumber(), movesets, tp.level);
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -3023,7 +3060,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = !settings.getWildPokemonMod().equals(Settings.WildPokemonMod.UNCHANGED);
+        boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen6Constants.friendshipValueForEvoLocator);

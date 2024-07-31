@@ -5,10 +5,10 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.constants.GBConstants;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gbspace.FreedSpace;
-import com.dabomstew.pkrandom.game_data.Move;
-import com.dabomstew.pkrandom.game_data.Trainer;
+import com.dabomstew.pkrandom.gamedata.Move;
+import com.dabomstew.pkrandom.gamedata.Trainer;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractGBRomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 
@@ -440,7 +440,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     @Override
 	public List<BufferedImage> getAllPokemonImages() {
 		List<BufferedImage> bims = new ArrayList<>();
-		for (Species pk : getPokemonSet()) {
+		for (Species pk : getSpeciesSet()) {
 			bims.add(createPokemonImageGetter(pk).getFull());
 		}
 		return bims;

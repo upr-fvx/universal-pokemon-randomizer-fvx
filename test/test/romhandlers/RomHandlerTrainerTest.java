@@ -3,7 +3,7 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
@@ -548,9 +548,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
                         .buildFullFamilies(false);
-        SpeciesSet all = romHandler.getPokemonSet();
+        SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);
 
@@ -582,9 +582,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true); // should be at least 4 non-local Pokemon in each game
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
                 .buildFullFamilies(false);
-        SpeciesSet all = romHandler.getPokemonSet();
+        SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);
 
@@ -652,7 +652,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     private void elite4UniquePokemonCheck() {
         List<Trainer> trainers = romHandler.getTrainers();
-        int[] pokeCount = new int[romHandler.getPokemon().size()];
+        int[] pokeCount = new int[romHandler.getSpecies().size()];
         for (Trainer tr : trainers) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
@@ -661,7 +661,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             }
         }
 
-        List<Species> allPokes = romHandler.getPokemon();
+        List<Species> allPokes = romHandler.getSpecies();
         for (int i = 1; i < allPokes.size(); i++) {
             System.out.println(allPokes.get(i).getName() + " : " + pokeCount[i]);
         }

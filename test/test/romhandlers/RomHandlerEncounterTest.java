@@ -1612,9 +1612,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             }
         }
         tag = tag.split(", Table")[0]; // for Gen 7
+        tag = tag.replace("é", "e");
         tag = tag.trim().toUpperCase();
 
         tag = tag.replace('’', '\''); //apostrophes, not single quote
+
+        tag = tag.replace("\\C ", "");
+
 
         return tag;
     }

@@ -96,8 +96,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             sb.append(String.format("\n\t[Name = %s, Rate = %d, Offset = %d,",
                     area.getDisplayName(), area.getRate(), area.getMapIndex()));
             sb.append(String.format("\n\t\tEncounters = %s", new ArrayList<>(area)));
-            if (!area.getBannedPokemon().isEmpty()) {
-                sb.append(String.format("\n\t\tBanned = %s", area.getBannedPokemon()));
+            if (!area.getBannedSpecies().isEmpty()) {
+                sb.append(String.format("\n\t\tBanned = %s", area.getBannedSpecies()));
             }
             sb.append("]");
         }
@@ -107,7 +107,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void allEncounterAreasHaveALocationTagDontUseTimeOfDay(String romName) {
+    public void allEncounterAreasHaveALocationTagNoTimeOfDay(String romName) {
         loadROM(romName);
         for (EncounterArea area : romHandler.getEncounters(false)) {
             assertNotNull(area.getLocationTag());
@@ -218,11 +218,32 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void randomEncountersCanBanLegendaries(String romName) {
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, true, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         checkForNoLegendaries();
+    }
+
+    /**
+     * Gets a new Settings object with the most common settings for testing: <br>
+     * Randomize Wild Pokemon = true <br>
+     * Region Mod = None <br>
+     * Use Time-based Encounters = true <br>
+     * Allow Alt Formes = true in generation 5 and above, false earlier. <br>
+     * Ban Irregular Alt Formes = true
+     * @param romName The name of the ROM in use.
+     * @return A Settings object with the described settings.
+     */
+    private Settings getStandardSettings(String romName) {
+        Settings settings = new Settings();
+        settings.setRandomizeWildPokemon(true);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NONE);
+        settings.setUseTimeBasedEncounters(true);
+        settings.setAllowWildAltFormes(getGenerationNumberOf(romName) >= 5); //idk why 5 and not 3 but w/e
+        settings.setBanIrregularAltFormes(true);
+        settings.setBlockWildLegendaries(false);
+        return settings;
     }
 
     @ParameterizedTest
@@ -231,7 +252,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, false, true, false);
@@ -246,7 +267,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -259,7 +280,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -269,9 +290,14 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
+
         loadROM(romName);
+
+
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -281,18 +307,18 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM,
-                true,
-                false, true, false,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+        Settings settings = getStandardSettings(romName);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
@@ -300,18 +326,19 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesANDRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM,
-                true,
-                true, true, false,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+        Settings settings = getStandardSettings(romName);
+        settings.setKeepWildTypeThemes(true);
+        settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
         randomTypeThemesAreasCheck();
@@ -320,6 +347,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepPrimaryTypeWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -327,7 +356,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -341,7 +370,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -353,10 +382,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.NONE, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -367,6 +399,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -374,12 +408,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM,
-                true,
-                false, true, false,
-                true, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+
+        settings.setKeepWildTypeThemes(true);
+        settings.setCatchEmAllEncounters(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
@@ -388,6 +423,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -395,12 +432,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.RANDOM,
-                true,
-                true, true, false,
-                true, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setCatchEmAllEncounters(true);
+        settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         randomTypeThemesAreasCheck();
@@ -418,7 +456,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -433,7 +471,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -448,7 +486,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -462,12 +500,12 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithKeepTypeThemes(String romName) {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING,
-                true,
-                false, true, false,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, false);
@@ -479,7 +517,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -494,7 +532,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -513,11 +551,35 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Iterator<EncounterArea> beforeIterator = before.iterator();
         Iterator<EncounterArea> afterIterator = after.iterator();
         while (beforeIterator.hasNext()) {
-            Map<Species, Species> map = new HashMap<>();
+            //Map<Species, Species> map = new HashMap<>();
             EncounterArea beforeArea = beforeIterator.next();
             EncounterArea afterArea = afterIterator.next();
 
             checkAreaIsReplaced1To1(beforeArea, afterArea, null, checkUnique ? new SpeciesSet() : null);
+        }
+    }
+
+    private static void checkEachLocationIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+        Map<String, List<EncounterArea>> beforeLocations = EncounterArea.groupAreasByLocation(before);
+        Map<String, List<EncounterArea>> afterLocations = EncounterArea.groupAreasByLocation(after);
+        for(String location : beforeLocations.keySet()) {
+
+            List<EncounterArea> locationBefore = beforeLocations.get(location);
+            List<EncounterArea> locationAfter = afterLocations.get(location);
+
+            checkIsReplaced1To1(locationBefore, locationAfter,  checkUnique);
+        }
+    }
+
+    private static void checkEachMapIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+        Map<Integer, List<EncounterArea>> beforeMaps = EncounterArea.groupAreasByMapIndex(before);
+        Map<Integer, List<EncounterArea>> afterMaps = EncounterArea.groupAreasByMapIndex(after);
+        for(int map : beforeMaps.keySet()) {
+
+            List<EncounterArea> mapBefore = beforeMaps.get(map);
+            List<EncounterArea> mapAfter = afterMaps.get(map);
+
+            checkIsReplaced1To1(mapBefore, mapAfter,  checkUnique);
         }
     }
 
@@ -527,7 +589,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -542,7 +604,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -558,7 +620,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -573,12 +635,12 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Too few mons of some types, so it always fails
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING,
-                true,
-                false, true, false,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, true);
@@ -591,7 +653,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -606,7 +668,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -621,7 +683,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, true, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -634,7 +696,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, false, true, false);
@@ -649,7 +711,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -662,7 +724,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -683,9 +745,12 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -695,18 +760,19 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING,
-                true,
-                false, true, false,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
@@ -714,6 +780,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepPrimaryTypeWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -721,7 +789,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -775,7 +843,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             beforeAreaStrings.add(beforeStrings);
             beforeStrings.add(area.toString());
             for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfPokemon(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
                 beforeStrings.add(toNameAndTypesString(pk));
             }
 
@@ -832,7 +900,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + area);
                 for (Encounter enc : area) {
-                    Species pk = romHandler.getAltFormeOfPokemon(enc.getSpecies(), enc.getFormeNumber());
+                    Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
                     System.out.println("\t" + toNameAndTypesString(pk));
                     assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
                 }
@@ -853,7 +921,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             List<Type> beforeTypes = new ArrayList<>();
             beforePrimaryTypes.add(beforeTypes);
             for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfPokemon(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
                 beforeStrings.add(toNameAndTypesString(pk));
                 beforeTypes.add(pk.getPrimaryType(false));
             }
@@ -873,7 +941,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             System.out.println("After: " + area);
             for (int j = 0; j < area.size(); j++) {
                 Encounter enc = area.get(j);
-                Species pk = romHandler.getAltFormeOfPokemon(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
                 Type primary = beforePrimaryTypes.get(i).get(j);
                 System.out.println("\t" + toNameAndTypesString(pk));
                 assertTrue(pk.getPrimaryType(false) == primary || pk.getSecondaryType(false) == primary);
@@ -888,7 +956,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -927,10 +995,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.ENCOUNTER_SET, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -941,7 +1012,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         // for some reason fails with the Gen 3 Hoenn games
         // there's no obvious bug-related reason so I'm guessing they just have too few encounters/areas
         if (romHandler instanceof Gen3RomHandler) {
@@ -953,12 +1027,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING,
-                true,
-                false, true, false,
-                true, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setCatchEmAllEncounters(true);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         catchEmAllCheck(allPokes);
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
@@ -967,7 +1042,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         // for some reason fails with the Gen 3 Hoenn games
         // there's no obvious bug-related reason so I'm guessing they just have too few encounters/areas
         if (romHandler instanceof Gen3RomHandler) {
@@ -979,12 +1057,14 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.AREA_MAPPING,
-                true,
-                true, true, false,
-                true, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setCatchEmAllEncounters(true);
+        settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
+        settings.setKeepWildTypeThemes(true);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         catchEmAllCheck(allPokes);
 
         randomTypeThemesAreasCheck();
@@ -997,13 +1077,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1012,13 +1092,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1026,14 +1106,15 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithRandomTypeThemes(String romName) {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
-        new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
-                true,
-                false, false, false, false,
-                0, getGenerationNumberOf(romName) >= 5, true, false);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
+        settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1042,13 +1123,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     @ParameterizedTest
@@ -1057,13 +1138,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        checkIsReplaced1To1(before, after, false);
+        checkEachLocationIsReplaced1To1(before, after, false);
     }
 
     private Map<String, List<EncounterArea>> groupEncountersByLocation(List<EncounterArea> ungrouped) {
@@ -1089,13 +1170,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1104,13 +1185,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1120,13 +1201,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1136,13 +1217,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1151,26 +1232,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
         List<EncounterArea> after = romHandler.getEncounters(true);
 
-        location1to1UniqueReplacementCheck(before, after);
-    }
-
-    private void location1to1UniqueReplacementCheck(List<EncounterArea> before, List<EncounterArea> after) {
-
-        Map<String, List<EncounterArea>> groupedBefore = groupEncountersByLocation(before);
-        Map<String, List<EncounterArea>> groupedAfter = groupEncountersByLocation(after);
-
-        for (String tag : groupedBefore.keySet()) {
-            Map<Species, Species> map = new HashMap<>();
-
-            System.out.println("\nLocation: " + tag);
-            checkIsReplaced1To1(groupedBefore.get(tag), groupedAfter.get(tag), true);
-        }
+        checkEachLocationIsReplaced1To1(before, after, true);
     }
 
     @ParameterizedTest
@@ -1179,7 +1247,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, true, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1192,7 +1260,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, false, true, false);
@@ -1207,7 +1275,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1217,6 +1285,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersCatchEmAllWorks(String romName) {
+        //does not hold later than Gen 5
+        assumeTrue(getGenerationNumberOf(romName) <= 5);
+
         loadROM(romName);
         // does not hold in BW1, presumably too few wild Pokémon species and too many in the national dex
         if (romHandler instanceof Gen5RomHandler) {
@@ -1224,7 +1295,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1234,9 +1305,12 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersRandomTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
+
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1246,6 +1320,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersKeepPrimaryTypeWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -1253,7 +1329,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
 
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.KEEP_PRIMARY,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1266,11 +1342,22 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         Map<String, List<EncounterArea>> grouped = groupEncountersByLocation(romHandler.getEncounters(true));
 
         for (Map.Entry<String, List<EncounterArea>> loc : grouped.entrySet()) {
+            if(loc.getKey().contains("UNUSED")) {
+                System.out.println("Skipping location: " + loc.getKey());
+                continue;
+            }
+
             // lazy solution mashing together all of a location's associated EncounterAreas into a single one,
             // so old code can be reused to a greater extent
             EncounterArea area = new EncounterArea();
             area.setDisplayName("All of location " + loc.getKey());
-            loc.getValue().forEach(area::addAll);
+            for(EncounterArea locArea : loc.getValue()) {
+                if(locArea.getEncounterType() == EncounterType.UNUSED) {
+                    System.out.println("Skipping area: " + locArea.getDisplayName());
+                    continue;
+                }
+                area.addAll(locArea);
+            }
 
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
             Species firstPk = area.get(0).getSpecies();
@@ -1310,7 +1397,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1322,6 +1409,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
+        //does not hold later than Gen 5
+        assumeTrue(getGenerationNumberOf(romName) <= 5);
+
         loadROM(romName);
         // does not hold in RSE/BW1/BW2, presumably too few wild Pokémon species and too many in the national dex
         if (romHandler instanceof Gen3RomHandler) {
@@ -1331,7 +1421,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.LOCATION_MAPPING, Settings.WildPokemonTypeMod.THEMED_AREAS,
+                Settings.WildPokemonZoneMod.NAMED_LOCATION, Settings.WildPokemonTypeMod.RANDOM_THEMES,
                 true,
                 true, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1345,7 +1435,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1360,7 +1450,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1370,8 +1460,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     /**
-     * Given a set of EncounterAreas, ensures that for each Pokemon in the area before randomization,
-     * exactly one replacement is present after randomization.
+     * Given a set of EncounterAreas, ensures that for each Pokemon present before randomization,
+     * exactly one replacement is present after randomization (in all areas).
      * @param before The list of EncounterAreas in the state before randomization.
      * @param after The same list of EncounterAreas, after randomization.
      * @param checkUnique Whether to also check that no Pokemon is used as a replacement for more than one Pokemon.
@@ -1456,7 +1546,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void game1to1EncountersCanBanLegendaries(String romName) {
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, true, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1469,7 +1559,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, false, true, false);
@@ -1484,7 +1574,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 5);
         loadROM(romName);
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, false, false, false,
                 0, true, true, false);
@@ -1497,7 +1587,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
         new EncounterRandomizer(romHandler, new Settings(), RND).randomizeEncounters(
-                Settings.WildPokemonMod.GLOBAL_MAPPING, Settings.WildPokemonTypeMod.NONE,
+                Settings.WildPokemonZoneMod.GAME, Settings.WildPokemonTypeMod.NONE,
                 true,
                 false, true, false, false,
                 0, getGenerationNumberOf(romName) >= 5, true, false);
@@ -1587,19 +1677,30 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void hasMapIndices(String romName) {
+    public void hasMapIndicesIsCorrect(String romName) {
         loadROM(romName);
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
 
-        int lastIndex = -1;
-        for(EncounterArea area : encounterAreas) {
-            int idx = area.getMapIndex();
-            if(idx != lastIndex) {
-                System.out.println("\t" + area.getMapIndex() + ":");
-                lastIndex = idx;
+        Map<Integer, List<EncounterArea>> areasByMapIndex = EncounterArea.groupAreasByMapIndex(encounterAreas);
+
+        List<Integer> maps = new ArrayList<>(areasByMapIndex.keySet());
+        maps.sort(null);
+
+        if(maps.size() > 1) {
+            for (int map : maps) {
+                System.out.println("\t" + map + ":");
+                for (EncounterArea area : areasByMapIndex.get(map)) {
+                    System.out.println("\t\t" + area.getDisplayName());
+                }
             }
-            System.out.println("\t\t" + area.getDisplayName());
-            assertNotEquals(-1, idx);
+        } else {
+            System.out.println("No map indices.");
+        }
+
+        if(romHandler.hasMapIndices()) {
+            assertNotEquals(areasByMapIndex.size(), 1);
+        } else {
+            assertEquals(areasByMapIndex.size(), 1);
         }
     }
 
@@ -1627,9 +1728,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
-        settings.setUseTimeBasedEncounters(true);
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
+        settings.setKeepWildEvolutionFamilies(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1646,9 +1747,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
-        settings.setUseTimeBasedEncounters(true);
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
+        settings.setKeepWildEvolutionFamilies(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1664,6 +1765,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void game1To1KeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -1671,7 +1774,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
 
         Settings settings = new Settings();
-        settings.setWildPokemonMod(Settings.WildPokemonMod.GLOBAL_MAPPING);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setKeepWildTypeThemes(true);
         settings.setUseTimeBasedEncounters(true);
 
@@ -1684,6 +1787,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void globalFamilyToFamilyKeepTypeThemesWorks(String romName) {
+        assumeTrue(romName.length() > 1);
+        //X & Y have problems testing types, which makes the test nearly always fail
+
         loadROM(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -1691,10 +1797,10 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
         List<EncounterArea> before = romHandler.getEncounters(true);
 
-        Settings settings = new Settings();
-        settings.setWildPokemonMod(Settings.WildPokemonMod.FAMILY_MAPPING);
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
+        settings.setKeepWildEvolutionFamilies(true);
         settings.setKeepWildTypeThemes(true);
-        settings.setUseTimeBasedEncounters(true);
 
         new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1703,5 +1809,28 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         //TODO: check family integrity
         checkIsReplaced1To1(before, after, true);
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+    }
+
+    /**
+     * Checks that map 1-to-1 encounters gives both consequent and unique replacements for each Species in each map.
+     * @param romName The name of the ROM to test.
+     */
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void map1to1EncountersWorks(String romName) {
+        loadROM(romName);
+
+        assumeTrue(romHandler.hasMapIndices());
+
+        List<EncounterArea> before = romHandler.getEncounters(true);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.MAP);
+
+        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkEachMapIsReplaced1To1(before, after, true);
     }
 }

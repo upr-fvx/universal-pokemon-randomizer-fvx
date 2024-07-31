@@ -838,7 +838,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private void readNormalEncounters(List<EncounterArea> encounterAreas) {
-        List<Integer> usedOffsets = new ArrayList<>();
+        Map<Integer, List<EncounterArea>> usedOffsets = new HashMap<>();
         int tableOffset = romEntry.getIntValue("WildPokemonTableOffset");
         int mapID = -1;
         Species ghostMarowak = getGhostMarowakPoke();
@@ -847,8 +847,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             mapID++;
             int offset = readPointer(tableOffset);
             int rootOffset = offset;
-            if (!usedOffsets.contains(offset)) {
-                usedOffsets.add(offset);
+            if (!usedOffsets.containsKey(offset)) {
+                usedOffsets.put(rootOffset, new ArrayList());
                 // grass and water are exactly the same
                 for (int a = 0; a < 2; a++) {
                     int rate = rom[offset++] & 0xFF;
@@ -856,9 +856,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         // there is data here
                         EncounterArea thisArea = new EncounterArea();
                         thisArea.setRate(rate);
-                        thisArea.setMapIndex(rootOffset);
                         thisArea.setDisplayName((a == 1 ? "Surfing" : "Grass/Cave") + " on " + mapNames[mapID]);
                         thisArea.setEncounterType(a == 1 ? EncounterType.SURFING : EncounterType.WALKING);
+                        thisArea.setMapIndex(mapID);
                         if (mapID >= Gen1Constants.towerMapsStartIndex && mapID <= Gen1Constants.towerMapsEndIndex) {
                             thisArea.banPokemon(ghostMarowak);
                         }
@@ -870,12 +870,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                             offset += 2;
                         }
                         encounterAreas.add(thisArea);
+                        usedOffsets.get(rootOffset).add(thisArea);
                     }
                 }
+
+
             } else {
-                for (EncounterArea area : encounterAreas) {
-                    if (area.getMapIndex() == offset) {
-                        area.setDisplayName(area.getDisplayName() + ", " + mapNames[mapID]);
+                //handling for EncounterAreas that span multiple maps
+                //should have the same effect as before
+                //(Excepting that mapIndex is a more parsable value)
+                List<EncounterArea> sharedAreas = usedOffsets.get(offset);
+                for(EncounterArea area : sharedAreas) {
+                    area.setDisplayName(area.getDisplayName() + ", " + mapNames[mapID]);
+                    if(area.getMapIndex() > 0) {
+                        //now spans multiple maps, so mapIndex should be negative
+                        area.setMapIndex(area.getMapIndex() * -1);
                     }
                 }
             }
@@ -892,8 +901,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readOldRodEncounters(List<EncounterArea> encounterAreas) {
         int oldRodOffset = romEntry.getIntValue("OldRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setDisplayName("Old Rod Fishing");
-        area.setEncounterType(EncounterType.FISHING);
+        area.setIdentifiers("Old Rod Fishing", -1, EncounterType.FISHING);
         Encounter oldRodEnc = new Encounter();
         oldRodEnc.setLevel(rom[oldRodOffset + 2] & 0xFF);
         oldRodEnc.setSpecies(pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]]);
@@ -906,8 +914,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void readGoodRodEncounters(List<EncounterArea> encounterAreas) {
         int goodRodOffset = romEntry.getIntValue("GoodRodOffset");
         EncounterArea area = new EncounterArea();
-        area.setDisplayName("Good Rod Fishing");
-        area.setEncounterType(EncounterType.FISHING);
+        area.setIdentifiers("Good Rod Fishing", -1, EncounterType.FISHING);
         for (int slot = 0; slot < 2; slot++) {
             Encounter enc = new Encounter();
             enc.setLevel(rom[goodRodOffset + slot * 2] & 0xFF);
@@ -929,6 +936,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 EncounterArea area = new EncounterArea();
                 area.setDisplayName("Super Rod Fishing on " + mapNames[map]);
                 area.setEncounterType(EncounterType.FISHING);
+                area.setMapIndex(map);
                 for (int encN = 0; encN < Gen1Constants.yellowSuperRodTableSize; encN++) {
                     Encounter enc = new Encounter();
                     enc.setLevel(rom[superRodOffset + 1] & 0xFF);
@@ -942,17 +950,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         } else {
             // red/blue
             int superRodOffset = romEntry.getIntValue("SuperRodTableOffset");
-            List<Integer> usedSROffsets = new ArrayList<>();
+            Map<Integer, EncounterArea> usedSROffsets = new HashMap<>();
             while ((rom[superRodOffset] & 0xFF) != 0xFF) {
                 int map = rom[superRodOffset++] & 0xFF;
                 int areaOffset = readPointer(superRodOffset);
                 superRodOffset += 2;
-                if (!usedSROffsets.contains(areaOffset)) {
-                    usedSROffsets.add(areaOffset);
+                if (!usedSROffsets.containsKey(areaOffset)) {
                     EncounterArea area = new EncounterArea();
+                    usedSROffsets.put(areaOffset, area);
                     area.setDisplayName("Super Rod Fishing on " + mapNames[map]);
                     area.setEncounterType(EncounterType.FISHING);
-                    area.setMapIndex(areaOffset);
+                    area.setMapIndex(map);
                     int pokesInArea = rom[areaOffset++] & 0xFF;
                     for (int encN = 0; encN < pokesInArea; encN++) {
                         Encounter enc = new Encounter();
@@ -964,10 +972,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     area.banPokemon(ghostMarowak);
                     encounterAreas.add(area);
                 } else {
-                    for (EncounterArea area : encounterAreas) {
-                        if (area.getMapIndex() == areaOffset) {
-                            area.setDisplayName(area.getDisplayName() + ", " + mapNames[map]);
-                        }
+                    EncounterArea sharedArea = usedSROffsets.get(areaOffset);
+                    sharedArea.setDisplayName(sharedArea.getDisplayName() + ", " + mapNames[map]);
+                    if(sharedArea.getMapIndex() > 0) {
+                        //now spans multiple maps, so mapIndex should be negative
+                        sharedArea.setMapIndex(sharedArea.getMapIndex() * -1);
                     }
                 }
             }
@@ -1090,6 +1099,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean hasMapIndices() {
+        return true;
+    }
+
+    @Override
     public boolean hasWildAltFormes() {
         return false;
     }
@@ -1115,7 +1129,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         return pk;
     }
 

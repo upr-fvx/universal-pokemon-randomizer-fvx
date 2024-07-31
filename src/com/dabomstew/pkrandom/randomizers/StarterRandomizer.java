@@ -288,17 +288,17 @@ public class StarterRandomizer extends Randomizer {
         SpeciesSet available;
 
         if (allowAltFormes) {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(true)
-                    : rPokeService.getAll(true));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(true)
+                    : rSpecService.getAll(true));
             if (abilitiesUnchanged) {
-                available.removeAll(rPokeService.getAbilityDependentFormes());
+                available.removeAll(rSpecService.getAbilityDependentFormes());
             }
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
             available.removeIf(Species::isActuallyCosmetic);
         } else {
-            available = new SpeciesSet(noLegendaries ? rPokeService.getNonLegendaries(false) : rPokeService.getAll(false));
+            available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(false) : rSpecService.getAll(false));
         }
 
         available.removeAll(alreadyChosen);

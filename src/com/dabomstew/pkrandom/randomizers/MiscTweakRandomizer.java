@@ -51,7 +51,7 @@ public class MiscTweakRandomizer extends Randomizer {
         boolean success = false;
         int tries = 0;
         while (!success && tries < MAX_CATCHING_TUTORIAL_TRIES) {
-            success = romHandler.setCatchingTutorial(rPokeService.randomPokemon(random), rPokeService.randomPokemon(random));
+            success = romHandler.setCatchingTutorial(rSpecService.randomSpecies(random), rSpecService.randomSpecies(random));
             tries++;
         }
         if (tries == MAX_CATCHING_TUTORIAL_TRIES) {

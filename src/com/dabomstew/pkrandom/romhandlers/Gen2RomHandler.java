@@ -1320,7 +1320,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         return pk;
     }
 

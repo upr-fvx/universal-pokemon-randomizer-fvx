@@ -158,7 +158,7 @@ public class GameRandomizer {
         // 1. Set Pokemon pool according to limits (or lack thereof)
         // 2. If limited, remove evolutions that are outside of the pool
 
-        romHandler.getRestrictedPokemonService().setRestrictions(settings);
+        romHandler.getRestrictedSpeciesService().setRestrictions(settings);
 
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();
@@ -464,8 +464,7 @@ public class GameRandomizer {
 
         // do part of wild Pokemon early if needed
         if (settings.isTrainersUseLocalPokemon() &&
-                (settings.getWildPokemonMod() != Settings.WildPokemonMod.UNCHANGED ||
-                        settings.isWildLevelsModified())) {
+                (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
             encounterRandomizer.randomizeEncounters();
         }
 
@@ -595,8 +594,7 @@ public class GameRandomizer {
         }
 
         if (!settings.isTrainersUseLocalPokemon() &&
-                (settings.getWildPokemonMod() != Settings.WildPokemonMod.UNCHANGED ||
-                settings.isWildLevelsModified())) {
+                (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
             encounterRandomizer.randomizeEncounters();
         }
 
@@ -607,7 +605,7 @@ public class GameRandomizer {
         }
 
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (settings.getWildPokemonMod() == Settings.WildPokemonMod.UNCHANGED && settings.isWildLevelsModified());
+                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeBasedEncounters);
         for (EncounterArea area : encounterAreas) {
             for (Encounter e : area) {
@@ -1087,7 +1085,7 @@ public class GameRandomizer {
 
         log.println("--Wild Pokemon--");
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (settings.getWildPokemonMod() == Settings.WildPokemonMod.UNCHANGED && settings.isWildLevelsModified());
+                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
         int idx = 0;
         for (EncounterArea area : encounterAreas) {

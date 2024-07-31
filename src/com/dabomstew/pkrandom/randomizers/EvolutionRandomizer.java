@@ -40,13 +40,13 @@ public class EvolutionRandomizer extends Randomizer {
                                      boolean forceChange, boolean forceGrowth, boolean noConvergence,
                                      boolean banIrregularAltFormes, boolean abilitiesAreRandomized,
                                      boolean evolveEveryLevel) {
-        rPokeService.setRestrictions(settings);
+        rSpecService.setRestrictions(settings);
 
-        SpeciesSet pokemonPool = rPokeService.getPokemon(false,
+        SpeciesSet pokemonPool = rSpecService.getSpecies(false,
                 romHandler.altFormesCanHaveDifferentEvolutions(), false);
-        SpeciesSet banned = new SpeciesSet(rPokeService.getBannedFormesForPlayerPokemon());
+        SpeciesSet banned = new SpeciesSet(rSpecService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
-            banned.addAll(rPokeService.getAbilityDependentFormes());
+            banned.addAll(rSpecService.getAbilityDependentFormes());
         }
         if (banIrregularAltFormes) {
             banned.addAll(romHandler.getIrregularFormes());

@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * rather than anything provided directly by the {@link RomHandler}, like {@link RomHandler#getSpecies()} or
  * {@link RomHandler#getSpeciesSetInclFormes()}.
  * <br><br>
- * This class also provides {@link #randomPokemon(Random)}, to get a random Pokemon from all allowed ones.
+ * This class also provides {@link #randomSpecies(Random)}, to get a random Pokemon from all allowed ones.
  * To get a random Pokemon from the other sets, use {@link SpeciesSet#getRandomSpecies(Random)}.
  */
-public class RestrictedPokemonService {
+public class RestrictedSpeciesService {
 
     private final RomHandler romHandler;
 
@@ -40,28 +40,28 @@ public class RestrictedPokemonService {
     private SpeciesSet ultraBeastsInclAltFormes;
     private Set<MegaEvolution> megaEvolutions;
 
-    public RestrictedPokemonService(RomHandler romHandler) {
+    public RestrictedSpeciesService(RomHandler romHandler) {
         this.romHandler = romHandler;
     }
 
-    public SpeciesSet getPokemon(boolean noLegendaries, boolean allowAltFormes, boolean allowCosmeticFormes) {
-        SpeciesSet allowedPokes = new SpeciesSet();
-        allowedPokes.addAll(noLegendaries ? getNonLegendaries(allowAltFormes) : getAll(allowAltFormes));
+    public SpeciesSet getSpecies(boolean noLegendaries, boolean allowAltFormes, boolean allowCosmeticFormes) {
+        SpeciesSet allowedSpecs = new SpeciesSet();
+        allowedSpecs.addAll(noLegendaries ? getNonLegendaries(allowAltFormes) : getAll(allowAltFormes));
         if (allowAltFormes && !allowCosmeticFormes) {
-            allowedPokes.removeIf(Species::isActuallyCosmetic);
+            allowedSpecs.removeIf(Species::isActuallyCosmetic);
         }
-        return SpeciesSet.unmodifiable(allowedPokes);
+        return SpeciesSet.unmodifiable(allowedSpecs);
     }
 
     /**
-     * Returns a random non-alt forme Pokemon.
+     * Returns a random non-alt forme {@link Species}.
      */
-    public Species randomPokemon(Random random) {
+    public Species randomSpecies(Random random) {
         return getAll(false).getRandomSpecies(random);
     }
 
     /**
-     * Returns an unmodifiable {@link SpeciesSet} containing all Pokemon that follow the restrictions.
+     * Returns an unmodifiable {@link SpeciesSet} containing all {@link Species} that follow the restrictions.
      */
     public SpeciesSet getAll(boolean includeAltFormes) {
         if (!restrictionsSet) {
@@ -71,7 +71,8 @@ public class RestrictedPokemonService {
     }
 
     /**
-     * Returns an unmodifiable {@link SpeciesSet} containing all non-legendary Pokemon that follow the restrictions.
+     * Returns an unmodifiable {@link SpeciesSet} containing all non-legendary
+     * {@link Species} that follow the restrictions.
      */
     public SpeciesSet getNonLegendaries(boolean includeAltFormes) {
         if (!restrictionsSet) {
@@ -81,7 +82,8 @@ public class RestrictedPokemonService {
     }
 
     /**
-     * Returns an unmodifiable {@link SpeciesSet} containing all legendary Pokemon that follow the restrictions.
+     * Returns an unmodifiable {@link SpeciesSet} containing all legendary {@link Species}
+     * that follow the restrictions.
      */
     public SpeciesSet getLegendaries(boolean includeAltFormes) {
         if (!restrictionsSet) {
@@ -113,20 +115,20 @@ public class RestrictedPokemonService {
 
     public SpeciesSet getAbilityDependentFormes() {
         SpeciesSet abilityDependentFormes = new SpeciesSet();
-        for (Species pk : allInclAltFormes) {
-            if (pk.getBaseForme() != null) {
-                if (pk.getBaseNumber() == SpeciesIDs.castform) {
+        for (Species sp : allInclAltFormes) {
+            if (sp.getBaseForme() != null) {
+                if (sp.getBaseNumber() == SpeciesIDs.castform) {
                     // All alternate Castform formes
-                    abilityDependentFormes.add(pk);
-                } else if (pk.getBaseNumber() == SpeciesIDs.darmanitan && pk.getFormeNumber() == 1) {
+                    abilityDependentFormes.add(sp);
+                } else if (sp.getBaseNumber() == SpeciesIDs.darmanitan && sp.getFormeNumber() == 1) {
                     // Darmanitan-Z
-                    abilityDependentFormes.add(pk);
-                } else if (pk.getBaseNumber() == SpeciesIDs.aegislash) {
+                    abilityDependentFormes.add(sp);
+                } else if (sp.getBaseNumber() == SpeciesIDs.aegislash) {
                     // Aegislash-B
-                    abilityDependentFormes.add(pk);
-                } else if (pk.getBaseNumber() == SpeciesIDs.wishiwashi) {
+                    abilityDependentFormes.add(sp);
+                } else if (sp.getBaseNumber() == SpeciesIDs.wishiwashi) {
                     // Wishiwashi-S
-                    abilityDependentFormes.add(pk);
+                    abilityDependentFormes.add(sp);
                 }
             }
         }
@@ -188,8 +190,8 @@ public class RestrictedPokemonService {
         //While this doesn't seem like the ideal place to put this,
         //it's the least bad one I can think of at this time.
         //TODO: place this somewhere more sensible.
-        for(Species poke : allInclAltFormes) {
-            poke.saveOriginalData();
+        for(Species spec : allInclAltFormes) {
+            spec.saveOriginalData();
         }
     }
 
@@ -228,8 +230,8 @@ public class RestrictedPokemonService {
     }
 
     private static void addFromGen(SpeciesSet allInclAltFormes, SpeciesSet allNonRestricted, int gen) {
-        allInclAltFormes.addAll(allNonRestricted.filter(pk -> {
-            Species baseForme = pk.getBaseForme() == null ? pk : pk.getBaseForme();
+        allInclAltFormes.addAll(allNonRestricted.filter(sp -> {
+            Species baseForme = sp.getBaseForme() == null ? sp : sp.getBaseForme();
             return baseForme.getGeneration() == gen;
         }));
     }

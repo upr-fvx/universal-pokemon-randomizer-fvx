@@ -1923,7 +1923,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         return pk;
     }
 

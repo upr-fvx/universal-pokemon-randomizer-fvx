@@ -26,7 +26,7 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
 import java.awt.image.BufferedImage;
@@ -113,11 +113,11 @@ public interface RomHandler {
 
     List<MegaEvolution> getMegaEvolutions();
 
-    Species getAltFormeOfPokemon(Species pk, int forme);
+    Species getAltFormeOfSpecies(Species pk, int forme);
 
     SpeciesSet getIrregularFormes();
 
-    RestrictedPokemonService getRestrictedPokemonService();
+    RestrictedSpeciesService getRestrictedSpeciesService();
 
     // ==================================
     // Methods to set up Gen Restrictions
@@ -183,11 +183,15 @@ public interface RomHandler {
      * @param useTimeOfDay
      * @return A new SpeciesSet containing all wild Species found in the main game.
      */
-    SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay);
+    SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay);
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 
     default boolean hasEncounterLocations() {
+        return false;
+    }
+
+    default boolean hasMapIndices() {
         return false;
     }
 

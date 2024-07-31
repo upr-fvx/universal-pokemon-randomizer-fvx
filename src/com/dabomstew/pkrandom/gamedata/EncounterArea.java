@@ -33,9 +33,11 @@ public class EncounterArea extends ArrayList<Encounter> {
     private String displayName;
 
     //The index of the map this area is contained in, as determined by the RomHandler.
-    //Note that not all RomHandlers currently set this variable,
-    //and of those that do, not all use it in the same way.
-    //However, in general, a particular index number will apply to exactly one map.
+    //Note that not all RomHandlers currently set this variable.
+    //However, in general, a particular index number will apply to exactly one map -
+    //unless the number is negative, in which case it indicates the encounter area spans multiple maps.
+    //(Or that the map cannot be determined.)
+    //Negative map indices will still attempt to have logical groupings.
     private int mapIndex = -1;
 
     private String locationTag;
@@ -71,8 +73,8 @@ public class EncounterArea extends ArrayList<Encounter> {
     /**
      * Returns an unmodifiable set of the {@link Species} which should NOT have {@link Encounter}s in this area.
      */
-    public Set<Species> getBannedPokemon() {
-        return Collections.unmodifiableSet(bannedSpecies);
+    public SpeciesSet getBannedSpecies() {
+        return SpeciesSet.unmodifiable(bannedSpecies);
     }
 
     public void banPokemon(Species toBan) {
@@ -188,4 +190,114 @@ public class EncounterArea extends ArrayList<Encounter> {
         }
         return speciesSet;
     }
+
+    /**
+     * Given a List of EncounterAreas, groups those that have the same encounter type.
+     * @param toGroup The set of EncounterAreas to group.
+     * @return A Map of encounterTypes to EncounterAreas.
+     */
+    public static Map<EncounterType, List<EncounterArea>> groupAreasByEncounterType(List<EncounterArea> toGroup) {
+        Map<EncounterType, List<EncounterArea>> grouped = new HashMap<>();
+        for (EncounterArea area : toGroup) {
+            EncounterType encType = area.getEncounterType();
+            if (!grouped.containsKey(encType)) {
+                grouped.put(encType, new ArrayList<>());
+            }
+            grouped.get(encType).add(area);
+        }
+        return grouped;
+    }
+
+    /**
+     * Given a List of EncounterAreas, groups those that have the same map index.
+     * @param toGroup The set of EncounterAreas to group.
+     * @return A Map of mapIndexes to EncounterAreas.
+     */
+    public static Map<Integer, List<EncounterArea>> groupAreasByMapIndex(List<EncounterArea> toGroup) {
+        Map<Integer, List<EncounterArea>> grouped = new HashMap<>();
+        for (EncounterArea area : toGroup) {
+            int index = area.getMapIndex();
+            if (!grouped.containsKey(index)) {
+                grouped.put(index, new ArrayList<>());
+            }
+            grouped.get(index).add(area);
+        }
+        return grouped;
+    }
+
+    /**
+     * Given a List of EncounterAreas, groups those that have the same location tag.
+     * @param toGroup The set of EncounterAreas to group.
+     * @return A Map of locationTags to EncounterAreas.
+     */
+    public static Map<String, List<EncounterArea>> groupAreasByLocation(List<EncounterArea> toGroup) {
+        Map<String, List<EncounterArea>> grouped = new HashMap<>();
+        int untagged = 1;
+        for (EncounterArea area : toGroup) {
+            String tag = area.getLocationTag();
+            if (tag == null) {
+                tag = "UNTAGGED-" + untagged;
+                untagged++;
+            }
+            if (!grouped.containsKey(tag)) {
+                grouped.put(tag, new ArrayList<>());
+            }
+            grouped.get(tag).add(area);
+        }
+        return grouped;
+    }
+
+    /**
+     * Given a List of EncounterAreas, merges those that have the same Location tag.
+     * @param toFlatten The set of EncounterAreas to merge.
+     * @return A List of EncounterAreas with the specified areas merged.
+     */
+    public static List<EncounterArea> flattenLocations(List<EncounterArea> toFlatten) {
+        Map<String, List<EncounterArea>> grouped = groupAreasByLocation(toFlatten);
+        List<EncounterArea> flattenedLocations = new ArrayList<>();
+        for (Map.Entry<String, List<EncounterArea>> locEntry : grouped.entrySet()) {
+            EncounterArea flattened = new EncounterArea();
+            flattened.setDisplayName("All of location " + locEntry.getKey());
+            for(EncounterArea area : locEntry.getValue()) {
+                flattened.addAll(area);
+                flattened.banAllPokemon(area.getBannedSpecies());
+            }
+            flattenedLocations.add(flattened);
+        }
+        return flattenedLocations;
+    }
+
+    /**
+     * Given a List of EncounterAreas, merges those that have the same map index AND encounter type.
+     * @param toFlatten The set of EncounterAreas to merge.
+     * @return A List of EncounterAreas with the specified areas merged.
+     */
+    public static List<EncounterArea> flattenEncounterTypesInMaps(List<EncounterArea> toFlatten) {
+        Map<Integer, List<EncounterArea>> grouped = groupAreasByMapIndex(toFlatten);
+        List<EncounterArea> flattenedEncounters = new ArrayList<>();
+        int unnamed = 1;
+        for (Map.Entry<Integer, List<EncounterArea>> mapEntry : grouped.entrySet()) {
+            Map<EncounterType, List<EncounterArea>> mapGrouped =
+                    groupAreasByEncounterType(mapEntry.getValue());
+            String mapName = mapEntry.getValue().get(0).getLocationTag();
+            if (mapName == null) {
+                mapName = "Unknown Map " + unnamed;
+                unnamed++;
+            }
+            for (Map.Entry<EncounterType, List<EncounterArea>> typeEntry : mapGrouped.entrySet()) {
+                EncounterArea flattened = new EncounterArea();
+                flattened.setDisplayName(mapName + "-" + typeEntry.getKey().name());
+                flattened.setEncounterType(typeEntry.getKey());
+                flattened.setMapIndex(mapEntry.getKey());
+                for (EncounterArea area : typeEntry.getValue()) {
+                    flattened.addAll(area);
+                    flattened.banAllPokemon(area.getBannedSpecies());
+                }
+                flattenedEncounters.add(flattened);
+            }
+        }
+        return flattenedEncounters;
+    }
+
+    //Note: should be two more flattens... probably. (Or, we might remove the need for them entirely.)
 }

@@ -164,7 +164,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
     }
 
     private boolean isUltraBeast(Species pk) {
-        return romHandler.getRestrictedPokemonService().getUltrabeasts(false).contains(pk);
+        return romHandler.getRestrictedSpeciesService().getUltrabeasts(false).contains(pk);
     }
 
     private List<StaticEncounter> deepCopy(List<StaticEncounter> original) {

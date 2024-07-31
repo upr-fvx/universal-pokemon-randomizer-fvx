@@ -209,7 +209,7 @@ public class Settings {
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
-    public enum WildPokemonRegionMod {
+    public enum WildPokemonZoneMod {
         NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
     }
     
@@ -217,8 +217,8 @@ public class Settings {
         NONE, RANDOM_THEMES, KEEP_PRIMARY
     }
 
-    private WildPokemonRegionMod wildPokemonRegionMod = WildPokemonRegionMod.GAME;
-    private boolean splitWildRegionByEncounterTypes;
+    private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
+    private boolean splitWildZoneByEncounterTypes;
     private boolean keepWildEvolutionFamilies;
     private boolean keepWildTypeThemes;
     private boolean similarStrengthEncounters;
@@ -470,13 +470,13 @@ public class Settings {
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
-                wildPokemonRegionMod == WildPokemonRegionMod.NONE,
-                wildPokemonRegionMod == WildPokemonRegionMod.ENCOUNTER_SET,
-                wildPokemonRegionMod == WildPokemonRegionMod.GAME,
+                wildPokemonZoneMod == WildPokemonZoneMod.NONE,
+                wildPokemonZoneMod == WildPokemonZoneMod.ENCOUNTER_SET,
+                wildPokemonZoneMod == WildPokemonZoneMod.GAME,
                 keepWildEvolutionFamilies,
-                wildPokemonRegionMod == WildPokemonRegionMod.NAMED_LOCATION,
-                wildPokemonRegionMod == WildPokemonRegionMod.MAP,
-                splitWildRegionByEncounterTypes));
+                wildPokemonZoneMod == WildPokemonZoneMod.NAMED_LOCATION,
+                wildPokemonZoneMod == WildPokemonZoneMod.MAP,
+                splitWildZoneByEncounterTypes));
 
         // 16 wild pokemon (restriction)
         out.write(makeByteSelected(false,
@@ -798,7 +798,7 @@ public class Settings {
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
-        settings.setWildPokemonRegionMod(restoreEnum(WildPokemonRegionMod.class, data[15], 1, // RANDOM
+        settings.setWildPokemonZoneMod(restoreEnum(WildPokemonZoneMod.class, data[15], 1, // RANDOM
                 2, // AREA_MAPPING
                 6, // MAP_MAPPING
                 5, // LOCATION_MAPPING
@@ -806,7 +806,7 @@ public class Settings {
         ));
 
         settings.setKeepWildEvolutionFamilies(restoreState(data[15], 4));
-        settings.setSplitWildRegionByEncounterTypes(restoreState(data[15], 7));
+        settings.setSplitWildZoneByEncounterTypes(restoreState(data[15], 7));
 
         settings.setSimilarStrengthEncounters(restoreState(data[16], 1));
         settings.setCatchEmAllEncounters(restoreState(data[16], 2));
@@ -2017,24 +2017,24 @@ public class Settings {
         this.randomizeWildPokemon = randomizeWildPokemon;
     }
 
-    public WildPokemonRegionMod getWildPokemonRegionMod() {
-        return wildPokemonRegionMod;
+    public WildPokemonZoneMod getWildPokemonZoneMod() {
+        return wildPokemonZoneMod;
     }
 
-    public void setWildPokemonRegionMod(boolean... bools) {
-        setWildPokemonRegionMod(getEnum(WildPokemonRegionMod.class, bools));
+    public void setWildPokemonZoneMod(boolean... bools) {
+        setWildPokemonZoneMod(getEnum(WildPokemonZoneMod.class, bools));
     }
 
-    public void setWildPokemonRegionMod(WildPokemonRegionMod wildPokemonMod) {
-        this.wildPokemonRegionMod = wildPokemonMod;
+    public void setWildPokemonZoneMod(WildPokemonZoneMod wildPokemonMod) {
+        this.wildPokemonZoneMod = wildPokemonMod;
     }
 
-    public void setSplitWildRegionByEncounterTypes(boolean splitWildRegionByEncounterTypes) {
-        this.splitWildRegionByEncounterTypes = splitWildRegionByEncounterTypes;
+    public void setSplitWildZoneByEncounterTypes(boolean splitWildZoneByEncounterTypes) {
+        this.splitWildZoneByEncounterTypes = splitWildZoneByEncounterTypes;
     }
 
-    public boolean isSplitWildRegionByEncounterTypes() {
-        return splitWildRegionByEncounterTypes;
+    public boolean isSplitWildZoneByEncounterTypes() {
+        return splitWildZoneByEncounterTypes;
     }
 
     public boolean isKeepWildTypeThemes() {

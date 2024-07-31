@@ -22,8 +22,8 @@ public class EncounterRandomizer extends Randomizer {
             return;
         }
 
-        Settings.WildPokemonRegionMod mode = settings.getWildPokemonRegionMod();
-        boolean splitByEncounterType = settings.isSplitWildRegionByEncounterTypes();
+        Settings.WildPokemonZoneMod mode = settings.getWildPokemonZoneMod();
+        boolean splitByEncounterType = settings.isSplitWildZoneByEncounterTypes();
         boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
@@ -43,7 +43,7 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     // only exists for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonRegionMod mode, Settings.WildPokemonTypeMod typeMode,
+    public void randomizeEncounters(Settings.WildPokemonZoneMod mode, Settings.WildPokemonTypeMod typeMode,
                                     boolean useTimeOfDay,
                                     boolean catchEmAll, boolean similarStrength,
                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
@@ -63,7 +63,7 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     // only public for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonRegionMod mode, boolean splitByEncounterType,
+    public void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                     boolean keepEvolutions, boolean catchEmAll, boolean similarStrength,
@@ -169,7 +169,7 @@ public class EncounterRandomizer extends Randomizer {
         private Map<Type, SpeciesSet> remainingByType;
         private SpeciesSet remaining;
 
-        private Map<Species, Species> regionMap;
+        private Map<Species, Species> zoneMap;
         private Map<Species, SpeciesAreaInformation> areaInformationMap = null;
 
         //ORAS's DexNav will crash if the load is higher than this value.
@@ -216,14 +216,14 @@ public class EncounterRandomizer extends Randomizer {
             useMapping = false;
 
             //ok. this is dumb, but it makes it integrate well.
-            List<List<EncounterArea>> regions = new ArrayList<>();
+            List<List<EncounterArea>> zones = new ArrayList<>();
             for(EncounterArea area : encounterAreas) {
-                List<EncounterArea> region = new ArrayList<>();
-                region.add(area);
-                regions.add(region);
+                List<EncounterArea> zone = new ArrayList<>();
+                zone.add(area);
+                zones.add(zone);
             }
 
-            randomizeRegions(regions);
+            randomizeZones(zones);
         }
 
         /**
@@ -233,7 +233,7 @@ public class EncounterRandomizer extends Randomizer {
          */
         private void randomEncountersORAS(List<EncounterArea> encounterAreas) {
 
-            //ideally, this would treat the encounter types as regions rather than flattening them
+            //ideally, this would treat the encounter types as zones rather than flattening them
             //however that would require ANOTHER big rewrite of this algorithm
             //TODO: convert this from flatten to group
             List<EncounterArea> collapsedEncounters = EncounterArea.flattenEncounterTypesInMaps(encounterAreas);
@@ -259,93 +259,93 @@ public class EncounterRandomizer extends Randomizer {
             //Rock smash is not affected by the crashing, so we can run the standard RandomEncounters on it.
             this.randomEncounters(rockSmashAreas);
 
-            randomizeRegionsORAS(maps);
+            randomizeZonesORAS(maps);
         }
 
         public void area1to1Encounters(List<EncounterArea> encounterAreas) {
             useMapping = true;
 
             //ok. this is dumb, but it makes it integrate well.
-            List<List<EncounterArea>> regions = new ArrayList<>();
+            List<List<EncounterArea>> zones = new ArrayList<>();
             for(EncounterArea area : encounterAreas) {
-                List<EncounterArea> region = new ArrayList<>();
-                region.add(area);
-                regions.add(region);
+                List<EncounterArea> zone = new ArrayList<>();
+                zone.add(area);
+                zones.add(zone);
             }
 
-            randomizeRegions(regions);
+            randomizeZones(zones);
         }
 
         public void map1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
             useMapping = true;
-            Collection<List<EncounterArea>> regions = EncounterArea.groupAreasByMapIndex(encounterAreas).values();
+            Collection<List<EncounterArea>> zones = EncounterArea.groupAreasByMapIndex(encounterAreas).values();
 
             if(splitByEncounterType) {
-                Collection<List<EncounterArea>> maps = regions;
-                regions = new ArrayList<>();
+                Collection<List<EncounterArea>> maps = zones;
+                zones = new ArrayList<>();
                 for(List<EncounterArea> map : maps) {
-                    regions.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                    zones.addAll(EncounterArea.groupAreasByEncounterType(map).values());
                 }
             }
 
-            randomizeRegions(regions);
+            randomizeZones(zones);
         }
 
         public void location1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
             useMapping = true;
-            Collection<List<EncounterArea>> regions = EncounterArea.groupAreasByLocation(encounterAreas).values();
+            Collection<List<EncounterArea>> zones = EncounterArea.groupAreasByLocation(encounterAreas).values();
 
             if(splitByEncounterType) {
-                Collection<List<EncounterArea>> maps = regions;
-                regions = new ArrayList<>();
+                Collection<List<EncounterArea>> maps = zones;
+                zones = new ArrayList<>();
                 for(List<EncounterArea> map : maps) {
-                    regions.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                    zones.addAll(EncounterArea.groupAreasByEncounterType(map).values());
                 }
             }
 
-            randomizeRegions(regions);
+            randomizeZones(zones);
         }
 
         public void game1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
             useMapping = true;
 
-            Collection<List<EncounterArea>> regions;
+            Collection<List<EncounterArea>> zones;
             if (splitByEncounterType) {
-                regions = EncounterArea.groupAreasByEncounterType(encounterAreas).values();
+                zones = EncounterArea.groupAreasByEncounterType(encounterAreas).values();
             } else {
-                regions = new ArrayList<>();
-                regions.add(encounterAreas);
+                zones = new ArrayList<>();
+                zones.add(encounterAreas);
             }
 
-            randomizeRegions(regions);
+            randomizeZones(zones);
         }
 
         /**
-         * Given a Collection of regions (represented by a List of EncounterAreas),
-         * randomizes each region such that type theming, 1-to-1 map, etc., are carried
-         * throughout the region.
-         * @param regions The regions to randomize.
+         * Given a Collection of zones (represented by a List of EncounterAreas),
+         * randomizes each zone such that type theming, 1-to-1 map, etc., are carried
+         * throughout the zone.
+         * @param zones The zones to randomize.
          */
-        private void randomizeRegions(Collection<List<EncounterArea>> regions) {
+        private void randomizeZones(Collection<List<EncounterArea>> zones) {
 
-            //Shuffle regions; otherwise, large regions would tend to be randomized first.
-            List<List<EncounterArea>> shuffledRegions = new ArrayList<>(regions);
-            Collections.shuffle(shuffledRegions, random);
+            //Shuffle zones; otherwise, large zones would tend to be randomized first.
+            List<List<EncounterArea>> shuffledZones = new ArrayList<>(zones);
+            Collections.shuffle(shuffledZones, random);
 
-            for(List<EncounterArea> region : shuffledRegions) {
-                Type regionType = pickRegionType(region);
+            for(List<EncounterArea> zone : shuffledZones) {
+                Type zoneType = pickZoneType(zone);
 
                 if(useMapping) {
-                    regionMap = new HashMap<>();
-                    setupAreaInfoMap(region);
+                    zoneMap = new HashMap<>();
+                    setupAreaInfoMap(zone);
 
                     if(keepEvolutions) {
                         spreadThemesThroughFamilies();
                     }
                 }
 
-                for(EncounterArea area : region) {
-                    randomizeArea(area, regionType);
+                for(EncounterArea area : zone) {
+                    randomizeArea(area, zoneType);
                 }
 
                 if(useMapping && !catchEmAll) {
@@ -355,9 +355,9 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
-        private void randomizeArea(EncounterArea area, Type regionType) {
+        private void randomizeArea(EncounterArea area, Type zoneType) {
             //no area-level type theme, because that could foul up other type restrictions.
-            //Either it's region-level, or determined per-Species (based on all areas in the region).
+            //Either it's zone-level, or determined per-Species (based on all areas in the zone).
 
             //removing allowedForArea: it added a lot of complexity to the algorithm, and only saved
             //a small amount of processing time in what are already the fastest-processing cases.
@@ -365,22 +365,22 @@ public class EncounterRandomizer extends Randomizer {
                 Species current = enc.getSpecies();
 
                 Species replacement;
-                if(useMapping && regionMap.containsKey(current)) {
+                if(useMapping && zoneMap.containsKey(current)) {
                     //checking the map first lets us avoid creating a pointless allowedForReplacement set
-                    replacement = regionMap.get(current);
+                    replacement = zoneMap.get(current);
 
                 } else {
                     //choose new Species
                     if(keepEvolutions && mapHasFamilyMember(current)) {
                         replacement = pickFamilyMemberReplacement(current);
                     } else {
-                        SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, area, regionType);
+                        SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, area, zoneType);
                         replacement = pickReplacement(current, allowedForReplacement);
                     }
 
                     //add to map if applicable
                     if (useMapping) {
-                        regionMap.put(current, replacement);
+                        zoneMap.put(current, replacement);
                     }
 
                     //remove from remaining if applicable
@@ -400,7 +400,7 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given a {@link Species} which has at least one evolutionary relative contained within the regionMap,
+         * Given a {@link Species} which has at least one evolutionary relative contained within the zoneMap,
          * chooses a replacement for it that is a corresponding relative of its relative's replacement.
          * @param toReplace The {@link Species} to find a replacement for.
          * @return An appropriate replacement {@link Species}.
@@ -409,7 +409,7 @@ public class EncounterRandomizer extends Randomizer {
             SpeciesAreaInformation info = areaInformationMap.get(toReplace);
             SpeciesSet family = info.getFamily();
             for(Species relative : family) {
-                if(regionMap.containsKey(relative)) {
+                if(zoneMap.containsKey(relative)) {
                     return pickFamilyMemberReplacementInner(toReplace, relative);
                 }
             }
@@ -418,16 +418,16 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given a {@link Species} and a relative of that {@link Species} which is contained in the regionMap,
+         * Given a {@link Species} and a relative of that {@link Species} which is contained in the zoneMap,
          * chooses a replacement for it that is a corresponding relative of its relative's replacement.
          * @param toReplace The {@link Species} to replace.
-         * @param relative A relative of that {@link Species}, which is contained as a key in the regionMap.
+         * @param relative A relative of that {@link Species}, which is contained as a key in the zoneMap.
          * @return An appropriate replacement {@link Species}.
          */
         private Species pickFamilyMemberReplacementInner(Species toReplace, Species relative) {
             SpeciesAreaInformation info = areaInformationMap.get(toReplace);
             int relation = relative.getRelation(toReplace, true);
-            Species relativeReplacement = regionMap.get(relative);
+            Species relativeReplacement = zoneMap.get(relative);
             if(relativeReplacement == null) {
                 throw new IllegalArgumentException("Relative had a null replacement!");
             }
@@ -452,7 +452,7 @@ public class EncounterRandomizer extends Randomizer {
 
         /**
          * Checks if any family member (as listed in areaInformationMap) of the given {@link Species}
-         * is contained in the regionMap.
+         * is contained in the zoneMap.
          * @param current The {@link Species} to check.
          * @return True if any family member is present, false otherwise.
          */
@@ -460,7 +460,7 @@ public class EncounterRandomizer extends Randomizer {
            SpeciesAreaInformation info = areaInformationMap.get(current);
            SpeciesSet family = info.getFamily();
            for(Species relative : family) {
-               if(regionMap.containsKey(relative)) {
+               if(zoneMap.containsKey(relative)) {
                    return true;
                }
            }
@@ -473,7 +473,7 @@ public class EncounterRandomizer extends Randomizer {
          * with as many distinct Pokemon as possible without crashing ORAS's DexNav.
          * @param maps The list of maps to randomize.
          */
-        private void randomizeRegionsORAS(List<List<EncounterArea>> maps) {
+        private void randomizeZonesORAS(List<List<EncounterArea>> maps) {
             //Shuffle maps; otherwise, large maps would tend to be randomized first.
             List<List<EncounterArea>> shuffledMaps = new ArrayList<>(maps);
             Collections.shuffle(shuffledMaps, random);
@@ -509,9 +509,9 @@ public class EncounterRandomizer extends Randomizer {
                 AreaWithData awd = new AreaWithData();
                 awd.area = area;
 
-                List<EncounterArea> dummyRegion = new ArrayList<>();
-                dummyRegion.add(area);
-                awd.areaType = pickRegionType(dummyRegion);
+                List<EncounterArea> dummyZone = new ArrayList<>();
+                dummyZone.add(area);
+                awd.areaType = pickZoneType(dummyZone);
 
                 awd.areaMap = new HashMap<>();
 
@@ -556,20 +556,20 @@ public class EncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Chooses an appropriate type theme for the given region based on the current settings:
+         * Chooses an appropriate type theme for the given zone based on the current settings:
          * If keepTypeThemes is true, chooses an existing theme if there is one.
          * If no theme was chosen, and randomTypeThemes is true, chooses a theme at random.
-         * (Exception: If using catch-em-all and a banned {@link Species} was present in the regions, the
+         * (Exception: If using catch-em-all and a banned {@link Species} was present in the zone, the
          * chosen "random" type will be one of the banned {@link Species}'s types.)
-         * @param region A List of EncounterAreas representing an appropriately-sized region for randomization.
+         * @param zone A List of EncounterAreas representing an appropriately-sized zone for randomization.
          * @return A Type chosen by one of the above-listed methods, or null if none was chosen.
          */
-        private Type pickRegionType(List<EncounterArea> region) {
+        private Type pickZoneType(List<EncounterArea> zone) {
             Type picked = null;
             if(keepTypeThemes) {
-                //see if any types are shared among all areas in the region
+                //see if any types are shared among all areas in the zone
                 Set<Type> possibleThemes = EnumSet.allOf(Type.class);
-                for(EncounterArea area : region) {
+                for(EncounterArea area : zone) {
                     possibleThemes.retainAll(area.getSpeciesInArea().getSharedTypes(true));
                     if(possibleThemes.isEmpty()) {
                         break;
@@ -586,7 +586,7 @@ public class EncounterRandomizer extends Randomizer {
                             picked = itor.next();
                         } else {
                             //prefer primary of first species
-                            Type preferredTheme = region.get(0).get(0).getSpecies().getPrimaryType(true);
+                            Type preferredTheme = zone.get(0).get(0).getSpecies().getPrimaryType(true);
                             if(picked != preferredTheme) {
                                 picked = itor.next();
                             }
@@ -605,9 +605,9 @@ public class EncounterRandomizer extends Randomizer {
                 // because why not?
                 if (catchEmAll) {
                     SpeciesSet bannedInArea = new SpeciesSet(banned);
-                    SpeciesSet speciesInRegion = new SpeciesSet();
-                    region.forEach(area -> speciesInRegion.addAll(area.getSpeciesInArea()));
-                    bannedInArea.retainAll(speciesInRegion);
+                    SpeciesSet speciesInZone = new SpeciesSet();
+                    zone.forEach(area -> speciesInZone.addAll(area.getSpeciesInArea()));
+                    bannedInArea.retainAll(speciesInZone);
 
                     Type themeOfBanned = bannedInArea.getSharedType(false);
                     if (themeOfBanned != null) {
@@ -696,16 +696,16 @@ public class EncounterRandomizer extends Randomizer {
          * @param current The {@link Species} to find replacements for.
          * @param area The area the encounter is in. Used to determine banned {@link Species} if
          *             areaInformationMap is not populated.
-         * @param regionType A Type that all {@link Species} in the current region should be.
+         * @param zoneType A Type that all {@link Species} in the current zone should be.
          * @return A {@link SpeciesSet} containing all valid replacements for the encounter. This may be a
          * reference to another set; do not modify!
          */
-        private SpeciesSet setupAllowedForReplacement(Species current, EncounterArea area, Type regionType) {
+        private SpeciesSet setupAllowedForReplacement(Species current, EncounterArea area, Type zoneType) {
             SpeciesSet allowedForReplacement;
             if(areaInformationMap == null) {
-                allowedForReplacement = setupAllowedForReplacementNoInfoMap(current, area, regionType);
+                allowedForReplacement = setupAllowedForReplacementNoInfoMap(current, area, zoneType);
             } else {
-                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, regionType);
+                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, zoneType);
             }
 
             if (allowedForReplacement.isEmpty()) {
@@ -948,7 +948,7 @@ public class EncounterRandomizer extends Randomizer {
 
             //Try to remove any Species which have a relative that has already been used
             SpeciesSet withoutUsedFamilies = potentiallyAllowed.filter(p ->
-                    !p.getFamily(false).containsAny(regionMap.values()));
+                    !p.getFamily(false).containsAny(zoneMap.values()));
 
             return withoutUsedFamilies.isEmpty() ? potentiallyAllowed : withoutUsedFamilies;
         }
@@ -1179,7 +1179,7 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             /**
-             * Gets the lowest level encounter with this Species in the region.
+             * Gets the lowest level encounter with this Species in the zone.
              * @return The lowest level.
              */
             public int getLowestLevel() {

@@ -104,7 +104,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
 

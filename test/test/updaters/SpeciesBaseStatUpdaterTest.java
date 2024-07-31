@@ -1,6 +1,6 @@
 package test.updaters;
 
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.updaters.PokemonBaseStatUpdater;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

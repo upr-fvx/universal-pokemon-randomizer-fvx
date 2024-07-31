@@ -3,9 +3,9 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
-import com.dabomstew.pkrandom.game_data.GenRestrictions;
-import com.dabomstew.pkrandom.game_data.Species;
-import com.dabomstew.pkrandom.game_data.SpeciesSet;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import org.junit.jupiter.api.Disabled;
@@ -126,32 +126,32 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void pokemonSetIncludesAllNonNullPokemonInPokemonList(String romName) {
+    public void speciesSetIncludesAllNonNullSpeciesInSpeciesList(String romName) {
         loadROM(romName);
         List<Species> speciesList = romHandler.getSpecies();
         SpeciesSet speciesSet = romHandler.getSpeciesSet();
         for (Species pk : speciesList) {
             if (pk != null && !speciesSet.contains(pk)) {
-                fail(pk + " in Pokemon List (getPokemonList()) but not in Pokemon Set (getPokemonSet())");
+                fail(pk + " in Species List (getSpecies()) but not in Species Set (getSpeciesSet())");
             }
         }
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void pokemonSetOnlyHasPokemonAlsoInPokemonList(String romName) {
+    public void speciesSetOnlyHasSpeciesAlsoInSpeciesList(String romName) {
         loadROM(romName);
         List<Species> speciesList = romHandler.getSpecies();
         for (Species pk : romHandler.getSpeciesSet()) {
             if (!speciesList.contains(pk)) {
-                fail(pk + " in Pokemon Set (getPokemonSet()) but not in Pokemon List (getPokemon())");
+                fail(pk + " in Species Set (getSpeciesSet()) but not in Species List (getSpecies())");
             }
         }
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonAreSameAsPokemonSetWithNoRestrictionsSet(String romName) {
+    public void restrictedPokemonAreSameAsSpeciesSetWithNoRestrictionsSet(String romName) {
         loadROM(romName);
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(null);

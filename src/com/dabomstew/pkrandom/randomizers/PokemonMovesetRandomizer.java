@@ -3,7 +3,7 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.constants.MoveIDs;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -432,7 +432,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
     }
 
     // Note that this is slow and somewhat hacky.
-    // TODO: add to PokemonSet, hopefully in a less hacky way.
+    // TODO: add to SpeciesSet, hopefully in a less hacky way.
     // (The non-hacky way might be to make it a TreeSet.)
     private Species findPokemonInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
         for (Species pk : speciesPool) {

@@ -3,7 +3,7 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
@@ -548,7 +548,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildSpecies(s.isUseTimeBasedEncounters())
                         .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
@@ -582,7 +582,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true); // should be at least 4 non-local Pokemon in each game
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemon(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildSpecies(s.isUseTimeBasedEncounters())
                 .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);

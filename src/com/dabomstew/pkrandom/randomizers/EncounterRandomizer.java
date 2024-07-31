@@ -2,7 +2,7 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
@@ -973,7 +973,7 @@ public class EncounterRandomizer extends Randomizer {
 
                 SpeciesSet speciesInArea = new SpeciesSet();
                 for (Species poke : area.getSpeciesInArea()) {
-                    //Different formes of the same Species do not contribute to load
+                    //Different formes of the same species do not contribute to load
                     if(poke.isBaseForme()) {
                         speciesInArea.add(poke);
                     } else {

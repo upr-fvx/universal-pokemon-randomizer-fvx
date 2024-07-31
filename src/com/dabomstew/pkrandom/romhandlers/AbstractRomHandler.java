@@ -34,7 +34,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
@@ -104,7 +104,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public SpeciesSet getMainGameWildPokemon(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
 

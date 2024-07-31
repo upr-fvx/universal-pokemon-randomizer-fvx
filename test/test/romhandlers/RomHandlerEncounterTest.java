@@ -2,7 +2,7 @@ package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.EncounterRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -1482,17 +1482,17 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     }
 
     /**
-     * Checks that for each Pokemon in beforeArea, it is replaced by the Pokemon listed in the map if there is one;
-     * if not, adds its replacement to the map and ensures that any future replacements use the same Pokemon.
+     * Checks that for each Species in beforeArea, it is replaced by the Species listed in the map if there is one;
+     * if not, adds its replacement to the map and ensures that any future replacements use the same Species.
      * @param beforeArea The area, in its state before randomization. If the area is marked as Unused (either by
      *                   EncounterType, or Location tag), the method will return without performing any checks.
      * @param afterArea The same area, after randomization.
-     * @param map The map of Pokemon to their replacements. WARNING: MODIFIED. If null, a new map will be created.
-     * @param usedPokemon A PokemonSet of Pokemon already used as replacements. If null, Pokemon will not be checked
+     * @param map The map of Species to their replacements. WARNING: MODIFIED. If null, a new map will be created.
+     * @param usedSpecies A SpeciesSet of Species already used as replacements. If null, Species will not be checked
      *                    for uniqueness.
      * @throws RuntimeException if the areas do not have the same display name.
      */
-    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedPokemon) {
+    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedSpecies) {
         if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
             throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
                     + afterArea.getDisplayName());
@@ -1518,11 +1518,11 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
             if (!map.containsKey(beforePk)) {
                 map.put(beforePk, afterPk);
-                if(usedPokemon != null) {
+                if(usedSpecies != null) {
                     System.out.println("Adding map entry: " + beforePk.getName() + beforePk.getFormeSuffix() +
                             " to " + afterPk.getName() + afterPk.getFormeSuffix());
-                    assertFalse(usedPokemon.contains(afterPk));
-                    usedPokemon.add(afterPk);
+                    assertFalse(usedSpecies.contains(afterPk));
+                    usedSpecies.add(afterPk);
                 }
             }
             assertEquals(map.get(beforePk), afterPk);

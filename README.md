@@ -7,7 +7,7 @@ For a full list of new features, see [this wiki page](https://github.com/upr-fvx
 
 True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 
-For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a PokemonSet class with many helper functions, and automated tests for most features.
+For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a SpeciesSet class with many helper functions, and automated tests for most features.
 
 # Feature requests
 

@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.romhandlers;
 
 import com.dabomstew.pkrandom.graphics.palettes.PaletteDescriptionTool;
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 
 import java.awt.image.BufferedImage;
 

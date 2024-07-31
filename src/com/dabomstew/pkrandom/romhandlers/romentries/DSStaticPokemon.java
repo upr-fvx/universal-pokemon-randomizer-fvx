@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.romhandlers.romentries;
 
-import com.dabomstew.pkrandom.game_data.Species;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
 import com.dabomstew.pkrandom.romhandlers.AbstractDSRomHandler;
 

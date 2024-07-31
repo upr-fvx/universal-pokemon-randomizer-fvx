@@ -25,7 +25,7 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.game_data.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
@@ -96,7 +96,7 @@ public interface RomHandler {
     boolean isRomValid();
 
     // ======================================================
-    // Methods for retrieving a list of Pokemon objects.
+    // Methods for retrieving a list of Species objects.
     // Note that for many of these lists, index 0 is null.
     // Instead, you use index on the species' National Dex ID
     // ======================================================
@@ -181,9 +181,9 @@ public interface RomHandler {
     /**
      *
      * @param useTimeOfDay
-     * @return A new PokemonSet containing all wild Pokemon found in the main game.
+     * @return A new SpeciesSet containing all wild Species found in the main game.
      */
-    SpeciesSet getMainGameWildPokemon(boolean useTimeOfDay);
+    SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay);
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 

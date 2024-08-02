@@ -2874,7 +2874,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public int abilitiesPerPokemon() {
+    public int abilitiesPerSpecies() {
         return 3;
     }
 

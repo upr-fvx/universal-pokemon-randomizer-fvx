@@ -2788,7 +2788,7 @@ public class RandomizerGUI {
             shShuffleRadioButton.setEnabled(true);
             shRandomRadioButton.setEnabled(true);
 
-            pickupItemsPanel.setVisible(romHandler.abilitiesPerPokemon() > 0);
+            pickupItemsPanel.setVisible(romHandler.abilitiesPerSpecies() > 0);
             puUnchangedRadioButton.setEnabled(true);
             puUnchangedRadioButton.setSelected(true);
             puRandomRadioButton.setEnabled(true);

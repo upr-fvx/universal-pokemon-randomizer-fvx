@@ -926,7 +926,7 @@ public class GameRandomizer {
             }
 
             log.print("NUM|NAME" + nameSp + "|TYPE             |  HP| ATK| DEF|SATK|SDEF| SPD");
-            int abils = romHandler.abilitiesPerPokemon();
+            int abils = romHandler.abilitiesPerSpecies();
             for (int i = 0; i < abils; i++) {
                 log.print("|ABILITY" + (i + 1) + abSp);
             }

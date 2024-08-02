@@ -46,7 +46,7 @@ import java.util.Set;
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
  * Some methods giving extra context to the main data are also provided (e.g. {@link #hasRivalFinalBattle()},
- * {@link #hasPhysicalSpecialSplit()}, {@link #abilitiesPerPokemon()}).
+ * {@link #hasPhysicalSpecialSplit()}, {@link #abilitiesPerSpecies()}).
  * <br><br>
  * Though given a Rom, the RomHandler might not be able to get/set all kinds of data. Either because the Rom itself
  * does not support the data type (there are no Starter held items in Red), or because the RomHandler itself does not
@@ -149,7 +149,7 @@ public interface RomHandler {
     // Pokemon Abilities
     // =================
 
-    int abilitiesPerPokemon();
+    int abilitiesPerSpecies();
 
     int highestAbilityIndex();
 

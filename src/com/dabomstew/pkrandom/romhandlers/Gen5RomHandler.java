@@ -3102,7 +3102,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public int abilitiesPerPokemon() {
+    public int abilitiesPerSpecies() {
         return 3;
     }
 

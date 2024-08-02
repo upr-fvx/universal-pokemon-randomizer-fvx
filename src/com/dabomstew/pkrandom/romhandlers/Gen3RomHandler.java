@@ -3336,7 +3336,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public int abilitiesPerPokemon() {
+    public int abilitiesPerSpecies() {
         return 2;
     }
 

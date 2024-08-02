@@ -1115,7 +1115,7 @@ public class Settings {
             feedback.setRemovedCodeTweaks(true);
         }
 
-        if (rh.abilitiesPerPokemon() == 0) {
+        if (rh.abilitiesPerSpecies() == 0) {
             this.setAbilitiesMod(AbilitiesMod.UNCHANGED);
             this.setAllowWonderGuard(false);
         }

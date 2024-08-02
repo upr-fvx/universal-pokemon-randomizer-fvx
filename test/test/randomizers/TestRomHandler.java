@@ -3,10 +3,10 @@ package test.randomizers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.pokemon.*;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
 import java.awt.image.BufferedImage;
@@ -17,11 +17,13 @@ import java.util.Set;
 
 public class TestRomHandler implements RomHandler {
 
-    TypeTable originalTypeTable;
-    TypeTable testTypeTable = null;
-    PokemonSet allPokemon;
-    List<EncounterArea> originalEncounters;
+    private final TypeTable originalTypeTable;
+    private TypeTable testTypeTable = null;
+    private final SpeciesSet originalSpeciesInclFormes;
+    private SpeciesSet testSpeciesInclFormes = null;
+    private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
+    private final int generation;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -29,8 +31,9 @@ public class TestRomHandler implements RomHandler {
      */
     public TestRomHandler(RomHandler mockupOf) {
         originalTypeTable = new TypeTable(mockupOf.getTypeTable());
-        allPokemon = PokemonSet.unmodifiable(mockupOf.getPokemonSet());
+        originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
         originalEncounters = mockupOf.getEncounters(true);
+        generation = mockupOf.generationOfPokemon();
     }
 
     /**
@@ -38,75 +41,117 @@ public class TestRomHandler implements RomHandler {
      */
     public void reset() {
         testTypeTable = null;
+        testEncounters = null;
+
+        testSpeciesInclFormes = new SpeciesSet();
+        for(Species orig : originalSpeciesInclFormes) {
+            Species copy = deepCopySpecies(orig);
+        }
+    }
+
+    /**
+     * Copies all data from one Species to a new Species. The new Species can then be safely modified in tests.
+     * @param original The Species to copy.
+     * @return A new Species with none of its fields having reference to the original Species.
+     */
+    private Species deepCopySpecies(Species original) {
+        boolean isGen1 = generation == 1;
+        Species copy;
+        if(isGen1) {
+            copy = new Gen1Species(original.getNumber());
+        } else {
+            copy = new Species(original.getNumber());
+        }
+        copy.setName(original.getName());
+
+        //formes
+        copy.setFormeSuffix(original.getFormeSuffix());
+        if(!original.isBaseForme()) {
+            //...
+            //this is harder than expected
+        }
+
+        copy.setHp(original.getHp());
+        copy.setAttack(original.getAttack());
+        copy.setDefense(original.getDefense());
+        copy.setSpeed(original.getSpeed());
+        if(isGen1) {
+            copy.setSpecial(original.getSpecial());
+        } else {
+            copy.setSpatk(original.getSpatk());
+            copy.setSpdef(original.getSpdef());
+        }
+
+
     }
 
     @Override
     public boolean loadRom(String filename) {
-        return false;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
-        return false;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public String loadedFilename() {
-        return null;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public boolean hasGameUpdateLoaded() {
-        return false;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public boolean loadGameUpdate(String filename) {
-        return false;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public void removeGameUpdate() {
-
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public String getGameUpdateVersion() {
-        return null;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public void printRomDiagnostics(PrintStream logStream) {
-
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public boolean isRomValid() {
-        return false;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
-    public List<Pokemon> getPokemon() {
+    public List<Species> getSpecies() {
         return null;
     }
 
     @Override
-    public List<Pokemon> getPokemonInclFormes() {
+    public List<Species> getSpeciesInclFormes() {
         return null;
     }
 
     @Override
-    public PokemonSet getAltFormes() {
+    public SpeciesSet getAltFormes() {
         return null;
     }
 
     @Override
-    public PokemonSet getPokemonSet() {
-        return allPokemon; //it's already unmodifiable, so safe to pass
+    public SpeciesSet getSpeciesSet() {
+        return testSpeciesInclFormes;
     }
 
     @Override
-    public PokemonSet getPokemonSetInclFormes() {
+    public SpeciesSet getSpeciesSetInclFormes() {
         return null;
     }
 
@@ -116,18 +161,18 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public Pokemon getAltFormeOfPokemon(Pokemon pk, int forme) {
+    public Species getAltFormeOfSpecies(Species pk, int forme) {
         return null;
     }
 
     @Override
-    public PokemonSet getIrregularFormes() {
+    public SpeciesSet getIrregularFormes() {
         return null;
     }
 
     @Override
-    public RestrictedPokemonService getRestrictedPokemonService() {
-        return new RestrictedPokemonService(this);
+    public RestrictedSpeciesService getRestrictedSpeciesService() {
+        return new RestrictedSpeciesService(this);
     }
 
     @Override
@@ -136,12 +181,12 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public List<Pokemon> getStarters() {
+    public List<Species> getStarters() {
         return null;
     }
 
     @Override
-    public boolean setStarters(List<Pokemon> newStarters) {
+    public boolean setStarters(List<Species> newStarters) {
         return false;
     }
 
@@ -176,7 +221,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public int abilitiesPerPokemon() {
+    public int abilitiesPerSpecies() {
         return 0;
     }
 
@@ -221,7 +266,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getMainGameWildPokemon(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         return null;
     }
 
@@ -241,7 +286,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedForWildEncounters() {
+    public SpeciesSet getBannedForWildEncounters() {
         return null;
     }
 
@@ -396,7 +441,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedForStaticPokemon() {
+    public SpeciesSet getBannedForStaticPokemon() {
         return null;
     }
 
@@ -471,12 +516,12 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public Map<Pokemon, boolean[]> getTMHMCompatibility() {
+    public Map<Species, boolean[]> getTMHMCompatibility() {
         return null;
     }
 
     @Override
-    public void setTMHMCompatibility(Map<Pokemon, boolean[]> compatData) {
+    public void setTMHMCompatibility(Map<Species, boolean[]> compatData) {
 
     }
 
@@ -496,12 +541,12 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public Map<Pokemon, boolean[]> getMoveTutorCompatibility() {
+    public Map<Species, boolean[]> getMoveTutorCompatibility() {
         return null;
     }
 
     @Override
-    public void setMoveTutorCompatibility(Map<Pokemon, boolean[]> compatData) {
+    public void setMoveTutorCompatibility(Map<Species, boolean[]> compatData) {
 
     }
 
@@ -796,7 +841,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public boolean setIntroPokemon(Pokemon pk) {
+    public boolean setIntroPokemon(Species pk) {
         return false;
     }
 
@@ -821,7 +866,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public boolean setCatchingTutorial(Pokemon opponent, Pokemon player) {
+    public boolean setCatchingTutorial(Species opponent, Species player) {
         return false;
     }
 
@@ -836,7 +881,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonSet getBannedFormesForTrainerPokemon() {
+    public SpeciesSet getBannedFormesForTrainerPokemon() {
         return null;
     }
 
@@ -866,7 +911,7 @@ public class TestRomHandler implements RomHandler {
     }
 
     @Override
-    public PokemonImageGetter createPokemonImageGetter(Pokemon pk) {
+    public PokemonImageGetter createPokemonImageGetter(Species pk) {
         return null;
     }
 

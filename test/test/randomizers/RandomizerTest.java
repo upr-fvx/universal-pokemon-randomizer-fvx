@@ -63,6 +63,7 @@ public class RandomizerTest {
     protected TestRomHandler activateRomHandler(String romName) {
         romHandler = romHandlers.get(romName);
         romHandler.reset();
+        return romHandler;
     }
 
     private static void loadROM(String romName) {

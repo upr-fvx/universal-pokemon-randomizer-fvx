@@ -29,11 +29,11 @@ public class PokemonAbilityRandomizer extends Randomizer {
         boolean doubleBattleMode = settings.isDoubleBattleMode();
 
         // Abilities don't exist in some games...
-        if (romHandler.abilitiesPerPokemon() == 0) {
+        if (romHandler.abilitiesPerSpecies() == 0) {
             return;
         }
 
-        final boolean hasHiddenAbilities = (romHandler.abilitiesPerPokemon() == 3);
+        final boolean hasHiddenAbilities = (romHandler.abilitiesPerSpecies() == 3);
 
         final List<Integer> bannedAbilities = romHandler.getUselessAbilities();
 

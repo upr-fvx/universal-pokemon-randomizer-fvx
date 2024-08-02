@@ -578,13 +578,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     private int getRandomAbilitySlot(Species species) {
-        if (romHandler.abilitiesPerPokemon() == 0) {
+        if (romHandler.abilitiesPerSpecies() == 0) {
             return 0;
         }
         List<Integer> abilitiesList = Arrays.asList(species.getAbility1(), species.getAbility2(), species.getAbility3());
-        int slot = random.nextInt(romHandler.abilitiesPerPokemon());
+        int slot = random.nextInt(romHandler.abilitiesPerSpecies());
         while (abilitiesList.get(slot) == 0) {
-            slot = random.nextInt(romHandler.abilitiesPerPokemon());
+            slot = random.nextInt(romHandler.abilitiesPerSpecies());
         }
         return slot + 1;
     }

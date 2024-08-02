@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 /**
  * An extension of {@link HashSet} instantiated to {@link Species}.
  * Adds various helper functions useful for this class.
+ * Will not add null values to the set.
  */
 public class SpeciesSet extends HashSet<Species> {
 

@@ -41,6 +41,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean isYellow;
     private final boolean isORAS;
     private final boolean isUSUM;
+    private final int romType;
 
     private RestrictedSpeciesService testRSS;
 
@@ -57,6 +58,7 @@ public class TestRomHandler extends AbstractRomHandler {
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
 
+        romType = mockupOf.getROMType();
         isYellow = mockupOf.isYellow();
         isORAS = mockupOf.isORAS();
         isUSUM = mockupOf.isUSUM();
@@ -355,6 +357,7 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
         throw new NotImplementedException();
+        //why does this even exist????
     }
 
     @Override
@@ -1030,7 +1033,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int getROMType() {
-        throw new NotImplementedException();
+        return romType;
     }
 
     @Override

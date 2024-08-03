@@ -34,6 +34,8 @@ import java.util.*;
  * Represents a Pokémon species or forme.
  */
 public class Species implements Comparable<Species> {
+    //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
+    //TODO: add a reset method that reverts this to original (for testing)
 
     private String name;
     private final int number;

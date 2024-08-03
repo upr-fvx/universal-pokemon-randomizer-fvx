@@ -77,11 +77,11 @@ public class EncounterArea extends ArrayList<Encounter> {
         return SpeciesSet.unmodifiable(bannedSpecies);
     }
 
-    public void banPokemon(Species toBan) {
+    public void banSpecies(Species toBan) {
         bannedSpecies.add(toBan);
     }
 
-    public void banAllPokemon(Collection<? extends Species> toBan) {
+    public void banAllSpecies(Collection<? extends Species> toBan) {
         bannedSpecies.addAll(toBan);
     }
 
@@ -260,7 +260,7 @@ public class EncounterArea extends ArrayList<Encounter> {
             flattened.setDisplayName("All of location " + locEntry.getKey());
             for(EncounterArea area : locEntry.getValue()) {
                 flattened.addAll(area);
-                flattened.banAllPokemon(area.getBannedSpecies());
+                flattened.banAllSpecies(area.getBannedSpecies());
             }
             flattenedLocations.add(flattened);
         }
@@ -291,7 +291,7 @@ public class EncounterArea extends ArrayList<Encounter> {
                 flattened.setMapIndex(mapEntry.getKey());
                 for (EncounterArea area : typeEntry.getValue()) {
                     flattened.addAll(area);
-                    flattened.banAllPokemon(area.getBannedSpecies());
+                    flattened.banAllSpecies(area.getBannedSpecies());
                 }
                 flattenedEncounters.add(flattened);
             }

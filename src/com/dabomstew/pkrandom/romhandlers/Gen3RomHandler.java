@@ -1477,7 +1477,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 }
             }
             for (int areaIdx : battleTrappersBannedAreas) {
-                encounterAreas.get(areaIdx).banAllPokemon(battleTrappers);
+                encounterAreas.get(areaIdx).banAllSpecies(battleTrappers);
             }
         }
 

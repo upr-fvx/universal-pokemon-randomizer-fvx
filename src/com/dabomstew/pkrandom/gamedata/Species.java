@@ -518,6 +518,7 @@ public class Species implements Comparable<Species> {
 
     public void copyBaseFormeEvolutions(Species baseForme) {
         evolutionsFrom = baseForme.evolutionsFrom;
+        //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
     public int getSpriteIndex() {

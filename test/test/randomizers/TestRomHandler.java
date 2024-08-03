@@ -11,16 +11,19 @@ import com.dabomstew.pkrandom.services.TypeService;
 
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * A special "dummy" romHandler which copies data from an existing romHandler.
+ *
+ */
 public class TestRomHandler implements RomHandler {
 
     private final TypeTable originalTypeTable;
     private TypeTable testTypeTable = null;
     private final SpeciesSet originalSpeciesInclFormes;
     private SpeciesSet testSpeciesInclFormes = null;
+    Map<Species, Species> originalToTest = null;
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
     private final int generation;
@@ -37,25 +40,54 @@ public class TestRomHandler implements RomHandler {
     }
 
     /**
+     * Prepares for testing by copying all data that must be passed by reference,
+     * and all data which references that data.
+     */
+    public void prepare() {
+        testSpeciesInclFormes = deepCopySpeciesSet(originalSpeciesInclFormes);
+    }
+
+    /**
      * Resets all data to the original data gotten from the RomHandler.
      */
     public void reset() {
         testTypeTable = null;
         testEncounters = null;
-
-        testSpeciesInclFormes = new SpeciesSet();
-        for(Species orig : originalSpeciesInclFormes) {
-            Species copy = deepCopySpecies(orig);
-        }
+        testSpeciesInclFormes = null;
+        originalToTest = null;
     }
 
     /**
-     * Copies all data from one Species to a new Species. The new Species can then be safely modified in tests.
+     * Deep copies the set of all Species in the game.
+     * When finished, all Species should contain the same data, but have no references to
+     * the original set.
+     * @param originalSet The set of Species to deep-copy.
+     * @return A copy of each of the Species given, with no
+     */
+    private SpeciesSet deepCopySpeciesSet(SpeciesSet originalSet) {
+        SpeciesSet newSet = new SpeciesSet();
+        originalToTest = new HashMap<>();
+        for(Species orig : originalSet) {
+            Species copy = copySpeciesStaticTraits(orig);
+            newSet.add(copy);
+            originalToTest.put(orig, copy);
+        }
+
+        //now that they're all here, iterate again to copy relations
+        for(Species orig : originalSet) {
+            copySpeciesRelations(orig, originalToTest);
+        }
+
+        return newSet;
+    }
+
+    /**
+     * Copies all data from one species to another, excepting data which contains references to other Species.
      * @param original The Species to copy.
      * @return A new Species with none of its fields having reference to the original Species.
      */
-    private Species deepCopySpecies(Species original) {
-        boolean isGen1 = generation == 1;
+    private static Species copySpeciesStaticTraits(Species original) {
+        boolean isGen1 = original instanceof Gen1Species;
         Species copy;
         if(isGen1) {
             copy = new Gen1Species(original.getNumber());
@@ -66,11 +98,20 @@ public class TestRomHandler implements RomHandler {
 
         //formes
         copy.setFormeSuffix(original.getFormeSuffix());
-        if(!original.isBaseForme()) {
-            //...
-            //this is harder than expected
-        }
+        copy.setFormeNumber(original.getFormeNumber());
+        copy.setCosmeticForms(original.getCosmeticForms());
+        copy.setFormeSpriteIndex(original.getFormeSpriteIndex());
+        copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
+        //I don't know if that copy is necessary, but it shouldn't hurt?
 
+        copy.setGeneration(original.getGeneration());
+
+        //Types
+        copy.setPrimaryType(original.getPrimaryType(true));
+        copy.setSecondaryType(original.getSecondaryType(true));
+        //using original or not shouldn't matter
+
+        //base stats
         copy.setHp(original.getHp());
         copy.setAttack(original.getAttack());
         copy.setDefense(original.getDefense());
@@ -82,6 +123,73 @@ public class TestRomHandler implements RomHandler {
             copy.setSpdef(original.getSpdef());
         }
 
+        //abilities
+        copy.setAbility1(original.getAbility1());
+        copy.setAbility2(original.getAbility2());
+        copy.setAbility3(original.getAbility3());
+
+        copy.setExpYield(original.getExpYield());
+
+        //wild encounter related
+        copy.setCatchRate(original.getCatchRate());
+        copy.setCommonHeldItem(original.getCommonHeldItem());
+        copy.setRareHeldItem(original.getRareHeldItem());
+        copy.setDarkGrassHeldItem(original.getDarkGrassHeldItem());
+        copy.setGenderRatio(original.getGenderRatio());
+
+        //misc
+        copy.setFrontImageDimensions(original.getFrontImageDimensions());
+        copy.setCallRate(original.getCallRate());
+        copy.setGrowthCurve(original.getGrowthCurve());
+
+        return copy;
+    }
+
+    /**
+     * Given an original species and a copy of that species, as well as a map of all original species to copies of them,
+     * copies all data which contains references to other Species, updating those references to the copies. <br>
+     * For evolutions and mega evolutions, it only assigns those from this Species,
+     * but also assigns it to the Species evolved to.
+     * This should result in all evolutions being properly assigned if this function is called on all Species.
+     * @param original The Species to copy relations from. They will be copied to its mapped value.
+     * @param originalToCopies A Map of the original Species to their copies.
+     */
+    private static void copySpeciesRelations(Species original, Map<Species, Species> originalToCopies) {
+        Species copy = originalToCopies.get(original);
+        if(!original.isBaseForme()) {
+            copy.setBaseForme(originalToCopies.get(original.getBaseForme()));
+        }
+
+        for(Evolution evolution : original.getEvolutionsFrom()) {
+            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
+                    evolution.getType(), evolution.getExtraInfo());
+            evoCopy.setForme(evolution.getForme());
+            evoCopy.setLevel(evolution.getLevel());
+            copy.getEvolutionsFrom().add(evoCopy);
+            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
+        }
+
+        for(MegaEvolution evolution : original.getMegaEvolutionsFrom()) {
+            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.to),
+                    evolution.method, evolution.argument);
+            evoCopy.carryStats = evolution.carryStats;
+            copy.getMegaEvolutionsFrom().add(evoCopy);
+            evoCopy.to.getMegaEvolutionsTo().add(evoCopy);
+        }
+    }
+
+    /**
+     * Given a SpeciesSet, creates a new SpeciesSet containing the copy corresponding to each Species in the set.
+     * @param original The SpeciesSet to copy.
+     * @return A new SpeciesSet with the corresponding copy for each Species in the original.
+     */
+    private SpeciesSet copySpeciesSet(SpeciesSet original) {
+        SpeciesSet copy = new SpeciesSet();
+        for(Species origSpec : original) {
+            copy.add(originalToTest.get(origSpec));
+        }
+        return copy;
+    }
 
     }
 

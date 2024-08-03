@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 //TODO: once supported by JUnit, convert to ParameterizedContainer
 //support is intended to be added sometime this year? that's all I got
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RandomizerTest {
 
     // update if the amount of supported generation increases,
@@ -60,10 +61,15 @@ public class RandomizerTest {
 
     protected TestRomHandler romHandler;
 
-    protected TestRomHandler activateRomHandler(String romName) {
+    //TODO: once parameterized containers are available, make this a @BeforeEach
+    protected void activateRomHandler(String romName) {
         romHandler = romHandlers.get(romName);
+        romHandler.prepare();
+    }
+
+    @AfterEach
+    public void resetROMHandler() {
         romHandler.reset();
-        return romHandler;
     }
 
     private static void loadROM(String romName) {
@@ -76,11 +82,13 @@ public class RandomizerTest {
         if (!factory.isLoadable(fullRomName)) {
             throw new IllegalArgumentException("ROM is not loadable.");
         }
-        romHandler = factory.create();
+        RomHandler romHandler = factory.create();
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedPokemonService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+
+        romHandlers.put(romName, new TestRomHandler(romHandler));
     }
 
     @BeforeAll
@@ -88,10 +96,7 @@ public class RandomizerTest {
 
     }
 
-    @AfterEach
-    static public void resetROMHandler() {
 
-    }
 
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));

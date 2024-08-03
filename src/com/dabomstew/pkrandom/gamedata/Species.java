@@ -934,6 +934,22 @@ public class Species implements Comparable<Species> {
         this.growthCurve = growthCurve;
     }
 
+    public List<Palette> getNormalPalettes() {
+        return normalPalettes;
+    }
+
+    public void setNormalPalettes(List<Palette> normalPalettes) {
+        this.normalPalettes = normalPalettes;
+    }
+
+    public List<Palette> getShinyPalettes() {
+        return shinyPalettes;
+    }
+
+    public void setShinyPalettes(List<Palette> shinyPalettes) {
+        this.shinyPalettes = shinyPalettes;
+    }
+
     public Palette getNormalPalette() {
         return getNormalPalette(0);
     }

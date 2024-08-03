@@ -4,10 +4,13 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
 import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
@@ -17,16 +20,29 @@ import java.util.*;
  * A special "dummy" romHandler which copies data from an existing romHandler.
  *
  */
-public class TestRomHandler implements RomHandler {
+public class TestRomHandler extends AbstractRomHandler {
 
     private final TypeTable originalTypeTable;
     private TypeTable testTypeTable = null;
+    private final boolean hasTypeEffectivenessSupport;
+
+    private final int generation;
+
     private final SpeciesSet originalSpeciesInclFormes;
     private SpeciesSet testSpeciesInclFormes = null;
+    private SpeciesSet testSpeciesNoFormes = null;
     Map<Species, Species> originalToTest = null;
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
-    private final int generation;
+    private final boolean hasTimeBasedEncounters;
+    private final boolean hasWildAltFormes;
+    private final SpeciesSet originalBannedForWild;
+
+    private final boolean isYellow;
+    private final boolean isORAS;
+    private final boolean isUSUM;
+
+    private RestrictedSpeciesService testRSS;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -37,24 +53,36 @@ public class TestRomHandler implements RomHandler {
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
         originalEncounters = mockupOf.getEncounters(true);
         generation = mockupOf.generationOfPokemon();
+        hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
+        hasWildAltFormes = mockupOf.hasWildAltFormes();
+        originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
+
+        isYellow = mockupOf.isYellow();
+        isORAS = mockupOf.isORAS();
+        isUSUM = mockupOf.isUSUM();
+
+        hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
     }
 
     /**
-     * Prepares for testing by copying all data that must be passed by reference,
-     * and all data which references that data.
+     * Prepares for testing by making a deep copy of all Species,
+     * which are passed by reference and therefore cannot otherwise be reset.
      */
     public void prepare() {
         testSpeciesInclFormes = deepCopySpeciesSet(originalSpeciesInclFormes);
+        testSpeciesInclFormes.forEach(Species::saveOriginalData);
     }
 
     /**
-     * Resets all data to the original data gotten from the RomHandler.
+     * Drops all test data.
      */
     public void reset() {
         testTypeTable = null;
         testEncounters = null;
         testSpeciesInclFormes = null;
+        testSpeciesNoFormes = null;
         originalToTest = null;
+        testRSS = null;
     }
 
     /**
@@ -191,6 +219,38 @@ public class TestRomHandler implements RomHandler {
         return copy;
     }
 
+    /**
+     * Given a List of EncounterAreas, copies them such that each Species in the original Encounters
+     * is replaced by its copied test version.
+     * @param originalEncounters The List of EncounterAreas to copy.
+     * @return A new List of new EncounterAreas which are copies of the given ones.
+     */
+    private List<EncounterArea> deepCopyEncounters(List<EncounterArea> originalEncounters) {
+        List<EncounterArea> copiedEncounters = new ArrayList<>();
+        for(EncounterArea originalArea : originalEncounters) {
+            EncounterArea copiedArea = new EncounterArea();
+            copiedArea.setRate(originalArea.getRate());
+            copiedArea.banAllPokemon(copySpeciesSet(originalArea.getBannedSpecies()));
+            copiedArea.setIdentifiers(originalArea.getDisplayName(), originalArea.getMapIndex(),
+                    originalArea.getEncounterType(), originalArea.getLocationTag());
+            copiedArea.setPostGame(originalArea.isPostGame());
+            copiedArea.setPartiallyPostGameCutoff(originalArea.getPartiallyPostGameCutoff());
+            copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
+
+            for(Encounter origEnc : originalArea) {
+                Encounter copyEnc = new Encounter();
+                copyEnc.setLevel(origEnc.getLevel());
+                copyEnc.setMaxLevel(origEnc.getMaxLevel());
+                copyEnc.setSpecies(originalToTest.get(origEnc.getSpecies()));
+                copyEnc.setFormeNumber(origEnc.getFormeNumber());
+                copyEnc.setSOS(origEnc.isSOS());
+                copyEnc.setSosType(origEnc.getSosType());
+
+                copiedArea.add(copyEnc);
+            }
+        }
+
+        return copiedEncounters;
     }
 
     @Override
@@ -201,6 +261,31 @@ public class TestRomHandler implements RomHandler {
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
+    }
+
+    @Override
+    public void saveMoves() {
+
+    }
+
+    @Override
+    public void savePokemonStats() {
+
+    }
+
+    @Override
+    protected boolean saveRomFile(String filename, long seed) {
+        return false;
+    }
+
+    @Override
+    protected boolean saveRomDirectory(String filename) {
+        return false;
+    }
+
+    @Override
+    protected RomEntry getRomEntry() {
+        return null;
     }
 
     @Override
@@ -255,787 +340,802 @@ public class TestRomHandler implements RomHandler {
 
     @Override
     public SpeciesSet getSpeciesSet() {
-        return testSpeciesInclFormes;
+        if(testSpeciesNoFormes == null) {
+            testSpeciesNoFormes = testSpeciesInclFormes.filter(Species::isBaseForme);
+        }
+
+        return testSpeciesNoFormes;
     }
 
     @Override
     public SpeciesSet getSpeciesSetInclFormes() {
-        return null;
+        return testSpeciesInclFormes;
     }
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Species getAltFormeOfSpecies(Species pk, int forme) {
-        return null;
+        throw new NotImplementedException();
+        //why is this even in RomHandler??
     }
 
     @Override
     public SpeciesSet getIrregularFormes() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public RestrictedSpeciesService getRestrictedSpeciesService() {
-        return new RestrictedSpeciesService(this);
+        if(testRSS == null) {
+            testRSS = new RestrictedSpeciesService(this);
+            testRSS.setRestrictions(new Settings());
+        }
+        return testRSS;
     }
 
     @Override
     public void removeEvosForPokemonPool() {
-
+        throw new NotImplementedException();
+        //Why is THIS in RomHandler, either???
     }
 
     @Override
     public List<Species> getStarters() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean setStarters(List<Species> newStarters) {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasStarterAltFormes() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public int starterCount() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasStarterTypeTriangleSupport() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean supportsStarterHeldItems() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getStarterHeldItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setStarterHeldItems(List<Integer> items) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public int abilitiesPerSpecies() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public int highestAbilityIndex() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public String abilityName(int number) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Integer, List<Integer>> getAbilityVariations() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getUselessAbilities() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasMegaEvolutions() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
-        return null;
+        if(!useTimeOfDay) {
+            throw new NotImplementedException();
+        }
+
+        if(testEncounters == null) {
+            testEncounters = deepCopyEncounters(originalEncounters);
+        }
+
+        return testEncounters;
     }
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        return null;
-    }
-
-    @Override
-    public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
-
+        testEncounters = encounters;
     }
 
     @Override
     public boolean hasTimeBasedEncounters() {
-        return false;
+        return hasTimeBasedEncounters;
     }
 
     @Override
     public boolean hasWildAltFormes() {
-        return false;
+        return hasWildAltFormes;
     }
 
     @Override
     public SpeciesSet getBannedForWildEncounters() {
-        return null;
+        return originalBannedForWild;
+        //TODO: ensure this works
     }
 
     @Override
     public void enableGuaranteedPokemonCatching() {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Trainer> getTrainers() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getMainPlaythroughTrainers() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getEliteFourTrainers(boolean isChallengeMode) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTrainers(List<Trainer> trainerData) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddPokemonToBossTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddPokemonToImportantTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddPokemonToRegularTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddHeldItemsToBossTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddHeldItemsToImportantTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getAllConsumableHeldItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getAllHeldItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasRivalFinalBattle() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public void makeDoubleBattleModePossible() {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasPhysicalSpecialSplit() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Move> getMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public int getPerfectAccuracy() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Integer, List<MoveLearnt>> getMovesLearnt() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getMovesBannedFromLevelup() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Integer, List<Integer>> getEggMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setEggMoves(Map<Integer, List<Integer>> eggMoves) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean supportsFourStartingMoves() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<StaticEncounter> getStaticPokemon() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean setStaticPokemon(List<StaticEncounter> staticPokemon) {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canChangeStaticPokemon() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasStaticAltFormes() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public SpeciesSet getBannedForStaticPokemon() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean forceSwapStaticMegaEvos() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasMainGameLegendaries() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getMainGameLegendaries() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getSpecialMusicStatics() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void applyCorrectStaticMusic(Map<Integer, Integer> specialMusicStaticChanges) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasStaticMusicFix() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasTotemPokemon() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<TotemPokemon> getTotemPokemon() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTotemPokemon(List<TotemPokemon> totemPokemon) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getTMMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getHMMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTMMoves(List<Integer> moveIndexes) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public int getTMCount() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public int getHMCount() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Species, boolean[]> getTMHMCompatibility() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTMHMCompatibility(Map<Species, boolean[]> compatData) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasMoveTutors() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getMoveTutorMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setMoveTutorMoves(List<Integer> moves) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Species, boolean[]> getMoveTutorCompatibility() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setMoveTutorCompatibility(Map<Species, boolean[]> compatData) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean canChangeTrainerText() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<String> getTrainerNames() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTrainerNames(List<String> trainerNames) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public TrainerNameMode trainerNameMode() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public int maxTrainerNameLength() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public int maxSumOfTrainerNameLengths() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getTCNameLengthsByTrainer() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<String> getTrainerClassNames() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setTrainerClassNames(List<String> trainerClassNames) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean fixedTrainerClassNamesLength() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public int maxTrainerClassNameLength() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getDoublesTrainerClasses() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public ItemList getAllowedItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public ItemList getNonBadItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getEvolutionItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getXItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getUniqueNoSellItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getRegularShopItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getOPShopItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String[] getItemNames() {
-        return new String[0];
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getRequiredFieldTMs() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getCurrentFieldTMs() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setFieldTMs(List<Integer> fieldTMs) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getRegularFieldItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setRegularFieldItems(List<Integer> items) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasShopSupport() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setShopItems(Map<Integer, Shop> shopItems) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void setBalancedShopPrices() {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<PickupItem> getPickupItems() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setPickupItems(List<PickupItem> pickupItems) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<IngameTrade> getIngameTrades() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setIngameTrades(List<IngameTrade> trades) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasDVs() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public int maxTradeNicknameLength() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public int maxTradeOTNameLength() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public void removeImpossibleEvolutions(Settings settings) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void removeTimeBasedEvolutions() {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean altFormesCanHaveDifferentEvolutions() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getGameBreakingMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getIllegalMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getFieldMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Integer> getEarlyRequiredHMMoves() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean isYellow() {
-        return false;
+        return isYellow;
     }
 
     @Override
     public boolean isORAS() {
-        return false;
+        return isORAS;
     }
 
     @Override
     public boolean isUSUM() {
-        return false;
+        return isUSUM;
     }
 
     @Override
     public boolean hasMultiplePlayerCharacters() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getROMName() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getROMCode() {
-        return null;
+        throw new NotImplementedException();
+        //What even is this...?
     }
 
     @Override
     public int getROMType() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getSupportLevel() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getDefaultExtension() {
-        return null;
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public int internalStringLength(String string) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean setIntroPokemon(Species pk) {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public int generationOfPokemon() {
-        return 0;
+        return generation;
     }
 
     @Override
     public void writeCheckValueToROM(int value) {
-
+        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override
     public int miscTweaksAvailable() {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setPCPotionItem(int itemID) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasFunctionalFormes() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public SpeciesSet getBannedFormesForTrainerPokemon() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasPokemonPaletteSupport() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean pokemonPaletteSupportIsPartial() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasCustomPlayerGraphicsSupport() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean hasPokemonImageGetter() {
-        return false;
+        throw new NotImplementedException();
     }
 
     @Override
     public PokemonImageGetter createPokemonImageGetter(Species pk) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public String getPaletteFilesID() {
-        return null;
-    }
-
-    @Override
-    public void dumpAllPokemonImages() {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-        return null;
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void savePokemonPalettes() {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -1055,6 +1155,6 @@ public class TestRomHandler implements RomHandler {
 
     @Override
     public boolean hasTypeEffectivenessSupport() {
-        return false;
+        return hasTypeEffectivenessSupport;
     }
 }

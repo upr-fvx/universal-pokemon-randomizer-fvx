@@ -36,7 +36,7 @@ public class RandomizerTest {
     private static final String TEST_CPG_PATH = "test/players";
 
     //extremely hacky workaround for lack of ParameterizedContainer
-    private static Map<String, TestRomHandler> romHandlers = new HashMap<>();
+    private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
         return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
@@ -92,8 +92,10 @@ public class RandomizerTest {
     }
 
     @BeforeAll
-    static public void loadAllROMs() {
-
+    static public void loadROMs() {
+        for(String romName : getRomNames()) {
+            loadROM(romName);
+        }
     }
 
 

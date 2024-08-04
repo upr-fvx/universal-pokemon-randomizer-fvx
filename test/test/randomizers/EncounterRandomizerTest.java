@@ -32,6 +32,41 @@ public class EncounterRandomizerTest extends RandomizerTest {
     }
 
     /**
+     * Given a List of EncounterAreas, copies them, also copying each Encounter in the EncounterAreas.
+     * @param originalEncounters The List of EncounterAreas to copy.
+     * @return A new List of new EncounterAreas which are copies of the given ones.
+     */
+    private List<EncounterArea> deepCopyEncounters(List<EncounterArea> originalEncounters) {
+        List<EncounterArea> copiedEncounters = new ArrayList<>();
+        for(EncounterArea originalArea : originalEncounters) {
+            EncounterArea copiedArea = new EncounterArea();
+            copiedArea.setRate(originalArea.getRate());
+            copiedArea.banAllSpecies(originalArea.getBannedSpecies());
+            copiedArea.setIdentifiers(originalArea.getDisplayName(), originalArea.getMapIndex(),
+                    originalArea.getEncounterType(), originalArea.getLocationTag());
+            copiedArea.setPostGame(originalArea.isPostGame());
+            copiedArea.setPartiallyPostGameCutoff(originalArea.getPartiallyPostGameCutoff());
+            copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
+
+            for(Encounter origEnc : originalArea) {
+                Encounter copyEnc = new Encounter();
+                copyEnc.setLevel(origEnc.getLevel());
+                copyEnc.setMaxLevel(origEnc.getMaxLevel());
+                copyEnc.setSpecies(origEnc.getSpecies());
+                copyEnc.setFormeNumber(origEnc.getFormeNumber());
+                copyEnc.setSOS(origEnc.isSOS());
+                copyEnc.setSosType(origEnc.getSosType());
+
+                copiedArea.add(copyEnc);
+            }
+
+            copiedEncounters.add(copiedArea);
+        }
+
+        return copiedEncounters;
+    }
+
+    /**
      * Checks the EncounterAreas in the current RomHandler to ensure they contain no alternate Formes.
      * Not to be confused with {@link #checkForAlternateFormes()}
      */
@@ -219,7 +254,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersUsePowerLevelsWorks(String romName) {
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setSimilarStrengthEncounters(true);
@@ -303,7 +338,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     public void area1to1EncountersGivesConsequentReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -318,7 +353,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithCatchEmAll(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -334,7 +369,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithRandomTypeThemes(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -351,7 +386,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithKeepTypeThemes(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -367,7 +402,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithKeepPrimaryType(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -384,7 +419,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesConsequentReplacementsForEachMonWithUsePowerLevels(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -442,7 +477,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesUniqueReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -458,7 +493,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesUniqueReplacementsForEachMonWithCatchEmAll(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -476,7 +511,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     public void area1to1EncountersGivesUniqueReplacementsForEachMonWithRandomTypeThemes(String romName) {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Too few mons of some types, so it always fails
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -494,7 +529,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Too few mons of some types, so it always fails
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -512,7 +547,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Too few mons of some types, so it always fails
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -528,7 +563,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersGivesUniqueReplacementsForEachMonWithUsePowerLevels(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -839,7 +874,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void area1to1EncountersUsePowerLevelsWorks(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -959,7 +994,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void locations1to1EncountersGivesConsequentReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -975,7 +1010,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithCatchEmAll(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -992,7 +1027,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithRandomTypeThemes(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1008,7 +1043,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithKeepPrimaryType(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1025,7 +1060,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void locations1to1EncountersGivesConsequentReplacementsForEachMonWithUsePowerLevels(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1042,7 +1077,8 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void location1to1EncountersGivesUniqueReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1058,7 +1094,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void location1to1EncountersGivesUniqueReplacementsForEachMonWithCatchEmAll(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1077,7 +1113,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) > 4); // Too few mons of some types vs the size of the locations, so it always fails
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1096,7 +1132,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Too few mons of some types, so it always fails
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1113,7 +1149,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void location1to1EncountersGivesUniqueReplacementsForEachMonWithUsePowerLevels(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1236,7 +1272,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void location1to1EncountersUsePowerLevelsWorks(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1279,7 +1315,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void game1to1EncountersGivesConsequentReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1295,7 +1331,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void game1to1EncountersGivesUniqueReplacementsForEachMon(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1438,7 +1474,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void game1to1EncountersUsePowerLevelsWorks(String romName) {
         activateRomHandler(romName);
-        List<EncounterArea> before = romHandler.getEncounters(true); // TODO: deep copy just in case
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true)); // TODO: deep copy just in case
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1456,7 +1492,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     public void globalFamilyToFamilyGivesConsequentReplacements(String romName) {
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1475,7 +1511,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
     public void globalFamilyToFamilyGivesUniqueReplacements(String romName) {
         activateRomHandler(romName);
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1520,7 +1556,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         List<List<String>> beforeAreaStrings = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1547,7 +1583,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
 
         assumeTrue(romHandler.hasMapIndices());
 
-        List<EncounterArea> before = romHandler.getEncounters(true);
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.MAP);

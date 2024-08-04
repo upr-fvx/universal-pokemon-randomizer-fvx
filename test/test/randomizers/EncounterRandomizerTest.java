@@ -705,6 +705,10 @@ public class EncounterRandomizerTest extends RandomizerTest {
 
     private void randomTypeThemesAreasCheck(List<EncounterArea> areas) {
         for (EncounterArea area : areas) {
+            if(area.isEmpty()) {
+                continue; //can occur with locations
+            }
+
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
             Encounter firstEnc = area.get(0);
             Species firstSpec = romHandler.getAltFormeOfSpecies(firstEnc.getSpecies(), firstEnc.getFormeNumber());

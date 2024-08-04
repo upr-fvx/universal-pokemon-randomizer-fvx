@@ -4,17 +4,9 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.EncounterRandomizer;
-import com.dabomstew.pkrandom.romhandlers.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import test.romhandlers.RomHandlerTest;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +52,8 @@ public class EncounterRandomizerTest extends RandomizerTest {
             System.out.println(area.getDisplayName() + ":");
             System.out.println(area);
             for (Encounter enc : area) {
-                if (enc.getSpecies().getBaseForme() != null) {
+                if (enc.getSpecies().getBaseForme() != null ||
+                        enc.getFormeNumber() != enc.getSpecies().getFormeNumber()) {
                     System.out.println(enc.getSpecies());
                     hasAltFormes = true;
                     break;
@@ -155,9 +148,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
-
         activateRomHandler(romName);
 
         Settings settings = getStandardSettings(romName);
@@ -171,8 +161,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -190,8 +178,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepTypeThemesANDRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -211,8 +197,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersKeepPrimaryTypeWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -247,8 +231,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
@@ -266,8 +248,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -290,8 +270,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomEncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -635,8 +613,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         Settings settings = getStandardSettings(romName);
@@ -650,8 +626,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -670,8 +644,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersKeepPrimaryTypeWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -688,41 +660,61 @@ public class EncounterRandomizerTest extends RandomizerTest {
     }
 
     private void randomTypeThemesAreasCheck() {
-        for (EncounterArea area : romHandler.getEncounters(true)) {
+        List <EncounterArea> areas = romHandler.getEncounters(true);
+
+        randomTypeThemesAreasCheck(areas);
+    }
+
+    private void randomTypeThemesAreasCheck(List<EncounterArea> areas) {
+        for (EncounterArea area : areas) {
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
-            Species firstPk = area.get(0).getSpecies();
+            Encounter firstEnc = area.get(0);
+            Species firstSpec = romHandler.getAltFormeOfSpecies(firstEnc.getSpecies(), firstEnc.getFormeNumber());
             SpeciesSet allInArea = area.getSpeciesInArea();
 
-            Type primaryType = firstPk.getPrimaryType(false);
-            SpeciesSet ofFirstType = area.getSpeciesInArea().filterByType(primaryType, false);
-            SpeciesSet notOfFirstType = new SpeciesSet(allInArea).filter(pk -> !ofFirstType.contains(pk));
-            System.out.println(notOfFirstType);
+            Type primaryType = firstSpec.getPrimaryType(false);
+            boolean primaryTypeMatched = true;
+            for(Encounter enc : area) {
+                Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                if(!spec.hasType(primaryType, false)) {
+                    System.out.println(spec);
+                    primaryTypeMatched = false;
+                }
+            }
 
-            if (!notOfFirstType.isEmpty()) {
+            if(!primaryTypeMatched) {
                 System.out.println("Not " + primaryType);
-                Type secondaryType = firstPk.getSecondaryType(false);
+
+                Type secondaryType = firstSpec.getSecondaryType(false);
                 if (secondaryType == null) {
                     fail();
                 }
-                SpeciesSet ofSecondaryType = area.getSpeciesInArea().filterByType(secondaryType, false);
-                SpeciesSet notOfSecondaryType = new SpeciesSet(allInArea)
-                        .filter(pk -> !ofSecondaryType.contains(pk));
-                System.out.println(notOfSecondaryType);
-                if (!notOfSecondaryType.isEmpty()) {
+
+                boolean secondaryTypeMatched = true;
+                for(Encounter enc : area) {
+                    Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    if(!spec.hasType(secondaryType, false)) {
+                        System.out.println(spec);
+                        secondaryTypeMatched = false;
+                    }
+                }
+
+                if(!secondaryTypeMatched) {
                     System.out.println("Not " + secondaryType);
                     fail();
                 } else {
-                    System.out.println(secondaryType);
+                    System.out.println("All " + secondaryType);
                 }
+
             } else {
-                System.out.println(primaryType);
+                System.out.println("All " + primaryType);
             }
         }
     }
 
-    private String toNameAndTypesString(Species pk) {
-        return pk.getName() + ", " + pk.getPrimaryType(false)
-                + (pk.getSecondaryType(false) == null ? "" : " / " + pk.getSecondaryType(false));
+    private String toNameAndTypesString(Species sp) {
+        return sp.getName() + ", " + sp.getPrimaryType(false)
+                + (sp.getSecondaryType(false) == null ? "" : " / " + sp.getSecondaryType(false));
     }
 
     private void recordTypeThemeBefore(List<List<String>> beforeAreaStrings, Map<Integer, Type> typeThemedAreas) {
@@ -790,9 +782,9 @@ public class EncounterRandomizerTest extends RandomizerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + area);
                 for (Encounter enc : area) {
-                    Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
-                    System.out.println("\t" + toNameAndTypesString(pk));
-                    assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
+                    Species sp = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    System.out.println("\t" + toNameAndTypesString(sp));
+                    assertTrue(sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme);
                 }
             } else {
                 System.out.println("Not Type Themed");
@@ -887,8 +879,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
@@ -907,8 +897,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         // for some reason fails with the Gen 3 Hoenn games
@@ -937,8 +925,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void area1to1EncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         // for some reason fails with the Gen 3 Hoenn games
@@ -1047,23 +1033,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachLocationIsReplaced1To1(before, after, false);
-    }
-
-    private Map<String, List<EncounterArea>> groupEncountersByLocation(List<EncounterArea> ungrouped) {
-        Map<String, List<EncounterArea>> grouped = new HashMap<>();
-        int untagged = 0;
-        for (EncounterArea area : ungrouped) {
-            String tag = area.getLocationTag();
-            if (tag == null) {
-                tag = "UNTAGGED-" + untagged;
-                untagged++;
-            }
-            if (!grouped.containsKey(tag)) {
-                grouped.put(tag, new ArrayList<>());
-            }
-            grouped.get(tag).add(area);
-        }
-        return grouped;
     }
 
     @ParameterizedTest
@@ -1225,8 +1194,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersRandomTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         Settings settings = getStandardSettings(romName);
@@ -1241,8 +1208,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void location1to1EncountersKeepPrimaryTypeWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreasStrings = new ArrayList<>();
@@ -1259,57 +1224,9 @@ public class EncounterRandomizerTest extends RandomizerTest {
     }
 
     private void randomTypeThemesLocationsCheck() {
-
-        Map<String, List<EncounterArea>> grouped = groupEncountersByLocation(romHandler.getEncounters(true));
-
-        for (Map.Entry<String, List<EncounterArea>> loc : grouped.entrySet()) {
-            if(loc.getKey().contains("UNUSED")) {
-                System.out.println("Skipping location: " + loc.getKey());
-                continue;
-            }
-
-            // lazy solution mashing together all of a location's associated EncounterAreas into a single one,
-            // so old code can be reused to a greater extent
-            EncounterArea area = new EncounterArea();
-            area.setDisplayName("All of location " + loc.getKey());
-            for(EncounterArea locArea : loc.getValue()) {
-                if(locArea.getEncounterType() == EncounterType.UNUSED) {
-                    System.out.println("Skipping area: " + locArea.getDisplayName());
-                    continue;
-                }
-                area.addAll(locArea);
-            }
-
-            System.out.println("\n" + area.getDisplayName() + ":\n" + area);
-            Species firstPk = area.get(0).getSpecies();
-            SpeciesSet allInArea = area.getSpeciesInArea();
-
-            Type primaryType = firstPk.getPrimaryType(false);
-            SpeciesSet ofFirstType = area.getSpeciesInArea().filterByType(primaryType, false);
-            SpeciesSet notOfFirstType = new SpeciesSet(allInArea).filter(pk -> !ofFirstType.contains(pk));
-            System.out.println(notOfFirstType);
-
-            if (!notOfFirstType.isEmpty()) {
-                System.out.println("Not " + primaryType);
-                Type secondaryType = firstPk.getSecondaryType(false);
-                if (secondaryType == null) {
-                    fail();
-                }
-                SpeciesSet ofSecondaryType = area.getSpeciesInArea().filterByType(secondaryType, false);
-                SpeciesSet notOfSecondaryType = new SpeciesSet(allInArea)
-                        .filter(pk -> !ofSecondaryType.contains(pk));
-                System.out.println(notOfSecondaryType);
-                if (!notOfSecondaryType.isEmpty()) {
-                    System.out.println("Not " + secondaryType);
-                    fail();
-                } else {
-                    System.out.println(secondaryType);
-                }
-            } else {
-                System.out.println(primaryType);
-            }
-        }
-
+        //This may need to be changed, since (afaik) this is the only current use of flattenLocations
+        List<EncounterArea> grouped = EncounterArea.flattenLocations(romHandler.getEncounters(true));
+        randomTypeThemesAreasCheck(grouped);
     }
 
     @ParameterizedTest
@@ -1575,8 +1492,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void game1To1KeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();
@@ -1597,9 +1512,6 @@ public class EncounterRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void globalFamilyToFamilyKeepTypeThemesWorks(String romName) {
-        assumeTrue(romName.length() > 1);
-        //X & Y have problems testing types, which makes the test nearly always fail
-
         activateRomHandler(romName);
 
         List<List<String>> beforeAreaStrings = new ArrayList<>();

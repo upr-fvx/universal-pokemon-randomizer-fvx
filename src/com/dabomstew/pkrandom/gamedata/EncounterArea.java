@@ -259,6 +259,9 @@ public class EncounterArea extends ArrayList<Encounter> {
             EncounterArea flattened = new EncounterArea();
             flattened.setDisplayName("All of location " + locEntry.getKey());
             for(EncounterArea area : locEntry.getValue()) {
+                if(area.encounterType == EncounterType.UNUSED) {
+                    continue;
+                }
                 flattened.addAll(area);
                 flattened.banAllPokemon(area.getBannedSpecies());
             }

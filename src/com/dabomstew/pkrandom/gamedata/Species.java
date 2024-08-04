@@ -738,8 +738,15 @@ public class Species implements Comparable<Species> {
      * For this reason, it is important to use this method when initializing a {@link Species}'s types,
      * even if the "null" value used to represent no secondary type is technically the internal state of the
      * secondaryType attribute before being set.
+     * <br><br>
+     * If the secondary given is the same as the current primary, it will instead be set to null.
+     * Therefore, if changing both types, it is important to change the primary type first.
      */
     public void setSecondaryType(Type secondaryType) {
+        if(hasSetPrimaryType && secondaryType == primaryType) {
+            secondaryType = null; //So that original types aren't full of NORMAL/NORMAL and the like
+        }
+
         this.secondaryType = secondaryType;
         if (!hasSetSecondaryType) {
             this.originalSecondaryType = secondaryType;

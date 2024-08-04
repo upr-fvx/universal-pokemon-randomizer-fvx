@@ -21,35 +21,41 @@ import java.util.*;
  *
  */
 public class TestRomHandler extends AbstractRomHandler {
-
-    private final TypeTable originalTypeTable;
-    private TypeTable testTypeTable = null;
-    private final boolean hasTypeEffectivenessSupport;
-
-    private final int generation;
-
+    //Species
     private final SpeciesSet originalSpeciesInclFormes;
     private SpeciesSet testSpeciesInclFormes = null;
     private SpeciesSet testSpeciesNoFormes = null;
     Map<Species, Species> originalToTest = null;
-    private List<MegaEvolution> testMegaEvolutions;
-    private SpeciesSet testAltFormes;
+    private List<MegaEvolution> testMegaEvolutions = null;
+    private SpeciesSet testAltFormes = null;
     private final SpeciesSet originalIrregularFormes;
-    private SpeciesSet testIrregularFormes;
-    Map<Species, Map<Integer, Species>> testAltFormesMap;
+    private SpeciesSet testIrregularFormes = null;
+    Map<Species, Map<Integer, Species>> testAltFormesMap = null;
+    private RestrictedSpeciesService testRSS = null;
 
+    //Encounters
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
     private final boolean hasTimeBasedEncounters;
     private final boolean hasWildAltFormes;
     private final SpeciesSet originalBannedForWild;
 
+    //Types
+    private final TypeTable originalTypeTable;
+    private TypeTable testTypeTable = null;
+    private final boolean hasTypeEffectivenessSupport;
+
+    //ROM identifiers
+    private final int generation;
     private final boolean isYellow;
     private final boolean isORAS;
     private final boolean isUSUM;
     private final int romType;
 
-    private RestrictedSpeciesService testRSS;
+    //Starters
+    private final List<Species> originalStarters;
+    private List<Species> testStarters = null;
+    private final boolean hasStarterAltFormes;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -71,6 +77,9 @@ public class TestRomHandler extends AbstractRomHandler {
         isUSUM = mockupOf.isUSUM();
 
         hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
+
+        originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
+        hasStarterAltFormes = mockupOf.hasStarterAltFormes();
     }
 
     /**
@@ -93,11 +102,13 @@ public class TestRomHandler extends AbstractRomHandler {
         testAltFormes = null;
         testIrregularFormes = null;
         testAltFormesMap = null;
-
-        testTypeTable = null;
-        testEncounters = null;
         testRSS = null;
 
+        testEncounters = null;
+
+        testTypeTable = null;
+
+        testStarters = null;
     }
 
     /**
@@ -424,27 +435,39 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Species> getStarters() {
-        throw new NotImplementedException();
+        if(testStarters == null) {
+            testStarters = new ArrayList<>();
+            for(Species origStarter : originalStarters) {
+                testStarters.add(originalToTest.get(origStarter));
+            }
+        }
+
+        return testStarters;
     }
 
     @Override
     public boolean setStarters(List<Species> newStarters) {
-        throw new NotImplementedException();
+        if(newStarters.size() != originalStarters.size()) {
+            throw new IllegalArgumentException("Starter list is wrong size!");
+        }
+
+        testStarters = newStarters;
+        return true;
     }
 
     @Override
     public boolean hasStarterAltFormes() {
-        throw new NotImplementedException();
+        return hasStarterAltFormes;
     }
 
     @Override
     public int starterCount() {
-        throw new NotImplementedException();
+        return originalStarters.size();
     }
 
     @Override
     public boolean hasStarterTypeTriangleSupport() {
-        throw new NotImplementedException();
+        return originalStarters.size() % 3 == 0;
     }
 
     @Override

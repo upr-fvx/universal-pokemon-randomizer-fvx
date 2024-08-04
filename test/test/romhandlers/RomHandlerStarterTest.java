@@ -112,20 +112,25 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void randomWithTwoEvosWithNoOtherOptionsDoesntThrow(String romName) {
+    public void randomWithTwoEvosWorks(String romName) {
         loadROM(romName);
         Settings s = new Settings();
-        s.setStartersMod(false, false, false, true);
+        s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        checkStartersHaveTwoEvos();
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void randomBasicWithNoOtherOptionsDoesntThrow(String romName) {
+    public void randomBasicWorks(String romName) {
         loadROM(romName);
         Settings s = new Settings();
         s.setStartersMod(false, false, false, false, true);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
@@ -138,7 +143,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, true, false, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        fwgCheck(getGenerationNumberOf(romName));
+        checkStartersAreFireWaterAndGrass(getGenerationNumberOf(romName));
     }
 
     @ParameterizedTest
@@ -151,8 +156,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, true, false, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        fwgCheck(getGenerationNumberOf(romName));
-        startersHaveTwoEvosCheck();
+        checkStartersAreFireWaterAndGrass(getGenerationNumberOf(romName));
+        checkStartersHaveTwoEvos();
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
@@ -165,10 +171,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, true, false, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        fwgCheck(getGenerationNumberOf(romName));
+        checkStartersAreFireWaterAndGrass(getGenerationNumberOf(romName));
+        checkStartersAreBasic();
     }
 
-    private void fwgCheck(int generation) {
+    private void checkStartersAreFireWaterAndGrass(int generation) {
         List<Species> starters = romHandler.getStarters();
         Species fireStarter;
         Species waterStarter;
@@ -194,10 +201,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void typeTriangleCheckReturnsTrueForVanilla(String romName) {
+    public void typeTriangleChecksReturnTrueForVanilla(String romName) {
         loadROM(romName);
         assumeFalse(romHandler.isYellow());
-        typeTriangleCheck(getGenerationNumberOf(romName));
+        checkStartersAreTypeTriangle(getGenerationNumberOf(romName));
+        checkStartersAreFireWaterAndGrass(getGenerationNumberOf(romName));
     }
 
     @ParameterizedTest
@@ -210,7 +218,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, true, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        typeTriangleCheck(getGenerationNumberOf(romName));
+        checkStartersAreTypeTriangle(getGenerationNumberOf(romName));
     }
 
     @ParameterizedTest
@@ -223,8 +231,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, true, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        typeTriangleCheck(getGenerationNumberOf(romName));
-        startersHaveTwoEvosCheck();
+        checkStartersAreTypeTriangle(getGenerationNumberOf(romName));
+        checkStartersHaveTwoEvos();
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
@@ -237,10 +246,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, true, false, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        typeTriangleCheck(getGenerationNumberOf(romName));
+        checkStartersAreTypeTriangle(getGenerationNumberOf(romName));
+        checkStartersAreBasic();
     }
 
-    private void typeTriangleCheck(int generation) {
+    private void checkStartersAreTypeTriangle(int generation) {
         List<Species> starters = romHandler.getStarters();
         System.out.println(starters + "\n");
 
@@ -295,7 +305,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        uniqueTypesCheck();
+        checkStartersAreAllDifferentTypes();
     }
 
     @ParameterizedTest
@@ -307,8 +317,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        uniqueTypesCheck();
-        startersHaveTwoEvosCheck();
+        checkStartersAreAllDifferentTypes();
+        checkStartersHaveTwoEvos();
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
@@ -320,10 +331,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        uniqueTypesCheck();
+        checkStartersAreAllDifferentTypes();
+        checkStartersAreBasic();
     }
 
-    private void uniqueTypesCheck() {
+    private void checkStartersAreAllDifferentTypes() {
         List<Species> starters = romHandler.getStarters();
         System.out.println(starters);
         for (int i = 0; i < starters.size(); i++) {
@@ -356,13 +368,14 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersMod(false, false, true, false, false);
         s.setStartersTypeMod(false, false, false, false, true);
 
-        singleTypeCheck(s);
+        runStarterSingleTypeOnEveryTypeWithCheck(s);
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void singleTypeWorksWithRandomWithTwoEvosForEveryType(String romName) {
         // fails on all vanilla games before gen 4, as until then there are only two for Dragon.
+        // Actually, fails on *all* vanilla games, as there are only two three-stage Fighting lines (Machop, Timburr)
         assumeTrue(getGenerationNumberOf(romName) >= 4);
         loadROM(romName);
         assumeFalse(romHandler.isORAS());
@@ -370,8 +383,9 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersMod(false, false, false, true, false);
         s.setStartersTypeMod(false, false, false, false, true);
 
-        singleTypeCheck(s);
-        startersHaveTwoEvosCheck();
+        runStarterSingleTypeOnEveryTypeWithCheck(s);
+        checkStartersHaveTwoEvos();
+        checkStartersAreBasic();
     }
 
     @ParameterizedTest
@@ -383,10 +397,11 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersMod(false, false, false, false, true);
         s.setStartersTypeMod(false, false, false, false, true);
 
-        singleTypeCheck(s);
+        runStarterSingleTypeOnEveryTypeWithCheck(s);
+        checkStartersAreBasic();
     }
 
-    private void singleTypeCheck(Settings s) {
+    private void runStarterSingleTypeOnEveryTypeWithCheck(Settings s) {
         for (int i = 0; i < Type.values().length; i++) {
             Type t = Type.values()[i];
             if (romHandler.getTypeService().typeInGame(t)) {
@@ -415,10 +430,10 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        noDualTypesCheck();
+        checkStartersAreEachSingleType();
     }
 
-    private void noDualTypesCheck() {
+    private void checkStartersAreEachSingleType() {
         List<Species> starters = romHandler.getStarters();
         System.out.println(starters);
         for(Species starter : starters) {
@@ -439,7 +454,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         new PokemonTypeRandomizer(romHandler, s, RND).randomizePokemonTypes();
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        noDualTypesCheck();
+        checkStartersAreEachSingleType();
     }
 
     @ParameterizedTest
@@ -470,20 +485,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void randomWithTwoEvosWorks(String romName) {
-        loadROM(romName);
-        Settings s = new Settings();
-
-        s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
-
-        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
-
-        startersHaveTwoEvosCheck();
-    }
-
-    private void startersHaveTwoEvosCheck() {
+    private void checkStartersHaveTwoEvos() {
 
 
         for(Species starter : romHandler.getStarters()) {
@@ -500,7 +502,12 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
             assertTrue(hasTwoEvos);
         }
+    }
 
-
+    private void checkStartersAreBasic() {
+        for(Species starter : romHandler.getStarters()) {
+            System.out.println(starter.getFullName());
+            assertTrue(starter.getPreEvolvedSpecies(false).isEmpty());
+        }
     }
 }

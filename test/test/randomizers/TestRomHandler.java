@@ -32,6 +32,12 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet testSpeciesInclFormes = null;
     private SpeciesSet testSpeciesNoFormes = null;
     Map<Species, Species> originalToTest = null;
+    private List<MegaEvolution> testMegaEvolutions;
+    private SpeciesSet testAltFormes;
+    private final SpeciesSet originalIrregularFormes;
+    private SpeciesSet testIrregularFormes;
+    Map<Species, Map<Integer, Species>> testAltFormesMap;
+
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
     private final boolean hasTimeBasedEncounters;
@@ -57,6 +63,7 @@ public class TestRomHandler extends AbstractRomHandler {
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
+        originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
         romType = mockupOf.getROMType();
         isYellow = mockupOf.isYellow();
@@ -79,12 +86,18 @@ public class TestRomHandler extends AbstractRomHandler {
      * Drops all test data.
      */
     public void reset() {
-        testTypeTable = null;
-        testEncounters = null;
         testSpeciesInclFormes = null;
         testSpeciesNoFormes = null;
         originalToTest = null;
+        testMegaEvolutions = null;
+        testAltFormes = null;
+        testIrregularFormes = null;
+        testAltFormesMap = null;
+
+        testTypeTable = null;
+        testEncounters = null;
         testRSS = null;
+
     }
 
     /**
@@ -103,6 +116,10 @@ public class TestRomHandler extends AbstractRomHandler {
             originalToTest.put(orig, copy);
         }
 
+        testMegaEvolutions = new ArrayList<>();
+        testAltFormes = new SpeciesSet();
+        testIrregularFormes = new SpeciesSet();
+        testAltFormesMap = new HashMap<>();
         //now that they're all here, iterate again to copy relations
         for(Species orig : originalSet) {
             copySpeciesRelations(orig, originalToTest);
@@ -184,10 +201,21 @@ public class TestRomHandler extends AbstractRomHandler {
      * @param original The Species to copy relations from. They will be copied to its mapped value.
      * @param originalToCopies A Map of the original Species to their copies.
      */
-    private static void copySpeciesRelations(Species original, Map<Species, Species> originalToCopies) {
+    private void copySpeciesRelations(Species original, Map<Species, Species> originalToCopies) {
         Species copy = originalToCopies.get(original);
         if(!original.isBaseForme()) {
-            copy.setBaseForme(originalToCopies.get(original.getBaseForme()));
+            Species copyBaseForme = originalToCopies.get(original.getBaseForme());
+            copy.setBaseForme(copyBaseForme);
+            testAltFormes.add(copy);
+
+            if(originalIrregularFormes.contains(original)) {
+                testIrregularFormes.add(copy);
+            }
+            if(!testAltFormesMap.containsKey(copyBaseForme)) {
+                testAltFormesMap.put(copyBaseForme, new HashMap<>());
+                testAltFormesMap.get(copyBaseForme).put(copyBaseForme.getFormeNumber(), copyBaseForme);
+            }
+            testAltFormesMap.get(copyBaseForme).put(copy.getFormeNumber(), copy);
         }
 
         for(Evolution evolution : original.getEvolutionsFrom()) {
@@ -205,6 +233,8 @@ public class TestRomHandler extends AbstractRomHandler {
             evoCopy.carryStats = evolution.carryStats;
             copy.getMegaEvolutionsFrom().add(evoCopy);
             evoCopy.to.getMegaEvolutionsTo().add(evoCopy);
+
+            testMegaEvolutions.add(evoCopy);
         }
     }
 
@@ -250,6 +280,8 @@ public class TestRomHandler extends AbstractRomHandler {
 
                 copiedArea.add(copyEnc);
             }
+
+            copiedEncounters.add(copiedArea);
         }
 
         return copiedEncounters;
@@ -327,17 +359,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public SpeciesSet getAltFormes() {
-        return null;
+        return testAltFormes;
     }
 
     @Override
@@ -356,19 +388,23 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
-        throw new NotImplementedException();
+        return testMegaEvolutions;
         //why does this even exist????
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        throw new NotImplementedException();
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        if(testAltFormesMap.get(base) == null) {
+            return base;
+        } else {
+            return testAltFormesMap.get(base).get(forme);
+        }
         //why is this even in RomHandler??
     }
 
     @Override
     public SpeciesSet getIrregularFormes() {
-        throw new NotImplementedException();
+        return testIrregularFormes;
     }
 
     @Override

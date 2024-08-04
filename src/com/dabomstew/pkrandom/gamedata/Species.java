@@ -584,7 +584,7 @@ public class Species implements Comparable<Species> {
             SpeciesIDs.stakataka, SpeciesIDs.blacephalon);
 
     public boolean isLegendary() {
-        return formeNumber == 0 ? legendaries.contains(this.number) : legendaries.contains(this.baseForme.number);
+        return isBaseForme() ? legendaries.contains(this.number) : baseForme.isLegendary();
     }
 
     public boolean isStrongLegendary() {

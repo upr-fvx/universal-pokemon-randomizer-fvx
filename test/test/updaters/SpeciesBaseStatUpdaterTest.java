@@ -104,7 +104,7 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         List<BaseStatRecord> records = new ArrayList<>(pokes.size());
         for (Species pk : pokes) {
             if (pk != null) {
-                records.add(new BaseStatRecord(pk.fullName(), pk.getHp(), pk.getAttack(), pk.getDefense(),
+                records.add(new BaseStatRecord(pk.getFullName(), pk.getHp(), pk.getAttack(), pk.getDefense(),
                         pk.getSpatk(), pk.getSpdef(), pk.getSpeed(), pk.getSpecial()));
             }
         }

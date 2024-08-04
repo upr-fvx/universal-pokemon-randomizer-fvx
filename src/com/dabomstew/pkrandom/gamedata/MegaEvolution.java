@@ -24,6 +24,7 @@ package com.dabomstew.pkrandom.gamedata;
 /*----------------------------------------------------------------------------*/
 
 public class MegaEvolution {
+    //TODO: make fields private, add accessors
     public Species from;
     public Species to;
     public int method;

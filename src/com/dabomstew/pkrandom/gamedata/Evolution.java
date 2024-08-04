@@ -26,7 +26,7 @@ package com.dabomstew.pkrandom.gamedata;
  * Represents an evolution between two {@link Species}.
  */
 public class Evolution implements Comparable<Evolution> {
-
+    //TODO: make this unmodifiable after creation
     private Species from;
     private Species to;
     private EvolutionType type;
@@ -35,6 +35,7 @@ public class Evolution implements Comparable<Evolution> {
     // only relevant for Gen 7
     private int forme;
     private int level = 0; // in generations pre gen 7, the extrainfo has the level
+    //TODO: fix that
 
     public Evolution(Species from, Species to, EvolutionType type, int extra) {
         this.from = from;
@@ -138,9 +139,9 @@ public class Evolution implements Comparable<Evolution> {
     @Override
     public String toString() {
         return forme == 0 && level == 0 ?
-                String.format("(%s->%s, %s, extraInfo:%d)", from.fullName(), to.fullName(),
+                String.format("(%s->%s, %s, extraInfo:%d)", from.getFullName(), to.getFullName(),
                         type, extraInfo) :
-                String.format("(%s->%s, %s, extraInfo:%d, forme:%d, level:%d)", from.fullName(), to.fullName(),
+                String.format("(%s->%s, %s, extraInfo:%d, forme:%d, level:%d)", from.getFullName(), to.getFullName(),
                         type, extraInfo, forme, level);
     }
 }

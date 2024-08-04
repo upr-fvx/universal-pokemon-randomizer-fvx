@@ -707,9 +707,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             FileFunctions.write2ByteInt(stats, Gen7Constants.bsDarkGrassHeldItemOffset, 0);
         }
 
-        if (pkmn.fullName().equals("Meowstic")) {
+        if (pkmn.getFullName().equals("Meowstic")) {
             stats[Gen7Constants.bsGenderOffset] = 0;
-        } else if (pkmn.fullName().equals("Meowstic-F")) {
+        } else if (pkmn.getFullName().equals("Meowstic-F")) {
             stats[Gen7Constants.bsGenderOffset] = (byte)0xFE;
         }
     }
@@ -961,9 +961,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
+        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : base;
     }
 
 	@Override
@@ -2604,7 +2604,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // Based on what species we're currently dealing with
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].fullName());
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }

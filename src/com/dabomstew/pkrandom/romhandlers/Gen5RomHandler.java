@@ -547,9 +547,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        int pokeNum = Gen5Constants.getAbsolutePokeNumByBaseForme(pk.getNumber(),forme);
-        return pokeNum != 0 ? pokes[pokeNum] : pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        int pokeNum = Gen5Constants.getAbsolutePokeNumByBaseForme(base.getNumber(),forme);
+        return pokeNum != 0 ? pokes[pokeNum] : base;
     }
 
 	@Override
@@ -2846,7 +2846,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Based on what species we're currently dealing with
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].fullName());
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                 }
 

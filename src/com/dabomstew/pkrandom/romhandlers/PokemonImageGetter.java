@@ -52,7 +52,7 @@ public abstract class PokemonImageGetter {
             throw new IllegalArgumentException("forme must be positive");
         }
         if (forme >= getGraphicalFormeAmount()) {
-            throw new IllegalArgumentException("invalid/too high forme for this Pokemon, " + forme + " for " + pk.fullName());
+            throw new IllegalArgumentException("invalid/too high forme for this Pokemon, " + forme + " for " + pk.getFullName());
         }
         this.forme = forme;
         return this;

@@ -34,6 +34,8 @@ import java.util.*;
  * Represents a Pokémon species or forme.
  */
 public class Species implements Comparable<Species> {
+    //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
+    //TODO: add a reset method that reverts this to original (for testing)
 
     private String name;
     private final int number;
@@ -516,13 +518,14 @@ public class Species implements Comparable<Species> {
 
     public void copyBaseFormeEvolutions(Species baseForme) {
         evolutionsFrom = baseForme.evolutionsFrom;
+        //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
     public int getSpriteIndex() {
         return formeNumber == 0 ? number : formeSpriteIndex + formeNumber - 1;
     }
 
-    public String fullName() {
+    public String getFullName() {
         return name + formeSuffix;
     }
 

@@ -860,7 +860,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         thisArea.setEncounterType(a == 1 ? EncounterType.SURFING : EncounterType.WALKING);
                         thisArea.setMapIndex(mapID);
                         if (mapID >= Gen1Constants.towerMapsStartIndex && mapID <= Gen1Constants.towerMapsEndIndex) {
-                            thisArea.banPokemon(ghostMarowak);
+                            thisArea.banSpecies(ghostMarowak);
                         }
                         for (int slot = 0; slot < Gen1Constants.encounterTableSize; slot++) {
                             Encounter enc = new Encounter();
@@ -906,7 +906,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         oldRodEnc.setLevel(rom[oldRodOffset + 2] & 0xFF);
         oldRodEnc.setSpecies(pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]]);
         area.add(oldRodEnc);
-        area.banPokemon(getGhostMarowakPoke());
+        area.banSpecies(getGhostMarowakPoke());
 
         encounterAreas.add(area);
     }
@@ -921,7 +921,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             enc.setSpecies(pokes[pokeRBYToNumTable[rom[goodRodOffset + slot * 2 + 1] & 0xFF]]);
             area.add(enc);
         }
-        area.banPokemon(getGhostMarowakPoke());
+        area.banSpecies(getGhostMarowakPoke());
 
         encounterAreas.add(area);
     }
@@ -944,7 +944,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     area.add(enc);
                     superRodOffset += 2;
                 }
-                area.banPokemon(ghostMarowak);
+                area.banSpecies(ghostMarowak);
                 encounterAreas.add(area);
             }
         } else {
@@ -969,7 +969,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         area.add(enc);
                         areaOffset += 2;
                     }
-                    area.banPokemon(ghostMarowak);
+                    area.banSpecies(ghostMarowak);
                     encounterAreas.add(area);
                 } else {
                     EncounterArea sharedArea = usedSROffsets.get(areaOffset);
@@ -1129,8 +1129,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        return pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        return base;
     }
 
     @Override

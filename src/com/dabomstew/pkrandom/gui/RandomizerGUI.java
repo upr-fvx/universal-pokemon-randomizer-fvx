@@ -3577,7 +3577,7 @@ public class RandomizerGUI {
         String[] pokeNames = new String[allPokes.size()];
         pokeNames[0] = "Random";
         for (int i = 1; i < allPokes.size(); i++) {
-            pokeNames[i] = allPokes.get(i).fullName();
+            pokeNames[i] = allPokes.get(i).getFullName();
 
         }
 

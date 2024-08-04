@@ -313,7 +313,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk);
-            System.out.println(pk.fullName());
+            System.out.println(pk.getFullName());
             System.out.println(pk.getGeneration());
             assertNotEquals(-1, pk.getGeneration());
         }

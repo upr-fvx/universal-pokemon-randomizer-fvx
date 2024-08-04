@@ -100,7 +100,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(pkmn == null ? null : pkmn.fullName());
+        sb.append(pkmn == null ? null : pkmn.getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {

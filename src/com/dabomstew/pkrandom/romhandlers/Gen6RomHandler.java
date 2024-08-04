@@ -634,9 +634,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             FileFunctions.write2ByteInt(stats, Gen6Constants.bsDarkGrassHeldItemOffset, 0);
         }
 
-        if (pkmn.fullName().equals("Meowstic")) {
+        if (pkmn.getFullName().equals("Meowstic")) {
             stats[Gen6Constants.bsGenderOffset] = 0;
-        } else if (pkmn.fullName().equals("Meowstic-F")) {
+        } else if (pkmn.getFullName().equals("Meowstic-F")) {
             stats[Gen6Constants.bsGenderOffset] = (byte)0xFE;
         }
     }
@@ -3044,7 +3044,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // Based on what species we're currently dealing with
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].fullName());
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }

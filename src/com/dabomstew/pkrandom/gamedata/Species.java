@@ -525,7 +525,7 @@ public class Species implements Comparable<Species> {
         return formeNumber == 0 ? number : formeSpriteIndex + formeNumber - 1;
     }
 
-    public String fullName() {
+    public String getFullName() {
         return name + formeSuffix;
     }
 

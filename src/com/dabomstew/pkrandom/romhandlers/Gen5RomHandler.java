@@ -2846,7 +2846,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Based on what species we're currently dealing with
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].fullName());
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                 }
 

@@ -710,7 +710,7 @@ public class EncounterRandomizer extends Randomizer {
 
             if (allowedForReplacement.isEmpty()) {
                 throw new RandomizationException("Could not find a wild Species replacement for "
-                        + current.fullName() + " in area " + area.getDisplayName() + "!");
+                        + current.getFullName() + " in area " + area.getDisplayName() + "!");
             }
 
             return allowedForReplacement;

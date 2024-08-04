@@ -362,9 +362,9 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
-            System.out.println(pk.fullName() + " BST=" + pk.getBSTForPowerLevels() + " ->");
+            System.out.println(pk.getFullName() + " BST=" + pk.getBSTForPowerLevels() + " ->");
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                System.out.println("\t" + evo.getTo().fullName() + " BST=" + evo.getTo().getBSTForPowerLevels());
+                System.out.println("\t" + evo.getTo().getFullName() + " BST=" + evo.getTo().getBSTForPowerLevels());
                 assertTrue(evo.getTo().getBSTForPowerLevels() > pk.getBSTForPowerLevels());
             }
         }
@@ -381,7 +381,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
-            System.out.println(pk.fullName());
+            System.out.println(pk.getFullName());
             System.out.println(pk.getEvolutionsTo());
             assertTrue(pk.getEvolutionsTo().size() <= 1);
         }
@@ -521,7 +521,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
-            System.out.println(pk.fullName());
+            System.out.println(pk.getFullName());
             System.out.println(pk.getEvolutionsTo());
             assertTrue(pk.getEvolutionsTo().size() <= 1);
         }

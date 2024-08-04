@@ -152,6 +152,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         fwgCheck(getGenerationNumberOf(romName));
+        startersHaveTwoEvosCheck();
     }
 
     @ParameterizedTest
@@ -223,6 +224,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         typeTriangleCheck(getGenerationNumberOf(romName));
+        startersHaveTwoEvosCheck();
     }
 
     @ParameterizedTest
@@ -306,6 +308,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         uniqueTypesCheck();
+        startersHaveTwoEvosCheck();
     }
 
     @ParameterizedTest
@@ -368,6 +371,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         s.setStartersTypeMod(false, false, false, false, true);
 
         singleTypeCheck(s);
+        startersHaveTwoEvosCheck();
     }
 
     @ParameterizedTest
@@ -464,5 +468,39 @@ public class RomHandlerStarterTest extends RomHandlerTest {
             assertTrue(starter.getBSTForPowerLevels() >= minimumBST &&
                     starter.getBSTForPowerLevels() <= maximumBST);
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomWithTwoEvosWorks(String romName) {
+        loadROM(romName);
+        Settings s = new Settings();
+
+        s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
+
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        startersHaveTwoEvosCheck();
+    }
+
+    private void startersHaveTwoEvosCheck() {
+
+
+        for(Species starter : romHandler.getStarters()) {
+            boolean hasTwoEvos = false;
+
+            System.out.println(starter.getFullName());
+            for(Species firstEvo : starter.getEvolvedSpecies(false)) {
+                System.out.println("\t" + firstEvo.getFullName());
+                for(Species secondEvo : firstEvo.getEvolvedSpecies(false)) {
+                    System.out.println("\t\t" + secondEvo.getFullName());
+                    hasTwoEvos = true;
+                }
+            }
+
+            assertTrue(hasTwoEvos);
+        }
+
+
     }
 }

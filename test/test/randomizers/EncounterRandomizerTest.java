@@ -23,7 +23,10 @@ public class EncounterRandomizerTest extends RandomizerTest {
             System.out.println(area.getDisplayName() + ":");
             System.out.println(area);
             for (Encounter enc : area) {
-                assertFalse(enc.getSpecies().isLegendary());
+                if(enc.getSpecies().isLegendary()) {
+                    Species forme = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    fail(forme.getFullName() + " is legendary!");
+                }
             }
         }
     }

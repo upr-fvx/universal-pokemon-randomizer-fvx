@@ -1220,8 +1220,6 @@ public class EncounterRandomizer extends Randomizer {
         } else if (!checkCosmetics && sp.getCosmeticForms() > 0) {
             enc.setFormeNumber(enc.getFormeNumber() + sp.getCosmeticFormNumber(this.random.nextInt(sp.getCosmeticForms())));
         }
-        //TODO: instead of (most of) this function, have encounter store the actual forme used and call baseSpecies when needed
-        // Or.. some other solution to the problem of not recognizing formes in ORAS "enhance" logic
     }
 
     public void changeCatchRates() {

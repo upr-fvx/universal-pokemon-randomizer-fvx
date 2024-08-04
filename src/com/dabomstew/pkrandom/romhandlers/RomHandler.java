@@ -114,6 +114,7 @@ public interface RomHandler {
     List<MegaEvolution> getMegaEvolutions();
 
     Species getAltFormeOfSpecies(Species base, int forme);
+    //TODO: move this to Species
 
     SpeciesSet getIrregularFormes();
 

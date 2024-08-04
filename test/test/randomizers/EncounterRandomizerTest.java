@@ -449,7 +449,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         }
     }
 
-    private static void checkEachLocationIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+    private void checkEachLocationIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
         Map<String, List<EncounterArea>> beforeLocations = EncounterArea.groupAreasByLocation(before);
         Map<String, List<EncounterArea>> afterLocations = EncounterArea.groupAreasByLocation(after);
         for(String location : beforeLocations.keySet()) {
@@ -461,7 +461,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         }
     }
 
-    private static void checkEachMapIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+    private void checkEachMapIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
         Map<Integer, List<EncounterArea>> beforeMaps = EncounterArea.groupAreasByMapIndex(before);
         Map<Integer, List<EncounterArea>> afterMaps = EncounterArea.groupAreasByMapIndex(after);
         for(int map : beforeMaps.keySet()) {
@@ -1354,7 +1354,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
      * @param after The same list of EncounterAreas, after randomization.
      * @param checkUnique Whether to also check that no Pokemon is used as a replacement for more than one Pokemon.
      */
-    private static void checkIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
+    private void checkIsReplaced1To1(List<EncounterArea> before, List<EncounterArea> after, boolean checkUnique) {
         Map<Species, Species> map = new HashMap<>();
         Iterator<EncounterArea> beforeIterator = before.iterator();
         Iterator<EncounterArea> afterIterator = after.iterator();
@@ -1380,7 +1380,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
      *                    for uniqueness.
      * @throws RuntimeException if the areas do not have the same display name.
      */
-    private static void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedSpecies) {
+    private void checkAreaIsReplaced1To1(EncounterArea beforeArea, EncounterArea afterArea, Map<Species, Species> map, SpeciesSet usedSpecies) {
         if (!beforeArea.getDisplayName().equals(afterArea.getDisplayName())) {
             throw new RuntimeException("Area mismatch; " + beforeArea.getDisplayName() + " and "
                     + afterArea.getDisplayName());
@@ -1401,20 +1401,39 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Iterator<Encounter> beforeEncIterator = beforeArea.iterator();
         Iterator<Encounter> afterEncIterator = afterArea.iterator();
         while (beforeEncIterator.hasNext()) {
-            Species beforePk = beforeEncIterator.next().getSpecies();
-            Species afterPk = afterEncIterator.next().getSpecies();
+            Species beforeSp = getNonCosmeticForme(beforeEncIterator.next());
+            Species afterSp = getNonCosmeticForme(afterEncIterator.next());
 
-            if (!map.containsKey(beforePk)) {
-                map.put(beforePk, afterPk);
+            if (!map.containsKey(beforeSp)) {
+                map.put(beforeSp, afterSp);
                 if(usedSpecies != null) {
-                    System.out.println("Adding map entry: " + beforePk.getName() + beforePk.getFormeSuffix() +
-                            " to " + afterPk.getName() + afterPk.getFormeSuffix());
-                    assertFalse(usedSpecies.contains(afterPk));
-                    usedSpecies.add(afterPk);
+                    System.out.println("Adding map entry: " + beforeSp.getFullName() + " to " + afterSp.getFullName());
+                    assertFalse(usedSpecies.contains(afterSp));
+                    usedSpecies.add(afterSp);
                 }
             }
-            assertEquals(map.get(beforePk), afterPk);
+            assertEquals(map.get(beforeSp), afterSp);
         }
+    }
+
+    private Species getNonCosmeticForme(Encounter enc) {
+        //what the fuck. why is this so complicated.
+        Species base = enc.getSpecies();
+        int formeNumber = enc.getFormeNumber();
+        Species forme;
+        if(formeNumber <= base.getCosmeticForms()) {
+            forme = base;
+        }else if(base.getRealCosmeticFormNumbers().contains(formeNumber)){
+            forme = base;
+        } else {
+            forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
+        }
+
+        if(forme.isActuallyCosmetic()) {
+            forme = forme.getBaseForme();
+        }
+
+        return forme;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {

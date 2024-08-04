@@ -428,6 +428,7 @@ public class Species implements Comparable<Species> {
 
     //TODO: improve behaviour around cycles
     //(For these and the SpeciesSet versions)
+    //...also likely to have odd behavior with merged evolutions of different lengths
     /**
      * Gets the maximum number of times this {@link Species} can evolve into distinct {@link Species}.
      * If an evolutionary cycle is found, will count each evolution once,
@@ -446,7 +447,7 @@ public class Species implements Comparable<Species> {
                 if(checked.contains(spec)) {
                     continue;
                 }
-                nextStage.addAll(this.getEvolvedSpecies(useOriginal));
+                nextStage.addAll(spec.getEvolvedSpecies(useOriginal));
                 checked.add(spec);
             }
             if(!nextStage.isEmpty()) {
@@ -476,7 +477,7 @@ public class Species implements Comparable<Species> {
                 if(checked.contains(spec)) {
                     continue;
                 }
-                previousStage.addAll(this.getPreEvolvedSpecies(useOriginal));
+                previousStage.addAll(spec.getPreEvolvedSpecies(useOriginal));
                 checked.add(spec);
             }
             if(!previousStage.isEmpty()) {

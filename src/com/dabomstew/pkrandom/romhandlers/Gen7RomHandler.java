@@ -278,11 +278,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         pkmn.setSpdef(stats[Gen7Constants.bsSpDefOffset] & 0xFF);
         // Type
         pkmn.setPrimaryType(Gen7Constants.typeTable[stats[Gen7Constants.bsPrimaryTypeOffset] & 0xFF]);
-        pkmn.setSecondaryType(Gen7Constants.typeTable[stats[Gen7Constants.bsSecondaryTypeOffset] & 0xFF]);
+        Type secondary = Gen7Constants.typeTable[stats[Gen7Constants.bsSecondaryTypeOffset] & 0xFF];
+
         // Only one type?
-        if (pkmn.getSecondaryType(false) == pkmn.getPrimaryType(false)) {
+        if (secondary == pkmn.getPrimaryType(true)) {
             pkmn.setSecondaryType(null);
+        } else {
+            pkmn.setSecondaryType(secondary);
         }
+
         pkmn.setCatchRate(stats[Gen7Constants.bsCatchRateOffset] & 0xFF);
         pkmn.setGrowthCurve(ExpCurve.fromByte(stats[Gen7Constants.bsGrowthCurveOffset]));
 

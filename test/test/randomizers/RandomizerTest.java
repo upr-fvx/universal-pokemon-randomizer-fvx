@@ -62,6 +62,7 @@ public class RandomizerTest {
     protected TestRomHandler romHandler;
 
     //TODO: once parameterized containers are available, make this a @BeforeEach
+    // (and remove the hacky part)
     protected void activateRomHandler(String romName) {
         romHandler = romHandlers.get(romName);
         romHandler.prepare();
@@ -94,8 +95,9 @@ public class RandomizerTest {
     @BeforeAll
     static public void loadROMs() {
         for(String romName : getRomNames()) {
+            System.out.println("Loading " + romName +  "...");
             loadROM(romName);
-            System.out.println("Loaded " + romName);
+            System.out.println("Finished loading " + romName);
         }
     }
 

@@ -297,24 +297,27 @@ public class StarterRandomizerTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void singleTypeWorksWithRandomWithTwoEvosForEveryType(String romName) {
-        // fails on all vanilla games before gen 4, as until then there are only two for Dragon.
-        // Actually, fails on *all* vanilla games, as there are only two three-stage Fighting lines (Machop, Timburr)
-        assumeTrue(getGenerationNumberOf(romName) >= 4);
+    public void singleTypeWorksWithRandomWithTwoEvosForGrassType(String romName) {
+        //Can't do every type since Fighting only has two three-stage lines - even in the games we don't support
+        //However, Grass type works since Gen 1
+        //So it makes a reasonable proxy to check this is working
         activateRomHandler(romName);
         assumeFalse(romHandler.isORAS());
         Settings s = new Settings();
-        s.setStartersMod(false, false, false, true, false);
-        s.setStartersTypeMod(false, false, false, false, true);
+        s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
+        s.setStartersTypeMod(Settings.StartersTypeMod.SINGLE_TYPE);
+        s.setStartersSingleType(Type.GRASS.ordinal() + 1);
 
-        runStarterSingleTypeOnEveryTypeWithCheck(s);
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        checkStartersAreAllOfType(Type.GRASS);
         checkStartersHaveTwoEvos();
         checkStartersAreBasic();
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void singleTypeWorksWithRandomBasic(String romName) {
+    public void singleTypeWorksWithRandomBasicForEveryType(String romName) {
         assumeTrue(getGenerationNumberOf(romName) > 2); // Gen 1 & 2 have too few basic Dragon/Ghost types
         activateRomHandler(romName);
         Settings s = new Settings();
@@ -333,13 +336,21 @@ public class StarterRandomizerTest extends RandomizerTest {
                 System.out.println(t);
                 new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-                List<Species> starters = romHandler.getStarters();
-                System.out.println(starters.stream().map(pk -> pk.getName() + " " + pk.getPrimaryType(false) +
-                        (pk.getSecondaryType(false) == null ? "" : " / " + pk.getSecondaryType(false))).collect(Collectors.toList()));
-                for (Species starter : starters) {
-                    assertTrue(starter.getPrimaryType(false) == t || starter.getSecondaryType(false) == t);
-                }
+                checkStartersAreAllOfType(t);
             }
+        }
+    }
+
+    private void checkStartersAreAllOfType(Type type) {
+        List<Species> starters = romHandler.getStarters();
+        System.out.println(starters.stream().map(pk -> pk.getName() +
+                " " + pk.getPrimaryType(false) +
+                (pk.getSecondaryType(false) == null ? ""
+                        : " / " + pk.getSecondaryType(false))).collect(Collectors.toList()));
+
+        for (Species starter : starters) {
+            assertTrue(starter.getPrimaryType(false) == type
+                    || starter.getSecondaryType(false) == type);
         }
     }
 

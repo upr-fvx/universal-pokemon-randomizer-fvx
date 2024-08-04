@@ -547,9 +547,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        int pokeNum = Gen5Constants.getAbsolutePokeNumByBaseForme(pk.getNumber(),forme);
-        return pokeNum != 0 ? pokes[pokeNum] : pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        int pokeNum = Gen5Constants.getAbsolutePokeNumByBaseForme(base.getNumber(),forme);
+        return pokeNum != 0 ? pokes[pokeNum] : base;
     }
 
 	@Override

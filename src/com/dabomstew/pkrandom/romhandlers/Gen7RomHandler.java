@@ -961,9 +961,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species pk, int forme) {
-        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
+        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : base;
     }
 
 	@Override

@@ -296,7 +296,7 @@ public class StarterRandomizer extends Randomizer {
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
-            available.removeIf(Species::isActuallyCosmetic);
+            available.removeIf(Species::isCosmeticForme);
         } else {
             available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(false) : rSpecService.getAll(false));
         }
@@ -330,7 +330,7 @@ public class StarterRandomizer extends Randomizer {
         List<Species> customStarters = new ArrayList<>();
         List<Species> romSpecies = romHandler.getSpeciesInclFormes()
                 .stream()
-                .filter(pk -> pk == null || !pk.isActuallyCosmetic())
+                .filter(pk -> pk == null || !pk.isCosmeticForme())
                 .collect(Collectors.toList());
 
         for (int customStarter : starterIndices) {

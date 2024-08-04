@@ -750,7 +750,7 @@ public class GameRandomizer {
         List<Species> pkmnList = romHandler.getSpeciesInclFormes();
         int i = 1;
         for (Species pkmn : pkmnList) {
-            if (pkmn == null || pkmn.isActuallyCosmetic()) {
+            if (pkmn == null || pkmn.isCosmeticForme()) {
                 continue;
             }
             StringBuilder evoStr = new StringBuilder();
@@ -869,7 +869,7 @@ public class GameRandomizer {
         log.println("--Randomized Evolutions--");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
-            if (pk != null && !pk.isActuallyCosmetic()) {
+            if (pk != null && !pk.isCosmeticForme()) {
                 int numEvos = pk.getEvolutionsFrom().size();
                 if (numEvos > 0) {
                     StringBuilder evoStr = new StringBuilder(pk.getEvolutionsFrom().get(0).getTo().getFullName());
@@ -934,7 +934,7 @@ public class GameRandomizer {
             log.println();
             int i = 0;
             for (Species pkmn : allPokes) {
-                if (pkmn != null && !pkmn.isActuallyCosmetic()) {
+                if (pkmn != null && !pkmn.isCosmeticForme()) {
                     i++;
                     String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
                     if (pkmn.getSecondaryType(false) != null) {
@@ -1004,7 +1004,7 @@ public class GameRandomizer {
         int tmCount = romHandler.getTMCount();
         for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
             Species pkmn = entry.getKey();
-            if (pkmn.isActuallyCosmetic()) continue;
+            if (pkmn.isCosmeticForme()) continue;
             boolean[] flags = entry.getValue();
 
             String nameSpFormat = "%-14s";

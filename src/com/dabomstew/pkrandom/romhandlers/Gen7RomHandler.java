@@ -209,7 +209,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setName(pokeNames[realBaseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
-                if (pokes[i].isActuallyCosmetic()) {
+                if (pokes[i].isCosmeticOverride()) {
                     pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix());
                 } else {
                     pokes[i].setFormeSuffix(Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme,fi.formeNumber));
@@ -442,7 +442,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isActuallyCosmetic()) {
+                            if (!pk.isCosmeticForme()) {
                                 if (evol.getForme() > 0) {
                                     // The forme number for the evolution might represent an actual alt forme, or it
                                     // might simply represent a cosmetic forme. If it represents an actual alt forme,
@@ -967,7 +967,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public Species getAltFormeOfSpecies(Species base, int forme) {
         int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : base;
+        return pokeNum != 0 ? !pokes[pokeNum].isCosmeticForme() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : base;
     }
 
 	@Override

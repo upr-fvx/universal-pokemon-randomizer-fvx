@@ -47,6 +47,7 @@ public class Species implements Comparable<Species> {
     private int formeSpriteIndex = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
+    //TODO: condense this cosmetic bs into a single denotation
 
     private int generation = -1;
 
@@ -663,7 +664,7 @@ public class Species implements Comparable<Species> {
         this.formeSpriteIndex = formeSpriteIndex;
     }
 
-    public boolean isActuallyCosmetic() {
+    public boolean isCosmeticOverride() {
         return actuallyCosmetic;
     }
 
@@ -1033,4 +1034,18 @@ public class Species implements Comparable<Species> {
         this.megaEvolutionsTo = megaEvolutionsTo;
     }
 
+    /**
+     * Checks if this forme is marked as cosmetic in any of the three possible ways.
+     * @return True if the forme is cosmetic, false otherwise.
+     */
+    public boolean isCosmeticForme() {
+        Species base = baseForme;
+        if(base == null) {
+            return false;
+        }
+
+        return formeNumber <= base.getCosmeticForms() ||
+                base.getRealCosmeticFormNumbers().contains(formeNumber) ||
+                actuallyCosmetic;
+    }
 }

@@ -1027,7 +1027,7 @@ public class SpeciesSet extends HashSet<Species> {
      * @return A {@link SpeciesSet} containing all {@link Species} in this set which are cosmetic.
      */
     public SpeciesSet filterCosmetic() {
-        return filter(Species::isActuallyCosmetic);
+        return filter(Species::isCosmeticForme);
     }
 
     /**
@@ -1035,7 +1035,7 @@ public class SpeciesSet extends HashSet<Species> {
      * @return A {@link SpeciesSet} containing all {@link Species} in this set which are not cosmetic.
      */
     public SpeciesSet filterNonCosmetic() {
-        return filter(p -> !p.isActuallyCosmetic());
+        return filter(p -> !p.isCosmeticForme());
     }
 
     public String toStringShort() {

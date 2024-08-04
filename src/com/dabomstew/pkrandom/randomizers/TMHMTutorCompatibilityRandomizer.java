@@ -197,7 +197,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
-            if (pkmn.isActuallyCosmetic()) {
+            if (pkmn.isCosmeticForme()) {
                 boolean[] baseFlags = compat.get(pkmn.getBaseForme());
                 for (int i = 1; i < flags.length; i++) {
                     flags[i] = baseFlags[i];
@@ -303,7 +303,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
-            if (pkmn.isActuallyCosmetic()) {
+            if (pkmn.isCosmeticForme()) {
                 boolean[] baseFlags = compat.get(pkmn.getBaseForme());
                 for (int i = 1; i < flags.length; i++) {
                     flags[i] = baseFlags[i];

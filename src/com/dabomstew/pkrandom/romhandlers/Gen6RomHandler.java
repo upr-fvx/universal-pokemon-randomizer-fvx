@@ -339,7 +339,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isActuallyCosmetic()) pokes[species].getEvolutionsTo().add(evol);
+                            if (!pk.isCosmeticForme()) pokes[species].getEvolutionsTo().add(evol);
                         }
                     }
                 }

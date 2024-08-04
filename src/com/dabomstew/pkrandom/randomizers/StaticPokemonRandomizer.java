@@ -85,11 +85,11 @@ public class StaticPokemonRandomizer extends Randomizer {
         if (swapLegendaries) {
             SpeciesSet legendariesLeft = new SpeciesSet(rSpecService.getLegendaries(allowAltFormes));
             if (allowAltFormes) {
-                legendariesLeft = legendariesLeft.filter(pk -> !pk.isActuallyCosmetic());
+                legendariesLeft = legendariesLeft.filter(pk -> !pk.isCosmeticForme());
             }
             SpeciesSet nonlegsLeft = new SpeciesSet(rSpecService.getNonLegendaries(allowAltFormes));
             if (allowAltFormes) {
-                nonlegsLeft = nonlegsLeft.filter(pk -> !pk.isActuallyCosmetic());
+                nonlegsLeft = nonlegsLeft.filter(pk -> !pk.isCosmeticForme());
             }
             SpeciesSet ultraBeastsLeft = new SpeciesSet(rSpecService.getUltrabeasts(false));
             legendariesLeft.removeAll(banned);
@@ -158,7 +158,7 @@ public class StaticPokemonRandomizer extends Randomizer {
             }
         } else if (similarStrength) {
             SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true)
-                    .filter(pk -> !pk.isActuallyCosmetic());
+                    .filter(pk -> !pk.isCosmeticForme());
             SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
                     rSpecService.getAll(false) : listInclFormesExclCosmetics);
             pokemonLeft.removeAll(banned);
@@ -255,7 +255,7 @@ public class StaticPokemonRandomizer extends Randomizer {
             }
         } else { // Completely random
             SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true)
-                    .filter(pk -> !pk.isActuallyCosmetic());
+                    .filter(pk -> !pk.isCosmeticForme());
             SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
                     rSpecService.getAll(false) : listInclFormesExclCosmetics);
             pokemonLeft.removeAll(banned);
@@ -342,7 +342,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         }
 
         SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true).filter(
-                pk -> !pk.isActuallyCosmetic());
+                pk -> !pk.isCosmeticForme());
         SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
                 rSpecService.getAll(false) : listInclFormesExclCosmetics);
         pokemonLeft.removeAll(banned);

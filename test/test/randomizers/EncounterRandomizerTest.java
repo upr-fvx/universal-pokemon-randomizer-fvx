@@ -1417,23 +1417,11 @@ public class EncounterRandomizerTest extends RandomizerTest {
     }
 
     private Species getNonCosmeticForme(Encounter enc) {
-        //what the fuck. why is this so complicated.
         Species base = enc.getSpecies();
         int formeNumber = enc.getFormeNumber();
-        Species forme;
-        if(formeNumber <= base.getCosmeticForms()) {
-            forme = base;
-        }else if(base.getRealCosmeticFormNumbers().contains(formeNumber)){
-            forme = base;
-        } else {
-            forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
-        }
+        Species forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
 
-        if(forme.isActuallyCosmetic()) {
-            forme = forme.getBaseForme();
-        }
-
-        return forme;
+        return forme.isCosmeticForme() ? base : forme;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {

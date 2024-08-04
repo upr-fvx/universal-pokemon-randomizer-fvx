@@ -95,6 +95,7 @@ public class RandomizerTest {
     static public void loadROMs() {
         for(String romName : getRomNames()) {
             loadROM(romName);
+            System.out.println("Loaded " + romName);
         }
     }
 

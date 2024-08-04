@@ -262,7 +262,7 @@ public class TestRomHandler extends AbstractRomHandler {
         for(EncounterArea originalArea : originalEncounters) {
             EncounterArea copiedArea = new EncounterArea();
             copiedArea.setRate(originalArea.getRate());
-            copiedArea.banAllPokemon(copySpeciesSet(originalArea.getBannedSpecies()));
+            copiedArea.banAllSpecies(copySpeciesSet(originalArea.getBannedSpecies()));
             copiedArea.setIdentifiers(originalArea.getDisplayName(), originalArea.getMapIndex(),
                     originalArea.getEncounterType(), originalArea.getLocationTag());
             copiedArea.setPostGame(originalArea.isPostGame());

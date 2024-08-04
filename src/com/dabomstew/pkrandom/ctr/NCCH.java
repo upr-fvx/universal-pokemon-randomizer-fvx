@@ -233,7 +233,7 @@ public class NCCH {
     private void visitFile(int offset, String rootPath, byte[] fileMetadataBlock) {
         FileMetadata metadata = new FileMetadata(fileMetadataBlock, offset);
         String currentPath = rootPath + metadata.name;
-        System.out.println("NCCH: Visiting file " + currentPath);
+        //System.out.println("NCCH: Visiting file " + currentPath);
         RomfsFile file = new RomfsFile(this);
         file.offset = fileDataOffset + metadata.fileDataOffset;
         file.size = (int) metadata.fileDataLength;  // no Pokemon game has a file larger than unsigned int max

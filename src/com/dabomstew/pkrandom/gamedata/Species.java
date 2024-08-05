@@ -665,7 +665,7 @@ public class Species implements Comparable<Species> {
         this.formeSpriteIndex = formeSpriteIndex;
     }
 
-    public boolean isCosmeticOverride() {
+    public boolean isActuallyCosmetic() {
         return actuallyCosmetic;
     }
 

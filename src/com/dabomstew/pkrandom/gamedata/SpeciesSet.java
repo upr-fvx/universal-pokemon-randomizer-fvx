@@ -1022,22 +1022,6 @@ public class SpeciesSet extends HashSet<Species> {
 
     //Various Functions
 
-    /**
-     * Returns all {@link Species} in the set which are cosmetic formes.
-     * @return A {@link SpeciesSet} containing all {@link Species} in this set which are cosmetic.
-     */
-    public SpeciesSet filterCosmetic() {
-        return filter(Species::isCosmeticForme);
-    }
-
-    /**
-     * Returns all {@link Species} in the set which are not cosmetic formes.
-     * @return A {@link SpeciesSet} containing all {@link Species} in this set which are not cosmetic.
-     */
-    public SpeciesSet filterNonCosmetic() {
-        return filter(p -> !p.isCosmeticForme());
-    }
-
     public String toStringShort() {
         StringBuilder string = new StringBuilder("[");
         Iterator<Species> itor = this.iterator();

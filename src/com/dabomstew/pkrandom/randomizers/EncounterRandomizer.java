@@ -1208,17 +1208,9 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     private void setFormeForEncounter(Encounter enc, Species sp) {
-        boolean checkCosmetics = true;
-        enc.setFormeNumber(0);
-        if (enc.getSpecies().getFormeNumber() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getFormeNumber());
+        enc.setFormeNumber(enc.getSpecies().getRandomCosmeticFormeNumber(random));
+        while(!enc.getSpecies().isBaseForme()) {
             enc.setSpecies(enc.getSpecies().getBaseForme());
-            checkCosmetics = false;
-        }
-        if (checkCosmetics && enc.getSpecies().getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getCosmeticFormNumber(this.random.nextInt(enc.getSpecies().getCosmeticForms())));
-        } else if (!checkCosmetics && sp.getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getFormeNumber() + sp.getCosmeticFormNumber(this.random.nextInt(sp.getCosmeticForms())));
         }
     }
 

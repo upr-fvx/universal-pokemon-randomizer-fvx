@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class StaticEncounter {
-    public Species pkmn;
+    public Species spec;
     public int forme = 0;
     public int level;
     public int maxLevel = 0;
@@ -51,13 +51,13 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>();
     }
 
-    public StaticEncounter(Species pkmn) {
-        this.pkmn = pkmn;
+    public StaticEncounter(Species spec) {
+        this.spec = spec;
         this.linkedEncounters = new ArrayList<>();
     }
 
     public StaticEncounter(StaticEncounter original) {
-        this.pkmn = original.pkmn;
+        this.spec = original.spec;
         this.forme = original.forme;
         this.level = original.level;
         this.maxLevel = original.maxLevel;
@@ -69,7 +69,7 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
             StaticEncounter newLinked = new StaticEncounter();
-            newLinked.pkmn = oldLinked.pkmn;
+            newLinked.spec = oldLinked.spec;
             newLinked.forme = oldLinked.forme;
             newLinked.level = oldLinked.level;
             newLinked.maxLevel = oldLinked.maxLevel;
@@ -84,7 +84,7 @@ public class StaticEncounter {
 
     public boolean canMegaEvolve() {
         if (heldItem != 0) {
-            for (MegaEvolution mega: pkmn.getMegaEvolutionsFrom()) {
+            for (MegaEvolution mega: spec.getMegaEvolutionsFrom()) {
                 if (mega.argument == heldItem) {
                     return true;
                 }
@@ -100,7 +100,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(pkmn == null ? null : pkmn.getFullName());
+        sb.append(spec == null ? null : spec.getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {
@@ -129,14 +129,14 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkmn, level);
+        return Objects.hash(spec, level);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof StaticEncounter) {
             StaticEncounter other = (StaticEncounter) o;
-            return Objects.equals(other.pkmn, pkmn) && other.forme == forme && other.level == level
+            return Objects.equals(other.spec, spec) && other.forme == forme && other.level == level
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);

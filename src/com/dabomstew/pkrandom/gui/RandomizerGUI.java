@@ -3571,7 +3571,7 @@ public class RandomizerGUI {
                 romHandler.generationOfPokemon() >= 6 ?
                         romHandler.getSpeciesInclFormes()
                                 .stream()
-                                .filter(pk -> pk == null || !pk.isCosmeticForme())
+                                .filter(pk -> pk == null || !pk.isCosmeticReplacement())
                                 .collect(Collectors.toList()) :
                         romHandler.getSpecies();
         String[] pokeNames = new String[allPokes.size()];

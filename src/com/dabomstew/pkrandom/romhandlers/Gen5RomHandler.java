@@ -1745,12 +1745,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             StaticEncounter se = new StaticEncounter();
             Species newPK = statP.getPokemon(this, scriptNARC);
             newPK = getAltFormeOfSpecies(newPK, statP.getForme(scriptNARC));
-            se.pkmn = newPK;
+            se.spec = newPK;
             se.level = statP.getLevel(scriptNARC, 0);
             se.isEgg = Arrays.stream(staticEggOffsets).anyMatch(x-> x == currentOffset);
             for (int levelEntry = 1; levelEntry < statP.getLevelCount(); levelEntry++) {
                 StaticEncounter linkedStatic = new StaticEncounter();
-                linkedStatic.pkmn = newPK;
+                linkedStatic.spec = newPK;
                 linkedStatic.level = statP.getLevel(scriptNARC, levelEntry);
                 se.linkedEncounters.add(linkedStatic);
             }
@@ -1764,11 +1764,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 DSStaticPokemon statP = romEntry.getStaticPokemonFakeBall().get(i);
                 StaticEncounter se = new StaticEncounter();
                 Species newPK = statP.getPokemon(this, scriptNARC);
-                se.pkmn = newPK;
+                se.spec = newPK;
                 se.level = statP.getLevel(mapNARC, 0);
                 for (int levelEntry = 1; levelEntry < statP.getLevelCount(); levelEntry++) {
                     StaticEncounter linkedStatic = new StaticEncounter();
-                    linkedStatic.pkmn = newPK;
+                    linkedStatic.spec = newPK;
                     linkedStatic.level = statP.getLevel(mapNARC, levelEntry);
                     se.linkedEncounters.add(linkedStatic);
                 }
@@ -1796,7 +1796,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                 StaticEncounter se = new StaticEncounter();
                                 Species newPK = pokes[readWord(hhEntry, version * 78 + raritySlot * 26 + group * 2)];
                                 newPK = getAltFormeOfSpecies(newPK, hhEntry[version * 78 + raritySlot * 26 + 20 + group]);
-                                se.pkmn = newPK;
+                                se.spec = newPK;
                                 se.level = hhEntry[version * 78 + raritySlot * 26 + 12 + group];
                                 se.maxLevel = hhEntry[version * 78 + raritySlot * 26 + 8 + group];
                                 se.isEgg = false;
@@ -1804,7 +1804,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                 se.restrictedList = allowedHiddenHollowSpecies;
                                 boolean originalEncounter = true;
                                 for (StaticEncounter encounterInGroup: encountersInGroup) {
-                                    if (encounterInGroup.pkmn.equals(se.pkmn)) {
+                                    if (encounterInGroup.spec.equals(se.spec)) {
                                         encounterInGroup.linkedEncounters.add(se);
                                         originalEncounter = false;
                                         break;
@@ -1840,7 +1840,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                     RoamingPokemon roamer = romEntry.getRoamingPokemon().get(i);
                     StaticEncounter se = new StaticEncounter();
-                    se.pkmn = roamer.getPokemon(this);
+                    se.spec = roamer.getPokemon(this);
                     se.level = roamer.getLevel(this);
                     sp.add(se);
                 }
@@ -1867,8 +1867,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         NARCArchive scriptNARC = scriptNarc;
         for (DSStaticPokemon statP : romEntry.getStaticPokemon()) {
             StaticEncounter se = statics.next();
-            statP.setPokemon(this, scriptNARC, se.pkmn);
-            statP.setForme(scriptNARC, se.pkmn.getFormeNumber());
+            statP.setPokemon(this, scriptNARC, se.spec);
+            statP.setForme(scriptNARC, se.spec.getFormeNumber());
             statP.setLevel(scriptNARC, se.level, 0);
             for (int i = 0; i < se.linkedEncounters.size(); i++) {
                 StaticEncounter linkedStatic = se.linkedEncounters.get(i);
@@ -1881,7 +1881,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             NARCArchive mapNARC = readNARC(romEntry.getFile("MapFiles"));
             for (DSStaticPokemon statP : romEntry.getStaticPokemonFakeBall()) {
                 StaticEncounter se = statics.next();
-                statP.setPokemon(this, scriptNARC, se.pkmn);
+                statP.setPokemon(this, scriptNARC, se.spec);
                 statP.setLevel(mapNARC, se.level, 0);
                 for (int i = 0; i < se.linkedEncounters.size(); i++) {
                     StaticEncounter linkedStatic = se.linkedEncounters.get(i);
@@ -1903,13 +1903,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         for (int raritySlot = 0; raritySlot < 3; raritySlot++) {
                             for (int group = 0; group < 4; group++) {
                                 StaticEncounter se = statics.next();
-                                writeWord(hhEntry, version * 78 + raritySlot * 26 + group * 2, se.pkmn.getNumber());
+                                writeWord(hhEntry, version * 78 + raritySlot * 26 + group * 2, se.spec.getNumber());
                                 // genderRatio here is a percentage from 0-100;
                                 // this value overrides the genderRatio of the species.
                                 // The vanilla grottoes have some variance in genderRatios, but for simplicity's sake
                                 // we just set all Pokémon to 30% female, unless they are always female/male/genderless.
                                 int genderRatio;
-                                switch (se.pkmn.getGenderRatio()) {
+                                switch (se.spec.getGenderRatio()) {
                                     case 0xFE: // female
                                         genderRatio = 100;
                                         break;
@@ -1927,7 +1927,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                 for (int i = 0; i < se.linkedEncounters.size(); i++) {
                                     StaticEncounter linkedStatic = se.linkedEncounters.get(i);
                                     group++;
-                                    writeWord(hhEntry, version * 78 + raritySlot * 26 + group * 2, linkedStatic.pkmn.getNumber());
+                                    writeWord(hhEntry, version * 78 + raritySlot * 26 + group * 2, linkedStatic.spec.getNumber());
                                     hhEntry[version * 78 + raritySlot * 26 + 16 + group] = (byte) genderRatio;
                                     hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) linkedStatic.forme; // forme
                                     hhEntry[version * 78 + raritySlot * 26 + 12 + group] = (byte) linkedStatic.level;
@@ -1948,7 +1948,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 RoamingPokemon roamer = romEntry.getRoamingPokemon().get(i);
                 StaticEncounter roamerEncounter = statics.next();
-                roamer.setPokemon(this, scriptNarc, roamerEncounter.pkmn);
+                roamer.setPokemon(this, scriptNarc, roamerEncounter.spec);
                 roamer.setLevel(this, roamerEncounter.level);
             }
         } catch (IOException e) {
@@ -1962,7 +1962,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (romEntry.getRomType() == Gen5Constants.Type_BW) {
             int boxLegendaryIndex = romEntry.getIntValue("BoxLegendaryOffset");
             try {
-                int boxLegendarySpecies = staticPokemon.get(boxLegendaryIndex).pkmn.getNumber();
+                int boxLegendarySpecies = staticPokemon.get(boxLegendaryIndex).spec.getNumber();
                 fixBoxLegendaryBW1(boxLegendarySpecies);
             } catch (IOException e) {
                 throw new RomIOException(e);

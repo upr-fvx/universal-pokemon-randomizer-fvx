@@ -339,7 +339,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isCosmeticForme()) pokes[species].getEvolutionsTo().add(evol);
+                            if (!pk.isCosmeticReplacement()) pokes[species].getEvolutionsTo().add(evol);
                         }
                     }
                 }
@@ -911,7 +911,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 5];
                 starters.add(se);
@@ -920,7 +920,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        return starters.stream().map(pk -> pk.pkmn).collect(Collectors.toList());
+        return starters.stream().map(pk -> pk.spec).collect(Collectors.toList());
     }
 
     @Override
@@ -956,11 +956,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     newStatic.forme = starter.getFormeNumber();
                     starter = starter.getBaseForme();
                 }
-                newStatic.pkmn = starter;
-                writeWord(staticCRO,offset+i*size, newStatic.pkmn.getNumber());
+                newStatic.spec = starter;
+                writeWord(staticCRO,offset+i*size, newStatic.spec.getNumber());
                 staticCRO[offset+i*size + 4] = (byte)newStatic.forme;
 //                staticCRO[offset+i*size + 5] = (byte)newStatic.level;
-                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.pkmn.getNumber());
+                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.spec.getNumber());
                 displayCRO[displayOffset+displayIndex*0x54+2] = (byte)newStatic.forme;
                 if (displayIndex < 3) {
                     starterText.set(starterTextIndices[displayIndex],
@@ -2132,7 +2132,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 3];
                 short heldItem = (short)FileFunctions.read2ByteInt(staticCRO,offset+i*size + 4);
@@ -2161,7 +2161,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 5];
                 int heldItem = FileFunctions.readFullInt(staticCRO,offset+i*size + 12);
@@ -2218,12 +2218,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int offset = tableBaseOffset + (offsetWithinTable * Gen6Constants.xyTrashEncounterDataLength);
         for (int i = offsetWithinTable; i < offsetWithinTable + count; i++) {
             StaticEncounter se = readTrashCanEncounter(offset);
-            if (consolidateSameSpeciesEncounters && encounterSet.containsKey(se.pkmn)) {
-                StaticEncounter mainEncounter = encounterSet.get(se.pkmn);
+            if (consolidateSameSpeciesEncounters && encounterSet.containsKey(se.spec)) {
+                StaticEncounter mainEncounter = encounterSet.get(se.spec);
                 mainEncounter.linkedEncounters.add(se);
             } else {
                 statics.add(se);
-                encounterSet.put(se.pkmn, se);
+                encounterSet.put(se.spec, se);
             }
             offset += Gen6Constants.xyTrashEncounterDataLength;
         }
@@ -2242,7 +2242,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     .getOrDefault(forme, 0);
             pokemon = pokes[speciesWithForme];
         }
-        se.pkmn = pokemon;
+        se.spec = pokemon;
         se.forme = forme;
         se.level = level;
         return se;
@@ -2262,7 +2262,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int offset = romEntry.getIntValue("StaticPokemonOffset");
             for (int i = 0; i < staticCount; i++) {
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.pkmn.getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.spec.getBaseNumber());
                 staticCRO[offset+i*size + 2] = (byte)se.forme;
                 staticCRO[offset+i*size + 3] = (byte)se.level;
                 if (se.heldItem == 0) {
@@ -2281,7 +2281,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < giftCount; i++) {
                 if (skipStarters.contains(i)) continue;
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.pkmn.getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.spec.getBaseNumber());
                 staticCRO[offset+i*size + 4] = (byte)se.forme;
                 staticCRO[offset+i*size + 5] = (byte)se.level;
                 if (se.heldItem == 0) {
@@ -2300,14 +2300,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int currentCount = 0;
                     while (currentCount != Gen6Constants.xyTrashCanEncounterCount) {
                         StaticEncounter se = staticIter.next();
-                        FileFunctions.writeFullInt(code, offset, se.pkmn.getBaseNumber());
+                        FileFunctions.writeFullInt(code, offset, se.spec.getBaseNumber());
                         FileFunctions.writeFullInt(code, offset + 4, se.forme);
                         FileFunctions.writeFullInt(code, offset + 8, se.level);
                         offset += Gen6Constants.xyTrashEncounterDataLength;
                         currentCount++;
                         for (int i = 0; i < se.linkedEncounters.size(); i++) {
                             StaticEncounter linkedEncounter = se.linkedEncounters.get(i);
-                            FileFunctions.writeFullInt(code, offset, linkedEncounter.pkmn.getBaseNumber());
+                            FileFunctions.writeFullInt(code, offset, linkedEncounter.spec.getBaseNumber());
                             FileFunctions.writeFullInt(code, offset + 4, linkedEncounter.forme);
                             FileFunctions.writeFullInt(code, offset + 8, linkedEncounter.level);
                             offset += Gen6Constants.xyTrashEncounterDataLength;
@@ -2320,11 +2320,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int[] boxLegendaryOffsets = romEntry.getArrayValue("BoxLegendaryOffsets");
                 StaticEncounter boxLegendaryEncounter = staticPokemon.get(boxLegendaryOffsets[0]);
-                fixBoxLegendariesXY(boxLegendaryEncounter.pkmn.getNumber());
+                fixBoxLegendariesXY(boxLegendaryEncounter.spec.getNumber());
                 setRoamersXY(staticPokemon);
             } else {
                 StaticEncounter rayquazaEncounter = staticPokemon.get(romEntry.getIntValue("RayquazaEncounterNumber"));
-                fixRayquazaORAS(rayquazaEncounter.pkmn.getNumber());
+                fixRayquazaORAS(rayquazaEncounter.spec.getNumber());
             }
 
             return true;
@@ -2431,7 +2431,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // In the free space now opened up, write the three roamer species.
             for (int i = 0; i < roamers.length; i++) {
                 int offset = freeSpaceOffset + 8 + (i * 4);
-                int species = roamers[i].pkmn.getBaseNumber();
+                int species = roamers[i].spec.getBaseNumber();
                 FileFunctions.writeFullInt(code, offset, species);
             }
 
@@ -2466,7 +2466,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             AMX seaSpiritsDenAreaScript = new AMX(seaSpiritsDenAreaFile, 1);
             for (int i = 0; i < roamers.length; i++) {
                 int offset = Gen6Constants.seaSpiritsDenScriptOffsetsXY[i];
-                int species = roamers[i].pkmn.getBaseNumber();
+                int species = roamers[i].spec.getBaseNumber();
                 FileFunctions.write2ByteInt(seaSpiritsDenAreaScript.decData, offset, species);
             }
             byte[] modifiedScript = seaSpiritsDenAreaScript.getBytes();

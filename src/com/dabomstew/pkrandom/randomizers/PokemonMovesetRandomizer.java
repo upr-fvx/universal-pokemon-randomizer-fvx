@@ -72,7 +72,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
                 }
             }
 
-            if (pkmn.isCosmeticForme()) {
+            if (pkmn.isActuallyCosmetic()) {
                 for (int i = 0; i < moves.size(); i++) {
                     moves.get(i).move = movesets.get(pkmn.getBaseForme().getNumber()).get(i).move;
                 }
@@ -223,7 +223,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
 
             double atkSpAtkRatio = pkmn.getAttackSpecialAttackRatio();
 
-            if (pkmn.isCosmeticForme()) {
+            if (pkmn.isActuallyCosmetic()) {
                 for (int i = 0; i < moves.size(); i++) {
                     moves.set(i, movesets.get(pkmn.getBaseForme().getNumber()).get(i));
                 }

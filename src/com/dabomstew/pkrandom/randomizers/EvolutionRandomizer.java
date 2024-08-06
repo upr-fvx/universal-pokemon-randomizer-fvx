@@ -173,21 +173,8 @@ public class EvolutionRandomizer extends Randomizer {
             if (newEvo.getType() == EvolutionType.LEVEL_FEMALE_ESPURR) {
                 newEvo.setType(EvolutionType.LEVEL_FEMALE_ONLY);
             }
-            pickCosmeticForme(picked, newEvo);
+            newEvo.setForme(picked.getRandomCosmeticFormeNumber(random));
             return newEvo;
-        }
-
-        private void pickCosmeticForme(Species picked, Evolution newEvo) {
-            boolean checkCosmetics = true;
-            if (picked.getFormeNumber() > 0) {
-                newEvo.setForme(picked.getFormeNumber());
-                checkCosmetics = false;
-            }
-            if (checkCosmetics && newEvo.getTo().getCosmeticForms() > 0) {
-                newEvo.setForme(newEvo.getTo().getCosmeticFormNumber(random.nextInt(newEvo.getTo().getCosmeticForms())));
-            } else if (!checkCosmetics && picked.getCosmeticForms() > 0) {
-                newEvo.setForme(newEvo.getForme() + picked.getCosmeticFormNumber(random.nextInt(picked.getCosmeticForms())));
-            }
         }
 
         private SpeciesSet findPossibleReplacements(Species from, Evolution evo) {

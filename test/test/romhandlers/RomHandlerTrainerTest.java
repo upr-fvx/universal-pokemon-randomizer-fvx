@@ -442,7 +442,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
             for (TrainerPokemon pokemon : trainer.pokemon) {
-                speciesPrimaryTypes.add(pokemon.species);
+                speciesPrimaryTypes.add(romHandler.getAltFormeOfSpecies(pokemon.species, pokemon.forme));
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
         }

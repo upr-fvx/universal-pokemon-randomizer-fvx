@@ -354,6 +354,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     post8Gyms.add(group);
                     continue;
                 }
+                if(group.startsWith("THEMED")) {
+                    //this is a non-league group, and so doesn't need to have any type restrictions on it
+                    typesForGroups.put(group, typeService.randomType(random));
+                    continue;
+                }
                 if(remainingTypes.isEmpty()) {
                     throw new RandomizationException(
                             "Unexpected amount of Elite/Champions; could not assign types to all!");

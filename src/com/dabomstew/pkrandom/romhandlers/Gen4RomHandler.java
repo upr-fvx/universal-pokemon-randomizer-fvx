@@ -2705,11 +2705,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
-        if(romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-            return Gen4Constants.gymAndEliteThemesHGSS;
-        } else {
-            return Gen4Constants.gymAndEliteThemesDPPt;
-        }
+		switch (romEntry.getRomType()) {
+			case Gen4Constants.Type_DP:
+				return Gen4Constants.gymAndEliteThemesDP;
+			case Gen4Constants.Type_Plat:
+				return Gen4Constants.gymAndEliteThemesPt;
+			case Gen4Constants.Type_HGSS:
+				return Gen4Constants.gymAndEliteThemesHGSS;
+			default:
+				return null;
+		}
     }
 
     @Override

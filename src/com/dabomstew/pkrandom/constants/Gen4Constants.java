@@ -1953,9 +1953,9 @@ public class Gen4Constants {
 
     }
 
-    public static final HashMap<String, Type> gymAndEliteThemesDPPt = setupGymAndEliteThemesDPPt();
+    public static final HashMap<String, Type> gymAndEliteThemesDP = setupGymAndEliteThemesDP();
 
-    private static HashMap<String, Type> setupGymAndEliteThemesDPPt() {
+    private static HashMap<String, Type> setupGymAndEliteThemesDP() {
         HashMap<String, Type> themeMap = new HashMap<>();
         //no theme for Cynthia
         themeMap.put("ELITE1", Type.BUG); //Aaron
@@ -1967,6 +1967,26 @@ public class Gen4Constants {
         themeMap.put("GYM3", Type.FIGHTING); //Maylene
         themeMap.put("GYM4", Type.WATER); //Wake
         themeMap.put("GYM5", Type.GHOST); //Fantina
+        themeMap.put("GYM6", Type.STEEL); //Byron
+        themeMap.put("GYM7", Type.ICE); //Candice
+        themeMap.put("GYM8", Type.ELECTRIC); //Volkner
+        return themeMap;
+    }
+
+    public static final HashMap<String, Type> gymAndEliteThemesPt = setupGymAndEliteThemesPt();
+
+    private static HashMap<String, Type> setupGymAndEliteThemesPt() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        //no theme for Cynthia
+        themeMap.put("ELITE1", Type.BUG); //Aaron
+        themeMap.put("ELITE2", Type.GROUND); //Bertha
+        themeMap.put("ELITE3", Type.FIRE); //Flint
+        themeMap.put("ELITE4", Type.PSYCHIC); //Lucian
+        themeMap.put("GYM1", Type.ROCK); //Roark
+        themeMap.put("GYM2", Type.GRASS); //Gardenia
+        themeMap.put("GYM3", Type.GHOST); //Fantina
+        themeMap.put("GYM4", Type.FIGHTING); // Maylene
+        themeMap.put("GYM5", Type.WATER); //Wake
         themeMap.put("GYM6", Type.STEEL); //Byron
         themeMap.put("GYM7", Type.ICE); //Candice
         themeMap.put("GYM8", Type.ELECTRIC); //Volkner

@@ -32,6 +32,10 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet testIrregularFormes = null;
     Map<Species, Map<Integer, Species>> testAltFormesMap = null;
     private RestrictedSpeciesService testRSS = null;
+    private List<Species> testSpeciesInOrder = null;
+
+    //Evolutions
+    private final boolean altFormesCanHaveDifferentEvolutions;
 
     //Encounters
     private final List<EncounterArea> originalEncounters;
@@ -65,18 +69,21 @@ public class TestRomHandler extends AbstractRomHandler {
         originalTypeTable = new TypeTable(mockupOf.getTypeTable());
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
         originalEncounters = mockupOf.getEncounters(true);
-        generation = mockupOf.generationOfPokemon();
+
+        altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
+
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
         originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
+        hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
+
+        generation = mockupOf.generationOfPokemon();
         romType = mockupOf.getROMType();
         isYellow = mockupOf.isYellow();
         isORAS = mockupOf.isORAS();
         isUSUM = mockupOf.isUSUM();
-
-        hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
 
         originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
@@ -103,6 +110,7 @@ public class TestRomHandler extends AbstractRomHandler {
         testIrregularFormes = null;
         testAltFormesMap = null;
         testRSS = null;
+        testSpeciesInOrder = null;
 
         testEncounters = null;
 
@@ -370,7 +378,11 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        throw new NotImplementedException();
+        if(testSpeciesInOrder == null) {
+            testSpeciesInOrder = new ArrayList<>(getSpeciesSet());
+            testSpeciesInOrder.sort(Comparator.comparingInt(Species::getNumber)); //ok that's some sleek syntax. gj java.
+        }
+        return testSpeciesInOrder;
     }
 
     @Override
@@ -1036,7 +1048,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean altFormesCanHaveDifferentEvolutions() {
-        throw new NotImplementedException();
+        return altFormesCanHaveDifferentEvolutions;
     }
 
     @Override

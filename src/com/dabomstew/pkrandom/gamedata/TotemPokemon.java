@@ -34,8 +34,8 @@ public class TotemPokemon extends StaticEncounter {
 
     public TotemPokemon() {}
 
-    public TotemPokemon(Species pkmn) {
-        this.setSpecies(pkmn);
+    public TotemPokemon(Species species) {
+        this.setSpecies(species);
     }
 
     public Aura getAura() {
@@ -64,8 +64,7 @@ public class TotemPokemon extends StaticEncounter {
 
     @Override
     public String toString() {
-        // The %s will be formatted to include the held item.
-        StringBuilder sb = new StringBuilder(getSpecies().fullName());
+        StringBuilder sb = new StringBuilder(getSpecies().getFullName());
         if (getHeldItem() != null) {
             sb.append("@").append(getHeldItem().getName());
         }

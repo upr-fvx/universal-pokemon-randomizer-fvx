@@ -34,6 +34,8 @@ import java.util.*;
  * Represents a Pokémon species or forme.
  */
 public class Species implements Comparable<Species> {
+    //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
+    //TODO: add a reset method that reverts this to original (for testing)
 
     private String name;
     private final int number;
@@ -45,6 +47,7 @@ public class Species implements Comparable<Species> {
     private int formeSpriteIndex = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
+    //TODO: condense this cosmetic bs into a single denotation
 
     private int generation = -1;
 
@@ -425,6 +428,7 @@ public class Species implements Comparable<Species> {
 
     //TODO: improve behaviour around cycles
     //(For these and the SpeciesSet versions)
+    //...also likely to have odd behavior with merged evolutions of different lengths
     /**
      * Gets the maximum number of times this {@link Species} can evolve into distinct {@link Species}.
      * If an evolutionary cycle is found, will count each evolution once,
@@ -443,7 +447,7 @@ public class Species implements Comparable<Species> {
                 if(checked.contains(spec)) {
                     continue;
                 }
-                nextStage.addAll(this.getEvolvedSpecies(useOriginal));
+                nextStage.addAll(spec.getEvolvedSpecies(useOriginal));
                 checked.add(spec);
             }
             if(!nextStage.isEmpty()) {
@@ -473,7 +477,7 @@ public class Species implements Comparable<Species> {
                 if(checked.contains(spec)) {
                     continue;
                 }
-                previousStage.addAll(this.getPreEvolvedSpecies(useOriginal));
+                previousStage.addAll(spec.getPreEvolvedSpecies(useOriginal));
                 checked.add(spec);
             }
             if(!previousStage.isEmpty()) {
@@ -516,13 +520,14 @@ public class Species implements Comparable<Species> {
 
     public void copyBaseFormeEvolutions(Species baseForme) {
         evolutionsFrom = baseForme.evolutionsFrom;
+        //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
     public int getSpriteIndex() {
         return formeNumber == 0 ? number : formeSpriteIndex + formeNumber - 1;
     }
 
-    public String fullName() {
+    public String getFullName() {
         return name + formeSuffix;
     }
 
@@ -581,7 +586,7 @@ public class Species implements Comparable<Species> {
             SpeciesIDs.stakataka, SpeciesIDs.blacephalon);
 
     public boolean isLegendary() {
-        return formeNumber == 0 ? legendaries.contains(this.number) : legendaries.contains(this.baseForme.number);
+        return isBaseForme() ? legendaries.contains(this.number) : baseForme.isLegendary();
     }
 
     public boolean isStrongLegendary() {
@@ -596,8 +601,29 @@ public class Species implements Comparable<Species> {
         return ultraBeasts.contains(this.number);
     }
 
-    public int getCosmeticFormNumber(int num) {
-        return realCosmeticFormNumbers.isEmpty() ? num : realCosmeticFormNumbers.get(num);
+    /**
+     * Gets a random cosmetic forme of this Species, including itself.
+     * @param random A seeded random number generator.
+     * @return A forme number for a random cosmetic forme of this Species, including itself.
+     */
+    public int getRandomCosmeticFormeNumber(Random random) {
+        if(cosmeticForms == 0) {
+            return formeNumber;
+        }
+
+        int num = random.nextInt(cosmeticForms);
+        if (num == cosmeticForms) {
+            return formeNumber;
+        }
+
+        if(!realCosmeticFormNumbers.isEmpty()) {
+            if(num > realCosmeticFormNumbers.size()) {
+                throw new IllegalStateException("Not all cosmetic formes listed in cosmeticFormeNumbers!");
+            }
+            return realCosmeticFormNumbers.get(num);
+        } else {
+            return formeNumber + num;
+        }
     }
 
     public String getName() {
@@ -660,8 +686,33 @@ public class Species implements Comparable<Species> {
         this.formeSpriteIndex = formeSpriteIndex;
     }
 
+    /**
+     * Checks whether the form is a purely cosmetic variant on its base form.
+     * Has some false positives and negatives at the current time.<br>
+     * See also {@link #isCosmeticReplacement()}
+     * @return Whether the form is cosmetic.
+     */
     public boolean isActuallyCosmetic() {
         return actuallyCosmetic;
+    }
+
+    /**
+     * Checks if this forme can be chosen as a "cosmetic" replacement.<br>
+     * To check if the forme is a cosmetic forme, use {@link #isActuallyCosmetic()}. <br>
+     * Despite the name, not all "cosmetic" replacements are purely cosmetic (e.g. Pumpkaboo's sizing).
+     * @return True if the forme is a cosmetic variant, false otherwise.
+     */
+    public boolean isCosmeticReplacement() {
+        if(baseForme == null) {
+            return false;
+        }
+
+        Species base = baseForme;
+        if(base.getRealCosmeticFormNumbers().isEmpty()) {
+            return formeNumber <= base.formeNumber + base.getCosmeticForms();
+        } else {
+            return base.getRealCosmeticFormNumbers().contains(formeNumber);
+        }
     }
 
     public void setActuallyCosmetic(boolean actuallyCosmetic) {
@@ -733,8 +784,15 @@ public class Species implements Comparable<Species> {
      * For this reason, it is important to use this method when initializing a {@link Species}'s types,
      * even if the "null" value used to represent no secondary type is technically the internal state of the
      * secondaryType attribute before being set.
+     * <br><br>
+     * If the secondary given is the same as the current primary, it will instead be set to null.
+     * Therefore, if changing both types, it is important to change the primary type first.
      */
     public void setSecondaryType(Type secondaryType) {
+        if(hasSetPrimaryType && secondaryType == primaryType) {
+            secondaryType = null; //So that original types aren't full of NORMAL/NORMAL and the like
+        }
+
         this.secondaryType = secondaryType;
         if (!hasSetSecondaryType) {
             this.originalSecondaryType = secondaryType;
@@ -934,6 +992,22 @@ public class Species implements Comparable<Species> {
         this.growthCurve = growthCurve;
     }
 
+    public List<Palette> getNormalPalettes() {
+        return normalPalettes;
+    }
+
+    public void setNormalPalettes(List<Palette> normalPalettes) {
+        this.normalPalettes = normalPalettes;
+    }
+
+    public List<Palette> getShinyPalettes() {
+        return shinyPalettes;
+    }
+
+    public void setShinyPalettes(List<Palette> shinyPalettes) {
+        this.shinyPalettes = shinyPalettes;
+    }
+
     public Palette getNormalPalette() {
         return getNormalPalette(0);
     }
@@ -1013,5 +1087,6 @@ public class Species implements Comparable<Species> {
     public void setMegaEvolutionsTo(List<MegaEvolution> megaEvolutionsTo) {
         this.megaEvolutionsTo = megaEvolutionsTo;
     }
+
 
 }

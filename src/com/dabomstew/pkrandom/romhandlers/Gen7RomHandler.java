@@ -293,11 +293,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         pkmn.setSpdef(stats[Gen7Constants.bsSpDefOffset] & 0xFF);
         // Type
         pkmn.setPrimaryType(Gen7Constants.typeTable[stats[Gen7Constants.bsPrimaryTypeOffset] & 0xFF]);
-        pkmn.setSecondaryType(Gen7Constants.typeTable[stats[Gen7Constants.bsSecondaryTypeOffset] & 0xFF]);
+        Type secondary = Gen7Constants.typeTable[stats[Gen7Constants.bsSecondaryTypeOffset] & 0xFF];
+
         // Only one type?
-        if (pkmn.getSecondaryType(false) == pkmn.getPrimaryType(false)) {
+        if (secondary == pkmn.getPrimaryType(true)) {
             pkmn.setSecondaryType(null);
+        } else {
+            pkmn.setSecondaryType(secondary);
         }
+
         pkmn.setCatchRate(stats[Gen7Constants.bsCatchRateOffset] & 0xFF);
         pkmn.setGrowthCurve(ExpCurve.fromByte(stats[Gen7Constants.bsGrowthCurveOffset]));
 
@@ -372,16 +376,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
             }
         }
-
-        // The above code will add all alternate cosmetic forms to realCosmeticFormNumbers as necessary, but it will
-        // NOT add the base form. For example, if we are currently looking at Mimikyu, it will add Totem Mimikyu to
-        // the list of realCosmeticFormNumbers, but it will not add normal-sized Mimikyu. Without any corrections,
-        // this will make base Mimikyu impossible to randomly select. The simplest way to fix this is to just add
-        // the base form to the realCosmeticFormNumbers here if that list was populated above.
-        if (pkmn.getRealCosmeticFormNumbers().size() > 0) {
-            pkmn.getRealCosmeticFormNumbers().add(0);
-            pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1); // getCosmeticForms++;
-        }
     }
 
     private String[] readPokemonNames() {
@@ -453,7 +447,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isActuallyCosmetic()) {
+                            if (!pk.isCosmeticReplacement()) {
                                 if (evol.getForme() > 0) {
                                     // The forme number for the evolution might represent an actual alt forme, or it
                                     // might simply represent a cosmetic forme. If it represents an actual alt forme,
@@ -717,9 +711,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             FileFunctions.write2ByteInt(stats, Gen7Constants.bsDarkGrassHeldItemOffset, 0);
         }
 
-        if (pkmn.fullName().equals("Meowstic")) {
+        if (pkmn.getFullName().equals("Meowstic")) {
             stats[Gen7Constants.bsGenderOffset] = 0;
-        } else if (pkmn.fullName().equals("Meowstic-F")) {
+        } else if (pkmn.getFullName().equals("Meowstic-F")) {
             stats[Gen7Constants.bsGenderOffset] = (byte)0xFE;
         }
     }
@@ -971,9 +965,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfPokemon(Species pk, int forme) {
-        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? !pokes[pokeNum].isActuallyCosmetic() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme() : pk;
+    public Species getAltFormeOfSpecies(Species base, int forme) {
+        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
+        return pokeNum != 0 ? (!pokes[pokeNum].isCosmeticReplacement() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme()) : base;
     }
 
 	@Override
@@ -1611,7 +1605,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs, itemId);
                     pokeOffs += 4;
                     if (tp.isResetMoves()) {
-                        int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                        int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                         for (int m = 0; m < 4; m++) {
                             writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                         }
@@ -1782,7 +1776,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     int numberOfEggMoves = readWord(movedata, 2);
@@ -1794,7 +1788,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     eggMoves.put(altForme.getNumber(), moves);
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 }
                 iter.remove();
             }
@@ -1826,7 +1820,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     List<Integer> moves = eggMoves.get(altForme.getNumber());
@@ -1835,7 +1829,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfPokemon(originalForme, formeNumber);
+                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
                 }
                 iter.remove();
             }
@@ -2616,7 +2610,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // Based on what species we're currently dealing with
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].fullName());
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }
@@ -2632,7 +2626,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = !settings.getWildPokemonMod().equals(Settings.WildPokemonMod.UNCHANGED);
+        boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);
@@ -2886,7 +2880,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public int abilitiesPerPokemon() {
+    public int abilitiesPerSpecies() {
         return 3;
     }
 

@@ -44,7 +44,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                 }
             }
-            setPokemonAndFormeForStaticEncounter(se, se.getSpecies());
+            setSpeciesAndFormeForStaticAndLinkedEncounters(se, se.getSpecies());
         }
         romHandler.setStaticPokemon(currentStaticPokemon);
     }
@@ -66,9 +66,9 @@ public class StaticPokemonRandomizer extends Randomizer {
         List<StaticEncounter> replacements = new ArrayList<>();
 
         SpeciesSet banned = romHandler.getBannedForStaticPokemon();
-        banned.addAll(rPokeService.getBannedFormesForPlayerPokemon());
+        banned.addAll(rSpecService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
-            SpeciesSet abilityDependentFormes = rPokeService.getAbilityDependentFormes();
+            SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
         }
         if (banIrregularAltFormes) {
@@ -83,15 +83,15 @@ public class StaticPokemonRandomizer extends Randomizer {
         }
 
         if (swapLegendaries) {
-            SpeciesSet legendariesLeft = new SpeciesSet(rPokeService.getLegendaries(allowAltFormes));
+            SpeciesSet legendariesLeft = new SpeciesSet(rSpecService.getLegendaries(allowAltFormes));
             if (allowAltFormes) {
-                legendariesLeft = legendariesLeft.filter(pk -> !pk.isActuallyCosmetic());
+                legendariesLeft = legendariesLeft.filter(pk -> !pk.isCosmeticReplacement());
             }
-            SpeciesSet nonlegsLeft = new SpeciesSet(rPokeService.getNonLegendaries(allowAltFormes));
+            SpeciesSet nonlegsLeft = new SpeciesSet(rSpecService.getNonLegendaries(allowAltFormes));
             if (allowAltFormes) {
-                nonlegsLeft = nonlegsLeft.filter(pk -> !pk.isActuallyCosmetic());
+                nonlegsLeft = nonlegsLeft.filter(pk -> !pk.isCosmeticReplacement());
             }
-            SpeciesSet ultraBeastsLeft = new SpeciesSet(rPokeService.getUltrabeasts(false));
+            SpeciesSet ultraBeastsLeft = new SpeciesSet(rSpecService.getUltrabeasts(false));
             legendariesLeft.removeAll(banned);
             nonlegsLeft.removeAll(banned);
             ultraBeastsLeft.removeAll(banned);
@@ -106,7 +106,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 Species newPK;
                 if (old.getSpecies().isLegendary()) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
-                        newPK = getMegaEvoPokemon(rPokeService.getLegendaries(false), legendariesLeft, newStatic);
+                        newPK = getMegaEvoPokemon(rSpecService.getLegendaries(false), legendariesLeft, newStatic);
                     } else {
                         if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(legendariesPool, legendariesLeft, old);
@@ -116,12 +116,12 @@ public class StaticPokemonRandomizer extends Randomizer {
                         }
                     }
 
-                    setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                    setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
                     if (legendariesLeft.size() == 0) {
                         legendariesLeft.addAll(legendariesPool);
                     }
-                } else if (rPokeService.getUltrabeasts(false).contains(old.getSpecies())) {
+                } else if (rSpecService.getUltrabeasts(false).contains(old.getSpecies())) {
                     if (old.isRestrictedPool()) {
                         newPK = getRestrictedStaticPokemon(ultraBeastsPool, ultraBeastsLeft, old);
                     } else {
@@ -129,14 +129,14 @@ public class StaticPokemonRandomizer extends Randomizer {
                         ultraBeastsLeft.remove(newPK);
                     }
 
-                    setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                    setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
                     if (ultraBeastsLeft.size() == 0) {
                         ultraBeastsLeft.addAll(ultraBeastsPool);
                     }
                 } else {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
-                        newPK = getMegaEvoPokemon(rPokeService.getNonLegendaries(false), nonlegsLeft, newStatic);
+                        newPK = getMegaEvoPokemon(rSpecService.getNonLegendaries(false), nonlegsLeft, newStatic);
                     } else {
                         if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(nonlegsPool, nonlegsLeft, old);
@@ -145,7 +145,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                             nonlegsLeft.remove(newPK);
                         }
                     }
-                    setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                    setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
                     if (nonlegsLeft.size() == 0) {
                         nonlegsLeft.addAll(nonlegsPool);
@@ -157,10 +157,10 @@ public class StaticPokemonRandomizer extends Randomizer {
                 }
             }
         } else if (similarStrength) {
-            SpeciesSet listInclFormesExclCosmetics = rPokeService.getAll(true)
-                    .filter(pk -> !pk.isActuallyCosmetic());
+            SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true)
+                    .filter(pk -> !pk.isCosmeticReplacement());
             SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
-                    rPokeService.getAll(false) : listInclFormesExclCosmetics);
+                    rSpecService.getAll(false) : listInclFormesExclCosmetics);
             pokemonLeft.removeAll(banned);
 
             SpeciesSet pokemonPool = new SpeciesSet(pokemonLeft);
@@ -171,12 +171,12 @@ public class StaticPokemonRandomizer extends Randomizer {
                 Species newPK;
                 Species oldPK = old.getSpecies();
                 if (old.getForme() > 0) {
-                    oldPK = romHandler.getAltFormeOfPokemon(oldPK, old.getForme());
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
                 }
                 Integer oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
-                        newPK = getMegaEvoPokemon(rPokeService.getAll(false), pokemonLeft, newStatic);
+                        newPK = getMegaEvoPokemon(rSpecService.getAll(false), pokemonLeft, newStatic);
                     } else {
                         if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(pokemonPool, pokemonLeft, old);
@@ -185,24 +185,24 @@ public class StaticPokemonRandomizer extends Randomizer {
                             pokemonLeft.remove(newPK);
                         }
                     }
-                    setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                    setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 } else {
                     boolean limitBST = oldPK.getBaseForme() == null ?
                             limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getNumber()) :
                             limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getBaseForme().getNumber());
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
-                        SpeciesSet megaEvoPokemonLeft = rPokeService.getMegaEvolutions()
+                        SpeciesSet megaEvoPokemonLeft = rSpecService.getMegaEvolutions()
                                 .stream()
                                 .filter(MegaEvolution::isNeedsItem)
                                 .map(mega -> mega.getFrom())
                                 .filter(pokemonLeft::contains)
                                 .collect(Collectors.toCollection(SpeciesSet::new));
                         if (megaEvoPokemonLeft.isEmpty()) {
-                            megaEvoPokemonLeft = rPokeService.getMegaEvolutions()
+                            megaEvoPokemonLeft = rSpecService.getMegaEvolutions()
                                     .stream()
                                     .filter(MegaEvolution::isNeedsItem)
                                     .map(mega -> mega.getFrom())
-                                    .filter(rPokeService.getAll(false)::contains)
+                                    .filter(rSpecService.getAll(false)::contains)
                                     .collect(Collectors.toCollection(SpeciesSet::new));
                         }
                         if(limitBST) {
@@ -242,7 +242,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         }
                     }
                     pokemonLeft.remove(newPK);
-                    setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                    setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 }
 
                 if (pokemonLeft.size() == 0) {
@@ -254,10 +254,10 @@ public class StaticPokemonRandomizer extends Randomizer {
                 }
             }
         } else { // Completely random
-            SpeciesSet listInclFormesExclCosmetics = rPokeService.getAll(true)
-                    .filter(pk -> !pk.isActuallyCosmetic());
+            SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true)
+                    .filter(pk -> !pk.isCosmeticReplacement());
             SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
-                    rPokeService.getAll(false) : listInclFormesExclCosmetics);
+                    rSpecService.getAll(false) : listInclFormesExclCosmetics);
             pokemonLeft.removeAll(banned);
 
             SpeciesSet pokemonPool = new SpeciesSet(pokemonLeft);
@@ -266,7 +266,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 if (reallySwapMegaEvos && old.canMegaEvolve()) {
-                    newPK = getMegaEvoPokemon(rPokeService.getAll(false), pokemonLeft, newStatic);
+                    newPK = getMegaEvoPokemon(rSpecService.getAll(false), pokemonLeft, newStatic);
                 } else {
                     if (old.isRestrictedPool()) {
                         newPK = getRestrictedStaticPokemon(pokemonPool, pokemonLeft, old);
@@ -276,7 +276,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                 }
                 pokemonLeft.remove(newPK);
-                setPokemonAndFormeForStaticEncounter(newStatic, newPK);
+                setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 if (pokemonLeft.size() == 0) {
                     pokemonLeft.addAll(pokemonPool);
                 }
@@ -334,17 +334,17 @@ public class StaticPokemonRandomizer extends Randomizer {
         List<TotemPokemon> replacements = new ArrayList<>();
         SpeciesSet banned = romHandler.getBannedForStaticPokemon();
         if (!abilitiesAreRandomized) {
-            SpeciesSet abilityDependentFormes = rPokeService.getAbilityDependentFormes();
+            SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
         }
         if (banIrregularAltFormes) {
             banned.addAll(romHandler.getIrregularFormes());
         }
 
-        SpeciesSet listInclFormesExclCosmetics = rPokeService.getAll(true).filter(
-                pk -> !pk.isActuallyCosmetic());
+        SpeciesSet listInclFormesExclCosmetics = rSpecService.getAll(true).filter(
+                pk -> !pk.isCosmeticReplacement());
         SpeciesSet pokemonLeft = new SpeciesSet(!allowAltFormes ?
-                rPokeService.getAll(false) : listInclFormesExclCosmetics);
+                rSpecService.getAll(false) : listInclFormesExclCosmetics);
         pokemonLeft.removeAll(banned);
 
         for (TotemPokemon old : currentTotemPokemon) {
@@ -354,7 +354,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 Species newPK;
                 Species oldPK = old.getSpecies();
                 if (old.getForme() > 0) {
-                    oldPK = romHandler.getAltFormeOfPokemon(oldPK, old.getForme());
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
                 }
 
                 if (similarStrengthTotem) {
@@ -370,7 +370,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                 pokemonLeft.remove(newPK);
                 newTotem.setSpecies(newPK);
-                setFormeForStaticEncounter(newTotem, newPK);
+                setSpeciesAndFormeForStaticEncounter(newTotem, newPK);
                 newTotem.setResetMoves(true);
                 newTotem.setLevel(old.getLevel());
 
@@ -378,7 +378,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
                 }
                 if (pokemonLeft.size() == 0) {
-                    pokemonLeft.addAll(!allowAltFormes ? rPokeService.getAll(false) : listInclFormesExclCosmetics);
+                    pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                     pokemonLeft.removeAll(banned);
                 }
             } else {
@@ -387,7 +387,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 if (levelModifier != 0) {
                     newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
                 }
-                setFormeForStaticEncounter(newTotem, newTotem.getSpecies());
+                setSpeciesAndFormeForStaticEncounter(newTotem, newTotem.getSpecies());
             }
 
             if (randomizeAllies) {
@@ -397,7 +397,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     Species newAllyPK;
                     Species oldAllyPK = oldAlly.getSpecies();
                     if (oldAlly.getForme() > 0) {
-                        oldAllyPK = romHandler.getAltFormeOfPokemon(oldAllyPK, oldAlly.getForme());
+                        oldAllyPK = romHandler.getAltFormeOfSpecies(oldAllyPK, oldAlly.getForme());
                     }
                     if (similarStrengthAllies) {
                         newAllyPK = pickStaticPowerLvlReplacement(
@@ -412,7 +412,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                     pokemonLeft.remove(newAllyPK);
                     newAlly.setSpecies(newAllyPK);
-                    setFormeForStaticEncounter(newAlly, newAllyPK);
+                    setSpeciesAndFormeForStaticEncounter(newAlly, newAllyPK);
                     newAlly.setResetMoves(true);
                     newAlly.setLevel(oldAlly.getLevel());
                     if (levelModifier != 0) {
@@ -421,7 +421,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                     newTotem.getAllies().put(oldAllyIndex, newAlly);
                     if (pokemonLeft.size() == 0) {
-                        pokemonLeft.addAll(!allowAltFormes ? rPokeService.getAll(false) : listInclFormesExclCosmetics);
+                        pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                         pokemonLeft.removeAll(banned);
                     }
                 }
@@ -430,7 +430,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 for (StaticEncounter ally : newTotem.getAllies().values()) {
                     if (levelModifier != 0) {
                         ally.setLevel(Math.min(100, (int) Math.round(ally.getLevel() * (1 + levelModifier / 100.0))));
-                        setFormeForStaticEncounter(ally, ally.getSpecies());
+                        setSpeciesAndFormeForStaticEncounter(ally, ally.getSpecies());
                     }
                 }
             }
@@ -469,24 +469,14 @@ public class StaticPokemonRandomizer extends Randomizer {
         return newStatic;
     }
 
-    private void setPokemonAndFormeForStaticEncounter(StaticEncounter newStatic, Species pk) {
-        boolean checkCosmetics = true;
-        Species newPK = pk;
-        int newForme = 0;
-        if (pk.getFormeNumber() > 0) {
-            newForme = pk.getFormeNumber();
-            newPK = pk.getBaseForme();
-            checkCosmetics = false;
-        }
-        if (checkCosmetics && pk.getCosmeticForms() > 0) {
-            newForme = pk.getCosmeticFormNumber(random.nextInt(pk.getCosmeticForms()));
-        } else if (!checkCosmetics && pk.getCosmeticForms() > 0) {
-            newForme += pk.getCosmeticFormNumber(random.nextInt(pk.getCosmeticForms()));
-        }
-        newStatic.setSpecies(newPK);
-        newStatic.setForme(newForme);
+    private void setSpeciesAndFormeForStaticAndLinkedEncounters(StaticEncounter newStatic, Species sp) {
+        setSpeciesAndFormeForStaticEncounter(newStatic, sp);
+
+        Species newSpec = newStatic.getSpecies();
+        int newForme = newStatic.getForme();
+
         for (StaticEncounter linked : newStatic.getLinkedEncounters()) {
-            linked.setSpecies(newPK);
+            linked.setSpecies(newSpec);
             linked.setForme(newForme);
         }
     }
@@ -504,7 +494,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
     private Species getMegaEvoPokemon(SpeciesSet fullList, SpeciesSet pokemonLeft,
                                       StaticEncounter newStatic) {
-        Set<MegaEvolution> megaEvos = rPokeService.getMegaEvolutions();
+        Set<MegaEvolution> megaEvos = rSpecService.getMegaEvolutions();
         SpeciesSet megaEvoPokemon = megaEvos
                 .stream()
                 .filter(MegaEvolution::isNeedsItem)
@@ -535,19 +525,13 @@ public class StaticPokemonRandomizer extends Randomizer {
         return finalPool.getRandomSimilarStrengthSpecies(current, banSamePokemon, random);
     }
 
-    private void setFormeForStaticEncounter(StaticEncounter newStatic, Species pk) {
-        boolean checkCosmetics = true;
-        newStatic.setForme(0);
-        if (pk.getFormeNumber() > 0) {
-            newStatic.setForme(pk.getFormeNumber());
-            newStatic.setSpecies(pk.getBaseForme());
-            checkCosmetics = false;
+    private void setSpeciesAndFormeForStaticEncounter(StaticEncounter newStatic, Species sp) {
+        newStatic.setForme(sp.getRandomCosmeticFormeNumber(random));
+        Species base = sp;
+        while (!base.isBaseForme()) {
+            base = base.getBaseForme();
         }
-        if (checkCosmetics && newStatic.getSpecies().getCosmeticForms() > 0) {
-            newStatic.setForme(newStatic.getSpecies().getCosmeticFormNumber(random.nextInt(newStatic.getSpecies().getCosmeticForms())));
-        } else if (!checkCosmetics && pk.getCosmeticForms() > 0) {
-            newStatic.setForme(newStatic.getForme() + pk.getCosmeticFormNumber(random.nextInt(pk.getCosmeticForms())));
-        }
+        newStatic.setSpecies(base);
     }
 
 }

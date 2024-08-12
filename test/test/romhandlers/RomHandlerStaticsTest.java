@@ -49,7 +49,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
 
     private String toLongString(StaticEncounter se, boolean isLinkedEncounter) {
         StringBuilder sb = new StringBuilder();
-        sb.append(se.getSpecies().fullName());
+        sb.append(se.getSpecies().getFullName());
         sb.append(" forme=").append(se.getForme());
         sb.append(" level=").append(se.getLevel());
         if (se.getMaxLevel() > 0) {
@@ -65,7 +65,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         } else {
             sb.append("(");
             sb.append(se.getRestrictedList().stream()
-                    .map(Species::fullName)
+                    .map(Species::getFullName)
                     .collect(Collectors.joining(",")));
             sb.append(")");
         }
@@ -108,8 +108,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         for (int i = 0; i < before.size(); i++) {
             Species befPk = before.get(i).getSpecies();
             Species aftPk = after.get(i).getSpecies();
-            System.out.println("bef=" + befPk.fullName() + (befPk.isLegendary() ? " (legendary)" : "") +
-                    ", aft=" + aftPk.fullName() + (aftPk.isLegendary() ? " (legendary)" : ""));
+            System.out.println("bef=" + befPk.getFullName() + (befPk.isLegendary() ? " (legendary)" : "") +
+                    ", aft=" + aftPk.getFullName() + (aftPk.isLegendary() ? " (legendary)" : ""));
             assertEquals(befPk.isLegendary(), aftPk.isLegendary());
         }
     }
@@ -131,8 +131,8 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         for (int i = 0; i < before.size(); i++) {
             Species befPk = before.get(i).getSpecies();
             Species aftPk = after.get(i).getSpecies();
-            System.out.println("bef=" + befPk.fullName() + (isUltraBeast(befPk) ? " (ultra beast)" : "") +
-                    ", aft=" + aftPk.fullName() + (isUltraBeast(aftPk) ? " (ultra beast)" : ""));
+            System.out.println("bef=" + befPk.getFullName() + (isUltraBeast(befPk) ? " (ultra beast)" : "") +
+                    ", aft=" + aftPk.getFullName() + (isUltraBeast(aftPk) ? " (ultra beast)" : ""));
             assertEquals(isUltraBeast(befPk), isUltraBeast(aftPk));
         }
     }
@@ -156,16 +156,16 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         for (int i = 0; i < before.size(); i++) {
             StaticEncounter bef = before.get(i);
             StaticEncounter aft = after.get(i);
-            System.out.println("bef=" + bef.getSpecies().fullName() + (bef.getHeldItem() == null ? "" : "w. " + items.get(bef.getHeldItem().getId()).getName())
+            System.out.println("bef=" + bef.getSpecies().getFullName() + (bef.getHeldItem() == null ? "" : "w. " + items.get(bef.getHeldItem().getId()).getName())
                     + (bef.canMegaEvolve() ? " (can mega evolve)" : "") +
-                    ", aft=" + aft.getSpecies().fullName() + (aft.getHeldItem() == null ? "" : "w. " + items.get(aft.getHeldItem().getId()).getName())
+                    ", aft=" + aft.getSpecies().getFullName() + (aft.getHeldItem() == null ? "" : "w. " + items.get(aft.getHeldItem().getId()).getName())
                     + (aft.canMegaEvolve() ? " (can mega evolve)" : ""));
             assertEquals(bef.canMegaEvolve(), aft.canMegaEvolve());
         }
     }
 
     private boolean isUltraBeast(Species pk) {
-        return romHandler.getRestrictedPokemonService().getUltrabeasts(false).contains(pk);
+        return romHandler.getRestrictedSpeciesService().getUltrabeasts(false).contains(pk);
     }
 
     private List<StaticEncounter> deepCopy(List<StaticEncounter> original) {

@@ -14,8 +14,8 @@ public class EvolutionUpdate implements Comparable<EvolutionUpdate> {
     public EvolutionUpdate(Species from, Species to, EvolutionType type, String extraInfo, boolean condensed, boolean additional) {
         this.from = from;
         this.to = to;
-        fromName = from.fullName();
-        toName = to.fullName();
+        fromName = from.getFullName();
+        toName = to.getFullName();
         this.type = type;
         this.extraInfo = extraInfo;
         this.condensed = condensed;

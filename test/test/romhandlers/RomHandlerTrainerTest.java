@@ -398,9 +398,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + tr);
                 for (TrainerPokemon tp : tr.pokemon) {
-                    Species pk = tp.getSpecies();
-                    System.out.println("\t" + pk);
-                    assertTrue(pk.getPrimaryType(false) == theme || pk.getSecondaryType(false) == theme);
+                    Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                    System.out.println("\t" + sp);
+                    assertTrue(sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme);
                 }
             } else {
                 System.out.println("Not Type Themed");
@@ -442,7 +442,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
             for (TrainerPokemon pokemon : trainer.pokemon) {
-                speciesPrimaryTypes.add(pokemon.getSpecies());
+                speciesPrimaryTypes.add(romHandler.getAltFormeOfSpecies(pokemon.getSpecies(), pokemon.getForme()));
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
         }
@@ -548,7 +548,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildSpecies(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
                         .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
@@ -582,7 +582,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setUseTimeBasedEncounters(true); // should be at least 4 non-local Pokemon in each game
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildSpecies(s.isUseTimeBasedEncounters())
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
                 .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);

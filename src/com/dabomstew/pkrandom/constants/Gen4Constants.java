@@ -1953,9 +1953,9 @@ public class Gen4Constants {
 
     }
 
-    public static final HashMap<String, Type> gymAndEliteThemesDPPt = setupGymAndEliteThemesDPPt();
+    public static final HashMap<String, Type> gymAndEliteThemesDP = setupGymAndEliteThemesDP();
 
-    private static HashMap<String, Type> setupGymAndEliteThemesDPPt() {
+    private static HashMap<String, Type> setupGymAndEliteThemesDP() {
         HashMap<String, Type> themeMap = new HashMap<>();
         //no theme for Cynthia
         themeMap.put("ELITE1", Type.BUG); //Aaron
@@ -1967,6 +1967,26 @@ public class Gen4Constants {
         themeMap.put("GYM3", Type.FIGHTING); //Maylene
         themeMap.put("GYM4", Type.WATER); //Wake
         themeMap.put("GYM5", Type.GHOST); //Fantina
+        themeMap.put("GYM6", Type.STEEL); //Byron
+        themeMap.put("GYM7", Type.ICE); //Candice
+        themeMap.put("GYM8", Type.ELECTRIC); //Volkner
+        return themeMap;
+    }
+
+    public static final HashMap<String, Type> gymAndEliteThemesPt = setupGymAndEliteThemesPt();
+
+    private static HashMap<String, Type> setupGymAndEliteThemesPt() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        //no theme for Cynthia
+        themeMap.put("ELITE1", Type.BUG); //Aaron
+        themeMap.put("ELITE2", Type.GROUND); //Bertha
+        themeMap.put("ELITE3", Type.FIRE); //Flint
+        themeMap.put("ELITE4", Type.PSYCHIC); //Lucian
+        themeMap.put("GYM1", Type.ROCK); //Roark
+        themeMap.put("GYM2", Type.GRASS); //Gardenia
+        themeMap.put("GYM3", Type.GHOST); //Fantina
+        themeMap.put("GYM4", Type.FIGHTING); // Maylene
+        themeMap.put("GYM5", Type.WATER); //Wake
         themeMap.put("GYM6", Type.STEEL); //Byron
         themeMap.put("GYM7", Type.ICE); //Candice
         themeMap.put("GYM8", Type.ELECTRIC); //Volkner
@@ -2335,7 +2355,7 @@ public class Gen4Constants {
 
     private static List<String> initLocationTagsDP() {
         List<String> tags = new ArrayList<>();
-        addCopies(tags, 4, "CANACLAVE CITY");
+        addCopies(tags, 4, "CANALAVE CITY");
         addCopies(tags, 4, "ETERNA CITY");
         addCopies(tags, 4, "PASTORIA CITY");
         addCopies(tags, 4, "SUNYSHORE CITY");
@@ -2405,6 +2425,15 @@ public class Gen4Constants {
         addCopies(tags, 2, "GREAT MARSH");
         return Collections.unmodifiableList(tags);
     }
+
+    public static final int trophyGardenMapIndex = 117;
+    public static final int nationalParkMapIndex = 23;
+    public static final int nationalParkBadMapIndex = 24; //National Park is incorrectly considered two maps
+    //This lets us merge them
+    //(Some other areas that are debatably the same map are not merged)
+    public static final int mtCoronetFeebasLakeMapIndex = 10;
+    //(It's not the best that we're hardcoding these, but we've already got plenty of hardcoded stuff that probably
+    //shouldn't be)
 
     private static final List<String> locationTagsPt = initLocationTagsPt();
 

@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 /**
  * An extension of {@link HashSet} instantiated to {@link Species}.
  * Adds various helper functions useful for this class.
+ * Will not add null values to the set.
  */
 public class SpeciesSet extends HashSet<Species> {
 
@@ -84,7 +85,7 @@ public class SpeciesSet extends HashSet<Species> {
     /**
      * Returns the subset of this set for which the predicate function returns true.
      * @param predicate The function to test {@link Species} against.
-     * @return A {@link SpeciesSet} containing every {@link Species} in this set for which predicate returns true.
+     * @return A new {@link SpeciesSet} containing every {@link Species} in this set for which predicate returns true.
      */
     public SpeciesSet filter(Predicate<? super Species> predicate) {
         SpeciesSet filtered = new SpeciesSet();
@@ -94,6 +95,29 @@ public class SpeciesSet extends HashSet<Species> {
             }
         }
         return filtered;
+    }
+
+    /**
+     * Given a {@link Collection} of {@link Species}, finds whether this set shares any members with it.
+     * @param other The {@link Collection} to compare.
+     * @return True if any {@link Species} is in both Collections, false otherwise.
+     */
+    public boolean containsAny(Collection<Species> other) {
+        if(this.size() < other.size()) {
+            for(Species species : this) {
+                if(other.contains(species)) {
+                    return true;
+                }
+            }
+        } else {
+            for(Species species : other) {
+                if(this.contains(species)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     //BuildSet variants
@@ -311,6 +335,27 @@ public class SpeciesSet extends HashSet<Species> {
         } else {
             return primary;
         }
+    }
+
+    /**
+     * Finds if all {@link Species} in this set share one or more types.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return The set of Types shared by all {@link Species} in the set, or an empty set if none were shared.
+     */
+    public Set<Type> getSharedTypes(boolean useOriginal) {
+        if(this.isEmpty()) {
+            return EnumSet.noneOf(Type.class);
+        }
+        Set<Type> sharedTypes = EnumSet.allOf(Type.class);
+
+        for(Species spec : this) {
+            sharedTypes.removeIf(t -> !spec.hasType(t, useOriginal));
+            if(sharedTypes.isEmpty()) {
+                break;
+            }
+        }
+
+        return sharedTypes;
     }
 
     //End Type Zone
@@ -976,22 +1021,6 @@ public class SpeciesSet extends HashSet<Species> {
     //end randoms
 
     //Various Functions
-
-    /**
-     * Returns all {@link Species} in the set which are cosmetic formes.
-     * @return A {@link SpeciesSet} containing all {@link Species} in this set which are cosmetic.
-     */
-    public SpeciesSet filterCosmetic() {
-        return filter(Species::isActuallyCosmetic);
-    }
-
-    /**
-     * Returns all {@link Species} in the set which are not cosmetic formes.
-     * @return A {@link SpeciesSet} containing all {@link Species} in this set which are not cosmetic.
-     */
-    public SpeciesSet filterNonCosmetic() {
-        return filter(p -> !p.isActuallyCosmetic());
-    }
 
     public String toStringShort() {
         StringBuilder string = new StringBuilder("[");

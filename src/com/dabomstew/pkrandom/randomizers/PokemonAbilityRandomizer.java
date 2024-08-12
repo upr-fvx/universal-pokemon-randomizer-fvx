@@ -5,6 +5,7 @@ import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.List;
@@ -29,11 +30,11 @@ public class PokemonAbilityRandomizer extends Randomizer {
         boolean doubleBattleMode = settings.isDoubleBattleMode();
 
         // Abilities don't exist in some games...
-        if (romHandler.abilitiesPerPokemon() == 0) {
+        if (romHandler.abilitiesPerSpecies() == 0) {
             return;
         }
 
-        final boolean hasHiddenAbilities = (romHandler.abilitiesPerPokemon() == 3);
+        final boolean hasHiddenAbilities = (romHandler.abilitiesPerSpecies() == 3);
 
         final List<Integer> bannedAbilities = romHandler.getUselessAbilities();
 
@@ -99,7 +100,7 @@ public class PokemonAbilityRandomizer extends Randomizer {
         });
 
 
-        romHandler.getSpeciesSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {

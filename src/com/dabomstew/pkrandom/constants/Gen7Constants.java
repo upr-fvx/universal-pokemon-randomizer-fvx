@@ -648,6 +648,10 @@ public class Gen7Constants {
         rayquazaMap.put(1,"-Mega");
         map.put(SpeciesIDs.rayquaza, rayquazaMap);
 
+        Map<Integer, String> keldeoMap = new HashMap<>();
+        keldeoMap.put(1, "-Resolute");
+        map.put(SpeciesIDs.keldeo, keldeoMap);
+
         Map<Integer,String> hoopaMap = new HashMap<>();
         hoopaMap.put(1,"-Unbound");
         map.put(SpeciesIDs.hoopa, hoopaMap);

@@ -26,7 +26,7 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
 import java.awt.image.BufferedImage;
@@ -46,7 +46,7 @@ import java.util.Set;
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
  * Some methods giving extra context to the main data are also provided (e.g. {@link #hasRivalFinalBattle()},
- * {@link #hasPhysicalSpecialSplit()}, {@link #abilitiesPerPokemon()}).
+ * {@link #hasPhysicalSpecialSplit()}, {@link #abilitiesPerSpecies()}).
  * <br><br>
  * Though given a Rom, the RomHandler might not be able to get/set all kinds of data. Either because the Rom itself
  * does not support the data type (there are no Starter held items in Red), or because the RomHandler itself does not
@@ -113,11 +113,12 @@ public interface RomHandler {
 
     List<MegaEvolution> getMegaEvolutions();
 
-    Species getAltFormeOfPokemon(Species pk, int forme);
+    Species getAltFormeOfSpecies(Species base, int forme);
+    //TODO: move this to Species
 
     SpeciesSet getIrregularFormes();
 
-    RestrictedPokemonService getRestrictedPokemonService();
+    RestrictedSpeciesService getRestrictedSpeciesService();
 
     // ==================================
     // Methods to set up Gen Restrictions
@@ -149,7 +150,7 @@ public interface RomHandler {
     // Pokemon Abilities
     // =================
 
-    int abilitiesPerPokemon();
+    int abilitiesPerSpecies();
 
     int highestAbilityIndex();
 
@@ -183,11 +184,15 @@ public interface RomHandler {
      * @param useTimeOfDay
      * @return A new SpeciesSet containing all wild Species found in the main game.
      */
-    SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay);
+    SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay);
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 
     default boolean hasEncounterLocations() {
+        return false;
+    }
+
+    default boolean hasMapIndices() {
         return false;
     }
 
@@ -323,7 +328,7 @@ public interface RomHandler {
 
     /**
      * Get TM/HM compatibility data from this rom. The result should contain a
-     * boolean array for each Pokemon indexed as such:
+     * boolean array for each Species indexed as such:
      * <br>
      * 0: blank (false) / 1 - (getTMCount()) : TM compatibility /
      * (getTMCount()+1) - (getTMCount()+getHMCount()) - HM compatibility
@@ -531,7 +536,7 @@ public interface RomHandler {
     int internalStringLength(String string);
 
     /**
-     * Sets the Pokemon shown in the intro. Returns false if pk is not a valid intro Pokemon.
+     * Sets the Species shown in the intro. Returns false if pk is not a valid intro Species.
      */
     boolean setIntroPokemon(Species pk);
 
@@ -548,7 +553,7 @@ public interface RomHandler {
     void applyMiscTweak(MiscTweak tweak);
 
     /**
-     * Sets the Pokemon shown in the catching tutorial. Returns false if the Pokemon are not valid catching tutorial Pokemon.
+     * Sets the Species shown in the catching tutorial. Returns false if the Species are not valid catching tutorial Species.
      */
     boolean setCatchingTutorial(Species opponent, Species player);
 

@@ -5,7 +5,8 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -151,7 +152,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void restrictedPokemonAreSameAsSpeciesSetWithNoRestrictionsSet(String romName) {
         loadROM(romName);
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(null);
         assertEquals(romHandler.getSpeciesSet(), rPokeService.getAll(false));
     }
@@ -166,7 +167,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
@@ -192,7 +193,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
@@ -224,7 +225,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
         // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
@@ -250,7 +251,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
 
-        RestrictedPokemonService rPokeService = romHandler.getRestrictedPokemonService();
+        RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(settings);
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
@@ -310,7 +311,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk);
-            System.out.println(pk.fullName());
+            System.out.println(pk.getFullName());
             System.out.println(pk.getGeneration());
             assertNotEquals(-1, pk.getGeneration());
         }
@@ -340,6 +341,41 @@ public class RomHandlerMiscTest extends RomHandlerTest {
                 String itemName = mev.getItem().getName();
                 assertTrue(itemName.startsWith(prefix));
             }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void actuallyCosmeticAndIsCosmeticFormeMatch(String romName) {
+        loadROM(romName);
+
+        SpeciesSet mismatched = new SpeciesSet();
+
+        System.out.println("Cosmetic replacements which are cosmetic formes: ");
+
+        for (Species forme : romHandler.getSpeciesSetInclFormes()) {
+            if(forme.isCosmeticReplacement() != forme.isActuallyCosmetic()) {
+                mismatched.add(forme);
+            }
+            if(forme.isCosmeticReplacement() && forme.isActuallyCosmetic()) {
+                System.out.print(forme.getFullName());
+                if(forme.getName().equals(forme.getFullName())) {
+                    System.out.print(" " + forme.getFormeNumber());
+                }
+                System.out.println();
+            }
+        }
+        System.out.println();
+
+        if(!mismatched.isEmpty()) {
+            for(Species forme : mismatched) {
+                System.out.println(forme.getFullName() +
+                        (forme.getFormeSuffix().isEmpty() ? " " + forme.getFormeNumber() : "")
+                        + ": isCosmeticReplacement = " + forme.isCosmeticReplacement()
+                        + "; isActuallyCosmetic = " + forme.isActuallyCosmetic());
+            }
+            Assumptions.abort();
+            //This test isn't really meant to be passed, so much as it's meant to be informative.
         }
     }
 

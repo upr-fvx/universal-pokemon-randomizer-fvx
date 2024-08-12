@@ -14,52 +14,42 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     public void randomizeEncounters() {
-        Settings.WildPokemonMod mode = settings.getWildPokemonMod();
         boolean useTimeOfDay = settings.isUseTimeBasedEncounters();
-        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.THEMED_AREAS;
+        int levelModifier = settings.isWildLevelsModified() ? settings.getWildLevelModifier() : 0;
+
+        if(!settings.isRandomizeWildPokemon()) {
+            modifyLevelsOnly(useTimeOfDay, levelModifier);
+            return;
+        }
+
+        Settings.WildPokemonZoneMod mode = settings.getWildPokemonZoneMod();
+        boolean splitByEncounterType = settings.isSplitWildZoneByEncounterTypes();
+        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
+        boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
         boolean noLegendaries = settings.isBlockWildLegendaries();
         boolean balanceShakingGrass = settings.isBalanceShakingGrass();
-        int levelModifier = settings.isWildLevelsModified() ? settings.getWildLevelModifier() : 0;
         boolean allowAltFormes = settings.isAllowWildAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
 
-        randomizeEncounters(mode, useTimeOfDay,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, noLegendaries,
+        randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, keepEvolutions, catchEmAll, similarStrength, noLegendaries,
                 balanceShakingGrass, levelModifier, allowAltFormes, banIrregularAltFormes, abilitiesAreRandomized);
         changesMade = true;
     }
 
-    // only exists for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonMod mode, Settings.WildPokemonTypeMod typeMode,
+    // only public for some old test cases, please don't use
+    private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
-                                    boolean catchEmAll, boolean similarStrength,
+                                    boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
+                                    boolean keepEvolutions, boolean catchEmAll, boolean similarStrength,
                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
                                     boolean allowAltFormes, boolean banIrregularAltFormes,
                                     boolean abilitiesAreRandomized) {
-        randomizeEncounters(mode,
-                useTimeOfDay,
-                typeMode == Settings.WildPokemonTypeMod.THEMED_AREAS,
-                false,
-                typeMode == Settings.WildPokemonTypeMod.KEEP_PRIMARY,
-                catchEmAll, similarStrength,
-                noLegendaries, balanceShakingGrass, levelModifier,
-                allowAltFormes, banIrregularAltFormes,
-                abilitiesAreRandomized);
-    }
-
-    // only public for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonMod mode,
-                                     boolean useTimeOfDay,
-                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                     boolean catchEmAll, boolean similarStrength,
-                                     boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
-                                     boolean allowAltFormes, boolean banIrregularAltFormes,
-                                     boolean abilitiesAreRandomized) {
         // - prep settings
         // - get encounters
         // - setup banned + allowed
@@ -67,38 +57,38 @@ public class EncounterRandomizer extends Randomizer {
         // - apply level modifier
         // - set encounters
 
-        rPokeService.setRestrictions(settings);
+        rSpecService.setRestrictions(settings);
 
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
+        List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
         SpeciesSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
-        SpeciesSet allowed = new SpeciesSet(rPokeService.getPokemon(noLegendaries, allowAltFormes, false));
+        SpeciesSet allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
 
-
-
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass);
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
+                keepEvolutions);
         switch (mode) {
-            case RANDOM:
+            case NONE:
                 if(romHandler.isORAS()) {
                     //this mode crashes ORAS and needs special handling to approximate
-                    ir.randomEncountersORAS(encounterAreas);
+                    ir.randomEncountersORAS(preppedAreas);
                 } else {
-                    ir.randomEncounters(encounterAreas);
+                    ir.randomEncounters(preppedAreas);
                 }
                 break;
-            case AREA_MAPPING:
-                ir.area1to1Encounters(encounterAreas);
+            case ENCOUNTER_SET:
+                ir.area1to1Encounters(preppedAreas);
                 break;
-            case LOCATION_MAPPING:
-                ir.location1to1Encounters(encounterAreas);
+            case MAP:
+                ir.map1to1Encounters(preppedAreas, splitByEncounterType);
                 break;
-            case GLOBAL_MAPPING:
-                ir.game1to1Encounters(encounterAreas);
+            case NAMED_LOCATION:
+                ir.location1to1Encounters(preppedAreas, splitByEncounterType);
                 break;
-            case FAMILY_MAPPING:
-                ir.gameFamilyToFamilyEncounters(encounterAreas);
+            case GAME:
+                ir.game1to1Encounters(preppedAreas, splitByEncounterType);
                 break;
         }
 
@@ -106,13 +96,22 @@ public class EncounterRandomizer extends Randomizer {
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }
 
+    /**
+     * Changes the levels of wild Pokemon encounters without randomizing them.
+     */
+    private void modifyLevelsOnly(boolean useTimeOfDay, int levelModifier) {
+        List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
+        applyLevelModifier(levelModifier, encounterAreas);
+        romHandler.setEncounters(useTimeOfDay, encounterAreas);
+    }
+
     private SpeciesSet getBannedForWildEncounters(boolean banIrregularAltFormes,
-                                                  boolean abilitiesAreRandomized) {
+                                                           boolean abilitiesAreRandomized) {
         SpeciesSet banned = new SpeciesSet();
         banned.addAll(romHandler.getBannedForWildEncounters());
-        banned.addAll(rPokeService.getBannedFormesForPlayerPokemon());
+        banned.addAll(rSpecService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
-            SpeciesSet abilityDependentFormes = rPokeService.getAbilityDependentFormes();
+            SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
         }
         if (banIrregularAltFormes) {
@@ -139,54 +138,49 @@ public class EncounterRandomizer extends Randomizer {
         private final boolean needsTypes;
         private final boolean catchEmAll;
         private final boolean similarStrength;
-        private final boolean balanceShakingGrass;
+        private final boolean balanceLowLevelEncounters;
+        private final boolean keepEvolutions;
 
-        private boolean map1to1;
-        private boolean useLocations;
+        private boolean useMapping;
 
         private Map<Type, SpeciesSet> allowedByType;
         private final SpeciesSet allowed;
         private final SpeciesSet banned;
-
         private Map<Type, SpeciesSet> remainingByType;
         private SpeciesSet remaining;
 
-        private Type areaType;
-        private SpeciesSet allowedForArea;
-        private Map<Species, Species> areaMap;
-        private SpeciesSet allowedForReplacement;
-
-        private Map<Species, PokemonAreaInformation> areaInformationMap;
-        private SpeciesSet remainingFamilyRestricted;
-        private Map<Type, SpeciesSet> remainingFamilyRestrictedByType;
+        private Map<Species, Species> zoneMap;
+        private Map<Species, SpeciesAreaInformation> areaInformationMap = null;
 
         //ORAS's DexNav will crash if the load is higher than this value.
         final int ORAS_CRASH_THRESHOLD = 18;
 
         public InnerRandomizer(SpeciesSet allowed, SpeciesSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                               boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass) {
+                               boolean catchEmAll, boolean similarStrength, boolean balanceLowLevelEncounters,
+                               boolean keepEvolutions) {
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
             }
             this.randomTypeThemes = randomTypeThemes;
             this.keepTypeThemes = keepTypeThemes;
             this.keepPrimaryType = keepPrimaryType;
+            this.keepEvolutions = keepEvolutions;
             this.needsTypes = keepPrimaryType || keepTypeThemes || randomTypeThemes;
             this.catchEmAll = catchEmAll;
             this.similarStrength = similarStrength;
-            this.balanceShakingGrass = balanceShakingGrass;
+            this.balanceLowLevelEncounters = balanceLowLevelEncounters;
             this.allowed = allowed;
             this.banned = banned;
             if (needsTypes) {
                 this.allowedByType = allowed.sortByType(false, typeService.getTypes());
             }
-            if (catchEmAll) {
-                refillRemainingPokemon();
-            }
+            //any algorithm that uses mapping should use remaining, not just catch-em-all
+            //easiest to just always use it
+            refillRemainingSpecies();
         }
 
-        private void refillRemainingPokemon() {
+        private void refillRemainingSpecies() {
             remaining = new SpeciesSet(allowed);
             if (needsTypes) {
                 remainingByType = new EnumMap<>(Type.class);
@@ -196,52 +190,20 @@ public class EncounterRandomizer extends Randomizer {
             }
         }
 
+        //This is now the one most different, algorithm-wise
+        //but it has enough overlap to make sense here, anyway.
         public void randomEncounters(List<EncounterArea> encounterAreas) {
-            map1to1 = false;
-            useLocations = false;
-            randomEncountersInner(encounterAreas);
-        }
+            useMapping = false;
 
-        public void area1to1Encounters(List<EncounterArea> encounterAreas) {
-            map1to1 = true;
-            useLocations = false;
-            randomEncountersInner(encounterAreas);
-        }
-
-        public void location1to1Encounters(List<EncounterArea> encounterAreas) {
-            map1to1 = true;
-            useLocations = true;
-            randomEncountersInner(encounterAreas);
-        }
-
-        private void randomEncountersInner(List<EncounterArea> encounterAreas) {
-            List<EncounterArea> preppedEncounterAreas = prepEncounterAreas(encounterAreas);
-            for (EncounterArea area : preppedEncounterAreas) {
-                areaType = pickAreaType(area);
-                allowedForArea = setupAllowedForArea();
-
-                areaMap = new TreeMap<>();
-
-                for (Encounter enc : area) {
-                    Species replacement = pickReplacement(enc);
-                    if (map1to1) {
-                        areaMap.put(enc.getSpecies(), replacement);
-                    }
-
-                    enc.setSpecies(replacement);
-                    setFormeForEncounter(enc, replacement);
-
-                    if (catchEmAll) {
-                        removeFromRemaining(replacement);
-                        if (allowedForArea.isEmpty()) {
-                            allowedForArea = setupAllowedForArea();
-                        }
-                    }
-                }
-                if (area.isForceMultipleSpecies()) {
-                    enforceMultipleSpecies(area);
-                }
+            //ok. this is dumb, but it makes it integrate well.
+            List<List<EncounterArea>> zones = new ArrayList<>();
+            for(EncounterArea area : encounterAreas) {
+                List<EncounterArea> zone = new ArrayList<>();
+                zone.add(area);
+                zones.add(zone);
             }
+
+            randomizeZones(zones);
         }
 
         /**
@@ -251,8 +213,12 @@ public class EncounterRandomizer extends Randomizer {
          */
         private void randomEncountersORAS(List<EncounterArea> encounterAreas) {
 
-            List<EncounterArea> collapsedEncounters = flattenEncounterTypesInMaps(encounterAreas);
-            List<List<EncounterArea>> maps = new ArrayList<>(groupAreasByMapIndex(collapsedEncounters).values());
+            //ideally, this would treat the encounter types as zones rather than flattening them
+            //however that would require ANOTHER big rewrite of this algorithm
+            //TODO: convert this from flatten to group
+            List<EncounterArea> collapsedEncounters = EncounterArea.flattenEncounterTypesInMaps(encounterAreas);
+            List<List<EncounterArea>> maps = new ArrayList<>(
+                    EncounterArea.groupAreasByMapIndex(collapsedEncounters).values());
             Collections.shuffle(maps, random);
             //Awkwardly, the grouping is run twice...
 
@@ -273,315 +239,561 @@ public class EncounterRandomizer extends Randomizer {
             //Rock smash is not affected by the crashing, so we can run the standard RandomEncounters on it.
             this.randomEncounters(rockSmashAreas);
 
-            //For other areas, run it by map
-            //(They're already shuffled)
-            for(List<EncounterArea> map : maps) {
+            randomizeZonesORAS(maps);
+        }
+
+        public void area1to1Encounters(List<EncounterArea> encounterAreas) {
+            useMapping = true;
+
+            //ok. this is dumb, but it makes it integrate well.
+            List<List<EncounterArea>> zones = new ArrayList<>();
+            for(EncounterArea area : encounterAreas) {
+                List<EncounterArea> zone = new ArrayList<>();
+                zone.add(area);
+                zones.add(zone);
+            }
+
+            randomizeZones(zones);
+        }
+
+        public void map1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+            Collection<List<EncounterArea>> zones = EncounterArea.groupAreasByMapIndex(encounterAreas).values();
+
+            if(splitByEncounterType) {
+                Collection<List<EncounterArea>> maps = zones;
+                zones = new ArrayList<>();
+                for(List<EncounterArea> map : maps) {
+                    zones.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                }
+            }
+
+            randomizeZones(zones);
+        }
+
+        public void location1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+            Collection<List<EncounterArea>> zones = EncounterArea.groupAreasByLocation(encounterAreas).values();
+
+            if(splitByEncounterType) {
+                Collection<List<EncounterArea>> maps = zones;
+                zones = new ArrayList<>();
+                for(List<EncounterArea> map : maps) {
+                    zones.addAll(EncounterArea.groupAreasByEncounterType(map).values());
+                }
+            }
+
+            randomizeZones(zones);
+        }
+
+        public void game1to1Encounters(List<EncounterArea> encounterAreas, boolean splitByEncounterType) {
+            useMapping = true;
+
+            Collection<List<EncounterArea>> zones;
+            if (splitByEncounterType) {
+                zones = EncounterArea.groupAreasByEncounterType(encounterAreas).values();
+            } else {
+                zones = new ArrayList<>();
+                zones.add(encounterAreas);
+            }
+
+            randomizeZones(zones);
+        }
+
+        /**
+         * Given a Collection of zones (represented by a List of EncounterAreas),
+         * randomizes each zone such that type theming, 1-to-1 map, etc., are carried
+         * throughout the zone.
+         * @param zones The zones to randomize.
+         */
+        private void randomizeZones(Collection<List<EncounterArea>> zones) {
+
+            //Shuffle zones; otherwise, large zones would tend to be randomized first.
+            List<List<EncounterArea>> shuffledZones = new ArrayList<>(zones);
+            Collections.shuffle(shuffledZones, random);
+
+            for(List<EncounterArea> zone : shuffledZones) {
+                Type zoneType = pickZoneType(zone);
+
+                if(useMapping) {
+                    zoneMap = new HashMap<>();
+                    setupAreaInfoMap(zone);
+
+                    if(keepEvolutions) {
+                        spreadThemesThroughFamilies();
+                    }
+                }
+
+                for(EncounterArea area : zone) {
+                    randomizeArea(area, zoneType);
+                }
+
+                if(useMapping && !catchEmAll) {
+                    //if not using mapping or catch em all, remaining will not empty in the first place.
+                    refillRemainingSpecies();
+                }
+            }
+        }
+
+        private void randomizeArea(EncounterArea area, Type zoneType) {
+            //no area-level type theme, because that could foul up other type restrictions.
+            //Either it's zone-level, or determined per-Species (based on all areas in the zone).
+
+            //removing allowedForArea: it added a lot of complexity to the algorithm, and only saved
+            //a small amount of processing time in what are already the fastest-processing cases.
+            for (Encounter enc : area) {
+                Species current = enc.getSpecies();
+
+                Species replacement;
+                if(useMapping && zoneMap.containsKey(current)) {
+                    //checking the map first lets us avoid creating a pointless allowedForReplacement set
+                    replacement = zoneMap.get(current);
+
+                } else {
+                    //choose new Species
+                    if(keepEvolutions && mapHasFamilyMember(current)) {
+                        replacement = pickFamilyMemberReplacement(current);
+                    } else {
+                        SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, area, zoneType);
+                        replacement = pickReplacement(current, allowedForReplacement);
+                    }
+
+                    //add to map if applicable
+                    if (useMapping) {
+                        zoneMap.put(current, replacement);
+                    }
+
+                    //remove from remaining if applicable
+                    if (useMapping || catchEmAll) {
+                        removeFromRemaining(replacement);
+                        //removeFromRemaining() already checks if remaining is empty, so we don't need to do that here.
+                    }
+                }
+
+                enc.setSpecies(replacement);
+                setFormeForEncounter(enc, replacement);
+            }
+
+            if (area.isForceMultipleSpecies()) {
+                enforceMultipleSpecies(area);
+            }
+        }
+
+        /**
+         * Given a {@link Species} which has at least one evolutionary relative contained within the zoneMap,
+         * chooses a replacement for it that is a corresponding relative of its relative's replacement.
+         * @param toReplace The {@link Species} to find a replacement for.
+         * @return An appropriate replacement {@link Species}.
+         */
+        private Species pickFamilyMemberReplacement(Species toReplace) {
+            SpeciesAreaInformation info = areaInformationMap.get(toReplace);
+            SpeciesSet family = info.getFamily();
+            for(Species relative : family) {
+                if(zoneMap.containsKey(relative)) {
+                    return pickFamilyMemberReplacementInner(toReplace, relative);
+                }
+            }
+
+            throw new IllegalArgumentException("Tried to pick family member replacement for non-mapped Species!");
+        }
+
+        /**
+         * Given a {@link Species} and a relative of that {@link Species} which is contained in the zoneMap,
+         * chooses a replacement for it that is a corresponding relative of its relative's replacement.
+         * @param toReplace The {@link Species} to replace.
+         * @param relative A relative of that {@link Species}, which is contained as a key in the zoneMap.
+         * @return An appropriate replacement {@link Species}.
+         */
+        private Species pickFamilyMemberReplacementInner(Species toReplace, Species relative) {
+            SpeciesAreaInformation info = areaInformationMap.get(toReplace);
+            int relation = relative.getRelation(toReplace, true);
+            Species relativeReplacement = zoneMap.get(relative);
+            if(relativeReplacement == null) {
+                throw new IllegalArgumentException("Relative had a null replacement!");
+            }
+
+            SpeciesSet possibleReplacements = relativeReplacement.getRelativesAtPosition(relation, false);
+            possibleReplacements.retainAll(remaining);
+            possibleReplacements.removeAll(info.getBannedForReplacement());
+            if(!possibleReplacements.isEmpty()) {
+                return pickReplacement(toReplace, possibleReplacements);
+            }
+            //else - remaining didn't have any valid, but allowed should.
+            possibleReplacements = relativeReplacement.getRelativesAtPosition(relation, false);
+            possibleReplacements.retainAll(allowed);
+            possibleReplacements.removeAll(info.getBannedForReplacement());
+            if(!possibleReplacements.isEmpty()) {
+                return pickReplacement(toReplace, possibleReplacements);
+            }
+            //else - we messed up earlier, this Species has no replacement
+
+            throw new IllegalStateException("Chose a family that is invalid!");
+        }
+
+        /**
+         * Checks if any family member (as listed in areaInformationMap) of the given {@link Species}
+         * is contained in the zoneMap.
+         * @param current The {@link Species} to check.
+         * @return True if any family member is present, false otherwise.
+         */
+        private boolean mapHasFamilyMember(Species current) {
+           SpeciesAreaInformation info = areaInformationMap.get(current);
+           SpeciesSet family = info.getFamily();
+           for(Species relative : family) {
+               if(zoneMap.containsKey(relative)) {
+                   return true;
+               }
+           }
+
+           return false;
+        }
+
+        /**
+         * Given a {@link List} of maps (each represented by a {@link List} of {@link EncounterArea}s) randomizes them
+         * with as many distinct Pokemon as possible without crashing ORAS's DexNav.
+         * @param maps The list of maps to randomize.
+         */
+        private void randomizeZonesORAS(List<List<EncounterArea>> maps) {
+            //Shuffle maps; otherwise, large maps would tend to be randomized first.
+            List<List<EncounterArea>> shuffledMaps = new ArrayList<>(maps);
+            Collections.shuffle(shuffledMaps, random);
+
+            for(List<EncounterArea> map : shuffledMaps) {
                 randomizeMapORAS(map);
+
+                if(!catchEmAll) {
+                    refillRemainingSpecies();
+                }
             }
         }
 
         /**
          * Given a list of EncounterAreas, all on the same map, randomizes them with as many
-         * different Pokemon as it can without crashing.
+         * different {@link Species} as it can without crashing.
          * @param map The map to randomize.
          */
         private void randomizeMapORAS(List<EncounterArea> map) {
+            //a messy method, but less so than the previous versions
 
-            class EncounterWithData {
-                //fully functional and anatomically correct *is shot*
-                int areaIndex;
-                Species originalPokemon;
-                Encounter encounter;
+            class AreaWithData {
+                EncounterArea area;
+                Type areaType;
+                Map<Species, Species> areaMap;
             }
 
-            //log original Pokemon
-            List<EncounterWithData> encounters = new ArrayList<>();
-            for(int i = 0; i < map.size(); i++){
-                EncounterArea area = map.get(i);
+            Map<Encounter, AreaWithData> encountersToAreas = new IdentityHashMap<>();
+            //IdentityHashMap makes each key distinct if it has a different reference to the same value
+            //This means that identical Encounters will still map to the correct areas
+
+            for(EncounterArea area : map) {
+                AreaWithData awd = new AreaWithData();
+                awd.area = area;
+
+                List<EncounterArea> dummyZone = new ArrayList<>();
+                dummyZone.add(area);
+                awd.areaType = pickZoneType(dummyZone);
+
+                awd.areaMap = new HashMap<>();
+
                 for(Encounter enc : area) {
-                    EncounterWithData data = new EncounterWithData();
-                    data.encounter = enc;
-                    data.originalPokemon = enc.getSpecies();
-                    data.areaIndex = i;
-                    encounters.add(data);
+                    encountersToAreas.put(enc, awd);
                 }
             }
 
-            //do area 1-to-1 to make sure everything gets SOME randomization
-            this.area1to1Encounters(map);
+            List<Encounter> shuffledEncounters = new ArrayList<>(encountersToAreas.keySet());
+            Collections.shuffle(shuffledEncounters, random);
 
-            //set to the proper settings, in case it matters
-            map1to1 = false;
-            useLocations = false;
+            int dexNavLoad = getORASDexNavLoad(map);
 
-            //then do more randomizing!
-            Collections.shuffle(encounters, random);
-            while(getORASDexNavLoad(map) < ORAS_CRASH_THRESHOLD && !encounters.isEmpty()) {
+            //now we're prepared to start actually randomizing
+            for(Encounter enc : shuffledEncounters) {
+                AreaWithData awd = encountersToAreas.get(enc);
 
-                EncounterWithData encData = encounters.remove(0);
+                Species current = enc.getSpecies();
+                Species replacement;
 
-                Encounter enc = encData.encounter;
-                //check if there's another encounter with the same Pokemon - otherwise, this is a waste of time
-                //(And, if we're using catchEmAll, a removal of a used Pokemon, which is bad.)
-                boolean anotherExists = false;
-                for(EncounterWithData otherEncData : encounters) {
-                    if(enc.getSpecies() == otherEncData.encounter.getSpecies()) {
-                        anotherExists = true;
+                if(!awd.areaMap.containsKey(current) || dexNavLoad < ORAS_CRASH_THRESHOLD) {
+                    //get new species
+                    SpeciesSet allowedForReplacement = setupAllowedForReplacement(current, awd.area, awd.areaType);
+
+                    replacement = pickReplacement(current, allowedForReplacement);
+                    removeFromRemaining(replacement);
+
+                    //either put it in the map, or increase DexNav load
+                    if(!awd.areaMap.containsKey(current)) {
+                        awd.areaMap.put(current, replacement);
+                    } else {
+                        dexNavLoad++;
+                    }
+                } else {
+                    replacement = awd.areaMap.get(enc.getSpecies());
+                }
+
+                enc.setSpecies(replacement);
+                setFormeForEncounter(enc, replacement);
+            }
+
+        }
+
+        /**
+         * Chooses an appropriate type theme for the given zone based on the current settings:
+         * If keepTypeThemes is true, chooses an existing theme if there is one.
+         * If no theme was chosen, and randomTypeThemes is true, chooses a theme at random.
+         * (Exception: If using catch-em-all and a banned {@link Species} was present in the zone, the
+         * chosen "random" type will be one of the banned {@link Species}'s types.)
+         * @param zone A List of EncounterAreas representing an appropriately-sized zone for randomization.
+         * @return A Type chosen by one of the above-listed methods, or null if none was chosen.
+         */
+        private Type pickZoneType(List<EncounterArea> zone) {
+            Type picked = null;
+            if(keepTypeThemes) {
+                //see if any types are shared among all areas in the zone
+                Set<Type> possibleThemes = EnumSet.allOf(Type.class);
+                for(EncounterArea area : zone) {
+                    possibleThemes.retainAll(area.getSpeciesInArea().getSharedTypes(true));
+                    if(possibleThemes.isEmpty()) {
                         break;
                     }
                 }
-                if(!anotherExists) {
-                    continue;
-                }
 
-                //now the standard replacement logic
-                areaType = findExistingAreaType(map.get(encData.areaIndex));
-                allowedForArea = setupAllowedForArea();
-
-                //reset the Pokemon
-                //(Matters for keep primary, similar strength)
-                enc.setSpecies(encData.originalPokemon);
-
-                Species replacement = pickReplacement(enc);
-                enc.setSpecies(replacement);
-                setFormeForEncounter(enc, replacement);
-
-                if (catchEmAll) {
-                    removeFromRemaining(replacement);
-                }
-            }
-
-        }
-
-        /**
-         * Prepares the EncounterAreas for randomization by shuffling the order and flattening them if appropriate.
-         * @param unprepped The List of EncounterAreas to prepare.
-         * @return A new List of all the same Encounters, with the areas shuffled and possibly merged as appropriate.
-         */
-        private List<EncounterArea> prepEncounterAreas(List<EncounterArea> unprepped) {
-            // Clone the original set, so that we don't mess up saving
-            List<EncounterArea> prepped = new ArrayList<>(unprepped);
-
-            prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
-                    || "UNUSED".equals(area.getLocationTag()));
-            //don't randomize unused areas
-            //mostly important for catch 'em all
-
-            if (useLocations) {
-                prepped = flattenLocations(prepped);
-            } else if (romHandler.isORAS()) {
-                //some modes crash in ORAS if the maps aren't flattened
-                prepped = flattenEncounterTypesInMaps(prepped);
-            }
-            // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
-            Collections.shuffle(prepped, random);
-            return prepped;
-        }
-
-        /**
-         * Given a List of EncounterAreas, merges those that have the same Location tag.
-         * @param unflattened The set of EncounterAreas to merge.
-         * @return A List of EncounterAreas with the specified areas merged.
-         */
-        private List<EncounterArea> flattenLocations(List<EncounterArea> unflattened) {
-            Map<String, List<EncounterArea>> grouped = groupAreasByLocation(unflattened);
-            List<EncounterArea> flattenedLocations = new ArrayList<>();
-            for (Map.Entry<String, List<EncounterArea>> locEntry : grouped.entrySet()) {
-                EncounterArea flattened = new EncounterArea();
-                flattened.setDisplayName("All of location " + locEntry.getKey());
-                for(EncounterArea area : locEntry.getValue()) {
-                    flattened.addAll(area);
-                    flattened.banAllPokemon(area.getBannedPokemon());
-                }
-                flattenedLocations.add(flattened);
-            }
-            return flattenedLocations;
-        }
-
-        /**
-         * Given a List of EncounterAreas, merges those that have the same map index and encounter type.
-         * @param unflattened The set of EncounterAreas to merge.
-         * @return A List of EncounterAreas with the specified areas merged.
-         */
-        private List<EncounterArea> flattenEncounterTypesInMaps(List<EncounterArea> unflattened) {
-            Map<Integer, List<EncounterArea>> grouped = groupAreasByMapIndex(unflattened);
-            List<EncounterArea> flattenedEncounters = new ArrayList<>();
-            int unnamed = 1;
-            for (Map.Entry<Integer, List<EncounterArea>> mapEntry : grouped.entrySet()) {
-                Map<EncounterType, List<EncounterArea>> mapGrouped =
-                        groupAreasByEncounterType(mapEntry.getValue());
-                String mapName = mapEntry.getValue().get(0).getLocationTag();
-                if (mapName == null) {
-                    mapName = "Unknown Map " + unnamed;
-                    unnamed++;
-                }
-                for (Map.Entry<EncounterType, List<EncounterArea>> typeEntry : mapGrouped.entrySet()) {
-                    EncounterArea flattened = new EncounterArea();
-                    flattened.setDisplayName(mapName + "-" + typeEntry.getKey().name());
-                    flattened.setEncounterType(typeEntry.getKey());
-                    flattened.setMapIndex(mapEntry.getKey());
-                    for (EncounterArea area : typeEntry.getValue()) {
-                        flattened.addAll(area);
-                        flattened.banAllPokemon(area.getBannedPokemon());
+                //if so, pick one
+                if(!possibleThemes.isEmpty()) {
+                    Iterator<Type> itor = possibleThemes.iterator();
+                    picked = itor.next();
+                    if(itor.hasNext()) {
+                        if(picked == Type.NORMAL) {
+                            //prefer not normal
+                            picked = itor.next();
+                        } else {
+                            //prefer primary of first species
+                            Type preferredTheme = zone.get(0).get(0).getSpecies().getPrimaryType(true);
+                            if(picked != preferredTheme) {
+                                picked = itor.next();
+                            }
+                        }
+                        //both assume maximum two themes, which should be a safe assumption
                     }
-                    flattenedEncounters.add(flattened);
                 }
             }
-            return flattenedEncounters;
-        }
 
-        /**
-         * Given a List of EncounterAreas, groups those that have the same map index.
-         * @param ungrouped The set of EncounterAreas to group.
-         * @return A Map of mapIndexes to EncounterAreas.
-         */
-        private Map<Integer, List<EncounterArea>> groupAreasByMapIndex(List<EncounterArea> ungrouped) {
-            Map<Integer, List<EncounterArea>> grouped = new HashMap<>();
-            for (EncounterArea area : ungrouped) {
-                int index = area.getMapIndex();
-                if (!grouped.containsKey(index)) {
-                    grouped.put(index, new ArrayList<>());
-                }
-                grouped.get(index).add(area);
-            }
-            return grouped;
-        }
+            if(picked == null && randomTypeThemes) {
+                picked = pickRandomTypeWithSpeciesRemaining();
 
-        /**
-         * Given a List of EncounterAreas, groups those that have the same location tag.
-         * @param ungrouped The set of EncounterAreas to group.
-         * @return A Map of locationTags to EncounterAreas.
-         */
-        private Map<String, List<EncounterArea>> groupAreasByLocation(List<EncounterArea> ungrouped) {
-            Map<String, List<EncounterArea>> grouped = new HashMap<>();
-            int untagged = 1;
-            for (EncounterArea area : ungrouped) {
-                String tag = area.getLocationTag();
-                if (tag == null) {
-                    tag = "UNTAGGED-" + untagged;
-                    untagged++;
-                }
-                if (!grouped.containsKey(tag)) {
-                    grouped.put(tag, new ArrayList<>());
-                }
-                grouped.get(tag).add(area);
-            }
-            return grouped;
-        }
-
-        /**
-         * Given a List of EncounterAreas, groups those that have the same encounter type.
-         * @param ungrouped The set of EncounterAreas to group.
-         * @return A Map of encounterTypes to EncounterAreas.
-         */
-        private Map<EncounterType, List<EncounterArea>>
-                        groupAreasByEncounterType(List<EncounterArea> ungrouped) {
-            Map<EncounterType, List<EncounterArea>> grouped = new HashMap<>();
-            for (EncounterArea area : ungrouped) {
-                EncounterType encType = area.getEncounterType();
-                if (!grouped.containsKey(encType)) {
-                    grouped.put(encType, new ArrayList<>());
-                }
-                grouped.get(encType).add(area);
-            }
-            return grouped;
-        }
-
-        //should the above functions instead be in EncounterArea?
-
-        private Type pickAreaType(EncounterArea area) {
-            Type picked = null;
-            if (keepTypeThemes) {
-                picked = area.getSpeciesInArea().getSharedType(true);
-            }
-            if (randomTypeThemes && picked == null) {
-                picked = pickRandomAreaType();
-
-                // Unown clause - since Unown (and other banned Pokemon) aren't randomized with catchEmAll active,
-                // the "random" type theme must be one of the banned's types.
-                // The implementation below supports multiple banned Pokemon of the same type in the same area,
+                // Unown clause - since Unown (and other banned Species) aren't randomized with catchEmAll active,
+                // the "random" type theme must be one of the banned Species's types.
+                // The implementation below supports multiple banned Species of the same type in the same area,
                 // because why not?
                 if (catchEmAll) {
                     SpeciesSet bannedInArea = new SpeciesSet(banned);
-                    bannedInArea.retainAll(area.getSpeciesInArea());
+                    SpeciesSet speciesInZone = new SpeciesSet();
+                    zone.forEach(area -> speciesInZone.addAll(area.getSpeciesInArea()));
+                    bannedInArea.retainAll(speciesInZone);
+
                     Type themeOfBanned = bannedInArea.getSharedType(false);
                     if (themeOfBanned != null) {
                         picked = themeOfBanned;
                     }
                 }
             }
+
             return picked;
         }
 
-        private Type pickRandomAreaType() {
-            Map<Type, SpeciesSet> byType = catchEmAll ? remainingByType : allowedByType;
+        /**
+         * Given an {@link EncounterArea}, returns a shared type of that area (before randomization) iff keepTypeThemes
+         * is true.
+         * @param area The area to examine.
+         * @return A shared type if keepTypeThemes is true and such a type exists, null otherwise.
+         */
+        private Type findAreaType(EncounterArea area) {
+            Type picked = null;
+            if (keepTypeThemes) {
+                picked = area.getSpeciesInArea().getSharedType(true);
+            }
+            return picked;
+        }
+
+        private Type pickRandomTypeWithSpeciesRemaining() {
+            List<Type> types = new ArrayList<>(typeService.getTypes());
+            Collections.shuffle(types, random);
             Type areaType;
             do {
-                areaType = typeService.randomType(random);
-            } while (byType.get(areaType).isEmpty());
-            //TODO: ensure loop terminates
-            return areaType;
-        }
-
-        private Type findExistingAreaType(EncounterArea area) {
-            Type areaType = null;
-            if(keepTypeThemes || randomTypeThemes) {
-                SpeciesSet inArea = area.getSpeciesInArea();
-                areaType = inArea.getSharedType(false);
+                areaType = types.remove(0);
+            } while (remainingByType.get(areaType).isEmpty() && !types.isEmpty());
+            if(types.isEmpty() && remainingByType.get(areaType).isEmpty()) {
+                throw new IllegalStateException("RemainingByType contained no Species of any valid type!");
             }
             return areaType;
         }
 
-        private SpeciesSet setupAllowedForArea() {
+        /**
+         * Given a {@link Type} (or null) and a set of banned {@link Species}, returns a set of {@link Species}
+         * valid for placement in that area, of the given type if there was one.
+         * @param areaType The Type which all {@link Species} returned should have, or null.
+         * @param banned The set of banned species. Can be empty.
+         * @return A {@link SpeciesSet} (which may be a reference to an existing set) which contains all
+         * available {@link Species} of that type, except any banned ones.
+         */
+        private SpeciesSet getTypeWithoutBanned(Type areaType, SpeciesSet banned) {
+
+            SpeciesSet validSpecies;
             if (areaType != null) {
-                return catchEmAll && !remainingByType.get(areaType).isEmpty()
-                        ? remainingByType.get(areaType) : allowedByType.get(areaType);
+                validSpecies = removeBannedSpecies(remainingByType.get(areaType), banned);
+                if(validSpecies.isEmpty()) {
+                    validSpecies = removeBannedSpecies(allowedByType.get(areaType), banned);
+                }
             } else {
-                return catchEmAll ? remaining : allowed;
+                validSpecies = removeBannedSpecies(remaining, banned);
+                if(validSpecies.isEmpty()) {
+                    validSpecies = removeBannedSpecies(allowed, banned);
+                }
             }
 
-            //TODO: remove locally banned Pokemon
+            return validSpecies;
         }
 
-        private Species pickReplacement(Encounter enc) {
-            allowedForReplacement = allowedForArea;
-            if (keepPrimaryType && areaType == null) {
-                allowedForReplacement = getAllowedReplacementPreservePrimaryType(enc);
+        /**
+         * Removes all {@link Species} contained in the banned set from the given pool.
+         * Safe to pass referenced {@link SpeciesSet}s to.
+         * @param startingPool The pool of {@link Species} to start from.
+         * @param banned The set of {@link Species} to remove.
+         * @return startingPool if banned had no {@link Species}; a new {@link SpeciesSet} with the banned
+         * {@link Species} removed otherwise.
+         */
+        private SpeciesSet removeBannedSpecies(SpeciesSet startingPool, SpeciesSet banned) {
+            SpeciesSet output = startingPool;
+            if(!banned.isEmpty()) {
+                output = new SpeciesSet(startingPool);
+                output.removeAll(banned);
             }
 
-            if (map1to1) {
-                return pickReplacement1to1(enc);
+            return output;
+        }
+
+        /**
+         * Given a {@link Species}, and some related information, finds a set of
+         * valid replacements for that {@link Species}.
+         * @param current The {@link Species} to find replacements for.
+         * @param area The area the encounter is in. Used to determine banned {@link Species} if
+         *             areaInformationMap is not populated.
+         * @param zoneType A Type that all {@link Species} in the current zone should be.
+         * @return A {@link SpeciesSet} containing all valid replacements for the encounter. This may be a
+         * reference to another set; do not modify!
+         */
+        private SpeciesSet setupAllowedForReplacement(Species current, EncounterArea area, Type zoneType) {
+            SpeciesSet allowedForReplacement;
+            if(areaInformationMap == null) {
+                allowedForReplacement = setupAllowedForReplacementNoInfoMap(current, area, zoneType);
             } else {
-                return pickReplacementInner(enc);
+                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, zoneType);
             }
-        }
 
-
-        private SpeciesSet getAllowedReplacementPreservePrimaryType(Encounter enc) {
-            //TODO: ensure this works correctly with area bans
-            Species current = enc.getSpecies();
-            Type primaryType = current.getPrimaryType(true);
-            return catchEmAll && !remainingByType.get(primaryType).isEmpty()
-                    ? remainingByType.get(primaryType) : allowedByType.get(primaryType);
-        }
-
-        private Species pickReplacementInner(Encounter enc) {
             if (allowedForReplacement.isEmpty()) {
-                throw new IllegalStateException("No allowed Pokemon to pick as replacement.");
+                throw new RandomizationException("Could not find a wild Species replacement for "
+                        + current.getFullName() + " in area " + area.getDisplayName() + "!");
             }
-            Species current = enc.getSpecies();
+
+            return allowedForReplacement;
+        }
+
+        /**
+         * Given a {@link Species} and (optionally) a {@link Type}, finds allowed replacements for that species,
+         * of the given type if there was one. <br>
+         * Assumes that the info map is populated and contains an entry for the given species; throws an exception
+         * otherwise. To find replacements for an unmapped Species, use setupAllowedForReplacementNoInfoMap().
+         * @param current The {@link Species} to replace.
+         * @param theme A {@link Type} that the allowed replacements should all be. Overrides any other type themes.
+         * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
+         * to a local variable; do not modify!
+         * @throws NullPointerException if the info map was not set up.
+         * @throws IllegalStateException if the info map did not contain a non-null value for the given {@link Species}.
+         */
+        private SpeciesSet setupAllowedForReplacementUsingInfoMap(Species current, Type theme) {
+            SpeciesAreaInformation info = areaInformationMap.get(current);
+            if(info == null) {
+                throw new IllegalStateException("Info was null for encounter's species!");
+            }
+
+            Type typeForReplacement = (theme != null) ? theme : info.getTheme(keepPrimaryType);
+            boolean needsInner = !info.bannedForReplacement.isEmpty() || keepEvolutions;
+            //if neither of these is true, the only restriction is the type
+
+            SpeciesSet possiblyAllowed;
+            possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
+            if(needsInner) {
+                possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
+            }
+            if(!possiblyAllowed.isEmpty()) {
+                return possiblyAllowed;
+            }
+            //else - it didn't work looking at remaining. Let's try allowed.
+
+            possiblyAllowed = (typeForReplacement == null) ? allowed : allowedByType.get(typeForReplacement);
+            if(needsInner) {
+                possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
+            }
+            return possiblyAllowed;
+            //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
+        }
+
+        /**
+         * Given a {@link Species} and (optionally) a {@link Type}, finds allowed replacements for that species,
+         * of the given type if there was one. <br>
+         * Ignores any information present in the info map.
+         * @param current The {@link Species} to replace.
+         * @param area The area that this encounter was found in. Used to determine banned Species.
+         * @param theme A {@link Type} that the allowed replacements should all be. If null,
+         *              returns Species of all Types.
+         * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
+         * to a local variable; do not modify!
+         */
+        private SpeciesSet setupAllowedForReplacementNoInfoMap(Species current, EncounterArea area, Type theme) {
+            Type typeForReplacement = (theme != null) ? theme :
+                    (keepPrimaryType ? current.getPrimaryType(true) : null);
+
+            return getTypeWithoutBanned(typeForReplacement, area.getBannedSpecies());
+        }
+
+        /**
+         * Given a {@link SpeciesAreaInformation} and a pool of {@link Species}, narrows the pool down to
+         * {@link Species} valid as determined by the {@link SpeciesAreaInformation}.
+         * Assumes all type restrictions have already been applied.
+         * @param info The restrictions for the current encounter.
+         * @param startingPool The pool to start from.
+         * @return startingPool if no additional restrictions were applied, a new {@link SpeciesSet} with the narrowed
+         * set otherwise.
+         */
+        private SpeciesSet setupAllowedForReplacementInner(SpeciesAreaInformation info, SpeciesSet startingPool) {
+            SpeciesSet allowedForReplacement;
+            if(!info.getBannedForReplacement().isEmpty()) {
+                allowedForReplacement = new SpeciesSet(startingPool);
+                allowedForReplacement.removeAll(info.getBannedForReplacement());
+            } else {
+                allowedForReplacement = startingPool;
+            }
+
+            if(keepEvolutions) {
+                allowedForReplacement = setupAllowedForFamily(allowedForReplacement, info);
+            }
+            return allowedForReplacement;
+        }
+
+        private Species pickReplacement(Species current, SpeciesSet allowedForReplacement) {
+            if (allowedForReplacement == null || allowedForReplacement.isEmpty()) {
+                throw new IllegalArgumentException("No allowed Species to pick as replacement.");
+            }
 
             Species replacement;
-            // In Catch 'Em All mode, don't randomize encounters for Pokemon that are banned for
-            // wild encounters. Otherwise, it may be impossible to obtain this Pokemon unless it
+            // In Catch 'Em All mode, don't randomize encounters for Species that are banned for
+            // wild encounters. Otherwise, it may be impossible to obtain this Species unless it
             // randomly appears as a static or unless it becomes a random evolution.
             if (catchEmAll && banned.contains(current)) {
                 replacement = current;
             } else if (similarStrength) {
-                if(balanceShakingGrass) {
-                    int bstToUse = current.getBSTForPowerLevels();
-                    int avgLevel = (enc.getLevel() + enc.getMaxLevel()) / 2;
-                    bstToUse = Math.min(bstToUse, avgLevel * 10 + 250);
+                if(balanceLowLevelEncounters && areaInformationMap != null) {
+                    SpeciesAreaInformation info = areaInformationMap.get(current);
+                    int bstToUse = Math.min(current.getBSTForPowerLevels(), info.getLowestLevel() * 10 + 250);
+
                     replacement = allowedForReplacement.getRandomSimilarStrengthSpecies(bstToUse, random);
                 } else {
                     replacement = allowedForReplacement.getRandomSimilarStrengthSpecies(current, random);
@@ -592,25 +804,10 @@ public class EncounterRandomizer extends Randomizer {
             return replacement;
         }
 
-        private Species pickReplacement1to1(Encounter enc) {
-            Species current = enc.getSpecies();
-            if (areaMap.containsKey(current)) {
-                return areaMap.get(current);
-            } else {
-                // the below loop ensures no two Pokemon are given the same replacement,
-                // unless that's impossible due to the (small) size of allowedForArea
-                Species replacement;
-                do {
-                    replacement = pickReplacementInner(enc);
-                } while (areaMap.containsValue(replacement) && areaMap.size() < allowedForArea.size());
-                return replacement;
-            }
-        }
-
         /**
-         * Removes the given Pokemon from "remaining" and all variants that are in use.
+         * Removes the given {@link Species} from "remaining" and all variants that are in use.
          * If remaining is empty after removing, refills it.
-         * @param replacement The Pokemon to remove.
+         * @param replacement The {@link Species} to remove.
          */
         private void removeFromRemaining(Species replacement) {
             remaining.remove(replacement);
@@ -620,18 +817,9 @@ public class EncounterRandomizer extends Randomizer {
                     remainingByType.get(replacement.getSecondaryType(false)).remove(replacement);
                 }
             }
-            if(remainingFamilyRestricted != null) {
-                remainingFamilyRestricted.remove(replacement);
-                if (needsTypes) {
-                    remainingFamilyRestrictedByType.get(replacement.getPrimaryType(false)).remove(replacement);
-                    if (replacement.hasSecondaryType(false)) {
-                        remainingFamilyRestrictedByType.get(replacement.getSecondaryType(false)).remove(replacement);
-                    }
-                }
-            }
 
             if(remaining.isEmpty()) {
-                refillRemainingPokemon();
+                refillRemainingSpecies();
             }
         }
 
@@ -641,100 +829,46 @@ public class EncounterRandomizer extends Randomizer {
             // This is very unlikely to happen in practice, even with very
             // restrictive settings, so it should be okay to break logic here.
             while (area.stream().distinct().count() == 1) {
-                area.get(0).setSpecies(rPokeService.randomPokemon(random));
+                area.get(0).setSpecies(rSpecService.randomSpecies(random));
             }
         }
 
-        // quite different functionally from the other random encounter methods,
-        // but still grouped in this inner class due to conceptual cohesion
-        public void game1to1Encounters(List<EncounterArea> encounterAreas) {
-            refillRemainingPokemon();
-            Map<Species, Species> translateMap = new HashMap<>();
-            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
-            //mostly to skip unused areas, since the order doesn't matter
-
-            setupAreaInfoMap(prepped, null);
-
-            // shuffle to not give certain Pokémon priority when picking replacements
-            // matters for similar strength
-            List<PokemonAreaInformation> shuffled = new ArrayList<>(areaInformationMap.values());
-            Collections.shuffle(shuffled, random);
-
-            for (PokemonAreaInformation current : shuffled) {
-                Species replacement = pickGame1to1Replacement(current);
-                translateMap.put(current.getPokemon(), replacement);
-            }
-
-            applyGlobalMap(prepped, translateMap);
-        }
-
         /**
-         * Randomizes the set of EncounterAreas given such that for each Pokemon in the areas, they
-         * will be replaced by exactly one new Pokemon, and its evolutionary family will replace the
-         * original Pokemon's family.
-         * @param encounterAreas The EncounterAreas to randomize.
-         */
-        public void gameFamilyToFamilyEncounters(List<EncounterArea> encounterAreas) {
-            refillRemainingPokemon();
-            Map<Species, Species> translateMap = new HashMap<>();
-            List<EncounterArea> prepped = prepEncounterAreas(encounterAreas);
-
-            SpeciesSet pokemonToRandomize = new SpeciesSet();
-            setupAreaInfoMap(prepped, pokemonToRandomize);
-
-            spreadThemesThroughFamilies(pokemonToRandomize);
-
-            //assumes that the longest evo line to randomize is 3 (or shorter)
-            //this seems a safe assumption given no 4-length evo line exists in Pokemon
-            //(Anyway, it would still include it; just wouldn't isolate it.)
-
-            //starts with rarest evo lines, moving to more common.
-            //(If this wasn't done, could end up with a 3-length with no replacement.)
-            //3-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, false, pokemonToRandomize));
-            //3-long with gap (I'm not sure this ever actually comes up)
-            translateMap.putAll(pickReplacementFamiliesOfLength(3, true, pokemonToRandomize));
-            //2-long
-            translateMap.putAll(pickReplacementFamiliesOfLength(2, false, pokemonToRandomize));
-            //standalone
-            translateMap.putAll(pickReplacementFamiliesOfLength(1, false, pokemonToRandomize));
-
-
-            applyGlobalMap(prepped, translateMap);
-        }
-
-        /**
-         * Given a set of Pokemon, for each that has a type theme, adds that theme to each evolutionary relative
-         * (before randomization) in the set. <br>
+         * For each {@link Species} in the areaInfoMap, for each that has a type theme, adds that theme
+         * to each listed member of its family. <br>
          * setupAreaInfoMap() must be called before this method!
-         * @param families The Pokemon to spread type themes through.
          * @throws IllegalStateException if areaInformationMap is null.
-         * @throws IllegalArgumentException if families contains a Pokemon which has no
+         * @throws IllegalArgumentException if families contains a {@link Species} which has no
          * information in areaInformationMap.
          */
-        private void spreadThemesThroughFamilies(SpeciesSet families) {
-            SpeciesSet remainingFamilies = new SpeciesSet(families);
+        private void spreadThemesThroughFamilies() {
+            SpeciesSet completedFamilies = new SpeciesSet();
             if(areaInformationMap == null) {
                 throw new IllegalStateException("Cannot spread themes before determining themes!");
             }
-            for(Species poke : families) {
-                if(!remainingFamilies.contains(poke)) {
+            for(SpeciesAreaInformation info : areaInformationMap.values()) {
+                if(info == null) {
+                    throw new IllegalStateException("AreaInfoMap contained a null value!");
+                }
+                Species poke = info.getSpecies();
+                if(completedFamilies.contains(poke)) {
                     continue;
                 }
-                SpeciesSet family = remainingFamilies.filterFamily(poke, true);
-                remainingFamilies.removeAll(family);
 
-                //this algorithm weights any area which contains (for example) two Pokemon in the family twice as strongly
+                SpeciesSet family = info.getFamily();
+                completedFamilies.addAll(family);
+
+                //this algorithm weights any area which contains (for example) two Species in the family twice as strongly
                 //this is probably acceptable
                 Map<Type, Integer> familyThemeInfo = new EnumMap<>(Type.class);
                 for(Species relative : family) {
 
-                    //get this Pokemon's possible themes
-                    PokemonAreaInformation info = areaInformationMap.get(relative);
-                    if(info == null) {
-                        throw new IllegalArgumentException("Cannot spread themes among Pokemon without theme information!");
+                    //get this Species's possible themes
+                    SpeciesAreaInformation relativeInfo = areaInformationMap.get(relative);
+                    if(relativeInfo == null) {
+                        throw new IllegalArgumentException("Cannot spread themes among Species without theme information!");
                     }
-                    Map<Type, Integer> themeInfo = info.getAllPossibleThemes();
+                    Map<Type, Integer> themeInfo = relativeInfo.getAllPossibleThemes();
 
                     //add them to the total theme info
                     for(Map.Entry<Type, Integer> possibleTheme : themeInfo.entrySet()) {
@@ -751,211 +885,52 @@ public class EncounterRandomizer extends Randomizer {
 
                 //set our determined theme info to the whole family
                 for(Species relative : family) {
-                    PokemonAreaInformation info = areaInformationMap.get(relative);
-                    if(info == null) {
+                    SpeciesAreaInformation relativeInfo = areaInformationMap.get(relative);
+                    if(relativeInfo == null) {
                         //shouldn't be possible
-                        throw new RuntimeException("Pokemon's info became null between checking and setting themes??");
+                        throw new RuntimeException("Species's info became null between checking and setting themes??");
                     }
-                    info.setPossibleThemes(familyThemeInfo);
+                    relativeInfo.setPossibleThemes(familyThemeInfo);
                 }
 
             }
         }
 
         /**
-         * Given a set of areas and a map, applies the map's replacements to each area.
-         * @param encounterAreas The areas to replace Pokemon in.
-         * @param translateMap The map of which Pokemon to replace each Pokemon with.
-         * @throws IllegalArgumentException if the map is missing a replacement for a Pokemon in one or more
-         * of the areas, or if the replacement for a Pokemon is banned in one of that Pokemon's areas.
-         */
-        private void applyGlobalMap(List<EncounterArea> encounterAreas, Map<Species, Species> translateMap) {
-            for (EncounterArea area : encounterAreas) {
-                for (Encounter enc : area) {
-                    Species replacement = translateMap.get(enc.getSpecies());
-                    if (replacement == null) {
-                        throw new IllegalArgumentException("Map did not contain replacement for "
-                                + enc.getSpecies() + "!");
-                    }
-                    if (area.getBannedPokemon().contains(replacement)) {
-                        // This should never happen, since we already checked all the areas' banned Pokemon.
-                        throw new IllegalArgumentException("Map contained a banned Pokemon " + replacement +
-                                " as replacement for " + enc.getSpecies() + "!");
-                    }
-                    enc.setSpecies(replacement);
-                    setFormeForEncounter(enc, replacement);
-                }
-            }
-        }
-
-        /**
-         * Helper function for Global Family-To-Family.
-         * Given a set of Pokemon, randomizes each family within that set of the given length.
-         * @param length The length of the evolutionary families.
-         * @param allowGaps Whether the evolutionary families should allow gaps.
-         * @param pokemonToRandomize The set of Pokemon to randomize. Will remove each Pokemon randomized.
-         */
-        private Map<Species, Species> pickReplacementFamiliesOfLength(int length, boolean allowGaps,
-                                                                      SpeciesSet pokemonToRandomize) {
-            SpeciesSet familiesToRandomize = pokemonToRandomize.filterEvoLinesAtLeastLength(length, allowGaps, true);
-            pokemonToRandomize.removeAll(familiesToRandomize);
-
-            remainingFamilyRestricted = remaining.filterEvoLinesAtLeastLength(length, allowGaps, false);
-            if (needsTypes) {
-                remainingFamilyRestrictedByType = remainingFamilyRestricted.sortByType(false);
-            }
-
-            Map<Species, Species> result = new HashMap<>();
-
-            while(!familiesToRandomize.isEmpty()) {
-                //Because we're randomizing a family at a time, we can't use a shuffled list.
-                //(Well, I supppose a List of SpeciesSets would work, but acquiring that is harder than just
-                //choosing random Species and then pulling their families.)
-                Species toRandomize = familiesToRandomize.getRandomSpecies(random);
-                SpeciesSet family = familiesToRandomize.filterFamily(toRandomize, true);
-
-                result.putAll(pickFamilyReplacement(toRandomize, family));
-
-                familiesToRandomize.removeAll(family);
-                SpeciesSet replacementFamily = result.get(toRandomize).getFamily(false);
-                replacementFamily.forEach(this::removeFromRemaining);
-            }
-
-            return result;
-        }
-
-        /**
-         * Given a family and a primary Pokemon, maps each member of the family to a member of a random family.
-         * @param match The primary Pokemon to randomize.
-         * @param family The family to randomize.
-         * @return A Map of each Pokemon in the family to a replacement in a new family.
-         */
-        private Map<Species, Species> pickFamilyReplacement(Species match, SpeciesSet family) {
-
-            allowedForReplacement = setupAllowedForFamily(match, family);
-
-            Map<Species, Species> familyMap = new HashMap<>();
-
-            Species replacement = pickGame1to1ReplacementInner(match);
-            familyMap.put(match, replacement);
-
-            //now we add the rest of the family
-            for (Species relative : family) {
-                if(relative == match) {
-                    //we don't need to do it again
-                    continue;
-                }
-
-                int relation = match.getRelation(relative, true);
-                SpeciesSet replaceCandidates = replacement.getRelativesAtPositionSameBranch(relation, false);
-                replaceCandidates.retainAll(allowed);
-                //We could try remaining first, but there shouldn't be any individual family members
-                //in allowed but not remaining. Only full families.
-
-                replaceCandidates.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                if(replaceCandidates.isEmpty()) {
-                    throw new RuntimeException("Chosen Pokemon does not have correct family. This shouldn't happen.");
-                }
-
-                familyMap.put(relative, replaceCandidates.getRandomSpecies(random));
-            }
-            return familyMap;
-        }
-
-        /**
-         * Narrows the family-restricted pool of Species down to one that is compatible with the given Species
-         * and the portion of its evolutionary family given. Uses the post-randomization evolutions
-         * of the pool, and pre-randomization evolutions of the family.
-         * @param match The Species to make a pool for.
-         * @param family The portion of the given Species's family to consider.
-         * @return A Species narrowed down as specified.
+         * Narrows the given pool of {@link Species} down to one that is compatible with the family contained in the
+         * given area information. Uses the full allowed pool for relatives.
+         * Ignores all type restrictions.
+         * @param potentiallyAllowed The set of {@link Species} to work from.
+         * @param info The information of the {@link Species} to match.
+         * @return A new {@link SpeciesSet} narrowed down as specified.
          * @throws RandomizationException if no match for the given family can be found in the allowed pool.
          */
-        private SpeciesSet setupAllowedForFamily(Species match, SpeciesSet family) {
-            Type theme = areaInformationMap.get(match).getTheme(keepPrimaryType);
-            SpeciesSet availablePool;
-            if(theme != null) {
-                availablePool = remainingFamilyRestrictedByType.get(theme);
-            } else {
-                availablePool = remainingFamilyRestricted;
-            }
+        private SpeciesSet setupAllowedForFamily(SpeciesSet potentiallyAllowed, SpeciesAreaInformation info) {
+            SpeciesSet family = info.getFamily();
+            Species match = info.getSpecies();
 
             int before = family.getNumberEvoStagesBefore(match, true);
             int after = family.getNumberEvoStagesAfter(match, true);
-            availablePool = availablePool.filterHasEvoStages(before, after, false);
+            potentiallyAllowed = potentiallyAllowed.filterHasEvoStages(before, after, false);
 
             for(Species relative : family) {
                 int relation = match.getRelation(relative, true);
 
-                //Remove all Pokemon for which "relative" cannot be replaced by any corresponding relative
-                //either because it's not in the remaining pool, or it's banned
-                availablePool = availablePool.filter(p -> {
-                   SpeciesSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
-                   sameRelations.retainAll(remainingFamilyRestricted);
-                   sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                   return !sameRelations.isEmpty();
+                //Remove all Species for which "relative" cannot be replaced by any corresponding relative
+                //either because it's not in the allowed pool, or it's banned
+                potentiallyAllowed = potentiallyAllowed.filter(p -> {
+                       SpeciesSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
+                       sameRelations.retainAll(allowed);
+                       sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
+                       return !sameRelations.isEmpty();
                 });
             }
 
-            if(availablePool.isEmpty()) {
-                //nothing's in the remaining pool, how about the full pool?
-                if(theme != null) {
-                    availablePool = allowedByType.get(theme);
-                } else {
-                    availablePool = allowed;
-                }
+            //Try to remove any Species which have a relative that has already been used
+            SpeciesSet withoutUsedFamilies = potentiallyAllowed.filter(p ->
+                    !p.getFamily(false).containsAny(zoneMap.values()));
 
-                availablePool = availablePool.filterHasEvoStages(before, after, false);
-
-                for(Species relative : family) {
-                    int relation = match.getRelation(relative, true);
-
-                    availablePool = availablePool.filter(p -> {
-                        SpeciesSet sameRelations = p.getRelativesAtPositionSameBranch(relation, false);
-                        sameRelations.retainAll(allowed);
-                        sameRelations.removeAll(areaInformationMap.get(relative).getBannedForReplacement());
-                        return !sameRelations.isEmpty();
-                    });
-                }
-                //do everything the same, but with allowed instead of remaining
-                //(should we extract that to a method?)
-
-                if(availablePool.isEmpty()) {
-                    //there's STILL no matches
-                    //guess i'll die
-                    throw new RandomizationException("No replacement found for family of " + match +"!");
-                }
-            }
-
-            return availablePool;
-        }
-
-        private Species pickGame1to1Replacement(PokemonAreaInformation current) {
-            Type theme = current.getTheme(keepPrimaryType);
-            if(theme != null) {
-                allowedForReplacement = remainingByType.get(theme);
-            } else {
-                allowedForReplacement = remaining;
-            }
-            allowedForReplacement.removeAll(current.getBannedForReplacement());
-
-            Species replacement = pickGame1to1ReplacementInner(current.species);
-            // In case it runs out of unique Pokémon, picks something already mapped to.
-            // Shouldn't happen unless restrictions are really harsh, normally [#allowed Pokémon] > [#Pokémon which appear in the wild]
-            if (replacement == null) {
-                allowedForReplacement = theme != null ? allowedByType.get(theme) : allowed;
-                allowedForReplacement.removeAll(current.getBannedForReplacement());
-                replacement = pickGame1to1ReplacementInner(current.species);
-            } else {
-                remaining.remove(replacement);
-            }
-            return replacement;
-        }
-
-        private Species pickGame1to1ReplacementInner(Species species) {
-            return similarStrength ?
-                    allowedForReplacement.getRandomSimilarStrengthSpecies(species, true, random) :
-                    allowedForReplacement.getRandomSpecies(random);
+            return withoutUsedFamilies.isEmpty() ? potentiallyAllowed : withoutUsedFamilies;
         }
 
         /**
@@ -966,8 +941,8 @@ public class EncounterRandomizer extends Randomizer {
          */
         private int getORASDexNavLoad(List<EncounterArea> areasInMap) {
             //If the previous implementation is to be believed,
-            //the load is equal to the number of distinct Pokemon in each area summed.
-            //(Not the total number of unique Pokemon).
+            //the load is equal to the number of distinct Species in each area summed.
+            //(Not the total number of unique Species).
             //I am not going to attempt to verify this (yet).
             int load = 0;
             for(EncounterArea area : areasInMap) {
@@ -976,96 +951,112 @@ public class EncounterRandomizer extends Randomizer {
                     continue;
                 }
 
-                SpeciesSet pokemonInArea = new SpeciesSet();
+                SpeciesSet speciesInArea = new SpeciesSet();
                 for (Species poke : area.getSpeciesInArea()) {
-                    //Different formes of the same Pokemon do not contribute to load
+                    //Different formes of the same species do not contribute to load
                     if(poke.isBaseForme()) {
-                        pokemonInArea.add(poke);
+                        speciesInArea.add(poke);
                     } else {
-                        pokemonInArea.add(poke.getBaseForme());
+                        speciesInArea.add(poke.getBaseForme());
                     }
                 }
 
-                load += pokemonInArea.size();
+                load += speciesInArea.size();
             }
             return load;
         }
 
         /**
-         * Given a set of EncounterAreas, creates a map of every Species in the areas to
-         * information about the areas that Species is contained in.
-         * If addAllPokemonTo is not null, also adds every Species to it.
+         * Given a set of EncounterAreas, creates a map of every {@link Species} in the areas to
+         * information about the areas that {@link Species} is contained in.
          * @param areas The list of EncounterAreas to explore.
-         * @param addAllPokemonTo A SpeciesSet to add every Species found to. Can be null.
          */
-        private void setupAreaInfoMap(List<EncounterArea> areas, SpeciesSet addAllPokemonTo) {
+        private void setupAreaInfoMap(List<EncounterArea> areas) {
+
+            SpeciesSet existingSpecies = new SpeciesSet();
 
             areaInformationMap = new HashMap<>();
             for(EncounterArea area : areas) {
-                Type areaTheme = pickAreaType(area);
+                Type areaTheme = findAreaType(area);
                 int areaSize = area.getSpeciesInArea().size();
 
                 for(Species species : area.getSpeciesInArea()) {
-                    PokemonAreaInformation info = areaInformationMap.get(species);
+                    SpeciesAreaInformation info = areaInformationMap.get(species);
+
                     if(info == null) {
-                        info = new PokemonAreaInformation(species);
+                        info = new SpeciesAreaInformation(species);
                         areaInformationMap.put(species, info);
 
-                        if(addAllPokemonTo != null) {
-                            addAllPokemonTo.add(species);
+                        if(keepEvolutions) {
+                            existingSpecies.add(species);
+                            SpeciesSet family = existingSpecies.filterFamily(species, true);
+                            if(family.size() > 1) {
+                                family.forEach(relative -> areaInformationMap.get(relative).addFamily(family));
+                            }
                         }
                     }
 
                     info.addTypeTheme(areaTheme, areaSize);
-                    info.banAll(area.getBannedPokemon());
+                    info.banAll(area.getBannedSpecies());
+                }
+                if(balanceLowLevelEncounters) {
+                    //TODO: either verify that this IS a shaking grass encounter,
+                    // or rename the setting.
+                    // (Leaning towards the latter.)
+                    for (Encounter enc : area) {
+                        SpeciesAreaInformation info = areaInformationMap.get(enc.getSpecies());
+                        info.setLevelIfLower((enc.getLevel() + enc.getMaxLevel()) / 2);
+                        //TODO: *Should* this be average level? Or should it be lowest?
+                    }
                 }
             }
         }
 
         /**
-         * A class which stores some information about the areas a Pokemon was found in,
+         * A class which stores some information about the areas and encounters a {@link Species} was found in,
          * in order to allow us to use this information later.
          */
-        private class PokemonAreaInformation {
-            private Map<Type, Integer> possibleThemes;
-            private SpeciesSet bannedForReplacement;
-            private Species species;
+        private class SpeciesAreaInformation {
+            private Map<Type, Integer> possibleThemes = new EnumMap<>(Type.class);
+            private final SpeciesSet bannedForReplacement = new SpeciesSet();
+            private final SpeciesSet family = new SpeciesSet();
+            private final Species species;
+            private int lowestLevel = 100;
 
             /**
              * Creates a new RandomizationInformation with the given data.
-             * @param pk The Pokemon this RandomizationInformation is about.
+             * @param sp The {@link Species} this RandomizationInformation is about.
              */
-            PokemonAreaInformation(Species pk) {
-                possibleThemes = new EnumMap<>(Type.class);
-                bannedForReplacement = new SpeciesSet();
-                species = pk;
+            SpeciesAreaInformation(Species sp) {
+                species = sp;
             }
 
             /**
-             * Adds all Pokemon in the given collection to the set of Pokemon banned for replacement.
-             * @param banned The Collection of Pokemon to add.
+             * Adds all {@link Species} in the given collection to the set of {@link Species} banned for replacement.
+             * @param banned The Collection of {@link Species} to add.
              */
             public void banAll(Collection<Species> banned) {
                 bannedForReplacement.addAll(banned);
             }
 
             /**
-             * Get the list of all Pokemon banned as replacements for this Pokemon.
-             * @return A new unmodifiable {@link SpeciesSet} containing the banned Pokemon.
+             * Get the list of all {@link Species} banned as replacements for this {@link Species}.
+             * @return A new unmodifiable {@link SpeciesSet} containing the banned {@link Species}.
              */
             public SpeciesSet getBannedForReplacement() {
                 return SpeciesSet.unmodifiable(bannedForReplacement);
             }
 
             /**
-             * Adds the given type and count of Pokemon to the list of existing themes for this Pokemon.
+             * Adds the given type and count of {@link Species} to the list of existing themes for
+             * this {@link Species}. <br>
              * If theme is null, has no effect.
              * @param theme The type to add.
              * @throws IllegalArgumentException if count is less than 1.
              */
             public void addTypeTheme(Type theme, int count) {
                 if (count < 1) {
-                    throw new IllegalArgumentException("Number of Pokemon in theme cannot be less than 1!");
+                    throw new IllegalArgumentException("Number of Species in theme cannot be less than 1!");
                 }
                 if(theme != null) {
                     if(possibleThemes.containsKey(theme)) {
@@ -1077,13 +1068,13 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             /**
-             * Gets the type of this Pokemon's area theming. <br>
-             * If there are two or more themes, returns the one with the highest count of Pokemon. If tied,
-             * will choose the Pokemon's original primary type. If neither theme is the original primary,
+             * Gets the type of this {@link Species}'s area theming. <br>
+             * If there are two or more themes, returns the one with the highest count of {@link Species}. If tied,
+             * will choose the {@link Species}'s original primary type. If neither theme is the original primary,
              * chooses one arbitrarily.<br>
              * If there are no themes, it will default to the original primary only if defaultToPrimary is true;
              * otherwise, it will default to null.
-             * @param defaultToPrimary Whether the type should default to the Pokemon's primary type
+             * @param defaultToPrimary Whether the type should default to the {@link Species}'s primary type
              *                         if there are no themes.
              * @return The type that should be used, or null for any type.
              */
@@ -1119,7 +1110,7 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             /**
-             * Returns the set of all desired themes for this Pokemon.
+             * Returns the set of all desired themes for this {@link Species}.
              * @return A new Set containing all the possible themes.
              */
             Map<Type, Integer> getAllPossibleThemes() {
@@ -1136,29 +1127,71 @@ public class EncounterRandomizer extends Randomizer {
             }
 
             /**
-             * Gets the Pokemon that this PokemonAreaInformation is about.
-             * @return The Pokemon.
+             * Adds the {@link Species} in the given set to this {@link Species}'s family.
+             * @param family The {@link Species} to add.
              */
-            public Species getPokemon() {
+            void addFamily(SpeciesSet family) {
+                this.family.addAll(family);
+            }
+
+            /**
+             * Gets any members of the {@link Species}'s family that have been added to the information.
+             * @return A new unmodifiable {@link SpeciesSet} containing the {@link Species}'s family.
+             */
+            SpeciesSet getFamily() {
+                return SpeciesSet.unmodifiable(family);
+            }
+
+            /**
+             * Gets the {@link Species} that this SpeciesAreaInformation is about.
+             * @return The {@link Species}.
+             */
+            public Species getSpecies() {
                 return species;
+            }
+
+            /**
+             * Sets the lowest level to the level given, if it is lower than the current lowest level.
+             * @param level The level to lower to.
+             */
+            void setLevelIfLower(int level) {
+                lowestLevel = Math.min(level, lowestLevel);
+            }
+
+            /**
+             * Gets the lowest level encounter with this Species in the zone.
+             * @return The lowest level.
+             */
+            public int getLowestLevel() {
+                return lowestLevel;
             }
         }
     }
 
-    private void setFormeForEncounter(Encounter enc, Species pk) {
-        boolean checkCosmetics = true;
-        enc.setFormeNumber(0);
-        if (enc.getSpecies().getFormeNumber() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getFormeNumber());
+    /**
+     * Prepares the EncounterAreas for randomization by copying them, removing unused areas, and shuffling the order.
+     * @param originalAreas The List of EncounterAreas to prepare.
+     * @return A new List of all the same Encounters, with the areas shuffled and possibly merged as appropriate.
+     */
+    private List<EncounterArea> prepEncounterAreas(List<EncounterArea> originalAreas) {
+        // Clone the original set, so that we don't mess up saving
+        List<EncounterArea> prepped = new ArrayList<>(originalAreas);
+
+        prepped.removeIf(area -> area.getEncounterType() == EncounterType.UNUSED
+                || "UNUSED".equals(area.getLocationTag()));
+        //don't randomize unused areas
+        //mostly important for catch 'em all
+
+        // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
+        Collections.shuffle(prepped, random);
+        return prepped;
+    }
+
+    private void setFormeForEncounter(Encounter enc, Species sp) {
+        enc.setFormeNumber(enc.getSpecies().getRandomCosmeticFormeNumber(random));
+        while(!enc.getSpecies().isBaseForme()) {
             enc.setSpecies(enc.getSpecies().getBaseForme());
-            checkCosmetics = false;
         }
-        if (checkCosmetics && enc.getSpecies().getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getCosmeticFormNumber(this.random.nextInt(enc.getSpecies().getCosmeticForms())));
-        } else if (!checkCosmetics && pk.getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getFormeNumber() + pk.getCosmeticFormNumber(this.random.nextInt(pk.getCosmeticForms())));
-        }
-        //TODO: instead of (most of) this function, have encounter store the actual forme used and call basePokemon when needed
     }
 
     public void changeCatchRates() {
@@ -1191,9 +1224,9 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     private void minimumCatchRate(int rateNonLegendary, int rateLegendary) {
-        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
-            int minCatchRate = pk.isLegendary() ? rateLegendary : rateNonLegendary;
-            pk.setCatchRate(Math.max(pk.getCatchRate(), minCatchRate));
+        for (Species sp : romHandler.getSpeciesSetInclFormes()) {
+            int minCatchRate = sp.isLegendary() ? rateLegendary : rateNonLegendary;
+            sp.setCatchRate(Math.max(sp.getCatchRate(), minCatchRate));
         }
 
     }

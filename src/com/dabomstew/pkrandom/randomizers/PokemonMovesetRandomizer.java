@@ -38,7 +38,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
             List<Integer> learnt = new ArrayList<>();
             List<MoveLearnt> moves = movesets.get(pkmnNum);
             int lv1AttackingMove = 0;
-            Species pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
+            Species pkmn = findPokemonInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }
@@ -216,7 +216,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         for (Integer pkmnNum : movesets.keySet()) {
             List<Integer> learnt = new ArrayList<>();
             List<Integer> moves = movesets.get(pkmnNum);
-            Species pkmn = findPokemonInPoolWithSpeciesID(rPokeService.getAll(true), pkmnNum);
+            Species pkmn = findPokemonInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }

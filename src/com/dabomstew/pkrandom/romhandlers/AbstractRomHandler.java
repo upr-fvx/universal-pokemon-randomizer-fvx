@@ -36,7 +36,7 @@ import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedPokemonService;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
 import javax.imageio.ImageIO;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractRomHandler implements RomHandler {
 
-    protected final RestrictedPokemonService rPokeService = new RestrictedPokemonService(this);
+    protected final RestrictedSpeciesService rPokeService = new RestrictedSpeciesService(this);
     protected final TypeService typeService = new TypeService(this);
 
     protected int perfectAccuracy = 100; // default
@@ -60,7 +60,7 @@ public abstract class AbstractRomHandler implements RomHandler {
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
 
-    public RestrictedPokemonService getRestrictedPokemonService() {
+    public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
     }
 
@@ -104,7 +104,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public SpeciesSet getMainGameWildSpecies(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
 

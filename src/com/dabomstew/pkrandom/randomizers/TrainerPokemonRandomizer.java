@@ -9,6 +9,7 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkrandom.services.TypeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,11 +74,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();
-        cachedAll = new SpeciesSet(rPokeService.getPokemon(noLegendaries, includeFormes, false));
+        cachedAll = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
 
         if (useLocalPokemon) {
             SpeciesSet localWithRelatives =
-                    romHandler.getMainGameWildSpecies(settings.isUseTimeBasedEncounters())
+                    romHandler.getMainGameWildPokemonSpecies(settings.isUseTimeBasedEncounters())
                     .buildFullFamilies(false);
 
             cachedAll.retainAll(localWithRelatives);
@@ -85,7 +86,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         banned = romHandler.getBannedFormesForTrainerPokemon();
         if (!abilitiesAreRandomized) {
-            SpeciesSet abilityDependentFormes = rPokeService.getAbilityDependentFormes();
+            SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
         }
         if (banIrregularAltFormes) {
@@ -150,7 +151,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (useLocalPokemon) {
                 //elite four unique pokemon are excepted from local requirement
                 //and in fact, non-local pokemon should be chosen first
-                eliteFourExceptions = new SpeciesSet(rPokeService.getPokemon(noLegendaries, includeFormes, false));
+                eliteFourExceptions = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
                 eliteFourExceptions.removeAll(banned);
                 eliteFourExceptions.removeAll(cachedAll); // i.e. retains only non-local pokes
             }
@@ -224,7 +225,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 Species oldPK = tp.getSpecies();
                 if (tp.getForme() > 0) {
-                    oldPK = romHandler.getAltFormeOfPokemon(oldPK, tp.getForme());
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, tp.getForme());
                 }
 
                 banned = new SpeciesSet(usedAsUnique);
@@ -353,6 +354,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     post8Gyms.add(group);
                     continue;
                 }
+                if(group.startsWith("THEMED")) {
+                    //this is a non-league group, and so doesn't need to have any type restrictions on it
+                    typesForGroups.put(group, typeService.randomType(random));
+                    continue;
+                }
                 if(remainingTypes.isEmpty()) {
                     throw new RandomizationException(
                             "Unexpected amount of Elite/Champions; could not assign types to all!");
@@ -462,7 +468,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         SpeciesSet withoutBannedPokemon;
 
         if (swapMegaEvos) {
-            pickFrom = rPokeService.getMegaEvolutions()
+            pickFrom = rSpecService.getMegaEvolutions()
                     .stream()
                     .filter(MegaEvolution::isNeedsItem)
                     .map(mega -> mega.getFrom())
@@ -567,8 +573,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
      */
     private void initTypeWeightings(boolean noLegendaries, boolean allowAltFormes) {
         // Determine weightings
-        Map<Type, SpeciesSet> pokemonByType = rPokeService
-                .getPokemon(noLegendaries, allowAltFormes, true).sortByType(false);
+        Map<Type, SpeciesSet> pokemonByType = rSpecService
+                .getSpecies(noLegendaries, allowAltFormes, true).sortByType(false);
         for (Type t : typeService.getTypes()) {
             SpeciesSet pokemonOfType = pokemonByType.get(t);
             int pkWithTyping = pokemonOfType.size();
@@ -578,13 +584,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     private int getRandomAbilitySlot(Species species) {
-        if (romHandler.abilitiesPerPokemon() == 0) {
+        if (romHandler.abilitiesPerSpecies() == 0) {
             return 0;
         }
         List<Integer> abilitiesList = Arrays.asList(species.getAbility1(), species.getAbility2(), species.getAbility3());
-        int slot = random.nextInt(romHandler.abilitiesPerPokemon());
+        int slot = random.nextInt(romHandler.abilitiesPerSpecies());
         while (abilitiesList.get(slot) == 0) {
-            slot = random.nextInt(romHandler.abilitiesPerPokemon());
+            slot = random.nextInt(romHandler.abilitiesPerSpecies());
         }
         return slot + 1;
     }
@@ -773,21 +779,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
     }
 
-    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species pk) {
-        boolean checkCosmetics = true;
-        tp.setFormeSuffix("");
-        tp.setForme(0);
-        if (pk.getFormeNumber() > 0) {
-            tp.setForme(pk.getFormeNumber());
-            tp.setFormeSuffix(pk.getFormeSuffix());
-            tp.setSpecies(pk.getBaseForme());
-            checkCosmetics = false;
+    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
+        tp.setForme(sp.getRandomCosmeticFormeNumber(random));
+        tp.setSpecies(sp);
+        while (!tp.getSpecies().isBaseForme()) {
+            tp.setSpecies(tp.getSpecies().getBaseForme());
         }
-        if (checkCosmetics && tp.getSpecies().getCosmeticForms() > 0) {
-            tp.setForme(tp.getSpecies().getCosmeticFormNumber(random.nextInt(tp.getSpecies().getCosmeticForms())));
-        } else if (!checkCosmetics && pk.getCosmeticForms() > 0) {
-            tp.setForme(tp.getForme() + pk.getCosmeticFormNumber(random.nextInt(pk.getCosmeticForms())));
-        }
+        tp.setFormeSuffix(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getFormeSuffix());
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
@@ -1072,7 +1070,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     continue; // should never happen - trainer had zero pokes
                 }
                 int[] moveset = highestLevelPoke.isResetMoves() ?
-                        RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfPokemon(
+                        RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
                                         highestLevelPoke.getSpecies(), highestLevelPoke.getForme()).getNumber(),
                                 movesets,
                                 highestLevelPoke.getLevel()) :
@@ -1081,7 +1079,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             } else {
                 for (TrainerPokemon tp : t.pokemon) {
                     int[] moveset = tp.isResetMoves() ?
-                            RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfPokemon(
+                            RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
                                             tp.getSpecies(), tp.getForme()).getNumber(),
                                     movesets,
                                     tp.getLevel()) :
@@ -1134,7 +1132,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
                         int[] pokeMoves = tp.isResetMoves() ?
                                 RomFunctions.getMovesAtLevel(
-                                        romHandler.getAltFormeOfPokemon(tp.getSpecies(), tp.getForme()).getNumber(),
+                                        romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(),
                                         romHandler.getMovesLearnt(), tp.getLevel()) :
                                 tp.getMoves();
                         pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();

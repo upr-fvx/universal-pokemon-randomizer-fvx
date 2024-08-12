@@ -55,7 +55,7 @@ public class MegaEvolution {
 
     @Override
     public String toString() {
-        return "MegaEvolution[from=" + from.fullName() + ", to=" + to.fullName() + ", needsItem=" + needsItem
+        return "MegaEvolution[from=" + from.getFullName() + ", to=" + to.getFullName() + ", needsItem=" + needsItem
                 + (needsItem ? ", item=" + item : "") + "]";
     }
 }

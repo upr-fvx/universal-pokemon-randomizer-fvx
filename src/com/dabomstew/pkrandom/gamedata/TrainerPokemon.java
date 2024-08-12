@@ -261,7 +261,7 @@ public class TrainerPokemon {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(species.fullName());
+        StringBuilder sb = new StringBuilder(species.getFullName());
         if (heldItem != null) {
             sb.append("@").append(heldItem.getName());
         }

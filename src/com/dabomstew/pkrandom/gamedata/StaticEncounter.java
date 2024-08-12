@@ -175,7 +175,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(species == null ? null : species.fullName());
+        sb.append(species == null ? null : species.getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {

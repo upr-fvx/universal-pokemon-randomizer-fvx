@@ -1,21 +1,28 @@
-package test.romhandlers;
+package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import test.romhandlers.Generation;
+import test.romhandlers.Roms;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.
- */
-public class RomHandlerTest {
+//TODO: once supported by JUnit, convert to ParameterizedContainer
+//support is intended to be added sometime this year? that's all I got
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class RandomizerTest {
 
     // update if the amount of supported generation increases,
     // and expect some test cases to need updating too, though hopefully only in a minor way
@@ -27,6 +34,9 @@ public class RomHandlerTest {
     private static final String LAST_DOT_REGEX = "\\.+(?![^.]*\\.)";
 
     private static final String TEST_CPG_PATH = "test/players";
+
+    //extremely hacky workaround for lack of ParameterizedContainer
+    private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
         return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
@@ -49,9 +59,21 @@ public class RomHandlerTest {
         return names.toArray(new String[0]);
     }
 
-    protected RomHandler romHandler;
+    protected TestRomHandler romHandler;
 
-    protected void loadROM(String romName) {
+    //TODO: once parameterized containers are available, make this a @BeforeEach
+    // (and remove the hacky part)
+    protected void activateRomHandler(String romName) {
+        romHandler = romHandlers.get(romName);
+        romHandler.prepare();
+    }
+
+    @AfterEach
+    public void resetROMHandler() {
+        romHandler.reset();
+    }
+
+    private static void loadROM(String romName) {
         Generation gen = getGenerationOf(romName);
         if (gen == null) {
             throw new IllegalArgumentException("Could not find the generation of " + romName);
@@ -61,12 +83,25 @@ public class RomHandlerTest {
         if (!factory.isLoadable(fullRomName)) {
             throw new IllegalArgumentException("ROM is not loadable.");
         }
-        romHandler = factory.create();
+        RomHandler romHandler = factory.create();
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
         romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+
+        romHandlers.put(romName, new TestRomHandler(romHandler));
     }
+
+    @BeforeAll
+    static public void loadROMs() {
+        for(String romName : getRomNames()) {
+            System.out.println("Loading " + romName +  "...");
+            loadROM(romName);
+            System.out.println("Finished loading " + romName);
+        }
+    }
+
+
 
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));

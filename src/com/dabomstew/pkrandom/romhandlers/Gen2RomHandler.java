@@ -2469,6 +2469,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         for (int i = 1; i < names.length; i++) {
             items.add(new Item(i, names[i]));
         }
+
+        Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int i = Gen2Constants.tmsStartIndex; i < Gen2Constants.tmsStartIndex + Gen2Constants.tmCount; i++) {
+            items.get(i).setTM(true);
+        }
     }
 
     private String[] readItemNames() {

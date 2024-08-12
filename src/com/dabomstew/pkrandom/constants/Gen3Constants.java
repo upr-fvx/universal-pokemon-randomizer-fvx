@@ -260,6 +260,8 @@ public class Gen3Constants {
             MoveIDs.screech, MoveIDs.snore, MoveIDs.uproar, MoveIDs.metalSound, MoveIDs.grassWhistle, MoveIDs.hyperVoice,
             MoveIDs.perishSong, MoveIDs.healBell);
 
+    public static final int tmsStartIndex = Gen3ItemIDs.tm01;
+
     public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(1, 2, 6, 7, 11, 18, 22, 23,
             26, 30, 37, 48);
 

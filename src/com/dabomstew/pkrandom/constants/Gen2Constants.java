@@ -124,6 +124,8 @@ public class Gen2Constants {
     public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorWind, MoveIDs.razorLeaf,
             MoveIDs.crabhammer, MoveIDs.slash, MoveIDs.aeroblast, MoveIDs.crossChop);
 
+    public static final int tmsStartIndex = Gen2ItemIDs.tm01;
+
     public static final List<Integer> requiredFieldTMs = Arrays.asList(4, 20, 22, 26, 28, 34, 35, 39,
             40, 43, 44, 46);
 

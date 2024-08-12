@@ -3647,6 +3647,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 1; i <= maxcount; i++) {
             items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
         }
+
+        Gen3Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int i = Gen3Constants.tmsStartIndex; i < Gen3Constants.tmsStartIndex + Gen3Constants.tmCount; i++) {
+            items.get(i).setTM(true);
+        }
     }
 
     @Override

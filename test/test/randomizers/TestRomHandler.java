@@ -37,12 +37,21 @@ public class TestRomHandler extends AbstractRomHandler {
     //Evolutions
     private final boolean altFormesCanHaveDifferentEvolutions;
 
-    //Encounters
+    //Encounters (wild)
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
     private final boolean hasTimeBasedEncounters;
     private final boolean hasWildAltFormes;
     private final SpeciesSet originalBannedForWild;
+
+    //Statics
+    private final List<StaticEncounter> originalStatics;
+    private List<StaticEncounter> testStatics = null;
+    private final boolean canChangeStaticPokemon;
+    private final boolean hasStaticAltFormes;
+    private final SpeciesSet originalBannedForStatics;
+    private final boolean forceSwapStaticMegaEvos;
+    private final List<Integer> mainGameLegendaries;
 
     //Types
     private final TypeTable originalTypeTable;
@@ -61,6 +70,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private List<Species> testStarters = null;
     private final boolean hasStarterAltFormes;
 
+    //Items
+    private final List<String> itemNames;
+
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
      * @param mockupOf A loaded RomHandler to create a mockup of.
@@ -68,14 +80,25 @@ public class TestRomHandler extends AbstractRomHandler {
     public TestRomHandler(RomHandler mockupOf) {
         originalTypeTable = new TypeTable(mockupOf.getTypeTable());
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
-        originalEncounters = mockupOf.getEncounters(true);
+        originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters(true));
+        originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
         altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
 
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
-        originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
+
+        originalStatics = Collections.unmodifiableList(mockupOf.getStaticPokemon());
+        canChangeStaticPokemon = mockupOf.canChangeStaticPokemon();
+        hasStaticAltFormes = mockupOf.hasStaticAltFormes();
+        originalBannedForStatics = SpeciesSet.unmodifiable(mockupOf.getBannedForStaticPokemon());
+        forceSwapStaticMegaEvos = mockupOf.forceSwapStaticMegaEvos();
+        if(mockupOf.hasMainGameLegendaries()) {
+            mainGameLegendaries = Collections.unmodifiableList(mockupOf.getMainGameLegendaries());
+        } else {
+            mainGameLegendaries = Collections.unmodifiableList(new ArrayList<>());
+        }
 
         hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
 
@@ -87,6 +110,8 @@ public class TestRomHandler extends AbstractRomHandler {
 
         originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
+
+        itemNames = Collections.unmodifiableList(Arrays.asList(mockupOf.getItemNames()));
     }
 
     /**
@@ -113,6 +138,8 @@ public class TestRomHandler extends AbstractRomHandler {
         testSpeciesInOrder = null;
 
         testEncounters = null;
+
+        testStatics = null;
 
         testTypeTable = null;
 
@@ -304,6 +331,26 @@ public class TestRomHandler extends AbstractRomHandler {
         }
 
         return copiedEncounters;
+    }
+
+    /**
+     * Given a List of {@link StaticEncounter}s, copies them such that each Species in the original
+     * is replaced by its copied test version.
+     * @param originalStatics The List of StaticEncounters to copy.
+     * @return A new List of new StaticEncounters which are copies of the given ones.
+     */
+    private List<StaticEncounter> deepCopyStatics(List<StaticEncounter> originalStatics) {
+        List<StaticEncounter> copiedStatics = new ArrayList<>();
+        for(StaticEncounter orig : originalStatics) {
+            StaticEncounter copy = new StaticEncounter(orig);
+            Species spec = originalToTest.get(orig.spec);
+            copy.spec = spec;
+            for(StaticEncounter linked : copy.linkedEncounters) {
+                linked.spec = spec;
+            }
+            copiedStatics.add(copy);
+        }
+        return copiedStatics;
     }
 
     @Override
@@ -703,42 +750,56 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<StaticEncounter> getStaticPokemon() {
-        throw new NotImplementedException();
+        if(!canChangeStaticPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support changing statics!");
+        }
+
+        if(testStatics == null) {
+            testStatics = deepCopyStatics(originalStatics);
+        }
+        return testStatics;
     }
 
     @Override
     public boolean setStaticPokemon(List<StaticEncounter> staticPokemon) {
-        throw new NotImplementedException();
+        if(!canChangeStaticPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support changing statics!");
+        }
+
+        testStatics = staticPokemon;
+        return true;
     }
 
     @Override
     public boolean canChangeStaticPokemon() {
-        throw new NotImplementedException();
+        return canChangeStaticPokemon;
     }
 
     @Override
     public boolean hasStaticAltFormes() {
-        throw new NotImplementedException();
+        return hasStaticAltFormes;
     }
 
     @Override
     public SpeciesSet getBannedForStaticPokemon() {
-        throw new NotImplementedException();
+        return originalBannedForStatics;
+        //TODO: verify this works
     }
 
     @Override
     public boolean forceSwapStaticMegaEvos() {
-        throw new NotImplementedException();
+        //what... does this mean
+        return forceSwapStaticMegaEvos;
     }
 
     @Override
     public boolean hasMainGameLegendaries() {
-        throw new NotImplementedException();
+        return !mainGameLegendaries.isEmpty();
     }
 
     @Override
     public List<Integer> getMainGameLegendaries() {
-        throw new NotImplementedException();
+        return mainGameLegendaries;
     }
 
     @Override
@@ -928,7 +989,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public String[] getItemNames() {
-        throw new NotImplementedException();
+        return itemNames.toArray(new String[0]);
     }
 
     @Override

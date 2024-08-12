@@ -568,8 +568,8 @@ public class Gen3Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
     private static final Set<Integer> badItemsRSE = setupBadItemsRSE();
     private static final Set<Integer> badItemsFRLG = setupBadItemsFRLG();
-    public static final List<Integer> regularShopItems = setupRegularShopItems();
-    public static final List<Integer> opShopItems = setupOPShopItems();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
 
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>();
@@ -609,30 +609,34 @@ public class Gen3Constants {
         return set;
     }
 
-    private static List<Integer> setupRegularShopItems() {
-        List<Integer> regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.potion, Gen3ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.superRepel, Gen3ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        return regularShopItems;
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall);
+        addBetween(set, Gen3ItemIDs.potion, Gen3ItemIDs.revive);
+        addBetween(set, Gen3ItemIDs.superRepel, Gen3ItemIDs.repel);
+        return set;
     }
 
-    private static List<Integer> setupOPShopItems() {
-        List<Integer> opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(Gen3ItemIDs.rareCandy);
-        opShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.pearl, Gen3ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(Gen3ItemIDs.luckyEgg);
-
-        return opShopItems;
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(Gen3ItemIDs.rareCandy);
+        addBetween(set, Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom);
+        addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
+        set.add(Gen3ItemIDs.luckyEgg);
+        return set;
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {
         for (int i = start; i < start + length; i++) {
+            set.add(i);
+        }
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
             set.add(i);
         }
     }

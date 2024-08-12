@@ -147,9 +147,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		loadItems();
 		loadedWildMapNames = false;
 
-		allowedItems = Gen4Constants.allowedItems.copy();
-		nonBadItems = Gen4Constants.nonBadItems.copy();
-
 		roamerRandomizationEnabled = (romEntry.getRomType() == Gen4Constants.Type_DP && romEntry.getRoamingPokemon().size() > 0)
 				|| (romEntry.getRomType() == Gen4Constants.Type_Plat
 						&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"))
@@ -184,6 +181,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<String> names = getStrings(romEntry.getIntValue("ItemNamesTextOffset"));
 		for (int i = 1; i < names.size(); i++) {
 			items.add(new Item(i, names.get(i)));
+		}
+
+		Gen4Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+		for (int i = Gen4Constants.tmsStartIndex; i < Gen4Constants.tmsStartIndex + Gen4Constants.tmCount; i++) {
+			items.get(i).setTM(true);
 		}
 	}
 
@@ -4742,13 +4744,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public ItemList getAllowedItems() {
-		return allowedItems;
-	}
-
-	@Override
-	public ItemList getNonBadItems() {
-		return nonBadItems;
+	public Set<Item> getNonBadItems() {
+		Set<Item> nonBad = new HashSet<>(getAllowedItems());
+		Set<Integer> badIds = Gen4Constants.badItems;
+		nonBad.removeIf(item -> badIds.contains(item.getId()));
+		return nonBad;
 	}
 
 	@Override

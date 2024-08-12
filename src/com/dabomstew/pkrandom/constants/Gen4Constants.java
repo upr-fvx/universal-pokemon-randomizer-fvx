@@ -656,6 +656,8 @@ public class Gen4Constants {
             MoveIDs.machPunch, MoveIDs.focusPunch, MoveIDs.dizzyPunch, MoveIDs.dynamicPunch, MoveIDs.hammerArm, MoveIDs.megaPunch,
             MoveIDs.cometPunch, MoveIDs.meteorMash, MoveIDs.shadowPunch, MoveIDs.drainPunch, MoveIDs.bulletPunch, MoveIDs.skyUppercut);
 
+    public static final int tmsStartIndex = ItemIDs.tm01;
+
     public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(2, 3, 5, 9, 12, 19, 23, 28,
             34, 39, 41, 43, 46, 47, 49, 50, 62, 69, 79, 80, 82, 84, 85, 87);
 
@@ -673,9 +675,6 @@ public class Gen4Constants {
     public static final List<Integer> dpptEarlyRequiredHMMoves = Arrays.asList(MoveIDs.rockSmash, MoveIDs.cut);
 
     public static final List<Integer> hgssEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
-
-    public static ItemList allowedItems, nonBadItems;
-    public static List<Integer> regularShopItems, opShopItems;
 
     public static final String shedinjaSpeciesLocator = "492080000090281C0521";
 
@@ -813,48 +812,66 @@ public class Gen4Constants {
     public static final List<Integer> dpptOverworldHoneyTreeDexIndicies = Arrays.asList(6, 7, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 34, 36, 37, 50);
     public static final List<Integer> partnerTrainerIndices = Arrays.asList(608, 609, 610, 611, 612);
 
-    static {
-        setupAllowedItems();
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    public static final Set<Integer> badItems = setupBadItems();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
+
+    private static Set<Integer> setupBannedItems() {
+        Set<Integer> set = new HashSet<>();
+        // Key items + version exclusives
+        addRange(set, ItemIDs.explorerKit, 109);
+        // Unknown blank items or version exclusives
+        addRange(set, ItemIDs.griseousOrb, 23);
+        // HMs
+        addRange(set, ItemIDs.hm01, 8);
+        return set;
     }
 
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(ItemIDs.enigmaStone);
-        // Key items + version exclusives
-        allowedItems.banRange(ItemIDs.explorerKit, 109);
-        // Unknown blank items or version exclusives
-        allowedItems.banRange(ItemIDs.griseousOrb, 23);
-        // HMs
-        allowedItems.banRange(ItemIDs.hm01, 8);
-        // TMs
-        allowedItems.tmRange(ItemIDs.tm01, 92);
-
-        // non-bad items
+    private static Set<Integer> setupBadItems() {
         // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItems = allowedItems.copy();
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
+                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder));
+        addRange(set, ItemIDs.shoalSalt, 2);
+        addRange(set, ItemIDs.growthMulch, 4); // mulch
+        addRange(set, ItemIDs.adamantOrb, 2); // orbs
+        addRange(set, ItemIDs.mail1, 12); // mails
+        addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
+        addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
+        addRange(set, ItemIDs.redScarf, 5); // contest scarves
+        return set;
+    }
 
-        nonBadItems.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder);
-        nonBadItems.banRange(ItemIDs.shoalSalt,2);
-        nonBadItems.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItems.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItems.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItems.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItems.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItems.banRange(ItemIDs.redScarf, 5); // contest scarves
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        return set;
+    }
 
-        regularShopItems = new ArrayList<>();
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(ItemIDs.rareCandy);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        set.add(ItemIDs.luckyEgg);
+        return set;
+    }
 
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
+    private static void addRange(Set<Integer> set, int start, int length) {
+        for (int i = start; i < start + length; i++) {
+            set.add(i);
+        }
+    }
 
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.add(ItemIDs.luckyEgg);
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
     }
 
     public static String getDoubleBattleFixPrefix(int romType) {

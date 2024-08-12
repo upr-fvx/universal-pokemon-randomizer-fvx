@@ -436,7 +436,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         throw new UnsupportedOperationException();
     }
 
-    protected Set<Item> itemIdsToSet(List<Integer> ids) {
+    protected Set<Item> itemIdsToSet(Collection<Integer> ids) {
         List<Item> allItems = getItems();
         return ids.stream().map(allItems::get)
                 .collect(Collectors.toSet());

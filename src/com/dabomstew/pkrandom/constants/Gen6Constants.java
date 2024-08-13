@@ -24,6 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.gamedata.*;
+import sun.java2d.pipe.AAShapePipe;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -928,115 +929,125 @@ public class Gen6Constants {
         return m;
     }
 
-    public static ItemList allowedItemsXY, allowedItemsORAS, nonBadItemsXY, nonBadItemsORAS;
-    public static List<Integer> regularShopItems, opShopItems;
+    private static final Set<Integer> bannedItemsXY = setupBannedItemsXY();
+    private static final Set<Integer> bannedItemsORAS = setupBannedItemsORAS();
+    private static final Set<Integer> badItemsORAS = setupBadItemsORAS();
+    private static final Set<Integer> badItemsXY = setupBadItemsXY();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems =  setupOPShopItems();
 
-    static {
-        setupAllowedItems();
-    }
-
-    private static void setupAllowedItems() {
-        allowedItemsXY = new ItemList(ItemIDs.megaGlove);
+    private static Set<Integer> setupBannedItemsXY() {
+        Set<Integer> set = new HashSet<>();
         // Key items + version exclusives
-        allowedItemsXY.banRange(ItemIDs.explorerKit, 76);
-        allowedItemsXY.banRange(ItemIDs.dataCard01, 32);
-        allowedItemsXY.banRange(ItemIDs.xtransceiverMale, 18);
-        allowedItemsXY.banSingles(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
-                ItemIDs.lightStone, ItemIDs.darkStone);
+        addRange(set, ItemIDs.explorerKit, 76);
+        addRange(set, ItemIDs.dataCard01, 32);
+        addRange(set, ItemIDs.xtransceiverMale, 18);
+        set.addAll(Arrays.asList(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
+                ItemIDs.lightStone, ItemIDs.darkStone));
         // Unknown blank items or version exclusives
-        allowedItemsXY.banRange(ItemIDs.tea, 3);
-        allowedItemsXY.banRange(ItemIDs.unused120, 14);
+        addRange(set, ItemIDs.tea, 3);
+        addRange(set, ItemIDs.unused120, 14);
         // TMs & HMs - tms cant be held in gen6
-        allowedItemsXY.tmRange(ItemIDs.tm01, 92);
-        allowedItemsXY.tmRange(ItemIDs.tm93, 3);
-        allowedItemsXY.banRange(ItemIDs.tm01, 100);
-        allowedItemsXY.banRange(ItemIDs.tm93, 3);
+        addRange(set, ItemIDs.tm01, 100);
+        addRange(set, ItemIDs.tm93, 3);
+        addRange(set, ItemIDs.tm96, 5);
         // Battle Launcher exclusives
-        allowedItemsXY.banRange(ItemIDs.direHit2, 24);
-
+        addRange(set, ItemIDs.direHit2, 24);
         // Key items (Gen 6)
-        allowedItemsXY.banRange(ItemIDs.holoCasterMale,3);
-        allowedItemsXY.banSingles(ItemIDs.pokeFlute, ItemIDs.sprinklotad);
-        allowedItemsXY.banRange(ItemIDs.powerPlantPass,4);
-        allowedItemsXY.banRange(ItemIDs.elevatorKey,4);
-        allowedItemsXY.banRange(ItemIDs.lensCase,3);
-        allowedItemsXY.banRange(ItemIDs.lookerTicket,3);
-        allowedItemsXY.banRange(ItemIDs.megaCharm,2);
-
-        // TMs (Gen 6)
-        allowedItemsXY.tmRange(ItemIDs.tm96,5);
-        allowedItemsXY.banRange(ItemIDs.tm96,5);
-
-        allowedItemsORAS = allowedItemsXY.copy(ItemIDs.eonFlute);
-        // Key items and an HM
-        allowedItemsORAS.banRange(ItemIDs.machBike,34);
-        allowedItemsORAS.banRange(ItemIDs.prisonBottle,2);
-        allowedItemsORAS.banRange(ItemIDs.meteoriteThirdForm,5);
-
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItemsXY = allowedItemsXY.copy();
-
-        nonBadItemsXY.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir);
-        nonBadItemsXY.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItemsXY.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItemsXY.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItemsXY.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsXY.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsXY.banRange(ItemIDs.redScarf, 5); // contest scarves
-        nonBadItemsXY.banRange(ItemIDs.relicCopper,7); // relic items
-        nonBadItemsXY.banRange(ItemIDs.richMulch,4); // more mulch
-        nonBadItemsXY.banRange(ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
-
-        nonBadItemsORAS = allowedItemsORAS.copy();
-
-        nonBadItemsORAS.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir);
-        nonBadItemsORAS.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItemsORAS.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItemsORAS.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItemsORAS.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsORAS.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsORAS.banRange(ItemIDs.redScarf, 5); // contest scarves
-        nonBadItemsORAS.banRange(ItemIDs.relicCopper,7); // relic items
-        nonBadItemsORAS.banRange(ItemIDs.richMulch,4); // more mulch
-
-        regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(ItemIDs.lavaCookie);
-        opShopItems.add(ItemIDs.berryJuice);
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.add(ItemIDs.oldGateau);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.blueFlute, ItemIDs.shoalShell).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.lansatBerry, ItemIDs.rowapBerry).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.luckyEgg);
-        opShopItems.add(ItemIDs.prettyFeather);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.balmMushroom, ItemIDs.casteliacone).boxed().collect(Collectors.toList()));
+        addRange(set, ItemIDs.holoCasterMale,3);
+        set.addAll(Arrays.asList(ItemIDs.pokeFlute, ItemIDs.sprinklotad));
+        addRange(set, ItemIDs.powerPlantPass,4);
+        addRange(set, ItemIDs.elevatorKey,4);
+        addRange(set, ItemIDs.lensCase,3);
+        addRange(set, ItemIDs.lookerTicket,3);
+        addRange(set, ItemIDs.megaCharm,2);
+        return set;
     }
 
-    public static ItemList getAllowedItems(int romType) {
-        if (romType == Type_XY) {
-            return allowedItemsXY;
-        } else {
-            return allowedItemsORAS;
+    private static Set<Integer> setupBannedItemsORAS() {
+        Set<Integer> set = new HashSet<>(bannedItemsXY);
+        // Key items and an HM
+        addRange(set, ItemIDs.machBike,34);
+        addRange(set, ItemIDs.prisonBottle,2);
+        addRange(set, ItemIDs.meteoriteThirdForm,5);
+        return set;
+    }
+
+    private static Set<Integer> setupBadItemsORAS() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
+                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon,
+                ItemIDs.strangeSouvenir));
+        addRange(set,ItemIDs.growthMulch, 4); // mulch
+        addRange(set,ItemIDs.adamantOrb, 2); // orbs
+        addRange(set,ItemIDs.mail1, 12); // mails
+        addRange(set,ItemIDs.figyBerry, 25); // berries without useful battle effects
+        addRange(set,ItemIDs.luckyPunch, 4); // pokemon specific
+        addRange(set,ItemIDs.redScarf, 5); // contest scarves
+        addRange(set,ItemIDs.relicCopper,7); // relic items
+        addRange(set,ItemIDs.richMulch,4); // more mulch
+        addRange(set,ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
+        return set;
+    }
+
+    private static Set<Integer> setupBadItemsXY() {
+        Set<Integer> set = new HashSet<>(badItemsORAS);
+        addRange(set,ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
+        return set;
+    }
+
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        return set;
+    }
+
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        // "Money items" etc
+        set.add(ItemIDs.lavaCookie);
+        set.add(ItemIDs.berryJuice);
+        set.add(ItemIDs.rareCandy);
+        set.add(ItemIDs.oldGateau);
+        addBetween(set, ItemIDs.blueFlute, ItemIDs.shoalShell);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
+        set.add(ItemIDs.luckyEgg);
+        set.add(ItemIDs.prettyFeather);
+        addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return set;
+    }
+
+    private static void addRange(Set<Integer> set, int start, int length) {
+        for (int i = start; i < start + length; i++) {
+            set.add(i);
         }
     }
 
-    public static ItemList getNonBadItems(int romType) {
-        if (romType == Type_XY) {
-            return nonBadItemsXY;
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
+    }
+
+    public static Set<Integer> getBannedItems(int romType) {
+        if (romType == Gen6Constants.Type_XY) {
+            return bannedItemsXY;
         } else {
-            return nonBadItemsORAS;
+            return bannedItemsORAS;
+        }
+    }
+
+    public static Set<Integer> getBadItems(int romType) {
+        if (romType == Gen6Constants.Type_XY) {
+            return badItemsXY;
+        } else {
+            return badItemsORAS;
         }
     }
 

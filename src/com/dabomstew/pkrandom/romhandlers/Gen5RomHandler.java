@@ -25,9 +25,9 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.DSStaticPokemon;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen5RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.InFileEntry;
@@ -88,9 +88,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private List<String> shopNames;
     private boolean loadedWildMapNames;
     private Map<Integer, String> wildMapNames;
-    private ItemList allowedItems, nonBadItems;
-    private List<Integer> regularShopItems;
-    private List<Integer> opShopItems;
     private int hiddenHollowCount = 0;
     private boolean hiddenHollowCounted = false;
     private List<Integer> originalDoubleTrainers = new ArrayList<>();
@@ -168,11 +165,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         
         loadedWildMapNames = false;
 
-        allowedItems = Gen5Constants.allowedItems.copy();
-        nonBadItems = Gen5Constants.getNonBadItems(romEntry.getRomType()).copy();
-        regularShopItems = Gen5Constants.regularShopItems;
-        opShopItems = Gen5Constants.opShopItems;
-
         try {
             computeCRC32sForRom();
         } catch (IOException e) {
@@ -193,6 +185,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         List<String> names = getStrings(false, romEntry.getIntValue("ItemNamesTextOffset"));
         for (int i = 1; i < names.size(); i++) {
             items.add(new Item(i, names.get(i)));
+        }
+
+        // TODO: would some other system be better here; e.g. something similar to "tagTrainers"
+        Gen5Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
+            items.get(i).setTM(true);
+        }
+        for (int i = ItemIDs.tm93; i <= ItemIDs.tm95; i++) {
+            items.get(i).setTM(true);
         }
     }
 
@@ -2111,22 +2112,20 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestText();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            allowedItems.banSingles(ItemIDs.luckyEgg);
-            nonBadItems.banSingles(ItemIDs.luckyEgg);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.NO_FREE_LUCKY_EGG) {
             removeFreeLuckyEgg();
         } else if (tweak == MiscTweak.BAN_BIG_MANIAC_ITEMS) {
-            // BalmMushroom, Big Nugget, Pearl String, Comet Shard
-            allowedItems.banRange(ItemIDs.balmMushroom, 4);
-            nonBadItems.banRange(ItemIDs.balmMushroom, 4);
-
-            // Relics
-            allowedItems.banRange(ItemIDs.relicVase, 4);
-            nonBadItems.banRange(ItemIDs.relicVase, 4);
-
-            // Rare berries
-            allowedItems.banRange(ItemIDs.lansatBerry, 7);
-            nonBadItems.banRange(ItemIDs.lansatBerry, 7);
+            for (int i = 0; i < 4; i++) {
+                // BalmMushroom, Big Nugget, Pearl String, Comet Shard
+                items.get(ItemIDs.balmMushroom + i).setAllowed(false);
+                // Relics
+                items.get(ItemIDs.relicVase + i).setAllowed(false);
+            }
+            for (int i = 0; i < 7; i++) {
+                // Rare berries
+                items.get(ItemIDs.lansatBerry + i).setAllowed(false);
+            }
         } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
             byte[] fossilFile = scriptNarc.files.get(Gen5Constants.fossilPokemonFile);
             writeWord(fossilFile,Gen5Constants.fossilPokemonLevelOffset,20);
@@ -3199,13 +3198,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return allowedItems;
-    }
-
-    @Override
-    public ItemList getNonBadItems() {
-        return nonBadItems;
+    public Set<Item> getNonBadItems() {
+        Set<Item> nonBad = new HashSet<>(getAllowedItems());
+        Set<Integer> badIds = Gen5Constants.getBadItems(romEntry.getRomType());
+        nonBad.removeIf(item -> badIds.contains(item.getId()));
+        return nonBad;
     }
 
     @Override
@@ -3215,12 +3212,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(regularShopItems);
+        return itemIdsToSet(Gen5Constants.regularShopItems);
     }
 
     @Override
     public Set<Item> getOPShopItems() {
-        return itemIdsToSet(opShopItems);
+        return itemIdsToSet(Gen5Constants.opShopItems);
     }
 
     @Override
@@ -3420,9 +3417,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         List<Integer> fieldItems = this.getFieldItems();
         List<Integer> fieldTMs = new ArrayList<>();
 
-        for (int item : fieldItems) {
-            if (Gen5Constants.allowedItems.isTM(item)) {
-                fieldTMs.add(tmFromIndex(item));
+        for (int id : fieldItems) {
+            if (items.get(id).isTM()) {
+                fieldTMs.add(tmFromIndex(id));
             }
         }
 
@@ -3437,7 +3434,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
         for (int i = 0; i < fiLength; i++) {
             int oldItem = fieldItems.get(i);
-            if (Gen5Constants.allowedItems.isTM(oldItem)) {
+            if (items.get(oldItem).isTM()) {
                 int newItem = indexFromTM(iterTMs.next());
                 fieldItems.set(i, newItem);
             }
@@ -3451,9 +3448,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         List<Integer> fieldItems = getFieldItems();
         List<Item> fieldRegItems = new ArrayList<>();
 
-        for (int item : fieldItems) {
-            if (Gen5Constants.allowedItems.isAllowed(item) && !(Gen5Constants.allowedItems.isTM(item))) {
-                fieldRegItems.add(items.get(item));
+        for (int id : fieldItems) {
+            Item item = items.get(id);
+            if (item.isAllowed() && !item.isTM()) {
+                fieldRegItems.add(item);
             }
         }
 
@@ -3467,8 +3465,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         Iterator<Item> iterNewItems = items.iterator();
 
         for (int i = 0; i < fiLength; i++) {
-            int oldItem = fieldItems.get(i);
-            if (!(Gen5Constants.allowedItems.isTM(oldItem)) && Gen5Constants.allowedItems.isAllowed(oldItem)) {
+            Item oldItem = items.get(fieldItems.get(i));
+            if (oldItem.isAllowed() && !oldItem.isTM()) {
                 int newItem = iterNewItems.next().getId();
                 fieldItems.set(i, newItem);
             }

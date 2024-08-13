@@ -1158,7 +1158,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private byte[] translateString(String text) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        while (text.length() != 0) {
+        while (!text.isEmpty()) {
             int i = Math.max(0, 4 - text.length());
             if (text.charAt(0) == '\\' && text.charAt(1) == 'x') {
                 baos.write((byte) Integer.parseInt(text.substring(2, 4), 16));
@@ -2033,17 +2033,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public Map<Integer, List<Integer>> getEggMoves() {
         Map<Integer, List<Integer>> eggMoves = new TreeMap<>();
-        int baseOffset = romEntry.getIntValue("EggMoves");
-        int currentOffset = baseOffset;
+        int offset = romEntry.getIntValue("EggMoves");
         int currentSpecies = 0;
         List<Integer> currentMoves = new ArrayList<>();
-        int val = FileFunctions.read2ByteInt(rom, currentOffset);
+        int val = FileFunctions.read2ByteInt(rom, offset);
 
         // Check egg_moves.h in the Gen 3 decomps for more info on how this algorithm works.
         while (val != 0xFFFF) {
             if (val > 20000) {
                 int species = val - 20000;
-                if (currentMoves.size() > 0) {
+                if (!currentMoves.isEmpty()) {
                     eggMoves.put(internalToPokedex[currentSpecies], currentMoves);
                 }
                 currentSpecies = species;
@@ -2051,12 +2050,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else {
                 currentMoves.add(val);
             }
-            currentOffset += 2;
-            val = FileFunctions.read2ByteInt(rom, currentOffset);
+            offset += 2;
+            val = FileFunctions.read2ByteInt(rom, offset);
         }
 
         // Need to make sure the last entry gets recorded too
-        if (currentMoves.size() > 0) {
+        if (!currentMoves.isEmpty()) {
             eggMoves.put(internalToPokedex[currentSpecies], currentMoves);
         }
         return eggMoves;
@@ -2064,14 +2063,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setEggMoves(Map<Integer, List<Integer>> eggMoves) {
-        int baseOffset = romEntry.getIntValue("EggMoves");
-        int currentOffset = baseOffset;
+        int offset = romEntry.getIntValue("EggMoves");
         for (int species : eggMoves.keySet()) {
-            FileFunctions.write2ByteInt(rom, currentOffset, pokedexToInternal[species] + 20000);
-            currentOffset += 2;
+            FileFunctions.write2ByteInt(rom, offset, pokedexToInternal[species] + 20000);
+            offset += 2;
             for (int move : eggMoves.get(species)) {
-                FileFunctions.write2ByteInt(rom, currentOffset, move);
-                currentOffset += 2;
+                FileFunctions.write2ByteInt(rom, offset, move);
+                offset += 2;
             }
         }
     }
@@ -2671,7 +2669,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(haystack, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -2766,7 +2764,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void patchForNationalDex() {
-        String nl = System.getProperty("line.separator");
         if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             // Find the original pokedex script
             int pkDexOffset = find(Gen3Constants.rsPokedexScriptIdentifier);
@@ -3145,7 +3142,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         // Assuming we got the items from the last step, fill out the probabilities based on the game.
-        if (pickupItems.size() > 0) {
+        if (!pickupItems.isEmpty()) {
             if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
                 for (int levelRange = 0; levelRange < 10; levelRange++) {
                     pickupItems.get(0).probabilities[levelRange] = 30;
@@ -3970,9 +3967,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // To make all TMs reusable, change this from HM01_Cut => 0.
         // FRLG has multiple comparisons like this to change, so we deal with offsets instead of singular offset.
         int[] offsets = romEntry.getArrayValue("TMMovesReusableFunctionOffsets");
-        if (offsets.length == 0) {
-            return;
-        }
         for (int offset : offsets) {
             if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) {
                 throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
@@ -4130,7 +4124,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         default:
                             effectivenessInternal = 0;
                             break;
-                    };
+                    }
                     part.write(Gen3Constants.typeToByte(attacker));
                     part.write(Gen3Constants.typeToByte(defender));
                     part.write(effectivenessInternal);

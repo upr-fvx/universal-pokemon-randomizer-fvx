@@ -147,7 +147,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		loadItems();
 		loadedWildMapNames = false;
 
-		roamerRandomizationEnabled = (romEntry.getRomType() == Gen4Constants.Type_DP && romEntry.getRoamingPokemon().size() > 0)
+		roamerRandomizationEnabled = (romEntry.getRomType() == Gen4Constants.Type_DP && !romEntry.getRoamingPokemon().isEmpty())
 				|| (romEntry.getRomType() == Gen4Constants.Type_Plat
 						&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"))
 				|| (romEntry.getRomType() == Gen4Constants.Type_HGSS
@@ -1162,7 +1162,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int fileCheck : filesWithRivalScript) {
 					byte[] file = scriptNARC.files.get(fileCheck);
 					List<Integer> rivalOffsets = RomFunctions.search(file, magic);
-					if (rivalOffsets.size() > 0) {
+					if (!rivalOffsets.isEmpty()) {
 						for (int baseOffset : rivalOffsets) {
 							// found, check for trainer battle or HoF
 							// check at jump
@@ -1192,7 +1192,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int fileCheck : filesWithTagBattleScript) {
 					byte[] file = scriptNARC.files.get(fileCheck);
 					List<Integer> tbOffsets = RomFunctions.search(file, tagBattleMagic);
-					if (tbOffsets.size() > 0) {
+					if (!tbOffsets.isEmpty()) {
 						for (int baseOffset : tbOffsets) {
 							// found, check for second part
 							int secondPartStart = baseOffset + tagBattleMagic.length + 2;
@@ -1380,7 +1380,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						condsArea.add(enc);
 					}
 				}
-				if (condsArea.size() > 0) {
+				if (!condsArea.isEmpty()) {
 					encounterAreas.add(condsArea);
 				}
 			}
@@ -1640,7 +1640,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Hoenn/Sinnoh Radio
 			EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
 			radioArea.setIdentifiers(mapName + " Hoenn/Sinnoh Radio", mapIndex, EncounterType.SPECIAL);
-			if (radioArea.size() > 0) {
+			if (!radioArea.isEmpty()) {
 				encounterAreas.add(radioArea);
 			}
 
@@ -1663,7 +1663,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Swarms
 			EncounterArea swarmArea = readOptionalEncounterAreaHGSS(b, offset, 2);
 			swarmArea.setIdentifiers(mapName + " Swarms", mapIndex, EncounterType.SPECIAL);
-			if (swarmArea.size() > 0) {
+			if (!swarmArea.isEmpty()) {
 				encounterAreas.add(swarmArea);
 			}
 
@@ -1672,12 +1672,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			EncounterArea nightFishingReplacementArea = readOptionalEncounterAreaHGSS(b, offset + 4, 1);
 			nightFishingReplacementArea.setIdentifiers(mapName + " Night Fishing Replacement", mapIndex,
 					EncounterType.FISHING);
-			if (nightFishingReplacementArea.size() > 0) {
+			if (!nightFishingReplacementArea.isEmpty()) {
 				encounterAreas.add(nightFishingReplacementArea);
 			}
 			EncounterArea fishingSwarmsArea = readOptionalEncounterAreaHGSS(b, offset + 6, 1);
 			fishingSwarmsArea.setIdentifiers(mapName + " Fishing Swarm", mapIndex, EncounterType.SPECIAL);
-			if (fishingSwarmsArea.size() > 0) {
+			if (!fishingSwarmsArea.isEmpty()) {
 				encounterAreas.add(fishingSwarmsArea);
 			}
 
@@ -1716,7 +1716,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Map 24 is an unused version of Route 16, but it still has valid headbutt
 			// encounter data.
 			// Avoid adding it to the list of encounters to prevent confusion.
-			if (area.size() > 0 && mapID != 24) {
+			if (!area.isEmpty() && mapID != 24) {
 				area.setDisplayName(mapName + " Headbutt");
 				area.setEncounterType(EncounterType.INTERACT);
 
@@ -1754,25 +1754,25 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		EncounterArea preNationalDexArea = readBCCEncounterAreaHGSS(bccEncountersData, 0, 10);
 		preNationalDexArea.setIdentifiers("Bug Catching Contest (Pre-National Dex)",
 				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
-		if (preNationalDexArea.size() > 0) {
+		if (!preNationalDexArea.isEmpty()) {
 			encounterAreas.add(preNationalDexArea);
 		}
 		EncounterArea postNationalDexTuesArea = readBCCEncounterAreaHGSS(bccEncountersData, 80, 10);
 		postNationalDexTuesArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Tuesdays)",
 				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
-		if (postNationalDexTuesArea.size() > 0) {
+		if (!postNationalDexTuesArea.isEmpty()) {
 			encounterAreas.add(postNationalDexTuesArea);
 		}
 		EncounterArea postNationalDexThursArea = readBCCEncounterAreaHGSS(bccEncountersData, 160, 10);
 		postNationalDexThursArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Thursdays)",
 				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
-		if (postNationalDexThursArea.size() > 0) {
+		if (!postNationalDexThursArea.isEmpty()) {
 			encounterAreas.add(postNationalDexThursArea);
 		}
 		EncounterArea postNationalDexSatArea = readBCCEncounterAreaHGSS(bccEncountersData, 240, 10);
 		postNationalDexSatArea.setIdentifiers("Bug Catching Contest (Post-National Dex, Saturdays)",
 				Gen4Constants.nationalParkMapIndex, EncounterType.SPECIAL);
-		if (postNationalDexSatArea.size() > 0) {
+		if (!postNationalDexSatArea.isEmpty()) {
 			encounterAreas.add(postNationalDexSatArea);
 		}
 	}
@@ -2798,7 +2798,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					writeWord(trpoke, pokeOffs, difficulty | ability << 8);
 					writeWord(trpoke, pokeOffs + 2, tp.getLevel());
 					writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
-					trpoke[pokeOffs + 5] |= (tp.getForme() << 2);
+					trpoke[pokeOffs + 5] |= (byte) (tp.getForme() << 2);
 					pokeOffs += 6;
 					if (tr.pokemonHaveItems()) {
 						int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -2929,7 +2929,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	// the moment; if that changes, then this should be moved there instead.
 	private void fixAbilitySlotValuesForHGSS(List<Trainer> trainers) {
 		for (Trainer tr : trainers) {
-			if (tr.pokemon.size() > 0) {
+			if (!tr.pokemon.isEmpty()) {
 				TrainerPokemon lastPokemon = tr.pokemon.get(tr.pokemon.size() - 1);
 				int lastAbilitySlot = lastPokemon.getAbilitySlot();
 				for (int i = 0; i < tr.pokemon.size(); i++) {
@@ -3139,7 +3139,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		while (val != 0xFFFF) {
 			if (val > 20000) {
 				int species = val - 20000;
-				if (currentMoves.size() > 0) {
+				if (!currentMoves.isEmpty()) {
 					eggMoves.put(currentSpecies, currentMoves);
 				}
 				currentSpecies = species;
@@ -3152,7 +3152,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		// Need to make sure the last entry gets recorded too
-		if (currentMoves.size() > 0) {
+		if (!currentMoves.isEmpty()) {
 			eggMoves.put(currentSpecies, currentMoves);
 		}
 
@@ -3967,7 +3967,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
 		}
 		List<Integer> found = RomFunctions.search(data, searchFor);
-		if (found.size() == 0) {
+		if (found.isEmpty()) {
 			return -1; // not found
 		} else if (found.size() > 1) {
 			return -2; // not unique
@@ -5123,7 +5123,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// baby pokemon
 			for (int i = 1; i <= Gen4Constants.pokemonCount; i++) {
 				Species baby = pokes[i];
-				while (baby.getEvolutionsTo().size() > 0) {
+				while (!baby.getEvolutionsTo().isEmpty()) {
 					// Grab the first "to evolution" even if there are multiple
 					baby = baby.getEvolutionsTo().get(0).getFrom();
 				}
@@ -5378,7 +5378,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							effectiveness = null;
 							break;
 					}
-					;
 					if (effectiveness != null) {
 						typeTable.setEffectiveness(attacking, defending, effectiveness);
 					}

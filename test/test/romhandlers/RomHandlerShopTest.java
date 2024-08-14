@@ -98,7 +98,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void canBadBadItems(String romName) {
+    public void canBanBadItems(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 

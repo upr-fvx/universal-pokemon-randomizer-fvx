@@ -848,7 +848,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             int offset = readPointer(tableOffset);
             int rootOffset = offset;
             if (!usedOffsets.containsKey(offset)) {
-                usedOffsets.put(rootOffset, new ArrayList());
+                usedOffsets.put(rootOffset, new ArrayList<>());
                 // grass and water are exactly the same
                 for (int a = 0; a < 2; a++) {
                     int rate = rom[offset++] & 0xFF;
@@ -1769,7 +1769,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(haystack, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique

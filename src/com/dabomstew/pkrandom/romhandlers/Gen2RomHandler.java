@@ -1386,7 +1386,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 eggMoveOffset++;
                 val = rom[eggMoveOffset] & 0xFF;
             }
-            if (moves.size() > 0) {
+            if (!moves.isEmpty()) {
                 eggMoves.put(i, moves);
             }
         }
@@ -1554,7 +1554,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < 4; i++) {
             int move = 0;
             int pp = 0;
-            if (level5Moveset.size() > 0) {
+            if (!level5Moveset.isEmpty()) {
                 move = level5Moveset.remove();
                 pp = moves.get(move).pp; // This assumes the ordering of moves matches the internal order
             }
@@ -1832,7 +1832,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(haystack, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique

@@ -75,7 +75,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     // This ROM
     private Species[] pokes;
-    private Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
     private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private Map<Integer,Integer> dummyAbsolutePokeNums;
     private List<Species> speciesList;
@@ -2392,7 +2392,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -3283,7 +3283,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= pokemonCount; i++) {
                 byte[] babyFile = babyGarc.getFile(i);
                 Species baby = pokes[i];
-                while (baby.getEvolutionsTo().size() > 0) {
+                while (!baby.getEvolutionsTo().isEmpty()) {
                     // Grab the first "to evolution" even if there are multiple
                     baby = baby.getEvolutionsTo().get(0).getFrom();
                 }

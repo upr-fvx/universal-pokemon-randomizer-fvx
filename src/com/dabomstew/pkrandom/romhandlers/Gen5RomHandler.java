@@ -77,7 +77,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     // This ROM
     private Species[] pokes;
-    private Map<Integer, FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Integer, FormeInfo> formeMappings = new TreeMap<>();
     private List<Species> speciesList;
     private List<Species> speciesListInclFormes;
     private Move[] moves;
@@ -90,7 +90,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private Map<Integer, String> wildMapNames;
     private int hiddenHollowCount = 0;
     private boolean hiddenHollowCounted = false;
-    private List<Integer> originalDoubleTrainers = new ArrayList<>();
+    private final List<Integer> originalDoubleTrainers = new ArrayList<>();
     private int pickupItemsTableOffset;
     private TypeTable typeTable;
     private long actualArm9CRC32;
@@ -1018,7 +1018,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     // Skip stuff that isn't on the map or is wrong version
                     if (areaIndex != -1) {
-                        pokeFile[season * (encounterAreaCount + 1) + 2 + areaIndex] |= (1 << i);
+                        pokeFile[season * (encounterAreaCount + 1) + 2 + areaIndex] |= (byte) (1 << i);
                     }
                 }
             }
@@ -1282,7 +1282,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 if (tr.forcedDoubleBattle) {
                     if (trainer[2] == 0) {
                         trainer[2] = 1;
-                        trainer[12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                        trainer[12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                     }
                 }
 
@@ -1845,7 +1845,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         hiddenHollowCounted = true;
 
         // Roaming encounters
-        if (romEntry.getRoamingPokemon().size() > 0) {
+        if (!romEntry.getRoamingPokemon().isEmpty()) {
             try {
                 int firstSpeciesOffset = romEntry.getRoamingPokemon().get(0).speciesOverlayOffsets[0];
                 byte[] overlay = readOverlay(romEntry.getIntValue("RoamerOvlNumber"));
@@ -2659,7 +2659,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -3550,7 +3550,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 writeWord(tfile, 0x34, trade.otId);
                 writeLong(tfile, 0x4C, trade.item);
                 writeLong(tfile, 0x5C, trade.requestedSpecies.getNumber());
-                if (romEntry.getTradeScripts().size() > 0) {
+                if (!romEntry.getTradeScripts().isEmpty()) {
                     romEntry.getTradeScripts().get(i - unusedOffset).setPokemon(this,scriptNarc,trade.requestedSpecies,trade.givenSpecies);
                 }
             }
@@ -3631,7 +3631,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             // baby pokemon
             for (int i = 1; i <= Gen5Constants.pokemonCount; i++) {
                 Species baby = pokes[i];
-                while (baby.getEvolutionsTo().size() > 0) {
+                while (!baby.getEvolutionsTo().isEmpty()) {
                     // Grab the first "to evolution" even if there are multiple
                     baby = baby.getEvolutionsTo().get(0).getFrom();
                 }
@@ -3733,12 +3733,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             IntStream.range(0, shopCount).forEachOrdered(i -> {
                 boolean badShop = false;
                 for (int tmShop : tmShops) {
-                    if (badShop) break;
-                    if (i == tmShop) badShop = true;
+                    if (i == tmShop) {
+                        badShop = true;
+                        break;
+                    }
                 }
                 for (int regularShop : regularShops) {
                     if (badShop) break;
-                    if (i == regularShop) badShop = true;
+                    if (i == regularShop) {
+                        badShop = true;
+                        break;
+                    }
                 }
                 if (!badShop) {
                     List<Item> shopContents = shopItems.get(i).getItems();
@@ -3803,7 +3808,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             }
 
             // Assuming we got the items from the last step, fill out the probabilities.
-            if (pickupItems.size() > 0) {
+            if (!pickupItems.isEmpty()) {
                 for (int levelRange = 0; levelRange < 10; levelRange++) {
                     int startingRareItemOffset = levelRange;
                     int startingCommonItemOffset = 11 + levelRange;

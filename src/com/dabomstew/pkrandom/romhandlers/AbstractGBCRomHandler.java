@@ -178,7 +178,7 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
 
     protected byte[] translateString(String text) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        while (text.length() != 0) {
+        while (!text.isEmpty()) {
             int i = Math.max(0, longestTableToken - text.length());
             if (text.charAt(0) == '\\' && text.charAt(1) == 'x') {
                 baos.write(Integer.parseInt(text.substring(2, 4), 16));

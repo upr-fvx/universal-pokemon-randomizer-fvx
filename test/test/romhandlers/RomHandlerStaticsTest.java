@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-//TODO: when feature is implemented, make child class LoadOnlyRomHandlerTest which is parameterized container
-// (Not doing it now bc I'm afraid it would overtax memory to load all romHandlers at once.)
 public class RomHandlerStaticsTest extends RomHandlerTest {
 
     @ParameterizedTest

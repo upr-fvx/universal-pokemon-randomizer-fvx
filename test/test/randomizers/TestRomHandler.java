@@ -34,6 +34,13 @@ public class TestRomHandler extends AbstractRomHandler {
     private RestrictedSpeciesService testRSS = null;
     private List<Species> testSpeciesInOrder = null;
 
+    //Abilities
+    private final int abilitiesPerSpecies;
+
+    //Moves
+    private final List<Move> originalMoves;
+    private List<Move> testMoves;
+
     //Evolutions
     private final boolean altFormesCanHaveDifferentEvolutions;
 
@@ -73,6 +80,16 @@ public class TestRomHandler extends AbstractRomHandler {
     //Items
     private final List<String> itemNames;
 
+    //Trainers
+    private final SpeciesSet originalBannedForTrainers;
+    private SpeciesSet testBannedForTrainers = null;
+    private final List<Trainer> originalTrainers;
+    private List<Trainer> testTrainers = null;
+    private final List<Integer> mainPlaythroughTrainers;
+    private final List<Integer> eliteFourTrainers;
+    private final List<Integer> challengeModeEliteFourTrainers;
+    private final Map<String, Type> gymAndEliteTypeThemes;
+
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
      * @param mockupOf A loaded RomHandler to create a mockup of.
@@ -82,6 +99,10 @@ public class TestRomHandler extends AbstractRomHandler {
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
         originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters(true));
         originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
+
+        abilitiesPerSpecies = mockupOf.abilitiesPerSpecies();
+
+        originalMoves = Collections.unmodifiableList(mockupOf.getMoves());
 
         altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
 
@@ -112,11 +133,19 @@ public class TestRomHandler extends AbstractRomHandler {
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
 
         itemNames = Collections.unmodifiableList(Arrays.asList(mockupOf.getItemNames()));
+
+        originalBannedForTrainers = SpeciesSet.unmodifiable(mockupOf.getBannedFormesForTrainerPokemon());
+        originalTrainers = Collections.unmodifiableList(mockupOf.getTrainers());
+        mainPlaythroughTrainers = Collections.unmodifiableList(mockupOf.getMainPlaythroughTrainers());
+        eliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(false));
+        challengeModeEliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(true));
+        gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
     }
 
     /**
      * Prepares for testing by making a deep copy of all Species,
-     * which are passed by reference and therefore cannot otherwise be reset.
+     * which are passed by reference and therefore cannot otherwise be reset. <br>
+     * Other test data is copied as needed.
      */
     public void prepare() {
         testSpeciesInclFormes = deepCopySpeciesSet(originalSpeciesInclFormes);
@@ -137,6 +166,8 @@ public class TestRomHandler extends AbstractRomHandler {
         testRSS = null;
         testSpeciesInOrder = null;
 
+        testMoves = null;
+
         testEncounters = null;
 
         testStatics = null;
@@ -144,6 +175,9 @@ public class TestRomHandler extends AbstractRomHandler {
         testTypeTable = null;
 
         testStarters = null;
+
+        testBannedForTrainers = null;
+        testTrainers = null;
     }
 
     /**
@@ -353,6 +387,45 @@ public class TestRomHandler extends AbstractRomHandler {
         return copiedStatics;
     }
 
+    /**
+     * Given a List of {@link Trainer}s, copies them such that each Species in the original
+     * is replaced by its copied test version.
+     * @param originalTrainers The List of Trainers to copy.
+     * @return A new List of Trainers which are copies of the given one.
+     */
+    private List<Trainer> deepCopyTrainers(List<Trainer> originalTrainers) {
+        List<Trainer> copiedTrainers = new ArrayList<>();
+        for(Trainer original : originalTrainers) {
+            Trainer copy = new Trainer(original);
+            for(TrainerPokemon tp : copy.pokemon) {
+                tp.species = originalToTest.get(tp.species);
+            }
+            copiedTrainers.add(copy);
+        }
+
+        return copiedTrainers;
+    }
+
+    /**
+     * Given a {@link List} of {@link Move}s, copies each.
+     * @param originalMoves The List of Moves to copy.
+     * @return A new List of Moves containing a copy of each move.
+     */
+    private List<Move> deepCopyMoves(List<Move> originalMoves) {
+        List<Move> copiedMoves = new ArrayList<>();
+        for(Move original : originalMoves) {
+            if(original == null) {
+                copiedMoves.add(null);
+                //some games start the list with a null move so they start at 1 instead of zero
+                //(weirdly, it's not all games)
+            } else {
+                Move copy = new Move(original);
+                copiedMoves.add(copy);
+            }
+        }
+        return copiedMoves;
+    }
+
     @Override
     public boolean loadRom(String filename) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
@@ -546,7 +619,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int abilitiesPerSpecies() {
-        throw new NotImplementedException();
+        return abilitiesPerSpecies;
     }
 
     @Override
@@ -571,6 +644,8 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
+        //what. why is this in romHandler
+        //or maybe the real question is, why is it public
         throw new NotImplementedException();
     }
 
@@ -625,27 +700,34 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Trainer> getTrainers() {
-        throw new NotImplementedException();
+        if(testTrainers == null) {
+            testTrainers = deepCopyTrainers(originalTrainers);
+        }
+        return testTrainers;
     }
 
     @Override
     public List<Integer> getMainPlaythroughTrainers() {
-        throw new NotImplementedException();
+        return mainPlaythroughTrainers;
     }
 
     @Override
     public List<Integer> getEliteFourTrainers(boolean isChallengeMode) {
-        throw new NotImplementedException();
+        if(isChallengeMode) {
+            return challengeModeEliteFourTrainers;
+        } else {
+            return eliteFourTrainers;
+        }
     }
 
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
-        throw new NotImplementedException();
+        return gymAndEliteTypeThemes;
     }
 
     @Override
     public void setTrainers(List<Trainer> trainerData) {
-        throw new NotImplementedException();
+        testTrainers = trainerData;
     }
 
     @Override
@@ -700,7 +782,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public void makeDoubleBattleModePossible() {
-        throw new NotImplementedException();
+        //do nothing
     }
 
     @Override
@@ -710,7 +792,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Move> getMoves() {
-        throw new NotImplementedException();
+        if(testMoves == null) {
+            testMoves = deepCopyMoves(originalMoves);
+        }
+        return testMoves;
     }
 
     @Override
@@ -1225,7 +1310,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public SpeciesSet getBannedFormesForTrainerPokemon() {
-        throw new NotImplementedException();
+        if(testBannedForTrainers == null) {
+            testBannedForTrainers = SpeciesSet.unmodifiable(copySpeciesSet(originalBannedForTrainers));
+        }
+        return testBannedForTrainers;
     }
 
     @Override

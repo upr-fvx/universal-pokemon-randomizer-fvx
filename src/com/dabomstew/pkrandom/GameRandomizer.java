@@ -692,7 +692,7 @@ public class GameRandomizer {
 
         // Diagnostics
         log.println("--ROM Diagnostics--");
-        if (!romHandler.isRomValid()) {
+        if (!romHandler.isRomValid(null)) {
             log.println(bundle.getString("Log.InvalidRomLoaded"));
         }
         romHandler.printRomDiagnostics(log);

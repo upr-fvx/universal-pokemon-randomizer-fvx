@@ -93,7 +93,11 @@ public interface RomHandler {
 
     void printRomDiagnostics(PrintStream logStream);
 
-    boolean isRomValid();
+    /**
+     * Returns whether the Rom is valid/has correct checksums, and logs relevant information.
+     * If logStream is null, nothing is logged.
+     */
+    boolean isRomValid(PrintStream logStream);
 
     // ======================================================
     // Methods for retrieving a list of Species objects.

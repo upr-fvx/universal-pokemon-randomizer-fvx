@@ -36,6 +36,7 @@ import pptxt.N3DSTxtHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -3972,8 +3973,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public boolean isRomValid() {
+    public boolean isRomValid(PrintStream logStream) {
         int index = this.hasGameUpdateLoaded() ? 1 : 0;
+        long expectedCodeCRC32 = romEntry.getExpectedCodeCRC32s()[index];
+        if (logStream != null) {
+            System.out.println("Checking CRC32 validities");
+            System.out.println("Code expected:\t" + Long.toHexString(expectedCodeCRC32));
+            System.out.println("Code actual:  \t" + Long.toHexString(actualCodeCRC32));
+        }
         if (romEntry.getExpectedCodeCRC32s()[index] != actualCodeCRC32) {
             return false;
         }
@@ -3981,6 +3988,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (String fileKey : romEntry.getFileKeys()) {
             long expectedCRC32 = romEntry.getFileExpectedCRC32s(fileKey)[index];
             long actualCRC32 = actualFileCRC32s.get(fileKey);
+            if (logStream != null) {
+                System.out.println(fileKey + "\texpected:\t" + Long.toHexString(expectedCRC32));
+                System.out.println(fileKey + "\tactual:  \t" + Long.toHexString(actualCRC32));
+            }
             if (expectedCRC32 != actualCRC32) {
                 System.out.println(actualCRC32);
                 return false;

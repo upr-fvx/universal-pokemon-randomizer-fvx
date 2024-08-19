@@ -2124,7 +2124,7 @@ public class RandomizerGUI {
             ex.printStackTrace();
             ps.println();
             ps.println("--ROM Diagnostics--");
-            if (!romHandler.isRomValid()) {
+            if (!romHandler.isRomValid(null)) {
                 ps.println(bundle.getString("Log.InvalidRomLoaded"));
             }
             romHandler.printRomDiagnostics(ps);
@@ -2471,7 +2471,7 @@ public class RandomizerGUI {
             romSupportLabel.setText(bundle.getString("GUI.romSupportPrefix") + " "
                     + this.romHandler.getSupportLevel());
 
-            if (!romHandler.isRomValid()) {
+            if (!romHandler.isRomValid(null)) {
                 romNameLabel.setForeground(Color.RED);
                 romCodeLabel.setForeground(Color.RED);
                 romSupportLabel.setForeground(Color.RED);

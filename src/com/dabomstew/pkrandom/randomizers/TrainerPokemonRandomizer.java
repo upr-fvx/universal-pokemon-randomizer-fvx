@@ -9,6 +9,7 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkrandom.services.TypeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -351,6 +352,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     //So we'll delay all these, so that if there *are* duplicate types, they're in
                     //the post-game gyms. (Since only Johto has enough gyms to require duplicate types.)
                     post8Gyms.add(group);
+                    continue;
+                }
+                if(group.startsWith("THEMED")) {
+                    //this is a non-league group, and so doesn't need to have any type restrictions on it
+                    typesForGroups.put(group, typeService.randomType(random));
                     continue;
                 }
                 if(remainingTypes.isEmpty()) {
@@ -773,21 +779,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
     }
 
-    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species pk) {
-        boolean checkCosmetics = true;
-        tp.formeSuffix = "";
-        tp.forme = 0;
-        if (pk.getFormeNumber() > 0) {
-            tp.forme = pk.getFormeNumber();
-            tp.formeSuffix = pk.getFormeSuffix();
-            tp.species = pk.getBaseForme();
-            checkCosmetics = false;
+    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
+        tp.forme = sp.getRandomCosmeticFormeNumber(random);
+        tp.species = sp;
+        while(!tp.species.isBaseForme()) {
+            tp.species = tp.species.getBaseForme();
         }
-        if (checkCosmetics && tp.species.getCosmeticForms() > 0) {
-            tp.forme = tp.species.getCosmeticFormNumber(random.nextInt(tp.species.getCosmeticForms()));
-        } else if (!checkCosmetics && pk.getCosmeticForms() > 0) {
-            tp.forme += pk.getCosmeticFormNumber(random.nextInt(pk.getCosmeticForms()));
-        }
+        tp.formeSuffix = romHandler.getAltFormeOfSpecies(tp.species, tp.forme).getFormeSuffix();
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {

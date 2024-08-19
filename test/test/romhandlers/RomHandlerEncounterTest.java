@@ -3,6 +3,7 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -268,9 +269,11 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
 
         if(romHandler.hasMapIndices()) {
-            assertNotEquals(areasByMapIndex.size(), 1);
+            assertNotEquals(areasByMapIndex.size(), 1, "No map indices when hasMapIndices is true!");
         } else {
-            assertEquals(areasByMapIndex.size(), 1);
+            assertEquals(areasByMapIndex.size(), 1,
+                    "Map indices are present, but hasMapIndices is false!");
+            Assumptions.abort("Does not have map indices.");
         }
     }
 

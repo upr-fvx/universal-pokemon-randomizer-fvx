@@ -750,7 +750,7 @@ public class GameRandomizer {
         List<Species> pkmnList = romHandler.getSpeciesInclFormes();
         int i = 1;
         for (Species pkmn : pkmnList) {
-            if (pkmn == null || pkmn.isCosmeticForme()) {
+            if (pkmn == null || pkmn.isActuallyCosmetic()) {
                 continue;
             }
             StringBuilder evoStr = new StringBuilder();
@@ -869,7 +869,7 @@ public class GameRandomizer {
         log.println("--Randomized Evolutions--");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
-            if (pk != null && !pk.isCosmeticForme()) {
+            if (pk != null && !pk.isActuallyCosmetic()) {
                 int numEvos = pk.getEvolutionsFrom().size();
                 if (numEvos > 0) {
                     StringBuilder evoStr = new StringBuilder(pk.getEvolutionsFrom().get(0).getTo().getFullName());
@@ -934,7 +934,7 @@ public class GameRandomizer {
             log.println();
             int i = 0;
             for (Species pkmn : allPokes) {
-                if (pkmn != null && !pkmn.isCosmeticForme()) {
+                if (pkmn != null && !pkmn.isActuallyCosmetic()) {
                     i++;
                     String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
                     if (pkmn.getSecondaryType(false) != null) {
@@ -1004,7 +1004,7 @@ public class GameRandomizer {
         int tmCount = romHandler.getTMCount();
         for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
             Species pkmn = entry.getKey();
-            if (pkmn.isCosmeticForme()) continue;
+            if (pkmn.isActuallyCosmetic()) continue;
             boolean[] flags = entry.getValue();
 
             String nameSpFormat = "%-14s";
@@ -1205,7 +1205,7 @@ public class GameRandomizer {
         for (int i = 0; i < oldStatics.size(); i++) {
             StaticEncounter oldP = oldStatics.get(i);
             StaticEncounter newP = newStatics.get(i);
-            checkValue = addToCV(checkValue, newP.pkmn.getNumber());
+            checkValue = addToCV(checkValue, newP.spec.getNumber());
             String oldStaticString = oldP.toString(settings.isStaticLevelModified());
             log.print(oldStaticString);
             if (seenPokemon.containsKey(oldStaticString)) {
@@ -1231,8 +1231,8 @@ public class GameRandomizer {
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
-            checkValue = addToCV(checkValue, newP.pkmn.getNumber());
-            log.println(oldP.pkmn.getFullName() + " =>");
+            checkValue = addToCV(checkValue, newP.spec.getNumber());
+            log.println(oldP.spec.getFullName() + " =>");
             log.printf(newP.toString(), itemNames[newP.heldItem]);
         }
         log.println();

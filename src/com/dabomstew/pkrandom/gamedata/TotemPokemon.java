@@ -39,13 +39,13 @@ public class TotemPokemon extends StaticEncounter {
     }
 
     public TotemPokemon(Species pkmn) {
-        this.pkmn = pkmn;
+        this.spec = pkmn;
     }
 
     @Override
     public String toString() {
         // The %s will be formatted to include the held item.
-        String ret = pkmn.getFullName() + "@%s Lv" + level + "\n    Aura: " + aura.toString() + "\n";
+        String ret = spec.getFullName() + "@%s Lv" + level + "\n    Aura: " + aura.toString() + "\n";
         int i = 1;
         for (StaticEncounter ally: allies.values()) {
             ret = ret.concat("    Ally " + i + ": " + ally.toString() + "\n");

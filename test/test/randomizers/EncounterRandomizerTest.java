@@ -1421,7 +1421,8 @@ public class EncounterRandomizerTest extends RandomizerTest {
         int formeNumber = enc.getFormeNumber();
         Species forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
 
-        return forme.isCosmeticForme() ? base : forme;
+
+        return forme.isCosmeticReplacement() ? base : forme;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {

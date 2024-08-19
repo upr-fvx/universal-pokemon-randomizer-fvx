@@ -52,8 +52,21 @@ public class StarterRandomizer extends Randomizer {
             pickedStarters.addAll(chooseStartersBasic(starterCount - pickedStarters.size(), choosable));
         } else if (typeUnique) {
             //we don't actually need a type map for this one
-            pickedStarters.addAll(chooseUniqueTypeStarters(pickedStarters,
-                    starterCount - pickedStarters.size(), choosable));
+
+            //run on a trio at a time so that we don't run out of types in games with many starters
+            while (pickedStarters.size() < starterCount) {
+                int startOfTrio = (pickedStarters.size() / 3) * 3; //round down to the nearest 3
+                int endOfTrio = Math.min(startOfTrio + 3, starterCount);
+                int sizeOfTrio = endOfTrio - startOfTrio;
+                int pickedInTrio = pickedStarters.size() - startOfTrio; //modulus 3 would also work
+                SpeciesSet pokemonInTrio = new SpeciesSet();
+                for(int i = 0; i < pickedInTrio; i++) {
+                    pokemonInTrio.add(pickedStarters.get(startOfTrio + i));
+                }
+
+                pickedStarters.addAll(chooseUniqueTypeStarters(pokemonInTrio, sizeOfTrio, choosable));
+                choosable.removeAll(pickedStarters);
+            }
         } else {
 
             //build type map
@@ -242,12 +255,13 @@ public class StarterRandomizer extends Randomizer {
     /**
      * Given a set of available Species, chooses a set of unique starters such that none of their types are
      * shared with any Species already picked.
-     * @param alreadyPicked The list of Species already picked.
+     * @param alreadyPicked The set of Species already picked.
      * @param numberPicks The number of Species to choose (not including those already picked).
-     * @param available The set of Species available to choose from. WARNING: PARAMETER MODIFIED.
+     * @param available The set of Species available to choose from.
      * @return A new {@link List} containing each starter chosen. (Not a SpeciesSet so that the order remains random.)
      */
-    private List<Species> chooseUniqueTypeStarters(List<Species> alreadyPicked, int numberPicks, SpeciesSet available) {
+    private List<Species> chooseUniqueTypeStarters(SpeciesSet alreadyPicked, int numberPicks, SpeciesSet available) {
+        available = new SpeciesSet(available); //so as to not modify by reference
         for (Species picked : alreadyPicked) {
             available.removeIf(poke -> poke.hasType(picked.getPrimaryType(false), false)
                     || poke.hasType(picked.getSecondaryType(false), false));
@@ -296,7 +310,8 @@ public class StarterRandomizer extends Randomizer {
             if (banIrregularAltFormes) {
                 available.removeAll(romHandler.getIrregularFormes());
             }
-            available.removeIf(Species::isCosmeticForme);
+            available.removeIf(Species::isCosmeticReplacement);
+            available.removeIf(Species::isActuallyCosmetic);
         } else {
             available = new SpeciesSet(noLegendaries ? rSpecService.getNonLegendaries(false) : rSpecService.getAll(false));
         }
@@ -330,7 +345,7 @@ public class StarterRandomizer extends Randomizer {
         List<Species> customStarters = new ArrayList<>();
         List<Species> romSpecies = romHandler.getSpeciesInclFormes()
                 .stream()
-                .filter(pk -> pk == null || !pk.isCosmeticForme())
+                .filter(pk -> pk == null || !pk.isCosmeticReplacement())
                 .collect(Collectors.toList());
 
         for (int customStarter : starterIndices) {

@@ -42,28 +42,8 @@ public class EncounterRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    // only exists for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonZoneMod mode, Settings.WildPokemonTypeMod typeMode,
-                                    boolean useTimeOfDay,
-                                    boolean catchEmAll, boolean similarStrength,
-                                    boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
-                                    boolean allowAltFormes, boolean banIrregularAltFormes,
-                                    boolean abilitiesAreRandomized) {
-        randomizeEncounters(mode,
-                false,
-                useTimeOfDay,
-                typeMode == Settings.WildPokemonTypeMod.RANDOM_THEMES,
-                false,
-                typeMode == Settings.WildPokemonTypeMod.KEEP_PRIMARY,
-                false,
-                catchEmAll, similarStrength,
-                noLegendaries, balanceShakingGrass, levelModifier,
-                allowAltFormes, banIrregularAltFormes,
-                abilitiesAreRandomized);
-    }
-
     // only public for some old test cases, please don't use
-    public void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
+    private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                     boolean keepEvolutions, boolean catchEmAll, boolean similarStrength,
@@ -158,7 +138,7 @@ public class EncounterRandomizer extends Randomizer {
         private final boolean needsTypes;
         private final boolean catchEmAll;
         private final boolean similarStrength;
-        private final boolean balanceShakingGrass;
+        private final boolean balanceLowLevelEncounters;
         private final boolean keepEvolutions;
 
         private boolean useMapping;
@@ -177,7 +157,7 @@ public class EncounterRandomizer extends Randomizer {
 
         public InnerRandomizer(SpeciesSet allowed, SpeciesSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                               boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
+                               boolean catchEmAll, boolean similarStrength, boolean balanceLowLevelEncounters,
                                boolean keepEvolutions) {
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
@@ -189,7 +169,7 @@ public class EncounterRandomizer extends Randomizer {
             this.needsTypes = keepPrimaryType || keepTypeThemes || randomTypeThemes;
             this.catchEmAll = catchEmAll;
             this.similarStrength = similarStrength;
-            this.balanceShakingGrass = balanceShakingGrass;
+            this.balanceLowLevelEncounters = balanceLowLevelEncounters;
             this.allowed = allowed;
             this.banned = banned;
             if (needsTypes) {
@@ -810,7 +790,7 @@ public class EncounterRandomizer extends Randomizer {
             if (catchEmAll && banned.contains(current)) {
                 replacement = current;
             } else if (similarStrength) {
-                if(balanceShakingGrass) {
+                if(balanceLowLevelEncounters && areaInformationMap != null) {
                     SpeciesAreaInformation info = areaInformationMap.get(current);
                     int bstToUse = Math.min(current.getBSTForPowerLevels(), info.getLowestLevel() * 10 + 250);
 
@@ -1019,7 +999,7 @@ public class EncounterRandomizer extends Randomizer {
                     info.addTypeTheme(areaTheme, areaSize);
                     info.banAll(area.getBannedSpecies());
                 }
-                if(balanceShakingGrass) {
+                if(balanceLowLevelEncounters) {
                     //TODO: either verify that this IS a shaking grass encounter,
                     // or rename the setting.
                     // (Leaning towards the latter.)
@@ -1208,17 +1188,9 @@ public class EncounterRandomizer extends Randomizer {
     }
 
     private void setFormeForEncounter(Encounter enc, Species sp) {
-        boolean checkCosmetics = true;
-        enc.setFormeNumber(0);
-        if (enc.getSpecies().getFormeNumber() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getFormeNumber());
+        enc.setFormeNumber(enc.getSpecies().getRandomCosmeticFormeNumber(random));
+        while(!enc.getSpecies().isBaseForme()) {
             enc.setSpecies(enc.getSpecies().getBaseForme());
-            checkCosmetics = false;
-        }
-        if (checkCosmetics && enc.getSpecies().getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getSpecies().getCosmeticFormNumber(this.random.nextInt(enc.getSpecies().getCosmeticForms())));
-        } else if (!checkCosmetics && sp.getCosmeticForms() > 0) {
-            enc.setFormeNumber(enc.getFormeNumber() + sp.getCosmeticFormNumber(this.random.nextInt(sp.getCosmeticForms())));
         }
     }
 

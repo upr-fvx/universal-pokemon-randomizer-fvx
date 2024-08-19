@@ -22,7 +22,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
                 pk -> pk.shuffleStats(random),
                 (evFrom, evTo, toMonIsFinalEvo) -> evTo.copyShuffledStatsUpEvolution(evFrom));
 
-        romHandler.getSpeciesSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {
@@ -49,7 +49,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
                 assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
 
-        romHandler.getSpeciesSetInclFormes().filterCosmetic()
+        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {

@@ -75,7 +75,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     // This ROM
     private Species[] pokes;
-    private Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
     private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private Map<Integer,Integer> dummyAbsolutePokeNums;
     private List<Species> speciesList;
@@ -340,7 +340,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isCosmeticForme()) pokes[species].getEvolutionsTo().add(evol);
+                            if (!pk.isCosmeticReplacement()) pokes[species].getEvolutionsTo().add(evol);
                         }
                     }
                 }
@@ -755,7 +755,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         // When the "Limit Pokemon" setting is enabled, we clear out the evolutions of
         // everything *not* in the pool, which could include Feebas. In that case,
         // there's no point in even worrying about its evolutions, so just return.
-        if (feebas.getEvolutionsFrom().size() == 0) {
+        if (feebas.getEvolutionsFrom().isEmpty()) {
             return;
         }
 
@@ -912,7 +912,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 5];
                 starters.add(se);
@@ -921,7 +921,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        return starters.stream().map(pk -> pk.pkmn).collect(Collectors.toList());
+        return starters.stream().map(pk -> pk.spec).collect(Collectors.toList());
     }
 
     @Override
@@ -957,11 +957,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     newStatic.forme = starter.getFormeNumber();
                     starter = starter.getBaseForme();
                 }
-                newStatic.pkmn = starter;
-                writeWord(staticCRO,offset+i*size, newStatic.pkmn.getNumber());
+                newStatic.spec = starter;
+                writeWord(staticCRO,offset+i*size, newStatic.spec.getNumber());
                 staticCRO[offset+i*size + 4] = (byte)newStatic.forme;
 //                staticCRO[offset+i*size + 5] = (byte)newStatic.level;
-                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.pkmn.getNumber());
+                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.spec.getNumber());
                 displayCRO[displayOffset+displayIndex*0x54+2] = (byte)newStatic.forme;
                 if (displayIndex < 3) {
                     starterText.set(starterTextIndices[displayIndex],
@@ -1258,14 +1258,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             // First, read 12 grass encounters and 12 long grass encounters
             EncounterArea grassArea = readEncounterArea(encounterData, 0, 12);
-            if (grassArea.size() > 0) {
+            if (!grassArea.isEmpty()) {
                 grassArea.setDisplayName(mapName + " Grass/Cave");
                 grassArea.setMapIndex(i);
                 grassArea.setEncounterType(EncounterType.WALKING);
                 encounterAreas.add(grassArea);
             }
             EncounterArea longGrassArea = readEncounterArea(encounterData, 48, 12);
-            if (longGrassArea.size() > 0) {
+            if (!longGrassArea.isEmpty()) {
                 longGrassArea.setDisplayName(mapName + " Long Grass");
                 longGrassArea.setMapIndex(i);
                 longGrassArea.setEncounterType(EncounterType.WALKING);
@@ -1274,7 +1274,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             // Now, 3 DexNav Foreign encounters
             EncounterArea dexNavForeignArea = readEncounterArea(encounterData, 96, 3);
-            if (dexNavForeignArea.size() > 0) {
+            if (!dexNavForeignArea.isEmpty()) {
                 dexNavForeignArea.setDisplayName(mapName + " DexNav Foreign Encounter");
                 dexNavForeignArea.setMapIndex(i);
                 dexNavForeignArea.setEncounterType(EncounterType.SPECIAL);
@@ -1283,14 +1283,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             // 5 surf and 5 rock smash encounters
             EncounterArea surfArea = readEncounterArea(encounterData, 108, 5);
-            if (surfArea.size() > 0) {
+            if (!surfArea.isEmpty()) {
                 surfArea.setDisplayName(mapName + " Surf");
                 surfArea.setMapIndex(i);
                 surfArea.setEncounterType(EncounterType.SURFING);
                 encounterAreas.add(surfArea);
             }
             EncounterArea rockSmashArea = readEncounterArea(encounterData, 128, 5);
-            if (rockSmashArea.size() > 0) {
+            if (!rockSmashArea.isEmpty()) {
                 rockSmashArea.setDisplayName(mapName + " Rock Smash");
                 rockSmashArea.setMapIndex(i);
                 rockSmashArea.setEncounterType(EncounterType.INTERACT);
@@ -1299,21 +1299,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             // 3 Encounters for each type of rod
             EncounterArea oldRodArea = readEncounterArea(encounterData, 148, 3);
-            if (oldRodArea.size() > 0) {
+            if (!oldRodArea.isEmpty()) {
                 oldRodArea.setDisplayName(mapName + " Old Rod");
                 oldRodArea.setMapIndex(i);
                 oldRodArea.setEncounterType(EncounterType.FISHING);
                 encounterAreas.add(oldRodArea);
             }
             EncounterArea goodRodArea = readEncounterArea(encounterData, 160, 3);
-            if (goodRodArea.size() > 0) {
+            if (!goodRodArea.isEmpty()) {
                 goodRodArea.setDisplayName(mapName + " Good Rod");
                 goodRodArea.setMapIndex(i);
                 goodRodArea.setEncounterType(EncounterType.FISHING);
                 encounterAreas.add(goodRodArea);
             }
             EncounterArea superRodArea = readEncounterArea(encounterData, 172, 3);
-            if (superRodArea.size() > 0) {
+            if (!superRodArea.isEmpty()) {
                 superRodArea.setDisplayName(mapName + " Super Rod");
                 superRodArea.setMapIndex(i);
                 superRodArea.setEncounterType(EncounterType.FISHING);
@@ -1322,21 +1322,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             // Lastly, 5 for each kind of Horde
             EncounterArea hordeCommonArea = readEncounterArea(encounterData, 184, 5);
-            if (hordeCommonArea.size() > 0) {
+            if (!hordeCommonArea.isEmpty()) {
                 hordeCommonArea.setDisplayName(mapName + " Common Horde");
                 hordeCommonArea.setMapIndex(i);
                 hordeCommonArea.setEncounterType(EncounterType.WALKING);
                 encounterAreas.add(hordeCommonArea);
             }
             EncounterArea hordeUncommonArea = readEncounterArea(encounterData, 204, 5);
-            if (hordeUncommonArea.size() > 0) {
+            if (!hordeUncommonArea.isEmpty()) {
                 hordeUncommonArea.setDisplayName(mapName + " Uncommon Horde");
                 hordeUncommonArea.setMapIndex(i);
                 hordeUncommonArea.setEncounterType(EncounterType.WALKING);
                 encounterAreas.add(hordeUncommonArea);
             }
             EncounterArea hordeRareArea = readEncounterArea(encounterData, 224, 5);
-            if (hordeRareArea.size() > 0) {
+            if (!hordeRareArea.isEmpty()) {
                 hordeRareArea.setDisplayName(mapName + " Rare Horde");
                 hordeRareArea.setMapIndex(i);
                 hordeRareArea.setEncounterType(EncounterType.WALKING);
@@ -1444,61 +1444,61 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             System.arraycopy(b, offset, encounterData, 0, 0x178);
 
             // First, 12 grass encounters, 12 rough terrain encounters, and 12 encounters each for yellow/purple/red flowers
-            if (readEncounterArea(encounterData, 0, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 0, 12).isEmpty()) {
                 EncounterArea grassArea = areaIterator.next();
                 writeEncounters(encounterData, 0, grassArea);
             }
-            if (readEncounterArea(encounterData, 48, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 48, 12).isEmpty()) {
                 EncounterArea yellowFlowersArea = areaIterator.next();
                 writeEncounters(encounterData, 48, yellowFlowersArea);
             }
-            if (readEncounterArea(encounterData, 96, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 96, 12).isEmpty()) {
                 EncounterArea purpleFlowersArea = areaIterator.next();
                 writeEncounters(encounterData, 96, purpleFlowersArea);
             }
-            if (readEncounterArea(encounterData, 144, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 144, 12).isEmpty()) {
                 EncounterArea redFlowersArea = areaIterator.next();
                 writeEncounters(encounterData, 144, redFlowersArea);
             }
-            if (readEncounterArea(encounterData, 192, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 192, 12).isEmpty()) {
                 EncounterArea roughTerrainArea = areaIterator.next();
                 writeEncounters(encounterData, 192, roughTerrainArea);
             }
 
             // 5 surf and 5 rock smash encounters
-            if (readEncounterArea(encounterData, 240, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 240, 5).isEmpty()) {
                 EncounterArea surfArea = areaIterator.next();
                 writeEncounters(encounterData, 240, surfArea);
             }
-            if (readEncounterArea(encounterData, 260, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 260, 5).isEmpty()) {
                 EncounterArea rockSmashArea = areaIterator.next();
                 writeEncounters(encounterData, 260, rockSmashArea);
             }
 
             // 3 Encounters for each type of rod
-            if (readEncounterArea(encounterData, 280, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 280, 3).isEmpty()) {
                 EncounterArea oldRodArea = areaIterator.next();
                 writeEncounters(encounterData, 280, oldRodArea);
             }
-            if (readEncounterArea(encounterData, 292, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 292, 3).isEmpty()) {
                 EncounterArea goodRodArea = areaIterator.next();
                 writeEncounters(encounterData, 292, goodRodArea);
             }
-            if (readEncounterArea(encounterData, 304, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 304, 3).isEmpty()) {
                 EncounterArea superRodArea = areaIterator.next();
                 writeEncounters(encounterData, 304, superRodArea);
             }
 
             // Lastly, 5 for each kind of Horde
-            if (readEncounterArea(encounterData, 316, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 316, 5).isEmpty()) {
                 EncounterArea commonHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 316, commonHordeArea);
             }
-            if (readEncounterArea(encounterData, 336, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 336, 5).isEmpty()) {
                 EncounterArea uncommonHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 336, uncommonHordeArea);
             }
-            if (readEncounterArea(encounterData, 356, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 356, 5).isEmpty()) {
                 EncounterArea rareHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 356, rareHordeArea);
             }
@@ -1546,55 +1546,55 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             System.arraycopy(b, offset, encounterData, 0, 0xF6);
 
             // First, 12 grass encounters and 12 long grass encounters
-            if (readEncounterArea(encounterData, 0, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 0, 12).isEmpty()) {
                 EncounterArea grassArea = areaIterator.next();
                 writeEncounters(encounterData, 0, grassArea);
             }
-            if (readEncounterArea(encounterData, 48, 12).size() > 0) {
+            if (!readEncounterArea(encounterData, 48, 12).isEmpty()) {
                 EncounterArea longGrassArea = areaIterator.next();
                 writeEncounters(encounterData, 48, longGrassArea);
             }
 
             // Now, 3 DexNav Foreign encounters
-            if (readEncounterArea(encounterData, 96, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 96, 3).isEmpty()) {
                 EncounterArea dexNavArea = areaIterator.next();
                 writeEncounters(encounterData, 96, dexNavArea);
             }
 
             // 5 surf and 5 rock smash encounters
-            if (readEncounterArea(encounterData, 108, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 108, 5).isEmpty()) {
                 EncounterArea surfArea = areaIterator.next();
                 writeEncounters(encounterData, 108, surfArea);
             }
-            if (readEncounterArea(encounterData, 128, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 128, 5).isEmpty()) {
                 EncounterArea rockSmashArea = areaIterator.next();
                 writeEncounters(encounterData, 128, rockSmashArea);
             }
 
             // 3 Encounters for each type of rod
-            if (readEncounterArea(encounterData, 148, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 148, 3).isEmpty()) {
                 EncounterArea oldRodArea = areaIterator.next();
                 writeEncounters(encounterData, 148, oldRodArea);
             }
-            if (readEncounterArea(encounterData, 160, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 160, 3).isEmpty()) {
                 EncounterArea goodRodArea = areaIterator.next();
                 writeEncounters(encounterData, 160, goodRodArea);
             }
-            if (readEncounterArea(encounterData, 172, 3).size() > 0) {
+            if (!readEncounterArea(encounterData, 172, 3).isEmpty()) {
                 EncounterArea superRodArea = areaIterator.next();
                 writeEncounters(encounterData, 172, superRodArea);
             }
 
             // Lastly, 5 for each kind of Horde
-            if (readEncounterArea(encounterData, 184, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 184, 5).isEmpty()) {
                 EncounterArea commonHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 184, commonHordeArea);
             }
-            if (readEncounterArea(encounterData, 204, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 204, 5).isEmpty()) {
                 EncounterArea uncommonHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 204, uncommonHordeArea);
             }
-            if (readEncounterArea(encounterData, 224, 5).size() > 0) {
+            if (!readEncounterArea(encounterData, 224, 5).isEmpty()) {
                 EncounterArea rareHordeArea = areaIterator.next();
                 writeEncounters(encounterData, 224, rareHordeArea);
             }
@@ -1707,7 +1707,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             updatePokedexAreaDataFromEncounterArea(grassArea, pokedexAreaData, areaIndex, 0x1);
             EncounterArea longGrassArea = readEncounterArea(encounterData, 48, 12);
             updatePokedexAreaDataFromEncounterArea(longGrassArea, pokedexAreaData, areaIndex, 0x2);
-            int foreignEncounterType = grassArea.size() > 0 ? 0x04 : 0x08;
+            int foreignEncounterType = !grassArea.isEmpty() ? 0x04 : 0x08;
             EncounterArea dexNavForeignArea = readEncounterArea(encounterData, 96, 3);
             updatePokedexAreaDataFromEncounterArea(dexNavForeignArea, pokedexAreaData, areaIndex, foreignEncounterType);
             EncounterArea surfArea = readEncounterArea(encounterData, 108, 5);
@@ -1946,7 +1946,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (tr.forcedDoubleBattle) {
                     if (trainer[offset+2] == 0) {
                         trainer[offset+2] = 1;
-                        trainer[offset+12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                        trainer[offset+12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                     }
                 }
 
@@ -2133,7 +2133,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 3];
                 short heldItem = (short)FileFunctions.read2ByteInt(staticCRO,offset+i*size + 4);
@@ -2162,7 +2162,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     pokemon = pokes[speciesWithForme];
                 }
-                se.pkmn = pokemon;
+                se.spec = pokemon;
                 se.forme = forme;
                 se.level = staticCRO[offset+i*size + 5];
                 int heldItem = FileFunctions.readFullInt(staticCRO,offset+i*size + 12);
@@ -2219,12 +2219,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int offset = tableBaseOffset + (offsetWithinTable * Gen6Constants.xyTrashEncounterDataLength);
         for (int i = offsetWithinTable; i < offsetWithinTable + count; i++) {
             StaticEncounter se = readTrashCanEncounter(offset);
-            if (consolidateSameSpeciesEncounters && encounterSet.containsKey(se.pkmn)) {
-                StaticEncounter mainEncounter = encounterSet.get(se.pkmn);
+            if (consolidateSameSpeciesEncounters && encounterSet.containsKey(se.spec)) {
+                StaticEncounter mainEncounter = encounterSet.get(se.spec);
                 mainEncounter.linkedEncounters.add(se);
             } else {
                 statics.add(se);
-                encounterSet.put(se.pkmn, se);
+                encounterSet.put(se.spec, se);
             }
             offset += Gen6Constants.xyTrashEncounterDataLength;
         }
@@ -2243,7 +2243,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     .getOrDefault(forme, 0);
             pokemon = pokes[speciesWithForme];
         }
-        se.pkmn = pokemon;
+        se.spec = pokemon;
         se.forme = forme;
         se.level = level;
         return se;
@@ -2263,7 +2263,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int offset = romEntry.getIntValue("StaticPokemonOffset");
             for (int i = 0; i < staticCount; i++) {
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.pkmn.getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.spec.getBaseNumber());
                 staticCRO[offset+i*size + 2] = (byte)se.forme;
                 staticCRO[offset+i*size + 3] = (byte)se.level;
                 if (se.heldItem == 0) {
@@ -2282,7 +2282,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < giftCount; i++) {
                 if (skipStarters.contains(i)) continue;
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.pkmn.getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.spec.getBaseNumber());
                 staticCRO[offset+i*size + 4] = (byte)se.forme;
                 staticCRO[offset+i*size + 5] = (byte)se.level;
                 if (se.heldItem == 0) {
@@ -2301,14 +2301,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int currentCount = 0;
                     while (currentCount != Gen6Constants.xyTrashCanEncounterCount) {
                         StaticEncounter se = staticIter.next();
-                        FileFunctions.writeFullInt(code, offset, se.pkmn.getBaseNumber());
+                        FileFunctions.writeFullInt(code, offset, se.spec.getBaseNumber());
                         FileFunctions.writeFullInt(code, offset + 4, se.forme);
                         FileFunctions.writeFullInt(code, offset + 8, se.level);
                         offset += Gen6Constants.xyTrashEncounterDataLength;
                         currentCount++;
                         for (int i = 0; i < se.linkedEncounters.size(); i++) {
                             StaticEncounter linkedEncounter = se.linkedEncounters.get(i);
-                            FileFunctions.writeFullInt(code, offset, linkedEncounter.pkmn.getBaseNumber());
+                            FileFunctions.writeFullInt(code, offset, linkedEncounter.spec.getBaseNumber());
                             FileFunctions.writeFullInt(code, offset + 4, linkedEncounter.forme);
                             FileFunctions.writeFullInt(code, offset + 8, linkedEncounter.level);
                             offset += Gen6Constants.xyTrashEncounterDataLength;
@@ -2321,11 +2321,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int[] boxLegendaryOffsets = romEntry.getArrayValue("BoxLegendaryOffsets");
                 StaticEncounter boxLegendaryEncounter = staticPokemon.get(boxLegendaryOffsets[0]);
-                fixBoxLegendariesXY(boxLegendaryEncounter.pkmn.getNumber());
+                fixBoxLegendariesXY(boxLegendaryEncounter.spec.getNumber());
                 setRoamersXY(staticPokemon);
             } else {
                 StaticEncounter rayquazaEncounter = staticPokemon.get(romEntry.getIntValue("RayquazaEncounterNumber"));
-                fixRayquazaORAS(rayquazaEncounter.pkmn.getNumber());
+                fixRayquazaORAS(rayquazaEncounter.spec.getNumber());
             }
 
             return true;
@@ -2432,7 +2432,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // In the free space now opened up, write the three roamer species.
             for (int i = 0; i < roamers.length; i++) {
                 int offset = freeSpaceOffset + 8 + (i * 4);
-                int species = roamers[i].pkmn.getBaseNumber();
+                int species = roamers[i].spec.getBaseNumber();
                 FileFunctions.writeFullInt(code, offset, species);
             }
 
@@ -2467,7 +2467,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             AMX seaSpiritsDenAreaScript = new AMX(seaSpiritsDenAreaFile, 1);
             for (int i = 0; i < roamers.length; i++) {
                 int offset = Gen6Constants.seaSpiritsDenScriptOffsetsXY[i];
-                int species = roamers[i].pkmn.getBaseNumber();
+                int species = roamers[i].spec.getBaseNumber();
                 FileFunctions.write2ByteInt(seaSpiritsDenAreaScript.decData, offset, species);
             }
             byte[] modifiedScript = seaSpiritsDenAreaScript.getBytes();
@@ -2764,7 +2764,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -2908,11 +2908,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 offset += sizes[mt];
             }
         }
-    }
-
-    @Override
-    public boolean hasTimeBasedEncounters() {
-        return false;
     }
 
     @Override
@@ -3768,7 +3763,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 byte[] babyFile = babyGarc.getFile(i);
                 Species baby = pokes[i];
-                while (baby.getEvolutionsTo().size() > 0) {
+                while (!baby.getEvolutionsTo().isEmpty()) {
                     // Grab the first "to evolution" even if there are multiple
                     baby = baby.getEvolutionsTo().get(0).getFrom();
                 }
@@ -3861,7 +3856,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < shopCount; i++) {
             boolean badShop = false;
             for (int tmShop: tmShops) {
-                if (badShop) break;
                 if (i == tmShop) {
                     badShop = true;
                     offset += (shopItemSizes[i] * 2);
@@ -3934,7 +3928,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         // Assuming we got the items from the last step, fill out the probabilities.
-        if (pickupItems.size() > 0) {
+        if (!pickupItems.isEmpty()) {
             for (int levelRange = 0; levelRange < 10; levelRange++) {
                 int startingCommonItemOffset = levelRange;
                 int startingRareItemOffset = 18 + levelRange;

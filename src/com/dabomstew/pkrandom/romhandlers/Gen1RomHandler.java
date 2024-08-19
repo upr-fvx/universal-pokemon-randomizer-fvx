@@ -848,7 +848,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             int offset = readPointer(tableOffset);
             int rootOffset = offset;
             if (!usedOffsets.containsKey(offset)) {
-                usedOffsets.put(rootOffset, new ArrayList());
+                usedOffsets.put(rootOffset, new ArrayList<>());
                 // grass and water are exactly the same
                 for (int a = 0; a < 2; a++) {
                     int rate = rom[offset++] & 0xFF;
@@ -1582,7 +1582,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getIntValue("StaticPokemonSupport") > 0) {
             for (StaticPokemon sp : romEntry.getStaticPokemon()) {
                 StaticEncounter se = new StaticEncounter();
-                se.pkmn = sp.getPokemon(this);
+                se.spec = sp.getPokemon(this);
                 se.level = sp.getLevel(rom, 0);
                 statics.add(se);
             }
@@ -1598,7 +1598,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
             StaticEncounter se = staticPokemon.get(i);
             StaticPokemon sp = romEntry.getStaticPokemon().get(i);
-            sp.setPokemon(this, se.pkmn);
+            sp.setPokemon(this, se.spec);
             sp.setLevel(rom, se.level, 0);
         }
 
@@ -1769,7 +1769,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(haystack, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique

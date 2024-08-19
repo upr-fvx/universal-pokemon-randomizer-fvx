@@ -229,7 +229,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        checkStartersAreAllDifferentTypes();
+        checkStartersInSameTriosAreAllDifferentTypes();
     }
 
     @ParameterizedTest
@@ -241,7 +241,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        checkStartersAreAllDifferentTypes();
+        checkStartersInSameTriosAreAllDifferentTypes();
         checkStartersHaveTwoEvos();
         checkStartersAreBasic();
     }
@@ -255,16 +255,28 @@ public class StarterRandomizerTest extends RandomizerTest {
         s.setStartersTypeMod(false, false, false, true, false);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
-        checkStartersAreAllDifferentTypes();
+        checkStartersInSameTriosAreAllDifferentTypes();
         checkStartersAreBasic();
     }
 
-    private void checkStartersAreAllDifferentTypes() {
+    private void checkStartersInSameTriosAreAllDifferentTypes() {
         List<Species> starters = romHandler.getStarters();
-        System.out.println(starters);
+        int startOfTrio = 0;
         for (int i = 0; i < starters.size(); i++) {
-            for (int j = i + 1; j < starters.size(); j++) {
-                assertFalse(sharesTypes(starters.get(i), starters.get(j)));
+            Species starter = starters.get(i);
+            System.out.println(starter.getFullName() + ": " + starter.getPrimaryType(false) +
+                    (!starter.hasSecondaryType(false) ? "" : "/" + starter.getSecondaryType(false)));
+
+            for (int j = startOfTrio; j < i; j++) {
+                Species compare = starters.get(j);
+                assertFalse(sharesTypes(starter, compare),
+                        starter.getFullName() + " and " + compare.getFullName() + " share a type!");
+            }
+
+            if(i == startOfTrio + 2) {
+                startOfTrio = i + 1;
+                System.out.println("Trio does not share types.");
+                System.out.println();
             }
         }
     }

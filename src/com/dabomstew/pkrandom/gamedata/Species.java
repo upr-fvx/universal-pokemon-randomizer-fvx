@@ -601,8 +601,29 @@ public class Species implements Comparable<Species> {
         return ultraBeasts.contains(this.number);
     }
 
-    public int getCosmeticFormNumber(int num) {
-        return realCosmeticFormNumbers.isEmpty() ? num : realCosmeticFormNumbers.get(num);
+    /**
+     * Gets a random cosmetic forme of this Species, including itself.
+     * @param random A seeded random number generator.
+     * @return A forme number for a random cosmetic forme of this Species, including itself.
+     */
+    public int getRandomCosmeticFormeNumber(Random random) {
+        if(cosmeticForms == 0) {
+            return formeNumber;
+        }
+
+        int num = random.nextInt(cosmeticForms);
+        if (num == cosmeticForms) {
+            return formeNumber;
+        }
+
+        if(!realCosmeticFormNumbers.isEmpty()) {
+            if(num > realCosmeticFormNumbers.size()) {
+                throw new IllegalStateException("Not all cosmetic formes listed in cosmeticFormeNumbers!");
+            }
+            return realCosmeticFormNumbers.get(num);
+        } else {
+            return formeNumber + num;
+        }
     }
 
     public String getName() {
@@ -665,8 +686,33 @@ public class Species implements Comparable<Species> {
         this.formeSpriteIndex = formeSpriteIndex;
     }
 
-    public boolean isCosmeticOverride() {
+    /**
+     * Checks whether the form is a purely cosmetic variant on its base form.
+     * Has some false positives and negatives at the current time.<br>
+     * See also {@link #isCosmeticReplacement()}
+     * @return Whether the form is cosmetic.
+     */
+    public boolean isActuallyCosmetic() {
         return actuallyCosmetic;
+    }
+
+    /**
+     * Checks if this forme can be chosen as a "cosmetic" replacement.<br>
+     * To check if the forme is a cosmetic forme, use {@link #isActuallyCosmetic()}. <br>
+     * Despite the name, not all "cosmetic" replacements are purely cosmetic (e.g. Pumpkaboo's sizing).
+     * @return True if the forme is a cosmetic variant, false otherwise.
+     */
+    public boolean isCosmeticReplacement() {
+        if(baseForme == null) {
+            return false;
+        }
+
+        Species base = baseForme;
+        if(base.getRealCosmeticFormNumbers().isEmpty()) {
+            return formeNumber <= base.formeNumber + base.getCosmeticForms();
+        } else {
+            return base.getRealCosmeticFormNumbers().contains(formeNumber);
+        }
     }
 
     public void setActuallyCosmetic(boolean actuallyCosmetic) {
@@ -1042,18 +1088,5 @@ public class Species implements Comparable<Species> {
         this.megaEvolutionsTo = megaEvolutionsTo;
     }
 
-    /**
-     * Checks if this forme is marked as cosmetic in any of the three possible ways.
-     * @return True if the forme is cosmetic, false otherwise.
-     */
-    public boolean isCosmeticForme() {
-        Species base = baseForme;
-        if(base == null) {
-            return false;
-        }
 
-        return formeNumber <= base.getCosmeticForms() ||
-                base.getRealCosmeticFormNumbers().contains(formeNumber) ||
-                actuallyCosmetic;
-    }
 }

@@ -722,13 +722,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
+    public List<Item> getStarterHeldItems() {
         // do nothing
         return new ArrayList<>();
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         // do nothing
     }
 

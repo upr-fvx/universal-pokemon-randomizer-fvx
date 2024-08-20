@@ -1367,43 +1367,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
-        List<Integer> sHeldItems = new ArrayList<>();
+    public List<Item> getStarterHeldItems() {
+        List<Item> sHeldItems = new ArrayList<>();
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            sHeldItems.add(readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset));
+            int id = readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset);
+            sHeldItems.add(items.get(id));
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
             int i1 = rom[baseOffset] & 0xFF;
             int i2 = rom[baseOffset + 2] & 0xFF;
             if (i2 == 0) {
-                sHeldItems.add(i1);
+                sHeldItems.add(items.get(i1));
             } else {
-                sHeldItems.add(i2 + 0xFF);
+                sHeldItems.add(items.get(i2 + 0xFF));
             }
         }
         return sHeldItems;
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         if (items.size() != 1) {
             return;
         }
-        int item = items.get(0);
+        Item item = items.get(0);
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, item);
+            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, item.getId());
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
-            if (item <= 0xFF) {
-                rom[baseOffset] = (byte) item;
+            if (item.getId() <= 0xFF) {
+                rom[baseOffset] = (byte) (item.getId() & 0xFF);
                 rom[baseOffset + 2] = 0;
             } else {
                 rom[baseOffset] = (byte) 0xFF;
-                rom[baseOffset + 2] = (byte) (item - 0xFF);
+                rom[baseOffset + 2] = (byte) ((item.getId() - 0xFF) & 0xFF);
             }
             rom[baseOffset + 3] = Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR2;
         }

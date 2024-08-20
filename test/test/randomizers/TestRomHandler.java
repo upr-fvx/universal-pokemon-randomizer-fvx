@@ -476,12 +476,12 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
+    public List<Item> getStarterHeldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         throw new NotImplementedException();
     }
 

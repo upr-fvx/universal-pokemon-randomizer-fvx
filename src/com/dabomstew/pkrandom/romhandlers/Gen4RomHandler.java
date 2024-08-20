@@ -87,7 +87,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private List<String> abilityNames;
 	private boolean loadedWildMapNames;
 	private Map<Integer, String> wildMapNames, headbuttMapNames;
-	private ItemList allowedItems, nonBadItems;
 	private boolean roamerRandomizationEnabled;
 	private int pickupItemsTableOffset, rarePickupItemsTableOffset;
 	private TypeTable typeTable;
@@ -1270,20 +1269,23 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
     @Override
-    public List<Integer> getStarterHeldItems() {
+    public List<Item> getStarterHeldItems() {
         int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
-        int item = FileFunctions.read2ByteInt(file, starterHeldItemOffset);
-        return Collections.singletonList(item);
+        int id = FileFunctions.read2ByteInt(file, starterHeldItemOffset);
+        return Collections.singletonList(items.get(id));
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
+		if (items.size() != 1) {
+			throw new IllegalArgumentException("Incorrect amount of items given, must be 1");
+		}
         int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
-        FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0));
+        FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0).getId());
     }
 
 	@Override
@@ -4901,9 +4903,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<Integer> fieldItems = this.getFieldItems();
 		List<Integer> fieldTMs = new ArrayList<>();
 
-		for (int item : fieldItems) {
-			if (Gen4Constants.allowedItems.isTM(item)) {
-				fieldTMs.add(item - Gen4Constants.tmItemOffset + 1);
+		for (int id : fieldItems) {
+			if (items.get(id).isTM()) {
+				fieldTMs.add(id - Gen4Constants.tmItemOffset + 1);
 			}
 		}
 
@@ -4918,7 +4920,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		for (int i = 0; i < fiLength; i++) {
 			int oldItem = fieldItems.get(i);
-			if (Gen4Constants.allowedItems.isTM(oldItem)) {
+			if (items.get(oldItem).isTM()) {
 				int newItem = iterTMs.next() + Gen4Constants.tmItemOffset - 1;
 				fieldItems.set(i, newItem);
 			}
@@ -4932,9 +4934,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<Integer> fieldItems = getFieldItems();
 		List<Item> fieldRegItems = new ArrayList<>();
 
-		for (int item : fieldItems) {
-			if (Gen4Constants.allowedItems.isAllowed(item) && !(Gen4Constants.allowedItems.isTM(item))) {
-				fieldRegItems.add(items.get(item));
+		for (int id : fieldItems) {
+			Item item = items.get(id);
+			if (item.isAllowed() && !item.isTM()) {
+				fieldRegItems.add(items.get(id));
 			}
 		}
 
@@ -4949,7 +4952,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		for (int i = 0; i < fiLength; i++) {
 			int oldItem = fieldItems.get(i);
-			if (!(Gen4Constants.allowedItems.isTM(oldItem)) && Gen4Constants.allowedItems.isAllowed(oldItem)) {
+			if (items.get(oldItem).isAllowed() && !items.get(oldItem).isTM()) {
 				int newItem = iterNewItems.next().getId();
 				fieldItems.set(i, newItem);
 			}
@@ -5191,8 +5194,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         } else if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestText();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            allowedItems.banSingles(ItemIDs.luckyEgg);
-            nonBadItems.banSingles(ItemIDs.luckyEgg);
+			items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {

@@ -670,24 +670,24 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
-        List<Integer> sHeldItems = new ArrayList<>();
+    public List<Item> getStarterHeldItems() {
+        List<Item> sHeldItems = new ArrayList<>();
         int[] shiOffsets = romEntry.getArrayValue("StarterHeldItems");
         for (int offset : shiOffsets) {
-            sHeldItems.add(rom[offset] & 0xFF);
+            sHeldItems.add(items.get(rom[offset] & 0xFF));
         }
         return sHeldItems;
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         int[] shiOffsets = romEntry.getArrayValue("StarterHeldItems");
         if (items.size() != shiOffsets.length) {
             return;
         }
-        Iterator<Integer> sHeldItems = items.iterator();
+        Iterator<Item> sHeldItems = items.iterator();
         for (int offset : shiOffsets) {
-            writeByte(offset, sHeldItems.next().byteValue());
+            writeByte(offset, (byte) (sHeldItems.next().getId() & 0xFF));
         }
     }
 

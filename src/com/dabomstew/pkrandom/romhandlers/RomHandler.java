@@ -142,9 +142,9 @@ public interface RomHandler {
 
     boolean supportsStarterHeldItems();
 
-    List<Integer> getStarterHeldItems();
+    List<Item> getStarterHeldItems();
 
-    void setStarterHeldItems(List<Integer> items);
+    void setStarterHeldItems(List<Item> items);
 
     // =================
     // Pokemon Abilities

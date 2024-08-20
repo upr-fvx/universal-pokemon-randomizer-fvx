@@ -1111,15 +1111,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
-        List<Integer> starterHeldItems = new ArrayList<>();
+    public List<Item> getStarterHeldItems() {
+        List<Item> starterHeldItems = new ArrayList<>();
         try {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.files.get(0).get(0);
             for (int i = 0; i < 3; i++) {
                 int offset = i * 0x14;
-                int item = FileFunctions.read2ByteInt(giftsFile, offset + 8);
-                starterHeldItems.add(item);
+                int id = FileFunctions.read2ByteInt(giftsFile, offset + 8);
+                starterHeldItems.add(items.get(id));
             }
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -1128,14 +1128,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         try {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.files.get(0).get(0);
             for (int i = 0; i < 3; i++) {
                 int offset = i * 0x14;
-                int item = items.get(i);
-                FileFunctions.write2ByteInt(giftsFile, offset + 8, item);
+                Item item = items.get(i);
+                FileFunctions.write2ByteInt(giftsFile, offset + 8, item.getId());
             }
             writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
         } catch (IOException e) {

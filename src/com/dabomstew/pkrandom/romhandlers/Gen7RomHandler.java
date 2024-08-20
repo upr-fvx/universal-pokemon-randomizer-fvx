@@ -88,7 +88,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     private byte[] code;
     private List<String> shopNames;
     private List<String> abilityNames;
-    private ItemList allowedItems, nonBadItems;
     private long actualCodeCRC32;
     private Map<String, Long> actualFileCRC32s;
 
@@ -145,9 +144,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen7Constants.getShopNames(romEntry.getRomType());
 
-        allowedItems = Gen7Constants.getAllowedItems(romEntry.getRomType()).copy();
-        nonBadItems = Gen7Constants.nonBadItems.copy();
-
         try {
             computeCRC32sForRom();
         } catch (IOException e) {
@@ -186,6 +182,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         List<String> names = getStrings(false,romEntry.getIntValue("ItemNamesTextOffset"));
         for (int i = 1; i < names.size(); i++) {
             items.add(new Item(i, names.get(i)));
+        }
+
+        Gen7Constants.getBannedItems(romEntry.getRomType()).forEach(id -> items.get(id).setAllowed(false));
+        for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
+            items.get(i).setTM(true);
+        }
+        for (int i = ItemIDs.tm93; i <= ItemIDs.tm95; i++) {
+            items.get(i).setTM(true);
+        }
+        for (int i = ItemIDs.tm96; i <= ItemIDs.tm100; i++) {
+            items.get(i).setTM(true);
         }
     }
 
@@ -2240,8 +2247,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestText();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            allowedItems.banSingles(ItemIDs.luckyEgg);
-            nonBadItems.banSingles(ItemIDs.luckyEgg);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.SOS_BATTLES_FOR_ALL) {
             positiveCallRates();
         } else if (tweak == MiscTweak.RETAIN_ALT_FORMES) {
@@ -2901,13 +2907,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return allowedItems;
-    }
-
-    @Override
-    public ItemList getNonBadItems() {
-        return nonBadItems;
+    public Set<Item> getNonBadItems() {
+        Set<Item> nonBad = new HashSet<>(getAllowedItems());
+        Set<Integer> badIds = Gen7Constants.badItems;
+        nonBad.removeIf(item -> badIds.contains(item.getId()));
+        return nonBad;
     }
 
     @Override
@@ -2987,10 +2991,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         List<Integer> fieldItems = this.getFieldItems();
         List<Integer> fieldTMs = new ArrayList<>();
 
-        ItemList allowedItems = Gen7Constants.getAllowedItems(romEntry.getRomType());
-        for (int item : fieldItems) {
-            if (allowedItems.isTM(item)) {
-                fieldTMs.add(tmFromIndex(item));
+        for (int id : fieldItems) {
+            if (items.get(id).isTM()) {
+                fieldTMs.add(tmFromIndex(id));
             }
         }
 
@@ -3004,10 +3007,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         Iterator<Integer> iterTMs = fieldTMs.iterator();
         Map<Integer,Integer> tmMap = new HashMap<>();
 
-        ItemList allowedItems = Gen7Constants.getAllowedItems(romEntry.getRomType());
         for (int i = 0; i < fiLength; i++) {
             int oldItem = fieldItems.get(i);
-            if (allowedItems.isTM(oldItem)) {
+            if (items.get(oldItem).isTM()) {
                 if (tmMap.get(oldItem) != null) {
                     fieldItems.set(i,tmMap.get(oldItem));
                     continue;
@@ -3026,10 +3028,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         List<Integer> fieldItems = getFieldItems();
         List<Item> fieldRegItems = new ArrayList<>();
 
-        ItemList allowedItems = Gen7Constants.getAllowedItems(romEntry.getRomType());
-        for (int item : fieldItems) {
-            if (allowedItems.isAllowed(item) && !(allowedItems.isTM(item))) {
-                fieldRegItems.add(items.get(item));
+        for (int id : fieldItems) {
+            Item item = items.get(id);
+            if (item.isAllowed() && !item.isTM()) {
+                fieldRegItems.add(item);
             }
         }
 
@@ -3042,10 +3044,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         int fiLength = fieldItems.size();
         Iterator<Item> iterNewItems = items.iterator();
 
-        ItemList allowedItems = Gen7Constants.getAllowedItems(romEntry.getRomType());
         for (int i = 0; i < fiLength; i++) {
             int oldItem = fieldItems.get(i);
-            if (!(allowedItems.isTM(oldItem)) && allowedItems.isAllowed(oldItem)) {
+            if (items.get(oldItem).isAllowed() && !items.get(oldItem).isTM()) {
                 int newItem = iterNewItems.next().getId();
                 fieldItems.set(i, newItem);
             }

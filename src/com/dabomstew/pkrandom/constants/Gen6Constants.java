@@ -977,15 +977,15 @@ public class Gen6Constants {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
                 ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon,
                 ItemIDs.strangeSouvenir));
-        addRange(set,ItemIDs.growthMulch, 4); // mulch
-        addRange(set,ItemIDs.adamantOrb, 2); // orbs
-        addRange(set,ItemIDs.mail1, 12); // mails
-        addRange(set,ItemIDs.figyBerry, 25); // berries without useful battle effects
-        addRange(set,ItemIDs.luckyPunch, 4); // pokemon specific
-        addRange(set,ItemIDs.redScarf, 5); // contest scarves
-        addRange(set,ItemIDs.relicCopper,7); // relic items
-        addRange(set,ItemIDs.richMulch,4); // more mulch
-        addRange(set,ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
+        addRange(set, ItemIDs.growthMulch, 4); // mulch
+        addRange(set, ItemIDs.adamantOrb, 2); // orbs
+        addRange(set, ItemIDs.mail1, 12); // mails
+        addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
+        addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
+        addRange(set, ItemIDs.redScarf, 5); // contest scarves
+        addRange(set, ItemIDs.relicCopper, 7); // relic items
+        addRange(set, ItemIDs.richMulch, 4); // more mulch
+        addRange(set, ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
         return set;
     }
 

@@ -164,7 +164,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         // TODO: would some other system be better here; e.g. something similar to "tagTrainers"
-        Gen5Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        Gen6Constants.getBannedItems(romEntry.getRomType()).forEach(id -> items.get(id).setAllowed(false));
         for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
             items.get(i).setTM(true);
         }

@@ -7,9 +7,9 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
 
-public class EncounterRandomizer extends Randomizer {
+public class WildEncounterRandomizer extends Randomizer {
 
-    public EncounterRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public WildEncounterRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 

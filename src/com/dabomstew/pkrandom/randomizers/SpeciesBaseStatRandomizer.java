@@ -8,13 +8,13 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;
 
-public class PokemonBaseStatRandomizer extends Randomizer {
+public class SpeciesBaseStatRandomizer extends Randomizer {
 
-    public PokemonBaseStatRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesBaseStatRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 
-    public void shufflePokemonStats() {
+    public void shuffleSpeciesStats() {
         boolean evolutionSanity = settings.isBaseStatsFollowEvolutions();
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
 
@@ -35,7 +35,7 @@ public class PokemonBaseStatRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    public void randomizePokemonStats() {
+    public void randomizeSpeciesStats() {
         boolean evolutionSanity = settings.isBaseStatsFollowEvolutions();
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();

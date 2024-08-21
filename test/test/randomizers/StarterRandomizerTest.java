@@ -3,7 +3,7 @@ package test.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
+import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -398,7 +398,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         s.setStartersTypeMod(false, false, false, false, false);
         s.setStartersNoDualTypes(true);
 
-        new PokemonTypeRandomizer(romHandler, s, RND).randomizePokemonTypes();
+        new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         checkStartersAreEachSingleType();

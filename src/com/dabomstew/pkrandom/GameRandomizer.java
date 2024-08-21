@@ -60,20 +60,20 @@ public class GameRandomizer {
     private final TypeEffectivenessUpdater typeEffUpdater;
 
     private final IntroPokemonRandomizer introPokeRandomizer;
-    private final PokemonBaseStatRandomizer pokeBSRandomizer;
-    private final PokemonTypeRandomizer pokeTypeRandomizer;
-    private final PokemonAbilityRandomizer pokeAbilityRandomizer;
+    private final SpeciesBaseStatRandomizer pokeBSRandomizer;
+    private final SpeciesTypeRandomizer pokeTypeRandomizer;
+    private final SpeciesAbilityRandomizer pokeAbilityRandomizer;
     private final EvolutionRandomizer evoRandomizer;
     private final StarterRandomizer starterRandomizer;
     private final StaticPokemonRandomizer staticPokeRandomizer;
     private final TradeRandomizer tradeRandomizer;
     private final MoveDataRandomizer moveDataRandomizer;
-    private final PokemonMovesetRandomizer pokeMovesetRandomizer;
+    private final SpeciesMovesetRandomizer pokeMovesetRandomizer;
     private final TrainerPokemonRandomizer trainerPokeRandomizer;
     private final TrainerMovesetRandomizer trainerMovesetRandomizer;
     private final TrainerNameRandomizer trainerNameRandomizer;
-    private final EncounterRandomizer encounterRandomizer;
-    private final PokemonWildHeldItemRandomizer pokeHeldItemRandomizer;
+    private final WildEncounterRandomizer wildEncounterRandomizer;
+    private final EncounterHeldItemRandomizer pokeHeldItemRandomizer;
     private final TMTutorMoveRandomizer tmtMoveRandomizer;
     private final TMHMTutorCompatibilityRandomizer tmhmtCompRandomizer;
     private final ItemRandomizer itemRandomizer;
@@ -92,20 +92,20 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.pokeBSRandomizer = new PokemonBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.pokeTypeRandomizer = new PokemonTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.pokeAbilityRandomizer = new PokemonAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.pokeBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.pokeTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.pokeAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.starterRandomizer = new StarterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.staticPokeRandomizer = new StaticPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tradeRandomizer = new TradeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.moveDataRandomizer = new MoveDataRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.pokeMovesetRandomizer = new PokemonMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.pokeMovesetRandomizer = new SpeciesMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerPokeRandomizer = new TrainerPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerNameRandomizer = new TrainerNameRandomizer(romHandler, settings,  randomSource.getCosmetic());
-        this.encounterRandomizer = new EncounterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.pokeHeldItemRandomizer = new PokemonWildHeldItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.wildEncounterRandomizer = new WildEncounterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.pokeHeldItemRandomizer = new EncounterHeldItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tmtMoveRandomizer = new TMTutorMoveRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tmhmtCompRandomizer = new TMHMTutorCompatibilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.itemRandomizer = new ItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -238,7 +238,7 @@ public class GameRandomizer {
 
         // Pokemon Types
         if (settings.getTypesMod() != Settings.TypesMod.UNCHANGED) {
-            pokeTypeRandomizer.randomizePokemonTypes();
+            pokeTypeRandomizer.randomizeSpeciesTypes();
         }
 
         // Wild Held Items
@@ -260,10 +260,10 @@ public class GameRandomizer {
         // Base stat randomization
         switch (settings.getBaseStatisticsMod()) {
             case SHUFFLE:
-                pokeBSRandomizer.shufflePokemonStats();
+                pokeBSRandomizer.shuffleSpeciesStats();
                 break;
             case RANDOM:
-                pokeBSRandomizer.randomizePokemonStats();
+                pokeBSRandomizer.randomizeSpeciesStats();
         }
 
         // Abilities
@@ -465,7 +465,7 @@ public class GameRandomizer {
         // do part of wild Pokemon early if needed
         if (settings.isTrainersUseLocalPokemon() &&
                 (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
-            encounterRandomizer.randomizeEncounters();
+            wildEncounterRandomizer.randomizeEncounters();
         }
 
         // Trainer Pokemon
@@ -590,15 +590,15 @@ public class GameRandomizer {
         // Wild Pokemon
 
         if (settings.isUseMinimumCatchRate()) {
-            encounterRandomizer.changeCatchRates();
+            wildEncounterRandomizer.changeCatchRates();
         }
 
         if (!settings.isTrainersUseLocalPokemon() &&
                 (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
-            encounterRandomizer.randomizeEncounters();
+            wildEncounterRandomizer.randomizeEncounters();
         }
 
-        if (encounterRandomizer.isChangesMade()) {
+        if (wildEncounterRandomizer.isChangesMade()) {
             logWildPokemonChanges(log);
         } else {
             log.println("Wild Pokemon: Unchanged." + NEWLINE);

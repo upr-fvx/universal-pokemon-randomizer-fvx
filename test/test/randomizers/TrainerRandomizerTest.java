@@ -151,7 +151,7 @@ public class TrainerRandomizerTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         Settings s = new Settings();
-        s.setTypesMod(false, false, true);
+        s.setSpeciesTypesMod(false, false, true);
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
         s.setTrainersMod(false, false, false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();

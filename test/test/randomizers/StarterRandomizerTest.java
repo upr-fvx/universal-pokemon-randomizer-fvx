@@ -393,7 +393,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void noDualTypesWorksWithRandomTypes(String romName) {
         activateRomHandler(romName);
         Settings s = new Settings();
-        s.setTypesMod(Settings.TypesMod.COMPLETELY_RANDOM);
+        s.setSpeciesTypesMod(Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         s.setStartersMod(false, false, false, false, false);
         s.setStartersTypeMod(false, false, false, false, false);
         s.setStartersNoDualTypes(true);

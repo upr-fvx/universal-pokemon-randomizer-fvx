@@ -237,7 +237,7 @@ public class GameRandomizer {
         }
 
         // Pokemon Types
-        if (settings.getTypesMod() != Settings.TypesMod.UNCHANGED) {
+        if (settings.getSpeciesTypesMod() != Settings.SpeciesTypesMod.UNCHANGED) {
             pokeTypeRandomizer.randomizeSpeciesTypes();
         }
 

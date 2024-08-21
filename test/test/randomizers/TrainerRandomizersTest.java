@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class TrainerRandomizerTest extends RandomizerTest {
+public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")

@@ -4,7 +4,7 @@ import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
+import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -152,7 +152,7 @@ public class TrainerRandomizerTest extends RandomizerTest {
 
         Settings s = new Settings();
         s.setTypesMod(false, false, true);
-        new PokemonTypeRandomizer(romHandler, s, RND).randomizePokemonTypes();
+        new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
         s.setTrainersMod(false, false, false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -407,7 +407,7 @@ public class TrainerRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomUsableZCrystalsDoesNotChangeWhichPokemonHaveZCrystals(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) == 7);
+        assumeTrue(getGenerationNumberOf(romName) >= 7);
         activateRomHandler(romName);
 
         System.out.println("==== BEFORE: ====");

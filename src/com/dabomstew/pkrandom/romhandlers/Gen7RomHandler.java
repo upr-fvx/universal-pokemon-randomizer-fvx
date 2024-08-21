@@ -38,6 +38,7 @@ import pptxt.N3DSTxtHandler;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     // This ROM
     private Species[] pokes;
-    private Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
     private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private Map<Integer,Integer> dummyAbsolutePokeNums;
     private List<Species> speciesList;
@@ -2380,7 +2381,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -3276,7 +3277,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= pokemonCount; i++) {
                 byte[] babyFile = babyGarc.getFile(i);
                 Species baby = pokes[i];
-                while (baby.getEvolutionsTo().size() > 0) {
+                while (!baby.getEvolutionsTo().isEmpty()) {
                     // Grab the first "to evolution" even if there are multiple
                     baby = baby.getEvolutionsTo().get(0).getFrom();
                 }
@@ -3458,8 +3459,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public boolean isRomValid() {
+    public boolean isRomValid(PrintStream logStream) {
         int index = this.hasGameUpdateLoaded() ? 1 : 0;
+        long expectedCodeCRC32 = romEntry.getExpectedCodeCRC32s()[index];
+        if (logStream != null) {
+            System.out.println("Checking CRC32 validities");
+            System.out.println("Code expected:\t" + Long.toHexString(expectedCodeCRC32));
+            System.out.println("Code actual:  \t" + Long.toHexString(actualCodeCRC32));
+        }
         if (romEntry.getExpectedCodeCRC32s()[index] != actualCodeCRC32) {
             return false;
         }
@@ -3467,7 +3474,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (String fileKey : romEntry.getFileKeys()) {
             long expectedCRC32 = romEntry.getFileExpectedCRC32s(fileKey)[index];
             long actualCRC32 = actualFileCRC32s.get(fileKey);
+            if (logStream != null) {
+                System.out.println(fileKey + "\texpected:\t" + Long.toHexString(expectedCRC32));
+                System.out.println(fileKey + "\tactual:  \t" + Long.toHexString(actualCRC32));
+            }
             if (expectedCRC32 != actualCRC32) {
+                System.out.println(actualCRC32);
                 return false;
             }
         }

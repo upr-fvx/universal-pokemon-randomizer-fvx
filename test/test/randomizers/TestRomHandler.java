@@ -492,7 +492,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public boolean isRomValid() {
+    public boolean isRomValid(PrintStream logStream) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 

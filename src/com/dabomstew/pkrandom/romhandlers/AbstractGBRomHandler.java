@@ -474,7 +474,12 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     public abstract AbstractGBRomEntry getRomEntry();
 
     @Override
-    public boolean isRomValid() {
+    public boolean isRomValid(PrintStream logStream) {
+        if (logStream != null) {
+            System.out.println("Checking CRC32 validity");
+            System.out.println("CRC32, expected:\t" + Long.toHexString(getRomEntry().getExpectedCRC32()));
+            System.out.println("CRC32, actual:  \t" + Long.toHexString(actualCRC32));
+        }
         return getRomEntry().getExpectedCRC32() == actualCRC32;
     }
 

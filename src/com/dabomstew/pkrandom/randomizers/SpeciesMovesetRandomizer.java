@@ -9,9 +9,9 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PokemonMovesetRandomizer extends Randomizer {
+public class SpeciesMovesetRandomizer extends Randomizer {
 
-    public PokemonMovesetRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesMovesetRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -38,7 +38,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
             List<Integer> learnt = new ArrayList<>();
             List<MoveLearnt> moves = movesets.get(pkmnNum);
             int lv1AttackingMove = 0;
-            Species pkmn = findPokemonInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
+            Species pkmn = findSpeciesInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }
@@ -216,7 +216,7 @@ public class PokemonMovesetRandomizer extends Randomizer {
         for (Integer pkmnNum : movesets.keySet()) {
             List<Integer> learnt = new ArrayList<>();
             List<Integer> moves = movesets.get(pkmnNum);
-            Species pkmn = findPokemonInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
+            Species pkmn = findSpeciesInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
             if (pkmn == null) {
                 continue;
             }
@@ -434,10 +434,10 @@ public class PokemonMovesetRandomizer extends Randomizer {
     // Note that this is slow and somewhat hacky.
     // TODO: add to SpeciesSet, hopefully in a less hacky way.
     // (The non-hacky way might be to make it a TreeSet.)
-    private Species findPokemonInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
-        for (Species pk : speciesPool) {
-            if (pk.getNumber() == speciesID) {
-                return pk;
+    private Species findSpeciesInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
+        for (Species sp : speciesPool) {
+            if (sp.getNumber() == speciesID) {
+                return sp;
             }
         }
         return null;

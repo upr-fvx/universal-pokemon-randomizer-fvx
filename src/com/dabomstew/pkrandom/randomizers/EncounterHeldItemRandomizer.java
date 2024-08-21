@@ -11,11 +11,11 @@ import java.util.Random;
  * A {@link Randomizer} for the held items of wild Pokemon.
  * In some games, these items may be shared between Pokemon
  * in normal and static encounters, thus the separation from
- * {@link EncounterRandomizer} which only does normal encounters.
+ * {@link WildEncounterRandomizer} which only does normal encounters.
  */
-public class PokemonWildHeldItemRandomizer extends Randomizer {
+public class EncounterHeldItemRandomizer extends Randomizer {
 
-    public PokemonWildHeldItemRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public EncounterHeldItemRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 

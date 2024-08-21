@@ -1,17 +1,13 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;

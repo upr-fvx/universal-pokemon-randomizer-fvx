@@ -228,6 +228,8 @@ public class TestRomHandler extends AbstractRomHandler {
         copy.setFormeNumber(original.getFormeNumber());
         copy.setCosmeticForms(original.getCosmeticForms());
         copy.setFormeSpriteIndex(original.getFormeSpriteIndex());
+        copy.setActuallyCosmetic(original.isActuallyCosmetic());
+
         copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
         //I don't know if that copy is necessary, but it shouldn't hurt?
 

@@ -879,7 +879,7 @@ public class Gen5Constants {
         addRange(set, ItemIDs.tm93, 3);
         // Battle Launcher exclusives
         addRange(set, ItemIDs.direHit2, 24);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsBW2() {
@@ -892,14 +892,14 @@ public class Gen5Constants {
         addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
         addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
         addRange(set, ItemIDs.redScarf, 5); // contest scarves
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsBW1() {
         Set<Integer> set = new HashSet<>(badItemsBW2);
         // The shards are bad in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
         addRange(set, ItemIDs.redShard, 4);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupRegularShopItems() {
@@ -907,7 +907,7 @@ public class Gen5Constants {
         addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
         addBetween(set, ItemIDs.potion, ItemIDs.revive);
         addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupOPShopItems() {
@@ -924,7 +924,7 @@ public class Gen5Constants {
         set.add(ItemIDs.luckyEgg);
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {

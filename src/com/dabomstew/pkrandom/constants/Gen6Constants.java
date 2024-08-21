@@ -961,7 +961,7 @@ public class Gen6Constants {
         addRange(set, ItemIDs.lensCase,3);
         addRange(set, ItemIDs.lookerTicket,3);
         addRange(set, ItemIDs.megaCharm,2);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBannedItemsORAS() {
@@ -970,7 +970,7 @@ public class Gen6Constants {
         addRange(set, ItemIDs.machBike,34);
         addRange(set, ItemIDs.prisonBottle,2);
         addRange(set, ItemIDs.meteoriteThirdForm,5);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsORAS() {
@@ -986,13 +986,13 @@ public class Gen6Constants {
         addRange(set, ItemIDs.relicCopper, 7); // relic items
         addRange(set, ItemIDs.richMulch, 4); // more mulch
         addRange(set, ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsXY() {
         Set<Integer> set = new HashSet<>(badItemsORAS);
         addRange(set,ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupRegularShopItems() {
@@ -1000,7 +1000,7 @@ public class Gen6Constants {
         addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
         addBetween(set, ItemIDs.potion, ItemIDs.revive);
         addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupOPShopItems() {
@@ -1017,7 +1017,7 @@ public class Gen6Constants {
         set.add(ItemIDs.luckyEgg);
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {

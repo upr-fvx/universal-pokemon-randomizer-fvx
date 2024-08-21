@@ -935,12 +935,12 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
+    public List<Item> getRegularFieldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
+    public void setRegularFieldItems(List<Item> items) {
         throw new NotImplementedException();
     }
 
@@ -1141,7 +1141,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         throw new NotImplementedException();
     }
 

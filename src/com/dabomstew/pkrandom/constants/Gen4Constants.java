@@ -824,7 +824,7 @@ public class Gen4Constants {
         addRange(set, ItemIDs.griseousOrb, 23);
         // HMs
         addRange(set, ItemIDs.hm01, 8);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItems() {
@@ -838,7 +838,7 @@ public class Gen4Constants {
         addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
         addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
         addRange(set, ItemIDs.redScarf, 5); // contest scarves
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupRegularShopItems() {
@@ -846,7 +846,7 @@ public class Gen4Constants {
         addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
         addBetween(set, ItemIDs.potion, ItemIDs.revive);
         addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupOPShopItems() {
@@ -855,7 +855,7 @@ public class Gen4Constants {
         addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
         set.add(ItemIDs.rareBone);
         set.add(ItemIDs.luckyEgg);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {

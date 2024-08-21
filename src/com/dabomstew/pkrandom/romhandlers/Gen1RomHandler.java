@@ -2116,6 +2116,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     "likely ROM entry value \"TMMovesReusableFunctionOffset\" is faulty.");
         }
         writeByte(offset, GBConstants.gbZ80Ret);
+        tmsReusable = true;
     }
 
     @Override
@@ -2164,13 +2165,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!getAllowedItems().contains(items.get(itemID))) {
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + items.get(itemID).getName());
+            if (item.isAllowed()) {
+                throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeByte(romEntry.getIntValue("PCPotionOffset"),
-                    (byte) itemID);
+            writeByte(romEntry.getIntValue("PCPotionOffset"), (byte) (item.getId() & 0xFF));
         }
     }
 

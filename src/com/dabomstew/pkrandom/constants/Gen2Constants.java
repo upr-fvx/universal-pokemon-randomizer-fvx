@@ -325,7 +325,7 @@ public class Gen2Constants {
                 Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused));
         // 250-255 are junk and cancel
         addRange(set, Gen2ItemIDs.hm07, 6);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItems() {
@@ -336,7 +336,7 @@ public class Gen2Constants {
         addRange(set, Gen2ItemIDs.ylwApricorn, 2);
         addRange(set, Gen2ItemIDs.normalBox, 2);
         addRange(set, Gen2ItemIDs.surfMail, 9);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {

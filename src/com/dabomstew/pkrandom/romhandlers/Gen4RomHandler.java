@@ -93,6 +93,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private long actualArm9CRC32;
 	private Map<Integer, Long> actualOverlayCRC32s;
 	private Map<String, Long> actualFileCRC32s;
+	private boolean tmsReusable;
 
 	private Gen4RomEntry romEntry;
 
@@ -3786,6 +3787,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
+	public boolean isTMsReusable() {
+		return tmsReusable;
+	}
+
+	@Override
 	public Map<Species, boolean[]> getTMHMCompatibility() {
 		Map<Species, boolean[]> compat = new TreeMap<>();
 		int formeCount = Gen4Constants.getFormeCount(romEntry.getRomType());
@@ -5496,6 +5502,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					+ ", was 0x" + Integer.toHexString(arm9[offset]) + ". Likely TMMovesReusableFunctionOffset is faulty.");
 		}
 		arm9[offset] = Gen4Constants.tmsReusableByteAfter;
+		tmsReusable = true;
 	}
 
 	@Override

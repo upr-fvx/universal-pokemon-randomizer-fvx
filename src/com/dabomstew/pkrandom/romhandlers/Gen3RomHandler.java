@@ -3979,6 +3979,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             writeByte(offset, (byte) 0);
         }
+        tmsReusable = true;
     }
 
     @Override
@@ -4039,12 +4040,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (items.get(itemID).isAllowed()) {
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + items.get(itemID).getName());
+            if (item.isAllowed()) {
+                throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeWord(romEntry.getIntValue("PCPotionOffset"), itemID);
+            writeWord(romEntry.getIntValue("PCPotionOffset"), item.getId());
         }
     }
 

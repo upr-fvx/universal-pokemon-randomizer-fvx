@@ -259,6 +259,11 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean isTMsReusable() {
+        return true;
+    }
+
+    @Override
     public boolean hasTotemPokemon() {
         // DEFAULT: no
         return false;
@@ -432,7 +437,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         throw new UnsupportedOperationException();
     }
 

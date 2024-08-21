@@ -326,6 +326,8 @@ public interface RomHandler {
 
     int getHMCount();
 
+    boolean isTMsReusable();
+
     /**
      * Get TM/HM compatibility data from this rom. The result should contain a
      * boolean array for each Species indexed as such:
@@ -557,7 +559,7 @@ public interface RomHandler {
      */
     boolean setCatchingTutorial(Species opponent, Species player);
 
-    void setPCPotionItem(int itemID);
+    void setPCPotionItem(Item item);
 
     // ==========================
     // Misc forme-related methods

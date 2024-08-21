@@ -31,6 +31,8 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     private String loadedFileName;
     private long actualCRC32;
 
+    protected boolean tmsReusable;
+
     @Override
     public boolean loadRom(String filename) {
         try {
@@ -431,6 +433,11 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     protected abstract FreedSpace getFreedSpace();
 
 	protected abstract byte getFreeSpaceByte();
+
+    @Override
+    public boolean isTMsReusable() {
+        return tmsReusable;
+    }
 
     @Override
     public boolean hasTypeEffectivenessSupport() {

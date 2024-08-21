@@ -589,7 +589,7 @@ public class Gen3Constants {
                 Gen3ItemIDs.unknown267));
         // HMs
         addRange(set, Gen3ItemIDs.hm01, 8);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsRSE() {
@@ -599,14 +599,14 @@ public class Gen3Constants {
         addRange(set, Gen3ItemIDs.figyBerry, 33); // berries
         addRange(set, Gen3ItemIDs.luckyPunch, 4); // pokemon specific
         addRange(set, Gen3ItemIDs.redScarf, 5); // contest scarves
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsFRLG() {
         Set<Integer> set = new HashSet<>(badItemsRSE);
         // Ban Shoal items and Shards, since they don't do anything
         addRange(set, Gen3ItemIDs.shoalSalt, 6);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupRegularShopItems() {
@@ -614,7 +614,7 @@ public class Gen3Constants {
         addBetween(set, Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall);
         addBetween(set, Gen3ItemIDs.potion, Gen3ItemIDs.revive);
         addBetween(set, Gen3ItemIDs.superRepel, Gen3ItemIDs.repel);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupOPShopItems() {
@@ -623,7 +623,7 @@ public class Gen3Constants {
         addBetween(set, Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom);
         addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
         set.add(Gen3ItemIDs.luckyEgg);
-        return set;
+        return Collections.unmodifiableSet(set);
     }
 
     private static void addRange(Set<Integer> set, int start, int length) {

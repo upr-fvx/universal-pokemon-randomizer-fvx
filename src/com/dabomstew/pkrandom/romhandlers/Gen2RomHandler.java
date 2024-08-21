@@ -2284,6 +2284,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         writeByte(offset++, GBConstants.gbZ80Jump);
         writeByte(offset, (byte) jumpLength);
+        tmsReusable = true;
     }
 
     @Override

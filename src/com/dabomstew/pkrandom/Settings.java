@@ -1093,7 +1093,7 @@ public class Settings {
         }
 
         // gen restrictions
-        if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid())) {
+        if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;
             this.setLimitPokemon(false);
         } else if (this.currentRestrictions != null) {

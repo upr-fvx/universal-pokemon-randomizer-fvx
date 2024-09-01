@@ -38,6 +38,7 @@ import javax.naming.OperationNotSupportedException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -5610,23 +5611,38 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public boolean isRomValid() {
+	public boolean isRomValid(PrintStream logStream) {
+		if (logStream != null) {
+			System.out.println("Checking CRC32 validities");
+			System.out.println("ARM9 expected:\t" + Long.toHexString(romEntry.getArm9ExpectedCRC32()));
+			System.out.println("ARM9 actual:  \t" + Long.toHexString(actualArm9CRC32));
+		}
 		if (romEntry.getArm9ExpectedCRC32() != actualArm9CRC32) {
 			System.out.println(actualArm9CRC32);
 			return false;
 		}
 
+		System.out.println("Overlays");
 		for (int overlayNumber : romEntry.getOverlayExpectedCRC32Keys()) {
 			long expectedCRC32 = romEntry.getOverlayExpectedCRC32(overlayNumber);
 			long actualCRC32 = actualOverlayCRC32s.get(overlayNumber);
+			if (logStream != null) {
+				System.out.println("#" + overlayNumber + "\texpected:\t" + Long.toHexString(expectedCRC32));
+				System.out.println("#" + overlayNumber + "\tactual:  \t" + Long.toHexString(actualCRC32));
+			}
 			if (expectedCRC32 != actualCRC32) {
 				return false;
 			}
 		}
 
+		System.out.println("Filekeys");
 		for (String fileKey : romEntry.getFileKeys()) {
 			long expectedCRC32 = romEntry.getFileExpectedCRC32(fileKey);
 			long actualCRC32 = actualFileCRC32s.get(fileKey);
+			if (logStream != null) {
+				System.out.println(fileKey + "\texpected:\t" + Long.toHexString(expectedCRC32));
+				System.out.println(fileKey + "\tactual:  \t" + Long.toHexString(actualCRC32));
+			}
 			if (expectedCRC32 != actualCRC32) {
 				return false;
 			}

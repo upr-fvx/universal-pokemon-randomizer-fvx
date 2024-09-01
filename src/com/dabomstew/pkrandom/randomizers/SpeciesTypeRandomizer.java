@@ -11,7 +11,7 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import java.util.List;
 import java.util.Random;
 
-public class PokemonTypeRandomizer extends Randomizer {
+public class SpeciesTypeRandomizer extends Randomizer {
 
     // "Get Secondary Type Chance"s
     private static final double GSTC_NO_EVO = 0.5;
@@ -19,11 +19,11 @@ public class PokemonTypeRandomizer extends Randomizer {
     private static final double GSTC_MIDDLE_EVO = 0.15;
     private static final double GSTC_FINAL_EVO = 0.25;
 
-    public PokemonTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 
-    public void randomizePokemonTypes() {
+    public void randomizeSpeciesTypes() {
         boolean evolutionSanity = settings.getTypesMod() == Settings.TypesMod.RANDOM_FOLLOW_EVOLUTIONS;
         boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
         boolean dualTypeOnly = settings.isDualTypeOnly();
@@ -88,11 +88,11 @@ public class PokemonTypeRandomizer extends Randomizer {
         }
     }
 
-    private void assignRandomSecondaryType(Species pk, double chance, boolean dualTypeOnly) {
+    private void assignRandomSecondaryType(Species sp, double chance, boolean dualTypeOnly) {
         if (random.nextDouble() < chance || dualTypeOnly) {
-            pk.setSecondaryType(typeService.randomType(random));
-            while (pk.getSecondaryType(false) == pk.getPrimaryType(false)) {
-                pk.setSecondaryType(typeService.randomType(random));
+            sp.setSecondaryType(typeService.randomType(random));
+            while (sp.getSecondaryType(false) == sp.getPrimaryType(false)) {
+                sp.setSecondaryType(typeService.randomType(random));
             }
         }
     }

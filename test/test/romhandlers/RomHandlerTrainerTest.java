@@ -4,7 +4,7 @@ import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.randomizers.PokemonTypeRandomizer;
+import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -461,7 +461,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
         Settings s = new Settings();
         s.setTypesMod(false, false, true);
-        new PokemonTypeRandomizer(romHandler, s, RND).randomizePokemonTypes();
+        new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
         s.setTrainersMod(false, false, false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 

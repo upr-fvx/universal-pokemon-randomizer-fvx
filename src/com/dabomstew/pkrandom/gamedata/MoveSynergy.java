@@ -1203,6 +1203,10 @@ public class MoveSynergy {
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 break;
+            case MoveIDs.snore:
+            case MoveIDs.sleepTalk:
+                requiresMove.add(MoveIDs.rest);
+                break;
         }
         return moveList
                 .stream()

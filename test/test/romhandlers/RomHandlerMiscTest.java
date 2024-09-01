@@ -75,7 +75,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNamesInFolder")
     public void romInFolderIsValid(String romName) {
         loadROM(romName);
-        assertTrue(romHandler.isRomValid());
+        assertTrue(romHandler.isRomValid(System.out));
     }
 
     @ParameterizedTest

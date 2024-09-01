@@ -3,7 +3,7 @@ package test.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.randomizers.EncounterRandomizer;
+import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class EncounterRandomizerTest extends RandomizerTest {
+public class WildEncounterRandomizerTest extends RandomizerTest {
 
     private static final double MAX_AVERAGE_POWER_LEVEL_DIFF = 0.065;
 
@@ -113,7 +113,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setBlockWildLegendaries(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoLegendaries();
     }
@@ -148,7 +148,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setAllowWildAltFormes(false);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoAlternateFormes();
     }
@@ -163,7 +163,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
 
         Settings settings = getStandardSettings(romName);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForAlternateFormes();
     }
@@ -178,7 +178,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
     }
@@ -191,7 +191,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         randomTypeThemesAreasCheck();
     }
@@ -208,7 +208,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
@@ -226,7 +226,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setKeepWildTypeThemes(true);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
         randomTypeThemesAreasCheck();
@@ -244,7 +244,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
     }
@@ -259,7 +259,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -277,7 +277,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setCatchEmAllEncounters(true);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         randomTypeThemesAreasCheck();
@@ -299,7 +299,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setKeepWildTypeThemes(true);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
@@ -321,7 +321,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         randomTypeThemesAreasCheck();
@@ -343,7 +343,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, false);
@@ -359,7 +359,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, false);
@@ -375,7 +375,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -392,7 +392,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, false);
@@ -408,7 +408,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -424,7 +424,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -482,7 +482,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -499,7 +499,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -517,7 +517,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, true);
@@ -535,7 +535,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, true);
@@ -553,7 +553,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachAreaIsReplaced1To1(before, after, true);
@@ -569,7 +569,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -585,7 +585,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setBlockWildLegendaries(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoLegendaries();
     }
@@ -600,7 +600,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setAllowWildAltFormes(false);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoAlternateFormes();
     }
@@ -616,7 +616,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForAlternateFormes();
     }
@@ -632,7 +632,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
     }
@@ -657,7 +657,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         randomTypeThemesAreasCheck();
     }
 
@@ -674,7 +674,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
@@ -692,7 +692,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
     }
@@ -884,7 +884,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -930,7 +930,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setCatchEmAllEncounters(true);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         randomTypeThemesAreasCheck();
@@ -958,7 +958,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setCatchEmAllEncounters(true);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         catchEmAllCheck(allPokes);
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
@@ -987,7 +987,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         catchEmAllCheck(allPokes);
 
         randomTypeThemesAreasCheck();
@@ -1003,7 +1003,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1020,7 +1020,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1037,7 +1037,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         List<EncounterArea> after = romHandler.getEncounters(true);
 
         checkEachLocationIsReplaced1To1(before, after, false);
@@ -1053,7 +1053,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1070,7 +1070,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1087,7 +1087,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1104,7 +1104,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1123,7 +1123,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1142,7 +1142,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1159,7 +1159,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1175,7 +1175,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setBlockWildLegendaries(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoLegendaries();
     }
@@ -1190,7 +1190,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setAllowWildAltFormes(false);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoAlternateFormes();
     }
@@ -1206,7 +1206,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForAlternateFormes();
     }
@@ -1229,7 +1229,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
     }
@@ -1243,7 +1243,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         randomTypeThemesLocationsCheck();
     }
@@ -1261,7 +1261,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
     }
@@ -1282,7 +1282,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1309,7 +1309,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.RANDOM_THEMES);
         settings.setCatchEmAllEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
         randomTypeThemesLocationsCheck();
@@ -1324,7 +1324,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1340,7 +1340,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1446,7 +1446,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setBlockWildLegendaries(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoLegendaries();
     }
@@ -1461,7 +1461,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setAllowWildAltFormes(false);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForNoAlternateFormes();
     }
@@ -1477,7 +1477,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         checkForAlternateFormes();
     }
@@ -1492,7 +1492,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setSimilarStrengthEncounters(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1510,7 +1510,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setKeepWildEvolutionFamilies(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1529,7 +1529,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
         settings.setKeepWildEvolutionFamilies(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1555,7 +1555,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setUseTimeBasedEncounters(true);
 
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
     }
@@ -1575,7 +1575,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         settings.setKeepWildEvolutionFamilies(true);
         settings.setKeepWildTypeThemes(true);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 
@@ -1600,7 +1600,7 @@ public class EncounterRandomizerTest extends RandomizerTest {
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.MAP);
 
-        new EncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         List<EncounterArea> after = romHandler.getEncounters(true);
 

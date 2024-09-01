@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class PokemonAbilityRandomizer extends Randomizer {
+public class SpeciesAbilityRandomizer extends Randomizer {
 
-    public PokemonAbilityRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesAbilityRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 

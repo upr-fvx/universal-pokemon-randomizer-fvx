@@ -84,11 +84,11 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
      * and {@link Trainer}s.
      */
     protected void loadGameData() {
+        loadItems();
         loadPokemonStats();
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();
-        loadItems();
         loadTrainers();
     }
 
@@ -442,6 +442,11 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     @Override
     public boolean hasTypeEffectivenessSupport() {
         return true;
+    }
+
+    @Override
+    public boolean hasGuaranteedWildHeldItems() {
+        return false; // no held items in Gen 1 and Gen 2 has no guaranteed ones still
     }
 
     @Override

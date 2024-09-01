@@ -149,12 +149,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 throw new RomIOException(e);
             }
         }
+        loadItems();
         loadPokemonStats();
         speciesListInclFormes = Arrays.asList(pokes);
         speciesList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen5Constants.pokemonCount + 1));
         loadMoves();
         loadPokemonPalettes();
-        loadItems();
 
         abilityNames = getStrings(false, romEntry.getIntValue("AbilityNamesTextOffset"));
         if (romEntry.getRomType() == Gen5Constants.Type_BW) {
@@ -383,20 +383,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         pkmn.setAbility3(stats[Gen5Constants.bsAbility3Offset] & 0xFF);
 
         // Held Items?
-        int item1 = readWord(stats, Gen5Constants.bsCommonHeldItemOffset);
-        int item2 = readWord(stats, Gen5Constants.bsRareHeldItemOffset);
+        Item item1 = items.get(readWord(stats, Gen5Constants.bsCommonHeldItemOffset));
+        Item item2 = items.get(readWord(stats, Gen5Constants.bsRareHeldItemOffset));
 
-        if (item1 == item2) {
+        if (item1.equals(item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
-            pkmn.setCommonHeldItem(0);
-            pkmn.setRareHeldItem(0);
-            pkmn.setDarkGrassHeldItem(0);
         } else {
-            pkmn.setGuaranteedHeldItem(0);
             pkmn.setCommonHeldItem(item1);
             pkmn.setRareHeldItem(item2);
-            pkmn.setDarkGrassHeldItem(readWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset));
+            Item dgItem = items.get(readWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset));
+            pkmn.setDarkGrassHeldItem(dgItem);
         }
 
         pkmn.setGenderRatio(stats[Gen5Constants.bsGenderRatioOffset] & 0xFF);
@@ -529,14 +526,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         stats[Gen5Constants.bsAbility3Offset] = (byte) pkmn.getAbility3();
 
         // Held items
-        if (pkmn.getGuaranteedHeldItem() > 0) {
-            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem());
-            writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem());
+        if (pkmn.getGuaranteedHeldItem() != null) {
+            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
             writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset, 0);
         } else {
-            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem());
-            writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem());
-            writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset, pkmn.getDarkGrassHeldItem());
+            // assumes common/rare/darkGrassHeldItem to be non-null, if guaranteedHeldItem is.
+            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset, pkmn.getDarkGrassHeldItem().getId());
         }
     }
 
@@ -2699,6 +2697,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public boolean hasWildAltFormes() {
+        return true;
+    }
+
+    @Override
+    public boolean hasDarkGrassHeldItems() {
         return true;
     }
 

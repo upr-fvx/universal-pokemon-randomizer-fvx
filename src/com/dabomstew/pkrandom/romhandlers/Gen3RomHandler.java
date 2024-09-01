@@ -1072,20 +1072,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         pkmn.setAbility2(rom[offset + Gen3Constants.bsAbility2Offset] & 0xFF);
 
         // Held Items?
-        int item1 = readWord(offset + Gen3Constants.bsCommonHeldItemOffset);
-        int item2 = readWord(offset + Gen3Constants.bsRareHeldItemOffset);
+        Item item1 = items.get(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
+        Item item2 = items.get(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
 
-        if (item1 == item2) {
+        if (item1.equals(item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
-            pkmn.setCommonHeldItem(0);
-            pkmn.setRareHeldItem(0);
         } else {
-            pkmn.setGuaranteedHeldItem(0);
             pkmn.setCommonHeldItem(item1);
             pkmn.setRareHeldItem(item2);
         }
-        pkmn.setDarkGrassHeldItem(-1);
 
         pkmn.setGenderRatio(rom[offset + Gen3Constants.bsGenderRatioOffset] & 0xFF);
     }
@@ -1110,12 +1106,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         pkmn.getAbility2())); // required to not break evos with random ability
 
         // Held items
-        if (pkmn.getGuaranteedHeldItem() > 0) {
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem());
+        if (pkmn.getGuaranteedHeldItem() != null) {
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
         } else {
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem());
+            // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
         }
 
         writeByte(offset + Gen3Constants.bsGenderRatioOffset, (byte) pkmn.getGenderRatio());

@@ -206,6 +206,16 @@ public interface RomHandler {
 
     SpeciesSet getBannedForWildEncounters();
 
+    /**
+     * Returns whether the game supports wild encounters having guaranteed held items.
+     */
+    boolean hasGuaranteedWildHeldItems();
+
+    /**
+     * Returns whether the game supports wild encounters having (rare) held items in dark grass only.
+     */
+    boolean hasDarkGrassHeldItems();
+
     void enableGuaranteedPokemonCatching();
 
     // ===============

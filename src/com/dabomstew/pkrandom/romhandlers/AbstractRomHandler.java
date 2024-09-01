@@ -320,6 +320,18 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public boolean hasGuaranteedWildHeldItems() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
+    public boolean hasDarkGrassHeldItems() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
     public int getPerfectAccuracy() {
         return perfectAccuracy;
     }

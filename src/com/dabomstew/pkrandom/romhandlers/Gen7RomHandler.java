@@ -323,20 +323,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         pkmn.setCallRate(stats[Gen7Constants.bsCallRateOffset] & 0xFF);
 
         // Held Items?
-        int item1 = FileFunctions.read2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset);
-        int item2 = FileFunctions.read2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset);
+        Item item1 = items.get(FileFunctions.read2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset));
+        Item item2 = items.get(FileFunctions.read2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset));
 
-        if (item1 == item2) {
+        if (item1.equals(item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
-            pkmn.setCommonHeldItem(0);
-            pkmn.setRareHeldItem(0);
-            pkmn.setDarkGrassHeldItem(-1);
         } else {
-            pkmn.setGuaranteedHeldItem(0);
             pkmn.setCommonHeldItem(item1);
             pkmn.setRareHeldItem(item2);
-            pkmn.setDarkGrassHeldItem(-1);
         }
 
         int formeCount = stats[Gen7Constants.bsFormeCountOffset] & 0xFF;
@@ -709,14 +704,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         stats[Gen7Constants.bsCallRateOffset] = (byte) pkmn.getCallRate();
 
         // Held items
-        if (pkmn.getGuaranteedHeldItem() > 0) {
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem());
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem());
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsDarkGrassHeldItemOffset, 0);
+        if (pkmn.getGuaranteedHeldItem() != null) {
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
         } else {
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem());
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem());
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsDarkGrassHeldItemOffset, 0);
+            // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
         }
 
         if (pkmn.getFullName().equals("Meowstic")) {

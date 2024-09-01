@@ -25,6 +25,7 @@ package com.dabomstew.pkrandom;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
@@ -950,27 +951,20 @@ public class GameRandomizer {
                         }
                     }
                     log.print("|");
-                    if (pkmn.getGuaranteedHeldItem() > 0) {
-                        log.print(items.get(pkmn.getGuaranteedHeldItem()).getName() + " (100%)");
+                    if (pkmn.getGuaranteedHeldItem() != null) {
+                        log.print(pkmn.getGuaranteedHeldItem().getName() + " (100%)");
                     } else {
-                        int itemCount = 0;
-                        if (pkmn.getCommonHeldItem() > 0) {
-                            itemCount++;
-                            log.print(items.get(pkmn.getCommonHeldItem()).getName() + " (common)");
+                        List<String> heldItemStrings = new ArrayList<>();
+                        if (pkmn.getCommonHeldItem() != null) {
+                            heldItemStrings.add(pkmn.getCommonHeldItem().getName() + " (common)");
                         }
-                        if (pkmn.getRareHeldItem() > 0) {
-                            if (itemCount > 0) {
-                                log.print(", ");
-                            }
-                            itemCount++;
-                            log.print(items.get(pkmn.getRareHeldItem()).getName() + " (rare)");
+                        if (pkmn.getRareHeldItem() != null) {
+                            heldItemStrings.add(pkmn.getRareHeldItem().getName() + " (rare)");
                         }
-                        if (pkmn.getDarkGrassHeldItem() > 0) {
-                            if (itemCount > 0) {
-                                log.print(", ");
-                            }
-                            log.print(items.get(pkmn.getDarkGrassHeldItem()) + " (dark grass only)");
+                        if (pkmn.getDarkGrassHeldItem() != null) {
+                            heldItemStrings.add(pkmn.getDarkGrassHeldItem() + " (dark grass only)");
                         }
+                        log.print(String.join(", ", heldItemStrings));
                     }
                     log.println();
                 }

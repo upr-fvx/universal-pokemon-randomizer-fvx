@@ -139,13 +139,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
+		loadItems();
 		loadPokemonStats();
 		speciesListInclFormes = Arrays.asList(pokes);
 		speciesList = Arrays.asList(Arrays.copyOfRange(pokes, 0, Gen4Constants.pokemonCount + 1));
 		loadMoves();
 		loadPokemonPalettes();
 		abilityNames = getStrings(romEntry.getIntValue("AbilityNamesTextOffset"));
-		loadItems();
 		loadedWildMapNames = false;
 
 		roamerRandomizationEnabled = (romEntry.getRomType() == Gen4Constants.Type_DP && !romEntry.getRoamingPokemon().isEmpty())
@@ -736,20 +736,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		pkmn.setAbility2(stats[Gen4Constants.bsAbility2Offset] & 0xFF);
 
 		// Held Items?
-		int item1 = readWord(stats, Gen4Constants.bsCommonHeldItemOffset);
-		int item2 = readWord(stats, Gen4Constants.bsRareHeldItemOffset);
+		Item item1 = items.get(readWord(stats, Gen4Constants.bsCommonHeldItemOffset));
+		Item item2 = items.get(readWord(stats, Gen4Constants.bsRareHeldItemOffset));
 
-		if (item1 == item2) {
+		if (item1.equals(item2)) {
 			// guaranteed
 			pkmn.setGuaranteedHeldItem(item1);
-			pkmn.setCommonHeldItem(0);
-			pkmn.setRareHeldItem(0);
 		} else {
-			pkmn.setGuaranteedHeldItem(0);
 			pkmn.setCommonHeldItem(item1);
 			pkmn.setRareHeldItem(item2);
 		}
-		pkmn.setDarkGrassHeldItem(-1);
 
 		pkmn.setGenderRatio(stats[Gen4Constants.bsGenderRatioOffset] & 0xFF);
 
@@ -881,12 +877,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		stats[Gen4Constants.bsAbility2Offset] = (byte) pkmn.getAbility2();
 
 		// Held items
-		if (pkmn.getGuaranteedHeldItem() > 0) {
-			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem());
-			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem());
+		if (pkmn.getGuaranteedHeldItem() != null) {
+			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
 		} else {
-			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem());
-			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem());
+			// assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
+			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
+			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
 		}
 	}
 

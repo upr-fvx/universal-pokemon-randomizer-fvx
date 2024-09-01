@@ -604,11 +604,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         pkmn.setFrontImageDimensions(rom[offset + Gen1Constants.bsFrontImageDimensionsOffset] & 0xFF);
         pkmn.setFrontImagePointer(readWord(offset + Gen1Constants.bsFrontImagePointerOffset));
         pkmn.setBackImagePointer(readWord(offset + Gen1Constants.bsBackImagePointerOffset));
-        
-        pkmn.setGuaranteedHeldItem(-1);
-        pkmn.setCommonHeldItem(-1);
-        pkmn.setRareHeldItem(-1);
-        pkmn.setDarkGrassHeldItem(-1);
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {

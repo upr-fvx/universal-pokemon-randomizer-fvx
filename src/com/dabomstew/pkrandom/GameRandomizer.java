@@ -25,7 +25,6 @@ package com.dabomstew.pkrandom;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
@@ -617,7 +616,7 @@ public class GameRandomizer {
 
         // In-game trades
 
-        List<IngameTrade> oldTrades = romHandler.getIngameTrades();
+        List<InGameTrade> oldTrades = romHandler.getIngameTrades();
         switch (settings.getInGameTradesMod()) {
             case RANDOMIZE_GIVEN:
             case RANDOMIZE_GIVEN_AND_REQUESTED:
@@ -726,18 +725,18 @@ public class GameRandomizer {
         return checkValue;
     }
 
-    private void logTrades(PrintStream log, List<IngameTrade> oldTrades) {
+    private void logTrades(PrintStream log, List<InGameTrade> oldTrades) {
         log.println("--In-Game Trades--");
-        List<IngameTrade> newTrades = romHandler.getIngameTrades();
+        List<InGameTrade> newTrades = romHandler.getIngameTrades();
         int size = oldTrades.size();
         for (int i = 0; i < size; i++) {
-            IngameTrade oldT = oldTrades.get(i);
-            IngameTrade newT = newTrades.get(i);
+            InGameTrade oldT = oldTrades.get(i);
+            InGameTrade newT = newTrades.get(i);
             log.printf("Trade %-11s -> %-11s the %-11s        ->      %-11s -> %-15s the %s" + NEWLINE,
-                    oldT.requestedSpecies != null ? oldT.requestedSpecies.getFullName() : "Any",
-                    oldT.nickname, oldT.givenSpecies.getFullName(),
-                    newT.requestedSpecies != null ? newT.requestedSpecies.getFullName() : "Any",
-                    newT.nickname, newT.givenSpecies.getFullName());
+                    oldT.getRequestedSpecies() != null ? oldT.getRequestedSpecies().getFullName() : "Any",
+                    oldT.getNickname(), oldT.getGivenSpecies().getFullName(),
+                    newT.getRequestedSpecies() != null ? newT.getRequestedSpecies().getFullName() : "Any",
+                    newT.getNickname(), newT.getGivenSpecies().getFullName());
         }
         log.println();
     }
@@ -891,7 +890,6 @@ public class GameRandomizer {
 
     private void logPokemonTraitChanges(final PrintStream log) {
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
-        List<Item> items = romHandler.getItems();
         // Log base stats & types
         log.println("--Pokemon Base Stats & Types--");
         if (romHandler instanceof Gen1RomHandler) {

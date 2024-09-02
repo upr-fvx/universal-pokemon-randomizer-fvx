@@ -478,9 +478,9 @@ public interface RomHandler {
     // In-Game Trades
     // ==============
 
-    List<IngameTrade> getIngameTrades();
+    List<InGameTrade> getIngameTrades();
 
-    void setIngameTrades(List<IngameTrade> trades);
+    void setIngameTrades(List<InGameTrade> trades);
 
     boolean hasDVs();
 

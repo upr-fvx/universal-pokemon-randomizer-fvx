@@ -2552,8 +2552,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -2568,11 +2568,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = new IngameTrade();
+            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.requestedSpecies = pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]];
-            trade.givenSpecies = pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]];
-            trade.nickname = readString(entryOffset + 3, nicknameLength, false);
+            trade.setRequestedSpecies(pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]]);
+            trade.setGivenSpecies(pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]]);
+            trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             trades.add(trade);
         }
 
@@ -2580,7 +2580,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setIngameTrades(List<InGameTrade> trades) {
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -2596,13 +2596,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = trades.get(tradeOffset++);
+            InGameTrade trade = trades.get(tradeOffset++);
             int entryOffset = tableOffset + entry * entryLength;
             writeBytes(entryOffset, new byte[]{
-                    (byte) pokeNumToRBYTable[trade.requestedSpecies.getNumber()],
-                    (byte) pokeNumToRBYTable[trade.givenSpecies.getNumber()]});
+                    (byte) pokeNumToRBYTable[trade.getRequestedSpecies().getNumber()],
+                    (byte) pokeNumToRBYTable[trade.getGivenSpecies().getNumber()]});
             if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-                writeFixedLengthString(trade.nickname, entryOffset + 3, nicknameLength);
+                writeFixedLengthString(trade.getNickname(), entryOffset + 3, nicknameLength);
             }
         }
     }

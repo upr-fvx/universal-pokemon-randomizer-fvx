@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  IngameTrade.java - stores Pokemon trades with in-game NPCs.           --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,18 +22,76 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-public class IngameTrade {
+/**
+ * Represents a Pokemon trade with an in-game NPC.
+ */
+public class InGameTrade {
 
-    public int id;
+    private Species requestedSpecies;
+    private Species givenSpecies;
 
-    public Species requestedSpecies, givenSpecies;
+    private String nickname;
+    private String otName;
 
-    public String nickname, otName;
+    private int otId;
 
-    public int otId;
+    private int[] ivs = new int[0];
 
-    public int[] ivs = new int[0];
+    private Item item;
 
-    public int item = 0;
+    public Species getRequestedSpecies() {
+        return requestedSpecies;
+    }
 
+    public void setRequestedSpecies(Species requestedSpecies) {
+        this.requestedSpecies = requestedSpecies;
+    }
+
+    public Species getGivenSpecies() {
+        return givenSpecies;
+    }
+
+    public void setGivenSpecies(Species givenSpecies) {
+        this.givenSpecies = givenSpecies;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getOtName() {
+        return otName;
+    }
+
+    public void setOtName(String otName) {
+        this.otName = otName;
+    }
+
+    public int getOtId() {
+        return otId;
+    }
+
+    public void setOtId(int otId) {
+        this.otId = otId;
+    }
+
+    public int[] getIVs() {
+        return ivs;
+    }
+
+    public void setIVs(int[] ivs) {
+        this.ivs = ivs;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }

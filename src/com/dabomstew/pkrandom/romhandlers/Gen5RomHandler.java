@@ -3489,8 +3489,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
         try {
             NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
             List<String> tradeStrings = getStrings(false, romEntry.getIntValue("IngameTradesTextOffset"));
@@ -3503,18 +3503,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     unusedOffset++;
                     continue;
                 }
-                IngameTrade trade = new IngameTrade();
+                InGameTrade trade = new InGameTrade();
                 byte[] tfile = tradeNARC.files.get(entry);
-                trade.nickname = tradeStrings.get(entry * 2);
-                trade.givenSpecies = pokes[readLong(tfile, 4)];
-                trade.ivs = new int[6];
+                trade.setNickname(tradeStrings.get(entry * 2));
+                trade.setGivenSpecies(pokes[readLong(tfile, 4)]);
+                trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
-                    trade.ivs[iv] = readLong(tfile, 0x10 + iv * 4);
+                    trade.getIVs()[iv] = readLong(tfile, 0x10 + iv * 4);
                 }
-                trade.otId = readWord(tfile, 0x34);
-                trade.item = readLong(tfile, 0x4C);
-                trade.otName = tradeStrings.get(entry * 2 + 1);
-                trade.requestedSpecies = pokes[readLong(tfile, 0x5C)];
+                trade.setOtId(readWord(tfile, 0x34));
+                trade.setItem(items.get(readLong(tfile, 0x4C)));
+                trade.setOtName(tradeStrings.get(entry * 2 + 1));
+                trade.setRequestedSpecies(pokes[readLong(tfile, 0x5C)]);
                 trades.add(trade);
             }
         } catch (Exception ex) {
@@ -3526,10 +3526,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setIngameTrades(List<InGameTrade> trades) {
         // info
         int tradeOffset = 0;
-        List<IngameTrade> oldTrades = this.getIngameTrades();
+        List<InGameTrade> oldTrades = this.getIngameTrades();
         try {
             NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
             List<String> tradeStrings = getStrings(false, romEntry.getIntValue("IngameTradesTextOffset"));
@@ -3542,20 +3542,20 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     continue;
                 }
                 byte[] tfile = tradeNARC.files.get(i);
-                IngameTrade trade = trades.get(tradeOffset++);
-                tradeStrings.set(i * 2, trade.nickname);
-                tradeStrings.set(i * 2 + 1, trade.otName);
-                writeLong(tfile, 4, trade.givenSpecies.getNumber());
+                InGameTrade trade = trades.get(tradeOffset++);
+                tradeStrings.set(i * 2, trade.getNickname());
+                tradeStrings.set(i * 2 + 1, trade.getOtName());
+                writeLong(tfile, 4, trade.getGivenSpecies().getNumber());
                 writeLong(tfile, 8, 0); // disable forme
                 for (int iv = 0; iv < 6; iv++) {
-                    writeLong(tfile, 0x10 + iv * 4, trade.ivs[iv]);
+                    writeLong(tfile, 0x10 + iv * 4, trade.getIVs()[iv]);
                 }
                 writeLong(tfile, 0x2C, 0xFF); // random nature
-                writeWord(tfile, 0x34, trade.otId);
-                writeLong(tfile, 0x4C, trade.item);
-                writeLong(tfile, 0x5C, trade.requestedSpecies.getNumber());
+                writeWord(tfile, 0x34, trade.getOtId());
+                writeLong(tfile, 0x4C, trade.getItem() == null ? 0 : trade.getItem().getId());
+                writeLong(tfile, 0x5C, trade.getRequestedSpecies().getNumber());
                 if (!romEntry.getTradeScripts().isEmpty()) {
-                    romEntry.getTradeScripts().get(i - unusedOffset).setPokemon(this,scriptNarc,trade.requestedSpecies,trade.givenSpecies);
+                    romEntry.getTradeScripts().get(i - unusedOffset).setPokemon(this,scriptNarc, trade.getRequestedSpecies(), trade.getGivenSpecies());
                 }
             }
             this.writeNARC(romEntry.getFile("InGameTrades"), tradeNARC);
@@ -3572,12 +3572,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     if (tr+24 >= oldTrades.size() || tr+24 >= trades.size()) {
                         break;
                     }
-                    IngameTrade oldTrade = oldTrades.get(tr+24);
-                    IngameTrade newTrade = trades.get(tr+24);
+                    InGameTrade oldTrade = oldTrades.get(tr+24);
+                    InGameTrade newTrade = trades.get(tr+24);
                     Map<String, String> replacements = new TreeMap<>();
-                    replacements.put(oldTrade.givenSpecies.getName(), newTrade.givenSpecies.getName());
-                    if (oldTrade.requestedSpecies != newTrade.requestedSpecies) {
-                        replacements.put(oldTrade.requestedSpecies.getName(), newTrade.requestedSpecies.getName());
+                    replacements.put(oldTrade.getGivenSpecies().getName(), newTrade.getGivenSpecies().getName());
+                    if (oldTrade.getRequestedSpecies() != newTrade.getRequestedSpecies()) {
+                        replacements.put(oldTrade.getRequestedSpecies().getName(), newTrade.getRequestedSpecies().getName());
                     }
                     replaceAllStringsInEntry(textOffsets[tr], replacements);
                 }

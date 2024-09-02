@@ -3749,8 +3749,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -3764,18 +3764,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = new IngameTrade();
+            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.nickname = readVariableLengthString(entryOffset);
-            trade.givenSpecies = pokesInternal[readWord(entryOffset + 12)];
-            trade.ivs = new int[6];
+            trade.setNickname(readVariableLengthString(entryOffset));
+            trade.setGivenSpecies(pokesInternal[readWord(entryOffset + 12)]);
+            trade.setIVs(new int[6]);
             for (int i = 0; i < 6; i++) {
-                trade.ivs[i] = rom[entryOffset + 14 + i] & 0xFF;
+                trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
             }
-            trade.otId = readWord(entryOffset + 24);
-            trade.item = readWord(entryOffset + 40);
-            trade.otName = readVariableLengthString(entryOffset + 43);
-            trade.requestedSpecies = pokesInternal[readWord(entryOffset + 56)];
+            trade.setOtId(readWord(entryOffset + 24));
+            trade.setItem(items.get(readWord(entryOffset + 40)));
+            trade.setOtName(readVariableLengthString(entryOffset + 43));
+            trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
         }
 
@@ -3784,7 +3784,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setIngameTrades(List<InGameTrade> trades) {
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
         int tableSize = romEntry.getIntValue("TradeTableSize");
@@ -3798,17 +3798,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = trades.get(tradeOffset++);
+            InGameTrade trade = trades.get(tradeOffset++);
             int entryOffset = tableOffset + entry * entryLength;
-            writeFixedLengthString(trade.nickname, entryOffset, 12);
-            writeWord(entryOffset + 12, pokedexToInternal[trade.givenSpecies.getNumber()]);
+            writeFixedLengthString(trade.getNickname(), entryOffset, 12);
+            writeWord(entryOffset + 12, pokedexToInternal[trade.getGivenSpecies().getNumber()]);
             for (int i = 0; i < 6; i++) {
-                writeByte(entryOffset + 14 + i, (byte) trade.ivs[i]);
+                writeByte(entryOffset + 14 + i, (byte) trade.getIVs()[i]);
             }
-            writeWord(entryOffset + 24, trade.otId);
-            writeWord(entryOffset + 40, trade.item);
-            writeFixedLengthString(trade.otName, entryOffset + 43, 11);
-            writeWord(entryOffset + 56, pokedexToInternal[trade.requestedSpecies.getNumber()]);
+            writeWord(entryOffset + 24, trade.getOtId());
+            writeWord(entryOffset + 40, trade.getItem() == null ? 0 : trade.getItem().getId());
+            writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
+            writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
         }
     }
 

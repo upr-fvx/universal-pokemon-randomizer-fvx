@@ -3642,8 +3642,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
 
         int count = romEntry.getIntValue("IngameTradeCount");
         String prefix = Gen6Constants.getIngameTradesPrefix(romEntry.getRomType());
@@ -3653,17 +3653,17 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (offset > 0) {
             offset += prefix.length() / 2;
             for (int i = 0; i < count; i++) {
-                IngameTrade trade = new IngameTrade();
-                trade.nickname = tradeStrings.get(textOffset + i);
-                trade.givenSpecies = pokes[FileFunctions.read2ByteInt(code,offset)];
-                trade.ivs = new int[6];
+                InGameTrade trade = new InGameTrade();
+                trade.setNickname(tradeStrings.get(textOffset + i));
+                trade.setGivenSpecies(pokes[FileFunctions.read2ByteInt(code,offset)]);
+                trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
-                    trade.ivs[iv] = code[offset + 5 + iv];
+                    trade.getIVs()[iv] = code[offset + 5 + iv];
                 }
-                trade.otId = FileFunctions.read2ByteInt(code,offset + 0xE);
-                trade.item = FileFunctions.read2ByteInt(code,offset + 0x10);
-                trade.otName = tradeStrings.get(textOffset + count + i);
-                trade.requestedSpecies = pokes[FileFunctions.read2ByteInt(code,offset + 0x20)];
+                trade.setOtId(FileFunctions.read2ByteInt(code,offset + 0xE));
+                trade.setItem(items.get(FileFunctions.read2ByteInt(code,offset + 0x10)));
+                trade.setOtName(tradeStrings.get(textOffset + count + i));
+                trade.setRequestedSpecies(pokes[FileFunctions.read2ByteInt(code,offset + 0x20)]);
                 trades.add(trade);
                 offset += Gen6Constants.ingameTradeSize;
             }
@@ -3672,8 +3672,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
-        List<IngameTrade> oldTrades = this.getIngameTrades();
+    public void setIngameTrades(List<InGameTrade> trades) {
+        List<InGameTrade> oldTrades = this.getIngameTrades();
         int count = romEntry.getIntValue("IngameTradeCount");
         String prefix = Gen6Constants.getIngameTradesPrefix(romEntry.getRomType());
         List<String> tradeStrings = getStrings(false, romEntry.getIntValue("IngameTradesTextOffset"));
@@ -3682,17 +3682,17 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (offset > 0) {
             offset += prefix.length() / 2;
             for (int i = 0; i < count; i++) {
-                IngameTrade trade = trades.get(i);
-                tradeStrings.set(textOffset + i, trade.nickname);
-                FileFunctions.write2ByteInt(code,offset, trade.givenSpecies.getNumber());
+                InGameTrade trade = trades.get(i);
+                tradeStrings.set(textOffset + i, trade.getNickname());
+                FileFunctions.write2ByteInt(code,offset, trade.getGivenSpecies().getNumber());
                 for (int iv = 0; iv < 6; iv++) {
-                    code[offset + 5 + iv] = (byte)trade.ivs[iv];
+                    code[offset + 5 + iv] = (byte) trade.getIVs()[iv];
                 }
-                FileFunctions.write2ByteInt(code,offset + 0xE,trade.otId);
-                FileFunctions.write2ByteInt(code,offset + 0x10,trade.item);
-                tradeStrings.set(textOffset + count + i, trade.otName);
+                FileFunctions.write2ByteInt(code,offset + 0xE, trade.getOtId());
+                FileFunctions.write2ByteInt(code,offset + 0x10, trade.getItem() == null ? 0 : trade.getItem().getId());
+                tradeStrings.set(textOffset + count + i, trade.getOtName());
                 FileFunctions.write2ByteInt(code,offset + 0x20,
-                        trade.requestedSpecies == null ? 0 : trade.requestedSpecies.getNumber());
+                        trade.getRequestedSpecies() == null ? 0 : trade.getRequestedSpecies().getNumber());
                 offset += Gen6Constants.ingameTradeSize;
 
                 // In XY, there are some trades that use hardcoded strings. Go and forcibly update
@@ -3708,14 +3708,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     // NOTE: This method is kind of stupid, in that it doesn't try to reflow the text to better fit; it just
     // blindly replaces the Pokemon's name. However, it seems to work well enough for what we need.
-    private void updateHardcodedTradeText(IngameTrade oldTrade, IngameTrade newTrade, int hardcodedTradeTextFile) {
+    private void updateHardcodedTradeText(InGameTrade oldTrade, InGameTrade newTrade, int hardcodedTradeTextFile) {
         List<String> hardcodedTradeStrings = getStrings(true, hardcodedTradeTextFile);
-        Species oldRequested = oldTrade.requestedSpecies;
+        Species oldRequested = oldTrade.getRequestedSpecies();
         String oldRequestedName = oldRequested != null ? oldRequested.getName() : null;
-        String oldGivenName = oldTrade.givenSpecies.getName();
-        Species newRequested = newTrade.requestedSpecies;
+        String oldGivenName = oldTrade.getGivenSpecies().getName();
+        Species newRequested = newTrade.getRequestedSpecies();
         String newRequestedName = newRequested != null ? newRequested.getName() : null;
-        String newGivenName = newTrade.givenSpecies.getName();
+        String newGivenName = newTrade.getGivenSpecies().getName();
         for (int i = 0; i < hardcodedTradeStrings.size(); i++) {
             String hardcodedTradeString = hardcodedTradeStrings.get(i);
             if (oldRequestedName != null && newRequestedName != null && hardcodedTradeString.contains(oldRequestedName)) {

@@ -4966,8 +4966,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<IngameTrade> getIngameTrades() {
-		List<IngameTrade> trades = new ArrayList<>();
+	public List<InGameTrade> getIngameTrades() {
+		List<InGameTrade> trades = new ArrayList<>();
 		try {
 			NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
 			int[] spTrades = romEntry.getArrayValue("StaticPokemonTrades");
@@ -4985,17 +4985,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					continue;
 				}
 				byte[] tfile = tradeNARC.files.get(i);
-				IngameTrade trade = new IngameTrade();
-				trade.nickname = tradeStrings.get(i);
-				trade.givenSpecies = pokes[readLong(tfile, 0)];
-				trade.ivs = new int[6];
+				InGameTrade trade = new InGameTrade();
+				trade.setNickname(tradeStrings.get(i));
+				trade.setGivenSpecies(pokes[readLong(tfile, 0)]);
+				trade.setIVs(new int[6]);
 				for (int iv = 0; iv < 6; iv++) {
-					trade.ivs[iv] = readLong(tfile, 4 + iv * 4);
+					trade.getIVs()[iv] = readLong(tfile, 4 + iv * 4);
 				}
-				trade.otId = readWord(tfile, 0x20);
-				trade.otName = tradeStrings.get(i + tradeCount);
-				trade.item = readLong(tfile, 0x3C);
-				trade.requestedSpecies = pokes[readLong(tfile, 0x4C)];
+				trade.setOtId(readWord(tfile, 0x20));
+				trade.setOtName(tradeStrings.get(i + tradeCount));
+				trade.setItem(items.get(readLong(tfile, 0x3C)));
+				trade.setRequestedSpecies(pokes[readLong(tfile, 0x4C)]);
 				trades.add(trade);
 			}
 		} catch (IOException ex) {
@@ -5005,9 +5005,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void setIngameTrades(List<IngameTrade> trades) {
+	public void setIngameTrades(List<InGameTrade> trades) {
 		int tradeOffset = 0;
-		List<IngameTrade> oldTrades = this.getIngameTrades();
+		List<InGameTrade> oldTrades = this.getIngameTrades();
 		try {
 			NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
 			int[] spTrades = romEntry.getArrayValue("StaticPokemonTrades");
@@ -5025,16 +5025,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					continue;
 				}
 				byte[] tfile = tradeNARC.files.get(i);
-				IngameTrade trade = trades.get(tradeOffset++);
-				tradeStrings.set(i, trade.nickname);
-				tradeStrings.set(i + tradeCount, trade.otName);
-				writeLong(tfile, 0, trade.givenSpecies.getNumber());
+				InGameTrade trade = trades.get(tradeOffset++);
+				tradeStrings.set(i, trade.getNickname());
+				tradeStrings.set(i + tradeCount, trade.getOtName());
+				writeLong(tfile, 0, trade.getGivenSpecies().getNumber());
 				for (int iv = 0; iv < 6; iv++) {
-					writeLong(tfile, 4 + iv * 4, trade.ivs[iv]);
+					writeLong(tfile, 4 + iv * 4, trade.getIVs()[iv]);
 				}
-				writeWord(tfile, 0x20, trade.otId);
-				writeLong(tfile, 0x3C, trade.item);
-				writeLong(tfile, 0x4C, trade.requestedSpecies.getNumber());
+				writeWord(tfile, 0x20, trade.getOtId());
+				writeLong(tfile, 0x3C, trade.getItem() == null ? 0 : trade.getItem().getId());
+				writeLong(tfile, 0x4C, trade.getRequestedSpecies().getNumber());
 				if (tfile.length > 0x50) {
 					writeLong(tfile, 0x50, 0); // disable gender
 				}
@@ -5048,14 +5048,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if (trade >= oldTrades.size() || trade >= trades.size()) {
 						break;
 					}
-					IngameTrade oldTrade = oldTrades.get(trade);
-					IngameTrade newTrade = trades.get(trade);
+					InGameTrade oldTrade = oldTrades.get(trade);
+					InGameTrade newTrade = trades.get(trade);
 					Map<String, String> replacements = new TreeMap<>();
-					replacements.put(oldTrade.givenSpecies.getName().toUpperCase(),
-							newTrade.givenSpecies.getName());
-					if (oldTrade.requestedSpecies != newTrade.requestedSpecies) {
-						replacements.put(oldTrade.requestedSpecies.getName().toUpperCase(),
-								newTrade.requestedSpecies.getName());
+					replacements.put(oldTrade.getGivenSpecies().getName().toUpperCase(),
+							newTrade.getGivenSpecies().getName());
+					if (oldTrade.getRequestedSpecies() != newTrade.getRequestedSpecies()) {
+						replacements.put(oldTrade.getRequestedSpecies().getName().toUpperCase(),
+								newTrade.getRequestedSpecies().getName());
 					}
 					replaceAllStringsInEntry(textOffsets[trade], replacements);
 					// hgss override for one set of strings that appears 2x

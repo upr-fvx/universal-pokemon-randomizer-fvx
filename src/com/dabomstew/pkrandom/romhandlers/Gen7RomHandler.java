@@ -3142,8 +3142,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> ingameTrades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> ingameTrades = new ArrayList<>();
         try {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             List<String> tradeStrings = getStrings(true, romEntry.getIntValue("IngameTradesTextOffset"));
@@ -3151,7 +3151,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int numberOfIngameTrades = tradesFile.length / 0x34;
             for (int i = 0; i < numberOfIngameTrades; i++) {
                 int offset = i * 0x34;
-                IngameTrade trade = new IngameTrade();
+                InGameTrade trade = new InGameTrade();
                 int givenSpecies = FileFunctions.read2ByteInt(tradesFile, offset);
                 int requestedSpecies = FileFunctions.read2ByteInt(tradesFile, offset + 0x2C);
                 Species givenPokemon = pokes[givenSpecies];
@@ -3163,19 +3163,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             .getOrDefault(forme, 0);
                     givenPokemon = pokes[speciesWithForme];
                 }
-                trade.givenSpecies = givenPokemon;
-                trade.requestedSpecies = requestedPokemon;
-                trade.nickname = tradeStrings.get(FileFunctions.read2ByteInt(tradesFile, offset + 2));
-                trade.otName = tradeStrings.get(FileFunctions.read2ByteInt(tradesFile, offset + 0x18));
-                trade.otId = FileFunctions.readFullInt(tradesFile, offset + 0x10);
-                trade.ivs = new int[6];
+                trade.setGivenSpecies(givenPokemon);
+                trade.setRequestedSpecies(requestedPokemon);
+                trade.setNickname(tradeStrings.get(FileFunctions.read2ByteInt(tradesFile, offset + 2)));
+                trade.setOtName(tradeStrings.get(FileFunctions.read2ByteInt(tradesFile, offset + 0x18)));
+                trade.setOtId(FileFunctions.readFullInt(tradesFile, offset + 0x10));
+                trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
-                    trade.ivs[iv] = tradesFile[offset + 6 + iv];
+                    trade.getIVs()[iv] = tradesFile[offset + 6 + iv];
                 }
-                trade.item = FileFunctions.read2ByteInt(tradesFile, offset + 0x14);
-                if (trade.item < 0) {
-                    trade.item = 0;
-                }
+                int itemID = FileFunctions.read2ByteInt(tradesFile, offset + 0x14);
+                trade.setItem(itemID < 0 ? null : items.get(itemID));
                 ingameTrades.add(trade);
             }
         } catch (IOException e) {
@@ -3185,18 +3183,18 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setIngameTrades(List<InGameTrade> trades) {
         try {
-            List<IngameTrade> oldTrades = this.getIngameTrades();
+            List<InGameTrade> oldTrades = this.getIngameTrades();
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             List<String> tradeStrings = getStrings(true, romEntry.getIntValue("IngameTradesTextOffset"));
             Map<Integer, List<Integer>> hardcodedTradeTextOffsets = Gen7Constants.getHardcodedTradeTextOffsets(romEntry.getRomType());
             byte[] tradesFile = staticGarc.files.get(4).get(0);
             int numberOfIngameTrades = tradesFile.length / 0x34;
             for (int i = 0; i < numberOfIngameTrades; i++) {
-                IngameTrade trade = trades.get(i);
+                InGameTrade trade = trades.get(i);
                 int offset = i * 0x34;
-                Species givenSpecies = trade.givenSpecies;
+                Species givenSpecies = trade.getGivenSpecies();
                 int forme = 0;
                 if (givenSpecies.getFormeNumber() > 0) {
                     forme = givenSpecies.getFormeNumber();
@@ -3204,14 +3202,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 FileFunctions.write2ByteInt(tradesFile, offset, givenSpecies.getNumber());
                 tradesFile[offset + 4] = (byte) forme;
-                FileFunctions.write2ByteInt(tradesFile, offset + 0x2C, trade.requestedSpecies.getNumber());
-                tradeStrings.set(FileFunctions.read2ByteInt(tradesFile, offset + 2), trade.nickname);
-                tradeStrings.set(FileFunctions.read2ByteInt(tradesFile, offset + 0x18), trade.otName);
-                FileFunctions.writeFullInt(tradesFile, offset + 0x10, trade.otId);
+                FileFunctions.write2ByteInt(tradesFile, offset + 0x2C, trade.getRequestedSpecies().getNumber());
+                tradeStrings.set(FileFunctions.read2ByteInt(tradesFile, offset + 2), trade.getNickname());
+                tradeStrings.set(FileFunctions.read2ByteInt(tradesFile, offset + 0x18), trade.getOtName());
+                FileFunctions.writeFullInt(tradesFile, offset + 0x10, trade.getOtId());
                 for (int iv = 0; iv < 6; iv++) {
-                    tradesFile[offset + 6 + iv] = (byte) trade.ivs[iv];
+                    tradesFile[offset + 6 + iv] = (byte) trade.getIVs()[iv];
                 }
-                FileFunctions.write2ByteInt(tradesFile, offset + 0x14, trade.item);
+                FileFunctions.write2ByteInt(tradesFile, offset + 0x14, trade.getItem() == null ? 0 : trade.getItem().getId());
 
                 List<Integer> hardcodedTextOffsetsForThisTrade = hardcodedTradeTextOffsets.get(i);
                 if (hardcodedTextOffsetsForThisTrade != null) {
@@ -3227,13 +3225,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     // NOTE: This method is kind of stupid, in that it doesn't try to reflow the text to better fit; it just
     // blindly replaces the Pokemon's name. However, it seems to work well enough for what we need.
-    private void updateHardcodedTradeText(IngameTrade oldTrade, IngameTrade newTrade, List<String> tradeStrings, List<Integer> hardcodedTextOffsets) {
+    private void updateHardcodedTradeText(InGameTrade oldTrade, InGameTrade newTrade, List<String> tradeStrings, List<Integer> hardcodedTextOffsets) {
         for (int offset : hardcodedTextOffsets) {
             String hardcodedText = tradeStrings.get(offset);
-            String oldRequestedName = oldTrade.requestedSpecies.getName();
-            String oldGivenName = oldTrade.givenSpecies.getName();
-            String newRequestedName = newTrade.requestedSpecies.getName();
-            String newGivenName = newTrade.givenSpecies.getName();
+            String oldRequestedName = oldTrade.getRequestedSpecies().getName();
+            String oldGivenName = oldTrade.getGivenSpecies().getName();
+            String newRequestedName = newTrade.getRequestedSpecies().getName();
+            String newGivenName = newTrade.getGivenSpecies().getName();
             hardcodedText = hardcodedText.replace(oldRequestedName, newRequestedName);
             hardcodedText = hardcodedText.replace(oldGivenName, newGivenName);
             tradeStrings.set(offset, hardcodedText);

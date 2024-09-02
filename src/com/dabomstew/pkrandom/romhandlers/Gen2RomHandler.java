@@ -596,8 +596,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         writeByte(offset + Gen2Constants.bsSecondaryTypeOffset, secondaryTypeByte);
         writeByte(offset + Gen2Constants.bsCatchRateOffset, (byte) pkmn.getCatchRate());
 
-        writeByte(offset + Gen2Constants.bsCommonHeldItemOffset, (byte) pkmn.getCommonHeldItem());
-        writeByte(offset + Gen2Constants.bsRareHeldItemOffset, (byte) pkmn.getRareHeldItem());
+        writeByte(offset + Gen2Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem() == null ? 0 : (byte) pkmn.getCommonHeldItem().getId());
+        writeByte(offset + Gen2Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem() == null ? 0 : (byte) pkmn.getRareHeldItem().getId());
         writeByte(offset + Gen2Constants.bsGrowthCurveOffset, pkmn.getGrowthCurve().toByte());
     }
 
@@ -2706,8 +2706,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getIngameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -2726,17 +2726,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = new IngameTrade();
+            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.requestedSpecies = pokes[rom[entryOffset + 1] & 0xFF];
-            trade.givenSpecies = pokes[rom[entryOffset + 2] & 0xFF];
-            trade.nickname = readString(entryOffset + 3, nicknameLength, false);
+            trade.setRequestedSpecies(pokes[rom[entryOffset + 1] & 0xFF]);
+            trade.setGivenSpecies(pokes[rom[entryOffset + 2] & 0xFF]);
+            trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             int atkdef = rom[entryOffset + 3 + nicknameLength] & 0xFF;
             int spdspc = rom[entryOffset + 4 + nicknameLength] & 0xFF;
-            trade.ivs = new int[]{(atkdef >> 4) & 0xF, atkdef & 0xF, (spdspc >> 4) & 0xF, spdspc & 0xF};
-            trade.item = rom[entryOffset + 5 + nicknameLength] & 0xFF;
-            trade.otId = readWord(entryOffset + 6 + nicknameLength);
-            trade.otName = readString(entryOffset + 8 + nicknameLength, otLength, false);
+            trade.setIVs(new int[]{(atkdef >> 4) & 0xF, atkdef & 0xF, (spdspc >> 4) & 0xF, spdspc & 0xF});
+            trade.setItem(items.get(rom[entryOffset + 5 + nicknameLength] & 0xFF));
+            trade.setOtId(readWord(entryOffset + 6 + nicknameLength));
+            trade.setOtName(readString(entryOffset + 8 + nicknameLength, otLength, false));
             trades.add(trade);
         }
 
@@ -2745,7 +2745,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setIngameTrades(List<InGameTrade> trades) {
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
         int tableSize = romEntry.getIntValue("TradeTableSize");
@@ -2758,7 +2758,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             if (unusedIndex < unused.length && unused[unusedIndex] == entry) {
                 unusedIndex++;
             } else {
-                IngameTrade trade = trades.get(tradeIndex);
+                InGameTrade trade = trades.get(tradeIndex);
                 int entryOffset = tableOffset + entry * entryLength;
                 writeBytes(entryOffset, ingameTradeToBytes(trade));
                 tradeIndex++;
@@ -2766,22 +2766,22 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private byte[] ingameTradeToBytes(IngameTrade trade) {
+    private byte[] ingameTradeToBytes(InGameTrade trade) {
         int nicknameLength = romEntry.getIntValue("TradeNameLength");
         int otLength = romEntry.getIntValue("TradeOTLength");
 
         byte[] data = new byte[getIngameTradeEntryLength()];
-        data[0] = (byte) trade.requestedSpecies.getNumber();
-        data[1] = (byte) trade.givenSpecies.getNumber();
+        data[0] = (byte) trade.getRequestedSpecies().getNumber();
+        data[1] = (byte) trade.getGivenSpecies().getNumber();
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            writeFixedLengthString(data, trade.nickname, 2, nicknameLength);
+            writeFixedLengthString(data, trade.getNickname(), 2, nicknameLength);
         }
-        data[2 + nicknameLength] = (byte) (trade.ivs[0] << 4 | trade.ivs[1]);
-        data[3 + nicknameLength] = (byte) (trade.ivs[2] << 4 | trade.ivs[3]);
-        data[4 + nicknameLength] = (byte) trade.item;
-        writeWord(data, 5 + nicknameLength, trade.otId);
+        data[2 + nicknameLength] = (byte) (trade.getIVs()[0] << 4 | trade.getIVs()[1]);
+        data[3 + nicknameLength] = (byte) (trade.getIVs()[2] << 4 | trade.getIVs()[3]);
+        data[4 + nicknameLength] = (byte) (trade.getItem() == null ? 0 : trade.getItem().getId());
+        writeWord(data, 5 + nicknameLength, trade.getOtId());
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            writeFixedLengthString(data, trade.otName, 7 + nicknameLength, otLength);
+            writeFixedLengthString(data, trade.getOtName(), 7 + nicknameLength, otLength);
         }
         // remove gender req
         data[7 + nicknameLength + otLength] = 0;

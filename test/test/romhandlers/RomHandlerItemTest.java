@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.game_data.Item;
+import com.dabomstew.pkrandom.gamedata.Item;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -12,8 +12,13 @@ public class RomHandlerItemTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void itemNamesExist(String romName) {
         loadROM(romName);
-        List<Item> items = romHandler.getItems();
-        items.forEach(System.out::println);
+        for (Item item : romHandler.getItems()) {
+            if (item == null) {
+                System.out.println("null");
+            } else {
+                System.out.println((item.isAllowed() ? "" : "(B)-- ") + item);
+            }
+        }
     }
 
 }

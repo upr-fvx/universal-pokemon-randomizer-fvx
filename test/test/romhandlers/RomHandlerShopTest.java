@@ -2,7 +2,6 @@ package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
 import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
@@ -106,12 +105,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         s.setBanBadRandomShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        ItemList nonBad = romHandler.getNonBadItems();
+        Set<Item> nonBad = romHandler.getNonBadItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
             System.out.println(shop);
             for (Item item : shop.getItems()) {
-                assertTrue(nonBad.isAllowed(item.getId()));
+                assertTrue(nonBad.contains(item));
             }
         }
     }

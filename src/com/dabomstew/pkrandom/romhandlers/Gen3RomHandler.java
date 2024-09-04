@@ -1075,7 +1075,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Item item1 = items.get(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
         Item item2 = items.get(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
 
-        if (item1.equals(item2)) {
+        if (Objects.equals(item1, item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
         } else {
@@ -3643,7 +3643,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
         }
 
-        Gen3Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int id : Gen3Constants.bannedItems) {
+            if (id < items.size()) {
+                items.get(id).setAllowed(false);
+            }
+        }
         for (int i = Gen3Constants.tmsStartIndex; i < Gen3Constants.tmsStartIndex + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
@@ -3773,7 +3777,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
             }
             trade.setOtId(readWord(entryOffset + 24));
-            trade.setItem(items.get(readWord(entryOffset + 40)));
+            trade.setHeldItem(items.get(readWord(entryOffset + 40)));
             trade.setOtName(readVariableLengthString(entryOffset + 43));
             trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
@@ -3806,7 +3810,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeByte(entryOffset + 14 + i, (byte) trade.getIVs()[i]);
             }
             writeWord(entryOffset + 24, trade.getOtId());
-            writeWord(entryOffset + 40, trade.getItem() == null ? 0 : trade.getItem().getId());
+            writeWord(entryOffset + 40, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
             writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
             writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
         }

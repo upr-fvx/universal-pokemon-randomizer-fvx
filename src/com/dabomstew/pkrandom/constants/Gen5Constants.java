@@ -866,39 +866,37 @@ public class Gen5Constants {
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
                 ItemIDs.lightStone, ItemIDs.darkStone));
-        addRange(set, ItemIDs.explorerKit, 76);
-        addRange(set, ItemIDs.dataCard01, 32);
-        addRange(set, ItemIDs.xtransceiverMale, 18);
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.tidalBell);
+        addBetween(set, ItemIDs.dataCard01, ItemIDs.enigmaStone);
+        addBetween(set, ItemIDs.xtransceiverMale, ItemIDs.revealGlass);
         // Unknown blank items or version exclusives
-        addRange(set, ItemIDs.tea, 3);
-        addRange(set, ItemIDs.unused120, 14);
+        addBetween(set, ItemIDs.tea, ItemIDs.autograph);
+        addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
         // TMs & HMs - tms cant be held in gen5
-        addRange(set, ItemIDs.tm01, 92);
-        addRange(set, ItemIDs.tm93, 3);
-        addRange(set, ItemIDs.tm01, 100);
-        addRange(set, ItemIDs.tm93, 3);
+        addBetween(set, ItemIDs.tm01, ItemIDs.hm08);
+        addBetween(set, ItemIDs.tm93, ItemIDs.tm95);
         // Battle Launcher exclusives
-        addRange(set, ItemIDs.direHit2, 24);
+        addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsBW2() {
         // specific pokemon hold items, berries, apricorns, mail
-        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
-                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb));
-        addRange(set, ItemIDs.growthMulch, 4); // mulch
-        addRange(set, ItemIDs.adamantOrb, 2); // orbs
-        addRange(set, ItemIDs.mail1, 12); // mails
-        addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
-        addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
-        addRange(set, ItemIDs.redScarf, 5); // contest scarves
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
+                ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
+                ItemIDs.passOrb));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsBW1() {
         Set<Integer> set = new HashSet<>(badItemsBW2);
         // The shards are bad in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
-        addRange(set, ItemIDs.redShard, 4);
+        addBetween(set, ItemIDs.redShard, ItemIDs.greenShard);
         return Collections.unmodifiableSet(set);
     }
 
@@ -925,12 +923,6 @@ public class Gen5Constants {
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
         return Collections.unmodifiableSet(set);
-    }
-
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
-            set.add(i);
-        }
     }
 
     /**

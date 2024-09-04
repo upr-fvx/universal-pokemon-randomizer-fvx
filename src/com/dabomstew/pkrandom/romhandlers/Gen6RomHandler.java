@@ -165,7 +165,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         // TODO: would some other system be better here; e.g. something similar to "tagTrainers"
-        Gen6Constants.getBannedItems(romEntry.getRomType()).forEach(id -> items.get(id).setAllowed(false));
+        for (int id : Gen6Constants.getBannedItems(romEntry.getRomType())) {
+            if (id < items.size()) {
+                items.get(id).setAllowed(false);
+            }
+        }
         for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
             items.get(i).setTM(true);
         }
@@ -288,7 +292,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         Item item1 = items.get(FileFunctions.read2ByteInt(stats, Gen6Constants.bsCommonHeldItemOffset));
         Item item2 = items.get(FileFunctions.read2ByteInt(stats, Gen6Constants.bsRareHeldItemOffset));
 
-        if (item1.equals(item2)) {
+        if (Objects.equals(item1, item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
         } else {
@@ -3661,7 +3665,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     trade.getIVs()[iv] = code[offset + 5 + iv];
                 }
                 trade.setOtId(FileFunctions.read2ByteInt(code,offset + 0xE));
-                trade.setItem(items.get(FileFunctions.read2ByteInt(code,offset + 0x10)));
+                trade.setHeldItem(items.get(FileFunctions.read2ByteInt(code,offset + 0x10)));
                 trade.setOtName(tradeStrings.get(textOffset + count + i));
                 trade.setRequestedSpecies(pokes[FileFunctions.read2ByteInt(code,offset + 0x20)]);
                 trades.add(trade);
@@ -3689,7 +3693,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     code[offset + 5 + iv] = (byte) trade.getIVs()[iv];
                 }
                 FileFunctions.write2ByteInt(code,offset + 0xE, trade.getOtId());
-                FileFunctions.write2ByteInt(code,offset + 0x10, trade.getItem() == null ? 0 : trade.getItem().getId());
+                FileFunctions.write2ByteInt(code,offset + 0x10, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
                 tradeStrings.set(textOffset + count + i, trade.getOtName());
                 FileFunctions.write2ByteInt(code,offset + 0x20,
                         trade.getRequestedSpecies() == null ? 0 : trade.getRequestedSpecies().getNumber());

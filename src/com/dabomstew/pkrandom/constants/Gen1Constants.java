@@ -174,20 +174,23 @@ public class Gen1Constants {
                 Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
                 Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
                 Gen1ItemIDs.goldTeeth));
-        addRange(set, Gen1ItemIDs.boulderBadge, 8);
-        addRange(set, Gen1ItemIDs.domeFossil, 5);
-        addRange(set, Gen1ItemIDs.coinCase, 10);
+        addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
+        addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
+        addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
         // Unused
-        addRange(set, Gen1ItemIDs.unused84, 112);
+        addBetween(set, Gen1ItemIDs.unused84, Gen1ItemIDs.unused195);
         // HMs
-        addRange(set, hmsStartIndex, hmCount);
+        addBetween(set, Gen1ItemIDs.hm01, Gen1ItemIDs.hm05);
         // Junk at end
-        addRange(set, Gen1ItemIDs.tm50, 5); // 251-255 are junk TMs
+        addBetween(set, Gen1ItemIDs.tm51, Gen1ItemIDs.tm55); // 251-255 are junk TMs
         return Collections.unmodifiableSet(set);
     }
 
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
             set.add(i);
         }
     }

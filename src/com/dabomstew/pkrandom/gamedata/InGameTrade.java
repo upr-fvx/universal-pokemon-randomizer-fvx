@@ -37,7 +37,7 @@ public class InGameTrade {
 
     private int[] ivs = new int[0];
 
-    private Item item;
+    private Item heldItem;
 
     public Species getRequestedSpecies() {
         return requestedSpecies;
@@ -87,11 +87,11 @@ public class InGameTrade {
         this.ivs = ivs;
     }
 
-    public Item getItem() {
-        return item;
+    public Item getHeldItem() {
+        return heldItem;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
     }
 }

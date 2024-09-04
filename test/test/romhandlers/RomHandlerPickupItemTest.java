@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.game_data.PickupItem;
+import com.dabomstew.pkrandom.gamedata.PickupItem;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

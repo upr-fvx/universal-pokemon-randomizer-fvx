@@ -819,25 +819,24 @@ public class Gen4Constants {
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>();
         // Key items + version exclusives
-        addRange(set, ItemIDs.explorerKit, 109);
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.enigmaStone);
         // Unknown blank items or version exclusives
-        addRange(set, ItemIDs.griseousOrb, 23);
+        addBetween(set, ItemIDs.griseousOrb, ItemIDs.sweetHeart);
         // HMs
-        addRange(set, ItemIDs.hm01, 8);
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItems() {
         // ban specific pokemon hold items, berries, apricorns, mail
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
-                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder));
-        addRange(set, ItemIDs.shoalSalt, 2);
-        addRange(set, ItemIDs.growthMulch, 4); // mulch
-        addRange(set, ItemIDs.adamantOrb, 2); // orbs
-        addRange(set, ItemIDs.mail1, 12); // mails
-        addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
-        addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
-        addRange(set, ItemIDs.redScarf, 5); // contest scarves
+                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.shoalSalt, ItemIDs.shoalShell,
+                ItemIDs.adamantOrb, ItemIDs.lustrousOrb));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
         return Collections.unmodifiableSet(set);
     }
 
@@ -856,12 +855,6 @@ public class Gen4Constants {
         set.add(ItemIDs.rareBone);
         set.add(ItemIDs.luckyEgg);
         return Collections.unmodifiableSet(set);
-    }
-
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
-            set.add(i);
-        }
     }
 
     /**

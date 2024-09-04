@@ -575,37 +575,36 @@ public class Gen3Constants {
         Set<Integer> set = new HashSet<>();
         set.add(Gen3ItemIDs.oldSeaMap);
         // Key items (+1 unknown item)
-        addRange(set, Gen3ItemIDs.machBike, 30);
-        addRange(set, Gen3ItemIDs.oaksParcel, 28);
+        addBetween(set, Gen3ItemIDs.machBike, Gen3ItemIDs.devonScope);
+        addBetween(set, Gen3ItemIDs.oaksParcel, Gen3ItemIDs.oldSeaMap);
         // Unknown blank items
-        addRange(set, Gen3ItemIDs.unknown52, 11);
-        addRange(set, Gen3ItemIDs.unknown87, 6);
-        addRange(set, Gen3ItemIDs.unknown99, 4);
-        addRange(set, Gen3ItemIDs.unknown112, 9);
-        addRange(set, Gen3ItemIDs.unknown176, 3);
-        addRange(set, Gen3ItemIDs.unknown226, 28);
-        addRange(set, Gen3ItemIDs.unknown347, 2);
+        addBetween(set, Gen3ItemIDs.unknown52, Gen3ItemIDs.unknown62);
+        addBetween(set, Gen3ItemIDs.unknown87, Gen3ItemIDs.unknown92);
+        addBetween(set, Gen3ItemIDs.unknown99, Gen3ItemIDs.unknown102);
+        addBetween(set, Gen3ItemIDs.unknown112, Gen3ItemIDs.unknown120);
+        addBetween(set, Gen3ItemIDs.unknown176, Gen3ItemIDs.unknown178);
+        addBetween(set, Gen3ItemIDs.unknown226, Gen3ItemIDs.unknown253);
         set.addAll(Arrays.asList(Gen3ItemIDs.unknown72, Gen3ItemIDs.unknown82, Gen3ItemIDs.unknown105,
-                Gen3ItemIDs.unknown267));
+                Gen3ItemIDs.unknown267, Gen3ItemIDs.unknown347, Gen3ItemIDs.unknown348));
         // HMs
-        addRange(set, Gen3ItemIDs.hm01, 8);
+        addBetween(set, Gen3ItemIDs.hm01, Gen3ItemIDs.hm08);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsRSE() {
         // ban specific pokemon hold items, berries, apricorns, mail
         Set<Integer> set = new HashSet<>(Arrays.asList(Gen3ItemIDs.lightBall, Gen3ItemIDs.oranBerry, Gen3ItemIDs.soulDew));
-        addRange(set, Gen3ItemIDs.orangeMail, 12); // mail
-        addRange(set, Gen3ItemIDs.figyBerry, 33); // berries
-        addRange(set, Gen3ItemIDs.luckyPunch, 4); // pokemon specific
-        addRange(set, Gen3ItemIDs.redScarf, 5); // contest scarves
+        addBetween(set, Gen3ItemIDs.orangeMail, Gen3ItemIDs.retroMail); // mail
+        addBetween(set, Gen3ItemIDs.figyBerry, Gen3ItemIDs.enigmaBerry); // berries
+        addBetween(set, Gen3ItemIDs.luckyPunch, Gen3ItemIDs.stick); // pokemon specific
+        addBetween(set, Gen3ItemIDs.redScarf, Gen3ItemIDs.yellowScarf); // contest scarves
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItemsFRLG() {
         Set<Integer> set = new HashSet<>(badItemsRSE);
         // Ban Shoal items and Shards, since they don't do anything
-        addRange(set, Gen3ItemIDs.shoalSalt, 6);
+        addBetween(set, Gen3ItemIDs.shoalSalt, Gen3ItemIDs.greenShard);
         return Collections.unmodifiableSet(set);
     }
 
@@ -624,12 +623,6 @@ public class Gen3Constants {
         addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
         set.add(Gen3ItemIDs.luckyEgg);
         return Collections.unmodifiableSet(set);
-    }
-
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
-            set.add(i);
-        }
     }
 
     /**

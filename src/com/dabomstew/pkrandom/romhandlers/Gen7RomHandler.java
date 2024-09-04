@@ -185,7 +185,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             items.add(new Item(i, names.get(i)));
         }
 
-        Gen7Constants.getBannedItems(romEntry.getRomType()).forEach(id -> items.get(id).setAllowed(false));
+        for (int id : Gen7Constants.getBannedItems(romEntry.getRomType())) {
+            if (id < items.size()) {
+                items.get(id).setAllowed(false);
+            }
+        }
         for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
             items.get(i).setTM(true);
         }
@@ -326,7 +330,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         Item item1 = items.get(FileFunctions.read2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset));
         Item item2 = items.get(FileFunctions.read2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset));
 
-        if (item1.equals(item2)) {
+        if (Objects.equals(item1, item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
         } else {
@@ -3173,7 +3177,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     trade.getIVs()[iv] = tradesFile[offset + 6 + iv];
                 }
                 int itemID = FileFunctions.read2ByteInt(tradesFile, offset + 0x14);
-                trade.setItem(itemID < 0 ? null : items.get(itemID));
+                trade.setHeldItem(itemID < 0 ? null : items.get(itemID));
                 ingameTrades.add(trade);
             }
         } catch (IOException e) {
@@ -3209,7 +3213,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (int iv = 0; iv < 6; iv++) {
                     tradesFile[offset + 6 + iv] = (byte) trade.getIVs()[iv];
                 }
-                FileFunctions.write2ByteInt(tradesFile, offset + 0x14, trade.getItem() == null ? 0 : trade.getItem().getId());
+                FileFunctions.write2ByteInt(tradesFile, offset + 0x14, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
 
                 List<Integer> hardcodedTextOffsetsForThisTrade = hardcodedTradeTextOffsets.get(i);
                 if (hardcodedTextOffsetsForThisTrade != null) {

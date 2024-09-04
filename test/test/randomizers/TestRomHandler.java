@@ -239,11 +239,10 @@ public class TestRomHandler extends AbstractRomHandler {
         }
 
         for(MegaEvolution evolution : original.getMegaEvolutionsFrom()) {
-            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.to),
-                    evolution.method, evolution.argument);
-            evoCopy.carryStats = evolution.carryStats;
+            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.getTo()),
+                    evolution.isNeedsItem(), evolution.getItem());
             copy.getMegaEvolutionsFrom().add(evoCopy);
-            evoCopy.to.getMegaEvolutionsTo().add(evoCopy);
+            evoCopy.getTo().getMegaEvolutionsTo().add(evoCopy);
 
             testMegaEvolutions.add(evoCopy);
         }
@@ -620,17 +619,17 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
+    public Set<Item> getAllConsumableHeldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getAllHeldItems() {
+    public Set<Item> getAllHeldItems() {
         throw new NotImplementedException();
     }
 
@@ -880,42 +879,42 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
+    public Set<Item> getAllowedItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public ItemList getNonBadItems() {
+    public Set<Item> getNonBadItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
+    public Set<Item> getEvolutionItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getXItems() {
+    public Set<Item> getXItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
+    public Set<Item> getUniqueNoSellItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
+    public Set<Item> getRegularShopItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
+    public Set<Item> getOPShopItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public String[] getItemNames() {
+    public List<Item> getItems() {
         throw new NotImplementedException();
     }
 

@@ -2734,7 +2734,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int atkdef = rom[entryOffset + 3 + nicknameLength] & 0xFF;
             int spdspc = rom[entryOffset + 4 + nicknameLength] & 0xFF;
             trade.setIVs(new int[]{(atkdef >> 4) & 0xF, atkdef & 0xF, (spdspc >> 4) & 0xF, spdspc & 0xF});
-            trade.setItem(items.get(rom[entryOffset + 5 + nicknameLength] & 0xFF));
+            trade.setHeldItem(items.get(rom[entryOffset + 5 + nicknameLength] & 0xFF));
             trade.setOtId(readWord(entryOffset + 6 + nicknameLength));
             trade.setOtName(readString(entryOffset + 8 + nicknameLength, otLength, false));
             trades.add(trade);
@@ -2778,7 +2778,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         data[2 + nicknameLength] = (byte) (trade.getIVs()[0] << 4 | trade.getIVs()[1]);
         data[3 + nicknameLength] = (byte) (trade.getIVs()[2] << 4 | trade.getIVs()[3]);
-        data[4 + nicknameLength] = (byte) (trade.getItem() == null ? 0 : trade.getItem().getId());
+        data[4 + nicknameLength] = (byte) (trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
         writeWord(data, 5 + nicknameLength, trade.getOtId());
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
             writeFixedLengthString(data, trade.getOtName(), 7 + nicknameLength, otLength);

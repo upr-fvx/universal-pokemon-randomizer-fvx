@@ -4,7 +4,6 @@ import com.dabomstew.pkrandom.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.InGameTrade;
 import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
@@ -119,7 +118,7 @@ public class TradeRandomizer extends Randomizer {
             }
 
             if (randomItem) {
-                trade.setItem(possibleItems.get(random.nextInt(possibleItems.size())));
+                trade.setHeldItem(possibleItems.get(random.nextInt(possibleItems.size())));
             }
         }
 

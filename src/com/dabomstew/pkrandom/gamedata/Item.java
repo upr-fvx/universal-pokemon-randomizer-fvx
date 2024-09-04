@@ -7,7 +7,7 @@ public class Item {
     private final int id;
     private final String name;
 
-    private boolean allowed;
+    private boolean allowed = true;
     private boolean bad;
     private boolean tm;
 

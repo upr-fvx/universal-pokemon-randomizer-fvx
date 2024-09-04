@@ -998,84 +998,76 @@ public class Gen7Constants {
     private static Set<Integer> setupBannedItemsSM() {
         Set<Integer> set = new HashSet<>();
         // Key items + version exclusives
-        addRange(set, ItemIDs.explorerKit, 76);
-        addRange(set, ItemIDs.dataCard01, 32);
-        addRange(set, ItemIDs.xtransceiverMale, 18);
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.tidalBell);
+        addBetween(set, ItemIDs.dataCard01, ItemIDs.enigmaStone);
+        addBetween(set, ItemIDs.xtransceiverMale, ItemIDs.revealGlass);
         set.addAll(Arrays.asList(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
                 ItemIDs.lightStone, ItemIDs.darkStone));
         // Unknown blank items or version exclusives
-        addRange(set, ItemIDs.tea, 3);
-        addRange(set, ItemIDs.unused120, 14);
+        addBetween(set, ItemIDs.tea, ItemIDs.autograph);
+        addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
         // TMs & HMs - tms cant be held in gen7
-        addRange(set, ItemIDs.tm01, 100);
-        addRange(set, ItemIDs.tm93, 3);
+        addBetween(set, ItemIDs.tm01, ItemIDs.hm08);
+        addBetween(set, ItemIDs.tm93, ItemIDs.tm95);
+        addBetween(set, ItemIDs.tm96, ItemIDs.tm100);
         // Battle Launcher exclusives
-        addRange(set, ItemIDs.direHit2, 24);
-
+        addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         // Key items (Gen 6)
-        addRange(set, ItemIDs.holoCasterMale,3);
-        set.add(ItemIDs.pokeFlute);
-        set.add(ItemIDs.sprinklotad);
-        addRange(set, ItemIDs.powerPlantPass,4);
-        addRange(set, ItemIDs.elevatorKey,4);
-        addRange(set, ItemIDs.lensCase,3);
-        addRange(set, ItemIDs.lookerTicket,3);
-        addRange(set, ItemIDs.megaCharm,2);
-
-        // TMs (Gen 6)
-        addRange(set, ItemIDs.tm96,5);
-
-        // Key items and an HM
-        addRange(set, ItemIDs.machBike,34);
-        addRange(set, ItemIDs.prisonBottle,2);
-        addRange(set, ItemIDs.meteoriteThirdForm,5);
+        addBetween(set, ItemIDs.holoCasterMale, ItemIDs.rollerSkates);
+        addBetween(set, ItemIDs.powerPlantPass, ItemIDs.commonStone);
+        addBetween(set, ItemIDs.elevatorKey, ItemIDs.adventureGuide);
+        addBetween(set, ItemIDs.lensCase, ItemIDs.travelTrunk);
+        addBetween(set, ItemIDs.lookerTicket, ItemIDs.holoCasterFemale);
+        set.addAll(Arrays.asList(ItemIDs.pokeFlute, ItemIDs.sprinklotad, ItemIDs.megaCharm, ItemIDs.megaGlove));
+        addBetween(set, ItemIDs.machBike, ItemIDs.meteoriteSecondForm);
+        addBetween(set, ItemIDs.prisonBottle, ItemIDs.megaCuff);
+        addBetween(set, ItemIDs.meteoriteThirdForm, ItemIDs.eonFlute);
 
         // Z-Crystals
-        addRange(set, ItemIDs.normaliumZHeld,19);
-        addRange(set, ItemIDs.decidiumZHeld,39);
+        addBetween(set, ItemIDs.normaliumZHeld, ItemIDs.pikaniumZHeld);
+        addBetween(set, ItemIDs.decidiumZHeld, ItemIDs.pikashuniumZBag);
 
         // Key Items (Gen 7)
         set.addAll(Arrays.asList(ItemIDs.zRing, ItemIDs.sparklingStone, ItemIDs.zygardeCube, ItemIDs.ridePager,
                 ItemIDs.sunFlute, ItemIDs.moonFlute, ItemIDs.enigmaticCard));
-        addRange(set, ItemIDs.forageBag,3);
+        addBetween(set, ItemIDs.forageBag, ItemIDs.professorsMask);
 
         // Unused
         set.addAll(Arrays.asList(ItemIDs.unused848, ItemIDs.unused859));
-        addRange(set, ItemIDs.unused837,4);
-        addRange(set, ItemIDs.silverRazzBerry,18);
-        addRange(set, ItemIDs.stretchySpring,19);
+        addBetween(set, ItemIDs.unused837, ItemIDs.unused840);
+        addBetween(set, ItemIDs.silverRazzBerry, ItemIDs.liftKey);
+        addBetween(set, ItemIDs.stretchySpring, ItemIDs.pewterCrunchies);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBannedItemsUSUM() {
         Set<Integer> set = new HashSet<>(bannedItemsSM);
         // Z-Crystals
-        addRange(set, ItemIDs.solganiumZBag,12);
+        addBetween(set, ItemIDs.solganiumZBag, ItemIDs.kommoniumZBag);
         // Key Items
-        addRange(set, ItemIDs.zPowerRing,16);
+        addBetween(set, ItemIDs.zPowerRing, ItemIDs.leftPokeBall);
         // ROTO LOTO
-        addRange(set, ItemIDs.rotoHatch,11);
+        addBetween(set, ItemIDs.rotoHatch, ItemIDs.rotoCatch);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItems() {
-        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
-                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon,
-                ItemIDs.strangeSouvenir, ItemIDs.festivalTicket));
-        addRange(set, ItemIDs.growthMulch, 4); // mulch
-        addRange(set, ItemIDs.adamantOrb, 2); // orbs
-        addRange(set, ItemIDs.mail1, 12); // mails
-        addRange(set, ItemIDs.figyBerry, 25); // berries without useful battle effects
-        addRange(set, ItemIDs.luckyPunch, 4); // pokemon specific
-        addRange(set, ItemIDs.redScarf, 5); // contest scarves
-        addRange(set, ItemIDs.richMulch,4); // more mulch
-        addRange(set, ItemIDs.gengarite, 30); // Mega Stones, part 1
-        addRange(set, ItemIDs.swampertite, 13); // Mega Stones, part 2
-        addRange(set, ItemIDs.cameruptite, 4); // Mega Stones, part 3
-        addRange(set, ItemIDs.fightingMemory,17); // Memories
-        addRange(set, ItemIDs.relicCopper,7); // relic items
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
+                ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
+                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir, ItemIDs.festivalTicket));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
+        addBetween(set, ItemIDs.relicCopper, ItemIDs.relicCrown); // relic items
+        addBetween(set, ItemIDs.richMulch, ItemIDs.amazeMulch); // more mulch
+        addBetween(set, ItemIDs.gengarite, ItemIDs.latiosite); // Mega Stones, part 1
+        addBetween(set, ItemIDs.swampertite, ItemIDs.beedrillite); // Mega Stones, part 2
+        addBetween(set, ItemIDs.cameruptite, ItemIDs.beedrillite); // Mega Stones, part 3
+        addBetween(set, ItemIDs.fightingMemory, ItemIDs.fairyMemory); // Memories
         set.addAll(Arrays.asList(ItemIDs.shoalSalt, ItemIDs.shoalShell)); // Shoal items; have no purpose and sell for $10.
-        addRange(set, ItemIDs.blueFlute, 5); // Flutes; have no purpose and sell for $10.
+        addBetween(set, ItemIDs.blueFlute, ItemIDs.whiteFlute); // Flutes; have no purpose and sell for $10.
         return Collections.unmodifiableSet(set);
     }
 
@@ -1108,12 +1100,6 @@ public class Gen7Constants {
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
         return Collections.unmodifiableSet(set);
-    }
-
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
-            set.add(i);
-        }
     }
 
     /**

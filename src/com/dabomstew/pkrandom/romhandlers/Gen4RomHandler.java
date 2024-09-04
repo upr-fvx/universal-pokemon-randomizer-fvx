@@ -184,7 +184,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			items.add(new Item(i, names.get(i)));
 		}
 
-		Gen4Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+		for (int id : Gen4Constants.bannedItems) {
+			if (id < items.size()) {
+				items.get(id).setAllowed(false);
+			}
+		}
 		for (int i = Gen4Constants.tmsStartIndex; i < Gen4Constants.tmsStartIndex + Gen4Constants.tmCount; i++) {
 			items.get(i).setTM(true);
 		}
@@ -739,7 +743,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		Item item1 = items.get(readWord(stats, Gen4Constants.bsCommonHeldItemOffset));
 		Item item2 = items.get(readWord(stats, Gen4Constants.bsRareHeldItemOffset));
 
-		if (item1.equals(item2)) {
+		if (Objects.equals(item1, item2)) {
 			// guaranteed
 			pkmn.setGuaranteedHeldItem(item1);
 		} else {
@@ -4994,7 +4998,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 				trade.setOtId(readWord(tfile, 0x20));
 				trade.setOtName(tradeStrings.get(i + tradeCount));
-				trade.setItem(items.get(readLong(tfile, 0x3C)));
+				trade.setHeldItem(items.get(readLong(tfile, 0x3C)));
 				trade.setRequestedSpecies(pokes[readLong(tfile, 0x4C)]);
 				trades.add(trade);
 			}
@@ -5033,7 +5037,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					writeLong(tfile, 4 + iv * 4, trade.getIVs()[iv]);
 				}
 				writeWord(tfile, 0x20, trade.getOtId());
-				writeLong(tfile, 0x3C, trade.getItem() == null ? 0 : trade.getItem().getId());
+				writeLong(tfile, 0x3C, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
 				writeLong(tfile, 0x4C, trade.getRequestedSpecies().getNumber());
 				if (tfile.length > 0x50) {
 					writeLong(tfile, 0x50, 0); // disable gender

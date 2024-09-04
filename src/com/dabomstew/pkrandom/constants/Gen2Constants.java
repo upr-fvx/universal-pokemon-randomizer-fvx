@@ -311,10 +311,10 @@ public class Gen2Constants {
                 Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod, Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod,
                 Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey, Gen2ItemIDs.pass,
                 Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing));
-        addRange(set, Gen2ItemIDs.redScale, 6);
-        addRange(set, Gen2ItemIDs.cardKey, 4);
+        addBetween(set, Gen2ItemIDs.redScale, Gen2ItemIDs.silverWing);
+        addBetween(set, Gen2ItemIDs.cardKey, Gen2ItemIDs.lostItem);
         // HMs
-        addRange(set, Gen2ItemIDs.hm01, 7);
+        addBetween(set, Gen2ItemIDs.hm01, Gen2ItemIDs.hm07);
         // Unused items (Teru-Samas and dummy TMs)
         set.addAll(Arrays.asList(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
                 Gen2ItemIDs.terusama50, Gen2ItemIDs.terusama56, Gen2ItemIDs.terusama90, Gen2ItemIDs.terusama100,
@@ -324,23 +324,25 @@ public class Gen2Constants {
                 Gen2ItemIDs.terusama155, Gen2ItemIDs.terusama162, Gen2ItemIDs.terusama171, Gen2ItemIDs.terusama176,
                 Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused));
         // 250-255 are junk and cancel
-        addRange(set, Gen2ItemIDs.hm07, 6);
+        addBetween(set, Gen2ItemIDs.hm08, Gen2ItemIDs.cancel);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupBadItems() {
         Set<Integer> set = new HashSet<>(Arrays.asList(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
                 Gen2ItemIDs.goldLeaf, Gen2ItemIDs.redApricorn, Gen2ItemIDs.bluApricorn, Gen2ItemIDs.whtApricorn,
-                Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.stick, Gen2ItemIDs.thickClub,
-                Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall, Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece));
-        addRange(set, Gen2ItemIDs.ylwApricorn, 2);
-        addRange(set, Gen2ItemIDs.normalBox, 2);
-        addRange(set, Gen2ItemIDs.surfMail, 9);
+                Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.ylwApricorn, Gen2ItemIDs.grnApricorn,
+                Gen2ItemIDs.stick, Gen2ItemIDs.thickClub, Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall,
+                Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece, Gen2ItemIDs.normalBox, Gen2ItemIDs.gorgeousBox));
+        addBetween(set, Gen2ItemIDs.surfMail, Gen2ItemIDs.mirageMail);
         return Collections.unmodifiableSet(set);
     }
 
-    private static void addRange(Set<Integer> set, int start, int length) {
-        for (int i = start; i < start + length; i++) {
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
             set.add(i);
         }
     }

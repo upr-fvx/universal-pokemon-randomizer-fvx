@@ -189,7 +189,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
 
         // TODO: would some other system be better here; e.g. something similar to "tagTrainers"
-        Gen5Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int id : Gen5Constants.bannedItems) {
+            if (id < items.size()) {
+                items.get(id).setAllowed(false);
+            }
+        }
         for (int i = ItemIDs.tm01; i <= ItemIDs.tm92; i++) {
             items.get(i).setTM(true);
         }
@@ -386,7 +390,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         Item item1 = items.get(readWord(stats, Gen5Constants.bsCommonHeldItemOffset));
         Item item2 = items.get(readWord(stats, Gen5Constants.bsRareHeldItemOffset));
 
-        if (item1.equals(item2)) {
+        if (Objects.equals(item1, item2)) {
             // guaranteed
             pkmn.setGuaranteedHeldItem(item1);
         } else {
@@ -3512,7 +3516,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     trade.getIVs()[iv] = readLong(tfile, 0x10 + iv * 4);
                 }
                 trade.setOtId(readWord(tfile, 0x34));
-                trade.setItem(items.get(readLong(tfile, 0x4C)));
+                trade.setHeldItem(items.get(readLong(tfile, 0x4C)));
                 trade.setOtName(tradeStrings.get(entry * 2 + 1));
                 trade.setRequestedSpecies(pokes[readLong(tfile, 0x5C)]);
                 trades.add(trade);
@@ -3552,7 +3556,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
                 writeLong(tfile, 0x2C, 0xFF); // random nature
                 writeWord(tfile, 0x34, trade.getOtId());
-                writeLong(tfile, 0x4C, trade.getItem() == null ? 0 : trade.getItem().getId());
+                writeLong(tfile, 0x4C, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
                 writeLong(tfile, 0x5C, trade.getRequestedSpecies().getNumber());
                 if (!romEntry.getTradeScripts().isEmpty()) {
                     romEntry.getTradeScripts().get(i - unusedOffset).setPokemon(this,scriptNarc, trade.getRequestedSpecies(), trade.getGivenSpecies());

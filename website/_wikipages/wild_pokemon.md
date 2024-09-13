@@ -18,7 +18,8 @@ This section describes the minimum odds for catching any given Pokemon when the 
   - 601+ species caught: 4096/4096 (exactly 1; in other words, there is no longer any reduction in odds)
 
 ### Level 1
-|**Games**   |**Odds (non-legendary, full health)**|**Odds (non-legendary, 1 HP)**|**Odds (legendary, full health)**|**Odds (legendary, 1 HP)**|
+
+|  Games     |  Odds (non-legendary, full health)  |  Odds (non-legendary, 1 HP)  |  Odds (legendary, full health)  |  Odds (legendary, 1 HP)  |
 |------------|-------------------------------------|------------------------------|---------------------------------|--------------------------|
 | Gen 1      | 10.162%                             | 29.688%                      | 5.081%                          | 14.844%                  |
 | Gen 2      | 10.156%                             | 29.175%                      | 5.078%                          | 14.453%                  |
@@ -26,7 +27,8 @@ This section describes the minimum odds for catching any given Pokemon when the 
 | Gens 5+    | 17.52%                              | 39.54%                       | 10.314%                         | 23.276%                  |
 
 ### Level 2
-|**Games**   |**Odds (non-legendary, full health)**|**Odds (non-legendary, 1 HP)**|**Odds (legendary, full health)**|**Odds (legendary, 1 HP)**|
+
+|  Games     |  Odds (non-legendary, full health)  |  Odds (non-legendary, 1 HP)  |  Odds (legendary, full health)  |  Odds (legendary, 1 HP)  |
 |------------|-------------------------------------|------------------------------|---------------------------------|--------------------------|
 | Gen 1      | 17.248%                             | 50.391%                      | 8.691%                          | 25.391%                  |
 | Gen 2      | 16.797%                             | 49.609%                      | 8.594%                          | 25%                      |
@@ -34,7 +36,8 @@ This section describes the minimum odds for catching any given Pokemon when the 
 | Gens 5+    | 26.164%                             | 59.048%                      | 15.556%                         | 35.109%                  |
 
 ### Level 3
-|**Games**   |**Odds (non-legendary, full health)**|**Odds (non-legendary, 1 HP)**|**Odds (legendary, full health)**|**Odds (legendary, 1 HP)**|
+
+|  Games     |  Odds (non-legendary, full health)  |  Odds (non-legendary, 1 HP)  |  Odds (legendary, full health)  |  Odds (legendary, 1 HP)  |
 |------------|-------------------------------------|------------------------------|---------------------------------|--------------------------|
 | Gen 1      | 26.875%                             | 78.516%                      | 13.504%                         | 39.453%                  |
 | Gen 2      | 26.172%                             | 77.344%                      | 13.281%                         | 38.672%                  |
@@ -42,7 +45,8 @@ This section describes the minimum odds for catching any given Pokemon when the 
 | Gens 5+    | 36.564%                             | 82.509%                      | 21.739%                         | 49.066%                  |
 
 ### Level 4
-|**Games**   |**Odds (full health)**|**Odds (1 HP)**|
+
+|  Games     |  Odds (full health)  |  Odds (1 HP)  |
 |------------|----------------------|---------------|
 | Gen 1      | 34.229%              | 100%          |
 | Gen 2      | 33.594%              | 98.438%       |

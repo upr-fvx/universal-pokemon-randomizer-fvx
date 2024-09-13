@@ -2,8 +2,8 @@
   link: /
 - name: About
   link: /about.html
-- name: Credits
-  link: /credits.html
+- name: Acknowledgements
+  link: /acks.html
 - name: Wiki
   link: /wikipages/home.html
 - name: Downloads

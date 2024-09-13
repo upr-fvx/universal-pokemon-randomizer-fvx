@@ -2,3 +2,9 @@
   link: /
 - name: About
   link: /about.html
+- name: Credits
+  link: /credits.html
+- name: Wiki
+  link: /wikipages/home.html
+- name: Downloads
+  link: https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases

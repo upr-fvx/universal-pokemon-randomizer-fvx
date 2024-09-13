@@ -1,12 +1,24 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title }}</title>
-	<link rel="stylesheet" href="/assets/css/styles.css">
-  </head>
-  <body>
-	{% include navigation.html %}
-    {{ content }}
-  </body>
+	<head>
+		<meta charset="utf-8">
+		<title>UPR FVX - {{ page.title }}</title>
+		<link rel="stylesheet" href="/assets/css/styles.css">
+	</head>
+	
+	<body>
+		<header>
+		{% include title.html %}
+		</header>
+		
+		{% include navigation.html %}
+		<main>
+		{{ content }}
+		</main>
+
+		<footer>
+		{% include siteinfo.html %}
+		</footer>
+	</body>
+  
 </html>

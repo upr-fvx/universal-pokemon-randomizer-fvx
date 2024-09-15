@@ -1283,7 +1283,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             byte[] trainersOfClassBytes = baos.toByteArray();
             int pointerOffset = trainerClassTableOffset + trainerClassNum * 2;
             int trainersPerThisClass = trainersPerClass[trainerClassNum];
-            new GBCDataRewriter<byte[]>().rewriteData(pointerOffset, trainersOfClassBytes, b -> b, oldDataOffset ->
+            new SameBankDataRewriter<byte[]>().rewriteData(pointerOffset, trainersOfClassBytes, b -> b, oldDataOffset ->
                     lengthOfTrainerClassAt(oldDataOffset, trainersPerThisClass));
         }
 
@@ -2634,7 +2634,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int i = 1; i <= pokemonCount; i++) {
             Species pk = pokes[pokeRBYToNumTable[i]];
             int pointerOffset = pointerTableOffset + (i - 1) * 2;
-            new GBCDataRewriter<Species>().rewriteData(pointerOffset, pk, this::pokemonToEvosAndMovesLearntBytes,
+            new SameBankDataRewriter<Species>().rewriteData(pointerOffset, pk, this::pokemonToEvosAndMovesLearntBytes,
                     oldDataOffset -> lengthOfDataWithTerminatorsAt(oldDataOffset,
                             GBConstants.evosAndMovesTerminator, 2));
         }

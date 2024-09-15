@@ -2676,7 +2676,7 @@ public class RandomizerGUI {
             tpRegularTrainersSpinner.setVisible(canAddPokesToRegular);
 
             boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
-            boolean canAddHeldItemsToImportant = romHandler.canAddPokemonToImportantTrainers();
+            boolean canAddHeldItemsToImportant = romHandler.canAddHeldItemsToImportantTrainers();
             boolean canAddHeldItemsToRegular = romHandler.canAddHeldItemsToRegularTrainers();
             boolean heldItemsAvailable = canAddHeldItemsToBoss || canAddHeldItemsToImportant || canAddHeldItemsToRegular;
 

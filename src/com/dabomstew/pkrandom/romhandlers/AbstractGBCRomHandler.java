@@ -37,7 +37,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * An extension of {@link AbstractGBRomHandler} used for Gen 1 and Gen 2.
@@ -280,6 +283,9 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         writeBytes(offset, image.toBytes());
     }
 
+    /**
+     * A {@link DataRewriter} for a GBC game.
+     */
     protected class GBCDataRewriter<E> extends DataRewriter<E> {
 
         public GBCDataRewriter() {
@@ -288,7 +294,12 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
     }
 
-    protected class SpecificBankDataRewriter<E> extends DataRewriter<E> {
+    /**
+     * A {@link GBCDataRewriter} for when the data is and must stay in a specific bank,
+     * but this bank not shared by the pointer. If the data must share the pointer's bank,
+     * use {@link SameBankDataRewriter}.
+     */
+    protected class SpecificBankDataRewriter<E> extends GBCDataRewriter<E> {
 
         int bank;
 
@@ -308,6 +319,12 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
     }
 
+    /**
+     * A {@link GBCDataRewriter} for when the data is and must stay in the same bank as the pointer.
+     * <b>This is almost always the right Rewriter</b> for data in a GBC game, since normal 2-byte pointers only
+     * reach within a single bank. If your code uses another Rewriter, make sure you understand why. If you don't
+     * understand why, you are probably wrong and should use this instead.
+     */
     protected class SameBankDataRewriter<E> extends GBCDataRewriter<E> {
 
         @Override

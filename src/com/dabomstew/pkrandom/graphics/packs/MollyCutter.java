@@ -20,24 +20,30 @@ public class MollyCutter {
     private static final int FISH_WIDTH = 16;
     private static final int FISH_HEIGHT = 8;
 
-    boolean monoSection;
+    final boolean monoSection;
+    final String[] names;
 
     public static void main(String[] args) throws IOException {
-        new MollyCutter().cut();
+        String[] names = new String[]{"dp", "Pt", "blu"};
+        new MollyCutter(true, names).cut();
+    }
+
+    private MollyCutter(boolean monoSection, String[] names) {
+        this.monoSection = monoSection;
+        this.names = names;
     }
 
     private void cut() throws IOException {
         BufferedImage in = ImageIO.read(new File("in.png"));
-        in = in.getSubimage(EXTRA_MARGIN, 0, in.getWidth() - EXTRA_MARGIN , in.getHeight());
+        in = in.getSubimage(EXTRA_MARGIN, 0, in.getWidth() - EXTRA_MARGIN, in.getHeight());
 
-        monoSection = in.getWidth() <= SECTION_WIDTH;
         int i = 1;
         while (in.getWidth() >= SECTION_WIDTH) {
             System.out.println("Section " + i);
-            BufferedImage front = in.getSubimage(5,3, FRONT_DIM, FRONT_DIM);
+            BufferedImage front = in.getSubimage(5, 3, FRONT_DIM, FRONT_DIM);
             ImageIO.write(front, "png", fromName("front", i));
 
-            BufferedImage back = in.getSubimage(64,11, BACK_DIM, BACK_DIM);
+            BufferedImage back = in.getSubimage(64, 11, BACK_DIM, BACK_DIM);
             ImageIO.write(back, "png", fromName("back", i));
 
             BufferedImage walk = new BufferedImage(OV_DIM, OV_DIM * 6, 1);
@@ -75,7 +81,7 @@ public class MollyCutter {
     }
 
     private File fromName(String name, int i) {
-        File f =  new File(name + (monoSection ? "" : "_" + i) + ".png");
+        File f = new File(name + (monoSection ? "" : "_" + names[i - 1]) + ".png");
         System.out.println(f);
         return f;
     }

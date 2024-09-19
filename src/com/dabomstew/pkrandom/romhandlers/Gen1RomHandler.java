@@ -2495,41 +2495,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getCurrentFieldTMs() {
-        List<Integer> itemOffsets = getItemOffsets();
-        List<Integer> fieldTMs = new ArrayList<>();
-
-        for (int offset : itemOffsets) {
-            int itemId = rom[offset] & 0xFF;
-            if (items.get(itemId).isTM()) {
-                fieldTMs.add(itemId - Gen1Constants.tmsStartIndex + 1);
-            }
-        }
-        return fieldTMs;
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        List<Integer> itemOffsets = getItemOffsets();
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-
-        for (int offset : itemOffsets) {
-            Item item = items.get(rom[offset] & 0xFF);
-            if (item.isTM()) {
-                // Replace this with a TM from the list
-                writeByte(offset, (byte) (iterTMs.next() + Gen1Constants.tmsStartIndex - 1));
-            }
-        }
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
+    public List<Item> getFieldItems() {
         List<Integer> itemOffsets = getItemOffsets();
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
             Item item = items.get(rom[offset] & 0xFF);
-            if (item.isAllowed() && !item.isTM()) {
+            if (item.isAllowed()) {
                 fieldItems.add(item);
             }
         }
@@ -2537,13 +2509,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setRegularFieldItems(List<Item> items) {
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
+
         List<Integer> itemOffsets = getItemOffsets();
-        Iterator<Item> iterItems = items.iterator();
+        Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffsets) {
             Item item = items.get(rom[offset] & 0xFF);
-            if (item.isAllowed() && !item.isTM()) {
+            if (item.isAllowed()) {
                 // Replace it
                 writeByte(offset, (byte) (iterItems.next().getId()));
             }

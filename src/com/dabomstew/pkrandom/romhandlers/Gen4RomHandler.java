@@ -4813,7 +4813,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return false;
 	}
 
-	private List<Integer> getFieldItems() {
+	private List<Integer> getFieldItemIds() {
 		List<Integer> fieldItems = new ArrayList<>();
 		// normal items
 		int scriptFile = romEntry.getIntValue("ItemBallsScriptOffset");
@@ -4855,7 +4855,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return fieldItems;
 	}
 
-	private void setFieldItems(List<Integer> fieldItems) {
+	private void writeFieldItemsIds(List<Integer> fieldItems) {
 		Iterator<Integer> iterItems = fieldItems.iterator();
 
 		// normal items
@@ -4907,66 +4907,36 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<Integer> getCurrentFieldTMs() {
-		List<Integer> fieldItems = this.getFieldItems();
-		List<Integer> fieldTMs = new ArrayList<>();
+	public List<Item> getFieldItems() {
+		List<Integer> fieldItemIds = getFieldItemIds();
+		List<Item> fieldItems = new ArrayList<>();
 
-		for (int id : fieldItems) {
-			if (items.get(id).isTM()) {
-				fieldTMs.add(id - Gen4Constants.tmItemOffset + 1);
-			}
-		}
-
-		return fieldTMs;
-	}
-
-	@Override
-	public void setFieldTMs(List<Integer> fieldTMs) {
-		List<Integer> fieldItems = this.getFieldItems();
-		int fiLength = fieldItems.size();
-		Iterator<Integer> iterTMs = fieldTMs.iterator();
-
-		for (int i = 0; i < fiLength; i++) {
-			int oldItem = fieldItems.get(i);
-			if (items.get(oldItem).isTM()) {
-				int newItem = iterTMs.next() + Gen4Constants.tmItemOffset - 1;
-				fieldItems.set(i, newItem);
-			}
-		}
-
-		this.setFieldItems(fieldItems);
-	}
-
-	@Override
-	public List<Item> getRegularFieldItems() {
-		List<Integer> fieldItems = getFieldItems();
-		List<Item> fieldRegItems = new ArrayList<>();
-
-		for (int id : fieldItems) {
+		for (int id : fieldItemIds) {
 			Item item = items.get(id);
-			if (item.isAllowed() && !item.isTM()) {
-				fieldRegItems.add(items.get(id));
+			if (item.isAllowed()) {
+				fieldItems.add(items.get(id));
 			}
 		}
 
-		return fieldRegItems;
+		return fieldItems;
 	}
 
 	@Override
-	public void setRegularFieldItems(List<Item> items) {
-		List<Integer> fieldItems = this.getFieldItems();
-		int fiLength = fieldItems.size();
-		Iterator<Item> iterNewItems = items.iterator();
+	public void setFieldItems(List<Item> fieldItems) {
+		checkFieldItemsTMsReplaceTMs(fieldItems);
 
-		for (int i = 0; i < fiLength; i++) {
-			int oldItem = fieldItems.get(i);
-			if (items.get(oldItem).isAllowed() && !items.get(oldItem).isTM()) {
-				int newItem = iterNewItems.next().getId();
-				fieldItems.set(i, newItem);
+		List<Integer> fieldItemIds = getFieldItemIds();
+		Iterator<Item> iterItems = fieldItems.iterator();
+
+		for (int i = 0; i < fieldItemIds.size(); i++) {
+			Item current = items.get(fieldItemIds.get(i));
+			if (current.isAllowed()) {
+				// Replace it
+				fieldItemIds.set(i, iterItems.next().getId());
 			}
 		}
 
-		this.setFieldItems(fieldItems);
+		this.writeFieldItemsIds(fieldItemIds);
 	}
 
 	@Override

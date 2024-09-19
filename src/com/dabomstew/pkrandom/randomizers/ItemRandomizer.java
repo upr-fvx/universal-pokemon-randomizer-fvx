@@ -2,13 +2,11 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.PickupItem;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ItemRandomizer extends Randomizer {
 
@@ -44,14 +42,24 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void shuffleFieldItems() {
-        List<Item> currentItems = romHandler.getRegularFieldItems();
-        List<Integer> currentTMs = romHandler.getCurrentFieldTMs();
+        // TMs and non-TMs must end up at the same indices. Complicates the algorithm somewhat.
+        List<Item> current = romHandler.getFieldItems();
+        
+        Stack<Item> tms = new Stack<>();
+        Stack<Item> nonTMs = new Stack<>();
+        for (Item item : current) {
+            (item.isTM() ? tms : nonTMs).push(item);
+        }
 
-        Collections.shuffle(currentItems, random);
-        Collections.shuffle(currentTMs, random);
+        Collections.shuffle(tms, random);
+        Collections.shuffle(nonTMs, random);
+        
+        List<Item> combined = new ArrayList<>(current.size());
+        for (Item item : current) {
+            combined.add((item.isTM() ? tms : nonTMs).pop());
+        }
 
-        romHandler.setRegularFieldItems(currentItems);
-        romHandler.setFieldTMs(currentTMs);
+        romHandler.setFieldItems(combined);
         fieldChangesMade = true;
     }
 

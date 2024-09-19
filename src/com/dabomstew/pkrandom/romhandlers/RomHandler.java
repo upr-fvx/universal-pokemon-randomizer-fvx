@@ -438,21 +438,19 @@ public interface RomHandler {
     // Field Items
     // ===========
 
-    // TMs on the field
-
     // "Required" seems to mean that you can only get the TM as a field item in vanilla.
     // Thus, when randomizing field items they must be included, or otherwise become unavailable.
     List<Integer> getRequiredFieldTMs();
 
-    List<Integer> getCurrentFieldTMs();
+    List<Item> getFieldItems();
 
-    void setFieldTMs(List<Integer> fieldTMs);
-
-    // Everything else
-
-    List<Item> getRegularFieldItems();
-
-    void setRegularFieldItems(List<Item> items);
+    /**
+     * Sets field items. Due to an old requirement from the Randomizer (unclear where it comes from, might be a design
+     * decision, might be necessary for some Gens to work), TMs must be replaced by TMs, and non-TMs by non-TMs.
+     * This means the TM-ness at each given index, must be the same as in the returned value of {@link #getFieldItems()}.
+     * If not followed, this will throw an {@link IllegalArgumentException}.
+     */
+    void setFieldItems(List<Item> items);
 
     // ============
     // Special Shops

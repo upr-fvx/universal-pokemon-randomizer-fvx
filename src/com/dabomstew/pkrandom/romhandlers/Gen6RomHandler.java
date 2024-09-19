@@ -3423,91 +3423,38 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return true;
     }
 
-    private int tmFromIndex(int index) {
-
-        if (index >= Gen6Constants.tmBlockOneOffset
-                && index < Gen6Constants.tmBlockOneOffset + Gen6Constants.tmBlockOneCount) {
-            return index - (Gen6Constants.tmBlockOneOffset - 1);
-        } else if (index >= Gen6Constants.tmBlockTwoOffset
-                && index < Gen6Constants.tmBlockTwoOffset + Gen6Constants.tmBlockTwoCount) {
-            return (index + Gen6Constants.tmBlockOneCount) - (Gen6Constants.tmBlockTwoOffset - 1);
-        } else {
-            return (index + Gen6Constants.tmBlockOneCount + Gen6Constants.tmBlockTwoCount) - (Gen6Constants.tmBlockThreeOffset - 1);
-        }
-    }
-
-    private int indexFromTM(int tm) {
-        if (tm >= 1 && tm <= Gen6Constants.tmBlockOneCount) {
-            return tm + (Gen6Constants.tmBlockOneOffset - 1);
-        } else if (tm > Gen6Constants.tmBlockOneCount && tm <= Gen6Constants.tmBlockOneCount + Gen6Constants.tmBlockTwoCount) {
-            return tm + (Gen6Constants.tmBlockTwoOffset - 1 - Gen6Constants.tmBlockOneCount);
-        } else {
-            return tm + (Gen6Constants.tmBlockThreeOffset - 1 - (Gen6Constants.tmBlockOneCount + Gen6Constants.tmBlockTwoCount));
-        }
-    }
 
     @Override
-    public List<Integer> getCurrentFieldTMs() {
-        List<Integer> fieldItems = this.getFieldItems();
-        List<Integer> fieldTMs = new ArrayList<>();
+    public List<Item> getFieldItems() {
+        List<Integer> fieldItemsIds = getFieldItemIds();
+        List<Item> fieldItems = new ArrayList<>();
 
-        for (int id : fieldItems) {
-            if (items.get(id).isTM()) {
-                fieldTMs.add(tmFromIndex(id));
-            }
-        }
-
-        return fieldTMs;
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        List<Integer> fieldItems = this.getFieldItems();
-        int fiLength = fieldItems.size();
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-
-        for (int i = 0; i < fiLength; i++) {
-            int oldItem = fieldItems.get(i);
-            if (items.get(oldItem).isTM()) {
-                int newItem = indexFromTM(iterTMs.next());
-                fieldItems.set(i, newItem);
-            }
-        }
-
-        this.setFieldItems(fieldItems);
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
-        List<Integer> fieldItems = getFieldItems();
-        List<Item> fieldRegItems = new ArrayList<>();
-
-        for (int id : fieldItems) {
+        for (int id : fieldItemsIds) {
             Item item = items.get(id);
-            if (item.isAllowed() && !item.isTM()) {
-                fieldRegItems.add(item);
+            if (item.isAllowed()) {
+                fieldItems.add(item);
             }
         }
 
-        return fieldRegItems;
+        return fieldItems;
     }
 
     @Override
-    public void setRegularFieldItems(List<Item> items) {
-        List<Integer> fieldItems = this.getFieldItems();
-        int fiLength = fieldItems.size();
-        Iterator<Item> iterNewItems = items.iterator();
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
 
-        for (int i = 0; i < fiLength; i++) {
-            int oldItem = fieldItems.get(i);
+        List<Integer> fieldItemIds = this.getFieldItemIds();
+        Iterator<Item> iterItems = fieldItems.iterator();
+
+        for (int i = 0; i < fieldItemIds.size(); i++) {
+            Item current = items.get(fieldItemIds.get(i));
             // TODO: why exclude master ball here?
-            if (items.get(oldItem).isAllowed() && !items.get(oldItem).isTM() && oldItem != ItemIDs.masterBall) {
-                int newItem = iterNewItems.next().getId();
-                fieldItems.set(i, newItem);
+            if (current.isAllowed() && current.getId() != ItemIDs.masterBall) {
+                fieldItemIds.set(i, iterItems.next().getId());
             }
         }
 
-        this.setFieldItems(fieldItems);
+        this.setFieldItemIds(fieldItemIds);
     }
 
     @Override
@@ -3515,7 +3462,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return Gen6Constants.getRequiredFieldTMs(romEntry.getRomType());
     }
 
-    public List<Integer> getFieldItems() {
+    public List<Integer> getFieldItemIds() {
         List<Integer> fieldItems = new ArrayList<>();
         try {
             // normal items
@@ -3577,7 +3524,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return fieldMegaStones;
     }
 
-    public void setFieldItems(List<Integer> items) {
+    public void setFieldItemIds(List<Integer> items) {
         try {
             Iterator<Integer> iterItems = items.iterator();
             // normal items

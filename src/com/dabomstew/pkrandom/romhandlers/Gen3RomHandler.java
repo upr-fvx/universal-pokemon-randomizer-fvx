@@ -3671,54 +3671,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getCurrentFieldTMs() {
-        if (!mapLoadingDone) {
-            preprocessMaps();
-            mapLoadingDone = true;
-        }
-        List<Integer> fieldTMs = new ArrayList<>();
-
-        for (int offset : itemOffs) {
-            int itemId = readWord(offset);
-            if (items.get(itemId).isTM()) {
-                int thisTM = itemId - Gen3Constants.tmItemOffset + 1;
-                // hack for repeat TMs
-                if (!fieldTMs.contains(thisTM)) {
-                    fieldTMs.add(thisTM);
-                }
-            }
-        }
-        return fieldTMs;
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        if (!mapLoadingDone) {
-            preprocessMaps();
-            mapLoadingDone = true;
-        }
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-        int[] givenTMs = new int[512];
-
-        for (int offset : itemOffs) {
-            int itemId = readWord(offset);
-            if (items.get(itemId).isTM()) {
-                // Cache replaced TMs to duplicate repeats
-                if (givenTMs[itemId] != 0) {
-                    writeByte(offset, (byte) givenTMs[itemId]);
-                } else {
-                    // Replace this with a TM from the list
-                    int tm = iterTMs.next();
-                    tm += Gen3Constants.tmItemOffset - 1;
-                    givenTMs[itemId] = tm;
-                    writeWord(offset, tm);
-                }
-            }
-        }
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
+    public List<Item> getFieldItems() {
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;
@@ -3727,7 +3680,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         for (int offset : itemOffs) {
             Item item = items.get(readWord(offset));
-            if (item.isAllowed() && !item.isTM()) {
+            if (item.isAllowed()) {
                 fieldItems.add(item);
             }
         }
@@ -3735,16 +3688,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setRegularFieldItems(List<Item> items) {
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
+
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;
         }
-        Iterator<Item> iterItems = items.iterator();
+        Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffs) {
             Item current = items.get(readWord(offset));
-            if (current.isAllowed() && !current.isTM()) {
+            if (current.isAllowed()) {
                 // Replace it
                 writeWord(offset, iterItems.next().getId());
             }

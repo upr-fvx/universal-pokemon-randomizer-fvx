@@ -245,6 +245,15 @@ public abstract class AbstractRomHandler implements RomHandler {
                 true, additional));
     }
 
+    protected void checkFieldItemsTMsReplaceTMs(List<Item> replacement) {
+        List<Item> current = getFieldItems();
+        for (int i = 0; i < current.size(); i++) {
+            if (current.get(i).isTM() != replacement.get(i).isTM()) {
+                throw new IllegalArgumentException("TMs must replace TMs, non-TMs must replace non-TMs");
+            }
+        }
+    }
+
     /* Helper methods used by subclasses and/or this class */
 
     protected void applyCamelCaseNames() {

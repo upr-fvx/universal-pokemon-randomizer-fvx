@@ -2619,72 +2619,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getCurrentFieldTMs() {
-        List<Integer> fieldTMs = new ArrayList<>();
-
-        for (int offset : itemOffs) {
-            int itemId = rom[offset] & 0xFF;
-            if (items.get(itemId).isTM()) {
-                int thisTM;
-                if (itemId >= Gen2Constants.tmBlockOneIndex
-                        && itemId < Gen2Constants.tmBlockOneIndex + Gen2Constants.tmBlockOneSize) {
-                    thisTM = itemId - Gen2Constants.tmBlockOneIndex + 1;
-                } else if (itemId >= Gen2Constants.tmBlockTwoIndex
-                        && itemId < Gen2Constants.tmBlockTwoIndex + Gen2Constants.tmBlockTwoSize) {
-                    thisTM = itemId - Gen2Constants.tmBlockTwoIndex + 1 + Gen2Constants.tmBlockOneSize; // TM
-                    // block
-                    // 2
-                    // offset
-                } else {
-                    thisTM = itemId - Gen2Constants.tmBlockThreeIndex + 1 + Gen2Constants.tmBlockOneSize
-                            + Gen2Constants.tmBlockTwoSize; // TM block 3 offset
-                }
-                // hack for the bug catching contest repeat TM28
-                if (!fieldTMs.contains(thisTM)) {
-                    fieldTMs.add(thisTM);
-                }
-            }
-        }
-        return fieldTMs;
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-        int[] givenTMs = new int[256];
-
-        for (int offset : itemOffs) {
-            int itemId = rom[offset] & 0xFF;
-            if (items.get(itemId).isTM()) {
-                // Cache replaced TMs to duplicate bug catching contest TM
-                if (givenTMs[itemId] != 0) {
-                    writeByte(offset, (byte) givenTMs[itemId]);
-                } else {
-                    // Replace this with a TM from the list
-                    int tm = iterTMs.next();
-                    if (tm >= 1 && tm <= Gen2Constants.tmBlockOneSize) {
-                        tm += Gen2Constants.tmBlockOneIndex - 1;
-                    } else if (tm >= Gen2Constants.tmBlockOneSize + 1
-                            && tm <= Gen2Constants.tmBlockOneSize + Gen2Constants.tmBlockTwoSize) {
-                        tm += Gen2Constants.tmBlockTwoIndex - 1 - Gen2Constants.tmBlockOneSize;
-                    } else {
-                        tm += Gen2Constants.tmBlockThreeIndex - 1 - Gen2Constants.tmBlockOneSize
-                                - Gen2Constants.tmBlockTwoSize;
-                    }
-                    givenTMs[itemId] = tm;
-                    writeByte(offset, (byte) tm);
-                }
-            }
-        }
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
+    public List<Item> getFieldItems() {
+        // TODO: older code ensured TMs with multiple occurances (TM28 in National Park/Bug Catching Contest)
+        //  would be replaced by the same item. Is this something we're interested in re-implementing?
+        //  Similar code was also found in Gen3RomHandler and Gen7RomHandler.
+        //  It might be the case that other non-TMs also share pickup flags, in which case these should probably be
+        //  written together.
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
             Item item = items.get(rom[offset] & 0xFF);
-            if (item.isAllowed() && !item.isTM()) {
+            if (item.isAllowed()) {
                 fieldItems.add(item);
             }
         }
@@ -2692,12 +2637,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setRegularFieldItems(List<Item> items) {
-        Iterator<Item> iterItems = items.iterator();
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
+
+        Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffs) {
             Item current = items.get(rom[offset] & 0xFF);
-            if (current.isAllowed() && !current.isTM()) {
+            if (current.isAllowed()) {
                 // Replace it
                 writeByte(offset, (byte) iterItems.next().getId());
             }

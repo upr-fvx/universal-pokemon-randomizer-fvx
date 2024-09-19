@@ -3268,7 +3268,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return false;
     }
 
-    private List<Integer> getFieldItems() {
+    private List<Integer> getFieldItemIds() {
         List<Integer> fieldItems = new ArrayList<>();
         // normal items
         int scriptFileNormal = romEntry.getIntValue("ItemBallsScriptOffset");
@@ -3336,7 +3336,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return fieldItems;
     }
 
-    private void setFieldItems(List<Integer> fieldItems) {
+    private void setFieldItemIds(List<Integer> fieldItems) {
         Iterator<Integer> iterItems = fieldItems.iterator();
 
         // normal items
@@ -3403,84 +3403,37 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private int tmFromIndex(int index) {
-        if (index >= Gen5Constants.tmBlockOneOffset
-                && index < Gen5Constants.tmBlockOneOffset + Gen5Constants.tmBlockOneCount) {
-            return index - (Gen5Constants.tmBlockOneOffset - 1);
-        } else {
-            return (index + Gen5Constants.tmBlockOneCount) - (Gen5Constants.tmBlockTwoOffset - 1);
-        }
-    }
-
-    private int indexFromTM(int tm) {
-        if (tm >= 1 && tm <= Gen5Constants.tmBlockOneCount) {
-            return tm + (Gen5Constants.tmBlockOneOffset - 1);
-        } else {
-            return tm + (Gen5Constants.tmBlockTwoOffset - 1 - Gen5Constants.tmBlockOneCount);
-        }
-    }
-
     @Override
-    public List<Integer> getCurrentFieldTMs() {
-        List<Integer> fieldItems = this.getFieldItems();
-        List<Integer> fieldTMs = new ArrayList<>();
+    public List<Item> getFieldItems() {
+        List<Integer> fieldItemsIds = getFieldItemIds();
+        List<Item> fieldItems = new ArrayList<>();
 
-        for (int id : fieldItems) {
-            if (items.get(id).isTM()) {
-                fieldTMs.add(tmFromIndex(id));
-            }
-        }
-
-        return fieldTMs;
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        List<Integer> fieldItems = this.getFieldItems();
-        int fiLength = fieldItems.size();
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-
-        for (int i = 0; i < fiLength; i++) {
-            int oldItem = fieldItems.get(i);
-            if (items.get(oldItem).isTM()) {
-                int newItem = indexFromTM(iterTMs.next());
-                fieldItems.set(i, newItem);
-            }
-        }
-
-        this.setFieldItems(fieldItems);
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
-        List<Integer> fieldItems = getFieldItems();
-        List<Item> fieldRegItems = new ArrayList<>();
-
-        for (int id : fieldItems) {
+        for (int id : fieldItemsIds) {
             Item item = items.get(id);
-            if (item.isAllowed() && !item.isTM()) {
-                fieldRegItems.add(item);
+            if (item.isAllowed()) {
+                fieldItems.add(item);
             }
         }
 
-        return fieldRegItems;
+        return fieldItems;
     }
 
     @Override
-    public void setRegularFieldItems(List<Item> items) {
-        List<Integer> fieldItems = getFieldItems();
-        int fiLength = fieldItems.size();
-        Iterator<Item> iterNewItems = items.iterator();
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
 
-        for (int i = 0; i < fiLength; i++) {
-            Item oldItem = items.get(fieldItems.get(i));
-            if (oldItem.isAllowed() && !oldItem.isTM()) {
-                int newItem = iterNewItems.next().getId();
-                fieldItems.set(i, newItem);
+        List<Integer> fieldItemsIds = getFieldItemIds();
+        Iterator<Item> iterItems = fieldItems.iterator();
+
+        for (int i = 0; i < fieldItemsIds.size(); i++) {
+            Item current = items.get(fieldItemsIds.get(i));
+            if (current.isAllowed()) {
+                // Replace it
+                fieldItemsIds.set(i, iterItems.next().getId());
             }
         }
 
-        this.setFieldItems(fieldItems);
+        this.setFieldItemIds(fieldItemsIds);
     }
 
     @Override

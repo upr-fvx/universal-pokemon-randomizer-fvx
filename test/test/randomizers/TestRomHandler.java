@@ -924,22 +924,12 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getCurrentFieldTMs() {
+    public List<Item> getFieldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Item> getRegularFieldItems() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setRegularFieldItems(List<Item> items) {
+    public void setFieldItems(List<Item> items) {
         throw new NotImplementedException();
     }
 

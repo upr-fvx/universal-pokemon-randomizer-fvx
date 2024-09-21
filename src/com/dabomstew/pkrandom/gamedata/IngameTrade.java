@@ -24,6 +24,9 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class IngameTrade {
 
     public int id;
@@ -38,4 +41,27 @@ public class IngameTrade {
 
     public int item = 0;
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof IngameTrade) {
+            IngameTrade other = (IngameTrade) o;
+            return id == other.id && otId == other.otId && item == other.item
+                    && requestedSpecies.equals(other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
+                    && nickname.equals(other.nickname) && Objects.equals(otName, other.otName)
+                    && Arrays.equals(ivs, other.ivs);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "IngameTrade(id=" + id + ", requested=" + requestedSpecies + ", given=" + givenSpecies +
+                ", nickname=" + nickname + ", otName=" + otName + ", otId=" + otId + ", ivs=" + Arrays.toString(ivs) +
+                ", item=" + item + ")";
+    }
 }

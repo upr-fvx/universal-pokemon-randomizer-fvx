@@ -20,6 +20,9 @@ public class MollyCutter {
     private static final int FISH_WIDTH = 16;
     private static final int FISH_HEIGHT = 8;
 
+    private static final int CYAN = 0xFF00FFFF;
+    private static final int WHITE = 0xFFFFFFFF;
+
     final boolean monoSection;
     final String[] names;
 
@@ -47,30 +50,33 @@ public class MollyCutter {
             ImageIO.write(back, "png", fromName("back", i));
 
             BufferedImage walk = new BufferedImage(OV_DIM, OV_DIM * 6, 1);
-            Graphics walkG = walk.getGraphics();
+            Graphics2D walkG = walk.createGraphics();
             walkG.drawImage(in.getSubimage(8, 62, OV_DIM, OV_DIM), 0, 0, null);
             walkG.drawImage(in.getSubimage(25, 62, OV_DIM, OV_DIM), 0, OV_DIM, null);
             walkG.drawImage(in.getSubimage(42, 62, OV_DIM, OV_DIM), 0, OV_DIM * 2, null);
             walkG.drawImage(in.getSubimage(8, 79, OV_DIM, OV_DIM), 0, OV_DIM * 3, null);
             walkG.drawImage(in.getSubimage(25, 79, OV_DIM, OV_DIM), 0, OV_DIM * 4, null);
             walkG.drawImage(in.getSubimage(42, 79, OV_DIM, OV_DIM), 0, OV_DIM * 5, null);
+            replaceCyanPixelsWithWhite(walk);
             ImageIO.write(walk, "png", fromName("walk", i));
 
             BufferedImage bike = new BufferedImage(OV_DIM, OV_DIM * 6, 1);
-            Graphics bikeG = bike.getGraphics();
+            Graphics2D bikeG = bike.createGraphics();
             bikeG.drawImage(in.getSubimage(59, 62, OV_DIM, OV_DIM), 0, 0, null);
             bikeG.drawImage(in.getSubimage(76, 62, OV_DIM, OV_DIM), 0, OV_DIM, null);
             bikeG.drawImage(in.getSubimage(93, 62, OV_DIM, OV_DIM), 0, OV_DIM * 2, null);
             bikeG.drawImage(in.getSubimage(59, 79, OV_DIM, OV_DIM), 0, OV_DIM * 3, null);
             bikeG.drawImage(in.getSubimage(76, 79, OV_DIM, OV_DIM), 0, OV_DIM * 4, null);
             bikeG.drawImage(in.getSubimage(93, 79, OV_DIM, OV_DIM), 0, OV_DIM * 5, null);
+            replaceCyanPixelsWithWhite(bike);
             ImageIO.write(bike, "png", fromName("bike", i));
 
             BufferedImage fish = new BufferedImage(FISH_WIDTH, FISH_HEIGHT * 3, 1);
-            Graphics fishG = fish.getGraphics();
+            Graphics2D fishG = fish.createGraphics();
             fishG.drawImage(in.getSubimage(8, 104, FISH_WIDTH, FISH_HEIGHT), 0, 0, null);
             fishG.drawImage(in.getSubimage(25, 112, FISH_WIDTH, FISH_HEIGHT), 0, FISH_HEIGHT, null);
             fishG.drawImage(in.getSubimage(50, 112, FISH_WIDTH, FISH_HEIGHT), 0, FISH_HEIGHT * 2, null);
+            replaceCyanPixelsWithWhite(fish);
             ImageIO.write(fish, "png", fromName("fish", i));
 
             in = in.getSubimage(SECTION_WIDTH, 0, in.getWidth() - SECTION_WIDTH, in.getHeight());
@@ -84,6 +90,16 @@ public class MollyCutter {
         File f = new File(name + (monoSection ? "" : "_" + names[i - 1]) + ".png");
         System.out.println(f);
         return f;
+    }
+
+    private void replaceCyanPixelsWithWhite(BufferedImage bim) {
+        for (int x = 0; x < bim.getWidth(); x++) {
+            for (int y = 0; y < bim.getHeight(); y++) {
+                if (bim.getRGB(x, y) == CYAN) {
+                    bim.setRGB(x, y, WHITE);
+                }
+            }
+        }
     }
 
 }

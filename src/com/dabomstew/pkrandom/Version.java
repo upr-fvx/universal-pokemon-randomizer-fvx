@@ -30,12 +30,12 @@ public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the
     //  forking-and-then-merging that is bound to happen with an open-source project like this.
 
-    // LAST_VERSION is a bit superfluous, but refactoring VERSION/VERSION_STRING felt like a project for later
+    // LATEST_VERSION is a bit superfluous, but refactoring VERSION/VERSION_STRING felt like a project for later
     // id should increment by 1 for new version (note the current system has an upper limit of 999)
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST_VERSION = new Version(404, "1.0.2", "FVX");
+    public static final Version LATEST_VERSION = new Version(405, "1.0.3", "FVX");
     public static final int VERSION = LATEST_VERSION.id;
     public static final String VERSION_STRING = LATEST_VERSION.name;
 
@@ -102,7 +102,8 @@ public class Version {
     public static final Version FVX_0_1_1 = new Version(401, "0.1.1", "FVX");
     public static final Version FVX_1_0_0 = new Version(402, "1.0.0", "FVX");
     public static final Version FVX_1_0_1 = new Version(403, "1.0.1", "FVX");
-    public static final Version FVX_1_0_2 = LATEST_VERSION;
+    public static final Version FVX_1_0_2 = new Version(404, "1.0.2", "FVX");
+    public static final Version FVX_1_0_3 = LATEST_VERSION;
 
     // add versions to the bottom as you create them
 
@@ -111,7 +112,7 @@ public class Version {
             v1_7_1, v1_7_2, v3_1_0, v4_0_0, v4_0_1, v4_0_2, v4_1_0, v4_2_0, v4_2_1, v4_3_0, v4_4_0, v4_5_0, v4_5_1,
             v4_6_0, CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0,
             Vb_0_10_1, Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0,
-            FVX_1_0_1, FVX_1_0_2
+            FVX_1_0_1, FVX_1_0_2, FVX_1_0_3
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {

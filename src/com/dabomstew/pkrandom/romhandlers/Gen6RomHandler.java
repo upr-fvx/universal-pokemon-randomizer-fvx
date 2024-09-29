@@ -3458,8 +3458,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        return Gen6Constants.getRequiredFieldTMs(romEntry.getRomType());
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(Gen6Constants.getRequiredFieldTMs(romEntry.getRomType()));
     }
 
     public List<Integer> getFieldItemIds() {

@@ -657,11 +657,16 @@ public class Gen4Constants {
 
     public static final int tmsStartIndex = ItemIDs.tm01;
 
-    public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(2, 3, 5, 9, 12, 19, 23, 28,
-            34, 39, 41, 43, 46, 47, 49, 50, 62, 69, 79, 80, 82, 84, 85, 87);
+    public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm19, ItemIDs.tm23, ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm39,
+            ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62,
+            ItemIDs.tm69, ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm82, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm87);
 
-    public static final List<Integer> ptRequiredFieldTMs = Arrays.asList(2, 3, 5, 7, 9, 11, 12, 18, 19,
-            23, 28, 34, 37, 39, 41, 43, 46, 47, 49, 50, 62, 69, 79, 80, 82, 84, 85, 87);
+    public static final List<Integer> ptRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm07, ItemIDs.tm09, ItemIDs.tm11, ItemIDs.tm12, ItemIDs.tm18, ItemIDs.tm19, ItemIDs.tm23,
+            ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm37, ItemIDs.tm39, ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46,
+            ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62, ItemIDs.tm69, ItemIDs.tm79, ItemIDs.tm80,
+            ItemIDs.tm82, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm87);
 
     public static final List<Integer> dpptFieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,

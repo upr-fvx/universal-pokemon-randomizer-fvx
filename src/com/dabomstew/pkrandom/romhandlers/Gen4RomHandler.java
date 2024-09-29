@@ -4896,14 +4896,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<Integer> getRequiredFieldTMs() {
+	public Set<Item> getRequiredFieldTMs() {
+		List<Integer> ids;
 		if (romEntry.getRomType() == Gen4Constants.Type_DP) {
-			return Gen4Constants.dpRequiredFieldTMs;
+			ids = Gen4Constants.dpRequiredFieldTMs;
 		} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
 			// same as DP just we have to keep the weather TMs
-			return Gen4Constants.ptRequiredFieldTMs;
+			ids = Gen4Constants.ptRequiredFieldTMs;
+		} else {
+			ids = new ArrayList<>();
 		}
-		return new ArrayList<>();
+		return itemIdsToSet(ids);
 	}
 
 	@Override

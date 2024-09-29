@@ -314,7 +314,6 @@ public class Gen6Constants {
             "Lilycove Dept. Store 4F Left (TMs)",
             "Lilycove Dept. Store 4F Right (TMs)");
 
-
     public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone, ItemIDs.fireStone,
             ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone, ItemIDs.shinyStone, ItemIDs.duskStone, ItemIDs.dawnStone,
             ItemIDs.ovalStone, ItemIDs.kingsRock, ItemIDs.deepSeaTooth, ItemIDs.deepSeaScale, ItemIDs.metalCoat, ItemIDs.dragonScale,
@@ -322,11 +321,18 @@ public class Gen6Constants {
             ItemIDs.razorClaw, ItemIDs.razorFang, ItemIDs.prismScale, ItemIDs.whippedDream, ItemIDs.sachet);
 
     private static final List<Integer> requiredFieldTMsXY = Arrays.asList(
-            1, 9, 40, 19, 65, 73, 69, 74, 81, 57, 61, 97, 95, 71, 79, 30, 31, 36, 53, 29, 22, 3, 2, 80, 26);
+            ItemIDs.tm01, ItemIDs.tm09, ItemIDs.tm40, ItemIDs.tm19, ItemIDs.tm65, ItemIDs.tm73, ItemIDs.tm69,
+            ItemIDs.tm74, ItemIDs.tm81, ItemIDs.tm57, ItemIDs.tm61, ItemIDs.tm97, ItemIDs.tm95, ItemIDs.tm71,
+            ItemIDs.tm79, ItemIDs.tm30, ItemIDs.tm31, ItemIDs.tm36, ItemIDs.tm53, ItemIDs.tm29, ItemIDs.tm22,
+            ItemIDs.tm03, ItemIDs.tm02, ItemIDs.tm80, ItemIDs.tm26);
 
     private static final List<Integer> requiredFieldTMsORAS = Arrays.asList(
-            37, 32, 62, 11, 86, 29, 59, 43, 53, 69, 6, 2, 13, 18, 22, 61, 30, 97, 7, 90, 26, 55, 34, 35, 64, 65, 66,
-            74, 79, 80, 81, 84, 89, 91, 93, 95);
+            ItemIDs.tm37, ItemIDs.tm32, ItemIDs.tm62, ItemIDs.tm11, ItemIDs.tm86, ItemIDs.tm29, ItemIDs.tm59,
+            ItemIDs.tm43, ItemIDs.tm53, ItemIDs.tm69, ItemIDs.tm06, ItemIDs.tm02, ItemIDs.tm13, ItemIDs.tm18,
+            ItemIDs.tm22, ItemIDs.tm61, ItemIDs.tm30, ItemIDs.tm97, ItemIDs.tm07, ItemIDs.tm90, ItemIDs.tm26,
+            ItemIDs.tm55, ItemIDs.tm34, ItemIDs.tm35, ItemIDs.tm64, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm74,
+            ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm81, ItemIDs.tm84, ItemIDs.tm89, ItemIDs.tm91, ItemIDs.tm93,
+            ItemIDs.tm95);
 
     public static final List<Integer> fieldMovesXY = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,

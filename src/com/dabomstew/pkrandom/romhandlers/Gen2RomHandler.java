@@ -2614,8 +2614,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        return Gen2Constants.requiredFieldTMs;
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(Gen2Constants.requiredFieldTMs);
     }
 
     @Override

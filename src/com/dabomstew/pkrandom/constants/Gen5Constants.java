@@ -348,13 +348,20 @@ public class Gen5Constants {
             ItemIDs.upgrade, ItemIDs.protector, ItemIDs.electirizer, ItemIDs.magmarizer, ItemIDs.dubiousDisc, ItemIDs.reaperCloth,
             ItemIDs.razorClaw, ItemIDs.razorFang, ItemIDs.prismScale);
 
-    public static final List<Integer> bw1RequiredFieldTMs = Arrays.asList(2, 3, 5, 6, 9, 12, 13, 19,
-            22, 24, 26, 29, 30, 35, 36, 39, 41, 46, 47, 50, 52, 53, 55, 58, 61, 63, 65, 66, 71, 80, 81, 84, 85, 86, 90,
-            91, 92, 93);
+    public static final List<Integer> bw1RequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm06, ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm13, ItemIDs.tm19, ItemIDs.tm22, ItemIDs.tm24,
+            ItemIDs.tm26, ItemIDs.tm29, ItemIDs.tm30, ItemIDs.tm35, ItemIDs.tm36, ItemIDs.tm39, ItemIDs.tm41,
+            ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm50, ItemIDs.tm52, ItemIDs.tm53, ItemIDs.tm55, ItemIDs.tm58,
+            ItemIDs.tm61, ItemIDs.tm63, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm71, ItemIDs.tm80, ItemIDs.tm81,
+            ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm86, ItemIDs.tm90, ItemIDs.tm91, ItemIDs.tm92, ItemIDs.tm93);
 
-    public static final List<Integer> bw2RequiredFieldTMs = Arrays.asList(1, 2, 3, 5, 6, 12, 13, 19,
-            22, 26, 28, 29, 30, 36, 39, 41, 46, 47, 50, 52, 53, 56, 58, 61, 63, 65, 66, 67, 69, 71, 80, 81, 84, 85, 86,
-            90, 91, 92, 93);
+    public static final List<Integer> bw2RequiredFieldTMs = Arrays.asList(ItemIDs.tm01, ItemIDs.tm02, ItemIDs.tm03,
+            ItemIDs.tm05, ItemIDs.tm06, ItemIDs.tm12, ItemIDs.tm13, ItemIDs.tm19, ItemIDs.tm22, ItemIDs.tm26,
+            ItemIDs.tm28, ItemIDs.tm29, ItemIDs.tm30, ItemIDs.tm36, ItemIDs.tm39, ItemIDs.tm41, ItemIDs.tm46,
+            ItemIDs.tm47, ItemIDs.tm50, ItemIDs.tm52, ItemIDs.tm53, ItemIDs.tm56, ItemIDs.tm58, ItemIDs.tm61,
+            ItemIDs.tm63, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm67, ItemIDs.tm69, ItemIDs.tm71, ItemIDs.tm80,
+            ItemIDs.tm81, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm86, ItemIDs.tm90, ItemIDs.tm91, ItemIDs.tm92,
+            ItemIDs.tm93);
 
     public static final List<Integer> bw1EarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 

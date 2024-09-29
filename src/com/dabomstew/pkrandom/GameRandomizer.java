@@ -646,8 +646,11 @@ public class GameRandomizer {
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
         }
+        if (settings.isBalanceShopPrices()) {
+            romHandler.setBalancedShopPrices();
+        }
 
-        if (itemRandomizer.isShopChangesMade()) {
+        if (itemRandomizer.isShopChangesMade() || settings.isBalanceShopPrices()) {
             logShops(log);
         }
 

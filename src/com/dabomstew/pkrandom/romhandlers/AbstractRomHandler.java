@@ -470,7 +470,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public Set<Item> getAllowedItems() {
-        return getItems().stream().filter(Item::isAllowed).collect(Collectors.toSet());
+        return getItems().stream().filter(item -> item != null && item.isAllowed()).collect(Collectors.toSet());
     }
 
     @Override

@@ -2471,7 +2471,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
         for (int i = Gen2Constants.tmsStartIndex; i < Gen2Constants.tmsStartIndex + Gen2Constants.tmCount; i++) {
-            items.get(i).setTM(true);
+            items.get(i).setTM(true); // TODO: fix TM marking
         }
     }
 

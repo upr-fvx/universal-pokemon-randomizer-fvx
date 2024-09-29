@@ -1,6 +1,7 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.PickupItem;
 import com.dabomstew.pkrandom.gamedata.Shop;
@@ -10,8 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemRandomizer extends Randomizer {
-
-    private final Map<Integer, Integer> itemPlacementHistory = new HashMap<>();
 
     private boolean fieldChangesMade;
     private boolean shopChangesMade;
@@ -42,19 +41,28 @@ public class ItemRandomizer extends Randomizer {
         return pickupChangesMade;
     }
 
-    public void shuffleFieldItems() {
+    public void randomizeFieldItems() {
         // TMs and non-TMs must end up at the same indices. Complicates the algorithm somewhat.
         List<Item> current = romHandler.getFieldItems();
-        
+
         Stack<Item> tms = new Stack<>();
         Stack<Item> nonTMs = new Stack<>();
         for (Item item : current) {
             (item.isTM() ? tms : nonTMs).push(item);
         }
 
-        Collections.shuffle(tms, random);
-        Collections.shuffle(nonTMs, random);
-        
+        switch (settings.getFieldItemsMod()) {
+            case SHUFFLE:
+                Collections.shuffle(tms, random);
+                Collections.shuffle(nonTMs, random);
+                break;
+            case RANDOM:
+            case RANDOM_EVEN:
+                randomizeTMFieldItems(tms);
+                randomizeNonTMFieldItems(nonTMs);
+                break;
+        }
+
         List<Item> combined = new ArrayList<>(current.size());
         for (Item item : current) {
             combined.add((item.isTM() ? tms : nonTMs).pop());
@@ -64,103 +72,70 @@ public class ItemRandomizer extends Randomizer {
         fieldChangesMade = true;
     }
 
-    public void randomizeFieldItems() {
-//        boolean banBadItems = settings.isBanBadRandomFieldItems();
-//        boolean distributeItemsControl = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
-//        boolean uniqueItems = !settings.isBalanceShopPrices(); // why is uniqueItems related to shop prices???
-//
-//        List<Item> allItems = romHandler.getItems();
-//
-//        ItemList possibleItems = banBadItems ? romHandler.getNonBadItems().copy() : romHandler.getAllowedItems().copy();
-//        List<Item> currentItems = romHandler.getRegularFieldItems();
-//        Set<Item> uniqueNoSellItems = romHandler.getUniqueNoSellItems();
-//
-//        List<Integer> currentTMs = romHandler.getCurrentFieldTMs();
-//        List<Integer> requiredTMs = romHandler.getRequiredFieldTMs();
-//
-//        // System.out.println("distributeItemsControl: "+ distributeItemsControl);
-//
-//        int fieldItemCount = currentItems.size();
-//        int fieldTMCount = currentTMs.size();
-//        int reqTMCount = requiredTMs.size();
-//        int totalTMCount = romHandler.getTMCount();
-//
-//        List<Item> newItems = new ArrayList<>();
-//        List<Integer> newTMs = new ArrayList<>(requiredTMs);
-//
-//        // List<Integer> chosenItems = new ArrayList<Integer>(); // collecting chosenItems for later process
-//
-//        if (distributeItemsControl) {
-//            for (int i = 0; i < fieldItemCount; i++) {
-//                int chosenItem = possibleItems.randomNonTM(random);
-//                int iterNum = 0;
-//                while ((getItemPlacementHistory(chosenItem) > getItemPlacementAverage()) && iterNum < 100) {
-//                    chosenItem = possibleItems.randomNonTM(random);
-//                    iterNum += 1;
-//                }
-//                newItems.add(allItems.get(chosenItem));
-//                if (uniqueItems && uniqueNoSellItems.contains(allItems.get(chosenItem))) {
-//                    possibleItems.banSingles(chosenItem);
-//                } else {
-//                    setItemPlacementHistory(chosenItem);
-//                }
-//            }
-//        } else {
-//            for (int i = 0; i < fieldItemCount; i++) {
-//                int chosenItem = possibleItems.randomNonTM(random);
-//                newItems.add(allItems.get(chosenItem));
-//                if (uniqueItems && uniqueNoSellItems.contains(allItems.get(chosenItem))) {
-//                    possibleItems.banSingles(chosenItem);
-//                }
-//            }
-//        }
-//
-//        for (int i = reqTMCount; i < fieldTMCount; i++) {
-//            while (true) {
-//                int tm = random.nextInt(totalTMCount) + 1;
-//                if (!newTMs.contains(tm)) {
-//                    newTMs.add(tm);
-//                    break;
-//                }
-//            }
-//        }
-//
-//
-//        Collections.shuffle(newItems, random);
-//        Collections.shuffle(newTMs, random);
-//
-//        romHandler.setRegularFieldItems(newItems);
-//        romHandler.setFieldTMs(newTMs);
-//        fieldChangesMade = true;
+    /**
+     * Randomizes TM field items, by modifying the input list.
+     */
+    private void randomizeTMFieldItems(List<Item> tms) {
+        List<Item> allTMs = romHandler.getItems().stream().filter(Item::isTM).collect(Collectors.toList());
+        Set<Item> requiredTMs = romHandler.getRequiredFieldTMs();
+
+        int neededTMAmount = tms.size();
+
+        Set<Item> newTMs = new HashSet<>(requiredTMs);
+        while (newTMs.size() < neededTMAmount && newTMs.size() < allTMs.size()) {
+            newTMs.add(allTMs.get(random.nextInt(allTMs.size()))); // duplicates get automatically ignored by the Set
+        }
+        if (newTMs.size() != neededTMAmount) {
+            throw new RandomizationException("Could not randomize TM field items, too many TMs requested.");
+        }
+
+        tms.clear();
+        tms.addAll(newTMs);
     }
 
-    private void setItemPlacementHistory(int newItem) {
-        int history = getItemPlacementHistory(newItem);
-        // System.out.println("Current history: " + newPK.name + " : " + history);
-        itemPlacementHistory.put(newItem, history + 1);
-    }
+    /**
+     * Randomizes non-TM field items, by modifying the input list.
+     */
+    private void randomizeNonTMFieldItems(List<Item> nonTMs) {
 
-    private int getItemPlacementHistory(int newItem) {
-        List<Integer> placedItem = new ArrayList<>(itemPlacementHistory.keySet());
-        if (placedItem.contains(newItem)) {
-            return itemPlacementHistory.get(newItem);
+        boolean banBadItems = settings.isBanBadRandomFieldItems();
+        boolean uniqueItems = !settings.isBalanceShopPrices(); // TODO: why is uniqueItems related to shop prices???
+        boolean evenItems = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
+
+        List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        possible.removeIf(Item::isTM);
+        Set<Item> uniqueNoSellItems = uniqueItems ? romHandler.getUniqueNoSellItems() : new HashSet<>();
+
+        int neededNonTMCount = nonTMs.size();
+        nonTMs.clear();
+
+        // Completely different algorithms whether items are "evenly distributed", or entirely random
+        // Though both of them are simple enough to be best left uncommented. Just read them.
+        if (evenItems) {
+            Stack<Item> remaining = new Stack<>();
+            Collections.shuffle(remaining, random);
+            for (int i = 0; i < neededNonTMCount; i++) {
+                if (remaining.isEmpty()) {
+                    remaining.addAll(possible);
+                    Collections.shuffle(remaining, random);
+                }
+                Item chosen = remaining.pop();
+                nonTMs.add(chosen);
+                if (uniqueNoSellItems.contains(chosen)) {
+                    possible.remove(chosen);
+                }
+            }
+
         } else {
-            return 0;
+            for (int i = 0; i < neededNonTMCount; i++) {
+                Item chosen = possible.get(random.nextInt(possible.size()));
+                nonTMs.add(chosen);
+                if (uniqueNoSellItems.contains(chosen)) {
+                    possible.remove(chosen);
+                }
+            }
         }
-    }
 
-    private float getItemPlacementAverage() {
-        // This method will return an integer of average for itemPlacementHistory
-        // placed is less than average of all placed pokemon's appearances
-        // E.g., Charmander's been placed once, but the average for all pokemon is 2.2
-        // So add to list and return
-
-        List<Integer> placedPK = new ArrayList<>(itemPlacementHistory.keySet());
-        int placedPKNum = 0;
-        for (Integer p : placedPK) {
-            placedPKNum += itemPlacementHistory.get(p);
-        }
-        return (float) placedPKNum / (float) placedPK.size();
     }
 
     public void shuffleShopItems() {
@@ -221,7 +196,7 @@ public class ItemRandomizer extends Randomizer {
         if (settings.isGuaranteeEvolutionItems()) {
             guaranteed.addAll(romHandler.getEvolutionItems());
         }
-        if ( settings.isGuaranteeXItems()) {
+        if (settings.isGuaranteeXItems()) {
             guaranteed.addAll(romHandler.getXItems());
         }
         return guaranteed;
@@ -229,7 +204,7 @@ public class ItemRandomizer extends Randomizer {
 
     private Map<Integer, Shop> copyShops(Map<Integer, Shop> original) {
         Map<Integer, Shop> copy = new HashMap<>(original.size());
-        for (Map.Entry<Integer, Shop> entry: original.entrySet()) {
+        for (Map.Entry<Integer, Shop> entry : original.entrySet()) {
             copy.put(entry.getKey(), new Shop(entry.getValue()));
         }
         return copy;

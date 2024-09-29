@@ -628,17 +628,11 @@ public class GameRandomizer {
         }
 
         // Field Items
-        switch (settings.getFieldItemsMod()) {
-            case SHUFFLE:
-                itemRandomizer.shuffleFieldItems();
-                break;
-            case RANDOM:
-            case RANDOM_EVEN:
-                itemRandomizer.randomizeFieldItems();
+        if (settings.getFieldItemsMod() != Settings.FieldItemsMod.UNCHANGED) {
+            itemRandomizer.randomizeFieldItems();
         }
 
         // Shops
-
         switch (settings.getShopItemsMod()) {
             case SHUFFLE:
                 itemRandomizer.shuffleShopItems();

@@ -14,7 +14,7 @@ public abstract class GraphicsPack {
 
     public GraphicsPack(GraphicsPackEntry entry) {
         this.entry = entry;
-        System.out.println("Initializing " + getName() + "...");
+        // System.out.println("Initializing " + getName() + "...");
     }
 
     public String getName() {
@@ -49,7 +49,7 @@ public abstract class GraphicsPack {
             try {
                 return ImageIO.read(imageFile);
             } catch (IOException e) {
-                System.out.println("Could not read " + imageFile + " as a BufferedImage for " + key);
+                // System.out.println("Could not read " + imageFile + " as a BufferedImage for " + key);
                 return null;
             }
         }
@@ -62,7 +62,7 @@ public abstract class GraphicsPack {
             try {
                 return Palette.readFromFile(paletteFile);
             } catch (IOException e) {
-                System.out.println("Could not read " + paletteFile + " as a Palette.");
+                // System.out.println("Could not read " + paletteFile + " as a Palette.");
                 return null;
             }
         }

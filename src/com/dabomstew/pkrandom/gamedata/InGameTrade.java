@@ -22,6 +22,9 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Represents a Pokemon trade with an in-game NPC.
  */
@@ -93,5 +96,29 @@ public class InGameTrade {
 
     public void setHeldItem(Item heldItem) {
         this.heldItem = heldItem;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(requestedSpecies, givenSpecies, otId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof InGameTrade) {
+            InGameTrade other = (InGameTrade) o;
+            return otId == other.otId
+                    && requestedSpecies.equals(other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
+                    && nickname.equals(other.nickname) && Objects.equals(otName, other.otName)
+                    && Arrays.equals(ivs, other.ivs) && Objects.equals(heldItem, other.heldItem);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "IngameTrade(requested=" + requestedSpecies + ", given=" + givenSpecies +
+                ", nickname=" + nickname + ", otName=" + otName + ", otId=" + otId + ", ivs=" + Arrays.toString(ivs) +
+                ", heldItem=" + heldItem + ")";
     }
 }

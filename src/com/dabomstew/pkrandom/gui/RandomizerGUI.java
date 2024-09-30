@@ -2657,6 +2657,7 @@ public class RandomizerGUI {
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             tpDoubleBattleModeCheckBox.setVisible(pokemonGeneration >= 3);
+            tpDoubleBattleModeCheckBox.setEnabled(pokemonGeneration >= 3);
 
             boolean canAddPokesToBoss = romHandler.canAddPokemonToBossTrainers();
             boolean canAddPokesToImportant = romHandler.canAddPokemonToImportantTrainers();
@@ -2675,7 +2676,7 @@ public class RandomizerGUI {
             tpRegularTrainersSpinner.setVisible(canAddPokesToRegular);
 
             boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
-            boolean canAddHeldItemsToImportant = romHandler.canAddPokemonToImportantTrainers();
+            boolean canAddHeldItemsToImportant = romHandler.canAddHeldItemsToImportantTrainers();
             boolean canAddHeldItemsToRegular = romHandler.canAddHeldItemsToRegularTrainers();
             boolean heldItemsAvailable = canAddHeldItemsToBoss || canAddHeldItemsToImportant || canAddHeldItemsToRegular;
 
@@ -3209,7 +3210,7 @@ public class RandomizerGUI {
         if (isTrainerSetting(TRAINER_UNCHANGED)) {
             disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
-                    tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpDoubleBattleModeCheckBox,
+                    tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
                     tpBossTrainersCheckBox, tpImportantTrainersCheckBox, tpRegularTrainersCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
@@ -3227,7 +3228,7 @@ public class RandomizerGUI {
             } else {
                 disableAndDeselectButtons(tpSwapMegaEvosCheckBox);
             }
-            enableButtonsIfVisible(tpDoubleBattleModeCheckBox, tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
+            enableButtonsIfVisible(tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
                     tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
                     tpRegularTrainersItemsCheckBox, tpEliteFourUniquePokemonCheckBox);
         }

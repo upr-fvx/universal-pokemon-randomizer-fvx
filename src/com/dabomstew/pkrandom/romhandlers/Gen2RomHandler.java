@@ -2675,6 +2675,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             }
             InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
+            // entryOffset + 0 is the identifier for the text box string. We simply ignore it.
             trade.setRequestedSpecies(pokes[rom[entryOffset + 1] & 0xFF]);
             trade.setGivenSpecies(pokes[rom[entryOffset + 2] & 0xFF]);
             trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
@@ -2707,32 +2708,31 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             } else {
                 InGameTrade trade = trades.get(tradeIndex);
                 int entryOffset = tableOffset + entry * entryLength;
-                writeBytes(entryOffset, ingameTradeToBytes(trade));
+                writeTradeBytes(entryOffset, trade);
                 tradeIndex++;
             }
         }
     }
 
-    private byte[] ingameTradeToBytes(InGameTrade trade) {
+    private void writeTradeBytes(int offset, InGameTrade trade) {
         int nicknameLength = romEntry.getIntValue("TradeNameLength");
         int otLength = romEntry.getIntValue("TradeOTLength");
 
-        byte[] data = new byte[getIngameTradeEntryLength()];
-        data[0] = (byte) trade.getRequestedSpecies().getNumber();
-        data[1] = (byte) trade.getGivenSpecies().getNumber();
+        // offset + 0 is intentionally left untouched
+        rom[offset + 1] = (byte) trade.getRequestedSpecies().getNumber();
+        rom[offset + 2] = (byte) trade.getGivenSpecies().getNumber();
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            writeFixedLengthString(data, trade.getNickname(), 2, nicknameLength);
+            writeFixedLengthString(trade.getNickname(), offset + 3, nicknameLength);
         }
-        data[2 + nicknameLength] = (byte) (trade.getIVs()[0] << 4 | trade.getIVs()[1]);
-        data[3 + nicknameLength] = (byte) (trade.getIVs()[2] << 4 | trade.getIVs()[3]);
-        data[4 + nicknameLength] = (byte) (trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
-        writeWord(data, 5 + nicknameLength, trade.getOtId());
+        rom[offset + 3 + nicknameLength] = (byte) (trade.getIVs()[0] << 4 | trade.getIVs()[1]);
+        rom[offset + 4 + nicknameLength] = (byte) (trade.getIVs()[2] << 4 | trade.getIVs()[3]);
+        rom[offset + 5 + nicknameLength] = (byte) (trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
+        writeWord(offset + 6 + nicknameLength, trade.getOtId());
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            writeFixedLengthString(data, trade.getOtName(), 7 + nicknameLength, otLength);
+            writeFixedLengthString(trade.getOtName(), offset + 8 + nicknameLength, otLength);
         }
         // remove gender req
-        data[7 + nicknameLength + otLength] = 0;
-        return data;
+        rom[offset + 8 + nicknameLength + otLength] = 0;
     }
 
     private int getIngameTradeEntryLength() {

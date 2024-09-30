@@ -2471,7 +2471,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
         for (int i = Gen2Constants.tmsStartIndex; i < Gen2Constants.tmsStartIndex + Gen2Constants.tmCount; i++) {
-            items.get(i).setTM(true);
+            items.get(i).setTM(true); // TODO: fix TM marking
         }
     }
 
@@ -2614,8 +2614,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        return Gen2Constants.requiredFieldTMs;
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(Gen2Constants.requiredFieldTMs);
     }
 
     @Override

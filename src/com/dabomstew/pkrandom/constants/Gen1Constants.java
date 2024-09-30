@@ -91,8 +91,10 @@ public class Gen1Constants {
 
     public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(3, 4, 8, 10, 12, 14, 16, 19, 20,
-            22, 25, 26, 30, 40, 43, 44, 45, 47);
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen1ItemIDs.tm03, Gen1ItemIDs.tm04,
+            Gen1ItemIDs.tm08, Gen1ItemIDs.tm10, Gen1ItemIDs.tm12, Gen1ItemIDs.tm14, Gen1ItemIDs.tm16, Gen1ItemIDs.tm19,
+            Gen1ItemIDs.tm20, Gen1ItemIDs.tm22, Gen1ItemIDs.tm25, Gen1ItemIDs.tm26, Gen1ItemIDs.tm30, Gen1ItemIDs.tm40,
+            Gen1ItemIDs.tm43, Gen1ItemIDs.tm44, Gen1ItemIDs.tm45, Gen1ItemIDs.tm47);
 
     public static final int towerMapsStartIndex = 0x90, towerMapsEndIndex = 0x94;
 

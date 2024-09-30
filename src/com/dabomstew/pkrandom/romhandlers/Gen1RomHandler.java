@@ -2490,8 +2490,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        return Gen1Constants.requiredFieldTMs;
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(Gen1Constants.requiredFieldTMs);
     }
 
     @Override

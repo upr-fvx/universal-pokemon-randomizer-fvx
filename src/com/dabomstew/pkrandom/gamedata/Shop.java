@@ -24,6 +24,7 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class Shop {
     }
 
     public Shop(Shop otherShop) {
-        this.items = otherShop.items;
+        this.items = new ArrayList<>(otherShop.items);
         this.name = otherShop.name;
         this.isMainGame = otherShop.isMainGame;
     }

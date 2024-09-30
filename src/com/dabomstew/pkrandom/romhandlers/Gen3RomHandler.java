@@ -3659,15 +3659,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
+    public Set<Item> getRequiredFieldTMs() {
+        List<Integer> ids;
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-            return Gen3Constants.frlgRequiredFieldTMs;
+            ids = Gen3Constants.frlgRequiredFieldTMs;
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
-            return Gen3Constants.rsRequiredFieldTMs;
+            ids = Gen3Constants.rsRequiredFieldTMs;
         } else {
             // emerald has a few TMs from pickup
-            return Gen3Constants.eRequiredFieldTMs;
+            ids = Gen3Constants.eRequiredFieldTMs;
         }
+        return itemIdsToSet(ids);
     }
 
     @Override

@@ -919,7 +919,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
+    public Set<Item> getRequiredFieldTMs() {
         throw new NotImplementedException();
     }
 

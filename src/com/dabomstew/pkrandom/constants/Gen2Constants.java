@@ -126,8 +126,9 @@ public class Gen2Constants {
 
     public static final int tmsStartIndex = Gen2ItemIDs.tm01;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(4, 20, 22, 26, 28, 34, 35, 39,
-            40, 43, 44, 46);
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen2ItemIDs.tm04, Gen2ItemIDs.tm20,
+            Gen2ItemIDs.tm22, Gen2ItemIDs.tm26, Gen2ItemIDs.tm28, Gen2ItemIDs.tm34, Gen2ItemIDs.tm35,
+            Gen2ItemIDs.tm39, Gen2ItemIDs.tm40, Gen2ItemIDs.tm43, Gen2ItemIDs.tm44, Gen2ItemIDs.tm46);
 
     public static final List<Integer> fieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,

@@ -3437,12 +3437,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-            return Gen5Constants.bw1RequiredFieldTMs;
-        } else {
-            return Gen5Constants.bw2RequiredFieldTMs;
-        }
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(romEntry.getRomType() == Gen5Constants.Type_BW ?
+                Gen5Constants.bw1RequiredFieldTMs : Gen5Constants.bw2RequiredFieldTMs);
     }
 
     @Override

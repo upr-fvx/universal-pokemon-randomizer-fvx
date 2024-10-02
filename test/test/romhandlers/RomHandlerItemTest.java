@@ -53,4 +53,37 @@ public class RomHandlerItemTest extends RomHandlerTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allAllowedItemsWithTMNamesAreTMs(String romName) {
+        // Might fail for non-English ROMs
+        loadROM(romName);
+        for (Item item : romHandler.getItems()) {
+            if (item == null) continue;
+            if (item.getName().matches("TM\\d+")) {
+
+                System.out.println(item.getName());
+                if (item.isAllowed()) {
+                    assertTrue(item.isTM());
+                } else {
+                    System.out.println("-- banned");
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allTMsHaveTMNames(String romName) {
+        // Obviously fails for non-English ROMs
+        loadROM(romName);
+        for (Item item : romHandler.getItems()) {
+            if (item == null) continue;
+            if (item.isTM()) {
+                System.out.println(item.getName());
+                assertTrue(item.getName().matches("TM\\d+"));
+            }
+        }
+    }
+
 }

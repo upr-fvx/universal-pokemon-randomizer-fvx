@@ -3443,7 +3443,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         List<InGameTrade> trades = new ArrayList<>();
         try {
             NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
@@ -3480,10 +3480,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         // info
         int tradeOffset = 0;
-        List<InGameTrade> oldTrades = this.getIngameTrades();
+        List<InGameTrade> oldTrades = this.getInGameTrades();
         try {
             NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
             List<String> tradeStrings = getStrings(false, romEntry.getIntValue("IngameTradesTextOffset"));

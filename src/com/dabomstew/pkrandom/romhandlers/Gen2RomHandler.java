@@ -2470,9 +2470,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
 
         Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
-        for (int i = Gen2Constants.tmsStartIndex; i < Gen2Constants.tmsStartIndex + Gen2Constants.tmCount; i++) {
-            items.get(i).setTM(true); // TODO: fix TM marking
-        }
+        Gen2Constants.tmItems.forEach(id -> items.get(id).setTM(true));
     }
 
     private String[] readItemNames() {
@@ -2653,7 +2651,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         List<InGameTrade> trades = new ArrayList<>();
 
         // info
@@ -2693,7 +2691,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
         int tableSize = romEntry.getIntValue("TradeTableSize");

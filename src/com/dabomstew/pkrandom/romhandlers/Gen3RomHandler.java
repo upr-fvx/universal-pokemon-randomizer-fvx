@@ -3710,7 +3710,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         List<InGameTrade> trades = new ArrayList<>();
 
         // info
@@ -3745,7 +3745,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
         int tableSize = romEntry.getIntValue("TradeTableSize");

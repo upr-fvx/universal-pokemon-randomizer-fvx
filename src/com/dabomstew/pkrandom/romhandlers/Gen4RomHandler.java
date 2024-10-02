@@ -4943,7 +4943,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<InGameTrade> getIngameTrades() {
+	public List<InGameTrade> getInGameTrades() {
 		List<InGameTrade> trades = new ArrayList<>();
 		try {
 			NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
@@ -4982,9 +4982,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void setIngameTrades(List<InGameTrade> trades) {
+	public void setInGameTrades(List<InGameTrade> trades) {
 		int tradeOffset = 0;
-		List<InGameTrade> oldTrades = this.getIngameTrades();
+		List<InGameTrade> oldTrades = this.getInGameTrades();
 		try {
 			NARCArchive tradeNARC = this.readNARC(romEntry.getFile("InGameTrades"));
 			int[] spTrades = romEntry.getArrayValue("StaticPokemonTrades");

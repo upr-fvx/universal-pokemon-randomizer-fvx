@@ -964,12 +964,12 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         throw new NotImplementedException();
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         throw new NotImplementedException();
     }
 

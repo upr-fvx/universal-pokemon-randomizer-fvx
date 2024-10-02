@@ -3593,7 +3593,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         List<InGameTrade> trades = new ArrayList<>();
 
         int count = romEntry.getIntValue("IngameTradeCount");
@@ -3623,8 +3623,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
-        List<InGameTrade> oldTrades = this.getIngameTrades();
+    public void setInGameTrades(List<InGameTrade> trades) {
+        List<InGameTrade> oldTrades = this.getInGameTrades();
         int count = romEntry.getIntValue("IngameTradeCount");
         String prefix = Gen6Constants.getIngameTradesPrefix(romEntry.getRomType());
         List<String> tradeStrings = getStrings(false, romEntry.getIntValue("IngameTradesTextOffset"));

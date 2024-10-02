@@ -3087,7 +3087,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<InGameTrade> getIngameTrades() {
+    public List<InGameTrade> getInGameTrades() {
         List<InGameTrade> ingameTrades = new ArrayList<>();
         try {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
@@ -3128,9 +3128,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<InGameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         try {
-            List<InGameTrade> oldTrades = this.getIngameTrades();
+            List<InGameTrade> oldTrades = this.getInGameTrades();
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             List<String> tradeStrings = getStrings(true, romEntry.getIntValue("IngameTradesTextOffset"));
             Map<Integer, List<Integer>> hardcodedTradeTextOffsets = Gen7Constants.getHardcodedTradeTextOffsets(romEntry.getRomType());

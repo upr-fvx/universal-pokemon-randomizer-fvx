@@ -52,7 +52,7 @@ public class TradeRandomizer extends Randomizer {
         }
 
         // get old trades
-        List<InGameTrade> trades = romHandler.getIngameTrades();
+        List<InGameTrade> trades = romHandler.getInGameTrades();
         List<Species> usedRequests = new ArrayList<>();
         List<Species> usedGivens = new ArrayList<>();
         List<String> usedOTs = new ArrayList<>();
@@ -123,7 +123,7 @@ public class TradeRandomizer extends Randomizer {
         }
 
         // things that the game doesn't support should just be ignored
-        romHandler.setIngameTrades(trades);
+        romHandler.setInGameTrades(trades);
         changesMade = true;
     }
 

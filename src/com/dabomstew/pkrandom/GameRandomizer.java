@@ -616,7 +616,7 @@ public class GameRandomizer {
 
         // In-game trades
 
-        List<InGameTrade> oldTrades = romHandler.getIngameTrades();
+        List<InGameTrade> oldTrades = romHandler.getInGameTrades();
         switch (settings.getInGameTradesMod()) {
             case RANDOMIZE_GIVEN:
             case RANDOMIZE_GIVEN_AND_REQUESTED:
@@ -724,7 +724,7 @@ public class GameRandomizer {
 
     private void logTrades(PrintStream log, List<InGameTrade> oldTrades) {
         log.println("--In-Game Trades--");
-        List<InGameTrade> newTrades = romHandler.getIngameTrades();
+        List<InGameTrade> newTrades = romHandler.getInGameTrades();
         int size = oldTrades.size();
         for (int i = 0; i < size; i++) {
             InGameTrade oldT = oldTrades.get(i);

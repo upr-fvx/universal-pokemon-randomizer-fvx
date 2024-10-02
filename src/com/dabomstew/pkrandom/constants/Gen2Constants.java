@@ -305,6 +305,7 @@ public class Gen2Constants {
 
     public static final Set<Integer> bannedItems = setupBannedItems();
     public static final Set<Integer> badItems = setupBadItems();
+    public static final Set<Integer> tmItems = setupTMItems();
 
     private static Set<Integer> setupBannedItems() {
         // Assorted key items &
@@ -337,6 +338,14 @@ public class Gen2Constants {
                 Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece, Gen2ItemIDs.normalBox, Gen2ItemIDs.gorgeousBox));
         addBetween(set, Gen2ItemIDs.surfMail, Gen2ItemIDs.mirageMail);
         return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupTMItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, Gen2ItemIDs.tm01, Gen2ItemIDs.tm04);
+        addBetween(set, Gen2ItemIDs.tm05, Gen2ItemIDs.tm28);
+        addBetween(set, Gen2ItemIDs.tm29, Gen2ItemIDs.tm50);
+        return set;
     }
 
     /**

@@ -56,7 +56,14 @@ The Custom Player Graphics requires image files to insert into the game. Some of
 
 All authors were asked when possible; for some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notice us and it will be removed from the Randomizer.
 
-- [todo: fill]
+- voliol (Various)
+- altedgy (Blue)
+- MollyChan (Various)
+- Cutlerine (Ghost, Wraith)
+- MrHtuber (Jotaro, Kakyoin)
+- BettyNewby (Leaf)
+- CFA (Luigi)
+- jojobear13 (Violet)
 
 ## Direct code contributors
 

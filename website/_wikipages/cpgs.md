@@ -2,32 +2,34 @@
 name: Custom Player Graphics
 ---
 
-The FVX branch has support for custom player graphics in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them.
+The FVX branch has support for custom player graphics in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
  
-This feature was inspired in part by a similar feature in [The ALttP Randomizer](https://alttpr.com/en) and in part by people on Reddit and Discords wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
+This feature was inspired in part by a similar feature in [The ALttP Randomizer](https://alttpr.com/en), and in part by people on Reddit and Discords wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
 
-<details><summary>Showcase gifs:</summary>
-[in-game footage of custom player graphics in Gen 1](showcase_gen1.gif)
-[in-game footage of custom player graphics in Gen 2](showcase_gen2.gif)
-</details>
+Below is a general guide for how CPGs work, followed by sections for specific games/Generations.
 
-The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
-Below are links to pages with generation-specific information, followed by a guide on how to do it in general.
+* [In all games](#in-all-games)
+* [In Generation 1](#in-generation-1)
+* [In Generation 2](#in-generation-2)
+* [In Generation 3 (general)](#in-generation-3-general)
+* [In Ruby/Sapphire/Emerald](#in-rubysapphireemerald)
+* [In FireRed/LeafGreen](#in-fireredleafgreen)
 
-[TODO: navbox]
+## In all games
 
-## File structure
+### File structure
 To add a custom player graphics, create a new folder within `data/players`. This folder should contain your image files (and palette files, if you need those), as well as a text file called `info.ini`.
 
+[TODO: remake these folder images]
 [the players/ folder](nav1.png)
 [inside the players/ folder](nav2.png)
 [inside a subfolder of players/, showing image files and info.ini](nav3.png)
 
-The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen III overworld sprites).
+The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 2I overworld sprites).
 
-Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen III games. Normally the palettes are taken from the image files.
+Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen 2I games. Normally the palettes are taken from the image files.
 
-`info.ini` contains some info about the custom player graphics, such as who made it, and also tells the UPR how to use the images. The "info.ini" file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen I game. 
+`info.ini` contains some info about the custom player graphics, such as who made it, and also tells the UPR how to use the images. The "info.ini" file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
 
 Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are.
 
@@ -65,7 +67,7 @@ Below is a table of common tags, what values they accept, and what they are used
 	<td>The file name of the fishing sprite image.</td></tr>
 </table>
 
-## Example:
+### Example:
 
 Below is an example of the contents of a info.ini file. Double slashes "//" can be used for comments.
 
@@ -99,3 +101,219 @@ FishSpriteMode=combined
 FishSprite=gb_fish.png
 ```
 
+<hr>
+
+## In Generation 1
+
+[Showcase gif](/assets/images/wikipages/cpg/gen1/showcase.gif)
+
+### General info
+
+Due to the Gen 1 games being for the original GameBoy, all graphics are monochrome, with 4 shades. The UPR can detect the shades used in your images, so as long as your image contains no more than four colors, it will be fine. You do not have to index the palette.
+
+For overworld sprites, the lightest color in the source image is used for "transparent", instead of "white".
+
+The example below shows that both source images (colored and monochrome) give the same result when inserted into the game.
+
+![a colored source image](/assets/images/wikipages/cpg/gen1/mario_walk_colored.png) or ![a monochrome source image](/assets/images/wikipages/cpg/gen1/mario_walk.png) &rarr; ![a screenshot of the resulting sprite in-game](/assets/images/wikipages/cpg/gen1/mario_screenshot.png)
+
+### Graphic specifications
+
+The player has a front image, a back image, and sprites for walking, cycling, and fishing in the overworld.
+
+The front image is 56x56 pixels, and the back image is 32x32 pixels. The bottom 4 rows of pixels of the back image should be white. Examples of valid front and back images below:
+
+![front image #1](/assets/images/wikipages/cpg/gen1/red_front.png)
+![front image #2](/assets/images/wikipages/cpg/gen1/blackmage_front.png)
+![front image #3](/assets/images/wikipages/cpg/gen1/snorlax_front.png)
+![front image #4](/assets/images/wikipages/cpg/gen1/mario_front.png)
+![back image #1](/assets/images/wikipages/cpg/gen1/red_back.png)
+![back image #2](/assets/images/wikipages/cpg/gen1/blackmage_back.png)
+![back image #3](/assets/images/wikipages/cpg/gen1/snorlax_back.png)
+![back image #4](/assets/images/wikipages/cpg/gen1/mario_back.png)
+
+The walk sprite and bike sprite have identical specifications. They are both 16x96 pixels, split into 6 frames of 16x16 pixels each. Examples of valid walk and bike sprites below:
+
+![walk sprite #1](/assets/images/wikipages/cpg/gen1/red_walk.png)
+![walk sprite #2](/assets/images/wikipages/cpg/gen1/blackmage_walk.png)
+![walk sprite #3](/assets/images/wikipages/cpg/gen1/snorlax_walk.png)
+![walk sprite #4](/assets/images/wikipages/cpg/gen1/mario_walk.png)
+![bike sprite #1](/assets/images/wikipages/cpg/gen1/red_bike.png)
+![bike sprite #2](/assets/images/wikipages/cpg/gen1/blackmage_bike.png)
+![bike sprite #3](/assets/images/wikipages/cpg/gen1/snorlax_bike.png)
+![bike sprite #4](/assets/images/wikipages/cpg/gen1/mario_bike.png)
+
+Like the walk and bike sprites, the fishing sprite has frames for the directions up/down/side. However, they only have 1 frame for each direction, 
+and this frame only covers the bottom half of what is seen on screen. The top half is taken from the walk sprite frame facing the appropriate direction.
+
+![walk sprite with the part seen in screenshot highlighted](/assets/images/wikipages/cpg/gen1/red_walk_highlight.png) + 
+![fishing sprite with the part seen in screenshot highlighted](/assets/images/wikipages/cpg/gen1/red_fish_highlight.png) &rarr;
+![screenshot of the player fishing ](/assets/images/wikipages/cpg/gen1/fishing_screenshot.png)
+
+The UPR can read fishing sprites in two "modes". With the "separate" mode, each frame will be read from a separate 8x16 pixel image. 
+With the "combined" mode, all frames will be read from a single 16x24 pixel image. This is controlled Examples of valid fishing sprites below:
+
+![fishing sprite separate #1-front](/assets/images/wikipages/cpg/gen1/red_fish_front.png)
+![fishing sprite separate #1-back](/assets/images/wikipages/cpg/gen1/red_fish_back.png)
+![fishing sprite separate #1-side](/assets/images/wikipages/cpg/gen1/red_fish_side.png),
+![fishing sprite separate #2-front](/assets/images/wikipages/cpg/gen1/blackmage_fish_front.png)
+![fishing sprite separate #2-back](/assets/images/wikipages/cpg/gen1/blackmage_fish_back.png)
+![fishing sprite separate #2-side](/assets/images/wikipages/cpg/gen1/blackmage_fish_side.png),
+![fishing sprite separate #3-front](/assets/images/wikipages/cpg/gen1/snorlax_fish_front.png)
+![fishing sprite separate #3-back](/assets/images/wikipages/cpg/gen1/snorlax_fish_back.png)
+![fishing sprite separate #3-side](/assets/images/wikipages/cpg/gen1/snorlax_fish_side.png),
+![fishing sprite separate #4-front](/assets/images/wikipages/cpg/gen1/mario_fish_front.png)
+![fishing sprite separate #4-back](/assets/images/wikipages/cpg/gen1/mario_fish_back.png)
+![fishing sprite separate #4-side](/assets/images/wikipages/cpg/gen1/mario_fish_side.png),
+![fishing sprite combined #1](/assets/images/wikipages/cpg/gen1/red_fish.png)
+![fishing sprite combined #2](/assets/images/wikipages/cpg/gen1/blackmage_fish.png)
+![fishing sprite combined #3](/assets/images/wikipages/cpg/gen1/snorlax_fish.png)
+![fishing sprite combined #4](/assets/images/wikipages/cpg/gen1/mario_fish.png)
+
+### List of tags
+
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>FishSpriteMode</td>
+	<td><b>Separate</b> or <b>Combined</b></td> 
+	<td>Controls whether the fishing sprite will be read from 3 separate images (one for each frame), or a single 
+	image.</td></tr>
+<tr><td>FishFrontSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the south-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+<tr><td>FishBackSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the north-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+<tr><td>FishSideSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the east/west-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+</table>
+
+### Other/unsupported graphics
+
+On the title screen, there is an image of Red holding a Poké Ball. The UPR has no support for changing it. There is no support for changing the fishing rod.
+
+![a screenshot of the Pokémon Blue title screen](/assets/images/wikipages/cpg/gen1/title_screen_screenshot.png)
+![the fishing rod sprite](/assets/images/wikipages/cpg/gen1/fishing_rod.png)
+
+<hr>
+
+## In Generation 2
+
+[Showcase gif](/assets/images/wikipages/cpg/gen2/showcase.gif)
+
+### General info
+
+Perhaps because the Gen 2 games were originally set up to be playable on the original GameBoy, as well as the GameBoy color, all graphics have 4 colors: "white", "black", and two others. The UPR can detect the shades used in your images, so as long as your image contains no more than four colors, it will be fine. You do not have to index the palette.
+
+For overworld sprites, the lightest color in the source image is used for "transparent", instead of "white".
+
+The example below shows that both source images (colored and monochrome) give the same result when inserted into the game.
+
+![a colored source image](/assets/images/wikipages/cpg/gen2/other_walk.png) or ![a monochrome source image](/assets/images/wikipages/cpg/gen2/other_walk_monochrome.png) &rarr;
+![a screenshot of the resulting sprite in-game](/assets/images/wikipages/cpg/gen2/other_screenshot.png)
+
+What colors are actually used for an image/sprite depends on the palette loaded for it. The front and back images will use the palette of the given front image. The overworld sprites will use one of 8 predefined palettes, chosen in `ini.txt`.
+
+### Graphic specifications
+
+The player has a front image, a back image, a trainer card image, and sprites for walking, cycling, and fishing in the overworld.
+
+The front image is 56x56 pixels, and the back image is 48x48 pixels. The trainer card image is 40x56 pixels, and normally just a cropped down version of the front image, with a triangle in the corner in Gold/Silver. The UPR knows how to crop down a front image to create a trainer card image, so you don't have to include the latter if you don't want to.
+
+Examples of valid front, back, and trainer card images below. The last trainer card image includes the aforementioned "triangle in the corner":
+
+![front image #1](/assets/images/wikipages/cpg/gen2/kris_front.png)
+![front image #2](/assets/images/wikipages/cpg/gen2/other_front.png)
+![back image #1](/assets/images/wikipages/cpg/gen2/kris_back.png)
+![back image #2](/assets/images/wikipages/cpg/gen2/other_back.png)
+![trainer card image #1](/assets/images/wikipages/cpg/gen2/kris_trainer_card.png)
+![trainer card image #2](/assets/images/wikipages/cpg/gen2/other_trainer_card.png)
+
+The walk sprite and bike sprite have identical specifications. They are both 16x96 pixels, split into 6 frames of 16x16 pixels each. 
+Examples of valid walk and bike sprites below:
+
+![walk sprite #1](/assets/images/wikipages/cpg/gen2/kris_walk.png)
+![walk sprite #2](/assets/images/wikipages/cpg/gen2/other_walk.png)
+![bike sprite #1](/assets/images/wikipages/cpg/gen2/kris_bike.png)
+![bike sprite #2](/assets/images/wikipages/cpg/gen2/other_bike.png)
+
+Like the walk and bike sprites, the fishing sprite has frames for the directions up/down/side. However, they only have 1 frame for each direction, 
+and this frame only covers the bottom half of what is seen on screen. The top half is taken from the walk sprite frame facing the appropriate direction.
+
+![walk sprite with the part seen in screenshot highlighted](/assets/images/wikipages/cpg/gen2/kris_walk_highlight.png) + 
+![fishing sprite with the part seen in screenshot highlighted](/assets/images/wikipages/cpg/gen2/kris_fish_highlight.png) &rarr;
+![screenshot of the player fishing ](/assets/images/wikipages/cpg/gen2/fishing_screenshot.png)
+
+The UPR can read fishing sprites in two "modes". With the "separate" mode, each frame will be read from a separate 8x16 pixel image. 
+With the "combined" mode, all frames will be read from a single 16x24 pixel image. Examples of valid fishing sprites below:
+
+![fishing sprite separate #1-front](/assets/images/wikipages/cpg/gen2/kris_fish_front.png)
+![fishing sprite separate #1-back](/assets/images/wikipages/cpg/gen2/kris_fish_back.png)
+![fishing sprite separate #1-side](/assets/images/wikipages/cpg/gen2/kris_fish_side.png),
+![fishing sprite separate #2-front](/assets/images/wikipages/cpg/gen2/other_fish_front.png)
+![fishing sprite separate #2-back](/assets/images/wikipages/cpg/gen2/other_fish_back.png)
+![fishing sprite separate #2-side](/assets/images/wikipages/cpg/gen2/other_fish_side.png),
+![fishing sprite combined #1](/assets/images/wikipages/cpg/gen2/kris_fish.png)
+![fishing sprite combined #2](/assets/images/wikipages/cpg/gen2/other_fish.png)
+
+### List of tags
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>SpritePalette</td>
+	<td>RED, BLUE, GREEN, BROWN, PINK, EMOTE, TREE, ROCK</td> 
+	<td>Decides what palette will be used for the overworld sprites.
+	<br><br>
+	RED, BLUE, GREEN, and BROWN are used for NPCs in the Vanilla games, while PINK is an unused palette very similar to RED. EMOTE, TREE, and ROCK are used by emotes, cuttable trees, and breakable rocks respectively.</td></tr>
+<tr><td>FishSpriteMode</td>
+	<td><b>Separate</b> or <b>Combined</b></td> 
+	<td>Controls whether the fishing sprite will be read from 3 separate images (one for each frame), or a single 
+	image.</td></tr>
+<tr><td>FishFrontSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the south-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+<tr><td>FishBackSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the north-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+<tr><td>FishSideSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the east/west-facing fishing sprite frame image. Used only if FishSpriteMode is "Separate".</td></tr>
+</table>
+
+### Other/unsupported graphics
+
+There is no support for changing the fishing rod. 
+
+![the fishing rod sprite](/assets/images/wikipages/cpg/gen2/fishing_rod.png)
+
+<hr>
+
+## In Generation 3 (general)
+
+### General info
+
+### Graphic specifications
+
+### List of tags
+
+<hr>
+
+## In Ruby/Sapphire/Emerald
+
+### General info
+
+### Graphic specifications
+
+### List of tags
+
+### Other/unsupported graphics
+
+<hr>
+
+## In FireRed/LeafGreen
+
+### General info
+
+### Graphic specifications
+
+### List of tags
+
+### Other/unsupported graphics

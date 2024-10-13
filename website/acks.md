@@ -62,6 +62,7 @@ All authors were asked when possible; for some old ROM hacks their creators are 
 - Cutlerine (Ghost, Wraith)
 - MrHtuber (Jotaro, Kakyoin)
 - BettyNewby (Leaf)
+- Luna (Leaf)
 - CFA (Luigi)
 - jojobear13 (Violet)
 

@@ -25,9 +25,9 @@ To add a custom player graphics, create a new folder within `data/players`. This
 [inside the players/ folder](nav2.png)
 [inside a subfolder of players/, showing image files and info.ini](nav3.png)
 
-The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 2I overworld sprites).
+The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites).
 
-Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen 2I games. Normally the palettes are taken from the image files.
+Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen 3 games. Normally the palettes are taken from the image files.
 
 `info.ini` contains some info about the custom player graphics, such as who made it, and also tells the UPR how to use the images. The "info.ini" file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
 
@@ -257,6 +257,7 @@ With the "combined" mode, all frames will be read from a single 16x24 pixel imag
 ![fishing sprite combined #2](/assets/images/wikipages/cpg/gen2/other_fish.png)
 
 ### List of tags
+
 <table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
 <tr><td>SpritePalette</td>
 	<td>RED, BLUE, GREEN, BROWN, PINK, EMOTE, TREE, ROCK</td> 
@@ -290,30 +291,172 @@ There is no support for changing the fishing rod.
 
 ### General info
 
+All the customizable player graphics use indexed palettes of size 16. Since 1 color is always used for transparency, this in effect means each image can have up to <b>15</b> colors. 
+
+The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
+
+<img src=cpg_gen3/may_front_top_pixel.png alt="front image with the top right pixel highlighted"> &rarr;   
+<img src=cpg_gen3/may_front_top_pixel.png alt="in-game front image with transparency">
+
 ### Graphic specifications
 
+The player has a front image, a back image, a map icon image, and various sprites (walking, cycling, fishing etc.) used in the overworld.
+<br><br>
+The front image is 64x64 pixels, and the back image is 64x256 pixels in RSE and 64x320 pixels in FRLG, divided into 4 respectively 5 64x64 pixel frames. Examples of valid front and back images below. The first back image is valid for RSE, and the second for FRLG:
+<br><br>
+<img src=cpg_gen3/may_front.png alt="front image #1">
+<img src=cpg_gen3/other_front.png alt="front image #2">
+<img src=cpg_gen3/may_back.png alt="back image #1">
+<img src=cpg_gen3/other_back.png alt="back image #2">
+<br><br>
+
+The map icon image is 16x16 pixels. Examples of valid map icon images below.
+
+<img src=cpg_gen3/may_icon.png alt="trainer map icon image #1">
+<img src=cpg_gen3/other_icon.png alt="trainer map icon image #2">
+
+The walk sprite is 144x32 pixels, split into 9 frames of 16x32 pixels each. 
+Examples of valid walk sprites below:
+
+![walk sprite #1](/assets/images/wikipages/cpg/gen3/may_walk.png)
+![walk sprite #2](/assets/images/wikipages/cpg/gen3/red_walk.png)
+
+The run sprite too is 144x32 pixels, split into 9 frames of 16x32 pixels each. However, depending on which "mode" it is read in, these frames will be assumed to be in different orders. The "RSE" mode assumes the same order as the frames in the walk sprite, while the "FRLG" mode assumes each "direction" is grouped together. Examples of valid run sprites below. The first run sprite is valid for "RSE" mode, and the second for "FRLG" mode:
+
+![run sprite #1](/assets/images/wikipages/cpg/gen3/may_run.png)
+![run sprite #2](/assets/images/wikipages/cpg/gen3/red_run.png)
+
+The bike sprite is 288x32 pixels, split into 9 frames of 32x32 pixels each. In RSE, this sprite is used for the Mach Bike. Examples of valid bike sprites below:
+
+![bike sprite #1](/assets/images/wikipages/cpg/gen3/may_bike.png)
+![bike sprite #2](/assets/images/wikipages/cpg/gen3/red_bike.png)
+
+The fishing sprite is 384x32 pixels, split into 12 frames of 32x32 pixels each. Examples of valid fishing sprites below:
+
+![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_fish.png)
+![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_fish.png)
+
+The size of the sit sprite (used primarily when surfing) varies between games. In RSE it is 96x32 pixels, split into 3 frames of 32x32 pixels each. In FRLG it is 48x32 pixels, split into 3 frames of 16x32 pixels eachs. Examples of valid sit sprites below. The first sit sprite is valid for RSE, and the second for FRLG: 
+
+![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_sit.png)
+![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_sit.png)
+
+The size of the surf blob sprite varies between games. In RSE it is 96x32 pixels, split into 3 frames of 32x32 pixels each. In FRLG it is 192x32pixels, split into 6 frames of 32x32 pixels each. Note that the surf blob sprite shares its palette with most other overworld sprites. The first surf blob sprite is valid for RSE, and the second for FRLG: 
+
+![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_surfblob.png)
+![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_surfblob.png)
+
+The size of the bird sprite (which appears when Fly is used) varies between games. In RSE it is 32x32 pixels, with a single frame. In FRLG it is 64x192 pixels, split into 3 frames of 64x64 pixels each. Note that the bird sprite shares its palette with most other overworld sprites. The first bird sprite is valid for RSE, and the second for FRLG:
+
+![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_bird.png)
+![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_bird.png)
+
+All overworld sprites mentioned above share the same normal palette, and the same reflection palette. These are 16-colors palettes, of which the first color is "transparent". By default, the normal palette is derived from the walking image [how does the indexing work? can you use a non-indexed walk image as long as the same 16 or less colors are used??], and the reflection palette is a copy of the normal palette. However, they can also be assigned custom palettes through ".pal" files. Below is an example of a valid .pal file:
+
+```
+JASC-PAL
+0100
+16
+148 230 230
+255 238 213
+255 213 213
+238 180 180
+172 156 164
+164 164 180
+106 123 148
+106 123 148
+123 131 131
+238 238 255
+164 246 156
+123 205 123
+255 156 156
+230 123 139
+255 255 255
+106 115 106
+```
+
 ### List of tags
+
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>RunSpriteMode</td>
+	<td><b>RSE</b> or <b>FRLG</b></td>
+	<td>TODO</td></tr>
+<tr><td>RunSprite</td>
+	<td>Image file name</td>
+	<td>TODO</td></tr>
+<tr><td>MapIcon</td>
+	<td>Image file name</td>
+	<td>The file name of the map icon image.</td></tr>
+<tr><td>SpriteNormalPalette</td>
+	<td>Palette file name</td>
+	<td>The file name of the normal palette.</td></tr>
+<tr><td>SpriteReflectionPalette</td>
+	<td>Image file name</td>
+	<td>The file name of the reflection palette.</td></tr>
+</table>
 
 <hr>
 
 ## In Ruby/Sapphire/Emerald
 
-### General info
+[TODO: showcase gif]
 
 ### Graphic specifications
 
+[TODO: fill]
+
 ### List of tags
 
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>SitJumpSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the sit/jump sprite image.</td></tr>
+<tr><td>AcroBikeSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the acro bike sprite image</td></tr>
+<tr><td>Underwater</td>
+	<td>Image file name</td>
+	<td>The file name of the underwater sprite image.</td></tr>
+<tr><td>WateringCanSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the watering can sprite image.</td></tr>
+<tr><td>DecorateSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the decorate sprite image.</td></tr>
+<tr><td>FieldMoveSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the field move sprite image.</td></tr>
+</table>
+
 ### Other/unsupported graphics
+
+[TODO]
+the bike image from the intro
 
 <hr>
 
 ## In FireRed/LeafGreen
 
-### General info
+[TODO: showcase gif]
 
 ### Graphic specifications
 
+[TODO: fill]
+
 ### List of tags
 
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>ItemSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the item sprite image.</td></tr>
+<tr><td>ItemBikeSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the item/bike sprite image</td></tr>
+</table>
+
 ### Other/unsupported graphics
+
+The large images shown during the player select are not supported. These use a palette of 32 colors, unlike all supported images.
+
+![the player select red image](player_select_red.png)
+![the player select leaf image](player_select_leaf.png)

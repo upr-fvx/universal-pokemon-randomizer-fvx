@@ -18,12 +18,15 @@ Below is a general guide for how CPGs work, followed by sections for specific ga
 ## In all games
 
 ### File structure
-To add a custom player graphics, create a new folder within `data/players`. This folder should contain your image files (and palette files, if you need those), as well as a text file called `info.ini`.
+To add a custom player graphics, create a new folder within `data/players/`. This folder should contain your image files (and palette files, if you need those), as well as a text file called `info.ini`.
 
-[TODO: remake these folder images]
-[the players/ folder](nav1.png)
-[inside the players/ folder](nav2.png)
-[inside a subfolder of players/, showing image files and info.ini](nav3.png)
+![the randomizer's root folder, with data/ highlighted](/assets/images/wikipages/cpg/nav1.png)
+
+![the data/ folder, with players/ highlighted](/assets/images/wikipages/cpg/nav2.png)
+
+![the players/ folder, with snorlax/ highlighted](/assets/images/wikipages/cpg/nav3.png)
+
+![the snorlax/ folder, showing image files and info.ini](/assets/images/wikipages/cpg/nav4.png)
 
 The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites).
 

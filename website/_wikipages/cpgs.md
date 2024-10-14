@@ -295,6 +295,7 @@ All the customizable player graphics use indexed palettes of size 16. Since 1 co
 
 The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
 
+[TODO]
 <img src=cpg_gen3/may_front_top_pixel.png alt="front image with the top right pixel highlighted"> &rarr;   
 <img src=cpg_gen3/may_front_top_pixel.png alt="in-game front image with transparency">
 
@@ -303,17 +304,16 @@ The transparent color is picked differently depending on whether your source ima
 The player has a front image, a back image, a map icon image, and various sprites (walking, cycling, fishing etc.) used in the overworld.
 <br><br>
 The front image is 64x64 pixels, and the back image is 64x256 pixels in RSE and 64x320 pixels in FRLG, divided into 4 respectively 5 64x64 pixel frames. Examples of valid front and back images below. The first back image is valid for RSE, and the second for FRLG:
-<br><br>
-<img src=cpg_gen3/may_front.png alt="front image #1">
-<img src=cpg_gen3/other_front.png alt="front image #2">
-<img src=cpg_gen3/may_back.png alt="back image #1">
-<img src=cpg_gen3/other_back.png alt="back image #2">
-<br><br>
+
+![front image #1](/assets/images/wikipages/cpg/gen3/may_front.png)
+![front image #2](/assets/images/wikipages/cpg/gen3/red_front.png)
+![back image #1](/assets/images/wikipages/cpg/gen3/may_back.png)
+![back image #2](/assets/images/wikipages/cpg/gen3/red_back.png)
 
 The map icon image is 16x16 pixels. Examples of valid map icon images below.
 
-<img src=cpg_gen3/may_icon.png alt="trainer map icon image #1">
-<img src=cpg_gen3/other_icon.png alt="trainer map icon image #2">
+![trainer map icon image #1](/assets/images/wikipages/cpg/gen3/may_icon.png)
+![trainer map icon image #2](/assets/images/wikipages/cpg/gen3/red_icon.png)
 
 The walk sprite is 144x32 pixels, split into 9 frames of 16x32 pixels each. 
 Examples of valid walk sprites below:
@@ -338,20 +338,20 @@ The fishing sprite is 384x32 pixels, split into 12 frames of 32x32 pixels each. 
 
 The size of the sit sprite (used primarily when surfing) varies between games. In RSE it is 96x32 pixels, split into 3 frames of 32x32 pixels each. In FRLG it is 48x32 pixels, split into 3 frames of 16x32 pixels eachs. Examples of valid sit sprites below. The first sit sprite is valid for RSE, and the second for FRLG: 
 
-![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_sit.png)
-![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_sit.png)
+![sit sprite #1](/assets/images/wikipages/cpg/gen3/may_sit.png)
+![sit sprite #2](/assets/images/wikipages/cpg/gen3/red_sit.png)
 
 The size of the surf blob sprite varies between games. In RSE it is 96x32 pixels, split into 3 frames of 32x32 pixels each. In FRLG it is 192x32pixels, split into 6 frames of 32x32 pixels each. Note that the surf blob sprite shares its palette with most other overworld sprites. The first surf blob sprite is valid for RSE, and the second for FRLG: 
 
-![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_surfblob.png)
-![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_surfblob.png)
+![surf blob sprite #1](/assets/images/wikipages/cpg/gen3/may_surfblob.png)
+![surf blob sprite #2](/assets/images/wikipages/cpg/gen3/red_surfblob.png)
 
 The size of the bird sprite (which appears when Fly is used) varies between games. In RSE it is 32x32 pixels, with a single frame. In FRLG it is 64x192 pixels, split into 3 frames of 64x64 pixels each. Note that the bird sprite shares its palette with most other overworld sprites. The first bird sprite is valid for RSE, and the second for FRLG:
 
-![fishing sprite #1](/assets/images/wikipages/cpg/gen3/may_bird.png)
-![fishing sprite #2](/assets/images/wikipages/cpg/gen3/red_bird.png)
+![bird sprite #1](/assets/images/wikipages/cpg/gen3/may_bird.png)
+![bird sprite #2](/assets/images/wikipages/cpg/gen3/red_bird.png)
 
-All overworld sprites mentioned above share the same normal palette, and the same reflection palette. These are 16-colors palettes, of which the first color is "transparent". By default, the normal palette is derived from the walking image [how does the indexing work? can you use a non-indexed walk image as long as the same 16 or less colors are used??], and the reflection palette is a copy of the normal palette. However, they can also be assigned custom palettes through ".pal" files. Below is an example of a valid .pal file:
+All overworld sprites mentioned above share the same normal palette, and the same reflection palette. These are 16-colors palettes, of which the first color is "transparent". By default, the normal palette is derived from the walking image [TODO: how does the indexing work? can you use a non-indexed walk image as long as the same 16 or less colors are used??], and the reflection palette is a copy of the normal palette. However, they can also be assigned custom palettes through ".pal" files. Below is an example of a valid .pal file:
 
 ```
 JASC-PAL
@@ -377,16 +377,16 @@ JASC-PAL
 
 ### List of tags
 
-<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
-<tr><td>RunSpriteMode</td>
-	<td><b>RSE</b> or <b>FRLG</b></td>
-	<td>TODO</td></tr>
-<tr><td>RunSprite</td>
-	<td>Image file name</td>
-	<td>TODO</td></tr>
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr
 <tr><td>MapIcon</td>
 	<td>Image file name</td>
 	<td>The file name of the map icon image.</td></tr>
+<tr><td>RunSpriteMode</td>
+	<td><b>RSE</b> or <b>FRLG</b></td>
+	<td>The mode for reading the run sprite image.</td></tr>
+<tr><td>RunSprite</td>
+	<td>Image file name</td>
+	<td>The file name of the run sprite image.</td></tr>
 <tr><td>SpriteNormalPalette</td>
 	<td>Palette file name</td>
 	<td>The file name of the normal palette.</td></tr>
@@ -403,7 +403,35 @@ JASC-PAL
 
 ### Graphic specifications
 
-[TODO: fill]
+The sit/jump sprite (used when jumping into water/onto the fly bird) is 92x32 pixels, split into 3 frames of 32x32 pixels each. Examples of valid sit/jump sprites below:
+
+![sit/jump sprite #1](/assets/images/wikipages/cpg/rse/may_sitjump.png)
+![sit/jump sprite #2](/assets/images/wikipages/cpg/rse/brendan_sitjump.png)
+
+The acro bike sprite is 864x32 pixels, split into 27 frames of 32x32 pixels each. Examples of valid sit/jump sprites below:
+
+![acro bike sprite #1](/assets/images/wikipages/cpg/rse/may_acrobike.png)
+![acro bike sprite #2](/assets/images/wikipages/cpg/rse/brendan_acrobike.png)
+
+The underwater sprite is 96x32 pixels, split into 3 frames of 32x32 pixels each. Note that the underwater sprite uses a different palette from all other overworld sprites. Examples of valid underwater sprites below:
+
+![underwater sprite #1](/assets/images/wikipages/cpg/rse/may_underwater.png)
+![underwater sprite #2](/assets/images/wikipages/cpg/rse/brendan_underwater.png)
+
+The watering can sprite is 192x32 pixels, split into 6 frames of 32x32 pixels each. Examples of valid underwater sprites below:
+
+![watering can sprite #1](/assets/images/wikipages/cpg/rse/may_wateringcan.png)
+![watering can sprite #2](/assets/images/wikipages/cpg/rse/brendan_wateringcan.png)
+
+The decorate sprite is 16x32 pixels, with a single frame. Examples of valid decorate sprites below:
+
+![decorate sprite #1](/assets/images/wikipages/cpg/rse/may_decorate.png)
+![decorate sprite #2](/assets/images/wikipages/cpg/rse/brendan_decorate.png)
+
+And finally, the field move sprite is 160x32 pixels, split into 5 frames of 32x32 pixels each. Examples of valid decorate sprites below:
+
+![field move sprite #1](/assets/images/wikipages/cpg/rse/may_fieldmove.png)
+![field move sprite #2](/assets/images/wikipages/cpg/rse/brendan_fieldmove.png)
 
 ### List of tags
 
@@ -430,8 +458,14 @@ JASC-PAL
 
 ### Other/unsupported graphics
 
-[TODO]
-the bike image from the intro
+During the intro movie, the player is shown riding a bike. In Emerald, this is also shown during the credits. This bike is split into two images, for the player and for the bike. The UPR does not support changing either.
+
+![intro brendan (ruby/sapphire)](/assets/images/wikipages/cpg/rse/brendan_introbike_RS.png)
+![intro may (ruby/sapphire)](/assets/images/wikipages/cpg/rse/may_introbike_RS.png)
+![intro brendan (emerald)](/assets/images/wikipages/cpg/rse/brendan_introbike_E.png) 
+![intro may (emerald)](/assets/images/wikipages/cpg/rse/may_introbike_E.png)
+![the bike itself (ruby/sapphire)](/assets/images/wikipages/cpg/rse/introbike_RS.png)
+![the bike itself (emerald)](/assets/images/wikipages/cpg/rse/introbike_E.png)
 
 <hr>
 
@@ -441,7 +475,15 @@ the bike image from the intro
 
 ### Graphic specifications
 
-[TODO: fill]
+Ihe item sprite (used when using a field move or the VS Seeker) is 144x32 pixels, split into 9 frames of 16x32 pixels each. Examples of valid decorate sprites below:
+
+![field move sprite #1](/assets/images/wikipages/cpg/frlg/leaf_item.png)
+![field move sprite #2](/assets/images/wikipages/cpg/frlg/red_item.png)
+
+Ihe item/bike sprite (used when using the VS Seeker on a bike) is 192x32 pixels, split into 6 frames of 32x32 pixels each. Examples of valid decorate sprites below:
+
+![field move sprite #1](/assets/images/wikipages/cpg/frlg/leaf_itembike.png)
+![field move sprite #2](/assets/images/wikipages/cpg/frlg/red_itembike.png)
 
 ### List of tags
 
@@ -458,5 +500,5 @@ the bike image from the intro
 
 The large images shown during the player select are not supported. These use a palette of 32 colors, unlike all supported images.
 
-![the player select red image](player_select_red.png)
-![the player select leaf image](player_select_leaf.png)
+![the player select red image](/assets/images/wikipages/cpg/frlg/red_playerselect.png)
+![the player select leaf image](/assets/images/wikipages/cpg/frlg/leaf_playerselect.png)

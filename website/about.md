@@ -6,25 +6,54 @@ title: About
 
 The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon games, originally released by Dabomstew in 2012. Like other randomizers, it can shuffle around and change the data of the target game to your liking. The Randomizer also contains various quality-of-life features, like turning off trade evolutions or choosing exactly which Pokémon to have as your starter.
 
-All versions of the UPR can randomize:
+### What can the UPR randomize?
 
-- Pokémon base stats
-- Pokémon types
-- Pokémon abilities
-- Pokémon evolutions
-- Pokémon movesets
-- 
+- Pokémon traits
+	- What base stats Pokémon have
+	- The types of Pokémon
+	- Pokémon abilities
+	- What each Pokémon evolves into
+- Starters, Statics, and Trades
+	- What Pokémon are available as starters. You may also set the starters to any Pokémon in the game, so you can play through the game with your favorite 'mon.
+	- "Static" Pokémon, like legendary encounters, gifts, and ones you buy at the Game Corner
+	- What Pokémon are available in in-game trades, and what Pokémon are requested
+- Moves and movesets
+	- The power, accuracy, PP, type, of each move
+	- The category (physical or special) of each move (Gen 4+)
+	- What moves Pokémon learn by leveling up
+	- What egg moves each Pokémon has
+- Foe Pokémon
+	- What Pokémon each Trainer uses
+	- The held items of Trainer Pokémon
+	- Trainer names and trainer class names  
+	- Totem Pokémon (Gen 7 only)
+- Wild Pokémon
+	- What Pokémon can be encountered in each area
+	- The held items of wild Pokémon
+- TM/HMs & Tutors 
+	- The power, accuracy, and type of each move
+	- What moves are available as TMs
+	- What TMs are compatible with which Pokémon
+	- What moves are available as Move Tutors
+	- What Move Tutors are compatible with which Pokémon
+- Items
+	- What items can be found in item balls, and as hidden items
+	- What items are sold in shops
+	- What items can be found by Pickup
+- The strengths and weaknesses of types (only in FVX)
+- The colors of Pokémon (only in FVX)
 
-- Starter Pokémon
-- "Static" Pokémon, like legendary encounters, gifts, and ones you buy
+### What games can the UPR randomize?
 
-- Trainer teams
-- Trainer names and trainer class names  
+All versions of the UPR can randomize core series games from Generation 1-5, from Red/Green to Black 2/White 2. All versions based of UPR ZX, including the FVX branch linked to by this site, also support randomizing Generation 6 and Generation 7 games.
 
-[... explain what the randomizer can do, bullet point list randomizable parts]
-[... mention supported games]
-[... mention seeds]
-[... ]
+The UPR does not support ROM hacks, but it does support all official localizations of the games it supports (except Korean Gold/Silver). ROM hacks *may* still work with the UPR in practise, especially if they are old or only make minor changes to the game. However, this is done at own risk.
+
+### Seeds and logs
+
+Each time the Randomizer is used, it outputs not only the randomized ROM, but also the random "seed" that was used and a string representing the settings. By inputting this same seed and settings, users can ensure the same randomization results every time, enabling consistent experiences and sharing Randomizer results with others. This feature is particularly useful for races and other community playthroughs, where uniformity is key.
+
+The UPR can also log its randomization, so users can look up details on the randomized game. For races, this feature may be turned off to avoid spoilers.
 
 ## About the FVX branch
 
@@ -32,7 +61,7 @@ The **Universal Pokémon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a c
 
 [... say something about ZX, what it added relative the original FVX]
 
-Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page](../wiki/New-Feature-Summary).
+Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page](/wikipages/New-Feature-Summary).
 
 True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 
@@ -59,9 +88,9 @@ Below, a small selection of other randomizers and branches are listed. They have
 
 ### Randomizers
 
-- **[The Crystal Randofuser](https://github.com/xCrystal/crystal-randofuser)** (by xCrystal) [...].
-- **[Sanqui's Online Randomizer]** (by Sanqui) is not only an online randomizer for Pokémon Red, [...].
-- **[GBAXG](https://kittypboxx.github.io/GBAXG/)** (by KittyPBoxx) [...].
+- **[The Crystal Randofuser](https://github.com/xCrystal/crystal-randofuser)** (by xCrystal) is a randomizer for Pokémon Crystal, where Pokémon lines are fused when randomized. You no longer have Abra-Kadabra-Alakazam, Chikorita-Bayleef-Meganium - you have Chikabra-Baydabra-Megakazam! Or the like. 
+- **[Sanqui's Online Randomizer](https://sanqui.net/randomizer/)** (by Sanqui) is not only an online randomizer for Pokémon Red, it adds new Pokémon species to the game, all the way up to Gen 6. 
+- **[GBAXG](https://kittypboxx.github.io/GBAXG/)** (by KittyPBoxx) is a cross-game map randomizer of Pokémon FireRed, Emerald, and the Crystal Dust ROM hack. This does not mean it works on any of those given games - it works on all of them, *at once*. Travel between three regions seamlessly, and keep your team and items as you look for Gym Leaders and the Elite 4.
 - **[Archipelago](https://archipelago.gg/)** is a so-called "multi-game" randomizer. Not only does it support many many games from disparate franchises, but it lets you combine them in a sense. Or if you don't feel up for that, the games can be randomized by their own. At the time of writing, Archipelago officially supports Pokémon [Red/Blue](https://archipelago.gg/games/Pokemon%20Red%20and%20Blue/info/en) and (Emerald)[https://archipelago.gg/games/Pokemon%20Emerald/info/en], but more are likely to be added in the future. 
 
 ### Branches

@@ -27,7 +27,7 @@ Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of usefu
 
 [The pret Discord server](https://discord.com/invite/d5dubZ3) is the prime forum for discussing the contents of pret resources, and ROM hacking using them. Considering disassembly hacking is now dominating the Gen 1 and 2 scenes, and Gen 3 hacking is in transition of being mostly decomp, this community plays a vital role in sharing knowledge and providing support for hackers of these games.
 
-[The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found here about said games, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
+[The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found about said games here, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
 
 ## Tools used
 
@@ -65,7 +65,7 @@ The NDS games introduced a lot of file formats, for which great programs have al
 
 In addition,
 
-- **Pokémon Palette Randomization in Gen 3-5** is achieved using a port of code from Artemis251's Emerald Randomizer.
+- **Pokémon Palette Randomization in Gen 3-5** is achieved using a port of code from [Artemis251's Emerald Randomizer](http://artemis251.fobby.net/downloads/emerald/).
 
 ## Images used for Custom Player Graphics
 

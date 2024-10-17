@@ -9,11 +9,11 @@ The Randomizer is an open source project, but it also exists and has only been m
 
 Many people have put countless hours of their time into researching the structures contained within Pokemon games over the years. Without the research done by these people, this randomizer would not exist, or would have taken a lot longer to create.
 
-Instead of trying to note where I found every single piece of information used in the randomizer's creation, I will acknowledge the major sources of information that were used, as well as some of the main contributors of said information.
+Instead of trying to note where every single piece of information used in the Randomizer's creation was found, the major sources of information that were used will be acknowledged, as well as some of the main contributors of said information.
 
-The creators of the external components I used will also be acknowledged. These components have been used appropriately subject to their respective software licenses.
+The creators of the external components used will also be acknowledged. These components have been used appropriately subject to their respective software licenses.
 
-Thanks to the efforts of those acknowledged below, my time spent making the program was mainly focussed on just that - putting the pieces together to create the program itself. I did, however, do my own research where things were too undocumented for my liking, and this research can be seen in the comments of the program's source code where appropriate.
+Thanks to the efforts of those acknowledged below, time spent making the program can be mainly focused on just that - putting the pieces together to create the program itself. However, sometimes documentation proved insufficient, and original research had to be done. This research can be seen in the comments of the program's source code where appropriate.
 
 ## Sources of information
 
@@ -22,6 +22,7 @@ Thanks to the efforts of those acknowledged below, my time spent making the prog
 Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of useful information to aid users in hacking the Nintendo DS Pokemon games. The research done by members such as andibad, Kaphotics & Bond697 helped the Generation 5 portions of the randomizer get off the ground.
 
 [The Pokecommunity](https://www.pokecommunity.com/) is the largest English-language Pokemon ROM hacking community, and also contains a wealth of useful information, especially information relating to GBA/Generation 3 Pokemon games.
+
 
 ## Tools used
 
@@ -38,6 +39,8 @@ Not all the functionality implemented into the Randomizer was documented anywher
 - SDSME by Spiky Eared Pichu ([here](https://projectpokemon.org/home/files/file/2099-spikys-ds-map-editor-sdsme/), or [here](https://github.com/Skareeg/SDSME))
 - PokeDSPic by loadingNOW
 - BWSE by KazoWAR ([here](https://projectpokemon.org/home/forums/topic/13424-kazos-bw-tools/))
+- Tinke by pleonex ([here](https://github.com/pleonex/tinke))
+- Hex Maniac Advance by haven1433 ([here](https://github.com/haven1433/HexManiacAdvance))
 
 ## Libraries/Programs used in the Randomizer
 

@@ -17,12 +17,17 @@ Thanks to the efforts of those acknowledged below, time spent making the program
 
 ## Sources of information
 
-[The Skeetendo community](https://web.archive.org/web/20220929151130/https://hax.iimarckus.org/topic/8058/) was a forum full of hacking information regarding the GameBoy/GameBoy Color Pokemon games. It was shut down in 2022, but  was an invaluable resource in the development of the randomizers for these games.
+[The Skeetendo community](https://web.archive.org/web/20220929151130/https://hax.iimarckus.org/topic/8058/) was a forum full of hacking information regarding the GameBoy/GameBoy Color Pokemon games. It was shut down in 2022, but was an invaluable resource in the development of the randomizers for these games.
 
 Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of useful information to aid users in hacking the Nintendo DS Pokemon games. The research done by members such as andibad, Kaphotics & Bond697 helped the Generation 5 portions of the randomizer get off the ground.
 
 [The Pokecommunity](https://www.pokecommunity.com/) is the largest English-language Pokemon ROM hacking community, and also contains a wealth of useful information, especially information relating to GBA/Generation 3 Pokemon games.
 
+[The disassemblies and decompilations by the pret team](https://pret.github.io/), are hard to overstate the value of. They have left an impact comparable to a large meteor on all parts of the ROM hacking community, and randomizers are not excempt from this. When trying to understand the inner workings of a game, nothing beats being able to read its code. 
+
+[The pret Discord server](https://discord.com/invite/d5dubZ3) is the prime forum for discussing the contents of pret resources, and ROM hacking using them. Considering disassembly hacking is now dominating the Gen 1 and 2 scenes, and Gen 3 hacking is in transition of being mostly decomp, this community plays a vital role in sharing knowledge and providing support for hackers of these games.
+
+[The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found here about said games, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
 
 ## Tools used
 
@@ -41,6 +46,7 @@ Not all the functionality implemented into the Randomizer was documented anywher
 - BWSE by KazoWAR ([here](https://projectpokemon.org/home/forums/topic/13424-kazos-bw-tools/))
 - Tinke by pleonex ([here](https://github.com/pleonex/tinke))
 - Hex Maniac Advance by haven1433 ([here](https://github.com/haven1433/HexManiacAdvance))
+- Sprite decompression webapp by IsoFrieze ([here](https://rgmechex.com/tech/gen1decompress.html)) 
 
 ## Libraries/Programs used in the Randomizer
 
@@ -48,10 +54,18 @@ The NDS games introduced a lot of file formats, for which great programs have al
 
 - **Generation 4 text handling** is processed by a Java port of loadingNOW's thenewpoketext.
 - **Generation 5 text handling** is processed by a Java port of SCV/ProjectPokemon's pptxt.
-- **NDS ROM extraction & creation** is handled using Java-ported code from **ndstool**.
+- **NDS ROM extraction & creation** is handled using a Java port of code from **ndstool**.
 - **arm9.bin decompression & compression** is achieved using a Java port of **CUE's BLZ compressor**.
 - **Decompression of LZ10/11-compressed images** is achieved using the DSDecmp library.
-- **Decompression of Gen1/2 Pokemon pictures** is achieved using a Java port of code from pokemon-reverse-engineering-tools
+- **Decompression of Gen 1/2 Pokemon images** is achieved using a Java port of code from pokemon-reverse-engineering-tools
+- **Recompression of LZ10/11-compressed images** is achieved using modified code from [AlmiaE](https://github.com/SunakazeKun/AlmiaE).
+- **Recompression of Gen 2 images** is achieved using [FuSoYa's Lunar Compress DLL](https://fusoya.eludevisibility.org/lc/index.html). 
+- **3DS ROM extraction & creation** is handled using a Java port of code from Kaphotics' pk3DS and pkNX, and FireyFly's poketools.
+- **Reading/parsing BFLIM images** is achieved using Java port of code from KillzXGaming's Switch Toolbox.  
+
+In addition,
+
+- **Pokémon Palette Randomization in Gen 3-5** is achieved using a port of code from Artemis251's Emerald Randomizer.
 
 ## Images used for Custom Player Graphics
 

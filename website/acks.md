@@ -19,15 +19,17 @@ Thanks to the efforts of those acknowledged below, time spent making the program
 
 [The Skeetendo community](https://web.archive.org/web/20220929151130/https://hax.iimarckus.org/topic/8058/) was a forum full of hacking information regarding the GameBoy/GameBoy Color Pokemon games. It was shut down in 2022, but was an invaluable resource in the development of the randomizers for these games.
 
-Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of useful information to aid users in hacking the Nintendo DS Pokemon games. The research done by members such as andibad, Kaphotics & Bond697 helped the Generation 5 portions of the randomizer get off the ground.
+Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of useful information to aid users in hacking the Nintendo DS Pokemon games. The research done by members such as andibad, Kaphotics & Bond697 helped the Generation 5 portions of the Randomizer get off the ground.
 
 [The Pokecommunity](https://www.pokecommunity.com/) is the largest English-language Pokemon ROM hacking community, and also contains a wealth of useful information, especially information relating to GBA/Generation 3 Pokemon games.
 
 [The disassemblies and decompilations by the pret team](https://pret.github.io/), are hard to overstate the value of. They have left an impact comparable to a large meteor on all parts of the ROM hacking community, and randomizers are not excempt from this. When trying to understand the inner workings of a game, nothing beats being able to read its code. 
 
-[The pret Discord server](https://discord.com/invite/d5dubZ3) is the prime forum for discussing the contents of pret resources, and ROM hacking using them. Considering disassembly hacking is now dominating the Gen 1 and 2 scenes, and Gen 3 hacking is in transition of being mostly decomp, this community plays a vital role in sharing knowledge and providing support for hackers of these games.
+[The pret Discord server](https://discord.com/invite/d5dubZ3) is the prime forum for discussing the contents of pret resources, and ROM hacking using them. Considering how disassembly hacking now dominates the Gen 1 and 2 scenes, and Gen 3 hacking is in transition of being mostly decomp, this community plays a vital role in sharing knowledge and providing support for hackers of these games.
 
 [The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found about said games here, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
+
+[Island of Lost ROM Hacks](https://discord.gg/NrPDYB2mtW) is a smaller Discord server dedicated to the preservation of ROM hacks, and small talk. Its members have provided insight and advice, a place to bounce off ideas for the Randomizer.
 
 ## Tools used
 

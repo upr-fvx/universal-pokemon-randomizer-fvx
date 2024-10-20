@@ -104,7 +104,7 @@ FishSpriteMode=combined
 FishSprite=gb_fish.png
 ```
 
-<hr>
+---
 
 ## In Generation 1
 
@@ -198,7 +198,7 @@ On the title screen, there is an image of Red holding a Poké Ball. The UPR has 
 ![a screenshot of the Pokémon Blue title screen](/assets/images/wikipages/cpg/gen1/title_screen_screenshot.png)
 ![the fishing rod sprite](/assets/images/wikipages/cpg/gen1/fishing_rod.png)
 
-<hr>
+---
 
 ## In Generation 2
 
@@ -288,7 +288,7 @@ There is no support for changing the fishing rod.
 
 ![the fishing rod sprite](/assets/images/wikipages/cpg/gen2/fishing_rod.png)
 
-<hr>
+---
 
 ## In Generation 3 (general)
 
@@ -380,25 +380,15 @@ JASC-PAL
 
 ### List of tags
 
-<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr
-<tr><td>MapIcon</td>
-	<td>Image file name</td>
-	<td>The file name of the map icon image.</td></tr>
-<tr><td>RunSpriteMode</td>
-	<td><b>RSE</b> or <b>FRLG</b></td>
-	<td>The mode for reading the run sprite image.</td></tr>
-<tr><td>RunSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the run sprite image.</td></tr>
-<tr><td>SpriteNormalPalette</td>
-	<td>Palette file name</td>
-	<td>The file name of the normal palette.</td></tr>
-<tr><td>SpriteReflectionPalette</td>
-	<td>Image file name</td>
-	<td>The file name of the reflection palette.</td></tr>
-</table>
+| Key                     | Accepted values     | Usage                                      |
+|-------------------------|---------------------|--------------------------------------------|
+| MapIcon                 | Image file name     | The file name of the map icon image.       |
+| RunSpriteMode           | **RSE** or **FRLG** | The mode for reading the run sprite image. |
+| RunSprite               | Image file name     | The file name of the run sprite image.     |
+| SpriteNormalPalette     | Palette file name   | The file name of the normal palette.       |
+| SpriteReflectionPalette | Palette file name   | The file name of the reflection palette.   |
 
-<hr>
+---
 
 ## In Ruby/Sapphire/Emerald
 
@@ -438,26 +428,14 @@ And finally, the field move sprite is 160x32 pixels, split into 5 frames of 32x3
 
 ### List of tags
 
-<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
-<tr><td>SitJumpSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the sit/jump sprite image.</td></tr>
-<tr><td>AcroBikeSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the acro bike sprite image</td></tr>
-<tr><td>Underwater</td>
-	<td>Image file name</td>
-	<td>The file name of the underwater sprite image.</td></tr>
-<tr><td>WateringCanSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the watering can sprite image.</td></tr>
-<tr><td>DecorateSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the decorate sprite image.</td></tr>
-<tr><td>FieldMoveSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the field move sprite image.</td></tr>
-</table>
+| Key               | Accepted values | Usage                                           |
+|-------------------|-----------------|-------------------------------------------------|
+| SitJumpSprite     | Image file name | The file name of the sit/jump sprite image.     |
+| AcroBikeSprite    | Image file name | The file name of the acro bike sprite image.    |
+| Underwater        | Image file name | The file name of the underwater sprite image.   |
+| WateringCanSprite | Image file name | The file name of the watering can sprite image. |
+| DecorateSprite    | Image file name | The file name of the decorate sprite image.     |
+| FieldMoveSprite   | Image file name | The file name of the field move sprite image.   |
 
 ### Other/unsupported graphics
 
@@ -470,7 +448,7 @@ During the intro movie, the player is shown riding a bike. In Emerald, this is a
 ![the bike itself (ruby/sapphire)](/assets/images/wikipages/cpg/rse/introbike_RS.png)
 ![the bike itself (emerald)](/assets/images/wikipages/cpg/rse/introbike_E.png)
 
-<hr>
+---
 
 ## In FireRed/LeafGreen
 
@@ -490,14 +468,10 @@ Ihe item/bike sprite (used when using the VS Seeker on a bike) is 192x32 pixels,
 
 ### List of tags
 
-<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
-<tr><td>ItemSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the item sprite image.</td></tr>
-<tr><td>ItemBikeSprite</td>
-	<td>Image file name</td>
-	<td>The file name of the item/bike sprite image</td></tr>
-</table>
+| Key            | Accepted values | Usage                                        |
+|----------------|-----------------|----------------------------------------------|
+| ItemSprite     | Image file name | The file name of the item sprite image.      |
+| ItemBikeSprite | Item file name  | The file name of the item/bike sprite image. |
 
 ### Other/unsupported graphics
 

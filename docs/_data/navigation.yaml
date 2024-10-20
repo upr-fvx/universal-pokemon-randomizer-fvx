@@ -1,0 +1,10 @@
+- name: Home
+  link: /
+- name: About
+  link: /about.html
+- name: Acknowledgements
+  link: /acks.html
+- name: Wiki
+  link: /wikipages/home.html
+- name: Downloads
+  link: /downloads.html

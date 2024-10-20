@@ -73,7 +73,7 @@ In addition,
 
 The Custom Player Graphics requires image files to insert into the game. Some of these are from other Pokémon ROM hacking projects, while others were made as general resources. Full credits for each CPG are included in its files, but for good measure an abridged version is here as well. 
 
-All authors were asked when possible; for some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notice us and it will be removed from the Randomizer.
+All authors were asked when possible; for some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notify us and it will be removed from the Randomizer.
 
 - voliol (Various)
 - altedgy (Blue)
@@ -87,7 +87,7 @@ All authors were asked when possible; for some old ROM hacks their creators are 
 
 ## Direct code contributors
 
-Since Dabomstew opened up the Randomizer to open source developer, a number of people have worked directly on the Randomizer's codebase. They are listed here. The names used are taken from git, and they are sorted according to when their first git commit (code contribution) was made. For more information on who did what, browse [the project's source code/version control](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx).
+Since Dabomstew opened up the Randomizer to open source development, a number of people have worked directly on the Randomizer's codebase. They are listed here. The names used are taken from git, and they are sorted according to when their first git commit (code contribution) was made. For more information on who did what, browse [the project's source code/version control](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx).
 
 - Dabomstew 
 - toddblove 

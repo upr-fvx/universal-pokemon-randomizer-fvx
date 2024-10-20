@@ -4,9 +4,15 @@ title: About
 ---
 ## About the Universal Pokémon Randomizer
 
-The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon games, originally released by Dabomstew in 2012. Like other randomizers, it can shuffle around and change the data of the target game to your liking. The Randomizer also contains various quality-of-life features, like turning off trade evolutions or choosing exactly which Pokémon to have as your starter.
+The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon games, originally released by Dabomstew in 2012. Like other randomizers, it can shuffle around and change the data of the target game to your liking. The Randomizer also contains various quality-of-life features, like turning off trade evolutions or choosing exactly which Pokémon to have as your starter. All randomizations are optional, so you can change the game as little or as much as you like.
 
-### What can the UPR randomize?
+### What games can the UPR randomize?
+
+All versions of the UPR can randomize core series games from Generation 1-5, from Red/Green to Black 2/White 2. All versions based on UPR ZX, including the FVX branch linked to by this site, also support randomizing Generation 6 and Generation 7 games.
+
+The UPR does not support ROM hacks, but it does support all official localizations of the games it supports (except Korean Gold/Silver). ROM hacks *may* still work with the UPR in practise, especially if they are old or only make minor changes to the game. However, this is done at own risk.
+
+### What can the UPR randomize in the game?
 
 - Pokémon traits
 	- What base stats Pokémon have
@@ -18,7 +24,7 @@ The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon gam
 	- "Static" Pokémon, like legendary encounters, gifts, and ones you buy at the Game Corner
 	- What Pokémon are available in in-game trades, and what Pokémon are requested
 - Moves and movesets
-	- The power, accuracy, PP, type, of each move
+	- The power, accuracy, PP, and type of each move
 	- The category (physical or special) of each move (Gen 4+)
 	- What moves Pokémon learn by leveling up
 	- What egg moves each Pokémon has
@@ -42,12 +48,6 @@ The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon gam
 	- What items can be found by Pickup
 - The strengths and weaknesses of types (only in FVX)
 - The colors of Pokémon (only in FVX)
-
-### What games can the UPR randomize?
-
-All versions of the UPR can randomize core series games from Generation 1-5, from Red/Green to Black 2/White 2. All versions based of UPR ZX, including the FVX branch linked to by this site, also support randomizing Generation 6 and Generation 7 games.
-
-The UPR does not support ROM hacks, but it does support all official localizations of the games it supports (except Korean Gold/Silver). ROM hacks *may* still work with the UPR in practise, especially if they are old or only make minor changes to the game. However, this is done at own risk.
 
 ### Seeds and logs
 
@@ -76,7 +76,7 @@ May 8, 2019, the first version of the Universal Pokémon Randomizer ZX was relea
 
 August 6, 2022, voliol released the first version of a nameless branch, later "UPR ZX V branch". This branch had some focus on graphical features, and also contained considerable refactoring. Initially, the branch was based off brentspector's branch, but later "moved" to ZX.
 
-[... about fox of the asterisk's branch, give dates. Best if she fills in this?]
+Dec 1, 2023, foxoftheasterisk began work on a branch focused on adding features to control the randomization, called "Closer To Vanilla". Although it was originally intended to implement features to be added to the ZX branch rather than have its own releases, she eventually released a single version on May 17, 2024.
 
 July 11, 2024, collaboration between foxoftheasterisk and voliol led to a release of their branches merged (and then some): the Universal Pokémon Randomizer FVX.
 

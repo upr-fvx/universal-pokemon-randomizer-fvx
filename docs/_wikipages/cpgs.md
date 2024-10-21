@@ -1,7 +1,8 @@
 ---
 name: Custom Player Graphics
-img_dir: {{ site.baseurl }}/assets/images/wikipages/cpg
 ---
+{% assign img_dir = "{{ site.baseurl }}/assets/images/wikipages/cpg" %}
+
 
 The FVX branch has support for custom player graphics in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
  

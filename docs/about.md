@@ -59,7 +59,7 @@ The UPR can also log its randomization, so users can look up details on the rand
 
 The **Universal Pokémon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a continuation of the Universal Pokémon Randomizer. It was born of a merge of branches by [foxoftheasterisk](https://github.com/foxoftheasterisk/UPR-ZX-closer-to-vanilla) and [voliol](https://github.com/voliol/universal-pokemon-randomizer), both based on [Ajarmar's UPR ZX](https://github.com/Ajarmar/universal-pokemon-randomizer-zx).
 
-Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page]({{ site.baseurl }}/wikipages/new-feature-summary.html]).
+Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page]({{ site.baseurl }}/wikipages/new_feature_summary.html).
 
 True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 

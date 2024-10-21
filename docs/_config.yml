@@ -22,8 +22,8 @@ title: Universal Pokémon Randomizer FVX
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Site for the Universal Pokémon Randomizer FVX
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://upr-fvx.net" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/universal-pokemon-randomizer-fvx" # the subpath of your site, e.g. /blog
+url: "https://upr-fvx.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  upr-fvx
 
 # Build settings

@@ -9,7 +9,7 @@ layout: default
 	<h2>Wiki pages:</h2>
 	<ul>
 		{% for wikipage in site.wikipages %}
-		<li><a href="{{ wikipage.url }}">{{ wikipage.name }}</a></li>
+		<li><a href="{{ site.baseurl }}{{ wikipage.url }}">{{ wikipage.name }}</a></li>
 		{% endfor %}
 	</ul>
 </div>

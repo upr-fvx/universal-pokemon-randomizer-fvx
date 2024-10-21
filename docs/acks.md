@@ -119,7 +119,3 @@ Credit also goes to those who made randomizer programs before this one was relea
 - Artemis251's Red/Blue randomizer
 - pateandrew's randomizer for gen2/3 games
 - Another R/B randomizer by Ubuntaur
-
----
-
-![pixel art depicting a worker in a hard hat holding a wrench](assets/images/under_construction.png) The website for the Universal Pokemon Randomizer FVX is under construction. This page is yet to be completed. ![pixel art depicting a worker in a hard hat holding a wrench](assets/images/under_construction.png)

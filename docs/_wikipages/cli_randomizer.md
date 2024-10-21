@@ -1,8 +1,6 @@
 ---
 name: CLI Randomizer
 ---
-# CLI Randomizer
-
 The CLI randomizer can be used by starting the randomizer from the command line with the program argument `cli`.
 
 Available options:

@@ -15,4 +15,4 @@ In the Gen 7 games, the "Allow Alternate Formes" setting for evolutions allows a
 
 ## 3DS Game Randomization
 
-Randomizing 3DS games is a bit more complicated than games on older consoles. [If you're unfamiliar with working with the various 3DS file formats, check out this page.](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/Randomizing-the-3DS-games)
+Randomizing 3DS games is a bit more complicated than games on older consoles. [If you're unfamiliar with working with the various 3DS file formats, check out this page.]({{ site.baseurl }}/wikipages/3ds_games.html)

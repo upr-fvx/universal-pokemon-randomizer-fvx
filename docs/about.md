@@ -59,14 +59,14 @@ The UPR can also log its randomization, so users can look up details on the rand
 
 The **Universal Pokémon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a continuation of the Universal Pokémon Randomizer. It was born of a merge of branches by [foxoftheasterisk](https://github.com/foxoftheasterisk/UPR-ZX-closer-to-vanilla) and [voliol](https://github.com/voliol/universal-pokemon-randomizer), both based on [Ajarmar's UPR ZX](https://github.com/Ajarmar/universal-pokemon-randomizer-zx).
 
-Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page](/wikipages/New-Feature-Summary).
+Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. For a full list of new features, see [this wiki page]({{ site.baseurl }}/wikipages/new-feature-summary.html]).
 
 True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 
 For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a SpeciesSet class with many helper functions, and automated tests for most features.
 
 ## History of the Randomizer
-December 12, 2012, Dabomstew released the first version of the Universal Pokemon Randomizer. It was not the first randomizer of its kind, Artemis251's Emerald randomizer among others (see [Acknowledgements](./Acknowledgements) had already broken the ground of randomizing Pokémon games. What made the UPR stand out was its goal of being able to randomize all then-released Pokémon games, from Gen 1 to Gen 5. Thus, the *Universal* Pokémon Randomizer.
+December 12, 2012, Dabomstew released the first version of the Universal Pokemon Randomizer. It was not the first randomizer of its kind, Artemis251's Emerald randomizer among others (see [Acknowledgements]({{ site.baseurl }}/acks.html)) had already broken the ground of randomizing Pokémon games. What made the UPR stand out was its goal of being able to randomize all then-released Pokémon games, from Gen 1 to Gen 5. Thus, the *Universal* Pokémon Randomizer.
 
 May 15, 2014, in conjunction with the release of UPR 1.6.1, the Randomizer became open source, [hosted on GitHub](https://github.com/Dabomstew/universal-pokemon-randomizer). 
 
@@ -91,14 +91,14 @@ Below, a small selection of other randomizers and branches are listed. They have
 - **[The Crystal Randofuser](https://github.com/xCrystal/crystal-randofuser)** (by xCrystal) is a randomizer for Pokémon Crystal, where Pokémon lines are fused when randomized. You no longer have Abra-Kadabra-Alakazam, Chikorita-Bayleef-Meganium - you have Chikabra-Baydabra-Megakazam! Or the like. 
 - **[Sanqui's Online Randomizer](https://sanqui.net/randomizer/)** (by Sanqui) is not only an online randomizer for Pokémon Red, it adds new Pokémon species to the game, all the way up to Gen 6. 
 - **[GBAXG](https://kittypboxx.github.io/GBAXG/)** (by KittyPBoxx) is a cross-game map randomizer of Pokémon FireRed, Emerald, and the Crystal Dust ROM hack. This does not mean it works on any of those given games - it works on all of them, *at once*. Travel between three regions seamlessly, and keep your team and items as you look for Gym Leaders and the Elite 4.
-- **[Archipelago](https://archipelago.gg/)** is a so-called "multi-game" randomizer. Not only does it support many many games from disparate franchises, but it lets you combine them in a sense. Or if you don't feel up for that, the games can be randomized by their own. At the time of writing, Archipelago officially supports Pokémon [Red/Blue](https://archipelago.gg/games/Pokemon%20Red%20and%20Blue/info/en) and (Emerald)[https://archipelago.gg/games/Pokemon%20Emerald/info/en], but more are likely to be added in the future. 
+- **[Archipelago](https://archipelago.gg/)** is a so-called "multi-game" randomizer. Not only does it support many many games from disparate franchises, but it lets you combine them in a sense. Or if you don't feel up for that, the games can be randomized by their own. At the time of writing, Archipelago officially supports Pokémon [Red/Blue](https://archipelago.gg/games/Pokemon%20Red%20and%20Blue/info/en) and [Emerald](https://archipelago.gg/games/Pokemon%20Emerald/info/en), but more are likely to be added in the future. 
 
 ### Branches
 
 - **[The Gaia Fork](https://github.com/sphericalice/universal-pokemon-randomizer)** (by Spherical Ice) branches off from the original UPR, and adds support to the popular Gaia ROM hack.
 - **[brentspector's branch]()** (by brentspector) branches off from the original UPR, [...]. 
 - **[Ironhidelvan's branch](https://github.com/IronhideIvan/universal-pokemon-randomizer-zx)** (by Ironhidelvan) branches off from ZX, [...].
-- **Speedchoice branches** are ones that support Speedchoice ROM hacks. These are by [Dabomstew](https://github.com/Dabomstew/UPR-Speedchoice), and [choatix](https://github.com/choatix/zxplus). Since there are multiple branches with multiple releases each, each compatible with only some ROMs, finding the right Randomizer can be tricky. To solve this, Speedchoice communities tend to pack the relevant Randomizer with the download of the Speedchoice ROM itself.  
+- **Speedchoice branches** (by [Dabomstew](https://github.com/Dabomstew/UPR-Speedchoice), and [choatix](https://github.com/choatix/zxplus)) are ones that support Speedchoice ROM hacks. Since there are multiple branches with multiple releases each, each compatible with only some ROMs, finding the right Randomizer can be tricky. To solve this, Speedchoice communities tend to pack the relevant Randomizer with the download of the Speedchoice ROM itself.  
 
 --- 
 

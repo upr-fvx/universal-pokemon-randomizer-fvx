@@ -1,10 +1,10 @@
 - name: Home
-  link: {{ site.baseurl }}/
+  link: /
 - name: About
-  link: {{ site.baseurl }}/about.html
+  link: /about.html
 - name: Acknowledgements
-  link: {{ site.baseurl }}/acks.html
+  link: /acks.html
 - name: Wiki
-  link: {{ site.baseurl }}/wikipages/home.html
+  link: /wikipages/home.html
 - name: Downloads
-  link: {{ site.baseurl }}/downloads.html
+  link: /downloads.html

@@ -2,10 +2,9 @@
 name: Deploy Jekyll with GitHub Pages dependencies preinstalled
 
 on:
-  # Runs on pushes targeting the jekyll branch
-  # TODO: for now, this is only until deployment is working and the jekyll branch is unmerged with master
+  # Runs on pushes targeting the master branch
   push:
-    branches: ["jekyll"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

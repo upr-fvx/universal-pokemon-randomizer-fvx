@@ -298,10 +298,6 @@ All the customizable player graphics use indexed palettes of size 16. Since 1 co
 
 The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
 
-[TODO]
-<img src=cpg_gen3/may_front_top_pixel.png alt="front image with the top right pixel highlighted"> &rarr;   
-<img src=cpg_gen3/may_front_top_pixel.png alt="in-game front image with transparency">
-
 ### Graphic specifications
 
 The player has a front image, a back image, a map icon image, and various sprites (walking, cycling, fishing etc.) used in the overworld.
@@ -354,7 +350,8 @@ The size of the bird sprite (which appears when Fly is used) varies between game
 ![bird sprite #1]({{ site.baseurl }}/assets/images/wikipages/cpg/gen3/may_bird.png)
 ![bird sprite #2]({{ site.baseurl }}/assets/images/wikipages/cpg/gen3/red_bird.png)
 
-All overworld sprites mentioned above share the same normal palette, and the same reflection palette. These are 16-colors palettes, of which the first color is "transparent". By default, the normal palette is derived from the walking image [TODO: how does the indexing work? can you use a non-indexed walk image as long as the same 16 or less colors are used??], and the reflection palette is a copy of the normal palette. However, they can also be assigned custom palettes through ".pal" files. Below is an example of a valid .pal file:
+<!-- TODO: how does the indexing work? can you use a non-indexed walk image as long as the same 16 or less colors are used?? -->
+All overworld sprites mentioned above share the same normal palette, and the same reflection palette. These are 16-colors palettes, of which the first color is "transparent". By default, the normal palette is derived from the walking image, and the reflection palette is a copy of the normal palette. However, they can also be assigned custom palettes through ".pal" files. Below is an example of a valid .pal file:
 
 ```
 JASC-PAL

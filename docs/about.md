@@ -96,10 +96,6 @@ Below, a small selection of other randomizers and branches are listed. They have
 ### Branches
 
 - **[The Gaia Fork](https://github.com/sphericalice/universal-pokemon-randomizer)** (by Spherical Ice) branches off from the original UPR, and adds support to the popular Gaia ROM hack.
-- **[brentspector's branch]()** (by brentspector) branches off from the original UPR, [...]. 
-- **[Ironhidelvan's branch](https://github.com/IronhideIvan/universal-pokemon-randomizer-zx)** (by Ironhidelvan) branches off from ZX, [...].
+- **[brentspector's branch](https://github.com/brentspector/universal-pokemon-randomizer)** (by brentspector) branches off from the original UPR, and adds a number of features and tweaks, such as support for FireRed Randomizable 809. 
+- **[Ironhidelvan's branch](https://github.com/IronhideIvan/universal-pokemon-randomizer-zx)** (by Ironhidelvan) branches off from ZX, and adds options to improve trades and trainer teams, among others.
 - **Speedchoice branches** (by [Dabomstew](https://github.com/Dabomstew/UPR-Speedchoice), and [choatix](https://github.com/choatix/zxplus)) are ones that support Speedchoice ROM hacks. Since there are multiple branches with multiple releases each, each compatible with only some ROMs, finding the right Randomizer can be tricky. To solve this, Speedchoice communities tend to pack the relevant Randomizer with the download of the Speedchoice ROM itself.  
-
---- 
-
-![pixel art depicting a worker in a hard hat holding a wrench](assets/images/under_construction.png) The website for the Universal Pokemon Randomizer FVX is under construction. This page is yet to be completed. ![pixel art depicting a worker in a hard hat holding a wrench](assets/images/under_construction.png)

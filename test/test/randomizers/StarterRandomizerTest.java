@@ -36,6 +36,29 @@ public class StarterRandomizerTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void completelyRandomDoesNotAlwaysGiveBasics(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setStartersMod(Settings.StartersMod.COMPLETELY_RANDOM);
+        StarterRandomizer sr = new StarterRandomizer(romHandler, s, RND);
+
+        boolean allBasic = true;
+        for (int i = 0; i < 100; i++) {
+            sr.randomizeStarters();
+            System.out.println("Set #" + (i + 1) + ": " + romHandler.getStarters().stream().map(Species::getName)
+                    .collect(Collectors.toList()));
+            if (romHandler.getStarters().stream().anyMatch(sp -> !sp.getEvolutionsTo().isEmpty())) {
+                allBasic = false;
+                break;
+            }
+        }
+
+        assertFalse(allBasic);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void randomWithTwoEvosWorks(String romName) {
         activateRomHandler(romName);
         Settings s = new Settings();

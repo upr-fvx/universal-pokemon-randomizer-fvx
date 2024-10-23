@@ -48,10 +48,13 @@ public class PokemonBaseStatUpdater extends Updater {
         updateSpAtk(pokes, SpeciesIDs.butterfree, 90);
         updateAtk(pokes, SpeciesIDs.beedrill, 90);
         updateSpeed(pokes, SpeciesIDs.pidgeot, 101);
-        updateSpeed(pokes, SpeciesIDs.raichu, 92);
+        updateDef(pokes, SpeciesIDs.pikachu, 40);
+        updateSpDef(pokes, SpeciesIDs.pikachu, 50);
+        updateSpeed(pokes, SpeciesIDs.raichu, 110);
         updateAtk(pokes, SpeciesIDs.nidoqueen, 92);
         updateAtk(pokes, SpeciesIDs.nidoking, 102);
         updateSpAtk(pokes, SpeciesIDs.clefable, 95);
+        updateSpAtk(pokes, SpeciesIDs.wigglytuff, 85);
         updateSpAtk(pokes, SpeciesIDs.vileplume, 110);
         updateAtk(pokes, SpeciesIDs.poliwrath, 95);
         updateSpDef(pokes, SpeciesIDs.alakazam, 95);
@@ -127,8 +130,6 @@ public class PokemonBaseStatUpdater extends Updater {
         }
         if (romHandler.generationOfPokemon() == 6) {
             updateSpDef(pokes, SpeciesIDs.Gen6Formes.alakazamMega, 105);
-            updateAtk(pokes, SpeciesIDs.Gen6Formes.aegislashB, 140);
-            updateSpAtk(pokes, SpeciesIDs.Gen6Formes.aegislashB, 140);
         }
     }
 
@@ -152,10 +153,11 @@ public class PokemonBaseStatUpdater extends Updater {
             updateDef(pokes, SpeciesIDs.cresselia, 110);
             updateSpDef(pokes, SpeciesIDs.cresselia, 120);
         }
-        if (romHandler.generationOfPokemon() >= 8) {
-            updateAtk(pokes, SpeciesIDs.zacian, 120);
-            updateAtk(pokes, SpeciesIDs.zamazenta, 120);
-        }
+        // The Randomizer doesn't support Gen 8 games, but if it did:
+        // Zacian (base form) Atk -> 120
+        // Zacian (crowned sword) Atk -> 150
+        // Zamazenta (base form) Atk -> 120
+        // Zamazenta (crowned shield) Atk -> 120, Def -> 140, SpDef -> 140
     }
 
     private void updateHP(List<Species> pokes, int species, int value) {

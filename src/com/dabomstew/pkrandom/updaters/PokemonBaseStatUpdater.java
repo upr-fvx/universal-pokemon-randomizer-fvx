@@ -42,6 +42,7 @@ public class PokemonBaseStatUpdater extends Updater {
             // These are the Gen 1 Pokemon that otherwise get their SpAtk updated
             updateSpecial(pokes, SpeciesIDs.butterfree, 90);
             updateSpecial(pokes, SpeciesIDs.clefable, 95);
+            updateSpecial(pokes, SpeciesIDs.wigglytuff, 95);
             updateSpecial(pokes, SpeciesIDs.vileplume, 110);
         }
 

@@ -390,7 +390,7 @@ public class Gen3Constants {
 
     public static final List<Integer> consumableHeldItems = Collections.unmodifiableList(Arrays.asList(
             Gen3ItemIDs.cheriBerry, Gen3ItemIDs.chestoBerry, Gen3ItemIDs.pechaBerry, Gen3ItemIDs.rawstBerry,
-            Gen3ItemIDs.rawstBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
+            Gen3ItemIDs.aspearBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
             Gen3ItemIDs.sitrusBerry, Gen3ItemIDs.figyBerry, Gen3ItemIDs.wikiBerry, Gen3ItemIDs.magoBerry, Gen3ItemIDs.aguavBerry,
             Gen3ItemIDs.iapapaBerry, Gen3ItemIDs.liechiBerry, Gen3ItemIDs.ganlonBerry, Gen3ItemIDs.salacBerry,
             Gen3ItemIDs.petayaBerry, Gen3ItemIDs.apicotBerry, Gen3ItemIDs.lansatBerry, Gen3ItemIDs.starfBerry,

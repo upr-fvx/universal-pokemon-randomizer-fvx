@@ -1,0 +1,15 @@
+---
+layout: default
+---
+<h1>{{ page.name }}</h1>
+
+{{ content }}
+
+<div class=wikipagelist>
+	<h2>Wiki pages:</h2>
+	<ul>
+		{% for wikipage in site.wikipages %}
+		<li><a href="{{ site.baseurl }}{{ wikipage.url }}">{{ wikipage.name }}</a></li>
+		{% endfor %}
+	</ul>
+</div>

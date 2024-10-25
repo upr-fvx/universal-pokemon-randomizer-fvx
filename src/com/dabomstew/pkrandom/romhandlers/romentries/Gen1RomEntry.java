@@ -20,6 +20,9 @@ public class Gen1RomEntry extends AbstractGBCRomEntry {
             super();
             putSpecialKeyMethod("StaticPokemon{}", Gen1RomEntry::addStaticPokemon);
             putSpecialKeyMethod("StaticPokemonGhostMarowak{}", Gen1RomEntry::addStaticPokemonGhostMarowak);
+
+            putIntAlias("SpecialMapList", "HiddenObjectMapList");
+            putIntAlias("SpecialMapPointerTable", "HiddenObjectMapPointerTable");
         }
 
         /**

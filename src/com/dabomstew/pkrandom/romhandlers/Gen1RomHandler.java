@@ -2437,56 +2437,67 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private List<Integer> getItemOffsets() {
+    /**
+     * Gets all offsets for "field items", i.e. the offsets of the item ids, that are either item balls or hidden items.
+     * The hidden items work as described
+     * <a href=https://github.com/pret/pokered/blob/master/data/events/hidden_objects.asm">here</a> and
+     * <a href=https://github.com/pret/pokeyellow/blob/master/data/events/hidden_objects.asm>here</a>.
+     */
+    private List<Integer> getFieldItemOffsets() {
 
         List<Integer> itemOffs = new ArrayList<>();
 
+        // -- Item balls --
         for (SubMap map : maps) {
             if (map != null) {
                 itemOffs.addAll(map.itemOffsets);
             }
         }
 
-        int hiRoutine = romEntry.getIntValue("HiddenItemRoutine");
-        int spclTable = romEntry.getIntValue("SpecialMapPointerTable");
+        // -- Hidden items --
+        int pointerTableOffset = romEntry.getIntValue("HiddenObjectMapPointerTable");
 
-        if (!isYellow()) {
+        if (isYellow()) {
+            while ((rom[pointerTableOffset] & 0xFF) != Gen1Constants.hiddenObjectMapsTerminator) {
+                int hiddenObjectsOffset = readPointer(pointerTableOffset + 1);
+                itemOffs.addAll(readHiddenItems(hiddenObjectsOffset));
 
-            int lOffs = romEntry.getIntValue("SpecialMapList");
-            int idx = 0;
-
-            while ((rom[lOffs] & 0xFF) != 0xFF) {
-
-                int spclOffset = readPointer(spclTable + idx);
-
-                while ((rom[spclOffset] & 0xFF) != 0xFF) {
-                    if (readPointer(spclOffset + 4, rom[spclOffset + 3] & 0xFF) == hiRoutine) {
-                        itemOffs.add(spclOffset + 2);
-                    }
-                    spclOffset += 6;
-                }
-                lOffs++;
-                idx += 2;
+                pointerTableOffset += 3;
             }
+
         } else {
+            // before yellow, the table that has pointers in it has no terminator.
+            // luckily, there is a table of equal length right before it with a terminator,
+            // but that still means we got to iterate through two tables at once.
+            int listOffset = romEntry.getIntValue("HiddenObjectMapList");
+            while ((rom[listOffset] & 0xFF) != Gen1Constants.hiddenObjectMapsTerminator) {
+                int hiddenObjectsOffset = readPointer(pointerTableOffset);
+                itemOffs.addAll(readHiddenItems(hiddenObjectsOffset));
 
-            int lOffs = spclTable;
-
-            while ((rom[lOffs] & 0xFF) != 0xFF) {
-
-                int spclOffset = readPointer(lOffs + 1);
-
-                while ((rom[spclOffset] & 0xFF) != 0xFF) {
-                    if (readPointer(readWord(spclOffset + 4), rom[spclOffset + 3] & 0xFF) == hiRoutine) {
-                        itemOffs.add(spclOffset + 2);
-                    }
-                    spclOffset += 6;
-                }
-                lOffs += 3;
+                listOffset++;
+                pointerTableOffset += 2;
             }
         }
 
         return itemOffs;
+    }
+
+    /**
+     * Returns a list of offsets of item IDs, given the offset of a hidden objects table.
+     */
+    private List<Integer> readHiddenItems(int offset) {
+        int hiRoutine = romEntry.getIntValue("HiddenItemRoutine");
+        List<Integer> itemOffsets = new ArrayList<>();
+
+        while ((rom[offset] & 0xFF) != Gen1Constants.hiddenObjectsTerminator) {
+            int routineOffset = readPointer(offset + 4, rom[offset + 3] & 0xFF);
+            if (routineOffset == hiRoutine) {
+                itemOffsets.add(offset + 2);
+            }
+            offset += 6;
+        }
+
+        return itemOffsets;
     }
 
     @Override
@@ -2496,7 +2507,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Item> getFieldItems() {
-        List<Integer> itemOffsets = getItemOffsets();
+        List<Integer> itemOffsets = getFieldItemOffsets();
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
@@ -2512,7 +2523,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void setFieldItems(List<Item> fieldItems) {
         checkFieldItemsTMsReplaceTMs(fieldItems);
 
-        List<Integer> itemOffsets = getItemOffsets();
+        List<Integer> itemOffsets = getFieldItemOffsets();
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffsets) {

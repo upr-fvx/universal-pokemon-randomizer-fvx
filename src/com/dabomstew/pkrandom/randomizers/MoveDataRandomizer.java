@@ -129,8 +129,8 @@ public class MoveDataRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private static final Map<Type, String[]> TYPE_MOVE_NAMES = TypeColor.readTypeNameMapFromFile("data/MoveNames.txt");
-    private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES = TypeColor.readCatNameMapFromFile("data/MoveNames.txt");
+    private static final Map<Type, String[]> TYPE_MOVE_NAMES = TypeColor.readTypeNameMapFromFile("data/TypeMoveNames.txt");
+    private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES = TypeColor.readCatNameMapFromFile("data/CatMoveNames.txt");
     public static String getRandomMoveName(Type type, Random random, MoveCategory... category) {
         // Get type-based move names
         String[] typeNames = TYPE_MOVE_NAMES.get(type);

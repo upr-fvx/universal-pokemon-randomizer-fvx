@@ -1691,7 +1691,7 @@ public class Settings {
         return randomizeMoveNames;
     }
 
-    public boolean setRandomizeMoveNames(boolean randomizeMoveNames) {
+    public void setRandomizeMoveNames(boolean randomizeMoveNames) {
         this.randomizeMoveNames = randomizeMoveNames;
     }
 

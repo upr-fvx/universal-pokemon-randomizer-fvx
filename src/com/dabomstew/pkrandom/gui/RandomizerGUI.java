@@ -740,7 +740,6 @@ public class RandomizerGUI {
     }
 
     private void initExplicit() {
-
         versionLabel.setText(String.format(bundle.getString("GUI.versionLabel.text"), Version.VERSION_STRING));
         mtNoExistLabel.setVisible(false);
         mtNoneAvailableLabel.setVisible(false);

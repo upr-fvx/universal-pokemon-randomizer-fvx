@@ -33,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.dabomstew.pkrandom.gamedata.MoveCategory;
 import com.dabomstew.pkrandom.gamedata.Type;
 
 /**
@@ -78,6 +79,77 @@ public class TypeColor extends Color {
 
 		return map;
 	}
+
+	public static Map<Type, String[]> readTypeNameMapFromFile(String fileName) {
+		Map<Type, String[]> map = new EnumMap<>(Type.class);
+	
+		Type type = null;
+		List<String> typeWords = new ArrayList<>();
+	
+		String fileString = readAllFromTextFile(fileName);
+		Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(fileString);
+		while (matcher.find()) {
+			String token = matcher.group();
+	
+			if (token.matches(TYPE_TOKEN_REGEX)) {
+				if (type != null) {
+					map.put(type, typeWords.toArray(new String[0]));
+					typeWords = new ArrayList<>();
+				}
+				try {
+					type = Type.valueOf(token.replaceAll("[\\[\\]]", ""));
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			// Assumes any non-type token is a word for that type
+			else if (!token.matches(TYPE_TOKEN_REGEX)) {
+				typeWords.add(token);
+			}
+		}
+	
+		if (type != null) {
+			map.put(type, typeWords.toArray(new String[0]));
+		}
+	
+		return map;
+	}
+
+	public static Map<MoveCategory, String[]> readCatNameMapFromFile(String fileName) {
+		Map<MoveCategory, String[]> map = new EnumMap<>(MoveCategory.class);
+	
+		MoveCategory cat = null;
+		List<String> catWords = new ArrayList<>();
+	
+		String fileString = readAllFromTextFile(fileName);
+		Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(fileString);
+		while (matcher.find()) {
+			String token = matcher.group();
+	
+			if (token.matches(TYPE_TOKEN_REGEX)) {
+				if (cat != null) {
+					map.put(cat, catWords.toArray(new String[0]));
+					catWords = new ArrayList<>();
+				}
+				try {
+					cat = MoveCategory.valueOf(token.replaceAll("[\\[\\]]", ""));
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			// Assumes any non-type token is a word for that type
+			else if (!token.matches(TYPE_TOKEN_REGEX)) {
+				catWords.add(token);
+			}
+		}
+	
+		if (cat != null) {
+			map.put(cat, catWords.toArray(new String[0]));
+		}
+	
+		return map;
+	}
+	
 
 	private static String readAllFromTextFile(String fileName) {
 		String fileString;

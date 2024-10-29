@@ -217,6 +217,10 @@ public class GameRandomizer {
             moveDataRandomizer.randomizeMoveTypes();
         }
 
+        if (settings.isRandomizeMoveNames()) {
+            moveDataRandomizer.randomizeMoveNames();
+        }
+
         if (settings.isRandomizeMoveCategory() && romHandler.hasPhysicalSpecialSplit()) {
             moveDataRandomizer.randomizeMoveCategory();
         }

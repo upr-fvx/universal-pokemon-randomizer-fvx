@@ -500,9 +500,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public void saveMoves() {
         int movesOffset = romEntry.getIntValue("MoveDataOffset");
+        int nameLength = romEntry.getIntValue("MoveNamesOffset");
         for (Move m : moves) {
             if (m != null) {
                 int i = m.internalId;
+
+                String newMoveName = moves[i].name;
+                int stringOffset = movesOffset + (i - 1) * nameLength;
+                writeFixedLengthString(newMoveName, stringOffset, nameLength);
+
                 int hitratio = (int) Math.round(m.hitratio * 2.55);
                 hitratio = Math.max(0, hitratio);
                 hitratio = Math.min(255, hitratio);

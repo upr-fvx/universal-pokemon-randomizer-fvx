@@ -817,10 +817,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void saveMoves() {
+        List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
         int moveCount = Gen7Constants.getMoveCount(romEntry.getRomType());
         byte[][] movesData = Mini.UnpackMini(moveGarc.files.get(0).get(0), "WD");
         for (int i = 1; i <= moveCount; i++) {
             byte[] moveData = movesData[i];
+            String newMoveName = moves[i].name;
+			moveNames.set(i, newMoveName);
             moveData[2] = Gen7Constants.moveCategoryToByte(moves[i].category);
             moveData[3] = (byte) moves[i].power;
             moveData[0] = Gen7Constants.typeToByte(moves[i].type);
@@ -834,6 +837,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             moveData[4] = (byte) hitratio;
             moveData[5] = (byte) moves[i].pp;
         }
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
         try {
             moveGarc.setFile(0, Mini.PackMini(movesData, "WD"));
             this.writeGARC(romEntry.getFile("MoveData"), moveGarc);

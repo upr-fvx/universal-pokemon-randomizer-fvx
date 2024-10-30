@@ -102,9 +102,9 @@ public class TypeColor extends Color {
 					throw new RuntimeException(e);
 				}
 			}
-			// Assumes any non-type token is a word for that type
-			else if (!token.matches(TYPE_TOKEN_REGEX)) {
-				typeWords.add(token);
+			else if (token.matches(COLOR_TOKEN_REGEX)) {
+				String name = token.replaceAll("[\\(\\)]", "");
+				typeWords.add(name);
 			}
 		}
 	
@@ -138,8 +138,9 @@ public class TypeColor extends Color {
 				}
 			}
 			// Assumes any non-type token is a word for that type
-			else if (!token.matches(TYPE_TOKEN_REGEX)) {
-				catWords.add(token);
+			else if (token.matches(COLOR_TOKEN_REGEX)) {
+				String name = token.replaceAll("[\\(\\)]", "");
+				catWords.add(name);
 			}
 		}
 	

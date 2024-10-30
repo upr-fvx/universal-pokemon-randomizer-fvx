@@ -5,7 +5,6 @@ import com.dabomstew.pkrandom.constants.MoveIDs;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.MoveCategory;
 import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.graphics.palettes.Color;
 import com.dabomstew.pkrandom.graphics.palettes.TypeColor;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
@@ -15,8 +14,17 @@ import java.util.Random;
 
 public class MoveDataRandomizer extends Randomizer {
 
+    private boolean nameChangesMade;
+    
     public MoveDataRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
+    }
+
+    /**
+     * Returns whether any changes have been made to Move names.
+     */
+    public boolean isNameChangesMade() {
+        return nameChangesMade;
     }
 
     // Makes sure to not touch move ID 165 (Struggle)
@@ -139,7 +147,9 @@ public class MoveDataRandomizer extends Randomizer {
         String typeWord = (typeNames == null || typeNames.length == 0)
                             ? "Attack"
                             : typeNames[random.nextInt(typeNames.length)];
-    
+
+        System.out.println("Type: " + type + ", Chosen Type Name: " + typeWord);
+
         // Determine the category to use: if none provided, pick one randomly
         MoveCategory chosenCat = (category.length > 0) ? category[0] : switch (random.nextInt(3)) {
             case 0 -> MoveCategory.PHYSICAL;
@@ -155,7 +165,9 @@ public class MoveDataRandomizer extends Randomizer {
         String categoryWord = (catNames == null || catNames.length == 0)
                                 ? "Strike"
                                 : catNames[random.nextInt(catNames.length)];
-    
+
+        System.out.println("Chosen Category: " + chosenCat + ", Chosen Category Name: " + categoryWord);
+
         // Combine type word and category word to form the move name
         return typeWord + " " + categoryWord;
     }
@@ -164,10 +176,14 @@ public class MoveDataRandomizer extends Randomizer {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
             if (mv != null && mv.internalId != MoveIDs.struggle) {
-                mv.name = getRandomMoveName(mv.type, random, mv.category);
+                String newName = getRandomMoveName(mv.type, random, mv.category);
+                mv.oldName = mv.name;
+                mv.name = newName;
+                mv.newName = newName;
             }
         }
         changesMade = true;
+        nameChangesMade = true;
     }
 
     public void randomizeMoveCategory() {

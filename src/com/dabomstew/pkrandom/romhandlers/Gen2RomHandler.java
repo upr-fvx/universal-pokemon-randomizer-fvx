@@ -551,7 +551,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public void saveMoves() {
         int offs = romEntry.getIntValue("MoveDataOffset");
+        int len = romEntry.getIntValue("MoveNamesOffset");
+
         for (int i = 1; i <= 251; i++) {
+            String newMoveName = moves[i].name;
+            int stringOffset = offs + (i - 1) * len;
+            writeFixedLengthString(newMoveName, stringOffset, len);
+
             int hitratio = (int) Math.round(moves[i].hitratio * 2.55);
             if (hitratio < 0) {
                 hitratio = 0;

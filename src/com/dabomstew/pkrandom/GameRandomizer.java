@@ -29,10 +29,6 @@ import java.util.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
-import com.dabomstew.pkrandom.randomizers.Gen1PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.Gen2PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.PaletteRandomizer;
 import com.dabomstew.pkrandom.randomizers.*;
 import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -1252,11 +1248,13 @@ public class GameRandomizer {
             log.print(" |CATEGORY");
         }
         log.println();
+        boolean nameChanges = moveDataRandomizer.isNameChangesMade();
         List<Move> allMoves = romHandler.getMoves();
         for (Move mv : allMoves) {
             if (mv != null) {
                 String mvType = (mv.type == null) ? "???" : mv.type.toString();
-                log.printf("%3d|%-15s|%-8s|%5d|%4d|%3d", mv.internalId, mv.name, mvType, mv.power,
+                String moveName =  nameChanges ? mv.oldName + " -> " + mv.newName : mv.name;
+                log.printf("%3d|%-15s|%-8s|%5d|%4d|%3d", mv.internalId, moveName, mvType, mv.power,
                         (int) mv.hitratio, mv.pp);
                 if (romHandler.hasPhysicalSpecialSplit()) {
                     log.printf("| %s", mv.category.toString());

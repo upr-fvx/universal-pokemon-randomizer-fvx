@@ -2500,7 +2500,7 @@
                   </component>
                   <component id="f60c2" class="javax.swing.JSlider" binding="wpSetMinimumCatchRateSlider">
                     <constraints>
-                      <grid row="3" column="7" row-span="5" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="7" row-span="8" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="0" left="10" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -2587,7 +2587,7 @@
                   </component>
                   <component id="a5c09" class="javax.swing.JCheckBox" binding="wpPercentageLevelModifierCheckBox" default-binding="true">
                     <constraints>
-                      <grid row="8" column="5" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="11" column="5" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -2598,7 +2598,7 @@
                   </component>
                   <grid id="e032f" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="3" column="1" row-span="9" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="1" row-span="8" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -2685,23 +2685,6 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </hspacer>
-                  <vspacer id="580fb">
-                    <constraints>
-                      <grid row="12" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
-                  <component id="43488" class="javax.swing.JCheckBox" binding="wpKeepEvolutionsCheckBox">
-                    <constraints>
-                      <grid row="7" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
                   <component id="244aa" class="javax.swing.JCheckBox" binding="wpRandomizeWildPokemonCheckBox">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -2715,7 +2698,7 @@
                   </component>
                   <component id="7e56b" class="javax.swing.JSlider" binding="wpPercentageLevelModifierSlider" default-binding="true">
                     <constraints>
-                      <grid row="9" column="5" row-span="2" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="12" column="5" row-span="2" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                     </constraints>
                     <properties>
@@ -2733,52 +2716,13 @@
                   </component>
                   <component id="438d0" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
                     <constraints>
-                      <grid row="7" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="10" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
                       <enabled value="false"/>
                       <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.text"/>
                       <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <component id="f3f94" class="javax.swing.JCheckBox" binding="wpCatchEmAllModeCheckBox">
-                    <constraints>
-                      <grid row="8" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <component id="da56d" class="javax.swing.JCheckBox" binding="wpBalanceShakingGrassPokemonCheckBox">
-                    <constraints>
-                      <grid row="10" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <hspacer id="ade72">
-                    <constraints>
-                      <grid row="10" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </hspacer>
-                  <component id="f5f68" class="javax.swing.JCheckBox" binding="wpSimilarStrengthCheckBox">
-                    <constraints>
-                      <grid row="9" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.toolTipText"/>
                     </properties>
                   </component>
                   <component id="7e552" class="javax.swing.JCheckBox" binding="wpBanBadItemsCheckBox" default-binding="true">
@@ -2798,6 +2742,105 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </hspacer>
+                  <grid id="fc6a6" layout-manager="GridBagLayout">
+                    <constraints>
+                      <grid row="7" column="3" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none" title-resource-bundle="com/dabomstew/pkrandom/gui/Bundle" title-key="GUI.wpERPanel.title"/>
+                    <children>
+                      <component id="3475a" class="javax.swing.JRadioButton" binding="wpERNoneRadioButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERNoneRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERNoneRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="43488" class="javax.swing.JCheckBox" binding="wpERKeepEvolutionsCheckBox">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <hspacer id="3d008">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <hspacer id="314ad">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.1" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <component id="681b6" class="javax.swing.JRadioButton" binding="wpERBasicOnlyRadioButton">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERBasicOnlyRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERBasicOnlyRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="ad075" class="javax.swing.JRadioButton" binding="wpERSameEvolutionStageRadioButton">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERSameEvolutionStageRadioButton.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpERSameEvolutionStageRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <component id="f3f94" class="javax.swing.JCheckBox" binding="wpCatchEmAllModeCheckBox">
+                    <constraints>
+                      <grid row="7" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="f5f68" class="javax.swing.JCheckBox" binding="wpSimilarStrengthCheckBox">
+                    <constraints>
+                      <grid row="8" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="da56d" class="javax.swing.JCheckBox" binding="wpBalanceShakingGrassPokemonCheckBox">
+                    <constraints>
+                      <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
               <hspacer id="731f9">
@@ -4729,6 +4772,11 @@
       <member id="dcb07"/>
       <member id="47afe"/>
       <member id="3a90e"/>
+    </group>
+    <group name="wildPokemonEvolutionsButtonGroup">
+      <member id="3475a"/>
+      <member id="681b6"/>
+      <member id="ad075"/>
     </group>
   </buttonGroups>
   <inspectionSuppressions>

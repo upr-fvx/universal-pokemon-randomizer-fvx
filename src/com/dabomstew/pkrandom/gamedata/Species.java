@@ -255,19 +255,24 @@ public class Species implements Comparable<Species> {
      * @return A {@link SpeciesSet} containing all possible evolved forms of this {@link Species}.
      */
     public SpeciesSet getEvolvedSpecies(boolean useOriginal) {
+        SpeciesSet evolvedSpecies;
         if(useOriginal) {
             if(this.originalEvolvedForms == null) {
-                return new SpeciesSet();
+                evolvedSpecies = new SpeciesSet();
             } else {
-                return new SpeciesSet(this.originalEvolvedForms);
+                evolvedSpecies = new SpeciesSet(this.originalEvolvedForms);
             }
         } else {
-            SpeciesSet evolvedSpecies = new SpeciesSet();
+            evolvedSpecies = new SpeciesSet();
             for (Evolution evo : evolutionsFrom) {
                 evolvedSpecies.add(evo.getTo());
             }
-            return evolvedSpecies;
         }
+
+        if(!isBaseForme()) {
+            evolvedSpecies.addAll(baseForme.getEvolvedSpecies(useOriginal));
+        }
+        return evolvedSpecies;
     }
 
     /**
@@ -277,19 +282,27 @@ public class Species implements Comparable<Species> {
      * @return A new {@link SpeciesSet} containing all pre-evolved forms of this {@link Species}.
      */
     public SpeciesSet getPreEvolvedSpecies(boolean useOriginal) {
+        SpeciesSet evolvedSpecies;
+
         if(useOriginal) {
             if(this.originalPreEvolvedForms == null) {
-                return new SpeciesSet();
+                evolvedSpecies = new SpeciesSet();
             } else {
-                return new SpeciesSet(this.originalPreEvolvedForms);
+                evolvedSpecies = new SpeciesSet(this.originalPreEvolvedForms);
             }
         } else {
-            SpeciesSet evolvedSpecies = new SpeciesSet();
+            evolvedSpecies = new SpeciesSet();
             for (Evolution evo : evolutionsTo) {
                 evolvedSpecies.add(evo.getFrom());
             }
-            return evolvedSpecies;
         }
+
+        if(!isBaseForme()) {
+            evolvedSpecies.addAll(baseForme.getPreEvolvedSpecies(useOriginal));
+            //TODO: improve handling for non-evolving forms of evolving species,
+            // e.g. Battle Bond Greninja, Eternal Flower Floette
+        }
+        return evolvedSpecies;
     }
 
     /**

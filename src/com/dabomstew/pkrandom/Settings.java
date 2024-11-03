@@ -212,18 +212,23 @@ public class Settings {
     public enum WildPokemonZoneMod {
         NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
     }
+    private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
+    private boolean splitWildZoneByEncounterTypes;
     
     public enum WildPokemonTypeMod {
         NONE, RANDOM_THEMES, KEEP_PRIMARY
     }
-
-    private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
-    private boolean splitWildZoneByEncounterTypes;
-    private boolean keepWildEvolutionFamilies;
+    private WildPokemonTypeMod wildPokemonTypeMod = WildPokemonTypeMod.NONE;
     private boolean keepWildTypeThemes;
+
+    public enum WildPokemonEvolutionMod {
+        NONE, BASIC_ONLY, KEEP_STAGE
+    }
+    private WildPokemonEvolutionMod wildPokemonEvolutionMod = WildPokemonEvolutionMod.NONE;
+    private boolean keepWildEvolutionFamilies;
+
     private boolean similarStrengthEncounters;
     private boolean catchEmAllEncounters;
-    private WildPokemonTypeMod wildPokemonTypeMod = WildPokemonTypeMod.NONE;
     private boolean useTimeBasedEncounters;
     private boolean blockWildLegendaries = true;
     private boolean useMinimumCatchRate;
@@ -484,12 +489,15 @@ public class Settings {
                 catchEmAllEncounters,
                 false, false, false, false, false));
 
-        // 17 wild pokemon (types)
+        // 17 wild pokemon (types/evolutions)
         out.write(makeByteSelected(wildPokemonTypeMod == WildPokemonTypeMod.NONE,
                 wildPokemonTypeMod == WildPokemonTypeMod.KEEP_PRIMARY,
                 wildPokemonTypeMod == WildPokemonTypeMod.RANDOM_THEMES,
                 keepWildTypeThemes,
-                false, false, false, false));
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.NONE,
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.BASIC_ONLY,
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.KEEP_STAGE,
+                false));
 
         // 18 wild pokemon (various)
         out.write(makeByteSelected(useTimeBasedEncounters, useMinimumCatchRate,
@@ -815,6 +823,11 @@ public class Settings {
                 1 // KEEP_PRIMARY
         ));
         settings.setKeepWildTypeThemes(restoreState(data[17], 3));
+        settings.setWildPokemonEvolutionMod(restoreEnum(WildPokemonEvolutionMod.class, data[17],
+                4, //NONE
+                5, //BASIC_ONLY
+                6 //KEEP_STAGE
+        ));
         
         settings.setUseTimeBasedEncounters(restoreState(data[18], 0));
         settings.setUseMinimumCatchRate(restoreState(data[18], 1));
@@ -2079,6 +2092,18 @@ public class Settings {
 
     public void setWildPokemonTypeMod(WildPokemonTypeMod wildPokemonTypeMod) {
         this.wildPokemonTypeMod = wildPokemonTypeMod;
+    }
+
+    public WildPokemonEvolutionMod getWildPokemonEvolutionMod() {
+        return wildPokemonEvolutionMod;
+    }
+
+    public void setWildPokemonEvolutionMod(boolean... bools) {
+        setWildPokemonEvolutionMod(getEnum(WildPokemonEvolutionMod.class, bools));
+    }
+
+    public void setWildPokemonEvolutionMod(WildPokemonEvolutionMod wildPokemonEvolutionMod) {
+        this.wildPokemonEvolutionMod = wildPokemonEvolutionMod;
     }
 
     public boolean isUseTimeBasedEncounters() {

@@ -4,6 +4,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
+import javafx.util.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -1416,6 +1417,52 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         }
     }
 
+    private static void checkAllSpeciesAreBasic(List<EncounterArea> encounters) {
+        for(EncounterArea area : encounters) {
+            System.out.println(area);
+
+            SpeciesSet speciesInArea = area.getSpeciesInArea();
+            for(Species species : speciesInArea) {
+                System.out.print("\t" + species.getFullName() + ": ");
+                SpeciesSet prevos = species.getPreEvolvedSpecies(false);
+                if (prevos.isEmpty()) {
+                    System.out.println("Is basic.");
+                } else {
+                    System.out.println("Evolves from " + prevos.toStringShort());
+                    fail(species.getFullName() + " has previous evolutions");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    private static void checkAllSpeciesAreBasicOrRelatives(List<EncounterArea> encounters) {
+        for(EncounterArea area : encounters) {
+            System.out.println(area);
+
+            SpeciesSet speciesInArea = area.getSpeciesInArea();
+            for(Species species : speciesInArea) {
+                System.out.print("\t" + species.getFullName() + ": ");
+                SpeciesSet prevos = species.getPreEvolvedSpecies(false);
+                if (prevos.isEmpty()) {
+                    System.out.println("Is basic.");
+                } else {
+                    SpeciesSet basics = species.getFamily(false);
+                    basics = basics.filterBasic(false);
+                    System.out.println("Evolves from " + basics.toStringShort());
+                    basics.retainAll(speciesInArea);
+                    if(prevos.isEmpty()) {
+                        System.out.println("\t\tNone are in area.");
+                        fail(species.getFullName() + " evolves from non-present species");
+                    } else {
+                        System.out.println("\t\t" + basics.toStringShort() + " present.");
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+
     private Species getNonCosmeticForme(Encounter enc) {
         Species base = enc.getSpecies();
         int formeNumber = enc.getFormeNumber();
@@ -1606,4 +1653,92 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         checkEachMapIsReplaced1To1(before, after, true);
     }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void onlyBasicPokemonWorks(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonEvolutionMod(Settings.WildPokemonEvolutionMod.BASIC_ONLY);
+
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkAllSpeciesAreBasic(after);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void onlyBasicPokemonWorksWithKeepRelations(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonEvolutionMod(Settings.WildPokemonEvolutionMod.BASIC_ONLY);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
+        settings.setKeepWildEvolutionFamilies(true);
+
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkAllSpeciesAreBasicOrRelatives(after);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void sameStageWorks(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) != 7);
+        //Alolan forms do not test correctly
+        //TODO: fix that
+
+        activateRomHandler(romName);
+
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonEvolutionMod(Settings.WildPokemonEvolutionMod.KEEP_STAGE);
+
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkAllSpeciesKeepSameEvoStage(before, after);
+    }
+
+    private static void checkAllSpeciesKeepSameEvoStage(List<EncounterArea> before, List<EncounterArea> after) {
+        if(before.size() != after.size()) {
+            throw new RuntimeException("Encounter area counts do not match before and after!");
+        }
+
+        for(int i = 0; i < before.size(); i++) {
+            EncounterArea areaBefore = before.get(i);
+            EncounterArea areaAfter = after.get(i);
+
+            if(!areaBefore.getDisplayName().equals(areaAfter.getDisplayName()) ||
+                    areaBefore.size() != areaAfter.size()) {
+                throw new RuntimeException("Area mismatch: " + areaBefore.getDisplayName() + " and "
+                        + areaAfter.getDisplayName() + ".");
+            }
+
+            System.out.println("Before: " + areaBefore);
+            System.out.println("After: " + areaAfter);
+
+            Set<Pair<Species, Species>> pairs = new HashSet<>();
+            for(int j = 0; j < areaBefore.size(); j++) {
+                pairs.add(new Pair<>(areaBefore.get(j).getSpecies(), areaAfter.get(j).getSpecies()));
+            }
+
+            for(Pair<Species, Species> pair : pairs) {
+                System.out.print("\t" + pair.getKey().getFullName() + " -> " + pair.getValue().getFullName() + ": ");
+                int stageBefore = pair.getKey().getStagesBefore(true);
+                int stageAfter = pair.getValue().getStagesBefore(false);
+                System.out.println(stageBefore + " -> " + stageAfter);
+                assertEquals(stageBefore, stageAfter);
+            }
+            System.out.println();
+        }
+    }
+
 }

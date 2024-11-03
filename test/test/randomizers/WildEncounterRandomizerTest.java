@@ -4,6 +4,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
+import javafx.util.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -1431,6 +1432,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
                     fail(species.getFullName() + " has previous evolutions");
                 }
             }
+            System.out.println();
         }
     }
 
@@ -1457,6 +1459,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
                     }
                 }
             }
+            System.out.println();
         }
     }
 
@@ -1683,6 +1686,59 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         checkAllSpeciesAreBasicOrRelatives(after);
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void sameStageWorks(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) != 7);
+        //Alolan forms do not test correctly
+        //TODO: fix that
 
+        activateRomHandler(romName);
+
+        List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
+
+        Settings settings = getStandardSettings(romName);
+        settings.setWildPokemonEvolutionMod(Settings.WildPokemonEvolutionMod.KEEP_STAGE);
+
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        List<EncounterArea> after = romHandler.getEncounters(true);
+
+        checkAllSpeciesKeepSameEvoStage(before, after);
+    }
+
+    private static void checkAllSpeciesKeepSameEvoStage(List<EncounterArea> before, List<EncounterArea> after) {
+        if(before.size() != after.size()) {
+            throw new RuntimeException("Encounter area counts do not match before and after!");
+        }
+
+        for(int i = 0; i < before.size(); i++) {
+            EncounterArea areaBefore = before.get(i);
+            EncounterArea areaAfter = after.get(i);
+
+            if(!areaBefore.getDisplayName().equals(areaAfter.getDisplayName()) ||
+                    areaBefore.size() != areaAfter.size()) {
+                throw new RuntimeException("Area mismatch: " + areaBefore.getDisplayName() + " and "
+                        + areaAfter.getDisplayName() + ".");
+            }
+
+            System.out.println("Before: " + areaBefore);
+            System.out.println("After: " + areaAfter);
+
+            Set<Pair<Species, Species>> pairs = new HashSet<>();
+            for(int j = 0; j < areaBefore.size(); j++) {
+                pairs.add(new Pair<>(areaBefore.get(j).getSpecies(), areaAfter.get(j).getSpecies()));
+            }
+
+            for(Pair<Species, Species> pair : pairs) {
+                System.out.print("\t" + pair.getKey().getFullName() + " -> " + pair.getValue().getFullName() + ": ");
+                int stageBefore = pair.getKey().getStagesBefore(true);
+                int stageAfter = pair.getValue().getStagesBefore(false);
+                System.out.println(stageBefore + " -> " + stageAfter);
+                assertEquals(stageBefore, stageAfter);
+            }
+            System.out.println();
+        }
+    }
 
 }

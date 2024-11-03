@@ -35,7 +35,7 @@ public class Version {
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST_VERSION = new Version(405, "1.0.3", "FVX");
+    public static final Version LATEST_VERSION = new Version(406, "1.1.0", "FVX");
     public static final int VERSION = LATEST_VERSION.id;
     public static final String VERSION_STRING = LATEST_VERSION.name;
 
@@ -103,7 +103,8 @@ public class Version {
     public static final Version FVX_1_0_0 = new Version(402, "1.0.0", "FVX");
     public static final Version FVX_1_0_1 = new Version(403, "1.0.1", "FVX");
     public static final Version FVX_1_0_2 = new Version(404, "1.0.2", "FVX");
-    public static final Version FVX_1_0_3 = LATEST_VERSION;
+    public static final Version FVX_1_0_3 = new Version(405, "1.0.3", "FVX");
+    public static final Version FVX_1_0_4 = LATEST_VERSION;
 
     // add versions to the bottom as you create them
 

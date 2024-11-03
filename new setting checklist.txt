@@ -8,10 +8,9 @@ Settings.java:
 RandomizerGUI.form:
     add GUI element to select setting (not necessary if combobox option?)
 RandomizerGUI.java:
-    initialState
+    initialState, romLoaded
     restoreStateFromSettings, createSettingsFromState
     enableOrDisableSubControls
-    romLoaded (to reset)
     may also need to add action listeners to the constructor
 bundle.properties:
     strings for setting label & tooltip

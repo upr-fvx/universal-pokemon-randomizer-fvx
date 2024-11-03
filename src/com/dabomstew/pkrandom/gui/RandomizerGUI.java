@@ -1988,9 +1988,12 @@ public class RandomizerGUI {
         settings.setWildPokemonZoneMod(wpZoneNoneRadioButton.isSelected(),
                 wpZoneEncounterSetRadioButton.isSelected(), wpZoneMapRadioButton.isSelected(),
                 wpZoneNamedLocationRadioButton.isSelected(), wpZoneGameRadioButton.isSelected());
+        settings.setSplitWildZoneByEncounterTypes(wpSplitByEncounterTypesCheckBox.isSelected());
         settings.setWildPokemonTypeMod(wpTRNoneRadioButton.isSelected(), wpTRThemedAreasRadioButton.isSelected(),
                 wpTRKeepPrimaryRadioButton.isSelected());
         settings.setKeepWildTypeThemes(wpTRKeepThemesCheckBox.isSelected());
+        settings.setWildPokemonEvolutionMod(wpERNoneRadioButton.isSelected(), wpERBasicOnlyRadioButton.isSelected(),
+                wpERSameEvolutionStageRadioButton.isSelected());
         settings.setKeepWildEvolutionFamilies(wpERKeepEvolutionsCheckBox.isSelected());
         settings.setSimilarStrengthEncounters(wpSimilarStrengthCheckBox.isSelected());
         settings.setCatchEmAllEncounters(wpCatchEmAllModeCheckBox.isSelected());

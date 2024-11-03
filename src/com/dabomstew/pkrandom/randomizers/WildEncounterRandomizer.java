@@ -27,6 +27,8 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
+        boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
+        boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
@@ -37,19 +39,21 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, keepEvolutions, catchEmAll, similarStrength, noLegendaries,
-                balanceShakingGrass, levelModifier, allowAltFormes, banIrregularAltFormes, abilitiesAreRandomized);
+                randomTypeThemes, keepTypeThemes, keepPrimaryType,
+                basicPokemonOnly, sameEvoStage, keepEvolutions,
+                catchEmAll, similarStrength, balanceShakingGrass,
+                noLegendaries, allowAltFormes, banIrregularAltFormes,
+                levelModifier, abilitiesAreRandomized);
         changesMade = true;
     }
 
-    // only public for some old test cases, please don't use
     private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                    boolean keepEvolutions, boolean catchEmAll, boolean similarStrength,
-                                    boolean noLegendaries, boolean balanceShakingGrass, int levelModifier,
-                                    boolean allowAltFormes, boolean banIrregularAltFormes,
-                                    boolean abilitiesAreRandomized) {
+                                    boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
+                                    boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
+                                    boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
+                                    int levelModifier, boolean abilitiesAreRandomized) {
         // - prep settings
         // - get encounters
         // - setup banned + allowed
@@ -68,7 +72,7 @@ public class WildEncounterRandomizer extends Randomizer {
 
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
-                keepEvolutions);
+                basicPokemonOnly, sameEvoStage, keepEvolutions);
         switch (mode) {
             case NONE:
                 if(romHandler.isORAS()) {
@@ -139,6 +143,8 @@ public class WildEncounterRandomizer extends Randomizer {
         private final boolean catchEmAll;
         private final boolean similarStrength;
         private final boolean balanceLowLevelEncounters;
+        private final boolean basicPokemonOnly;
+        private final boolean sameEvoStage;
         private final boolean keepEvolutions;
 
         private boolean useMapping;
@@ -158,19 +164,33 @@ public class WildEncounterRandomizer extends Randomizer {
         public InnerRandomizer(SpeciesSet allowed, SpeciesSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                boolean catchEmAll, boolean similarStrength, boolean balanceLowLevelEncounters,
-                               boolean keepEvolutions) {
+                               boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions) {
+
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
             }
             this.randomTypeThemes = randomTypeThemes;
             this.keepTypeThemes = keepTypeThemes;
             this.keepPrimaryType = keepPrimaryType;
+
+            if(basicPokemonOnly && sameEvoStage) {
+                throw new IllegalArgumentException("Can't use basicPokemonOnly with sameEvoStage.");
+            }
+            this.basicPokemonOnly = basicPokemonOnly;
+            this.sameEvoStage = sameEvoStage;
             this.keepEvolutions = keepEvolutions;
+
             this.needsTypes = keepPrimaryType || keepTypeThemes || randomTypeThemes;
             this.catchEmAll = catchEmAll;
             this.similarStrength = similarStrength;
             this.balanceLowLevelEncounters = balanceLowLevelEncounters;
-            this.allowed = allowed;
+
+            if(basicPokemonOnly && !keepEvolutions) {
+                this.allowed = allowed.filterBasic(false);
+            } else {
+                this.allowed = allowed;
+            }
+
             this.banned = banned;
             if (needsTypes) {
                 this.allowedByType = allowed.sortByType(false, typeService.getTypes());
@@ -715,8 +735,8 @@ public class WildEncounterRandomizer extends Randomizer {
             }
 
             Type typeForReplacement = (theme != null) ? theme : info.getTheme(keepPrimaryType);
-            boolean needsInner = !info.bannedForReplacement.isEmpty() || keepEvolutions;
-            //if neither of these is true, the only restriction is the type
+            boolean needsInner = !info.bannedForReplacement.isEmpty() || keepEvolutions || sameEvoStage;
+            //if none of these is true, the only restriction is the type
 
             SpeciesSet possiblyAllowed;
             possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
@@ -751,7 +771,15 @@ public class WildEncounterRandomizer extends Randomizer {
             Type typeForReplacement = (theme != null) ? theme :
                     (keepPrimaryType ? current.getPrimaryType(true) : null);
 
-            return getTypeWithoutBanned(typeForReplacement, area.getBannedSpecies());
+            SpeciesSet allowedForReplacement = getTypeWithoutBanned(typeForReplacement, area.getBannedSpecies());
+
+            if(sameEvoStage) {
+                int stage = current.getStagesBefore(true);
+                allowedForReplacement = allowedForReplacement.filter(sp ->
+                        sp.getStagesBefore(false) == stage);
+            }
+
+            return allowedForReplacement;
         }
 
         /**
@@ -770,6 +798,12 @@ public class WildEncounterRandomizer extends Randomizer {
                 allowedForReplacement.removeAll(info.getBannedForReplacement());
             } else {
                 allowedForReplacement = startingPool;
+            }
+
+            if(sameEvoStage) {
+                int stage = info.species.getStagesBefore(true);
+                allowedForReplacement = allowedForReplacement.filter(sp ->
+                        sp.getStagesBefore(false) == stage);
             }
 
             if(keepEvolutions) {
@@ -911,7 +945,11 @@ public class WildEncounterRandomizer extends Randomizer {
 
             int before = family.getNumberEvoStagesBefore(match, true);
             int after = family.getNumberEvoStagesAfter(match, true);
-            potentiallyAllowed = potentiallyAllowed.filterHasEvoStages(before, after, false);
+            potentiallyAllowed = potentiallyAllowed.filter(sp -> sp.getStagesBefore(false) >= before
+                    && sp.getStagesAfter(false) >= after);
+            if(basicPokemonOnly) {
+                potentiallyAllowed.removeIf(sp -> sp.getStagesBefore(false) > before);
+            }
 
             for(Species relative : family) {
                 int relation = match.getRelation(relative, true);

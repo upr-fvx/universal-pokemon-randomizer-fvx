@@ -2320,8 +2320,9 @@ public class RandomizerGUI {
 		totpPercentageLevelModifierSlider.setValue(0);
 
         setInitialButtonState(wpRandomizeWildPokemonCheckBox, wpZoneNoneRadioButton, wpZoneEncounterSetRadioButton,
-                wpZoneNamedLocationRadioButton, wpZoneGameRadioButton, wpTRNoneRadioButton,
-                        wpTRThemedAreasRadioButton, wpTRKeepPrimaryRadioButton, wpTRKeepThemesCheckBox,
+                wpZoneMapRadioButton, wpZoneNamedLocationRadioButton, wpZoneGameRadioButton,
+                wpSplitByEncounterTypesCheckBox,
+                wpTRNoneRadioButton, wpTRThemedAreasRadioButton, wpTRKeepPrimaryRadioButton, wpTRKeepThemesCheckBox,
                 wpERNoneRadioButton, wpERBasicOnlyRadioButton, wpERSameEvolutionStageRadioButton,
                 wpERKeepEvolutionsCheckBox, wpSimilarStrengthCheckBox, wpCatchEmAllModeCheckBox,
                         wpUseTimeBasedEncountersCheckBox, wpDontUseLegendariesCheckBox, wpSetMinimumCatchRateCheckBox,
@@ -2744,6 +2745,9 @@ public class RandomizerGUI {
                 wpZoneEncounterSetRadioButton.setVisible(true);
                 wpZoneMapRadioButton.setVisible(false);
             }
+            wpZoneGameRadioButton.setSelected(true);
+            wpTRNoneRadioButton.setSelected(true);
+            wpERNoneRadioButton.setSelected(true);
             wpUseTimeBasedEncountersCheckBox.setVisible(romHandler.hasTimeBasedEncounters());
             wpUseTimeBasedEncountersCheckBox.setSelected(true);
             wpSetMinimumCatchRateCheckBox.setEnabled(true);

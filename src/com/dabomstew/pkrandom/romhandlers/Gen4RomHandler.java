@@ -3794,6 +3794,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
+	public boolean canTMsBeHeld() {
+		return true;
+	}
+
+	@Override
 	public Map<Species, boolean[]> getTMHMCompatibility() {
 		Map<Species, boolean[]> compat = new TreeMap<>();
 		int formeCount = Gen4Constants.getFormeCount(romEntry.getRomType());

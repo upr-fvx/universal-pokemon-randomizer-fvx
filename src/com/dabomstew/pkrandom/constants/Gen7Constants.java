@@ -27,7 +27,6 @@ import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Gen7Constants {
@@ -1006,10 +1005,8 @@ public class Gen7Constants {
         // Unknown blank items or version exclusives
         addBetween(set, ItemIDs.tea, ItemIDs.autograph);
         addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
-        // TMs & HMs - tms cant be held in gen7
-        addBetween(set, ItemIDs.tm01, ItemIDs.hm08);
-        addBetween(set, ItemIDs.tm93, ItemIDs.tm95);
-        addBetween(set, ItemIDs.tm96, ItemIDs.tm100);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         // Battle Launcher exclusives
         addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         // Key items (Gen 6)
@@ -1251,12 +1248,6 @@ public class Gen7Constants {
         allTrainers.get(offset).tag = tag + "-1";
         allTrainers.get(offset + 1).tag = tag + "-2";
 
-    }
-
-    private static void tag(List<Trainer> allTrainers, int number, String tag) {
-        if (allTrainers.size() > (number - 1)) {
-            allTrainers.get(number - 1).tag = tag;
-        }
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {

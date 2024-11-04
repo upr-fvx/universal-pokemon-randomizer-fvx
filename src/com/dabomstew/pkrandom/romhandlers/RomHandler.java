@@ -342,6 +342,8 @@ public interface RomHandler {
 
     boolean isTMsReusable();
 
+    boolean canTMsBeHeld();
+
     /**
      * Get TM/HM compatibility data from this rom. The result should contain a
      * boolean array for each Species indexed as such:

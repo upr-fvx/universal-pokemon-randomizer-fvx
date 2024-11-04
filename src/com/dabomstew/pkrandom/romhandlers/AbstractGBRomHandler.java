@@ -440,6 +440,9 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public boolean canTMsBeHeld() { return true; }
+
+    @Override
     public boolean hasTypeEffectivenessSupport() {
         return true;
     }

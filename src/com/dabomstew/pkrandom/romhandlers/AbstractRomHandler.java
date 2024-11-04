@@ -273,6 +273,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public boolean canTMsBeHeld() {
+        return false;
+    }
+
+    @Override
     public boolean hasTotemPokemon() {
         // DEFAULT: no
         return false;

@@ -879,9 +879,8 @@ public class Gen5Constants {
         // Unknown blank items or version exclusives
         addBetween(set, ItemIDs.tea, ItemIDs.autograph);
         addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
-        // TMs & HMs - tms cant be held in gen5
-        addBetween(set, ItemIDs.tm01, ItemIDs.hm08);
-        addBetween(set, ItemIDs.tm93, ItemIDs.tm95);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         // Battle Launcher exclusives
         addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         return Collections.unmodifiableSet(set);

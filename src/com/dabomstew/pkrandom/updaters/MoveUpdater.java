@@ -337,8 +337,8 @@ public class MoveUpdater extends Updater {
 
     private void updateMoveAccuracy(List<Move> moves, int moveNum, int accuracy) {
         Move mv = moves.get(moveNum);
-        if (Math.abs(mv.hitratio - accuracy) >= 1) {
-            mv.hitratio = accuracy;
+        if (Math.abs(mv.hitRatio - accuracy) >= 1) {
+            mv.hitRatio = accuracy;
             addMoveUpdate(moveNum, 2);
         }
     }

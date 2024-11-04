@@ -191,7 +191,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				moves[i].number = i;
 				moves[i].internalId = i;
 				moves[i].effectIndex = readWord(moveData, 0);
-				moves[i].hitratio = (moveData[5] & 0xFF);
+				moves[i].hitRatio = (moveData[5] & 0xFF);
 				moves[i].power = moveData[3] & 0xFF;
 				moves[i].pp = moveData[6] & 0xFF;
 				moves[i].type = Gen4Constants.typeTable[moveData[4] & 0xFF];
@@ -204,7 +204,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				moves[i].isSoundMove = Gen4Constants.soundMoves.contains(moves[i].number);
 
 				if (i == MoveIDs.swift) {
-					perfectAccuracy = (int) moves[i].hitratio;
+					perfectAccuracy = (int) moves[i].hitRatio;
 				}
 
 				if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -785,7 +785,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			data[2] = Gen4Constants.moveCategoryToByte(moves[i].category);
 			data[3] = (byte) moves[i].power;
 			data[4] = Gen4Constants.typeToByte(moves[i].type);
-			int hitratio = (int) Math.round(moves[i].hitratio);
+			int hitratio = (int) Math.round(moves[i].hitRatio);
 			if (hitratio < 0) {
 				hitratio = 0;
 			}
@@ -3509,7 +3509,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (m.category == MoveCategory.STATUS) {
 			return 0;
 		}
-		double strength = m.power * m.hitCount * m.hitratio;
+		double strength = m.power * m.hitCount * m.hitRatio;
 		strength *= m.category == MoveCategory.PHYSICAL ? pk.getAttack() : pk.getSpatk();
 		if (m.type == pk.getPrimaryType(false) || m.type == pk.getSecondaryType(false)) {
 			strength *= Gen4Constants.stabMultiplier;

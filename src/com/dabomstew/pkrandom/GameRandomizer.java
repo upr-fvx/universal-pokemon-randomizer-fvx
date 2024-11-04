@@ -831,7 +831,7 @@ public class GameRandomizer {
                 nonTypeChanges.add(String.format("%d PP", mv.pp));
             }
             if (changes[2]) {
-                nonTypeChanges.add(String.format("%.00f%% accuracy", mv.hitratio));
+                nonTypeChanges.add(String.format("%.00f%% accuracy", mv.hitRatio));
             }
             String logStr = "Made " + mv.name;
             // type or not?
@@ -1253,7 +1253,7 @@ public class GameRandomizer {
             if (mv != null) {
                 String mvType = (mv.type == null) ? "???" : mv.type.toString();
                 log.printf("%3d|%-15s|%-8s|%5d|%4d|%3d", mv.internalId, mv.name, mvType, mv.power,
-                        (int) mv.hitratio, mv.pp);
+                        (int) mv.hitRatio, mv.pp);
                 if (romHandler.hasPhysicalSpecialSplit()) {
                     log.printf("| %s", mv.category.toString());
                 }

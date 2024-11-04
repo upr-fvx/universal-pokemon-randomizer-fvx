@@ -444,7 +444,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 moves[i].number = i;
                 moves[i].internalId = i;
                 moves[i].effectIndex = readWord(moveData, 16);
-                moves[i].hitratio = (moveData[4] & 0xFF);
+                moves[i].hitRatio = (moveData[4] & 0xFF);
                 moves[i].power = moveData[3] & 0xFF;
                 moves[i].pp = moveData[5] & 0xFF;
                 moves[i].type = Gen6Constants.typeTable[moveData[0] & 0xFF];
@@ -485,7 +485,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
 
                 if (i == MoveIDs.swift) {
-                    perfectAccuracy = (int)moves[i].hitratio;
+                    perfectAccuracy = (int)moves[i].hitRatio;
                 }
 
                 if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -785,7 +785,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             data[2] = Gen6Constants.moveCategoryToByte(moves[i].category);
             data[3] = (byte) moves[i].power;
             data[0] = Gen6Constants.typeToByte(moves[i].type);
-            int hitratio = (int) Math.round(moves[i].hitratio);
+            int hitratio = (int) Math.round(moves[i].hitRatio);
             if (hitratio < 0) {
                 hitratio = 0;
             }

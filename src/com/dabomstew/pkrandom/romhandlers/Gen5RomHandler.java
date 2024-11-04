@@ -248,7 +248,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 moves[i].number = i;
                 moves[i].internalId = i;
                 moves[i].effectIndex = readWord(moveData, 16);
-                moves[i].hitratio = (moveData[4] & 0xFF);
+                moves[i].hitRatio = (moveData[4] & 0xFF);
                 moves[i].power = moveData[3] & 0xFF;
                 moves[i].pp = moveData[5] & 0xFF;
                 moves[i].type = Gen5Constants.typeTable[moveData[0] & 0xFF];
@@ -281,7 +281,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
 
                 if (i == MoveIDs.swift) {
-                    perfectAccuracy = (int)moves[i].hitratio;
+                    perfectAccuracy = (int)moves[i].hitRatio;
                 }
 
                 if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -448,7 +448,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             data[2] = Gen5Constants.moveCategoryToByte(moves[i].category);
             data[3] = (byte) moves[i].power;
             data[0] = Gen5Constants.typeToByte(moves[i].type);
-            int hitratio = (int) Math.round(moves[i].hitratio);
+            int hitratio = (int) Math.round(moves[i].hitRatio);
             if (hitratio < 0) {
                 hitratio = 0;
             }

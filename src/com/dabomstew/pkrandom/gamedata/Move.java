@@ -55,7 +55,7 @@ public class Move {
     public int internalId;
     public int power;
     public int pp;
-    public double hitratio;
+    public double hitRatio;
     public Type type;
     public MoveCategory category;
     public StatChangeMoveType statChangeMoveType = StatChangeMoveType.NONE_OR_UNKNOWN;
@@ -78,6 +78,8 @@ public class Move {
     public int target;
     public double hitCount = 1; // not saved, only used in randomized move powers.
 
+    private int baseValue = -1; //for moveset randomization
+
     public Move() {
         // Initialize all statStageChanges to something sensible so that we don't need to have
         // each RomHandler mess with them if they don't need to.
@@ -92,6 +94,9 @@ public class Move {
             if (sc.type == type && (isPositive ^ sc.stages < 0)) {
                 return true;
             }
+            if(sc.type == StatChangeType.ALL && type.containedInAll() && (isPositive ^ sc.stages < 0)) {
+                return true;
+            }
         }
         return false;
     }
@@ -103,12 +108,107 @@ public class Move {
 
     public boolean isGoodDamaging(int perfectAccuracy) {
         return (power * hitCount) >= 2 * GlobalConstants.MIN_DAMAGING_MOVE_POWER
-                || ((power * hitCount) >= GlobalConstants.MIN_DAMAGING_MOVE_POWER && (hitratio >= 90 || hitratio == perfectAccuracy));
+                || ((power * hitCount) >= GlobalConstants.MIN_DAMAGING_MOVE_POWER && (hitRatio >= 90 || hitRatio == perfectAccuracy));
     }
 
     public String toString() {
         return "#" + number + " " + name + " - Power: " + power + ", Base PP: " + pp + ", Type: " + type + ", Hit%: "
-                + (hitratio) + ", Effect: " + effectIndex + ", Priority: " + priority;
+                + (hitRatio) + ", Effect: " + effectIndex + ", Priority: " + priority;
+    }
+
+    /**
+     * Gives a number representing the usefulness of the move in a vacuum.
+     * @return The move's base value.
+     */
+    public int getBaseValue() {
+        if(baseValue == -1) {
+            if(category != MoveCategory.STATUS) {
+                baseValue = generateDamagingMoveValue();
+            } else {
+                baseValue = generateStatusMoveValue();
+            }
+        }
+        return baseValue;
+    }
+
+    private int generateDamagingMoveValue() {
+        double value = power;
+        if(power == 0) {
+            value = generateUniqueDamagingMovePower();
+        }
+        if(hitCount > 1) {
+            value *= hitCount;
+        }
+
+        value += absorbPercent * power;
+        value -= recoilPercent * power;
+        value += flinchPercentChance * 100;
+
+        switch (criticalChance) {
+            case NONE:
+                value -= power * .12;
+                break;
+            case INCREASED:
+                value += power * .12;
+                break;
+            case GUARANTEED:
+                value += power;
+                break;
+                //TODO: make these values accurate outside of Gen 2-5
+        }
+
+        if(statusPercentChance != 0) {
+            int secondaryEffectValue = 0;
+            if(statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
+                secondaryEffectValue += generateStatChangeValue();
+            }
+            if(statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
+                secondaryEffectValue += generateStatusConditionValue();
+            }
+            if(secondaryEffectValue == 0) {
+                secondaryEffectValue += generateUniqueSecondaryValue();
+            }
+            value += statusPercentChance * secondaryEffectValue;
+        }
+
+        if(hitRatio == 0) {
+            value *= 1.5;
+        } else {
+            value *= hitRatio;
+        }
+
+        if(isChargeMove)
+            value *= .5;
+        if(isRechargeMove)
+            value *= .6;
+
+        if(priority > 0) {
+            value += 10 + priority;
+        } else if(priority < 0) {
+            value -= 10 + priority;
+        }
+
+        return (int) value;
+    }
+
+    private int generateStatusMoveValue() {
+        double value = 0;
+
+        if(statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
+            value += generateStatChangeValue();
+        }
+        if(statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
+            value += generateStatusConditionValue();
+        }
+        if(value == 0) {
+            value += generateUniqueStatusMoveValue();
+        }
+
+        if(hitRatio != 0) {
+            value *= hitRatio;
+        }
+
+        return (int) value;
     }
 
 }

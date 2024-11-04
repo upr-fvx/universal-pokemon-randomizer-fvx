@@ -34,5 +34,18 @@ public enum StatChangeType {
     ACCURACY,
     EVASION,
     ALL,
-    SPECIAL
+    SPECIAL;
+
+    public boolean containedInAll() {
+        switch(this) {
+            case ATTACK:
+            case DEFENSE:
+            case SPECIAL_ATTACK:
+            case SPECIAL_DEFENSE:
+            case SPEED:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

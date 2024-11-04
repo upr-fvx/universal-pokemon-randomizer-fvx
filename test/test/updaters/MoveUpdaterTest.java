@@ -105,7 +105,7 @@ public class MoveUpdaterTest extends UpdaterTest {
         List<MoveRecord> records = new ArrayList<>(moves.size());
         for (Move m : moves) {
             if (m != null) {
-                records.add(new MoveRecord(m.name, m.power, m.pp, m.hitratio, m.type, m.category));
+                records.add(new MoveRecord(m.name, m.power, m.pp, m.hitRatio, m.type, m.category));
             }
         }
         return records;

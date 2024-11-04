@@ -69,32 +69,32 @@ public class MoveDataRandomizer extends Randomizer {
     public void randomizeMoveAccuracies() {
         List<Move> moves = romHandler.getMoves();
         for (Move mv : moves) {
-            if (mv != null && mv.internalId != MoveIDs.struggle && mv.hitratio >= 5) {
+            if (mv != null && mv.internalId != MoveIDs.struggle && mv.hitRatio >= 5) {
                 // "Sane" accuracy randomization
                 // Broken into three tiers based on original accuracy
                 // Designed to limit the chances of 100% accurate OHKO moves and
                 // keep a decent base of 100% accurate regular moves.
 
-                if (mv.hitratio <= 50) {
+                if (mv.hitRatio <= 50) {
                     // lowest tier (acc <= 50)
                     // new accuracy = rand(20...50) inclusive
                     // with a 10% chance to increase by 50%
-                    mv.hitratio = random.nextInt(7) * 5 + 20;
+                    mv.hitRatio = random.nextInt(7) * 5 + 20;
                     if (random.nextInt(10) == 0) {
-                        mv.hitratio = (mv.hitratio * 3 / 2) / 5 * 5;
+                        mv.hitRatio = (mv.hitRatio * 3 / 2) / 5 * 5;
                     }
-                } else if (mv.hitratio < 90) {
+                } else if (mv.hitRatio < 90) {
                     // middle tier (50 < acc < 90)
                     // count down from 100% to 20% in 5% increments with 20%
                     // chance to "stop" and use the current accuracy at each
                     // increment
                     // gives decent-but-not-100% accuracy most of the time
-                    mv.hitratio = 100;
-                    while (mv.hitratio > 20) {
+                    mv.hitRatio = 100;
+                    while (mv.hitRatio > 20) {
                         if (random.nextInt(10) < 2) {
                             break;
                         }
-                        mv.hitratio -= 5;
+                        mv.hitRatio -= 5;
                     }
                 } else {
                     // highest tier (90 <= acc <= 100)
@@ -102,12 +102,12 @@ public class MoveDataRandomizer extends Randomizer {
                     // chance to "stop" and use the current accuracy at each
                     // increment
                     // gives high accuracy most of the time
-                    mv.hitratio = 100;
-                    while (mv.hitratio > 20) {
+                    mv.hitRatio = 100;
+                    while (mv.hitRatio > 20) {
                         if (random.nextInt(10) < 4) {
                             break;
                         }
-                        mv.hitratio -= 5;
+                        mv.hitRatio -= 5;
                     }
                 }
             }

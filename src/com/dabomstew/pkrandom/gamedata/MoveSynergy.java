@@ -228,7 +228,7 @@ public class MoveSynergy {
             case AbilityIDs.compoundEyes:
                 synergisticMoves.addAll(moveList
                         .stream()
-                        .filter(mv -> mv.hitratio > 0 && mv.hitratio <= 80)
+                        .filter(mv -> mv.hitRatio > 0 && mv.hitRatio <= 80)
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 break;
@@ -296,7 +296,7 @@ public class MoveSynergy {
                         .collect(Collectors.toList()));
                 synergisticMoves.addAll(moveList
                         .stream()
-                        .filter(mv -> mv.category == MoveCategory.PHYSICAL && mv.hitratio == perfectAccuracy)
+                        .filter(mv -> mv.category == MoveCategory.PHYSICAL && mv.hitRatio == perfectAccuracy)
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 break;
@@ -401,7 +401,7 @@ public class MoveSynergy {
             case AbilityIDs.noGuard:
                 synergisticMoves.addAll(moveList
                         .stream()
-                        .filter(mv -> mv.hitratio > 0 && mv.hitratio <= 70)
+                        .filter(mv -> mv.hitRatio > 0 && mv.hitRatio <= 70)
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 break;
@@ -888,7 +888,7 @@ public class MoveSynergy {
             case MoveIDs.mindReader:
                 synergisticMoves.addAll(moveList
                         .stream()
-                        .filter(mv -> (mv.hitratio <= 50))
+                        .filter(mv -> (mv.hitRatio <= 50))
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 break;

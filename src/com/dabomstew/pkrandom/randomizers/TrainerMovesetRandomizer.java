@@ -40,186 +40,10 @@ public class TrainerMovesetRandomizer extends Randomizer {
                     continue;
                 }
 
-                double trainerTypeModifier = 1;
-                if (t.isImportant()) {
-                    trainerTypeModifier = 1.5;
-                } else if (t.isBoss()) {
-                    trainerTypeModifier = 2;
-                }
-                double movePoolSizeModifier = movesAtLevel.size() / 10.0;
-                double bonusModifier = trainerTypeModifier * movePoolSizeModifier;
-
-                double atkSpatkRatioModifier = 0.75;
-                double stabMoveBias = 0.25 * bonusModifier;
-                double hardAbilityMoveBias = 1 * bonusModifier;
-                double softAbilityMoveBias = 0.5 * bonusModifier;
-                double statBias = 0.5 * bonusModifier;
-                double softMoveBias = 0.25 * bonusModifier;
-                double hardMoveBias = 1 * bonusModifier;
-                double softMoveAntiBias = 0.5;
-
-                // Add bias for STAB
-
-                Species pk = romHandler.getAltFormeOfSpecies(tp.species, tp.forme);
-
-                List<Move> stabMoves = new ArrayList<>(movesAtLevel)
-                        .stream()
-                        .filter(mv -> mv.type == pk.getPrimaryType(false) && mv.category != MoveCategory.STATUS)
-                        .collect(Collectors.toList());
-                Collections.shuffle(stabMoves, random);
-
-                for (int i = 0; i < stabMoveBias * stabMoves.size(); i++) {
-                    int j = i % stabMoves.size();
-                    movesAtLevel.add(stabMoves.get(j));
-                }
-
-                if (pk.getSecondaryType(false) != null) {
-                    stabMoves = new ArrayList<>(movesAtLevel)
-                            .stream()
-                            .filter(mv -> mv.type == pk.getSecondaryType(false) && mv.category != MoveCategory.STATUS)
-                            .collect(Collectors.toList());
-                    Collections.shuffle(stabMoves, random);
-
-                    for (int i = 0; i < stabMoveBias * stabMoves.size(); i++) {
-                        int j = i % stabMoves.size();
-                        movesAtLevel.add(stabMoves.get(j));
-                    }
-                }
-
-                // Hard ability/move synergy
-
-                List<Move> abilityMoveSynergyList = MoveSynergy.getHardAbilityMoveSynergy(
-                        romHandler.getAbilityForTrainerPokemon(tp),
-                        pk.getPrimaryType(false),
-                        pk.getSecondaryType(false),
-                        movesAtLevel,
-                        romHandler.generationOfPokemon(),
-                        romHandler.getPerfectAccuracy());
-                Collections.shuffle(abilityMoveSynergyList, random);
-                for (int i = 0; i < hardAbilityMoveBias * abilityMoveSynergyList.size(); i++) {
-                    int j = i % abilityMoveSynergyList.size();
-                    movesAtLevel.add(abilityMoveSynergyList.get(j));
-                }
-
-                // Soft ability/move synergy
-
-                List<Move> softAbilityMoveSynergyList = MoveSynergy.getSoftAbilityMoveSynergy(
-                        romHandler.getAbilityForTrainerPokemon(tp),
-                        movesAtLevel,
-                        pk.getPrimaryType(false),
-                        pk.getSecondaryType(false));
-
-                Collections.shuffle(softAbilityMoveSynergyList, random);
-                for (int i = 0; i < softAbilityMoveBias * softAbilityMoveSynergyList.size(); i++) {
-                    int j = i % softAbilityMoveSynergyList.size();
-                    movesAtLevel.add(softAbilityMoveSynergyList.get(j));
-                }
-
-                // Soft ability/move anti-synergy
-
-                List<Move> softAbilityMoveAntiSynergyList = MoveSynergy.getSoftAbilityMoveAntiSynergy(
-                        romHandler.getAbilityForTrainerPokemon(tp), movesAtLevel);
-                List<Move> withoutSoftAntiSynergy = new ArrayList<>(movesAtLevel);
-                for (Move mv : softAbilityMoveAntiSynergyList) {
-                    withoutSoftAntiSynergy.remove(mv);
-                }
-                if (withoutSoftAntiSynergy.size() > 0) {
-                    movesAtLevel = withoutSoftAntiSynergy;
-                }
-
-                List<Move> distinctMoveList = movesAtLevel.stream().distinct().collect(Collectors.toList());
-                int movesLeft = distinctMoveList.size();
-
-                if (movesLeft <= 4) {
-
-                    for (int i = 0; i < 4; i++) {
-                        if (i < movesLeft) {
-                            tp.moves[i] = distinctMoveList.get(i).number;
-                        } else {
-                            tp.moves[i] = 0;
-                        }
-                    }
-                    continue;
-                }
-
-                // Stat/move synergy
-
-                List<Move> statSynergyList = MoveSynergy.getStatMoveSynergy(pk, movesAtLevel);
-                Collections.shuffle(statSynergyList, random);
-                for (int i = 0; i < statBias * statSynergyList.size(); i++) {
-                    int j = i % statSynergyList.size();
-                    movesAtLevel.add(statSynergyList.get(j));
-                }
-
-                // Stat/move anti-synergy
-
-                List<Move> statAntiSynergyList = MoveSynergy.getStatMoveAntiSynergy(pk, movesAtLevel);
-                List<Move> withoutStatAntiSynergy = new ArrayList<>(movesAtLevel);
-                for (Move mv : statAntiSynergyList) {
-                    withoutStatAntiSynergy.remove(mv);
-                }
-                if (withoutStatAntiSynergy.size() > 0) {
-                    movesAtLevel = withoutStatAntiSynergy;
-                }
-
-                distinctMoveList = movesAtLevel.stream().distinct().collect(Collectors.toList());
-                movesLeft = distinctMoveList.size();
-
-                if (movesLeft <= 4) {
-
-                    for (int i = 0; i < 4; i++) {
-                        if (i < movesLeft) {
-                            tp.moves[i] = distinctMoveList.get(i).number;
-                        } else {
-                            tp.moves[i] = 0;
-                        }
-                    }
-                    continue;
-                }
-
-                // Add bias for atk/spatk ratio
-
-                double atkSpatkRatio = (double) pk.getAttack() / (double) pk.getSpatk();
-                switch (romHandler.getAbilityForTrainerPokemon(tp)) {
-                    case AbilityIDs.hugePower:
-                    case AbilityIDs.purePower:
-                        atkSpatkRatio *= 2;
-                        break;
-                    case AbilityIDs.hustle:
-                    case AbilityIDs.gorillaTactics:
-                        atkSpatkRatio *= 1.5;
-                        break;
-                    case AbilityIDs.moxie:
-                        atkSpatkRatio *= 1.1;
-                        break;
-                    case AbilityIDs.soulHeart:
-                        atkSpatkRatio *= 0.9;
-                        break;
-                }
-
-                List<Move> physicalMoves = new ArrayList<>(movesAtLevel)
-                        .stream()
-                        .filter(mv -> mv.category == MoveCategory.PHYSICAL).collect(Collectors.toList());
-                List<Move> specialMoves = new ArrayList<>(movesAtLevel)
-                        .stream()
-                        .filter(mv -> mv.category == MoveCategory.SPECIAL).collect(Collectors.toList());
-
-                if (atkSpatkRatio < 1 && specialMoves.size() > 0) {
-                    atkSpatkRatio = 1 / atkSpatkRatio;
-                    double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
-                    int additionalMoves = (int) (physicalMoves.size() * acceptedRatio) - specialMoves.size();
-                    for (int i = 0; i < additionalMoves; i++) {
-                        Move mv = specialMoves.get(random.nextInt(specialMoves.size()));
-                        movesAtLevel.add(mv);
-                    }
-                } else if (physicalMoves.size() > 0) {
-                    double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
-                    int additionalMoves = (int) (specialMoves.size() * acceptedRatio) - physicalMoves.size();
-                    for (int i = 0; i < additionalMoves; i++) {
-                        Move mv = physicalMoves.get(random.nextInt(physicalMoves.size()));
-                        movesAtLevel.add(mv);
-                    }
-                }
+                MoveWeights weights = getInitialMoveWeights(t, tp, movesAtLevel);
+                if (weights == null) continue;
+                List<Move> distinctMoveList;
+                int movesLeft;
 
                 // Pick moves
 
@@ -230,33 +54,33 @@ public class TrainerMovesetRandomizer extends Randomizer {
                     List<Move> pickFrom;
 
                     if (i == 1) {
-                        pickFrom = movesAtLevel
+                        pickFrom = weights.movesAtLevel
                                 .stream()
                                 .filter(mv -> mv.isGoodDamaging(romHandler.getPerfectAccuracy()))
                                 .collect(Collectors.toList());
                         if (pickFrom.isEmpty()) {
-                            pickFrom = movesAtLevel;
+                            pickFrom = weights.movesAtLevel;
                         }
                     } else {
-                        pickFrom = movesAtLevel;
+                        pickFrom = weights.movesAtLevel;
                     }
 
                     if (i == 4) {
-                        List<Move> requiresOtherMove = movesAtLevel
+                        List<Move> requiresOtherMove = weights.movesAtLevel
                                 .stream()
                                 .filter(mv -> GlobalConstants.requiresOtherMove.contains(mv.number))
                                 .distinct().collect(Collectors.toList());
 
                         for (Move dependentMove : requiresOtherMove) {
                             boolean hasRequiredMove = false;
-                            for (Move requiredMove : MoveSynergy.requiresOtherMove(dependentMove, movesAtLevel)) {
+                            for (Move requiredMove : MoveSynergy.requiresOtherMove(dependentMove, weights.movesAtLevel)) {
                                 if (pickedMoves.contains(requiredMove)) {
                                     hasRequiredMove = true;
                                     break;
                                 }
                             }
                             if (!hasRequiredMove) {
-                                movesAtLevel.removeAll(Collections.singletonList(dependentMove));
+                                weights.movesAtLevel.removeAll(Collections.singletonList(dependentMove));
                             }
                         }
                     }
@@ -268,11 +92,11 @@ public class TrainerMovesetRandomizer extends Randomizer {
                         break;
                     }
 
-                    movesAtLevel.removeAll(Collections.singletonList(move));
+                    weights.movesAtLevel.removeAll(Collections.singletonList(move));
 
-                    movesAtLevel.removeAll(MoveSynergy.getHardMoveAntiSynergy(move, movesAtLevel));
+                    weights.movesAtLevel.removeAll(MoveSynergy.getHardMoveAntiSynergy(move, weights.movesAtLevel));
 
-                    distinctMoveList = movesAtLevel.stream().distinct().collect(Collectors.toList());
+                    distinctMoveList = weights.movesAtLevel.stream().distinct().collect(Collectors.toList());
                     movesLeft = distinctMoveList.size();
 
                     if (movesLeft <= (4 - i)) {
@@ -282,36 +106,36 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                     List<Move> hardMoveSynergyList = MoveSynergy.getMoveSynergy(
                             move,
-                            movesAtLevel,
+                            weights.movesAtLevel,
                             romHandler.generationOfPokemon());
                     Collections.shuffle(hardMoveSynergyList, random);
-                    for (int j = 0; j < hardMoveBias * hardMoveSynergyList.size(); j++) {
+                    for (int j = 0; j < weights.hardMoveBias * hardMoveSynergyList.size(); j++) {
                         int k = j % hardMoveSynergyList.size();
-                        movesAtLevel.add(hardMoveSynergyList.get(k));
+                        weights.movesAtLevel.add(hardMoveSynergyList.get(k));
                     }
 
                     List<Move> softMoveSynergyList = MoveSynergy.getSoftMoveSynergy(
                             move,
-                            movesAtLevel,
+                            weights.movesAtLevel,
                             romHandler.getTypeTable());
                     Collections.shuffle(softMoveSynergyList, random);
-                    for (int j = 0; j < softMoveBias * softMoveSynergyList.size(); j++) {
+                    for (int j = 0; j < weights.softMoveBias * softMoveSynergyList.size(); j++) {
                         int k = j % softMoveSynergyList.size();
-                        movesAtLevel.add(softMoveSynergyList.get(k));
+                        weights.movesAtLevel.add(softMoveSynergyList.get(k));
                     }
 
-                    List<Move> softMoveAntiSynergyList = MoveSynergy.getSoftMoveAntiSynergy(move, movesAtLevel);
+                    List<Move> softMoveAntiSynergyList = MoveSynergy.getSoftMoveAntiSynergy(move, weights.movesAtLevel);
                     Collections.shuffle(softMoveAntiSynergyList, random);
-                    for (int j = 0; j < softMoveAntiBias * softMoveAntiSynergyList.size(); j++) {
-                        distinctMoveList = movesAtLevel.stream().distinct().collect(Collectors.toList());
+                    for (int j = 0; j < weights.softMoveAntiBias * softMoveAntiSynergyList.size(); j++) {
+                        distinctMoveList = weights.movesAtLevel.stream().distinct().collect(Collectors.toList());
                         if (distinctMoveList.size() <= (4 - i)) {
                             break;
                         }
                         int k = j % softMoveAntiSynergyList.size();
-                        movesAtLevel.remove(softMoveAntiSynergyList.get(k));
+                        weights.movesAtLevel.remove(softMoveAntiSynergyList.get(k));
                     }
 
-                    distinctMoveList = movesAtLevel.stream().distinct().collect(Collectors.toList());
+                    distinctMoveList = weights.movesAtLevel.stream().distinct().collect(Collectors.toList());
                     movesLeft = distinctMoveList.size();
 
                     if (movesLeft <= (4 - i)) {
@@ -333,6 +157,205 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
         romHandler.setTrainers(trainers);
         changesMade = true;
+    }
+
+    private MoveWeights getInitialMoveWeights(Trainer t, TrainerPokemon tp, List<Move> availableMoves) {
+        double trainerTypeModifier = 1;
+        if (t.isImportant()) {
+            trainerTypeModifier = 1.5;
+        } else if (t.isBoss()) {
+            trainerTypeModifier = 2;
+        }
+        double movePoolSizeModifier = availableMoves.size() / 10.0;
+        double bonusModifier = trainerTypeModifier * movePoolSizeModifier;
+
+        double atkSpatkRatioModifier = 0.75;
+        double stabMoveBias = 0.25 * bonusModifier;
+        double hardAbilityMoveBias = 1 * bonusModifier;
+        double softAbilityMoveBias = 0.5 * bonusModifier;
+        double statBias = 0.5 * bonusModifier;
+        double softMoveBias = 0.25 * bonusModifier;
+        double hardMoveBias = 1 * bonusModifier;
+        double softMoveAntiBias = 0.5;
+
+        // Add bias for STAB
+
+        Species pk = romHandler.getAltFormeOfSpecies(tp.species, tp.forme);
+
+        List<Move> stabMoves = new ArrayList<>(availableMoves)
+                .stream()
+                .filter(mv -> mv.type == pk.getPrimaryType(false) && mv.category != MoveCategory.STATUS)
+                .collect(Collectors.toList());
+        Collections.shuffle(stabMoves, random);
+
+        for (int i = 0; i < stabMoveBias * stabMoves.size(); i++) {
+            int j = i % stabMoves.size();
+            availableMoves.add(stabMoves.get(j));
+        }
+
+        if (pk.getSecondaryType(false) != null) {
+            stabMoves = new ArrayList<>(availableMoves)
+                    .stream()
+                    .filter(mv -> mv.type == pk.getSecondaryType(false) && mv.category != MoveCategory.STATUS)
+                    .collect(Collectors.toList());
+            Collections.shuffle(stabMoves, random);
+
+            for (int i = 0; i < stabMoveBias * stabMoves.size(); i++) {
+                int j = i % stabMoves.size();
+                availableMoves.add(stabMoves.get(j));
+            }
+        }
+
+        // Hard ability/move synergy
+
+        List<Move> abilityMoveSynergyList = MoveSynergy.getHardAbilityMoveSynergy(
+                romHandler.getAbilityForTrainerPokemon(tp),
+                pk.getPrimaryType(false),
+                pk.getSecondaryType(false),
+                availableMoves,
+                romHandler.generationOfPokemon(),
+                romHandler.getPerfectAccuracy());
+        Collections.shuffle(abilityMoveSynergyList, random);
+        for (int i = 0; i < hardAbilityMoveBias * abilityMoveSynergyList.size(); i++) {
+            int j = i % abilityMoveSynergyList.size();
+            availableMoves.add(abilityMoveSynergyList.get(j));
+        }
+
+        // Soft ability/move synergy
+
+        List<Move> softAbilityMoveSynergyList = MoveSynergy.getSoftAbilityMoveSynergy(
+                romHandler.getAbilityForTrainerPokemon(tp),
+                availableMoves,
+                pk.getPrimaryType(false),
+                pk.getSecondaryType(false));
+
+        Collections.shuffle(softAbilityMoveSynergyList, random);
+        for (int i = 0; i < softAbilityMoveBias * softAbilityMoveSynergyList.size(); i++) {
+            int j = i % softAbilityMoveSynergyList.size();
+            availableMoves.add(softAbilityMoveSynergyList.get(j));
+        }
+
+        // Soft ability/move anti-synergy
+
+        List<Move> softAbilityMoveAntiSynergyList = MoveSynergy.getSoftAbilityMoveAntiSynergy(
+                romHandler.getAbilityForTrainerPokemon(tp), availableMoves);
+        List<Move> withoutSoftAntiSynergy = new ArrayList<>(availableMoves);
+        for (Move mv : softAbilityMoveAntiSynergyList) {
+            withoutSoftAntiSynergy.remove(mv);
+        }
+        if (withoutSoftAntiSynergy.size() > 0) {
+            availableMoves = withoutSoftAntiSynergy;
+        }
+
+        List<Move> distinctMoveList = availableMoves.stream().distinct().collect(Collectors.toList());
+        int movesLeft = distinctMoveList.size();
+
+        if (movesLeft <= 4) {
+
+            for (int i = 0; i < 4; i++) {
+                if (i < movesLeft) {
+                    tp.moves[i] = distinctMoveList.get(i).number;
+                } else {
+                    tp.moves[i] = 0;
+                }
+            }
+            return null;
+        }
+
+        // Stat/move synergy
+
+        List<Move> statSynergyList = MoveSynergy.getStatMoveSynergy(pk, availableMoves);
+        Collections.shuffle(statSynergyList, random);
+        for (int i = 0; i < statBias * statSynergyList.size(); i++) {
+            int j = i % statSynergyList.size();
+            availableMoves.add(statSynergyList.get(j));
+        }
+
+        // Stat/move anti-synergy
+
+        List<Move> statAntiSynergyList = MoveSynergy.getStatMoveAntiSynergy(pk, availableMoves);
+        List<Move> withoutStatAntiSynergy = new ArrayList<>(availableMoves);
+        for (Move mv : statAntiSynergyList) {
+            withoutStatAntiSynergy.remove(mv);
+        }
+        if (!withoutStatAntiSynergy.isEmpty()) {
+            availableMoves = withoutStatAntiSynergy;
+        }
+
+        distinctMoveList = availableMoves.stream().distinct().collect(Collectors.toList());
+        movesLeft = distinctMoveList.size();
+
+        if (movesLeft <= 4) {
+
+            for (int i = 0; i < 4; i++) {
+                if (i < movesLeft) {
+                    tp.moves[i] = distinctMoveList.get(i).number;
+                } else {
+                    tp.moves[i] = 0;
+                }
+            }
+            return null;
+        }
+
+        // Add bias for atk/spatk ratio
+
+        double atkSpatkRatio = (double) pk.getAttack() / (double) pk.getSpatk();
+        switch (romHandler.getAbilityForTrainerPokemon(tp)) {
+            case AbilityIDs.hugePower:
+            case AbilityIDs.purePower:
+                atkSpatkRatio *= 2;
+                break;
+            case AbilityIDs.hustle:
+            case AbilityIDs.gorillaTactics:
+                atkSpatkRatio *= 1.5;
+                break;
+            case AbilityIDs.moxie:
+                atkSpatkRatio *= 1.1;
+                break;
+            case AbilityIDs.soulHeart:
+                atkSpatkRatio *= 0.9;
+                break;
+        }
+
+        List<Move> physicalMoves = new ArrayList<>(availableMoves)
+                .stream()
+                .filter(mv -> mv.category == MoveCategory.PHYSICAL).collect(Collectors.toList());
+        List<Move> specialMoves = new ArrayList<>(availableMoves)
+                .stream()
+                .filter(mv -> mv.category == MoveCategory.SPECIAL).collect(Collectors.toList());
+
+        if (atkSpatkRatio < 1 && specialMoves.size() > 0) {
+            atkSpatkRatio = 1 / atkSpatkRatio;
+            double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
+            int additionalMoves = (int) (physicalMoves.size() * acceptedRatio) - specialMoves.size();
+            for (int i = 0; i < additionalMoves; i++) {
+                Move mv = specialMoves.get(random.nextInt(specialMoves.size()));
+                availableMoves.add(mv);
+            }
+        } else if (physicalMoves.size() > 0) {
+            double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
+            int additionalMoves = (int) (specialMoves.size() * acceptedRatio) - physicalMoves.size();
+            for (int i = 0; i < additionalMoves; i++) {
+                Move mv = physicalMoves.get(random.nextInt(physicalMoves.size()));
+                availableMoves.add(mv);
+            }
+        }
+        MoveWeights weights = new MoveWeights(availableMoves, softMoveBias, hardMoveBias, softMoveAntiBias);
+        return weights;
+    }
+
+    private static class MoveWeights {
+        public final List<Move> movesAtLevel;
+        public final double softMoveBias;
+        public final double hardMoveBias;
+        public final double softMoveAntiBias;
+
+        public MoveWeights(List<Move> movesAtLevel, double softMoveBias, double hardMoveBias, double softMoveAntiBias) {
+            this.movesAtLevel = movesAtLevel;
+            this.softMoveBias = softMoveBias;
+            this.hardMoveBias = hardMoveBias;
+            this.softMoveAntiBias = softMoveAntiBias;
+        }
     }
 
     private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean doubleBattleMode) {
@@ -455,7 +478,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                                         !mv.isChargeMove &&
                                         !mv.isRechargeMove) ||
                                         mv2.power * mv2.hitCount <= 30) &&
-                                mv.hitratio >= mv2.hitratio &&
+                                mv.hitRatio >= mv2.hitRatio &&
                                 mv.category == mv2.category &&
                                 mv.priority >= mv2.priority &&
                                 mv2.power > 0 &&

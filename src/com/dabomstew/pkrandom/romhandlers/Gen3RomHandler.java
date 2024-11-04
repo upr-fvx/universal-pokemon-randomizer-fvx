@@ -622,7 +622,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             moves[i].number = i;
             moves[i].internalId = i;
             moves[i].effectIndex = rom[offs + i * 0xC] & 0xFF;
-            moves[i].hitratio = ((rom[offs + i * 0xC + 3] & 0xFF));
+            moves[i].hitRatio = ((rom[offs + i * 0xC + 3] & 0xFF));
             moves[i].power = rom[offs + i * 0xC + 1] & 0xFF;
             moves[i].pp = rom[offs + i * 0xC + 4] & 0xFF;
             moves[i].type = Gen3Constants.typeTable[rom[offs + i * 0xC + 2]];
@@ -637,7 +637,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             moves[i].isSoundMove = Gen3Constants.soundMoves.contains(moves[i].number);
 
             if (i == MoveIDs.swift) {
-                perfectAccuracy = (int)moves[i].hitratio;
+                perfectAccuracy = (int)moves[i].hitRatio;
             }
 
             if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -1039,7 +1039,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int offs = romEntry.getIntValue("MoveData");
         for (int i = 1; i <= moveCount; i++) {
 
-            int hitratio = (int) Math.round(moves[i].hitratio);
+            int hitratio = (int) Math.round(moves[i].hitRatio);
             hitratio = Math.max(hitratio, 0);
             hitratio = Math.min(hitratio, 100);
 

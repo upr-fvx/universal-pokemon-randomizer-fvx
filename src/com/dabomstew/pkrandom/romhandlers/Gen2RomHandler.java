@@ -255,7 +255,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             moves[i].number = i;
             moves[i].internalId = i;
             moves[i].effectIndex = rom[offs + (i - 1) * 7 + 1] & 0xFF;
-            moves[i].hitratio = ((rom[offs + (i - 1) * 7 + 4] & 0xFF)) / 255.0 * 100;
+            moves[i].hitRatio = ((rom[offs + (i - 1) * 7 + 4] & 0xFF)) / 255.0 * 100;
             moves[i].power = rom[offs + (i - 1) * 7 + 2] & 0xFF;
             moves[i].pp = rom[offs + (i - 1) * 7 + 5] & 0xFF;
             moves[i].type = Gen2Constants.typeTable[rom[offs + (i - 1) * 7 + 3]];
@@ -265,7 +265,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             }
 
             if (i == MoveIDs.swift) {
-                perfectAccuracy = (int) moves[i].hitratio;
+                perfectAccuracy = (int) moves[i].hitRatio;
             }
 
             if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -552,7 +552,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void saveMoves() {
         int offs = romEntry.getIntValue("MoveDataOffset");
         for (int i = 1; i <= 251; i++) {
-            int hitratio = (int) Math.round(moves[i].hitratio * 2.55);
+            int hitratio = (int) Math.round(moves[i].hitRatio * 2.55);
             if (hitratio < 0) {
                 hitratio = 0;
             }

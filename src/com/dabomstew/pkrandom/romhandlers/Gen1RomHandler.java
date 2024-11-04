@@ -254,7 +254,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 moves[trueMoveIndex].internalId = i;
                 moves[trueMoveIndex].number = trueMoveIndex;
                 moves[trueMoveIndex].effectIndex = rom[movesOffset + (i - 1) * 6 + 1] & 0xFF;
-                moves[trueMoveIndex].hitratio = ((rom[movesOffset + (i - 1) * 6 + 4] & 0xFF)) / 255.0 * 100;
+                moves[trueMoveIndex].hitRatio = ((rom[movesOffset + (i - 1) * 6 + 4] & 0xFF)) / 255.0 * 100;
                 moves[trueMoveIndex].power = rom[movesOffset + (i - 1) * 6 + 2] & 0xFF;
                 moves[trueMoveIndex].pp = rom[movesOffset + (i - 1) * 6 + 5] & 0xFF;
                 moves[trueMoveIndex].type = Gen1Constants.typeTable[rom[movesOffset + (i - 1) * 6 + 3] & 0xFF];
@@ -264,7 +264,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 }
 
                 if (moves[trueMoveIndex].name.equals("Swift")) {
-                    perfectAccuracy = (int)moves[trueMoveIndex].hitratio;
+                    perfectAccuracy = (int)moves[trueMoveIndex].hitRatio;
                 }
 
                 if (GlobalConstants.normalMultihitMoves.contains(i)) {
@@ -503,7 +503,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (Move m : moves) {
             if (m != null) {
                 int i = m.internalId;
-                int hitratio = (int) Math.round(m.hitratio * 2.55);
+                int hitratio = (int) Math.round(m.hitRatio * 2.55);
                 hitratio = Math.max(0, hitratio);
                 hitratio = Math.min(255, hitratio);
                 writeBytes(movesOffset + (i - 1) * 6 + 1, new byte[]{

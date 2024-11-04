@@ -120,6 +120,9 @@ public class Move {
      * Gives a number representing the usefulness of the move in a vacuum.
      * @return The move's base value.
      */
+    //Hmm. I kinda feel like this should be in MoveSynergy instead... but.
+    //Well, the reason it isn't is so it can be stored after being calculated. Definitely don't want to recalculate it
+    //every time.
     public int getBaseValue() {
         if(baseValue == -1) {
             if(category != MoveCategory.STATUS) {
@@ -133,7 +136,7 @@ public class Move {
 
     private int generateDamagingMoveValue() {
         double value = power;
-        if(power == 0) {
+        if(power <= 0) {
             value = generateUniqueDamagingMovePower();
         }
         if(hitCount > 1) {
@@ -191,6 +194,8 @@ public class Move {
         return (int) value;
     }
 
+
+
     private int generateStatusMoveValue() {
         double value = 0;
 
@@ -211,4 +216,92 @@ public class Move {
         return (int) value;
     }
 
+    private double generateStatChangeValue() {
+        double value = 0;
+
+        for(StatChange change : statChanges) {
+            if(change == null) {
+                continue;
+            }
+            int changeValue;
+            switch(change.type) {
+                case ATTACK:
+                case DEFENSE:
+                case SPECIAL_ATTACK:
+                case SPECIAL_DEFENSE:
+                    changeValue = 30; //somewhat arbitrary baseline
+                    break;
+                case SPEED:
+                    changeValue = 15; //using a move just to change speed is usually a waste
+                    break;
+                case SPECIAL: //because this is both attack and defence
+                case ACCURACY:
+                case EVASION:
+                    changeValue = 40;
+                    break;
+                case ALL:
+                    changeValue = 135; //att + def + spatk + spdef + spd
+                    break;
+                case NONE:
+                default:
+                    changeValue = 0; //this shouldn't be reached? but whatever
+                    break;
+            }
+            changeValue *= change.stages;
+
+            value += changeValue * change.percentChance;
+        }
+
+        switch (statChangeMoveType) {
+            case DAMAGE_USER:
+            case NO_DAMAGE_ALLY:
+            case NO_DAMAGE_USER:
+                //no change
+                break;
+            case DAMAGE_TARGET:
+            case NO_DAMAGE_TARGET:
+                value *= -1;
+            case NO_DAMAGE_ALL:
+            case NONE_OR_UNKNOWN:
+                //?????
+                value = 0;
+                break;
+        }
+
+        return value;
+    }
+
+    private int generateStatusConditionValue() {
+        switch(statusType) {
+            case POISON:
+                return 50;
+            case BURN:
+                return 60;
+            case TOXIC_POISON:
+                return 70;
+            case CONFUSION:
+                return 90;
+            case PARALYZE:
+            case SLEEP:
+            case FREEZE:
+                return 100;
+            case NONE:
+            default:
+                return 0;
+        }
+        //These values are a bit arbitrary and may betray my personal biases.
+        //But that applies to all status values... and some of the damage factors as well...
+    }
+
+    private int generateUniqueSecondaryValue() {
+        return 0;
+    }
+
+    private double generateUniqueDamagingMovePower() {
+        return 0;
+    }
+
+    private double generateUniqueStatusMoveValue() {
+        return 0;
+    }
 }

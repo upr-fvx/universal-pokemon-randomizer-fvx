@@ -56,6 +56,11 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>();
     }
 
+    /**
+     * Deep copies the given encounter and all linked encounters.
+     * Linked encounters are not stored in the main list, so this is safe for copying full sets.
+     * @param original The StaticEncounter to copy.
+     */
     public StaticEncounter(StaticEncounter original) {
         this.spec = original.spec;
         this.forme = original.forme;
@@ -68,7 +73,7 @@ public class StaticEncounter {
         this.restrictedList = new ArrayList<>(original.restrictedList);
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
-            StaticEncounter newLinked = new StaticEncounter();
+            StaticEncounter newLinked = new StaticEncounter(); //is there a reason to not use the copy constructor here?
             newLinked.spec = oldLinked.spec;
             newLinked.forme = oldLinked.forme;
             newLinked.level = oldLinked.level;

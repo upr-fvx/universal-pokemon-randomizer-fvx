@@ -84,7 +84,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             cachedAll.retainAll(localWithRelatives);
         }
 
-        banned = romHandler.getBannedFormesForTrainerPokemon();
+        banned = new SpeciesSet(romHandler.getBannedFormesForTrainerPokemon());
         if (!abilitiesAreRandomized) {
             SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);

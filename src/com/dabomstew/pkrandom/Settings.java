@@ -128,11 +128,11 @@ public class Settings {
 
     private int startersBSTMinimum, startersBSTMaximum;
 
-    public enum TypesMod {
+    public enum SpeciesTypesMod {
         UNCHANGED, RANDOM_FOLLOW_EVOLUTIONS, COMPLETELY_RANDOM
     }
 
-    private TypesMod typesMod = TypesMod.UNCHANGED;
+    private SpeciesTypesMod speciesTypesMod = SpeciesTypesMod.UNCHANGED;
 
     private boolean typesFollowMegaEvolutions;
 
@@ -431,8 +431,8 @@ public class Settings {
                 standardizeEXPCurves, updateBaseStats, baseStatsFollowMegaEvolutions, assignEvoStatsRandomly));
 
         // 2: pokemon types & more general options
-        out.write(makeByteSelected(typesMod == TypesMod.RANDOM_FOLLOW_EVOLUTIONS,
-                typesMod == TypesMod.COMPLETELY_RANDOM, typesMod == TypesMod.UNCHANGED, raceMode, blockBrokenMoves,
+        out.write(makeByteSelected(speciesTypesMod == SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS,
+                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED, raceMode, blockBrokenMoves,
                 limitPokemon, typesFollowMegaEvolutions, dualTypeOnly));
 
         // 3: v171: changed to the abilities byte
@@ -746,7 +746,7 @@ public class Settings {
         settings.setBaseStatsFollowMegaEvolutions(restoreState(data[1],6));
         settings.setAssignEvoStatsRandomly(restoreState(data[1],7));
 
-        settings.setTypesMod(restoreEnum(TypesMod.class, data[2], 2, // UNCHANGED
+        settings.setSpeciesTypesMod(restoreEnum(SpeciesTypesMod.class, data[2], 2, // UNCHANGED
                 0, // RANDOM_FOLLOW_EVOLUTIONS
                 1 // COMPLETELY_RANDOM
         ));
@@ -1578,16 +1578,16 @@ public class Settings {
         this.startersBSTMaximum = startersBSTMaximum;
     }
     
-    public TypesMod getTypesMod() {
-        return typesMod;
+    public SpeciesTypesMod getSpeciesTypesMod() {
+        return speciesTypesMod;
     }
 
-    public void setTypesMod(boolean... bools) {
-        setTypesMod(getEnum(TypesMod.class, bools));
+    public void setSpeciesTypesMod(boolean... bools) {
+        setSpeciesTypesMod(getEnum(SpeciesTypesMod.class, bools));
     }
 
-    public void setTypesMod(TypesMod typesMod) {
-        this.typesMod = typesMod;
+    public void setSpeciesTypesMod(SpeciesTypesMod speciesTypesMod) {
+        this.speciesTypesMod = speciesTypesMod;
     }
 
     public boolean isTypesFollowMegaEvolutions() {

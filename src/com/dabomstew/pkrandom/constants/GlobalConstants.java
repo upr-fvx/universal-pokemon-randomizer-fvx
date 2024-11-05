@@ -165,8 +165,22 @@ public class GlobalConstants {
             MoveIDs.reflectType       // the AI does not know how to use this move properly
     );
 
+    public static final List<Integer> uselessInSomeGames = Arrays.asList(
+            MoveIDs.whirlwind, MoveIDs.roar
+    );
+
     public static final List<Integer> requiresOtherMove = Arrays.asList(
             MoveIDs.spitUp, MoveIDs.swallow, MoveIDs.dreamEater, MoveIDs.nightmare
+    );
+
+    public static final List<Integer> semiInvulnerableMoves = Arrays.asList(
+            MoveIDs.fly, MoveIDs.dig, MoveIDs.dive, MoveIDs.bounce, MoveIDs.shadowForce,MoveIDs.skyDrop,
+            MoveIDs.phantomForce
+    );
+
+    public static final List<Integer> bindingMoves = Arrays.asList(
+            MoveIDs.bind, MoveIDs.wrap, MoveIDs.fireSpin, MoveIDs.clamp, MoveIDs.whirlpool, MoveIDs.sandTomb,
+            MoveIDs.magmaStorm, MoveIDs.infestation
     );
 
     public static final int vanillaHappinessToEvolve = 220, easierHappinessToEvolve = 160;

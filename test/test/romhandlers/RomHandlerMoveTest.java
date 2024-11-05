@@ -1,10 +1,13 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.constants.MoveIDs;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.MoveLearnt;
 import com.dabomstew.pkrandom.randomizers.TMTutorMoveRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
+import com.dabomstew.pkrandom.services.MoveValuationService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -111,6 +114,30 @@ public class RomHandlerMoveTest extends RomHandlerTest {
         List<Integer> before = new ArrayList<>(moveTutorMoves);
         romHandler.setMoveTutorMoves(moveTutorMoves);
         assertEquals(before, romHandler.getMoveTutorMoves());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void checkMoveValueSanity(String romName) {
+        loadROM(romName);
+        MoveValuationService mvs = new MoveValuationService(romHandler);
+
+        for(Move move : mvs.getAllMoves()) {
+            if (move == null) {
+                continue;
+            }
+            int value = mvs.getBaseValue(move);
+            System.out.println(move.name + ": " + value);
+
+            if(value == 0 && !GlobalConstants.uselessMoves.contains(move.internalId)
+                    && !GlobalConstants.uselessInSomeGames.contains(move.internalId)) {
+                fail("Non-useless move " + move.name + " has value 0.");
+            } else if(value > 1000) {
+                fail("Move " + move.name + " has value over 1000.");
+            } else if(value < 0) {
+                fail("Move " + move.name + " has negative value.");
+            }
+        }
     }
 
 }

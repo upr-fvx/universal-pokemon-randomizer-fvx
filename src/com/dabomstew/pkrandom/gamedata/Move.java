@@ -25,6 +25,7 @@ package com.dabomstew.pkrandom.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.constants.MoveIDs;
 
 import java.util.Objects;
 
@@ -55,7 +56,7 @@ public class Move {
     public int internalId;
     public int power;
     public int pp;
-    public double hitRatio;
+    public double hitRatio; //why is this a double if it's 0-100 not 0-1
     public Type type;
     public MoveCategory category;
     public StatChangeMoveType statChangeMoveType = StatChangeMoveType.NONE_OR_UNKNOWN;
@@ -77,8 +78,6 @@ public class Move {
     public int effectIndex;
     public int target;
     public double hitCount = 1; // not saved, only used in randomized move powers.
-
-    private int baseValue = -1; //for moveset randomization
 
     public Move() {
         // Initialize all statStageChanges to something sensible so that we don't need to have
@@ -114,194 +113,5 @@ public class Move {
     public String toString() {
         return "#" + number + " " + name + " - Power: " + power + ", Base PP: " + pp + ", Type: " + type + ", Hit%: "
                 + (hitRatio) + ", Effect: " + effectIndex + ", Priority: " + priority;
-    }
-
-    /**
-     * Gives a number representing the usefulness of the move in a vacuum.
-     * @return The move's base value.
-     */
-    //Hmm. I kinda feel like this should be in MoveSynergy instead... but.
-    //Well, the reason it isn't is so it can be stored after being calculated. Definitely don't want to recalculate it
-    //every time.
-    public int getBaseValue() {
-        if(baseValue == -1) {
-            if(category != MoveCategory.STATUS) {
-                baseValue = generateDamagingMoveValue();
-            } else {
-                baseValue = generateStatusMoveValue();
-            }
-        }
-        return baseValue;
-    }
-
-    private int generateDamagingMoveValue() {
-        double value = power;
-        if(power <= 0) {
-            value = generateUniqueDamagingMovePower();
-        }
-        if(hitCount > 1) {
-            value *= hitCount;
-        }
-
-        value += absorbPercent * power;
-        value -= recoilPercent * power;
-        value += flinchPercentChance * 100;
-
-        switch (criticalChance) {
-            case NONE:
-                value -= power * .12;
-                break;
-            case INCREASED:
-                value += power * .12;
-                break;
-            case GUARANTEED:
-                value += power;
-                break;
-                //TODO: make these values accurate outside of Gen 2-5
-        }
-
-        if(statusPercentChance != 0) {
-            int secondaryEffectValue = 0;
-            if(statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-                secondaryEffectValue += generateStatChangeValue();
-            }
-            if(statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
-                secondaryEffectValue += generateStatusConditionValue();
-            }
-            if(secondaryEffectValue == 0) {
-                secondaryEffectValue += generateUniqueSecondaryValue();
-            }
-            value += statusPercentChance * secondaryEffectValue;
-        }
-
-        if(hitRatio == 0) {
-            value *= 1.5;
-        } else {
-            value *= hitRatio;
-        }
-
-        if(isChargeMove)
-            value *= .5;
-        if(isRechargeMove)
-            value *= .6;
-
-        if(priority > 0) {
-            value += 10 + priority;
-        } else if(priority < 0) {
-            value -= 10 + priority;
-        }
-
-        return (int) value;
-    }
-
-
-
-    private int generateStatusMoveValue() {
-        double value = 0;
-
-        if(statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-            value += generateStatChangeValue();
-        }
-        if(statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
-            value += generateStatusConditionValue();
-        }
-        if(value == 0) {
-            value += generateUniqueStatusMoveValue();
-        }
-
-        if(hitRatio != 0) {
-            value *= hitRatio;
-        }
-
-        return (int) value;
-    }
-
-    private double generateStatChangeValue() {
-        double value = 0;
-
-        for(StatChange change : statChanges) {
-            if(change == null) {
-                continue;
-            }
-            int changeValue;
-            switch(change.type) {
-                case ATTACK:
-                case DEFENSE:
-                case SPECIAL_ATTACK:
-                case SPECIAL_DEFENSE:
-                    changeValue = 30; //somewhat arbitrary baseline
-                    break;
-                case SPEED:
-                    changeValue = 15; //using a move just to change speed is usually a waste
-                    break;
-                case SPECIAL: //because this is both attack and defence
-                case ACCURACY:
-                case EVASION:
-                    changeValue = 40;
-                    break;
-                case ALL:
-                    changeValue = 135; //att + def + spatk + spdef + spd
-                    break;
-                case NONE:
-                default:
-                    changeValue = 0; //this shouldn't be reached? but whatever
-                    break;
-            }
-            changeValue *= change.stages;
-
-            value += changeValue * change.percentChance;
-        }
-
-        switch (statChangeMoveType) {
-            case DAMAGE_USER:
-            case NO_DAMAGE_ALLY:
-            case NO_DAMAGE_USER:
-                //no change
-                break;
-            case DAMAGE_TARGET:
-            case NO_DAMAGE_TARGET:
-                value *= -1;
-            case NO_DAMAGE_ALL:
-            case NONE_OR_UNKNOWN:
-                //?????
-                value = 0;
-                break;
-        }
-
-        return value;
-    }
-
-    private int generateStatusConditionValue() {
-        switch(statusType) {
-            case POISON:
-                return 50;
-            case BURN:
-                return 60;
-            case TOXIC_POISON:
-                return 70;
-            case CONFUSION:
-                return 90;
-            case PARALYZE:
-            case SLEEP:
-            case FREEZE:
-                return 100;
-            case NONE:
-            default:
-                return 0;
-        }
-        //These values are a bit arbitrary and may betray my personal biases.
-        //But that applies to all status values... and some of the damage factors as well...
-    }
-
-    private int generateUniqueSecondaryValue() {
-        return 0;
-    }
-
-    private double generateUniqueDamagingMovePower() {
-        return 0;
-    }
-
-    private double generateUniqueStatusMoveValue() {
-        return 0;
     }
 }

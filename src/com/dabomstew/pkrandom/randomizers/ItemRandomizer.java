@@ -272,14 +272,15 @@ public class ItemRandomizer extends Randomizer {
         boolean banBadItems = settings.isBanBadRandomPickupItems();
 
         List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        if (!romHandler.canTMsBeHeld() || romHandler.isTMsReusable()) {
+            // Normally these conditions overlap, but if TMs are made reusable we can get the latter but not the former,
+            // and it's still no fun getting the same reusable TM over and over again.
+            possibleItems.removeIf(Item::isTM);
+        }
         List<PickupItem> currentItems = romHandler.getPickupItems();
         List<PickupItem> newItems = new ArrayList<>();
         for (PickupItem currentItem : currentItems) {
-            Item picked;
-            do {
-                picked = possibleItems.get(random.nextInt(possibleItems.size()));
-                // No point getting TMs if they are reusable
-            } while (picked.isTM() && romHandler.isTMsReusable());
+            Item picked = possibleItems.get(random.nextInt(possibleItems.size()));
 
             PickupItem pickupItem = new PickupItem(picked);
             for (int j = 0; j < PickupItem.PROBABILITY_SLOTS; j++) {

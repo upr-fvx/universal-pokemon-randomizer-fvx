@@ -37,8 +37,9 @@ public class MoveValuationService {
         private double useMultiplier = 1; //for charge moves, etc
 
         //calculated values
-        private int baseValue = -1;
-        private int lostInaccuracyValue = -1;
+        private int baseValue;
+        private int totalEffectsValue;
+        private int lostInaccuracyValue;
         private boolean finalized = false;
 
 
@@ -111,11 +112,12 @@ public class MoveValuationService {
         private void calculateValues() {
             finalized = true;
 
-            int effectsValue = powerValue + this.effectsValue + (speedDependantEffectsValue / 2)
+            totalEffectsValue = powerValue + effectsValue + (speedDependantEffectsValue / 2)
                     + (doubleBattleEffectsValue / 2);
-            int perUseValue = (effectsValue * accuracy) / 100;
-            baseValue = (int) (perUseValue * useMultiplier);
-            lostInaccuracyValue = (int) ((effectsValue - perUseValue) * useMultiplier);
+            int perUseValue = (totalEffectsValue * accuracy) / 100;
+            double finalMultiplier = useMultiplier * ((doubleBattleRangeModifier + 1) / 2.0);
+            baseValue = (int) (perUseValue * finalMultiplier);
+            lostInaccuracyValue = (int) ((effectsValue - perUseValue) * finalMultiplier);
         }
 
         public int getBaseValue() {
@@ -261,6 +263,9 @@ public class MoveValuationService {
 
         values.setUseMultiplier(useMultiplier);
 
+        values.setDoubleBattleEffectsValue(generateUniqueDoubleBattleEffectsValue(move));
+        values.setDoubleBattleRangeModifier(generateDoubleBattleRangeModifier(move));
+
         values.calculateValues();
 
         return values;
@@ -302,10 +307,12 @@ public class MoveValuationService {
         }
         values.setUseMultiplier(useRestrictionMultiplier);
 
+        values.setDoubleBattleEffectsValue(generateUniqueDoubleBattleEffectsValue(move));
+        values.setDoubleBattleRangeModifier(generateDoubleBattleRangeModifier(move));
+
         values.calculateValues();
         return values;
     }
-
 
     private double generateStatChangeValue(Move move) {
         double value = 0;
@@ -797,10 +804,6 @@ public class MoveValuationService {
                 return 50;
             case MoveIDs.perishSong:
                 return 30; //without synergy, just forces a switch
-            case MoveIDs.followMe:
-                return 30; //another low value high synergy move
-            case MoveIDs.helpingHand:
-                return 50; //synergy to 0 if single battle
             case MoveIDs.trick:
             case MoveIDs.rolePlay:
             case MoveIDs.recycle:
@@ -822,6 +825,118 @@ public class MoveValuationService {
                 }
                 return 0;
         }
+    }
+
+    private int generateUniqueDoubleBattleEffectsValue(Move move) {
+        switch(move.internalId) {
+            case MoveIDs.assurance:
+                //this is also dependent on speed, not sure how to handle that
+                //ignoring it for now
+                return 50;
+            case MoveIDs.followMe:
+                return 30; //low value, high synergy. Synergizes with defenses.
+            case MoveIDs.helpingHand:
+                return 50;
+        }
+
+        return 0;
+    }
+
+    private double generateDoubleBattleRangeModifier(Move move) {
+        switch(move.internalId) {
+            //this one I feel like should be a field on the move.
+            //But it isn't, so whatever.
+            case MoveIDs.acid:
+            case MoveIDs.airCutter:
+            case MoveIDs.blizzard:
+            case MoveIDs.bubble:
+            case MoveIDs.captivate:
+            case MoveIDs.clangingScales:
+            case MoveIDs.coreEnforcer:
+            case MoveIDs.darkVoid:
+            case MoveIDs.dazzlingGleam:
+            case MoveIDs.disarmingVoice:
+            case MoveIDs.electroweb:
+            case MoveIDs.eruption:
+            case MoveIDs.glaciate:
+            case MoveIDs.growl:
+            case MoveIDs.healBlock:
+            case MoveIDs.heatWave:
+            case MoveIDs.icyWind:
+            case MoveIDs.hyperVoice:
+            case MoveIDs.incinerate:
+            case MoveIDs.landsWrath:
+            case MoveIDs.leer:
+            case MoveIDs.muddyWater:
+            case MoveIDs.originPulse:
+            case MoveIDs.overdrive:
+            case MoveIDs.powderSnow:
+            case MoveIDs.precipiceBlades:
+            case MoveIDs.razorLeaf:
+            case MoveIDs.razorWind:
+            case MoveIDs.relicSong:
+            case MoveIDs.rockSlide:
+            case MoveIDs.snarl:
+            case MoveIDs.spikes:
+            case MoveIDs.stealthRock:
+            case MoveIDs.stickyWeb:
+            case MoveIDs.stringShot:
+            case MoveIDs.struggleBug:
+            case MoveIDs.sweetScent:
+            case MoveIDs.swift:
+            case MoveIDs.tailWhip:
+            case MoveIDs.toxicSpikes:
+            case MoveIDs.twister:
+            case MoveIDs.waterSpout:
+                //hits both foes (or foe side of field)
+                return 2;
+
+            case MoveIDs.boomburst:
+            case MoveIDs.bulldoze:
+            case MoveIDs.brutalSwing:
+            case MoveIDs.corrosiveGas:
+            case MoveIDs.earthquake:
+            case MoveIDs.discharge:
+            case MoveIDs.explosion:
+            case MoveIDs.lavaPlume:
+            case MoveIDs.magnitude:
+            case MoveIDs.mistyExplosion:
+            case MoveIDs.parabolicCharge:
+            case MoveIDs.petalBlizzard:
+            case MoveIDs.searingShot:
+            case MoveIDs.selfDestruct:
+            case MoveIDs.sludgeWave:
+            case MoveIDs.sparklingAria:
+            case MoveIDs.synchronoise:
+            case MoveIDs.teeterDance:
+            case MoveIDs.mindBlown:
+                //hits both foes and ally
+                return 1.2;
+
+
+
+            case MoveIDs.poisonGas:
+                if(generation >= 5) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            case MoveIDs.cottonSpore:
+                if(generation >= 6) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            case MoveIDs.surf:
+                if(generation >= 4) {
+                    return 1.2;
+                } else {
+                    return 2;
+                }
+            case MoveIDs.expandingForce:
+                return 1; //this is a synergy case
+        }
+        return 1;
     }
 
     private int averageMoveValue(int... moveIDs) {

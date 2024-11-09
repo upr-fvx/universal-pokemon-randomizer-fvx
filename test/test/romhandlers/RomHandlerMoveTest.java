@@ -132,6 +132,8 @@ public class RomHandlerMoveTest extends RomHandlerTest {
             if(value == 0 && !GlobalConstants.uselessMoves.contains(move.internalId)
                     && !GlobalConstants.uselessInSomeGames.contains(move.internalId)) {
                 fail("Non-useless move " + move.name + " has value 0.");
+            } else if(GlobalConstants.uselessMoves.contains(move.internalId) && value != 0){
+                fail("Useless move " + move.name + " has nonzero value.");
             } else if(value > 1000) {
                 fail("Move " + move.name + " has value over 1000.");
             } else if(value < 0) {

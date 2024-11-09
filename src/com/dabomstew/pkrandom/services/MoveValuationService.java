@@ -16,30 +16,117 @@ import java.util.Map;
 public class MoveValuationService {
     private final RomHandler romHandler;
     private final List<Move> allMoves;
-    private final Map<Move, Integer> baseValues;
+    private final Map<Move, MoveValues> moveValues;
+    private final int generation;
 
     public MoveValuationService(RomHandler romHandler) {
         this.romHandler = romHandler;
         allMoves = romHandler.getMoves();
-        baseValues = new HashMap<>();
+        moveValues = new HashMap<>();
+        generation = romHandler.generationOfPokemon();
     }
 
     public static class MoveValues{
-        private int baseValue;
-        private int synergyPotential;
+        private final Move move;
+        private int powerValue = 0;
+        private int effectsValue = 0;
+        private int speedDependantEffectsValue = 0;
+        private int doubleBattleEffectsValue = 0;
+        private double doubleBattleRangeModifier = 1;
+        private int accuracy = 100;
+        private double useMultiplier = 1; //for charge moves, etc
 
-        public MoveValues(int baseValue, int synergyPotential) {
+        //calculated values
+        private int baseValue = -1;
+        private int lostInaccuracyValue = -1;
+        private boolean finalized = false;
+
+
+        public MoveValues(Move move) {
+            this.move = move;
+        }
+
+        public MoveValues(Move move, int baseValue, int powerValue, int speedDependantEffectsValue) {
+            this.move = move;
             this.baseValue = baseValue;
-            this.synergyPotential = synergyPotential;
+            this.powerValue = powerValue;
+            this.speedDependantEffectsValue = speedDependantEffectsValue;
+        }
+        private void setPowerValue(int value) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            powerValue = value;
+        }
+
+        private void setEffectsValue(int effectsValue) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.effectsValue = effectsValue;
+        }
+
+        private void setSpeedDependantEffectsValue(int speedDependantEffectsValue) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.speedDependantEffectsValue = speedDependantEffectsValue;
+        }
+
+        private void setAccuracy(int accuracy) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.accuracy = accuracy;
+        }
+
+        public void setUseMultiplier(double useMultiplier) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.useMultiplier = useMultiplier;
+        }
+
+        public void setDoubleBattleEffectsValue(int doubleBattleEffectsValue) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.doubleBattleEffectsValue = doubleBattleEffectsValue;
+        }
+
+        public void setDoubleBattleRangeModifier(double doubleBattleRangeModifier) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.doubleBattleRangeModifier = doubleBattleRangeModifier;
+        }
+
+        private void calculateValues() {
+            finalized = true;
+
+            int effectsValue = powerValue + this.effectsValue + (speedDependantEffectsValue / 2)
+                    + (doubleBattleEffectsValue / 2);
+            int perUseValue = (effectsValue * accuracy) / 100;
+            baseValue = (int) (perUseValue * useMultiplier);
+            lostInaccuracyValue = (int) ((effectsValue - perUseValue) * useMultiplier);
         }
 
         public int getBaseValue() {
+            if(!finalized) {
+                throw new IllegalStateException("Attempted to get value of non-finalized move!");
+            }
+
             return baseValue;
         }
 
-        public int getSynergyPotential() {
-            return synergyPotential;
-        }
+
     }
 
     public List<Move> getAllMoves() {
@@ -51,63 +138,94 @@ public class MoveValuationService {
     }
 
     public int getBaseValue(Move move) {
-        if(!baseValues.containsKey(move)) {
-            int value;
+        if(!moveValues.containsKey(move)) {
+            MoveValues value;
             if(move.category != MoveCategory.STATUS) {
-                value = generateDamagingMoveValue(move);
+                value = generateDamagingMoveValues(move);
             } else {
                 value = generateStatusMoveValue(move);
             }
 
-            baseValues.put(move, value);
+            moveValues.put(move, value);
         }
 
-        return baseValues.get(move);
+        return moveValues.get(move).getBaseValue();
     }
 
-    private int generateDamagingMoveValue(Move move) {
+    private MoveValues generateDamagingMoveValues(Move move) {
+        MoveValues values = new MoveValues(move);
+
         int power = move.power;
         if(power <= 1) {
             power = generateUniqueDamagingMovePower(move);
         }
-        double value = power;
+        double powerValue = power;
 
         if(move.hitCount > 1) {
-            value *= move.hitCount;
+            powerValue *= move.hitCount;
         } else {
-            value *= generateUniquePowerMultiplier(move);
+            powerValue *= generateUniquePowerMultiplier(move);
         }
 
-        value += move.absorbPercent / 100.0 * power;
-        value -= (move.recoilPercent / 100.0 * power) / 2;
-        value *= 1 + (move.flinchPercentChance / 100.0);
+        powerValue += move.absorbPercent / 100.0 * power;
+        powerValue -= (move.recoilPercent / 100.0 * power) / 2;
 
         switch (move.criticalChance) {
             case NONE:
-                value -= power * .12;
+                powerValue -= power * .12;
                 break;
             case INCREASED:
-                value += power * .12;
+                powerValue += power * .12;
                 break;
             case GUARANTEED:
-                value += power;
+                powerValue += power;
                 break;
             //TODO: make these values accurate outside of Gen 2-5
         }
 
+        values.setPowerValue((int)powerValue);
+
+
+        int effectsValue = 0;
+
         if(move.statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-            value += generateStatChangeValue(move);
+            effectsValue += (int) generateStatChangeValue(move);
         }
 
         if(move.statusPercentChance != 0) {
-            value += (move.statusPercentChance / 100) * generateStatusConditionValue(move);
+            effectsValue += (int) ((move.statusPercentChance / 100) * generateStatusConditionValue(move));
         }
 
-        value += generateUniqueSecondaryValue(move);
+        int priority = move.priority;
+        if(romHandler.generationOfPokemon() == 2) {
+            priority--; //All gen 2 moves have one higher priority than typical
+        }
+        effectsValue += 10 * priority;
+
+        if(GlobalConstants.semiInvulnerableMoves.contains(move)) {
+            effectsValue += 10;
+        }
+
+        effectsValue += generateUniqueEffectsValue(move);
+
+        values.setEffectsValue(effectsValue);
 
 
+        int speedValue;
+        if(move.flinchPercentChance > 0 && move.flinchPercentChance < 1) {
+            speedValue = (int) (move.flinchPercentChance * 100);
+        } else {
+            speedValue = (int) move.flinchPercentChance;
+        }
+
+        speedValue += generateUniqueSpeedValue(move);
+
+        values.setSpeedDependantEffectsValue(speedValue);
+
+
+        int accuracy;
         if(move.hitRatio == 0) {
-            value *= 1.5;
+            accuracy = 150;
         } else {
             switch(move.internalId) {
                 case MoveIDs.swift:
@@ -115,64 +233,79 @@ public class MoveValuationService {
                 case MoveIDs.vitalThrow:
                     //because gen 1 through 3 encoded perfect-accuracy moves differently, and they can't be distinguished
                     //from other moves except by ID.
-                    value *= 1.5;
+                    accuracy = 150;
                     break;
                 default:
-                    value *= move.hitRatio / 100;
+                    if(move.hitRatio < 1) {
+                        accuracy = (int) (move.hitRatio * 100);
+                    } else {
+                        accuracy = (int) move.hitRatio;
+                    }
             }
         }
 
-        if(move.isChargeMove) {
-            if(GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
-                value += 10;
-            } else {
-                value *= .5;
-            }
+        values.setAccuracy(accuracy);
+
+        double useMultiplier = 1;
+        if(move.isChargeMove && !GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
+            useMultiplier = .5;
         }
         if(move.isRechargeMove)
-            value *= .75;
-
-        int priority = move.priority;
-        if(romHandler.generationOfPokemon() == 2) {
-            priority--; //All gen 2 moves have one higher priority than typical
-        }
-
-        value += 10 * priority;
+            useMultiplier = .75;
 
         if(move.pp < 10) {
-            value *= .95;
+            useMultiplier *= .95;
         }
 
-        return (int) value;
+        useMultiplier *= generateUniqueUseLimitValue(move);
+
+        values.setUseMultiplier(useMultiplier);
+
+        values.calculateValues();
+
+        return values;
     }
 
-    private int generateStatusMoveValue(Move move) {
+    private MoveValues generateStatusMoveValue(Move move) {
+        MoveValues values = new MoveValues(move);
+
         if(GlobalConstants.uselessMoves.contains(move.internalId)) {
-            return 0;
+            values.effectsValue = 0;
+            values.calculateValues();
+            return values;
         }
 
-        double value = 0;
+        int effectsValue = 0;
 
         if(move.statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-            value += generateStatChangeValue(move);
+            effectsValue += (int) generateStatChangeValue(move);
         }
         if(move.statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
-            value += generateStatusConditionValue(move);
+            effectsValue += generateStatusConditionValue(move);
         }
-        if(value == 0) {
-            value += generateUniqueStatusMoveValue(move);
-        }
+        effectsValue += generateUniqueEffectsValue(move);
+
+        values.setEffectsValue(effectsValue);
 
         if(move.hitRatio != 0) {
-            value *= move.hitRatio / 100;
+            if(move.hitRatio < 1) {
+                values.setAccuracy((int) (move.hitRatio * 100));
+            } else {
+                values.setAccuracy((int) move.hitRatio);
+            }
         }
 
+        values.setSpeedDependantEffectsValue(generateUniqueSpeedValue(move));
+        double useRestrictionMultiplier = generateUniqueUseLimitValue(move);
         if(move.pp < 10) {
-            value *= .9;
+            useRestrictionMultiplier *= .9;
         }
+        values.setUseMultiplier(useRestrictionMultiplier);
 
-        return (int) value;
+        values.calculateValues();
+        return values;
     }
+
 
     private double generateStatChangeValue(Move move) {
         double value = 0;
@@ -285,18 +418,20 @@ public class MoveValuationService {
             case MoveIDs.bide:
                 return 60;
                 //not really sure how to handle the retaliate moves
+            case MoveIDs.endeavor:
+                return 100; //a bit arbitrary
             case MoveIDs.lowKick:
             case MoveIDs.grassKnot:
                 return 60;
-            //this is a guess at the median power
-            //Interestingly, these moves may become higher powered at higher levels (as opponents evolve)
+                //this is a guess at the median power
+                //Interestingly, these moves may become higher powered at higher levels (as opponents evolve)
             case MoveIDs.flail:
             case MoveIDs.reversal:
                 return 60; //in most cases, it will be 20, 40, or 80; this is a rough estimate of the mean
             case MoveIDs.returnTheMoveNotTheKeyword:
             case MoveIDs.frustration:
                 return 50; //if trainer pokemon have neutral happiness (127), then the power is 50.
-            //I *think* that is always the case.
+                //I *think* that is always the case.
             case MoveIDs.present:
                 return 40; //.4 * 40 + .3 * 80 + .1 * 120 + .2 * -60 (for healing 1/4 hp)
             case MoveIDs.magnitude:
@@ -305,8 +440,10 @@ public class MoveValuationService {
                 return 50; //ranges from 30-70, I presume in a linear fashion
             case MoveIDs.spitUp:
                 return 100; //actually ranges from 0-300, but 100 seems reasonable given the prep time.
-            case MoveIDs.endeavor:
-                return 100; //a bit arbitrary,
+            case MoveIDs.gyroBall:
+                return 150; //maximum power, reduced by SpeedEffect.
+            case MoveIDs.naturalGift:
+                return 70; //middle of possible powers (IF they have a berry)
         }
 
         return 0;
@@ -339,6 +476,7 @@ public class MoveValuationService {
                 //move has a high failure rate
                 return 0.5;
             case MoveIDs.smellingSalts:
+            case MoveIDs.wakeUpSlap:
                 //useless without synergy
                 return 1;
             case MoveIDs.eruption:
@@ -347,6 +485,12 @@ public class MoveValuationService {
             case MoveIDs.futureSight:
             case MoveIDs.doomDesire:
                 return 0.95; //the neutral damage type mostly cancels the delay
+            case MoveIDs.brine:
+                return 1.25; //doubled at a time that may be important
+            case MoveIDs.payback:
+                return 2; //doubled if slower (i.e. when speed modifier doesn't apply)
+            case MoveIDs.assurance:
+                return 1; //needs synergy or double battle to pull off
             default:
                 if(GlobalConstants.bindingMoves.contains(move.internalId) && romHandler.generationOfPokemon() == 1) {
                     return 2.5; //Multi-turn incapacitating moves
@@ -355,8 +499,83 @@ public class MoveValuationService {
         }
     }
 
-    private int generateUniqueSecondaryValue(Move move) {
+    private int generateUniqueSpeedValue(Move move) {
         switch (move.internalId) {
+            case MoveIDs.gyroBall:
+                return -250; //at speed neutral, power is 25.
+                // (Ideally there'd be a way to do this which put this factor into power,
+                // but that seems too specific to bother. (100 counting STAB isn't that great for a damage move anyway.))
+            case MoveIDs.payback:
+                return -50; //hmm... maybe we do need a speed-based power value?
+            case MoveIDs.metalBurst:
+                return -120; //does nothing if moves first.
+            case MoveIDs.copycat:
+            case MoveIDs.mimic:
+            case MoveIDs.mirrorMove:
+            case MoveIDs.sketch:
+                return 30; //Allows making choices about the move copied (although I'm not sure the AI *does* that)
+            case MoveIDs.destinyBond:
+                return 40; //can't avoid the kill
+            default:
+                if(GlobalConstants.bindingMoves.contains(move.internalId) && generation == 1) {
+                    return 100; //essentially a 100% chance to flinch
+                }
+                return 0;
+        }
+    }
+
+    private double generateUniqueUseLimitValue(Move move) {
+        switch(move.internalId) {
+            case MoveIDs.fakeOut:
+                return .5; //only first turn
+            case MoveIDs.naturalGift:
+                return .5; //only once and consumes a potentially-useful resource
+            case MoveIDs.thrash:
+            case MoveIDs.outrage:
+            case MoveIDs.petalDance:
+                return .85; //after 2-3 turns (.7), become confused (.5) (multiply inverses together)
+            case MoveIDs.bide:
+                return .33; //two turns prep
+            case MoveIDs.swallow:
+            case MoveIDs.spitUp:
+                return .5; //need to use Stockpile at least once first
+            case MoveIDs.feint:
+                return .1; //depends on opponent using protect/detect
+            default:
+                return 1;
+        }
+        //TODO: consider if multi-turn moves (rollout, uproar, etc) get a penalty
+    }
+
+    private int generateUniqueEffectsValue(Move move) {
+        switch (move.internalId) {
+            //non-power damaging moves
+            case MoveIDs.superFang:
+                return 100; //half HP
+            case MoveIDs.endeavor:
+                return 100; //a bit arbitrary, but "on average" about half HP?
+            case MoveIDs.guillotine:
+            case MoveIDs.hornDrill:
+            case MoveIDs.fissure:
+            case MoveIDs.sheerCold:
+                return 200; //instakill
+            case MoveIDs.psywave:
+                return 30;
+            case MoveIDs.sonicBoom:
+            case MoveIDs.seismicToss:
+            case MoveIDs.nightShade:
+                return 40; //seismic toss/night shade peak around l20
+            case MoveIDs.dragonRage:
+                return 70; //static damage moves will be given synergy multipliers based on level
+            case MoveIDs.counter:
+            case MoveIDs.mirrorCoat:
+                return 80;
+            case MoveIDs.metalBurst:
+            case MoveIDs.bide:
+                return 120;
+            //not really sure how to handle the retaliate moves
+
+            //damaging moves' secondary effects
             case MoveIDs.selfDestruct:
             case MoveIDs.explosion:
                 return -150; //for causing faint
@@ -366,12 +585,23 @@ public class MoveValuationService {
                 } else {
                     return 0;
                 }
-            case MoveIDs.thrash:
-            case MoveIDs.outrage:
-            case MoveIDs.petalDance:
-                return -36; //90 for confusion, divided by 2.5 turns
             case MoveIDs.rage:
                 return 30; //attack boost at fairly high reliability
+            case MoveIDs.secretPower:
+                return 25; //30% to do various things, many (but not all) of them valued at 100.
+            case MoveIDs.uTurn:
+                return 20; //not innately that good, but it has combo potential
+            //these super narrow ones probably should just get 0s
+            case MoveIDs.brickBreak:
+            case MoveIDs.knockOff:
+                return 15; //narrow, but very useful when applicable
+            case MoveIDs.skyUppercut:
+                return 5; //REALLY narrow
+            case MoveIDs.feint:
+                return 30; //really good, when it hits
+            case MoveIDs.pluck:
+            case MoveIDs.bugBite:
+                return 15; //narrow but useful
             case MoveIDs.thief:
             case MoveIDs.covet:
                 return 5; //deliberately undervaluing this effect since it's annoying for players
@@ -379,43 +609,11 @@ public class MoveValuationService {
                 return 10; //good, but very situational
             case MoveIDs.rapidSpin:
                 return 10; //doesn't apply to many effects
-            case MoveIDs.fakeOut:
-                if(romHandler.generationOfPokemon() <= 3) {
-                    return 0; //does not factor in auto-flinch, so that cancels out
-                } else {
-                    return -40; //only usable on first turn
-                }
             case MoveIDs.uproar:
                 //this effect is marginal without synergy
                 return 10;
-            case MoveIDs.brickBreak:
-            case MoveIDs.knockOff:
-                return 15; //narrow, but very useful when applicable
-            case MoveIDs.secretPower:
-                return 25; //30% to do various things, many of them valued at 100.
-            case MoveIDs.skyUppercut:
-                return 10; //REALLY narrow
-            default:
-                if(GlobalConstants.bindingMoves.contains(move.internalId)) {
-                    if(romHandler.generationOfPokemon() == 1) {
-                        return 100; //essentially, 100% chance to flinch
-                    } else {
-                        return 30; //trap temporarily, plus a tiny bit of damage
-                    }
-                }
-                return 0;
-        }
-    }
 
-    private double generateUniqueStatusMoveValue(Move move) {
-        switch (move.internalId) {
-            case MoveIDs.whirlwind:
-            case MoveIDs.roar:
-                if(romHandler.generationOfPokemon() == 1) {
-                    return 0;
-                } else {
-                    return 40;
-                }
+            //disabling moves
             case MoveIDs.disable:
                 return 70;
             case MoveIDs.encore:
@@ -426,20 +624,12 @@ public class MoveValuationService {
                 return 70;
             case MoveIDs.imprison:
                 return 10; //near useless without synergy
-            case MoveIDs.substitute:
-            case MoveIDs.mist:
-                return 50;
-            case MoveIDs.haze:
-                return 60;
-            case MoveIDs.healBell:
-            case MoveIDs.aromatherapy:
-            case MoveIDs.safeguard:
-            case MoveIDs.refresh:
-                return 70;
-            case MoveIDs.leechSeed:
-                return 60;
-            case MoveIDs.ingrain:
-                return 40; //too little healing to be much good
+            case MoveIDs.attract:
+                return 100; //Only works on half the pokemon, but twice as well as paralysis.
+            case MoveIDs.yawn:
+                return 100; //guaranteed means >100, but delay puts it back.
+
+            //copying moves
             case MoveIDs.mirrorMove:
             case MoveIDs.copycat:
                 return 50;
@@ -447,92 +637,12 @@ public class MoveValuationService {
             case MoveIDs.sketch:
                 return 55;
             case MoveIDs.transform:
-                return 60;
-            case MoveIDs.morningSun:
-            case MoveIDs.moonlight:
-            case MoveIDs.synthesis:
-                if(romHandler.generationOfPokemon() == 2) {
-                    return 50; //if not join the 50% heal moves below
-                }
-            case MoveIDs.recover:
-            case MoveIDs.softBoiled:
-            case MoveIDs.milkDrink:
-            case MoveIDs.wish: //the delay could make it worse or better, so it'll stay at 100.
-            case MoveIDs.slackOff:
-                return 100;
-            case MoveIDs.rest:
-            case MoveIDs.swallow:
-                return 150;
-            case MoveIDs.reflect:
-            case MoveIDs.lightScreen:
-                return 70;
-            case MoveIDs.focusEnergy:
-                return 50;
-            case MoveIDs.conversion:
-                return 50;
-            case MoveIDs.conversion2:
-                return 70;
-            case MoveIDs.spiderWeb:
-            case MoveIDs.meanLook:
-            case MoveIDs.block:
-                return 40;
-            case MoveIDs.mindReader:
-            case MoveIDs.lockOn:
-            case MoveIDs.foresight:
-            case MoveIDs.odorSleuth:
-                return 50; //without synergy, both groups have the same use case
-            case MoveIDs.nightmare:
-                return 100; //synergy baked in
-            case MoveIDs.curse:
-                return 65; //the default value for the stat changes; Ghost types count as synergy.
-            case MoveIDs.spite:
-                return 50;
-            case MoveIDs.protect:
-            case MoveIDs.detect:
                 return 80;
-            case MoveIDs.endure:
-                return 50;
-            case MoveIDs.bellyDrum:
-                return 160; //atk (40) * 6 stages - 80 (for half health)
-            //I don't know that I value it that highly, but I'm not the kind of player that likes such a move
-            case MoveIDs.spikes:
-            case MoveIDs.stealthRock:
-                return 40;
-            case MoveIDs.toxicSpikes:
-                return 70;
-            case MoveIDs.destinyBond:
-                return 70;
-            case MoveIDs.grudge:
-                return 30; //grudge is just Destiny Bond but bad
-            case MoveIDs.perishSong:
-                return 50;
-            case MoveIDs.sandstorm:
-            case MoveIDs.hail:
-                return 20; //weather moves have extreme synergy but low inherent value
-            case MoveIDs.rainDance:
-            case MoveIDs.sunnyDay:
-                return 15;
-            case MoveIDs.batonPass:
-                return 20; //like weather, low base value but high synergy potential
-            case MoveIDs.attract:
-                return 100; //Only works on half the pokemon, but twice as well as paralysis.
-            case MoveIDs.yawn:
-                return 100; //guaranteed means >100, but delay puts it back.
+
+            //other calling moves
             case MoveIDs.sleepTalk:
             case MoveIDs.assist:
                 return 1; //Synergy based on other moves' potency.
-            case MoveIDs.painSplit:
-                return 70; //...if used correctly, which im not confident the AI can do.
-            case MoveIDs.psychUp:
-                return 60;
-            case MoveIDs.stockpile:
-                return 80; //in gen 3, should be 0 without synergy
-            case MoveIDs.memento:
-                return 60; //160 for reducing 4 stat stages, -100 for causing faint.
-            case MoveIDs.followMe:
-                return 30; //another low value high synergy move
-            case MoveIDs.helpingHand:
-                return 50;
             case MoveIDs.metronome:
                 return 50; //TODO: calculate average move value
             case MoveIDs.naturePower:
@@ -557,9 +667,140 @@ public class MoveValuationService {
                     default:
                         return 0; //unsupported generation?
                 }
+
+                //status prevention/healing
+            case MoveIDs.mist:
+                return 50;
+            case MoveIDs.haze:
+                return 60;
+            case MoveIDs.healBell:
+            case MoveIDs.aromatherapy:
+            case MoveIDs.safeguard:
+            case MoveIDs.refresh:
+            case MoveIDs.substitute:
+                return 70;
+
+            //damage over time
+            case MoveIDs.nightmare:
+                return 100; //synergy baked in
+            case MoveIDs.curse:
+                return 65; //the default value for the stat changes; Ghost types count as synergy.
+            //(Although, valuing Curse's effect at 140 (-75 for half health) isn't too far off.)
+            case MoveIDs.spikes:
+            case MoveIDs.stealthRock:
+                return 40;
+            case MoveIDs.toxicSpikes:
+                return 70;
+            case MoveIDs.sandstorm:
+            case MoveIDs.hail:
+                return 20; //weather moves have extreme synergy but low inherent value
+
+            //HP recovery
+            case MoveIDs.leechSeed:
+                return 60;
+            case MoveIDs.ingrain:
+                return 40; //too little healing to be much good
+            case MoveIDs.morningSun:
+            case MoveIDs.moonlight:
+            case MoveIDs.synthesis:
+                if(romHandler.generationOfPokemon() == 2) {
+                    return 50; //if not join the 50% heal moves below
+                }
+            case MoveIDs.recover:
+            case MoveIDs.softBoiled:
+            case MoveIDs.milkDrink:
+            case MoveIDs.wish: //the delay could make it worse or better, so it'll stay at 100.
+            case MoveIDs.slackOff:
+                return 100;
+            case MoveIDs.roost:
+                return 95; //Removes immunities, so slightly worse than other 50% heal moves.
+            case MoveIDs.rest:
+            case MoveIDs.swallow:
+                return 150; //(up to) full heal
+            case MoveIDs.healingWish:
+                return 5; //The AI doesn't typically switch pokemon enough to make this work.
+            case MoveIDs.painSplit:
+                return 70; //...if used correctly, which im not confident the AI can do.
+
+            //stat change+
+            case MoveIDs.bellyDrum:
+                return 165; //atk (40) * 6 stages - 75 (for half health)
+            //I don't know that I value it that highly, but I'm not the kind of player that likes such a move
+            case MoveIDs.memento:
+                return 60; //160 for reducing 4 stat stages, -100 for causing faint.
+            case MoveIDs.focusEnergy:
+                return 50; //sort of a stat change
+            case MoveIDs.mindReader:
+            case MoveIDs.lockOn:
+            case MoveIDs.foresight:
+            case MoveIDs.odorSleuth:
+            case MoveIDs.miracleEye:
+                return 50; //without synergy (including <100% accurate moves), both groups have the same use case
+            case MoveIDs.stockpile:
+                if(generation == 3) {
+                    return 1; //does nothing on its own
+                } else {
+                    return 80; //raises def + spdef
+                }
+            case MoveIDs.psychUp:
+                return 60; //weird stat change
             case MoveIDs.swagger:
                 return 80; //the two effects have synergy with each other,
                 //so boosting the opponent's Attack should not count as a negative.
+            case MoveIDs.tailwind:
+                return 80; //double speed is a lot, but has short duration.
+            case MoveIDs.acupressure:
+                return 80; //+2 any stat. Can hit acc/eva, but no choice, so evens out.
+
+
+            //protect / damage reduction
+            case MoveIDs.protect:
+            case MoveIDs.detect:
+                return 80;
+            case MoveIDs.endure:
+                return 50;
+            case MoveIDs.reflect:
+            case MoveIDs.lightScreen:
+                return 70;
+            case MoveIDs.mudSport:
+            case MoveIDs.waterSport:
+                return 30; //synergy goes up if they're weak to that type
+
+            //other effects
+            case MoveIDs.whirlwind:
+            case MoveIDs.roar:
+                if(romHandler.generationOfPokemon() == 1) {
+                    return 0;
+                } else {
+                    return 40;
+                }
+            case MoveIDs.conversion:
+                return 50;
+            case MoveIDs.conversion2:
+                return 70;
+            case MoveIDs.spiderWeb:
+            case MoveIDs.meanLook:
+            case MoveIDs.block:
+                return 40; //trap moves
+            case MoveIDs.spite:
+                return 50;
+            case MoveIDs.grudge:
+                return 30; //grudge is just Destiny Bond but bad
+            case MoveIDs.rainDance:
+            case MoveIDs.sunnyDay:
+                return 15; //weather moves do barely anything without synergy
+            case MoveIDs.gravity:
+                return 15;
+            case MoveIDs.batonPass:
+                return 20; //like weather, low base value but high synergy potential
+            case MoveIDs.destinyBond:
+                return 50;
+            case MoveIDs.perishSong:
+                return 30; //without synergy, just forces a switch
+            case MoveIDs.followMe:
+                return 30; //another low value high synergy move
+            case MoveIDs.helpingHand:
+                return 50; //synergy to 0 if single battle
             case MoveIDs.trick:
             case MoveIDs.rolePlay:
             case MoveIDs.recycle:
@@ -568,17 +809,22 @@ public class MoveValuationService {
                 return 5; //these moves are too weird for the AI to use correctly
             case MoveIDs.magicCoat:
             case MoveIDs.snatch:
-                return 50; //potent effects, but mostly luck based to see if they work (excepting with synergy)
-            case MoveIDs.mudSport:
-            case MoveIDs.waterSport:
-                return 30; //synergy goes up if they're weak to that type
-        }
-        //These are *especially* arbitrary and debatable.
+                return 50; //potent effects, but mostly luck based to see if they work
+            // (excepting with very specific synergy)
 
-        return 0;
+            default:
+                if(GlobalConstants.bindingMoves.contains(move.internalId)) {
+                    if(romHandler.generationOfPokemon() == 1) {
+                        return 100; //essentially, 100% chance to flinch
+                    } else {
+                        return 30; //trap temporarily, plus a tiny bit of damage
+                    }
+                }
+                return 0;
+        }
     }
 
-    private double averageMoveValue(int... moveIDs) {
+    private int averageMoveValue(int... moveIDs) {
         Move[] moves = new Move[moveIDs.length];
         for(int i = 0; i < moveIDs.length; i++) {
             moves[i] = allMoves.get(moveIDs[i]);
@@ -586,13 +832,13 @@ public class MoveValuationService {
         return averageMoveValue(moves);
     }
 
-    private double averageMoveValue(Move... moves) {
+    private int averageMoveValue(Move... moves) {
         int count = 0;
         int totalValue = 0;
         for(Move move : moves) {
             count++;
             totalValue += getBaseValue(move);
         }
-        return totalValue / (double) count;
+        return totalValue / count;
     }
 }

@@ -3330,6 +3330,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private StaticEncounter readVanillaMysteryEgg(byte[] ovOverlay) {
+		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
+		byte[] data = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandImprovement.length);
+		System.out.println("Mystery egg bytes:\n" + RomFunctions.bytesToHex(data));
+
 		StaticEncounter se = new StaticEncounter(pokes[ovOverlay[romEntry.getIntValue("MysteryEggOffset")] & 0xFF]);
 		se.isEgg = true;
 		return se;
@@ -3438,6 +3442,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		byte[] ovOverlay = readOverlay(romEntry.getIntValue("FieldOvlNumber"));
 		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
 
+		if (!isMysteryEggCommandImproved(ovOverlay)) {
+			improveMysteryEggCommand(ovOverlay);
+		}
+
 		writeBytes(ovOverlay, offset, Gen4Constants.mysteryEggCommandImprovement);
 		offset += Gen4Constants.mysteryEggCommandImprovement.length;
 
@@ -3448,6 +3456,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		writeLong(ovOverlay, offset, extraMove == null ? 0 : extraMove.number);
 
 		writeOverlay(romEntry.getIntValue("FieldOvlNumber"), ovOverlay);
+	}
+
+	private void improveMysteryEggCommand(byte[] ovOverlay) {
+
+		// TODO: use
+
 	}
 
 	/**

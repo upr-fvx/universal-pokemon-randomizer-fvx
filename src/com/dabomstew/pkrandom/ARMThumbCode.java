@@ -7,13 +7,17 @@ import com.dabomstew.pkrandom.constants.Gen4Constants;
 import java.util.*;
 
 /**
- * Represents a chunk of ARM9 thumb instructions.<br>
+ * Represents a chunk of ARM9 thumb instructions.
+ * <br><br>
  * The purpose of this class is to act as a sort of middle ground; to allow more freedom and power than modifying the
  * code manually with byte-level operations, without needing a full disassembler/editor/assembler pipeline.<br>
  * The user can insert and remove instructions as needed, with relative jump/branch instructions correcting themselves
  * accordingly. (though for now, only BL instructions are supported)
  */
 public class ARMThumbCode {
+
+    public static final byte LSL_imm_0 = (byte) 0x00, LDRPC_r1 = (byte) 0x49, ADD_i8r4 = (byte) 0x34,
+            ADDSP_imm7 = (byte) 0xB0, POP_pc = (byte) 0xBD, BGE = (byte) 0xDA;
 
     private static final List<String> OP_CODE_NAMES = Collections.unmodifiableList(Arrays.asList(
             "LSL imm", "LSL imm", "LSL imm", "LSL imm", "LSL imm", "LSL imm", "LSL imm", "LSL imm",
@@ -86,6 +90,7 @@ public class ARMThumbCode {
     }
 
     public static void main(String[] args) {
+        System.out.println(RomFunctions.bytesToHex(Gen4Constants.mysteryEggCommandImprovement));
         ARMThumbCode a = new ARMThumbCode(Gen4Constants.mysteryEggCommandImprovement);
         System.out.println(a);
     }
@@ -124,12 +129,14 @@ public class ARMThumbCode {
      * @param instBytes The bytes to insert. Since thumb instructions are 16-bit, has to be an even amount.
      */
     public void insertInstructions(int offset, byte... instBytes) {
-        if (offset % 2 != 0) {
+        if (offset % 2 != 0)
             throw new IllegalArgumentException("offset must be even");
-        }
-        if (instBytes.length % 2 != 0) {
+        if (offset < 0)
+            throw new IllegalArgumentException("offset must be positive");
+        if (offset > instructions.size() * 2)
+            throw new IllegalArgumentException("offset too high");
+        if (instBytes.length % 2 != 0)
             throw new IllegalArgumentException("instBytes must have even length.");
-        }
 
         List<Instruction> toAdd = new LinkedList<>();
         for (int i = 0; i < instBytes.length; i += 2) {
@@ -137,7 +144,7 @@ public class ARMThumbCode {
         }
         instructions.addAll(offset / 2, toAdd);
 
-        shiftBranchInstructions(offset + instBytes.length, instBytes.length);
+        shiftBranchInstructions(offset + instBytes.length, instBytes.length / 2);
     }
 
     /**
@@ -150,12 +157,12 @@ public class ARMThumbCode {
      *               twice as many bytes are removed.
      */
     public void removeInstructions(int offset, int length) {
-        if (offset % 2 != 0) {
+        if (offset % 2 != 0)
             throw new IllegalArgumentException("offset must be even");
-        }
-        if (instructions.size() < (offset / 2) + length) {
+        if (offset < 0)
+            throw new IllegalArgumentException("offset must be positive");
+        if (instructions.size() < (offset / 2) + length)
             throw new IllegalArgumentException("offset and length imply removing instructions beyond the code's end");
-        }
 
         Iterator<Instruction> iter = instructions.listIterator(offset / 2);
         for (int i = 0; i < length; i++) {
@@ -163,8 +170,27 @@ public class ARMThumbCode {
             iter.remove();
         }
 
-        int shift = -(length * 2);
-        shiftBranchInstructions(offset, shift);
+        shiftBranchInstructions(offset, -length);
+    }
+
+    /**
+     * Sets the instruction at the given offset, overwriting what was previously there.
+     *
+     * @param offset Where to set the instruction. Since thumb instructions are 16-bit, has to be even.
+     * @param lower  The lower byte to set.
+     * @param higher The higher byte to set.
+     */
+    public void setInstruction(int offset, byte lower, byte higher) {
+        if (offset % 2 != 0)
+            throw new IllegalArgumentException("offset must be even");
+        if (offset < 0)
+            throw new IllegalArgumentException("offset must be positive");
+        if (offset > instructions.size() * 2)
+            throw new IllegalArgumentException("offset too high");
+
+        Instruction inst = instructions.get(offset / 2);
+        inst.lower = lower;
+        inst.higher = higher;
     }
 
     /**
@@ -226,7 +252,7 @@ public class ARMThumbCode {
         if (disp >= 2 << 22) {
             throw new IllegalArgumentException("number too large to be represented by 21 bits + sign");
         }
-        blSetup.higher = (byte) (0xF0 + (sign << 3) + ((disp >>> 19) & 0b11));
+        blSetup.higher = (byte) (0xF0 + (sign << 2) + ((disp >>> 19) & 0b11));
         blSetup.lower = (byte) ((disp >>> 11) & 0b11111111);
         blOffset.higher = (byte) (0xF8 + ((disp >>> 8) & 0b111));
         blOffset.lower = (byte) (disp & 0b11111111);

@@ -3313,6 +3313,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private boolean isMysteryEggCommandImproved(byte[] ovOverlay) {
+		// TODO: this obviously only works on (U) versions... fix that!
 		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
 		for (int i = 0; i < Gen4Constants.mysteryEggCommandImprovement.length; i++) {
 			if (ovOverlay[offset++] != Gen4Constants.mysteryEggCommandImprovement[i]) {
@@ -3333,6 +3334,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
 		byte[] data = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandImprovement.length);
 		System.out.println("Mystery egg bytes:\n" + RomFunctions.bytesToHex(data));
+		System.out.println(new ARMThumbCode(data));
 
 		StaticEncounter se = new StaticEncounter(pokes[ovOverlay[romEntry.getIntValue("MysteryEggOffset")] & 0xFF]);
 		se.isEgg = true;
@@ -3459,9 +3461,39 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void improveMysteryEggCommand(byte[] ovOverlay) {
+        int offset = romEntry.getIntValue("MysteryEggCommandOffset");
+        byte[] bytesBefore = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandImprovement.length);
 
-		// TODO: use
+		// The vanilla command looks slightly different between different localizations; it contains
+		// a number of relative branch instructions that differ only by a few bytes.
+		// Otherwise, the command is identical.
+		// When "improving" the command, we naturally scoot those branch instructions over, and must thus adjust them
+		// to account for their new locations (remember, they are *relative* branch instructions).
+		// Previous versions of the program simply contained the improved bytes as a constant, though only for HGSS (U).
+		// We could do the same for other versions, manually transforming the bytes and then include them in the
+		// Rom entries, but this is rather wasteful, ugly, and would be prone to human-made errors.
+		// Thus, the usage of the ARMThumbCode class.
 
+		// AdAstra wrote that original version for HGSS (U), which the below is essentially a translation of.
+
+		// The code below doesn't say that much on its own; it is still byte-code manipulating,
+		// but printing out the armTC object does help, along with external tools like this opcode map:
+		// https://imrannazar.com/articles/arm-opcode-map, and online (dis)assembler: https://armconverter.com/.
+		ARMThumbCode armTC = new ARMThumbCode(bytesBefore);
+		// Operations start at high offsets just because it was easier to count instructions that way,
+		// since the shifting done by the removal at offset 30 could be ignored.
+		armTC.insertInstructions(216,
+				(byte) 0x04, ARMThumbCode.ADDSP_imm7,
+				(byte) 0xf8, ARMThumbCode.POP_pc,
+				(byte) 0x00, ARMThumbCode.LSL_imm_0);
+		armTC.setInstruction(108, (byte) 0x1D, ARMThumbCode.LDRPC_r1);
+		armTC.setInstruction(96, (byte) 0x01, ARMThumbCode.ADD_i8r4);
+		armTC.setInstruction(66, (byte) 0x26, ARMThumbCode.LDRPC_r1);
+		armTC.removeInstructions(30, 4);
+		armTC.insertInstructions(30, (byte) 0x57, ARMThumbCode.BGE);
+
+		// The improved command is the same length as the original one.
+		writeBytes(ovOverlay, offset, armTC.toBytes());
 	}
 
 	/**

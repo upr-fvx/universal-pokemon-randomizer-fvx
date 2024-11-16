@@ -176,23 +176,39 @@ public class ARMThumbCode {
      */
     private void shiftBranchInstructions(int startOffset, int shift) {
         ListIterator<Instruction> iter = instructions.listIterator(startOffset / 2);
+        int currOffset = startOffset;
 
         while (iter.hasNext()) {
             Instruction inst = iter.next();
+            currOffset += 2;
 
             // BL instruction.
             if (inst.isBLSetup()) {
                 Instruction inst2 = iter.next();
                 iter.previous();
                 if (inst2.isBLOffset()) {
+
                     int disp = getBLDisplacement(inst, inst2);
                     disp += shift;
-                    setBLDisplacement(inst, inst2, disp);
+                    if (!blDestinationIncludedInShift(startOffset, currOffset, disp))
+                        setBLDisplacement(inst, inst2, disp);
+
                 } else {
                     throw new RuntimeException("BL setup not followed by BL offset");
                 }
             }
         }
+    }
+
+    private boolean blDestinationIncludedInShift(int startOffset, int blInstOffset, int displacement) {
+        // Often, a BL instruction will refer to somewhere far away, way outside the code snippet
+        // that is being represented by this ARMThumbCode object.
+        // However, it might too refer to somewhere close.
+        // If a BL instruction refers to a point in the code, which is being shifted around due to
+        // the same insertion or removal of instruction, then the BL displacement value should not change.
+        // That is what this method checks for.
+        return (blInstOffset + displacement >= startOffset)
+                && ((blInstOffset + displacement) / 2 <= instructions.size());
     }
 
     private int getBLDisplacement(Instruction blSetup, Instruction blOffset) {

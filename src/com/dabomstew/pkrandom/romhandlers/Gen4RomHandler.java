@@ -3313,29 +3313,20 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private boolean isMysteryEggCommandImproved(byte[] ovOverlay) {
-		// TODO: this obviously only works on (U) versions... fix that!
+		// the "identifier" is just the first byte that differs from the Vanilla command
 		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
-		for (int i = 0; i < Gen4Constants.mysteryEggCommandImprovement.length; i++) {
-			if (ovOverlay[offset++] != Gen4Constants.mysteryEggCommandImprovement[i]) {
-				return false;
-			}
-		}
-		return true;
+		offset += Gen4Constants.mysteryEggImprovementIdentifierOffset;
+		return ovOverlay[offset] == Gen4Constants.mysteryEggImprovementIdentifier;
 	}
 
 	private StaticEncounter readImprovedMysteryEgg(byte[] ovOverlay) {
-		int offset = romEntry.getIntValue("MysteryEggCommandOffset") + Gen4Constants.mysteryEggCommandImprovement.length;
+		int offset = romEntry.getIntValue("MysteryEggCommandOffset") + Gen4Constants.mysteryEggCommandLength;
 		StaticEncounter se = new StaticEncounter(pokes[readLong(ovOverlay, offset)]);
 		se.isEgg = true;
 		return se;
 	}
 
 	private StaticEncounter readVanillaMysteryEgg(byte[] ovOverlay) {
-		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
-		byte[] data = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandImprovement.length);
-		System.out.println("Mystery egg bytes:\n" + RomFunctions.bytesToHex(data));
-		System.out.println(new ARMThumbCode(data));
-
 		StaticEncounter se = new StaticEncounter(pokes[ovOverlay[romEntry.getIntValue("MysteryEggOffset")] & 0xFF]);
 		se.isEgg = true;
 		return se;
@@ -3435,11 +3426,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void setMysteryEgg(StaticEncounter se) throws IOException {
 		// The Mystery Egg (HGSS Togepi) uses a different command than other eggs,
 		// which is hardcoded in the field overlay. Normally this command uses a single
-		// byte to represent Togepi's number, which clearly doesn't allow for any Pokemon
+		// byte to represent Togepi's number, which clearly doesn't allow for any Species
 		// with a number > 255 to replace it.
 		// To fix this, we overwrite the command with an improved version by AdAstra
 		// on the Kingdom of DS Hacking Discord server. This improved command allows
-		// a full long for both the Pokemon and the Move ID.
+		// a full long for both the Species and the Move ID.
 		// (The Move ID is an extra move the Mystery Egg mon gets. In Vanilla, it is Togepi's Extrasensory.)
 		byte[] ovOverlay = readOverlay(romEntry.getIntValue("FieldOvlNumber"));
 		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
@@ -3447,9 +3438,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (!isMysteryEggCommandImproved(ovOverlay)) {
 			improveMysteryEggCommand(ovOverlay);
 		}
-
-		writeBytes(ovOverlay, offset, Gen4Constants.mysteryEggCommandImprovement);
-		offset += Gen4Constants.mysteryEggCommandImprovement.length;
+		offset += Gen4Constants.mysteryEggCommandLength;
 
 		writeLong(ovOverlay, offset, se.spec.getNumber());
 		offset += 4;
@@ -3462,7 +3451,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void improveMysteryEggCommand(byte[] ovOverlay) {
         int offset = romEntry.getIntValue("MysteryEggCommandOffset");
-        byte[] bytesBefore = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandImprovement.length);
+        byte[] bytesBefore = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandLength);
 
 		// The vanilla command looks slightly different between different localizations; it contains
 		// a number of relative branch instructions that differ only by a few bytes.
@@ -3492,7 +3481,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		armTC.removeInstructions(30, 4);
 		armTC.insertInstructions(30, (byte) 0x57, ARMThumbCode.BGE);
 
-		// The improved command is the same length as the original one.
+		// The improved command is the about same length as the original one.
+		// "About" since it is proceeded by 8 bytes that we overwrite with the new species/move ids.
+		// Anyway, it is safe to overwrite in the same location.
 		writeBytes(ovOverlay, offset, armTC.toBytes());
 	}
 

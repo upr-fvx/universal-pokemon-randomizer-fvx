@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen4Constants {
@@ -98,23 +97,11 @@ public class Gen4Constants {
 
     public static final int highestAbilityIndex = AbilityIDs.badDreams;
 
-    // by AdAstra
-    public static final byte[] mysteryEggCommandImprovement = RomFunctions.hexToBytes(
-                    "F8 B5 84 B0 80 30 07 68 F8 68 26 F6 E1 FE 04 1C" +
-                    "F8 68 72 F6 11 FC 02 90 72 F6 AC FA 06 28 57 DA" +
-                    "0B 20 6B F6 1D FE 05 1C 6B F6 F6 FD 01 20 0D 21" +
-                    "15 F6 72 FF 03 21 00 91 01 90 28 1C 26 49 01 22" +
-                    "23 1C 6A F6 D3 FB 00 24 26 1C 21 1C 28 1C 36 31" +
-                    "32 1C 6C F6 0F FA 00 28 02 D0 01 34 04 2C F4 DB" +
-                    "04 2C 00 D1 03 24 1D 49 03 A8 41 80 21 1C 03 AA" +
-                    "28 1C 36 31 02 32 6C F6 7D FD 21 1C 28 1C 42 31" +
-                    "00 22 6C F6 F7 F9 03 A9 08 70 3A 34 28 1C 21 1C" +
-                    "03 AA 6C F6 6F FD 02 98 29 1C 72 F6 DD F9 28 1C" +
-                    "18 F6 CE FC F8 68 28 F6 EF FB 00 21 04 1C 28 1C" +
-                    "0A 1C 6C F6 DF F9 06 1C 28 1C 6F 21 00 22 6C F6" +
-                    "D9 F9 02 1C 12 06 20 1C 31 1C 12 0E 28 F6 0A FD" +
-                    "00 20 04 B0 F8 BD 00 00"
-    );
+    public static final int mysteryEggCommandLength = 216; // the improved version, technically
+
+    public static final int mysteryEggImprovementIdentifierOffset = 30;
+
+    public static final byte mysteryEggImprovementIdentifier = (byte) 0x57;
 
     public static final List<Integer> consumableHeldItems = Arrays.asList(
             ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry, ItemIDs.aspearBerry,

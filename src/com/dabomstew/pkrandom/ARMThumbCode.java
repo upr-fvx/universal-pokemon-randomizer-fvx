@@ -89,12 +89,6 @@ public class ARMThumbCode {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(RomFunctions.bytesToHex(Gen4Constants.mysteryEggCommandImprovement));
-        ARMThumbCode a = new ARMThumbCode(Gen4Constants.mysteryEggCommandImprovement);
-        System.out.println(a);
-    }
-
     private final List<Instruction> instructions;
 
     public ARMThumbCode(byte[] bytes) {

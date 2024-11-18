@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class StaticPokemonRandomizerTest extends RandomizerTest {
 
@@ -41,6 +42,8 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomMatchingSwapsUBsWithUBsOnly(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) == 7);
+
         activateRomHandler(romName);
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 

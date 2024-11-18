@@ -417,6 +417,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // This is the first rival in Yellow. His Pokemon is used to determine the non-player
                 // starter, so we can't change it here. Just skip it.
                 continue;
+                //TODO: confirm if this is still needed
             }
             String group = t.tag == null ? "" : t.tag;
             if (group.contains("-")) {

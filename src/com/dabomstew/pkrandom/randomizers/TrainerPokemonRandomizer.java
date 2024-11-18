@@ -26,7 +26,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private final Map<Species, Integer> placementHistory = new HashMap<>();
 
-    private int fullyEvolvedRandomSeed = -1;
     private Set<Type> usedUberTypes = EnumSet.noneOf(Type.class);
     private Map<Trainer, Type> trainerTypes = new HashMap<>();
 
@@ -34,7 +33,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         super(romHandler, settings, random);
     }
 
-    public void onlyChangeTrainerLevels() {
+    public void applyTrainerLevelModifier() {
         int levelModifier = settings.getTrainersLevelModifier();
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
@@ -645,12 +644,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
         return 0;
     }
-
-    private void changeStarterWithTag(List<Trainer> currentTrainers, String tag, Species starter, int abilitySlot) {
+    /**
+     * Searches through the list of trainers given until it finds one with the given tag,
+     * then assigns that trainer's strongest Pokemon the starter indicated.
+     * @param currentTrainers The List of Trainers to search through.
+     * @param tag The tag to find.
+     * @param startersByLevel A map of levels to evolutions of the starter (including the base).
+     * @param abilitySlot Which ability slot should be used for the starter.
+     */
+    private void changeStarterWithTag(List<Trainer> currentTrainers, String tag,
+                                      NavigableMap<Integer, Species> startersByLevel, int abilitySlot) {
         for (Trainer t : currentTrainers) {
             if (t.tag != null && t.tag.equals(tag)) {
 
-                // Bingo
                 TrainerPokemon bestPoke = t.pokemon.get(0);
 
                 if (t.forceStarterPosition >= 0) {
@@ -667,6 +673,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                         }
                     }
                 }
+                Species starter = startersByLevel.floorEntry(bestPoke.level).getValue();
+
                 bestPoke.species = starter;
                 setFormeForTrainerPokemon(bestPoke, starter);
                 bestPoke.resetMoves = true;
@@ -696,17 +704,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
     }
 
-    private Species fullyEvolve(Species species, int trainerIndex) {
-        // If the fullyEvolvedRandomSeed hasn't been set yet, set it here.
-        if (this.fullyEvolvedRandomSeed == -1) {
-            this.fullyEvolvedRandomSeed = random.nextInt(GlobalConstants.LARGEST_NUMBER_OF_SPLIT_EVOS);
-        }
-
+    private Species fullyEvolve(Species species) {
         Set<Species> seenMons = new HashSet<>();
         seenMons.add(species);
 
         while (true) {
-            if (species.getEvolutionsFrom().size() == 0) {
+            if (species.getEvolutionsFrom().isEmpty()) {
                 // fully evolved
                 break;
             }
@@ -725,10 +728,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 break;
             }
 
-            // We want to make split evolutions deterministic, but still random on a seed-to-seed basis.
-            // Therefore, we take a random value (which is generated once per seed) and add it to the trainer's
-            // index to get a pseudorandom number that can be used to decide which split to take.
-            int evolutionIndex = (this.fullyEvolvedRandomSeed + trainerIndex) % species.getEvolutionsFrom().size();
+            // No longer needs trainerIndex to be deterministic,
+            // as this method is no longer run multiple times on the same TrainerPokemon!
+            int evolutionIndex = random.nextInt(species.getEvolutionsFrom().size());
             species = species.getEvolutionsFrom().get(evolutionIndex).getTo();
             seenMons.add(species);
         }
@@ -840,102 +842,114 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (romHandler.isYellow()) {
             // The rival's starter is index 1
             Species rivalStarter = starters.get(1);
-            int timesEvolves = numEvolutions(rivalStarter, 2);
+
+            int highestPreBranchLevel = getLevelOfStarter(currentTrainers, prefix + "3-0");
+
+            NavigableMap<Integer, Species> startersByLevel =
+                    getEvolutionsByLevel(rivalStarter, 1, highestPreBranchLevel);
             // Yellow does not have abilities
             int abilitySlot = 0;
-            // Apply evolutions as appropriate
-            if (timesEvolves == 0) {
-                for (int j = 1; j <= 3; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-0", rivalStarter, abilitySlot);
-                }
-                for (int j = 4; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
-                }
-            } else if (timesEvolves == 1) {
-                for (int j = 1; j <= 3; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-0", rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, false);
-                for (int j = 4; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
-                }
-            } else if (timesEvolves == 2) {
-                for (int j = 1; j <= 2; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-" + 0, rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, true);
-                changeStarterWithTag(currentTrainers, prefix + "3-0", rivalStarter, abilitySlot);
-                for (int i = 0; i < 3; i++) {
-                    changeStarterWithTag(currentTrainers, prefix + "4-" + i, rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, false);
-                for (int j = 5; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
+
+            for (int encounter = 0; encounter <= 3; encounter++) {
+                changeStarterWithTag(currentTrainers, prefix + encounter + "-0", startersByLevel, abilitySlot);
+            }
+            Map.Entry<Integer, Species> lastPreBranchEvolution = startersByLevel.floorEntry(highestPreBranchLevel);
+            int lastEvoLevel = lastPreBranchEvolution.getKey();
+            Species lastEvoSpecies = lastPreBranchEvolution.getValue();
+
+            for (int variant = 0; variant < 3; variant++) {
+                //determine further evolutions in-loop,
+                //so that if he's using Eevee, it has a chance to branch
+                startersByLevel = getEvolutionsByLevel(lastEvoSpecies, lastEvoLevel, 100);
+
+                for (int encounter = 4; encounter <= 7; encounter++) {
+                    changeStarterWithTag(currentTrainers, prefix + encounter + "-" + variant,
+                            startersByLevel, abilitySlot);
                 }
             }
+
         } else {
             // Replace each starter as appropriate
             // Use level to determine when to evolve, not number anymore
-            for (int i = 0; i < 3; i++) {
+            for (int variant = 0; variant < 3; variant++) {
                 // Rival's starters are pokemonOffset over from each of ours
-                int starterToUse = (i + pokemonOffset) % 3;
+                int starterToUse = (variant + pokemonOffset) % 3;
                 Species thisStarter = starters.get(starterToUse);
-                int timesEvolves = numEvolutions(thisStarter, 2);
+
+                NavigableMap<Integer, Species> startersByLevel =
+                        getEvolutionsByLevel(thisStarter, 1, 100);
+                //This could (rarely) result in a starter evolving before the first battle,
+                //but that's better than the alternative option of crashing if the level is lowered.
+
                 int abilitySlot = getRandomAbilitySlot(thisStarter);
                 while (abilitySlot == 3) {
                     // Since starters never have hidden abilities, the rival's starter shouldn't either
                     abilitySlot = getRandomAbilitySlot(thisStarter);
                 }
-                // If a fully evolved pokemon, use throughout
-                // Otherwise split by evolutions as appropriate
-                if (timesEvolves == 0) {
-                    for (int j = 1; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                } else if (timesEvolves == 1) {
-                    int j = 1;
-                    for (; j <= highestRivalNum / 2; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 30) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, false);
-                    int evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
-                } else if (timesEvolves == 2) {
-                    int j = 1;
-                    for (; j <= highestRivalNum; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 16) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, true);
-                    int evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 36) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, false);
-                    evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
+
+                for (int encounter = 1; encounter <= highestRivalNum; encounter++) {
+                    changeStarterWithTag(currentTrainers, prefix + encounter + "-" + variant,
+                            startersByLevel, abilitySlot);
                 }
             }
         }
 
+    }
+
+    /**
+     * Given a base Species, returns a NavigableMap containing it and its evolutions,
+     * with each evolution's key being the lowest level it should appear at.
+     * Used for rematches with the same trainer.
+     * When reading, floorEntry(level) should be used.
+     *
+     * @param base         The base Species to start from.
+     * @param initialLevel The level of the Pokemon in the first battle with this trainer.
+     * @param maxLevel     The highest level interested in (typically the level of the Pokemon in the last
+     *                     battle with the trainer, or 100 if not known).
+     * @return A NavigableMap containing the Pokemon's evolutions by level.
+     */
+    private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
+        boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
+        int fullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
+
+        NavigableMap<Integer, Species> evolutions = new TreeMap<>();
+        evolutions.put(initialLevel, base);
+        int currentLevel = initialLevel;
+        Species currentSpecies = base;
+
+        if(forceFullyEvolved && maxLevel < fullyEvolvedLevel) {
+            maxLevel = fullyEvolvedLevel;
+        }
+
+        while(currentLevel < maxLevel && !currentSpecies.getEvolutionsFrom().isEmpty()) {
+            List<Evolution> possibleEvolutions = currentSpecies.getEvolutionsFrom();
+            int chosenEvoIndex = random.nextInt(possibleEvolutions.size());
+            Evolution chosenEvo = possibleEvolutions.get(chosenEvoIndex);
+
+            int level;
+            if(chosenEvo.getType().usesLevel()) {
+                level = chosenEvo.getLevel();
+                if(level <= currentLevel) {
+                    level = currentLevel + 1;
+                }
+            } else {
+                //arbitrary amount of levels later
+                level = currentLevel + 20;
+            }
+
+            if(level >= maxLevel) {
+                break;
+            }
+            currentLevel = level;
+            currentSpecies = chosenEvo.getTo();
+            evolutions.put(currentLevel, currentSpecies);
+        }
+
+        if(forceFullyEvolved) {
+            evolutions.put(fullyEvolvedLevel, fullyEvolve(currentSpecies));
+        }
+
+        return evolutions;
     }
 
     public void forceFullyEvolvedTrainerPokes() {
@@ -945,7 +959,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.pokemon) {
                 if (tp.level >= minLevel) {
-                    Species newSpecies = fullyEvolve(tp.species, t.index);
+                    Species newSpecies = fullyEvolve(tp.species);
                     if (newSpecies != tp.species) {
                         tp.species = newSpecies;
                         setFormeForTrainerPokemon(tp, newSpecies);

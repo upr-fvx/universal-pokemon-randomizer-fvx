@@ -1946,7 +1946,7 @@
                   </component>
                   <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
                     <constraints>
-                      <grid row="10" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="10" column="7" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -2045,81 +2045,6 @@
                       <enabled value="false"/>
                     </properties>
                   </component>
-                  <component id="2918f" class="javax.swing.JLabel" binding="tpHeldItemsLabel">
-                    <constraints>
-                      <grid row="8" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHeldItemsLabel.text"/>
-                    </properties>
-                  </component>
-                  <component id="dad16" class="javax.swing.JCheckBox" binding="tpBossTrainersItemsCheckBox">
-                    <constraints>
-                      <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <component id="d7d93" class="javax.swing.JCheckBox" binding="tpImportantTrainersItemsCheckBox">
-                    <constraints>
-                      <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <component id="7fddd" class="javax.swing.JCheckBox" binding="tpRegularTrainersItemsCheckBox">
-                    <constraints>
-                      <grid row="9" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.toolTipText"/>
-                    </properties>
-                  </component>
-                  <component id="31e9a" class="javax.swing.JCheckBox" binding="tpConsumableItemsOnlyCheckBox">
-                    <constraints>
-                      <grid row="10" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.tooltip"/>
-                    </properties>
-                  </component>
-                  <component id="79d6a" class="javax.swing.JCheckBox" binding="tpSensibleItemsCheckBox">
-                    <constraints>
-                      <grid row="10" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.tooltip"/>
-                    </properties>
-                  </component>
-                  <component id="f3c52" class="javax.swing.JCheckBox" binding="tpHighestLevelGetsItemCheckBox">
-                    <constraints>
-                      <grid row="10" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.tooltip"/>
-                    </properties>
-                  </component>
                   <component id="21090" class="javax.swing.JCheckBox" binding="tpBetterMovesetsCheckBox">
                     <constraints>
                       <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -2194,6 +2119,124 @@
                       <enabled value="false"/>
                       <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpUseLocalPokemon.text"/>
                       <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpUseLocalPokemon.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="2918f" class="javax.swing.JLabel" binding="tpHeldItemsLabel">
+                    <constraints>
+                      <grid row="7" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHeldItemsLabel.text"/>
+                    </properties>
+                  </component>
+                  <component id="dad16" class="javax.swing.JCheckBox" binding="tpBossTrainersItemsCheckBox">
+                    <constraints>
+                      <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="d7d93" class="javax.swing.JCheckBox" binding="tpImportantTrainersItemsCheckBox">
+                    <constraints>
+                      <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="7fddd" class="javax.swing.JCheckBox" binding="tpRegularTrainersItemsCheckBox">
+                    <constraints>
+                      <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="31e9a" class="javax.swing.JCheckBox" binding="tpConsumableItemsOnlyCheckBox">
+                    <constraints>
+                      <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.tooltip"/>
+                    </properties>
+                  </component>
+                  <component id="79d6a" class="javax.swing.JCheckBox" binding="tpSensibleItemsCheckBox">
+                    <constraints>
+                      <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.tooltip"/>
+                    </properties>
+                  </component>
+                  <component id="f3c52" class="javax.swing.JCheckBox" binding="tpHighestLevelGetsItemCheckBox">
+                    <constraints>
+                      <grid row="9" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.tooltip"/>
+                    </properties>
+                  </component>
+                  <component id="f4bb1" class="javax.swing.JLabel" binding="tpTypeDiversityLabel">
+                    <constraints>
+                      <grid row="10" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpTypeDiversityLabel.text"/>
+                    </properties>
+                  </component>
+                  <component id="a3d18" class="javax.swing.JCheckBox" binding="tpBossTrainersTypeDiversityCheckBox">
+                    <constraints>
+                      <grid row="11" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersTypeDiversityCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBossTrainersTypeDiversityCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="e1be3" class="javax.swing.JCheckBox" binding="tpImportantTrainersTypeDiversityCheckBox">
+                    <constraints>
+                      <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <selected value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersTypeDiversityCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpImportantTrainersTypeDiversityCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="66a0b" class="javax.swing.JCheckBox" binding="tpRegularTrainersTypeDiversityCheckBox">
+                    <constraints>
+                      <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersTypeDiversityCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRegularTrainersTypeDiversityCheckBox.toolTipText"/>
                     </properties>
                   </component>
                 </children>

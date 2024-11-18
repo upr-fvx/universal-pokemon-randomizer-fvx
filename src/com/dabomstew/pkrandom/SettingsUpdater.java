@@ -335,6 +335,12 @@ public class SettingsUpdater {
             insertExtraByte(60, (byte) 0);
         }
 
+        if (oldVersion < Version.FVX_1_1_0.id)
+        {
+            //add byte for trainer type diversity
+            insertExtraByte(61, (byte) 0);
+        }
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

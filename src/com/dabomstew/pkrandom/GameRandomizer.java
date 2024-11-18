@@ -471,9 +471,9 @@ public class GameRandomizer {
         // Trainer Pokemon
         // 1. Add extra Trainer Pokemon
         // 2. Set trainers to be double battles and add extra Pokemon if necessary
-        // 3. Randomize Trainer Pokemon
+        // 3. Modify levels
         // 4. Modify rivals to carry starters
-        // 5. Force Trainer Pokemon to be fully evolved
+        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing)
 
         if (settings.getAdditionalRegularTrainerPokemon() > 0
                 || settings.getAdditionalImportantTrainerPokemon() > 0
@@ -485,12 +485,8 @@ public class GameRandomizer {
             trainerPokeRandomizer.setDoubleBattleMode();
         }
 
-        if(settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
-                trainerPokeRandomizer.randomizeTrainerPokes();
-        } else {
-            if (settings.isTrainersLevelModified()) {
-                    trainerPokeRandomizer.onlyChangeTrainerLevels();
-            }
+        if (settings.isTrainersLevelModified()) {
+            trainerPokeRandomizer.applyTrainerLevelModifier();
         }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
@@ -499,7 +495,9 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if (settings.isTrainersForceFullyEvolved()) {
+        if(settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
+            trainerPokeRandomizer.randomizeTrainerPokes();
+        } else if (settings.isTrainersForceFullyEvolved()) {
             trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
         }
 

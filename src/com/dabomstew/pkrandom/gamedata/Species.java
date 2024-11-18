@@ -306,7 +306,7 @@ public class Species implements Comparable<Species> {
 
     /**
      * Gets all {@link Species} that this {@link Species} is related to by evolution.
-     * Does not include Mega Evolution.
+     * Includes itself. Does not include Mega Evolution.
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return a {@link SpeciesSet} containing all {@link Species} this {@link Species} is related to (including itself)
      */

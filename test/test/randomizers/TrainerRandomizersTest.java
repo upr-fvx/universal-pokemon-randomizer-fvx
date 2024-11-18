@@ -484,4 +484,50 @@ public class TrainerRandomizersTest extends RandomizerTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void typeDiverseTrainersWorks(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = new Settings();
+        settings.setDiverseTypesForRegularTrainers(true);
+        settings.setDiverseTypesForImportantTrainers(true);
+        settings.setDiverseTypesForBossTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+
+        checkTrainerTypesAreDiverse(romHandler.getTrainers());
+    }
+
+    private void checkTrainerTypesAreDiverse(List<Trainer> trainers) {
+        for(Trainer trainer : trainers) {
+            Set<Type> usedTypes = EnumSet.noneOf(Type.class);
+            System.out.println(trainer.fullDisplayName);
+
+            for(TrainerPokemon tp : trainer.pokemon) {
+                Species sp = tp.species;
+                if(tp.forme != 0) {
+                    sp = romHandler.getAltFormeOfSpecies(sp, tp.forme);
+                }
+
+                Type primaryType = sp.getPrimaryType(false);
+                Type secondaryType = sp.getSecondaryType(false);
+
+                System.out.println("\t" + sp.getFullName() + ": " + primaryType +
+                        (secondaryType == null ? "" : "/" + secondaryType));
+
+                if(usedTypes.contains(primaryType)) {
+                    fail("Type " + primaryType + " already used by this trainer!");
+                }
+                usedTypes.add(primaryType);
+
+                if(secondaryType != null) {
+                    if (usedTypes.contains(secondaryType)) {
+                        fail("Type " + secondaryType + " already used by this trainer!");
+                    }
+                    usedTypes.add(secondaryType);
+                }
+            }
+        }
+    }
 }

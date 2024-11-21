@@ -34,12 +34,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.zip.CRC32;
 
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.gui.RandomizerGUI;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 
 public class Utils {
 
@@ -93,7 +93,7 @@ public class Utils {
             throws InvalidSupplementFilesException {
         byte[] data = Base64.getDecoder().decode(config);
 
-        if (data.length < Settings.LENGTH_OF_SETTINGS_DATA + 9) {
+        if (data.length < SettingsManager.LENGTH_OF_SETTINGS_DATA + 9) {
             throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.UNKNOWN,
                     "The preset config is too short to be valid");
         }

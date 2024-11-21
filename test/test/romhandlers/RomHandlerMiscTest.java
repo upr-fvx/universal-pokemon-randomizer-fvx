@@ -1,7 +1,7 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
 import com.dabomstew.pkrandom.gamedata.Species;
@@ -165,7 +165,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
+        SettingsManager settings = new SettingsManager();
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
@@ -191,7 +191,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
+        SettingsManager settings = new SettingsManager();
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
 
@@ -222,7 +222,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
+        SettingsManager settings = new SettingsManager();
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
         // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
@@ -249,7 +249,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
+        SettingsManager settings = new SettingsManager();
         settings.setLimitPokemon(true);
         settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
 

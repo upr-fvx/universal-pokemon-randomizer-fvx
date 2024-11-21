@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.CustomNamesSet;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
@@ -9,7 +9,7 @@ import java.util.*;
 
 public class TrainerNameRandomizer extends Randomizer {
 
-    public TrainerNameRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TrainerNameRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

@@ -33,6 +33,7 @@ import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen1RomEntry;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
 
@@ -1814,7 +1815,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
+    public void removeImpossibleEvolutions(SettingsManager settings) {
         // Gen 1: only regular trade evos
         // change them all to evolve at level 37
         for (Species pkmn : pokes) {
@@ -1832,7 +1833,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(SettingsManager settings) {
         // No such thing
     }
 
@@ -2723,8 +2724,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, Settings.PlayerCharacterMod toReplace) {
-        if (toReplace != Settings.PlayerCharacterMod.PC1) {
+    public void setCustomPlayerGraphics(GraphicsPack unchecked, SettingsManager.PlayerCharacterMod toReplace) {
+        if (toReplace != SettingsManager.PlayerCharacterMod.PC1) {
             throw new IllegalArgumentException("Invalid toReplace. Only one player character in Gen 1.");
         }
         if (!(unchecked instanceof GBCPlayerCharacterGraphics)) {

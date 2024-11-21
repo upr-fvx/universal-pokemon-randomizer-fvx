@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -19,12 +19,12 @@ public abstract class Randomizer {
     protected final TypeService typeService;
     protected final CopyUpEvolutionsHelper<Species> copyUpEvolutionsHelper;
 
-    protected final Settings settings;
+    protected final SettingsManager settings;
     protected final Random random;
 
     protected boolean changesMade;
 
-    public Randomizer(RomHandler romHandler, Settings settings, Random random) {
+    public Randomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         this.romHandler = romHandler;
         this.rSpecService = romHandler.getRestrictedSpeciesService();
         this.typeService = romHandler.getTypeService();

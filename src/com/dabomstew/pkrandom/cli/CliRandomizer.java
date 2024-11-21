@@ -2,11 +2,10 @@ package com.dabomstew.pkrandom.cli;
 
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.romhandlers.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +29,11 @@ public class CliRandomizer {
                 new Gen7RomHandler.Factory()
         };
 
-        Settings settings;
+        SettingsManager settings;
         try {
             File fh = new File(settingsFilePath);
             FileInputStream fis = new FileInputStream(fh);
-            settings = Settings.read(fis);
+            settings = SettingsManager.read(fis);
             // taken from com.dabomstew.pkrandom.newgui.RandomizerGUI.saveROM, set distinctly from all other settings
             settings.setCustomNames(FileFunctions.getCustomNames());
             fis.close();
@@ -121,9 +120,9 @@ public class CliRandomizer {
         return false;
     }
 
-    private static void displaySettingsWarnings(Settings settings, RomHandler romHandler) {
-        Settings.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
-        if (feedback.isChangedStarter() && settings.getStartersMod() == Settings.StartersMod.CUSTOM) {
+    private static void displaySettingsWarnings(SettingsManager settings, RomHandler romHandler) {
+        SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
+        if (feedback.isChangedStarter() && settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM) {
             printWarning(bundle.getString("GUI.starterUnavailable"));
         }
         if (settings.isUpdatedFromOldVersion()) {

@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -9,7 +9,7 @@ import java.util.*;
 
 public class WildEncounterRandomizer extends Randomizer {
 
-    public WildEncounterRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public WildEncounterRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -22,13 +22,13 @@ public class WildEncounterRandomizer extends Randomizer {
             return;
         }
 
-        Settings.WildPokemonZoneMod mode = settings.getWildPokemonZoneMod();
+        SettingsManager.WildPokemonZoneMod mode = settings.getWildPokemonZoneMod();
         boolean splitByEncounterType = settings.isSplitWildZoneByEncounterTypes();
-        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
+        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == SettingsManager.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
-        boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
-        boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
-        boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
+        boolean keepPrimaryType = settings.getWildPokemonTypeMod() == SettingsManager.WildPokemonTypeMod.KEEP_PRIMARY;
+        boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == SettingsManager.WildPokemonEvolutionMod.BASIC_ONLY;
+        boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == SettingsManager.WildPokemonEvolutionMod.KEEP_STAGE;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
@@ -36,7 +36,7 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean balanceShakingGrass = settings.isBalanceShakingGrass();
         boolean allowAltFormes = settings.isAllowWildAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
+        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType,
@@ -47,13 +47,13 @@ public class WildEncounterRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
-                                    boolean useTimeOfDay,
-                                    boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                    boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
-                                    boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
-                                    boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
-                                    int levelModifier, boolean abilitiesAreRandomized) {
+    private void randomizeEncounters(SettingsManager.WildPokemonZoneMod mode, boolean splitByEncounterType,
+                                     boolean useTimeOfDay,
+                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
+                                     boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
+                                     boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
+                                     boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
+                                     int levelModifier, boolean abilitiesAreRandomized) {
         // - prep settings
         // - get encounters
         // - setup banned + allowed

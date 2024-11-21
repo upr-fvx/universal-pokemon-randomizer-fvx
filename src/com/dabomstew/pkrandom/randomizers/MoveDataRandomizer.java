@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.MoveIDs;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.MoveCategory;
@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class MoveDataRandomizer extends Randomizer {
 
-    public MoveDataRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public MoveDataRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

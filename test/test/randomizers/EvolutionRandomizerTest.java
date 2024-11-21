@@ -1,6 +1,6 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.Evolution;
 import com.dabomstew.pkrandom.gamedata.EvolutionType;
@@ -10,7 +10,6 @@ import com.dabomstew.pkrandom.randomizers.EvolutionRandomizer;
 import com.dabomstew.pkrandom.randomizers.SpeciesBaseStatRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import test.romhandlers.RomHandlerTest;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomNoPokemonEvolvesIntoItself(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -45,7 +44,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEvosShareEXPCurveWithPrevo(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -63,7 +62,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomSplitEvosDoNotChooseTheSamePokemon(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -87,7 +86,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomNoEvoCyclesExist(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -112,7 +111,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomSameTypingGivesEvosWithSomeSharedType(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosSameTyping(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -155,7 +154,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
             beforeEvos.add(before);
         }
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosSameTyping(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -176,7 +175,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomLimitEvosToThreeStagesWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosMaxThreeStages(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -207,7 +206,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomSameTypingANDLimitEvosToThreeStagesWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosSameTyping(true);
         s.setEvosMaxThreeStages(true);
@@ -227,7 +226,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
             allEvosBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::getTo).collect(Collectors.toList()));
         }
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosForceChange(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -247,7 +246,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 7);
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
 //        s.setSelectedEXPCurve(ExpCurve.MEDIUM_FAST);
 //        s.setStandardizeEXPCurves(true);
 //        romHandler.standardizeEXPCurves(s);
@@ -276,7 +275,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
             allEvosBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::getTo).collect(Collectors.toList()));
         }
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosSimilarStrength(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -310,7 +309,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomForceGrowthWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosForceGrowth(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -329,7 +328,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomNoConvergenceWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         s.setEvosNoConvergence(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -349,7 +348,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         // Probably there are some issues if LEVEL_FEMALE_ESPURR is used and the Pokemon it evolves to isn't Meowstic.
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, true, false);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -367,7 +366,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEveryLevelGivesEveryPokemonExactlyOneEvolutionAtLevelOne(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, false, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -392,7 +391,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEveryLevelNoPokemonEvolvesIntoItself(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, false, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -410,7 +409,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEveryLevelEvosShareEXPCurveWithPrevo(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, false, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
@@ -433,7 +432,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
             allEvosBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::getTo).collect(Collectors.toList()));
         }
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, false, true);
         s.setEvosForceChange(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
@@ -452,7 +451,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEveryLevelSameTypingGivesEvosWithSomeSharedType(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setExpCurveMod(false, false, true);
         s.setSelectedEXPCurve(ExpCurve.MEDIUM_FAST);
         s.setStandardizeEXPCurves(true);
@@ -469,7 +468,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     public void randomEveryLevelNoConvergenceWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEvolutionsMod(false, false, true);
         s.setEvosNoConvergence(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();

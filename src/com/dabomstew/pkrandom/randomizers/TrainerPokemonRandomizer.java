@@ -2,7 +2,7 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
@@ -26,7 +26,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private Set<Type> usedUberTypes = EnumSet.noneOf(Type.class);
     private Map<Trainer, Type> trainerTypes = new HashMap<>();
 
-    public TrainerPokemonRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TrainerPokemonRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -48,19 +48,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
         boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
-        boolean isTypeThemed = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED;
-        boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
-        boolean keepTypeThemes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEMED;
-        boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEME_OR_PRIMARY;
+        boolean isTypeThemed = settings.getTrainersMod() == SettingsManager.TrainersMod.TYPE_THEMED;
+        boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == SettingsManager.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
+        boolean keepTypeThemes = settings.getTrainersMod() == SettingsManager.TrainersMod.KEEP_THEMED;
+        boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == SettingsManager.TrainersMod.KEEP_THEME_OR_PRIMARY;
         boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
                 || keepThemeOrPrimaryTypes;
-        boolean distributionSetting = settings.getTrainersMod() == Settings.TrainersMod.DISTRIBUTED;
-        boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
+        boolean distributionSetting = settings.getTrainersMod() == SettingsManager.TrainersMod.DISTRIBUTED;
+        boolean mainPlaythroughSetting = settings.getTrainersMod() == SettingsManager.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
         boolean swapMegaEvos = settings.isSwapTrainerMegaEvos();
         boolean shinyChance = settings.isShinyChance();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
+        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
         boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
         int forceFullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
@@ -1034,7 +1034,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private void randomizeHeldItem(TrainerPokemon tp, Settings settings, List<Move> moves, int[] moveset) {
+    private void randomizeHeldItem(TrainerPokemon tp, SettingsManager settings, List<Move> moves, int[] moveset) {
         boolean sensibleItemsOnly = settings.isSensibleItemsOnlyForTrainers();
         boolean consumableItemsOnly = settings.isConsumableItemsOnlyForTrainers();
         boolean swapMegaEvolutions = settings.isSwapTrainerMegaEvos();

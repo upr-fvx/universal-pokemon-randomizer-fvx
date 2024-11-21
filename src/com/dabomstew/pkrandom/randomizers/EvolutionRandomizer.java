@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Evolution;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class EvolutionRandomizer extends Randomizer {
 
-    public EvolutionRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public EvolutionRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -28,9 +28,9 @@ public class EvolutionRandomizer extends Randomizer {
         boolean noConvergence = settings.isEvosNoConvergence();
 
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
+        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
 
-        boolean evolveEveryLevel = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
+        boolean evolveEveryLevel = settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL;
         randomizeEvolutions(similarStrength, sameType, limitToThreeStages, forceChange, forceGrowth, noConvergence,
                 banIrregularAltFormes, abilitiesAreRandomized, evolveEveryLevel);
         changesMade = true;

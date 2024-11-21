@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
@@ -30,9 +30,9 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasCustomPlayerGraphicsSupport());
         GraphicsPack cpg = getCustomPlayerGraphics();
-        romHandler.setCustomPlayerGraphics(cpg, Settings.PlayerCharacterMod.PC1);
+        romHandler.setCustomPlayerGraphics(cpg, SettingsManager.PlayerCharacterMod.PC1);
         if (romHandler.hasMultiplePlayerCharacters()) {
-            romHandler.setCustomPlayerGraphics(cpg, Settings.PlayerCharacterMod.PC2);
+            romHandler.setCustomPlayerGraphics(cpg, SettingsManager.PlayerCharacterMod.PC2);
         }
         assertTrue(true);
     }

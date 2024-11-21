@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.MoveLearnt;
 import com.dabomstew.pkrandom.gamedata.Species;
@@ -17,7 +17,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     private boolean tmhmChangesMade;
     private boolean tutorChangesMade;
 
-    public TMHMTutorCompatibilityRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TMHMTutorCompatibilityRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -36,7 +36,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeTMHMCompatibility() {
-        boolean preferSameType = settings.getTmsHmsCompatibilityMod() == Settings.TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE;
+        boolean preferSameType = settings.getTmsHmsCompatibilityMod() == SettingsManager.TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE;
         boolean followEvolutions = settings.isTmsFollowEvolutions();
 
         // Get current compatibility
@@ -210,7 +210,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeMoveTutorCompatibility() {
-        boolean preferSameType = settings.getMoveTutorsCompatibilityMod() == Settings.MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE;
+        boolean preferSameType = settings.getMoveTutorsCompatibilityMod() == SettingsManager.MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE;
         boolean followEvolutions = settings.isTutorFollowEvolutions();
 
         if (!romHandler.hasMoveTutors()) {

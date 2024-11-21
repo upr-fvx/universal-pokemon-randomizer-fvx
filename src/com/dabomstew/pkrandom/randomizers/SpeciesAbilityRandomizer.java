@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class SpeciesAbilityRandomizer extends Randomizer {
 
-    public SpeciesAbilityRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesAbilityRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

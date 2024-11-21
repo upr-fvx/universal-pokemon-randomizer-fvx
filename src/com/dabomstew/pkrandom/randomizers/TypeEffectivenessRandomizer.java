@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Effectiveness;
 import com.dabomstew.pkrandom.gamedata.Type;
@@ -11,7 +11,7 @@ import java.util.*;
 
 public class TypeEffectivenessRandomizer extends Randomizer {
 
-    public TypeEffectivenessRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TypeEffectivenessRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

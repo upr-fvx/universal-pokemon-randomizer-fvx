@@ -1,6 +1,6 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,7 +84,7 @@ public class RandomizerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new SettingsManager());
 
         romHandlers.put(romName, new TestRomHandler(romHandler));
     }

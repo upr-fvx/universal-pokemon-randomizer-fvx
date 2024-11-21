@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
 import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
 
-    public SpeciesBaseStatRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesBaseStatRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -65,7 +65,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void standardizeEXPCurves() {
-        Settings.ExpCurveMod mod = settings.getExpCurveMod();
+        SettingsManager.ExpCurveMod mod = settings.getExpCurveMod();
         ExpCurve expCurve = settings.getSelectedEXPCurve();
 
         SpeciesSet pokes = romHandler.getSpeciesSetInclFormes();

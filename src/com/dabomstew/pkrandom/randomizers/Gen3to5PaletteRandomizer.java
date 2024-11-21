@@ -21,7 +21,7 @@ package com.dabomstew.pkrandom.randomizers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.graphics.palettes.*;
@@ -65,7 +65,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	private boolean shinyFromNormal;
 	private Map<Species, TypeBaseColorList> typeBaseColorLists;
 
-	public Gen3to5PaletteRandomizer(RomHandler romHandler, Settings settings, Random random) {
+	public Gen3to5PaletteRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
 		super(romHandler, settings, random);
 		this.paletteFilesID = romHandler.getPaletteFilesID();
 	}

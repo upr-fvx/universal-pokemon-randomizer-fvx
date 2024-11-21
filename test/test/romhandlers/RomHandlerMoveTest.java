@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.MoveLearnt;
 import com.dabomstew.pkrandom.randomizers.TMTutorMoveRandomizer;
@@ -106,7 +106,7 @@ public class RomHandlerMoveTest extends RomHandlerTest {
     public void moveTutorsCanBeRandomizedAndGetAndSet(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasMoveTutors());
-        new TMTutorMoveRandomizer(romHandler, new Settings(), RND).randomizeMoveTutorMoves();
+        new TMTutorMoveRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveTutorMoves();
         List<Integer> moveTutorMoves = romHandler.getMoveTutorMoves();
         List<Integer> before = new ArrayList<>(moveTutorMoves);
         romHandler.setMoveTutorMoves(moveTutorMoves);

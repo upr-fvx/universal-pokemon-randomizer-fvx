@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class RomHandlerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new SettingsManager());
     }
 
     protected static Generation getGenerationOf(String romName) {

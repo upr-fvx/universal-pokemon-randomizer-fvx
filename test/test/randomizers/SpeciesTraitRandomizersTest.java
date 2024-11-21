@@ -1,6 +1,6 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
@@ -16,8 +16,8 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
     public void randomizeTypesCompletelyFollowsCosmeticFormes(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
-        s.setSpeciesTypesMod(Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
+        SettingsManager s = new SettingsManager();
+        s.setSpeciesTypesMod(SettingsManager.SpeciesTypesMod.COMPLETELY_RANDOM);
 
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
 

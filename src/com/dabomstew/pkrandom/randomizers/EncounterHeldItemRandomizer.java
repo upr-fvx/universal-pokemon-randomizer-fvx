@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class EncounterHeldItemRandomizer extends Randomizer {
 
-    public EncounterHeldItemRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public EncounterHeldItemRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

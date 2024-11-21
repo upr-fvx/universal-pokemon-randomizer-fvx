@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
@@ -14,7 +14,7 @@ public class MiscTweakRandomizer extends Randomizer {
 
     private static final int MAX_CATCHING_TUTORIAL_TRIES = 1000;
 
-    public MiscTweakRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public MiscTweakRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

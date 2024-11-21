@@ -21,7 +21,7 @@ package com.dabomstew.pkrandom.randomizers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.graphics.palettes.Color;
 import com.dabomstew.pkrandom.graphics.palettes.Gen2TypeColors;
@@ -47,7 +47,7 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 	private boolean typeSanity;
 	private boolean shinyFromNormal;
 
-	public Gen2PaletteRandomizer(RomHandler romHandler, Settings settings, Random random) {
+	public Gen2PaletteRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
 		super(romHandler, settings, random);
 	}
 

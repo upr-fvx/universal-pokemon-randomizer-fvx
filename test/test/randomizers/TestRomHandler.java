@@ -1,7 +1,7 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
@@ -556,7 +556,7 @@ public class TestRomHandler extends AbstractRomHandler {
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         if(testRSS == null) {
             testRSS = new RestrictedSpeciesService(this);
-            testRSS.setRestrictions(new Settings());
+            testRSS.setRestrictions(new SettingsManager());
         }
         return testRSS;
     }
@@ -1160,7 +1160,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
+    public void removeImpossibleEvolutions(SettingsManager settings) {
         throw new NotImplementedException();
     }
 
@@ -1170,7 +1170,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(SettingsManager settings) {
         throw new NotImplementedException();
     }
 
@@ -1334,7 +1334,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, SettingsManager.PlayerCharacterMod toReplace) {
         throw new NotImplementedException();
     }
 

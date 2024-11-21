@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -10,16 +10,16 @@ import java.util.stream.Collectors;
 
 public class StarterRandomizer extends Randomizer {
 
-    public StarterRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public StarterRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
     public void randomizeStarters() {
-        boolean useCustomStarters = settings.getStartersMod() == Settings.StartersMod.CUSTOM;
-        boolean typeFwg = settings.getStartersTypeMod() == Settings.StartersTypeMod.FIRE_WATER_GRASS;
-        boolean typeUnique = settings.getStartersTypeMod() == Settings.StartersTypeMod.UNIQUE;
-        boolean typeTriangle = settings.getStartersTypeMod() == Settings.StartersTypeMod.TRIANGLE;
-        boolean typeSingle = settings.getStartersTypeMod() == Settings.StartersTypeMod.SINGLE_TYPE;
+        boolean useCustomStarters = settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM;
+        boolean typeFwg = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.FIRE_WATER_GRASS;
+        boolean typeUnique = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.UNIQUE;
+        boolean typeTriangle = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.TRIANGLE;
+        boolean typeSingle = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.SINGLE_TYPE;
         boolean hasTypeRestriction = typeFwg || typeUnique || typeTriangle || typeSingle;
         Type singleType = settings.getStartersSingleType();
         int[] customStarters = settings.getCustomStarters();
@@ -289,13 +289,13 @@ public class StarterRandomizer extends Randomizer {
      * @return A new SpeciesSet containing all Species which are valid starters, except the already chosen ones.
      */
     private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
-        boolean abilitiesUnchanged = settings.getAbilitiesMod() == Settings.AbilitiesMod.UNCHANGED;
+        boolean abilitiesUnchanged = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.UNCHANGED;
         boolean allowAltFormes = settings.isAllowStarterAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
         boolean noLegendaries = settings.isStartersNoLegendaries();
         boolean noDualTypes = settings.isStartersNoDualTypes();
-        boolean triStageOnly = settings.getStartersMod() == Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
-        boolean basicOnly = triStageOnly || settings.getStartersMod() == Settings.StartersMod.RANDOM_BASIC;
+        boolean triStageOnly = settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
+        boolean basicOnly = triStageOnly || settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_BASIC;
         int bstMin = settings.getStartersBSTMinimum();
         int bstMax = settings.getStartersBSTMaximum() == 0 ? 1530 : settings.getStartersBSTMaximum();
 

@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.PickupItem;
 import com.dabomstew.pkrandom.gamedata.Shop;
@@ -16,7 +16,7 @@ public class ItemRandomizer extends Randomizer {
     private boolean shopChangesMade;
     private boolean pickupChangesMade;
 
-    public ItemRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public ItemRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
@@ -55,7 +55,7 @@ public class ItemRandomizer extends Randomizer {
 
     public void randomizeFieldItems() {
         boolean banBadItems = settings.isBanBadRandomFieldItems();
-        boolean distributeItemsControl = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
+        boolean distributeItemsControl = settings.getFieldItemsMod() == SettingsManager.FieldItemsMod.RANDOM_EVEN;
         boolean uniqueItems = !settings.isBalanceShopPrices();
 
         ItemList possibleItems = banBadItems ? romHandler.getNonBadItems().copy() : romHandler.getAllowedItems().copy();

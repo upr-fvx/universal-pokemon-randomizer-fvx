@@ -31,6 +31,7 @@ import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.DSStaticPokemon;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen5RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.InFileEntry;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import compressors.DSDecmp;
 import pptxt.PPTxtHandler;
 
@@ -2782,8 +2783,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
-        boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
+    public void removeImpossibleEvolutions(SettingsManager settings) {
+        boolean changeMoveEvos = !(settings.getMovesetsMod() == SettingsManager.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         Set<Evolution> extraEvolutions = new HashSet<>();
@@ -2861,7 +2862,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(SettingsManager settings) {
         boolean wildsRandomized = settings.isRandomizeWildPokemon();
 
         // Reduce the amount of happiness required to evolve.

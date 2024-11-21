@@ -1,4 +1,4 @@
-package com.dabomstew.pkrandom;
+package com.dabomstew.pkrandom.settings;
 
 /*----------------------------------------------------------------------------*/
 /*--  SettingsUpdater.java - handles the process of updating a Settings file--*/
@@ -26,6 +26,10 @@ package com.dabomstew.pkrandom;
 /*--  You should have received a copy of the GNU General Public License     --*/
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
+
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkrandom.Version;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

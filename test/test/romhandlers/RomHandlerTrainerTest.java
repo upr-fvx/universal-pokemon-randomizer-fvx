@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
@@ -76,7 +76,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     public void trainersSaveAndLoadCorrectlyAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) == 3);
         loadROM(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        new TrainerPokemonRandomizer(romHandler, new SettingsManager(), RND).setDoubleBattleMode();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
         List<Trainer> trainers = gbRomHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
@@ -92,7 +92,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
@@ -110,7 +110,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToImportantTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalImportantTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
@@ -128,7 +128,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(6);
         s.setAdditionalImportantTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
@@ -148,7 +148,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(5);
         s.setAdditionalImportantTrainerPokemon(5);
         s.setAdditionalRegularTrainerPokemon(5);
@@ -168,7 +168,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(5);
         s.setAdditionalImportantTrainerPokemon(5);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
@@ -193,7 +193,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(5);
         s.setAdditionalImportantTrainerPokemon(5);
         s.setAdditionalRegularTrainerPokemon(5);
@@ -217,7 +217,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
@@ -235,7 +235,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
@@ -254,7 +254,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
@@ -275,7 +275,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
         assumeTrue(romHandler.canAddHeldItemsToRegularTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         s.setRandomizeHeldItemsForRegularTrainerPokemon(true);
@@ -298,7 +298,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
         assumeTrue(romHandler.canAddHeldItemsToRegularTrainers());
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         s.setRandomizeHeldItemsForRegularTrainerPokemon(true);

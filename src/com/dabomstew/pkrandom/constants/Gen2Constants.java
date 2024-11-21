@@ -24,7 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
@@ -344,10 +344,10 @@ public class Gen2Constants {
 
     public static final String friendshipValueForEvoLocator = "FEDCDA";
 
-    public static String getName(Settings.PlayerCharacterMod playerCharacter) {
-        if (playerCharacter == Settings.PlayerCharacterMod.PC1) {
+    public static String getName(SettingsManager.PlayerCharacterMod playerCharacter) {
+        if (playerCharacter == SettingsManager.PlayerCharacterMod.PC1) {
             return "Chris";
-        } else if (playerCharacter == Settings.PlayerCharacterMod.PC2){
+        } else if (playerCharacter == SettingsManager.PlayerCharacterMod.PC2){
             return "Kris";
         } else {
             throw new IllegalArgumentException("Invalid enum. Gen 2 only has two playable characters, Chris and Kris.");

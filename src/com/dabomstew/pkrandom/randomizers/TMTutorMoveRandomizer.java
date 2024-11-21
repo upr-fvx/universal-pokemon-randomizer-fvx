@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -16,7 +16,7 @@ public class TMTutorMoveRandomizer extends Randomizer {
     private boolean tmChangesMade;
     private boolean tutorChangesMade;
 
-    public TMTutorMoveRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TMTutorMoveRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

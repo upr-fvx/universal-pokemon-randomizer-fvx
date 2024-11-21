@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.services;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
 import com.dabomstew.pkrandom.gamedata.MegaEvolution;
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(Settings)},
+ * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(SettingsManager)},
  * you can access a number of <i>unmodifiable</i> {@link SpeciesSet}s, following those restrictions.<br>
  * When randomizing, you generally want to use these sets,
  * rather than anything provided directly by the {@link RomHandler}, like {@link RomHandler#getSpecies()} or
@@ -154,7 +154,7 @@ public class RestrictedSpeciesService {
         return bannedFormes;
     }
 
-    public void setRestrictions(Settings settings) {
+    public void setRestrictions(SettingsManager settings) {
         GenRestrictions restrictions = null;
         if (settings != null) {
             restrictions = settings.getCurrentRestrictions();

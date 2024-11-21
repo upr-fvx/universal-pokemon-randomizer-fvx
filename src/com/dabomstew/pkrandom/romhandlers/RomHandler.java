@@ -23,7 +23,7 @@ package com.dabomstew.pkrandom.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
@@ -470,11 +470,11 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
-    void removeImpossibleEvolutions(Settings settings);
+    void removeImpossibleEvolutions(SettingsManager settings);
 
     void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
 
-    void makeEvolutionsEasier(Settings settings);
+    void makeEvolutionsEasier(SettingsManager settings);
 
     void removeTimeBasedEvolutions();
 
@@ -571,7 +571,7 @@ public interface RomHandler {
 
     boolean hasCustomPlayerGraphicsSupport();
 
-    void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace);
+    void setCustomPlayerGraphics(GraphicsPack playerGraphics, SettingsManager.PlayerCharacterMod toReplace);
 
     /**
      * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.

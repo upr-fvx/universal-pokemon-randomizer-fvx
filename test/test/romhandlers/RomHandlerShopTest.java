@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
@@ -43,7 +43,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
     public void shopItemsCanBeRandomizedAndGetAndSet(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
-        new ItemRandomizer(romHandler, new Settings(), RND).randomizeShopItems();
+        new ItemRandomizer(romHandler, new SettingsManager(), RND).randomizeShopItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         Map<Integer, Shop> before = new HashMap<>(shopItems);
         romHandler.setShopItems(shopItems);
@@ -100,7 +100,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setBanBadRandomShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -120,7 +120,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setBanRegularShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -140,7 +140,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setBanOPShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -160,7 +160,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setGuaranteeEvolutionItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -191,7 +191,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setGuaranteeXItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -222,7 +222,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 2);
         loadROM(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setGuaranteeEvolutionItems(true);
         s.setGuaranteeXItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();

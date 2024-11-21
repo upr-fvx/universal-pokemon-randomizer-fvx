@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.gamedata.*;
@@ -16,12 +16,12 @@ public class TrainerMovesetRandomizer extends Randomizer {
     private Map<Species, boolean[]> allTMCompat, allTutorCompat;
     private List<Integer> allTMMoves, allTutorMoves;
 
-    public TrainerMovesetRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public TrainerMovesetRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
     public void randomizeTrainerMovesets() {
-        boolean isCyclicEvolutions = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
+        boolean isCyclicEvolutions = settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL;
         boolean doubleBattleMode = settings.isDoubleBattleMode();
 
         List<Trainer> trainers = romHandler.getTrainers();

@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,7 +37,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void startersCanBeRandomizedAndGetAndSet(String romName) {
         loadROM(romName);
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setStartersMod(false, false, true);
         System.out.println(s.getStartersMod());
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
@@ -51,7 +51,7 @@ public class RomHandlerStarterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void customStartersCanBeSet(String romName) {
         loadROM(romName);
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setStartersMod(false, true, false);
         int customCount = romHandler.starterCount();
         int[] custom = new int[customCount];

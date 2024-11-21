@@ -22,7 +22,7 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.GFXFunctions;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.Utils;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.Species;
@@ -51,7 +51,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 7741836888133659367L;
 
-    private static final Settings SETTINGS = new Settings();
+    private static final SettingsManager SETTINGS = new SettingsManager();
     private static final Random RND = new Random();
 
     private static final String TITLE = "Palette Description Tool";

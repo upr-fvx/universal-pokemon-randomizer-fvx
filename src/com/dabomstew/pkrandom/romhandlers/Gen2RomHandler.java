@@ -34,6 +34,7 @@ import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen2RomEntry;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import compressors.Gen2Cmp;
 import compressors.Gen2Decmp;
 
@@ -1915,7 +1916,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
+    public void removeImpossibleEvolutions(SettingsManager settings) {
         // no move evos, so no need to check for those
         for (Species pkmn : pokes) {
             if (pkmn != null) {
@@ -1953,7 +1954,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(SettingsManager settings) {
         // Reduce the amount of happiness required to evolve.
         int offset = find(rom, Gen2Constants.friendshipValueForEvoLocator);
         if (offset > 0) {
@@ -3062,7 +3063,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack unchecked, SettingsManager.PlayerCharacterMod toReplace) {
         if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -3074,7 +3075,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
 
         if (playerGraphics.hasBackImage()) {
-            if (toReplace == Settings.PlayerCharacterMod.PC1) {
+            if (toReplace == SettingsManager.PlayerCharacterMod.PC1) {
                 rewriteChrisBackImage(playerGraphics.getBackImage());
             } else {
                 rewriteKrisBackImage(playerGraphics.getBackImage());
@@ -3103,7 +3104,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void rewritePlayerFrontImage(GBCImage frontImage, Settings.PlayerCharacterMod toReplace) {
+    private void rewritePlayerFrontImage(GBCImage frontImage, SettingsManager.PlayerCharacterMod toReplace) {
         if (romEntry.isCrystal()) {
             int frontOffset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "FrontImage");
             writeImage(frontOffset, frontImage);
@@ -3112,16 +3113,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void rewritePlayerTrainerCardImage(GBCImage trainerCardImage, Settings.PlayerCharacterMod toReplace) {
+    private void rewritePlayerTrainerCardImage(GBCImage trainerCardImage, SettingsManager.PlayerCharacterMod toReplace) {
         int trainerCardOffset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "TrainerCardImage");
         // the trainer card image has different column modes in GS / Crystal, for whatever reason
         writeImage(trainerCardOffset, new GBCImage.Builder(trainerCardImage).columnMode(romEntry.isCrystal()).build());
     }
 
-    private void rewritePlayerImagePalette(Palette palette, Settings.PlayerCharacterMod toReplace) {
-        if (toReplace == Settings.PlayerCharacterMod.PC1) {
+    private void rewritePlayerImagePalette(Palette palette, SettingsManager.PlayerCharacterMod toReplace) {
+        if (toReplace == SettingsManager.PlayerCharacterMod.PC1) {
             rewriteChrisImagePalette(palette);
-        } else if (toReplace == Settings.PlayerCharacterMod.PC2) {
+        } else if (toReplace == SettingsManager.PlayerCharacterMod.PC2) {
             rewriteKrisImagePalette(palette);
         } else {
             throw new IllegalArgumentException("Unexpected value for toReplace: " + toReplace);
@@ -3286,7 +3287,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void rewritePlayerSpritePalette(Gen2SpritePaletteID spritePaletteID,
-                                            Settings.PlayerCharacterMod toReplace) {
+                                            SettingsManager.PlayerCharacterMod toReplace) {
         int offset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "SpritePalette");
         byte value = (byte) ((spritePaletteID.ordinal() | 0b1000) << 4);
         System.out.println(spritePaletteID);

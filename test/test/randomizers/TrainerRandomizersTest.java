@@ -1,7 +1,7 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
@@ -22,7 +22,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void trainersHaveAtLeastTwoPokemonAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        new TrainerPokemonRandomizer(romHandler, new SettingsManager(), RND).setDoubleBattleMode();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
             if (trainer.forcedDoubleBattle) {
@@ -42,7 +42,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setTrainersMod(false, false, false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -61,8 +61,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         nonTypeThemedTrainers = recordTrainerPokemon();
         typeThemedTrainers.keySet().forEach(nonTypeThemedTrainers::remove);
 
-        Settings s = new Settings();
-        s.setTrainersMod(Settings.TrainersMod.KEEP_THEME_OR_PRIMARY);
+        SettingsManager s = new SettingsManager();
+        s.setTrainersMod(SettingsManager.TrainersMod.KEEP_THEME_OR_PRIMARY);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, nonTypeThemedTrainers);
@@ -150,7 +150,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setSpeciesTypesMod(false, false, true);
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
         s.setTrainersMod(false, false, false, false, false, false, true);
@@ -233,8 +233,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void useLocalPokemonGuaranteesLocalPokemonOnly(String romName) {
         activateRomHandler(romName);
-        Settings s = new Settings();
-        s.setTrainersMod(Settings.TrainersMod.RANDOM);
+        SettingsManager s = new SettingsManager();
+        s.setTrainersMod(SettingsManager.TrainersMod.RANDOM);
         s.setTrainersUseLocalPokemon(true);
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -266,8 +266,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         int wantedNonLocal = 1; // you can play around with this value between 1-6 but what's important is it works for 1
 
         activateRomHandler(romName);
-        Settings s = new Settings();
-        s.setTrainersMod(Settings.TrainersMod.RANDOM);
+        SettingsManager s = new SettingsManager();
+        s.setTrainersMod(SettingsManager.TrainersMod.RANDOM);
         s.setTrainersUseLocalPokemon(true);
         s.setEliteFourUniquePokemonNumber(wantedNonLocal);
         s.setUseTimeBasedEncounters(true); // should be at least 4 non-local Pokemon in each game
@@ -305,7 +305,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void uniqueElite4PokemonGivesUniquePokemonToSaidTrainers(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setEliteFourUniquePokemonNumber(1);
         s.setTrainersMod(false, true, false, false, false);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -318,10 +318,10 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void uniqueElite4PokemonGivesUniquePokemonToSaidTrainersWithUseLocal(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setTrainersUseLocalPokemon(true);
         s.setEliteFourUniquePokemonNumber(1);
-        s.setTrainersMod(Settings.TrainersMod.RANDOM);
+        s.setTrainersMod(SettingsManager.TrainersMod.RANDOM);
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -333,7 +333,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void uniqueElite4PokemonGivesUniquePokemonToSaidTrainersWithTypeThemes(String romName) {
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         //s.setTrainersUseLocalPokemon(true);
         s.setEliteFourUniquePokemonNumber(1);
         s.setTrainersMod(false, false, false, false, true);
@@ -380,7 +380,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         //with random type themes
         activateRomHandler(romName);
 
-        Settings s = new Settings();
+        SettingsManager s = new SettingsManager();
         s.setTrainersMod(false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -412,7 +412,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         System.out.println("==== BEFORE: ====");
         Map<Integer, boolean[]> before = findZCrystals();
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).randomUsableZCrystals();
+        new TrainerPokemonRandomizer(romHandler, new SettingsManager(), RND).randomUsableZCrystals();
         System.out.println("==== AFTER: ====");
         Map<Integer, boolean[]> after = findZCrystals();
 
@@ -455,7 +455,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         String[] itemNames = romHandler.getItemNames();
 
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).randomUsableZCrystals();
+        new TrainerPokemonRandomizer(romHandler, new SettingsManager(), RND).randomUsableZCrystals();
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
@@ -489,7 +489,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void typeDiverseTrainersWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings settings = new Settings();
+        SettingsManager settings = new SettingsManager();
         settings.setDiverseTypesForRegularTrainers(true);
         settings.setDiverseTypesForImportantTrainers(true);
         settings.setDiverseTypesForBossTrainers(true);

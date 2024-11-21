@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.gamedata.MegaEvolution;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.SpeciesSet;
@@ -19,12 +19,12 @@ public class SpeciesTypeRandomizer extends Randomizer {
     private static final double GSTC_MIDDLE_EVO = 0.15;
     private static final double GSTC_FINAL_EVO = 0.25;
 
-    public SpeciesTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public SpeciesTypeRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
     public void randomizeSpeciesTypes() {
-        boolean evolutionSanity = settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
+        boolean evolutionSanity = settings.getSpeciesTypesMod() == SettingsManager.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
         boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
         boolean dualTypeOnly = settings.isDualTypeOnly();
 

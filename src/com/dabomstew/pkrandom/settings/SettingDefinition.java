@@ -8,25 +8,15 @@ public class SettingDefinition<T> {
     private final String name;
     private final String category;
     private final T defaultValue;
-    private final SettingState prerequisite;
+    private final SettingState<?>[] prerequisites;
     private final Predicate<RomHandler> supported;
 
-    public SettingDefinition(String name, String category, T defaultValue, SettingState prerequisite, Predicate<RomHandler> supported) {
+    public SettingDefinition(String name, String category, T defaultValue, Predicate<RomHandler> supported, SettingState<?>... prerequisites) {
         this.name = name;
         this.category = category;
         this.defaultValue = defaultValue;
-        this.prerequisite = prerequisite;
+        this.prerequisites = prerequisites;
         this.supported = supported;
-    }
-
-    public static class SettingState {
-        final String name;
-        final Predicate<Setting<?>> state;
-
-        public SettingState(String name, Predicate<Setting<?>> state) {
-            this.name = name;
-            this.state = state;
-        }
     }
 
     public String getName() {
@@ -42,10 +32,27 @@ public class SettingDefinition<T> {
     }
 
     public boolean isEnabled(SettingsManager settings) {
-        return settings.isFulfilled(prerequisite);
+        if(prerequisites == null) {
+            return true;
+        }
+        for(SettingState<?> prereq : prerequisites)
+        {
+            /*
+            if(!settings.isFulfilled(prerequisite)) {
+                return false;
+            }
+            //*/
+            //hmm. this works for "AND"s, but what if it's an "OR"?
+            //I might end up needing to make it a Predicate<SettingsManager>.
+            //Hope not, though...
+        }
+        return false;
     }
 
     public boolean isSupported(RomHandler game) {
+        if(supported == null) {
+            return true;
+        }
         return supported.test(game);
     }
 

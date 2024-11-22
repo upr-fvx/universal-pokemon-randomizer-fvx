@@ -3370,6 +3370,10 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
 
             if (generationOfPokemon() >= 3) {
+                // Luster Purge 95 power
+                updateMovePower(moves, Moves.lusterPurge, 95);
+                // Mist Ball 95 power
+                updateMovePower(moves, Moves.mistBall, 95);
                 // Slack Off 5 PP
                 updateMovePP(moves, Moves.slackOff, 5);
             }
@@ -3385,8 +3389,8 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
 
             if (generationOfPokemon() >= 8) {
-                // Grassy Glide 60 Power
-                updateMovePower(moves, Moves.grassyGlide, 60);
+                // Grassy Glide 55 Power
+                updateMovePower(moves, Moves.grassyGlide, 55);
                 // Wicked Blow 75 Power
                 updateMovePower(moves, Moves.wickedBlow, 75);
                 // Glacial Lance 120 Power

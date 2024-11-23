@@ -394,14 +394,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen7Constants.evolutionTypeFromIndex(method);
-                        if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
-                        if (skipNext) {
-                            skipNext = false;
-                            continue;
-                        }
-                        if (et == EvolutionType.LEVEL_GAME) {
-                            skipNext = true;
-                        }
+//                        if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
+//                        if (skipNext) {
+//                            skipNext = false;
+//                            continue;
+//                        }
+//                        if (et == EvolutionType.LEVEL_GAME) {
+//                            skipNext = true;
+//                        }
 
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
                         int forme = evoEntry[evo * 8 + 6];
@@ -412,20 +412,20 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         if (et.usesLevel()) {
                             evol.setExtraInfo(level);
                         }
-                        switch (et) {
-                            case LEVEL_GAME:
-                                evol.setType(EvolutionType.LEVEL);
-                                evol.setTo(pokes[romEntry.getIntValue("CosmoemEvolutionNumber")]);
-                                break;
-                            case LEVEL_DAY_GAME:
-                                evol.setType(EvolutionType.LEVEL_DAY);
-                                break;
-                            case LEVEL_NIGHT_GAME:
-                                evol.setType(EvolutionType.LEVEL_NIGHT);
-                                break;
-                            default:
-                                break;
-                        }
+//                        switch (et) {
+//                            case LEVEL_GAME:
+//                                evol.setType(EvolutionType.LEVEL);
+//                                evol.setTo(pokes[romEntry.getIntValue("CosmoemEvolutionNumber")]);
+//                                break;
+//                            case LEVEL_DAY_GAME:
+//                                evol.setType(EvolutionType.LEVEL_DAY);
+//                                break;
+//                            case LEVEL_NIGHT_GAME:
+//                                evol.setType(EvolutionType.LEVEL_NIGHT);
+//                                break;
+//                            default:
+//                                break;
+//                        }
                         if (pk.getBaseForme() != null && pk.getBaseForme().getNumber() == SpeciesIDs.rockruff && pk.getFormeNumber() > 0) {
                             evol.setFrom(pk.getBaseForme());
                             pk.getBaseForme().getEvolutionsFrom().add(evol);

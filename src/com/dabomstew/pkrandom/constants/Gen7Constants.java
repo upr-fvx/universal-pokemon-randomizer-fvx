@@ -946,7 +946,7 @@ public class Gen7Constants {
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
             EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.LEVEL_GAME,
             EvolutionType.LEVEL_DAY_GAME, EvolutionType.LEVEL_NIGHT_GAME, EvolutionType.LEVEL_SNOWY,
-            EvolutionType.LEVEL_DUSK, EvolutionType.LEVEL_NIGHT_ULTRA, EvolutionType.STONE_ULTRA
+            EvolutionType.LEVEL_DUSK, EvolutionType.LEVEL_ULTRA, EvolutionType.STONE_ULTRA
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {

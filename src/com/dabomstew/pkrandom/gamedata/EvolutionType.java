@@ -60,8 +60,8 @@ public enum EvolutionType {
     LEVEL_DAY_GAME, LEVEL_NIGHT_GAME,
     LEVEL_SNOWY,
     LEVEL_DUSK, // used by Rockruff-OwnTempo
-    LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space. // TODO: confirm
-    STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space. TODO: confirm
+    LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
+    STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
     // Other
     NONE;
 

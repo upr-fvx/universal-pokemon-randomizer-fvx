@@ -416,12 +416,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 //                                evol.setType(EvolutionType.LEVEL);
 //                                evol.setTo(pokes[romEntry.getIntValue("CosmoemEvolutionNumber")]);
 //                                break;
-//                            case LEVEL_DAY_GAME:
-//                                evol.setType(EvolutionType.LEVEL_DAY);
-//                                break;
-//                            case LEVEL_NIGHT_GAME:
-//                                evol.setType(EvolutionType.LEVEL_NIGHT);
-//                                break;
 //                            default:
 //                                break;
 //                        }
@@ -2578,34 +2572,36 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             if (pkmn != null) {
                 extraEvolutions.clear();
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
-                        // read move
-                        int move = evo.getExtraInfo();
-                        int levelLearntAt = 1;
-                        for (MoveLearnt ml : movesets.get(evo.getFrom().getNumber())) {
-                            if (ml.move == move) {
-                                levelLearntAt = ml.level;
+
+                    switch (evo.getType()) {
+                        case LEVEL_WITH_MOVE:
+                            if (!changeMoveEvos)
                                 break;
+                            // read move
+                            int move = evo.getExtraInfo();
+                            int levelLearntAt = 1;
+                            for (MoveLearnt ml : movesets.get(evo.getFrom().getNumber())) {
+                                if (ml.move == move) {
+                                    levelLearntAt = ml.level;
+                                    break;
+                                }
                             }
-                        }
-                        if (levelLearntAt == 1) {
-                            // override for piloswine
-                            levelLearntAt = 45;
-                        }
-                        // change to pure level evo
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(levelLearntAt);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                    }
-                    // Pure Trade
-                    if (evo.getType() == EvolutionType.TRADE) {
+                            if (levelLearntAt == 1) {
+                                // override for piloswine
+                                levelLearntAt = 45;
+                            }
+                            // change to pure level evo
+                            evo.setType(EvolutionType.LEVEL);
+                            evo.setExtraInfo(levelLearntAt);
+                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                            break;
+                        case TRADE:
                         // Replace w/ level 37
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
                         addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                    }
-                    // Trade w/ Item
-                    if (evo.getType() == EvolutionType.TRADE_ITEM) {
+                        break;
+                        case TRADE_ITEM:
                         // Get the current item & evolution
                         int item = evo.getExtraInfo();
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
@@ -2627,15 +2623,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             extraEntry.setForme(evo.getForme());
                             extraEvolutions.add(extraEntry);
                         }
-                    }
-                    if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
-                        // This is the karrablast <-> shelmet trade
-                        // Replace it with Level up w/ Other Species in Party
-                        // (22)
-                        // Based on what species we're currently dealing with
-                        evo.setType(EvolutionType.LEVEL_WITH_OTHER);
-                        evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
+                        break;
+                        case TRADE_SPECIAL:
+                            // This is the karrablast <-> shelmet trade
+                            // Replace it with Level up w/ Other Species in Party
+                            // (22)
+                            // Based on what species we're currently dealing with
+                            evo.setType(EvolutionType.LEVEL_WITH_OTHER);
+                            evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
+                            addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
+                            break;
+                        case LEVEL_DAY_GAME:
+                            evo.setType(EvolutionType.LEVEL_DAY);
+                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                        case LEVEL_NIGHT_GAME:
+                            evo.setType(EvolutionType.LEVEL_NIGHT);
+                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }

@@ -408,7 +408,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         int level = evoEntry[evo * 8 + 7];
                         Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
-                        evol.setLevel(level);
                         if (et.usesLevel()) {
                             evol.setExtraInfo(level);
                         }
@@ -458,7 +457,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
                     Evolution evol = new Evolution(pk, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
                     evol.setForme(-1);
-                    evol.setLevel(20);
                     pk.getEvolutionsFrom().add(evol);
                     shedinja.getEvolutionsTo().add(evol);
                 }
@@ -711,6 +709,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private void writeEvolutions() {
         try {
+            Map<Evolution, Byte> evosWithLevelsInternally = getEvolutionsWithLevelsInternally();
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); i++) {
                 byte[] evoEntry = evoGARC.files.get(i).get(0);
@@ -725,7 +724,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(evoEntry, evosWritten * 8 + 2, evo.getType().usesLevel() ? 0 : evo.getExtraInfo());
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
                     evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
-                    evoEntry[evosWritten * 8 + 7] = evo.getType().usesLevel() ? (byte) evo.getExtraInfo() : (byte) evo.getLevel();
+                    byte level;
+                    if (evo.getType().usesLevel()) {
+                        level = (byte) evo.getExtraInfo();
+                    } else if (evosWithLevelsInternally.containsKey(evo)) {
+                        level = evosWithLevelsInternally.get(evo);
+                    } else {
+                        level = 0;
+                    }
+                    evoEntry[evosWritten * 8 + 7] = level;
                     evosWritten++;
                     if (evosWritten == 8) {
                         break;
@@ -743,6 +750,35 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+    }
+
+    public Map<Evolution, Byte> getEvolutionsWithLevelsInternally() {
+        // i.e. Slowpoke -> Slowking, Kirlia -> Gallade, Snorunt -> Froslass
+        // For whatever reason these have the levels of
+        // Slowpoke -> Slowbro, Kirlia -> Gardevoir, Snorunt -> Glalie,
+        // in their internal data structure. It is unclear why, but just *in case* it could
+        // lead to some nasty crash, we reproduce these values when re-writing the evolutions,
+        // assuming the following statement must hold true to avoid issues:
+        //
+        // "If a Species has a by-level evolution, and a not-by-level evolution,
+        //  then the not-by-level evolution must hold the by-level evolution's level,
+        //  within its internal data structure".
+        //
+        // (at the time of writing the Randomizer doesn't allow randomizing evo methods,
+        // but this implementation should be ready for that)
+        Map<Evolution, Byte> map = new HashMap<>();
+        for (Species pk : getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType().usesLevel()) {
+                    for (Evolution evo2 : pk.getEvolutionsFrom()) {
+                        if (!evo2.getType().usesLevel()) {
+                            map.put(evo2, (byte) evo.getExtraInfo());
+                        }
+                    }
+                }
+            }
+        }
+        return map;
     }
 
     private void writeShedinjaEvolution() {

@@ -166,7 +166,6 @@ public class EvolutionRandomizer extends Randomizer {
             Evolution newEvo;
             if (evolveEveryLevel) {
                 newEvo = new Evolution(from, picked, EvolutionType.LEVEL, 1);
-                newEvo.setLevel(1);
             } else {
                 newEvo = new Evolution(from, picked, evo.getType(), evo.getExtraInfo());
             }

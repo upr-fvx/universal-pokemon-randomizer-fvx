@@ -377,11 +377,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
             assertEquals(1, pk.getEvolutionsFrom().size());
             Evolution evo = pk.getEvolutionsFrom().get(0);
             assertEquals(EvolutionType.LEVEL, evo.getType());
-            if (evo.getExtraInfo() == 0) {
-                assertEquals(1, evo.getLevel());
-            } else {
-                assertEquals(1, evo.getExtraInfo());
-            }
+            assertEquals(1, evo.getExtraInfo());
         }
 
         System.out.println(evoGraph());

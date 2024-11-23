@@ -847,12 +847,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
             int level;
             if(chosenEvo.getType().usesLevel()) {
-                level = chosenEvo.getLevel();
-                if(level == 0) {
-                    //WHY IS NOTHING ENCODED CONSISTENTLY
-                    level = chosenEvo.getExtraInfo();
-                }
-                if(level <= currentLevel) {
+                level = chosenEvo.getExtraInfo();
+                if (level <= currentLevel) {
                     level = currentLevel + 1;
                 }
             } else {

@@ -419,11 +419,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 //                            default:
 //                                break;
 //                        }
-                        if (pk.getBaseForme() != null && pk.getBaseForme().getNumber() == SpeciesIDs.rockruff && pk.getFormeNumber() > 0) {
-                            evol.setFrom(pk.getBaseForme());
-                            pk.getBaseForme().getEvolutionsFrom().add(evol);
-                            pokes[absolutePokeNumByBaseForme.get(species).get(evol.getForme())].getEvolutionsTo().add(evol);
-                        }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
                             if (!pk.isCosmeticReplacement()) {
@@ -2567,41 +2562,42 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-        Set<Evolution> extraEvolutions = new HashSet<>();
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                extraEvolutions.clear();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
+        for (Species pk : pokes) {
+            if (pk == null)
+                continue;
 
-                    switch (evo.getType()) {
-                        case LEVEL_WITH_MOVE:
-                            if (!changeMoveEvos)
-                                break;
-                            // read move
-                            int move = evo.getExtraInfo();
-                            int levelLearntAt = 1;
-                            for (MoveLearnt ml : movesets.get(evo.getFrom().getNumber())) {
-                                if (ml.move == move) {
-                                    levelLearntAt = ml.level;
-                                    break;
-                                }
-                            }
-                            if (levelLearntAt == 1) {
-                                // override for piloswine
-                                levelLearntAt = 45;
-                            }
-                            // change to pure level evo
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(levelLearntAt);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+            Set<Evolution> extraEvolutions = new HashSet<>();
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+
+                switch (evo.getType()) {
+                    case LEVEL_WITH_MOVE:
+                        if (!changeMoveEvos)
                             break;
-                        case TRADE:
+                        // read move
+                        int move = evo.getExtraInfo();
+                        int levelLearntAt = 1;
+                        for (MoveLearnt ml : movesets.get(evo.getFrom().getNumber())) {
+                            if (ml.move == move) {
+                                levelLearntAt = ml.level;
+                                break;
+                            }
+                        }
+                        if (levelLearntAt == 1) {
+                            // override for piloswine
+                            levelLearntAt = 45;
+                        }
+                        // change to pure level evo
+                        evo.setType(EvolutionType.LEVEL);
+                        evo.setExtraInfo(levelLearntAt);
+                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                        break;
+                    case TRADE:
                         // Replace w/ level 37
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
                         addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
-                        case TRADE_ITEM:
+                    case TRADE_ITEM:
                         // Get the current item & evolution
                         int item = evo.getExtraInfo();
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
@@ -2624,32 +2620,41 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             extraEvolutions.add(extraEntry);
                         }
                         break;
-                        case TRADE_SPECIAL:
-                            // This is the karrablast <-> shelmet trade
-                            // Replace it with Level up w/ Other Species in Party
-                            // (22)
-                            // Based on what species we're currently dealing with
-                            evo.setType(EvolutionType.LEVEL_WITH_OTHER);
-                            evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                            addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
-                            break;
-                        case LEVEL_DAY_GAME:
-                            evo.setType(EvolutionType.LEVEL_DAY);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                        case LEVEL_NIGHT_GAME:
-                            evo.setType(EvolutionType.LEVEL_NIGHT);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                    }
-                    // TBD: Pancham, Sliggoo? Sylveon?
+                    case TRADE_SPECIAL:
+                        // This is the karrablast <-> shelmet trade
+                        // Replace it with Level up w/ Other Species in Party
+                        // Based on what species we're currently dealing with
+                        evo.setType(EvolutionType.LEVEL_WITH_OTHER);
+                        evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
+                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
+                        break;
+                    case LEVEL_DAY_GAME:
+                        evo.setType(EvolutionType.LEVEL_DAY);
+                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                        break;
+                    case LEVEL_NIGHT_GAME:
+                        evo.setType(EvolutionType.LEVEL_NIGHT);
+                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                        break;
                 }
+            }
 
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
+            pk.getEvolutionsFrom().addAll(extraEvolutions);
+            for (Evolution ev : extraEvolutions) {
+                ev.getTo().getEvolutionsTo().add(ev);
             }
         }
 
+        if (romEntry.getRomType() == Gen7Constants.Type_USUM) {
+            // We link up Rockruff-Base with Lycanroc-Dusk, assuming that Rockruff-OwnTempo won't appear normally,
+            // making Lycanroc-Dusk "impossible". (this is partially a feature just carried over from an older version)
+            // TODO: take another look at this when reworking forms, does it make any sense to have?
+            Evolution rockruffDuskEvo = new Evolution(pokes[SpeciesIDs.rockruff],
+                    pokes[SpeciesIDs.USUMFormes.lycanrocD], EvolutionType.LEVEL_DUSK, 25);
+            // inserts it at the start to give priority over LEVEL_NIGHT evolution
+            pokes[SpeciesIDs.rockruff].getEvolutionsFrom().add(0, rockruffDuskEvo);
+            pokes[SpeciesIDs.USUMFormes.lycanrocD].getEvolutionsTo().add(rockruffDuskEvo);
+        }
     }
 
     @Override

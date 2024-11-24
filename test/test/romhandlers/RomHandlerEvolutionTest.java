@@ -48,7 +48,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         loadROM(romName);
 
         Set<Species> withDuplicateEvos = new HashSet<>();
-        for (Species pk : romHandler.getSpeciesSet()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             List<Species> evolved = new ArrayList<>();
             System.out.println(pk.getEvolutionsFrom());
             for (Evolution evo : pk.getEvolutionsFrom()) {
@@ -66,20 +66,6 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         assertTrue(withDuplicateEvos.isEmpty());
     }
 
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void foo(String romName) {
-        loadROM(romName);
-        for (Species pk : romHandler.getSpeciesSet()) {
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getLevel() != evo.getExtraInfo() && evo.getLevel() != 0) {
-                    System.out.println(evo);
-                }
-            }
-        }
-    }
-
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void printAllEvoTypesByUsage(String romName) {
@@ -91,7 +77,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             allEvos.put(et, new ArrayList<>());
         }
 
-        for (Species pk : romHandler.getSpeciesSet()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 allEvos.get(evo.getType()).add(evo);
             }

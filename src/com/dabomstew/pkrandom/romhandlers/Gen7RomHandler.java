@@ -393,7 +393,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen7Constants.evolutionTypeFromIndex(method);
-//                        if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
+                        if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
 
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
                         int forme = evoEntry[evo * 8 + 6];

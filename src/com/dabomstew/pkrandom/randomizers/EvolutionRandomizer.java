@@ -296,13 +296,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private boolean isAnOriginalEvo(Species from, Species to) {
-            boolean isAnOriginalEvo = allOriginalEvos.get(from).stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
-            // Hard-coded Cosmoem case, since the other-version evolution doesn't actually
-            // exist within the game's data, but we don't want Cosmoem to evolve into Lunala in Sun, still.
-            if (from.getNumber() == SpeciesIDs.cosmoem) {
-                isAnOriginalEvo |= to.getNumber() == SpeciesIDs.solgaleo || to.getNumber() == SpeciesIDs.lunala;
-            }
-            return isAnOriginalEvo;
+            return allOriginalEvos.get(from).stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
         }
     }
 

@@ -286,7 +286,7 @@ public class GameRandomizer {
             }
         }
 
-        // Trade evolutions removal
+        // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
             romHandler.removeImpossibleEvolutions(settings);
         }

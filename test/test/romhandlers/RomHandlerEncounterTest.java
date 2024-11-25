@@ -272,7 +272,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         } else {
             assertEquals(areasByMapIndex.size(), 1,
                     "Map indices are present, but hasMapIndices is false!");
-            Assumptions.abort("Does not have map indices.");
+            //Assumptions.abort("Does not have map indices.");
         }
     }
 

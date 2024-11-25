@@ -15,6 +15,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A special "dummy" romHandler which copies data from an existing romHandler.
@@ -79,6 +80,16 @@ public class TestRomHandler extends AbstractRomHandler {
 
     //Items
     private final List<Item> items;
+    private final Set<Item> originalAllowedItems;
+    private final Set<Item> evolutionItems;
+    private final Set<Item> xItems;
+    private final Set<Item> regularShopItems;
+    private final Set<Item> opShopItems;
+    private final Set<Item> uniqueNoSellItems;
+
+    //Shops
+    private final Map<Integer, Shop> originalShopItems;
+    private Map<Integer, Shop> testShopItems;
 
     //Trainers
     private final SpeciesSet originalBannedForTrainers;
@@ -133,6 +144,14 @@ public class TestRomHandler extends AbstractRomHandler {
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
 
         items = Collections.unmodifiableList(mockupOf.getItems());
+        originalAllowedItems = items.stream().filter(Objects::nonNull).filter(Item::isAllowed).collect(Collectors.toSet());
+        evolutionItems = Collections.unmodifiableSet(mockupOf.getEvolutionItems());
+        xItems = Collections.unmodifiableSet(mockupOf.getXItems());
+        regularShopItems = Collections.unmodifiableSet(mockupOf.getRegularShopItems());
+        opShopItems = Collections.unmodifiableSet(mockupOf.getOPShopItems());
+        uniqueNoSellItems = Collections.unmodifiableSet(mockupOf.getUniqueNoSellItems());
+
+        originalShopItems = Collections.unmodifiableMap(mockupOf.getShopItems());
 
         originalBannedForTrainers = SpeciesSet.unmodifiable(mockupOf.getBannedFormesForTrainerPokemon());
         originalTrainers = Collections.unmodifiableList(mockupOf.getTrainers());
@@ -175,6 +194,14 @@ public class TestRomHandler extends AbstractRomHandler {
         testTypeTable = null;
 
         testStarters = null;
+
+        // Items are passed around by reference a lot, but as we only expect their "allowed" attribute
+        // to change, we can (and do) just reset that.
+        for (int i = 1; i < items.size(); i++) {
+            items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+        }
+
+        testShopItems = null;
 
         testBannedForTrainers = null;
         testTrainers = null;
@@ -662,6 +689,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         if(testEncounters == null) {
             testEncounters = deepCopyEncounters(originalEncounters);
+            testEncounters = deepCopyEncounters(originalEncounters);
         }
 
         return testEncounters;
@@ -1039,7 +1067,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Set<Item> getAllowedItems() {
-        throw new NotImplementedException();
+        return getItems().stream().filter(item -> item != null && item.isAllowed()).collect(Collectors.toSet());
     }
 
     @Override
@@ -1049,27 +1077,27 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Set<Item> getEvolutionItems() {
-        throw new NotImplementedException();
+        return evolutionItems;
     }
 
     @Override
     public Set<Item> getXItems() {
-        throw new NotImplementedException();
+        return xItems;
     }
 
     @Override
     public Set<Item> getUniqueNoSellItems() {
-        throw new NotImplementedException();
+        return uniqueNoSellItems;
     }
 
     @Override
     public Set<Item> getRegularShopItems() {
-        throw new NotImplementedException();
+        return regularShopItems;
     }
 
     @Override
     public Set<Item> getOPShopItems() {
-        throw new NotImplementedException();
+        return opShopItems;
     }
 
     @Override
@@ -1094,17 +1122,23 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        throw new NotImplementedException();
+        return !originalShopItems.isEmpty();
     }
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        throw new NotImplementedException();
+        if (testShopItems == null) {
+            testShopItems = new HashMap<>(originalShopItems.size());
+            for (Map.Entry<Integer, Shop> entry : originalShopItems.entrySet()) {
+                testShopItems.put(entry.getKey(), new Shop(entry.getValue()));
+            }
+        }
+        return testShopItems;
     }
 
     @Override
     public void setShopItems(Map<Integer, Shop> shopItems) {
-        throw new NotImplementedException();
+        testShopItems = shopItems;
     }
 
     @Override

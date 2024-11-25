@@ -377,7 +377,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
                         + ": isCosmeticReplacement = " + forme.isCosmeticReplacement()
                         + "; isActuallyCosmetic = " + forme.isActuallyCosmetic());
             }
-            Assumptions.abort();
+            //Assumptions.abort();
             //This test isn't really meant to be passed, so much as it's meant to be informative.
         }
     }

@@ -802,7 +802,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public Set<Item> getEvolutionItems() {
-        return null; // TODO: implement
+        return itemIdsToSet(Gen1Constants.evolutionItems);
     }
 
     @Override
@@ -1843,7 +1843,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        return null; // Not implemented
+        return new HashMap<>(); // Not implemented
     }
 
     @Override
@@ -2216,12 +2216,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public Set<Item> getRegularShopItems() {
-        return null; // Not implemented
+        return itemIdsToSet(Gen1Constants.regularShopItems);
     }
 
     @Override
     public Set<Item> getOPShopItems() {
-        return null; // Not implemented
+        return itemIdsToSet(Gen1Constants.opShopItems);
     }
 
     @Override

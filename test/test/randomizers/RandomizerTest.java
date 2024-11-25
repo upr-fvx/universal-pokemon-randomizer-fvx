@@ -103,8 +103,6 @@ public class RandomizerTest {
         }
     }
 
-
-
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));
     }

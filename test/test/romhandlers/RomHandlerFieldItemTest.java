@@ -14,6 +14,7 @@ public class RomHandlerFieldItemTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void fieldItemsIsNotEmpty(String romName) {
+        loadROM(romName);
         assertFalse(romHandler.getFieldItems().isEmpty());
     }
 

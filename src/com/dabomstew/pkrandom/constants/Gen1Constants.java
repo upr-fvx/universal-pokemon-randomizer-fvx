@@ -173,6 +173,22 @@ public class Gen1Constants {
         }
     }
 
+    public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
+    ));
+    
+    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall, 
+            Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
+            Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
+            Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
+            Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
+    ));
+    
+    public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
+    ));
+
     public static final Set<Integer> bannedItems = setupBannedItems();
 
     private static Set<Integer> setupBannedItems() {

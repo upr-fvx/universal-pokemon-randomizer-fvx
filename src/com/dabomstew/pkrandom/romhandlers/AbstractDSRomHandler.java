@@ -6,10 +6,10 @@ import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
 import com.dabomstew.pkrandom.newnds.NDSRom;
-import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractDSRomEntry;
 
 import javax.imageio.ImageIO;
@@ -19,7 +19,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An abstract base class for DS {@link RomHandler}s, which standardises common DS functions.

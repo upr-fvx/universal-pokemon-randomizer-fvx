@@ -1,11 +1,11 @@
 package com.dabomstew.pkrandom.newnds;
 
+import com.dabomstew.pkrandom.FileFunctions;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.dabomstew.pkrandom.FileFunctions;
 
 /*----------------------------------------------------------------------------*/
 /*--  NDSFile.java - an entry in the FAT/FNT filesystem                     --*/

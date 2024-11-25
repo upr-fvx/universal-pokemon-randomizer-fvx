@@ -1,7 +1,5 @@
 package com.dabomstew.pkrandom.graphics.palettes;
 
-import java.util.Random;
-
 /**
  * Names taken from
  * <a href=https://github.com/pret/pokecrystal/blob/aba1f140443ddb8589a23f877546963430e12167/constants/sprite_data_constants.asm>

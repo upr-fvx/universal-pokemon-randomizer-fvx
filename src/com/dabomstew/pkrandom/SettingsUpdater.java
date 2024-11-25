@@ -28,7 +28,6 @@ package com.dabomstew.pkrandom;
 /*----------------------------------------------------------------------------*/
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.CRC32;
 
@@ -333,6 +332,12 @@ public class SettingsUpdater {
             insertExtraByte(58, (byte) 0);
             insertExtraByte(59, (byte) 0);
             insertExtraByte(60, (byte) 0);
+        }
+
+        if (oldVersion < Version.FVX_1_1_0.id)
+        {
+            //add byte for trainer type diversity
+            insertExtraByte(61, (byte) 0);
         }
 
         // fix checksum

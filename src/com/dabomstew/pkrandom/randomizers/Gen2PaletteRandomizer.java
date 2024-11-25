@@ -23,12 +23,12 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.graphics.palettes.Color;
 import com.dabomstew.pkrandom.graphics.palettes.Gen2TypeColors;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
-import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Random;

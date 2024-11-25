@@ -13,8 +13,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.
+ * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.<br>
+ * <b>NOTE:</b> to change which ROMs are tested, modify {@link #getRomNames()}.
  */
+//TODO: when feature is implemented, make child class LoadOnlyRomHandlerTest which is parameterized container
+// (Not doing it now bc I'm afraid it would overtax memory to load all romHandlers at once.)
 public class RomHandlerTest {
 
     // update if the amount of supported generation increases,
@@ -29,7 +32,7 @@ public class RomHandlerTest {
     private static final String TEST_CPG_PATH = "test/players";
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{1,2,3}, Roms.Region.values(), false);
     }
 
     public static String[] getAllRomNames() {

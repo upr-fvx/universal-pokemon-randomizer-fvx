@@ -31,7 +31,10 @@ import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;

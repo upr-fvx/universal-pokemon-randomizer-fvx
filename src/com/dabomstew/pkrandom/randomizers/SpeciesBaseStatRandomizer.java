@@ -1,7 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
 import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;

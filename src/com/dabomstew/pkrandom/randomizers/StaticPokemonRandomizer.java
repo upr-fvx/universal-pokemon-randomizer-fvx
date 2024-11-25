@@ -65,7 +65,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
         List<StaticEncounter> replacements = new ArrayList<>();
 
-        SpeciesSet banned = romHandler.getBannedForStaticPokemon();
+        SpeciesSet banned = new SpeciesSet(romHandler.getBannedForStaticPokemon());
         banned.addAll(rSpecService.getBannedFormesForPlayerPokemon());
         if (!abilitiesAreRandomized) {
             SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
@@ -332,7 +332,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
         List<TotemPokemon> currentTotemPokemon = romHandler.getTotemPokemon();
         List<TotemPokemon> replacements = new ArrayList<>();
-        SpeciesSet banned = romHandler.getBannedForStaticPokemon();
+        SpeciesSet banned = new SpeciesSet(romHandler.getBannedForStaticPokemon());
         if (!abilitiesAreRandomized) {
             SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);

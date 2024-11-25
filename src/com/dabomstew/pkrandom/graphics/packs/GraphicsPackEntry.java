@@ -3,7 +3,6 @@ package com.dabomstew.pkrandom.graphics.packs;
 import com.dabomstew.pkrandom.romhandlers.romentries.IniEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.IniEntryReader;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 

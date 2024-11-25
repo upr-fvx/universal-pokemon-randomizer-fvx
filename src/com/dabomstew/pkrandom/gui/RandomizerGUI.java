@@ -30,11 +30,11 @@ import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.gamedata.ExpCurve;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -50,8 +50,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -357,6 +357,10 @@ public class RandomizerGUI {
     private JRadioButton wpERNoneRadioButton;
     private JRadioButton wpERBasicOnlyRadioButton;
     private JRadioButton wpERSameEvolutionStageRadioButton;
+    private JLabel tpTypeDiversityLabel;
+    private JCheckBox tpBossTrainersTypeDiversityCheckBox;
+    private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
+    private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
 
     private static final Random RND = new Random();
 
@@ -1594,9 +1598,9 @@ public class RandomizerGUI {
         paWeighDuplicatesTogetherCheckBox.setSelected(settings.isWeighDuplicateAbilitiesTogether());
         paEnsureTwoAbilitiesCheckbox.setSelected(settings.isEnsureTwoAbilities());
 
-        ptRandomFollowEvolutionsRadioButton.setSelected(settings.getTypesMod() == Settings.TypesMod.RANDOM_FOLLOW_EVOLUTIONS);
-        ptRandomCompletelyRadioButton.setSelected(settings.getTypesMod() == Settings.TypesMod.COMPLETELY_RANDOM);
-        ptUnchangedRadioButton.setSelected(settings.getTypesMod() == Settings.TypesMod.UNCHANGED);
+        ptRandomFollowEvolutionsRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS);
+        ptRandomCompletelyRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
+        ptUnchangedRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.UNCHANGED);
         ptFollowMegaEvosCheckBox.setSelected(settings.isTypesFollowMegaEvolutions());
         pmsNoGameBreakingMovesCheckBox.setSelected(settings.doBlockBrokenMoves());
 
@@ -1698,6 +1702,9 @@ public class RandomizerGUI {
         tpConsumableItemsOnlyCheckBox.setSelected(settings.isConsumableItemsOnlyForTrainers());
         tpSensibleItemsCheckBox.setSelected(settings.isSensibleItemsOnlyForTrainers());
         tpHighestLevelGetsItemCheckBox.setSelected(settings.isHighestLevelGetsItemsForTrainers());
+        tpBossTrainersTypeDiversityCheckBox.setSelected(settings.isDiverseTypesForBossTrainers());
+        tpImportantTrainersTypeDiversityCheckBox.setSelected(settings.isDiverseTypesForImportantTrainers());
+        tpRegularTrainersTypeDiversityCheckBox.setSelected(settings.isDiverseTypesForRegularTrainers());
 
         tpRandomShinyTrainerPokemonCheckBox.setSelected(settings.isShinyChance());
         tpBetterMovesetsCheckBox.setSelected(settings.isBetterTrainerMovesets());
@@ -1892,7 +1899,7 @@ public class RandomizerGUI {
         settings.setWeighDuplicateAbilitiesTogether(paWeighDuplicatesTogetherCheckBox.isSelected());
         settings.setEnsureTwoAbilities(paEnsureTwoAbilitiesCheckbox.isSelected());
 
-        settings.setTypesMod(ptUnchangedRadioButton.isSelected(), ptRandomFollowEvolutionsRadioButton.isSelected(),
+        settings.setSpeciesTypesMod(ptUnchangedRadioButton.isSelected(), ptRandomFollowEvolutionsRadioButton.isSelected(),
                 ptRandomCompletelyRadioButton.isSelected());
         settings.setTypesFollowMegaEvolutions(ptFollowMegaEvosCheckBox.isSelected() && ptFollowMegaEvosCheckBox.isVisible());
         settings.setBlockBrokenMovesetMoves(pmsNoGameBreakingMovesCheckBox.isSelected());
@@ -1975,6 +1982,9 @@ public class RandomizerGUI {
         settings.setConsumableItemsOnlyForTrainers(tpConsumableItemsOnlyCheckBox.isVisible() && tpConsumableItemsOnlyCheckBox.isSelected());
         settings.setSensibleItemsOnlyForTrainers(tpSensibleItemsCheckBox.isVisible() && tpSensibleItemsCheckBox.isSelected());
         settings.setHighestLevelGetsItemsForTrainers(tpHighestLevelGetsItemCheckBox.isVisible() && tpHighestLevelGetsItemCheckBox.isSelected());
+        settings.setDiverseTypesForBossTrainers(tpBossTrainersTypeDiversityCheckBox.isSelected());
+        settings.setDiverseTypesForImportantTrainers(tpImportantTrainersTypeDiversityCheckBox.isSelected());
+        settings.setDiverseTypesForRegularTrainers(tpRegularTrainersTypeDiversityCheckBox.isSelected());
 
         settings.setTotemPokemonMod(totpUnchangedRadioButton.isSelected(), totpRandomRadioButton.isSelected(), totpRandomSimilarStrengthRadioButton.isSelected());
         settings.setAllyPokemonMod(totpAllyUnchangedRadioButton.isSelected(), totpAllyRandomRadioButton.isSelected(), totpAllyRandomSimilarStrengthRadioButton.isSelected());
@@ -2289,7 +2299,9 @@ public class RandomizerGUI {
 				tpDoubleBattleModeCheckBox, tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
 				tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
-				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox);
+				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
+                tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                tpRegularTrainersTypeDiversityCheckBox);
 		tpForceFullyEvolvedAtSlider.setVisible(true);
 		tpForceFullyEvolvedAtSlider.setEnabled(false);
 		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -2708,8 +2720,11 @@ public class RandomizerGUI {
             tpHighestLevelGetsItemCheckBox.setVisible(heldItemsAvailable);
             tpHighestLevelGetsItemCheckBox.setEnabled(false);
 
-            tpRandomizeTrainerNamesCheckBox.setEnabled(true);
-            tpRandomizeTrainerClassNamesCheckBox.setEnabled(true);
+            disableAndDeselectButtons(tpRegularTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                    tpBossTrainersTypeDiversityCheckBox);
+
+            enableButtons(tpRandomizeTrainerNamesCheckBox, tpRandomizeTrainerClassNamesCheckBox);
+
             tpNoEarlyWonderGuardCheckBox.setVisible(pokemonGeneration >= 3);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
             tpBetterMovesetsCheckBox.setVisible(pokemonGeneration >= 3);
@@ -3231,6 +3246,8 @@ public class RandomizerGUI {
                     tpBossTrainersCheckBox, tpImportantTrainersCheckBox, tpRegularTrainersCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
+                    tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                    tpRegularTrainersTypeDiversityCheckBox,
                     tpEliteFourUniquePokemonCheckBox);
         } else {
             enableButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
@@ -3248,6 +3265,14 @@ public class RandomizerGUI {
             enableButtonsIfVisible(tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
                     tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
                     tpRegularTrainersItemsCheckBox, tpEliteFourUniquePokemonCheckBox);
+
+            if(isTrainerSetting(TRAINER_TYPE_THEMED) || isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY)) {
+                disableAndDeselectButtons(tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                        tpRegularTrainersTypeDiversityCheckBox);
+            } else {
+                enableButtons(tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                        tpRegularTrainersTypeDiversityCheckBox);
+            }
         }
 
         if (tpForceFullyEvolvedAtCheckBox.isSelected()) {

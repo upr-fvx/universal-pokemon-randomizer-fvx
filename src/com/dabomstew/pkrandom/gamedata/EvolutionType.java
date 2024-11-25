@@ -27,13 +27,43 @@ package com.dabomstew.pkrandom.gamedata;
 
 public enum EvolutionType {
 
-    LEVEL, STONE, TRADE, TRADE_ITEM, HAPPINESS, HAPPINESS_DAY, HAPPINESS_NIGHT, LEVEL_ATTACK_HIGHER,
-    LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME, LEVEL_LOW_PV, LEVEL_HIGH_PV, LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA,
-    LEVEL_HIGH_BEAUTY, STONE_MALE_ONLY, STONE_FEMALE_ONLY, LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, LEVEL_WITH_MOVE,
-    LEVEL_WITH_OTHER, LEVEL_MALE_ONLY, LEVEL_FEMALE_ONLY, LEVEL_ELECTRIFIED_AREA, LEVEL_MOSS_ROCK, LEVEL_ICY_ROCK,
-    TRADE_SPECIAL, FAIRY_AFFECTION, LEVEL_WITH_DARK, LEVEL_UPSIDE_DOWN, LEVEL_RAIN, LEVEL_DAY, LEVEL_NIGHT,
-    LEVEL_FEMALE_ESPURR, LEVEL_GAME, LEVEL_DAY_GAME, LEVEL_NIGHT_GAME, LEVEL_SNOWY, LEVEL_DUSK, LEVEL_NIGHT_ULTRA,
-    STONE_ULTRA, NONE;
+    // Gen 1+
+    LEVEL, STONE, TRADE,
+    // Gen 2+
+    TRADE_ITEM,
+    HAPPINESS,
+    HAPPINESS_DAY, HAPPINESS_NIGHT,
+    LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME, // used by Tyrogue, should be used together
+    // Gen 3+
+    LEVEL_LOW_PV, LEVEL_HIGH_PV, // used by Wurmple, should be used together
+    LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, // used by Nincada, should be used together
+    LEVEL_HIGH_BEAUTY, // used by Feebas
+    // Gen 4+
+    STONE_MALE_ONLY, STONE_FEMALE_ONLY,
+    LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT,
+    LEVEL_WITH_MOVE,
+    LEVEL_WITH_OTHER, // used by Mantyke
+    LEVEL_MALE_ONLY, LEVEL_FEMALE_ONLY,
+    LEVEL_ELECTRIFIED_AREA, LEVEL_MOSS_ROCK, LEVEL_ICY_ROCK,
+    // Gen 5+
+    TRADE_SPECIAL, // used by Karrablast and Shelmet. The mon to trade with is likely hard-coded. // TODO: confirm
+    // Gen 6+
+    FAIRY_AFFECTION, // used by Eevee -> Sylveon
+    LEVEL_WITH_DARK, // used by Pancham
+    LEVEL_UPSIDE_DOWN, // used by Inkay
+    LEVEL_RAIN, // used by Sliggoo
+    LEVEL_DAY, LEVEL_NIGHT,
+    LEVEL_FEMALE_ESPURR, // used by Meowstic. Separation from LEVEL_FEMALE likely has to do with this implying a forme.
+    // Gen 7+
+    LEVEL_GAME, // used by Cosmoem. Unclear how it works
+    // used by Rockruff-base. Same as LEVEL_DAY/NIGHT except it also prevents evolution in the wrong game... somehow.
+    LEVEL_DAY_GAME, LEVEL_NIGHT_GAME,
+    LEVEL_SNOWY,
+    LEVEL_DUSK, // used by Rockruff-OwnTempo
+    LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
+    STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
+    // Other
+    NONE;
 
     public boolean usesLevel() {
         return (this == LEVEL) || (this == LEVEL_ATTACK_HIGHER) || (this == LEVEL_DEFENSE_HIGHER)
@@ -42,10 +72,10 @@ public enum EvolutionType {
                 || (this == LEVEL_FEMALE_ONLY) || (this == LEVEL_WITH_DARK)|| (this == LEVEL_UPSIDE_DOWN)
                 || (this == LEVEL_RAIN) || (this == LEVEL_DAY)|| (this == LEVEL_NIGHT)|| (this == LEVEL_FEMALE_ESPURR)
                 || (this == LEVEL_GAME) || (this == LEVEL_DAY_GAME) || (this == LEVEL_NIGHT_GAME)
-                || (this == LEVEL_SNOWY) || (this == LEVEL_DUSK) || (this == LEVEL_NIGHT_ULTRA);
+                || (this == LEVEL_SNOWY) || (this == LEVEL_DUSK) || (this == LEVEL_ULTRA);
     }
 
     public boolean skipSplitEvo() {
-        return (this == LEVEL_HIGH_BEAUTY) || (this == LEVEL_NIGHT_ULTRA) || (this == STONE_ULTRA);
+        return (this == LEVEL_HIGH_BEAUTY) || (this == LEVEL_ULTRA) || (this == STONE_ULTRA);
     }
 }

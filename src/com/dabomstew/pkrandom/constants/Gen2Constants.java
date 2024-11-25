@@ -25,7 +25,10 @@ package com.dabomstew.pkrandom.constants;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.EncounterArea;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gamedata.Type;
 
 import java.util.*;
 import java.util.stream.Collectors;

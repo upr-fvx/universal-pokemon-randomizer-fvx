@@ -21,10 +21,10 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import randompoint.RandomPointSelector;
+
 import java.util.Random;
 import java.util.function.Function;
-
-import randompoint.RandomPointSelector;
 
 /**
  * RandomColorSelector can select a random {@link Color} according to some weight function.

@@ -24,7 +24,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
     }
 
     public void randomizeSpeciesTypes() {
-        boolean evolutionSanity = settings.getTypesMod() == Settings.TypesMod.RANDOM_FOLLOW_EVOLUTIONS;
+        boolean evolutionSanity = settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
         boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
         boolean dualTypeOnly = settings.isDualTypeOnly();
 

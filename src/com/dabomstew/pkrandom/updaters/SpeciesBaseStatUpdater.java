@@ -8,21 +8,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class PokemonBaseStatUpdater extends Updater {
+public class SpeciesBaseStatUpdater extends Updater {
 
     // starts with two null-consumers so the indexing can be nicer,
-    // and then four more since Gens 2-5 didn't change the base stats of any existing Pokemon
+    // and then four more since Gens 2-5 didn't change the base stats of any existing Species
     private final List<Consumer<List<Species>>> updates = Arrays.asList(
             l -> {}, l -> {},
             l -> {}, l -> {}, l -> {}, l -> {},
             this::gen6Updates, this::gen7Updates, this::gen8Updates, this::gen9Updates
     );
 
-    public PokemonBaseStatUpdater(RomHandler romHandler) {
+    public SpeciesBaseStatUpdater(RomHandler romHandler) {
         super(romHandler);
     }
 
-    public void updatePokemonStats(int updateToGen) {
+    public void updateSpeciesStats(int updateToGen) {
         if (updateToGen > updates.size() - 1) {
             throw new IllegalArgumentException("updateToGen too high, can't update to Gen " + updateToGen);
         }
@@ -42,7 +42,7 @@ public class PokemonBaseStatUpdater extends Updater {
             // These are the Gen 1 Pokemon that otherwise get their SpAtk updated
             updateSpecial(pokes, SpeciesIDs.butterfree, 90);
             updateSpecial(pokes, SpeciesIDs.clefable, 95);
-            updateSpecial(pokes, SpeciesIDs.wigglytuff, 95);
+            updateSpecial(pokes, SpeciesIDs.wigglytuff, 85);
             updateSpecial(pokes, SpeciesIDs.vileplume, 110);
         }
 

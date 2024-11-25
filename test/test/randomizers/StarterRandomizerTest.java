@@ -338,6 +338,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         //So it makes a reasonable proxy to check this is working
         activateRomHandler(romName);
         assumeFalse(romHandler.isORAS());
+        //Because ORAS demands 12 starters, there aren't enough 3-stage Grass types to go around
         Settings s = new Settings();
         s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         s.setStartersTypeMod(Settings.StartersTypeMod.SINGLE_TYPE);
@@ -416,7 +417,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void noDualTypesWorksWithRandomTypes(String romName) {
         activateRomHandler(romName);
         Settings s = new Settings();
-        s.setTypesMod(Settings.TypesMod.COMPLETELY_RANDOM);
+        s.setSpeciesTypesMod(Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         s.setStartersMod(false, false, false, false, false);
         s.setStartersTypeMod(false, false, false, false, false);
         s.setStartersNoDualTypes(true);

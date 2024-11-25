@@ -1,13 +1,12 @@
 package com.dabomstew.pkrandom.newnds;
 
+import com.dabomstew.pkrandom.FileFunctions;
+import cuecompressors.BLZCoder;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.dabomstew.pkrandom.FileFunctions;
-
-import cuecompressors.BLZCoder;
 
 /*----------------------------------------------------------------------------*/
 /*--  NDSY9Entry.java - an entry in the arm9 overlay system                 --*/

@@ -24,9 +24,12 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.*;
+import com.dabomstew.pkrandom.gamedata.EncounterArea;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gamedata.Type;
 
-import com.dabomstew.pkrandom.gamedata.*;
+import java.util.*;
 
 public class Gen1Constants {
 

@@ -24,9 +24,9 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.palettes.*;
 import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
 import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkrandom.graphics.palettes.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.io.*;

@@ -3,7 +3,6 @@ package com.dabomstew.pkrandom.romhandlers.romentries;
 import com.dabomstew.pkrandom.constants.Gen2Constants;
 
 import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

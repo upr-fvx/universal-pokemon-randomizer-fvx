@@ -24,6 +24,8 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.Arrays;
+
 /**
  * Represents a Pokemon owned by a {@link Trainer}.
  */
@@ -35,8 +37,11 @@ public class TrainerPokemon {
     private int[] moves = {0, 0, 0, 0};
 
     private Item heldItem;
+
     private boolean hasMegaStone;
     private boolean hasZCrystal;
+    //TODO: change these to methods which determine at runtime
+
     private int abilitySlot;
     private int forme;
     private String formeSuffix = "";
@@ -60,34 +65,37 @@ public class TrainerPokemon {
     
     private boolean resetMoves = false;
 
+    public TrainerPokemon() { }
+
+    public TrainerPokemon(TrainerPokemon original) {
+        species = original.species;
+        level = original.level;
+
+        moves = Arrays.copyOf(original.moves, 4);
+
+        forcedGenderFlag = original.forcedGenderFlag;
+        nature = original.nature;
+        IVs = original.IVs;
+        hpEVs = original.hpEVs;
+        atkEVs = original.atkEVs;
+        defEVs = original.defEVs;
+        spatkEVs = original.spatkEVs;
+        spdefEVs = original.spdefEVs;
+        speedEVs = original.speedEVs;
+        strength = original.strength;
+        heldItem = original.heldItem;
+        abilitySlot = original.abilitySlot;
+        forme = original.forme;
+        formeSuffix = original.formeSuffix;
+
+        hasZCrystal = original.hasZCrystal;
+        hasMegaStone = original.hasMegaStone;
+
+        resetMoves = original.resetMoves;
+    }
+
     public TrainerPokemon copy() {
-        TrainerPokemon tpk = new TrainerPokemon();
-        tpk.species = species;
-        tpk.level = level;
-
-        tpk.moves[0] = moves[0];
-        tpk.moves[1] = moves[1];
-        tpk.moves[2] = moves[2];
-        tpk.moves[3] = moves[3];
-
-        tpk.forcedGenderFlag = forcedGenderFlag;
-        tpk.nature = nature;
-        tpk.IVs = IVs;
-        tpk.hpEVs = hpEVs;
-        tpk.atkEVs = atkEVs;
-        tpk.defEVs = defEVs;
-        tpk.spatkEVs = spatkEVs;
-        tpk.spdefEVs = spdefEVs;
-        tpk.speedEVs = speedEVs;
-        tpk.strength = strength;
-        tpk.heldItem = heldItem;
-        tpk.abilitySlot = abilitySlot;
-        tpk.forme = forme;
-        tpk.formeSuffix = formeSuffix;
-
-        tpk.resetMoves = resetMoves;
-
-        return tpk;
+        return new TrainerPokemon(this);
     }
 
     public Species getSpecies() {

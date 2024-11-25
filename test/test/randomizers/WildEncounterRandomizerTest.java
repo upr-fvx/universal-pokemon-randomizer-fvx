@@ -1,7 +1,8 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.*;
+import com.dabomstew.pkrandom.constants.Gen3Constants;
+import com.dabomstew.pkrandom.constants.Gen5Constants;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
 import javafx.util.Pair;

@@ -25,7 +25,6 @@ package com.dabomstew.pkrandom.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import javafx.util.Pair;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 
 import java.util.*;
@@ -307,7 +306,7 @@ public class Species implements Comparable<Species> {
 
     /**
      * Gets all {@link Species} that this {@link Species} is related to by evolution.
-     * Does not include Mega Evolution.
+     * Includes itself. Does not include Mega Evolution.
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return a {@link SpeciesSet} containing all {@link Species} this {@link Species} is related to (including itself)
      */
@@ -331,6 +330,20 @@ public class Species implements Comparable<Species> {
     }
 
     /**
+     * A tiny class intended to remove reliance on javafx.util.Pair.
+     * Holds a given species and its relation to another species.
+     */
+    private static class RelationRecord {
+        Species relative;
+        int relation;
+
+        RelationRecord(Species relative, int relation) {
+            this.relative = relative;
+            this.relation = relation;
+        }
+    }
+
+    /**
      * Gets the relative position of the given {@link Species} in the evolutionary family.
      * If the family is a cycle, will return the closest path. This is usually, but
      * not always, the lowest absolute value.
@@ -341,14 +354,14 @@ public class Species implements Comparable<Species> {
      * @throws IllegalArgumentException if the {@link Species} are not related.
      */
     public int getRelation(Species relative, boolean useOriginal) {
-        Queue<Pair<Species, Integer>> toCheck = new ArrayDeque<>();
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
         SpeciesSet checked = new SpeciesSet();
-        toCheck.add(new Pair<>(this, 0));
+        toCheck.add(new RelationRecord(this, 0));
 
         while(!toCheck.isEmpty()) {
-            Pair<Species, Integer> current = toCheck.remove();
-            Species currentSpecies = current.getKey();
-            int currentPosition = current.getValue();
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
             if(checked.contains(currentSpecies)) {
                 continue;
             }
@@ -359,10 +372,10 @@ public class Species implements Comparable<Species> {
             }
 
             for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition + 1));
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
             }
             for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition - 1));
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
             }
         }
 
@@ -379,15 +392,15 @@ public class Species implements Comparable<Species> {
      *         there are none.
      */
     public SpeciesSet getRelativesAtPosition(int position, boolean useOriginal) {
-        Queue<Pair<Species, Integer>> toCheck = new ArrayDeque<>();
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
         SpeciesSet checked = new SpeciesSet();
         SpeciesSet relatives = new SpeciesSet();
-        toCheck.add(new Pair<>(this, 0));
+        toCheck.add(new RelationRecord(this, 0));
 
         while(!toCheck.isEmpty()) {
-            Pair<Species, Integer> current = toCheck.remove();
-            Species currentSpecies = current.getKey();
-            int currentPosition = current.getValue();
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
             if(checked.contains(currentSpecies)) {
                 continue;
             }
@@ -398,10 +411,10 @@ public class Species implements Comparable<Species> {
             }
 
             for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition + 1));
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
             }
             for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition - 1));
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
             }
         }
 

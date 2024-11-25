@@ -22,12 +22,12 @@ package com.dabomstew.pkrandom.randomizers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
-import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.gamedata.Gen1Species;
 import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.EnumMap;

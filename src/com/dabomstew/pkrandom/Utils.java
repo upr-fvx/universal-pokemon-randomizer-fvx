@@ -27,19 +27,14 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.zip.CRC32;
-
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.gui.RandomizerGUI;
+
+import java.io.*;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.Base64;
+import java.util.zip.CRC32;
 
 public class Utils {
 

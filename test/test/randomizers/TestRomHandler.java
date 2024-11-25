@@ -1066,16 +1066,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public Set<Item> getAllowedItems() {
-        return getItems().stream().filter(item -> item != null && item.isAllowed()).collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<Item> getNonBadItems() {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Set<Item> getEvolutionItems() {
         return evolutionItems;
     }

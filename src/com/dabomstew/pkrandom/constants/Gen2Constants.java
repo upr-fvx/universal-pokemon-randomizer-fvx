@@ -309,6 +309,10 @@ public class Gen2Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
     public static final Set<Integer> badItems = setupBadItems();
     public static final Set<Integer> tmItems = setupTMItems();
+    // In VietCrystal only, these items crash your game if used, glitch out your inventory if carried
+    public static final List<Integer> vietCrystalBannedItems = Collections.unmodifiableList(Arrays.asList(
+            Gen2ItemIDs.burnHeal, Gen2ItemIDs.calcium, Gen2ItemIDs.elixer, Gen2ItemIDs.twistedSpoon
+    ));
 
     private static Set<Integer> setupBannedItems() {
         // Assorted key items &

@@ -179,6 +179,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (int i = ItemIDs.tm96; i <= ItemIDs.tm100; i++) {
             items.get(i).setTM(true);
         }
+        for (int id : Gen6Constants.getBadItems(romEntry.getRomType())) {
+            if (id < items.size()) {
+                items.get(id).setBad(true);
+            }
+        }
     }
 
     @Override
@@ -3364,14 +3369,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             }
         }
         return true;
-    }
-
-    @Override
-    public Set<Item> getNonBadItems() {
-        Set<Item> nonBad = new HashSet<>(getAllowedItems());
-        Set<Integer> badIds = Gen6Constants.getBadItems(romEntry.getRomType());
-        nonBad.removeIf(item -> badIds.contains(item.getId()));
-        return nonBad;
     }
 
     @Override

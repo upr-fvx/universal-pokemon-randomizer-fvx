@@ -2204,12 +2204,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getNonBadItems() {
-        // Gen 1 has no bad items Kappa
-        return getAllowedItems();
-    }
-
-    @Override
     public Set<Item> getUniqueNoSellItems() {
         return new HashSet<>();
     }
@@ -2237,6 +2231,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int i = Gen1Constants.tmsStartIndex; i < Gen1Constants.tmsStartIndex + Gen1Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
+        // Gen 1 has no bad items Kappa, so we don't set any as such
     }
 
     public String[] readItemNames() {

@@ -43,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * {@link RomHandler} for Gold, Silver, Crystal.
@@ -2432,20 +2431,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getNonBadItems() {
-        Set<Item> nonBad = new HashSet<>(getAllowedItems());
-        nonBad.removeIf(item -> Gen2Constants.badItems.contains(item.getId()));
-        // VietCrystal: exclude Burn Heal, Calcium, TwistedSpoon, and Elixir
-        // crashes your game if used, glitches out your inventory if carried
-        if (isVietCrystal) {
-            Set<Item> vietBad = Stream.of(Gen2ItemIDs.burnHeal, Gen2ItemIDs.calcium, Gen2ItemIDs.elixer,
-                    Gen2ItemIDs.twistedSpoon).map(items::get).collect(Collectors.toSet());
-            nonBad.removeAll(vietBad);
-        }
-        return nonBad;
-    }
-
-    @Override
     public Set<Item> getUniqueNoSellItems() {
         return new HashSet<>();
     }
@@ -2471,6 +2456,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
         Gen2Constants.tmItems.forEach(id -> items.get(id).setTM(true));
+        Gen2Constants.badItems.forEach(id -> items.get(id).setBad(true));
+        if (isVietCrystal) {
+            Gen2Constants.vietCrystalBannedItems.forEach(id -> items.get(id).setAllowed(false));
+        }
     }
 
     private String[] readItemNames() {

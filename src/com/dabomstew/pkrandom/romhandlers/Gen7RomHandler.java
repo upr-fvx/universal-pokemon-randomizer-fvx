@@ -199,6 +199,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (int i = ItemIDs.tm96; i <= ItemIDs.tm100; i++) {
             items.get(i).setTM(true);
         }
+        for (int id : Gen7Constants.badItems) {
+            if (id < items.size()) {
+                items.get(id).setBad(true);
+            }
+        }
     }
 
     @Override
@@ -1023,7 +1028,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
-        return starters.stream().map(pk -> pk.getSpecies()).collect(Collectors.toList());
+        return starters.stream().map(StaticEncounter::getSpecies).collect(Collectors.toList());
     }
 
     @Override
@@ -2966,14 +2971,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     public boolean setIntroPokemon(Species pk) {
         // For now, do nothing.
         return true;
-    }
-
-    @Override
-    public Set<Item> getNonBadItems() {
-        Set<Item> nonBad = new HashSet<>(getAllowedItems());
-        Set<Integer> badIds = Gen7Constants.badItems;
-        nonBad.removeIf(item -> badIds.contains(item.getId()));
-        return nonBad;
     }
 
     @Override

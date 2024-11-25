@@ -479,6 +479,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public Set<Item> getNonBadItems() {
+        return getAllowedItems().stream().filter(item -> !item.isBad()).collect(Collectors.toSet());
+    }
+
+    @Override
     public Set<Item> getXItems() {
         return itemIdsToSet(GlobalConstants.xItems);
     }

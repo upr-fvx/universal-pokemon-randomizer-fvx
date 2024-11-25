@@ -200,6 +200,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         for (int i = ItemIDs.tm93; i <= ItemIDs.tm95; i++) {
             items.get(i).setTM(true);
         }
+        for (int id : Gen5Constants.getBadItems(romEntry.getRomType())) {
+            if (id < items.size()) {
+                items.get(id).setBad(true);
+            }
+        }
     }
 
     @Override
@@ -3203,14 +3208,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(e);
         }
         return true;
-    }
-
-    @Override
-    public Set<Item> getNonBadItems() {
-        Set<Item> nonBad = new HashSet<>(getAllowedItems());
-        Set<Integer> badIds = Gen5Constants.getBadItems(romEntry.getRomType());
-        nonBad.removeIf(item -> badIds.contains(item.getId()));
-        return nonBad;
     }
 
     @Override

@@ -192,6 +192,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = Gen4Constants.tmsStartIndex; i < Gen4Constants.tmsStartIndex + Gen4Constants.tmCount; i++) {
 			items.get(i).setTM(true);
 		}
+		for (int id : Gen4Constants.badItems) {
+			if (id < items.size()) {
+				items.get(id).setBad(true);
+			}
+		}
 	}
 
 	@Override
@@ -4793,14 +4798,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(e);
 		}
 		return true;
-	}
-
-	@Override
-	public Set<Item> getNonBadItems() {
-		Set<Item> nonBad = new HashSet<>(getAllowedItems());
-		Set<Integer> badIds = Gen4Constants.badItems;
-		nonBad.removeIf(item -> badIds.contains(item.getId()));
-		return nonBad;
 	}
 
 	@Override

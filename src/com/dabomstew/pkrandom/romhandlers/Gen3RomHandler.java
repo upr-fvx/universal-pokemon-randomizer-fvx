@@ -3608,14 +3608,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Set<Item> getNonBadItems() {
-        Set<Item> nonBad = new HashSet<>(getAllowedItems());
-        Set<Integer> badIds = Gen3Constants.getBadItems(romEntry.getRomType());
-        nonBad.removeIf(item -> badIds.contains(item.getId()));
-        return nonBad;
-    }
-
-    @Override
     public Set<Item> getUniqueNoSellItems() {
         return new HashSet<>();
     }
@@ -3650,6 +3642,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
         for (int i = Gen3Constants.tmsStartIndex; i < Gen3Constants.tmsStartIndex + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
+        }
+        for (int id : Gen3Constants.getBadItems(getROMType())) {
+            if (id < items.size()) {
+                items.get(id).setBad(true);
+            }
         }
     }
 

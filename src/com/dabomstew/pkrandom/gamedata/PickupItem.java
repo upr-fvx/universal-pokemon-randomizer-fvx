@@ -16,6 +16,11 @@ public class PickupItem {
         this.item = item;
     }
 
+    public PickupItem(PickupItem original) {
+        this.item = original.item;
+        System.arraycopy(original.probabilities, 0, probabilities, 0, PROBABILITY_SLOTS);
+    }
+
     public Item getItem() {
         return item;
     }

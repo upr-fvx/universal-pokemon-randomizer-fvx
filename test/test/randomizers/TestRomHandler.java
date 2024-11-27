@@ -87,6 +87,15 @@ public class TestRomHandler extends AbstractRomHandler {
     private final Set<Item> opShopItems;
     private final Set<Item> uniqueNoSellItems;
 
+    //Field Items
+    private final Set<Item> requiredFieldTMs;
+    private final List<Item> originalFieldItems;
+    private List<Item> testFieldItems;
+
+    //Pickup Items
+    private final List<PickupItem> originalPickupItems;
+    private List<PickupItem> testPickupItems;
+
     //Shops
     private final Map<Integer, Shop> originalShopItems;
     private Map<Integer, Shop> testShopItems;
@@ -151,6 +160,11 @@ public class TestRomHandler extends AbstractRomHandler {
         opShopItems = Collections.unmodifiableSet(mockupOf.getOPShopItems());
         uniqueNoSellItems = Collections.unmodifiableSet(mockupOf.getUniqueNoSellItems());
 
+        requiredFieldTMs = Collections.unmodifiableSet(mockupOf.getRequiredFieldTMs());
+        originalFieldItems = Collections.unmodifiableList(mockupOf.getFieldItems());
+
+        originalPickupItems = Collections.unmodifiableList(mockupOf.getPickupItems());
+
         originalShopItems = Collections.unmodifiableMap(mockupOf.getShopItems());
 
         originalBannedForTrainers = SpeciesSet.unmodifiable(mockupOf.getBannedFormesForTrainerPokemon());
@@ -200,6 +214,8 @@ public class TestRomHandler extends AbstractRomHandler {
         for (int i = 1; i < items.size(); i++) {
             items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
         }
+
+        testFieldItems = null;
 
         testShopItems = null;
 
@@ -1097,16 +1113,24 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Set<Item> getRequiredFieldTMs() {
-        throw new NotImplementedException();
+        return requiredFieldTMs;
     }
 
     @Override
     public List<Item> getFieldItems() {
-        throw new NotImplementedException();
+        if (testFieldItems != null) {
+            testFieldItems = new ArrayList<>(originalFieldItems);
+        }
+        return testFieldItems;
     }
 
     @Override
     public void setFieldItems(List<Item> items) {
+        for (int i = 0; i < originalFieldItems.size(); i++) {
+            if (items.get(i).isTM() != originalFieldItems.get(i).isTM())
+                throw new IllegalArgumentException("TM must replace TM and vice versa.");
+        }
+        testFieldItems = items;
         throw new NotImplementedException();
     }
 
@@ -1138,12 +1162,18 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<PickupItem> getPickupItems() {
+        if (testPickupItems == null) {
+            testPickupItems = new ArrayList<>(originalPickupItems.size());
+            for (PickupItem pi : originalPickupItems) {
+                testPickupItems.add(new PickupItem(pi));
+            }
+        }
         throw new NotImplementedException();
     }
 
     @Override
     public void setPickupItems(List<PickupItem> pickupItems) {
-        throw new NotImplementedException();
+        testPickupItems = pickupItems;
     }
 
     @Override

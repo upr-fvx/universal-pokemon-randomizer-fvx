@@ -8,12 +8,127 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class ItemRandomizerTest extends RandomizerTest{
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shuffleFieldItemsRetainsSameItems(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.SHUFFLE);
+
+        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getFieldItems());
+        System.out.println(itemCountsBefore);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getFieldItems());
+        System.out.println(itemCountsAfter);
+
+        assertEquals(itemCountsBefore, itemCountsAfter);
+    }
+
+    private Map<Item, Integer> countItems(List<Item> fieldItems) {
+        Map<Item, Integer> counts = new HashMap<>();
+        for (Item item : fieldItems) {
+            if (!counts.containsKey(item)) {
+                counts.put(item, 0);
+            }
+            counts.put(item, counts.get(item) + 1);
+        }
+        return counts;
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomFieldItemsSetsOnlyAllowedItems(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+
+        for (Item item : romHandler.getFieldItems()) {
+            System.out.println(item);
+            assertTrue(item.isAllowed());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomEvenFieldItemsSetsOnlyAllowedItems(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM_EVEN);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+
+        for (Item item : romHandler.getFieldItems()) {
+            System.out.println(item);
+            assertTrue(item.isAllowed());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomFieldItemsCanBanBadItems(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        s.setBanBadRandomFieldItems(true);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+
+        for (Item item : romHandler.getFieldItems()) {
+            System.out.println(item);
+            assertFalse(item.isBad());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomEvenFieldItemsCanBanBadItems(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM_EVEN);
+        s.setBanBadRandomFieldItems(true);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+
+        for (Item item : romHandler.getFieldItems()) {
+            System.out.println(item);
+            assertFalse(item.isBad());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomEvenWorks(String romName) {
+        // no item appears more than one more time than any other
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM_EVEN);
+        new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
+
+        Map<Item, Integer> counts = countItems(romHandler.getFieldItems());
+        System.out.println(counts);
+        Set<Item> uniqueItems = romHandler.getUniqueNoSellItems();
+        Set<Integer> filteredValues = counts.entrySet().stream()
+                .filter(et -> !et.getKey().isTM())
+                .filter(et -> !uniqueItems.contains(et.getKey()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toSet());
+        int min = filteredValues.stream().min(Integer::compareTo).get();
+        int max = filteredValues.stream().max(Integer::compareTo).get();
+        System.out.println("min: " + min + ", max: " + max);
+        assertTrue(max - min <= 1);
+    }
 
     @ParameterizedTest
     @MethodSource("getRomNames")

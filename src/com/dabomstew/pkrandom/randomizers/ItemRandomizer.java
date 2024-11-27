@@ -76,7 +76,9 @@ public class ItemRandomizer extends Randomizer {
      * Randomizes TM field items, by modifying the input list.
      */
     private void randomizeTMFieldItems(List<Item> tms) {
-        List<Item> allTMs = romHandler.getItems().stream().filter(Item::isTM).collect(Collectors.toList());
+        List<Item> allTMs = romHandler.getItems().stream()
+                .filter(Objects::nonNull).filter(Item::isTM)
+                .collect(Collectors.toList());
         Set<Item> requiredTMs = romHandler.getRequiredFieldTMs();
 
         int neededTMAmount = tms.size();

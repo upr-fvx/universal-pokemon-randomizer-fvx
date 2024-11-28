@@ -1118,7 +1118,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Item> getFieldItems() {
-        if (testFieldItems != null) {
+        if (testFieldItems == null) {
             testFieldItems = new ArrayList<>(originalFieldItems);
         }
         return testFieldItems;
@@ -1131,7 +1131,6 @@ public class TestRomHandler extends AbstractRomHandler {
                 throw new IllegalArgumentException("TM must replace TM and vice versa.");
         }
         testFieldItems = items;
-        throw new NotImplementedException();
     }
 
     @Override

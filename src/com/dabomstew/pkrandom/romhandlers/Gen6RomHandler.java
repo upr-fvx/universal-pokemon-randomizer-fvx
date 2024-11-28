@@ -1890,7 +1890,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     if (tr.pokemonHaveItems()) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
-                        tpk.setHasMegaStone(Gen6Constants.isMegaStone(tpk.getHeldItem().getId())); // TODO: better way to recognize mega stones
+                        tpk.setHasMegaStone(tpk.getHeldItem() != null &&
+                                Gen6Constants.isMegaStone(tpk.getHeldItem().getId())); // TODO: better way to recognize mega stones
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         for (int move = 0; move < 4; move++) {
@@ -3373,7 +3374,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public Set<Item> getUniqueNoSellItems() {
-        return itemIdsToSet(Gen6Constants.uniqueNoSellItems);
+        return itemIdsToSet(Gen6Constants.getUniqueNoSellItems(romEntry.getRomType()));
     }
 
     @Override

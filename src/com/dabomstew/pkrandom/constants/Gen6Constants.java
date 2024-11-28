@@ -939,6 +939,8 @@ public class Gen6Constants {
     private static final Set<Integer> badItemsXY = setupBadItemsXY();
     public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems =  setupOPShopItems();
+    public static final Set<Integer> uniqueNoSellItemsXY = setupUniqueNoSellItemsXY();
+    public static final Set<Integer> uniqueNoSellItemsORAS = setupUniqueNoSellItemsORAS();
 
     private static Set<Integer> setupBannedItemsXY() {
         Set<Integer> set = new HashSet<>();
@@ -1019,6 +1021,19 @@ public class Gen6Constants {
         return Collections.unmodifiableSet(set);
     }
 
+    private static Set<Integer> setupUniqueNoSellItemsXY() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.gengarite, ItemIDs.latiosite);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupUniqueNoSellItemsORAS() {
+        Set<Integer> set = new HashSet<>(uniqueNoSellItemsXY);
+        addBetween(set, ItemIDs.swampertite, ItemIDs.diancite);
+        addBetween(set, ItemIDs.cameruptite, ItemIDs.beedrillite);
+        return Collections.unmodifiableSet(set);
+    }
+
     /**
      * Adds the Integers to the set, from start to end, inclusive.
      */
@@ -1044,16 +1059,13 @@ public class Gen6Constants {
         }
     }
 
-    public static final List<Integer> uniqueNoSellItems = Arrays.asList(ItemIDs.gengarite, ItemIDs.gardevoirite,
-            ItemIDs.ampharosite, ItemIDs.venusaurite, ItemIDs.charizarditeX, ItemIDs.blastoisinite, ItemIDs.mewtwoniteX,
-            ItemIDs.mewtwoniteY, ItemIDs.blazikenite, ItemIDs.medichamite, ItemIDs.houndoominite, ItemIDs.aggronite,
-            ItemIDs.banettite, ItemIDs.tyranitarite, ItemIDs.scizorite, ItemIDs.pinsirite, ItemIDs.aerodactylite,
-            ItemIDs.lucarionite, ItemIDs.abomasite, ItemIDs.kangaskhanite, ItemIDs.gyaradosite, ItemIDs.absolite,
-            ItemIDs.charizarditeY, ItemIDs.alakazite, ItemIDs.heracronite, ItemIDs.mawilite, ItemIDs.manectite, ItemIDs.garchompite,
-            ItemIDs.latiasite, ItemIDs.latiosite, ItemIDs.swampertite, ItemIDs.sceptilite, ItemIDs.sablenite, ItemIDs.altarianite,
-            ItemIDs.galladite, ItemIDs.audinite, ItemIDs.metagrossite, ItemIDs.sharpedonite, ItemIDs.slowbronite,
-            ItemIDs.steelixite, ItemIDs.pidgeotite, ItemIDs.glalitite, ItemIDs.diancite, ItemIDs.cameruptite, ItemIDs.lopunnite,
-            ItemIDs.salamencite, ItemIDs.beedrillite);
+    public static Set<Integer> getUniqueNoSellItems(int romType) {
+        if (romType == Type_XY) {
+            return uniqueNoSellItemsXY;
+        } else {
+            return uniqueNoSellItemsORAS;
+        }
+    }
 
     private static Map<Integer,List<Integer>> setupSpeciesToMegaStone(int romType) {
         Map<Integer,List<Integer>> map = new TreeMap<>();

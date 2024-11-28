@@ -61,6 +61,11 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean forceSwapStaticMegaEvos;
     private final List<Integer> mainGameLegendaries;
 
+    //TMs/HMs
+    private final boolean originalIsTMsReusable;
+    private boolean testIsTMsReusable;
+    private final boolean canTMsBeHeld;
+
     //Types
     private final TypeTable originalTypeTable;
     private TypeTable testTypeTable = null;
@@ -72,6 +77,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean isORAS;
     private final boolean isUSUM;
     private final int romType;
+
+    //Misc tweaks
+    private final int miscTweaksAvailable;
 
     //Starters
     private final List<Species> originalStarters;
@@ -141,6 +149,9 @@ public class TestRomHandler extends AbstractRomHandler {
             mainGameLegendaries = Collections.unmodifiableList(new ArrayList<>());
         }
 
+        originalIsTMsReusable = mockupOf.isTMsReusable();
+        canTMsBeHeld = mockupOf.canTMsBeHeld();
+
         hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
 
         generation = mockupOf.generationOfPokemon();
@@ -148,6 +159,8 @@ public class TestRomHandler extends AbstractRomHandler {
         isYellow = mockupOf.isYellow();
         isORAS = mockupOf.isORAS();
         isUSUM = mockupOf.isUSUM();
+
+        miscTweaksAvailable = mockupOf.miscTweaksAvailable();
 
         originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
@@ -186,7 +199,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     /**
-     * Drops all test data.
+     * Resets all test data, mostly by simply dropping it.
      */
     public void reset() {
         testSpeciesInclFormes = null;
@@ -204,6 +217,8 @@ public class TestRomHandler extends AbstractRomHandler {
         testEncounters = null;
 
         testStatics = null;
+
+        testIsTMsReusable = originalIsTMsReusable;
 
         testTypeTable = null;
 
@@ -997,6 +1012,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public boolean isTMsReusable() {
+        return testIsTMsReusable;
+    }
+
+    @Override
+    public boolean canTMsBeHeld() {
+        return canTMsBeHeld;
+    }
+
+    @Override
     public boolean hasMoveTutors() {
         throw new NotImplementedException();
     }
@@ -1167,7 +1192,7 @@ public class TestRomHandler extends AbstractRomHandler {
                 testPickupItems.add(new PickupItem(pi));
             }
         }
-        throw new NotImplementedException();
+        return testPickupItems;
     }
 
     @Override
@@ -1328,12 +1353,18 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        throw new NotImplementedException();
+        return miscTweaksAvailable;
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        throw new NotImplementedException();
+        if ((miscTweaksAvailable & tweak.getValue()) > 0) {
+            if (tweak == MiscTweak.REUSABLE_TMS) {
+                testIsTMsReusable = true;
+            } else {
+                throw new UnsupportedOperationException("unimplemented");
+            }
+        }
     }
 
     @Override

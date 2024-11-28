@@ -1,7 +1,9 @@
 package test.randomizers;
 
+import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Item;
+import com.dabomstew.pkrandom.gamedata.PickupItem;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +13,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class ItemRandomizerTest extends RandomizerTest{
@@ -130,6 +131,8 @@ public class ItemRandomizerTest extends RandomizerTest{
         assertTrue(max - min <= 1);
     }
 
+    // TODO: test uniqueNoSellItems / figure out what even they imply
+
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void shuffleShopItemsRetainsSameItems(String romName) {
@@ -186,12 +189,11 @@ public class ItemRandomizerTest extends RandomizerTest{
         s.setBanBadRandomShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        Set<Item> nonBad = romHandler.getNonBadItems();
         Map<Integer, Shop> shopItems = romHandler.getShopItems();
         for (Shop shop : shopItems.values()) {
             System.out.println(shop);
             for (Item item : shop.getItems()) {
-                assertTrue(nonBad.contains(item));
+                assertFalse(item.isBad());
             }
         }
     }
@@ -277,5 +279,77 @@ public class ItemRandomizerTest extends RandomizerTest{
         assertEquals(evoItems.size(), placedEvoCount);
         int placedXCount = (int) placedX.values().stream().filter(b -> b).count();
         assertEquals(xItems.size(), placedXCount);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizePickupItemsCanBanBadItems(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBanBadRandomPickupItems(true);
+        new ItemRandomizer(romHandler, s, RND).randomizePickupItems();
+
+        for (PickupItem pi : romHandler.getPickupItems()) {
+            System.out.println(pi);
+            assertFalse(pi.getItem().isBad());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizePickupItemsMayGiveTMsIfTMsAreHoldableAndNotReusable(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+        assumeTrue(romHandler.canTMsBeHeld());
+        assumeTrue(!romHandler.isTMsReusable());
+
+        Settings s = new Settings();
+        new ItemRandomizer(romHandler, s, RND).randomizePickupItems();
+
+        boolean tmUsed = false;
+        for (PickupItem pi : romHandler.getPickupItems()) {
+            System.out.println(pi);
+            if (pi.getItem().isTM()) {
+                tmUsed = true;
+                break;
+            }
+        }
+
+        assertTrue(tmUsed);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizePickupItemsBanTMsIfTMsAreReusable(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+
+        if (!romHandler.isTMsReusable()) {
+            romHandler.applyMiscTweak(MiscTweak.REUSABLE_TMS);
+        }
+
+        new ItemRandomizer(romHandler, new Settings(), RND).randomizePickupItems();
+
+        for (PickupItem pi : romHandler.getPickupItems()) {
+            System.out.println(pi);
+            assertFalse(pi.getItem().isTM());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizePickupItemsBanTMsIfTMsAreNotHoldable(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+        assumeTrue(!romHandler.canTMsBeHeld());
+
+        new ItemRandomizer(romHandler, new Settings(), RND).randomizePickupItems();
+
+        for (PickupItem pi : romHandler.getPickupItems()) {
+            System.out.println(pi);
+            assertFalse(pi.getItem().isTM());
+        }
     }
 }

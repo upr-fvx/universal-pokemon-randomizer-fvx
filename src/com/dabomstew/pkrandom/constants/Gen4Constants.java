@@ -252,6 +252,7 @@ public class Gen4Constants {
         map.put(Type.DRAGON, ItemIDs.habanBerry);
         map.put(Type.DARK, ItemIDs.colburBerry);
         map.put(Type.STEEL, ItemIDs.babiriBerry);
+        map.put(Type.NORMAL, ItemIDs.chilanBerry); //With randomized type effectiveness, this can come up!
         return Collections.unmodifiableMap(map);
     }
 

@@ -2546,13 +2546,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-        for (Species pk : pokes) {
-            if (pk == null)
+        for (Species sp : pokes) {
+            if (sp == null)
                 continue;
 
             Set<Evolution> extraEvolutions = new HashSet<>();
-            for (int i = 0; i < pk.getEvolutionsFrom().size(); i++) {
-                Evolution evo = pk.getEvolutionsFrom().get(i);
+            for (int i = 0; i < sp.getEvolutionsFrom().size(); i++) {
+                Evolution evo = sp.getEvolutionsFrom().get(i);
 
                 switch (evo.getType()) {
                     case LEVEL_WITH_MOVE:
@@ -2633,9 +2633,27 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
                 }
+
+                if(this.getROMType() == Gen7Constants.Type_SM) {
+                    //Add Kanto form evolutions
+                    //(USUM already has a function for this)
+                    switch (evo.getFrom().getNumber()) {
+                        case SpeciesIDs.pikachu:
+                        case SpeciesIDs.exeggcute:
+                        case SpeciesIDs.cubone:
+                            Species kantoForm = evo.getTo().getBaseForme();
+                            Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
+                                    EvolutionType.STONE, ItemIDs.moonStone);
+                            extraEvolutions.add(extraEvo);
+                            addEvoUpdateStone(impossibleEvolutionUpdates, extraEvo, "Moon Stone");
+                    }
+
+                }
             }
 
-            pk.getEvolutionsFrom().addAll(extraEvolutions);
+
+
+            sp.getEvolutionsFrom().addAll(extraEvolutions);
             for (Evolution ev : extraEvolutions) {
                 ev.getTo().getEvolutionsTo().add(ev);
             }

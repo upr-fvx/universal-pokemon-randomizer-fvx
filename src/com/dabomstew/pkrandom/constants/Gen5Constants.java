@@ -2436,4 +2436,21 @@ public class Gen5Constants {
         tagEncounterAreas(encounterAreas, locationTags, postGameAreas);
     }
 
+    public static void setForcedRivalStarterPositionsBW(List<Trainer> allTrainers) {
+        allTrainers.get(287 - 1).forceStarterPosition = 0;
+        allTrainers.get(288 - 1).forceStarterPosition = 0;
+        allTrainers.get(289 - 1).forceStarterPosition = 0;
+    }
+
+    public static void setForcedRivalStarterPositionsBW2(List<Trainer> allTrainers) {
+        //?????
+        //Hugh's appearance in Pokemon World Tournament should need assigning, but it doesn't appear.
+        //I'm guessing the game just uses his team from the Plasma Frigate and assigns the levels to 25?
+        //Weird choice, but whatever.
+
+        //allTrainers.get(? - 1).forceStarterPosition = 0;
+        //allTrainers.get(? - 1).forceStarterPosition = 0;
+        //allTrainers.get(? - 1).forceStarterPosition = 0;
+    }
+
 }

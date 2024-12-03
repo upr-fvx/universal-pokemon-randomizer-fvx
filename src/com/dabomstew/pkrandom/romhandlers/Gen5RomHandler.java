@@ -1167,6 +1167,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             if (romEntry.getRomType() == Gen5Constants.Type_BW) {
                 Gen5Constants.tagTrainersBW(allTrainers);
                 Gen5Constants.setMultiBattleStatusBW(allTrainers);
+                Gen5Constants.setForcedRivalStarterPositionsBW(allTrainers);
             } else {
                 if (!romEntry.getFile("DriftveilPokemon").isEmpty()) {
                     NARCArchive driftveil = this.readNARC(romEntry.getFile("DriftveilPokemon"));
@@ -1202,6 +1203,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 boolean isBlack2 = romEntry.getRomCode().startsWith("IRE");
                 Gen5Constants.tagTrainersBW2(allTrainers);
                 Gen5Constants.setMultiBattleStatusBW2(allTrainers, isBlack2);
+                Gen5Constants.setForcedRivalStarterPositionsBW2(allTrainers);
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);

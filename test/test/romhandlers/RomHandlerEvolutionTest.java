@@ -49,15 +49,15 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
         Set<Species> withDuplicateEvos = new HashSet<>();
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
-            List<Species> evolved = new ArrayList<>();
+            Set<Species> evolved = new HashSet<>();
             System.out.println(pk.getEvolutionsFrom());
             for (Evolution evo : pk.getEvolutionsFrom()) {
+                Species baseForme = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
                 // LEVEL_FEMALE_ESPURR is an exception since it implies a forme difference
-                if (evo.getType() != EvolutionType.LEVEL_FEMALE_ESPURR) {
-                    if (evolved.contains(evo.getTo().getBaseForme()))
-                        withDuplicateEvos.add(pk);
+                if (evolved.contains(baseForme) && evo.getType() != EvolutionType.LEVEL_FEMALE_ESPURR) {
+                    withDuplicateEvos.add(pk);
                 }
-                evolved.add(evo.getTo().getBaseForme());
+                evolved.add(baseForme);
             }
         }
 

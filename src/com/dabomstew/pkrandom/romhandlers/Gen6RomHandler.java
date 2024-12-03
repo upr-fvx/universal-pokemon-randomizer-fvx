@@ -219,7 +219,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setName(pokeNames[fi.baseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
-                pokes[i].setFormeSuffix(Gen6Constants.formeSuffixes.getOrDefault(k,""));
+                pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 if (fi.baseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -311,7 +311,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 int firstFormeOffset = FileFunctions.read2ByteInt(stats, Gen6Constants.bsFormeOffset);
                 if (firstFormeOffset != 0) {
                     for (int i = 1; i < formeCount; i++) {
-                        altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i,FileFunctions.read2ByteInt(stats,Gen6Constants.bsFormeSpriteOffset))); // Assumes that formes are in memory in the same order as their numbers
+                        altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                         if (Gen6Constants.actuallyCosmeticForms.contains(firstFormeOffset+i-1)) {
                             if (pkmn.getNumber() != SpeciesIDs.pikachu && pkmn.getNumber() != SpeciesIDs.cherrim) { // No Pikachu/Cherrim
                                 pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);

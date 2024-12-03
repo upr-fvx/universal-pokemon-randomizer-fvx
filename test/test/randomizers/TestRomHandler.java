@@ -285,7 +285,6 @@ public class TestRomHandler extends AbstractRomHandler {
         copy.setFormeSuffix(original.getFormeSuffix());
         copy.setFormeNumber(original.getFormeNumber());
         copy.setCosmeticForms(original.getCosmeticForms());
-        copy.setFormeSpriteIndex(original.getFormeSpriteIndex());
         copy.setActuallyCosmetic(original.isActuallyCosmetic());
 
         copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));

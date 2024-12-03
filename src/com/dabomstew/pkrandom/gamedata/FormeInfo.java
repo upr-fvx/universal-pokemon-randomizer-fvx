@@ -26,11 +26,9 @@ package com.dabomstew.pkrandom.gamedata;
 public class FormeInfo {
     public int baseForme;
     public int formeNumber;
-    public int formeSpriteOffset;
 
-    public FormeInfo(int baseForme, int formeNumber, int formeSpriteOffset) {
+    public FormeInfo(int baseForme, int formeNumber) {
         this.baseForme = baseForme;
         this.formeNumber = formeNumber;
-        this.formeSpriteOffset = formeSpriteOffset;
     }
 }

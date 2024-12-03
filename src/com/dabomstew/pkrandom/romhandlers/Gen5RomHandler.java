@@ -209,8 +209,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 pokes[i].setName(pokeNames[fi.baseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
-                pokes[i].setFormeSpriteIndex(fi.formeSpriteOffset + Gen5Constants.pokemonCount + Gen5Constants.getNonPokemonBattleSpriteCount(romEntry.getRomType()));
-                pokes[i].setFormeSuffix(Gen5Constants.getFormeSuffix(k,romEntry.getRomType()));
+                pokes[i].setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i = i + 1;
             }
@@ -391,7 +390,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             int firstFormeOffset = readWord(stats, Gen5Constants.bsFormeOffset);
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
-                    altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i,readWord(stats,Gen5Constants.bsFormeSpriteOffset))); // Assumes that formes are in memory in the same order as their numbers
+                    altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                     if (pkmn.getNumber() == SpeciesIDs.keldeo) {
                         pkmn.setCosmeticForms(formeCount);
                     }

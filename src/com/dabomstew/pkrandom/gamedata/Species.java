@@ -43,7 +43,6 @@ public class Species implements Comparable<Species> {
     private Species baseForme = null;
     private int formeNumber = 0;
     private int cosmeticForms = 0;
-    private int formeSpriteIndex = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
     //TODO: condense this cosmetic bs into a single denotation
@@ -549,10 +548,6 @@ public class Species implements Comparable<Species> {
         //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
-    public int getSpriteIndex() {
-        return formeNumber == 0 ? number : formeSpriteIndex + formeNumber - 1;
-    }
-
     public String getFullName() {
         return name + formeSuffix;
     }
@@ -702,14 +697,6 @@ public class Species implements Comparable<Species> {
 
     public void setCosmeticForms(int cosmeticForms) {
         this.cosmeticForms = cosmeticForms;
-    }
-
-    public int getFormeSpriteIndex() {
-        return formeSpriteIndex;
-    }
-
-    public void setFormeSpriteIndex(int formeSpriteIndex) {
-        this.formeSpriteIndex = formeSpriteIndex;
     }
 
     /**

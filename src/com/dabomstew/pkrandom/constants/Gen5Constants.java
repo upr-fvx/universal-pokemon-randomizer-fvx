@@ -169,10 +169,6 @@ public class Gen5Constants {
 
     public static final Type[] typeTable = constructTypeTable();
 
-    private static final Map<Integer,String> bw1FormeSuffixes = setupFormeSuffixes(Gen5Constants.Type_BW);
-
-    private static final Map<Integer,String> bw2FormeSuffixes = setupFormeSuffixes(Gen5Constants.Type_BW2);
-
     private static final Map<Integer,Map<Integer,String>> formeSuffixesByBaseForme = setupFormeSuffixesByBaseForme();
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
 
@@ -637,136 +633,35 @@ public class Gen5Constants {
         return 0;
     }
 
-    public static String getFormeSuffix(int internalIndex, int romType) {
-        if (romType == Type_BW) {
-            return bw1FormeSuffixes.getOrDefault(internalIndex,"");
-        } else if (romType == Type_BW2) {
-            return bw2FormeSuffixes.getOrDefault(internalIndex,"");
-        } else {
-            return "";
-        }
-    }
-
-    private static Map<Integer,String> setupFormeSuffixes(int gameVersion) {
-        Map<Integer,String> formeSuffixes = new HashMap<>();
-        if (gameVersion == Gen5Constants.Type_BW) {
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysA,"-Attack");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysD,"-Defense");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysS,"-Speed");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamS,"-Sandy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamT,"-Trash");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.shayminS,"-Sky");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.giratinaO,"-Origin");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomH,"-Heat");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomW,"-Wash");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFr,"-Frost");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFa,"-Fan");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomM,"-Mow");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSu,"-Sunny");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformR,"-Rainy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSn,"-Snowy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.basculinB,"-Blue");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.darmanitanZ,"-Zen");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.meloettaP,"-Pirouette");
-        } else if (gameVersion == Gen5Constants.Type_BW2) {
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysA + bw2formeOffset,"-Attack");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysD + bw2formeOffset,"-Defense");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.deoxysS + bw2formeOffset,"-Speed");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamS + bw2formeOffset,"-Sandy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.wormadamT + bw2formeOffset,"-Trash");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.shayminS + bw2formeOffset,"-Sky");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.giratinaO + bw2formeOffset,"-Origin");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomH + bw2formeOffset,"-Heat");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomW + bw2formeOffset,"-Wash");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFr + bw2formeOffset,"-Frost");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomFa + bw2formeOffset,"-Fan");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.rotomM + bw2formeOffset,"-Mow");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSu + bw2formeOffset,"-Sunny");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformR + bw2formeOffset,"-Rainy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.castformSn + bw2formeOffset,"-Snowy");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.basculinB + bw2formeOffset,"-Blue");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.darmanitanZ + bw2formeOffset,"-Zen");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.meloettaP + bw2formeOffset,"-Pirouette");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.kyuremW + bw2formeOffset,"-White");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.kyuremB + bw2formeOffset,"-Black");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.tornadusT + bw2formeOffset,"-Therian");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.thundurusT + bw2formeOffset,"-Therian");
-            formeSuffixes.put(SpeciesIDs.Gen5Formes.landorusT + bw2formeOffset,"-Therian");
-        }
-
-        return formeSuffixes;
-    }
-
     private static Map<Integer,Map<Integer,String>> setupFormeSuffixesByBaseForme() {
         Map<Integer,Map<Integer,String>> map = new HashMap<>();
 
-        Map<Integer,String> deoxysMap = new HashMap<>();
-        deoxysMap.put(1,"-A");
-        deoxysMap.put(2,"-D");
-        deoxysMap.put(3,"-S");
-        map.put(SpeciesIDs.deoxys, deoxysMap);
+        putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
+        putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
-        Map<Integer,String> wormadamMap = new HashMap<>();
-        wormadamMap.put(1,"-S");
-        wormadamMap.put(2,"-T");
-        map.put(SpeciesIDs.wormadam, wormadamMap);
+        putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
+        putFormSuffixes(map, SpeciesIDs.rotom, "-Heat", "-Wash", "-Frost", "-Fan", "-Mow");
+        putFormSuffixes(map, SpeciesIDs.giratina, "-Origin");
+        putFormSuffixes(map, SpeciesIDs.shaymin, "-Sky");
 
-        Map<Integer,String> shayminMap = new HashMap<>();
-        shayminMap.put(1,"-S");
-        map.put(SpeciesIDs.shaymin, shayminMap);
-
-        Map<Integer,String> giratinaMap = new HashMap<>();
-        giratinaMap.put(1,"-O");
-        map.put(SpeciesIDs.giratina, giratinaMap);
-
-        Map<Integer,String> rotomMap = new HashMap<>();
-        rotomMap.put(1,"-H");
-        rotomMap.put(2,"-W");
-        rotomMap.put(3,"-Fr");
-        rotomMap.put(4,"-Fa");
-        rotomMap.put(5,"-M");
-        map.put(SpeciesIDs.rotom, rotomMap);
-
-        Map<Integer,String> castformMap = new HashMap<>();
-        castformMap.put(1,"-F");
-        castformMap.put(2,"-W");
-        castformMap.put(3,"-I");
-        map.put(SpeciesIDs.castform, castformMap);
-
-        Map<Integer,String> basculinMap = new HashMap<>();
-        basculinMap.put(1,"-B");
-        map.put(SpeciesIDs.basculin, basculinMap);
-
-        Map<Integer,String> darmanitanMap = new HashMap<>();
-        darmanitanMap.put(1,"-Z");
-        map.put(SpeciesIDs.darmanitan, darmanitanMap);
-
-        Map<Integer,String> meloettaMap = new HashMap<>();
-        meloettaMap.put(1,"-P");
-        map.put(SpeciesIDs.meloetta, meloettaMap);
-
-        Map<Integer,String> kyuremMap = new HashMap<>();
-        kyuremMap.put(1,"-W");
-        kyuremMap.put(2,"-B");
-        map.put(SpeciesIDs.kyurem, kyuremMap);
-
-        Map<Integer,String> keldeoMap = new HashMap<>();
-        keldeoMap.put(1,"-R");
-        map.put(SpeciesIDs.keldeo, keldeoMap);
-
-        Map<Integer,String> tornadusMap = new HashMap<>();
-        tornadusMap.put(1,"-T");
-        map.put(SpeciesIDs.tornadus, tornadusMap);
-
-        Map<Integer,String> thundurusMap = new HashMap<>();
-        thundurusMap.put(1,"-T");
-        map.put(SpeciesIDs.thundurus, thundurusMap);
-
-        Map<Integer,String> landorusMap = new HashMap<>();
-        landorusMap.put(1,"-T");
-        map.put(SpeciesIDs.landorus, landorusMap);
+        putFormSuffixes(map, SpeciesIDs.basculin, "-Blue");
+        putFormSuffixes(map, SpeciesIDs.darmanitan, "-Zen");
+        putFormSuffixes(map, SpeciesIDs.tornadus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.thundurus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.landorus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.kyurem, "-White", "-Black");
+        putFormSuffixes(map, SpeciesIDs.keldeo, "-Resolute");
+        putFormSuffixes(map, SpeciesIDs.meloetta, "-Pirouette");
 
         return map;
+    }
+
+    private static void putFormSuffixes(Map<Integer, Map<Integer, String>> map, int species, String... suffixes) {
+        Map<Integer, String> speciesMap = new HashMap<>();
+        for (int i = 0; i < suffixes.length; i++) {
+            speciesMap.put(i + 1, suffixes[i]);
+        }
+        map.put(species, speciesMap);
     }
 
     private static Map<Integer,String> setupDummyFormeSuffixes() {

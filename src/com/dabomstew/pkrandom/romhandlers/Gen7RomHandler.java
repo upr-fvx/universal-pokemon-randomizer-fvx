@@ -210,11 +210,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setName(pokeNames[realBaseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
-                if (pokes[i].isActuallyCosmetic()) {
-                    pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix());
-                } else {
-                    pokes[i].setFormeSuffix(Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme,fi.formeNumber));
-                }
+                pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix()
+                        + Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 if (realBaseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -328,7 +325,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     Set<Integer> altFormesWithCosmeticForms = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType()).keySet();
                     for (int i = 1; i < formeCount; i++) {
                         if (j == 0 || j > jMax) {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i,FileFunctions.read2ByteInt(stats,Gen7Constants.bsFormeSpriteOffset))); // Assumes that formes are in memory in the same order as their numbers
+                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                             if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) {
                                 if (!Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) { // Skip ignored forms (identical or confusing cosmetic forms)
                                     pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);
@@ -336,7 +333,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                                 }
                             }
                         } else {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j,FileFunctions.read2ByteInt(stats,Gen7Constants.bsFormeSpriteOffset)));
+                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j));
                             j++;
                         }
                         if (altFormesWithCosmeticForms.contains(firstFormeOffset + i - 1)) {

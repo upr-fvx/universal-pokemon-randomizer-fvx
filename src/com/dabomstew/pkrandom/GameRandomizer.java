@@ -225,10 +225,9 @@ public class GameRandomizer {
         maybeRandomizeMoveTutorMoves();
         maybeRandomizeMoveTutorCompatibility();
 
-        // do wild Pokemon early if needed
-        if (settings.isTrainersUseLocalPokemon()) {
-            maybeRandomizeWildPokemon();
-        }
+        // Applied before trainer randomization so "trainers use local pokémon"
+        // may be based on new "local pokémon".
+        maybeRandomizeWildPokemon();
 
         maybeRandomizeTrainerPokemon();
         maybeRandomizeTrainerMovesets();
@@ -244,10 +243,6 @@ public class GameRandomizer {
 
         maybeRandomizeStaticPokemon();
         maybeRandomizeTotemPokemon();
-
-        if (!settings.isTrainersUseLocalPokemon()) {
-            maybeRandomizeWildPokemon();
-        }
 
         maybeRandomizeInGameTrades();
 

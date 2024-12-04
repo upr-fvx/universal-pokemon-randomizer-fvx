@@ -32,6 +32,7 @@ public class SysConstants {
 
     public static final String RELEASES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases";
     public static final String RELEASES_API_URL = "https://api.github.com/repos/upr-fvx/universal-pokemon-randomizer-fvx/releases/latest";
+    // TODO: update/fix the wiki urls
     public static final String WIKI_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki";
     public static final String WIKI_IMPORTANT_INFO_URL = WIKI_URL + "/Important-Information";
     public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/Randomizing-the-3DS-games";

@@ -153,15 +153,11 @@ public class GameRandomizer {
         applyRandomizers();
         maybeSetCustomPlayerGraphics();
 
-        int checkValue = new CheckValueCalculator(romHandler, settings).calculate();
-        // TODO: sever the connection between the Randomizer's check value,
-        //  and the check value that Gen 2 games uses
-        romHandler.writeCheckValueToROM(checkValue);
         romHandler.saveRom(filename, seed, saveAsDirectory);
 
         logger.logResults(log, startTime);
 
-        return checkValue;
+        return new CheckValueCalculator(romHandler, settings).calculate();
     }
 
     private void limitSpecies() {
@@ -187,7 +183,7 @@ public class GameRandomizer {
     }
 
     private void maybeSetCustomPlayerGraphics() {
-        // with the refactor, it sticks out more how atypical this setting/feature is,
+        // this setting/feature sticks out for being atypical,
         // versus the rest of the randomizer..... is this the right place for it to be?
         if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
             romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),

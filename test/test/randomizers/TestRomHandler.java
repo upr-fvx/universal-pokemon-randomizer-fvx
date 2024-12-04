@@ -1279,11 +1279,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void writeCheckValueToROM(int value) {
-        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
-    }
-
-    @Override
     public int miscTweaksAvailable() {
         throw new NotImplementedException();
     }

@@ -536,8 +536,6 @@ public interface RomHandler {
 
     int generationOfPokemon();
 
-    void writeCheckValueToROM(int value);
-
     // ===========
     // code tweaks
     // ===========

@@ -57,6 +57,10 @@ public class SettingsManager {
     public static final int VERSION = Version.VERSION;
 
     public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public <T> T getSetting(String settingName) {
+        //TODO
+        return null;
+    }
 
     private CustomNamesSet customNames;
 

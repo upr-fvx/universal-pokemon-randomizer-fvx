@@ -2,11 +2,14 @@ package com.dabomstew.pkrandom.settings;
 
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class Settings {
+    public static final List<SettingDefinition<?>> ALL_SETTINGS;
 
     private static final Predicate<Boolean> isTrue = s -> s;
 
@@ -22,42 +25,61 @@ public class Settings {
         };
     }
 
-    public static final List<SettingDefinition<?>> ALL_SETTINGS = Arrays.asList(
-            //Top Level
-            new SettingDefinition<Boolean>("LimitPokemon", "GeneralOptions",
-                    false, notOfGeneration(1)), //might be able to eliminate this setting
-            new SettingDefinition<Boolean>("PokemonRestrictions", "GeneralOptions",
-                    false, null, new SettingState<Boolean>("LimitPokemon", isTrue)),
-            new SettingDefinition<Boolean>("RaceMode", "GeneralOptions",
-                    false, null),
-            new SettingDefinition<Boolean>("BanIrregularAltFormes", "GeneralOptions",
-                    false, null),
-
-            //Pokemon Traits
-            new SettingDefinition<SettingsManager.BaseStatisticsMod>("RandomizePokemonBaseStatistics",
-                    "PokemonBaseStatistics", SettingsManager.BaseStatisticsMod.UNCHANGED, null),
-            new SettingDefinition<Boolean>("FollowEvolutions", "PokemonBaseStatistics",
-                    false, null,
-                    new SettingState<SettingsManager.BaseStatisticsMod>("RandomizePokemonBaseStatistics",
-                            pbs -> !(pbs == SettingsManager.BaseStatisticsMod.UNCHANGED))),
-
-            new SettingDefinition<Boolean>("ChangeImpossibleEvolutions", "PokemonEvolutions",
-                    false, null),
-            new SettingDefinition<Boolean>("MakeEvolutionsEasier", "PokemonEvolutions",
-                    false, null),
-            new SettingDefinition<Boolean>("RemoveTimeBasedEvolutions", "PokemonEvolutions",
-                    false, null),
-
-            //Moves and Movesets
-            new SettingDefinition<Boolean>("UpdateMoves", "MoveData",
-                    false, null),
-            new SettingDefinition<Integer>("UpdateMovesToGeneration", "MoveData",
-                    0, null, new SettingState<Boolean>("UpdateMoves", isTrue)),
-
-            //Foe Pokemon
-            new SettingDefinition<Boolean>("RandomizeTrainerNames", "TrainerPokemon",
-                    false, null),
-            new SettingDefinition<Boolean>("RandomizeTrainerClassNames", "TrainerPokemon",
-                    false, null)
+    public static final List<SettingDefinition<?>> TOP_LEVEL = Arrays.asList(
+            new SettingDefinition<>("LimitPokemon", "GeneralOptions",
+                    false, null, notOfGeneration(1)), //TODO: might be able to eliminate this setting
+            new SettingDefinition<>("PokemonRestrictions", "GeneralOptions",
+                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), null),
+            new SettingDefinition<>("RaceMode", "GeneralOptions",
+                    false, null, null),
+            new SettingDefinition<>("BanIrregularAltFormes", "GeneralOptions",
+                    false, null, null)
     );
+
+    public static final List<SettingDefinition<?>> POKEMON_TRAITS = Arrays.asList(
+            new SettingDefinition<>("RandomizePokemonBaseStatistics",
+                    "PokemonBaseStatistics", SettingsManager.BaseStatisticsMod.UNCHANGED, null, null),
+            new SettingDefinition<>("FollowEvolutions", "PokemonBaseStatistics",
+                    false,
+                    new SimpleSettingRestriction<SettingsManager.BaseStatisticsMod>("RandomizePokemonBaseStatistics",
+                            pbs -> !(pbs == SettingsManager.BaseStatisticsMod.UNCHANGED)),
+                    null),
+
+            new SettingDefinition<>("ChangeImpossibleEvolutions", "PokemonEvolutions",
+                    false, null, null),
+            new SettingDefinition<>("MakeEvolutionsEasier", "PokemonEvolutions",
+                    false, null, null),
+            new SettingDefinition<>("RemoveTimeBasedEvolutions", "PokemonEvolutions",
+                    false, null, null)
+    );
+
+    public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(
+            new SettingDefinition<>("UpdateMoves", "MoveData",
+            false, null, null),
+            new SettingDefinition<>("UpdateMovesToGeneration", "MoveData",
+            0, new SimpleSettingRestriction<>("UpdateMoves", isTrue), null)
+    );
+
+    public static final List<SettingDefinition<?>> FOE_POKEMON = Arrays.asList(
+            new SettingDefinition<>("RandomizeTrainerNames", "TrainerPokemon",
+                    false, null, null),
+            new SettingDefinition<>("RandomizeTrainerClassNames", "TrainerPokemon",
+                    false, null, null)
+    );
+
+    static {
+        List<SettingDefinition<?>> all = new ArrayList<>(TOP_LEVEL);
+        all.addAll(POKEMON_TRAITS);
+        all.addAll(MOVES_AND_MOVESETS);
+        all.addAll(FOE_POKEMON);
+        ALL_SETTINGS = Collections.unmodifiableList(all);
+    }
+
+
+
+
+
+
+
+
 }

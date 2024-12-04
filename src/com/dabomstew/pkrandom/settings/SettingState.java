@@ -1,13 +1,18 @@
 package com.dabomstew.pkrandom.settings;
 
-import java.util.function.Predicate;
+public class SettingState<T> {
+    private final SettingDefinition<T> definition;
+    private T value;
 
-public class SettingState<U> {
-    final String name;
-    final Predicate<U> state;
+    public SettingState(SettingDefinition<T> definition) {
+        this.definition = definition;
+    }
 
-    public SettingState(String name, Predicate<U> state) {
-        this.name = name;
-        this.state = state;
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }

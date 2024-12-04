@@ -12,6 +12,12 @@ public class SettingDefinition<T> {
     private final Predicate<RomHandler> supported;
     protected static SettingsManager manager;
 
+    //Okay, this is not ideal; we should probably figure out a better way...
+    //TODO: yeah
+    public static void setSettingsManager(SettingsManager manager) {
+        SettingDefinition.manager = manager;
+    }
+
     public SettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
                              Predicate<RomHandler> supported) {
         this.name = name;

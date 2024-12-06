@@ -193,7 +193,7 @@ public class GameRandomizer {
 
         maybeRandomizeTypeEffectiveness();
 
-        maybeRandomizeMoveStats();
+        maybeRandomizeMoveData();
 
         maybeApplyMiscTweaks();
 
@@ -270,7 +270,7 @@ public class GameRandomizer {
         }
     }
 
-    private void maybeRandomizeMoveStats() {
+    private void maybeRandomizeMoveData() {
         if (settings.isRandomizeMovePowers()) {
             moveDataRandomizer.randomizeMovePowers();
         }

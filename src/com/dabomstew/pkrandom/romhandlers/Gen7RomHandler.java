@@ -1285,11 +1285,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
         byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
+        
         StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
         se.spec = enc.getSpecies();
         se.level = enc.getMaxLevel();
         se.forme = enc.getFormeNumber();
         writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
+
+        writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
     }
 
     @Override

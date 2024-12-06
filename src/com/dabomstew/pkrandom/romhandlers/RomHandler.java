@@ -128,6 +128,11 @@ public interface RomHandler {
     // Methods to set up Gen Restrictions
     // ==================================
 
+    /**
+     * When using {@link RestrictedSpeciesService} to restrict which Pokémon
+     * may appear, we want to prevent allowed Pokémon from evolving (or breeding)
+     * into ones that are not. This does that.
+     */
     void removeEvosForPokemonPool();
 
     // ===============

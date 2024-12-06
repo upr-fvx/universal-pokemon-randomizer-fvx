@@ -148,7 +148,7 @@ public class GameRandomizer {
         final long startTime = System.currentTimeMillis();
         randomSource.seed(seed);
 
-        limitSpecies();
+        setupSpeciesRestrictions();
         applyUpdaters();
         applyRandomizers();
         maybeSetCustomPlayerGraphics();
@@ -160,10 +160,7 @@ public class GameRandomizer {
         return new CheckValueCalculator(romHandler, settings).calculate();
     }
 
-    private void limitSpecies() {
-        // TODO: better method name
-        // 1. Set Pokemon pool according to limits (or lack thereof)
-        // 2. If limited, remove evolutions that are outside of the pool
+    private void setupSpeciesRestrictions() {
         romHandler.getRestrictedSpeciesService().setRestrictions(settings);
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();

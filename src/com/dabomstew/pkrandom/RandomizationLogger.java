@@ -8,6 +8,7 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.MoveUpdater;
 import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.Updater;
 
 import java.io.PrintStream;
 import java.util.*;
@@ -104,23 +105,20 @@ public class RandomizationLogger {
         this.miscTweakRandomizer = miscTweakRandomizer;
     }
 
-    // TODO: How to work with Updaters? Since all this is done post randomization,
-    //  does e.g. MoveUpdater get the correct info?
-
     public void logResults(PrintStream log, long startTime) {
 
         logHead(log);
 
         // TODO: should this be reordered to match the GUI?
 
+        maybeLogTypeEffectivenessUpdates(log);
         maybeLogTypeEffectiveness(log);
 
-        if (moveUpdater.isUpdated()) {
-            logMoveUpdates(log);
-        }
+        maybeLogMoveUpdates(log);
 
         maybeLogEvolutions(log);
 
+        maybeLogBaseStatUpdates(log);
         maybeLogSpeciesTraits(log);
 
         maybeLogEvolutionImprovements(log);
@@ -889,51 +887,71 @@ public class RandomizationLogger {
         log.println();
     }
 
+    private void maybeLogMoveUpdates(PrintStream log) {
+        if (settings.isUpdateMoves()) {
+            logMoveUpdates(log);
+        }
+    }
+
     private void logMoveUpdates(PrintStream log) {
-        log.println("--MologMovesetChangesve Updates--");
-        List<Move> moves = romHandler.getMoves();
-        Map<Integer, boolean[]> moveUpdates = moveUpdater.getMoveUpdates();
-        for (int moveID : moveUpdates.keySet()) {
-            boolean[] changes = moveUpdates.get(moveID);
-            Move mv = moves.get(moveID);
-            List<String> nonTypeChanges = new ArrayList<>();
-            if (changes[0]) {
-                nonTypeChanges.add(String.format("%d power", mv.power));
+        log.println("--Move Updates--");
+        log.print("The following moves have been updated, to be in line with Gen ");
+        log.println(settings.getUpdateMovesToGeneration() + ".");
+        log.println("Note that if you also randomized move data, these changes may be overwritten.");
+        log.println();
+
+        Map<Move, List<Updater.Update>> updates = moveUpdater.getUpdates();
+        for (Map.Entry<Move, List<Updater.Update>> entry : updates.entrySet()) {
+            log.println(entry.getKey().name);
+            for (Updater.Update update : entry.getValue()) {
+                log.println("\t" + update);
             }
-            if (changes[1]) {
-                nonTypeChanges.add(String.format("%d PP", mv.pp));
+        }
+        log.println();
+    }
+
+    private void maybeLogBaseStatUpdates(PrintStream log) {
+        if (settings.isUpdateBaseStats()) {
+            logBaseStatsUpdates(log);
+        }
+    }
+
+    private void logBaseStatsUpdates(PrintStream log) {
+        log.println("--Pokémon Base Stat Updates--");
+        log.print("The following base stats have been updated, to be in line with Gen ");
+        log.println(settings.getUpdateBaseStatsToGeneration() + ".");
+        log.println("Note that if you also randomized Pokémon base stats, these changes may be overwritten.");
+        log.println();
+
+        Map<Species, List<Updater.Update>> updates = speciesBSUpdater.getUpdates();
+        for (Map.Entry<Species, List<Updater.Update>> entry : updates.entrySet()) {
+            log.println(entry.getKey().getFullName());
+            for (Updater.Update update : entry.getValue()) {
+                log.println("\t" + update);
             }
-            if (changes[2]) {
-                nonTypeChanges.add(String.format("%.00f%% accuracy", mv.hitratio));
+        }
+        log.println();
+    }
+
+    private void maybeLogTypeEffectivenessUpdates(PrintStream log) {
+        if (settings.isUpdateTypeEffectiveness()) {
+            logTypeEffectivenessUpdates(log);
+        }
+    }
+
+    private void logTypeEffectivenessUpdates(PrintStream log) {
+        log.println("--Type Effectiveness Updates--");
+        log.print("The following parts of the Type effectiveness chart have been updated, to be in line with Gen ");
+        log.println(romHandler.generationOfPokemon() == 1 ? 2 : 6 + ".");
+        log.println("Note that if you also randomized Type effectiveness, these changes may be overwritten.");
+        log.println();
+
+        Map<Type, List<Updater.Update>> updates = typeEffUpdater.getUpdates();
+        for (Map.Entry<Type, List<Updater.Update>> entry : updates.entrySet()) {
+            log.println(entry.getKey() + " when used against...");
+            for (Updater.Update update : entry.getValue()) {
+                log.println("\t" + update);
             }
-            String logStr = "Made " + mv.name;
-            // type or not?
-            if (changes[3]) {
-                logStr += " be " + mv.type + "-type";
-                if (!nonTypeChanges.isEmpty()) {
-                    logStr += " and";
-                }
-            }
-            if (changes[4]) {
-                if (mv.category == MoveCategory.PHYSICAL) {
-                    logStr += " a Physical move";
-                } else if (mv.category == MoveCategory.SPECIAL) {
-                    logStr += " a Special move";
-                } else if (mv.category == MoveCategory.STATUS) {
-                    logStr += " a Status move";
-                }
-            }
-            if (!nonTypeChanges.isEmpty()) {
-                logStr += " have ";
-                if (nonTypeChanges.size() == 3) {
-                    logStr += nonTypeChanges.get(0) + ", " + nonTypeChanges.get(1) + " and " + nonTypeChanges.get(2);
-                } else if (nonTypeChanges.size() == 2) {
-                    logStr += nonTypeChanges.get(0) + " and " + nonTypeChanges.get(1);
-                } else {
-                    logStr += nonTypeChanges.get(0);
-                }
-            }
-            log.println(logStr);
         }
         log.println();
     }

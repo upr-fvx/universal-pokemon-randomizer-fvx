@@ -15,6 +15,8 @@ import java.util.TreeMap;
  */
 public abstract class Updater {
 
+    // TODO: updates of the same kind (e.g. two stat upgrades in the same stat) should overwrite each other
+
     public static class Update {
         private final Object descriptor;
         private final Object before;

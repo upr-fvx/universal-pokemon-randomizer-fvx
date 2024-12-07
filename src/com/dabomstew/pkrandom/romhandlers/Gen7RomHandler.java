@@ -1928,7 +1928,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int allies = staticEncountersFile[offset + 0x27];
                 for (int j = 0; j < allies; j++) {
                     int allyIndex = (staticEncountersFile[offset + 0x28 + 4*j] - 1) & 0xFF;
-                    totem.allies.put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex * 0x38));
+                    totem.allies.put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex));
                 }
                 totems.add(totem);
             }

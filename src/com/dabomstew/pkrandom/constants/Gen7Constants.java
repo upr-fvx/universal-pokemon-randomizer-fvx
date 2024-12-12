@@ -222,6 +222,8 @@ public class Gen7Constants {
         }
     }
 
+    public static final int route1EncAreaIndex = 0, route1PikipekEncIndex = 8, route1PikipekStaticIndex = 0;
+
     public static final int noDamageTargetTrappingEffect = 106, noDamageFieldTrappingEffect = 354,
             damageAdjacentFoesTrappingEffect = 373, damageTargetTrappingEffect = 384;
 

@@ -5,6 +5,7 @@ import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
 import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
+import com.dabomstew.pkrandom.romhandlers.Gen6RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -92,8 +93,6 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assertFalse(romHandler.getOPShopItems().isEmpty());
     }
 
-
-
     private String toMultilineString(Map<Integer, Shop> shops) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
@@ -110,14 +109,21 @@ public class RomHandlerShopTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canGetPricesWithoutThrowing(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) == 2);
+        assumeTrue(getGenerationNumberOf(romName) == 2 || getGenerationNumberOf(romName) == 6);
         loadROM(romName);
-        List<Integer> prices = ((Gen2RomHandler) romHandler).getShopPrices();
+        List<Integer> prices;
+        if (romHandler instanceof Gen2RomHandler) {
+            prices = ((Gen2RomHandler) romHandler).getShopPrices();
+        } else if (romHandler instanceof Gen6RomHandler) {
+            prices = ((Gen6RomHandler) romHandler).getShopPrices();
+        } else {
+            throw new IllegalStateException("can't get shop prices, unexpected ROM handler");
+        }
         List<Item> items = romHandler.getItems();
         if (prices.size() != items.size()) {
             throw new IllegalStateException();
         }
-        for (int i = 0; i < prices.size(); i++) {
+        for (int i = 1; i < prices.size(); i++) {
             System.out.println(items.get(i).getName() + ": " + prices.get(i) + "¥");
         }
     }

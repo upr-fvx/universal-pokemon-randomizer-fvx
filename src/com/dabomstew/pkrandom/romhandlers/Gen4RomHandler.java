@@ -891,9 +891,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
 			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
 		} else {
-			// assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
-			writeWord(stats, Gen4Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
+			writeWord(stats, Gen4Constants.bsCommonHeldItemOffset,
+					pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
+			writeWord(stats, Gen4Constants.bsRareHeldItemOffset,
+					pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
 		}
 	}
 

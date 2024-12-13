@@ -1111,8 +1111,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
         } else {
             // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset,
+                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset,
+                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
         }
 
         writeByte(offset + Gen3Constants.bsGenderRatioOffset, (byte) pkmn.getGenderRatio());

@@ -651,9 +651,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             FileFunctions.write2ByteInt(stats, Gen6Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
             FileFunctions.write2ByteInt(stats, Gen6Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
         } else {
-            // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-            FileFunctions.write2ByteInt(stats, Gen6Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
-            FileFunctions.write2ByteInt(stats, Gen6Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen6Constants.bsCommonHeldItemOffset,
+                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen6Constants.bsRareHeldItemOffset,
+                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
         }
 
         if (pkmn.getFullName().equals("Meowstic")) {
@@ -3474,6 +3475,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 fieldItems.add(item);
             }
 
+            // TODO: make all field mega stones supported, XY and ORAS, but shuffle them only with each other
+
             // hidden items - separate handling for XY and ORAS
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int hiddenItemsFile = romEntry.getIntValue("HiddenItemsScriptNumber");
@@ -3842,6 +3845,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             shopItemsOffset = offset;
         }
         return offset;
+    }
+
+    public List<Integer> getShopPrices() {
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
+        try {
+            GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"),true);
+            for (int i = 1; i < itemPriceGarc.files.size(); i++) {
+                System.out.println(items.get(i) + ": " + Arrays.toString(itemPriceGarc.files.get(i).get(0)));
+                prices.add((int) itemPriceGarc.files.get(i).get(0)[0]);
+            }
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+        return prices;
     }
 
     @Override

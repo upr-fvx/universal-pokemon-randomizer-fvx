@@ -685,9 +685,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
             FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
         } else {
-            // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
-            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsCommonHeldItemOffset,
+                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
+            FileFunctions.write2ByteInt(stats, Gen7Constants.bsRareHeldItemOffset,
+                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
         }
 
         if (pkmn.getFullName().equals("Meowstic")) {

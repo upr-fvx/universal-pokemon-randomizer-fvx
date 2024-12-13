@@ -539,10 +539,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
             writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset, 0);
         } else {
-            // assumes common/rare/darkGrassHeldItem to be non-null, if guaranteedHeldItem is.
-            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem().getId());
-            writeWord(stats, Gen5Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem().getId());
-            writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset, pkmn.getDarkGrassHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsCommonHeldItemOffset,
+                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsRareHeldItemOffset,
+                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
+            writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset,
+                    pkmn.getDarkGrassHeldItem() == null ? 0 : pkmn.getDarkGrassHeldItem().getId());
         }
     }
 

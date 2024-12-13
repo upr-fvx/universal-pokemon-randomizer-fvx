@@ -42,8 +42,10 @@ import java.util.function.Supplier;
  */
 public class CopyUpEvolutionsHelper<T extends Species> {
 
-    private final BasicSpeciesAction<T> nullBasicSpeciesAction = pk -> {};
-    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (evFrom, evTo, toMonIsFinalEvo) -> {};
+    private final BasicSpeciesAction<T> nullBasicSpeciesAction = pk -> {
+    };
+    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (evFrom, evTo, toMonIsFinalEvo) -> {
+    };
 
     private final Supplier<SpeciesSet> speciesSetSupplier;
 
@@ -53,7 +55,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
     private EvolvedSpeciesAction<T> splitAction;
 
     public CopyUpEvolutionsHelper(SpeciesSet speciesSet) {
-    	this.speciesSetSupplier = () -> speciesSet;
+        this.speciesSetSupplier = () -> speciesSet;
     }
 
     public CopyUpEvolutionsHelper(Supplier<SpeciesSet> speciesSetSupplier) {
@@ -139,7 +141,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
 
     /**
      * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
-     * @param copySplitEvos If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
+     * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
      */
     @SuppressWarnings("unchecked")
     private void apply(boolean evolutionSanity, boolean copySplitEvos) {
@@ -151,9 +153,9 @@ public class CopyUpEvolutionsHelper<T extends Species> {
             return;
         }
 
-        SpeciesSet basicSpecs = allSpecs.filterFirstEvolutionAvailable(false, false);
-        SpeciesSet splitEvos = allSpecs.filterSplitEvolutions(false);
-        SpeciesSet finalEvos = allSpecs.filterFinalEvos(false);
+        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec));
+        SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec));
+        SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec));
 
         Set<Species> processed = new HashSet<>();
 
@@ -197,5 +199,70 @@ public class CopyUpEvolutionsHelper<T extends Species> {
             }
         }
     }
+
+    // SpeciesSet has inbuilt filter methods for different evolutionary stages.
+    // However, those assume alt forms evolve from the prevos of their base form,
+    // and can thus not be used in this class.
+    // At some point, a proper form rewrite is due, but until then the methods below will do.
+    // TODO: the form rewrite
+    // Note that the below methods function in a way that ignores all Species outside of the
+    // given SpeciesSet. This should make them usable with smaller SpeciesSet / species restrictions.
+    // However, at the time of writing all CopyUpEvolutionsHelpers use RomHandler::getSpeciesSet...
+    // TODO: integrate with species restrictions
+    // Also, there is some risk/possible bug when one Species evolves into the same other Species
+    // in two different ways. Feebas, Meowstic, Pikachu/Exeggute/Cubone (USUM), and Species granted
+    // extra Evolutions when removing time-based evos are of notice here.
+    // TODO: investigate split evos into the same species
+
+    /**
+     * Returns true if spec has no other {@link Species} in allSpecs that evolves into it.
+     */
+    private boolean isBasicSpecies(SpeciesSet allSpecs, Species spec) {
+        for (Evolution evo : spec.getEvolutionsTo()) {
+            if (allSpecs.contains(evo.getFrom())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if spec evolves from some other {@link Species} in allSpecs,
+     * which in turn evolves into at least 2 {@link Species} in allSpecs.
+     */
+    private boolean isSplitEvo(SpeciesSet allSpecs, Species spec) {
+        // TODO: there was a notion in earlier code, of treating Ninjask only as a non-split evo
+        //  (or technically Species which evolved through EvolutionType.LEVEL_CREATE_EXTRA).
+        //  Is this something we want to recreate?
+        for (Evolution evo : spec.getEvolutionsTo()) {
+            if (allSpecs.contains(evo.getFrom())) {
+                long evoCount = evo.getFrom().getEvolutionsFrom().stream()
+                        .map(Evolution::getTo)
+                        .filter(allSpecs::contains)
+                        .count();
+                if (evoCount > 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if spec is not a {@link #isBasicSpecies(SpeciesSet, Species) basic species},
+     * and also spec does not evolve into any other {@link Species} in allSpecs.
+     */
+    private boolean isFinalEvo(SpeciesSet allSpecs, Species spec) {
+        if (isBasicSpecies(allSpecs, spec)) {
+            return false;
+        }
+        for (Evolution evo : spec.getEvolutionsFrom()) {
+            if (allSpecs.contains(evo.getTo())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }

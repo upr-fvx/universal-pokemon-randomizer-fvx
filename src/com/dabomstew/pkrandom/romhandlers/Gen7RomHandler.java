@@ -1286,9 +1286,30 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         try {
             saveAreaData();
             patchMiniorEncounterCode();
+            setRoute1StaticEncounter(encounterAreas);
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+    }
+
+    private void setRoute1StaticEncounter(List<EncounterArea> encounterAreas) throws IOException {
+        // In Vanilla, the first encounter on Route 1 is always a lvl 3 Pikipek,
+        // this is modeled as a static encounter.
+        // This method finds whatever replaced the lvl 3 Pikipek on Route 1,
+        // and writes the static encounter to match.
+        EncounterArea route1 = encounterAreas.get(Gen7Constants.route1EncAreaIndex);
+        Encounter enc = route1.get(Gen7Constants.route1PikipekEncIndex);
+
+        GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
+        byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
+
+        StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
+        se.spec = enc.getSpecies();
+        se.level = enc.getMaxLevel();
+        se.forme = enc.getFormeNumber();
+        writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
+
+        writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
     }
 
     @Override
@@ -1925,7 +1946,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int allies = staticEncountersFile[offset + 0x27];
                 for (int j = 0; j < allies; j++) {
                     int allyIndex = (staticEncountersFile[offset + 0x28 + 4*j] - 1) & 0xFF;
-                    totem.getAllies().put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex * 0x38));
+                    totem.getAllies().put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex));
                 }
                 totems.add(totem);
             }
@@ -2005,6 +2026,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             List<Integer> skipIndices = new ArrayList<>( // Arrays.stream.toList() is immutable so we have to wrap it.
                     Arrays.stream(romEntry.getArrayValue("TotemPokemonIndices")).boxed().collect(Collectors.toList()));
             skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));
+            skipIndices.add(Gen7Constants.route1PikipekStaticIndex);
 
             // Gifts, start at 3 to skip the starters
             byte[] giftsFile = staticGarc.files.get(0).get(0);
@@ -2033,10 +2055,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
             int numberOfStaticEncounters = staticEncountersFile.length / 0x38;
             for (int i = 0; i < numberOfStaticEncounters; i++) {
-                if (skipIndices.contains(i)) continue;
-                int offset = i * 0x38;
-                StaticEncounter se = readStaticEncounter(staticEncountersFile, offset);
-                statics.add(se);
+                if (!skipIndices.contains(i)) {
+                    StaticEncounter se = readStaticEncounter(staticEncountersFile, i);
+                    statics.add(se);
+                }
             }
 
             // Zygarde created via Assembly on Route 16 is hardcoded
@@ -2048,7 +2070,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return statics;
     }
 
-    private StaticEncounter readStaticEncounter(byte[] staticEncountersFile, int offset) {
+    private StaticEncounter readStaticEncounter(byte[] staticEncountersFile, int i) {
+        int offset = i * 0x38;
         StaticEncounter se = new StaticEncounter();
         int species = FileFunctions.read2ByteInt(staticEncountersFile, offset);
         Species pokemon = pokes[species];
@@ -2146,7 +2169,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             List<Integer> skipIndices = new ArrayList<>(
                     Arrays.stream(romEntry.getArrayValue("TotemPokemonIndices")).boxed().collect(Collectors.toList()));
-            skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));
+            skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));
+            skipIndices.add(Gen7Constants.route1PikipekStaticIndex);
             Iterator<StaticEncounter> staticIter = staticPokemon.iterator();
 
             // Gifts, start at 3 to skip the starters
@@ -2166,22 +2190,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
             int numberOfStaticEncounters = staticEncountersFile.length / 0x38;
             for (int i = 0; i < numberOfStaticEncounters; i++) {
-                if (skipIndices.contains(i)) continue;
-                int offset = i * 0x38;
-                StaticEncounter se = staticIter.next();
-                writeWord(staticEncountersFile, offset, se.getSpecies().getBaseNumber());
-                staticEncountersFile[offset + 2] = (byte) se.getForme();
-                staticEncountersFile[offset + 3] = (byte) se.getLevel();
-                if (se.getHeldItem() == null) {
-                    writeWord(staticEncountersFile, offset + 4, -1);
-                } else {
-                    writeWord(staticEncountersFile, offset + 4, se.getHeldItem().getId());
-                }
-                if (se.isResetMoves()) {
-                    writeWord(staticEncountersFile, offset + 12, 0);
-                    writeWord(staticEncountersFile, offset + 14, 0);
-                    writeWord(staticEncountersFile, offset + 16, 0);
-                    writeWord(staticEncountersFile, offset + 18, 0);
+                if (!skipIndices.contains(i)) {
+                    writeStaticEncounter(staticEncountersFile, i, staticIter.next());
                 }
             }
 
@@ -2192,6 +2202,24 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    private void writeStaticEncounter(byte[] staticEncountersFile, int i, StaticEncounter se) {
+        int offset = i * 0x38;
+        writeWord(staticEncountersFile, offset, se.getSpecies().getBaseNumber());
+        staticEncountersFile[offset + 2] = (byte) se.getForme();
+        staticEncountersFile[offset + 3] = (byte) se.getLevel();
+        if (se.getHeldItem() == null) {
+            writeWord(staticEncountersFile, offset + 4, -1);
+        } else {
+            writeWord(staticEncountersFile, offset + 4, se.getHeldItem().getId());
+        }
+        if (se.isResetMoves()) {
+            writeWord(staticEncountersFile, offset + 12, 0);
+            writeWord(staticEncountersFile, offset + 14, 0);
+            writeWord(staticEncountersFile, offset + 16, 0);
+            writeWord(staticEncountersFile, offset + 18, 0);
         }
     }
 

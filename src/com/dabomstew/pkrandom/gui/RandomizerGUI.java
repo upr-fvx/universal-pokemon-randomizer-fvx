@@ -573,7 +573,7 @@ public class RandomizerGUI {
             public void mouseClicked(MouseEvent e) {
                 Desktop desktop = java.awt.Desktop.getDesktop();
                 try {
-                    desktop.browse(new URI(SysConstants.WIKI_URL));
+                    desktop.browse(new URI(SysConstants.WIKI_HOME_URL));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

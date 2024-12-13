@@ -7,10 +7,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RomHandlerStaticsTest extends RomHandlerTest {
 
@@ -20,6 +23,31 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         loadROM(romName);
         System.out.println(romHandler.getStaticPokemon());
         assertFalse(romHandler.getStaticPokemon().isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void linkedStaticsAreOfSameSpecies(String romName) {
+        // This fails in ORAS, presumably since the linked encounter Pikachu
+        // is a different forme. Leaving the fix for later, since it is unclear
+        // whether the linkage or this test needs to be fixed.
+        loadROM(romName);
+
+        Map<Integer, StaticEncounter> bad = new TreeMap<>();
+        List<StaticEncounter> statics = romHandler.getStaticPokemon();
+        for (int i = 0; i < statics.size(); i++) {
+            StaticEncounter se = statics.get(i);
+            System.out.println(i + "\t" + se + " " + se.linkedEncounters);
+            for (StaticEncounter linked : se.linkedEncounters) {
+                if (!linked.spec.equals(se.spec)) {
+                    bad.put(i, se);
+                }
+            }
+        }
+        for (Map.Entry<Integer, StaticEncounter> entry : bad.entrySet()) {
+            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().linkedEncounters);
+        }
+        assertTrue(bad.isEmpty());
     }
 
     @ParameterizedTest

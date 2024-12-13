@@ -1304,9 +1304,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
 
         StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
-        se.spec = enc.getSpecies();
-        se.level = enc.getMaxLevel();
-        se.forme = enc.getFormeNumber();
+        se.setSpecies(enc.getSpecies());
+        se.setLevel(enc.getMaxLevel());
+        se.setForme(enc.getFormeNumber());
         writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
 
         writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
@@ -2691,7 +2691,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
                                     EvolutionType.STONE, ItemIDs.moonStone);
                             extraEvolutions.add(extraEvo);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, extraEvo, "Moon Stone");
+                            addEvoUpdateStone(impossibleEvolutionUpdates, extraEvo, items.get(ItemIDs.moonStone));
                     }
 
                 }

@@ -2058,6 +2058,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
+        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -2077,6 +2080,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             applyCamelCaseNames();
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
+        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
         }
     }
 
@@ -2116,6 +2121,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     "likely ROM entry value \"TMMovesReusableFunctionOffset\" is faulty.");
         }
         writeByte(offset, GBConstants.gbZ80Ret);
+    }
+
+    private void applyForgettableHMsPatch() {
+        // Changes a jump ("JR C, e8") to two NOPs,
+        // and thus ignores the special handling for HMs when forgetting moves.
+        int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
+        if (offset == 0) {
+            return;
+        }
+        if (rom[offset] != GBConstants.gbZ80JumpRelativeC) {
+            throw new RuntimeException("Unexpected byte found for the ROM's move forgetting function, " +
+                    "likely ROM entry value \"HMMovesForgettableFunctionOffset\" is faulty.");
+        }
+        writeByte(offset++, GBConstants.gbZ80Nop);
+        writeByte(offset, GBConstants.gbZ80Nop);
     }
 
     @Override

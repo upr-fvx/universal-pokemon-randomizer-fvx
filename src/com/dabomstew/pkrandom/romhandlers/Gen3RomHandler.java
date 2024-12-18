@@ -3894,6 +3894,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getArrayValue("TMMovesReusableFunctionOffsets").length != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
+        if (romEntry.getArrayValue("HMMovesForgettabelFunctionOffsets").length != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -3919,6 +3922,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
+        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
         }
     }
 
@@ -3971,6 +3976,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) {
                 throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
                         + Integer.toHexString(rom[offset]) + ". Likely TMMovesReusableFunctionOffsets is faulty.");
+            }
+            writeByte(offset, (byte) 0);
+        }
+    }
+
+    private void applyForgettableHMsPatch() {
+        // There are multiple locations where the game checks whether a Move is in a
+        // "banned from forgetting" list. If this was always the same list we could blank out that,
+        // but it is not, so instead we blank out the comparison to see if a given Move (e.g. an HM)
+        // is in the list.
+        int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+        for (int offset : offsets) {
+            if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) { // TODO: comparison to MOVS byte
+                throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
+                        + Integer.toHexString(rom[offset]) + ". Likely HMMovesForgettableFunctionOffsets is faulty.");
             }
             writeByte(offset, (byte) 0);
         }

@@ -1552,7 +1552,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     pokeOffs += 20;
                     tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                     tpk.setHasMegaStone(Gen6Constants.megaStones.contains(tpk.getHeldItem().getId()));
-                    tpk.setHasZCrystal(Gen7Constants.isZCrystal(tpk.getHeldItem().getId())); // TODO: better way of recognizing z crystals
+                    tpk.setHasZCrystal(Gen7Constants.heldZCrystals.contains(tpk.getHeldItem().getId()));
                     pokeOffs += 4;
                     for (int move = 0; move < 4; move++) {
                         tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));

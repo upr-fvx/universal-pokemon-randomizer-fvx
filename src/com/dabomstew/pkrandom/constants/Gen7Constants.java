@@ -439,14 +439,6 @@ public class Gen7Constants {
     public static final Map<Type, List<Integer>> typeBoostingItems = Gen6Constants.typeBoostingItems;
     public static final Map<Type, Integer> weaknessReducingBerries = Gen6Constants.weaknessReducingBerries;
 
-    public static boolean isZCrystal(int itemIndex) {
-        // From https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)
-        return (itemIndex >= ItemIDs.normaliumZHeld && itemIndex <= ItemIDs.pikaniumZHeld) ||
-                (itemIndex >= ItemIDs.decidiumZHeld && itemIndex <= ItemIDs.pikashuniumZBag) ||
-                (itemIndex >= ItemIDs.solganiumZBag && itemIndex <= ItemIDs.kommoniumZBag);
-
-    }
-
     public static List<String> getShopNames(int romType) {
         List<String> shopNames = new ArrayList<>();
         shopNames.add("Primary 0 Trials");
@@ -914,6 +906,7 @@ public class Gen7Constants {
     private static final Set<Integer> regularShopItemsSM = setupRegularShopItemsSM();
     private static final Set<Integer> regularShopItemsUSUM = setupRegularShopItemsUSUM();
     public static final Set<Integer> opShopItems = setupOPShopItems();
+    public static final Set<Integer> heldZCrystals = setupHeldZCrystals();
 
     private static Set<Integer> setupBannedItemsSM() {
         Set<Integer> set = new HashSet<>();
@@ -1017,6 +1010,15 @@ public class Gen7Constants {
         addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupHeldZCrystals() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.normaliumZHeld, ItemIDs.pikaniumZHeld);
+        addBetween(set, ItemIDs.decidiumZHeld, ItemIDs.mewniumZHeld);
+        set.add(ItemIDs.pikashuniumZHeld);
+        addBetween(set, ItemIDs.mimikiumZHeld, ItemIDs.ultranecroziumZHeld); // USUM only
         return Collections.unmodifiableSet(set);
     }
 

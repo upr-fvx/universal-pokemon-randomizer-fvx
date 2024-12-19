@@ -171,7 +171,7 @@ public class TestRomHandler extends AbstractRomHandler {
         xItems = Collections.unmodifiableSet(mockupOf.getXItems());
         regularShopItems = Collections.unmodifiableSet(mockupOf.getRegularShopItems());
         opShopItems = Collections.unmodifiableSet(mockupOf.getOPShopItems());
-        uniqueNoSellItems = Collections.unmodifiableSet(mockupOf.getUniqueNoSellItems());
+        uniqueNoSellItems = Collections.unmodifiableSet(mockupOf.getMegaStones());
 
         requiredFieldTMs = Collections.unmodifiableSet(mockupOf.getRequiredFieldTMs());
         originalFieldItems = Collections.unmodifiableList(mockupOf.getFieldItems());
@@ -1116,7 +1116,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public Set<Item> getUniqueNoSellItems() {
+    public Set<Item> getMegaStones() {
         return uniqueNoSellItems;
     }
 

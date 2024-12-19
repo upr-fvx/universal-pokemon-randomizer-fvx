@@ -2204,7 +2204,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getUniqueNoSellItems() {
+    public Set<Item> getMegaStones() {
         return new HashSet<>();
     }
 

@@ -4,6 +4,11 @@ import java.util.Objects;
 
 public class Item {
 
+    // TODO: ideally, there should be an ItemType enum.
+    //  This would eliminate disparate handling for questions like "is this a TM?", "is this a Mega Stone?",
+    //  "is this a Z Crystal?". That will have to be done in a second Item-refactor though, not the same
+    //  one that introduced the Item class.
+
     private final int id;
     private final String name;
 

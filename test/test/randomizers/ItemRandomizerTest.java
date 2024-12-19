@@ -119,7 +119,7 @@ public class ItemRandomizerTest extends RandomizerTest{
 
         Map<Item, Integer> counts = countItems(romHandler.getFieldItems());
         System.out.println(counts);
-        Set<Item> uniqueItems = romHandler.getUniqueNoSellItems();
+        Set<Item> uniqueItems = romHandler.getMegaStones();
         Set<Integer> filteredValues = counts.entrySet().stream()
                 .filter(et -> !et.getKey().isTM())
                 .filter(et -> !uniqueItems.contains(et.getKey()))

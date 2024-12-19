@@ -430,7 +430,7 @@ public interface RomHandler {
 
     Set<Item> getXItems();
 
-    Set<Item> getUniqueNoSellItems();
+    Set<Item> getMegaStones();
 
     Set<Item> getRegularShopItems();
 

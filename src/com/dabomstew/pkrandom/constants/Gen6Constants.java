@@ -65,8 +65,19 @@ public class Gen6Constants {
     public static final String introInitialCryOffset3XY = "0020E0E30310A0E1E4FDFFEB0000A0E3";
     public static final String introRepeatedCryOffsetXY = "1080BDE800002041000000008D001000";
 
-    public static final Map<Integer,List<Integer>> speciesToMegaStoneXY = setupSpeciesToMegaStone(Type_XY);
-    public static final Map<Integer,List<Integer>> speciesToMegaStoneORAS = setupSpeciesToMegaStone(Type_ORAS);
+    public static final List<Integer> speciesWithMegaEvos = Collections.unmodifiableList(Arrays.asList(
+            SpeciesIDs.venusaur, SpeciesIDs.charizard, SpeciesIDs.blastoise, SpeciesIDs.alakazam, SpeciesIDs.gengar,
+            SpeciesIDs.kangaskhan, SpeciesIDs.pinsir, SpeciesIDs.gyarados, SpeciesIDs.aerodactyl, SpeciesIDs.mewtwo,
+            SpeciesIDs.ampharos, SpeciesIDs.scizor, SpeciesIDs.heracross, SpeciesIDs.houndoom, SpeciesIDs.tyranitar,
+            SpeciesIDs.blaziken, SpeciesIDs.gardevoir, SpeciesIDs.mawile, SpeciesIDs.aggron, SpeciesIDs.medicham,
+            SpeciesIDs.manectric, SpeciesIDs.banette, SpeciesIDs.absol, SpeciesIDs.latias, SpeciesIDs.latios,
+            SpeciesIDs.garchomp, SpeciesIDs.lucario, SpeciesIDs.abomasnow,
+            // ORAS onlies:
+            SpeciesIDs.beedrill, SpeciesIDs.pidgeot, SpeciesIDs.slowbro, SpeciesIDs.steelix, SpeciesIDs.sceptile,
+            SpeciesIDs.swampert, SpeciesIDs.sableye, SpeciesIDs.sharpedo, SpeciesIDs.camerupt, SpeciesIDs.altaria,
+            SpeciesIDs.glalie, SpeciesIDs.salamence, SpeciesIDs.metagross, SpeciesIDs.rayquaza, SpeciesIDs.lopunny,
+            SpeciesIDs.gallade, SpeciesIDs.audino, SpeciesIDs.diancie
+    ));
 
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
     private static final Map<Integer,Map<Integer,String>> formeSuffixesByBaseForme = setupFormeSuffixesByBaseForme();
@@ -600,13 +611,6 @@ public class Gen6Constants {
         return shopItemsLocatorXY;
     }
 
-    public static boolean isMegaStone(int itemIndex) {
-        // These values come from https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)
-        return (itemIndex >= ItemIDs.gengarite && itemIndex <= ItemIDs.latiosite) ||
-                (itemIndex >= ItemIDs.swampertite && itemIndex <= ItemIDs.diancite) ||
-                (itemIndex >= ItemIDs.cameruptite && itemIndex <= ItemIDs.beedrillite);
-    }
-
     private static Type[] constructTypeTable() {
         Type[] table = new Type[256];
         table[0x00] = Type.NORMAL;
@@ -722,7 +726,6 @@ public class Gen6Constants {
         putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
         putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
         putFormSuffixes(map, SpeciesIDs.groudon, "-Primal");
-        putFormSuffixes(map, SpeciesIDs.rayquaza, "-Mega"); // the other megas are put using stones
         putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
         putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
@@ -746,7 +749,7 @@ public class Gen6Constants {
         putFormSuffixes(map, SpeciesIDs.floette, "", "", "", "", "-Eternal"); // first 4 are just colors
         putFormSuffixes(map, SpeciesIDs.hoopa, "-Unbound");
 
-        for (Integer speciesID : Gen6Constants.speciesToMegaStoneORAS.keySet()) {
+        for (Integer speciesID : Gen6Constants.speciesWithMegaEvos) {
             if (speciesID == SpeciesIDs.charizard || speciesID == SpeciesIDs.mewtwo) {
                 putFormSuffixes(map, speciesID, "-Mega-X", "-Mega-Y");
             } else {
@@ -777,8 +780,7 @@ public class Gen6Constants {
     private static final Set<Integer> badItemsXY = setupBadItemsXY();
     public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems =  setupOPShopItems();
-    public static final Set<Integer> uniqueNoSellItemsXY = setupUniqueNoSellItemsXY();
-    public static final Set<Integer> uniqueNoSellItemsORAS = setupUniqueNoSellItemsORAS();
+    public static final Set<Integer> megaStones = setupMegaStones();
 
     private static Set<Integer> setupBannedItemsXY() {
         Set<Integer> set = new HashSet<>();
@@ -859,14 +861,9 @@ public class Gen6Constants {
         return Collections.unmodifiableSet(set);
     }
 
-    private static Set<Integer> setupUniqueNoSellItemsXY() {
+    private static Set<Integer> setupMegaStones() {
         Set<Integer> set = new HashSet<>();
         addBetween(set, ItemIDs.gengarite, ItemIDs.latiosite);
-        return Collections.unmodifiableSet(set);
-    }
-
-    private static Set<Integer> setupUniqueNoSellItemsORAS() {
-        Set<Integer> set = new HashSet<>(uniqueNoSellItemsXY);
         addBetween(set, ItemIDs.swampertite, ItemIDs.diancite);
         addBetween(set, ItemIDs.cameruptite, ItemIDs.beedrillite);
         return Collections.unmodifiableSet(set);
@@ -895,69 +892,6 @@ public class Gen6Constants {
         } else {
             return badItemsORAS;
         }
-    }
-
-    public static Set<Integer> getUniqueNoSellItems(int romType) {
-        if (romType == Type_XY) {
-            return uniqueNoSellItemsXY;
-        } else {
-            return uniqueNoSellItemsORAS;
-        }
-    }
-
-    private static Map<Integer,List<Integer>> setupSpeciesToMegaStone(int romType) {
-        Map<Integer,List<Integer>> map = new TreeMap<>();
-
-        map.put(SpeciesIDs.venusaur, Collections.singletonList(ItemIDs.venusaurite));
-        map.put(SpeciesIDs.charizard, Arrays.asList(ItemIDs.charizarditeX, ItemIDs.charizarditeY));
-        map.put(SpeciesIDs.blastoise, Collections.singletonList(ItemIDs.blastoisinite));
-        map.put(SpeciesIDs.alakazam, Collections.singletonList(ItemIDs.alakazite));
-        map.put(SpeciesIDs.gengar, Collections.singletonList(ItemIDs.gengarite));
-        map.put(SpeciesIDs.kangaskhan, Collections.singletonList(ItemIDs.kangaskhanite));
-        map.put(SpeciesIDs.pinsir, Collections.singletonList(ItemIDs.pinsirite));
-        map.put(SpeciesIDs.gyarados, Collections.singletonList(ItemIDs.gyaradosite));
-        map.put(SpeciesIDs.aerodactyl, Collections.singletonList(ItemIDs.aerodactylite));
-        map.put(SpeciesIDs.mewtwo, Arrays.asList(ItemIDs.mewtwoniteX, ItemIDs.mewtwoniteY));
-        map.put(SpeciesIDs.ampharos, Collections.singletonList(ItemIDs.ampharosite));
-        map.put(SpeciesIDs.scizor, Collections.singletonList(ItemIDs.scizorite));
-        map.put(SpeciesIDs.heracross, Collections.singletonList(ItemIDs.heracronite));
-        map.put(SpeciesIDs.houndoom, Collections.singletonList(ItemIDs.houndoominite));
-        map.put(SpeciesIDs.tyranitar, Collections.singletonList(ItemIDs.tyranitarite));
-        map.put(SpeciesIDs.blaziken, Collections.singletonList(ItemIDs.blazikenite));
-        map.put(SpeciesIDs.gardevoir, Collections.singletonList(ItemIDs.gardevoirite));
-        map.put(SpeciesIDs.mawile, Collections.singletonList(ItemIDs.mawilite));
-        map.put(SpeciesIDs.aggron, Collections.singletonList(ItemIDs.aggronite));
-        map.put(SpeciesIDs.medicham, Collections.singletonList(ItemIDs.medichamite));
-        map.put(SpeciesIDs.manectric, Collections.singletonList(ItemIDs.manectite));
-        map.put(SpeciesIDs.banette, Collections.singletonList(ItemIDs.banettite));
-        map.put(SpeciesIDs.absol, Collections.singletonList(ItemIDs.absolite));
-        map.put(SpeciesIDs.latias, Collections.singletonList(ItemIDs.latiasite));
-        map.put(SpeciesIDs.latios, Collections.singletonList(ItemIDs.latiosite));
-        map.put(SpeciesIDs.garchomp, Collections.singletonList(ItemIDs.garchompite));
-        map.put(SpeciesIDs.lucario, Collections.singletonList(ItemIDs.lucarionite));
-        map.put(SpeciesIDs.abomasnow, Collections.singletonList(ItemIDs.abomasite));
-
-        if (romType == Type_ORAS) {
-            map.put(SpeciesIDs.beedrill, Collections.singletonList(ItemIDs.beedrillite));
-            map.put(SpeciesIDs.pidgeot, Collections.singletonList(ItemIDs.pidgeotite));
-            map.put(SpeciesIDs.slowbro, Collections.singletonList(ItemIDs.slowbronite));
-            map.put(SpeciesIDs.steelix, Collections.singletonList(ItemIDs.steelixite));
-            map.put(SpeciesIDs.sceptile, Collections.singletonList(ItemIDs.sceptilite));
-            map.put(SpeciesIDs.swampert, Collections.singletonList(ItemIDs.swampertite));
-            map.put(SpeciesIDs.sableye, Collections.singletonList(ItemIDs.sablenite));
-            map.put(SpeciesIDs.sharpedo, Collections.singletonList(ItemIDs.sharpedonite));
-            map.put(SpeciesIDs.camerupt, Collections.singletonList(ItemIDs.cameruptite));
-            map.put(SpeciesIDs.altaria, Collections.singletonList(ItemIDs.altarianite));
-            map.put(SpeciesIDs.glalie, Collections.singletonList(ItemIDs.glalitite));
-            map.put(SpeciesIDs.salamence, Collections.singletonList(ItemIDs.salamencite));
-            map.put(SpeciesIDs.metagross, Collections.singletonList(ItemIDs.metagrossite));
-            map.put(SpeciesIDs.lopunny, Collections.singletonList(ItemIDs.lopunnite));
-            map.put(SpeciesIDs.gallade, Collections.singletonList(ItemIDs.galladite));
-            map.put(SpeciesIDs.audino, Collections.singletonList(ItemIDs.audinite));
-            map.put(SpeciesIDs.diancie, Collections.singletonList(ItemIDs.diancite));
-        }
-
-        return map;
     }
 
     public static void tagTrainersXY(List<Trainer> trs) {

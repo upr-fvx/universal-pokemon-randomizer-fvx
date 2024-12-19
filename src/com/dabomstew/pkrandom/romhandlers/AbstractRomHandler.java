@@ -469,7 +469,9 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected Set<Item> itemIdsToSet(Collection<Integer> ids) {
         List<Item> allItems = getItems();
-        return ids.stream().map(allItems::get)
+        return ids.stream()
+                .filter(id -> id < allItems.size())
+                .map(allItems::get)
                 .collect(Collectors.toSet());
     }
 
@@ -486,6 +488,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public Set<Item> getXItems() {
         return itemIdsToSet(GlobalConstants.xItems);
+    }
+
+    @Override
+    public Set<Item> getMegaStones() {
+        return Collections.emptySet();
     }
 
     @Override

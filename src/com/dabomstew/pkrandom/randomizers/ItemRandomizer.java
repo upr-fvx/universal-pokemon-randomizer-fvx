@@ -106,7 +106,7 @@ public class ItemRandomizer extends Randomizer {
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
-        Set<Item> uniqueNoSellItems = uniqueItems ? romHandler.getUniqueNoSellItems() : new HashSet<>();
+        Set<Item> uniqueNoSellItems = uniqueItems ? romHandler.getMegaStones() : new HashSet<>();
 
         int neededNonTMCount = nonTMs.size();
         nonTMs.clear();

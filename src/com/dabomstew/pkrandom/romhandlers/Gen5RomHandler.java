@@ -3214,7 +3214,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public Set<Item> getUniqueNoSellItems() {
+    public Set<Item> getMegaStones() {
         return new HashSet<>();
     }
 

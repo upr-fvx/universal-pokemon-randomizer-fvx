@@ -559,7 +559,6 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
         putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
         putFormSuffixes(map, SpeciesIDs.groudon, "-Primal");
-        putFormSuffixes(map, SpeciesIDs.rayquaza, "-Mega"); // the other megas are put using stones
         putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
         putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
@@ -595,7 +594,7 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.necrozma, "-DuskMane", "-DawnWings", "-Ultra");
         putFormSuffixes(map, SpeciesIDs.magearna, "-OGColors");
 
-        for (Integer speciesID : Gen6Constants.speciesToMegaStoneORAS.keySet()) {
+        for (Integer speciesID : Gen6Constants.speciesWithMegaEvos) {
             if (speciesID == SpeciesIDs.charizard || speciesID == SpeciesIDs.mewtwo) {
                 putFormSuffixes(map, speciesID, "-Mega-X", "-Mega-Y");
             } else {

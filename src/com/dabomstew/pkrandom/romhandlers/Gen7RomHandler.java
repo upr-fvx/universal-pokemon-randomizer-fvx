@@ -3018,11 +3018,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Set<Item> getMegaStones() {
-        return new HashSet<>(); // TODO: should have some implementation
-    }
-
-    @Override
     public Set<Item> getRegularShopItems() {
         return itemIdsToSet(Gen7Constants.getRegularShopItems(romEntry.getRomType()));
     }

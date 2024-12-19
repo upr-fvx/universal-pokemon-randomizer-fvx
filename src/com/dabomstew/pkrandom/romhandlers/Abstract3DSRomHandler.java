@@ -22,11 +22,13 @@ package com.dabomstew.pkrandom.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.constants.Gen6Constants;
 import com.dabomstew.pkrandom.ctr.GARCArchive;
 import com.dabomstew.pkrandom.ctr.NCCH;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
 
@@ -38,6 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An abstract base class for 3DS {@link RomHandler}s, which standardises common 3DS functions.
@@ -342,6 +345,11 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		case FAIRY:
 			return isGen7 ? 555 : 546;
 		}
+	}
+
+	@Override
+	public Set<Item> getMegaStones() {
+		return itemIdsToSet(Gen6Constants.megaStones);
 	}
 
 	@Override

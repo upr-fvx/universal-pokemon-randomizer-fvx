@@ -2431,11 +2431,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getMegaStones() {
-        return new HashSet<>();
-    }
-
-    @Override
     public Set<Item> getRegularShopItems() {
         return itemIdsToSet(Gen2Constants.regularShopItems);
     }

@@ -3374,11 +3374,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Set<Item> getMegaStones() {
-        return itemIdsToSet(Gen6Constants.megaStones);
-    }
-
-    @Override
     public Set<Item> getRegularShopItems() {
         return itemIdsToSet(Gen6Constants.regularShopItems);
     }

@@ -3214,11 +3214,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public Set<Item> getMegaStones() {
-        return new HashSet<>();
-    }
-
-    @Override
     public Set<Item> getRegularShopItems() {
         return itemIdsToSet(Gen5Constants.regularShopItems);
     }

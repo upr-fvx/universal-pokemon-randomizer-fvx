@@ -4803,11 +4803,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public Set<Item> getMegaStones() {
-		return new HashSet<>();
-	}
-
-	@Override
 	public Set<Item> getRegularShopItems() {
 		return itemIdsToSet(Gen4Constants.regularShopItems);
 	}

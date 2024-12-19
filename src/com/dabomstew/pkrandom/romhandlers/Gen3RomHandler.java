@@ -3610,11 +3610,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Set<Item> getMegaStones() {
-        return new HashSet<>();
-    }
-
-    @Override
     public Set<Item> getRegularShopItems() {
         return itemIdsToSet(Gen3Constants.regularShopItems);
     }

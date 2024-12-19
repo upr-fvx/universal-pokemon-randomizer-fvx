@@ -722,6 +722,10 @@ public class NCCH {
         }
     }
 
+    public Set<String> getFileNames() {
+        return Collections.unmodifiableSet(romfsFiles.keySet());
+    }
+
     public boolean hasFile(String filename) {
         return romfsFiles.containsKey(filename);
     }

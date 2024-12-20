@@ -60,6 +60,19 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 getRomEntry().getArrayValue("ReservedBanks"));
         freeUnusedSpaceAtEndOfBanks();
         freeUnusedBanks();
+
+        findHMMovesForgettableFunctionOffset();
+    }
+
+    private void findHMMovesForgettableFunctionOffset() {
+        List<Integer> offsets = RomFunctions.search(rom, RomFunctions.hexToBytes("C1 D1 7A 38 04 E1 09 A7 C9"));
+        if (offsets.isEmpty()) {
+            System.out.println("no offset found");
+        } else {
+            if (offsets.size() > 1) System.out.println("multiple offsets found....");
+            for (int offset : offsets)
+                System.out.println("HMMovesForgettableFunctionOffset=0x" + Integer.toHexString(offset + 3).toUpperCase());
+        }
     }
 
     /**

@@ -178,6 +178,37 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         mapLoadingDone = true;
 
         freeAllUnusedSpace();
+
+        findForgettableHMFunctionOffsets();
+    }
+
+    private void findForgettableHMFunctionOffsets() {
+        List<Integer> trueOffsets = new ArrayList<>();
+
+        findAndAddToTrueOffsets("10 88 07 49 88 42 10 D0", 0x16, trueOffsets);
+        findAndAddToTrueOffsets("04 4b 08 1C 32 30 40 00", 0x10, trueOffsets);
+
+        System.out.print("HMMovesForgettableFunctionOffsets=[");
+        System.out.print(trueOffsets.stream().map(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", ")));
+        System.out.println("]");
+    }
+
+    private void findAndAddToTrueOffsets(String hex, int searchOffset, List<Integer> trueOffsets) {
+        System.out.println("looking for " + hex);
+        List<Integer> offsets = RomFunctions.search(rom, RomFunctions.hexToBytes(hex));
+        if (offsets.isEmpty()) {
+            System.out.println("could not find any offsets");
+        } else {
+            if (offsets.size() > 1) System.out.println("found multiple offsets");
+            for (int offset : offsets) {
+                int trueOffset = offset + searchOffset;
+                if (rom[trueOffset] == 1) {
+                    trueOffsets.add(trueOffset);
+                } else {
+                    System.out.println("candidate 0x" + Integer.toHexString(offset) + " is invalid");
+                }
+            }
+        }
     }
 
     @Override
@@ -3894,7 +3925,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getArrayValue("TMMovesReusableFunctionOffsets").length != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
-        if (romEntry.getArrayValue("HMMovesForgettabelFunctionOffsets").length != 0) {
+        if (romEntry.getArrayValue("HMMovesForgettableFunctionOffsets").length != 0) {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
         }
         return available;
@@ -3984,12 +4015,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private void applyForgettableHMsPatch() {
         // There are multiple locations where the game checks whether a Move is in a
         // "banned from forgetting" list. If this was always the same list we could blank out that,
-        // but it is not, so instead we blank out the comparison to see if a given Move (e.g. an HM)
-        // is in the list.
+        // but it is not. Instead, we force the checks themselves to misreport, to return "0" rather
+        // than "1" when an HM is found.
         int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
         for (int offset : offsets) {
-            if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) { // TODO: comparison to MOVS byte
-                throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
+            if (rom[offset] != 1) {
+                throw new RuntimeException("Expected 0x01, was 0x"
                         + Integer.toHexString(rom[offset]) + ". Likely HMMovesForgettableFunctionOffsets is faulty.");
             }
             writeByte(offset, (byte) 0);

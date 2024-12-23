@@ -178,37 +178,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         mapLoadingDone = true;
 
         freeAllUnusedSpace();
-
-        findForgettableHMFunctionOffsets();
-    }
-
-    private void findForgettableHMFunctionOffsets() {
-        List<Integer> trueOffsets = new ArrayList<>();
-
-        findAndAddToTrueOffsets("10 88 07 49 88 42 10 D0", 0x16, trueOffsets);
-        findAndAddToTrueOffsets("04 4b 08 1C 32 30 40 00", 0x10, trueOffsets);
-
-        System.out.print("HMMovesForgettableFunctionOffsets=[");
-        System.out.print(trueOffsets.stream().map(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", ")));
-        System.out.println("]");
-    }
-
-    private void findAndAddToTrueOffsets(String hex, int searchOffset, List<Integer> trueOffsets) {
-        System.out.println("looking for " + hex);
-        List<Integer> offsets = RomFunctions.search(rom, RomFunctions.hexToBytes(hex));
-        if (offsets.isEmpty()) {
-            System.out.println("could not find any offsets");
-        } else {
-            if (offsets.size() > 1) System.out.println("found multiple offsets");
-            for (int offset : offsets) {
-                int trueOffset = offset + searchOffset;
-                if (rom[trueOffset] == 1) {
-                    trueOffsets.add(trueOffset);
-                } else {
-                    System.out.println("candidate 0x" + Integer.toHexString(offset) + " is invalid");
-                }
-            }
-        }
     }
 
     @Override

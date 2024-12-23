@@ -180,29 +180,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(e);
         }
 
-        findHMsForgettableFunctionOffset();
-
         // If there are tweaks for expanding the ARM9, do it here to keep it simple.
         boolean shouldExtendARM9 = romEntry.hasTweakFile("ShedinjaEvolutionTweak") || romEntry.hasTweakFile("NewIndexToMusicTweak");
         if (shouldExtendARM9) {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
             arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen5Constants.arm9Offset);
         }
-    }
-
-    private void findHMsForgettableFunctionOffset() {
-
-        System.out.println(romEntry.getName());
-        List<Integer> offsets = RomFunctions.search(arm9, RomFunctions.hexToBytes(Gen5Constants.hmsForgettableBefore));
-        if (offsets.isEmpty()) {
-            System.out.println("no offsets found...");
-        } else {
-            if (offsets.size() > 1)
-                System.out.println("more than 1 offset found !?");
-            for (int offset : offsets)
-                System.out.println("HMMovesForgettableFunctionOffset=0x" + Integer.toHexString(offset).toUpperCase());
-        }
-        System.out.println();
     }
 
     private void loadPokemonStats() {

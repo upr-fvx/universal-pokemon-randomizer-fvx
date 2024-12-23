@@ -37,15 +37,15 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         List<StaticEncounter> statics = romHandler.getStaticPokemon();
         for (int i = 0; i < statics.size(); i++) {
             StaticEncounter se = statics.get(i);
-            System.out.println(i + "\t" + se + " " + se.linkedEncounters);
-            for (StaticEncounter linked : se.linkedEncounters) {
-                if (!linked.spec.equals(se.spec)) {
+            System.out.println(i + "\t" + se + " " + se.getLinkedEncounters());
+            for (StaticEncounter linked : se.getLinkedEncounters()) {
+                if (!linked.getSpecies().equals(se.getSpecies())) {
                     bad.put(i, se);
                 }
             }
         }
         for (Map.Entry<Integer, StaticEncounter> entry : bad.entrySet()) {
-            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().linkedEncounters);
+            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().getLinkedEncounters());
         }
         assertTrue(bad.isEmpty());
     }

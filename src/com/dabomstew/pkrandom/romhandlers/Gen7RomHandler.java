@@ -3068,7 +3068,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         for (int id : fieldItemIds) {
             Item item = items.get(id);
-            if (item.isAllowed()) {
+            if (item != null && item.isAllowed()) {
                 fieldItems.add(item);
             }
         }
@@ -3085,7 +3085,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         for (int i = 0; i < fieldItemsIds.size(); i++) {
             Item current = items.get(fieldItemsIds.get(i));
-            if (current.isAllowed()) {
+            if (current != null && current.isAllowed()) {
                 // Replace it
                 fieldItemsIds.set(i, iterNewItems.next().getId());
             }

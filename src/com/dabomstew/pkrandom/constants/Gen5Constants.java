@@ -122,6 +122,12 @@ public class Gen5Constants {
     public static final int fossilPokemonFile = 877;
     public static final int fossilPokemonLevelOffset = 0x3F7;
 
+    // It is intentional that "after" is 4 bytes longer that "before".
+    // 2 of those last 4 bytes in "before" vary between games, so we don't want to search for
+    // them/confirm they're there. Still, they need to be overwritten by "after".
+    public static final String hmsForgettableBefore = "08 4A 00 23 59 00 51 18 B8 31 09 88 88 42 01 D1 01 20 70 47 59 1C 09 06 0B 0E 06 2B F2 D3 00 20 70 47 C0 46",
+            hmsForgettableAfter = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 70 47 00 00 00 00 00 00";
+
     public static final Map<Integer,List<Integer>> abilityVariations = setupAbilityVariations();
 
     private static Map<Integer,List<Integer>> setupAbilityVariations() {

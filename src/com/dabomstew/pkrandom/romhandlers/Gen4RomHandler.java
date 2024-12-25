@@ -5210,6 +5210,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
 			available |= MiscTweak.REUSABLE_TMS.getValue();
 		}
+        if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -5234,7 +5237,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             updateRotomFormeTyping();
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
 			applyReusableTMsPatch();
-		}
+		} else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
+        }
     }
 
 	private void applyFastestText() {
@@ -5524,6 +5529,27 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		arm9[offset] = Gen4Constants.tmsReusableByteAfter;
 	}
+
+    private void applyForgettableHMsPatch() {
+        int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+        int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
+        if (offsets.length != expectedOffsetsLength) {
+            throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
+                    + expectedOffsetsLength + ", was " + offsets.length + ".");
+        }
+        if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+            // Overlay 8
+            // 01 F0 FB F9 01 28 -> C0 46 00 20 01 28
+            // ARM9
+            // EE F7 BC FF 01 28 -> C0 46 00 20 01 28
+            // EE F7 53 FF 01 28 -> C0 46 00 20 01 28
+        } else {
+            // Overlay 13
+            // 01 F0 35 FA 01 28 -> C0 46 00 20 01 28
+            // ARM9
+            // F0 F7 5B FA 01 28 ->C0 46 00 20 01 28
+        }
+    }
 
 	@Override
     public void enableGuaranteedPokemonCatching() {

@@ -4011,12 +4011,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         // TODO
     }
 
-    // TODO: remove
-    @Override
-    protected BufferedImage ripOtherPoke(int i, NARCArchive pokeGraphicsNARC) {
-        return null;
-    }
-
     @Override
     public Gen5PokemonImageGetter createPokemonImageGetter(Species pk) {
         return new Gen5PokemonImageGetter(pk);

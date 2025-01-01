@@ -467,7 +467,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-  //      ripAllOtherPokes();
         List<BufferedImage> bims = new ArrayList<>();
 
 		String NARCPath = getRomEntry().getFile("PokemonGraphics");
@@ -484,37 +483,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
         return bims;
     }
-
-    private void ripAllOtherPokes() {
-        String NARCPath = getRomEntry().getFile("OtherPokemonGraphics");
-        NARCArchive pokeGraphicsNARC;
-        try {
-            pokeGraphicsNARC = readNARC(NARCPath);
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
-        for (int i=0; i <= 157; i++) {
-            ripAndDumpOtherPokemon(pokeGraphicsNARC, i);
-        }
-
-//        ripAndDumpOtherPokemon(pokeGraphicsNARC, 208);
-//        ripAndDumpOtherPokemon(pokeGraphicsNARC, 209);
-//        ripAndDumpOtherPokemon(pokeGraphicsNARC, 211);
-    }
-
-    private void ripAndDumpOtherPokemon(NARCArchive pokeGraphicsNARC, int i) {
-        BufferedImage bim = ripOtherPoke(i, pokeGraphicsNARC);
-        String fileAdress = "Pokemon_image_dump/gen" + generationOfPokemon() + "/"
-                + String.format("a_%03d.png", i);
-        File outputfile = new File(fileAdress);
-        try {
-            ImageIO.write(bim, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected abstract BufferedImage ripOtherPoke(int i, NARCArchive pokeGraphicsNARC);
 
     @Override
     public boolean hasPokemonImageGetter() {

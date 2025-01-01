@@ -405,7 +405,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
                 if (getGraphicalFormePokes().contains(base.getNumber())) {
                     loadGraphicalFormePokemonPalettes(pk);
                 } else {
-                    System.out.println(pk);
                     int normalPaletteIndex = calculatePokemonNormalPaletteIndex(pk.getNumber());
                     pk.setNormalPalette(readPalette(pokeGraphicsNARC, normalPaletteIndex));
 
@@ -468,7 +467,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-//        ripAllOtherPokes();
+  //      ripAllOtherPokes();
         List<BufferedImage> bims = new ArrayList<>();
 
 		String NARCPath = getRomEntry().getFile("PokemonGraphics");

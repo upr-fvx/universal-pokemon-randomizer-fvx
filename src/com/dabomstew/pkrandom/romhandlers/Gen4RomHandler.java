@@ -5761,7 +5761,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
     protected Collection<Integer> getGraphicalFormePokes() {
-        return Gen4Constants.otherPokemonGraphicsPalettes.keySet();
+        return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
     }
 
     protected void loadGraphicalFormePokemonPalettes(Species pk) {
@@ -5774,13 +5774,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         }
 
 		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(base.getNumber());
-		System.out.println(pk);
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
 		System.out.println(base);
-		System.out.println(Arrays.deepToString(palettes));
+		System.out.println(pk);
 		System.out.println(pk.getFormeNumber());
+		System.out.println(Arrays.deepToString(palettes));
 		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
-		pk.setShinyPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
+		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
     }
 
     protected void saveGraphicalFormePokemonPalettes(Species pk) {
@@ -5793,7 +5793,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(base.getNumber());
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
 		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
 		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
     }
@@ -5829,7 +5829,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		@Override
 		public int getGraphicalFormeAmount() {
-			int[][] formeInfo = Gen4Constants.otherPokemonGraphicsImages.get(pk.getNumber());
+			int[][] formeInfo = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(pk.getNumber());
 			if (formeInfo == null) {
 				return 1;
 			} else {
@@ -5874,7 +5874,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		private int getImageIndex() {
 			int imageIndex;
 			if (getGraphicalFormeAmount() > 1) {
-				imageIndex = Gen4Constants.otherPokemonGraphicsImages.get(pk.getNumber())[back ? 1 : 0][forme];
+				imageIndex = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(pk.getNumber())[back ? 1 : 0][forme];
 			} else {
 				imageIndex = pk.getNumber() * 6 + 2;
 				if (gender == MALE) {
@@ -5888,13 +5888,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		private Palette getPalette() {
-			// For now, just returns the palette disregarding forme.
-			// This means the 'forme' attribute goes unused. This is intentional!
-			// The forme rewrite should be soon, and the plan is to give *all* formes
-			// (graphical or not) something akin to Species objects, but holding only
-			// the attributes each alt forme needs. This means the below code should
-			// be sufficient, come that rewrite.
-			return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+			// placeholder code, until the forme rewrite comes along
+			if (pk.isBaseForme() && forme != 0) {
+				String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
+				NARCArchive NARC;
+				try {
+					NARC = readNARC(NARCpath);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+
+				int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(pk.getNumber());
+				System.out.println(Arrays.deepToString(palettes));
+				return shiny ? readPalette(NARC, palettes[1][forme]) : readPalette(NARC, palettes[0][forme]);
+			} else {
+				return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+			}
 		}
 
 		@Override
@@ -5912,7 +5921,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 			BufferedImage[] normal = new BufferedImage[getGraphicalFormeAmount()*2];
 			BufferedImage[] shiny = new BufferedImage[getGraphicalFormeAmount()*2];
+			System.out.println(getGraphicalFormeAmount());
 			for (int i = 0; i < getGraphicalFormeAmount(); i++) {
+				System.out.println(i);
 				setGraphicalForme(i);
 
 				normal[i*2] = get();
@@ -5937,7 +5948,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 
 			// Decrypt image (why does EVERYTHING use the RNG formula geez)
-			if (romEntry.getRomType() != Gen4Constants.Type_DP && getGraphicalFormeAmount() == 1) {
+			if (romEntry.getRomType() != Gen4Constants.Type_DP) {
 				int key = imageData[0];
 				for (int i = 0; i < 3200; i++) {
 					imageData[i] ^= (key & 0xFFFF);

@@ -400,10 +400,12 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         try {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-            for (Species pk : getSpeciesSet()) {
-                if (getGraphicalFormePokes().contains(pk.getNumber())) {
+            for (Species pk : getSpeciesSetInclFormes()) {
+                Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+                if (getGraphicalFormePokes().contains(base.getNumber())) {
                     loadGraphicalFormePokemonPalettes(pk);
                 } else {
+                    System.out.println(pk);
                     int normalPaletteIndex = calculatePokemonNormalPaletteIndex(pk.getNumber());
                     pk.setNormalPalette(readPalette(pokeGraphicsNARC, normalPaletteIndex));
 
@@ -433,9 +435,10 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
-            for (Species pk : getSpeciesSet()) {
-                if (getGraphicalFormePokes().contains(pk.getNumber())) {
-                    saveGraphicalFormePokemonPalettes(pk);
+            for (Species pk : getSpeciesInclFormes()) {
+                Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+                if (getGraphicalFormePokes().contains(base.getNumber())) {
+                    saveGraphicalFormePokemonPalettes(base);
                 } else {
                     int normalPaletteIndex = calculatePokemonNormalPaletteIndex(pk.getNumber());
                     writePalette(pokeGraphicsNARC, normalPaletteIndex, pk.getNormalPalette());

@@ -5773,12 +5773,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             throw new RuntimeException(e);
         }
 
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(pk.getNumber());
-		for (int palID = 0; palID < palettes[0].length; palID++) {
-			// assumes there are as many normal and shiny palettes
-			pk.setNormalPalette(palID, readPalette(NARC, palettes[0][palID]));
-			pk.setShinyPalette(palID, readPalette(NARC, palettes[1][palID]));
-		}
+		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(base.getNumber());
+		System.out.println(pk);
+		System.out.println(base);
+		System.out.println(Arrays.deepToString(palettes));
+		System.out.println(pk.getFormeNumber());
+		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
+		pk.setShinyPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
     }
 
     protected void saveGraphicalFormePokemonPalettes(Species pk) {
@@ -5790,12 +5792,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RuntimeException(e);
 		}
 
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(pk.getNumber());
-		for (int palID = 0; palID < palettes[0].length; palID++) {
-			// assumes there are as many normal and shiny palettes
-			writePalette(NARC, palettes[0][palID], pk.getNormalPalette(palID));
-			writePalette(NARC, palettes[1][palID], pk.getShinyPalette(palID));
-		}
+		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(base.getNumber());
+		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
+		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
     }
 
 	public Gen4PokemonImageGetter createPokemonImageGetter(Species pk) {
@@ -5888,16 +5888,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		private Palette getPalette() {
-			Palette palette;
-			// unown and deoxys have the same palette(s) for all their formes
-			if (getGraphicalFormeAmount() > 1 && pk.getNumber() != SpeciesIDs.unown && pk.getNumber() != SpeciesIDs.deoxys) {
-				palette = shiny ? pk.getShinyPalette(forme) : pk.getNormalPalette(forme);
-			} else {
-				palette = shiny ? pk.getShinyPalette() : pk.getNormalPalette();
-			}
-			return palette;
+			// For now, just returns the palette disregarding forme.
+			// This means the 'forme' attribute goes unused. This is intentional!
+			// The forme rewrite should be soon, and the plan is to give *all* formes
+			// (graphical or not) something akin to Species objects, but holding only
+			// the attributes each alt forme needs. This means the below code should
+			// be sufficient, come that rewrite.
+			return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
 		}
-
 
 		@Override
 		public BufferedImage getFull() {

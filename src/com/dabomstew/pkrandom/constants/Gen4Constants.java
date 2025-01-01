@@ -553,11 +553,12 @@ public class Gen4Constants {
      */
     public static final Map<Integer, int[][]> otherPokemonGraphicsPalettes = initOtherPokemonGraphicsPalettes();
 
+    // TODO: these work for Diamond/Pearl, but it lacks the entries for Giratina-Origin etc....
     private static Map<Integer,int[][]> initOtherPokemonGraphicsPalettes() {
         Map<Integer, int[][]> palettes = new HashMap<>();
         palettes.put(SpeciesIDs.unown, new int[][]{{136}, {137}});
         palettes.put(SpeciesIDs.castform, new int[][]{{138, 139, 140, 141}, {142, 143, 144, 145}}); // normal, sunny, rainy, snowy
-        palettes.put(SpeciesIDs.deoxys, new int[][]{{134}, {135}});
+        palettes.put(SpeciesIDs.deoxys, new int[][]{{134, 134, 134, 134}, {135, 135, 135, 135}});
         palettes.put(SpeciesIDs.burmy, new int[][]{{146, 148, 150}, {147, 149, 151}}); // plant, sandy, trash
         palettes.put(SpeciesIDs.wormadam, new int[][]{{152, 154, 156}, {153, 155, 157}}); // plant, sandy, trash
         palettes.put(SpeciesIDs.cherrim, new int[][]{{166, 167}, {168, 169}}); // normal, sunny

@@ -477,10 +477,20 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 			throw new RomIOException(e);
 		}
 
-        for (Species pk : getSpeciesSet()) {
-            DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
-            bims.add(pig.getFull());
+        for (int i = 0; i < 800; i++) {
+            try {
+                DSPokemonImageGetter pig = createPokemonImageGetter(getSpecies().get(1)).setPokeGraphicsNARC(pokeGraphicsNARC);
+                ((Gen5RomHandler.Gen5PokemonImageGetter) pig).number = i;
+                bims.add(pig.getFull());
+                System.out.println("loaded image " + i);
+            } catch (Exception e) {
+                System.out.println("could not get image " + i);
+            }
         }
+//        for (Species pk : getSpeciesSet()) {
+//            DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
+//            bims.add(pig.getFull());
+//        }
         return bims;
     }
 

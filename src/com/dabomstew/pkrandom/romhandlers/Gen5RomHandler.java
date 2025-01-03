@@ -79,6 +79,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer, FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Integer, Integer> formeSpriteOffsets = new HashMap<>();
     private List<Species> speciesList;
     private List<Species> speciesListInclFormes;
     private Move[] moves;
@@ -387,6 +388,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
         int formeCount = stats[Gen5Constants.bsFormeCountOffset] & 0xFF;
         if (formeCount > 1) {
+            if (pkmn.getNumber() < 650) {
+                System.out.println("#" + pkmn.getNumber() + "\t" + readPokemonNames()[pkmn.getNumber()] +"\t" + readWord(stats, Gen5Constants.bsFormeSpriteOffset));
+            }
             int firstFormeOffset = readWord(stats, Gen5Constants.bsFormeOffset);
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
@@ -4028,11 +4032,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             super(pk);
         }
 
+        public int number = -1; // just for testing TODO: remove
+
         @Override
         public BufferedImage get() {
             beforeGet();
 
-            int spriteIndex = pk.getNumber() * 20;
+            int spriteIndex = ((number != -1) ? number : pk.getNumber()) * 20;
 
             if (hasGenderedImages() && gender == FEMALE) {
                 spriteIndex++;
@@ -4043,7 +4049,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             byte[] compressedPic = pokeGraphicsNARC.files.get(spriteIndex);
             byte[] uncompressedPic = DSDecmp.Decompress(compressedPic);
 
-            Palette palette = shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+            Palette palette;
+            if (number == -1) {
+                palette = shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+            } else {
+                palette = readPalette(pokeGraphicsNARC, number * 20 + (shiny ? 19 : 18));
+            }
             int[] convPalette = palette.toARGB();
             if (transparentBackground) {
                 convPalette[0] = 0;

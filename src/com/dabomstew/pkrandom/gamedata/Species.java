@@ -668,6 +668,8 @@ public class Species implements Comparable<Species> {
     }
 
     public Species getBaseForme() {
+        // TODO: return self if baseForme == null
+        //  (check that getBaseForme() == null isn't used instead of isBaseForme() first)
         return baseForme;
     }
 

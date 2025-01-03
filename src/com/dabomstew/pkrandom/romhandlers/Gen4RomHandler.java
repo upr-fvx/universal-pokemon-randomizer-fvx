@@ -5752,45 +5752,65 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return items;
 	}
 
-	protected int calculatePokemonNormalPaletteIndex(int i) {
-		return i * 6 + 4;
+	@Override
+	protected void loadPokemonPalettes() {
+		try {
+			String NARCpath = getRomEntry().getFile("PokemonGraphics");
+			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+			for (Species pk : getSpeciesSetInclFormes()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				if (getGraphicalFormePokes().contains(base.getNumber())) {
+					loadGraphicalFormePokemonPalettes(pk);
+				} else {
+					pk.setNormalPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4));
+					pk.setShinyPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5));
+				}
+			}
+
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
 	}
 
-	protected int calculatePokemonShinyPaletteIndex(int i) {
-		return calculatePokemonNormalPaletteIndex(i) + 1;
-	}
+	@Override
+	public void savePokemonPalettes() {
+		try {
+			String NARCpath = getRomEntry().getFile("PokemonGraphics");
+			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
+			for (Species pk : getSpeciesInclFormes()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				if (getGraphicalFormePokes().contains(base.getNumber())) {
+					saveGraphicalFormePokemonPalettes(base);
+				} else {
+					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4, pk.getNormalPalette());
+					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5, pk.getShinyPalette());
+				}
+			}
+			writeNARC(NARCpath, pokeGraphicsNARC);
+
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+	}
+	
     protected Collection<Integer> getGraphicalFormePokes() {
         return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
     }
 
-    protected void loadGraphicalFormePokemonPalettes(Species pk) {
+    protected void loadGraphicalFormePokemonPalettes(Species pk) throws IOException {
         String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-        NARCArchive NARC;
-        try {
-            NARC = readNARC(NARCpath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        NARCArchive NARC = readNARC(NARCpath);
 
 		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
 		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
-		System.out.println(base);
-		System.out.println(pk);
-		System.out.println(pk.getFormeNumber());
-		System.out.println(Arrays.deepToString(palettes));
 		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
 		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
     }
 
-    protected void saveGraphicalFormePokemonPalettes(Species pk) {
+    protected void saveGraphicalFormePokemonPalettes(Species pk) throws IOException {
 		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-		NARCArchive NARC;
-		try {
-			NARC = readNARC(NARCpath);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		NARCArchive NARC = readNARC(NARCpath);
 
 		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
 		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
@@ -5888,51 +5908,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		private Palette getPalette() {
-			// placeholder code, until the forme rewrite comes along
+			// placeholder code, until the form rewrite comes along
 			if (pk.isBaseForme() && forme != 0) {
 				String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
 				NARCArchive NARC;
 				try {
 					NARC = readNARC(NARCpath);
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new RomIOException(e);
 				}
 
 				int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(pk.getNumber());
-				System.out.println(Arrays.deepToString(palettes));
 				return shiny ? readPalette(NARC, palettes[1][forme]) : readPalette(NARC, palettes[0][forme]);
 			} else {
 				return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
 			}
-		}
-
-		@Override
-		public BufferedImage getFull() {
-			System.out.println(pk);
-			if (getGraphicalFormeAmount() > 1) {
-				return withFormesGetFull();
-			} else {
-				return super.getFull();
-			}
-		}
-
-		private BufferedImage withFormesGetFull() {
-			setIncludePalette(true);
-
-			BufferedImage[] normal = new BufferedImage[getGraphicalFormeAmount()*2];
-			BufferedImage[] shiny = new BufferedImage[getGraphicalFormeAmount()*2];
-			System.out.println(getGraphicalFormeAmount());
-			for (int i = 0; i < getGraphicalFormeAmount(); i++) {
-				System.out.println(i);
-				setGraphicalForme(i);
-
-				normal[i*2] = get();
-				normal[i*2 + 1] = setBack(true).get();
-				shiny[i*2 + 1] = setShiny(true).get();
-				shiny[i*2] = setBack(false).get();
-				setShiny(false);
-			}
-			return GFXFunctions.stitchToGrid(new BufferedImage[][] { normal, shiny });
 		}
 
 		private int[] readImageData(NARCArchive graphicsNARC, int imageIndex) {

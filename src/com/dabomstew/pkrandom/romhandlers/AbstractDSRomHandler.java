@@ -396,74 +396,20 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     // I dare not rewrite the load ROM structure, so for now loadPokemonPalettes()
 	// is separate methods called in loadROM()/loadedRom() methods. Even though
 	// one call in AbstractRomHandler should suffice.
-	protected void loadPokemonPalettes() {
-        try {
-            String NARCpath = getRomEntry().getFile("PokemonGraphics");
-            NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-            for (Species pk : getSpeciesSetInclFormes()) {
-                Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-                if (getGraphicalFormePokes().contains(base.getNumber())) {
-                    loadGraphicalFormePokemonPalettes(pk);
-                } else {
-                    int normalPaletteIndex = calculatePokemonNormalPaletteIndex(pk.getNumber());
-                    pk.setNormalPalette(readPalette(pokeGraphicsNARC, normalPaletteIndex));
-
-                    int shinyPaletteIndex = calculatePokemonShinyPaletteIndex(pk.getNumber());
-                    pk.setShinyPalette(readPalette(pokeGraphicsNARC, shinyPaletteIndex));
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected abstract int calculatePokemonNormalPaletteIndex(int i);
-    
-    protected abstract int calculatePokemonShinyPaletteIndex(int i);
+    // TODO: move loadPokemonPalettes() up
+	protected abstract void loadPokemonPalettes();
 
     protected final Palette readPalette(NARCArchive NARC, int index) {
         byte[] withPrefixBytes = NARC.files.get(index);
         byte[] paletteBytes = Arrays.copyOfRange(withPrefixBytes, PALETTE_PREFIX_BYTES.length, withPrefixBytes.length);
         return new Palette(paletteBytes);
     }
-
-    @Override
-    public void savePokemonPalettes() {
-        try {
-            String NARCpath = getRomEntry().getFile("PokemonGraphics");
-            NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-
-            for (Species pk : getSpeciesInclFormes()) {
-                Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-                if (getGraphicalFormePokes().contains(base.getNumber())) {
-                    saveGraphicalFormePokemonPalettes(base);
-                } else {
-                    int normalPaletteIndex = calculatePokemonNormalPaletteIndex(pk.getNumber());
-                    writePalette(pokeGraphicsNARC, normalPaletteIndex, pk.getNormalPalette());
-
-                    int shinyPaletteIndex = calculatePokemonShinyPaletteIndex(pk.getNumber());
-                    writePalette(pokeGraphicsNARC, shinyPaletteIndex, pk.getShinyPalette());
-                }
-            }
-            writeNARC(NARCpath, pokeGraphicsNARC);
-
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
-    }
-
+    
     protected final void writePalette(NARCArchive NARC, int index, Palette palette) {
         byte[] paletteBytes = palette.toBytes();
         paletteBytes = concatenate(PALETTE_PREFIX_BYTES, paletteBytes);
         NARC.files.set(index, paletteBytes);
     }
-
-    protected abstract Collection<Integer> getGraphicalFormePokes();
-
-    protected abstract void loadGraphicalFormePokemonPalettes(Species pk);
-
-    protected abstract void saveGraphicalFormePokemonPalettes(Species pk);
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
@@ -477,20 +423,15 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 			throw new RomIOException(e);
 		}
 
-        for (int i = 0; i < 800; i++) {
+        for (int i = 1; i < getSpecies().size(); i++) {
+            Species pk = getSpecies().get(i);
             try {
-                DSPokemonImageGetter pig = createPokemonImageGetter(getSpecies().get(1)).setPokeGraphicsNARC(pokeGraphicsNARC);
-                ((Gen5RomHandler.Gen5PokemonImageGetter) pig).number = i;
+                DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
                 bims.add(pig.getFull());
-                System.out.println("loaded image " + i);
-            } catch (Exception e) {
-                System.out.println("could not get image " + i);
+            } catch (Exception ignored) {
+                bims.add(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
             }
         }
-//        for (Species pk : getSpeciesSet()) {
-//            DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
-//            bims.add(pig.getFull());
-//        }
         return bims;
     }
 
@@ -539,7 +480,35 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         public abstract boolean hasGenderedImages();
 
+        @Override
         public BufferedImage getFull() {
+            // TODO: Gen 5 technically allows for alt forms to have graphical gender differences.
+            //  Combine the two methods below.
+            if (getGraphicalFormeAmount() > 1) {
+                return withFormesGetFull();
+            } else {
+                return withGendersGetFull();
+            }
+        }
+
+        private BufferedImage withFormesGetFull() {
+            setIncludePalette(true);
+
+            BufferedImage[] normal = new BufferedImage[getGraphicalFormeAmount()*2];
+            BufferedImage[] shiny = new BufferedImage[getGraphicalFormeAmount()*2];
+            for (int i = 0; i < getGraphicalFormeAmount(); i++) {
+                setGraphicalForme(i);
+
+                normal[i*2] = get();
+                normal[i*2 + 1] = setBack(true).get();
+                shiny[i*2 + 1] = setShiny(true).get();
+                shiny[i*2] = setBack(false).get();
+                setShiny(false);
+            }
+            return GFXFunctions.stitchToGrid(new BufferedImage[][] { normal, shiny });
+        }
+
+        public BufferedImage withGendersGetFull() {
             setGender(DSPokemonImageGetter.MALE)
                     .setIncludePalette(true);
 

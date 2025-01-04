@@ -954,7 +954,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
                 StaticEncounter newStatic = new StaticEncounter();
                 Species starter = starterIter.next();
-                if (starter.getFormeNumber() > 0) {
+                if (!starter.isBaseForme()) {
                     newStatic.forme = starter.getFormeNumber();
                     starter = starter.getBaseForme();
                 }
@@ -3373,7 +3373,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             int introPokemonNum = pk.getNumber();
             int introPokemonForme = 0;
-            if (pk.getFormeNumber() > 0) {
+            if (!pk.isBaseForme()) {
                 introPokemonForme = pk.getFormeNumber();
                 introPokemonNum = pk.getBaseForme().getNumber();
             }

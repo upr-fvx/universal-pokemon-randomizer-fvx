@@ -607,11 +607,11 @@ public class Species implements Comparable<Species> {
             SpeciesIDs.stakataka, SpeciesIDs.blacephalon);
 
     public boolean isLegendary() {
-        return isBaseForme() ? legendaries.contains(this.number) : baseForme.isLegendary();
+        return legendaries.contains(getBaseForme().number);
     }
 
     public boolean isStrongLegendary() {
-        return formeNumber == 0 ? strongLegendaries.contains(this.number) : strongLegendaries.contains(this.baseForme.number);
+        return strongLegendaries.contains(getBaseForme().number);
     }
 
     // This method can only be used in contexts where alt formes are NOT involved; otherwise, some alt formes

@@ -411,11 +411,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void writeCheckValueToROM(int value) {
-        // do nothing
-    }
-
-    @Override
     public int miscTweaksAvailable() {
         // default: none
         return 0;

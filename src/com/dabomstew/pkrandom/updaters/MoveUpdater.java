@@ -6,22 +6,15 @@ import com.dabomstew.pkrandom.gamedata.MoveCategory;
 import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public class MoveUpdater extends Updater {
+public class MoveUpdater extends Updater<Move, MoveUpdateType, Object> {
 
-    private enum MoveUpdateType {
-        POWER, PP, ACCURACY, TYPE, CATEGORY
-    }
-
-    private static class MoveUpdate extends Update {
-        public MoveUpdate(MoveUpdateType type, Object before, Object after) {
-            super(type, before, after);
-        }
-    }
-
-    private final TreeMap<Move, List<Update>> moveUpdates = new TreeMap<>();
+    private final Map<Move, Map<MoveUpdateType, Update<Object>>> moveUpdates = new TreeMap<>();
 
     // starts with two null-consumers so the indexing can be nicer
     private final List<Consumer<List<Move>>> updates = Arrays.asList(
@@ -36,7 +29,7 @@ public class MoveUpdater extends Updater {
         super(romHandler);
     }
 
-    public TreeMap<Move, List<Update>> getUpdates() {
+    public Map<Move, Map<MoveUpdateType, Update<Object>>> getUpdates() {
         return moveUpdates;
     }
 
@@ -342,7 +335,7 @@ public class MoveUpdater extends Updater {
         }
     }
 
-    private void updateMoveAccuracy(List<Move> moves, int moveNum, int accuracy) {
+    private void updateMoveAccuracy(List<Move> moves, int moveNum, double accuracy) {
         Move mv = moves.get(moveNum);
         if (Math.abs(mv.hitratio - accuracy) >= 1) {
             double before = mv.hitratio;
@@ -371,9 +364,9 @@ public class MoveUpdater extends Updater {
 
     private void addUpdate(Move move, Object before, Object after, MoveUpdateType type) {
         if (!moveUpdates.containsKey(move)) {
-            moveUpdates.put(move, new ArrayList<>());
+            moveUpdates.put(move, new TreeMap<>());
         }
-        moveUpdates.get(move).add(new MoveUpdate(type, before, after));
+        moveUpdates.get(move).put(type, new Update<>(before, after));
     }
 
 }

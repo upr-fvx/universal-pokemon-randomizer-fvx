@@ -5,20 +5,19 @@ import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.gamedata.TypeTable;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
-public class TypeEffectivenessUpdater extends Updater {
+public class TypeEffectivenessUpdater extends Updater<Type, Type, Effectiveness> {
 
-    private final TreeMap<Type, List<Update>> typeEffUpdates = new TreeMap<>();
+    private final Map<Type, Map<Type, Update<Effectiveness>>> typeEffUpdates = new TreeMap<>();
 
     public TypeEffectivenessUpdater(RomHandler romHandler) {
         super(romHandler);
     }
 
     @Override
-    public TreeMap<Type, List<Update>> getUpdates() {
+    public Map<Type, Map<Type, Update<Effectiveness>>> getUpdates() {
         return typeEffUpdates;
     }
 
@@ -49,8 +48,8 @@ public class TypeEffectivenessUpdater extends Updater {
 
     private void addUpdate(Type attacker, Effectiveness before, Effectiveness after, Type defender) {
         if (!typeEffUpdates.containsKey(attacker)) {
-            typeEffUpdates.put(attacker, new ArrayList<>());
+            typeEffUpdates.put(attacker, new TreeMap<>());
         }
-        typeEffUpdates.get(attacker).add(new Update(defender, before, after));
+        typeEffUpdates.get(attacker).put(defender, new Update<>(before, after));
     }
 }

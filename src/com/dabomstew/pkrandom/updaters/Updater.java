@@ -2,8 +2,7 @@ package com.dabomstew.pkrandom.updaters;
 
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
-import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
 
 /**
  * An abstract superclass for objects that "update" some aspect of a game (via a {@link RomHandler})
@@ -13,26 +12,7 @@ import java.util.TreeMap;
  * This of course has a Vanilla perspective, so these classes might not work great with ROM hacks,
  * once those are otherwise supported.
  */
-public abstract class Updater {
-
-    // TODO: updates of the same kind (e.g. two stat upgrades in the same stat) should overwrite each other
-
-    public static class Update {
-        private final Object descriptor;
-        private final Object before;
-        private final Object after;
-
-        public Update(Object descriptor, Object before, Object after) {
-            this.descriptor = descriptor;
-            this.before = before;
-            this.after = after;
-        }
-
-        @Override
-        public String toString() {
-            return descriptor + ": " + before + " -> " + after;
-        }
-    }
+public abstract class Updater<Target, Desc, Attr> {
 
     protected final RomHandler romHandler;
 
@@ -44,5 +24,5 @@ public abstract class Updater {
         return getUpdates().isEmpty();
     }
 
-    public abstract TreeMap<?, List<Update>> getUpdates();
+    public abstract Map<Target, Map<Desc, Update<Attr>>> getUpdates();
 }

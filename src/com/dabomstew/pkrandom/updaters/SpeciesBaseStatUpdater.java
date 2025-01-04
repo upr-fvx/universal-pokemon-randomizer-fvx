@@ -4,25 +4,15 @@ import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public class SpeciesBaseStatUpdater extends Updater {
+public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integer> {
 
-    private enum BSUpdateType {
-        HP, ATK, DEF, SPDEF, SPATK, SPEED, SPECIAL
-    }
-
-    private static class BSUpdate extends Update {
-        public BSUpdate(BSUpdateType type, Object before, Object after) {
-            super(type, before, after);
-        }
-    }
-
-    private final TreeMap<Species, List<Update>> bsUpdates = new TreeMap<>();
+    private final Map<Species, Map<BSUpdateType, Update<Integer>>> bsUpdates = new TreeMap<>();
 
     // starts with two null-consumers so the indexing can be nicer,
     // and then four more since Gens 2-5 didn't change the base stats of any existing Species
@@ -42,7 +32,7 @@ public class SpeciesBaseStatUpdater extends Updater {
         super(romHandler);
     }
 
-    public TreeMap<Species, List<Update>> getUpdates() {
+    public Map<Species, Map<BSUpdateType, Update<Integer>>> getUpdates() {
         return bsUpdates;
     }
 
@@ -243,9 +233,9 @@ public class SpeciesBaseStatUpdater extends Updater {
 
     private void addUpdate(Species spec, int before, int after, BSUpdateType type) {
         if (!bsUpdates.containsKey(spec)) {
-            bsUpdates.put(spec, new ArrayList<>());
+            bsUpdates.put(spec, new TreeMap<>());
         }
-        bsUpdates.get(spec).add(new BSUpdate(type, before, after));
+        bsUpdates.get(spec).put(type, new Update<>(before, after));
     }
 
 }

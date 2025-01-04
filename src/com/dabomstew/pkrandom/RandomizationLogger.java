@@ -5,15 +5,19 @@ import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.randomizers.*;
 import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.updaters.MoveUpdater;
-import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
-import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
-import com.dabomstew.pkrandom.updaters.Updater;
+import com.dabomstew.pkrandom.updaters.*;
 
 import java.io.PrintStream;
 import java.util.*;
 
 public class RandomizationLogger {
+
+    // At some point, it makes sense to let RandomizationLogger use a ResourceBundle for all its strings.
+    // Until then, this string array may live here. It's a statement of intent of sorts,
+    // to keep pretty strings out of the data classes/enums.
+    private static final String[] EFFECTIVENESS_NAMES = {
+            "No Effect/Immune", "Not Very Effective", "Neutral", "Super Effective"
+    };
 
     private static final String NEWLINE = System.lineSeparator();
 
@@ -892,19 +896,38 @@ public class RandomizationLogger {
             logMoveUpdates(log);
         }
     }
-
+    
     private void logMoveUpdates(PrintStream log) {
         log.println("--Move Updates--");
-        log.print("The following moves have been updated, to be in line with Gen ");
+        log.print("The following moves have been updated, to be in line with Generation ");
         log.println(settings.getUpdateMovesToGeneration() + ".");
         log.println("Note that if you also randomized move data, these changes may be overwritten.");
         log.println();
 
-        Map<Move, List<Updater.Update>> updates = moveUpdater.getUpdates();
-        for (Map.Entry<Move, List<Updater.Update>> entry : updates.entrySet()) {
-            log.println(entry.getKey().name);
-            for (Updater.Update update : entry.getValue()) {
-                log.println("\t" + update);
+        Map<Move, Map<MoveUpdateType, Update<Object>>> updates = moveUpdater.getUpdates();
+        for (Map.Entry<Move, Map<MoveUpdateType, Update<Object>>> outer : updates.entrySet()) {
+            log.println(outer.getKey().name + ":");
+            for (Map.Entry<MoveUpdateType, Update<Object>> inner : outer.getValue().entrySet()) {
+
+                log.printf("\t%-8s: ", inner.getKey());
+                switch (inner.getKey()) {
+                    case POWER:
+                    case PP:
+                        log.printf("%4d -> %4d%n",
+                                (Integer) inner.getValue().getBefore(),
+                                (Integer) inner.getValue().getAfter());
+                        break;
+                    case ACCURACY:
+                        log.printf("%3.0f%% -> %3.0f%%%n",
+                                (Double) inner.getValue().getBefore(),
+                                (Double) inner.getValue().getAfter());
+                        break;
+                    case TYPE:
+                    case CATEGORY:
+                        Object before = inner.getValue().getBefore() == null ? "???" : inner.getValue().getBefore();
+                        log.printf(" %s -> %s%n", before, inner.getValue().getAfter());
+                        break;
+                }
             }
         }
         log.println();
@@ -918,16 +941,18 @@ public class RandomizationLogger {
 
     private void logBaseStatsUpdates(PrintStream log) {
         log.println("--Pokémon Base Stat Updates--");
-        log.print("The following base stats have been updated, to be in line with Gen ");
+        log.print("The following base stats have been updated, to be in line with Generation ");
         log.println(settings.getUpdateBaseStatsToGeneration() + ".");
         log.println("Note that if you also randomized Pokémon base stats, these changes may be overwritten.");
         log.println();
 
-        Map<Species, List<Updater.Update>> updates = speciesBSUpdater.getUpdates();
-        for (Map.Entry<Species, List<Updater.Update>> entry : updates.entrySet()) {
-            log.println(entry.getKey().getFullName());
-            for (Updater.Update update : entry.getValue()) {
-                log.println("\t" + update);
+        Map<Species, Map<BSUpdateType, Update<Integer>>> updates = speciesBSUpdater.getUpdates();
+        for (Map.Entry<Species, Map<BSUpdateType, Update<Integer>>> outer : updates.entrySet()) {
+            log.println(outer.getKey().getFullName() + ":");
+            for (Map.Entry<BSUpdateType, Update<Integer>> inner : outer.getValue().entrySet()) {
+                log.printf("\t%-7s: %3d -> %3d%n",
+                        inner.getKey(),
+                        inner.getValue().getBefore(), inner.getValue().getAfter());
             }
         }
         log.println();
@@ -941,16 +966,19 @@ public class RandomizationLogger {
 
     private void logTypeEffectivenessUpdates(PrintStream log) {
         log.println("--Type Effectiveness Updates--");
-        log.print("The following parts of the Type effectiveness chart have been updated, to be in line with Gen ");
+        log.print("The following parts of the Type effectiveness chart have been updated, to be in line with Generation ");
         log.println(romHandler.generationOfPokemon() == 1 ? 2 : 6 + ".");
         log.println("Note that if you also randomized Type effectiveness, these changes may be overwritten.");
         log.println();
 
-        Map<Type, List<Updater.Update>> updates = typeEffUpdater.getUpdates();
-        for (Map.Entry<Type, List<Updater.Update>> entry : updates.entrySet()) {
-            log.println(entry.getKey() + " when used against...");
-            for (Updater.Update update : entry.getValue()) {
-                log.println("\t" + update);
+        Map<Type, Map<Type, Update<Effectiveness>>> updates = typeEffUpdater.getUpdates();
+        for (Map.Entry<Type, Map<Type, Update<Effectiveness>>> outer : updates.entrySet()) {
+            log.println(outer.getKey() + " when used against...");
+            for (Map.Entry<Type, Update<Effectiveness>> inner : outer.getValue().entrySet()) {
+                log.printf("\t%-8s:   %-18s -> %-18s%n",
+                        inner.getKey(),
+                        EFFECTIVENESS_NAMES[inner.getValue().getBefore().ordinal()],
+                        EFFECTIVENESS_NAMES[inner.getValue().getAfter().ordinal()]);
             }
         }
         log.println();

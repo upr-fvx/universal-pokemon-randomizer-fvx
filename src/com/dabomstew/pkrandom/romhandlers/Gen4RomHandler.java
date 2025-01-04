@@ -686,7 +686,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private int generationOf(Species pk) {
-		if (pk.getBaseForme() != null) {
+		if (!pk.isBaseForme()) {
 			return pk.getBaseForme().getGeneration();
 		}
 		if (pk.getNumber() >= SpeciesIDs.turtwig) {
@@ -4689,7 +4689,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					return false;
 				}
 				// Assume alt formes can't be used. I haven't actually tested this, but it seemed like the safer guess.
-				if (pk.getBaseForme() != null) {
+				if (pk.isBaseForme()) {
 					return false;
 				}
 				byte[] introOverlay = readOverlay(romEntry.getIntValue("IntroOvlNumber"));
@@ -4706,7 +4706,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// This is really cool, but there *is* an actual intro Pokemon to randomize,
 				// and it is a Marill to boot too! Ideally, Ethan/Lyra's Marill should be
 				// in addition to the intro one, not instead of.
-				if (pk.getBaseForme() != null) {
+				if (!pk.isBaseForme()) {
 					return false;
 				}
 				int spriteID = Gen4Constants.getOverworldSpriteIDOfSpecies(pk.getNumber());
@@ -4814,7 +4814,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
 		// In Gen 4, alt formes for Trainer Pokemon use the base forme's ability
 		Species pkmn = tp.species;
-		while (pkmn.getBaseForme() != null) {
+		while (!pkmn.isBaseForme()) {
 			pkmn = pkmn.getBaseForme();
 		}
 

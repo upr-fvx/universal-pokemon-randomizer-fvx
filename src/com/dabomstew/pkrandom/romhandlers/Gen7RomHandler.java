@@ -206,7 +206,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i] = new Species(i);
                 loadBasicPokeStats(pokes[i], pokeGarc.files.get(k).get(0),formeMappings);
                 FormeInfo fi = formeMappings.get(k);
-                int realBaseForme = pokes[fi.baseForme].getBaseForme() == null ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
+                int realBaseForme = pokes[fi.baseForme].isBaseForme() ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
                 pokes[i].setName(pokeNames[realBaseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
@@ -245,7 +245,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         if (pk.getFormeSuffix().startsWith("-Mega") || pk.getFormeSuffix().equals("-Primal")) {
             return 6;
         }
-        if (pk.getBaseForme() != null) {
+        if (!pk.isBaseForme()) {
             if (pk.getBaseNumber() == SpeciesIDs.pikachu) {
                 return 6; // contest pikachu
             }

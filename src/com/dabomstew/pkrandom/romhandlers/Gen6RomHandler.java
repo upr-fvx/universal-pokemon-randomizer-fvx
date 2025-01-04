@@ -218,7 +218,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (pk.getFormeSuffix().startsWith("-Mega") || pk.getFormeSuffix().equals("-Primal")) {
             return 6;
         }
-        if (pk.getBaseForme() != null) {
+        if (!pk.isBaseForme()) {
             if (pk.getBaseNumber() == SpeciesIDs.pikachu) {
                 return 6; // contest pikachu
             }

@@ -116,7 +116,7 @@ public class RestrictedSpeciesService {
     public SpeciesSet getAbilityDependentFormes() {
         SpeciesSet abilityDependentFormes = new SpeciesSet();
         for (Species sp : allInclAltFormes) {
-            if (sp.getBaseForme() != null) {
+            if (!sp.isBaseForme()) {
                 if (sp.getBaseNumber() == SpeciesIDs.castform) {
                     // All alternate Castform formes
                     abilityDependentFormes.add(sp);
@@ -138,7 +138,7 @@ public class RestrictedSpeciesService {
     public SpeciesSet getBannedFormesForPlayerPokemon() {
         SpeciesSet bannedFormes = new SpeciesSet();
         for (Species pk : allInclAltFormes) {
-            if (pk.getBaseForme() != null) {
+            if (!pk.isBaseForme()) {
                 if (pk.getBaseNumber() == SpeciesIDs.giratina) {
                     // Giratina-O is banned because it reverts back to Altered Forme if
                     // equipped with any item that isn't the Griseous Orb.
@@ -231,7 +231,7 @@ public class RestrictedSpeciesService {
 
     private static void addFromGen(SpeciesSet allInclAltFormes, SpeciesSet allNonRestricted, int gen) {
         allInclAltFormes.addAll(allNonRestricted.filter(sp -> {
-            Species baseForme = sp.getBaseForme() == null ? sp : sp.getBaseForme();
+            Species baseForme = sp.isBaseForme() ? sp : sp.getBaseForme();
             return baseForme.getGeneration() == gen;
         }));
     }

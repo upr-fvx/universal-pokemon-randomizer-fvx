@@ -187,7 +187,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 } else {
-                    boolean limitBST = oldPK.getBaseForme() == null ?
+                    boolean limitBST = oldPK.isBaseForme() ?
                             limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getNumber()) :
                             limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getBaseForme().getNumber());
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {

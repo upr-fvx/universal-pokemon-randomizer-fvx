@@ -5862,7 +5862,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			beforeGet();
 
 			int imageIndex = getImageIndex();
-			int[] imageData = readImageData(getGraphicalFormeAmount() > 1 ? otherPokeGraphicsNARC : pokeGraphicsNARC, imageIndex);
+			NARCArchive imageNARC = getGraphicalFormeAmount() > 1 || !pk.isBaseForme() ?
+					otherPokeGraphicsNARC : pokeGraphicsNARC;
+			int[] imageData = readImageData(imageNARC, imageIndex);
 
 			Palette palette = getPalette();
 			int[] convPalette = palette.toARGB();
@@ -5893,8 +5895,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		private int getImageIndex() {
 			int imageIndex;
-			if (getGraphicalFormeAmount() > 1) {
-				imageIndex = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(pk.getNumber())[back ? 1 : 0][forme];
+			if (getGraphicalFormeAmount() > 1 || !pk.isBaseForme()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				int formeNum = forme != 0 ? forme : pk.getFormeNumber();
+				int[][] imageIndexes = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(base.getNumber());
+				imageIndex = imageIndexes[back ? 1 : 0][formeNum];
 			} else {
 				imageIndex = pk.getNumber() * 6 + 2;
 				if (gender == MALE) {

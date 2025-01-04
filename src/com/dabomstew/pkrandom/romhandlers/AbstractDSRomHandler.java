@@ -425,12 +425,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         for (int i = 1; i < getSpecies().size(); i++) {
             Species pk = getSpecies().get(i);
-            try {
-                DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
-                bims.add(pig.getFull());
-            } catch (Exception ignored) {
-                bims.add(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
-            }
+            DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
+            bims.add(pig.getFull());
         }
         return bims;
     }

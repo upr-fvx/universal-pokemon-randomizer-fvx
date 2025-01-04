@@ -4099,16 +4099,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
 
         private Palette getPalette() {
-            // placeholder code, until the form rewrite comes along
+            // placeholder code, until the form rewrite comes along; then all palette reading will be centralized
             if (pk.isBaseForme() && forme != 0) {
                 if (pk.getNumber() == SpeciesIDs.arceus) {
                     // Arceus doesn't have unique images for all of its forms, they are just palette swaps.
-                    // TODO: read the actual palettes
-                    return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
-                }
+                    int palIndex = romEntry.getIntValue("ArceusPalettesOffset") + (forme - 1) * 2;
+                    if (shiny) palIndex++;
+                    return readPalette(pokeGraphicsNARC, palIndex);
 
-                int gfxIndex = formeGraphicsIndices.get(pk) + forme - 1;
-                return readPalette(pokeGraphicsNARC, gfxIndex * 20 + (shiny ? 19 : 18));
+                } else {
+                    int gfxIndex = formeGraphicsIndices.get(pk) + forme - 1;
+                    return readPalette(pokeGraphicsNARC, gfxIndex * 20 + (shiny ? 19 : 18));
+                }
             } else {
                 return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
             }

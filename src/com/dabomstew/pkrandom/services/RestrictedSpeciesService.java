@@ -230,9 +230,6 @@ public class RestrictedSpeciesService {
     }
 
     private static void addFromGen(SpeciesSet allInclAltFormes, SpeciesSet allNonRestricted, int gen) {
-        allInclAltFormes.addAll(allNonRestricted.filter(sp -> {
-            Species baseForme = sp.isBaseForme() ? sp : sp.getBaseForme();
-            return baseForme.getGeneration() == gen;
-        }));
+        allInclAltFormes.addAll(allNonRestricted.filter(sp -> sp.getBaseForme().getGeneration() == gen));
     }
 }

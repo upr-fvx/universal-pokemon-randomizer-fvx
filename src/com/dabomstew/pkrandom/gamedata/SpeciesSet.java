@@ -1027,7 +1027,7 @@ public class SpeciesSet extends HashSet<Species> {
         Iterator<Species> itor = this.iterator();
         while(itor.hasNext()) {
             Species species = itor.next();
-            string.append(species.getName()).append(species.isBaseForme() ? "" : species.getFormeSuffix());
+            string.append(species.getFullName());
             if(itor.hasNext()) {
                 //friggin' loop-and-a-half
                 string.append(", ");

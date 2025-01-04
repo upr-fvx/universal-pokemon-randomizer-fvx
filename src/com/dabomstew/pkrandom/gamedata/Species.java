@@ -667,9 +667,11 @@ public class Species implements Comparable<Species> {
         this.formeSuffix = formeSuffix;
     }
 
+    /**
+     * Returns the base forme of this Species, or itself if it is the base forme.<br>
+     * E.g. Deoxys and Deoxys-Attack would both return Deoxys, and Gloom would return Gloom.
+     */
     public Species getBaseForme() {
-        // TODO: return self if baseForme == null
-        //  (check that getBaseForme() == null isn't used instead of isBaseForme() first)
         return baseForme;
     }
 

@@ -79,6 +79,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer, FormeInfo> formeMappings = new TreeMap<>();
+    private final Map<Species, Integer> formeGraphicsIndices = new HashMap<>();
+    private final Map<Species, Integer> graphicalFormeCounts = new TreeMap<>(); // temporary until the form rewrite
     private List<Species> speciesList;
     private List<Species> speciesListInclFormes;
     private Move[] moves;
@@ -387,6 +389,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
         int formeCount = stats[Gen5Constants.bsFormeCountOffset] & 0xFF;
         if (formeCount > 1) {
+            graphicalFormeCounts.put(pkmn, formeCount);
+            formeGraphicsIndices.put(pkmn, romEntry.getIntValue("FormeGraphicsOffset") + readWord(stats, Gen5Constants.bsFormeSpriteOffset));
             int firstFormeOffset = readWord(stats, Gen5Constants.bsFormeOffset);
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
@@ -4008,35 +4012,44 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
         return items;
     }
-    
-    protected int calculatePokemonNormalPaletteIndex(int i) {
-        return i * 20 + 18;
-    }
-    
-    protected int calculatePokemonShinyPaletteIndex(int i) {
-        return calculatePokemonNormalPaletteIndex(i) + 1; 
+
+    @Override
+    protected void loadPokemonPalettes() {
+        try {
+            String NARCpath = getRomEntry().getFile("PokemonGraphics");
+            NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+
+            for (Species pk : getSpeciesSetInclFormes()) {
+                int gfxIndex = getGraphicsIndex(pk);
+                pk.setNormalPalette(readPalette(pokeGraphicsNARC, gfxIndex * 20 + 18));
+                pk.setShinyPalette(readPalette(pokeGraphicsNARC, gfxIndex * 20 + 19));
+            }
+
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
     }
 
     @Override
-    protected Collection<Integer> getGraphicalFormePokes() {
-        // TODO
-        return new ArrayList<>();
+    public void savePokemonPalettes() {
+        try {
+            String NARCpath = getRomEntry().getFile("PokemonGraphics");
+            NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+
+            for (Species pk : getSpeciesSetInclFormes()) {
+                int gfxIndex = getGraphicsIndex(pk);
+                writePalette(pokeGraphicsNARC, gfxIndex * 20 + 18, pk.getNormalPalette());
+                writePalette(pokeGraphicsNARC, gfxIndex * 20 + 19, pk.getShinyPalette());
+            }
+            writeNARC(NARCpath, pokeGraphicsNARC);
+
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
     }
 
-    @Override
-    protected void loadGraphicalFormePokemonPalettes(Species pk) {
-        // TODO
-    }
-
-    @Override
-    protected void saveGraphicalFormePokemonPalettes(Species pk) {
-        // TODO
-    }
-
-    // TODO: remove
-    @Override
-    protected BufferedImage ripOtherPoke(int i, NARCArchive pokeGraphicsNARC) {
-        return null;
+    private int getGraphicsIndex(Species pk) {
+        return pk.isBaseForme() ? pk.getNumber() : formeGraphicsIndices.get(pk.getBaseForme()) + pk.getFormeNumber() - 1;
     }
 
     @Override
@@ -4057,21 +4070,19 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
 
         @Override
+        public int getGraphicalFormeAmount() {
+            return graphicalFormeCounts.getOrDefault(pk, 1) ;
+        }
+
+        @Override
         public BufferedImage get() {
             beforeGet();
 
-            int spriteIndex = pk.getNumber() * 20;
-
-            if (hasGenderedImages() && gender == FEMALE) {
-                spriteIndex++;
-            }
-            if (back) {
-                spriteIndex += 9;
-            }
-            byte[] compressedPic = pokeGraphicsNARC.files.get(spriteIndex);
+            int imageIndex = getImageIndex();
+            byte[] compressedPic = pokeGraphicsNARC.files.get(imageIndex);
             byte[] uncompressedPic = DSDecmp.Decompress(compressedPic);
 
-            Palette palette = shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+            Palette palette = getPalette();
             int[] convPalette = palette.toARGB();
             if (transparentBackground) {
                 convPalette[0] = 0;
@@ -4088,6 +4099,43 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             }
 
             return bim;
+        }
+
+        private int getImageIndex() {
+            int gfxIndex;
+            // Arceus doesn't have unique images for all of its forms, they are just palette swaps
+            if (pk.isBaseForme() && forme != 0 && pk.getNumber() != SpeciesIDs.arceus) {
+                gfxIndex = formeGraphicsIndices.get(pk) + forme - 1;
+            } else {
+                gfxIndex = getGraphicsIndex(pk);
+            }
+
+            int imageIndex = gfxIndex * 20;
+            if (hasGenderedImages() && gender == FEMALE) {
+                imageIndex++;
+            }
+            if (back) {
+                imageIndex += 9;
+            }
+            return imageIndex;
+        }
+
+        private Palette getPalette() {
+            // placeholder code, until the form rewrite comes along; then all palette reading will be centralized
+            if (pk.isBaseForme() && forme != 0) {
+                if (pk.getNumber() == SpeciesIDs.arceus) {
+                    // Arceus doesn't have unique images for all of its forms, they are just palette swaps.
+                    int palIndex = romEntry.getIntValue("ArceusPalettesOffset") + (forme - 1) * 2;
+                    if (shiny) palIndex++;
+                    return readPalette(pokeGraphicsNARC, palIndex);
+
+                } else {
+                    int gfxIndex = formeGraphicsIndices.get(pk) + forme - 1;
+                    return readPalette(pokeGraphicsNARC, gfxIndex * 20 + (shiny ? 19 : 18));
+                }
+            } else {
+                return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+            }
         }
 
         private BufferedImage unscramblePokemonSprite(BufferedImage bim) {

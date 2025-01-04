@@ -311,7 +311,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         }
 
         Gen3to5PaletteRandomizer paletteRandomizer = new Gen3to5PaletteRandomizer(romHandler, SETTINGS, RND);
-        for (Species pk : romHandler.getSpeciesSet()) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             originalPalettes.put(pk, pk.getNormalPalette());
         }
         paletteDescriptions
@@ -431,7 +431,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private Species getCurrentPokemon() {
-        return romHandler.getSpecies().get(paletteDescriptions.getSelectedIndex() + 1);
+        return romHandler.getSpeciesInclFormes().get(paletteDescriptions.getSelectedIndex() + 1);
     }
 
     private BufferedImage getPokemonImage(Species pk, boolean shiny) {
@@ -443,7 +443,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private void autoNameDesc() {
-        String autoName = getCurrentPokemon().getName();
+        String autoName = getCurrentPokemon().getFullName();
         descNameField.setText(autoName);
     }
 

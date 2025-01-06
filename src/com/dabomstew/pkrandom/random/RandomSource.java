@@ -57,6 +57,14 @@ public class RandomSource {
         return nonCosmetic.calls + cosmetic.calls;
     }
 
+    public int callsSinceSeedNonCosmetic() {
+        return nonCosmetic.calls;
+    }
+
+    public int callsSinceSeedCosmetic() {
+        return cosmetic.calls;
+    }
+
     private static class RandomWithCounter extends Random {
 
         private int calls = 0;

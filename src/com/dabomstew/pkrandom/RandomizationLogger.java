@@ -12,14 +12,37 @@ import java.util.*;
 
 public class RandomizationLogger {
 
+    private static final String NEWLINE = System.lineSeparator();
+    private static final String LOGO =
+            "==========================================================" + NEWLINE +
+            "|   _   _        _                           _           |" + NEWLINE +
+            "|  | | | | _ _  (_)__ __ ___  _ _  ___ __ _ | |          |" + NEWLINE +
+            "|  | |_| || ' \\ | |\\ V // -_)| '_|(_-</ _` || |          |" + NEWLINE +
+            "|   \\___/ |_||_||_| \\_/ \\___||_|  /__/\\__,_||_|          |" + NEWLINE +
+            "|   ___       _     __                                   |" + NEWLINE +
+            "|  | _ \\ ___ | |__ /_/  _ __   ___  _ _                  |" + NEWLINE +
+            "|  |  _// _ \\| / // -_)| '  \\ / _ \\| ' \\                 |" + NEWLINE +
+            "|  |_|  \\___/|_\\_\\\\___||_|_|_|\\___/|_||_|                |" + NEWLINE +
+            "|   ___                 _              _                 | " + NEWLINE +
+            "|  | _ \\ __ _  _ _   __| | ___  _ __  (_) ___ ___  _ _   | " + NEWLINE +
+            "|  |   // _` || ' \\ / _` |/ _ \\| '  \\ | ||_ // -_)| '_|  | " + NEWLINE +
+            "|  |_|_\\\\__,_||_||_|\\__,_|\\___/|_|_|_||_|/__|\\___||_|    | " + NEWLINE +
+            "|   ___ __   ____  __                                    | " + NEWLINE +
+            "|  | __|\\ \\ / /\\ \\/ /                                    | " + NEWLINE +
+            "|  | _|  \\ V /  >  <                                     | " + NEWLINE +
+            "|  |_|    \\_/  /_/\\_\\  v1.1.3                            | " + NEWLINE +
+            "|                                                        | " + NEWLINE +
+            "==========================================================" + NEWLINE;
+
+    private static final String SECTION_SEPARATOR =
+            NEWLINE + "==========================================================" + NEWLINE;
+
     // At some point, it makes sense to let RandomizationLogger use a ResourceBundle for all its strings.
     // Until then, this string array may live here. It's a statement of intent of sorts,
     // to keep pretty strings out of the data classes/enums.
     private static final String[] EFFECTIVENESS_NAMES = {
             "No Effect/Immune", "Not Very Effective", "Neutral", "Super Effective"
     };
-
-    private static final String NEWLINE = System.lineSeparator();
 
     private final RandomSource randomSource;
     private final Settings settings;
@@ -58,6 +81,8 @@ public class RandomizationLogger {
     private final TypeEffectivenessRandomizer typeEffRandomizer;
     private final PaletteRandomizer paletteRandomizer;
     private final MiscTweakRandomizer miscTweakRandomizer;
+
+    private PrintStream log;
 
     public RandomizationLogger(RandomSource randomSource, Settings settings, RomHandler romHandler, ResourceBundle bundle,
                                SpeciesBaseStatUpdater speciesBSUpdater, MoveUpdater moveUpdater,
@@ -110,94 +135,153 @@ public class RandomizationLogger {
     }
 
     public void logResults(PrintStream log, long startTime) {
+        this.log = log;
 
-        logHead(log);
-
-        // TODO: should this be reordered to match the GUI?
-
-        maybeLogTypeEffectivenessUpdates(log);
-        maybeLogTypeEffectiveness(log);
-
-        maybeLogMoveUpdates(log);
-
-        maybeLogEvolutions(log);
-
-        maybeLogBaseStatUpdates(log);
-        maybeLogSpeciesTraits(log);
-
-        maybeLogEvolutionImprovements(log);
-
-        maybeLogStarters(log);
-
-        maybeLogMoveData(log);
-
-        maybeLogMovesets(log);
-
-        maybeLogTMMoves(log);
-        maybeLogTMHMCompatibility(log);
-
-        maybeLogMoveTutorMoves(log);
-        maybeLogMoveTutorCompatibility(log);
-
-        maybeLogTrainers(log);
-
-        maybeLogStaticPokemon(log);
-        maybeLogTotemPokemon(log);
-
-        maybeLogWildPokemon(log);
-
-        maybeLogInGameTrades(log);
-
-        // TODO: log field items
-        maybeLogShops(log);
-        maybeLogPickupItems(log);
-
-        logTail(log, startTime);
-        logDiagnostics(log);
+        logHead();
+        logTableOfContents();
+        logOverview();
+        logOptionalSections();
+        logStatistics(startTime);
+        logDiagnostics();
     }
 
-    private void logHead(PrintStream log) {
-        log.println("Randomizer Version: " + Version.VERSION_STRING);
-        log.println("Random Seed: " + randomSource.getSeed());
-        log.println("Settings String: " + Version.VERSION + settings.toString());
+    private void logHead() {
+        // TODO: figure out how to fit the version into the Logo
+        log.println(LOGO);
+        log.println(" [ Log for Randomized Game ]");
         log.println();
-    }
-
-    private void logTail(PrintStream log, long startTime) {
         String gameName = romHandler.getROMName();
         if (romHandler.hasGameUpdateLoaded()) {
             gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
         }
-        log.println("------------------------------------------------------------------");
-        log.println("Randomization of " + gameName + " completed.");
-        log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
-        log.println("RNG Calls: " + randomSource.callsSinceSeed());
-        log.println("------------------------------------------------------------------");
+        log.println("Base Game: " + gameName);
+        log.println("Randomizer Version: " + Version.VERSION_STRING);
+        log.println("Random Seed: " + randomSource.getSeed());
+        log.println("Settings String: " + Version.VERSION + settings.toString());
         log.println();
+        log.println("If you are having problems using the Universal Pokémon Randomizer FVX,");
+        log.println("please consult the wiki or leave an issue on the project's GitHub page.");
+        log.println();
+        log.println("Wiki link: "); // TODO: the link
+        log.println("GitHub issues page link: "); // TODO: the link
+        log.println(SECTION_SEPARATOR);
     }
 
-    private void logDiagnostics(PrintStream log) {
-        log.println("--ROM Diagnostics--");
+    private void logTableOfContents() {
+        log.println(" ( Table of Contents {TABL} )");
+        log.println();
+        log.println("Search (ctrl-f) for the strings in curly brackets {}");
+        log.println("to find the below sections quickly.");
+        printContentsRow("Table of Contents", "TABL");
+        printContentsRow("Overview of Randomization", "OVRD");
+        log.println();
+        printOptionalContentsRows();
+        log.println();
+        printContentsRow("Randomization Statistics", "STAT");
+        printContentsRow("Randomization/ROM Diagnostics", "DIAG");
+        log.println(SECTION_SEPARATOR);
+    }
+
+    private void printContentsRow(String name, String shortcut) {
+        log.print(" " + name);
+        log.print(new String(new char[49 - name.length()]).replace('\0', '-'));
+        log.println("{" + shortcut + "}");
+    }
+
+    private void printOptionalContentsRows() {
+        // TODO:
+    }
+
+    private void logOverview() {
+        log.println(" ( Overview of Randomization {OVRD} )");
+        log.println();
+        // TODO list all randomized sections
+        // TODO list all *non*-randomized sections
+        log.println("The following Misc. Tweaks were applied:");
+        int miscTweaks = settings.getCurrentMiscTweaks();
+        for (MiscTweak mt : MiscTweak.allTweaks) {
+            if ((miscTweaks & mt.getValue()) != 0) {
+                log.println(mt.getTweakName());
+            }
+        }
+        log.print(SECTION_SEPARATOR);
+    }
+
+    private void logStatistics(long startTime) {
+        log.println(" ( Randomization Statistics {STAT} )");
+        log.println();
+        // TODO: is this correct? should not it just measure the randomization, sans logging?
+        log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
+        log.println("RNG calls (non-cosmetic): " + randomSource.callsSinceSeedNonCosmetic());
+        log.println("RNG calls (cosmetic)    : " + randomSource.callsSinceSeedCosmetic());
+        log.println("RNG calls (total)       : " + randomSource.callsSinceSeed());
+        log.print(SECTION_SEPARATOR);
+    }
+
+    private void logDiagnostics() {
+        log.println(" ( ROM Diagnostics {DIAG} )");
+        log.println();
         if (!romHandler.isRomValid(null)) {
             log.println(bundle.getString("Log.InvalidRomLoaded"));
         }
         romHandler.printRomDiagnostics(log);
     }
 
-    private void maybeLogTypeEffectiveness(PrintStream log) {
+    /**
+     * The meat of the logging; logs all sections about the randomization results themselves,
+     * other than the overview. They are optional because e.g. the Trainer Pokémon section
+     * won't show up if they weren't randomized.
+     */
+    private void logOptionalSections() {
+
+        // TODO: refactor the below so they are formatted alike/like "sections"
+
+        maybeLogBaseStatUpdates();
+        maybeLogSpeciesTraits();
+        maybeLogEvolutions();
+        maybeLogEvolutionImprovements();
+
+        maybeLogStarters();
+        maybeLogStaticPokemon();
+        maybeLogInGameTrades();
+
+        maybeLogMoveUpdates();
+        maybeLogMoveData();
+        maybeLogMovesets();
+
+        maybeLogTrainers();
+        maybeLogTotemPokemon();
+
+        maybeLogWildPokemon();
+
+        maybeLogTMMoves();
+        maybeLogTMHMCompatibility();
+
+        maybeLogMoveTutorMoves();
+        maybeLogMoveTutorCompatibility();
+
+        // TODO: log field items
+        maybeLogShops();
+        maybeLogPickupItems();
+
+        maybeLogTypeEffectivenessUpdates();
+        maybeLogTypeEffectiveness();
+    }
+
+    private void maybeLogTypeEffectiveness() {
         if (typeEffUpdater.isUpdated() || typeEffRandomizer.isChangesMade()) {
             log.println("--Type Effectiveness--");
             log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
         }
     }
 
-    private void maybeLogEvolutions(PrintStream log) {
+    private void maybeLogEvolutions() {
         if (evoRandomizer.isChangesMade()) {
-            logEvolutions(log);
+            logEvolutions();
         }
     }
 
-    private void logEvolutions(PrintStream log) {
+    private void logEvolutions() {
         log.println("--Randomized Evolutions--");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
@@ -220,16 +304,16 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogSpeciesTraits(PrintStream log) {
+    private void maybeLogSpeciesTraits() {
         if (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade() || speciesTypeRandomizer.isChangesMade() ||
                 speciesAbilityRandomizer.isChangesMade() || encHeldItemRandomizer.isChangesMade()) {
-            logSpeciesTraits(log);
+            logSpeciesTraits();
         } else {
             log.println("Pokemon base stats & type: unchanged" + NEWLINE);
         }
     }
 
-    private void logSpeciesTraits(final PrintStream log) {
+    private void logSpeciesTraits() {
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         String[] itemNames = romHandler.getItemNames();
         // Log base stats & types
@@ -321,25 +405,25 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogEvolutionImprovements(PrintStream log) {
+    private void maybeLogEvolutionImprovements() {
         if (settings.isChangeImpossibleEvolutions()) {
             log.println("--Removing Impossible Evolutions--");
-            logUpdatedEvolutions(log, romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
+            logUpdatedEvolutions(romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
         }
         if (settings.isMakeEvolutionsEasier()) {
             log.println("--Making Evolutions Easier--");
             if (!(romHandler instanceof Gen1RomHandler)) {
                 log.println("Friendship evolutions now take 160 happiness (was 220).");
             }
-            logUpdatedEvolutions(log, romHandler.getEasierEvoUpdates(), null);
+            logUpdatedEvolutions(romHandler.getEasierEvoUpdates(), null);
         }
         if (settings.isRemoveTimeBasedEvolutions()) {
             log.println("--Removing Timed-Based Evolutions--");
-            logUpdatedEvolutions(log, romHandler.getTimeBasedEvoUpdates(), null);
+            logUpdatedEvolutions(romHandler.getTimeBasedEvoUpdates(), null);
         }
     }
 
-    private void logUpdatedEvolutions(final PrintStream log, Set<EvolutionUpdate> updatedEvolutions,
+    private void logUpdatedEvolutions(Set<EvolutionUpdate> updatedEvolutions,
                                       Set<EvolutionUpdate> otherUpdatedEvolutions) {
         for (EvolutionUpdate evo : updatedEvolutions) {
             if (otherUpdatedEvolutions != null && otherUpdatedEvolutions.contains(evo)) {
@@ -351,13 +435,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogStarters(PrintStream log) {
+    private void maybeLogStarters() {
         if (starterRandomizer.isChangesMade()) {
-            logStarters(log);
+            logStarters();
         }
     }
 
-    private void logStarters(final PrintStream log) {
+    private void logStarters() {
 
         // TODO: log starter held items
 
@@ -384,15 +468,15 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveData(PrintStream log) {
+    private void maybeLogMoveData() {
         if (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated()) {
-            logMoveData(log);
+            logMoveData();
         } else {
             log.println("Move Data: Unchanged." + NEWLINE);
         }
     }
 
-    private void logMoveData(final PrintStream log) {
+    private void logMoveData() {
 
         log.println("--Move Data--");
         log.print("NUM|NAME           |TYPE    |POWER|ACC.|PP");
@@ -415,9 +499,9 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMovesets(PrintStream log) {
+    private void maybeLogMovesets() {
         if (speciesMovesetRandomizer.isChangesMade()) {
-            logMovesets(log);
+            logMovesets();
         } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Pokemon Movesets: Metronome Only." + NEWLINE);
         } else {
@@ -425,7 +509,7 @@ public class RandomizationLogger {
         }
     }
 
-    private void logMovesets(PrintStream log) {
+    private void logMovesets() {
         log.println("--Pokemon Movesets--");
         List<String> movesets = new ArrayList<>();
         Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
@@ -500,9 +584,9 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTMMoves(PrintStream log) {
+    private void maybeLogTMMoves() {
         if (tmtMoveRandomizer.isTMChangesMade()) {
-            logTMMoves(log);
+            logTMMoves();
         } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("TM Moves: Metronome Only." + NEWLINE);
         } else {
@@ -510,7 +594,7 @@ public class RandomizationLogger {
         }
     }
 
-    private void logTMMoves(PrintStream log) {
+    private void logTMMoves() {
         log.println("--TM Moves--");
         List<Integer> tmMoves = romHandler.getTMMoves();
         List<Move> moves = romHandler.getMoves();
@@ -520,26 +604,26 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTMHMCompatibility(PrintStream log) {
+    private void maybeLogTMHMCompatibility() {
         if (tmhmtCompRandomizer.isTMHMChangesMade()) {
-            logTMHMCompatibility(log);
+            logTMHMCompatibility();
         }
     }
 
-    private void logTMHMCompatibility(final PrintStream log) {
+    private void logTMHMCompatibility() {
         log.println("--TM Compatibility--");
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
         tmHMs.addAll(romHandler.getHMMoves());
         List<Move> moveData = romHandler.getMoves();
 
-        logCompatibility(log, compat, tmHMs, moveData, true);
+        logCompatibility(compat, tmHMs, moveData, true);
     }
 
-    private void maybeLogMoveTutorMoves(PrintStream log) {
+    private void maybeLogMoveTutorMoves() {
         if (romHandler.hasMoveTutors()) {
             if (tmtMoveRandomizer.isTutorChangesMade()) {
-                logMoveTutorMoves(log, originalMTMoves);
+                logMoveTutorMoves(originalMTMoves);
             } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
                 log.println("Move Tutor Moves: Metronome Only." + NEWLINE);
             } else {
@@ -548,7 +632,7 @@ public class RandomizationLogger {
         }
     }
 
-    private void logMoveTutorMoves(PrintStream log, List<Integer> oldMtMoves) {
+    private void logMoveTutorMoves(List<Integer> oldMtMoves) {
         log.println("--Move Tutor Moves--");
         List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
         List<Move> moves = romHandler.getMoves();
@@ -559,22 +643,22 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveTutorCompatibility(PrintStream log) {
+    private void maybeLogMoveTutorCompatibility() {
         if (romHandler.hasMoveTutors() && tmhmtCompRandomizer.isTutorChangesMade()) {
-            logTutorCompatibility(log);
+            logTutorCompatibility();
         }
     }
 
-    private void logTutorCompatibility(final PrintStream log) {
+    private void logTutorCompatibility() {
         log.println("--Move Tutor Compatibility--");
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
         List<Move> moveData = romHandler.getMoves();
 
-        logCompatibility(log, compat, tutorMoves, moveData, false);
+        logCompatibility(compat, tutorMoves, moveData, false);
     }
 
-    private void logCompatibility(final PrintStream log, Map<Species, boolean[]> compat, List<Integer> moveList,
+    private void logCompatibility(Map<Species, boolean[]> compat, List<Integer> moveList,
                                   List<Move> moveData, boolean includeTMNumber) {
         int tmCount = romHandler.getTMCount();
         for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
@@ -617,17 +701,17 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTrainers(PrintStream log) {
+    private void maybeLogTrainers() {
         if (trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
                 || trainerNameRandomizer.isChangesMade()) {
-            logTrainers(log, originalTrainerNames, trainerNameRandomizer.isChangesMade(),
+            logTrainers(originalTrainerNames, trainerNameRandomizer.isChangesMade(),
                     trainerMovesetRandomizer.isChangesMade());
         } else {
             log.println("Trainers: Unchanged." + NEWLINE);
         }
     }
 
-    private void logTrainers(final PrintStream log, List<String> originalTrainerNames, boolean trainerNamesChanged, boolean logTrainerMovesets) {
+    private void logTrainers(List<String> originalTrainerNames, boolean trainerNamesChanged, boolean logTrainerMovesets) {
         log.println("--Trainers Pokemon--");
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
@@ -686,17 +770,17 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogStaticPokemon(PrintStream log) {
+    private void maybeLogStaticPokemon() {
         if (romHandler.canChangeStaticPokemon()) {
             if (staticPokeRandomizer.isStaticChangesMade()) {
-                logStaticPokemon(log, originalStatics);
+                logStaticPokemon(originalStatics);
             } else {
                 log.println("Static Pokemon: Unchanged." + NEWLINE);
             }
         }
     }
 
-    private void logStaticPokemon(final PrintStream log, List<StaticEncounter> oldStatics) {
+    private void logStaticPokemon(List<StaticEncounter> oldStatics) {
         List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
 
         log.println("--Static Pokemon--");
@@ -718,17 +802,17 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTotemPokemon(PrintStream log) {
+    private void maybeLogTotemPokemon() {
         if (romHandler.hasTotemPokemon()) {
             if (staticPokeRandomizer.isTotemChangesMade()) {
-                logTotemPokemon(log, originalTotems);
+                logTotemPokemon(originalTotems);
             } else {
                 log.println("Totem Pokemon: Unchanged." + NEWLINE);
             }
         }
     }
 
-    private void logTotemPokemon(final PrintStream log, List<TotemPokemon> oldTotems) {
+    private void logTotemPokemon(List<TotemPokemon> oldTotems) {
         List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
 
         String[] itemNames = romHandler.getItemNames();
@@ -742,15 +826,15 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogWildPokemon(PrintStream log) {
+    private void maybeLogWildPokemon() {
         if (wildEncounterRandomizer.isChangesMade()) {
-            logWildPokemon(log);
+            logWildPokemon();
         } else {
             log.println("Wild Pokemon: Unchanged." + NEWLINE);
         }
     }
 
-    private void logWildPokemon(final PrintStream log) {
+    private void logWildPokemon() {
 
         log.println("--Wild Pokemon--");
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
@@ -806,13 +890,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogInGameTrades(PrintStream log) {
+    private void maybeLogInGameTrades() {
         if (tradeRandomizer.isChangesMade()) {
-            logInGameTrades(log, originalTrades);
+            logInGameTrades(originalTrades);
         }
     }
 
-    private void logInGameTrades(PrintStream log, List<IngameTrade> oldTrades) {
+    private void logInGameTrades(List<IngameTrade> oldTrades) {
         log.println("--In-Game Trades--");
         List<IngameTrade> newTrades = romHandler.getIngameTrades();
         int size = oldTrades.size();
@@ -828,13 +912,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogShops(PrintStream log) {
+    private void maybeLogShops() {
         if (itemRandomizer.isShopChangesMade()) {
-            logShops(log);
+            logShops();
         }
     }
 
-    private void logShops(final PrintStream log) {
+    private void logShops() {
         String[] itemNames = romHandler.getItemNames();
         log.println("--Shops--");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
@@ -853,13 +937,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogPickupItems(PrintStream log) {
+    private void maybeLogPickupItems() {
         if (itemRandomizer.isPickupChangesMade()) {
-            logPickupItems(log);
+            logPickupItems();
         }
     }
 
-    private void logPickupItems(final PrintStream log) {
+    private void logPickupItems() {
         List<PickupItem> pickupItems = romHandler.getPickupItems();
         String[] itemNames = romHandler.getItemNames();
         log.println("--Pickup Items--");
@@ -891,13 +975,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveUpdates(PrintStream log) {
+    private void maybeLogMoveUpdates() {
         if (settings.isUpdateMoves()) {
-            logMoveUpdates(log);
+            logMoveUpdates();
         }
     }
     
-    private void logMoveUpdates(PrintStream log) {
+    private void logMoveUpdates() {
         log.println("--Move Updates--");
         log.print("The following moves have been updated, to be in line with Generation ");
         log.println(settings.getUpdateMovesToGeneration() + ".");
@@ -933,13 +1017,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogBaseStatUpdates(PrintStream log) {
+    private void maybeLogBaseStatUpdates() {
         if (settings.isUpdateBaseStats()) {
-            logBaseStatsUpdates(log);
+            logBaseStatsUpdates();
         }
     }
 
-    private void logBaseStatsUpdates(PrintStream log) {
+    private void logBaseStatsUpdates() {
         log.println("--Pokémon Base Stat Updates--");
         log.print("The following base stats have been updated, to be in line with Generation ");
         log.println(settings.getUpdateBaseStatsToGeneration() + ".");
@@ -958,13 +1042,13 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTypeEffectivenessUpdates(PrintStream log) {
+    private void maybeLogTypeEffectivenessUpdates() {
         if (settings.isUpdateTypeEffectiveness()) {
-            logTypeEffectivenessUpdates(log);
+            logTypeEffectivenessUpdates();
         }
     }
 
-    private void logTypeEffectivenessUpdates(PrintStream log) {
+    private void logTypeEffectivenessUpdates() {
         log.println("--Type Effectiveness Updates--");
         log.print("The following parts of the Type effectiveness chart have been updated, to be in line with Generation ");
         log.println(romHandler.generationOfPokemon() == 1 ? 2 : 6 + ".");

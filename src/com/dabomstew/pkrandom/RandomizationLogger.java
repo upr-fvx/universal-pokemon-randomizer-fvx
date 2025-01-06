@@ -189,13 +189,55 @@ public class RandomizationLogger {
     }
 
     private void printOptionalContentsRows() {
-        // TODO:
+        // TODO: where to put updates + evolution improvements?
+        if (shouldLogSpeciesTraits())
+            printContentsRow("Pokémon Base Stats / Types / Abilities", "PKST");
+        if (shouldLogEvolutions())
+            printContentsRow("Pokémon Evolutions", "PKEV");
+        log.println();
+        if (shouldLogStarters())
+            printContentsRow("Starter Pokémon", "SRPK");
+        if (shouldLogStaticPokemon())
+            printContentsRow("Static Pokémon", "STPK");
+        if (shouldLogInGameTrades())
+            printContentsRow("In-Game Trades", "IGTR");
+        log.println();
+        if (shouldLogMoveData())
+            printContentsRow("Move Data", "MVDT");
+        if (shouldLogMovesets())
+            printContentsRow("Pokémon Movesets", "PKMV");
+        log.println();
+        if (shouldLogTrainers())
+            printContentsRow("Trainer Pokémon", "TRPK");
+        if (shouldLogTotemPokemon())
+            printContentsRow("Totem Pokémon", "TOPK");
+        log.println();
+        if (shouldLogWildPokemon())
+            printContentsRow("Wild Pokémon", "WDPK");
+        log.println();
+        if (shouldLogTMMoves())
+            printContentsRow("TM Moves", "TMMV");
+        if (shouldLogTMHMCompatibility())
+            printContentsRow("TM/HM Compatibility", "TMCB");
+        if (shouldLogMoveTutorMoves())
+            printContentsRow("Move Tutor Moves", "MTMV");
+        if (shouldLogMoveTutorCompatibility())
+            printContentsRow("Move Tutor Compatibility", "MTCB");
+        log.println();
+        if (shouldLogShopItems())
+            printContentsRow("Shop Items", "SHMS");
+        if (shouldLogPickupItems())
+            printContentsRow("Pickup Items", "PUMS");
+        log.println();
+        if (shouldLogTypeEffectiveness())
+            printContentsRow("Type Effectiveness", "TPEF");
+        log.println();
     }
 
     private void logOverview() {
         log.println(" ( Overview of Randomization {OVRD} )");
         log.println();
-        // TODO list all randomized sections
+        // TODO list all randomized sections ( more atomic than the table of contents?? )
         // TODO list all *non*-randomized sections
         log.println("The following Misc. Tweaks were applied:");
         int miscTweaks = settings.getCurrentMiscTweaks();
@@ -233,52 +275,69 @@ public class RandomizationLogger {
      * won't show up if they weren't randomized.
      */
     private void logOptionalSections() {
+        if (shouldLogSpeciesTraits())
+            logSpeciesTraits();
+        if (shouldLogEvolutions())
+            logEvolutions();
 
-        // TODO: refactor the below so they are formatted alike/like "sections"
+        if (shouldLogStarters())
+            logStarters();
+        if (shouldLogStaticPokemon())
+            logStaticPokemon(originalStatics);
+        if (shouldLogInGameTrades())
+            logInGameTrades(originalTrades);
 
-        maybeLogBaseStatUpdates();
-        maybeLogSpeciesTraits();
-        maybeLogEvolutions();
-        maybeLogEvolutionImprovements();
+        if (shouldLogMoveData())
+            logMoveData();
+        if (shouldLogMovesets())
+            logMovesets();
 
-        maybeLogStarters();
-        maybeLogStaticPokemon();
-        maybeLogInGameTrades();
+        if (shouldLogTrainers())
+            logTrainers(originalTrainerNames);
+        if (shouldLogTotemPokemon())
+            logTotemPokemon(originalTotems);
 
-        maybeLogMoveUpdates();
-        maybeLogMoveData();
-        maybeLogMovesets();
+        if (shouldLogWildPokemon())
+            logWildPokemon();
 
-        maybeLogTrainers();
-        maybeLogTotemPokemon();
-
-        maybeLogWildPokemon();
-
-        maybeLogTMMoves();
-        maybeLogTMHMCompatibility();
-
-        maybeLogMoveTutorMoves();
-        maybeLogMoveTutorCompatibility();
+        if (shouldLogTMMoves())
+            logTMMoves();
+        if (shouldLogTMHMCompatibility())
+            logTMHMCompatibility();
+        if (shouldLogMoveTutorMoves())
+            logMoveTutorMoves(originalMTMoves);
+        if (shouldLogMoveTutorCompatibility())
+            logMoveTutorCompatibility();
 
         // TODO: log field items
-        maybeLogShops();
-        maybeLogPickupItems();
+        if (shouldLogShopItems())
+            logShopItems();
+        if (shouldLogPickupItems())
+            logPickupItems();
 
-        maybeLogTypeEffectivenessUpdates();
-        maybeLogTypeEffectiveness();
+        if (shouldLogTypeEffectiveness())
+            logTypeEffectiveness();
+
+        // TODO: where to fit these
+        logBaseStatsUpdates();
+        logEvolutionImprovements();
+        logMoveUpdates();
+        logTypeEffectivenessUpdates();
     }
 
-    private void maybeLogTypeEffectiveness() {
-        if (typeEffUpdater.isUpdated() || typeEffRandomizer.isChangesMade()) {
-            log.println("--Type Effectiveness--");
-            log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
-        }
+    // TODO: refactor the below so they are formatted alike/like "sections"
+
+    private boolean shouldLogTypeEffectiveness() {
+        return typeEffUpdater.isUpdated() || typeEffRandomizer.isChangesMade();
     }
 
-    private void maybeLogEvolutions() {
-        if (evoRandomizer.isChangesMade()) {
-            logEvolutions();
-        }
+    private void logTypeEffectiveness() {
+        log.println("--Type Effectiveness--");
+        log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
+    }
+
+    private boolean shouldLogEvolutions() {
+        return evoRandomizer.isChangesMade();
     }
 
     private void logEvolutions() {
@@ -304,13 +363,10 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogSpeciesTraits() {
-        if (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade() || speciesTypeRandomizer.isChangesMade() ||
-                speciesAbilityRandomizer.isChangesMade() || encHeldItemRandomizer.isChangesMade()) {
-            logSpeciesTraits();
-        } else {
-            log.println("Pokemon base stats & type: unchanged" + NEWLINE);
-        }
+    private boolean shouldLogSpeciesTraits() {
+        return (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade()
+                || speciesTypeRandomizer.isChangesMade() || speciesAbilityRandomizer.isChangesMade()
+                || encHeldItemRandomizer.isChangesMade()) ;
     }
 
     private void logSpeciesTraits() {
@@ -405,7 +461,7 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogEvolutionImprovements() {
+    private void logEvolutionImprovements() {
         if (settings.isChangeImpossibleEvolutions()) {
             log.println("--Removing Impossible Evolutions--");
             logUpdatedEvolutions(romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
@@ -435,10 +491,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogStarters() {
-        if (starterRandomizer.isChangesMade()) {
-            logStarters();
-        }
+    private boolean shouldLogStarters() {
+        return starterRandomizer.isChangesMade();
     }
 
     private void logStarters() {
@@ -468,12 +522,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveData() {
-        if (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated()) {
-            logMoveData();
-        } else {
-            log.println("Move Data: Unchanged." + NEWLINE);
-        }
+    private boolean shouldLogMoveData() {
+        return (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated());
     }
 
     private void logMoveData() {
@@ -499,14 +549,9 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMovesets() {
-        if (speciesMovesetRandomizer.isChangesMade()) {
-            logMovesets();
-        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("Pokemon Movesets: Metronome Only." + NEWLINE);
-        } else {
-            log.println("Pokemon Movesets: Unchanged." + NEWLINE);
-        }
+    private boolean shouldLogMovesets() {
+        // TODO: how to mark metronome mode??
+        return speciesMovesetRandomizer.isChangesMade();
     }
 
     private void logMovesets() {
@@ -584,14 +629,9 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTMMoves() {
-        if (tmtMoveRandomizer.isTMChangesMade()) {
-            logTMMoves();
-        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("TM Moves: Metronome Only." + NEWLINE);
-        } else {
-            log.println("TM Moves: Unchanged." + NEWLINE);
-        }
+    private boolean shouldLogTMMoves() {
+        // TODO: again, how to deal with metronome mode
+        return tmtMoveRandomizer.isTMChangesMade();
     }
 
     private void logTMMoves() {
@@ -604,10 +644,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTMHMCompatibility() {
-        if (tmhmtCompRandomizer.isTMHMChangesMade()) {
-            logTMHMCompatibility();
-        }
+    private boolean shouldLogTMHMCompatibility() {
+        return tmhmtCompRandomizer.isTMHMChangesMade();
     }
 
     private void logTMHMCompatibility() {
@@ -620,16 +658,8 @@ public class RandomizationLogger {
         logCompatibility(compat, tmHMs, moveData, true);
     }
 
-    private void maybeLogMoveTutorMoves() {
-        if (romHandler.hasMoveTutors()) {
-            if (tmtMoveRandomizer.isTutorChangesMade()) {
-                logMoveTutorMoves(originalMTMoves);
-            } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-                log.println("Move Tutor Moves: Metronome Only." + NEWLINE);
-            } else {
-                log.println("Move Tutor Moves: Unchanged." + NEWLINE);
-            }
-        }
+    private boolean shouldLogMoveTutorMoves() {
+        return romHandler.hasMoveTutors() && tmtMoveRandomizer.isTutorChangesMade();
     }
 
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
@@ -643,13 +673,11 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveTutorCompatibility() {
-        if (romHandler.hasMoveTutors() && tmhmtCompRandomizer.isTutorChangesMade()) {
-            logTutorCompatibility();
-        }
+    private boolean shouldLogMoveTutorCompatibility() {
+        return romHandler.hasMoveTutors() && tmhmtCompRandomizer.isTutorChangesMade();
     }
 
-    private void logTutorCompatibility() {
+    private void logMoveTutorCompatibility() {
         log.println("--Move Tutor Compatibility--");
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
@@ -701,17 +729,12 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTrainers() {
-        if (trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
-                || trainerNameRandomizer.isChangesMade()) {
-            logTrainers(originalTrainerNames, trainerNameRandomizer.isChangesMade(),
-                    trainerMovesetRandomizer.isChangesMade());
-        } else {
-            log.println("Trainers: Unchanged." + NEWLINE);
-        }
+    private boolean shouldLogTrainers() {
+        return trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
+                || trainerNameRandomizer.isChangesMade();
     }
 
-    private void logTrainers(List<String> originalTrainerNames, boolean trainerNamesChanged, boolean logTrainerMovesets) {
+    private void logTrainers(List<String> originalTrainerNames) {
         log.println("--Trainers Pokemon--");
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
@@ -724,7 +747,7 @@ public class RandomizationLogger {
                 currentTrainerName = t.name;
             }
             if (!currentTrainerName.isEmpty()) {
-                if (trainerNamesChanged) {
+                if (trainerNameRandomizer.isChangesMade()) {
                     log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
                 } else {
                     log.printf("(%s)", currentTrainerName);
@@ -735,7 +758,7 @@ public class RandomizationLogger {
             }
 
             String[] itemNames = romHandler.getItemNames();
-            if (logTrainerMovesets) {
+            if (trainerMovesetRandomizer.isChangesMade()) {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
@@ -770,14 +793,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogStaticPokemon() {
-        if (romHandler.canChangeStaticPokemon()) {
-            if (staticPokeRandomizer.isStaticChangesMade()) {
-                logStaticPokemon(originalStatics);
-            } else {
-                log.println("Static Pokemon: Unchanged." + NEWLINE);
-            }
-        }
+    private boolean shouldLogStaticPokemon() {
+        return romHandler.canChangeStaticPokemon() && staticPokeRandomizer.isStaticChangesMade();
     }
 
     private void logStaticPokemon(List<StaticEncounter> oldStatics) {
@@ -802,14 +819,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTotemPokemon() {
-        if (romHandler.hasTotemPokemon()) {
-            if (staticPokeRandomizer.isTotemChangesMade()) {
-                logTotemPokemon(originalTotems);
-            } else {
-                log.println("Totem Pokemon: Unchanged." + NEWLINE);
-            }
-        }
+    private boolean shouldLogTotemPokemon() {
+        return romHandler.hasTotemPokemon() && staticPokeRandomizer.isTotemChangesMade();
     }
 
     private void logTotemPokemon(List<TotemPokemon> oldTotems) {
@@ -826,16 +837,11 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogWildPokemon() {
-        if (wildEncounterRandomizer.isChangesMade()) {
-            logWildPokemon();
-        } else {
-            log.println("Wild Pokemon: Unchanged." + NEWLINE);
-        }
+    private boolean shouldLogWildPokemon() {
+        return wildEncounterRandomizer.isChangesMade();
     }
 
     private void logWildPokemon() {
-
         log.println("--Wild Pokemon--");
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
@@ -890,10 +896,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogInGameTrades() {
-        if (tradeRandomizer.isChangesMade()) {
-            logInGameTrades(originalTrades);
-        }
+    private boolean shouldLogInGameTrades() {
+        return tradeRandomizer.isChangesMade();
     }
 
     private void logInGameTrades(List<IngameTrade> oldTrades) {
@@ -912,13 +916,11 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogShops() {
-        if (itemRandomizer.isShopChangesMade()) {
-            logShops();
-        }
+    private boolean shouldLogShopItems() {
+        return itemRandomizer.isShopChangesMade();
     }
 
-    private void logShops() {
+    private void logShopItems() {
         String[] itemNames = romHandler.getItemNames();
         log.println("--Shops--");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
@@ -937,10 +939,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogPickupItems() {
-        if (itemRandomizer.isPickupChangesMade()) {
-            logPickupItems();
-        }
+    private boolean shouldLogPickupItems() {
+        return itemRandomizer.isPickupChangesMade();
     }
 
     private void logPickupItems() {
@@ -975,10 +975,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogMoveUpdates() {
-        if (settings.isUpdateMoves()) {
-            logMoveUpdates();
-        }
+    private boolean shouldLogMoveUpdates() {
+        return moveUpdater.isUpdated();
     }
     
     private void logMoveUpdates() {
@@ -1017,10 +1015,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogBaseStatUpdates() {
-        if (settings.isUpdateBaseStats()) {
-            logBaseStatsUpdates();
-        }
+    private boolean shouldLogBaseStatUpdates() {
+        return speciesBSUpdater.isUpdated();
     }
 
     private void logBaseStatsUpdates() {
@@ -1042,10 +1038,8 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private void maybeLogTypeEffectivenessUpdates() {
-        if (settings.isUpdateTypeEffectiveness()) {
-            logTypeEffectivenessUpdates();
-        }
+    private boolean shouldLogTypeEffectivenessUpdates() {
+        return typeEffUpdater.isUpdated();
     }
 
     private void logTypeEffectivenessUpdates() {

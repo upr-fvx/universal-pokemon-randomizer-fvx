@@ -156,7 +156,7 @@ public class RandomizationLogger {
             gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
         }
         log.println("Base Game: " + gameName);
-        log.println("Randomizer Version: " + Version.VERSION_STRING);
+        log.println("Randomizer Version: " + Version.LATEST_VERSION.branchName + " " + Version.VERSION_STRING);
         log.println("Random Seed: " + randomSource.getSeed());
         log.println("Settings String: " + Version.VERSION + settings.toString());
         log.println();
@@ -174,9 +174,7 @@ public class RandomizationLogger {
         log.println("to find the below sections quickly.");
         printContentsRow("Table of Contents", "TABL");
         printContentsRow("Overview of Randomization", "OVRD");
-        log.println();
         printOptionalContentsRows();
-        log.println();
         printContentsRow("Randomization Statistics", "STAT");
         printContentsRow("Randomization/ROM Diagnostics", "DIAG");
         log.println(SECTION_SEPARATOR);
@@ -190,31 +188,37 @@ public class RandomizationLogger {
 
     private void printOptionalContentsRows() {
         // TODO: where to put updates + evolution improvements?
+        log.println();
         if (shouldLogSpeciesTraits())
             printContentsRow("Pokémon Base Statistics / Types / Abilities", "PKST");
         if (shouldLogEvolutions())
             printContentsRow("Pokémon Evolutions", "PKEV");
-        log.println();
+        if (shouldLogSpeciesTraits() || shouldLogEvolutions())
+            log.println();
         if (shouldLogStarters())
             printContentsRow("Starter Pokémon", "SRPK");
         if (shouldLogStaticPokemon())
             printContentsRow("Static Pokémon", "STPK");
         if (shouldLogInGameTrades())
             printContentsRow("In-Game Trades", "IGTR");
-        log.println();
+        if (shouldLogStarters() || shouldLogStaticPokemon() || shouldLogInGameTrades())
+            log.println();
         if (shouldLogMoveData())
             printContentsRow("Move Data", "MVDT");
         if (shouldLogMovesets())
             printContentsRow("Pokémon Movesets", "PKMV");
-        log.println();
+        if (shouldLogMoveData() || shouldLogMovesets())
+            log.println();
         if (shouldLogTrainers())
             printContentsRow("Trainer Pokémon", "TRPK");
         if (shouldLogTotemPokemon())
             printContentsRow("Totem Pokémon", "TOPK");
-        log.println();
-        if (shouldLogWildPokemon())
+        if (shouldLogTrainers() || shouldLogTotemPokemon())
+            log.println();
+        if (shouldLogWildPokemon()) {
             printContentsRow("Wild Pokémon", "WDPK");
-        log.println();
+            log.println();
+        }
         if (shouldLogTMMoves())
             printContentsRow("TM Moves", "TMMV");
         if (shouldLogTMHMCompatibility())
@@ -223,15 +227,19 @@ public class RandomizationLogger {
             printContentsRow("Move Tutor Moves", "MTMV");
         if (shouldLogMoveTutorCompatibility())
             printContentsRow("Move Tutor Compatibility", "MTCB");
-        log.println();
+        if (shouldLogTMMoves() || shouldLogTMHMCompatibility()
+                || shouldLogMoveTutorMoves() || shouldLogMoveTutorCompatibility())
+            log.println();
         if (shouldLogShopItems())
             printContentsRow("Shop Items", "SHMS");
         if (shouldLogPickupItems())
             printContentsRow("Pickup Items", "PUMS");
-        log.println();
-        if (shouldLogTypeEffectiveness())
+        if (shouldLogShopItems() || shouldLogPickupItems())
+            log.println();
+        if (shouldLogTypeEffectiveness()) {
             printContentsRow("Type Effectiveness", "TPEF");
-        log.println();
+            log.println();
+        }
     }
 
     private void logOverview() {
@@ -255,7 +263,7 @@ public class RandomizationLogger {
         log.println("RNG calls (non-cosmetic): " + randomSource.callsSinceSeedNonCosmetic());
         log.println("RNG calls (cosmetic)    : " + randomSource.callsSinceSeedCosmetic());
         log.println("RNG calls (total)       : " + randomSource.callsSinceSeed());
-        log.print(SECTION_SEPARATOR);
+        log.println(SECTION_SEPARATOR);
     }
 
     private void logDiagnostics() {

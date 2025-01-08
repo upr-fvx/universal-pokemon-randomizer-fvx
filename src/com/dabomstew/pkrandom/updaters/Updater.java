@@ -21,7 +21,7 @@ public abstract class Updater<Target, Desc, Attr> {
     }
 
     public boolean isUpdated() {
-        return getUpdates().isEmpty();
+        return !getUpdates().isEmpty();
     }
 
     public abstract Map<Target, Map<Desc, Update<Attr>>> getUpdates();

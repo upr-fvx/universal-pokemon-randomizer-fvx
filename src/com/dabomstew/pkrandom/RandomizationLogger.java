@@ -36,6 +36,7 @@ public class RandomizationLogger {
 
     private static final String SECTION_SEPARATOR =
             NEWLINE + "==========================================================" + NEWLINE;
+    private static final String SECTION_TITLE = " ( %s {%s} )%n%n";
 
     // At some point, it makes sense to let RandomizationLogger use a ResourceBundle for all its strings.
     // Until then, this string array may live here. It's a statement of intent of sorts,
@@ -168,8 +169,7 @@ public class RandomizationLogger {
     }
 
     private void logTableOfContents() {
-        log.println(" ( Table of Contents {TABL} )");
-        log.println();
+        log.printf(SECTION_TITLE, "Table of Contents", "TABL");
         log.println("Search (ctrl-f) for the strings in curly brackets {}");
         log.println("to find the below sections quickly.");
         printContentsRow("Table of Contents", "TABL");
@@ -191,7 +191,7 @@ public class RandomizationLogger {
     private void printOptionalContentsRows() {
         // TODO: where to put updates + evolution improvements?
         if (shouldLogSpeciesTraits())
-            printContentsRow("Pokémon Base Stats / Types / Abilities", "PKST");
+            printContentsRow("Pokémon Base Statistics / Types / Abilities", "PKST");
         if (shouldLogEvolutions())
             printContentsRow("Pokémon Evolutions", "PKEV");
         log.println();
@@ -235,8 +235,7 @@ public class RandomizationLogger {
     }
 
     private void logOverview() {
-        log.println(" ( Overview of Randomization {OVRD} )");
-        log.println();
+        log.printf(SECTION_TITLE, "Overview of Randomization", "OVRD");
         // TODO list all randomized sections ( more atomic than the table of contents?? )
         // TODO list all *non*-randomized sections
         log.println("The following Misc. Tweaks were applied:");
@@ -250,8 +249,7 @@ public class RandomizationLogger {
     }
 
     private void logStatistics(long startTime) {
-        log.println(" ( Randomization Statistics {STAT} )");
-        log.println();
+        log.printf(SECTION_TITLE, "Randomization Statistics", "STAT");
         // TODO: is this correct? should not it just measure the randomization, sans logging?
         log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
         log.println("RNG calls (non-cosmetic): " + randomSource.callsSinceSeedNonCosmetic());
@@ -261,8 +259,7 @@ public class RandomizationLogger {
     }
 
     private void logDiagnostics() {
-        log.println(" ( ROM Diagnostics {DIAG} )");
-        log.println();
+        log.printf(SECTION_TITLE, "ROM Diagnostics", "DIAG");
         if (!romHandler.isRomValid(null)) {
             log.println(bundle.getString("Log.InvalidRomLoaded"));
         }
@@ -332,8 +329,9 @@ public class RandomizationLogger {
     }
 
     private void logTypeEffectiveness() {
-        log.println("--Type Effectiveness--");
+        log.printf(SECTION_TITLE, "Type Effectiveness", "TPEF");
         log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogEvolutions() {
@@ -341,7 +339,7 @@ public class RandomizationLogger {
     }
 
     private void logEvolutions() {
-        log.println("--Randomized Evolutions--");
+        log.printf(SECTION_TITLE, "Pokémon Evolutions", "PKEV");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
             if (pk != null && !pk.isActuallyCosmetic()) {
@@ -359,8 +357,7 @@ public class RandomizationLogger {
                 }
             }
         }
-
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogSpeciesTraits() {
@@ -373,7 +370,7 @@ public class RandomizationLogger {
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         String[] itemNames = romHandler.getItemNames();
         // Log base stats & types
-        log.println("--Pokemon Base Stats & Types--");
+        log.printf(SECTION_TITLE, "Pokémon Base Statistics / Types / Abilities", "PKST");
         if (romHandler instanceof Gen1RomHandler) {
             log.println("NUM|NAME      |TYPE             |  HP| ATK| DEF| SPE|SPEC");
             for (Species pkmn : allPokes) {
@@ -458,10 +455,11 @@ public class RandomizationLogger {
 
             }
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private void logEvolutionImprovements() {
+        // TODO
         if (settings.isChangeImpossibleEvolutions()) {
             log.println("--Removing Impossible Evolutions--");
             logUpdatedEvolutions(romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
@@ -498,7 +496,7 @@ public class RandomizationLogger {
     private void logStarters() {
 
         // TODO: log starter held items
-
+        log.printf(SECTION_TITLE, "Starter Pokémon", "SRPK");
         switch (settings.getStartersMod()) {
             case CUSTOM:
                 log.println("--Custom Starters--");
@@ -519,7 +517,7 @@ public class RandomizationLogger {
             log.println("Set starter " + i + " to " + starter.getFullName());
             i++;
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogMoveData() {
@@ -528,7 +526,7 @@ public class RandomizationLogger {
 
     private void logMoveData() {
 
-        log.println("--Move Data--");
+        log.printf(SECTION_TITLE, "Move Data", "MVDT");
         log.print("NUM|NAME           |TYPE    |POWER|ACC.|PP");
         if (romHandler.hasPhysicalSpecialSplit()) {
             log.print(" |CATEGORY");
@@ -546,7 +544,7 @@ public class RandomizationLogger {
                 log.println();
             }
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogMovesets() {
@@ -555,7 +553,7 @@ public class RandomizationLogger {
     }
 
     private void logMovesets() {
-        log.println("--Pokemon Movesets--");
+        log.printf(SECTION_TITLE, "Pokémon Movesets", "PKMV");
         List<String> movesets = new ArrayList<>();
         Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
@@ -626,7 +624,7 @@ public class RandomizationLogger {
         for (String moveset : movesets) {
             log.println(moveset);
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogTMMoves() {
@@ -635,13 +633,13 @@ public class RandomizationLogger {
     }
 
     private void logTMMoves() {
-        log.println("--TM Moves--");
+        log.printf(SECTION_TITLE, "TM Moves", "TMMV");
         List<Integer> tmMoves = romHandler.getTMMoves();
         List<Move> moves = romHandler.getMoves();
         for (int i = 0; i < tmMoves.size(); i++) {
             log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogTMHMCompatibility() {
@@ -649,13 +647,14 @@ public class RandomizationLogger {
     }
 
     private void logTMHMCompatibility() {
-        log.println("--TM Compatibility--");
+        log.printf(SECTION_TITLE, "TM Compatibility", "TMCM");
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
         tmHMs.addAll(romHandler.getHMMoves());
         List<Move> moveData = romHandler.getMoves();
 
         logCompatibility(compat, tmHMs, moveData, true);
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogMoveTutorMoves() {
@@ -663,14 +662,14 @@ public class RandomizationLogger {
     }
 
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
-        log.println("--Move Tutor Moves--");
+        log.printf(SECTION_TITLE, "Move Tutor Moves", "MTMV");
         List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
         List<Move> moves = romHandler.getMoves();
         for (int i = 0; i < newMtMoves.size(); i++) {
             log.printf("%-10s -> %-10s" + NEWLINE, moves.get(oldMtMoves.get(i)).name,
                     moves.get(newMtMoves.get(i)).name);
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogMoveTutorCompatibility() {
@@ -678,12 +677,13 @@ public class RandomizationLogger {
     }
 
     private void logMoveTutorCompatibility() {
-        log.println("--Move Tutor Compatibility--");
+        log.printf(SECTION_TITLE, "Move Tutor Compatibility", "MTCB");
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
         List<Move> moveData = romHandler.getMoves();
 
         logCompatibility(compat, tutorMoves, moveData, false);
+        log.println(SECTION_SEPARATOR);
     }
 
     private void logCompatibility(Map<Species, boolean[]> compat, List<Integer> moveList,
@@ -735,7 +735,7 @@ public class RandomizationLogger {
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
-        log.println("--Trainers Pokemon--");
+        log.printf(SECTION_TITLE, "Trainer Pokémon", "TRPK");
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
             log.print("#" + t.index + " ");
@@ -790,7 +790,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogStaticPokemon() {
@@ -800,7 +800,7 @@ public class RandomizationLogger {
     private void logStaticPokemon(List<StaticEncounter> oldStatics) {
         List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
 
-        log.println("--Static Pokemon--");
+        log.printf(SECTION_TITLE, "Static Pokémon", "STPK");
         Map<String, Integer> seenPokemon = new TreeMap<>();
         for (int i = 0; i < oldStatics.size(); i++) {
             StaticEncounter oldP = oldStatics.get(i);
@@ -816,7 +816,7 @@ public class RandomizationLogger {
             }
             log.println(" => " + newP.toString(settings.isStaticLevelModified()));
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogTotemPokemon() {
@@ -827,14 +827,14 @@ public class RandomizationLogger {
         List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
 
         String[] itemNames = romHandler.getItemNames();
-        log.println("--Totem Pokemon--");
+        log.printf(SECTION_TITLE, "Totem Pokémon", "TOPK");
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
             log.println(oldP.spec.getFullName() + " =>");
             log.printf(newP.toString(), itemNames[newP.heldItem]);
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogWildPokemon() {
@@ -842,7 +842,7 @@ public class RandomizationLogger {
     }
 
     private void logWildPokemon() {
-        log.println("--Wild Pokemon--");
+        log.printf(SECTION_TITLE, "Wild Pokémon", "WDPK");
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
@@ -893,7 +893,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogInGameTrades() {
@@ -901,7 +901,7 @@ public class RandomizationLogger {
     }
 
     private void logInGameTrades(List<IngameTrade> oldTrades) {
-        log.println("--In-Game Trades--");
+        log.printf(SECTION_TITLE, "In-Game Trades", "IGTR");
         List<IngameTrade> newTrades = romHandler.getIngameTrades();
         int size = oldTrades.size();
         for (int i = 0; i < size; i++) {
@@ -913,7 +913,7 @@ public class RandomizationLogger {
                     newT.requestedSpecies != null ? newT.requestedSpecies.getFullName() : "Any",
                     newT.nickname, newT.givenSpecies.getFullName());
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogShopItems() {
@@ -922,7 +922,7 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         String[] itemNames = romHandler.getItemNames();
-        log.println("--Shops--");
+        log.printf(SECTION_TITLE, "Shop Items", "SHMS");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
         for (int shopID : shopsDict.keySet()) {
             Shop shop = shopsDict.get(shopID);
@@ -936,7 +936,7 @@ public class RandomizationLogger {
 
             log.println();
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogPickupItems() {
@@ -946,7 +946,7 @@ public class RandomizationLogger {
     private void logPickupItems() {
         List<PickupItem> pickupItems = romHandler.getPickupItems();
         String[] itemNames = romHandler.getItemNames();
-        log.println("--Pickup Items--");
+        log.printf(SECTION_TITLE, "Pickup Items", "PUMS");
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
             int endingLevel = (levelRange + 1) * 10;
@@ -972,7 +972,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.println();
+        log.println(SECTION_SEPARATOR);
     }
 
     private boolean shouldLogMoveUpdates() {
@@ -980,6 +980,7 @@ public class RandomizationLogger {
     }
     
     private void logMoveUpdates() {
+        // TODO
         log.println("--Move Updates--");
         log.print("The following moves have been updated, to be in line with Generation ");
         log.println(settings.getUpdateMovesToGeneration() + ".");
@@ -1020,6 +1021,7 @@ public class RandomizationLogger {
     }
 
     private void logBaseStatsUpdates() {
+        // TODO
         log.println("--Pokémon Base Stat Updates--");
         log.print("The following base stats have been updated, to be in line with Generation ");
         log.println(settings.getUpdateBaseStatsToGeneration() + ".");

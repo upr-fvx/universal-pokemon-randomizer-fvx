@@ -9,6 +9,7 @@ import com.dabomstew.pkrandom.updaters.*;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RandomizationLogger {
 
@@ -556,83 +557,77 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMovesets() {
-        // TODO: how to mark metronome mode??
         return speciesMovesetRandomizer.isChangesMade();
     }
 
     private void logMovesets() {
         log.printf(SECTION_TITLE, "Pokémon Movesets", "PKMV");
-        List<String> movesets = new ArrayList<>();
+        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+            log.println("Metronome only mode - every Pokémon learns only Metronome.");
+            log.println(SECTION_SEPARATOR);
+            return;
+        }
+
         Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
-        List<Species> pkmnList = romHandler.getSpeciesInclFormes();
-        int i = 1;
-        for (Species pkmn : pkmnList) {
-            if (pkmn == null || pkmn.isActuallyCosmetic()) {
+        for (Species pk : romHandler.getSpeciesInclFormes()) {
+            if (pk == null || pk.isActuallyCosmetic()) {
                 continue;
             }
-            StringBuilder evoStr = new StringBuilder();
-            try {
-                evoStr.append(" -> ").append(pkmn.getEvolutionsFrom().get(0).getTo().getFullName());
-            } catch (Exception e) {
-                evoStr.append(" (no evolution)");
-            }
 
-            StringBuilder sb = new StringBuilder();
+            log.printf(String.format("%03d %s -> ", pk.getNumber(), pk.getFullName()));
+
+            SpeciesSet evos = pk.getEvolvedSpecies(false);
+            if (evos.isEmpty()) {
+                log.println(" (no evolution)");
+            } else {
+                log.println(evos.stream().sorted().map(Species::getFullName).collect(Collectors.joining(", ")));
+            }
 
             if (romHandler instanceof Gen1RomHandler) {
-                sb.append(String.format("%03d %s", i, pkmn.getFullName()))
-                        .append(evoStr).append(NEWLINE)
-                        .append(String.format("HP   %-3d", pkmn.getHp())).append(NEWLINE)
-                        .append(String.format("ATK  %-3d", pkmn.getAttack())).append(NEWLINE)
-                        .append(String.format("DEF  %-3d", pkmn.getDefense())).append(NEWLINE)
-                        .append(String.format("SPEC %-3d", pkmn.getSpecial())).append(NEWLINE)
-                        .append(String.format("SPE  %-3d", pkmn.getSpeed())).append(NEWLINE);
+                log.printf("  HP| ATK| DEF|SPEC| SPD %n%4d|%4d|%4d|%4d|%4d %n",
+                        pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpecial(), pk.getSpeed());
             } else {
-                sb.append(String.format("%03d %s", i, pkmn.getFullName()))
-                        .append(evoStr).append(NEWLINE)
-                        .append(String.format("HP  %-3d", pkmn.getHp())).append(NEWLINE)
-                        .append(String.format("ATK %-3d", pkmn.getAttack())).append(NEWLINE)
-                        .append(String.format("DEF %-3d", pkmn.getDefense())).append(NEWLINE)
-                        .append(String.format("SPA %-3d", pkmn.getSpatk())).append(NEWLINE)
-                        .append(String.format("SPD %-3d", pkmn.getSpdef())).append(NEWLINE)
-                        .append(String.format("SPE %-3d", pkmn.getSpeed())).append(NEWLINE);
+                log.printf("  HP| ATK| DEF|SATK|SDEF| SPD %n%4d|%4d|%4d|%4d|%4d|%4d %n",
+                        pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpatk(), pk.getSpdef(), pk.getSpeed());
             }
 
-            i++;
-
-            List<MoveLearnt> data = moveData.get(pkmn.getNumber());
+            List<MoveLearnt> data = moveData.get(pk.getNumber());
             for (MoveLearnt ml : data) {
                 try {
                     if (ml.level == 0) {
-                        sb.append("Learned upon evolution: ")
-                                .append(moves.get(ml.move).name).append(NEWLINE);
+                        log.print("Learnt upon evolution: ");
                     } else {
-                        sb.append("Level ")
-                                .append(String.format("%-2d", ml.level))
-                                .append(": ")
-                                .append(moves.get(ml.move).name).append(NEWLINE);
+                        log.printf("Level %-2d: ", ml.level);
                     }
+                    log.println(formatMovesetMove(moves.get(ml.move), pk));
                 } catch (NullPointerException ex) {
-                    sb.append("invalid move at level").append(ml.level);
+                    log.printf("invalid move at level %-2d %n", ml.level);
                 }
             }
-            List<Integer> eggMove = eggMoves.get(pkmn.getNumber());
+            List<Integer> eggMove = eggMoves.get(pk.getNumber());
             if (eggMove != null && !eggMove.isEmpty()) {
-                sb.append("Egg Moves:").append(NEWLINE);
+                log.println("Egg Moves:");
                 for (Integer move : eggMove) {
-                    sb.append(" - ").append(moves.get(move).name).append(NEWLINE);
+                    log.println(" - " + formatMovesetMove(moves.get(move), pk));
                 }
             }
-
-            movesets.add(sb.toString());
-        }
-        Collections.sort(movesets);
-        for (String moveset : movesets) {
-            log.println(moveset);
+            log.println();
         }
         log.println(SECTION_SEPARATOR);
+    }
+
+    private String formatMovesetMove(Move mv, Species learner) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%-12s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%" ,
+                mv.name, mv.type, mv.category,
+                mv.category == MoveCategory.STATUS ? "--" : String.format("%3d", mv.power),
+                mv.pp, mv.hitratio));
+        if (mv.category != MoveCategory.STATUS && learner.hasType(mv.type, false)) {
+            sb.append(" (STAB)");
+        }
+        return sb.toString();
     }
 
     private boolean shouldLogTMMoves() {

@@ -148,7 +148,6 @@ public class RandomizationLogger {
     }
 
     private void logHead() {
-        // TODO: figure out how to fit the version into the Logo
         log.printf(LOGO, "v" + Version.VERSION_STRING);
         log.println(" [ Log for Randomized Game ]");
         log.println();
@@ -164,8 +163,8 @@ public class RandomizationLogger {
         log.println("If you are having problems using the Universal Pokémon Randomizer FVX,");
         log.println("please consult the wiki or leave an issue on the project's GitHub page.");
         log.println();
-        log.println("Wiki link: "); // TODO: the link
-        log.println("GitHub issues page link: "); // TODO: the link
+        log.println("Wiki link: " + SysConstants.WIKI_URL);
+        log.println("GitHub issues page link: https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues");
         log.println(SECTION_SEPARATOR);
     }
 
@@ -254,12 +253,11 @@ public class RandomizationLogger {
                 log.println(mt.getTweakName());
             }
         }
-        log.print(SECTION_SEPARATOR);
+        log.println(SECTION_SEPARATOR);
     }
 
     private void logStatistics(long startTime) {
         log.printf(SECTION_TITLE, "Randomization Statistics", "STAT");
-        // TODO: is this correct? should not it just measure the randomization, sans logging?
         log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
         log.println("RNG calls (non-cosmetic): " + randomSource.callsSinceSeedNonCosmetic());
         log.println("RNG calls (cosmetic)    : " + randomSource.callsSinceSeedCosmetic());
@@ -330,8 +328,6 @@ public class RandomizationLogger {
         logMoveUpdates();
         logTypeEffectivenessUpdates();
     }
-
-    // TODO: refactor the below so they are formatted alike/like "sections"
 
     private boolean shouldLogTypeEffectiveness() {
         return typeEffUpdater.isUpdated() || typeEffRandomizer.isChangesMade();
@@ -557,7 +553,7 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMovesets() {
-        return speciesMovesetRandomizer.isChangesMade();
+        return speciesMovesetRandomizer.isChangesMade() || settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logMovesets() {
@@ -631,16 +627,20 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogTMMoves() {
-        // TODO: again, how to deal with metronome mode
-        return tmtMoveRandomizer.isTMChangesMade();
+        return tmtMoveRandomizer.isTMChangesMade() || settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logTMMoves() {
         log.printf(SECTION_TITLE, "TM Moves", "TMMV");
-        List<Integer> tmMoves = romHandler.getTMMoves();
-        List<Move> moves = romHandler.getMoves();
-        for (int i = 0; i < tmMoves.size(); i++) {
-            log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
+
+        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+            log.println("Metronome only mode - every TM contains Metronome.");
+        } else {
+            List<Integer> tmMoves = romHandler.getTMMoves();
+            List<Move> moves = romHandler.getMoves();
+            for (int i = 0; i < tmMoves.size(); i++) {
+                log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
+            }
         }
         log.println(SECTION_SEPARATOR);
     }
@@ -661,16 +661,22 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMoveTutorMoves() {
-        return romHandler.hasMoveTutors() && tmtMoveRandomizer.isTutorChangesMade();
+        return romHandler.hasMoveTutors() && (tmtMoveRandomizer.isTutorChangesMade() ||
+                settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY);
     }
 
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
         log.printf(SECTION_TITLE, "Move Tutor Moves", "MTMV");
-        List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
-        List<Move> moves = romHandler.getMoves();
-        for (int i = 0; i < newMtMoves.size(); i++) {
-            log.printf("%-10s -> %-10s" + NEWLINE, moves.get(oldMtMoves.get(i)).name,
-                    moves.get(newMtMoves.get(i)).name);
+
+        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+            log.println("Metronome only mode - every Move Tutor teaches Metronome.");
+        } else {
+            List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
+            List<Move> moves = romHandler.getMoves();
+            for (int i = 0; i < newMtMoves.size(); i++) {
+                log.printf("%-10s -> %-10s" + NEWLINE, moves.get(oldMtMoves.get(i)).name,
+                        moves.get(newMtMoves.get(i)).name);
+            }
         }
         log.println(SECTION_SEPARATOR);
     }

@@ -36,6 +36,7 @@ public class SysConstants {
     public static final String WIKI_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki";
     public static final String WIKI_IMPORTANT_INFO_URL = WIKI_URL + "/Important-Information";
     public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/Randomizing-the-3DS-games";
+    public static final String ISSUES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues";
 
     public static final String ROOT_PATH = getRootPath();
     public static final String LINE_SEP = System.getProperty("line.separator");

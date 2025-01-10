@@ -104,7 +104,7 @@ public class BatchRandomizationSettings implements Cloneable {
 
     @Override
     public String toString() {
-        StringJoiner sj = new StringJoiner(SysConstants.LINE_SEP);
+        StringJoiner sj = new StringJoiner(System.lineSeparator());
         sj.add("batchrandomization.enabled=" + batchRandomizationEnabled.toString());
         sj.add("batchrandomization.generatelogfiles=" + generateLogFile.toString());
         sj.add("batchrandomization.autoadvanceindex=" + autoAdvanceStartingIndex.toString());

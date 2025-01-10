@@ -93,6 +93,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private int shopItemsOffset;
     private ItemList allowedItems, nonBadItems;
     private int pickupItemsTableOffset;
+    private TypeTable typeTable;
     private long actualCodeCRC32;
     private Map<String, Long> actualFileCRC32s;
 
@@ -2648,6 +2649,100 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 battleCRO[offset + 3] = 0x00;
                 writeFile(romEntry.getFile("Battle"), battleCRO);
             }
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public boolean hasTypeEffectivenessSupport() {
+        return true;
+    }
+
+    @Override
+    public TypeTable getTypeTable() {
+        if (typeTable == null) {
+            typeTable = readTypeTable();
+        }
+        return typeTable;
+    }
+
+    private TypeTable readTypeTable() {
+        try {
+            TypeTable typeTable = new TypeTable(Type.getAllTypes(6));
+            byte[] battleFile = readFile(romEntry.getFile("Battle"));
+            int tableOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+            int tableWidth = typeTable.getTypes().size();
+
+            for (Type attacker : typeTable.getTypes()) {
+                for (Type defender : typeTable.getTypes()) {
+                    int offset = tableOffset + (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
+                    int effectivenessInternal = battleFile[offset];
+                    Effectiveness effectiveness;
+                    switch (effectivenessInternal) {
+                        case 8:
+                            effectiveness = Effectiveness.DOUBLE;
+                            break;
+                        case 4:
+                            effectiveness = Effectiveness.NEUTRAL;
+                            break;
+                        case 2:
+                            effectiveness = Effectiveness.HALF;
+                            break;
+                        case 0:
+                            effectiveness = Effectiveness.ZERO;
+                            break;
+                        default:
+                            effectiveness = null;
+                            break;
+                    }
+                    typeTable.setEffectiveness(attacker, defender, effectiveness);
+                }
+            }
+
+            return typeTable;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public void setTypeTable(TypeTable typeTable) {
+        this.typeTable = typeTable;
+        writeTypeTable(typeTable);
+    }
+
+    private void writeTypeTable(TypeTable typeTable) {
+        try {
+            byte[] battleFile = readFile(romEntry.getFile("Battle"));
+            int tableOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+            int tableWidth = typeTable.getTypes().size();
+
+            for (Type attacker : typeTable.getTypes()) {
+                for (Type defender : typeTable.getTypes()) {
+                    int offset = tableOffset + (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
+                    Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
+                    byte effectivenessInternal;
+                    switch (effectiveness) {
+                        case DOUBLE:
+                            effectivenessInternal = 8;
+                            break;
+                        case NEUTRAL:
+                            effectivenessInternal = 4;
+                            break;
+                        case HALF:
+                            effectivenessInternal = 2;
+                            break;
+                        case ZERO:
+                            effectivenessInternal = 0;
+                            break;
+                        default:
+                            effectivenessInternal = 0;
+                    }
+                    battleFile[offset] = effectivenessInternal;
+                }
+            }
+            writeFile(romEntry.getFile("Battle"), battleFile);
         } catch (IOException e) {
             throw new RomIOException(e);
         }

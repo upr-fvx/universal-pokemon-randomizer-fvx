@@ -31,6 +31,8 @@ import java.util.ResourceBundle;
 
 public class MiscTweak implements Comparable<MiscTweak> {
 
+    // Note that Java ints are 32 bits, so with the current implementation
+    // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;
 
     private static final ResourceBundle bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
@@ -63,6 +65,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     public static final MiscTweak UPDATE_ROTOM_FORME_TYPING = new MiscTweak(1 << 21, "updateRotomFormeTyping", 0);
     public static final MiscTweak DISABLE_LOW_HP_MUSIC = new MiscTweak(1 << 22, "disableLowHpMusic", 0);
     public static final MiscTweak REUSABLE_TMS = new MiscTweak(1 << 23, "reusableTMs", 0);
+    public static final MiscTweak FORGETTABLE_HMS = new MiscTweak(1 << 24, "forgettableHMs", 0);
 
     // alias to make SettingsUpdater code clearer
     public static final MiscTweak OLD_UPDATE_TYPE_EFFECTIVENESS = UNUSED8;

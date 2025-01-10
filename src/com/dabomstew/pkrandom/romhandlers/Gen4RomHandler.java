@@ -5752,50 +5752,70 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return items;
 	}
 
-	protected int calculatePokemonNormalPaletteIndex(int i) {
-		return i * 6 + 4;
-	}
-
-	protected int calculatePokemonShinyPaletteIndex(int i) {
-		return calculatePokemonNormalPaletteIndex(i) + 1;
-	}
-
-    protected Collection<Integer> getGraphicalFormePokes() {
-        return Gen4Constants.otherPokemonGraphicsPalettes.keySet();
-    }
-
-    protected void loadGraphicalFormePokemonPalettes(Species pk) {
-        String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-        NARCArchive NARC;
-        try {
-            NARC = readNARC(NARCpath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(pk.getNumber());
-		for (int palID = 0; palID < palettes[0].length; palID++) {
-			// assumes there are as many normal and shiny palettes
-			pk.setNormalPalette(palID, readPalette(NARC, palettes[0][palID]));
-			pk.setShinyPalette(palID, readPalette(NARC, palettes[1][palID]));
-		}
-    }
-
-    protected void saveGraphicalFormePokemonPalettes(Species pk) {
-		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-		NARCArchive NARC;
+	@Override
+	protected void loadPokemonPalettes() {
 		try {
-			NARC = readNARC(NARCpath);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+			String NARCpath = getRomEntry().getFile("PokemonGraphics");
+			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+			for (Species pk : getSpeciesSetInclFormes()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				if (getGraphicalFormePokes().contains(base.getNumber())) {
+					loadGraphicalFormePokemonPalettes(pk);
+				} else {
+					pk.setNormalPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4));
+					pk.setShinyPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5));
+				}
+			}
 
-		int[][] palettes = Gen4Constants.otherPokemonGraphicsPalettes.get(pk.getNumber());
-		for (int palID = 0; palID < palettes[0].length; palID++) {
-			// assumes there are as many normal and shiny palettes
-			writePalette(NARC, palettes[0][palID], pk.getNormalPalette(palID));
-			writePalette(NARC, palettes[1][palID], pk.getShinyPalette(palID));
+		} catch (IOException e) {
+			throw new RomIOException(e);
 		}
+	}
+
+	@Override
+	public void savePokemonPalettes() {
+		try {
+			String NARCpath = getRomEntry().getFile("PokemonGraphics");
+			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+
+			for (Species pk : getSpeciesInclFormes()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				if (getGraphicalFormePokes().contains(base.getNumber())) {
+					saveGraphicalFormePokemonPalettes(base);
+				} else {
+					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4, pk.getNormalPalette());
+					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5, pk.getShinyPalette());
+				}
+			}
+			writeNARC(NARCpath, pokeGraphicsNARC);
+
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+	}
+	
+    protected Collection<Integer> getGraphicalFormePokes() {
+        return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
+    }
+
+    protected void loadGraphicalFormePokemonPalettes(Species pk) throws IOException {
+        String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
+        NARCArchive NARC = readNARC(NARCpath);
+
+		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
+		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
+		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
+    }
+
+    protected void saveGraphicalFormePokemonPalettes(Species pk) throws IOException {
+		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
+		NARCArchive NARC = readNARC(NARCpath);
+
+		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
+		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
+		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
     }
 
 	public Gen4PokemonImageGetter createPokemonImageGetter(Species pk) {
@@ -5829,7 +5849,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		@Override
 		public int getGraphicalFormeAmount() {
-			int[][] formeInfo = Gen4Constants.otherPokemonGraphicsImages.get(pk.getNumber());
+			int[][] formeInfo = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(pk.getNumber());
 			if (formeInfo == null) {
 				return 1;
 			} else {
@@ -5842,7 +5862,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			beforeGet();
 
 			int imageIndex = getImageIndex();
-			int[] imageData = readImageData(getGraphicalFormeAmount() > 1 ? otherPokeGraphicsNARC : pokeGraphicsNARC, imageIndex);
+			NARCArchive imageNARC = getGraphicalFormeAmount() > 1 || !pk.isBaseForme() ?
+					otherPokeGraphicsNARC : pokeGraphicsNARC;
+			int[] imageData = readImageData(imageNARC, imageIndex);
 
 			Palette palette = getPalette();
 			int[] convPalette = palette.toARGB();
@@ -5873,8 +5895,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		private int getImageIndex() {
 			int imageIndex;
-			if (getGraphicalFormeAmount() > 1) {
-				imageIndex = Gen4Constants.otherPokemonGraphicsImages.get(pk.getNumber())[back ? 1 : 0][forme];
+			if (getGraphicalFormeAmount() > 1 || !pk.isBaseForme()) {
+				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
+				int formeNum = forme != 0 ? forme : pk.getFormeNumber();
+				int[][] imageIndexes = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(base.getNumber());
+				imageIndex = imageIndexes[back ? 1 : 0][formeNum];
 			} else {
 				imageIndex = pk.getNumber() * 6 + 2;
 				if (gender == MALE) {
@@ -5888,42 +5913,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		private Palette getPalette() {
-			Palette palette;
-			// unown and deoxys have the same palette(s) for all their formes
-			if (getGraphicalFormeAmount() > 1 && pk.getNumber() != SpeciesIDs.unown && pk.getNumber() != SpeciesIDs.deoxys) {
-				palette = shiny ? pk.getShinyPalette(forme) : pk.getNormalPalette(forme);
+			// placeholder code, until the form rewrite comes along
+			if (pk.isBaseForme() && forme != 0) {
+				String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
+				NARCArchive NARC;
+				try {
+					NARC = readNARC(NARCpath);
+				} catch (IOException e) {
+					throw new RomIOException(e);
+				}
+
+				int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(pk.getNumber());
+				return shiny ? readPalette(NARC, palettes[1][forme]) : readPalette(NARC, palettes[0][forme]);
 			} else {
-				palette = shiny ? pk.getShinyPalette() : pk.getNormalPalette();
+				return shiny ? pk.getShinyPalette() : pk.getNormalPalette();
 			}
-			return palette;
-		}
-
-
-		@Override
-		public BufferedImage getFull() {
-			System.out.println(pk);
-			if (getGraphicalFormeAmount() > 1) {
-				return withFormesGetFull();
-			} else {
-				return super.getFull();
-			}
-		}
-
-		private BufferedImage withFormesGetFull() {
-			setIncludePalette(true);
-
-			BufferedImage[] normal = new BufferedImage[getGraphicalFormeAmount()*2];
-			BufferedImage[] shiny = new BufferedImage[getGraphicalFormeAmount()*2];
-			for (int i = 0; i < getGraphicalFormeAmount(); i++) {
-				setGraphicalForme(i);
-
-				normal[i*2] = get();
-				normal[i*2 + 1] = setBack(true).get();
-				shiny[i*2 + 1] = setShiny(true).get();
-				shiny[i*2] = setBack(false).get();
-				setShiny(false);
-			}
-			return GFXFunctions.stitchToGrid(new BufferedImage[][] { normal, shiny });
 		}
 
 		private int[] readImageData(NARCArchive graphicsNARC, int imageIndex) {
@@ -5939,7 +5943,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 
 			// Decrypt image (why does EVERYTHING use the RNG formula geez)
-			if (romEntry.getRomType() != Gen4Constants.Type_DP && getGraphicalFormeAmount() == 1) {
+			if (romEntry.getRomType() != Gen4Constants.Type_DP) {
 				int key = imageData[0];
 				for (int i = 0; i < 3200; i++) {
 					imageData[i] ^= (key & 0xFFFF);
@@ -5965,98 +5969,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			return rawImageFemale.length != 0 && rawImageMale.length != 0
 					&& !Arrays.equals(rawImageFemale, rawImageMale);
 		}
-	}
-
-	//TODO: remove
-	@Override
-	public BufferedImage ripOtherPoke(int i, NARCArchive narcArchive) {
-		final int deoxysImages = 0, deoxysPals = 0;
-		final int unownImages = 8, unownPals = 2;
-		final int castformImages = 64, castformPals = 4;
-		final int burmyWormadamImages = 72;
-		final int shellosGastroImages = 84;
-		final int cherrimImages = 92;
-		final int arceusImages = 96;
-		final int eggImage = 132, manaphyEggImage = 133;
-		final int shayminImages = 134;
-		final int rotomImages = 138;
-		final int giratinaImages = 150;
-		final int pichuImages = 154;
-
-		int palStart;
-		switch (romEntry.getRomType()) {
-			case Gen4Constants.Type_DP : palStart = manaphyEggImage + 1;
-			case Gen4Constants.Type_Plat : palStart = 0; // TODO how does it look?
-			case Gen4Constants.Type_HGSS : palStart = pichuImages + 4;
-			default : palStart = 0;
-		}
-
-		System.out.println(i);
-		int[] spriteData = readSpriteData(narcArchive, i);
-
-		int palIndex;
-		if (deoxysImages <= i && i < unownImages) {
-			palIndex = deoxysPals + i % 2;
-		} else if (unownImages <= i && i < castformImages) {
-			palIndex = unownPals + i % 2;
-		} else if ((castformImages <= i && i < shellosGastroImages) || (cherrimImages <= i && i < palStart)) {
-			palIndex = i + castformPals - castformImages;
-		} else if (shellosGastroImages <= i && i < cherrimImages) {
-			palIndex = deoxysPals + i % 2; // TODO
-		} else if (i == 208 || i == 209){
-			palIndex = 210; // substitute
-		} else if (i == 211){
-			palIndex = 212; // shadows ??
-		} else {
-			palIndex = 0;
-		}
-
-		Palette palette = readPalette(narcArchive, palStart + palIndex);
-		System.out.println(palette);
-		int[] convPalette = palette.toARGB();
-		// Deliberately chop off the right half of the image while still
-		// correctly indexing the array.
-		int bpp = 4;
-		BufferedImage bim = new BufferedImage(80, 80, BufferedImage.TYPE_BYTE_INDEXED,
-				GFXFunctions.indexColorModelFromPalette(convPalette, bpp));
-		for (int y = 0; y < 80; y++) {
-			for (int x = 0; x < 80; x++) {
-				int value = ((spriteData[y * 40 + x / 4]) >> (x % 4) * 4) & 0x0F;
-				bim.setRGB(x, y, convPalette[value]);
-			}
-		}
-		return bim;
-	}
-
-	// TODO: remove
-	private int[] readSpriteData(NARCArchive graphicsNARC, int spriteIndex) {
-		// read sprite
-		byte[] rawSprite = graphicsNARC.files.get(spriteIndex);
-		if (rawSprite.length == 0) {
-			// Must use other gender form
-			rawSprite = graphicsNARC.files.get(spriteIndex ^ 1);
-		}
-		int[] spriteData = new int[3200];
-		for (int i = 0; i < 3200; i++) {
-			spriteData[i] = readWord(rawSprite, i * 2 + 48);
-		}
-
-		// Decrypt sprite (why does EVERYTHING use the RNG formula geez)
-		if (romEntry.getRomType() != Gen4Constants.Type_DP) {
-			int key = spriteData[0];
-			for (int i = 0; i < 3200; i++) {
-				spriteData[i] ^= (key & 0xFFFF);
-				key = key * 0x41C64E6D + 0x6073;
-			}
-		} else {
-			// D/P sprites are encrypted *backwards*. Wut.
-			int key = spriteData[3199];
-			for (int i = 3199; i >= 0; i--) {
-				spriteData[i] ^= (key & 0xFFFF);
-				key = key * 0x41C64E6D + 0x6073;
-			}
-		}
-		return spriteData;
 	}
 
 	public String getPaletteFilesID() {

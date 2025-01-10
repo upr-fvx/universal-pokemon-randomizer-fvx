@@ -87,8 +87,8 @@ public class Species implements Comparable<Species> {
 
     private ExpCurve growthCurve;
     
-    private List<Palette> normalPalettes = new ArrayList<>(1);
-    private List<Palette> shinyPalettes = new ArrayList<>(1);
+    private Palette normalPalette;
+    private Palette shinyPalette;
 
     private List<Evolution> evolutionsFrom = new ArrayList<>();
     private List<Evolution> evolutionsTo = new ArrayList<>();
@@ -668,6 +668,8 @@ public class Species implements Comparable<Species> {
     }
 
     public Species getBaseForme() {
+        // TODO: return self if baseForme == null
+        //  (check that getBaseForme() == null isn't used instead of isBaseForme() first)
         return baseForme;
     }
 
@@ -1005,58 +1007,20 @@ public class Species implements Comparable<Species> {
         this.growthCurve = growthCurve;
     }
 
-    public List<Palette> getNormalPalettes() {
-        return normalPalettes;
-    }
-
-    public void setNormalPalettes(List<Palette> normalPalettes) {
-        this.normalPalettes = normalPalettes;
-    }
-
-    public List<Palette> getShinyPalettes() {
-        return shinyPalettes;
-    }
-
-    public void setShinyPalettes(List<Palette> shinyPalettes) {
-        this.shinyPalettes = shinyPalettes;
-    }
-
     public Palette getNormalPalette() {
-        return getNormalPalette(0);
-    }
-
-    public Palette getNormalPalette(int index) {
-        return normalPalettes.size() <= index ? null : normalPalettes.get(index);
+        return normalPalette;
     }
 
     public void setNormalPalette(Palette normalPalette) {
-        setNormalPalette(0, normalPalette);
-    }
-
-    public void setNormalPalette(int index, Palette normalPalette) {
-        while (normalPalettes.size() <= index) {
-            normalPalettes.add(index, null);
-        }
-        normalPalettes.set(index, normalPalette);
+        this.normalPalette = normalPalette;
     }
 
     public Palette getShinyPalette() {
-        return getShinyPalette(0);
-    }
-
-    public Palette getShinyPalette(int index) {
-        return shinyPalettes.size() <= index ? null : shinyPalettes.get(index);
+        return shinyPalette;
     }
 
     public void setShinyPalette(Palette shinyPalette) {
-        setShinyPalette(0, shinyPalette);
-    }
-
-    public void setShinyPalette(int index, Palette shinyPalette) {
-        while (shinyPalettes.size() <= index) {
-            shinyPalettes.add(index, null);
-        }
-        shinyPalettes.set(index, shinyPalette);
+        this.shinyPalette = shinyPalette;
     }
 
     /**

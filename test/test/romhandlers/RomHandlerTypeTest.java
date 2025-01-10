@@ -1,14 +1,13 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.Effectiveness;
 import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.gamedata.TypeTable;
-import com.dabomstew.pkrandom.randomizers.TypeEffectivenessRandomizer;
+import com.dabomstew.pkrandom.romhandlers.Abstract3DSRomHandler;
+import com.dabomstew.pkrandom.romhandlers.Gen6RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,6 +71,15 @@ public class RomHandlerTypeTest extends RomHandlerTest {
         TypeTable before = new TypeTable(romHandler.getTypeTable());
         romHandler.setTypeTable(before);
         assertEquals(before, romHandler.getTypeTable());
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void foo(String romName) {
+        loadROM(romName);
+        romHandler.getTypeTable();
+        ((Abstract3DSRomHandler) romHandler).findTypeTable();
     }
 
 }

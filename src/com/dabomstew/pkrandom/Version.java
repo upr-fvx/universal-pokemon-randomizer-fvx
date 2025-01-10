@@ -35,7 +35,7 @@ public class Version {
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST_VERSION = new Version(406, "1.1.0", "FVX");
+    public static final Version LATEST_VERSION = new Version(408, "1.1.3", "FVX");
     public static final int VERSION = LATEST_VERSION.id;
     public static final String VERSION_STRING = LATEST_VERSION.name;
 
@@ -104,7 +104,10 @@ public class Version {
     public static final Version FVX_1_0_1 = new Version(403, "1.0.1", "FVX");
     public static final Version FVX_1_0_2 = new Version(404, "1.0.2", "FVX");
     public static final Version FVX_1_0_3 = new Version(405, "1.0.3", "FVX");
-    public static final Version FVX_1_1_0 = LATEST_VERSION;
+    public static final Version FVX_1_1_0 = new Version(406, "1.1.0", "FVX");
+    // forgot to create version for 1.1.1, so it doesn't get an id
+    public static final Version FVX_1_1_2 = new Version(407, "1.1.2", "FVX");
+    public static final Version FVX_1_1_3 = LATEST_VERSION;
 
     // add versions to the bottom as you create them
 
@@ -113,7 +116,7 @@ public class Version {
             v1_7_1, v1_7_2, v3_1_0, v4_0_0, v4_0_1, v4_0_2, v4_1_0, v4_2_0, v4_2_1, v4_3_0, v4_4_0, v4_5_0, v4_5_1,
             v4_6_0, CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0,
             Vb_0_10_1, Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0,
-            FVX_1_0_1, FVX_1_0_2, FVX_1_0_3, FVX_1_1_0
+            FVX_1_0_1, FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {

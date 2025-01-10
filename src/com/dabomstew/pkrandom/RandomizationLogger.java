@@ -172,13 +172,13 @@ public class RandomizationLogger {
         // TODO: where to put updates + evolution improvements?
         log.println();
         if (shouldLogSpeciesTraits())
-            printContentsRow("Pokémon Base Statistics / Types / Abilities", "PKST");
+            printContentsRow("psta");
         if (shouldLogEvolutions())
-            printContentsRow("Pokémon Evolutions", "PKEV");
+            printContentsRow("pe");
         if (shouldLogSpeciesTraits() || shouldLogEvolutions())
             log.println();
         if (shouldLogStarters())
-            printContentsRow("Starter Pokémon", "SRPK");
+            printContentsRow("sp");
         if (shouldLogStaticPokemon())
             printContentsRow("Static Pokémon", "STPK");
         if (shouldLogInGameTrades())
@@ -376,7 +376,7 @@ public class RandomizationLogger {
     }
 
     private void logEvolutions() {
-        log.printf(bundle.getString("Log.sectionTitle"), "Pokémon Evolutions", "PKEV");
+        printSectionTitle("pe");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
             if (pk != null && !pk.isActuallyCosmetic()) {
@@ -407,7 +407,7 @@ public class RandomizationLogger {
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         String[] itemNames = romHandler.getItemNames();
         // Log base stats & types
-        log.printf(bundle.getString("Log.sectionTitle"), "Pokémon Base Statistics / Types / Abilities", "PKST");
+        printSectionTitle("psta");
         if (romHandler instanceof Gen1RomHandler) {
             log.println("NUM|NAME      |TYPE             |  HP| ATK| DEF| SPE|SPEC");
             for (Species pkmn : allPokes) {
@@ -531,9 +531,8 @@ public class RandomizationLogger {
     }
 
     private void logStarters() {
-
         // TODO: log starter held items
-        log.printf(bundle.getString("Log.sectionTitle"), "Starter Pokémon", "SRPK");
+        printSectionTitle("sp");
         switch (settings.getStartersMod()) {
             case CUSTOM:
                 log.println("--Custom Starters--");

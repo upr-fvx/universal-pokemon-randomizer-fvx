@@ -116,6 +116,16 @@ public class RandomizationLogger {
         logDiagnostics();
     }
 
+    private void printSectionTitle(String bundleSectionID) {
+        log.printf(bundle.getString("Log.sectionTitle"),
+                bundle.getString("Log." + bundleSectionID + ".title"),
+                bundle.getString("Log." + bundleSectionID + ".shortcut"));
+    }
+    
+    private void printSectionSeparator() {
+        log.printf(bundle.getString("Log.sectionSeparator"));
+    }
+
     private void logHead() {
         log.printf(bundle.getString("Log.logo"), Version.VERSION_STRING);
         log.printf(bundle.getString("Log.title"));
@@ -132,24 +142,29 @@ public class RandomizationLogger {
         log.println();
         log.printf(bundle.getString("Log.wikiLink"), SysConstants.WIKI_URL);
         log.printf(bundle.getString("Log.githubIssuesLink"), SysConstants.ISSUES_URL);
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private void logTableOfContents() {
-        log.printf(bundle.getString("Log.sectionTitle"),
-                bundle.getString("Log.toc.title"), bundle.getString("Log.toc.shortcut"));
+        printSectionTitle("toc");
         log.printf(bundle.getString("Log.toc.instruction"));
-        printContentsRow("Table of Contents", "TABL");
-        printContentsRow("Overview of Randomization", "OVRD");
+        printContentsRow("toc");
+        printContentsRow("overview");
         printOptionalContentsRows();
-        printContentsRow("Randomization Statistics", "STAT");
-        printContentsRow("Randomization/ROM Diagnostics", "DIAG");
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printContentsRow("stat");
+        printContentsRow("dg");
+        printSectionSeparator();
     }
 
-    private void printContentsRow(String name, String shortcut) {
-        log.print(" " + name);
-        log.print(new String(new char[49 - name.length()]).replace('\0', '-'));
+    private void printContentsRow(String bundleSectionID) {
+        String title = bundle.getString("Log." + bundleSectionID + ".title");
+        String shortcut = bundle.getString("Log." + bundleSectionID + ".shortcut");
+        printContentsRow(title, shortcut);
+    }
+
+    private void printContentsRow(String title, String shortcut) {
+        log.print(" " + title);
+        log.print(new String(new char[49 - title.length()]).replace('\0', '-'));
         log.println("{" + shortcut + "}");
     }
 
@@ -210,8 +225,8 @@ public class RandomizationLogger {
     }
 
     private void logOverview() {
-        log.printf(bundle.getString("Log.sectionTitle"), "Overview of Randomization", "OVRD");
-
+        printSectionTitle("overview");
+        // The overview lines intentionally (mostly) map to panels in the UI, thus they share their bundle strings.
         logOverviewLine(bundle.getString("GUI.pbsPanel.title"), speciesBSRandomizer.isChangesMade(), true);
         logOverviewLine(bundle.getString("GUI.ptPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
         logOverviewLine(bundle.getString("GUI.paPanel.title"), speciesAbilityRandomizer.isChangesMade(),
@@ -225,9 +240,9 @@ public class RandomizationLogger {
         logOverviewLine(bundle.getString("GUI.mdPanel.title"), moveDataRandomizer.isChangesMade(), true);
         logOverviewLine(bundle.getString("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(bundle.getString("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
-        logOverviewLine("Trainer Movesets", trainerMovesetRandomizer.isChangesMade(),
+        logOverviewLine(bundle.getString("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(),
                 romHandler.generationOfPokemon() >= 3); // TODO: why this?
-        logOverviewLine("Trainer Names", trainerNameRandomizer.isChangesMade(), true);
+        logOverviewLine(bundle.getString("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
         logOverviewLine(bundle.getString("GUI.totpPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
         logOverviewLine(bundle.getString("GUI.wpPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
@@ -237,7 +252,7 @@ public class RandomizationLogger {
                 romHandler.hasMoveTutors());
         logOverviewLine(bundle.getString("GUI.mtcPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
-        // they aren't logged properly, but still important to show *whether* they were randomized
+        // field items aren't logged properly, but still important to show *whether* they were randomized
         logOverviewLine(bundle.getString("GUI.fiPanel.title"), itemRandomizer.isFieldChangesMade(), true);
         // TODO: okay what should the naming be here? "Special Shops"? "Shop Items"? "Shops"?
         //  Both here and in RandomizerGUI; they should be synced.
@@ -250,35 +265,42 @@ public class RandomizationLogger {
         logOverviewLine(bundle.getString("GUI.ppalPanel.title"), paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
 
-        log.println("The following Misc. Tweaks were applied:");
-        int miscTweaks = settings.getCurrentMiscTweaks();
-        for (MiscTweak mt : MiscTweak.allTweaks) {
-            if ((miscTweaks & mt.getValue()) != 0) {
-                log.println(mt.getTweakName());
+        if (miscTweakRandomizer.isChangesMade()) {
+            log.printf(bundle.getString("Log.overview.miscTweaks"));
+            int miscTweaks = settings.getCurrentMiscTweaks();
+            for (MiscTweak mt : MiscTweak.allTweaks) {
+                if ((miscTweaks & mt.getValue()) != 0) {
+                    log.println(mt.getTweakName());
+                }
             }
+        } else {
+            log.printf(bundle.getString("Log.overview.noMiscTweaks"));
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private void logOverviewLine(String line, boolean changed, boolean relevant) {
         if (relevant) {
-            log.println(line + ": " + (changed ? "Randomized/Changed" : "Unchanged"));
+            log.print(line + ": ");
+            log.println(changed ?
+                    bundle.getString("Log.overview.changed") :
+                    bundle.getString("Log.overview.unchanged") );
         }
     }
 
     private void logStatistics(long startTime) {
-        log.printf(bundle.getString("Log.sectionTitle"), "Randomization Statistics", "STAT");
-        log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
-        log.println("RNG calls (non-cosmetic): " + randomSource.callsSinceSeedNonCosmetic());
-        log.println("RNG calls (cosmetic)    : " + randomSource.callsSinceSeedCosmetic());
-        log.println("RNG calls (total)       : " + randomSource.callsSinceSeed());
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionTitle("stat");
+        log.printf(bundle.getString("Log.stat.time"), System.currentTimeMillis() - startTime);
+        log.printf(bundle.getString("Log.stat.callsNonCosmetic"), randomSource.callsSinceSeedNonCosmetic());
+        log.printf(bundle.getString("Log.stat.callsCosmetic"), randomSource.callsSinceSeedCosmetic());
+        log.printf(bundle.getString("Log.stat.callsTotal"), randomSource.callsSinceSeed());
+        printSectionSeparator();
     }
 
     private void logDiagnostics() {
-        log.printf(bundle.getString("Log.sectionTitle"), "ROM Diagnostics", "DIAG");
+        printSectionTitle("dg");
         if (!romHandler.isRomValid(null)) {
-            log.println(bundle.getString("Log.InvalidRomLoaded"));
+            log.printf(bundle.getString("Log.dg.invalidRomLoaded"));
         }
         romHandler.printRomDiagnostics(log);
     }
@@ -346,7 +368,7 @@ public class RandomizationLogger {
     private void logTypeEffectiveness() {
         log.printf(bundle.getString("Log.sectionTitle"), "Type Effectiveness", "TPEF");
         log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogEvolutions() {
@@ -372,7 +394,7 @@ public class RandomizationLogger {
                 }
             }
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogSpeciesTraits() {
@@ -470,7 +492,7 @@ public class RandomizationLogger {
 
             }
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private void logEvolutionImprovements() {
@@ -532,7 +554,7 @@ public class RandomizationLogger {
             log.println("Set starter " + i + " to " + starter.getFullName());
             i++;
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogMoveData() {
@@ -559,7 +581,7 @@ public class RandomizationLogger {
                 log.println();
             }
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogMovesets() {
@@ -570,7 +592,7 @@ public class RandomizationLogger {
         log.printf(bundle.getString("Log.sectionTitle"), "Pokémon Movesets", "PKMV");
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every Pokémon learns only Metronome.");
-            log.printf(bundle.getString("Log.sectionSeparator"));
+            printSectionSeparator();
             return;
         }
 
@@ -621,7 +643,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private String formatMovesetMove(Move mv, Species learner) {
@@ -652,7 +674,7 @@ public class RandomizationLogger {
                 log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
             }
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogTMHMCompatibility() {
@@ -667,7 +689,7 @@ public class RandomizationLogger {
         List<Move> moveData = romHandler.getMoves();
 
         logCompatibility(compat, tmHMs, moveData, true);
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogMoveTutorMoves() {
@@ -688,7 +710,7 @@ public class RandomizationLogger {
                         moves.get(newMtMoves.get(i)).name);
             }
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogMoveTutorCompatibility() {
@@ -702,7 +724,7 @@ public class RandomizationLogger {
         List<Move> moveData = romHandler.getMoves();
 
         logCompatibility(compat, tutorMoves, moveData, false);
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private void logCompatibility(Map<Species, boolean[]> compat, List<Integer> moveList,
@@ -809,7 +831,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogStaticPokemon() {
@@ -835,7 +857,7 @@ public class RandomizationLogger {
             }
             log.println(" => " + newP.toString(settings.isStaticLevelModified()));
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogTotemPokemon() {
@@ -853,7 +875,7 @@ public class RandomizationLogger {
             log.println(oldP.spec.getFullName() + " =>");
             log.printf(newP.toString(), itemNames[newP.heldItem]);
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogWildPokemon() {
@@ -912,7 +934,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogInGameTrades() {
@@ -932,7 +954,7 @@ public class RandomizationLogger {
                     newT.requestedSpecies != null ? newT.requestedSpecies.getFullName() : "Any",
                     newT.nickname, newT.givenSpecies.getFullName());
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogShopItems() {
@@ -955,7 +977,7 @@ public class RandomizationLogger {
 
             log.println();
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogPickupItems() {
@@ -991,7 +1013,7 @@ public class RandomizationLogger {
             }
             log.println();
         }
-        log.printf(bundle.getString("Log.sectionSeparator"));
+        printSectionSeparator();
     }
 
     private boolean shouldLogMoveUpdates() {

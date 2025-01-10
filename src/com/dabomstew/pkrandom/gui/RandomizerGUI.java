@@ -2727,6 +2727,7 @@ public class RandomizerGUI {
 
             tpNoEarlyWonderGuardCheckBox.setVisible(pokemonGeneration >= 3);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
+            // TODO: move this number to RomHandler or TrainerMovesetRandomizer or *somewhere*
             tpBetterMovesetsCheckBox.setVisible(pokemonGeneration >= 3);
             tpBetterMovesetsCheckBox.setEnabled(pokemonGeneration >= 3);
 

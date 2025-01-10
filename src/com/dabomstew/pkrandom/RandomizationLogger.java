@@ -244,8 +244,46 @@ public class RandomizationLogger {
 
     private void logOverview() {
         log.printf(SECTION_TITLE, "Overview of Randomization", "OVRD");
-        // TODO list all randomized sections ( more atomic than the table of contents?? )
-        // TODO list all *non*-randomized sections
+
+        // TODO: these are mostly the same as the boxes in RandomizerGUI.form,
+        //  they could take the strings from the same bundle
+        logOverviewLine("Pokémon Base Statistics", speciesBSRandomizer.isChangesMade(), true);
+        logOverviewLine("Pokémon Types", speciesTypeRandomizer.isChangesMade(), true);
+        logOverviewLine("Pokémon Abilities", speciesAbilityRandomizer.isChangesMade(),
+                romHandler.abilitiesPerSpecies() != 0);
+        // TODO: what about evo improvements?
+        logOverviewLine("Pokémon Evolutions", evoRandomizer.isChangesMade(), true);
+        logOverviewLine("Starter Pokémon", starterRandomizer.isChangesMade(), true);
+        logOverviewLine("Static Pokémon", staticPokeRandomizer.isStaticChangesMade(),
+                romHandler.canChangeStaticPokemon());
+        logOverviewLine("In-Game Trades", tradeRandomizer.isChangesMade(), true);
+        logOverviewLine("Move Data", moveDataRandomizer.isChangesMade(), true);
+        logOverviewLine("Pokémon Movesets", speciesMovesetRandomizer.isChangesMade(), true);
+        logOverviewLine("Trainer Pokémon", trainerPokeRandomizer.isChangesMade(), true);
+        logOverviewLine("Trainer Movesets", trainerMovesetRandomizer.isChangesMade(),
+                romHandler.generationOfPokemon() >= 3); // TODO: why this?
+        logOverviewLine("Trainer Names", trainerNameRandomizer.isChangesMade(), true);
+        logOverviewLine("Totem Pokémon", staticPokeRandomizer.isTotemChangesMade(),
+                romHandler.hasTotemPokemon());
+        logOverviewLine("Wild Pokémon", wildEncounterRandomizer.isChangesMade(), true);
+        logOverviewLine("TM Moves", tmtMoveRandomizer.isTMChangesMade(), true);
+        logOverviewLine("TM/HM Compatitibility", tmhmtCompRandomizer.isTMHMChangesMade(), true);
+        logOverviewLine("Move Tutor Moves", tmtMoveRandomizer.isTutorChangesMade(),
+                romHandler.hasMoveTutors());
+        logOverviewLine("Move Tutor Compatibility", tmhmtCompRandomizer.isTutorChangesMade(),
+                romHandler.hasMoveTutors());
+        logOverviewLine("Field Items", itemRandomizer.isFieldChangesMade(), true);
+        // TODO: okay what should the naming be here? "Special Shops"? "Shop Items"? "Shops"?
+        //  Both here and in RandomizerGUI; they should be synced.
+        logOverviewLine("Special Shops", itemRandomizer.isShopChangesMade(),
+                romHandler.hasShopSupport());
+        logOverviewLine("Pickup Items", itemRandomizer.isPickupChangesMade(),
+                romHandler.abilitiesPerSpecies() != 0);
+        logOverviewLine("Type Effectiveness", typeEffRandomizer.isChangesMade(),
+                romHandler.hasTypeEffectivenessSupport());
+        logOverviewLine("Pokémon Palettes", paletteRandomizer.isChangesMade(),
+                romHandler.hasPokemonPaletteSupport());
+
         log.println("The following Misc. Tweaks were applied:");
         int miscTweaks = settings.getCurrentMiscTweaks();
         for (MiscTweak mt : MiscTweak.allTweaks) {
@@ -254,6 +292,12 @@ public class RandomizationLogger {
             }
         }
         log.println(SECTION_SEPARATOR);
+    }
+
+    private void logOverviewLine(String line, boolean changed, boolean relevant) {
+        if (relevant) {
+            log.println(line + ": " + (changed ? "Randomized/Changed" : "Unchanged"));
+        }
     }
 
     private void logStatistics(long startTime) {

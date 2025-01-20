@@ -20,6 +20,10 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 
 * When using the "Random" setting under Pokemon Base Statistics, evolving a Pokemon into something with a lower base HP than it currently has can result in HP underflow, which can cause a variety of issues depending on the game. To prevent this underflow entirely, enable the "Follow Evolutions" setting for Pokemon Base Statistics. To mitigate these underflows without enabling "Follow Evolutions", make sure that a Pokemon is at high health before evolving them. If an underflow *does* occur, healing at a Pokemon Center will fix it in every game.
 
+## All Gen 2 Games
+
+* The "Custom Player Graphics" setting, does not work on non-Windows computers. This is because it (in this Generation only) depends on a (Windows-only) DLL file.
+
 ## Gold/Silver
 
 * With unchanged wild Pokemon, the "Use Local Pokemon" trainer option will fail with most type theming because there are no local dark types. (Note this does _not_ apply to Crystal version.)

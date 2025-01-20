@@ -129,7 +129,7 @@ public class RandomizationLogger {
                 getBS("Log." + bundleSectionID + ".title"),
                 getBS("Log." + bundleSectionID + ".shortcut"));
     }
-    
+
     private void printSectionSeparator() {
         log.printf(getBS("Log.sectionSeparator"));
     }
@@ -270,7 +270,7 @@ public class RandomizationLogger {
                 romHandler.abilitiesPerSpecies() != 0);
         logOverviewLine(getBS("GUI.tePanel.title"), typeEffRandomizer.isChangesMade(),
                 romHandler.hasTypeEffectivenessSupport());
-        logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
 
         if (miscTweakRandomizer.isChangesMade()) {
@@ -292,7 +292,7 @@ public class RandomizationLogger {
             log.print(line + ": ");
             log.println(changed ?
                     getBS("Log.overview.changed") :
-                    getBS("Log.overview.unchanged") );
+                    getBS("Log.overview.unchanged"));
         }
     }
 
@@ -408,7 +408,7 @@ public class RandomizationLogger {
     private boolean shouldLogSpeciesTraits() {
         return (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade()
                 || speciesTypeRandomizer.isChangesMade() || speciesAbilityRandomizer.isChangesMade()
-                || encHeldItemRandomizer.isChangesMade()) ;
+                || encHeldItemRandomizer.isChangesMade());
     }
 
     private void logSpeciesTraits() {
@@ -421,13 +421,13 @@ public class RandomizationLogger {
 
         int numLen = Integer.toString(allSpecies.size()).length();
         int nameLen = getMaxSpeciesNameLength(allSpecies);
-        int typeLen = 8*2 + 1; // TODO: remove magic number
+        int typeLen = 8 * 2 + 1; // TODO: remove magic number
         int abilityLen = getAbilityNameLength();
 
         // Table head
         log.printf("%" + numLen + "s", getBS("Log.psta.num"));
-        log.printf("|%" + nameLen + "s", getBS("Log.psta.name"));
-        log.printf("|%" + typeLen + "s", getBS("Log.psta.type"));
+        log.printf("|%-" + nameLen + "s", getBS("Log.psta.name"));
+        log.printf("|%-" + typeLen + "s", getBS("Log.psta.type"));
         if (romHandler.generationOfPokemon() == 1) {
             log.printf("|%4s|%4s|%4s|%4s|%4s",
                     getBS("Log.psta.hp"), getBS("Log.psta.attack"),
@@ -440,7 +440,7 @@ public class RandomizationLogger {
                     getBS("Log.psta.spdef"), getBS("Log.psta.speed"));
         }
         for (int i = 0; i < romHandler.abilitiesPerSpecies(); i++) {
-            log.printf("|%" + (abilityLen - 2) + "s %1d", getBS("Log.psta.ability"), i);
+            log.printf("|%-" + abilityLen + "s", getBS("Log.psta.ability" + (i + 1)));
         }
         if (romHandler.generationOfPokemon() != 1) {// i.e. wild pokes have held items
             log.print("|" + getBS("Log.psta.item"));
@@ -454,10 +454,10 @@ public class RandomizationLogger {
             }
 
             log.printf("%" + numLen + "d", pk.getNumber());
-            log.printf("|%" + nameLen + "s", pk.getFullName());
-            log.printf("|%" + typeLen + "s",
+            log.printf("|%-" + nameLen + "s", pk.getFullName());
+            log.printf("|%-" + typeLen + "s",
                     pk.getPrimaryType(false)
-                    + (pk.hasSecondaryType(false) ? "/" + pk.getSecondaryType(false) : ""));
+                            + (pk.hasSecondaryType(false) ? "/" + pk.getSecondaryType(false) : ""));
             if (romHandler.generationOfPokemon() == 1) {
                 log.printf("|%4d|%4d|%4d|%4d|%4d",
                         pk.getHp(), pk.getAttack(),
@@ -469,15 +469,16 @@ public class RandomizationLogger {
                         pk.getDefense(), pk.getSpatk(),
                         pk.getSpdef(), pk.getSpeed());
             }
-            if (romHandler.abilitiesPerSpecies() <= 1) {
-                log.printf("|%" + abilityLen + "s", romHandler.abilityName(pk.getAbility1()));
+            if (romHandler.abilitiesPerSpecies() >= 1) {
+                log.printf("|%-" + abilityLen + "s", romHandler.abilityName(pk.getAbility1()));
             }
-            if (romHandler.abilitiesPerSpecies() <= 2) {
-                log.printf("|%" + abilityLen + "s",
+            if (romHandler.abilitiesPerSpecies() >= 2) {
+                log.printf("|%-" + abilityLen + "s",
                         pk.getAbility2() == pk.getAbility1() ? "--" : romHandler.abilityName(pk.getAbility2()));
             }
-            if (romHandler.abilitiesPerSpecies() <= 3) {
-                log.printf("|%" + abilityLen + "s", romHandler.abilityName(pk.getAbility3()));
+            if (romHandler.abilitiesPerSpecies() >= 3) {
+                log.printf("|%-" + abilityLen + "s",
+                        pk.getAbility3() == pk.getAbility1() ? "--" : romHandler.abilityName(pk.getAbility3()));
             }
             if (romHandler.generationOfPokemon() != 1) {// i.e. wild pokes have held items
                 log.print("|");
@@ -503,9 +504,7 @@ public class RandomizationLogger {
         printSectionSeparator();
     }
 
-
     private int getMaxSpeciesNameLength(List<Species> allSpecies) {
-        // TODO: alt forms may bring the length up quite a bit...
         return allSpecies.stream()
                 .filter(Objects::nonNull)
                 .map(Species::getFullName).map(String::length)
@@ -674,7 +673,7 @@ public class RandomizationLogger {
 
     private String formatMovesetMove(Move mv, Species learner) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%-12s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%" ,
+        sb.append(String.format("%-12s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%",
                 mv.name, mv.type, mv.category,
                 mv.category == MoveCategory.STATUS ? "--" : String.format("%3d", mv.power),
                 mv.pp, mv.hitratio));
@@ -1045,7 +1044,7 @@ public class RandomizationLogger {
     private boolean shouldLogMoveUpdates() {
         return moveUpdater.isUpdated();
     }
-    
+
     private void logMoveUpdates() {
         // TODO
         log.println("--Move Updates--");

@@ -1,5 +1,6 @@
 package com.dabomstew.pkrandom.gamedata;
 
+@Deprecated
 public class EvolutionUpdate implements Comparable<EvolutionUpdate> {
 
     private final Species from;

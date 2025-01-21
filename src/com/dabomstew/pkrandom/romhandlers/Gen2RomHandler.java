@@ -1921,29 +1921,27 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             if (pkmn != null) {
                 for (Evolution evol : pkmn.getEvolutionsFrom()) {
                     if (evol.getType() == EvolutionType.TRADE || evol.getType() == EvolutionType.TRADE_ITEM) {
+
+                        markImpossibleEvolutions(pkmn);
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
                             evol.setExtraInfo(Gen2ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evol, itemNames[24]);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(40); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
                             // Level 37
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(37); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else {
                             // A new trade evo of a single stage Pokemon
                             // level 30
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(30); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         }
                     }
                 }
@@ -1976,14 +1974,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                     // In Gen 2, only Eevee has a time-based evolution.
                     if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
                         // Eevee: Make sun stone => Espeon
+                        markTimeBasedEvolutions(pkmn);
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen2ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[169]);
                     } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
                         // Eevee: Make moon stone => Umbreon
+                        markTimeBasedEvolutions(pkmn);
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen2ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[8]);
                     }
                 }
             }

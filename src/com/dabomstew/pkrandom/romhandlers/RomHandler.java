@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Responsible for direct handling a Rom/game file, and the data therein.
@@ -483,11 +482,29 @@ public interface RomHandler {
 
     void removeTimeBasedEvolutions();
 
-    Set<EvolutionUpdate> getImpossibleEvoUpdates();
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were changed using "Change Impossible Evolutions" setting,
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If impossible evolutions have not been changed, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getImpossibleEvolutions();
 
-    Set<EvolutionUpdate> getEasierEvoUpdates();
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were made easier using the "Make Evolutions Easier" setting,
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If evolutions have not been made easier, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getMadeEasierEvolutions();
 
-    Set<EvolutionUpdate> getTimeBasedEvoUpdates();
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were changed by the "Remove Time Based Evolutions" setting,
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If time-based evolutions have not been changed, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getTimeBasedEvolutions();
 
     // In the earlier games, alt formes use the same evolutions as the base forme.
     // In later games, this was changed so that alt formes can have unique evolutions

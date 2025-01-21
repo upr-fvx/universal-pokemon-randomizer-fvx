@@ -2833,30 +2833,29 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
+                        markImpossibleEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Replace w/ level 37
+                        markImpossibleEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
+                        markImpossibleEvolutions(pkmn);
                         // Get the current item & evolution
                         int item = evo.getExtraInfo();
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
-                            // Slowpoke is awkward - he already has a level evo
-                            // So we can't do Level up w/ Held Item for him
+                            // Slowpoke is awkward - it already has a level evo
+                            // So we can't do Level up w/ Held Item
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, itemNames.get(item));
                             // Replace, for this entry, w/
                             // Level up w/ Held Item at Day
                             evo.setType(EvolutionType.LEVEL_ITEM_DAY);
@@ -2872,9 +2871,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Replace it with Level up w/ Other Species in Party
                         // (22)
                         // Based on what species we're currently dealing with
+                        markImpossibleEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                 }
 
@@ -2914,9 +2913,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
+                            markMadeEasierEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, evo, false);
                         }
                     }
                 }
@@ -2932,29 +2931,27 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 extraEvolutions.clear();
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
+                        markTimeBasedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
                             // We can't set Eevee to evolve into Espeon with happiness at night because that's how
                             // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Night
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.HAPPINESS_NIGHT, 0);
                             extraEvolutions.add(extraEntry);
                         }
                     } else if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
+                        markTimeBasedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
                             // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
                             // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
                         } else {
                             // Add an extra evo for Happiness at Day
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.HAPPINESS_DAY, 0);
                             extraEvolutions.add(extraEntry);
@@ -2964,7 +2961,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Night
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            markTimeBasedEvolutions(pkmn);
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_NIGHT, item);
                             extraEvolutions.add(extraEntry);
@@ -2974,7 +2971,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
                         if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
                             // Add an extra evo for Level w/ Item During Day
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+                            markTimeBasedEvolutions(pkmn);
                             Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL_ITEM_DAY, item);
                             extraEvolutions.add(extraEntry);

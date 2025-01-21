@@ -162,16 +162,16 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // If evo is intermediate and too high, bring it down
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                            markMadeEasierEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
+                            markMadeEasierEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         }
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markMadeEasierEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
-                        addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                     }
                 }
             }
@@ -180,69 +180,70 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        return impossibleEvolutionUpdates;
+    public Map<Species, List<Evolution>> getImpossibleEvolutions() {
+        return impossibleEvolutions;
     }
 
     @Override
-    public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        return easierEvolutionUpdates;
+    public Map<Species, List<Evolution>> getMadeEasierEvolutions() {
+        return madeEasierEvolutions;
     }
 
     @Override
-    public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
-        return timeBasedEvolutionUpdates;
+    public Map<Species, List<Evolution>> getTimeBasedEvolutions() {
+        return timeBasedEvolutions;
     }
 
 
     /* Private methods/structs used internally by the above methods */
 
-    protected Set<EvolutionUpdate> impossibleEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> timeBasedEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> easierEvolutionUpdates = new TreeSet<>();
+    private final Map<Species, List<Evolution>> impossibleEvolutions = new TreeMap<>();
+    private final Map<Species, List<Evolution>> madeEasierEvolutions = new TreeMap<>();
+    private final Map<Species, List<Evolution>> timeBasedEvolutions = new TreeMap<>();
 
-    protected void addEvoUpdateLevel(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                false, false));
+    /**
+     * Marks that a {@link Species} has had any "impossible" {@link Evolution}
+     * (and saves its original Evolutions) for logging purposes.
+     */
+    protected void markImpossibleEvolutions(Species pk) {
+        // We can't overwrite these entries, because then species with
+        // multiple evos to change (e.g. HGSS Eevee) will store their partially-changed evos,
+        // instead of the original ones.
+        if (!impossibleEvolutions.containsKey(pk)) {
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            for (Evolution original : pk.getEvolutionsFrom()) {
+                evosCopy.add(new Evolution(original));
+            }
+            impossibleEvolutions.put(pk, evosCopy);
+        }
     }
 
-    protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item,
-                false, false));
+    /**
+     * Marks that a {@link Species} has had any {@link Evolution} which was made easier
+     * (and saves its original Evolutions) for logging purposes.
+     */
+    protected void markMadeEasierEvolutions(Species pk) {
+        if (!madeEasierEvolutions.containsKey(pk)) {
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            for (Evolution original : pk.getEvolutionsFrom()) {
+                evosCopy.add(new Evolution(original));
+            }
+            madeEasierEvolutions.put(pk, evosCopy);
+        }
     }
 
-    protected void addEvoUpdateHappiness(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.HAPPINESS, "",
-                false, false));
-    }
-
-    protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item,
-                false, false));
-    }
-
-    protected void addEvoUpdateParty(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String otherPk) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_WITH_OTHER, otherPk,
-                false, false));
-    }
-
-    protected void addEvoUpdateCondensed(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, boolean additional) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                true, additional));
+    /**
+     * Marks that a {@link Species} has had any time-based {@link Evolution}
+     * (and saves its original Evolutions) for logging purposes.
+     */
+    protected void markTimeBasedEvolutions(Species pk) {
+        if (!timeBasedEvolutions.containsKey(pk)) {
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            for (Evolution original : pk.getEvolutionsFrom()) {
+                evosCopy.add(new Evolution(original));
+            }
+            timeBasedEvolutions.put(pk, evosCopy);
+        }
     }
 
     /* Helper methods used by subclasses and/or this class */

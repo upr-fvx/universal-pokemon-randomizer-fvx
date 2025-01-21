@@ -4206,30 +4206,30 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						// beauty milotic
 						if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
 							// Replace w/ level 35
+							markImpossibleEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
 							evo.setExtraInfo(35);
-							addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
 						}
 						// mt.coronet (magnezone/probopass)
 						if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
 							// Replace w/ level 40
+							markImpossibleEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
 							evo.setExtraInfo(40);
-							addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
 						}
 						// moss rock (leafeon)
 						if (evo.getType() == EvolutionType.LEVEL_MOSS_ROCK) {
 							// Replace w/ leaf stone
+							markImpossibleEvolutions(pkmn);
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.leafStone);
-							addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
 						}
 						// icy rock (glaceon)
 						if (evo.getType() == EvolutionType.LEVEL_ICY_ROCK) {
 							// Replace w/ dawn stone
+							markImpossibleEvolutions(pkmn);
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.dawnStone);
-							addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
 						}
 					}
 					if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
@@ -4247,19 +4247,20 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							levelLearntAt = 45;
 						}
 						// change to pure level evo
+						markImpossibleEvolutions(pkmn);
 						evo.setType(EvolutionType.LEVEL);
 						evo.setExtraInfo(levelLearntAt);
-						addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
 					}
 					// Pure Trade
 					if (evo.getType() == EvolutionType.TRADE) {
 						// Replace w/ level 37
+						markImpossibleEvolutions(pkmn);
 						evo.setType(EvolutionType.LEVEL);
 						evo.setExtraInfo(37);
-						addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
 					}
 					// Trade w/ Item
 					if (evo.getType() == EvolutionType.TRADE_ITEM) {
+						markImpossibleEvolutions(pkmn);
 						// Get the current item & evolution
 						int item = evo.getExtraInfo();
 						if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
@@ -4268,9 +4269,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// Put Water Stone instead
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.waterStone);
-							addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
 						} else {
-							addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, itemNames.get(item));
 							// Replace, for this entry, w/
 							// Level up w/ Held Item at Day
 							evo.setType(EvolutionType.LEVEL_ITEM_DAY);
@@ -4318,9 +4317,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					for (Evolution evo : pkmn.getEvolutionsFrom()) {
 						if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
 							// Replace w/ level 35
+							markMadeEasierEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
 							evo.setExtraInfo(35);
-							addEvoUpdateCondensed(easierEvolutionUpdates, evo, false);
 						}
 					}
 				}
@@ -4336,6 +4335,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				extraEvolutions.clear();
 				for (Evolution evo : pkmn.getEvolutionsFrom()) {
 					if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
+						markTimeBasedEvolutions(pkmm);
 						if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
 							// We can't set Eevee to evolve into Espeon with happiness at night because
 							// that's how
@@ -4343,15 +4343,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// Espeon
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.sunStone);
-							addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
 						} else {
 							// Add an extra evo for Happiness at Night
-							addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
 							Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(), EvolutionType.HAPPINESS_NIGHT,
 									0);
 							extraEvolutions.add(extraEntry);
 						}
 					} else if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
+						markTimeBasedEvolutions(pkmn);
 						if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
 							// We can't set Eevee to evolve into Umbreon with happiness at day because
 							// that's how
@@ -4359,10 +4358,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// Umbreon
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.moonStone);
-							addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
 						} else {
 							// Add an extra evo for Happiness at Day
-							addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
 							Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(), EvolutionType.HAPPINESS_DAY,
 									0);
 							extraEvolutions.add(extraEntry);
@@ -4374,7 +4371,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						if (evo.getFrom().getEvolutionsFrom().stream()
 								.noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
 							// Add an extra evo for Level w/ Item During Night
-							addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+							markTimeBasedEvolutions(pkmn);
 							Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(), EvolutionType.LEVEL_ITEM_NIGHT,
 									item);
 							extraEvolutions.add(extraEntry);
@@ -4386,7 +4383,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						if (evo.getFrom().getEvolutionsFrom().stream()
 								.noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
 							// Add an extra evo for Level w/ Item During Day
-							addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
+							markTimeBasedEvolutions(pkmn);
 							Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(), EvolutionType.LEVEL_ITEM_DAY,
 									item);
 							extraEvolutions.add(extraEntry);

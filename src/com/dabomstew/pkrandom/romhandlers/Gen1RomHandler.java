@@ -1822,9 +1822,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (evo.getType() == EvolutionType.TRADE) {
                         // change
+                        markImpossibleEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates,evo);
                     }
                 }
             }

@@ -393,7 +393,7 @@ public class RandomizationLogger {
                     StringBuilder evoStr = new StringBuilder(pk.getEvolutionsFrom().get(0).getTo().getFullName());
                     for (int i = 1; i < numEvos; i++) {
                         if (i == numEvos - 1) {
-                            evoStr.append(" and ").append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
+                            evoStr.append(getBS("Log.pe.and")).append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
                         } else {
                             evoStr.append(", ").append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
                         }
@@ -404,6 +404,12 @@ public class RandomizationLogger {
         }
         printSectionSeparator();
     }
+
+    // - scrap the EvolutionUpdate class
+    // (- somehow remember old evolutions)
+    // - write evolution methods here
+
+
 
     private boolean shouldLogSpeciesTraits() {
         return (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade()
@@ -524,18 +530,18 @@ public class RandomizationLogger {
         // TODO
         if (settings.isChangeImpossibleEvolutions()) {
             log.println("--Removing Impossible Evolutions--");
-            logUpdatedEvolutions(romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
+            logUpdatedEvolutions(romHandler.getImpossibleEvoSpecies(), romHandler.getMadeEasierEvolutions());
         }
         if (settings.isMakeEvolutionsEasier()) {
             log.println("--Making Evolutions Easier--");
             if (!(romHandler instanceof Gen1RomHandler)) {
                 log.println("Friendship evolutions now take 160 happiness (was 220).");
             }
-            logUpdatedEvolutions(romHandler.getEasierEvoUpdates(), null);
+            logUpdatedEvolutions(romHandler.getMadeEasierEvolutions(), null);
         }
         if (settings.isRemoveTimeBasedEvolutions()) {
             log.println("--Removing Timed-Based Evolutions--");
-            logUpdatedEvolutions(romHandler.getTimeBasedEvoUpdates(), null);
+            logUpdatedEvolutions(romHandler.getTimeBasedEvolutions(), null);
         }
     }
 

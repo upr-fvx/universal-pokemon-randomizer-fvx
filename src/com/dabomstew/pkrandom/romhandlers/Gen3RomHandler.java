@@ -2944,66 +2944,63 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     // Not trades, but impossible without trading
-                    if (evo.getType() == EvolutionType.HAPPINESS_DAY && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // happiness day change to Sun Stone
-                        evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.sunStone]);
-                    }
-                    if (evo.getType() == EvolutionType.HAPPINESS_NIGHT && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // happiness night change to Moon Stone
-                        evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.moonStone]);
-                    }
-                    if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // beauty change to level 35
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(35);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                    if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+                        if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
+                            // happiness day change to Sun Stone
+                            markImpossibleEvolutions(pkmn);
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(Gen3ItemIDs.sunStone);
+                        }
+                        if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
+                            // happiness night change to Moon Stone
+                            markImpossibleEvolutions(pkmn);
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(Gen3ItemIDs.moonStone);
+                        }
+                        if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
+                            // beauty change to level 35
+                            markImpossibleEvolutions(pkmn);
+                            evo.setType(EvolutionType.LEVEL);
+                            evo.setExtraInfo(35);
+                        }
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Haunter, Machoke, Kadabra, Graveler
                         // Make it into level 37, we're done.
+                        markImpossibleEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Trade w/ Held Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
+                        markImpossibleEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
                             // Poliwhirl: Lv 37
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(37);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(40);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == Gen3ItemIDs.deepSeaTooth) {
                             // Clamperl -> Huntail: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == Gen3ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
                         } else {
                             // Onix, Scyther or Porygon: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         }
                     }
                 }
@@ -3043,14 +3040,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     // In Gen 3, only Eevee has a time-based evolution.
                     if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
                         // Eevee: Make sun stone => Espeon
+                        markTimeBasedEvolutions(pkmn);
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
                     } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
                         // Eevee: Make moon stone => Umbreon
+                        markTimeBasedEvolutions(pkmn);
                         evol.setType(EvolutionType.STONE);
                         evol.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
                     }
                 }
             }

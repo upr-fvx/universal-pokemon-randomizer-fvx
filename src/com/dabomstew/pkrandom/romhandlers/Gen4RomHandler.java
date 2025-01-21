@@ -5778,7 +5778,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			String NARCpath = getRomEntry().getFile("PokemonGraphics");
 			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
-			for (Species pk : getSpeciesInclFormes()) {
+			for (Species pk : getSpeciesSetInclFormes()) {
 				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
 				if (getGraphicalFormePokes().contains(base.getNumber())) {
 					saveGraphicalFormePokemonPalettes(base);

@@ -75,6 +75,22 @@ public enum EvolutionType {
                 || (this == LEVEL_SNOWY) || (this == LEVEL_DUSK) || (this == LEVEL_ULTRA);
     }
 
+    public boolean usesItem() {
+        return false; // TODO;
+    }
+
+    public boolean usesMove() {
+        return false; // TODO;
+    }
+
+    public boolean usesSpecies() {
+        return this == LEVEL_WITH_OTHER;
+    }
+
+    public boolean usesLocation() {
+        return false; // TODO;
+    }
+
     public boolean skipSplitEvo() {
         return (this == LEVEL_HIGH_BEAUTY) || (this == LEVEL_ULTRA) || (this == STONE_ULTRA);
     }

@@ -321,7 +321,7 @@ public class RandomizationLogger {
     private void logOptionalSections() {
         if (shouldLogSpeciesTraits())
             logSpeciesTraits();
-        if (shouldLogEvolutions())
+        //if (shouldLogEvolutions())
             logEvolutions();
 
         if (shouldLogStarters())
@@ -387,23 +387,81 @@ public class RandomizationLogger {
         printSectionTitle("pe");
         List<Species> allPokes = romHandler.getSpeciesInclFormes();
         for (Species pk : allPokes) {
-            if (pk != null && !pk.isActuallyCosmetic()) {
-                int numEvos = pk.getEvolutionsFrom().size();
-                if (numEvos > 0) {
-                    StringBuilder evoStr = new StringBuilder(pk.getEvolutionsFrom().get(0).getTo().getFullName());
-                    for (int i = 1; i < numEvos; i++) {
-                        if (i == numEvos - 1) {
-                            evoStr.append(getBS("Log.pe.and")).append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
-                        } else {
-                            evoStr.append(", ").append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
-                        }
-                    }
-                    log.printf("%-15s -> %-15s" + NEWLINE, pk.getFullName(), evoStr);
-                }
+            if (pk == null || pk.isActuallyCosmetic()) {
+                continue;
+            }
+
+            int numEvos = pk.getEvolutionsFrom().size();
+            if (numEvos > 0) {
+                log.print(pk.getFullName());
+                log.print(" -> ");
+                log.print(pk.getEvolutionsFrom().stream()
+                        .map(this::evolutionToString)
+                        .collect(Collectors.joining(getBS("Log.pe.and"))));
+                log.println();
             }
         }
         printSectionSeparator();
     }
+
+    private void logEvolutionImprovements() {
+        // TODO
+//        if (settings.isChangeImpossibleEvolutions()) {
+//            log.println("--Removing Impossible Evolutions--");
+//            logUpdatedEvolutions(romHandler.getImpossibleEvoSpecies(), romHandler.getMadeEasierEvolutions());
+//        }
+//        if (settings.isMakeEvolutionsEasier()) {
+//            log.println("--Making Evolutions Easier--");
+//            if (!(romHandler instanceof Gen1RomHandler)) {
+//                log.println("Friendship evolutions now take 160 happiness (was 220).");
+//            }
+//            logUpdatedEvolutions(romHandler.getMadeEasierEvolutions(), null);
+//        }
+//        if (settings.isRemoveTimeBasedEvolutions()) {
+//            log.println("--Removing Timed-Based Evolutions--");
+//            logUpdatedEvolutions(romHandler.getTimeBasedEvolutions(), null);
+//        }
+    }
+
+    private void logUpdatedEvolutions(Set<EvolutionUpdate> updatedEvolutions,
+                                      Set<EvolutionUpdate> otherUpdatedEvolutions) {
+        for (EvolutionUpdate evo : updatedEvolutions) {
+            if (otherUpdatedEvolutions != null && otherUpdatedEvolutions.contains(evo)) {
+                log.println(evo.toString() + " (Overwritten by \"Make Evolutions Easier\", see below)");
+            } else {
+                log.println(evo.toString());
+            }
+        }
+        log.println();
+    }
+
+    private String evolutionToString(Evolution evo) {
+        StringBuilder sb = new StringBuilder(evo.getTo().getFullName());
+        sb.append("(");
+
+        String evoTypeStr = getBS("Log.pe." + evo.getType());
+        if (evo.getType().usesItem()) {
+            String itemName = romHandler.getItemNames()[evo.getExtraInfo()];
+            evoTypeStr = String.format(evoTypeStr, itemName);
+        } else if (evo.getType().usesMove()) {
+            String moveName = romHandler.getMoves().get(evo.getExtraInfo()).name;
+            evoTypeStr = String.format(evoTypeStr, moveName);
+        } else if (evo.getType().usesSpecies()) {
+            String speciesName = romHandler.getSpecies().get(evo.getExtraInfo()).getName();
+            evoTypeStr = String.format(evoTypeStr, speciesName);
+        } else if (evo.getType().usesLocation()) {
+            String locationName = "foobar todo";
+            evoTypeStr = String.format(evoTypeStr, locationName);
+        }
+        sb.append(evoTypeStr);
+        if (evo.getType().usesLevel()) {
+            sb.append(String.format(getBS("Log.pe.usesLevel"), evo.getExtraInfo()));
+        }
+
+        sb.append(")");
+        return sb.toString();
+    }
+
 
     // - scrap the EvolutionUpdate class
     // (- somehow remember old evolutions)
@@ -524,38 +582,6 @@ public class RandomizationLogger {
             max = Math.max(max, romHandler.abilityName(i).length());
         }
         return max;
-    }
-
-    private void logEvolutionImprovements() {
-        // TODO
-        if (settings.isChangeImpossibleEvolutions()) {
-            log.println("--Removing Impossible Evolutions--");
-            logUpdatedEvolutions(romHandler.getImpossibleEvoSpecies(), romHandler.getMadeEasierEvolutions());
-        }
-        if (settings.isMakeEvolutionsEasier()) {
-            log.println("--Making Evolutions Easier--");
-            if (!(romHandler instanceof Gen1RomHandler)) {
-                log.println("Friendship evolutions now take 160 happiness (was 220).");
-            }
-            logUpdatedEvolutions(romHandler.getMadeEasierEvolutions(), null);
-        }
-        if (settings.isRemoveTimeBasedEvolutions()) {
-            log.println("--Removing Timed-Based Evolutions--");
-            logUpdatedEvolutions(romHandler.getTimeBasedEvolutions(), null);
-        }
-    }
-
-
-    private void logUpdatedEvolutions(Set<EvolutionUpdate> updatedEvolutions,
-                                      Set<EvolutionUpdate> otherUpdatedEvolutions) {
-        for (EvolutionUpdate evo : updatedEvolutions) {
-            if (otherUpdatedEvolutions != null && otherUpdatedEvolutions.contains(evo)) {
-                log.println(evo.toString() + " (Overwritten by \"Make Evolutions Easier\", see below)");
-            } else {
-                log.println(evo.toString());
-            }
-        }
-        log.println();
     }
 
     private boolean shouldLogStarters() {

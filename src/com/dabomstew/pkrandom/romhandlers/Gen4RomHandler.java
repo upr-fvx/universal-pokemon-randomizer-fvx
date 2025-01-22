@@ -4335,7 +4335,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				extraEvolutions.clear();
 				for (Evolution evo : pkmn.getEvolutionsFrom()) {
 					if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
-						markTimeBasedEvolutions(pkmm);
+						markTimeBasedEvolutions(pkmn);
 						if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
 							// We can't set Eevee to evolve into Espeon with happiness at night because
 							// that's how

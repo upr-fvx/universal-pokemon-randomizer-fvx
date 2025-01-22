@@ -385,21 +385,28 @@ public class RandomizationLogger {
 
     private void logEvolutions() {
         printSectionTitle("pe");
-        List<Species> allPokes = romHandler.getSpeciesInclFormes();
-        for (Species pk : allPokes) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+        List<Species> allSpecies = romHandler.getSpeciesInclFormes();
+        int nameLen = getMaxSpeciesNameLength(allSpecies);
+
+        // Table head
+        log.printf("%-" + nameLen + "s|%-" + nameLen + "s|%s%n",
+                getBS("Log.pe.from"), getBS("Log.pe.to"), getBS("Log.pe.method"));
+
+        // Table body
+        for (Species pk : allSpecies) {
+            if (pk == null || pk.isActuallyCosmetic() || pk.getEvolutionsFrom().isEmpty()) {
                 continue;
             }
 
-            int numEvos = pk.getEvolutionsFrom().size();
-            if (numEvos > 0) {
-                log.print(pk.getFullName());
-                log.print(" -> ");
-                log.print(pk.getEvolutionsFrom().stream()
-                        .map(this::evolutionToString)
-                        .collect(Collectors.joining(getBS("Log.pe.and"))));
-                log.println();
+            for (int i = 0; i < pk.getEvolutionsFrom().size(); i++) {
+                Evolution evo = pk.getEvolutionsFrom().get(i);
+                String from = i == 0 ? pk.getFullName() : "";
+                String to = evo.getTo().getFullName();
+                String method = evolutionMethodToString(evo);
+                log.printf("%-" + nameLen + "s|%-" + nameLen + "s|%s%n",
+                        from, to, method);
             }
+
         }
         printSectionSeparator();
     }
@@ -435,11 +442,11 @@ public class RandomizationLogger {
         log.println();
     }
 
-    private String evolutionToString(Evolution evo) {
-        StringBuilder sb = new StringBuilder(evo.getTo().getFullName());
-        sb.append("     (");
+    private String evolutionMethodToString(Evolution evo) {
+        StringBuilder sb = new StringBuilder();
 
         String evoTypeStr = getBS("Log.pe." + evo.getType());
+
         if (evo.getType().usesItem()) {
             String itemName = romHandler.getItemNames()[evo.getExtraInfo()];
             evoTypeStr = String.format(evoTypeStr, itemName);
@@ -453,12 +460,12 @@ public class RandomizationLogger {
             String locationName = "foobar todo";
             evoTypeStr = String.format(evoTypeStr, locationName);
         }
+
         sb.append(evoTypeStr);
         if (evo.getType().usesLevel()) {
             sb.append(String.format(getBS("Log.pe.usesLevel"), evo.getExtraInfo()));
         }
 
-        sb.append(")");
         return sb.toString();
     }
 

@@ -25,6 +25,9 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EvolutionType {
 
     // Gen 1+
@@ -65,22 +68,34 @@ public enum EvolutionType {
     // Other
     NONE;
 
+    private static final List<EvolutionType> USES_LEVEL = Arrays.asList(
+            LEVEL, LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER,
+            LEVEL_ATK_DEF_SAME, LEVEL_LOW_PV, LEVEL_HIGH_PV,
+            LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, LEVEL_MALE_ONLY,
+            LEVEL_FEMALE_ONLY, LEVEL_WITH_DARK, LEVEL_UPSIDE_DOWN,
+            LEVEL_RAIN, LEVEL_DAY, LEVEL_NIGHT, LEVEL_FEMALE_ESPURR,
+            LEVEL_GAME, LEVEL_DAY_GAME, LEVEL_NIGHT_GAME,
+            LEVEL_SNOWY, LEVEL_DUSK, LEVEL_ULTRA
+    );
+
+    private static final List<EvolutionType> USES_ITEM = Arrays.asList(
+            STONE, TRADE_ITEM, STONE_MALE_ONLY, STONE_FEMALE_ONLY, LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, STONE_ULTRA
+    );
+
+    private static final List<EvolutionType> USES_LOCATION = Arrays.asList(
+            LEVEL_ELECTRIFIED_AREA, LEVEL_MOSS_ROCK, LEVEL_ICY_ROCK, LEVEL_SNOWY
+    );
+
     public boolean usesLevel() {
-        return (this == LEVEL) || (this == LEVEL_ATTACK_HIGHER) || (this == LEVEL_DEFENSE_HIGHER)
-                || (this == LEVEL_ATK_DEF_SAME) || (this == LEVEL_LOW_PV) || (this == LEVEL_HIGH_PV)
-                || (this == LEVEL_CREATE_EXTRA) || (this == LEVEL_IS_EXTRA) || (this == LEVEL_MALE_ONLY)
-                || (this == LEVEL_FEMALE_ONLY) || (this == LEVEL_WITH_DARK)|| (this == LEVEL_UPSIDE_DOWN)
-                || (this == LEVEL_RAIN) || (this == LEVEL_DAY)|| (this == LEVEL_NIGHT)|| (this == LEVEL_FEMALE_ESPURR)
-                || (this == LEVEL_GAME) || (this == LEVEL_DAY_GAME) || (this == LEVEL_NIGHT_GAME)
-                || (this == LEVEL_SNOWY) || (this == LEVEL_DUSK) || (this == LEVEL_ULTRA);
+        return USES_LEVEL.contains(this);
     }
 
     public boolean usesItem() {
-        return false; // TODO;
+        return USES_ITEM.contains(this);
     }
 
     public boolean usesMove() {
-        return false; // TODO;
+        return this == LEVEL_WITH_MOVE;
     }
 
     public boolean usesSpecies() {
@@ -88,7 +103,7 @@ public enum EvolutionType {
     }
 
     public boolean usesLocation() {
-        return false; // TODO;
+        return USES_LOCATION.contains(this);
     }
 
     public boolean skipSplitEvo() {

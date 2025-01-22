@@ -437,7 +437,7 @@ public class RandomizationLogger {
 
     private String evolutionToString(Evolution evo) {
         StringBuilder sb = new StringBuilder(evo.getTo().getFullName());
-        sb.append("(");
+        sb.append("     (");
 
         String evoTypeStr = getBS("Log.pe." + evo.getType());
         if (evo.getType().usesItem()) {

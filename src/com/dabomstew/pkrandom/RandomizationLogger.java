@@ -412,6 +412,9 @@ public class RandomizationLogger {
     }
 
     private void logEvolutionImprovements() {
+
+
+
         // TODO
 //        if (settings.isChangeImpossibleEvolutions()) {
 //            log.println("--Removing Impossible Evolutions--");

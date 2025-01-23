@@ -1173,11 +1173,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Map<Species, List<Evolution>> getImpossibleEvolutions() {
         throw new NotImplementedException();
     }

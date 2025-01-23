@@ -66,6 +66,7 @@ public enum EvolutionType {
     LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
     STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
     // Other
+    LEVEL_ITEM, // not in any game internally
     NONE;
 
     private static final List<EvolutionType> USES_LEVEL = Arrays.asList(
@@ -79,7 +80,8 @@ public enum EvolutionType {
     );
 
     private static final List<EvolutionType> USES_ITEM = Arrays.asList(
-            STONE, TRADE_ITEM, STONE_MALE_ONLY, STONE_FEMALE_ONLY, LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, STONE_ULTRA
+            STONE, TRADE_ITEM, STONE_MALE_ONLY, STONE_FEMALE_ONLY,
+            LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, STONE_ULTRA, LEVEL_ITEM
     );
 
     private static final List<EvolutionType> USES_LOCATION = Arrays.asList(

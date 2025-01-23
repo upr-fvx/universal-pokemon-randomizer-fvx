@@ -678,6 +678,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeEvolutions() {
+        splitLevelItemEvolutions();
         try {
             Map<Evolution, Byte> evosWithLevelsInternally = getEvolutionsWithLevelsInternally();
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
@@ -2609,8 +2610,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         break;
                     case TRADE_ITEM:
                         markImpossibleEvolutions(sp);
-                        // Get the current item & evolution
-                        int item = evo.getExtraInfo();
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - he already has a level evo
                             // So we can't do Level up w/ Held Item for him
@@ -2618,15 +2617,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
-                            // Replace, for this entry, w/
-                            // Level up w/ Held Item at Day
-                            evo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                            // now add an extra evo for
-                            // Level up w/ Held Item at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
+                            evo.setType(EvolutionType.LEVEL_ITEM);
                         }
                         break;
                     case TRADE_SPECIAL:
@@ -2762,110 +2753,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         rockruffOT.getEvolutionsFrom().addAll(Arrays.asList(rockruffOTToMidday, rockruffOTToMidnight));
         lycanrocMidday.getEvolutionsTo().add(rockruffOTToMidday);
         lycanrocMidnight.getEvolutionsTo().add(rockruffOTToMidnight);
-    }
-
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                Set<Evolution> extraEvolutions = new HashSet<>();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-
-                    int item;
-                    switch (evo.getType()) {
-                        case HAPPINESS_DAY:
-                            markTimeBasedEvolutions(pkmn);
-                            if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                                // We can't set Eevee to evolve into Espeon with happiness at night because that's how
-                                // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.sunStone);
-                            } else {
-                                // Add an extra evo for Happiness at Night
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.HAPPINESS_NIGHT, 0);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case HAPPINESS_NIGHT:
-                            markTimeBasedEvolutions(pkmn);
-                            if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                                // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
-                                // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.moonStone);
-                            } else {
-                                // Add an extra evo for Happiness at Day
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.HAPPINESS_DAY, 0);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case LEVEL_ITEM_DAY:
-                            item = evo.getExtraInfo();
-                            // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
-                            if (evo.getFrom().getEvolutionsFrom().stream()
-                                    .noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
-                                // Add an extra evo for Level w/ Item During Night
-                                markTimeBasedEvolutions(pkmn);
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.LEVEL_ITEM_NIGHT, item);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case LEVEL_ITEM_NIGHT:
-                            item = evo.getExtraInfo();
-                            // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
-                            if (evo.getFrom().getEvolutionsFrom().stream()
-                                    .noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
-                                // Add an extra evo for Level w/ Item During Day
-                                markTimeBasedEvolutions(pkmn);
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.LEVEL_ITEM_DAY, item);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        // Rockruff and Cosmoem (if impossible evos are changed) have multiple LEVEL_[TIME] evolutions,
-                        // so they can't all be changed to LEVEL. Thus, Sun/Moon/Dusk stones are used instead.
-                        case LEVEL_DAY:
-                        case LEVEL_DAY_GAME:
-                            markTimeBasedEvolutions(pkmn);
-                            if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                    evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.sunStone);
-                            } else {
-                                evo.setType(EvolutionType.LEVEL);
-                            }
-                            break;
-                        case LEVEL_NIGHT:
-                        case LEVEL_NIGHT_GAME:
-                            markTimeBasedEvolutions(pkmn);
-                            if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                    evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.moonStone);
-                            } else {
-                                evo.setType(EvolutionType.LEVEL);
-                            }
-                            break;
-                        case LEVEL_DUSK:
-                            markTimeBasedEvolutions(pkmn);
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.duskStone);
-                            break;
-                    }
-                }
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
-            }
-        }
     }
 
     @Override

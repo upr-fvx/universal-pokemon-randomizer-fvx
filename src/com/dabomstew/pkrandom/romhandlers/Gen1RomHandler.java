@@ -1837,11 +1837,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        // No such thing
-    }
-
-    @Override
     public boolean hasShopSupport() {
         return false;
     }

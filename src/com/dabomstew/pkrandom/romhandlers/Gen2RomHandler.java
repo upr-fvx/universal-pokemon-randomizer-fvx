@@ -1967,29 +1967,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                for (Evolution evol : pkmn.getEvolutionsFrom()) {
-                    // In Gen 2, only Eevee has a time-based evolution.
-                    if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
-                        // Eevee: Make sun stone => Espeon
-                        markTimeBasedEvolutions(pkmn);
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.sunStone);
-                    } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        // Eevee: Make moon stone => Umbreon
-                        markTimeBasedEvolutions(pkmn);
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.moonStone);
-                    }
-                }
-            }
-        }
-
-    }
-
-    @Override
     public boolean hasShopSupport() {
         return true;
     }

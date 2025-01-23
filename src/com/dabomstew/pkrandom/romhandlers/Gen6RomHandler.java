@@ -644,6 +644,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeEvolutions() {
+        splitLevelItemEvolutions();
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
@@ -3074,10 +3075,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-        Set<Evolution> extraEvolutions = new HashSet<>();
         for (Species pkmn : pokes) {
             if (pkmn != null) {
-                extraEvolutions.clear();
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
                         // read move
@@ -3108,8 +3107,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
                         markImpossibleEvolutions(pkmn);
-                        // Get the current item & evolution
-                        int item = evo.getExtraInfo();
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - it already has a level evo
                             // So we can't do Level up w/ Held Item
@@ -3117,14 +3114,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
-                            // Replace, for this entry, w/
-                            // Level up w/ Held Item at Day
-                            evo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                            // now add an extra evo for
-                            // Level up w/ Held Item at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEvolutions.add(extraEntry);
+                            evo.setType(EvolutionType.LEVEL_ITEM);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
@@ -3138,14 +3128,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }
-
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
             }
         }
-
     }
 
     @Override
@@ -3183,73 +3167,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
         }
-    }
-
-    @Override
-    public void removeTimeBasedEvolutions() {
-        Set<Evolution> extraEvolutions = new HashSet<>();
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                extraEvolutions.clear();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
-                        markTimeBasedEvolutions(pkmn);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Espeon with happiness at night because that's how
-                            // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                        } else {
-                            // Add an extra evo for Happiness at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_NIGHT, 0);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        markTimeBasedEvolutions(pkmn);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
-                            // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                        } else {
-                            // Add an extra evo for Happiness at Day
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_DAY, 0);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Night
-                            markTimeBasedEvolutions(pkmn);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Day
-                            markTimeBasedEvolutions(pkmn);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_DAY, item);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_DAY || evo.getType() == EvolutionType.LEVEL_NIGHT) {
-                        markTimeBasedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                    }
-                }
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
-            }
-        }
-
     }
 
     @Override

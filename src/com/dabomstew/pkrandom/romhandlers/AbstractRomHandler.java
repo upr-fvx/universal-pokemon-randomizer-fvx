@@ -32,6 +32,8 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.constants.ItemIDs;
+import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
@@ -180,6 +182,79 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public void removeTimeBasedEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+
+                switch (evo.getType()) {
+                    case HAPPINESS_DAY:
+                        markTimeBasedEvolutions(pk);
+                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
+                            // We can't set Eevee to evolve into Espeon with happiness always,
+                            // because it has another time-based happiness evo (Umbreon).
+                            // Instead, use Sun Stone.
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(ItemIDs.sunStone);
+                        } else {
+                            evo.setType(EvolutionType.HAPPINESS);
+                        }
+                        break;
+                    case HAPPINESS_NIGHT:
+                        markTimeBasedEvolutions(pk);
+                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
+                            // We can't set Eevee to evolve into Umbreon with happiness always,
+                            // because it has another time-based happiness evo (Espeon).
+                            // Instead, use Moon Stone.
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(ItemIDs.moonStone);
+                        } else {
+                            evo.setType(EvolutionType.HAPPINESS);
+                        }
+                        break;
+                    case LEVEL_ITEM_DAY:
+                    case LEVEL_ITEM_NIGHT:
+                        evo.setType(EvolutionType.LEVEL_ITEM);
+                        break;
+                    // Rockruff and Cosmoem (if impossible evos are changed) have multiple LEVEL_[TIME] evolutions,
+                    // so they can't all be changed to LEVEL. Thus, Sun/Moon/Dusk stones are used instead.
+                    case LEVEL_DAY:
+                    case LEVEL_DAY_GAME:
+                        markTimeBasedEvolutions(pk);
+                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
+                                evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(ItemIDs.sunStone);
+                        } else {
+                            evo.setType(EvolutionType.LEVEL);
+                        }
+                        break;
+                    case LEVEL_NIGHT:
+                    case LEVEL_NIGHT_GAME:
+                        markTimeBasedEvolutions(pk);
+                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
+                                evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(ItemIDs.moonStone);
+                        } else {
+                            evo.setType(EvolutionType.LEVEL);
+                        }
+                        break;
+                    case LEVEL_DUSK:
+                        markTimeBasedEvolutions(pk);
+                        evo.setType(EvolutionType.STONE);
+                        evo.setExtraInfo(ItemIDs.duskStone);
+                        break;
+                }
+            }
+        }
+
+
+    }
+
+    @Override
     public Map<Species, List<Evolution>> getImpossibleEvolutions() {
         return impossibleEvolutions;
     }
@@ -246,7 +321,34 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
+
     /* Helper methods used by subclasses and/or this class */
+
+    /**
+     * {@link EvolutionType#LEVEL_ITEM} is not used internally in any ROM,
+     * so before writing Evolutions, we split all occurrences of it into
+     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.
+     */
+    protected void splitLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution levelItemEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM) {
+                    levelItemEvo = evo;
+                }
+            }
+            if (levelItemEvo != null) {
+                levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                Evolution nightEvo = new Evolution(levelItemEvo);
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
+                nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+            }
+        }
+    }
 
     protected void applyCamelCaseNames() {
         getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));

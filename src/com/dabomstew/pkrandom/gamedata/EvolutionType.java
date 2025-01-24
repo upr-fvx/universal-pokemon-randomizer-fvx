@@ -25,8 +25,7 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public enum EvolutionType {
 
@@ -58,9 +57,10 @@ public enum EvolutionType {
     LEVEL_DAY, LEVEL_NIGHT,
     LEVEL_FEMALE_ESPURR, // used by Meowstic. Separation from LEVEL_FEMALE likely has to do with this implying a forme.
     // Gen 7+
-    LEVEL_GAME, // used by Cosmoem. Unclear how it works
-    // used by Rockruff-base. Same as LEVEL_DAY/NIGHT except it also prevents evolution in the wrong game... somehow.
-    LEVEL_DAY_GAME, LEVEL_NIGHT_GAME,
+    // used by Cosmoem. The latter implies an impossible evo; you could only evolve it in some *other* game.
+    LEVEL_GAME_THIS, LEVEL_GAME_OTHER,
+    // used by Rockruff-base. Like Cosmoem's evo types, but for LEVEL_DAY and LEVEL_NIGHT.
+    LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_OTHER_NIGHT,
     LEVEL_SNOWY,
     LEVEL_DUSK, // used by Rockruff-OwnTempo
     LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
@@ -75,7 +75,8 @@ public enum EvolutionType {
             LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, LEVEL_MALE_ONLY,
             LEVEL_FEMALE_ONLY, LEVEL_WITH_DARK, LEVEL_UPSIDE_DOWN,
             LEVEL_RAIN, LEVEL_DAY, LEVEL_NIGHT, LEVEL_FEMALE_ESPURR,
-            LEVEL_GAME, LEVEL_DAY_GAME, LEVEL_NIGHT_GAME,
+            LEVEL_GAME_THIS, LEVEL_GAME_OTHER, LEVEL_GAME_THIS_DAY,
+            LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT,
             LEVEL_SNOWY, LEVEL_DUSK, LEVEL_ULTRA
     );
 
@@ -87,6 +88,43 @@ public enum EvolutionType {
     private static final List<EvolutionType> USES_LOCATION = Arrays.asList(
             LEVEL_ELECTRIFIED_AREA, LEVEL_MOSS_ROCK, LEVEL_ICY_ROCK, LEVEL_SNOWY
     );
+
+    private static final List<EvolutionType> DAY_TYPES = Arrays.asList(
+            HAPPINESS_DAY, LEVEL_ITEM_DAY, LEVEL_DAY, LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY
+    );
+
+    private static final Map<EvolutionType, EvolutionType> TIME_PAIRS = initTimePairs();
+
+    private static Map<EvolutionType, EvolutionType> initTimePairs() {
+        Map<EvolutionType, EvolutionType> map = new HashMap<>();
+        map.put(HAPPINESS_DAY, HAPPINESS_NIGHT);
+        map.put(HAPPINESS_NIGHT, HAPPINESS_DAY);
+        map.put(LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT);
+        map.put(LEVEL_ITEM_NIGHT, LEVEL_ITEM_DAY);
+        map.put(LEVEL_DAY, LEVEL_NIGHT);
+        map.put(LEVEL_NIGHT, LEVEL_DAY);
+        // LEVEL_GAME_[THIS/OTHER]_[DAY/NIGHT] are not included here, since a functional
+        // LEVEL_GAME_THIS_X will always be paired up with a defunct LEVEL_GAME_OTHER_X.
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static final Map<EvolutionType, EvolutionType> TIMELESS_MAP = initTimelessMap();
+
+    private static Map<EvolutionType, EvolutionType> initTimelessMap() {
+        Map<EvolutionType, EvolutionType> map = new HashMap<>();
+        map.put(HAPPINESS_DAY, HAPPINESS);
+        map.put(HAPPINESS_NIGHT, HAPPINESS);
+        map.put(LEVEL_ITEM_DAY, LEVEL_ITEM);
+        map.put(LEVEL_ITEM_NIGHT, LEVEL_ITEM);
+        map.put(LEVEL_DAY, LEVEL);
+        map.put(LEVEL_NIGHT, LEVEL);
+        map.put(LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS);
+        map.put(LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_THIS);
+        map.put(LEVEL_GAME_OTHER_DAY, LEVEL_GAME_OTHER);
+        map.put(LEVEL_GAME_OTHER_NIGHT, LEVEL_GAME_OTHER);
+        map.put(LEVEL_DUSK, LEVEL);
+        return Collections.unmodifiableMap(map);
+    }
 
     public boolean usesLevel() {
         return USES_LEVEL.contains(this);
@@ -106,6 +144,34 @@ public enum EvolutionType {
 
     public boolean usesLocation() {
         return USES_LOCATION.contains(this);
+    }
+
+    public boolean usesTime() {
+        return timeless() != null;
+    }
+
+    public boolean isDayType() {
+        return DAY_TYPES.contains(this);
+    }
+
+    /**
+     * Returns the opposite time version of this EvolutionType.
+     * E.g. {@link #HAPPINESS_DAY} -> {@link #HAPPINESS_NIGHT}.<br>
+     * If this EvolutionType is not time-based, returns null.
+     * The game-dependent evolutions (e.g. {@link #LEVEL_GAME_THIS_DAY})
+     * are not affected either.
+     */
+    public EvolutionType oppositeTime() {
+        return TIME_PAIRS.get(this);
+    }
+
+    /**
+     * Returns a non-time-based version of this EvolutionType.
+     * E.g. {@link #HAPPINESS_DAY} -> {@link #HAPPINESS}.<br>
+     * If this EvolutionType is not time-based, returns null.
+     */
+    public EvolutionType timeless() {
+        return TIMELESS_MAP.get(this);
     }
 
     public boolean skipSplitEvo() {

@@ -33,10 +33,9 @@ import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.constants.ItemIDs;
-import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
@@ -188,70 +187,38 @@ public abstract class AbstractRomHandler implements RomHandler {
                 continue;
             }
             for (Evolution evo : pk.getEvolutionsFrom()) {
+                EvolutionType et = evo.getType();
 
-                switch (evo.getType()) {
-                    case HAPPINESS_DAY:
-                        markTimeBasedEvolutions(pk);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Espeon with happiness always,
-                            // because it has another time-based happiness evo (Umbreon).
-                            // Instead, use Sun Stone.
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                        } else {
-                            evo.setType(EvolutionType.HAPPINESS);
-                        }
-                        break;
-                    case HAPPINESS_NIGHT:
-                        markTimeBasedEvolutions(pk);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Umbreon with happiness always,
-                            // because it has another time-based happiness evo (Espeon).
-                            // Instead, use Moon Stone.
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                        } else {
-                            evo.setType(EvolutionType.HAPPINESS);
-                        }
-                        break;
-                    case LEVEL_ITEM_DAY:
-                    case LEVEL_ITEM_NIGHT:
-                        evo.setType(EvolutionType.LEVEL_ITEM);
-                        break;
-                    // Rockruff and Cosmoem (if impossible evos are changed) have multiple LEVEL_[TIME] evolutions,
-                    // so they can't all be changed to LEVEL. Thus, Sun/Moon/Dusk stones are used instead.
-                    case LEVEL_DAY:
-                    case LEVEL_DAY_GAME:
-                        markTimeBasedEvolutions(pk);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                        } else {
-                            evo.setType(EvolutionType.LEVEL);
-                        }
-                        break;
-                    case LEVEL_NIGHT:
-                    case LEVEL_NIGHT_GAME:
-                        markTimeBasedEvolutions(pk);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                        } else {
-                            evo.setType(EvolutionType.LEVEL);
-                        }
-                        break;
-                    case LEVEL_DUSK:
-                        markTimeBasedEvolutions(pk);
+                if (et == EvolutionType.LEVEL_DUSK) {
+                    markTimeBasedEvolutions(pk);
+                    evo.setType(EvolutionType.STONE);
+                    evo.setExtraInfo(ItemIDs.duskStone);
+                } else if (et.usesTime()) {
+                    markTimeBasedEvolutions(pk);
+                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
+                        // Here we have just ascertained that this Species evolves by time,
+                        // and that this evolution is paired; it has another similar evolution
+                        // at the opposite time.
+                        // E.g. Eevee -> Espeon/Umbreon, which is a HAPPINESS_DAY/HAPPINESS_NIGHT pair.
+                        // In this case, we can't just remove the time-based-less,
+                        // so instead we use Sun/Moon Stone.
                         evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(ItemIDs.duskStone);
-                        break;
+                        int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
+                        evo.setExtraInfo(item);
+                    } else {
+                        evo.setType(et.timeless());
+                    }
                 }
             }
         }
+    }
 
-
+    private boolean hadEvolutionOfType(Species pk, EvolutionType et) {
+        List<Evolution> evos = timeBasedEvolutions.get(pk);
+        if (evos == null) {
+            throw new IllegalStateException("Species should always have been added to timeBasedEvolutions.");
+        }
+        return evos.stream().map(Evolution::getType).anyMatch(et2 -> et2 == et);
     }
 
     @Override

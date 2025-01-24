@@ -855,6 +855,9 @@ public class Gen7Constants {
         }
     }
 
+    public static final int evolutionMethodLevelGame = 0x24,
+            evolutionMethodLevelGameDay = 0x25, evolutionMethodLevelGameNight = 0x26;
+
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
             EvolutionType.HAPPINESS, EvolutionType.HAPPINESS_DAY, EvolutionType.HAPPINESS_NIGHT, EvolutionType.LEVEL,
             EvolutionType.TRADE, EvolutionType.TRADE_ITEM, EvolutionType.TRADE_SPECIAL, EvolutionType.STONE,

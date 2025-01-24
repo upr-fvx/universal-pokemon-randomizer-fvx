@@ -389,7 +389,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int method = readWord(evoEntry, evo * 8);
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
-                        EvolutionType et = Gen7Constants.evolutionTypeFromIndex(method);
+                        EvolutionType et = isGameSpecificEvolutionType(method) ?
+                                getGameSpecificEvolutionType(evoEntry, i) :
+                                Gen7Constants.evolutionTypeFromIndex(method);
                         if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
 
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
@@ -433,6 +435,28 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    private boolean isGameSpecificEvolutionType(int method) {
+        return method == Gen7Constants.evolutionMethodLevelGame ||
+                method == Gen7Constants.evolutionMethodLevelGameDay ||
+                method == Gen7Constants.evolutionMethodLevelGameNight;
+    }
+
+    private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int i) {
+        // For cosmoem and rockruff
+        int method = readWord(evoEntry, i * 8);
+        boolean wantsSunny = evoEntry[i * 8 + 2] == 0x1E;
+        boolean matchesGame = wantsSunny == romEntry.isSunny();
+        if (method == Gen7Constants.evolutionMethodLevelGame) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS : EvolutionType.LEVEL_GAME_OTHER;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameDay) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_DAY : EvolutionType.LEVEL_GAME_OTHER_DAY;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameNight) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_NIGHT : EvolutionType.LEVEL_GAME_OTHER_NIGHT;
+        } else {
+            throw new RuntimeException("Unexpected evolution method value: " + method);
         }
     }
 
@@ -2628,22 +2652,29 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
                         break;
-                    case LEVEL_GAME:
+                    case LEVEL_GAME_THIS:
+                        // This is Cosmoem's *possible* evolution,
+                        // but if we were to keep it and only change the impossible one,
+                        // then Cosmoem would have one level-evo, and one something-else-evo.
+                        // And worse, which would be the level-evo would vary between versions!
+                        // Instead, we change both to time-based evolutions.
                         markImpossibleEvolutions(sp);
-                        // This is used by Cosmoem, the first index is Solgaleo's and the second Lunala's.
-                        if (i == 0) {
-                            evo.setType(EvolutionType.LEVEL_DAY);
-                        } else if (i == 1) {
-                            evo.setType(EvolutionType.LEVEL_NIGHT);
-                        } else {
-                            throw new IllegalStateException("Unexpected use of LEVEL_GAME");
-                        }
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT);
                         break;
-                    case LEVEL_DAY_GAME:
+                    case LEVEL_GAME_OTHER:
+                        // This is Cosmoem's impossible evolution,
+                        // its time-based evo is the other way around.
+                        markImpossibleEvolutions(sp);
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
+                        break;
+                    // And these are Rockruff's. We change the possible ones to for symmetry's sake.
+                    case LEVEL_GAME_THIS_DAY:
+                    case LEVEL_GAME_OTHER_DAY:
                         markImpossibleEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_DAY);
                         break;
-                    case LEVEL_NIGHT_GAME:
+                    case LEVEL_GAME_THIS_NIGHT:
+                    case LEVEL_GAME_OTHER_NIGHT:
                         markImpossibleEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_NIGHT);
                         break;
@@ -2662,11 +2693,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                                     EvolutionType.STONE, ItemIDs.moonStone);
                             extraEvolutions.add(extraEvo);
                     }
-
                 }
             }
-
-
 
             sp.getEvolutionsFrom().addAll(extraEvolutions);
             for (Evolution ev : extraEvolutions) {

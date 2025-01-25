@@ -103,8 +103,10 @@ public enum EvolutionType {
         map.put(LEVEL_ITEM_NIGHT, LEVEL_ITEM_DAY);
         map.put(LEVEL_DAY, LEVEL_NIGHT);
         map.put(LEVEL_NIGHT, LEVEL_DAY);
-        // LEVEL_GAME_[THIS/OTHER]_[DAY/NIGHT] are not included here, since a functional
-        // LEVEL_GAME_THIS_X will always be paired up with a defunct LEVEL_GAME_OTHER_X.
+        map.put(LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS_NIGHT);
+        map.put(LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_THIS_DAY);
+        map.put(LEVEL_GAME_OTHER_DAY, LEVEL_GAME_OTHER_NIGHT);
+        map.put(LEVEL_GAME_OTHER_NIGHT, LEVEL_GAME_OTHER_DAY);
         return Collections.unmodifiableMap(map);
     }
 
@@ -125,6 +127,11 @@ public enum EvolutionType {
         map.put(LEVEL_DUSK, LEVEL);
         return Collections.unmodifiableMap(map);
     }
+
+    private static final List<EvolutionType> GAME_SPECIFIC = Arrays.asList(
+            LEVEL_GAME_THIS, LEVEL_GAME_OTHER, LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY,
+            LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT
+    );
 
     public boolean usesLevel() {
         return USES_LEVEL.contains(this);
@@ -152,6 +159,10 @@ public enum EvolutionType {
 
     public boolean isDayType() {
         return DAY_TYPES.contains(this);
+    }
+
+    public boolean isGameSpecific() {
+        return GAME_SPECIFIC.contains(this);
     }
 
     /**

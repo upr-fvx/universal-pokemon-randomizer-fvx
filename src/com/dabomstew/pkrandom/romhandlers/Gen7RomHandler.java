@@ -389,8 +389,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int method = readWord(evoEntry, evo * 8);
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
-                        EvolutionType et = isGameSpecificEvolutionType(method) ?
-                                getGameSpecificEvolutionType(evoEntry, i) :
+                        EvolutionType et = Gen7Constants.gameSpecificEvolutionMethods.contains(method) ?
+                                getGameSpecificEvolutionType(evoEntry, evo) :
                                 Gen7Constants.evolutionTypeFromIndex(method);
                         if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
 
@@ -438,16 +438,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private boolean isGameSpecificEvolutionType(int method) {
-        return method == Gen7Constants.evolutionMethodLevelGame ||
-                method == Gen7Constants.evolutionMethodLevelGameDay ||
-                method == Gen7Constants.evolutionMethodLevelGameNight;
-    }
-
-    private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int i) {
+    private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int evo) {
         // For cosmoem and rockruff
-        int method = readWord(evoEntry, i * 8);
-        boolean wantsSunny = evoEntry[i * 8 + 2] == 0x1E;
+        int method = readWord(evoEntry, evo * 8);
+        boolean wantsSunny = evoEntry[evo * 8 + 2] == 0x1E;
         boolean matchesGame = wantsSunny == romEntry.isSunny();
         if (method == Gen7Constants.evolutionMethodLevelGame) {
             return matchesGame ? EvolutionType.LEVEL_GAME_THIS : EvolutionType.LEVEL_GAME_OTHER;
@@ -716,7 +710,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pk.getEvolutionsFrom()) {
                     Species toPK = evo.getTo();
                     writeWord(evoEntry, evosWritten * 8, Gen7Constants.evolutionTypeToIndex(evo.getType()));
-                    writeWord(evoEntry, evosWritten * 8 + 2, evo.getType().usesLevel() ? 0 : evo.getExtraInfo());
+                    byte extraInfo;
+                    if (evo.getType().isGameSpecific()) {
+                        extraInfo = getGameSpecificExtraInfo(evo.getType());
+                    } else if (evo.getType().usesLevel()) {
+                        extraInfo = 0;
+                    } else {
+                        extraInfo = (byte) evo.getExtraInfo();
+                    }
+                    writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
                     evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
                     byte level;
@@ -745,6 +747,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+    }
+
+    private byte getGameSpecificExtraInfo(EvolutionType type) {
+        boolean thisGame = (type == EvolutionType.LEVEL_GAME_THIS || type == EvolutionType.LEVEL_GAME_THIS_DAY ||
+                type == EvolutionType.LEVEL_GAME_THIS_NIGHT);
+        return thisGame ^ romEntry.isSunny() ?
+                Gen7Constants.sunnyEvolutionExtraInfo :
+                Gen7Constants.moonyEvolutionExtraInfo;
     }
 
     public Map<Evolution, Byte> getEvolutionsWithLevelsInternally() {

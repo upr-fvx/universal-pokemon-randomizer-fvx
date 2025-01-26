@@ -747,6 +747,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        mergeLevelItemEvolutions();
     }
 
     private byte getGameSpecificExtraInfo(EvolutionType type) {

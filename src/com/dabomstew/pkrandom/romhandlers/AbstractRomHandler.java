@@ -252,7 +252,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         // multiple evos to change (e.g. HGSS Eevee) will store their partially-changed evos,
         // instead of the original ones.
         if (!impossibleEvolutions.containsKey(pk)) {
-            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
             for (Evolution original : pk.getEvolutionsFrom()) {
                 evosCopy.add(new Evolution(original));
             }
@@ -266,7 +266,7 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
     protected void markMadeEasierEvolutions(Species pk) {
         if (!madeEasierEvolutions.containsKey(pk)) {
-            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
             for (Evolution original : pk.getEvolutionsFrom()) {
                 evosCopy.add(new Evolution(original));
             }
@@ -280,7 +280,7 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
     protected void markTimeBasedEvolutions(Species pk) {
         if (!timeBasedEvolutions.containsKey(pk)) {
-            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom());
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
             for (Evolution original : pk.getEvolutionsFrom()) {
                 evosCopy.add(new Evolution(original));
             }
@@ -292,9 +292,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     /* Helper methods used by subclasses and/or this class */
 
     /**
-     * {@link EvolutionType#LEVEL_ITEM} is not used internally in any ROM,
-     * so before writing Evolutions, we split all occurrences of it into
-     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.
+     * Splits occurrences of {@link EvolutionType#LEVEL_ITEM} into
+     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.<br>
+     * Since LEVEL_ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
+     * Assumes each Species has at most one LEVEL_ITEM Evolution.
      */
     protected void splitLevelItemEvolutions() {
         for (Species pk : getSpecies()) {
@@ -313,6 +314,41 @@ public abstract class AbstractRomHandler implements RomHandler {
                 nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
                 nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
                 nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+            }
+        }
+    }
+
+    /**
+     * Merge occurrences of otherwise identical {@link EvolutionType#LEVEL_ITEM_DAY} and
+     * {@link EvolutionType#LEVEL_ITEM_NIGHT} {@link Evolution}s into a single one
+     * using {@link EvolutionType#LEVEL_ITEM}.<br>
+     * Assumes each Species has at most one pair of LEVEL_ITEM_DAY/NIGHT Evolutions.
+     */
+    protected void mergeLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution dayEvo = null;
+            Evolution nightEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
+                    dayEvo = evo;
+                } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
+                    nightEvo = evo;
+                }
+            }
+            if (dayEvo != null && nightEvo != null) {
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                if (nightEvo.equals(dayEvo)) {
+                    dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                    nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
+                    nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
+                } else {
+                    // If nightEvo differs from dayEvo in ways other than the EvolutionType,
+                    // then we can not merge them.
+                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                }
             }
         }
     }

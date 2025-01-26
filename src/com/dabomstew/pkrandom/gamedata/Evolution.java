@@ -117,7 +117,7 @@ public class Evolution implements Comparable<Evolution> {
         if (getClass() != obj.getClass())
             return false;
         Evolution other = (Evolution) obj;
-        return from == other.from && to == other.to && type == other.type;
+        return from == other.from && to == other.to && type == other.type && extraInfo == other.extraInfo;
     }
 
     @Override

@@ -4148,6 +4148,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
+		mergeLevelItemEvolutions();
 	}
 
 	private void writeShedinjaEvolution() {

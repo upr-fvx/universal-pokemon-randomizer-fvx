@@ -676,6 +676,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        mergeLevelItemEvolutions();
     }
 
     private void writeShedinjaEvolution() throws IOException {

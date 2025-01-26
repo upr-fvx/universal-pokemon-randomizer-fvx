@@ -419,54 +419,47 @@ public class RandomizationLogger {
         List<String> oldMethods = new ArrayList<>();
         List<String> newMethods = new ArrayList<>();
 
-        // the ugliest code you've ever seen, for filling these tables
+        // rather hefty code, for filling these tables
+        // Assumes improvements only adds Evolutions and/or Species (forms) to evolve into;
+        // i.e. oldFoo.size() < newFoo.size().
         for (Map.Entry<Species, List<Evolution>> entry : romHandler.getImpossibleEvolutions().entrySet()) {
+            fromNames.add(entry.getKey().getFullName());
+
             Map<Species, List<Evolution>> oldByTo = new HashMap<>();
             for (Evolution oldEvo : entry.getValue()) {
                 oldByTo.putIfAbsent(oldEvo.getTo(), new ArrayList<>());
                 oldByTo.get(oldEvo.getTo()).add(oldEvo);
             }
             Map<Species, List<Evolution>> newByTo = new HashMap<>();
-            for (Evolution newEvo : entry.getValue()) {
+            for (Evolution newEvo : entry.getKey().getEvolutionsFrom()) {
                 newByTo.putIfAbsent(newEvo.getTo(), new ArrayList<>());
                 newByTo.get(newEvo.getTo()).add(newEvo);
             }
 
-            fromNames.add(entry.getKey().getFullName());
-            for (Map.Entry<Species, List<Evolution>> toEntry: oldByTo.entrySet()) {
-                Species to = toEntry.getKey();
-
-                List<Evolution> oldEvos = oldByTo.get(to);
-                List<Evolution> newEvos = newByTo.getOrDefault(to, Collections.emptyList());
-                toNames.add(to.getFullName());
-                for (int i = 0; i < Math.max(oldEvos.size(), newEvos.size()); i++) {
-                    fromNames.add("");
-                    toNames.add("");
-                    oldMethods.add(i < oldEvos.size() ? evolutionMethodToString(oldEvos.get(i)) : "");
-                    newMethods.add(i < newEvos.size() ? evolutionMethodToString(newEvos.get(i)) : "");
-                }
-                toNames.remove(toNames.size() - 1);
-
-            }
-            oldByTo.keySet().forEach(newByTo::remove);
-            for (Map.Entry<Species, List<Evolution>> toEntry: oldByTo.entrySet()) {
+            for (Map.Entry<Species, List<Evolution>> toEntry: newByTo.entrySet()) {
                 toNames.add(toEntry.getKey().getFullName());
-                for (Evolution evo : toEntry.getValue()) {
-                    fromNames.add("");
-                    toNames.add("");
-                    oldMethods.add("None");
-                    newMethods.add(evolutionMethodToString(evo));
-                }
-                toNames.remove(toNames.size() - 1);
-            }
 
-            fromNames.remove(fromNames.size() - 1);
+                List<Evolution> oldEvos = oldByTo.getOrDefault(toEntry.getKey(), Collections.emptyList());
+                if (oldEvos.isEmpty()) {
+                    oldMethods.add("None");
+                }
+                List<Evolution> newEvos = toEntry.getValue();
+                for (int i = 0; i < newEvos.size(); i++) {
+                    newMethods.add(evolutionMethodToString(newEvos.get(i)));
+                    if (i < oldEvos.size()) {
+                        oldMethods.add(evolutionMethodToString(oldEvos.get(i)));
+                    }
+                }
+                padToEqualSize(oldMethods, newMethods);
+                padToEqualSize(toNames, newMethods);
+            }
+            padToEqualSize(fromNames, newMethods);
         }
 
-        int fromLength = fromNames.stream().map(String::length).max(Integer::compareTo).orElseThrow(RuntimeException::new);
-        int toLength = toNames.stream().map(String::length).max(Integer::compareTo).orElseThrow(RuntimeException::new);
-        int oldMethodsLength = oldMethods.stream().map(String::length).max(Integer::compareTo).orElseThrow(RuntimeException::new);
-        int newMethodsLength = newMethods.stream().map(String::length).max(Integer::compareTo).orElseThrow(RuntimeException::new);
+        int fromLength = maxElementLength(fromNames);
+        int toLength = maxElementLength(toNames);
+        int oldMethodsLength = maxElementLength(oldMethods);
+        int newMethodsLength = maxElementLength(newMethods);
 
         // printing the tables like this is swift though
         log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
@@ -493,6 +486,16 @@ public class RandomizationLogger {
 //            log.println("--Removing Timed-Based Evolutions--");
 //            logUpdatedEvolutions(romHandler.getTimeBasedEvolutions(), null);
 //        }
+    }
+
+    private void padToEqualSize(List<String> shorter, List<String> longer) {
+        while (shorter.size() < longer.size()) {
+            shorter.add("");
+        }
+    }
+
+    private int maxElementLength(List<String> list) {
+        return list.stream().map(String::length).max(Integer::compareTo).orElseThrow(IllegalStateException::new);
     }
 
     private void logUpdatedEvolutions(Set<EvolutionUpdate> updatedEvolutions,

@@ -163,15 +163,15 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // If evo is intermediate and too high, bring it down
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markMadeEasierEvolutions(pk);
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
-                            markMadeEasierEvolutions(pk);
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
                         }
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
-                        markMadeEasierEvolutions(pk);
+                        markImprovedEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
                     }
                 }
@@ -190,11 +190,11 @@ public abstract class AbstractRomHandler implements RomHandler {
                 EvolutionType et = evo.getType();
 
                 if (et == EvolutionType.LEVEL_DUSK) {
-                    markTimeBasedEvolutions(pk);
+                    markImprovedEvolutions(pk);
                     evo.setType(EvolutionType.STONE);
                     evo.setExtraInfo(ItemIDs.duskStone);
                 } else if (et.usesTime()) {
-                    markTimeBasedEvolutions(pk);
+                    markImprovedEvolutions(pk);
                     if (hadEvolutionOfType(pk, et.oppositeTime())) {
                         // Here we have just ascertained that this Species evolves by time,
                         // and that this evolution is paired; it has another similar evolution
@@ -214,80 +214,38 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     private boolean hadEvolutionOfType(Species pk, EvolutionType et) {
-        List<Evolution> evos = timeBasedEvolutions.get(pk);
+        List<Evolution> evos = preImprovedEvolutions.get(pk);
         if (evos == null) {
-            throw new IllegalStateException("Species should always have been added to timeBasedEvolutions.");
+            throw new IllegalStateException("Species should always have been added to preImprovedEvolutions.");
         }
         return evos.stream().map(Evolution::getType).anyMatch(et2 -> et2 == et);
     }
 
     @Override
-    public Map<Species, List<Evolution>> getImpossibleEvolutions() {
-        return impossibleEvolutions;
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
+        return preImprovedEvolutions;
     }
-
-    @Override
-    public Map<Species, List<Evolution>> getMadeEasierEvolutions() {
-        return madeEasierEvolutions;
-    }
-
-    @Override
-    public Map<Species, List<Evolution>> getTimeBasedEvolutions() {
-        return timeBasedEvolutions;
-    }
-
 
     /* Private methods/structs used internally by the above methods */
 
-    private final Map<Species, List<Evolution>> impossibleEvolutions = new TreeMap<>();
-    private final Map<Species, List<Evolution>> madeEasierEvolutions = new TreeMap<>();
-    private final Map<Species, List<Evolution>> timeBasedEvolutions = new TreeMap<>();
+    private final Map<Species, List<Evolution>> preImprovedEvolutions = new TreeMap<>();
 
     /**
-     * Marks that a {@link Species} has had any "impossible" {@link Evolution}
+     * Marks that a {@link Species} is getting its {@link Evolution}s improved,
      * (and saves its original Evolutions) for logging purposes.
      */
-    protected void markImpossibleEvolutions(Species pk) {
+    protected void markImprovedEvolutions(Species pk) {
         // We can't overwrite these entries, because then species with
         // multiple evos to change (e.g. HGSS Eevee) will store their partially-changed evos,
         // instead of the original ones.
-        if (!impossibleEvolutions.containsKey(pk)) {
+        if (!preImprovedEvolutions.containsKey(pk)) {
             List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
             for (Evolution original : pk.getEvolutionsFrom()) {
                 evosCopy.add(new Evolution(original));
             }
-            impossibleEvolutions.put(pk, evosCopy);
+            preImprovedEvolutions.put(pk, evosCopy);
         }
     }
-
-    /**
-     * Marks that a {@link Species} has had any {@link Evolution} which was made easier
-     * (and saves its original Evolutions) for logging purposes.
-     */
-    protected void markMadeEasierEvolutions(Species pk) {
-        if (!madeEasierEvolutions.containsKey(pk)) {
-            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
-            for (Evolution original : pk.getEvolutionsFrom()) {
-                evosCopy.add(new Evolution(original));
-            }
-            madeEasierEvolutions.put(pk, evosCopy);
-        }
-    }
-
-    /**
-     * Marks that a {@link Species} has had any time-based {@link Evolution}
-     * (and saves its original Evolutions) for logging purposes.
-     */
-    protected void markTimeBasedEvolutions(Species pk) {
-        if (!timeBasedEvolutions.containsKey(pk)) {
-            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
-            for (Evolution original : pk.getEvolutionsFrom()) {
-                evosCopy.add(new Evolution(original));
-            }
-            timeBasedEvolutions.put(pk, evosCopy);
-        }
-    }
-
 
     /* Helper methods used by subclasses and/or this class */
 

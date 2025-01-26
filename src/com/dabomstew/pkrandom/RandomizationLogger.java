@@ -414,6 +414,22 @@ public class RandomizationLogger {
     private void logEvolutionImprovements() {
         log.printf("Section!!!%n");
 
+        log.printf(getBS("Log.pe.impListHead"));
+        if (settings.isChangeImpossibleEvolutions()) {
+            log.printf(getBS("Log.pe.impListImpossible"));
+        }
+        if (settings.isMakeEvolutionsEasier()) {
+            log.printf(getBS("Log.pe.impListEasier"));
+        }
+        if (settings.isRemoveTimeBasedEvolutions()) {
+            log.printf(getBS("Log.pe.impListTimeBased"));
+        }
+        log.println();
+        if (settings.isMakeEvolutionsEasier() && romHandler.generationOfPokemon() != 1) {
+            log.printf(getBS("Log.pe.impHappiness"));
+        }
+        log.println();
+
         List<String> fromNames = new ArrayList<>();
         List<String> toNames = new ArrayList<>();
         List<String> oldMethods = new ArrayList<>();
@@ -422,7 +438,7 @@ public class RandomizationLogger {
         // rather hefty code, for filling these tables
         // Assumes improvements only adds Evolutions and/or Species (forms) to evolve into;
         // i.e. oldFoo.size() < newFoo.size().
-        for (Map.Entry<Species, List<Evolution>> entry : romHandler.getImpossibleEvolutions().entrySet()) {
+        for (Map.Entry<Species, List<Evolution>> entry : romHandler.getPreImprovedEvolutions().entrySet()) {
             fromNames.add(entry.getKey().getFullName());
 
             Map<Species, List<Evolution>> oldByTo = new HashMap<>();
@@ -463,29 +479,11 @@ public class RandomizationLogger {
 
         // printing the tables like this is swift though
         log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
-                "FROM", "TO", "OLD METHOD", "NEW METHOD");
+                getBS("Log.pe.from"), getBS("Log.pe.to"), getBS("Log.pe.oldMethod"), getBS("Log.pe.newMethod"));
         for (int i = 0; i < fromNames.size(); i++) {
             log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
                     fromNames.get(i), toNames.get(i), oldMethods.get(i), newMethods.get(i));
         }
-
-
-        // TODO
-//        if (settings.isChangeImpossibleEvolutions()) {
-//            log.println("--Removing Impossible Evolutions--");
-//            logUpdatedEvolutions(romHandler.getImpossibleEvoSpecies(), romHandler.getMadeEasierEvolutions());
-//        }
-//        if (settings.isMakeEvolutionsEasier()) {
-//            log.println("--Making Evolutions Easier--");
-//            if (!(romHandler instanceof Gen1RomHandler)) {
-//                log.println("Friendship evolutions now take 160 happiness (was 220).");
-//            }
-//            logUpdatedEvolutions(romHandler.getMadeEasierEvolutions(), null);
-//        }
-//        if (settings.isRemoveTimeBasedEvolutions()) {
-//            log.println("--Removing Timed-Based Evolutions--");
-//            logUpdatedEvolutions(romHandler.getTimeBasedEvolutions(), null);
-//        }
     }
 
     private void padToEqualSize(List<String> shorter, List<String> longer) {

@@ -2947,19 +2947,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
                         if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
                             // happiness day change to Sun Stone
-                            markImpossibleEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.sunStone);
                         }
                         if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
                             // happiness night change to Moon Stone
-                            markImpossibleEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.moonStone);
                         }
                         if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
                             // beauty change to level 35
-                            markImpossibleEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
                         }
@@ -2968,13 +2968,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Haunter, Machoke, Kadabra, Graveler
                         // Make it into level 37, we're done.
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
                     }
                     // Trade w/ Held Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
                             // Poliwhirl: Lv 37
                             evo.setType(EvolutionType.LEVEL);

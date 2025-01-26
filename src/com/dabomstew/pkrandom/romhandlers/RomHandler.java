@@ -484,27 +484,12 @@ public interface RomHandler {
 
     /**
      * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were changed using "Change Impossible Evolutions" setting,
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(Settings)},
+     * {@link #makeEvolutionsEasier(Settings)}, or {@link #removeTimeBasedEvolutions()},
      * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
-     * If impossible evolutions have not been changed, this Set is empty.
+     * If those methods have not been called, this Set is empty.
      */
-    Map<Species, List<Evolution>> getImpossibleEvolutions();
-
-    /**
-     * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were made easier using the "Make Evolutions Easier" setting,
-     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
-     * If evolutions have not been made easier, this Set is empty.
-     */
-    Map<Species, List<Evolution>> getMadeEasierEvolutions();
-
-    /**
-     * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were changed by the "Remove Time Based Evolutions" setting,
-     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
-     * If time-based evolutions have not been changed, this Set is empty.
-     */
-    Map<Species, List<Evolution>> getTimeBasedEvolutions();
+    Map<Species, List<Evolution>> getPreImprovedEvolutions();
 
     // In the earlier games, alt formes use the same evolutions as the base forme.
     // In later games, this was changed so that alt formes can have unique evolutions

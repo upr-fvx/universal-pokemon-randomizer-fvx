@@ -1173,17 +1173,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public Map<Species, List<Evolution>> getImpossibleEvolutions() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Species, List<Evolution>> getMadeEasierEvolutions() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Species, List<Evolution>> getTimeBasedEvolutions() {
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
         throw new NotImplementedException();
     }
 

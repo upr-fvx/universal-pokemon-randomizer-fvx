@@ -1922,7 +1922,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 for (Evolution evol : pkmn.getEvolutionsFrom()) {
                     if (evol.getType() == EvolutionType.TRADE || evol.getType() == EvolutionType.TRADE_ITEM) {
 
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking

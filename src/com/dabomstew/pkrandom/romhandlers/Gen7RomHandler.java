@@ -2633,18 +2633,18 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
                         break;
                     case TRADE:
                         // Replace w/ level 37
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
                         break;
                     case TRADE_ITEM:
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - he already has a level evo
                             // So we can't do Level up w/ Held Item for him
@@ -2659,7 +2659,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // This is the karrablast <-> shelmet trade
                         // Replace it with Level up w/ Other Species in Party
                         // Based on what species we're currently dealing with
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
                         break;
@@ -2669,24 +2669,24 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // then Cosmoem would have one level-evo, and one something-else-evo.
                         // And worse, which would be the level-evo would vary between versions!
                         // Instead, we change both to time-based evolutions.
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT);
                         break;
                     case LEVEL_GAME_OTHER:
                         // This is Cosmoem's impossible evolution,
                         // its time-based evo is the other way around.
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
                         break;
                     // And these are Rockruff's. We change the possible ones to for symmetry's sake.
                     case LEVEL_GAME_THIS_DAY:
                     case LEVEL_GAME_OTHER_DAY:
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_DAY);
                         break;
                     case LEVEL_GAME_THIS_NIGHT:
                     case LEVEL_GAME_OTHER_NIGHT:
-                        markImpossibleEvolutions(sp);
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_NIGHT);
                         break;
                 }
@@ -2698,7 +2698,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         case SpeciesIDs.pikachu:
                         case SpeciesIDs.exeggcute:
                         case SpeciesIDs.cubone:
-                            markImpossibleEvolutions(sp);
+                            markImprovedEvolutions(sp);
                             Species kantoForm = evo.getTo().getBaseForme();
                             Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
                                     EvolutionType.STONE, ItemIDs.moonStone);
@@ -2742,19 +2742,19 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     if (wildsRandomized) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
-                            markMadeEasierEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.LEVEL_SNOWY) {
-                            markMadeEasierEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
                         } else if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
-                            markMadeEasierEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());

@@ -2833,20 +2833,20 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Replace w/ level 37
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - it already has a level evo
                             // So we can't do Level up w/ Held Item
@@ -2862,7 +2862,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         // Replace it with Level up w/ Other Species in Party
                         // (22)
                         // Based on what species we're currently dealing with
-                        markImpossibleEvolutions(pkmn);
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
                     }
@@ -2899,7 +2899,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
-                            markMadeEasierEvolutions(pkmn);
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
                         }

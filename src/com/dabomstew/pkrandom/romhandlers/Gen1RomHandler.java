@@ -25,12 +25,12 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.images.GBCImage;
 import com.dabomstew.pkrandom.graphics.packs.GBCPlayerCharacterGraphics;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
@@ -1839,6 +1839,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public void removeTimeBasedEvolutions() {
         // No such thing
+    }
+
+    @Override
+    public boolean canGiveEverySpeciesOneEvolutionEach() {
+        // because there isn't enough space in the bank with evolution data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
     }
 
     @Override

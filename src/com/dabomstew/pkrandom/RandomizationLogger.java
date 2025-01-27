@@ -183,7 +183,9 @@ public class RandomizationLogger {
             printContentsRow("psta");
         if (shouldLogEvolutions())
             printContentsRow("pe");
-        if (shouldLogSpeciesTraits() || shouldLogEvolutions())
+        if (shouldLogEvolutionImprovements())
+            printContentsRow("pei");
+        if (shouldLogSpeciesTraits() || shouldLogEvolutions() || shouldLogEvolutionImprovements())
             log.println();
         if (shouldLogStarters())
             printContentsRow("sp");
@@ -239,8 +241,8 @@ public class RandomizationLogger {
         logOverviewLine(getBS("GUI.ptPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.paPanel.title"), speciesAbilityRandomizer.isChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        // TODO: what about evo improvements?
-        logOverviewLine(getBS("GUI.pePanel.title"), evoRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.pePanel.title"), evoRandomizer.isChangesMade()
+                || shouldLogEvolutionImprovements(), true);
         logOverviewLine(getBS("GUI.spPanel.title"), starterRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
                 romHandler.canChangeStaticPokemon());
@@ -321,8 +323,10 @@ public class RandomizationLogger {
     private void logOptionalSections() {
         if (shouldLogSpeciesTraits())
             logSpeciesTraits();
-        //if (shouldLogEvolutions())
+        if (shouldLogEvolutions())
             logEvolutions();
+        if (shouldLogEvolutionImprovements())
+            logEvolutionImprovements();
 
         if (shouldLogStarters())
             logStarters();
@@ -364,7 +368,6 @@ public class RandomizationLogger {
 
         // TODO: where to fit these
         logBaseStatsUpdates();
-        logEvolutionImprovements();
         logMoveUpdates();
         logTypeEffectivenessUpdates();
     }
@@ -411,22 +414,26 @@ public class RandomizationLogger {
         printSectionSeparator();
     }
 
-    private void logEvolutionImprovements() {
-        log.printf("Section!!!%n");
+    private boolean shouldLogEvolutionImprovements() {
+        return !romHandler.getPreImprovedEvolutions().isEmpty();
+    }
 
-        log.printf(getBS("Log.pe.impListHead"));
+    private void logEvolutionImprovements() {
+        printSectionTitle("pei");
+
+        log.printf(getBS("Log.pei.listHead"));
         if (settings.isChangeImpossibleEvolutions()) {
-            log.printf(getBS("Log.pe.impListImpossible"));
+            log.printf(getBS("Log.pei.listImpossible"));
         }
         if (settings.isMakeEvolutionsEasier()) {
-            log.printf(getBS("Log.pe.impListEasier"));
+            log.printf(getBS("Log.pei.listEasier"));
         }
         if (settings.isRemoveTimeBasedEvolutions()) {
-            log.printf(getBS("Log.pe.impListTimeBased"));
+            log.printf(getBS("Log.pei.listTimeBased"));
         }
         log.println();
         if (settings.isMakeEvolutionsEasier() && romHandler.generationOfPokemon() != 1) {
-            log.printf(getBS("Log.pe.impHappiness"));
+            log.printf(getBS("Log.pei.happiness"));
         }
         log.println();
 
@@ -435,7 +442,7 @@ public class RandomizationLogger {
         List<String> oldMethods = new ArrayList<>();
         List<String> newMethods = new ArrayList<>();
 
-        // rather hefty code, for filling these tables
+        // rather hefty code, for filling these table rows
         // Assumes improvements only adds Evolutions and/or Species (forms) to evolve into;
         // i.e. oldFoo.size() < newFoo.size().
         for (Map.Entry<Species, List<Evolution>> entry : romHandler.getPreImprovedEvolutions().entrySet()) {
@@ -477,13 +484,14 @@ public class RandomizationLogger {
         int oldMethodsLength = maxElementLength(oldMethods);
         int newMethodsLength = maxElementLength(newMethods);
 
-        // printing the tables like this is swift though
+        // printing the table like this is swift though
         log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
-                getBS("Log.pe.from"), getBS("Log.pe.to"), getBS("Log.pe.oldMethod"), getBS("Log.pe.newMethod"));
+                getBS("Log.pe.from"), getBS("Log.pe.to"), getBS("Log.pei.oldMethod"), getBS("Log.pei.newMethod"));
         for (int i = 0; i < fromNames.size(); i++) {
             log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
                     fromNames.get(i), toNames.get(i), oldMethods.get(i), newMethods.get(i));
         }
+        printSectionSeparator();
     }
 
     private void padToEqualSize(List<String> shorter, List<String> longer) {
@@ -494,18 +502,6 @@ public class RandomizationLogger {
 
     private int maxElementLength(List<String> list) {
         return list.stream().map(String::length).max(Integer::compareTo).orElseThrow(IllegalStateException::new);
-    }
-
-    private void logUpdatedEvolutions(Set<EvolutionUpdate> updatedEvolutions,
-                                      Set<EvolutionUpdate> otherUpdatedEvolutions) {
-        for (EvolutionUpdate evo : updatedEvolutions) {
-            if (otherUpdatedEvolutions != null && otherUpdatedEvolutions.contains(evo)) {
-                log.println(evo.toString() + " (Overwritten by \"Make Evolutions Easier\", see below)");
-            } else {
-                log.println(evo.toString());
-            }
-        }
-        log.println();
     }
 
     private String evolutionMethodToString(Evolution evo) {
@@ -534,13 +530,6 @@ public class RandomizationLogger {
 
         return sb.toString();
     }
-
-
-    // - scrap the EvolutionUpdate class
-    // (- somehow remember old evolutions)
-    // - write evolution methods here
-
-
 
     private boolean shouldLogSpeciesTraits() {
         return (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade()

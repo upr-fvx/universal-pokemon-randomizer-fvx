@@ -653,25 +653,28 @@ public class RandomizationLogger {
     private void logStarters() {
         // TODO: log starter held items
         printSectionTitle("sp");
+        String mode = null;
         switch (settings.getStartersMod()) {
+            case UNCHANGED:
+                mode = getBS("Log.sp.unchanged"); // should never happen
+                break;
             case CUSTOM:
-                log.println("--Custom Starters--");
+                mode = getBS("Log.sp.custom");
                 break;
             case COMPLETELY_RANDOM:
-                log.println("--Random Starters--");
+                mode = getBS("Log.sp.random");
                 break;
             case RANDOM_BASIC:
-                log.println("--Random Basic Starters--");
+                mode = getBS("Log.sp.randomBasic");
                 break;
             case RANDOM_WITH_TWO_EVOLUTIONS:
-                log.println("--Random 2-Evolution Starters--");
+                mode = getBS("Log.sp.random2Evolution");
         }
+        log.printf(getBS("Log.sp.mode"), mode);
 
         List<Species> starters = romHandler.getStarters();
-        int i = 1;
-        for (Species starter : starters) {
-            log.println("Set starter " + i + " to " + starter.getFullName());
-            i++;
+        for (int i = 0; i < starters.size(); i++) {
+            log.printf(getBS("Log.sp.set"), i + 1, starters.get(i).getFullName());
         }
         printSectionSeparator();
     }

@@ -2576,7 +2576,8 @@ public class RandomizerGUI {
             peRandomEveryLevelRadioButton.setEnabled(pokemonGeneration >= 3);
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
-            peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
+            peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
+            peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
             peAllowAltFormesCheckBox.setVisible(pokemonGeneration >= 7);
 
             // Starters, Statics & Trades

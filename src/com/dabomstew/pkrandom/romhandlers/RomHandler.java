@@ -480,6 +480,8 @@ public interface RomHandler {
 
     void makeEvolutionsEasier(Settings settings);
 
+    boolean hasTimeBasedEvolutions();
+
     void removeTimeBasedEvolutions();
 
     /**

@@ -323,6 +323,12 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean hasTimeBasedEvolutions() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
     public boolean hasTotemPokemon() {
         // DEFAULT: no
         return false;

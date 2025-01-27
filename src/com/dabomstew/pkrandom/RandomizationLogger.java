@@ -190,13 +190,13 @@ public class RandomizationLogger {
         if (shouldLogStarters())
             printContentsRow("sp");
         if (shouldLogStaticPokemon())
-            printContentsRow("Static Pokémon", "STPK");
+            printContentsRow("stp");
         if (shouldLogInGameTrades())
-            printContentsRow("In-Game Trades", "IGTR");
+            printContentsRow("igt");
         if (shouldLogStarters() || shouldLogStaticPokemon() || shouldLogInGameTrades())
             log.println();
         if (shouldLogMoveData())
-            printContentsRow("Move Data", "MVDT");
+            printContentsRow("md");
         if (shouldLogMovesets())
             printContentsRow("Pokémon Movesets", "PKMV");
         if (shouldLogMoveData() || shouldLogMovesets())
@@ -630,7 +630,7 @@ public class RandomizationLogger {
         printSectionSeparator();
     }
 
-    private int getMaxSpeciesNameLength(List<Species> allSpecies) {
+    private int getMaxSpeciesNameLength(Collection<Species> allSpecies) {
         return allSpecies.stream()
                 .filter(Objects::nonNull)
                 .map(Species::getFullName).map(String::length)
@@ -684,8 +684,8 @@ public class RandomizationLogger {
     }
 
     private void logMoveData() {
+        printSectionTitle("md");
 
-        log.printf(getBS("Log.sectionTitle"), "Move Data", "MVDT");
         log.print("NUM|NAME           |TYPE    |POWER|ACC.|PP");
         if (romHandler.hasPhysicalSpecialSplit()) {
             log.print(" |CATEGORY");
@@ -961,9 +961,9 @@ public class RandomizationLogger {
     }
 
     private void logStaticPokemon(List<StaticEncounter> oldStatics) {
-        List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
+        printSectionTitle("stp");
 
-        log.printf(getBS("Log.sectionTitle"), "Static Pokémon", "STPK");
+        List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
         Map<String, Integer> seenPokemon = new TreeMap<>();
         for (int i = 0; i < oldStatics.size(); i++) {
             StaticEncounter oldP = oldStatics.get(i);
@@ -1064,10 +1064,10 @@ public class RandomizationLogger {
     }
 
     private void logInGameTrades(List<IngameTrade> oldTrades) {
-        log.printf(getBS("Log.sectionTitle"), "In-Game Trades", "IGTR");
+        // TODO
+        printSectionTitle("igt");
         List<IngameTrade> newTrades = romHandler.getIngameTrades();
-        int size = oldTrades.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < oldTrades.size(); i++) {
             IngameTrade oldT = oldTrades.get(i);
             IngameTrade newT = newTrades.get(i);
             log.printf("Trade %-11s -> %-11s the %-11s        ->      %-11s -> %-15s the %s" + NEWLINE,

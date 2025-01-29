@@ -121,6 +121,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         xAccNerfed = false;
         preloadMaps();
         loadMapNames();
+        moveMewBaseStats();
     }
 
     @Override
@@ -213,6 +214,63 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
         // Not found
         return null;
+    }
+
+    /**
+     * In all games before Yellow, Mew's base stats (and images) reside in the main bank,
+     * instead of alongside the other base stats (and images). This is due to it being added
+     * last-minute, filling in the empty space that had been left by removing the games' debug tools.
+     * <br><br>
+     * Having it there is annoying, and leads to bugs if we're not careful
+     * (e.g. it seems like Pokémon can't evolve into/from Mew), so here we move it to be with the rest.
+     */
+    private void moveMewBaseStats() {
+        if (romEntry.isYellow()) {
+            return;
+        }
+
+        // First we locate mewBaseStats so it may be moved.
+        // The images don't need to be moved, though. They do require special handling for being in this bank,
+        // but it causes basically no problems relative to the base stats.
+
+        int mewBaseStatOffset = romEntry.getIntValue("mewBaseStats");
+        int baseStatLength = 28;
+        byte[] mewBaseStats = Arrays.copyOfRange(rom, mewBaseStatOffset, mewBaseStatOffset + baseStatLength);
+        freeSpace(mewBaseStatOffset, baseStatLength);
+
+        // We can't just add mewBaseStats to the end of the Base Stats table,
+        // because it is immediately followed by the Cry Data table.
+        // Luckily, right after Cry Data table come some unused functions for doubling/halving base stats.
+        // If we clear/free the space they occupy, we can then nudge over the Cry Data Table,
+        // and finally have free space to put mewBaseStats in.
+
+        int unusedBSFunctionsOffset = romEntry.getIntValue("unusedBaseStatFunctionsOffset");
+        int unusedBSFunctionLength = Gen1Constants.unusedBaseStatFunctionLength;
+        freeSpace(unusedBSFunctionsOffset, unusedBSFunctionLength);
+
+        int cdPointerOffset = romEntry.getIntValue("cryDataPointerOffset");
+        int cdBank = rom[cdPointerOffset + Gen1Constants.cryDataBankRelOffset] & 0xFF; // == cdPointerOffset + 6;
+        int cdOffset = readPointer(cdPointerOffset, cdBank);
+        byte[] cryData = Arrays.copyOfRange(rom, cdOffset, Gen1Constants.cryDataLength);
+        freeSpace(cdOffset, cryData.length);
+
+        // TODO: all of this might not work because findAndUnfreeSpace() is set to find the *earliest* free space,
+        //  not the last one. In other words, the nudge won't happen; space will be freed up after Cry Data,
+        //  and then it will be picked up... and placed in the exact same location.
+        //  The obvious solution is to rewrite findAndUnfreeSpace(), but that's central enough to have to reeally
+        //  be thought through.
+
+        int newCDOffset = findAndUnfreeSpace(cryData.length);
+        writeBytes(newCDOffset, cryData);
+        writePointer(cdPointerOffset, newCDOffset);
+
+        writeBytes(cdOffset, mewBaseStats); // Cry Data started right where Base Stats ended
+
+        // And now that mewBaseStats is with the rest, we don't need the special handling code for getting it.
+        // NOP it out.
+
+        // TODO
+
     }
 
     private String[] readMoveNames() {

@@ -233,39 +233,50 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // The images don't need to be moved, though. They do require special handling for being in this bank,
         // but it causes basically no problems relative to the base stats.
 
-        int mewBaseStatOffset = romEntry.getIntValue("mewBaseStats");
-        int baseStatLength = 28;
-        byte[] mewBaseStats = Arrays.copyOfRange(rom, mewBaseStatOffset, mewBaseStatOffset + baseStatLength);
-        freeSpace(mewBaseStatOffset, baseStatLength);
+        int mewBaseStatOffset = romEntry.getIntValue("MewStatsOffset");
+        byte[] mewBaseStats = Arrays.copyOfRange(rom, mewBaseStatOffset,
+                mewBaseStatOffset + Gen1Constants.baseStatsEntrySize);
+        freeSpace(mewBaseStatOffset, Gen1Constants.baseStatsEntrySize);
 
-        // We can't just add mewBaseStats to the end of the Base Stats table,
-        // because it is immediately followed by the Cry Data table.
-        // Luckily, right after Cry Data table come some unused functions for doubling/halving base stats.
-        // If we clear/free the space they occupy, we can then nudge over the Cry Data Table,
-        // and finally have free space to put mewBaseStats in.
+        // The bank that the Base Stats table resides in is somewhat cramped.
+        // Base Stats is immediately followed by Cry Data, leaving no room for mewBaseStats.
+        // Luckily, Cry Data is followed by some *unused* in-battle functions.
+        // If we remove said functions, we get enough space for both Base Stats (+ mewBaseStats) and Cry Data,
+        // but we still have to fiddle some.
 
-        int unusedBSFunctionsOffset = romEntry.getIntValue("unusedBaseStatFunctionsOffset");
+        int bank = romEntry.getIntValue("PokemonStatsBank");
+
+        // picking things up
+
+        int[] bsPointerOffsets = romEntry.getArrayValue("PokemonStatsPointerOffsets");
+        int bsOffset = readPointer(bsPointerOffsets[0], bank);
+        int bsLength = Gen1Constants.baseStatsEntrySize * Gen1Constants.pokemonCount;
+        byte[] baseStats = Arrays.copyOfRange(rom, bsOffset, bsLength);
+        System.arraycopy(mewBaseStats, 0, baseStats,
+                bsLength - mewBaseStats.length, mewBaseStats.length);
+        freeSpace(bsOffset, bsLength - mewBaseStats.length);
+
+        int cdPointerOffset = romEntry.getIntValue("CryDataPointerOffset");
+        int cdOffset = readPointer(cdPointerOffset, bank);
+        int cdLength = Gen1Constants.cryDataEntrySize * romEntry.getIntValue("InternalPokemonCount");
+        byte[] cryData = Arrays.copyOfRange(rom, cdOffset, cdLength);
+        freeSpace(cdOffset, cdLength);
+
+        int unusedBSFunctionsOffset = romEntry.getIntValue("UnusedBaseStatFunctionsOffset");
         int unusedBSFunctionLength = Gen1Constants.unusedBaseStatFunctionLength;
         freeSpace(unusedBSFunctionsOffset, unusedBSFunctionLength);
 
-        int cdPointerOffset = romEntry.getIntValue("cryDataPointerOffset");
-        int cdBank = rom[cdPointerOffset + Gen1Constants.cryDataBankRelOffset] & 0xFF; // == cdPointerOffset + 6;
-        int cdOffset = readPointer(cdPointerOffset, cdBank);
-        byte[] cryData = Arrays.copyOfRange(rom, cdOffset, Gen1Constants.cryDataLength);
-        freeSpace(cdOffset, cryData.length);
+        // putting things down
 
-        // findAndUnfreeSpace() doesn't promise whether to find the *earliest* free space, or the *last*.
-        // In other words, there is a risk it'll find exactly the old offset of Cry Data, see that it fits there,
-        // and then unfree the space we just freed. Leaving us with Cry Data in the same place,
-        // and nowhere to fit mewBaseStats.
-        // To avoid that, we pad the cryData.
-        byte[] padded = new byte[mewBaseStats.length + cryData.length];
-        System.arraycopy(cryData, 0, padded, mewBaseStats.length, cryData.length);
-        int newCDOffset = findAndUnfreeSpace(padded.length);
-        writeBytes(newCDOffset, padded);
+        int newBSOffset = findAndUnfreeSpaceInBank(bsLength, bank);
+        writeBytes(newBSOffset, baseStats);
+        for (int pointerOffset : bsPointerOffsets) {
+            writePointer(pointerOffset, newBSOffset);
+        }
+
+        int newCDOffset = findAndUnfreeSpaceInBank(cdLength, bank);
+        writeBytes(newCDOffset, cryData);
         writePointer(cdPointerOffset, newCDOffset);
-
-        writeBytes(cdOffset, mewBaseStats); // Cry Data started right where Base Stats ended
 
         // And now that mewBaseStats is with the rest, we don't need the special handling code for getting it.
         // NOP it out.

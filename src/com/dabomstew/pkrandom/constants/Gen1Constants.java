@@ -43,6 +43,8 @@ public class Gen1Constants {
 			bsExpYieldOffset = 9, bsFrontImageDimensionsOffset = 10, bsFrontImagePointerOffset = 11,
             bsBackImagePointerOffset = 13, bsLevel1MovesOffset = 15, bsGrowthCurveOffset = 19, bsTMHMCompatOffset = 20;
 
+    public static final int cryDataEntrySize = 3;
+
     public static final int encounterTableEnd = 0xFFFF, encounterTableSize = 10, yellowSuperRodTableSize = 4;
 
     public static final int trainerClassCount = 47;

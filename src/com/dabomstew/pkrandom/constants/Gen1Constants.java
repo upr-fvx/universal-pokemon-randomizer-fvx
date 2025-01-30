@@ -45,6 +45,8 @@ public class Gen1Constants {
 
     public static final int cryDataEntrySize = 3;
 
+    public static final int unusedBaseStatFunctionLength = 0x28D;
+
     public static final int encounterTableEnd = 0xFFFF, encounterTableSize = 10, yellowSuperRodTableSize = 4;
 
     public static final int trainerClassCount = 47;

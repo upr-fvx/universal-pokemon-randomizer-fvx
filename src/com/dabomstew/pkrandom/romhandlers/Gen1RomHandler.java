@@ -238,7 +238,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 mewBaseStatOffset + Gen1Constants.baseStatsEntrySize);
         freeSpace(mewBaseStatOffset, Gen1Constants.baseStatsEntrySize);
 
-        // The bank that the Base Stats table resides in is somewhat cramped.
+        // The bank that the Base Stats table resides in is somewhat cramped;
         // Base Stats is immediately followed by Cry Data, leaving no room for mewBaseStats.
         // Luckily, Cry Data is followed by some *unused* in-battle functions.
         // If we remove said functions, we get enough space for both Base Stats (+ mewBaseStats) and Cry Data,
@@ -613,15 +613,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int pokeStatsOffset = romEntry.getIntValue("PokemonStatsOffset");
         for (int i = 1; i <= pokedexCount; i++) {
             pokes[i] = new Gen1Species(i);
-            if (i != SpeciesIDs.mew || romEntry.isYellow()) {
-                loadBasicPokeStats((Gen1Species) pokes[i], pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize);
-            }
+            loadBasicPokeStats((Gen1Species) pokes[i], pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize);
             pokes[i].setName(pokeNames[pokeNumToRBYTable[i]]);
-        }
-
-        // Mew override for R/B
-        if (!romEntry.isYellow()) {
-            loadBasicPokeStats((Gen1Species) pokes[SpeciesIDs.mew], romEntry.getIntValue("MewStatsOffset"));
         }
 
         this.speciesList = Arrays.asList(pokes);
@@ -640,15 +633,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // Write pokemon stats
         int pokeStatsOffset = romEntry.getIntValue("PokemonStatsOffset");
         for (int i = 1; i <= pokedexCount; i++) {
-            if (i == SpeciesIDs.mew) {
-                continue;
-            }
             saveBasicPokeStats(pokes[i], pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize);
         }
-        // Write MEW
-        int mewOffset = romEntry.isYellow() ? pokeStatsOffset + (SpeciesIDs.mew - 1)
-                * Gen1Constants.baseStatsEntrySize : romEntry.getIntValue("MewStatsOffset");
-        saveBasicPokeStats(pokes[SpeciesIDs.mew], mewOffset);
 
         // Write evolutions and movesets
         saveEvosAndMovesLearnt();
@@ -1548,13 +1534,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             int pointer = readPointer(pointersOffset + (i - 1) * 2);
             if (pokeRBYToNumTable[i] != 0) {
                 Species pk = pokes[pokeRBYToNumTable[i]];
-                int statsOffset;
-                if (pokeRBYToNumTable[i] == SpeciesIDs.mew && !romEntry.isYellow()) {
-                    // Mewww
-                    statsOffset = romEntry.getIntValue("MewStatsOffset");
-                } else {
-                    statsOffset = (pokeRBYToNumTable[i] - 1) * 0x1C + pokeStatsOffset;
-                }
+                // TODO: identify 0x1C and move to Gen1Constants
+                int statsOffset = (pokeRBYToNumTable[i] - 1) * 0x1C + pokeStatsOffset;
                 List<MoveLearnt> ourMoves = new ArrayList<>();
                 for (int delta = Gen1Constants.bsLevel1MovesOffset; delta < Gen1Constants.bsLevel1MovesOffset + 4; delta++) {
                     if (rom[statsOffset + delta] != 0x00) {
@@ -1777,8 +1758,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Map<Species, boolean[]> compat = new TreeMap<>();
         int pokeStatsOffset = romEntry.getIntValue("PokemonStatsOffset");
         for (int i = 1; i <= pokedexCount; i++) {
-            int baseStatsOffset = (romEntry.isYellow() || i != SpeciesIDs.mew) ? (pokeStatsOffset + (i - 1)
-                    * Gen1Constants.baseStatsEntrySize) : romEntry.getIntValue("MewStatsOffset");
+            int baseStatsOffset = pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize;
             Species pkmn = pokes[i];
             boolean[] flags = new boolean[Gen1Constants.tmCount + Gen1Constants.hmCount + 1];
             for (int j = 0; j < 7; j++) {
@@ -1795,9 +1775,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (Map.Entry<Species, boolean[]> compatEntry : compatData.entrySet()) {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
-            int baseStatsOffset = (romEntry.isYellow() || pkmn.getNumber() != SpeciesIDs.mew) ? (pokeStatsOffset + (pkmn.getNumber() - 1)
-                    * Gen1Constants.baseStatsEntrySize)
-                    : romEntry.getIntValue("MewStatsOffset");
+            int baseStatsOffset = pokeStatsOffset + (pkmn.getNumber() - 1) * Gen1Constants.baseStatsEntrySize;
             for (int j = 0; j < 7; j++) {
                 writeByte(baseStatsOffset + Gen1Constants.bsTMHMCompatOffset + j,
                         getByteFromFlags(flags, j * 8 + 1));
@@ -2740,12 +2718,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int pokeStatsOffset = romEntry.getIntValue("PokemonStatsOffset");
         for (Species pk : speciesList) {
             if (pk == null) continue;
-            int statsOffset;
-            if (pk.getNumber() == SpeciesIDs.mew && !romEntry.isYellow()) {
-                statsOffset = romEntry.getIntValue("MewStatsOffset");
-            } else {
-                statsOffset = (pk.getNumber() - 1) * Gen1Constants.baseStatsEntrySize + pokeStatsOffset;
-            }
+            int statsOffset = (pk.getNumber() - 1) * Gen1Constants.baseStatsEntrySize + pokeStatsOffset;
             List<MoveLearnt> moveset = movesets.get(pk.getNumber());
             byte[] level1MoveBytes = movesetToLevel1MoveBytes(moveset);
             writeBytes(statsOffset + Gen1Constants.bsLevel1MovesOffset, level1MoveBytes);

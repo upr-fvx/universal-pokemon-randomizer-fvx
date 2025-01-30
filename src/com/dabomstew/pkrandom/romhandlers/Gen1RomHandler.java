@@ -254,14 +254,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         byte[] cryData = Arrays.copyOfRange(rom, cdOffset, Gen1Constants.cryDataLength);
         freeSpace(cdOffset, cryData.length);
 
-        // TODO: all of this might not work because findAndUnfreeSpace() is set to find the *earliest* free space,
-        //  not the last one. In other words, the nudge won't happen; space will be freed up after Cry Data,
-        //  and then it will be picked up... and placed in the exact same location.
-        //  The obvious solution is to rewrite findAndUnfreeSpace(), but that's central enough to have to reeally
-        //  be thought through.
-
-        int newCDOffset = findAndUnfreeSpace(cryData.length);
-        writeBytes(newCDOffset, cryData);
+        // findAndUnfreeSpace() doesn't promise whether to find the *earliest* free space, or the *last*.
+        // In other words, there is a risk it'll find exactly the old offset of Cry Data, see that it fits there,
+        // and then unfree the space we just freed. Leaving us with Cry Data in the same place,
+        // and nowhere to fit mewBaseStats.
+        // To avoid that, we pad the cryData.
+        byte[] padded = new byte[mewBaseStats.length + cryData.length];
+        System.arraycopy(cryData, 0, padded, mewBaseStats.length, cryData.length);
+        int newCDOffset = findAndUnfreeSpace(padded.length);
+        writeBytes(newCDOffset, padded);
         writePointer(cdPointerOffset, newCDOffset);
 
         writeBytes(cdOffset, mewBaseStats); // Cry Data started right where Base Stats ended

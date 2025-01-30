@@ -244,11 +244,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // If we remove said functions, we get enough space for both Base Stats (+ mewBaseStats) and Cry Data,
         // but we still have to fiddle some.
 
-        int bank = romEntry.getIntValue("PokemonStatsBank");
+        int bank = romEntry.getIntValue("PokemonStatsBank"); // TODO: find
 
         // picking things up
 
-        int[] bsPointerOffsets = romEntry.getArrayValue("PokemonStatsPointerOffsets");
+        int[] bsPointerOffsets = romEntry.getArrayValue("PokemonStatsPointerOffsets"); // TODO: find
         int bsOffset = readPointer(bsPointerOffsets[0], bank);
         int bsLength = Gen1Constants.baseStatsEntrySize * Gen1Constants.pokemonCount;
         byte[] baseStats = Arrays.copyOfRange(rom, bsOffset, bsLength);
@@ -256,13 +256,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 bsLength - mewBaseStats.length, mewBaseStats.length);
         freeSpace(bsOffset, bsLength - mewBaseStats.length);
 
-        int cdPointerOffset = romEntry.getIntValue("CryDataPointerOffset");
+        int cdPointerOffset = romEntry.getIntValue("CryDataPointerOffset"); // TODO: find
         int cdOffset = readPointer(cdPointerOffset, bank);
         int cdLength = Gen1Constants.cryDataEntrySize * romEntry.getIntValue("InternalPokemonCount");
         byte[] cryData = Arrays.copyOfRange(rom, cdOffset, cdLength);
         freeSpace(cdOffset, cdLength);
 
-        int unusedBSFunctionsOffset = romEntry.getIntValue("UnusedBaseStatFunctionsOffset");
+        int unusedBSFunctionsOffset = cdOffset + cdLength;
         int unusedBSFunctionLength = Gen1Constants.unusedBaseStatFunctionLength;
         freeSpace(unusedBSFunctionsOffset, unusedBSFunctionLength);
 
@@ -278,10 +278,18 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         writeBytes(newCDOffset, cryData);
         writePointer(cdPointerOffset, newCDOffset);
 
-        // And now that mewBaseStats is with the rest, we don't need the special handling code for getting it.
-        // NOP it out.
+        // And now that mewBaseStats is with the rest, we don't need the special code snippets for handling it.
+        // NOP them out.
 
-        // TODO
+        int[] mscOffsets = romEntry.getArrayValue("MewSpecialCodeOffsets"); // TODO: find
+        int[] mscLengths = romEntry.getArrayValue("MewSpecialCodeLengths");
+        for (int i = 0; i < mscOffsets.length; i++) {
+            for (int j = 0; j < mscLengths[i]; j++) {
+                rom[mscOffsets[i] + j] = GBConstants.gbZ80Nop;
+            }
+        }
+
+        // TODO: all places where "PokemonStatsOffset" is used must instead use the "PokemonStatsPointerOffset"
 
     }
 
@@ -1534,8 +1542,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             int pointer = readPointer(pointersOffset + (i - 1) * 2);
             if (pokeRBYToNumTable[i] != 0) {
                 Species pk = pokes[pokeRBYToNumTable[i]];
-                // TODO: identify 0x1C and move to Gen1Constants
-                int statsOffset = (pokeRBYToNumTable[i] - 1) * 0x1C + pokeStatsOffset;
+                int statsOffset = (pokeRBYToNumTable[i] - 1) * Gen1Constants.baseStatsEntrySize + pokeStatsOffset;
                 List<MoveLearnt> ourMoves = new ArrayList<>();
                 for (int delta = Gen1Constants.bsLevel1MovesOffset; delta < Gen1Constants.bsLevel1MovesOffset + 4; delta++) {
                     if (rom[statsOffset + delta] != 0x00) {

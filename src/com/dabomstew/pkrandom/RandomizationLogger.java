@@ -198,38 +198,38 @@ public class RandomizationLogger {
         if (shouldLogMoveData())
             printContentsRow("md");
         if (shouldLogMovesets())
-            printContentsRow("Pokémon Movesets", "PKMV");
+            printContentsRow("pms");
         if (shouldLogMoveData() || shouldLogMovesets())
             log.println();
         if (shouldLogTrainers())
-            printContentsRow("Trainer Pokémon", "TRPK");
+            printContentsRow("tp");
         if (shouldLogTotemPokemon())
-            printContentsRow("Totem Pokémon", "TOPK");
+            printContentsRow("topk");
         if (shouldLogTrainers() || shouldLogTotemPokemon())
             log.println();
         if (shouldLogWildPokemon()) {
-            printContentsRow("Wild Pokémon", "WDPK");
+            printContentsRow("wp");
             log.println();
         }
         if (shouldLogTMMoves())
-            printContentsRow("TM Moves", "TMMV");
+            printContentsRow("tm");
         if (shouldLogTMHMCompatibility())
-            printContentsRow("TM/HM Compatibility", "TMCB");
+            printContentsRow("tmc");
         if (shouldLogMoveTutorMoves())
-            printContentsRow("Move Tutor Moves", "MTMV");
+            printContentsRow("mt");
         if (shouldLogMoveTutorCompatibility())
-            printContentsRow("Move Tutor Compatibility", "MTCB");
+            printContentsRow("mtc");
         if (shouldLogTMMoves() || shouldLogTMHMCompatibility()
                 || shouldLogMoveTutorMoves() || shouldLogMoveTutorCompatibility())
             log.println();
         if (shouldLogShopItems())
-            printContentsRow("Shop Items", "SHMS");
+            printContentsRow("sh");
         if (shouldLogPickupItems())
-            printContentsRow("Pickup Items", "PUMS");
+            printContentsRow("pu");
         if (shouldLogShopItems() || shouldLogPickupItems())
             log.println();
         if (shouldLogTypeEffectiveness()) {
-            printContentsRow("Type Effectiveness", "TPEF");
+            printContentsRow("te");
             log.println();
         }
     }
@@ -377,6 +377,7 @@ public class RandomizationLogger {
     }
 
     private void logTypeEffectiveness() {
+        printSectionTitle("te");
         log.printf(getBS("Log.sectionTitle"), "Type Effectiveness", "TPEF");
         log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
         printSectionSeparator();
@@ -539,9 +540,10 @@ public class RandomizationLogger {
 
     private void logSpeciesTraits() {
         // Log base stats, types, abilities, and wild held items
+        printSectionTitle("psta");
+
         List<Species> allSpecies = romHandler.getSpeciesInclFormes();
         String[] itemNames = romHandler.getItemNames();
-        printSectionTitle("psta");
 
         // TODO: This puts the alt forms at the end. It would be nice to have them near their base forms.
 
@@ -711,7 +713,7 @@ public class RandomizationLogger {
     }
 
     private void logMovesets() {
-        log.printf(getBS("Log.sectionTitle"), "Pokémon Movesets", "PKMV");
+        printSectionTitle("pms");
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every Pokémon learns only Metronome.");
             printSectionSeparator();
@@ -785,7 +787,7 @@ public class RandomizationLogger {
     }
 
     private void logTMMoves() {
-        log.printf(getBS("Log.sectionTitle"), "TM Moves", "TMMV");
+        printSectionTitle("tm");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every TM contains Metronome.");
@@ -804,7 +806,7 @@ public class RandomizationLogger {
     }
 
     private void logTMHMCompatibility() {
-        log.printf(getBS("Log.sectionTitle"), "TM Compatibility", "TMCM");
+        printSectionTitle("tmc");
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
         tmHMs.addAll(romHandler.getHMMoves());
@@ -820,7 +822,7 @@ public class RandomizationLogger {
     }
 
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
-        log.printf(getBS("Log.sectionTitle"), "Move Tutor Moves", "MTMV");
+        printSectionTitle("mt");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every Move Tutor teaches Metronome.");
@@ -840,7 +842,7 @@ public class RandomizationLogger {
     }
 
     private void logMoveTutorCompatibility() {
-        log.printf(getBS("Log.sectionTitle"), "Move Tutor Compatibility", "MTCB");
+        printSectionTitle("mtc");
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
         List<Move> moveData = romHandler.getMoves();
@@ -898,7 +900,7 @@ public class RandomizationLogger {
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
-        log.printf(getBS("Log.sectionTitle"), "Trainer Pokémon", "TRPK");
+        printSectionTitle("tr");
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
             log.print("#" + t.index + " ");
@@ -987,10 +989,10 @@ public class RandomizationLogger {
     }
 
     private void logTotemPokemon(List<TotemPokemon> oldTotems) {
+        printSectionTitle("totp");
         List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
 
         String[] itemNames = romHandler.getItemNames();
-        log.printf(getBS("Log.sectionTitle"), "Totem Pokémon", "TOPK");
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
@@ -1005,7 +1007,7 @@ public class RandomizationLogger {
     }
 
     private void logWildPokemon() {
-        log.printf(getBS("Log.sectionTitle"), "Wild Pokémon", "WDPK");
+        printSectionTitle("wp");
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
@@ -1084,8 +1086,8 @@ public class RandomizationLogger {
     }
 
     private void logShopItems() {
+        printSectionTitle("sh");
         String[] itemNames = romHandler.getItemNames();
-        log.printf(getBS("Log.sectionTitle"), "Shop Items", "SHMS");
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
         for (int shopID : shopsDict.keySet()) {
             Shop shop = shopsDict.get(shopID);
@@ -1107,9 +1109,9 @@ public class RandomizationLogger {
     }
 
     private void logPickupItems() {
+        printSectionTitle("pu");
         List<PickupItem> pickupItems = romHandler.getPickupItems();
         String[] itemNames = romHandler.getItemNames();
-        log.printf(getBS("Log.sectionTitle"), "Pickup Items", "PUMS");
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
             int endingLevel = (levelRange + 1) * 10;

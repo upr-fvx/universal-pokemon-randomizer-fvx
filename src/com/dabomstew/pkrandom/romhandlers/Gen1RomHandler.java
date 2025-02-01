@@ -221,13 +221,19 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
      * instead of alongside the other base stats (and images). This is due to it being added
      * last-minute, filling in the empty space that had been left by removing the games' debug tools.
      * <br><br>
-     * Having it there is annoying, and leads to bugs if we're not careful
-     * (e.g. it seems like Pokémon can't evolve into/from Mew), so here we move it to be with the rest.
+     * Having it there is annoying, and leads to at least one bug (Pokémon can't evolve from/to Mew)
+     * so here we move it to be with the rest.
      */
     private void moveMewBaseStats() {
         if (romEntry.isYellow()) {
             return;
         }
+
+        // The terror! All this finessing to not depend on free space somewhere else,
+        // and then it turns out the Japanese games don't even have the sequence of
+        // BaseStats -> CryData -> Unused Stats Functions
+        // required for it to work.
+        // There might still be a solution for letting mons evolve into Mew, but it is not this one.
 
         // Finding these offsets, using pret/pokered as reference
         // -- Pointer to BaseStats # 0, in pokemon.asm
@@ -253,20 +259,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         //    3E 0E		    ld a, BANK(CryData)
         //    CD XX XX	    call BankswitchHome
         //
-        // -- Mew Special Code (first part), in pokemon.asm
+        // -- Mew Special Code (the jump), in pokemon.asm
         // 	  06 77         ld b, $77 ; size of Aerodactyl fossil sprite
         //	  FE B7         cp FOSSIL_AERODACTYL ; Aerodactyl fossil
         //	  28 XX         jr z, .specialID
         //	  FE 15         cp MEW
         //	  23 XX         jr z, .mew
-        //
-        // -- Mew Special Code (second part), in pokemon.asm
-        // 	  70            ld [hl], b ; write sprite dimensions
-        //	  23            inc hl
-        //	  73            ld [hl], e ; write front sprite pointer
-        //	  23            inc hl
-        //	  72            ld [hl], d
-        //	  18 XX         jr .done
 
         // PokemonStatsPointerOffsets
         List<Integer> pos;
@@ -293,17 +291,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // Mew Special Code
         pointerOffsets.clear();
         pos = RomFunctions.search(rom, RomFunctions.hexToBytes("06 77 FE B7 28"));
-        for (int offset : pos) {
-            pointerOffsets.add(offset + 6);
-        }
-        pos = RomFunctions.search(rom, RomFunctions.hexToBytes("70 23 73 23 72 18"));
-        for (int offset : pos) {
-            pointerOffsets.add(offset + 5);
-        }
-        System.out.print("MewSpecialCodeOffsets=[");
-        System.out.print(pointerOffsets.stream().map(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(",")));
-        System.out.println("]");
-
+        if (pos.size() > 1) System.out.println("Too many!! " + pos.size());
+        System.out.println("MewSpecialCodeOffset=0x" + Integer.toHexString(pos.get(0) + 6));
 
         // First we locate mewBaseStats so it may be moved.
         // The images don't need to be moved, though. They do require special handling for being in this bank,
@@ -354,16 +343,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         writeBytes(newCDOffset, cryData);
         writePointer(cdPointerOffset, newCDOffset);
 
-        // And now that mewBaseStats is with the rest, we don't need the special code snippets for handling it.
-        // NOP them out.
+        // And now that mewBaseStats is with the rest, we don't need the special code for handling it.
+        // We could NOP out all the extra code, but it's easier to just NOP the jump there.
 
-        int[] mscOffsets = romEntry.getArrayValue("MewSpecialCodeOffsets");
-        int[] mscLengths = romEntry.getArrayValue("MewSpecialCodeLengths");
-        for (int i = 0; i < mscOffsets.length; i++) {
-            for (int j = 0; j < mscLengths[i]; j++) {
-                rom[mscOffsets[i] + j] = GBConstants.gbZ80Nop;
-            }
-        }
+        int mscOffset = romEntry.getIntValue("MewSpecialCodeOffset");
+        writeBytes(mscOffset, new byte[]{GBConstants.gbZ80Nop, GBConstants.gbZ80Nop});
     }
 
     private String[] readMoveNames() {

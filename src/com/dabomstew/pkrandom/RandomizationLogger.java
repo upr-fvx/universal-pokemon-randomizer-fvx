@@ -378,8 +378,17 @@ public class RandomizationLogger {
 
     private void logTypeEffectiveness() {
         printSectionTitle("te");
-        log.printf(getBS("Log.sectionTitle"), "Type Effectiveness", "TPEF");
-        log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
+
+        String[] effSymbols = getBS("Log.te.effectivenessSymbols").split(",");
+        String[] effNames = getBS("Log.te.effectivenessNames").split(",");
+
+        log.print(romHandler.getTypeTable().toBigString(effSymbols));
+        log.printf(getBS("Log.te.orientation"));
+        log.printf(getBS("Log.te.legend"), effSymbols[2], effNames[2]);
+        log.printf(getBS("Log.te.legend"), effSymbols[3], effNames[3]);
+        log.printf(getBS("Log.te.legend"), effSymbols[1], effNames[1]);
+        log.printf(getBS("Log.te.legend"), effSymbols[0], effNames[0]);
+
         printSectionSeparator();
     }
 

@@ -264,9 +264,19 @@ public class TypeTable {
                 + types + ")";
     }
 
-    private static final String[] effectivenessSymbols = new String[] {"Imm", "nve", "---", "SE!"};
+    private static final String[] DEFAULT_EFFECTIVENESS_SYMBOLS = new String[] {"Imm", "nve", "---", "SE!"};
 
+    /**
+     * Returns the TypeTable as a String formatted as... a table.
+     * The attacking Types on the left, the defending Types on top.
+     */
     public String toBigString() {
+        // this method is practical for testing and logging both,
+        // but in the latter case we want to be able to customize the "symbols"
+        return toBigString(DEFAULT_EFFECTIVENESS_SYMBOLS);
+    }
+
+    public String toBigString(String[] effectivenessSymbols) {
         StringBuilder sb = new StringBuilder();
         int maxNameLength = 0;
         for (Type t : getTypes()) {
@@ -296,15 +306,6 @@ public class TypeTable {
             sb.append("\n");
         }
 
-        sb.append("Attacker (left), Defender (top)\n");
-        sb.append(effectivenessSymbols[NEUTRAL.ordinal()]);
-        sb.append(" = Neutral\n");
-        sb.append(effectivenessSymbols[DOUBLE.ordinal()]);
-        sb.append(" = Super Effective\n");
-        sb.append(effectivenessSymbols[HALF.ordinal()]);
-        sb.append(" = Not Very Effective\n");
-        sb.append(effectivenessSymbols[ZERO.ordinal()]);
-        sb.append(" = Immune\n");
         return sb.toString();
     }
 

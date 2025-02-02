@@ -179,13 +179,16 @@ public class RandomizationLogger {
     private void printOptionalContentsRows() {
         // TODO: where to put updates + evolution improvements?
         log.println();
+        if (shouldLogBaseStatUpdates())
+            printContentsRow("bsu");
         if (shouldLogSpeciesTraits())
             printContentsRow("psta");
         if (shouldLogEvolutions())
             printContentsRow("pe");
         if (shouldLogEvolutionImprovements())
             printContentsRow("pei");
-        if (shouldLogSpeciesTraits() || shouldLogEvolutions() || shouldLogEvolutionImprovements())
+        if (shouldLogBaseStatUpdates() || shouldLogSpeciesTraits() || shouldLogEvolutions()
+                || shouldLogEvolutionImprovements())
             log.println();
         if (shouldLogStarters())
             printContentsRow("sp");
@@ -195,11 +198,13 @@ public class RandomizationLogger {
             printContentsRow("igt");
         if (shouldLogStarters() || shouldLogStaticPokemon() || shouldLogInGameTrades())
             log.println();
+        if (shouldLogMoveUpdates())
+            printContentsRow("mu");
         if (shouldLogMoveData())
             printContentsRow("md");
         if (shouldLogMovesets())
             printContentsRow("pms");
-        if (shouldLogMoveData() || shouldLogMovesets())
+        if (shouldLogMoveUpdates() || shouldLogMoveData() || shouldLogMovesets())
             log.println();
         if (shouldLogTrainers())
             printContentsRow("tp");
@@ -228,16 +233,19 @@ public class RandomizationLogger {
             printContentsRow("pu");
         if (shouldLogShopItems() || shouldLogPickupItems())
             log.println();
-        if (shouldLogTypeEffectiveness()) {
+        if (shouldLogTypeEffectivenessUpdates())
+            printContentsRow("teu");
+        if (shouldLogTypeEffectiveness())
             printContentsRow("te");
+        if (shouldLogTypeEffectivenessUpdates() || shouldLogTypeEffectiveness())
             log.println();
-        }
     }
 
     private void logOverview() {
         printSectionTitle("overview");
         // The overview lines intentionally (mostly) map to panels in the UI, thus they share their bundle strings.
-        logOverviewLine(getBS("GUI.pbsPanel.title"), speciesBSRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.pbsPanel.title"),
+                speciesBSRandomizer.isChangesMade() || speciesBSUpdater.isUpdated(), true);
         logOverviewLine(getBS("GUI.ptPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.paPanel.title"), speciesAbilityRandomizer.isChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
@@ -247,7 +255,8 @@ public class RandomizationLogger {
         logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
                 romHandler.canChangeStaticPokemon());
         logOverviewLine(getBS("GUI.igtPanel.title"), tradeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.mdPanel.title"), moveDataRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.mdPanel.title"),
+                moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated(), true);
         logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(),
@@ -270,7 +279,8 @@ public class RandomizationLogger {
                 romHandler.hasShopSupport());
         logOverviewLine(getBS("GUI.puPanel.title"), itemRandomizer.isPickupChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        logOverviewLine(getBS("GUI.tePanel.title"), typeEffRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.tePanel.title"),
+                typeEffRandomizer.isChangesMade() || typeEffUpdater.isUpdated(),
                 romHandler.hasTypeEffectivenessSupport());
         logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
@@ -321,6 +331,8 @@ public class RandomizationLogger {
      * won't show up if they weren't randomized.
      */
     private void logOptionalSections() {
+        if (shouldLogBaseStatUpdates())
+            logBaseStatsUpdates();
         if (shouldLogSpeciesTraits())
             logSpeciesTraits();
         if (shouldLogEvolutions())
@@ -335,6 +347,8 @@ public class RandomizationLogger {
         if (shouldLogInGameTrades())
             logInGameTrades(originalTrades);
 
+        if (shouldLogMoveUpdates())
+            logMoveUpdates();
         if (shouldLogMoveData())
             logMoveData();
         if (shouldLogMovesets())
@@ -363,13 +377,10 @@ public class RandomizationLogger {
         if (shouldLogPickupItems())
             logPickupItems();
 
+        if (shouldLogTypeEffectivenessUpdates())
+            logTypeEffectivenessUpdates();
         if (shouldLogTypeEffectiveness())
             logTypeEffectiveness();
-
-        // TODO: where to fit these
-        logBaseStatsUpdates();
-        logMoveUpdates();
-        logTypeEffectivenessUpdates();
     }
 
     private boolean shouldLogTypeEffectiveness() {
@@ -1154,12 +1165,8 @@ public class RandomizationLogger {
     }
 
     private void logMoveUpdates() {
-        // TODO
-        log.println("--Move Updates--");
-        log.print("The following moves have been updated, to be in line with Generation ");
-        log.println(settings.getUpdateMovesToGeneration() + ".");
-        log.println("Note that if you also randomized move data, these changes may be overwritten.");
-        log.println();
+        printSectionTitle("mu");
+        log.printf(getBS("Log.mu.description"), settings.getUpdateMovesToGeneration());
 
         Map<Move, Map<MoveUpdateType, Update<Object>>> updates = moveUpdater.getUpdates();
         for (Map.Entry<Move, Map<MoveUpdateType, Update<Object>>> outer : updates.entrySet()) {
@@ -1187,7 +1194,7 @@ public class RandomizationLogger {
                 }
             }
         }
-        log.println();
+        printSectionSeparator();
     }
 
     private boolean shouldLogBaseStatUpdates() {
@@ -1195,12 +1202,8 @@ public class RandomizationLogger {
     }
 
     private void logBaseStatsUpdates() {
-        // TODO
-        log.println("--Pokémon Base Stat Updates--");
-        log.print("The following base stats have been updated, to be in line with Generation ");
-        log.println(settings.getUpdateBaseStatsToGeneration() + ".");
-        log.println("Note that if you also randomized Pokémon base stats, these changes may be overwritten.");
-        log.println();
+        printSectionTitle("bsu");
+        log.printf(getBS("Log.bsu.description"), settings.getUpdateBaseStatsToGeneration());
 
         Map<Species, Map<BSUpdateType, Update<Integer>>> updates = speciesBSUpdater.getUpdates();
         for (Map.Entry<Species, Map<BSUpdateType, Update<Integer>>> outer : updates.entrySet()) {
@@ -1211,7 +1214,7 @@ public class RandomizationLogger {
                         inner.getValue().getBefore(), inner.getValue().getAfter());
             }
         }
-        log.println();
+        printSectionSeparator();
     }
 
     private boolean shouldLogTypeEffectivenessUpdates() {
@@ -1219,17 +1222,14 @@ public class RandomizationLogger {
     }
 
     private void logTypeEffectivenessUpdates() {
-        log.println("--Type Effectiveness Updates--");
-        log.print("The following parts of the Type effectiveness chart have been updated, to be in line with Generation ");
-        log.println(romHandler.generationOfPokemon() == 1 ? 2 : 6 + ".");
-        log.println("Note that if you also randomized Type effectiveness, these changes may be overwritten.");
-        log.println();
+        printSectionTitle("teu");
+        log.printf(getBS("Log.teu.description"), romHandler.generationOfPokemon() == 1 ? 2 : 6);
 
         String[] effNames = getBS("Log.te.effectivenessNames").split(",");
 
         Map<Type, Map<Type, Update<Effectiveness>>> updates = typeEffUpdater.getUpdates();
         for (Map.Entry<Type, Map<Type, Update<Effectiveness>>> outer : updates.entrySet()) {
-            log.println(outer.getKey() + " when used against...");
+            log.printf(getBS("Log.teu.against"), outer.getKey());
             for (Map.Entry<Type, Update<Effectiveness>> inner : outer.getValue().entrySet()) {
                 log.printf("\t%-8s:   %-18s -> %-18s%n",
                         inner.getKey(),
@@ -1237,7 +1237,7 @@ public class RandomizationLogger {
                         effNames[inner.getValue().getAfter().ordinal()]);
             }
         }
-        log.println();
+        printSectionSeparator();
     }
 
     private List<String> getTrainerNames(List<Trainer> trainers) {

@@ -177,7 +177,6 @@ public class RandomizationLogger {
     }
 
     private void printOptionalContentsRows() {
-        // TODO: where to put updates + evolution improvements?
         log.println();
         if (shouldLogBaseStatUpdates())
             printContentsRow("bsu");
@@ -295,6 +294,10 @@ public class RandomizationLogger {
             }
         } else {
             log.printf(getBS("Log.overview.noMiscTweaks"));
+        }
+
+        if (introPokeRandomizer.isChangesMade()) {
+            log.printf(getBS("Log.overview.introPokemon"), introPokeRandomizer.getIntroSpecies());
         }
         printSectionSeparator();
     }

@@ -3282,80 +3282,84 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean canSetIntroPokemon() {
+        return romEntry.getRomType() == Gen6Constants.Type_XY;
+    }
+
+    @Override
     public boolean setIntroPokemon(Species pk) {
-        // Doesn't do anything for ORAS
-        if (romEntry.getRomType() == Gen6Constants.Type_XY) {
+        if (!canSetIntroPokemon()) {
+            throw new IllegalStateException("Can't set intro pokemon in ORAS");
+        }
+        int introPokemonNum = pk.getNumber();
+        int introPokemonForme = 0;
+        if (pk.getFormeNumber() > 0) {
+            introPokemonForme = pk.getFormeNumber();
+            introPokemonNum = pk.getBaseForme().getNumber();
+        }
 
-            int introPokemonNum = pk.getNumber();
-            int introPokemonForme = 0;
-            if (pk.getFormeNumber() > 0) {
-                introPokemonForme = pk.getFormeNumber();
-                introPokemonNum = pk.getBaseForme().getNumber();
-            }
+        // Find the value for the Pokemon's cry
 
-            // Find the value for the Pokemon's cry
+        int baseAddr = find(code, Gen6Constants.criesTablePrefixXY);
+        baseAddr += Gen6Constants.criesTablePrefixXY.length() / 2;
 
-            int baseAddr = find(code, Gen6Constants.criesTablePrefixXY);
-            baseAddr += Gen6Constants.criesTablePrefixXY.length() / 2;
+        if (introPokemonForme != 0) {
+            int extraOffset = readLong(code, baseAddr + (introPokemonNum * 0x14));
+            introPokemonNum = extraOffset + (introPokemonForme - 1);
+        }
 
-            if (introPokemonForme != 0) {
-                int extraOffset = readLong(code, baseAddr + (introPokemonNum * 0x14));
-                introPokemonNum = extraOffset + (introPokemonForme - 1);
-            }
+        int initialCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x4);
+        int repeatedCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x10);
 
-            int initialCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x4);
-            int repeatedCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x10);
+        // Write to DLLIntro.cro
+        try {
+            byte[] introCRO = readFile(romEntry.getFile("Intro"));
 
-            // Write to DLLIntro.cro
-            try {
-                byte[] introCRO = readFile(romEntry.getFile("Intro"));
+            // Replace the Pokemon model that's loaded, and set its forme
 
-                // Replace the Pokemon model that's loaded, and set its forme
+            int croModelOffset = find(introCRO, Gen6Constants.introPokemonModelOffsetXY);
+            croModelOffset += Gen6Constants.introPokemonModelOffsetXY.length() / 2;
 
-                int croModelOffset = find(introCRO, Gen6Constants.introPokemonModelOffsetXY);
-                croModelOffset += Gen6Constants.introPokemonModelOffsetXY.length() / 2;
+            writeWord(introCRO, croModelOffset, introPokemonNum);
+            introCRO[croModelOffset + 2] = (byte) introPokemonForme;
 
-                writeWord(introCRO, croModelOffset, introPokemonNum);
-                introCRO[croModelOffset + 2] = (byte) introPokemonForme;
+            // Replace the initial cry when the Pokemon exits the ball
+            // First, re-point two branches
 
-                // Replace the initial cry when the Pokemon exits the ball
-                // First, re-point two branches
+            int croInitialCryOffset1 = find(introCRO, Gen6Constants.introInitialCryOffset1XY);
+            croInitialCryOffset1 += Gen6Constants.introInitialCryOffset1XY.length() / 2;
 
-                int croInitialCryOffset1 = find(introCRO, Gen6Constants.introInitialCryOffset1XY);
-                croInitialCryOffset1 += Gen6Constants.introInitialCryOffset1XY.length() / 2;
+            introCRO[croInitialCryOffset1] = 0x5E;
 
-                introCRO[croInitialCryOffset1] = 0x5E;
+            int croInitialCryOffset2 = find(introCRO, Gen6Constants.introInitialCryOffset2XY);
+            croInitialCryOffset2 += Gen6Constants.introInitialCryOffset2XY.length() / 2;
 
-                int croInitialCryOffset2 = find(introCRO, Gen6Constants.introInitialCryOffset2XY);
-                croInitialCryOffset2 += Gen6Constants.introInitialCryOffset2XY.length() / 2;
+            introCRO[croInitialCryOffset2] = 0x2F;
 
-                introCRO[croInitialCryOffset2] = 0x2F;
+            // Then change the parameters that are loaded for a function call, and also change the function call
+            // itself to a function that uses the "cry value" instead of Pokemon ID + forme + emotion (same function
+            // that is used for the repeated cries)
 
-                // Then change the parameters that are loaded for a function call, and also change the function call
-                // itself to a function that uses the "cry value" instead of Pokemon ID + forme + emotion (same function
-                // that is used for the repeated cries)
+            int croInitialCryOffset3 = find(introCRO, Gen6Constants.introInitialCryOffset3XY);
+            croInitialCryOffset3 += Gen6Constants.introInitialCryOffset3XY.length() / 2;
 
-                int croInitialCryOffset3 = find(introCRO, Gen6Constants.introInitialCryOffset3XY);
-                croInitialCryOffset3 += Gen6Constants.introInitialCryOffset3XY.length() / 2;
+            writeLong(introCRO, croInitialCryOffset3, 0xE1A02000);  // cpy r2,r0
+            writeLong(introCRO, croInitialCryOffset3 + 0x4, 0xE59F100C);    // ldr r1,=#CRY_VALUE
+            writeLong(introCRO, croInitialCryOffset3 + 0x8, 0xE58D0000);    // str r0,[sp]
+            writeLong(introCRO, croInitialCryOffset3 + 0xC, 0xEBFFFDE9);    // bl FUN_006a51d4
+            writeLong(introCRO, croInitialCryOffset3 + 0x10, readLong(introCRO, croInitialCryOffset3 + 0x14)); // Move these two instructions up four bytes
+            writeLong(introCRO, croInitialCryOffset3 + 0x14, readLong(introCRO, croInitialCryOffset3 + 0x18));
+            writeLong(introCRO, croInitialCryOffset3 + 0x18, initialCry);   // CRY_VALUE pool
 
-                writeLong(introCRO, croInitialCryOffset3, 0xE1A02000);  // cpy r2,r0
-                writeLong(introCRO, croInitialCryOffset3 + 0x4, 0xE59F100C);    // ldr r1,=#CRY_VALUE
-                writeLong(introCRO, croInitialCryOffset3 + 0x8, 0xE58D0000);    // str r0,[sp]
-                writeLong(introCRO, croInitialCryOffset3 + 0xC, 0xEBFFFDE9);    // bl FUN_006a51d4
-                writeLong(introCRO, croInitialCryOffset3 + 0x10, readLong(introCRO, croInitialCryOffset3 + 0x14)); // Move these two instructions up four bytes
-                writeLong(introCRO, croInitialCryOffset3 + 0x14, readLong(introCRO, croInitialCryOffset3 + 0x18));
-                writeLong(introCRO, croInitialCryOffset3 + 0x18, initialCry);   // CRY_VALUE pool
+            // Replace the repeated cry that the Pokemon does while standing around
+            // Just replace a pool value
+            int croRepeatedCryOffset = find(introCRO, Gen6Constants.introRepeatedCryOffsetXY);
+            croRepeatedCryOffset += Gen6Constants.introRepeatedCryOffsetXY.length() / 2;
+            writeLong(introCRO, croRepeatedCryOffset, repeatedCry);
 
-                // Replace the repeated cry that the Pokemon does while standing around
-                // Just replace a pool value
-                int croRepeatedCryOffset = find(introCRO, Gen6Constants.introRepeatedCryOffsetXY);
-                croRepeatedCryOffset += Gen6Constants.introRepeatedCryOffsetXY.length() / 2;
-                writeLong(introCRO, croRepeatedCryOffset, repeatedCry);
-
-                writeFile(romEntry.getFile("Intro"), introCRO);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            writeFile(romEntry.getFile("Intro"), introCRO);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return true;
     }

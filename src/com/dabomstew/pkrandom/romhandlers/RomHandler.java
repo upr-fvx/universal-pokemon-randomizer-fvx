@@ -538,8 +538,11 @@ public interface RomHandler {
 
     int internalStringLength(String string);
 
+    boolean canSetIntroPokemon();
+
     /**
-     * Sets the Species shown in the intro. Returns false if pk is not a valid intro Species.
+     * Sets the {@link Species} shown in the intro. Returns false if pk is not a valid intro Species.
+     * Throws {@link UnsupportedOperationException} if {@link #canSetIntroPokemon()} is not true.
      */
     boolean setIntroPokemon(Species pk);
 

@@ -249,7 +249,7 @@ public class GameRandomizer {
 
         maybeRandomizePokemonPalettes();
 
-        introPokeRandomizer.randomizeIntroPokemon();
+        maybeRandomizeIntroPokemon();
     }
 
     private void maybeRandomizeTypeEffectiveness() {
@@ -603,6 +603,14 @@ public class GameRandomizer {
     private void maybeRandomizePokemonPalettes() {
         if (settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.RANDOM) {
             paletteRandomizer.randomizePokemonPalettes();
+        }
+    }
+
+    private void maybeRandomizeIntroPokemon() {
+        // Note: this is the only randomization that applies even if no setting is checked.
+        // Essentially, it works as confirmation that the Randomizer was applied at all.
+        if (romHandler.canSetIntroPokemon()) {
+            introPokeRandomizer.randomizeIntroPokemon();
         }
     }
 }

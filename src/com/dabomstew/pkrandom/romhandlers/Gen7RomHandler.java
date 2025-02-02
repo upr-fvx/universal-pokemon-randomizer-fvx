@@ -2911,9 +2911,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean canSetIntroPokemon() {
+        return false;
+    }
+
+    @Override
     public boolean setIntroPokemon(Species pk) {
-        // For now, do nothing.
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     @Override

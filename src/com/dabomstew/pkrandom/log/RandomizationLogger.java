@@ -697,23 +697,36 @@ public class RandomizationLogger {
     private void logMoveData() {
         printSectionTitle("md");
 
-        log.print("NUM|NAME           |TYPE    |POWER|ACC.|PP");
+        int columns = 6;
+        List<String> head = new ArrayList<>(Arrays.asList(
+                getBS("Log.md.num"), getBS("Log.md.name"), getBS("Log.md.type"),
+                getBS("Log.md.power"), getBS("Log.md.accuracy"), getBS("Log.md.pp")
+        ));
         if (romHandler.hasPhysicalSpecialSplit()) {
-            log.print(" |CATEGORY");
+            columns++;
+            head.add(getBS("Log.md.category"));
         }
-        log.println();
-        List<Move> allMoves = romHandler.getMoves();
-        for (Move mv : allMoves) {
-            if (mv != null) {
-                String mvType = (mv.type == null) ? "???" : mv.type.toString();
-                log.printf("%3d|%-15s|%-8s|%5d|%4d|%3d", mv.internalId, mv.name, mvType, mv.power,
-                        (int) mv.hitratio, mv.pp);
-                if (romHandler.hasPhysicalSpecialSplit()) {
-                    log.printf("| %s", mv.category.toString());
-                }
-                log.println();
+        TextTable table = new TextTable(columns);
+        table.addRow(head);
+
+        table.setColumnAlignments(TextTable.Alignment.RIGHT, 3, 4, 5); // power, acc., pp
+
+        for (Move mv : romHandler.getMoves()) {
+            if (mv == null) {
+                continue;
             }
+            List<String> row = new ArrayList<>(Arrays.asList(
+                    mv.internalId + "", mv.name, (mv.type == null) ? "???" : mv.type.toString(),
+                    mv.power + "", (int) mv.hitratio + "%", mv.pp + ""
+            ));
+            if (romHandler.hasPhysicalSpecialSplit()) {
+                row.add(mv.category.toString());
+            }
+            table.addRow(row);
         }
+
+        log.print(table);
+
         printSectionSeparator();
     }
 
@@ -1081,17 +1094,17 @@ public class RandomizationLogger {
         List<IngameTrade> newTrades = romHandler.getIngameTrades();
 
         TextTable table = new TextTable(6);
-        table.addRow(Arrays.asList(
+        table.addRow(
                 getBS("Log.igt.oldRequested"), getBS("Log.igt.oldGiven"), getBS("Log.igt.oldNickname"),
                 getBS("Log.igt.newRequested"), getBS("Log.igt.newGiven"), getBS("Log.igt.newNickname")
-        ));
+        );
         for (int i = 0; i < oldTrades.size(); i++) {
             IngameTrade oldT = oldTrades.get(i);
             IngameTrade newT = newTrades.get(i);
-            table.addRow(Arrays.asList(
+            table.addRow(
                     oldT.requestedSpecies.getFullName(), oldT.givenSpecies.getFullName(), oldT.nickname,
                     newT.requestedSpecies.getFullName(), newT.givenSpecies.getFullName(), newT.nickname
-            ));
+            );
         }
         log.print(table);
 

@@ -11,22 +11,35 @@ import java.util.stream.Collectors;
  */
 public class TextTable {
 
+    public enum Alignment {
+        LEFT, RIGHT
+    }
+
     private static class Cell {
         final String s;
-        Cell(String s) {
+        Alignment a;
+
+        Cell(String s, Alignment a) {
             this.s = s;
+            this.a = a;
         }
     }
-    private static final Cell EMPTY_CELL = new Cell("");
-    private static final Cell NULL_CELL = new Cell("");
+
+    private static final Cell EMPTY_CELL = new Cell("", Alignment.LEFT);
+    private static final Cell NULL_CELL = new Cell("", Alignment.LEFT);
 
     private static final String COLUMN_SEPARATOR = "|";
 
     private final int columns;
     private final List<List<Cell>> data = new ArrayList<>();
+    private final List<Alignment> colAlignments;
 
     public TextTable(int columns) {
         this.columns = columns;
+        colAlignments = new ArrayList<>(columns);
+        for (int col = 0; col < columns; col++) {
+            colAlignments.add(Alignment.LEFT);
+        }
     }
 
     public void addRow(List<String> row) {
@@ -34,7 +47,15 @@ public class TextTable {
             throw new IllegalArgumentException("invalid row.size(); must be " + columns + ", was " + row.size());
         }
         evenOut();
-        data.add(row.stream().map(Cell::new).collect(Collectors.toList()));
+        List<Cell> cellRow = new ArrayList<>(columns);
+        for (int col = 0; col < columns; col++) {
+            cellRow.add(new Cell(row.get(col), colAlignments.get(col)));
+        }
+        data.add(cellRow);
+    }
+
+    public void addRow(String... row) {
+        addRow(Arrays.asList(row));
     }
 
     /**
@@ -50,7 +71,7 @@ public class TextTable {
             Arrays.fill(arr, NULL_CELL);
             data.add(Arrays.stream(arr).collect(Collectors.toList()));
         }
-        data.get(row).set(col, new Cell(cell));
+        data.get(row).set(col, new Cell(cell, colAlignments.get(col)));
     }
 
     /**
@@ -63,6 +84,15 @@ public class TextTable {
                     row.set(col, EMPTY_CELL);
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the alignment of all future cells to be added to columns cols.
+     */
+    public void setColumnAlignments(Alignment a, int... cols) {
+        for (int col : cols) {
+            colAlignments.set(col, a);
         }
     }
 
@@ -81,7 +111,9 @@ public class TextTable {
         for (List<Cell> row : data) {
             System.out.println(row);
             for (int col = 0; col < columns; col++) {
-                sb.append(String.format("%-" + colLengths[col] + "s", row.get(col).s));
+                Cell c = row.get(col);
+                String fString = "%" + (c.a == Alignment.LEFT ? "-" : "") + colLengths[col] + "s";
+                sb.append(String.format(fString, row.get(col).s));
                 if (col != columns - 1) {
                     sb.append(COLUMN_SEPARATOR);
                 }

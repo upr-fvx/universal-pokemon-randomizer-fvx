@@ -467,16 +467,17 @@ public class RandomizationLogger {
         }
         log.println();
 
-        List<String> fromNames = new ArrayList<>();
-        List<String> toNames = new ArrayList<>();
-        List<String> oldMethods = new ArrayList<>();
-        List<String> newMethods = new ArrayList<>();
+        TextTable table = new TextTable(4);
+        table.addRow(Arrays.asList(
+                getBS("Log.pe.from"), getBS("Log.pe.to"),
+                getBS("Log.pei.oldMethod"), getBS("Log.pei.newMethod")
+        ));
 
         // rather hefty code, for filling these table rows
         // Assumes improvements only adds Evolutions and/or Species (forms) to evolve into;
         // i.e. oldFoo.size() < newFoo.size().
         for (Map.Entry<Species, List<Evolution>> entry : romHandler.getPreImprovedEvolutions().entrySet()) {
-            fromNames.add(entry.getKey().getFullName());
+            table.addCell(0, entry.getKey().getFullName());
 
             Map<Species, List<Evolution>> oldByTo = new HashMap<>();
             for (Evolution oldEvo : entry.getValue()) {
@@ -490,48 +491,27 @@ public class RandomizationLogger {
             }
 
             for (Map.Entry<Species, List<Evolution>> toEntry: newByTo.entrySet()) {
-                toNames.add(toEntry.getKey().getFullName());
+                table.addCell(1, toEntry.getKey().getFullName());
 
                 List<Evolution> oldEvos = oldByTo.getOrDefault(toEntry.getKey(), Collections.emptyList());
                 if (oldEvos.isEmpty()) {
-                    oldMethods.add("None");
+                    table.addCell(2, "None");
                 }
                 List<Evolution> newEvos = toEntry.getValue();
                 for (int i = 0; i < newEvos.size(); i++) {
-                    newMethods.add(evolutionMethodToString(newEvos.get(i)));
+                    table.addCell(3, evolutionMethodToString(newEvos.get(i)));
                     if (i < oldEvos.size()) {
-                        oldMethods.add(evolutionMethodToString(oldEvos.get(i)));
+                        table.addCell(2, evolutionMethodToString(oldEvos.get(i)));
                     }
                 }
-                padToEqualSize(oldMethods, newMethods);
-                padToEqualSize(toNames, newMethods);
+                table.evenOut();
             }
-            padToEqualSize(fromNames, newMethods);
+            table.evenOut();
         }
 
-        int fromLength = maxElementLength(fromNames);
-        int toLength = maxElementLength(toNames);
-        int oldMethodsLength = maxElementLength(oldMethods);
-        int newMethodsLength = maxElementLength(newMethods);
+        log.print(table);
 
-        // printing the table like this is swift though
-        log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
-                getBS("Log.pe.from"), getBS("Log.pe.to"), getBS("Log.pei.oldMethod"), getBS("Log.pei.newMethod"));
-        for (int i = 0; i < fromNames.size(); i++) {
-            log.printf("%-" + fromLength + "s|%-" + toLength + "s|%-" + oldMethodsLength + "s|%-" + newMethodsLength + "s%n",
-                    fromNames.get(i), toNames.get(i), oldMethods.get(i), newMethods.get(i));
-        }
         printSectionSeparator();
-    }
-
-    private void padToEqualSize(List<String> shorter, List<String> longer) {
-        while (shorter.size() < longer.size()) {
-            shorter.add("");
-        }
-    }
-
-    private int maxElementLength(List<String> list) {
-        return list.stream().map(String::length).max(Integer::compareTo).orElseThrow(IllegalStateException::new);
     }
 
     private String evolutionMethodToString(Evolution evo) {

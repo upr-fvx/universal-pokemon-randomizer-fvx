@@ -1,5 +1,9 @@
-package com.dabomstew.pkrandom;
+package com.dabomstew.pkrandom.log;
 
+import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.SysConstants;
+import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.randomizers.*;
@@ -1093,18 +1097,24 @@ public class RandomizationLogger {
     }
 
     private void logInGameTrades(List<IngameTrade> oldTrades) {
-        // TODO
         printSectionTitle("igt");
         List<IngameTrade> newTrades = romHandler.getIngameTrades();
+
+        TextTable table = new TextTable(6);
+        table.addRow(Arrays.asList(
+                getBS("Log.igt.oldRequested"), getBS("Log.igt.oldGiven"), getBS("Log.igt.oldNickname"),
+                getBS("Log.igt.newRequested"), getBS("Log.igt.newGiven"), getBS("Log.igt.newNickname")
+        ));
         for (int i = 0; i < oldTrades.size(); i++) {
             IngameTrade oldT = oldTrades.get(i);
             IngameTrade newT = newTrades.get(i);
-            log.printf("Trade %-11s -> %-11s the %-11s        ->      %-11s -> %-15s the %s" + NEWLINE,
-                    oldT.requestedSpecies != null ? oldT.requestedSpecies.getFullName() : "Any",
-                    oldT.nickname, oldT.givenSpecies.getFullName(),
-                    newT.requestedSpecies != null ? newT.requestedSpecies.getFullName() : "Any",
-                    newT.nickname, newT.givenSpecies.getFullName());
+            table.addRow(Arrays.asList(
+                    oldT.requestedSpecies.getFullName(), oldT.givenSpecies.getFullName(), oldT.nickname,
+                    newT.requestedSpecies.getFullName(), newT.givenSpecies.getFullName(), newT.nickname
+            ));
         }
+        log.print(table);
+
         printSectionSeparator();
     }
 

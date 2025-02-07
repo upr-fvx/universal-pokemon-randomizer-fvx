@@ -283,6 +283,7 @@ public class RandomizationLogger {
                 romHandler.hasTypeEffectivenessSupport());
         logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
+        log.println();
 
         if (miscTweakRandomizer.isChangesMade()) {
             log.printf(getBS("Log.overview.miscTweaks"));
@@ -295,9 +296,10 @@ public class RandomizationLogger {
         } else {
             log.printf(getBS("Log.overview.noMiscTweaks"));
         }
+        log.println();
 
         if (introPokeRandomizer.isChangesMade()) {
-            log.printf(getBS("Log.overview.introPokemon"), introPokeRandomizer.getIntroSpecies());
+            log.printf(getBS("Log.overview.introPokemon"), introPokeRandomizer.getIntroSpecies().getFullName());
         }
         printSectionSeparator();
     }
@@ -923,7 +925,7 @@ public class RandomizationLogger {
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
-        printSectionTitle("tr");
+        printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer t : trainers) {
             log.print("#" + t.index + " ");
@@ -987,6 +989,8 @@ public class RandomizationLogger {
 
     private void logStaticPokemon(List<StaticEncounter> oldStatics) {
         printSectionTitle("stp");
+
+        // TODO: log levels
 
         List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
         Map<String, Integer> seenPokemon = new TreeMap<>();

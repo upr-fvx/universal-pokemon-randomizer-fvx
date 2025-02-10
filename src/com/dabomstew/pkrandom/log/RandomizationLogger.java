@@ -950,7 +950,8 @@ public class RandomizationLogger {
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
                     log.printf(tpk.toString(), itemNames[tpk.heldItem]);
-                    log.print(", Ability: " + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    log.print(", "  + getBS("Log.tp.ability") + ": "
+                            + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;
                     for (int move : tpk.moves) {
@@ -1032,57 +1033,47 @@ public class RandomizationLogger {
 
     private void logWildPokemon() {
         printSectionTitle("wp");
+
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
-        int idx = 0;
-        for (EncounterArea area : encounterAreas) {
-            idx++;
-            log.print("Set #" + idx + " ");
-            if (area.getDisplayName() != null) {
-                log.print("- " + area.getDisplayName() + " ");
+
+        for (int i = 0; i < encounterAreas.size(); i++) {
+            EncounterArea area = encounterAreas.get(i);
+            if (area.getDisplayName() == null) {
+                log.printf(getBS("Log.wp.areaNoDisplayName"), i, area.getRate());
+            } else {
+                log.printf(getBS("Log.wp.areaWithDisplayName"), i, area.getDisplayName(), area.getRate());
             }
-            log.print("(rate=" + area.getRate() + ")");
-            log.println();
             for (Encounter e : area) {
-                StringBuilder sb = new StringBuilder();
                 if (e.isSOS()) {
-                    String stringToAppend;
-                    switch (e.getSosType()) {
-                        case RAIN:
-                            stringToAppend = "Rain SOS: ";
-                            break;
-                        case HAIL:
-                            stringToAppend = "Hail SOS: ";
-                            break;
-                        case SAND:
-                            stringToAppend = "Sand SOS: ";
-                            break;
-                        default:
-                            stringToAppend = "  SOS: ";
-                    }
-                    sb.append(stringToAppend);
+                    log.printf(getBS("Log.wp.sos"), getSOSString(e));
                 }
-                sb.append(e.getSpecies().getFullName()).append(" Lv");
                 if (e.getMaxLevel() > 0 && e.getMaxLevel() != e.getLevel()) {
-                    sb.append("s ").append(e.getLevel()).append("-").append(e.getMaxLevel());
+                    log.printf(getBS("Log.wp.encMultiLevel"), e.getSpecies().getFullName(),
+                            e.getLevel(), e.getMaxLevel());
                 } else {
-                    sb.append(e.getLevel());
+                    log.printf(getBS("Log.wp.encSingleLevel"), e.getSpecies().getFullName(), e.getLevel());
                 }
-                String whitespaceFormat = romHandler.generationOfPokemon() == 7 ? "%-31s" : "%-25s";
-                log.printf(whitespaceFormat, sb);
-                StringBuilder sb2 = new StringBuilder();
-                if (romHandler instanceof Gen1RomHandler) {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPECIAL %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpecial(), e.getSpecies().getSpeed()));
-                } else {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPATK %-3d SPDEF %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpatk(), e.getSpecies().getSpdef(), e.getSpecies().getSpeed()));
-                }
-                log.print(sb2);
-                log.println();
             }
             log.println();
         }
         printSectionSeparator();
+    }
+
+    private String getSOSString(Encounter e) {
+        switch (e.getSosType()) {
+            case RAIN:
+                return getBS("Log.wp.rainSOS");
+            case HAIL:
+                return getBS("Log.wp.hailSOS");
+            case SAND:
+                return getBS("Log.wp.sandSOS");
+            case GENERIC:
+                return getBS("Log.wp.genericSOS");
+            default:
+                return "THIS SHOULD NOT BE SEEN, PLEASE REPORT BUG";
+        }
     }
 
     private boolean shouldLogInGameTrades() {

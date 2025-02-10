@@ -109,7 +109,6 @@ public class TextTable {
 
         StringBuilder sb = new StringBuilder();
         for (List<Cell> row : data) {
-            System.out.println(row);
             for (int col = 0; col < columns; col++) {
                 Cell c = row.get(col);
                 String fString = "%" + (c.a == Alignment.LEFT ? "-" : "") + colLengths[col] + "s";

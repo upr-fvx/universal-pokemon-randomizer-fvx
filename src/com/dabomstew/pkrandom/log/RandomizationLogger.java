@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 public class RandomizationLogger {
 
-    private static final String NEWLINE = System.lineSeparator();
-
     private final RandomSource randomSource;
     private final Settings settings;
     private final RomHandler romHandler;
@@ -30,7 +28,7 @@ public class RandomizationLogger {
     private final List<TotemPokemon> originalTotems;
     private final List<IngameTrade> originalTrades;
 
-    // this huge list of shared attributes with GameRandomizer could probably be shared in a better way...
+    // this huge list of shared attributes with GameRandomizer could maybe be shared in a better way?
     private final SpeciesBaseStatUpdater speciesBSUpdater;
     private final MoveUpdater moveUpdater;
     private final TypeEffectivenessUpdater typeEffUpdater;
@@ -812,12 +810,12 @@ public class RandomizationLogger {
         printSectionTitle("tm");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("Metronome only mode - every TM contains Metronome.");
+            log.println(getBS("Log.tm.metronomeMode"));
         } else {
             List<Integer> tmMoves = romHandler.getTMMoves();
             List<Move> moves = romHandler.getMoves();
             for (int i = 0; i < tmMoves.size(); i++) {
-                log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
+                log.printf("TM%02d %s%n", i + 1, moves.get(tmMoves.get(i)).name);
             }
         }
         printSectionSeparator();
@@ -830,12 +828,61 @@ public class RandomizationLogger {
     private void logTMHMCompatibility() {
         printSectionTitle("tmc");
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
-        List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
-        tmHMs.addAll(romHandler.getHMMoves());
-        List<Move> moveData = romHandler.getMoves();
+        List<Move> tmHMs = getTMHMs();
 
-        logCompatibility(compat, tmHMs, moveData, true);
+        log.printf("-By Species:-%n");
+        for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
+
+            logCompSpecies(entry.getKey());
+
+            for (int i = 0; i < tmHMs.size(); i++) {
+                if (entry.getValue()[i + 1]) {
+                    log.print("\t");
+                    logCompTMHM(i, tmHMs);
+                }
+            }
+            log.println();
+        }
+
+        log.printf("-By TM/HM:-%n");
+        for (int i = 0; i < tmHMs.size(); i++) {
+
+            logCompTMHM(i, tmHMs);
+
+            for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
+                if (entry.getValue()[i + 1]) {
+                    log.print("\t");
+                    logCompSpecies(entry.getKey());
+                }
+            }
+            log.println();
+        }
+
         printSectionSeparator();
+    }
+
+    private void logCompSpecies(Species pk) {
+        log.printf("#%03d %s%n", pk.getNumber(), pk.getName());
+    }
+
+    private void logCompTMHM(int i, List<Move> tmHMs) {
+        int tmCount = romHandler.getTMCount();
+        if (i <= tmCount) {
+            log.printf(getBS("Log.tmc.tm"), i + 1, tmHMs.get(i).name);
+        } else {
+            log.printf(getBS("Log.tmc.hm"), i + 1, tmHMs.get(i).name);
+        }
+    }
+
+    private List<Move> getTMHMs() {
+        List<Move> moveData = romHandler.getMoves();
+        List<Move> tmHMs = romHandler.getTMMoves()
+                .stream().map(moveData::get)
+                .collect(Collectors.toList());
+        romHandler.getHMMoves()
+                .stream().map(moveData::get)
+                .forEach(tmHMs::add);
+        return tmHMs;
     }
 
     private boolean shouldLogMoveTutorMoves() {
@@ -847,12 +894,12 @@ public class RandomizationLogger {
         printSectionTitle("mt");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("Metronome only mode - every Move Tutor teaches Metronome.");
+            log.println("Log.mt.metronomeMode");
         } else {
             List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
             List<Move> moves = romHandler.getMoves();
             for (int i = 0; i < newMtMoves.size(); i++) {
-                log.printf("%-10s -> %-10s" + NEWLINE, moves.get(oldMtMoves.get(i)).name,
+                log.printf("%-10s -> %-10s%n", moves.get(oldMtMoves.get(i)).name,
                         moves.get(newMtMoves.get(i)).name);
             }
         }
@@ -869,51 +916,9 @@ public class RandomizationLogger {
         List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
         List<Move> moveData = romHandler.getMoves();
 
-        logCompatibility(compat, tutorMoves, moveData, false);
+        //logCompatibility(compat, tutorMoves, moveData, false);
+        // TODO
         printSectionSeparator();
-    }
-
-    private void logCompatibility(Map<Species, boolean[]> compat, List<Integer> moveList,
-                                  List<Move> moveData, boolean includeTMNumber) {
-        int tmCount = romHandler.getTMCount();
-        for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
-            Species pkmn = entry.getKey();
-            if (pkmn.isActuallyCosmetic()) continue;
-            boolean[] flags = entry.getValue();
-
-            String nameSpFormat = "%-14s";
-            if (romHandler.generationOfPokemon() >= 6) {
-                nameSpFormat = "%-17s";
-            }
-            log.printf("%3d " + nameSpFormat, pkmn.getNumber(), pkmn.getFullName() + " ");
-
-            for (int i = 1; i < flags.length; i++) {
-                String moveName = moveData.get(moveList.get(i - 1)).name;
-                if (moveName.isEmpty()) {
-                    moveName = "(BLANK)";
-                }
-                int moveNameLength = moveName.length();
-                if (flags[i]) {
-                    if (includeTMNumber) {
-                        if (i <= tmCount) {
-                            log.printf("|TM%02d %" + moveNameLength + "s ", i, moveName);
-                        } else {
-                            log.printf("|HM%02d %" + moveNameLength + "s ", i - tmCount, moveName);
-                        }
-                    } else {
-                        log.printf("|%" + moveNameLength + "s ", moveName);
-                    }
-                } else {
-                    if (includeTMNumber) {
-                        log.printf("| %" + (moveNameLength + 4) + "s ", "-");
-                    } else {
-                        log.printf("| %" + (moveNameLength - 1) + "s ", "-");
-                    }
-                }
-            }
-            log.println("|");
-        }
-        log.println();
     }
 
     private boolean shouldLogTrainers() {
@@ -1136,8 +1141,7 @@ public class RandomizationLogger {
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
             int endingLevel = (levelRange + 1) * 10;
-            log.printf("Level %s-%s", startingLevel, endingLevel);
-            log.println();
+            log.printf(getBS("Log.pu.level"), startingLevel, endingLevel);
             TreeMap<Integer, List<String>> itemListPerProbability = new TreeMap<>();
             for (PickupItem pickupItem : pickupItems) {
                 int probability = pickupItem.probabilities[levelRange];

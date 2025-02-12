@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class RandomizationLogger {
 
+    private static final int TM_COMP_ROW_WIDTH = 5;
+
     private final RandomSource randomSource;
     private final Settings settings;
     private final RomHandler romHandler;
@@ -524,7 +526,7 @@ public class RandomizationLogger {
             String moveName = romHandler.getMoves().get(evo.getExtraInfo()).name;
             evoTypeStr = String.format(evoTypeStr, moveName);
         } else if (evo.getType().usesSpecies()) {
-            String speciesName = romHandler.getSpecies().get(evo.getExtraInfo()).getName();
+            String speciesName = romHandler.getSpecies().get(evo.getExtraInfo()).getFullName();
             evoTypeStr = String.format(evoTypeStr, speciesName);
         } else if (evo.getType().usesLocation()) {
             String locationName = "foobar todo";
@@ -835,24 +837,39 @@ public class RandomizationLogger {
 
             logCompSpecies(entry.getKey());
 
+            int j = 0;
             for (int i = 0; i < tmHMs.size(); i++) {
                 if (entry.getValue()[i + 1]) {
-                    log.print("\t");
+                    if (j != 0) {
+                        log.print(", ");
+                    }
+                    if (j % TM_COMP_ROW_WIDTH == 0) {
+                        log.printf("%n\t");
+                    }
                     logCompTMHM(i, tmHMs);
+                    j++;
                 }
             }
             log.println();
         }
 
+        log.println();
         log.printf("-By TM/HM:-%n");
         for (int i = 0; i < tmHMs.size(); i++) {
 
             logCompTMHM(i, tmHMs);
 
+            int j = 0;
             for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
                 if (entry.getValue()[i + 1]) {
-                    log.print("\t");
+                    if (j != 0) {
+                        log.print(", ");
+                    }
+                    if (j % TM_COMP_ROW_WIDTH == 0) {
+                        log.printf("%n\t");
+                    }
                     logCompSpecies(entry.getKey());
+                    j++;
                 }
             }
             log.println();
@@ -862,15 +879,15 @@ public class RandomizationLogger {
     }
 
     private void logCompSpecies(Species pk) {
-        log.printf("#%03d %s%n", pk.getNumber(), pk.getName());
+        log.printf("#%03d %s", pk.getNumber(), pk.getFullName());
     }
 
     private void logCompTMHM(int i, List<Move> tmHMs) {
         int tmCount = romHandler.getTMCount();
-        if (i <= tmCount) {
+        if (i < tmCount) {
             log.printf(getBS("Log.tmc.tm"), i + 1, tmHMs.get(i).name);
         } else {
-            log.printf(getBS("Log.tmc.hm"), i + 1, tmHMs.get(i).name);
+            log.printf(getBS("Log.tmc.hm"), i + 1 - tmCount, tmHMs.get(i).name);
         }
     }
 

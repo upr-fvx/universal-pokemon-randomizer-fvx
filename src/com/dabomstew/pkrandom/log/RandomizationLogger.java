@@ -13,6 +13,7 @@ import com.dabomstew.pkrandom.updaters.*;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class RandomizationLogger {
@@ -490,7 +491,7 @@ public class RandomizationLogger {
                 newByTo.get(newEvo.getTo()).add(newEvo);
             }
 
-            for (Map.Entry<Species, List<Evolution>> toEntry: newByTo.entrySet()) {
+            for (Map.Entry<Species, List<Evolution>> toEntry : newByTo.entrySet()) {
                 table.addCell(1, toEntry.getKey().getFullName());
 
                 List<Evolution> oldEvos = oldByTo.getOrDefault(toEntry.getKey(), Collections.emptyList());
@@ -812,7 +813,7 @@ public class RandomizationLogger {
         printSectionTitle("tm");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println(getBS("Log.tm.metronomeMode"));
+            log.printf(getBS("Log.tm.metronomeMode"));
         } else {
             List<Integer> tmMoves = romHandler.getTMMoves();
             List<Move> moves = romHandler.getMoves();
@@ -829,16 +830,43 @@ public class RandomizationLogger {
 
     private void logTMHMCompatibility() {
         printSectionTitle("tmc");
-        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
-        List<Move> tmHMs = getTMHMs();
+        if (settings.isFullHMCompat()) {
+            log.printf(getBS("Log.tmc.fullHM"));
+        }
+        if (settings.getTmsHmsCompatibilityMod() == Settings.TMsHMsCompatibilityMod.FULL) {
+            log.printf(getBS("Log.tmc.full"));
+        } else if (settings.getTmsHmsCompatibilityMod() != Settings.TMsHMsCompatibilityMod.UNCHANGED) {
+            Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
+            List<Move> tmHMs = getTMHMs();
 
-        log.printf("-By Species:-%n");
+            logCompatibility(compat, tmHMs, getBS("Log.tmc.byTMHM"), this::logCompTMHM);
+        }
+
+        printSectionSeparator();
+    }
+
+    private List<Move> getTMHMs() {
+        List<Move> moveData = romHandler.getMoves();
+        List<Move> tmHMs = romHandler.getTMMoves()
+                .stream().map(moveData::get)
+                .collect(Collectors.toList());
+        if (!settings.isFullHMCompat()) {
+            romHandler.getHMMoves()
+                    .stream().map(moveData::get)
+                    .forEach(tmHMs::add);
+        }
+        return tmHMs;
+    }
+
+    private void logCompatibility(Map<Species, boolean[]> compat, List<Move> moves,
+                                  String byMoveString, BiConsumer<Integer, List<Move>> logCompMoveFun) {
+        log.printf(getBS("Log.tmc.bySpecies"));
         for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
 
             logCompSpecies(entry.getKey());
 
             int j = 0;
-            for (int i = 0; i < tmHMs.size(); i++) {
+            for (int i = 0; i < moves.size(); i++) {
                 if (entry.getValue()[i + 1]) {
                     if (j != 0) {
                         log.print(", ");
@@ -846,7 +874,7 @@ public class RandomizationLogger {
                     if (j % TM_COMP_ROW_WIDTH == 0) {
                         log.printf("%n\t");
                     }
-                    logCompTMHM(i, tmHMs);
+                    logCompMoveFun.accept(i, moves);
                     j++;
                 }
             }
@@ -854,10 +882,10 @@ public class RandomizationLogger {
         }
 
         log.println();
-        log.printf("-By TM/HM:-%n");
-        for (int i = 0; i < tmHMs.size(); i++) {
+        log.printf(byMoveString);
+        for (int i = 0; i < moves.size(); i++) {
 
-            logCompTMHM(i, tmHMs);
+            logCompMoveFun.accept(i, moves);
 
             int j = 0;
             for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
@@ -874,8 +902,6 @@ public class RandomizationLogger {
             }
             log.println();
         }
-
-        printSectionSeparator();
     }
 
     private void logCompSpecies(Species pk) {
@@ -891,15 +917,8 @@ public class RandomizationLogger {
         }
     }
 
-    private List<Move> getTMHMs() {
-        List<Move> moveData = romHandler.getMoves();
-        List<Move> tmHMs = romHandler.getTMMoves()
-                .stream().map(moveData::get)
-                .collect(Collectors.toList());
-        romHandler.getHMMoves()
-                .stream().map(moveData::get)
-                .forEach(tmHMs::add);
-        return tmHMs;
+    private void logCompTutorMove(int i, List<Move> tutorMoves) {
+        log.print(tutorMoves.get(i).name);
     }
 
     private boolean shouldLogMoveTutorMoves() {
@@ -911,7 +930,7 @@ public class RandomizationLogger {
         printSectionTitle("mt");
 
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("Log.mt.metronomeMode");
+            log.printf(getBS("Log.mt.metronomeMode"));
         } else {
             List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
             List<Move> moves = romHandler.getMoves();
@@ -929,12 +948,17 @@ public class RandomizationLogger {
 
     private void logMoveTutorCompatibility() {
         printSectionTitle("mtc");
-        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
-        List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
-        List<Move> moveData = romHandler.getMoves();
+        if (settings.getMoveTutorsCompatibilityMod() == Settings.MoveTutorsCompatibilityMod.FULL) {
+            log.printf(getBS("Log.mtc.full"));
+        } else {
+            Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
+            List<Move> moveData = romHandler.getMoves();
+            List<Move> tutorMoves = romHandler.getMoveTutorMoves()
+                    .stream().map(moveData::get)
+                    .collect(Collectors.toList());
 
-        //logCompatibility(compat, tutorMoves, moveData, false);
-        // TODO
+            logCompatibility(compat, tutorMoves, getBS("Log.mtc.byTutorMove"), this::logCompTutorMove);
+        }
         printSectionSeparator();
     }
 
@@ -972,7 +996,7 @@ public class RandomizationLogger {
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
                     log.printf(tpk.toString(), itemNames[tpk.heldItem]);
-                    log.print(", "  + getBS("Log.tp.ability") + ": "
+                    log.print(", " + getBS("Log.tp.ability") + ": "
                             + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;

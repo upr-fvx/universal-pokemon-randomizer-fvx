@@ -9,9 +9,9 @@ Owing to work done for the Universal Pokemon Randomizer ZX, UPR FVX supports ran
 
 If you have a 3DS running custom firmware (CFW), you can dump your Pokemon games and game updates yourself for use with the randomizer. Depending on whether you own your games physically or digitally, you can follow the following guides from the Citra wiki to dump your games:
 
-* [Dumping Game Cartridges](https://github.com/citra-emu/citra/wiki/Dumping-Game-Cartridges)
-* [Dumping Installed Titles](https://github.com/citra-emu/citra/wiki/Dumping-Installed-Titles)
-* [Dumping Updates and DLC](https://github.com/citra-emu/citra/wiki/Dumping-Updates-and-DLCs)
+* [Dumping Game Cartridges](https://citra-emulator.com/wiki/dumping-game-cartridges/)
+* [Dumping Installed Titles](https://citra-emulator.com/wiki/dumping-installed-titles/)
+* [Dumping Updates and DLC](https://citra-emulator.com/wiki/dumping-updates-and-dlcs/)
 
 ## 3DS game formats
 

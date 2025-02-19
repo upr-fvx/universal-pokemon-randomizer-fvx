@@ -52,7 +52,11 @@ Most screenshots below were borrowed (with permission) from Dabomstew's original
 
 ### Generation 6 (X/Y/OR/AS)
 
-// TODO
+![the starters are Cherrim, Floette-Eternal, and Terrakion]({{ site.baseurl }}/assets/images/screenshots/g6_starter.png "Some starters are small, others are BIG.")
+![a shop with Insect Plate, Big Mushroom, Heart Scale, X Attack, Metal Powder, Gardevoirite, Ampharosite, Qualot Berry]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Finally, a replacement for Luvdisc-fishing!")
+![two level 3 Quilladins battling. one knows crafty shield, hyper fang, and psyshock]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Underleveled mirror-match")
+// TODO: ORAS
+
 
 ### Generation 7 (S/M/US/UM)
 

@@ -237,6 +237,11 @@ public class Species implements Comparable<Species> {
     }
 
     public int getBaseNumber() {
+        // One might think this could just be turned into
+        // return getBaseForme().getNumber()
+        // but note the "while"; this works with formes-of-formes.
+        // Formes-of-formes admittedly only exist in Gen 7,
+        // but until something is done about them, don't touch this code.
         Species base = this;
         while (base.baseForme != null) {
             base = base.baseForme;
@@ -672,7 +677,7 @@ public class Species implements Comparable<Species> {
      * E.g. Deoxys and Deoxys-Attack would both return Deoxys, and Gloom would return Gloom.
      */
     public Species getBaseForme() {
-        return baseForme;
+        return isBaseForme() ? this : baseForme;
     }
 
     public void setBaseForme(Species baseForme) {

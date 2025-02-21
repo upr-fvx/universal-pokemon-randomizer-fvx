@@ -36,6 +36,7 @@ import com.dabomstew.pkrandom.gamedata.ExpCurve;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
 import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.random.SeedPicker;
+import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
 
 import javax.swing.*;
@@ -2728,9 +2729,8 @@ public class RandomizerGUI {
 
             tpNoEarlyWonderGuardCheckBox.setVisible(pokemonGeneration >= 3);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
-            // TODO: move this number to RomHandler or TrainerMovesetRandomizer or *somewhere*
-            tpBetterMovesetsCheckBox.setVisible(pokemonGeneration >= 3);
-            tpBetterMovesetsCheckBox.setEnabled(pokemonGeneration >= 3);
+            tpBetterMovesetsCheckBox.setVisible(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
+            tpBetterMovesetsCheckBox.setEnabled(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
 
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {

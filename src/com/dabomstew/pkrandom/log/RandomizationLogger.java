@@ -663,7 +663,6 @@ public class RandomizationLogger {
     }
 
     private void logStarters() {
-        // TODO: log starter held items
         printSectionTitle("sp");
         String mode = null;
         switch (settings.getStartersMod()) {
@@ -685,8 +684,22 @@ public class RandomizationLogger {
         log.printf(getBS("Log.sp.mode"), mode);
 
         List<Species> starters = romHandler.getStarters();
+        List<Integer> heldItems = romHandler.getStarterHeldItems();
+        String[] itemNames = romHandler.getItemNames();
+
         for (int i = 0; i < starters.size(); i++) {
-            log.printf(getBS("Log.sp.set"), i + 1, starters.get(i).getFullName());
+            if (heldItems.isEmpty()) {
+                log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
+            } else if (heldItems.size() == 1) {
+                log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
+                        itemNames[heldItems.get(0)]);
+            } else if (heldItems.size() == starters.size()) {
+                log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
+                        itemNames[heldItems.get(i)]);
+            } else {
+                log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
+                log.println("Something went weird with the held items. Please report this as a GitHub issue.");
+            }
         }
         printSectionSeparator();
     }

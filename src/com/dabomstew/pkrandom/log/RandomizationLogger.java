@@ -591,7 +591,7 @@ public class RandomizationLogger {
                 continue;
             }
 
-            log.printf("%" + numLen + "d", pk.getNumber());
+            log.printf("%" + numLen + "d", pk.getBaseNumber());
             log.printf("|%-" + nameLen + "s", pk.getFullName());
             log.printf("|%-" + typeLen + "s",
                     pk.getPrimaryType(false)
@@ -751,7 +751,7 @@ public class RandomizationLogger {
                 continue;
             }
 
-            log.printf(String.format("%03d %s -> ", pk.getNumber(), pk.getFullName()));
+            log.printf(String.format("%03d %s -> ", pk.getBaseNumber(), pk.getFullName()));
 
             SpeciesSet evos = pk.getEvolvedSpecies(false);
             if (evos.isEmpty()) {
@@ -905,7 +905,7 @@ public class RandomizationLogger {
     }
 
     private void logCompSpecies(Species pk) {
-        log.printf("#%03d %s", pk.getNumber(), pk.getFullName());
+        log.printf("#%03d %s", pk.getBaseNumber(), pk.getFullName());
     }
 
     private void logCompTMHM(int i, List<Move> tmHMs) {

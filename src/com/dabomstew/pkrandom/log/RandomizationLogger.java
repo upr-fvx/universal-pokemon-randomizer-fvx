@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class RandomizationLogger {
 
     private static final int TM_COMP_ROW_WIDTH = 5;
+    private static final int TYPE_NAME_LEN = 8;
 
     private final RandomSource randomSource;
     private final Settings settings;
@@ -559,7 +560,7 @@ public class RandomizationLogger {
 
         int numLen = Integer.toString(allSpecies.size()).length();
         int nameLen = getMaxSpeciesNameLength(allSpecies);
-        int typeLen = 8 * 2 + 1; // TODO: remove magic number
+        int typeLen = TYPE_NAME_LEN * 2 + 1; // two types and a '/' between
         int abilityLen = getAbilityNameLength();
 
         // Table head
@@ -1046,8 +1047,6 @@ public class RandomizationLogger {
 
     private void logStaticPokemon(List<StaticEncounter> oldStatics) {
         printSectionTitle("stp");
-
-        // TODO: log levels
 
         List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
         Map<String, Integer> seenPokemon = new TreeMap<>();

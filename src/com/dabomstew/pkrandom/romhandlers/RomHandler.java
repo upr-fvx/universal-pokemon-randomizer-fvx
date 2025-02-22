@@ -485,6 +485,12 @@ public interface RomHandler {
     void removeTimeBasedEvolutions();
 
     /**
+     * Some {@link EvolutionType}s only allow evolution in specific locations.
+     * This method gets the name of said location(s), given an EvolutionType.
+     */
+    List<String> getLocationNamesForEvolution(EvolutionType et);
+
+    /**
      * Returns a {@link Map} containing all Species whose
      * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(Settings)},
      * {@link #makeEvolutionsEasier(Settings)}, or {@link #removeTimeBasedEvolutions()},

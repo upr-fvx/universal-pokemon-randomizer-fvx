@@ -39,6 +39,7 @@ import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -321,6 +322,11 @@ public abstract class AbstractRomHandler implements RomHandler {
      * The implication here is that these WILL be overridden by at least one
      * subclass.
      */
+
+    @Override
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        throw new UnsupportedOperationException("This game has no location-based evolutions.");
+    }
 
     @Override
     public boolean canSetIntroPokemon() {

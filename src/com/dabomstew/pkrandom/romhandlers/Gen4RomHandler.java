@@ -4211,7 +4211,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							evo.setExtraInfo(35);
 						}
 						// mt.coronet (magnezone/probopass)
-						if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
+						if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
 							// Replace w/ level 40
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
@@ -4225,7 +4225,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							evo.setExtraInfo(ItemIDs.leafStone);
 						}
 						// icy rock (glaceon)
-						if (evo.getType() == EvolutionType.LEVEL_ICY_ROCK) {
+						if (evo.getType() == EvolutionType.LEVEL_ICE_ROCK) {
 							// Replace w/ dawn stone
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.STONE);
@@ -4312,6 +4312,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 			}
 		}
+	}
+
+	@Override
+	public List<String> getLocationNamesForEvolution(EvolutionType et) {
+		if (!et.usesLocation()) {
+			throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
+		}
+		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+			// none of Magnetic Field/Moss Rock/Ice Rock exist in HGSS
+			return Collections.emptyList();
+		}
+		if (!loadedWildMapNames) {
+			loadWildMapNames();
+		}
+		int mapIndex = Gen4Constants.getMapIndexForLocationEvolution(et);
+		return Collections.singletonList(wildMapNames.get(mapIndex));
 	}
 
 	@Override

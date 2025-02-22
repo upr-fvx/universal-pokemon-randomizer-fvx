@@ -2753,7 +2753,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
-                        } else if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
+                        } else if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);

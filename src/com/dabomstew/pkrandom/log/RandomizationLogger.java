@@ -531,8 +531,11 @@ public class RandomizationLogger {
             String speciesName = romHandler.getSpecies().get(evo.getExtraInfo()).getFullName();
             evoTypeStr = String.format(evoTypeStr, speciesName);
         } else if (evo.getType().usesLocation()) {
-            String locationName = "foobar todo";
-            evoTypeStr = String.format(evoTypeStr, locationName);
+            List<String> locationNames = romHandler.getLocationNamesForEvolution(evo.getType());
+            if (locationNames.isEmpty()) {
+                locationNames = Collections.singletonList(getBS("Log.pe.nowhere"));
+            }
+            evoTypeStr = String.format(evoTypeStr, String.join(getBS("Log.pe.separator"), locationNames));
         }
 
         sb.append(evoTypeStr);

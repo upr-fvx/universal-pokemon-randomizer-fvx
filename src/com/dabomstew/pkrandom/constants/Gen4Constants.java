@@ -1609,7 +1609,7 @@ public class Gen4Constants {
             EvolutionType.LEVEL_HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY, EvolutionType.STONE_FEMALE_ONLY,
             EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT, EvolutionType.LEVEL_WITH_MOVE,
             EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY, EvolutionType.LEVEL_FEMALE_ONLY,
-            EvolutionType.LEVEL_ELECTRIFIED_AREA, EvolutionType.LEVEL_MOSS_ROCK, EvolutionType.LEVEL_ICY_ROCK
+            EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK, EvolutionType.LEVEL_ICE_ROCK
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
@@ -1626,6 +1626,20 @@ public class Gen4Constants {
             return EvolutionType.NONE;
         }
         return evolutionTypeTable[index - 1];
+    }
+
+    public static int getMapIndexForLocationEvolution(EvolutionType et) {
+        // assumes this is for DPPt
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                return 10; // Mt. Coronet
+            case LEVEL_MOSS_ROCK:
+                return 8; // Eterna Forest
+            case LEVEL_ICE_ROCK:
+                return 166; // Route 217
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
     }
 
     public static int getFormeCount(int romType) {

@@ -123,7 +123,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 for (Move mv : softAbilityMoveAntiSynergyList) {
                     withoutSoftAntiSynergy.remove(mv);
                 }
-                if (withoutSoftAntiSynergy.size() > 0) {
+                if (!withoutSoftAntiSynergy.isEmpty()) {
                     movesAtLevel = withoutSoftAntiSynergy;
                 }
 
@@ -158,7 +158,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 for (Move mv : statAntiSynergyList) {
                     withoutStatAntiSynergy.remove(mv);
                 }
-                if (withoutStatAntiSynergy.size() > 0) {
+                if (!withoutStatAntiSynergy.isEmpty()) {
                     movesAtLevel = withoutStatAntiSynergy;
                 }
 
@@ -204,7 +204,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                         .stream()
                         .filter(mv -> mv.category == MoveCategory.SPECIAL).collect(Collectors.toList());
 
-                if (atkSpatkRatio < 1 && specialMoves.size() > 0) {
+                if (atkSpatkRatio < 1 && !specialMoves.isEmpty()) {
                     atkSpatkRatio = 1 / atkSpatkRatio;
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int) (physicalMoves.size() * acceptedRatio) - specialMoves.size();
@@ -212,7 +212,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                         Move mv = specialMoves.get(random.nextInt(specialMoves.size()));
                         movesAtLevel.add(mv);
                     }
-                } else if (physicalMoves.size() > 0) {
+                } else if (!physicalMoves.isEmpty()) {
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int) (specialMoves.size() * acceptedRatio) - physicalMoves.size();
                     for (int i = 0; i < additionalMoves; i++) {
@@ -417,7 +417,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 romHandler.getAbilityForTrainerPokemon(tp),
                 movesAtLevel));
 
-        if (withoutHardAntiSynergy.size() > 0) {
+        if (!withoutHardAntiSynergy.isEmpty()) {
             movesAtLevel = withoutHardAntiSynergy;
         }
 

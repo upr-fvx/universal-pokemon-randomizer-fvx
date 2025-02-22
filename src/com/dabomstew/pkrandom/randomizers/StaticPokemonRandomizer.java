@@ -118,7 +118,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
-                    if (legendariesLeft.size() == 0) {
+                    if (legendariesLeft.isEmpty()) {
                         legendariesLeft.addAll(legendariesPool);
                     }
                 } else if (rSpecService.getUltrabeasts(false).contains(old.spec)) {
@@ -131,7 +131,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
-                    if (ultraBeastsLeft.size() == 0) {
+                    if (ultraBeastsLeft.isEmpty()) {
                         ultraBeastsLeft.addAll(ultraBeastsPool);
                     }
                 } else {
@@ -147,7 +147,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
 
-                    if (nonlegsLeft.size() == 0) {
+                    if (nonlegsLeft.isEmpty()) {
                         nonlegsLeft.addAll(nonlegsPool);
                     }
                 }
@@ -245,7 +245,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 }
 
-                if (pokemonLeft.size() == 0) {
+                if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(pokemonPool);
                 }
                 replacements.add(newStatic);
@@ -277,7 +277,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 }
                 pokemonLeft.remove(newPK);
                 setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
-                if (pokemonLeft.size() == 0) {
+                if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(pokemonPool);
                 }
                 replacements.add(newStatic);
@@ -302,7 +302,7 @@ public class StaticPokemonRandomizer extends Randomizer {
             }
         }
 
-        if (specialMusicStaticChanges.size() > 0) {
+        if (!specialMusicStaticChanges.isEmpty()) {
             romHandler.applyCorrectStaticMusic(specialMusicStaticChanges);
         }
 
@@ -377,7 +377,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 if (levelModifier != 0) {
                     newTotem.level = Math.min(100, (int) Math.round(newTotem.level * (1 + levelModifier / 100.0)));
                 }
-                if (pokemonLeft.size() == 0) {
+                if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                     pokemonLeft.removeAll(banned);
                 }
@@ -420,7 +420,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
 
                     newTotem.allies.put(oldAllyIndex, newAlly);
-                    if (pokemonLeft.size() == 0) {
+                    if (pokemonLeft.isEmpty()) {
                         pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                         pokemonLeft.removeAll(banned);
                     }

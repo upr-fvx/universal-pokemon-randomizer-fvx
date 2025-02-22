@@ -490,7 +490,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         metronomeML.move = MoveIDs.metronome;
 
         for (List<MoveLearnt> ms : movesets.values()) {
-            if (ms != null && ms.size() > 0) {
+            if (ms != null && !ms.isEmpty()) {
                 ms.clear();
                 ms.add(metronomeML);
             }

@@ -798,7 +798,7 @@ public class GameRandomizer {
                 }
             }
             List<Integer> eggMove = eggMoves.get(pkmn.getNumber());
-            if (eggMove != null && eggMove.size() != 0) {
+            if (eggMove != null && !eggMove.isEmpty()) {
                 sb.append("Egg Moves:").append(System.getProperty("line.separator"));
                 for (Integer move : eggMove) {
                     sb.append(" - ").append(moves.get(move).name).append(System.getProperty("line.separator"));
@@ -835,7 +835,7 @@ public class GameRandomizer {
             // type or not?
             if (changes[3]) {
                 logStr += " be " + mv.type + "-type";
-                if (nonTypeChanges.size() > 0) {
+                if (!nonTypeChanges.isEmpty()) {
                     logStr += " and";
                 }
             }
@@ -848,7 +848,7 @@ public class GameRandomizer {
                     logStr += " a Status move";
                 }
             }
-            if (nonTypeChanges.size() > 0) {
+            if (!nonTypeChanges.isEmpty()) {
                 logStr += " have ";
                 if (nonTypeChanges.size() == 3) {
                     logStr += nonTypeChanges.get(0) + ", " + nonTypeChanges.get(1) + " and " + nonTypeChanges.get(2);

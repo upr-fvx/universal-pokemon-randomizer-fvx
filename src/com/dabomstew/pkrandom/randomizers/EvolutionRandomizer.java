@@ -268,7 +268,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private int numPreEvolutions(Species pk, int depth, int maxInterested) {
-            if (pk.getEvolutionsTo().size() == 0) {
+            if (pk.getEvolutionsTo().isEmpty()) {
                 return 0;
             }
             if (depth == maxInterested - 1) {
@@ -286,7 +286,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private int numEvolutions(Species pk, int depth, int maxInterested) {
-            if (pk.getEvolutionsFrom().size() == 0) {
+            if (pk.getEvolutionsFrom().isEmpty()) {
                 // looks ahead to see if an evo MUST be given to this Pokemon in the future
                 return allOriginalEvos.get(pk).isEmpty() ? 0 : 1;
             }

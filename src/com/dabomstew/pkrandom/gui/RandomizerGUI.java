@@ -3827,7 +3827,7 @@ public class RandomizerGUI {
             if (!initialPopup) {
                 ps.println("firststart=" + Version.VERSION_STRING);
             }
-            if (gameUpdates.size() > 0) {
+            if (!gameUpdates.isEmpty()) {
                 ps.println();
                 ps.println("[Game Updates]");
                 for (Map.Entry<String, String> update : gameUpdates.entrySet()) {

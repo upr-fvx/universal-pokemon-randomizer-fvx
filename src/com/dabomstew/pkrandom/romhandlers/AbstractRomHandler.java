@@ -492,6 +492,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public boolean customPlayerGraphicsSupportDependsOnOS() {
+        return false;
+    }
+
+    @Override
     public void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace) {
         throw new UnsupportedOperationException("Custom player graphics not supported for this game.");
     }

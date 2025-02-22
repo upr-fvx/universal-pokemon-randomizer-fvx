@@ -361,6 +361,7 @@ public class RandomizerGUI {
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
+    private JLabel cpgUnsupportedOSLabel;
 
     private static final Random RND = new Random();
 
@@ -2860,7 +2861,9 @@ public class RandomizerGUI {
             ppalShinyFromNormalCheckBox.setEnabled(false);
 
             boolean cpgSupport = romHandler.hasCustomPlayerGraphicsSupport();
-            cpgNotExistLabel.setVisible(!cpgSupport);
+            boolean cpgOSSupport = romHandler.customPlayerGraphicsSupportDependsOnOS();
+            cpgNotExistLabel.setVisible(!cpgSupport && !cpgOSSupport);
+            cpgUnsupportedOSLabel.setVisible(!cpgSupport && cpgOSSupport);
             cpgUnchangedRadioButton.setVisible(cpgSupport);
             cpgUnchangedRadioButton.setEnabled(cpgSupport);
             cpgUnchangedRadioButton.setSelected(true);

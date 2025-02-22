@@ -3078,6 +3078,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasCustomPlayerGraphicsSupport() {
+        // because it depends on a .DLL
+        return System.getProperty("os.name").startsWith("Windows");
+    }
+
+    @Override
+    public boolean customPlayerGraphicsSupportDependsOnOS() {
         return true;
     }
 

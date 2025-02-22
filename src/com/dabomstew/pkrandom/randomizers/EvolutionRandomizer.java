@@ -110,7 +110,12 @@ public class EvolutionRandomizer extends Randomizer {
                 tries++;
             }
             if (tries == MAX_TRIES) {
-                throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
+                if (settings.isStandardizeEXPCurves()) {
+                    throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
+                } else {
+                    throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries." +
+                            " Try using the \"Standardize EXP Curves\" option.");
+                }
             }
         }
 

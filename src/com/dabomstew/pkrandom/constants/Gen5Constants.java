@@ -567,6 +567,19 @@ public class Gen5Constants {
         return evolutionTypeTable[index - 1];
     }
 
+    public static int getMapIndexForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                return romType == Type_BW ? 41 : 20; // Chargestone Cave
+            case LEVEL_MOSS_ROCK:
+                return romType == Type_BW ? 5 : 8; // Pinwheel Forest
+            case LEVEL_ICE_ROCK:
+                return romType == Type_BW ? 44 : 23; // Twist Mountain
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
+    }
+
     public static int getAreaDataEntryLength(int romType) {
         if (romType == Type_BW) {
             return bw1AreaDataEntryLength;

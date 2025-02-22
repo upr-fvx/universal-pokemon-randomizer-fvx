@@ -3171,6 +3171,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        if (!et.usesLocation()) {
+            throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
+        }
+        if (!loadedWildMapNames) {
+            loadWildMapNames();
+        }
+        int mapIndex = Gen5Constants.getMapIndexForLocationEvolution(et, romEntry.getRomType());
+        return Collections.singletonList(wildMapNames.get(mapIndex));
+    }
+
+    @Override
     public boolean hasShopSupport() {
         return true;
     }

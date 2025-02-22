@@ -701,6 +701,19 @@ public class Gen6Constants {
         return evolutionTypeTable[index - 1];
     }
 
+    public static int getMapIndexForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                return romType == Type_XY ? 272 : 139; // Route 13 : New Mauville
+            case LEVEL_MOSS_ROCK:
+                return romType == Type_XY ? 282 : 82; // Route 20 : Petalburg Woods
+            case LEVEL_ICE_ROCK:
+                return romType == Type_XY ? 313 : 128; // Frost Cavern : Shoal Cave
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
+    }
+
     public static String getSaveLoadFormeReversionPrefix(int romType) {
         if (romType == Type_XY) {
             return saveLoadFormeReversionPrefixXY;

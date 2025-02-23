@@ -25,9 +25,9 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.romentries.DSStaticPokemon;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen4RomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.InFileEntry;
@@ -2289,40 +2289,88 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	}
 
+	private static final int POKEDEX_TIME_SLOTS = 3;
+
+	private static class PokedexAreaData {
+		private final List<List<Set<Integer>>> data;
+
+		public PokedexAreaData() {
+			this.data = new ArrayList<>();
+			for (int i = 0; i < Gen4Constants.pokemonCount; i++) {
+				List<Set<Integer>> inner = new ArrayList<>();
+				for (int j = 0; j < POKEDEX_TIME_SLOTS; j++) {
+					inner.add(new TreeSet<>());
+				}
+				data.add(inner);
+			}
+		}
+
+		public Set<Integer> get(int speciesNum, int time) {
+			return Collections.unmodifiableSet(data.get(speciesNum - 1).get(time));
+		}
+
+		public void add(int speciesNum, int time, int map) {
+			data.get(speciesNum - 1).get(time).add(map);
+		}
+
+		public void add(Encounter enc, int time, int map) {
+			add(enc.getSpecies().getNumber(), time, map);
+		}
+
+	}
+
+	private static class PokedexSpecialData {
+		private final List<Set<Integer>> data;
+
+		public PokedexSpecialData() {
+			this.data = new ArrayList<>();
+			for (int i = 0; i < Gen4Constants.pokemonCount; i++) {
+				data.add(new TreeSet<>());
+			}
+		}
+
+		public Set<Integer> get(int speciesNum) {
+			return Collections.unmodifiableSet(data.get(speciesNum - 1));
+		}
+
+		public void add(int speciesNum, int map) {
+			data.get(speciesNum - 1).add(map);
+		}
+
+		public void add(Encounter enc, int map) {
+			add(enc.getSpecies().getNumber(), map);
+		}
+
+		public void addAll(Encounter enc, Collection<Integer> maps) {
+			for (int map : maps) {
+				add(enc, map);
+			}
+		}
+	}
+
 	private void updatePokedexAreaDataDPPt(List<EncounterArea> encounterAreas) throws IOException {
 		String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
 
 		// Initialize empty area data
-		Set[][] dungeonAreaData = new Set[Gen4Constants.pokemonCount + 1][3];
-		Set[] dungeonSpecialPreNationalData = new Set[Gen4Constants.pokemonCount + 1];
-		Set[] dungeonSpecialPostNationalData = new Set[Gen4Constants.pokemonCount + 1];
-		Set[][] overworldAreaData = new Set[Gen4Constants.pokemonCount + 1][3];
-		Set[] overworldSpecialPreNationalData = new Set[Gen4Constants.pokemonCount + 1];
-		Set[] overworldSpecialPostNationalData = new Set[Gen4Constants.pokemonCount + 1];
-
-		for (int pk = 1; pk <= Gen4Constants.pokemonCount; pk++) {
-			for (int time = 0; time < 3; time++) {
-				dungeonAreaData[pk][time] = new TreeSet<>();
-				overworldAreaData[pk][time] = new TreeSet<>();
-			}
-			dungeonSpecialPreNationalData[pk] = new TreeSet<>();
-			dungeonSpecialPostNationalData[pk] = new TreeSet<>();
-			overworldSpecialPreNationalData[pk] = new TreeSet<>();
-			overworldSpecialPostNationalData[pk] = new TreeSet<>();
-		}
+		PokedexAreaData dunAreaData = new PokedexAreaData();
+		PokedexSpecialData dunSpecialPreNatDexData = new PokedexSpecialData();
+		PokedexSpecialData dunSpecialPostNatDexData = new PokedexSpecialData();
+		PokedexAreaData owAreaData = new PokedexAreaData();
+		PokedexSpecialData owSpecialPreNatDexData = new PokedexSpecialData();
+		PokedexSpecialData owSpecialPostNatDexData = new PokedexSpecialData();
 
 		for (int c = 0; c < encounterData.files.size(); c++) {
-			Set<Integer>[][] target;
-			Set<Integer>[] specialTarget;
+			PokedexAreaData target;
+			PokedexSpecialData specialTarget;
 			int index;
 			if (Gen4Constants.dpptOverworldDexMaps[c] != -1) {
-				target = overworldAreaData;
-				specialTarget = overworldSpecialPostNationalData;
+				target = owAreaData;
+				specialTarget = owSpecialPostNatDexData;
 				index = Gen4Constants.dpptOverworldDexMaps[c];
 			} else if (Gen4Constants.dpptDungeonDexMaps[c] != -1) {
-				target = dungeonAreaData;
-				specialTarget = dungeonSpecialPostNationalData;
+				target = dunAreaData;
+				specialTarget = dunSpecialPostNatDexData;
 				index = Gen4Constants.dpptDungeonDexMaps[c];
 			} else {
 				continue;
@@ -2336,16 +2384,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				List<Encounter> grassEncounters = readEncountersDPPt(b, 4, 12);
 
 				for (int i = 0; i < 12; i++) {
-					int pknum = grassEncounters.get(i).getSpecies().getNumber();
-					if (i == 2 || i == 3) {
-						// morning only - time of day data for day/night for
-						// these slots
-						target[pknum][0].add(index);
-					} else {
-						// all times of day
-						target[pknum][0].add(index);
-						target[pknum][1].add(index);
-						target[pknum][2].add(index);
+					Encounter enc = grassEncounters.get(i);
+					target.add(enc, 0, index);
+					if (i != 2 && i != 3) {
+						// 2 and 3 are morning only - time of day data for day/night for these slots
+						target.add(enc, 1, index);
+						target.add(enc, 2, index);
 					}
 				}
 
@@ -2353,7 +2397,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int i = 0; i < 4; i++) {
 					int pknum = readLong(b, 108 + 4 * i);
 					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-						target[pknum][i > 1 ? 2 : 1].add(index);
+						target.add(pknum, i > 1 ? 2 : 1, index);
 					}
 				}
 
@@ -2362,7 +2406,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					int offs = 100 + i * 4;
 					int pknum = readLong(b, offs);
 					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-						specialTarget[pknum].add(index);
+						specialTarget.add(pknum, index);
 					}
 				}
 			}
@@ -2378,9 +2422,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					continue;
 				}
 				for (Encounter enc : seaEncounters) {
-					target[enc.getSpecies().getNumber()][0].add(index);
-					target[enc.getSpecies().getNumber()][1].add(index);
-					target[enc.getSpecies().getNumber()][2].add(index);
+					target.add(enc, 0, index);
+					target.add(enc, 1, index);
+					target.add(enc, 2, index);
 				}
 			}
 		}
@@ -2389,31 +2433,27 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (EncounterArea area : encounterAreas) {
 			if (area.getDisplayName().contains("Mt. Coronet Feebas Tiles")) {
 				for (Encounter enc : area) {
-					dungeonSpecialPreNationalData[enc.getSpecies().getNumber()].add(Gen4Constants.dpptMtCoronetDexIndex);
-					dungeonSpecialPostNationalData[enc.getSpecies().getNumber()].add(Gen4Constants.dpptMtCoronetDexIndex);
+					dunSpecialPreNatDexData.add(enc, Gen4Constants.dpptMtCoronetDexIndex);
+					dunSpecialPostNatDexData.add(enc, Gen4Constants.dpptMtCoronetDexIndex);
 				}
 			} else if (area.getDisplayName().contains("Honey Tree Group 1") || area.getDisplayName().contains("Honey Tree Group 2")) {
 				for (Encounter enc : area) {
-					dungeonSpecialPreNationalData[enc.getSpecies().getNumber()]
-							.add(Gen4Constants.dpptFloaromaMeadowDexIndex);
-					dungeonSpecialPostNationalData[enc.getSpecies().getNumber()]
-							.add(Gen4Constants.dpptFloaromaMeadowDexIndex);
-					overworldSpecialPreNationalData[enc.getSpecies().getNumber()]
-							.addAll(Gen4Constants.dpptOverworldHoneyTreeDexIndicies);
-					overworldSpecialPostNationalData[enc.getSpecies().getNumber()]
-							.addAll(Gen4Constants.dpptOverworldHoneyTreeDexIndicies);
+					dunSpecialPreNatDexData.add(enc, Gen4Constants.dpptFloaromaMeadowDexIndex);
+					dunSpecialPostNatDexData.add(enc, Gen4Constants.dpptFloaromaMeadowDexIndex);
+					owSpecialPreNatDexData.addAll(enc, Gen4Constants.dpptOverworldHoneyTreeDexIndicies);
+					owSpecialPostNatDexData.addAll(enc, Gen4Constants.dpptOverworldHoneyTreeDexIndicies);
 				}
 			} else if (area.getDisplayName().contains("Trophy Garden Rotating Pokemon")) {
 				for (Encounter enc : area) {
-					dungeonSpecialPostNationalData[enc.getSpecies().getNumber()].add(Gen4Constants.dpptTrophyGardenDexIndex);
+					dunSpecialPostNatDexData.add(enc, Gen4Constants.dpptTrophyGardenDexIndex);
 				}
 			} else if (area.getDisplayName().contains("Great Marsh Rotating Pokemon (Post-National Dex)")) {
 				for (Encounter enc : area) {
-					dungeonSpecialPostNationalData[enc.getSpecies().getNumber()].add(Gen4Constants.dpptGreatMarshDexIndex);
+					dunSpecialPostNatDexData.add(enc, Gen4Constants.dpptGreatMarshDexIndex);
 				}
 			} else if (area.getDisplayName().contains("Great Marsh Rotating Pokemon (Pre-National Dex)")) {
 				for (Encounter enc : area) {
-					dungeonSpecialPreNationalData[enc.getSpecies().getNumber()].add(Gen4Constants.dpptGreatMarshDexIndex);
+					dunSpecialPreNatDexData.add(enc, Gen4Constants.dpptGreatMarshDexIndex);
 				}
 			}
 		}
@@ -2422,27 +2462,27 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// Area data format credit to Ganix
 		String pokedexAreaDataFile = romEntry.getFile("PokedexAreaData");
 		NARCArchive pokedexAreaData = readNARC(pokedexAreaDataFile);
-		int dungeonDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonIndex");
-		int dungeonSpecialPreNationalDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonSpecialPreNationalIndex");
-		int dungeonSpecialPostNationalDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonSpecialPostNationalIndex");
-		int overworldDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldIndex");
-		int overworldSpecialPreNationalDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldSpecialPreNationalIndex");
-		int overworldSpecialPostNationalDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldSpecialPostNationalIndex");
+		int dunDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonIndex");
+		int dunSpecialPreNatDexDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonSpecialPreNationalIndex");
+		int dunSpecialPostNatDexDataIndex = romEntry.getIntValue("PokedexAreaDataDungeonSpecialPostNationalIndex");
+		int owDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldIndex");
+		int owSpecialPreNatDexDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldSpecialPreNationalIndex");
+		int owSpecialPostNatDexDataIndex = romEntry.getIntValue("PokedexAreaDataOverworldSpecialPostNationalIndex");
 		for (int pk = 1; pk <= Gen4Constants.pokemonCount; pk++) {
 			for (int time = 0; time < 3; time++) {
-				pokedexAreaData.files.set(dungeonDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
-						makePokedexAreaDataFile(dungeonAreaData[pk][time]));
-				pokedexAreaData.files.set(overworldDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
-						makePokedexAreaDataFile(overworldAreaData[pk][time]));
+				pokedexAreaData.files.set(dunDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
+						makePokedexAreaDataFile(dunAreaData.get(pk, time)));
+				pokedexAreaData.files.set(owDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
+						makePokedexAreaDataFile(owAreaData.get(pk, time)));
 			}
-			pokedexAreaData.files.set(dungeonSpecialPreNationalDataIndex + pk,
-					makePokedexAreaDataFile(dungeonSpecialPreNationalData[pk]));
-			pokedexAreaData.files.set(dungeonSpecialPostNationalDataIndex + pk,
-					makePokedexAreaDataFile(dungeonSpecialPostNationalData[pk]));
-			pokedexAreaData.files.set(overworldSpecialPreNationalDataIndex + pk,
-					makePokedexAreaDataFile(overworldSpecialPreNationalData[pk]));
-			pokedexAreaData.files.set(overworldSpecialPostNationalDataIndex + pk,
-					makePokedexAreaDataFile(overworldSpecialPostNationalData[pk]));
+			pokedexAreaData.files.set(dunSpecialPreNatDexDataIndex + pk,
+					makePokedexAreaDataFile(dunSpecialPreNatDexData.get(pk)));
+			pokedexAreaData.files.set(dunSpecialPostNatDexDataIndex + pk,
+					makePokedexAreaDataFile(dunSpecialPostNatDexData.get(pk)));
+			pokedexAreaData.files.set(owSpecialPreNatDexDataIndex + pk,
+					makePokedexAreaDataFile(owSpecialPreNatDexData.get(pk)));
+			pokedexAreaData.files.set(owSpecialPostNatDexDataIndex + pk,
+					makePokedexAreaDataFile(owSpecialPostNatDexData.get(pk)));
 		}
 		writeNARC(pokedexAreaDataFile, pokedexAreaData);
 	}
@@ -2452,30 +2492,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		NARCArchive encounterData = readNARC(encountersFile);
 
 		// Initialize empty area data
-		Set[][] dungeonAreaData = new Set[Gen4Constants.pokemonCount + 1][3];
-		Set[][] overworldAreaData = new Set[Gen4Constants.pokemonCount + 1][3];
-		Set[] dungeonSpecialData = new Set[Gen4Constants.pokemonCount + 1];
-		Set[] overworldSpecialData = new Set[Gen4Constants.pokemonCount + 1];
-
-		for (int pk = 1; pk <= Gen4Constants.pokemonCount; pk++) {
-			for (int time = 0; time < 3; time++) {
-				dungeonAreaData[pk][time] = new TreeSet<>();
-				overworldAreaData[pk][time] = new TreeSet<>();
-			}
-			dungeonSpecialData[pk] = new TreeSet<>();
-			overworldSpecialData[pk] = new TreeSet<>();
-		}
+		PokedexAreaData dunAreaData = new PokedexAreaData();
+		PokedexAreaData owAreaData = new PokedexAreaData();
+		PokedexSpecialData dungeonSpecialData = new PokedexSpecialData();
+		PokedexSpecialData overworldSpecialData = new PokedexSpecialData();
 
 		for (int c = 0; c < encounterData.files.size(); c++) {
-			Set<Integer>[][] target;
-			Set<Integer>[] specialTarget;
+			PokedexAreaData target;
+			PokedexSpecialData specialTarget;
 			int index;
 			if (Gen4Constants.hgssOverworldDexMaps[c] != -1) {
-				target = overworldAreaData;
+				target = owAreaData;
 				specialTarget = overworldSpecialData;
 				index = Gen4Constants.hgssOverworldDexMaps[c];
 			} else if (Gen4Constants.hgssDungeonDexMaps[c] != -1) {
-				target = dungeonAreaData;
+				target = dunAreaData;
 				specialTarget = dungeonSpecialData;
 				index = Gen4Constants.hgssDungeonDexMaps[c];
 			} else {
@@ -2496,7 +2527,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int time = 0; time < 3; time++) {
 					Species[] pokes = readPokemonHGSS(b, 20 + time * 24, 12);
 					for (Species pk : pokes) {
-						target[pk.getNumber()][time].add(index);
+						target.add(pk.getNumber(), time, index);
 					}
 				}
 			}
@@ -2504,7 +2535,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Hoenn/Sinnoh Radio
 			EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
 			for (Encounter enc : radioArea) {
-				specialTarget[enc.getSpecies().getNumber()].add(index);
+				specialTarget.add(enc, index);
 			}
 
 			// Up to 100 now... 2*2*2 for radio pokemon
@@ -2516,9 +2547,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				if (rates[i] != 0) {
 					// Valid area.
 					for (Encounter enc : seaEncounters) {
-						target[enc.getSpecies().getNumber()][0].add(index);
-						target[enc.getSpecies().getNumber()][1].add(index);
-						target[enc.getSpecies().getNumber()][2].add(index);
+						target.add(enc, 0, index);
+						target.add(enc, 1, index);
+						target.add(enc, 2, index);
 					}
 				}
 			}
@@ -2530,22 +2561,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				List<EncounterArea> goodRodAreas = readTimeBasedRodEncounterAreasHGSS(b, offset,
 						nightFishingReplacement, Gen4Constants.hgssGoodRodReplacementIndex);
 				for (Encounter enc : goodRodAreas.get(0)) {
-					target[enc.getSpecies().getNumber()][0].add(index);
-					target[enc.getSpecies().getNumber()][1].add(index);
+					target.add(enc, 0, index);
+					target.add(enc, 1, index);
 				}
 				for (Encounter enc : goodRodAreas.get(1)) {
-					target[enc.getSpecies().getNumber()][2].add(index);
+					target.add(enc, 2, index);
 				}
 			}
 			if (rates[5] != 0) {
 				List<EncounterArea> superRodAreas = readTimeBasedRodEncounterAreasHGSS(b, offset + 20,
 						nightFishingReplacement, Gen4Constants.hgssSuperRodReplacementIndex);
 				for (Encounter enc : superRodAreas.get(0)) {
-					target[enc.getSpecies().getNumber()][0].add(index);
-					target[enc.getSpecies().getNumber()][1].add(index);
+					target.add(enc, 0, index);
+					target.add(enc, 1, index);
 				}
 				for (Encounter enc : superRodAreas.get(1)) {
-					target[enc.getSpecies().getNumber()][2].add(index);
+					target.add(enc, 2, index);
 				}
 			}
 		}
@@ -2560,10 +2591,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				EncounterArea area = encounterAreas.get(startingHeadbuttOffset + i);
 				for (Encounter enc : area) {
 					if (Gen4Constants.hgssHeadbuttOverworldDexMaps[i] != -1) {
-						overworldSpecialData[enc.getSpecies().getNumber()]
-								.add(Gen4Constants.hgssHeadbuttOverworldDexMaps[i]);
+						overworldSpecialData.add(enc, Gen4Constants.hgssHeadbuttOverworldDexMaps[i]);
 					} else if (Gen4Constants.hgssHeadbuttDungeonDexMaps[i] != -1) {
-						dungeonSpecialData[enc.getSpecies().getNumber()].add(Gen4Constants.hgssHeadbuttDungeonDexMaps[i]);
+						dungeonSpecialData.add(enc, Gen4Constants.hgssHeadbuttDungeonDexMaps[i]);
 					}
 				}
 			}
@@ -2580,13 +2610,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int pk = 1; pk <= Gen4Constants.pokemonCount; pk++) {
 			for (int time = 0; time < 3; time++) {
 				pokedexAreaData.files.set(dungeonDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
-						makePokedexAreaDataFile(dungeonAreaData[pk][time]));
+						makePokedexAreaDataFile(dunAreaData.get(pk, time)));
 				pokedexAreaData.files.set(overworldDataIndex + pk + time * Gen4Constants.pokedexAreaDataSize,
-						makePokedexAreaDataFile(overworldAreaData[pk][time]));
+						makePokedexAreaDataFile(owAreaData.get(pk, time)));
 			}
-			pokedexAreaData.files.set(dungeonSpecialIndex + pk, makePokedexAreaDataFile(dungeonSpecialData[pk]));
+			pokedexAreaData.files.set(dungeonSpecialIndex + pk,
+					makePokedexAreaDataFile(dungeonSpecialData.get(pk)));
 			pokedexAreaData.files.set(overworldSpecialDataIndex + pk,
-					makePokedexAreaDataFile(overworldSpecialData[pk]));
+					makePokedexAreaDataFile(overworldSpecialData.get(pk)));
 		}
 		writeNARC(pokedexAreaDataFile, pokedexAreaData);
 	}

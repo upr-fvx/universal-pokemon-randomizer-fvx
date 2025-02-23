@@ -1967,6 +1967,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean canGiveEverySpeciesOneEvolutionEach() {
+        // because there isn't enough space in the bank with evolution data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
     public boolean hasShopSupport() {
         return true;
     }

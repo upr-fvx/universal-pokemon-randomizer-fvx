@@ -504,6 +504,12 @@ public interface RomHandler {
     // compared to the base forme.
     boolean altFormesCanHaveDifferentEvolutions();
 
+    /**
+     * Returns whether it is possible to give every {@link Species} <i>exactly</i>
+     * one {@link Evolution} each, and successfully save the ROM.
+     */
+    boolean canGiveEverySpeciesOneEvolutionEach();
+
     // ==================================
     // (Mostly) unchanging lists of moves
     // ==================================

@@ -4,6 +4,7 @@ name: Known Issues
 Here is a list of known issues with the randomizer, listed by game. If an issue appears on this page, that doesn't mean it will be ignored forever. It simply means it is an issue with the currently-released version of the randomizer. 
 
 - [All Games](#all-games)
+- [Red/Blue/Green](#redbluegreen)
 - [Gold/Silver](#goldsilver)
 - [Ruby/Sapphire](#rubysapphire)
 - [FireRed/LeafGreen](#fireredleafgreen)
@@ -19,6 +20,10 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 ## All Games
 
 * When using the "Random" setting under Pokemon Base Statistics, evolving a Pokemon into something with a lower base HP than it currently has can result in HP underflow, which can cause a variety of issues depending on the game. To prevent this underflow entirely, enable the "Follow Evolutions" setting for Pokemon Base Statistics. To mitigate these underflows without enabling "Follow Evolutions", make sure that a Pokemon is at high health before evolving them. If an underflow *does* occur, healing at a Pokemon Center will fix it in every game.
+
+## Red/Blue/Green
+
+* Evolving a Pokemon into Mew, will give it glitchy stats. If you are using "Random Evolutions Every Level", evolving the Pokemon again and healing at a Pokemon center will fix all issues. Otherwise, the Mew will continue having glitchy stats, but this should be mostly harmless.
 
 ## All Gen 2 Games
 

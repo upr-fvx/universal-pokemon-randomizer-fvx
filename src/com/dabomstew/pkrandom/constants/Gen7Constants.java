@@ -903,6 +903,21 @@ public class Gen7Constants {
         return evolutionTypeTable[index - 1];
     }
 
+    public static List<Integer> getAreaIndicesForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                // {Vast Poni Canyon} : {Blush Mountain, Vast Poni Canyon}
+                return romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
+            case LEVEL_MOSS_ROCK:
+                return Collections.singletonList(74); // {Lush Jungle}
+            case LEVEL_ICE_ROCK:
+            case LEVEL_SNOWY:
+                return Collections.singletonList(138); // {Mount Lanakila}
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
+    }
+
     private static List<Boolean> setupRelevantEncounterFiles(int romType) {
         int fileCount = romType == Type_SM ? 2761 : 3696;
         List<Boolean> list = new ArrayList<>();

@@ -2699,7 +2699,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         case SpeciesIDs.exeggcute:
                         case SpeciesIDs.cubone:
                             markImprovedEvolutions(sp);
-                            Species kantoForm = evo.getTo().getBaseForme();
+                            // We don't know if evo.getTo() has a baseForme,
+                            // since it might have been randomized...
+                            Species kantoForm = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
                             Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
                                     EvolutionType.STONE, ItemIDs.moonStone);
                             extraEvolutions.add(extraEvo);
@@ -2792,6 +2794,19 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         rockruffOT.getEvolutionsFrom().addAll(Arrays.asList(rockruffOTToMidday, rockruffOTToMidnight));
         lycanrocMidday.getEvolutionsTo().add(rockruffOTToMidday);
         lycanrocMidnight.getEvolutionsTo().add(rockruffOTToMidnight);
+    }
+
+    @Override
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        if (!et.usesLocation()) {
+            throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
+        }
+        List<String> names = new ArrayList<>();
+        List<Integer> areaIndices = Gen7Constants.getAreaIndicesForLocationEvolution(et, romEntry.getRomType());
+        for (int areaIndex : areaIndices) {
+            names.add(areaDataList.get(areaIndex).name);
+        }
+        return names;
     }
 
     @Override
@@ -3531,7 +3546,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return icon.getImage();
     }
 
-    private class ZoneData {
+    private static class ZoneData {
         public int worldIndex;
         public int areaIndex;
         public int parentMap;
@@ -3545,9 +3560,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             System.arraycopy(zoneDataBytes, index * size, data, 0, size);
             parentMap = FileFunctions.readFullInt(data, 0x1C);
         }
+
+        @Override
+        public String toString() {
+            return locationName;
+        }
     }
 
-    private class AreaData {
+    private static class AreaData {
         public int fileNumber;
         public boolean hasTables;
         public List<byte[]> encounterTables;
@@ -3556,6 +3576,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         public AreaData() {
             encounterTables = new ArrayList<>();
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 

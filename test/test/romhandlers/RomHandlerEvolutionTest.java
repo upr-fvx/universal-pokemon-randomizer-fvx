@@ -32,7 +32,9 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     public void noEvolutionUsesEvoTypeNone(String romName) {
         loadROM(romName);
         for (Species pk : romHandler.getSpeciesSet()) {
+            System.out.println(pk.getFullName());
             for (Evolution evo : pk.getEvolutionsFrom()) {
+                System.out.println(evo);
                 assertNotEquals(EvolutionType.NONE, evo.getType());
             }
         }

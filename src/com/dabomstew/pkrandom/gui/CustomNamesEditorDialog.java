@@ -174,7 +174,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         boolean first = true;
         for (String name : names) {
             if (!first) {
-                sb.append(SysConstants.LINE_SEP);
+                sb.append(System.lineSeparator());
             }
             first = false;
             sb.append(name);

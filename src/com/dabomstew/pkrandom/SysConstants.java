@@ -36,9 +36,9 @@ public class SysConstants {
     public static final String WIKI_HOME_URL = WIKI_URL + "/home.html";
     public static final String WIKI_IMPORTANT_INFO_URL = WIKI_URL + "/important_info.html";
     public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/3ds_games.html";
+    public static final String ISSUES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues";
 
     public static final String ROOT_PATH = getRootPath();
-    public static final String LINE_SEP = System.getProperty("line.separator");
 
     public static final String customNamesFile = "customnames.rncn";
     public static final String customPCGDirectory = "data/players";

@@ -32,12 +32,14 @@ import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.constants.ItemIDs;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -162,16 +164,16 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // If evo is intermediate and too high, bring it down
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         }
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markImprovedEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
-                        addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                     }
                 }
             }
@@ -180,72 +182,135 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        return impossibleEvolutionUpdates;
+    public void removeTimeBasedEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                EvolutionType et = evo.getType();
+
+                if (et == EvolutionType.LEVEL_DUSK) {
+                    markImprovedEvolutions(pk);
+                    evo.setType(EvolutionType.STONE);
+                    evo.setExtraInfo(ItemIDs.duskStone);
+                } else if (et.usesTime()) {
+                    markImprovedEvolutions(pk);
+                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
+                        // Here we have just ascertained that this Species evolves by time,
+                        // and that this evolution is paired; it has another similar evolution
+                        // at the opposite time.
+                        // E.g. Eevee -> Espeon/Umbreon, which is a HAPPINESS_DAY/HAPPINESS_NIGHT pair.
+                        // In this case, we can't just remove the time-based-less,
+                        // so instead we use Sun/Moon Stone.
+                        evo.setType(EvolutionType.STONE);
+                        int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
+                        evo.setExtraInfo(item);
+                    } else {
+                        evo.setType(et.timeless());
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean hadEvolutionOfType(Species pk, EvolutionType et) {
+        List<Evolution> evos = preImprovedEvolutions.get(pk);
+        if (evos == null) {
+            throw new IllegalStateException("Species should always have been added to preImprovedEvolutions.");
+        }
+        return evos.stream().map(Evolution::getType).anyMatch(et2 -> et2 == et);
     }
 
     @Override
-    public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        return easierEvolutionUpdates;
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
+        return preImprovedEvolutions;
     }
-
-    @Override
-    public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
-        return timeBasedEvolutionUpdates;
-    }
-
 
     /* Private methods/structs used internally by the above methods */
 
-    protected Set<EvolutionUpdate> impossibleEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> timeBasedEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> easierEvolutionUpdates = new TreeSet<>();
+    private final Map<Species, List<Evolution>> preImprovedEvolutions = new TreeMap<>();
 
-    protected void addEvoUpdateLevel(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                false, false));
-    }
-
-    protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item,
-                false, false));
-    }
-
-    protected void addEvoUpdateHappiness(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.HAPPINESS, "",
-                false, false));
-    }
-
-    protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item,
-                false, false));
-    }
-
-    protected void addEvoUpdateParty(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String otherPk) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_WITH_OTHER, otherPk,
-                false, false));
-    }
-
-    protected void addEvoUpdateCondensed(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, boolean additional) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                true, additional));
+    /**
+     * Marks that a {@link Species} is getting its {@link Evolution}s improved,
+     * (and saves its original Evolutions) for logging purposes.
+     */
+    protected void markImprovedEvolutions(Species pk) {
+        // We can't overwrite these entries, because then species with
+        // multiple evos to change (e.g. HGSS Eevee) will store their partially-changed evos,
+        // instead of the original ones.
+        if (!preImprovedEvolutions.containsKey(pk)) {
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
+            for (Evolution original : pk.getEvolutionsFrom()) {
+                evosCopy.add(new Evolution(original));
+            }
+            preImprovedEvolutions.put(pk, evosCopy);
+        }
     }
 
     /* Helper methods used by subclasses and/or this class */
+
+    /**
+     * Splits occurrences of {@link EvolutionType#LEVEL_ITEM} into
+     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.<br>
+     * Since LEVEL_ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
+     * Assumes each Species has at most one LEVEL_ITEM Evolution.
+     */
+    protected void splitLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution levelItemEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM) {
+                    levelItemEvo = evo;
+                }
+            }
+            if (levelItemEvo != null) {
+                levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                Evolution nightEvo = new Evolution(levelItemEvo);
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
+                nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+            }
+        }
+    }
+
+    /**
+     * Merge occurrences of otherwise identical {@link EvolutionType#LEVEL_ITEM_DAY} and
+     * {@link EvolutionType#LEVEL_ITEM_NIGHT} {@link Evolution}s into a single one
+     * using {@link EvolutionType#LEVEL_ITEM}.<br>
+     * Assumes each Species has at most one pair of LEVEL_ITEM_DAY/NIGHT Evolutions.
+     */
+    protected void mergeLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution dayEvo = null;
+            Evolution nightEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
+                    dayEvo = evo;
+                } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
+                    nightEvo = evo;
+                }
+            }
+            if (dayEvo != null && nightEvo != null) {
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                if (nightEvo.equals(dayEvo)) {
+                    dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                    nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
+                    nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
+                } else {
+                    // If nightEvo differs from dayEvo in ways other than the EvolutionType,
+                    // then we can not merge them.
+                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                }
+            }
+        }
+    }
 
     protected void applyCamelCaseNames() {
         getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
@@ -257,6 +322,23 @@ public abstract class AbstractRomHandler implements RomHandler {
      * The implication here is that these WILL be overridden by at least one
      * subclass.
      */
+
+    @Override
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        throw new UnsupportedOperationException("This game has no location-based evolutions.");
+    }
+
+    @Override
+    public boolean canSetIntroPokemon() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
+    public boolean hasTimeBasedEvolutions() {
+        // DEFAULT: yes
+        return true;
+    }
 
     @Override
     public boolean hasTotemPokemon() {
@@ -408,11 +490,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public boolean hasMultiplePlayerCharacters() {
         return true;
-    }
-
-    @Override
-    public void writeCheckValueToROM(int value) {
-        // do nothing
     }
 
     @Override

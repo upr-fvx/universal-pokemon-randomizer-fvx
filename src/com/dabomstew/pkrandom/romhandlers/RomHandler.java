@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Responsible for direct handling a Rom/game file, and the data therein.
@@ -128,6 +127,11 @@ public interface RomHandler {
     // Methods to set up Gen Restrictions
     // ==================================
 
+    /**
+     * When using {@link RestrictedSpeciesService} to restrict which Pokémon
+     * may appear, we want to prevent allowed Pokémon from evolving (or breeding)
+     * into ones that are not. This does that.
+     */
     void removeEvosForPokemonPool();
 
     // ===============
@@ -476,13 +480,24 @@ public interface RomHandler {
 
     void makeEvolutionsEasier(Settings settings);
 
+    boolean hasTimeBasedEvolutions();
+
     void removeTimeBasedEvolutions();
 
-    Set<EvolutionUpdate> getImpossibleEvoUpdates();
+    /**
+     * Some {@link EvolutionType}s only allow evolution in specific locations.
+     * This method gets the name of said location(s), given an EvolutionType.
+     */
+    List<String> getLocationNamesForEvolution(EvolutionType et);
 
-    Set<EvolutionUpdate> getEasierEvoUpdates();
-
-    Set<EvolutionUpdate> getTimeBasedEvoUpdates();
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(Settings)},
+     * {@link #makeEvolutionsEasier(Settings)}, or {@link #removeTimeBasedEvolutions()},
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If those methods have not been called, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getPreImprovedEvolutions();
 
     // In the earlier games, alt formes use the same evolutions as the base forme.
     // In later games, this was changed so that alt formes can have unique evolutions
@@ -529,14 +544,15 @@ public interface RomHandler {
 
     int internalStringLength(String string);
 
+    boolean canSetIntroPokemon();
+
     /**
-     * Sets the Species shown in the intro. Returns false if pk is not a valid intro Species.
+     * Sets the {@link Species} shown in the intro. Returns false if pk is not a valid intro Species.
+     * Throws {@link UnsupportedOperationException} if {@link #canSetIntroPokemon()} is not true.
      */
     boolean setIntroPokemon(Species pk);
 
     int generationOfPokemon();
-
-    void writeCheckValueToROM(int value);
 
     // ===========
     // code tweaks

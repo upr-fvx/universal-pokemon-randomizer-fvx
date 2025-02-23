@@ -1921,29 +1921,27 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             if (pkmn != null) {
                 for (Evolution evol : pkmn.getEvolutionsFrom()) {
                     if (evol.getType() == EvolutionType.TRADE || evol.getType() == EvolutionType.TRADE_ITEM) {
+
+                        markImprovedEvolutions(pkmn);
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
                             evol.setExtraInfo(Gen2ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evol, itemNames[24]);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(40); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
                             // Level 37
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(37); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else {
                             // A new trade evo of a single stage Pokemon
                             // level 30
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(30); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         }
                     }
                 }
@@ -1966,29 +1964,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 writeByte(offset, (byte) GlobalConstants.easierHappinessToEvolve);
             }
         }
-    }
-
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                for (Evolution evol : pkmn.getEvolutionsFrom()) {
-                    // In Gen 2, only Eevee has a time-based evolution.
-                    if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
-                        // Eevee: Make sun stone => Espeon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[169]);
-                    } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        // Eevee: Make moon stone => Umbreon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[8]);
-                    }
-                }
-            }
-        }
-
     }
 
     @Override
@@ -3405,18 +3380,5 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public Gen2RomEntry getRomEntry() {
         return romEntry;
     }
-
-    @Override
-    public void writeCheckValueToROM(int value) {
-        if (romEntry.getIntValue("CheckValueOffset") > 0) {
-            int cvOffset = romEntry.getIntValue("CheckValueOffset");
-            byte[] cvBytes = new byte[4];
-            for (int i = 0; i < 4; i++) {
-                rom[cvOffset + i] = (byte) ((value >> (3 - i) * 8) & 0xFF);
-            }
-            writeBytes(cvOffset, cvBytes);
-        }
-    }
-
 
 }

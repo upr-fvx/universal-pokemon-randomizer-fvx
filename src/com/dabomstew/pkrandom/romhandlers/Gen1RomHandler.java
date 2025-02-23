@@ -1822,9 +1822,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (evo.getType() == EvolutionType.TRADE) {
                         // change
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates,evo);
                     }
                 }
             }
@@ -1837,8 +1837,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        // No such thing
+    public boolean hasTimeBasedEvolutions() {
+        return false;
     }
 
     @Override

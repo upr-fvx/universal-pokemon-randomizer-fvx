@@ -11,6 +11,16 @@ import java.util.stream.Collectors;
 
 public class TrainerMovesetRandomizer extends Randomizer {
 
+    /**
+     * Returns whether a TrainerMovesetRandomizer can be used on games of the given generation.
+     */
+    public static boolean hasSupport(int generation) {
+        // This is because MoveSynergy is dependent on move IDs,
+        // which are only unified starting in Gen 3.
+        // TODO: give Gen1+2 support, and remove this method
+        return generation >= 3;
+    }
+
     private Map<Integer, List<MoveLearnt>> allLevelUpMoves;
     private Map<Integer, List<Integer>> allEggMoves;
     private Map<Species, boolean[]> allTMCompat, allTutorCompat;

@@ -1173,22 +1173,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
         throw new NotImplementedException();
     }
 
@@ -1276,11 +1261,6 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public int generationOfPokemon() {
         return generation;
-    }
-
-    @Override
-    public void writeCheckValueToROM(int value) {
-        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
 
     @Override

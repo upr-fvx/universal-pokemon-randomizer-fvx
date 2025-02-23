@@ -6,20 +6,34 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public class SpeciesBaseStatUpdater extends Updater {
+public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integer> {
+
+    private final Map<Species, Map<BSUpdateType, Update<Integer>>> bsUpdates = new TreeMap<>();
 
     // starts with two null-consumers so the indexing can be nicer,
     // and then four more since Gens 2-5 didn't change the base stats of any existing Species
     private final List<Consumer<List<Species>>> updates = Arrays.asList(
-            l -> {}, l -> {},
-            l -> {}, l -> {}, l -> {}, l -> {},
+            l -> {
+            }, l -> {
+            },
+            l -> {
+            }, l -> {
+            }, l -> {
+            }, l -> {
+            },
             this::gen6Updates, this::gen7Updates, this::gen8Updates, this::gen9Updates
     );
 
     public SpeciesBaseStatUpdater(RomHandler romHandler) {
         super(romHandler);
+    }
+
+    public Map<Species, Map<BSUpdateType, Update<Integer>>> getUpdates() {
+        return bsUpdates;
     }
 
     public void updateSpeciesStats(int updateToGen) {
@@ -33,8 +47,6 @@ public class SpeciesBaseStatUpdater extends Updater {
                 updates.get(i).accept(pokes);
             }
         }
-
-        updated = true;
     }
 
     private void gen6Updates(List<Species> pokes) {
@@ -162,40 +174,68 @@ public class SpeciesBaseStatUpdater extends Updater {
     }
 
     private void updateHP(List<Species> pokes, int species, int value) {
-        pokes.get(species).setHp(value);
+        Species spec = pokes.get(species);
+        int before = spec.getHp();
+        spec.setHp(value);
+        addUpdate(spec, before, value, BSUpdateType.HP);
     }
 
     private void updateAtk(List<Species> pokes, int species, int value) {
-        pokes.get(species).setAttack(value);
+        Species spec = pokes.get(species);
+        int before = spec.getAttack();
+        spec.setAttack(value);
+        addUpdate(spec, before, value, BSUpdateType.ATK);
     }
 
     private void updateDef(List<Species> pokes, int species, int value) {
-        pokes.get(species).setDefense(value);
+        Species spec = pokes.get(species);
+        int before = spec.getDefense();
+        spec.setDefense(value);
+        addUpdate(spec, before, value, BSUpdateType.DEF);
     }
 
     private void updateSpAtk(List<Species> pokes, int species, int value) {
         // just gets ignored in Gen 1 games
         if (romHandler.generationOfPokemon() != 1) {
-            pokes.get(species).setSpatk(value);
+            Species spec = pokes.get(species);
+            int before = spec.getSpatk();
+            spec.setSpatk(value);
+            addUpdate(spec, before, value, BSUpdateType.SPATK);
         }
     }
 
     private void updateSpDef(List<Species> pokes, int species, int value) {
         // just gets ignored in Gen 1 games
         if (romHandler.generationOfPokemon() != 1) {
-            pokes.get(species).setSpdef(value);
+            Species spec = pokes.get(species);
+            int before = spec.getSpdef();
+            spec.setSpdef(value);
+            addUpdate(spec, before, value, BSUpdateType.SPDEF);
         }
     }
 
     private void updateSpeed(List<Species> pokes, int species, int value) {
-        pokes.get(species).setSpeed(value);
+        Species spec = pokes.get(species);
+        int before = spec.getSpeed();
+        spec.setSpeed(value);
+        addUpdate(spec, before, value, BSUpdateType.SPEED);
     }
 
     private void updateSpecial(List<Species> pokes, int species, int value) {
         // just gets ignored in non-Gen 1 games
         if (romHandler.generationOfPokemon() == 1) {
-            pokes.get(species).setSpecial(value);
+            Species spec = pokes.get(species);
+            int before = spec.getSpecial();
+            spec.setSpecial(value);
+            addUpdate(spec, before, value, BSUpdateType.SPECIAL);
         }
+    }
+
+    private void addUpdate(Species spec, int before, int after, BSUpdateType type) {
+        if (!bsUpdates.containsKey(spec)) {
+            bsUpdates.put(spec, new TreeMap<>());
+        }
+        bsUpdates.get(spec).put(type, new Update<>(before, after));
     }
 
 }

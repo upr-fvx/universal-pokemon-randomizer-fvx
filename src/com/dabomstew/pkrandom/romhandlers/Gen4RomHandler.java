@@ -5537,18 +5537,48 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
                     + expectedOffsetsLength + ", was " + offsets.length + ".");
         }
-        if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-            // Overlay 8
-            // 01 F0 FB F9 01 28 -> C0 46 00 20 01 28
-            // ARM9
-            // EE F7 BC FF 01 28 -> C0 46 00 20 01 28
-            // EE F7 53 FF 01 28 -> C0 46 00 20 01 28
-        } else {
-            // Overlay 13
-            // 01 F0 35 FA 01 28 -> C0 46 00 20 01 28
-            // ARM9
-            // F0 F7 5B FA 01 28 ->C0 46 00 20 01 28
-        }
+		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+			try {
+				// TODO: test
+				// TODO: generalize
+				// Overlay 8
+				// 01 F0 FB F9 01 28 -> C0 46 00 20 01 28
+				byte[] ol = readOverlay(8);
+				int olOffset = find(ol, "01 F0 FB F9 01 28");
+				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				writeOverlay(8, ol);
+				// ARM9
+				// EE F7 BC FF 01 28 -> C0 46 00 20 01 28
+				// EE F7 53 FF 01 28 -> C0 46 00 20 01 28
+				byte[] arm = readARM9();
+				int armOffset1 = find(arm, "EE F7 BC FF 01 28");
+				writeBytes(arm, armOffset1, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				int armOffset2 = find(arm, "EE F7 53 FF 01 28");
+				writeBytes(arm, armOffset2, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				writeARM9(arm);
+			} catch (IOException e) {
+				throw new RomIOException(e);
+			}
+		} else {
+			try {
+				// TODO: test
+				// TODO: generalize
+				// Overlay 13
+				// 01 F0 35 FA 01 28 -> C0 46 00 20 01 28
+				byte[] ol = readOverlay(13);
+				int olOffset = find(ol, "01 F0 35 FA 01 28");
+				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				writeOverlay(13, ol);
+				// ARM9
+				// F0 F7 5B FA 01 28 -> C0 46 00 20 01 28
+				byte[] arm = readARM9();
+				int armOffset = find(arm, "F0 F7 5B FA 01 28");
+				writeBytes(arm, armOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				writeARM9(arm);
+			} catch (IOException e) {
+				throw new RomIOException(e);
+			}
+		}
     }
 
 	@Override

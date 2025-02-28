@@ -3981,18 +3981,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private int find(byte[] data, String hexString) {
-		if (hexString.length() % 2 != 0) {
-			return -3; // error
-		}
-		byte[] searchFor = new byte[hexString.length() / 2];
-		for (int i = 0; i < searchFor.length; i++) {
-			searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-		}
-		List<Integer> found = RomFunctions.search(data, searchFor);
+		List<Integer> found = RomFunctions.search(data, RomFunctions.hexToBytes(hexString));
 		if (found.isEmpty()) {
-			return -1; // not found
+			throw new RuntimeException("Not found");
 		} else if (found.size() > 1) {
-			return -2; // not unique
+			throw new RuntimeException("Not unique");
 		} else {
 			return found.get(0);
 		}
@@ -5210,9 +5203,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
 			available |= MiscTweak.REUSABLE_TMS.getValue();
 		}
-        if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
+       // if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        }
+        //}
         return available;
     }
 
@@ -5533,20 +5526,24 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
     private void applyForgettableHMsPatch() {
         int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
         int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
-        if (offsets.length != expectedOffsetsLength) {
-            throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
-                    + expectedOffsetsLength + ", was " + offsets.length + ".");
-        }
+  //      if (offsets.length != expectedOffsetsLength) {
+   //         throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
+   //                 + expectedOffsetsLength + ", was " + offsets.length + ".");
+  //      }
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 			try {
 				// TODO: test
+				// Currently level-up moves can replace HMs, but not TMs
+				// (do tutors need to be tested separately??)
 				// TODO: generalize
+				// In-battle:
 				// Overlay 8
 				// 01 F0 FB F9 01 28 -> C0 46 00 20 01 28
 				byte[] ol = readOverlay(8);
 				int olOffset = find(ol, "01 F0 FB F9 01 28");
 				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
 				writeOverlay(8, ol);
+				// Overworld:
 				// ARM9
 				// EE F7 BC FF 01 28 -> C0 46 00 20 01 28
 				// EE F7 53 FF 01 28 -> C0 46 00 20 01 28
@@ -5563,12 +5560,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			try {
 				// TODO: test
 				// TODO: generalize
+				// In-battle:
 				// Overlay 13
 				// 01 F0 35 FA 01 28 -> C0 46 00 20 01 28
 				byte[] ol = readOverlay(13);
 				int olOffset = find(ol, "01 F0 35 FA 01 28");
 				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
 				writeOverlay(13, ol);
+				// Overworld:
 				// ARM9
 				// F0 F7 5B FA 01 28 -> C0 46 00 20 01 28
 				byte[] arm = readARM9();

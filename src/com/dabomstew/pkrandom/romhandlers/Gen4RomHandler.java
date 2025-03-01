@@ -1405,6 +1405,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void readFeebasTileEncounters(List<EncounterArea> encounterAreas, NARCArchive extraEncounterData, byte[] encounterOverlay) {
 		byte[] feebasData = extraEncounterData.files.get(0);
 		EncounterArea area = readExtraEncounterAreaDPPt(feebasData, 0, 1);
+		// TODO: make feebas tile encounters work in Japanese DP
 		int offset = find(encounterOverlay, Gen4Constants.feebasLevelPrefixDPPt);
 		if (offset > 0) {
 			offset += Gen4Constants.feebasLevelPrefixDPPt.length() / 2; // because it was a prefix
@@ -1424,6 +1425,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < honeyTreeOffsets.length; i++) {
 			byte[] honeyTreeData = extraEncounterData.files.get(honeyTreeOffsets[i]);
 			EncounterArea area = readExtraEncounterAreaDPPt(honeyTreeData, 0, 6);
+			// TODO: make honey tree encounters work in Japanese DP
 			offset = find(encounterOverlay, Gen4Constants.honeyTreeLevelPrefixDPPt);
 			if (offset > 0) {
 				offset += Gen4Constants.honeyTreeLevelPrefixDPPt.length() / 2; // because it was a prefix
@@ -3982,10 +3984,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private int find(byte[] data, String hexString) {
 		List<Integer> found = RomFunctions.search(data, RomFunctions.hexToBytes(hexString));
+		// Ideally, this would throw exceptions (or just never be used anywhere!! geez it's bad for load times.)
+		// but things are wired up to expect these C-style control returns.
 		if (found.isEmpty()) {
-			throw new RuntimeException("Not found");
+			return -1;
 		} else if (found.size() > 1) {
-			throw new RuntimeException("Not unique");
+			return -2; // not unique
 		} else {
 			return found.get(0);
 		}

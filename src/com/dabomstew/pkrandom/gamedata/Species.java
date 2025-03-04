@@ -561,6 +561,7 @@ public class Species implements Comparable<Species> {
 
     @Override
     public int hashCode() {
+        // Don't change this hash!! Things *will* break.
         final int prime = 31;
         int result = 1;
         result = prime * result + number;

@@ -5,6 +5,7 @@ import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen7Constants;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
+import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TrainerRandomizersTest extends RandomizerTest {
+
+    private static final double UBIQUITOUS_MOVE_RATE = 0.25;
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -529,5 +532,44 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 }
             }
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBetterTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+
+        Map<Integer, Integer> moveCounts = new TreeMap<>();
+        int tpCount = 0;
+        for (Trainer tr : romHandler.getTrainers()) {
+            for (TrainerPokemon tp : tr.pokemon) {
+                tpCount++;
+                for (int moveID : tp.moves) {
+                    if (moveID != 0) {
+                        moveCounts.put(moveID, moveCounts.getOrDefault(moveID, 0) + 1);
+                    }
+                }
+            }
+        }
+
+        List<Move> allMoves = romHandler.getMoves();
+
+        Map<Move, Double> ubiquitous = new HashMap<>();
+        for (Map.Entry<Integer, Integer> entry : moveCounts.entrySet()) {
+            Move m = allMoves.get(entry.getKey());
+            System.out.println(entry.getValue() + "\t" + m.name);
+            double rate = (double) entry.getValue() / (double) tpCount;
+            if (rate >= UBIQUITOUS_MOVE_RATE) {
+                ubiquitous.put(m, rate);
+            }
+        }
+
+        System.out.println(ubiquitous);
+        assertTrue(ubiquitous.isEmpty());
     }
 }

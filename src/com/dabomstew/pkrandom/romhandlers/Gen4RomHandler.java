@@ -3008,10 +3008,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if ((rom[moveDataLoc + 1] & 0x01) == 0x01) {
 						move += 256;
 					}
-					MoveLearnt ml = new MoveLearnt();
-					ml.level = level;
-					ml.move = move;
-					learnt.add(ml);
+					learnt.add(new MoveLearnt(move, level));
 					moveDataLoc += 2;
 				}
 				movesets.put(pkmn.getNumber(), learnt);

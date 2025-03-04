@@ -1352,10 +1352,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             List<MoveLearnt> ourMoves = new ArrayList<>();
             pointer++;
             while (rom[pointer] != 0) {
-                MoveLearnt learnt = new MoveLearnt();
-                learnt.level = rom[pointer] & 0xFF;
-                learnt.move = rom[pointer + 1] & 0xFF;
-                ourMoves.add(learnt);
+                int level = rom[pointer] & 0xFF;
+                int move = rom[pointer + 1] & 0xFF;
+                ourMoves.add(new MoveLearnt(move, level));
                 pointer += 2;
             }
             movesets.put(pkmn.getNumber(), ourMoves);

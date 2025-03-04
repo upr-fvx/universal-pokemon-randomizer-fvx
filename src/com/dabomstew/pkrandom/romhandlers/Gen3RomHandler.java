@@ -1956,10 +1956,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		if (jamboMovesetHack) {
 			while ((rom[offset] & 0xFF) != 0x00 || (rom[offset + 1] & 0xFF) != 0x00
 					|| (rom[offset + 2] & 0xFF) != 0xFF) {
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = rom[offset + 2] & 0xFF;
-				ml.move = readWord(offset);
-				moves.add(ml);
+                int move = readWord(offset);
+                int level = rom[offset + 2] & 0xFF;
+				moves.add(new MoveLearnt(move, level));
 				offset += 3;
 			}
 		} else {
@@ -1969,10 +1968,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				if ((rom[offset + 1] & 0x01) == 0x01) {
 					move += 0x100;
 				}
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = level;
-				ml.move = move;
-				moves.add(ml);
+				moves.add(new MoveLearnt(move, level));
 				offset += 2;
 			}
 		}

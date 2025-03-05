@@ -104,6 +104,8 @@ public class TestRomHandler extends AbstractRomHandler {
     private final List<Integer> eliteFourTrainers;
     private final List<Integer> challengeModeEliteFourTrainers;
     private final Map<String, Type> gymAndEliteTypeThemes;
+    private final boolean trainerPokemonAlwaysUseAbility1;
+    private final boolean trainerPokemonUseBaseFormeAbilities;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -163,6 +165,8 @@ public class TestRomHandler extends AbstractRomHandler {
         eliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(false));
         challengeModeEliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(true));
         gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
+        trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
+        trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
     }
 
     /**
@@ -673,10 +677,13 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        //what. why is this in romHandler
-        //or maybe the real question is, why is it public
-        throw new NotImplementedException();
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        return trainerPokemonAlwaysUseAbility1;
+    }
+
+    @Override
+    public boolean isTrainerPokemonUseBaseFormeAbilities() {
+        return trainerPokemonUseBaseFormeAbilities;
     }
 
     @Override

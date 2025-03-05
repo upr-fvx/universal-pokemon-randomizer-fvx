@@ -3185,23 +3185,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
-        // which represents "Either Ability 1 or 2". During randomization, we make sure to
-        // to set abilitySlot to some non-zero value, but if you call this method without
-        // randomization, then you'll hit this case.
-        if (tp.abilitySlot < 1 || tp.abilitySlot > 3) {
-            return 0;
-        }
-
-        // In Gen 5, alt formes for Trainer Pokemon use the base forme's ability
-        Species pkmn = tp.species;
-        while (pkmn.getBaseForme() != null) {
-            pkmn = pkmn.getBaseForme();
-        }
-
-        List<Integer> abilityList = Arrays.asList(pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
-        return abilityList.get(tp.abilitySlot - 1);
+    public boolean isTrainerPokemonUseBaseFormeAbilities() {
+        return true;
     }
 
     @Override

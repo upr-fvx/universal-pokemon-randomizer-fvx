@@ -167,6 +167,8 @@ public class TestRomHandler extends AbstractRomHandler {
         gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
         trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
         trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
+
+        perfectAccuracy = mockupOf.getPerfectAccuracy();
     }
 
     /**
@@ -833,11 +835,6 @@ public class TestRomHandler extends AbstractRomHandler {
             testMoves = deepCopyMoves(originalMoves);
         }
         return testMoves;
-    }
-
-    @Override
-    public int getPerfectAccuracy() {
-        throw new NotImplementedException();
     }
 
     @Override

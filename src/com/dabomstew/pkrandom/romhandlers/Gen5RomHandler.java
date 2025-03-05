@@ -1239,7 +1239,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         if(romEntry.getRomType() == Gen5Constants.Type_BW) {
-            return Gen5Constants.gymAndEliteThemesBW;
+            //This won't test correctly with TestRomHandler, but logically, it should be here.
+            //(Another reason to split GameHandler off of RomHandler.)
+
+            Map<String, Type> themes = new HashMap<>(Gen5Constants.gymAndEliteThemesBW);
+            if(isTypeTriangleChanged()) {
+                List<Type> triangle = getStarterTypeTriangle();
+                themes.put("GYM1", triangle.get(0));
+                themes.put("GYM9", triangle.get(1));
+                themes.put("GYM10", triangle.get(2));
+            }
+            return themes;
         } else {
             return Gen5Constants.gymAndEliteThemesBW2;
         }

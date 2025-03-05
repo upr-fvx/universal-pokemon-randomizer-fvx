@@ -154,6 +154,32 @@ public interface RomHandler {
 
     void setStarterHeldItems(List<Integer> items);
 
+    /**
+     * If the assigned starters have been chosen according to a new type triangle,
+     * sets the types of this triangle so that other aspects of the game can be changed to match.
+     * @param triangle The three types chosen, in the same order as the starters.
+     */
+    void setStarterTypeTriangle(List<Type> triangle);
+
+    /**
+     * Gets an unmodifiable copy of the starter type triangle in use.
+     * If no type triangle has been set, returns FIRE_WATER_GRASS,
+     * even if the starters have been changed from those types.
+     * @return The three types chosen, in the same order as the starters.
+     */
+    List<Type> getStarterTypeTriangle();
+
+    /**
+     * Returns true if a custom type triangle has been set, false otherwise.
+     */
+    boolean isTypeTriangleChanged();
+
+    /**
+     * Returns the standard type triangle (Fire, Water, Grass) in the order used by this game.
+     * @return The standard type triangle in the correct order.
+     */
+    List<Type> getStandardTypeTriangle();
+
     // =================
     // Pokemon Abilities
     // =================

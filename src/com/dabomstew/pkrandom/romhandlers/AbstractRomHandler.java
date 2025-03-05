@@ -58,6 +58,8 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected int perfectAccuracy = 100; // default
 
+    private List<Type> starterTypeTriangle = null;
+
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
@@ -147,6 +149,38 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public boolean hasStarterTypeTriangleSupport() {
         return (starterCount() % 3 == 0);
+    }
+
+    public void setStarterTypeTriangle(List<Type> triangle) {
+        if(triangle.size() != 3) {
+            throw new IllegalArgumentException("Type triangle must contain three types!");
+        }
+        starterTypeTriangle = Collections.unmodifiableList(triangle);
+    }
+
+    public List<Type> getStarterTypeTriangle() {
+        if(isTypeTriangleChanged()) {
+            return starterTypeTriangle;
+        } else {
+            return getStandardTypeTriangle();
+        }
+    }
+
+    public boolean isTypeTriangleChanged() {
+        return starterTypeTriangle != null;
+    }
+
+    public List<Type> getStandardTypeTriangle(){
+        List<Type> typesInOrder;
+        if(generationOfPokemon() <= 2) {
+            //the order is Fire, Water, Grass
+            typesInOrder = Arrays.asList(Type.FIRE, Type.WATER, Type.GRASS);
+        } else {
+            //the order is Grass, Fire, Water
+            typesInOrder = Arrays.asList(Type.GRASS, Type.FIRE, Type.WATER);
+        }
+
+        return Collections.unmodifiableList(typesInOrder);
     }
 
     @Override

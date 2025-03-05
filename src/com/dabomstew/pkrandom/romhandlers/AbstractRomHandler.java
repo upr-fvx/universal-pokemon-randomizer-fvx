@@ -112,7 +112,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
         for (EncounterArea area : areas) {
             if (area.isPartiallyPostGame()) {
-                for (int i = area.getPartiallyPostGameCutoff(); i < area.size(); i++) {
+                for (int i = 0; i < area.getPartiallyPostGameCutoff(); i++) {
                     wildPokemon.add(area.get(i).getSpecies());
                 }
             } else if (!area.isPostGame()) {

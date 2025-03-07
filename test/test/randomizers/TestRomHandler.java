@@ -127,7 +127,9 @@ public class TestRomHandler extends AbstractRomHandler {
         hmMoves = Collections.unmodifiableList(mockupOf.getHMMoves());
         originalMoveTutorMoves = Collections.unmodifiableList(mockupOf.getMoveTutorMoves());
         originalTMHMCompatibility = Collections.unmodifiableMap(mockupOf.getTMHMCompatibility());
-        originalMoveTutorCompatibility = Collections.unmodifiableMap(mockupOf.getMoveTutorCompatibility());
+        originalMoveTutorCompatibility = mockupOf.hasMoveTutors() ?
+                Collections.unmodifiableMap(mockupOf.getMoveTutorCompatibility()) :
+                Collections.emptyMap();
 
         altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
 

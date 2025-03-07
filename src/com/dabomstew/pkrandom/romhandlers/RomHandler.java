@@ -392,6 +392,10 @@ public interface RomHandler {
 
     void setMoveTutorMoves(List<Integer> moves);
 
+    /**
+     * Gets the Move Tutor compatibility for this game. 
+     * If {@link #hasMoveTutors()}==false, there is no guarantee this method will work.
+     */
     Map<Species, boolean[]> getMoveTutorCompatibility();
 
     void setMoveTutorCompatibility(Map<Species, boolean[]> compatData);

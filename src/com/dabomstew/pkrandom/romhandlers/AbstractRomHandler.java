@@ -31,6 +31,7 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.constants.ItemIDs;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
@@ -39,7 +40,6 @@ import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -282,6 +282,33 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
+    @Override
+    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
+        if (abilitiesPerSpecies() == 0) {
+            throw new IllegalStateException("No abilities in this game.");
+        }
+        if (tp.abilitySlot > abilitiesPerSpecies()) {
+            throw new IllegalStateException("tp.abilitySlot too high for this game. Should be <="
+                    + abilitiesPerSpecies() + ", is " + tp.abilitySlot);
+        }
+
+        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
+        // which represents "Either Ability 1 or 2". During randomization, we make sure
+        // to set abilitySlot to some non-zero value, but if you call this method without
+        // randomization, then you'll hit this case.
+        if (tp.abilitySlot == 0) {
+            return AbilityIDs.undefined;
+        }
+
+        Species pk = !tp.species.isBaseForme() && isTrainerPokemonUseBaseFormeAbilities() ?
+                tp.species.getBaseForme() : tp.species;
+        int[] abilities = new int[] {pk.getAbility1(), pk.getAbility2(), pk.getAbility3()};
+
+        int slot = isTrainerPokemonAlwaysUseAbility1() ? 1 : tp.abilitySlot;
+
+        return abilities[slot - 1];
+    }
+
     /* Helper methods used by subclasses and/or this class */
 
     /**
@@ -358,6 +385,18 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
+    public boolean isTrainerPokemonUseBaseFormeAbilities() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
     public List<String> getLocationNamesForEvolution(EvolutionType et) {
         throw new UnsupportedOperationException("This game has no location-based evolutions.");
     }
@@ -423,11 +462,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        return 0;
     }
 
     @Override

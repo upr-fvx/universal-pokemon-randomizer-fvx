@@ -196,6 +196,18 @@ public interface RomHandler {
 
     int getAbilityForTrainerPokemon(TrainerPokemon tp);
 
+    /**
+     * Returns true if {@link TrainerPokemon} in this game always use ability 1.
+     */
+    boolean isTrainerPokemonAlwaysUseAbility1();
+
+    /**
+     * In some games, when alt formes are used as {@link TrainerPokemon},
+     * they don't use their own abilities but those of their base forme.<br>
+     * Returns true if that is the case for this game.
+     */
+    boolean isTrainerPokemonUseBaseFormeAbilities();
+
     boolean hasMegaEvolutions();
 
     // ============

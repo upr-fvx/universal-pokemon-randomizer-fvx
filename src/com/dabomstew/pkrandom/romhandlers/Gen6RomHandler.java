@@ -2021,10 +2021,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 while (readWord(movedata, moveDataLoc) != 0xFFFF || readWord(movedata, moveDataLoc + 2) != 0xFFFF) {
                     int move = readWord(movedata, moveDataLoc);
                     int level = readWord(movedata, moveDataLoc + 2);
-                    MoveLearnt ml = new MoveLearnt();
-                    ml.level = level;
-                    ml.move = move;
-                    learnt.add(ml);
+                    learnt.add(new MoveLearnt(move, level));
                     moveDataLoc += 4;
                 }
                 movesets.put(pkmn.getNumber(), learnt);
@@ -3419,20 +3416,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>(Gen6Constants.uselessAbilities);
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
-        // which represents "Either Ability 1 or 2". During randomization, we make sure to
-        // to set abilitySlot to some non-zero value, but if you call this method without
-        // randomization, then you'll hit this case.
-        if (tp.abilitySlot < 1 || tp.abilitySlot > 3) {
-            return 0;
-        }
-
-        List<Integer> abilityList = Arrays.asList(tp.species.getAbility1(), tp.species.getAbility2(), tp.species.getAbility3());
-        return abilityList.get(tp.abilitySlot - 1);
     }
 
     @Override

@@ -1488,10 +1488,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 List<MoveLearnt> ourMoves = new ArrayList<>();
                 for (int delta = Gen1Constants.bsLevel1MovesOffset; delta < Gen1Constants.bsLevel1MovesOffset + 4; delta++) {
                     if (rom[statsOffset + delta] != 0x00) {
-                        MoveLearnt learnt = new MoveLearnt();
-                        learnt.level = 1;
-                        learnt.move = moveRomToNumTable[rom[statsOffset + delta] & 0xFF];
-                        ourMoves.add(learnt);
+                        int move = moveRomToNumTable[rom[statsOffset + delta] & 0xFF];
+                        ourMoves.add(new MoveLearnt(move, 1));
                     }
                 }
                 // Skip over evolution data
@@ -1506,10 +1504,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 }
                 pointer++;
                 while (rom[pointer] != 0) {
-                    MoveLearnt learnt = new MoveLearnt();
-                    learnt.level = rom[pointer] & 0xFF;
-                    learnt.move = moveRomToNumTable[rom[pointer + 1] & 0xFF];
-                    ourMoves.add(learnt);
+                    int move = moveRomToNumTable[rom[pointer + 1] & 0xFF];
+                    int level = rom[pointer] & 0xFF;
+                    ourMoves.add(new MoveLearnt(move, level));
                     pointer += 2;
                 }
                 movesets.put(pk.getNumber(), ourMoves);

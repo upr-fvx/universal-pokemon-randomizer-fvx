@@ -3008,10 +3008,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if ((rom[moveDataLoc + 1] & 0x01) == 0x01) {
 						move += 256;
 					}
-					MoveLearnt ml = new MoveLearnt();
-					ml.level = level;
-					ml.move = move;
-					learnt.add(ml);
+					learnt.add(new MoveLearnt(move, level));
 					moveDataLoc += 2;
 				}
 				movesets.put(pkmn.getNumber(), learnt);
@@ -4770,20 +4767,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-		// In Gen 4, alt formes for Trainer Pokemon use the base forme's ability
-		Species pkmn = tp.species;
-		while (pkmn.getBaseForme() != null) {
-			pkmn = pkmn.getBaseForme();
-		}
+	public boolean isTrainerPokemonAlwaysUseAbility1() {
+		return romEntry.getRomType() != Gen4Constants.Type_HGSS;
+	}
 
-		if (romEntry.getRomType() == Gen4Constants.Type_DP || romEntry.getRomType() == Gen4Constants.Type_Plat) {
-			// In DPPt, Trainer Pokemon *always* use the first Ability, no matter what
-			return pkmn.getAbility1();
-		} else {
-			// In HGSS, Trainer Pokemon can specify which ability they want to use.
-			return tp.abilitySlot == 2 ? pkmn.getAbility2() : pkmn.getAbility1();
-		}
+	@Override
+	public boolean isTrainerPokemonUseBaseFormeAbilities() {
+		return true;
 	}
 
 	@Override

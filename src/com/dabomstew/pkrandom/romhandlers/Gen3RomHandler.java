@@ -1661,6 +1661,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.IVs = ((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255;
                     thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
                     thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
+                    // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 2) {
@@ -1671,6 +1673,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
                     thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
                     thisPoke.heldItem = readWord(pointerToPokes + poke * 8 + 6);
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 1) {
@@ -1683,6 +1686,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     for (int move = 0; move < 4; move++) {
                         thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
                     }
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 3) {
@@ -1696,6 +1700,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     for (int move = 0; move < 4; move++) {
                         thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             }
@@ -1742,6 +1747,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			for (int move = 0; move < 4; move++) {
 				tp.moves[move] = readWord(currentOffset + 12 + (move * 2));
 			}
+            tp.abilitySlot = 1;
 			mossdeepSteven.pokemon.add(tp);
 		}
 
@@ -1956,10 +1962,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		if (jamboMovesetHack) {
 			while ((rom[offset] & 0xFF) != 0x00 || (rom[offset + 1] & 0xFF) != 0x00
 					|| (rom[offset + 2] & 0xFF) != 0xFF) {
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = rom[offset + 2] & 0xFF;
-				ml.move = readWord(offset);
-				moves.add(ml);
+                int move = readWord(offset);
+                int level = rom[offset + 2] & 0xFF;
+				moves.add(new MoveLearnt(move, level));
 				offset += 3;
 			}
 		} else {
@@ -1969,10 +1974,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				if ((rom[offset + 1] & 0x01) == 0x01) {
 					move += 0x100;
 				}
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = level;
-				ml.move = move;
-				moves.add(ml);
+				moves.add(new MoveLearnt(move, level));
 				offset += 2;
 			}
 		}
@@ -3342,9 +3344,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
-        return tp.species.getAbility1();
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        return true;
     }
 
     @Override

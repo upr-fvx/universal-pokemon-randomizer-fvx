@@ -38,6 +38,7 @@ import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -345,7 +346,7 @@ public class RandomizerGUI {
     private JRadioButton teKeepTypeIdentitiesRadioButton;
     private JRadioButton teInverseRadioButton;
     private JCheckBox teAddRandomImmunitiesCheckBox;
-    private JCheckBox teUpdateTypeEffectivenessCheckbox;
+    private JCheckBox teUpdateCheckbox;
     private JLabel spBstLimitsLabel;
     private JCheckBox spBSTMinimumCheckbox;
     private JCheckBox spBSTMaximumCheckbox;
@@ -1843,7 +1844,7 @@ public class RandomizerGUI {
         teKeepTypeIdentitiesRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.KEEP_IDENTITIES);
         teInverseRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.INVERSE);
         teAddRandomImmunitiesCheckBox.setSelected(settings.isInverseTypesRandomImmunities());
-        teUpdateTypeEffectivenessCheckbox.setSelected(settings.isUpdateTypeEffectiveness());
+        teUpdateCheckbox.setSelected(settings.isUpdateTypeEffectiveness());
 
         ppalUnchangedRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.UNCHANGED);
         ppalRandomRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.RANDOM);
@@ -2075,7 +2076,7 @@ public class RandomizerGUI {
         settings.setTypeEffectivenessMod(teUnchangedRadioButton.isSelected(), teRandomRadioButton.isSelected(),
                 teRandomBalancedRadioButton.isSelected(), teKeepTypeIdentitiesRadioButton.isSelected(), teInverseRadioButton.isSelected());
         settings.setInverseTypesRandomImmunities(teAddRandomImmunitiesCheckBox.isSelected());
-        settings.setUpdateTypeEffectiveness(teUpdateTypeEffectivenessCheckbox.isSelected());
+        settings.setUpdateTypeEffectiveness(teUpdateCheckbox.isSelected());
 
         settings.setPokemonPalettesMod(ppalUnchangedRadioButton.isSelected(), ppalRandomRadioButton.isSelected());
         settings.setPokemonPalettesFollowTypes(ppalFollowTypesCheckBox.isSelected());
@@ -2377,7 +2378,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
                 teKeepTypeIdentitiesRadioButton, teInverseRadioButton, teAddRandomImmunitiesCheckBox,
-                teUpdateTypeEffectivenessCheckbox);
+                teUpdateCheckbox);
 
         setInitialButtonState(ppalUnchangedRadioButton, ppalRandomRadioButton, ppalFollowTypesCheckBox,
                 ppalFollowEvolutionsCheckBox, ppalShinyFromNormalCheckBox,
@@ -2842,8 +2843,9 @@ public class RandomizerGUI {
             teKeepTypeIdentitiesRadioButton.setEnabled(typeSupport);
             teInverseRadioButton.setEnabled(typeSupport);
             disableAndDeselectButtons(teAddRandomImmunitiesCheckBox);
-            teUpdateTypeEffectivenessCheckbox.setEnabled(typeSupport);
-            teUpdateTypeEffectivenessCheckbox.setSelected(false);
+            teUpdateCheckbox.setVisible(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
+            teUpdateCheckbox.setEnabled(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
+            teUpdateCheckbox.setSelected(false);
 
             // Graphics
             boolean ppalSupport = romHandler.hasPokemonPaletteSupport();

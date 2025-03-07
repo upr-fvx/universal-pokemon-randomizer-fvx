@@ -10,6 +10,8 @@ import java.util.TreeMap;
 
 public class TypeEffectivenessUpdater extends Updater<Type, Type, Effectiveness> {
 
+    public static final int UPDATE_TO_GEN = 6;
+
     private final Map<Type, Map<Type, Update<Effectiveness>>> typeEffUpdates = new TreeMap<>();
 
     public TypeEffectivenessUpdater(RomHandler romHandler) {

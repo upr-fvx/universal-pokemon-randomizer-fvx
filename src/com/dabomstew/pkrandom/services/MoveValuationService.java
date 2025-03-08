@@ -300,10 +300,18 @@ public class MoveValuationService {
         values.setAccuracy(accuracy);
 
         values.setSpeedDependantEffectsValue(generateUniqueSpeedValue(move));
-        double useRestrictionMultiplier = generateUniqueUseLimitValue(move);
+
+        double useRestrictionMultiplier = 1;
+        if(move.isChargeMove && !GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
+            useRestrictionMultiplier = .5;
+        }
+        if(move.isRechargeMove)
+            useRestrictionMultiplier = .75;
+
         if(move.pp < 10) {
             useRestrictionMultiplier *= .9;
         }
+        useRestrictionMultiplier *= generateUniqueUseLimitValue(move);
         values.setUseMultiplier(useRestrictionMultiplier);
 
         values.setDoubleBattleEffectsValue(generateUniqueDoubleBattleEffectsValue(move));
@@ -521,6 +529,8 @@ public class MoveValuationService {
             case MoveIDs.psystrike:
             case MoveIDs.secretSword:
                 return 1; //not inherently valuable, but useful in combination with special moves
+            case MoveIDs.freezeDry:
+                return 1.2; //good, but only against Water-types
             default:
                 if(GlobalConstants.bindingMoves.contains(move.internalId) && romHandler.generationOfPokemon() == 1) {
                     return 2.5; //Multi-turn incapacitating moves
@@ -647,6 +657,7 @@ public class MoveValuationService {
 
             //unique conditions
             case MoveIDs.fakeOut:
+            case MoveIDs.matBlock:
                 return .5; //only first turn
             case MoveIDs.naturalGift:
                 return .5; //only once and consumes a potentially-useful resource
@@ -660,6 +671,11 @@ public class MoveValuationService {
                 return .07; //if my math is right, this is the chance of two Pokemon sharing a type,
                 //assuming that each Pokemon is a random type combination.
                 //(Since types are not all equally common, this is not entirely accurate.)
+            case MoveIDs.powder:
+                return .25; //only works against fire moves. Honestly, this is generous.
+
+            case MoveIDs.belch:
+                return .9; //this is mostly a synergy deal
 
             default:
                 return 1;
@@ -784,6 +800,8 @@ public class MoveValuationService {
             case MoveIDs.refresh:
             case MoveIDs.substitute:
                 return 70;
+            case MoveIDs.mistyTerrain:
+                return 65; //also protects foes... although, that doesn't usually matter without anti-synergy
             case MoveIDs.psychoShift:
                 return 90; //significantly better than just a status heal, but still needs a status effect to do anything
 
@@ -896,12 +914,47 @@ public class MoveValuationService {
                 //has some negative synergies
             case MoveIDs.shellSmash:
                 return 160; //gain 6 stages, lose 2, all of them 40-value stats
+            case MoveIDs.rototiller:
+                return 80; //1 stage in 2 stats... when it works (synergy)
+            case MoveIDs.flowerShield:
+                return 35; //1 stage, and it might also give it to opponents. (synergy makes better).
+            case MoveIDs.stickyWeb:
+                return 80; //1 stage on each new pokemon; 2 is a reasonable estimate. May do synergy: front of party.
+            case MoveIDs.fellStinger:
+                if(generation == 6) {
+                    return 40; //two stages, but only if you can pull off the kill
+                } else {
+                    return 70; //now three stages (and easier to do)
+                }
+            case MoveIDs.topsyTurvy:
+                return 60; //if opponent has any stat buffs, very solid. also potential synergy
+            case MoveIDs.diamondStorm:
+                if(generation == 6) {
+                    return 20; //50% to raise one stage
+                } else {
+                    return 40; //now two stages
+                }
+            case MoveIDs.venomDrench:
+                return 120; //three stats by 1; requires synergy
 
 
             //protect / damage reduction
             case MoveIDs.protect:
             case MoveIDs.detect:
                 return 80;
+            case MoveIDs.matBlock:
+                return 60; //only works on damaging moves
+            case MoveIDs.craftyShield:
+                return 30; //only works on status moves
+            case MoveIDs.kingsShield:
+                if(generation <= 7) {
+                    return 130; //blocks damaging moves PLUS reduces attack if contacted PLUS form change
+                    //although, maybe the form change should be a synergy thing? hmm.
+                } else {
+                    return 110; //attack reduction nerfed. still good.
+                }
+            case MoveIDs.spikyShield:
+                return 95; //blocks all move plus damages if contacted
             case MoveIDs.wideGuard:
             case MoveIDs.quickGuard:
                 return 20; //only work on small subset of moves
@@ -954,8 +1007,9 @@ public class MoveValuationService {
             case MoveIDs.uTurn:
             case MoveIDs.batonPass:
             case MoveIDs.voltSwitch:
+            case MoveIDs.partingShot:
                 //switch user
-                //not that *inherently* useful (since switching is just an option),
+                //not that *inherently* useful (since switching is just an option, even if the AI doesn't often use it),
                 //but get around trap moves & can be synergized
                 return 30;
             case MoveIDs.teleport:
@@ -974,6 +1028,9 @@ public class MoveValuationService {
                 return 50; //better with synergy
             case MoveIDs.reflectType:
                 return 70; //usually gives resistance
+            case MoveIDs.trickOrTreat:
+            case MoveIDs.forestsCurse:
+                return 70; //need synergy to be good. (easy synergy though)
 
             //ability changes
             case MoveIDs.gastroAcid:
@@ -988,11 +1045,25 @@ public class MoveValuationService {
                 return 80; //depends largely on the user's ability,
                 //but this seems like a decent base value
 
+            //work despite protection
+            case MoveIDs.feint:
+            case MoveIDs.shadowForce:
+            case MoveIDs.phantomForce:
+            case MoveIDs.hyperspaceHole:
+            case MoveIDs.hyperspaceFury:
+                return 10; //works through protect/detect/etc
+            //not putting the substitute-piercing moves because a: that's very specific and b: there's so many
+            case MoveIDs.thousandArrows:
+                return 30; //works against ungrounded, + grounds them
+
             //other effects
             case MoveIDs.spiderWeb:
             case MoveIDs.meanLook:
             case MoveIDs.block:
+            case MoveIDs.thousandWaves:
                 return 40; //trap moves
+            case MoveIDs.fairyLock:
+                return 15; //trap, but only for one turn.
             case MoveIDs.spite:
                 return 50;
             case MoveIDs.grudge:
@@ -1000,6 +1071,10 @@ public class MoveValuationService {
             case MoveIDs.rainDance:
             case MoveIDs.sunnyDay:
                 return 15; //weather moves do barely anything without synergy
+            case MoveIDs.grassyTerrain:
+            case MoveIDs.electricTerrain:
+            case MoveIDs.psychicTerrain:
+                return 15; //same for terrains
             case MoveIDs.gravity:
                 return 15;
             case MoveIDs.destinyBond:
@@ -1030,7 +1105,17 @@ public class MoveValuationService {
                 return 0; //not inherently valuable, but good if the user has low attack
             case MoveIDs.autotomize:
                 return 2; //I think there's slightly more punish-heavy moves than punish-light moves,
-            //but not many of each.
+                //but not many of each.
+            case MoveIDs.ionDeluge:
+                return 20; //might make a resist?
+            case MoveIDs.electrify:
+                return 40; //at least doesn't need it to be Normal type. still kinda bad.
+            case MoveIDs.powder:
+                return 80; //protect plus damage! when it works
+            case MoveIDs.falseSwipe:
+            case MoveIDs.holdBack:
+                return -5; //actively bad in a trainer battle
+
 
             default:
                 if(GlobalConstants.bindingMoves.contains(move.internalId)) {
@@ -1061,7 +1146,9 @@ public class MoveValuationService {
             case MoveIDs.feint:
             case MoveIDs.shadowForce:
             case MoveIDs.phantomForce:
-                return 30; //lifts protect/detect/etc
+            case MoveIDs.hyperspaceHole:
+            case MoveIDs.hyperspaceFury:
+                return 10; //lifts protect/detect/etc
             case MoveIDs.flameBurst:
                 return 5; //very small amount of damage
             case MoveIDs.afterYou:
@@ -1155,9 +1242,27 @@ public class MoveValuationService {
                 return 1.2;
 
             case MoveIDs.magicRoom:
+            case MoveIDs.fairyLock:
                 return 2;
                 //effects all pokemon - allies are dealt with via synergy
 
+            case MoveIDs.aromatherapy:
+            case MoveIDs.auroraVeil:
+            case MoveIDs.craftyShield:
+            case MoveIDs.healBell:
+            case MoveIDs.lightScreen:
+            case MoveIDs.lifeDew:
+            case MoveIDs.luckyChant:
+            case MoveIDs.matBlock:
+            case MoveIDs.mist:
+            case MoveIDs.quickGuard:
+            case MoveIDs.reflect:
+            case MoveIDs.safeguard:
+            case MoveIDs.tailwind:
+            case MoveIDs.wideGuard:
+            case MoveIDs.jungleHealing:
+                return 2;
+                //affects all allies
 
             case MoveIDs.poisonGas:
                 if(generation >= 5) {
@@ -1177,8 +1282,17 @@ public class MoveValuationService {
                 } else {
                     return 2;
                 }
+            case MoveIDs.howl:
+                if(generation >= 8) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+
+            case MoveIDs.gearUp:
+            case MoveIDs.magneticFlux:
             case MoveIDs.expandingForce:
-                return 1; //this is a synergy case
+                return 1; //these are synergy cases
         }
         return 1;
     }

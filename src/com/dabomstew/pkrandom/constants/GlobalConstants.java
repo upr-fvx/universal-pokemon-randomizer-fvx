@@ -162,6 +162,7 @@ public class GlobalConstants {
 
     public static final List<Integer> uselessMoves = Arrays.asList(
             MoveIDs.splash, MoveIDs.celebrate, MoveIDs.holdHands, MoveIDs.teleport,
+            MoveIDs.happyHour,        //this effect does not help in battle
             MoveIDs.reflectType       // the AI does not know how to use this move properly
     );
 

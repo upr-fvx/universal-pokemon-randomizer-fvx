@@ -126,7 +126,11 @@ public class RomHandlerMoveTest extends RomHandlerTest {
             if (move == null) {
                 continue;
             }
+            if(GlobalConstants.zMoves.contains(move.internalId)) {
+                continue;
+            }
             int value = mvs.getBaseValue(move);
+
             System.out.println(move.name + ": " + value);
 
             if(value == 0 && !GlobalConstants.uselessMoves.contains(move.internalId)

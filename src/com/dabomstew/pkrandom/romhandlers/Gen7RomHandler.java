@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
  */
 public class Gen7RomHandler extends Abstract3DSRomHandler {
 
+    // TODO: implement location traverse order
+
     public static class Factory extends RomHandler.Factory {
 
         @Override

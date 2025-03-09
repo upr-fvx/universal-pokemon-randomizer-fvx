@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TrainerRandomizersTest extends RandomizerTest {
 
-    private static final double UBIQUITOUS_MOVE_RATE = 0.25;
+    private static final double UBIQUITOUS_MOVE_RATE = 0.20;
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -560,14 +560,17 @@ public class TrainerRandomizersTest extends RandomizerTest {
         List<Move> allMoves = romHandler.getMoves();
 
         Map<Move, Double> ubiquitous = new HashMap<>();
-        for (Map.Entry<Integer, Integer> entry : moveCounts.entrySet()) {
-            Move m = allMoves.get(entry.getKey());
-            System.out.println(entry.getValue() + "\t" + m.name);
-            double rate = (double) entry.getValue() / (double) tpCount;
-            if (rate >= UBIQUITOUS_MOVE_RATE) {
-                ubiquitous.put(m, rate);
-            }
-        }
+        int finalTpCount = tpCount;
+        moveCounts.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(
+                e -> {
+                    Move m = allMoves.get(e.getKey());
+                    double rate = (double) e.getValue() / (double) finalTpCount;
+                    System.out.printf("%.4f\t%s%n", rate, m.name);
+                    if (rate >= UBIQUITOUS_MOVE_RATE) {
+                        ubiquitous.put(m, rate);
+                    }
+                }
+        );
 
         System.out.println(ubiquitous);
         assertTrue(ubiquitous.isEmpty());

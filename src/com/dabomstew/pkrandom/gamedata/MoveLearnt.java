@@ -35,6 +35,16 @@ public class MoveLearnt {
         return "move " + move + " at level " + level;
     }
 
+    public MoveLearnt(int move, int level) {
+        this.move = move;
+        this.level = level;
+    }
+
+    public MoveLearnt(MoveLearnt original) {
+        this.move = original.move;
+        this.level = original.level;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof MoveLearnt) {

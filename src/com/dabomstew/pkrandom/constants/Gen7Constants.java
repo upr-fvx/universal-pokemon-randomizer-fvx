@@ -57,6 +57,15 @@ public class Gen7Constants {
             SpeciesIDs.graveler, SpeciesIDs.golem, SpeciesIDs.grimer, SpeciesIDs.muk, SpeciesIDs.exeggutor, SpeciesIDs.marowak
     );
 
+    private static final List<Integer> speciesWithTotemForms = Arrays.asList(
+            // Raticate-Alolan and Marowak-Alolan being here depends on the USUM formes that share their SM species IDs,
+            // (Oricorio-Pom-Pom and Geodude-Alolan) not having cosmetic alt formes of their own.
+            // Wishiwashi is also excluded, since it seems to simply not have a totem forme.
+            SpeciesIDs.gumshoos, SpeciesIDs.vikavolt, SpeciesIDs.lurantis, SpeciesIDs.salazzle, SpeciesIDs.kommoO,
+            SpeciesIDs.araquanid, SpeciesIDs.togedemaru, SpeciesIDs.ribombee, SpeciesIDs.SMFormes.raticateA,
+            SpeciesIDs.USUMFormes.raticateA, SpeciesIDs.SMFormes.marowakA, SpeciesIDs.USUMFormes.marowakA
+    );
+
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
     private static final Map<Integer,Map<Integer,String>> formeSuffixesByBaseForme = setupFormeSuffixesByBaseForme();
 
@@ -212,6 +221,8 @@ public class Gen7Constants {
                 return 0;
         }
     }
+
+    public static final int route1EncAreaIndex = 0, route1PikipekEncIndex = 8, route1PikipekStaticIndex = 0;
 
     public static final int noDamageTargetTrappingEffect = 106, noDamageFieldTrappingEffect = 354,
             damageAdjacentFoesTrappingEffect = 373, damageTargetTrappingEffect = 384;
@@ -550,165 +561,76 @@ public class Gen7Constants {
     private static Map<Integer,Map<Integer,String>> setupFormeSuffixesByBaseForme() {
         Map<Integer,Map<Integer,String>> map = new HashMap<>();
 
-        Map<Integer,String> deoxysMap = new HashMap<>();
-        deoxysMap.put(1,"-Attack");
-        deoxysMap.put(2,"-Defense");
-        deoxysMap.put(3,"-Speed");
-        map.put(SpeciesIDs.deoxys, deoxysMap);
+        putFormSuffixes(map, SpeciesIDs.pikachu,
+                // the last one is Partner Cap because it is only in USUM, but unsure which is which of the others
+                "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-PartnerCap");
 
-        Map<Integer,String> wormadamMap = new HashMap<>();
-        wormadamMap.put(1,"-Sandy");
-        wormadamMap.put(2,"-Trash");
-        map.put(SpeciesIDs.wormadam, wormadamMap);
+        putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
+        putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
+        putFormSuffixes(map, SpeciesIDs.groudon, "-Primal");
+        putFormSuffixes(map, SpeciesIDs.rayquaza, "-Mega"); // the other megas are put using stones
+        putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
-        Map<Integer,String> shayminMap = new HashMap<>();
-        shayminMap.put(1,"-Sky");
-        map.put(SpeciesIDs.shaymin, shayminMap);
+        putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
+        putFormSuffixes(map, SpeciesIDs.shaymin, "-Sky");
+        putFormSuffixes(map, SpeciesIDs.giratina, "-Origin");
+        putFormSuffixes(map, SpeciesIDs.rotom, "-Heat", "-Wash", "-Frost", "-Fan", "-Mow");
 
-        Map<Integer,String> giratinaMap = new HashMap<>();
-        giratinaMap.put(1,"-Origin");
-        map.put(SpeciesIDs.giratina, giratinaMap);
+        putFormSuffixes(map, SpeciesIDs.basculin, "-Blue");
+        putFormSuffixes(map, SpeciesIDs.darmanitan, "-Zen");
+        putFormSuffixes(map, SpeciesIDs.tornadus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.thundurus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.landorus, "-Therian");
+        putFormSuffixes(map, SpeciesIDs.kyurem, "-White", "-Black");
+        putFormSuffixes(map, SpeciesIDs.keldeo, "-Resolute");
+        putFormSuffixes(map, SpeciesIDs.meloetta, "-Pirouette");
 
-        Map<Integer,String> rotomMap = new HashMap<>();
-        rotomMap.put(1,"-Heat");
-        rotomMap.put(2,"-Wash");
-        rotomMap.put(3,"-Frost");
-        rotomMap.put(4,"-Fan");
-        rotomMap.put(5,"-Mow");
-        map.put(SpeciesIDs.rotom, rotomMap);
+        putFormSuffixes(map, SpeciesIDs.greninja, "-BattleBond", "-Ash");
+        putFormSuffixes(map, SpeciesIDs.meowstic, "-F");
+        putFormSuffixes(map, SpeciesIDs.aegislash, "-Blade");
+        putFormSuffixes(map, SpeciesIDs.pumpkaboo, "-M", "-L", "-XL");
+        putFormSuffixes(map, SpeciesIDs.gourgeist, "-M", "-L", "-XL");
+        putFormSuffixes(map, SpeciesIDs.floette, "", "", "", "", "-Eternal"); // first 4 are just colors
+        putFormSuffixes(map, SpeciesIDs.zygarde,
+                // using '%' causes issues with Java's string formatting, so avoid it/use 'p' instead
+                "-10p", "-10p-PowerConstruct", "-PowerConstruct", "-Complete");
+        putFormSuffixes(map, SpeciesIDs.hoopa, "-Unbound");
 
-        Map<Integer,String> castformMap = new HashMap<>();
-        castformMap.put(1,"-Sunny");
-        castformMap.put(2,"-Rainy");
-        castformMap.put(3,"-Snowy");
-        map.put(SpeciesIDs.castform, castformMap);
+        putFormSuffixes(map, SpeciesIDs.oricorio, "-Pom-Pom", "-Pa'u", "-Sensu");
+        putFormSuffixes(map, SpeciesIDs.rockruff, "-OwnTempo");
+        putFormSuffixes(map, SpeciesIDs.lycanroc, "-Midnight", "-Dusk");
+        putFormSuffixes(map, SpeciesIDs.wishiwashi, "-School");
+        putFormSuffixes(map, SpeciesIDs.minior, "", "", "", "", "", "", "-Core"); // first 6 are just colors
+        putFormSuffixes(map, SpeciesIDs.necrozma, "-DuskMane", "-DawnWings", "-Ultra");
+        putFormSuffixes(map, SpeciesIDs.magearna, "-OGColors");
 
-        Map<Integer,String> basculinMap = new HashMap<>();
-        basculinMap.put(1,"-Blue");
-        map.put(SpeciesIDs.basculin, basculinMap);
-
-        Map<Integer,String> darmanitanMap = new HashMap<>();
-        darmanitanMap.put(1,"-Zen");
-        map.put(SpeciesIDs.darmanitan, darmanitanMap);
-
-        Map<Integer,String> meloettaMap = new HashMap<>();
-        meloettaMap.put(1,"-Pirouette");
-        map.put(SpeciesIDs.meloetta, meloettaMap);
-
-        Map<Integer,String> kyuremMap = new HashMap<>();
-        kyuremMap.put(1,"-White");
-        kyuremMap.put(2,"-Black");
-        map.put(SpeciesIDs.kyurem, kyuremMap);
-
-        Map<Integer,String> tornadusMap = new HashMap<>();
-        tornadusMap.put(1,"-Therian");
-        map.put(SpeciesIDs.tornadus, tornadusMap);
-
-        Map<Integer,String> thundurusMap = new HashMap<>();
-        thundurusMap.put(1,"-Therian");
-        map.put(SpeciesIDs.thundurus, thundurusMap);
-
-        Map<Integer,String> landorusMap = new HashMap<>();
-        landorusMap.put(1,"-Therian");
-        map.put(SpeciesIDs.landorus, landorusMap);
-
-        Map<Integer,String> meowsticMap = new HashMap<>();
-        meowsticMap.put(1,"-F");
-        map.put(SpeciesIDs.meowstic, meowsticMap);
-
-        Map<Integer,String> aegislashMap = new HashMap<>();
-        aegislashMap.put(1,"-Blade");
-        map.put(SpeciesIDs.aegislash, aegislashMap);
-
-        Map<Integer,String> pumpkabooMap = new HashMap<>();
-        pumpkabooMap.put(1,"-M");
-        pumpkabooMap.put(2,"-L");
-        pumpkabooMap.put(3,"-XL");
-        map.put(SpeciesIDs.pumpkaboo, pumpkabooMap);
-
-        Map<Integer,String> gourgeistMap = new HashMap<>();
-        gourgeistMap.put(1,"-M");
-        gourgeistMap.put(2,"-L");
-        gourgeistMap.put(3,"-XL");
-        map.put(SpeciesIDs.gourgeist, gourgeistMap);
-
-        Map<Integer,String> floetteMap = new HashMap<>();
-        floetteMap.put(5,"-Eternal");
-        map.put(SpeciesIDs.floette, floetteMap);
-
-        Map<Integer,String> kyogreMap = new HashMap<>();
-        kyogreMap.put(1,"-Primal");
-        map.put(SpeciesIDs.kyogre, kyogreMap);
-
-        Map<Integer,String> groudonMap = new HashMap<>();
-        groudonMap.put(1,"-Primal");
-        map.put(SpeciesIDs.groudon, groudonMap);
-
-        Map<Integer,String> rayquazaMap = new HashMap<>();
-        rayquazaMap.put(1,"-Mega");
-        map.put(SpeciesIDs.rayquaza, rayquazaMap);
-
-        Map<Integer, String> keldeoMap = new HashMap<>();
-        keldeoMap.put(1, "-Resolute");
-        map.put(SpeciesIDs.keldeo, keldeoMap);
-
-        Map<Integer,String> hoopaMap = new HashMap<>();
-        hoopaMap.put(1,"-Unbound");
-        map.put(SpeciesIDs.hoopa, hoopaMap);
-
-        for (Integer species: Gen6Constants.speciesToMegaStoneORAS.keySet()) {
-            Map<Integer,String> megaMap = new HashMap<>();
-            if (species == SpeciesIDs.charizard || species == SpeciesIDs.mewtwo) {
-                megaMap.put(1,"-Mega-X");
-                megaMap.put(2,"-Mega-Y");
+        for (Integer speciesID : Gen6Constants.speciesToMegaStoneORAS.keySet()) {
+            if (speciesID == SpeciesIDs.charizard || speciesID == SpeciesIDs.mewtwo) {
+                putFormSuffixes(map, speciesID, "-Mega-X", "-Mega-Y");
             } else {
-                megaMap.put(1,"-Mega");
+                putFormSuffixes(map, speciesID, "-Mega");
             }
-            map.put(species,megaMap);
         }
 
-        Map<Integer,String> wishiwashiMap = new HashMap<>();
-        wishiwashiMap.put(1,"-School");
-        map.put(SpeciesIDs.wishiwashi, wishiwashiMap);
-
-        Map<Integer,String> oricorioMap = new HashMap<>();
-        oricorioMap.put(1,"-Pom-Pom");
-        oricorioMap.put(2,"-Pa'u");
-        oricorioMap.put(3,"-Sensu");
-        map.put(SpeciesIDs.oricorio, oricorioMap);
-
-        Map<Integer,String> lycanrocMap = new HashMap<>();
-        lycanrocMap.put(1,"-Midnight");
-        lycanrocMap.put(2,"-Dusk");
-        map.put(SpeciesIDs.lycanroc, lycanrocMap);
-
-        for (int species: speciesWithAlolanForms) {
-            Map<Integer,String> alolanMap = new HashMap<>();
-            alolanMap.put(1,"-Alolan");
-            map.put(species, alolanMap);
+        for (int species : speciesWithAlolanForms) {
+            putFormSuffixes(map, species, "-Alolan");
         }
 
-        Map<Integer,String> greninjaMap = new HashMap<>();
-        greninjaMap.put(2,"-Ash");
-        map.put(SpeciesIDs.greninja, greninjaMap);
-
-        Map<Integer,String> zygardeMap = new HashMap<>();
-        zygardeMap.put(1,"-10p"); // using '%' causes issues with Java's string formatting, so avoid it/use 'p' instead
-        zygardeMap.put(4,"-Complete");
-        map.put(SpeciesIDs.zygarde, zygardeMap);
-
-        Map<Integer,String> miniorMap = new HashMap<>();
-        miniorMap.put(7,"-Core");
-        map.put(SpeciesIDs.minior, miniorMap);
-
-        Map<Integer,String> necrozmaMap = new HashMap<>();
-        necrozmaMap.put(1,"-DuskMane");
-        necrozmaMap.put(2,"-DawnWings");
-        necrozmaMap.put(3,"-Ultra");
-        map.put(SpeciesIDs.necrozma, necrozmaMap);
+        for (int species : speciesWithTotemForms) {
+            putFormSuffixes(map, species, "-Totem");
+        }
 
         return map;
     }
+
+    private static void putFormSuffixes(Map<Integer, Map<Integer, String>> map, int species, String... suffixes) {
+        Map<Integer, String> speciesMap = new HashMap<>();
+        for (int i = 0; i < suffixes.length; i++) {
+            speciesMap.put(i + 1, suffixes[i]);
+        }
+        map.put(species, speciesMap);
+    }
+
 
     private static Map<Integer,String> setupDummyFormeSuffixes() {
         Map<Integer,String> m = new HashMap<>();
@@ -933,6 +855,15 @@ public class Gen7Constants {
         }
     }
 
+    public static final byte sunnyEvolutionExtraInfo = 0x1E, moonyEvolutionExtraInfo = 0x1F;
+
+    public static final int evolutionMethodLevelGame = 0x24,
+            evolutionMethodLevelGameDay = 0x25, evolutionMethodLevelGameNight = 0x26;
+
+    public static final List<Integer> gameSpecificEvolutionMethods = Collections.unmodifiableList(Arrays.asList(
+            evolutionMethodLevelGame, evolutionMethodLevelGameDay, evolutionMethodLevelGameNight
+    ));
+
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
             EvolutionType.HAPPINESS, EvolutionType.HAPPINESS_DAY, EvolutionType.HAPPINESS_NIGHT, EvolutionType.LEVEL,
             EvolutionType.TRADE, EvolutionType.TRADE_ITEM, EvolutionType.TRADE_SPECIAL, EvolutionType.STONE,
@@ -941,19 +872,26 @@ public class Gen7Constants {
             EvolutionType.LEVEL_IS_EXTRA, EvolutionType.LEVEL_HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY,
             EvolutionType.STONE_FEMALE_ONLY, EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT,
             EvolutionType.LEVEL_WITH_MOVE, EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY,
-            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_ELECTRIFIED_AREA, EvolutionType.LEVEL_MOSS_ROCK,
-            EvolutionType.LEVEL_ICY_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
+            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK,
+            EvolutionType.LEVEL_ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
-            EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.LEVEL_GAME,
-            EvolutionType.LEVEL_DAY_GAME, EvolutionType.LEVEL_NIGHT_GAME, EvolutionType.LEVEL_SNOWY,
-            EvolutionType.LEVEL_DUSK, EvolutionType.LEVEL_NIGHT_ULTRA, EvolutionType.STONE_ULTRA
+            EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.NONE,
+            EvolutionType.NONE, EvolutionType.NONE, EvolutionType.LEVEL_SNOWY,
+            EvolutionType.LEVEL_DUSK, EvolutionType.LEVEL_ULTRA, EvolutionType.STONE_ULTRA
     };
 
-    public static int evolutionTypeToIndex(EvolutionType evolutionType) {
+    public static int evolutionTypeToIndex(EvolutionType et) {
         for (int i = 0; i < evolutionTypeTable.length; i++) {
-            if (evolutionType == evolutionTypeTable[i]) {
+            if (et == evolutionTypeTable[i]) {
                 return i + 1;
             }
+        }
+        if (et == EvolutionType.LEVEL_GAME_THIS || et == EvolutionType.LEVEL_GAME_OTHER) {
+            return evolutionMethodLevelGame;
+        } else if (et == EvolutionType.LEVEL_GAME_THIS_DAY || et == EvolutionType.LEVEL_GAME_OTHER_DAY) {
+            return evolutionMethodLevelGameDay;
+        } else if (et == EvolutionType.LEVEL_GAME_THIS_NIGHT || et == EvolutionType.LEVEL_GAME_OTHER_NIGHT) {
+            return evolutionMethodLevelGameNight;
         }
         return -1;
     }
@@ -963,6 +901,21 @@ public class Gen7Constants {
             return EvolutionType.NONE;
         }
         return evolutionTypeTable[index - 1];
+    }
+
+    public static List<Integer> getAreaIndicesForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                // {Vast Poni Canyon} : {Blush Mountain, Vast Poni Canyon}
+                return romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
+            case LEVEL_MOSS_ROCK:
+                return Collections.singletonList(74); // {Lush Jungle}
+            case LEVEL_ICE_ROCK:
+            case LEVEL_SNOWY:
+                return Collections.singletonList(138); // {Mount Lanakila}
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
     }
 
     private static List<Boolean> setupRelevantEncounterFiles(int romType) {

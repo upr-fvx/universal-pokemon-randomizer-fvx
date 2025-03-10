@@ -33,10 +33,12 @@ public class RandomSource {
 
     private final RandomWithCounter nonCosmetic = new RandomWithCounter();
     private final RandomWithCounter cosmetic = new RandomWithCounter();
+    private long seed;
 
     public void seed(long seed) {
         nonCosmetic.setSeed(seed);
         cosmetic.setSeed(seed);
+        this.seed = seed;
     }
 
     public Random getNonCosmetic() {
@@ -47,8 +49,20 @@ public class RandomSource {
         return cosmetic;
     }
 
+    public long getSeed() {
+        return seed;
+    }
+
     public int callsSinceSeed() {
         return nonCosmetic.calls + cosmetic.calls;
+    }
+
+    public int callsSinceSeedNonCosmetic() {
+        return nonCosmetic.calls;
+    }
+
+    public int callsSinceSeedCosmetic() {
+        return cosmetic.calls;
     }
 
     private static class RandomWithCounter extends Random {

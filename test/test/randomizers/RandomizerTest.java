@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -94,7 +91,12 @@ public class RandomizerTest {
 
     @BeforeAll
     static public void loadROMs() {
-        for(String romName : getRomNames()) {
+        List<String> romNames = Arrays.asList(getRomNames());
+        romNames.sort(Comparator.comparingInt(RandomizerTest::getGenerationNumberOf));
+        Collections.reverse(romNames);
+        //load late generations first, when there should be the most memory available
+        //sort and reverse rather than simply reverse sort because US/UM should be before S/M
+        for(String romName : romNames) {
             System.out.println("Loading " + romName +  "...");
             loadROM(romName);
             System.out.println("Finished loading " + romName);

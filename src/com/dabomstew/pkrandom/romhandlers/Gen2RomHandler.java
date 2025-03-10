@@ -156,8 +156,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 int offset1 = romEntry.isCrystal() ? Gen2Constants.chrisBackBankOffsetCrystal1 :
                         Gen2Constants.chrisBackBankOffsetGS1;
                 int[] bankOffsets = new int[] {chrisBackPointers[0] + offset0, chrisBackPointers[1] + offset1};
-                System.out.println("ChrisBackImageBankOffsets=[0x" + Integer.toHexString(bankOffsets[0]) +
-                        ", 0x" + Integer.toHexString(bankOffsets[1]) + "]");
                 romEntry.putArrayValue("ChrisBackImageBankOffsets", bankOffsets);
             }
 
@@ -1352,10 +1350,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             List<MoveLearnt> ourMoves = new ArrayList<>();
             pointer++;
             while (rom[pointer] != 0) {
-                MoveLearnt learnt = new MoveLearnt();
-                learnt.level = rom[pointer] & 0xFF;
-                learnt.move = rom[pointer + 1] & 0xFF;
-                ourMoves.add(learnt);
+                int level = rom[pointer] & 0xFF;
+                int move = rom[pointer + 1] & 0xFF;
+                ourMoves.add(new MoveLearnt(move, level));
                 pointer += 2;
             }
             movesets.put(pkmn.getNumber(), ourMoves);
@@ -1921,29 +1918,27 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             if (pkmn != null) {
                 for (Evolution evol : pkmn.getEvolutionsFrom()) {
                     if (evol.getType() == EvolutionType.TRADE || evol.getType() == EvolutionType.TRADE_ITEM) {
+
+                        markImprovedEvolutions(pkmn);
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
                             evol.setExtraInfo(Gen2ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evol, itemNames[24]);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(40); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
                             // Level 37
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(37); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         } else {
                             // A new trade evo of a single stage Pokemon
                             // level 30
                             evol.setType(EvolutionType.LEVEL);
                             evol.setExtraInfo(30); // level
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evol);
                         }
                     }
                 }
@@ -1969,26 +1964,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                for (Evolution evol : pkmn.getEvolutionsFrom()) {
-                    // In Gen 2, only Eevee has a time-based evolution.
-                    if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
-                        // Eevee: Make sun stone => Espeon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[169]);
-                    } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        // Eevee: Make moon stone => Umbreon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen2ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[8]);
-                    }
-                }
-            }
-        }
-
+    public boolean canGiveEverySpeciesOneEvolutionEach() {
+        // because there isn't enough space in the bank with evolution data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
     }
 
     @Override
@@ -2239,6 +2217,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 && romEntry.getIntValue("TMMovesReusableFunctionJumpLength") != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
+        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -2255,6 +2236,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             nonBadItems.banSingles(Gen2ItemIDs.luckyEgg);
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
+        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
         }
     }
 
@@ -2291,6 +2274,21 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         writeByte(offset++, GBConstants.gbZ80Jump);
         writeByte(offset, (byte) jumpLength);
+    }
+
+    private void applyForgettableHMsPatch() {
+        // Changes a jump ("JR C, e8") to two NOPs,
+        // and thus ignores the special handling for HMs when forgetting moves.
+        int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
+        if (offset == 0) {
+            return;
+        }
+        if (rom[offset] != GBConstants.gbZ80JumpRelativeC) {
+            throw new RuntimeException("Unexpected byte found for the ROM's move forgetting function, " +
+                    "likely ROM entry value \"HMMovesForgettableFunctionOffset\" is faulty.");
+        }
+        writeByte(offset++, GBConstants.gbZ80Nop);
+        writeByte(offset, GBConstants.gbZ80Nop);
     }
 
     @Override
@@ -3058,6 +3056,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasCustomPlayerGraphicsSupport() {
+        // because it depends on a .DLL
+        return System.getProperty("os.name").startsWith("Windows");
+    }
+
+    @Override
+    public boolean customPlayerGraphicsSupportDependsOnOS() {
         return true;
     }
 
@@ -3379,18 +3383,5 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public Gen2RomEntry getRomEntry() {
         return romEntry;
     }
-
-    @Override
-    public void writeCheckValueToROM(int value) {
-        if (romEntry.getIntValue("CheckValueOffset") > 0) {
-            int cvOffset = romEntry.getIntValue("CheckValueOffset");
-            byte[] cvBytes = new byte[4];
-            for (int i = 0; i < 4; i++) {
-                rom[cvOffset + i] = (byte) ((value >> (3 - i) * 8) & 0xFF);
-            }
-            writeBytes(cvOffset, cvBytes);
-        }
-    }
-
 
 }

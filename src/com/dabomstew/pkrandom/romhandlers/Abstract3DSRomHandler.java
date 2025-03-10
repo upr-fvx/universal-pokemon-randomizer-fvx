@@ -22,13 +22,17 @@ package com.dabomstew.pkrandom.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.RomFunctions;
+import com.dabomstew.pkrandom.constants.Gen6Constants;
 import com.dabomstew.pkrandom.ctr.GARCArchive;
 import com.dabomstew.pkrandom.ctr.NCCH;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.Effectiveness;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.TypeTable;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -38,6 +42,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * An abstract base class for 3DS {@link RomHandler}s, which standardises common 3DS functions.
@@ -159,6 +165,66 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		// Default value for Gen4+.
 		// Handlers can override again in case of ROM hacks etc.
 		return true;
+	}
+
+	public void findTypeTable() {
+		TypeTable typeTable = TypeTable.getVanillaGen6PlusTable();
+
+		int tableWidth = typeTable.getTypes().size();
+		byte[] tablebytes = new byte[tableWidth * tableWidth];
+
+		for (Type attacker : typeTable.getTypes()) {
+			for (Type defender : typeTable.getTypes()) {
+				int offset = (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
+				Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
+				byte effectivenessInternal;
+				switch (effectiveness) {
+					case DOUBLE:
+						effectivenessInternal = 8;
+						break;
+					case NEUTRAL:
+						effectivenessInternal = 4;
+						break;
+					case HALF:
+						effectivenessInternal = 2;
+						break;
+					case ZERO:
+						effectivenessInternal = 0;
+						break;
+					default:
+						effectivenessInternal = 0;
+				}
+				tablebytes[offset] = effectivenessInternal;
+			}
+		}
+
+		System.out.println(bytesToHex(tablebytes));
+		Map<String, List<Integer>> found = new TreeMap<>();
+
+		for (String fileName : baseRom.getFileNames()) {
+			System.out.println(fileName);
+			if (fileName.startsWith("a"))
+				continue;
+
+			try {
+				byte[] file = readFile(fileName);
+				List<Integer> offsets = RomFunctions.search(file, tablebytes);
+				if (!offsets.isEmpty()) {
+					System.out.println(offsets);
+					found.put(fileName, offsets);
+				}
+			} catch (Exception ignored) {
+				System.out.println("could not read GARC");
+			}
+		}
+
+
+		for (Map.Entry<String, List<Integer>> entry : found.entrySet()) {
+			System.out.println(entry.getKey());
+			for (Integer offset : entry.getValue()) {
+				System.out.println("\t0x" + Integer.toHexString(offset));
+			}
+		}
 	}
 
 	protected byte[] readCode() throws IOException {

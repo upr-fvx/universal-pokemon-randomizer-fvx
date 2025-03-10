@@ -34,14 +34,20 @@ public class Evolution implements Comparable<Evolution> {
 
     // only relevant for Gen 7
     private int forme;
-    private int level = 0; // in generations pre gen 7, the extrainfo has the level
-    //TODO: fix that
 
     public Evolution(Species from, Species to, EvolutionType type, int extra) {
         this.from = from;
         this.to = to;
         this.type = type;
         this.extraInfo = extra;
+    }
+
+    public Evolution(Evolution original) {
+        this.from = original.from;
+        this.to = original.to;
+        this.type = original.type;
+        this.extraInfo = original.extraInfo;;
+        this.forme = original.forme;
     }
 
     /**
@@ -92,15 +98,6 @@ public class Evolution implements Comparable<Evolution> {
         this.forme = forme;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    // TODO: are the evolutions hashed somewhere????
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -120,7 +117,7 @@ public class Evolution implements Comparable<Evolution> {
         if (getClass() != obj.getClass())
             return false;
         Evolution other = (Evolution) obj;
-        return from == other.from && to == other.to && type == other.type;
+        return from == other.from && to == other.to && type == other.type && extraInfo == other.extraInfo;
     }
 
     @Override
@@ -138,10 +135,10 @@ public class Evolution implements Comparable<Evolution> {
 
     @Override
     public String toString() {
-        return forme == 0 && level == 0 ?
+        return forme == 0 ?
                 String.format("(%s->%s, %s, extraInfo:%d)", from.getFullName(), to.getFullName(),
                         type, extraInfo) :
-                String.format("(%s->%s, %s, extraInfo:%d, forme:%d, level:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo, forme, level);
+                String.format("(%s->%s, %s, extraInfo:%d, forme:%d)", from.getFullName(), to.getFullName(),
+                        type, extraInfo, forme);
     }
 }

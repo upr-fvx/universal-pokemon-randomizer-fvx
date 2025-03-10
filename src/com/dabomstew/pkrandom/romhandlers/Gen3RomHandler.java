@@ -1661,6 +1661,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.IVs = ((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255;
                     thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
                     thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
+                    // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 2) {
@@ -1671,6 +1673,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.level = readWord(pointerToPokes + poke * 8 + 2);
                     thisPoke.species = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
                     thisPoke.heldItem = readWord(pointerToPokes + poke * 8 + 6);
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 1) {
@@ -1683,6 +1686,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     for (int move = 0; move < 4; move++) {
                         thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
                     }
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             } else if (pokeDataType == 3) {
@@ -1696,6 +1700,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     for (int move = 0; move < 4; move++) {
                         thisPoke.moves[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
+                    thisPoke.abilitySlot = 1;
                     tr.pokemon.add(thisPoke);
                 }
             }
@@ -1742,6 +1747,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			for (int move = 0; move < 4; move++) {
 				tp.moves[move] = readWord(currentOffset + 12 + (move * 2));
 			}
+            tp.abilitySlot = 1;
 			mossdeepSteven.pokemon.add(tp);
 		}
 
@@ -1956,10 +1962,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		if (jamboMovesetHack) {
 			while ((rom[offset] & 0xFF) != 0x00 || (rom[offset + 1] & 0xFF) != 0x00
 					|| (rom[offset + 2] & 0xFF) != 0xFF) {
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = rom[offset + 2] & 0xFF;
-				ml.move = readWord(offset);
-				moves.add(ml);
+                int move = readWord(offset);
+                int level = rom[offset + 2] & 0xFF;
+				moves.add(new MoveLearnt(move, level));
 				offset += 3;
 			}
 		} else {
@@ -1969,10 +1974,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				if ((rom[offset + 1] & 0x01) == 0x01) {
 					move += 0x100;
 				}
-				MoveLearnt ml = new MoveLearnt();
-				ml.level = level;
-				ml.move = move;
-				moves.add(ml);
+				moves.add(new MoveLearnt(move, level));
 				offset += 2;
 			}
 		}
@@ -2944,66 +2946,63 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     // Not trades, but impossible without trading
-                    if (evo.getType() == EvolutionType.HAPPINESS_DAY && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // happiness day change to Sun Stone
-                        evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.sunStone]);
-                    }
-                    if (evo.getType() == EvolutionType.HAPPINESS_NIGHT && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // happiness night change to Moon Stone
-                        evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.moonStone]);
-                    }
-                    if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        // beauty change to level 35
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(35);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                    if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+                        if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
+                            // happiness day change to Sun Stone
+                            markImprovedEvolutions(pkmn);
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(Gen3ItemIDs.sunStone);
+                        }
+                        if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
+                            // happiness night change to Moon Stone
+                            markImprovedEvolutions(pkmn);
+                            evo.setType(EvolutionType.STONE);
+                            evo.setExtraInfo(Gen3ItemIDs.moonStone);
+                        }
+                        if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
+                            // beauty change to level 35
+                            markImprovedEvolutions(pkmn);
+                            evo.setType(EvolutionType.LEVEL);
+                            evo.setExtraInfo(35);
+                        }
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Haunter, Machoke, Kadabra, Graveler
                         // Make it into level 37, we're done.
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Trade w/ Held Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
+                        markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
                             // Poliwhirl: Lv 37
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(37);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(40);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == Gen3ItemIDs.deepSeaTooth) {
                             // Clamperl -> Huntail: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == Gen3ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(Gen3ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames[Gen3ItemIDs.waterStone]);
                         } else {
                             // Onix, Scyther or Porygon: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
-                            addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         }
                     }
                 }
@@ -3030,28 +3029,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 // Amount of required happiness for HAPPINESS_NIGHT evolutions.
                 if (rom[offset + 66] == (byte) (GlobalConstants.vanillaHappinessToEvolve - 1)) {
                     writeByte(offset + 66, (byte) (GlobalConstants.easierHappinessToEvolve - 1));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                for (Evolution evol : pkmn.getEvolutionsFrom()) {
-                    // In Gen 3, only Eevee has a time-based evolution.
-                    if (evol.getType() == EvolutionType.HAPPINESS_DAY) {
-                        // Eevee: Make sun stone => Espeon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen3ItemIDs.sunStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
-                    } else if (evol.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        // Eevee: Make moon stone => Umbreon
-                        evol.setType(EvolutionType.STONE);
-                        evol.setExtraInfo(Gen3ItemIDs.moonStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evol, itemNames[evol.getExtraInfo()]);
-                    }
                 }
             }
         }
@@ -3367,9 +3344,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
-        return tp.species.getAbility1();
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        return true;
     }
 
     @Override
@@ -3894,6 +3870,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getArrayValue("TMMovesReusableFunctionOffsets").length != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
+        if (romEntry.getArrayValue("HMMovesForgettableFunctionOffsets").length != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -3919,6 +3898,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
+        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
         }
     }
 
@@ -3971,6 +3952,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) {
                 throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
                         + Integer.toHexString(rom[offset]) + ". Likely TMMovesReusableFunctionOffsets is faulty.");
+            }
+            writeByte(offset, (byte) 0);
+        }
+    }
+
+    private void applyForgettableHMsPatch() {
+        // There are multiple locations where the game checks whether a Move is in a
+        // "banned from forgetting" list. If this was always the same list we could blank out that,
+        // but it is not. Instead, we force the checks themselves to misreport, to return "0" rather
+        // than "1" when an HM is found.
+        int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+        for (int offset : offsets) {
+            if (rom[offset] != 1) {
+                throw new RuntimeException("Expected 0x01, was 0x"
+                        + Integer.toHexString(rom[offset]) + ". Likely HMMovesForgettableFunctionOffsets is faulty.");
             }
             writeByte(offset, (byte) 0);
         }

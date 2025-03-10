@@ -25,7 +25,6 @@ package com.dabomstew.pkrandom.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import javafx.util.Pair;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 
 import java.util.*;
@@ -44,7 +43,6 @@ public class Species implements Comparable<Species> {
     private Species baseForme = null;
     private int formeNumber = 0;
     private int cosmeticForms = 0;
-    private int formeSpriteIndex = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
     //TODO: condense this cosmetic bs into a single denotation
@@ -89,8 +87,8 @@ public class Species implements Comparable<Species> {
 
     private ExpCurve growthCurve;
     
-    private List<Palette> normalPalettes = new ArrayList<>(1);
-    private List<Palette> shinyPalettes = new ArrayList<>(1);
+    private Palette normalPalette;
+    private Palette shinyPalette;
 
     private List<Evolution> evolutionsFrom = new ArrayList<>();
     private List<Evolution> evolutionsTo = new ArrayList<>();
@@ -307,7 +305,7 @@ public class Species implements Comparable<Species> {
 
     /**
      * Gets all {@link Species} that this {@link Species} is related to by evolution.
-     * Does not include Mega Evolution.
+     * Includes itself. Does not include Mega Evolution.
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return a {@link SpeciesSet} containing all {@link Species} this {@link Species} is related to (including itself)
      */
@@ -331,6 +329,20 @@ public class Species implements Comparable<Species> {
     }
 
     /**
+     * A tiny class intended to remove reliance on javafx.util.Pair.
+     * Holds a given species and its relation to another species.
+     */
+    private static class RelationRecord {
+        Species relative;
+        int relation;
+
+        RelationRecord(Species relative, int relation) {
+            this.relative = relative;
+            this.relation = relation;
+        }
+    }
+
+    /**
      * Gets the relative position of the given {@link Species} in the evolutionary family.
      * If the family is a cycle, will return the closest path. This is usually, but
      * not always, the lowest absolute value.
@@ -341,14 +353,14 @@ public class Species implements Comparable<Species> {
      * @throws IllegalArgumentException if the {@link Species} are not related.
      */
     public int getRelation(Species relative, boolean useOriginal) {
-        Queue<Pair<Species, Integer>> toCheck = new ArrayDeque<>();
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
         SpeciesSet checked = new SpeciesSet();
-        toCheck.add(new Pair<>(this, 0));
+        toCheck.add(new RelationRecord(this, 0));
 
         while(!toCheck.isEmpty()) {
-            Pair<Species, Integer> current = toCheck.remove();
-            Species currentSpecies = current.getKey();
-            int currentPosition = current.getValue();
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
             if(checked.contains(currentSpecies)) {
                 continue;
             }
@@ -359,10 +371,10 @@ public class Species implements Comparable<Species> {
             }
 
             for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition + 1));
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
             }
             for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition - 1));
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
             }
         }
 
@@ -379,15 +391,15 @@ public class Species implements Comparable<Species> {
      *         there are none.
      */
     public SpeciesSet getRelativesAtPosition(int position, boolean useOriginal) {
-        Queue<Pair<Species, Integer>> toCheck = new ArrayDeque<>();
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
         SpeciesSet checked = new SpeciesSet();
         SpeciesSet relatives = new SpeciesSet();
-        toCheck.add(new Pair<>(this, 0));
+        toCheck.add(new RelationRecord(this, 0));
 
         while(!toCheck.isEmpty()) {
-            Pair<Species, Integer> current = toCheck.remove();
-            Species currentSpecies = current.getKey();
-            int currentPosition = current.getValue();
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
             if(checked.contains(currentSpecies)) {
                 continue;
             }
@@ -398,10 +410,10 @@ public class Species implements Comparable<Species> {
             }
 
             for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition + 1));
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
             }
             for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
-                toCheck.add(new Pair<>(evo, currentPosition - 1));
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
             }
         }
 
@@ -536,10 +548,6 @@ public class Species implements Comparable<Species> {
         //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
-    public int getSpriteIndex() {
-        return formeNumber == 0 ? number : formeSpriteIndex + formeNumber - 1;
-    }
-
     public String getFullName() {
         return name + formeSuffix;
     }
@@ -553,6 +561,7 @@ public class Species implements Comparable<Species> {
 
     @Override
     public int hashCode() {
+        // Don't change this hash!! Things *will* break.
         final int prime = 31;
         int result = 1;
         result = prime * result + number;
@@ -660,6 +669,8 @@ public class Species implements Comparable<Species> {
     }
 
     public Species getBaseForme() {
+        // TODO: return self if baseForme == null
+        //  (check that getBaseForme() == null isn't used instead of isBaseForme() first)
         return baseForme;
     }
 
@@ -689,14 +700,6 @@ public class Species implements Comparable<Species> {
 
     public void setCosmeticForms(int cosmeticForms) {
         this.cosmeticForms = cosmeticForms;
-    }
-
-    public int getFormeSpriteIndex() {
-        return formeSpriteIndex;
-    }
-
-    public void setFormeSpriteIndex(int formeSpriteIndex) {
-        this.formeSpriteIndex = formeSpriteIndex;
     }
 
     /**
@@ -1005,58 +1008,20 @@ public class Species implements Comparable<Species> {
         this.growthCurve = growthCurve;
     }
 
-    public List<Palette> getNormalPalettes() {
-        return normalPalettes;
-    }
-
-    public void setNormalPalettes(List<Palette> normalPalettes) {
-        this.normalPalettes = normalPalettes;
-    }
-
-    public List<Palette> getShinyPalettes() {
-        return shinyPalettes;
-    }
-
-    public void setShinyPalettes(List<Palette> shinyPalettes) {
-        this.shinyPalettes = shinyPalettes;
-    }
-
     public Palette getNormalPalette() {
-        return getNormalPalette(0);
-    }
-
-    public Palette getNormalPalette(int index) {
-        return normalPalettes.size() <= index ? null : normalPalettes.get(index);
+        return normalPalette;
     }
 
     public void setNormalPalette(Palette normalPalette) {
-        setNormalPalette(0, normalPalette);
-    }
-
-    public void setNormalPalette(int index, Palette normalPalette) {
-        while (normalPalettes.size() <= index) {
-            normalPalettes.add(index, null);
-        }
-        normalPalettes.set(index, normalPalette);
+        this.normalPalette = normalPalette;
     }
 
     public Palette getShinyPalette() {
-        return getShinyPalette(0);
-    }
-
-    public Palette getShinyPalette(int index) {
-        return shinyPalettes.size() <= index ? null : shinyPalettes.get(index);
+        return shinyPalette;
     }
 
     public void setShinyPalette(Palette shinyPalette) {
-        setShinyPalette(0, shinyPalette);
-    }
-
-    public void setShinyPalette(int index, Palette shinyPalette) {
-        while (shinyPalettes.size() <= index) {
-            shinyPalettes.add(index, null);
-        }
-        shinyPalettes.set(index, shinyPalette);
+        this.shinyPalette = shinyPalette;
     }
 
     /**

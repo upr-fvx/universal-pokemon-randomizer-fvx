@@ -7,7 +7,7 @@ The randomizer requires **Java 8 (or higher), 64-bit**. If you do not have 64-bi
 
 You can check your Java version by opening a terminal window and typing `java -version`:
 
-![java -version output](https://i.imgur.com/sqzUsUk.png)
+![java -version output]({{ site.baseurl }}/assets/images/wikipages/about_java/java_version.png)
 
 If you run this command and it does _not_ say that you have Java version 1.8 and a 64-bit VM, you will need to upgrade Java.
 
@@ -29,7 +29,7 @@ If that *still* doesn't work, then try moving the entire randomizer folder to a 
 
 This error indicates that you have an environment variable that overrides the amount of memory available to Java; you'll need at least 4 GB (4096 MB) to use the randomizer. To remove this environment variable on Windows, follow these steps:
 1. Hit the start button, then type "Edit the system environment variables" and select the option that looks like this:
-![](https://i.imgur.com/JeyH7g2.png)
+![]({{ site.baseurl }}/assets/images/wikipages/about_java/edit_env1.png)
 2. In the window that pops up, click on the "Environment Variables" button:
-![](https://i.imgur.com/FW896Fd.png)
+![]({{ site.baseurl }}/assets/images/wikipages/about_java/edit_env2.png)
 3. In either the user or system variables, you should find _JAVA_OPTIONS. You'll need to find and delete it. Just click on it and press "Delete".

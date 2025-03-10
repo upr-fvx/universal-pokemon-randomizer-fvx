@@ -13,8 +13,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.
+ * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.<br>
+ * <b>NOTE:</b> to change which ROMs are tested, modify {@link #getRomNames()}.
  */
+//TODO: when feature is implemented, make child class LoadOnlyRomHandlerTest which is parameterized container
+// (Not doing it now bc I'm afraid it would overtax memory to load all romHandlers at once.)
 public class RomHandlerTest {
 
     // update if the amount of supported generation increases,

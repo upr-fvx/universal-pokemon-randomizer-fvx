@@ -281,6 +281,22 @@ Following are the evolutions that are changed by this setting, listed by game.
 | Pumpkaboo      | Gourgeist   | Trade                  | Level 37                     |
 | Graveler-Alola | Golem-Alola | Trade                  | Level 37                     |
 
+**Only in Sun/Ultra Sun:**
+
+| Pokemon  | Evolution         | Old Method | New Method                |
+|----------|-------------------|------------|---------------------------|
+| Rockruff | Rockruff-Midnight | None       | Level 25 during the night |
+| Cosmoem  | Solgaleo          | Level 53   | Level 53 during the day   |
+| Cosmoem  | Lunala            | None       | Level 53 during the night |
+
+**Only in Moon/Ultra Moon:**
+
+| Pokemon  | Evolution       | Old Method | New Method                |
+|----------|-----------------|------------|---------------------------|
+| Rockruff | Rockruff-Midday | None       | Level 25 during the night |
+| Cosmoem  | Solgaleo        | None       | Level 53 during the day   |
+| Cosmoem  | Lunala          | Level 53   | Level 53 during the night |
+
 **Only if movesets are randomized:**
 
 | Pokemon             | Evolution  | Old Method                   | New Method |
@@ -308,6 +324,10 @@ In addition to lowering level evolutions, this setting also affects the followin
 * All Pokemon that normally evolve by levelling up in Vast Poni Canyon also evolve at level 35, in addition to their regular evolution method. This affects Magneton, Nosepass and Charjabug.
 * Crabrawler also evolves at level 35, in addition to its regular evolution method.
 
+**Only in Ultra Sun/Ultra Moon:**
+
+* Normally, base form Rockruff evolves into Lycanroc-Midday or Lycanroc-Midnight (depending on the game), and Rockruff-OwnTempo evolves into Lycanroc-Dusk. This setting allows any Rockruff to evolve into any Lycanroc form, though game restrictions remain unless "remove impossible evolutions" is enabled.
+
 **Only if Wild Pokemon are randomized:**
 
 * Pokemon that evolve by having another specific Pokemon in the party now evolve at level 35 instead. This affects Mantyke, and if "Change Impossible Evolutions" is used, Shelmet and Karrablast.
@@ -316,28 +336,37 @@ In addition to lowering level evolutions, this setting also affects the followin
 
 Following are the evolutions changed by this setting:
 
-| Pokemon       | Evolution | Old Method                                | New Method               |
-|----------------------|-------------------|-------------------------------------------|--------------------------|
-| Eevee                | Espeon            | Level w/ high friendship during the day   | Sun Stone                |
-| Eevee                | Umbreon           | Level w/ high friendship during the night | Moon Stone               |
-| Gligar               | Gliscor           | Level w/ Razor Fang during the night      | Level w/ Razor Fang      |
-| Sneasel              | Weavile           | Level w/ Razor Claw during the night      | Level w/ Razor Claw      |
-| Budew                | Rosalia           | Level w/ high friendship during the day   | Level w/ high friendship |
-| Chingling            | Chimecho          | Level w/ high friendship during the night | Level w/ high friendship |
-| Happiny              | Chansey           | Level w/ Oval Stone during the day        | Level w/ Oval Stone      |
-| Riolu                | Lucario           | Level w/ high friendship during the day   | Level w/ high friendship |
-| Tyrunt               | Tyrantrum         | Level 39 during the day                   | Level 39                 |
-| Amaura               | Aurorus           | Level 39 during the night                 | Level 39                 |
-| Yungoos              | Gumshoos          | Level 20 during the day                   | Level 20                 |
-| Rockruff             | Lycanroc-Midday   | Level 25 during the day                   | Sun Stone                |
-| Rockruff             | Lycanroc-Midnight | Level 25 during the night                 | Moon Stone               |
-| Rockruff (USUM only) | Lycanroc-Dusk     | Level 25 during dusk                      | Dusk Stone               |
-| Rattata-Alola        | Raticate-Alola    | Level 20 during the night                 | Level 20                 |
-| Cubone (Gen 7 only)  | Marowak-Alola     | Level 28 during the night                 | Level 28                 |
+| Pokemon           | Evolution         | Old Method                                       | New Method               |
+|-------------------|-------------------|--------------------------------------------------|--------------------------|
+| Eevee             | Espeon            | Level w/ high friendship during the day          | Sun Stone                |
+| Eevee             | Umbreon           | Level w/ high friendship during the night        | Moon Stone               |
+| Gligar            | Gliscor           | Level w/ Razor Fang during the night             | Level w/ Razor Fang      |
+| Sneasel           | Weavile           | Level w/ Razor Claw during the night             | Level w/ Razor Claw      |
+| Budew             | Rosalia           | Level w/ high friendship during the day          | Level w/ high friendship |
+| Chingling         | Chimecho          | Level w/ high friendship during the night        | Level w/ high friendship |
+| Happiny           | Chansey           | Level w/ Oval Stone during the day               | Level w/ Oval Stone      |
+| Riolu             | Lucario           | Level w/ high friendship during the day          | Level w/ high friendship |
+| Tyrunt            | Tyrantrum         | Level 39 during the day                          | Level 39                 |
+| Amaura            | Aurorus           | Level 39 during the night                        | Level 39                 |
+| Yungoos           | Gumshoos          | Level 20 during the day                          | Level 20                 |
+| Rockruff          | Lycanroc-Midday   | Level 25 during the day (not in Moon/Ultra Moon) | Sun Stone                |
+| Rockruff          | Lycanroc-Midnight | Level 25 during the night (not in Sun/Ultra Sun) | Moon Stone               |
+| Rockruff-OwnTempo | Lycanroc-Dusk     | Level 25 during the evening                      | Dusk Stone               |
+| Rattata-Alola     | Raticate-Alola    | Level 20 during the night                        | Level 20                 |
+| Cubone            | Marowak-Alola     | Level 28 during the night                        | Level 28                 |
+
+**Only if impossible evolutions are changed:**
+
+| Pokemon  | Evolution         | Old Method                               | New Method                |
+|----------|-------------------|------------------------------------------|---------------------------| 
+| Rockruff | Lycanroc-Midday   | Level 25 during the day (all versions)   | Sun Stone                 |
+| Rockruff | Lycanroc-Midnight | Level 25 during the night (all versions) | Moon Stone                |
+| Cosmoem  | Solgaleo          | Level 53 during the day                  | Sun Stone                 |
+| Cosmoem  | Lunala            | Level 53 during the night                | Moon Stone                | 
 
 ## "Follow Evolutions" Settings
 
 For "Follow Evolutions" settings, traits will normally follow evolutions, but there are a few exceptional cases:
 
 * For split evolutions (one Pokemon having several different evolutions), most traits will not follow to any of the evolutions. The reason for this is to make sure that the different evolutions are sufficiently different, while also preventing one evolution from being the "correct" one. The only exceptions to this are TM/HM compatibility and move tutor compatibility, which *will* follow all branches of the split evolution.
-* For duplicate evolutions (several Pokemon evolving into one Pokemon), traits will follow for **one** of the evolution chains. When randomizing evolutions, duplicate evolutions are avoided as much as possible, but they may occur sometimes.
+* For converging evolutions (several Pokemon evolving into one Pokemon), traits will follow for **one** of the evolution chains. When randomizing evolutions, converging evolutions are avoided as much as possible, but they may occur sometimes.

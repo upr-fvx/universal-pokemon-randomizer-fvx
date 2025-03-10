@@ -25,6 +25,7 @@ package com.dabomstew.pkrandom.constants;
 
 @SuppressWarnings("unused")
 public class AbilityIDs {
+    public static final int undefined = 0;
     public static final int stench = 1;
     public static final int drizzle = 2;
     public static final int speedBoost = 3;

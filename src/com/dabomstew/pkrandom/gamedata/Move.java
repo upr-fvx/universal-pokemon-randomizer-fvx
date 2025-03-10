@@ -29,12 +29,32 @@ import com.dabomstew.pkrandom.constants.MoveIDs;
 
 import java.util.Objects;
 
-public class Move {
+public class Move implements Comparable<Move> {
 
     public static class StatChange {
         public StatChangeType type;
         public int stages;
         public double percentChance;
+
+        public StatChange() { }
+        public StatChange(StatChange original) {
+            this.type = original.type;
+            this.stages = original.stages;
+            this.percentChance = original.percentChance;
+        }
+
+        /**
+         * Copies the given StatChange. If null, returns null instead.
+         * @param original A StatChange to copy, or null.
+         * @return Null if original was null; a new StatChange that is a copy of original otherwise.
+         */
+        public static StatChange copy(StatChange original) {
+            if(original == null) {
+                return null;
+            } else {
+                return new StatChange(original);
+            }
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -88,6 +108,43 @@ public class Move {
         }
     }
 
+    public Move(Move original) {
+        this();
+
+        this.name = original.name;
+        this.number = original.number;
+        this.internalId = original.internalId;
+        this.power = original.power;
+        this.pp = original.pp;
+        this.hitratio = original.hitratio;
+        this.type = original.type;
+        this.category = original.category;
+        this.statChangeMoveType = original.statChangeMoveType;
+
+        this.statChanges = new StatChange[original.statChanges.length];
+        for(int i = 0; i < original.statChanges.length; i++) {
+            this.statChanges[i] = StatChange.copy(original.statChanges[i]);
+        }
+
+        this.statusMoveType = original.statusMoveType;
+        this.statusType = original.statusType;
+        this.criticalChance = original.criticalChance;
+        this.statusPercentChance = original.statusPercentChance;
+        this.flinchPercentChance = original.flinchPercentChance;
+        this.recoilPercent = original.recoilPercent;
+        this.absorbPercent = original.absorbPercent;
+        this.priority = original.priority;
+        this.makesContact = original.makesContact;
+        this.isChargeMove = original.isChargeMove;
+        this.isRechargeMove = original.isRechargeMove;
+        this.isPunchMove = original.isPunchMove;
+        this.isSoundMove = original.isSoundMove;
+        this.isTrapMove = original.isTrapMove;
+        this.effectIndex = original.effectIndex;
+        this.target = original.target;
+        this.hitCount = original.hitCount;
+    }
+
     public boolean hasSpecificStatChange(StatChangeType type, boolean isPositive) {
         for (StatChange sc: this.statChanges) {
             if (sc.type == type && (isPositive ^ sc.stages < 0)) {
@@ -110,6 +167,12 @@ public class Move {
                 || ((power * hitCount) >= GlobalConstants.MIN_DAMAGING_MOVE_POWER && (hitRatio >= 90 || hitRatio == perfectAccuracy));
     }
 
+    @Override
+    public int compareTo(Move o) {
+        return Integer.compare(number, o.number);
+    }
+
+    @Override
     public String toString() {
         return "#" + number + " " + name + " - Power: " + power + ", Base PP: " + pp + ", Type: " + type + ", Hit%: "
                 + (hitRatio) + ", Effect: " + effectIndex + ", Priority: " + priority;

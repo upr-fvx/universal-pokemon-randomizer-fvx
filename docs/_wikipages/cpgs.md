@@ -438,12 +438,12 @@ And finally, the field move sprite is 160x32 pixels, split into 5 frames of 32x3
 
 During the intro movie, the player is shown riding a bike. In Emerald, this is also shown during the credits. This bike is split into two images, for the player and for the bike. The UPR does not support changing either.
 
-![intro brendan (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_RS.png)
-![intro may (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_RS.png)
-![intro brendan (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_E.png) 
-![intro may (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_E.png)
-![the bike itself (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_RS.png)
-![the bike itself (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_E.png)
+![intro brendan (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_rs.png)
+![intro may (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_rs.png)
+![intro brendan (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_e.png) 
+![intro may (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_e.png)
+![the bike itself (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_rs.png)
+![the bike itself (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_e.png)
 
 ---
 

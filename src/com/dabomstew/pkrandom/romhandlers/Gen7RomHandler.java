@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
  */
 public class Gen7RomHandler extends Abstract3DSRomHandler {
 
+    // TODO: implement location traverse order
+
     public static class Factory extends RomHandler.Factory {
 
         @Override
@@ -210,11 +212,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setName(pokeNames[realBaseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
-                if (pokes[i].isActuallyCosmetic()) {
-                    pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix());
-                } else {
-                    pokes[i].setFormeSuffix(Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme,fi.formeNumber));
-                }
+                pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix()
+                        + Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 if (realBaseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -328,7 +327,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     Set<Integer> altFormesWithCosmeticForms = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType()).keySet();
                     for (int i = 1; i < formeCount; i++) {
                         if (j == 0 || j > jMax) {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i,FileFunctions.read2ByteInt(stats,Gen7Constants.bsFormeSpriteOffset))); // Assumes that formes are in memory in the same order as their numbers
+                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                             if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) {
                                 if (!Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) { // Skip ignored forms (identical or confusing cosmetic forms)
                                     pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);
@@ -336,7 +335,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                                 }
                             }
                         } else {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j,FileFunctions.read2ByteInt(stats,Gen7Constants.bsFormeSpriteOffset)));
+                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j));
                             j++;
                         }
                         if (altFormesWithCosmeticForms.contains(firstFormeOffset + i - 1)) {
@@ -388,48 +387,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); i++) {
                 Species pk = pokes[i];
                 byte[] evoEntry = evoGARC.files.get(i).get(0);
-                boolean skipNext = false;
                 for (int evo = 0; evo < 8; evo++) {
                     int method = readWord(evoEntry, evo * 8);
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
-                        EvolutionType et = Gen7Constants.evolutionTypeFromIndex(method);
+                        EvolutionType et = Gen7Constants.gameSpecificEvolutionMethods.contains(method) ?
+                                getGameSpecificEvolutionType(evoEntry, evo) :
+                                Gen7Constants.evolutionTypeFromIndex(method);
                         if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
-                        if (skipNext) {
-                            skipNext = false;
-                            continue;
-                        }
-                        if (et == EvolutionType.LEVEL_GAME) {
-                            skipNext = true;
-                        }
 
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
                         int forme = evoEntry[evo * 8 + 6];
                         int level = evoEntry[evo * 8 + 7];
                         Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
-                        evol.setLevel(level);
                         if (et.usesLevel()) {
                             evol.setExtraInfo(level);
-                        }
-                        switch (et) {
-                            case LEVEL_GAME:
-                                evol.setType(EvolutionType.LEVEL);
-                                evol.setTo(pokes[romEntry.getIntValue("CosmoemEvolutionNumber")]);
-                                break;
-                            case LEVEL_DAY_GAME:
-                                evol.setType(EvolutionType.LEVEL_DAY);
-                                break;
-                            case LEVEL_NIGHT_GAME:
-                                evol.setType(EvolutionType.LEVEL_NIGHT);
-                                break;
-                            default:
-                                break;
-                        }
-                        if (pk.getBaseForme() != null && pk.getBaseForme().getNumber() == SpeciesIDs.rockruff && pk.getFormeNumber() > 0) {
-                            evol.setFrom(pk.getBaseForme());
-                            pk.getBaseForme().getEvolutionsFrom().add(evol);
-                            pokes[absolutePokeNumByBaseForme.get(species).get(evol.getForme())].getEvolutionsTo().add(evol);
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
@@ -458,13 +431,28 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
                     Evolution evol = new Evolution(pk, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
                     evol.setForme(-1);
-                    evol.setLevel(20);
                     pk.getEvolutionsFrom().add(evol);
                     shedinja.getEvolutionsTo().add(evol);
                 }
             }
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int evo) {
+        // For cosmoem and rockruff
+        int method = readWord(evoEntry, evo * 8);
+        boolean wantsSunny = evoEntry[evo * 8 + 2] == 0x1E;
+        boolean matchesGame = wantsSunny == romEntry.isSunny();
+        if (method == Gen7Constants.evolutionMethodLevelGame) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS : EvolutionType.LEVEL_GAME_OTHER;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameDay) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_DAY : EvolutionType.LEVEL_GAME_OTHER_DAY;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameNight) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_NIGHT : EvolutionType.LEVEL_GAME_OTHER_NIGHT;
+        } else {
+            throw new RuntimeException("Unexpected evolution method value: " + method);
         }
     }
 
@@ -710,7 +698,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeEvolutions() {
+        splitLevelItemEvolutions();
         try {
+            Map<Evolution, Byte> evosWithLevelsInternally = getEvolutionsWithLevelsInternally();
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); i++) {
                 byte[] evoEntry = evoGARC.files.get(i).get(0);
@@ -722,10 +712,26 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pk.getEvolutionsFrom()) {
                     Species toPK = evo.getTo();
                     writeWord(evoEntry, evosWritten * 8, Gen7Constants.evolutionTypeToIndex(evo.getType()));
-                    writeWord(evoEntry, evosWritten * 8 + 2, evo.getType().usesLevel() ? 0 : evo.getExtraInfo());
+                    byte extraInfo;
+                    if (evo.getType().isGameSpecific()) {
+                        extraInfo = getGameSpecificExtraInfo(evo.getType());
+                    } else if (evo.getType().usesLevel()) {
+                        extraInfo = 0;
+                    } else {
+                        extraInfo = (byte) evo.getExtraInfo();
+                    }
+                    writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
                     evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
-                    evoEntry[evosWritten * 8 + 7] = evo.getType().usesLevel() ? (byte) evo.getExtraInfo() : (byte) evo.getLevel();
+                    byte level;
+                    if (evo.getType().usesLevel()) {
+                        level = (byte) evo.getExtraInfo();
+                    } else if (evosWithLevelsInternally.containsKey(evo)) {
+                        level = evosWithLevelsInternally.get(evo);
+                    } else {
+                        level = 0;
+                    }
+                    evoEntry[evosWritten * 8 + 7] = level;
                     evosWritten++;
                     if (evosWritten == 8) {
                         break;
@@ -743,6 +749,44 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        mergeLevelItemEvolutions();
+    }
+
+    private byte getGameSpecificExtraInfo(EvolutionType type) {
+        boolean thisGame = (type == EvolutionType.LEVEL_GAME_THIS || type == EvolutionType.LEVEL_GAME_THIS_DAY ||
+                type == EvolutionType.LEVEL_GAME_THIS_NIGHT);
+        return thisGame ^ romEntry.isSunny() ?
+                Gen7Constants.sunnyEvolutionExtraInfo :
+                Gen7Constants.moonyEvolutionExtraInfo;
+    }
+
+    public Map<Evolution, Byte> getEvolutionsWithLevelsInternally() {
+        // i.e. Slowpoke -> Slowking, Kirlia -> Gallade, Snorunt -> Froslass
+        // For whatever reason these have the levels of
+        // Slowpoke -> Slowbro, Kirlia -> Gardevoir, Snorunt -> Glalie,
+        // in their internal data structure. It is unclear why, but just *in case* it could
+        // lead to some nasty crash, we reproduce these values when re-writing the evolutions,
+        // assuming the following statement must hold true to avoid issues:
+        //
+        // "If a Species has a by-level evolution, and a not-by-level evolution,
+        //  then the not-by-level evolution must hold the by-level evolution's level,
+        //  within its internal data structure".
+        //
+        // (at the time of writing the Randomizer doesn't allow randomizing evo methods,
+        // but this implementation should be ready for that)
+        Map<Evolution, Byte> map = new HashMap<>();
+        for (Species pk : getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType().usesLevel()) {
+                    for (Evolution evo2 : pk.getEvolutionsFrom()) {
+                        if (!evo2.getType().usesLevel()) {
+                            map.put(evo2, (byte) evo.getExtraInfo());
+                        }
+                    }
+                }
+            }
+        }
+        return map;
     }
 
     private void writeShedinjaEvolution() {
@@ -1260,9 +1304,30 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         try {
             saveAreaData();
             patchMiniorEncounterCode();
+            setRoute1StaticEncounter(encounterAreas);
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+    }
+
+    private void setRoute1StaticEncounter(List<EncounterArea> encounterAreas) throws IOException {
+        // In Vanilla, the first encounter on Route 1 is always a lvl 3 Pikipek,
+        // this is modeled as a static encounter.
+        // This method finds whatever replaced the lvl 3 Pikipek on Route 1,
+        // and writes the static encounter to match.
+        EncounterArea route1 = encounterAreas.get(Gen7Constants.route1EncAreaIndex);
+        Encounter enc = route1.get(Gen7Constants.route1PikipekEncIndex);
+
+        GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
+        byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
+        
+        StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
+        se.spec = enc.getSpecies();
+        se.level = enc.getMaxLevel();
+        se.forme = enc.getFormeNumber();
+        writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
+
+        writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
     }
 
     @Override
@@ -1698,10 +1763,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 while (readWord(movedata, moveDataLoc) != 0xFFFF || readWord(movedata, moveDataLoc + 2) != 0xFFFF) {
                     int move = readWord(movedata, moveDataLoc);
                     int level = readWord(movedata, moveDataLoc + 2);
-                    MoveLearnt ml = new MoveLearnt();
-                    ml.level = level;
-                    ml.move = move;
-                    learnt.add(ml);
+                    learnt.add(new MoveLearnt(move, level));
                     moveDataLoc += 4;
                 }
                 movesets.put(pkmn.getNumber(), learnt);
@@ -1898,7 +1960,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int allies = staticEncountersFile[offset + 0x27];
                 for (int j = 0; j < allies; j++) {
                     int allyIndex = (staticEncountersFile[offset + 0x28 + 4*j] - 1) & 0xFF;
-                    totem.allies.put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex * 0x38));
+                    totem.allies.put(allyIndex,readStaticEncounter(staticEncountersFile, allyIndex));
                 }
                 totems.add(totem);
             }
@@ -1978,6 +2040,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             List<Integer> skipIndices = new ArrayList<>( // Arrays.stream.toList() is immutable so we have to wrap it.
                     Arrays.stream(romEntry.getArrayValue("TotemPokemonIndices")).boxed().collect(Collectors.toList()));
             skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));
+            skipIndices.add(Gen7Constants.route1PikipekStaticIndex);
 
             // Gifts, start at 3 to skip the starters
             byte[] giftsFile = staticGarc.files.get(0).get(0);
@@ -2006,10 +2069,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
             int numberOfStaticEncounters = staticEncountersFile.length / 0x38;
             for (int i = 0; i < numberOfStaticEncounters; i++) {
-                if (skipIndices.contains(i)) continue;
-                int offset = i * 0x38;
-                StaticEncounter se = readStaticEncounter(staticEncountersFile, offset);
-                statics.add(se);
+                if (!skipIndices.contains(i)) {
+                    StaticEncounter se = readStaticEncounter(staticEncountersFile, i);
+                    statics.add(se);
+                }
             }
 
             // Zygarde created via Assembly on Route 16 is hardcoded
@@ -2021,7 +2084,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return statics;
     }
 
-    private StaticEncounter readStaticEncounter(byte[] staticEncountersFile, int offset) {
+    private StaticEncounter readStaticEncounter(byte[] staticEncountersFile, int i) {
+        int offset = i * 0x38;
         StaticEncounter se = new StaticEncounter();
         int species = FileFunctions.read2ByteInt(staticEncountersFile, offset);
         Species pokemon = pokes[species];
@@ -2119,7 +2183,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             List<Integer> skipIndices = new ArrayList<>(
                     Arrays.stream(romEntry.getArrayValue("TotemPokemonIndices")).boxed().collect(Collectors.toList()));
-            skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));
+            skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().collect(Collectors.toList()));skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));
+            skipIndices.add(Gen7Constants.route1PikipekStaticIndex);
             Iterator<StaticEncounter> staticIter = staticPokemon.iterator();
 
             // Gifts, start at 3 to skip the starters
@@ -2138,22 +2203,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] staticEncountersFile = staticGarc.files.get(1).get(0);
             int numberOfStaticEncounters = staticEncountersFile.length / 0x38;
             for (int i = 0; i < numberOfStaticEncounters; i++) {
-                if (skipIndices.contains(i)) continue;
-                int offset = i * 0x38;
-                StaticEncounter se = staticIter.next();
-                writeWord(staticEncountersFile, offset, se.spec.getBaseNumber());
-                staticEncountersFile[offset + 2] = (byte) se.forme;
-                staticEncountersFile[offset + 3] = (byte) se.level;
-                if (se.heldItem == 0) {
-                    writeWord(staticEncountersFile, offset + 4, -1);
-                } else {
-                    writeWord(staticEncountersFile, offset + 4, se.heldItem);
-                }
-                if (se.resetMoves) {
-                    writeWord(staticEncountersFile, offset + 12, 0);
-                    writeWord(staticEncountersFile, offset + 14, 0);
-                    writeWord(staticEncountersFile, offset + 16, 0);
-                    writeWord(staticEncountersFile, offset + 18, 0);
+                if (!skipIndices.contains(i)) {
+                    writeStaticEncounter(staticEncountersFile, i, staticIter.next());
                 }
             }
 
@@ -2164,6 +2215,24 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    private void writeStaticEncounter(byte[] staticEncountersFile, int i, StaticEncounter se) {
+        int offset = i * 0x38;
+        writeWord(staticEncountersFile, offset, se.spec.getBaseNumber());
+        staticEncountersFile[offset + 2] = (byte) se.forme;
+        staticEncountersFile[offset + 3] = (byte) se.level;
+        if (se.heldItem == 0) {
+            writeWord(staticEncountersFile, offset + 4, -1);
+        } else {
+            writeWord(staticEncountersFile, offset + 4, se.heldItem);
+        }
+        if (se.resetMoves) {
+            writeWord(staticEncountersFile, offset + 12, 0);
+            writeWord(staticEncountersFile, offset + 14, 0);
+            writeWord(staticEncountersFile, offset + 16, 0);
+            writeWord(staticEncountersFile, offset + 18, 0);
         }
     }
 
@@ -2537,12 +2606,18 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-        Set<Evolution> extraEvolutions = new HashSet<>();
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                extraEvolutions.clear();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
+        for (Species sp : pokes) {
+            if (sp == null)
+                continue;
+
+            Set<Evolution> extraEvolutions = new HashSet<>();
+            for (int i = 0; i < sp.getEvolutionsFrom().size(); i++) {
+                Evolution evo = sp.getEvolutionsFrom().get(i);
+
+                switch (evo.getType()) {
+                    case LEVEL_WITH_MOVE:
+                        if (!changeMoveEvos)
+                            break;
                         // read move
                         int move = evo.getExtraInfo();
                         int levelLearntAt = 1;
@@ -2557,60 +2632,87 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                    }
-                    // Pure Trade
-                    if (evo.getType() == EvolutionType.TRADE) {
+                        break;
+                    case TRADE:
                         // Replace w/ level 37
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
-                    }
-                    // Trade w/ Item
-                    if (evo.getType() == EvolutionType.TRADE_ITEM) {
-                        // Get the current item & evolution
-                        int item = evo.getExtraInfo();
+                        break;
+                    case TRADE_ITEM:
+                        markImprovedEvolutions(sp);
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - he already has a level evo
                             // So we can't do Level up w/ Held Item for him
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, itemNames.get(item));
-                            // Replace, for this entry, w/
-                            // Level up w/ Held Item at Day
-                            evo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                            // now add an extra evo for
-                            // Level up w/ Held Item at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
+                            evo.setType(EvolutionType.LEVEL_ITEM);
                         }
-                    }
-                    if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
+                        break;
+                    case TRADE_SPECIAL:
                         // This is the karrablast <-> shelmet trade
                         // Replace it with Level up w/ Other Species in Party
-                        // (22)
                         // Based on what species we're currently dealing with
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
-                    }
-                    // TBD: Pancham, Sliggoo? Sylveon?
+                        break;
+                    case LEVEL_GAME_THIS:
+                        // This is Cosmoem's *possible* evolution,
+                        // but if we were to keep it and only change the impossible one,
+                        // then Cosmoem would have one level-evo, and one something-else-evo.
+                        // And worse, which would be the level-evo would vary between versions!
+                        // Instead, we change both to time-based evolutions.
+                        markImprovedEvolutions(sp);
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT);
+                        break;
+                    case LEVEL_GAME_OTHER:
+                        // This is Cosmoem's impossible evolution,
+                        // its time-based evo is the other way around.
+                        markImprovedEvolutions(sp);
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
+                        break;
+                    // And these are Rockruff's. We change the possible ones to for symmetry's sake.
+                    case LEVEL_GAME_THIS_DAY:
+                    case LEVEL_GAME_OTHER_DAY:
+                        markImprovedEvolutions(sp);
+                        evo.setType(EvolutionType.LEVEL_DAY);
+                        break;
+                    case LEVEL_GAME_THIS_NIGHT:
+                    case LEVEL_GAME_OTHER_NIGHT:
+                        markImprovedEvolutions(sp);
+                        evo.setType(EvolutionType.LEVEL_NIGHT);
+                        break;
                 }
 
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
+                if(this.getROMType() == Gen7Constants.Type_SM) {
+                    //Add Kanto form evolutions
+                    //(USUM already has a function for this)
+                    switch (evo.getFrom().getNumber()) {
+                        case SpeciesIDs.pikachu:
+                        case SpeciesIDs.exeggcute:
+                        case SpeciesIDs.cubone:
+                            markImprovedEvolutions(sp);
+                            // We don't know if evo.getTo() has a baseForme,
+                            // since it might have been randomized...
+                            Species kantoForm = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
+                            Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
+                                    EvolutionType.STONE, ItemIDs.moonStone);
+                            extraEvolutions.add(extraEvo);
+                    }
                 }
             }
-        }
 
+            sp.getEvolutionsFrom().addAll(extraEvolutions);
+            for (Evolution ev : extraEvolutions) {
+                ev.getTo().getEvolutionsTo().add(ev);
+            }
+        }
     }
 
     @Override
@@ -2641,22 +2743,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     if (wildsRandomized) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, evo, false);
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.LEVEL_SNOWY) {
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
-                            addEvoUpdateCondensed(easierEvolutionUpdates, extraEntry, true);
-                        } else if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
+                        } else if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
-                            addEvoUpdateCondensed(easierEvolutionUpdates, extraEntry, true);
                         }
                     }
                 }
@@ -2667,104 +2769,43 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         }
 
+        if (romEntry.getRomType() == Gen7Constants.Type_USUM) {
+            unifyRockruffEvolutions();
+        }
+    }
+
+    private void unifyRockruffEvolutions() {
+        // Gives Rockruff-Base the evo(s) of Rockruff-OwnTempo, and vice versa.
+        // TODO: take another look at this when reworking forms, does it make any sense to have?
+        Species rockruffBase = pokes[SpeciesIDs.rockruff];
+        Species rockruffOT = pokes[SpeciesIDs.USUMFormes.rockruffCosmetic1];
+        Species lycanrocDusk = pokes[SpeciesIDs.USUMFormes.lycanrocD];
+        Species lycanrocMidday = pokes[SpeciesIDs.lycanroc];
+        Species lycanrocMidnight = pokes[SpeciesIDs.USUMFormes.lycanrocM];
+
+        Evolution rockruffBaseToDusk = new Evolution(rockruffBase, lycanrocDusk, EvolutionType.LEVEL_DUSK, 25);
+        // inserts it at the start to give priority over LEVEL_NIGHT evolution
+        rockruffBase.getEvolutionsFrom().add(0, rockruffBaseToDusk);
+        lycanrocDusk.getEvolutionsTo().add(rockruffBaseToDusk);
+
+        Evolution rockruffOTToMidday = new Evolution(rockruffOT, lycanrocMidday, EvolutionType.LEVEL_DAY, 25);
+        Evolution rockruffOTToMidnight = new Evolution(rockruffOT, lycanrocMidnight, EvolutionType.LEVEL_NIGHT, 25);
+        rockruffOT.getEvolutionsFrom().addAll(Arrays.asList(rockruffOTToMidday, rockruffOTToMidnight));
+        lycanrocMidday.getEvolutionsTo().add(rockruffOTToMidday);
+        lycanrocMidnight.getEvolutionsTo().add(rockruffOTToMidnight);
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        Set<Evolution> extraEvolutions = new HashSet<>();
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                extraEvolutions.clear();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Espeon with happiness at night because that's how
-                            // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
-                        } else {
-                            // Add an extra evo for Happiness at Night
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_NIGHT, 0);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
-                            // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
-                        } else {
-                            // Add an extra evo for Happiness at Day
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_DAY, 0);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Night
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Day
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, itemNames.get(item));
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_DAY, item);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_DAY) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff) {
-                            // We can't set Rockruff to evolve into Lycanroc-Midday with level at night because that's how
-                            // Lycanroc-Midnight works in the original game. Instead, make Rockruff: == sun stone => Lycanroc-Midday
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
-                        } else {
-                            addEvoUpdateLevel(timeBasedEvolutionUpdates, evo);
-                            evo.setType(EvolutionType.LEVEL);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_NIGHT) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.rockruff) {
-                            // We can't set Rockruff to evolve into Lycanroc-Midnight with level at night because that's how
-                            // Lycanroc-Midday works in the original game. Instead, make Rockruff: == moon stone => Lycanroc-Midnight
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
-                        } else {
-                            addEvoUpdateLevel(timeBasedEvolutionUpdates, evo);
-                            evo.setType(EvolutionType.LEVEL);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_DUSK) {
-                        // This is the Rockruff => Lycanroc-Dusk evolution. We can't set it to evolve with level at other
-                        // times because the other Lycanroc formes work like that in the original game. Instead, make
-                        // Rockruff: == dusk stone => Lycanroc-Dusk
-                        evo.setType(EvolutionType.STONE);
-                        evo.setExtraInfo(ItemIDs.duskStone);
-                        addEvoUpdateStone(timeBasedEvolutionUpdates, evo, itemNames.get(evo.getExtraInfo()));
-                    }
-                }
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
-            }
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        if (!et.usesLocation()) {
+            throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
         }
+        List<String> names = new ArrayList<>();
+        List<Integer> areaIndices = Gen7Constants.getAreaIndicesForLocationEvolution(et, romEntry.getRomType());
+        for (int areaIndex : areaIndices) {
+            names.add(areaDataList.get(areaIndex).name);
+        }
+        return names;
     }
 
     @Override
@@ -2884,9 +2925,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean canSetIntroPokemon() {
+        return false;
+    }
+
+    @Override
     public boolean setIntroPokemon(Species pk) {
-        // For now, do nothing.
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -2932,20 +2977,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>(Gen7Constants.uselessAbilities);
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
-        // which represents "Either Ability 1 or 2". During randomization, we make sure to
-        // to set abilitySlot to some non-zero value, but if you call this method without
-        // randomization, then you'll hit this case.
-        if (tp.abilitySlot < 1 || tp.abilitySlot > 3) {
-            return 0;
-        }
-
-        List<Integer> abilityList = Arrays.asList(tp.species.getAbility1(), tp.species.getAbility2(), tp.species.getAbility3());
-        return abilityList.get(tp.abilitySlot - 1);
     }
 
     @Override
@@ -3500,7 +3531,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return icon.getImage();
     }
 
-    private class ZoneData {
+    private static class ZoneData {
         public int worldIndex;
         public int areaIndex;
         public int parentMap;
@@ -3514,9 +3545,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             System.arraycopy(zoneDataBytes, index * size, data, 0, size);
             parentMap = FileFunctions.readFullInt(data, 0x1C);
         }
+
+        @Override
+        public String toString() {
+            return locationName;
+        }
     }
 
-    private class AreaData {
+    private static class AreaData {
         public int fileNumber;
         public boolean hasTables;
         public List<byte[]> encounterTables;
@@ -3525,6 +3561,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         public AreaData() {
             encounterTables = new ArrayList<>();
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 

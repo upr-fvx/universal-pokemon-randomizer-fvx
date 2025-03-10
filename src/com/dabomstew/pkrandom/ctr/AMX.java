@@ -184,7 +184,7 @@ public class AMX {
             long least7 = instruction & 0b01111111;
             byte byteVal = (byte)least7;
 
-            if (bytes.size() > 0)
+            if (!bytes.isEmpty())
             {
                 // Continuation bit on all but the lowest byte
                 byteVal |= 0x80;

@@ -86,7 +86,7 @@ public class TMTutorMoveRandomizer extends Randomizer {
 
         for (int i = 0; i < tmCount - preservedFieldMoveCount; i++) {
             Move chosenMove;
-            if (goodDamagingLeft > 0 && usableDamagingMoves.size() > 0) {
+            if (goodDamagingLeft > 0 && !usableDamagingMoves.isEmpty()) {
                 chosenMove = usableDamagingMoves.get(random.nextInt(usableDamagingMoves.size()));
             } else {
                 chosenMove = usableMoves.get(random.nextInt(usableMoves.size()));
@@ -175,7 +175,7 @@ public class TMTutorMoveRandomizer extends Randomizer {
 
         for (int i = 0; i < mtCount - preservedFieldMoveCount; i++) {
             Move chosenMove;
-            if (goodDamagingLeft > 0 && usableDamagingMoves.size() > 0) {
+            if (goodDamagingLeft > 0 && !usableDamagingMoves.isEmpty()) {
                 chosenMove = usableDamagingMoves.get(random.nextInt(usableDamagingMoves.size()));
             } else {
                 chosenMove = usableMoves.get(random.nextInt(usableMoves.size()));

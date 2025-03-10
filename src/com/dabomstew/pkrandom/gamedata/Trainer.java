@@ -43,6 +43,27 @@ public class Trainer implements Comparable<Trainer> {
     // Certain trainers (e.g., trainers in the PWT in BW2) require unique held items for all of their Pokemon to prevent a game crash.
     public boolean requiresUniqueHeldItems;
 
+    public Trainer() { }
+
+    public Trainer(Trainer original) {
+        this.offset = original.offset;
+        this.index = original.index;
+        this.pokemon = new ArrayList<>();
+        for(TrainerPokemon originalTP : original.pokemon) {
+            TrainerPokemon copiedTP = new TrainerPokemon(originalTP);
+            this.pokemon.add(copiedTP);
+        }
+        this.tag = original.tag;
+        this.poketype = original.poketype;
+        this.name = original.name;
+        this.trainerclass = original.trainerclass;
+        this.fullDisplayName = original.fullDisplayName;
+        this.multiBattleStatus = original.multiBattleStatus;
+        this.forcedDoubleBattle = original.forcedDoubleBattle;
+        this.forceStarterPosition = original.forceStarterPosition;
+        this.requiresUniqueHeldItems = original.requiresUniqueHeldItems;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         if (fullDisplayName != null) {

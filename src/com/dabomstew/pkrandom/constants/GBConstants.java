@@ -47,7 +47,7 @@ public class GBConstants {
 
     public static final byte gbZ80Jump = (byte) 0xC3, gbZ80Nop = 0x00, gbZ80XorA = (byte) 0xAF, gbZ80LdA = 0x3E,
             gbZ80LdAToFar = (byte) 0xEA, gbZ80Ret = (byte) 0xC9, gbZ80JumpRelative = (byte) 0x18,
-            gbZ80Call = (byte) 0xCD, gbZ80RetC = (byte) 0xD8;
+            gbZ80JumpRelativeC = (byte) 0x38, gbZ80Call = (byte) 0xCD, gbZ80RetC = (byte) 0xD8;
 
     public static final int gbZ80CallSize = 3;
 

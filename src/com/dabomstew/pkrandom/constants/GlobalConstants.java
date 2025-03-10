@@ -161,13 +161,13 @@ public class GlobalConstants {
     );
 
     public static final List<Integer> uselessMoves = Arrays.asList(
-            MoveIDs.splash, MoveIDs.celebrate, MoveIDs.holdHands, MoveIDs.teleport,
+            MoveIDs.splash, MoveIDs.celebrate, MoveIDs.holdHands,
             MoveIDs.happyHour,        //this effect does not help in battle
             MoveIDs.reflectType       // the AI does not know how to use this move properly
     );
 
     public static final List<Integer> uselessInSomeGames = Arrays.asList(
-            MoveIDs.whirlwind, MoveIDs.roar
+            MoveIDs.whirlwind, MoveIDs.roar, MoveIDs.teleport
     );
 
     public static final List<Integer> requiresOtherMove = Arrays.asList(

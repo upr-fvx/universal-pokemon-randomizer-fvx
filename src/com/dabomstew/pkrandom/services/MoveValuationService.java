@@ -1295,10 +1295,30 @@ public class MoveValuationService {
                 //hits both foes, but also ally
                 return 1.2;
 
-            case MoveIDs.magicRoom:
+            case MoveIDs.courtChange:
+            case MoveIDs.electricTerrain:
             case MoveIDs.fairyLock:
+            case MoveIDs.flowerShield:
+            case MoveIDs.grassyTerrain:
+            case MoveIDs.gravity:
+            case MoveIDs.hail:
+            case MoveIDs.haze:
+            case MoveIDs.ionDeluge:
+            case MoveIDs.magicRoom:
+            case MoveIDs.mistyTerrain:
+            case MoveIDs.mudSport:
+            case MoveIDs.perishSong:
+            case MoveIDs.psychicTerrain:
+            case MoveIDs.rainDance:
+            case MoveIDs.rototiller:
+            case MoveIDs.sandstorm:
+            case MoveIDs.sunnyDay:
+            case MoveIDs.teatime:
+            case MoveIDs.trickRoom:
+            case MoveIDs.waterSport:
+            case MoveIDs.wonderRoom:
                 return 2;
-                //effects all pokemon - allies are dealt with via synergy
+                //effects all pokemon - whether this is desirable for allies is dealt with via synergy
 
             case MoveIDs.aromatherapy:
             case MoveIDs.craftyShield:

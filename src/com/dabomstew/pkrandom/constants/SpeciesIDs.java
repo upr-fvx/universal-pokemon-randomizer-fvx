@@ -28,6 +28,7 @@ import com.dabomstew.pkrandom.gamedata.Species;
  */
 @SuppressWarnings("unused")
 public class SpeciesIDs {
+    // Gen 1
     public static final int bulbasaur = 1;
     public static final int ivysaur = 2;
     public static final int venusaur = 3;
@@ -179,6 +180,7 @@ public class SpeciesIDs {
     public static final int dragonite = 149;
     public static final int mewtwo = 150;
     public static final int mew = 151;
+    // Gen 2
     public static final int chikorita = 152;
     public static final int bayleef = 153;
     public static final int meganium = 154;
@@ -279,6 +281,7 @@ public class SpeciesIDs {
     public static final int lugia = 249;
     public static final int hoOh = 250;
     public static final int celebi = 251;
+    // Gen 3
     public static final int treecko = 252;
     public static final int grovyle = 253;
     public static final int sceptile = 254;
@@ -414,6 +417,7 @@ public class SpeciesIDs {
     public static final int rayquaza = 384;
     public static final int jirachi = 385;
     public static final int deoxys = 386;
+    // Gen 4
     public static final int turtwig = 387;
     public static final int grotle = 388;
     public static final int torterra = 389;
@@ -521,6 +525,7 @@ public class SpeciesIDs {
     public static final int darkrai = 491;
     public static final int shaymin = 492;
     public static final int arceus = 493;
+    // Gen 5
     public static final int victini = 494;
     public static final int snivy = 495;
     public static final int servine = 496;
@@ -677,6 +682,7 @@ public class SpeciesIDs {
     public static final int keldeo = 647;
     public static final int meloetta = 648;
     public static final int genesect = 649;
+    // Gen 6
     public static final int chespin = 650;
     public static final int quilladin = 651;
     public static final int chesnaught = 652;
@@ -696,7 +702,7 @@ public class SpeciesIDs {
     public static final int vivillon = 666;
     public static final int litleo = 667;
     public static final int pyroar = 668;
-    public static final int flabébé = 669;
+    public static final int flabebe = 669;
     public static final int floette = 670;
     public static final int florges = 671;
     public static final int skiddo = 672;
@@ -749,6 +755,7 @@ public class SpeciesIDs {
     public static final int diancie = 719;
     public static final int hoopa = 720;
     public static final int volcanion = 721;
+    // Gen 7
     public static final int rowlet = 722;
     public static final int dartrix = 723;
     public static final int decidueye = 724;
@@ -837,6 +844,7 @@ public class SpeciesIDs {
     public static final int zeraora = 807;
     public static final int meltan = 808;
     public static final int melmetal = 809;
+    // Gen 8
     public static final int grookey = 810;
     public static final int thwackey = 811;
     public static final int rillaboom = 812;
@@ -926,6 +934,134 @@ public class SpeciesIDs {
     public static final int glastrier = 896;
     public static final int spectrier = 897;
     public static final int calyrex = 898;
+    public static final int wyrdeer = 899;
+    public static final int kleavor = 900;
+    public static final int ursaluna = 901;
+    public static final int basculegion = 902;
+    public static final int sneasler = 903;
+    public static final int overqwil = 904;
+    public static final int enamorous = 905;
+    // Gen 9
+    public static final int sprigatito = 906;
+    public static final int floragato = 907;
+    public static final int meowscarada = 908;
+    public static final int fuecoco = 909;
+    public static final int crocalor = 910;
+    public static final int skeledirge = 911;
+    public static final int quaxly = 912;
+    public static final int quaxwell = 913;
+    public static final int quaquaval = 914;
+    public static final int lechonk = 915;
+    public static final int oinkologne = 916;
+    public static final int tarountula = 917;
+    public static final int spidops = 918;
+    public static final int nymble = 919;
+    public static final int lokix = 920;
+    public static final int pawmi = 921;
+    public static final int pawmo = 922;
+    public static final int pawmot = 923;
+    public static final int tandemaus = 924;
+    public static final int maushold = 925;
+    public static final int fidough = 926;
+    public static final int dachsbun = 927;
+    public static final int smoliv = 928;
+    public static final int dolliv = 929;
+    public static final int arboliva = 930;
+    public static final int squawkabilly = 931;
+    public static final int nacli = 932;
+    public static final int naclstack = 933;
+    public static final int garganacl = 934;
+    public static final int charcadet = 935;
+    public static final int armarouge = 936;
+    public static final int ceruledge = 937;
+    public static final int tadbulb = 938;
+    public static final int bellibolt = 939;
+    public static final int wattrel = 940;
+    public static final int kilowattrel = 941;
+    public static final int maschiff = 942;
+    public static final int mabosstiff = 943;
+    public static final int shroodle = 944;
+    public static final int grafaiai = 945;
+    public static final int bramblin = 946;
+    public static final int brambleghast = 947;
+    public static final int toedscool = 948;
+    public static final int toedscruel = 949;
+    public static final int klawf = 950;
+    public static final int capsakid = 951;
+    public static final int scovillain = 952;
+    public static final int rellor = 953;
+    public static final int rabsca = 954;
+    public static final int flittle = 955;
+    public static final int espathra = 956;
+    public static final int tinkatink = 957;
+    public static final int tinkatuff = 958;
+    public static final int tinkaton = 959;
+    public static final int wiglett = 960;
+    public static final int wugtrio = 961;
+    public static final int bombirdier = 962;
+    public static final int finizen = 963;
+    public static final int palafin = 964;
+    public static final int varoom = 965;
+    public static final int revavroom = 966;
+    public static final int cyclizar = 967;
+    public static final int orthworm = 968;
+    public static final int glimmet = 969;
+    public static final int glimmora = 970;
+    public static final int greavard = 971;
+    public static final int houndstone = 972;
+    public static final int flamigo = 973;
+    public static final int cetoddle = 974;
+    public static final int cetitan = 975;
+    public static final int veluza = 976;
+    public static final int dondozo = 977;
+    public static final int tatsugiri = 978;
+    public static final int annihilape = 979;
+    public static final int clodsire = 980;
+    public static final int farigiraf = 981;
+    public static final int dudunsparce = 982;
+    public static final int kingambit = 983;
+    public static final int greatTusk = 984;
+    public static final int screamTail = 985;
+    public static final int bruteBonnet = 986;
+    public static final int flutterMane = 987;
+    public static final int slitherWing = 988;
+    public static final int sandyShocks = 989;
+    public static final int ironTreads = 990;
+    public static final int ironBundle = 991;
+    public static final int ironHands = 992;
+    public static final int ironJugulis = 993;
+    public static final int ironMoth = 994;
+    public static final int ironThorns = 995;
+    public static final int frigibax = 996;
+    public static final int arctibax = 997;
+    public static final int baxcalibur = 998;
+    public static final int gimmighoul = 999;
+    public static final int gholdengo = 1000;
+    public static final int woChien = 1001;
+    public static final int chienPao = 1002;
+    public static final int tingLu = 1003;
+    public static final int chiYu = 1004;
+    public static final int roaringMoon = 1005;
+    public static final int ironValiant = 1006;
+    public static final int koraidon = 1007;
+    public static final int miraidon = 1008;
+    public static final int walkingWake = 1009;
+    public static final int ironLeaves = 1010;
+    public static final int dipplin = 1011;
+    public static final int poltchageist = 1012;
+    public static final int sinistcha = 1013;
+    public static final int okidogi = 1014;
+    public static final int munkidori = 1015;
+    public static final int fezandipiti = 1016;
+    public static final int ogerpon = 1017;
+    public static final int archaludon = 1018;
+    public static final int hydrapple = 1019;
+    public static final int gougingFire = 1020;
+    public static final int ragingBolt = 1021;
+    public static final int ironBoulder = 1022;
+    public static final int ironCrown = 1023;
+    public static final int terapagos = 1024;
+    public static final int pecharunt = 1025;
 
     public static final class Gen4Formes {
         public static final int deoxysA = 494;

@@ -3,8 +3,8 @@ package test.romhandlers;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.*;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -83,9 +83,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
      * {@link #encountersAreIdenticalToEarlierRandomizerCodeOutput(String)}.<br>
      * Overwrites the earlier output with the current one.
      */
+    @Disabled
     @ParameterizedTest()
     @MethodSource("getRomNames")
-    @Ignore
     public void overwriteEarlierRandomizerCodeOutput(String romName) throws IOException {
         loadROM(romName);
 

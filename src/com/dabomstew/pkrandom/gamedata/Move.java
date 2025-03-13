@@ -28,7 +28,7 @@ import com.dabomstew.pkrandom.constants.GlobalConstants;
 
 import java.util.Objects;
 
-public class Move {
+public class Move implements Comparable<Move> {
 
     public static class StatChange {
         public StatChangeType type;
@@ -163,6 +163,12 @@ public class Move {
                 || ((power * hitCount) >= GlobalConstants.MIN_DAMAGING_MOVE_POWER && (hitratio >= 90 || hitratio == perfectAccuracy));
     }
 
+    @Override
+    public int compareTo(Move o) {
+        return Integer.compare(number, o.number);
+    }
+
+    @Override
     public String toString() {
         return "#" + number + " " + name + " - Power: " + power + ", Base PP: " + pp + ", Type: " + type + ", Hit%: "
                 + (hitratio) + ", Effect: " + effectIndex + ", Priority: " + priority;

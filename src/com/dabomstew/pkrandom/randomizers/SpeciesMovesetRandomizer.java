@@ -55,9 +55,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
                 }
                 if (lv1count < forceStartingMoveCount) {
                     for (int i = 0; i < forceStartingMoveCount - lv1count; i++) {
-                        MoveLearnt fakeLv1 = new MoveLearnt();
-                        fakeLv1.level = 1;
-                        fakeLv1.move = 0;
+                        MoveLearnt fakeLv1 = new MoveLearnt(0, 1);
                         moves.add(0, fakeLv1);
                     }
                 }
@@ -65,9 +63,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
 
             if (evolutionMovesForAll) {
                 if (moves.get(0).level != 0) {
-                    MoveLearnt fakeEvoMove = new MoveLearnt();
-                    fakeEvoMove.level = 0;
-                    fakeEvoMove.move = 0;
+                    MoveLearnt fakeEvoMove = new MoveLearnt(0, 0);
                     moves.add(0, fakeEvoMove);
                 }
             }
@@ -376,7 +372,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
             totalAvgPower += (avgTypePower);
         }
 
-        totalAvgPower /= validTypeMoves.keySet().size();
+        totalAvgPower /= validTypeMoves.size();
 
         // Want the average power of each type to be within 25% both directions
         double minAvg = totalAvgPower * 0.75;
@@ -485,12 +481,10 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         // movesets
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
 
-        MoveLearnt metronomeML = new MoveLearnt();
-        metronomeML.level = 1;
-        metronomeML.move = MoveIDs.metronome;
+        MoveLearnt metronomeML = new MoveLearnt(MoveIDs.metronome, 1);
 
         for (List<MoveLearnt> ms : movesets.values()) {
-            if (ms != null && ms.size() > 0) {
+            if (ms != null && !ms.isEmpty()) {
                 ms.clear();
                 ms.add(metronomeML);
             }

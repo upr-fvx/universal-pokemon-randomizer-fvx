@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
  */
 public class Gen7RomHandler extends Abstract3DSRomHandler {
 
+    // TODO: implement location traverse order
+
     public static class Factory extends RomHandler.Factory {
 
         @Override
@@ -415,7 +417,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int method = readWord(evoEntry, evo * 8);
                     int species = readWord(evoEntry, evo * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
-                        EvolutionType et = Gen7Constants.evolutionTypeFromIndex(method);
+                        EvolutionType et = Gen7Constants.gameSpecificEvolutionMethods.contains(method) ?
+                                getGameSpecificEvolutionType(evoEntry, evo) :
+                                Gen7Constants.evolutionTypeFromIndex(method);
                         if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
 
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
@@ -459,6 +463,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int evo) {
+        // For cosmoem and rockruff
+        int method = readWord(evoEntry, evo * 8);
+        boolean wantsSunny = evoEntry[evo * 8 + 2] == 0x1E;
+        boolean matchesGame = wantsSunny == romEntry.isSunny();
+        if (method == Gen7Constants.evolutionMethodLevelGame) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS : EvolutionType.LEVEL_GAME_OTHER;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameDay) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_DAY : EvolutionType.LEVEL_GAME_OTHER_DAY;
+        } else if (method == Gen7Constants.evolutionMethodLevelGameNight) {
+            return matchesGame ? EvolutionType.LEVEL_GAME_THIS_NIGHT : EvolutionType.LEVEL_GAME_OTHER_NIGHT;
+        } else {
+            throw new RuntimeException("Unexpected evolution method value: " + method);
         }
     }
 
@@ -699,6 +719,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeEvolutions() {
+        splitLevelItemEvolutions();
         try {
             Map<Evolution, Byte> evosWithLevelsInternally = getEvolutionsWithLevelsInternally();
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
@@ -712,7 +733,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pk.getEvolutionsFrom()) {
                     Species toPK = evo.getTo();
                     writeWord(evoEntry, evosWritten * 8, Gen7Constants.evolutionTypeToIndex(evo.getType()));
-                    writeWord(evoEntry, evosWritten * 8 + 2, evo.getType().usesLevel() ? 0 : evo.getExtraInfo());
+                    byte extraInfo;
+                    if (evo.getType().isGameSpecific()) {
+                        extraInfo = getGameSpecificExtraInfo(evo.getType());
+                    } else if (evo.getType().usesLevel()) {
+                        extraInfo = 0;
+                    } else {
+                        extraInfo = (byte) evo.getExtraInfo();
+                    }
+                    writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
                     evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
                     byte level;
@@ -741,6 +770,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        mergeLevelItemEvolutions();
+    }
+
+    private byte getGameSpecificExtraInfo(EvolutionType type) {
+        boolean thisGame = (type == EvolutionType.LEVEL_GAME_THIS || type == EvolutionType.LEVEL_GAME_THIS_DAY ||
+                type == EvolutionType.LEVEL_GAME_THIS_NIGHT);
+        return thisGame ^ romEntry.isSunny() ?
+                Gen7Constants.sunnyEvolutionExtraInfo :
+                Gen7Constants.moonyEvolutionExtraInfo;
     }
 
     public Map<Evolution, Byte> getEvolutionsWithLevelsInternally() {
@@ -1268,6 +1306,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
+        List<String> locationTagsTraverseOrder = Gen7Constants.getLocationTagsTraverseOrder(getROMType());
+        return getEncounters(useTimeOfDay).stream()
+                .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
         for (AreaData areaData : areaDataList) {
@@ -1747,10 +1793,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 while (readWord(movedata, moveDataLoc) != 0xFFFF || readWord(movedata, moveDataLoc + 2) != 0xFFFF) {
                     int move = readWord(movedata, moveDataLoc);
                     int level = readWord(movedata, moveDataLoc + 2);
-                    MoveLearnt ml = new MoveLearnt();
-                    ml.level = level;
-                    ml.move = move;
-                    learnt.add(ml);
+                    learnt.add(new MoveLearnt(move, level));
                     moveDataLoc += 4;
                 }
                 movesets.put(pkmn.getNumber(), learnt);
@@ -2619,65 +2662,61 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
                     case TRADE:
                         // Replace w/ level 37
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
                     case TRADE_ITEM:
-                        // Get the current item & evolution
-                        int item = evo.getExtraInfo();
+                        markImprovedEvolutions(sp);
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke is awkward - he already has a level evo
                             // So we can't do Level up w/ Held Item for him
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, items.get(item));
-                            // Replace, for this entry, w/
-                            // Level up w/ Held Item at Day
-                            evo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                            // now add an extra evo for
-                            // Level up w/ Held Item at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEntry.setForme(evo.getForme());
-                            extraEvolutions.add(extraEntry);
+                            evo.setType(EvolutionType.LEVEL_ITEM);
                         }
                         break;
                     case TRADE_SPECIAL:
                         // This is the karrablast <-> shelmet trade
                         // Replace it with Level up w/ Other Species in Party
                         // Based on what species we're currently dealing with
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                         break;
-                    case LEVEL_GAME:
-                        // This is used by Cosmoem, the first index is Solgaleo's and the second Lunala's.
-                        if (i == 0) {
-                            evo.setType(EvolutionType.LEVEL_DAY);
-                        } else if (i == 1) {
-                            evo.setType(EvolutionType.LEVEL_NIGHT);
-                        } else {
-                            throw new IllegalStateException("Unexpected use of LEVEL_GAME");
-                        }
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
+                    case LEVEL_GAME_THIS:
+                        // This is Cosmoem's *possible* evolution,
+                        // but if we were to keep it and only change the impossible one,
+                        // then Cosmoem would have one level-evo, and one something-else-evo.
+                        // And worse, which would be the level-evo would vary between versions!
+                        // Instead, we change both to time-based evolutions.
+                        markImprovedEvolutions(sp);
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT);
                         break;
-                    case LEVEL_DAY_GAME:
+                    case LEVEL_GAME_OTHER:
+                        // This is Cosmoem's impossible evolution,
+                        // its time-based evo is the other way around.
+                        markImprovedEvolutions(sp);
+                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
+                        break;
+                    // And these are Rockruff's. We change the possible ones to for symmetry's sake.
+                    case LEVEL_GAME_THIS_DAY:
+                    case LEVEL_GAME_OTHER_DAY:
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_DAY);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
-                    case LEVEL_NIGHT_GAME:
+                    case LEVEL_GAME_THIS_NIGHT:
+                    case LEVEL_GAME_OTHER_NIGHT:
+                        markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL_NIGHT);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                         break;
                 }
 
@@ -2688,17 +2727,16 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         case SpeciesIDs.pikachu:
                         case SpeciesIDs.exeggcute:
                         case SpeciesIDs.cubone:
-                            Species kantoForm = evo.getTo().getBaseForme();
+                            markImprovedEvolutions(sp);
+                            // We don't know if evo.getTo() has a baseForme,
+                            // since it might have been randomized...
+                            Species kantoForm = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
                             Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
                                     EvolutionType.STONE, ItemIDs.moonStone);
                             extraEvolutions.add(extraEvo);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, extraEvo, items.get(ItemIDs.moonStone));
                     }
-
                 }
             }
-
-
 
             sp.getEvolutionsFrom().addAll(extraEvolutions);
             for (Evolution ev : extraEvolutions) {
@@ -2735,22 +2773,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     if (wildsRandomized) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, evo, false);
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.LEVEL_SNOWY) {
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
-                            addEvoUpdateCondensed(easierEvolutionUpdates, extraEntry, true);
-                        } else if (evo.getType() == EvolutionType.LEVEL_ELECTRIFIED_AREA) {
+                        } else if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
+                            markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);
                             extraEntry.setForme(evo.getForme());
-                            addEvoUpdateCondensed(easierEvolutionUpdates, extraEntry, true);
                         }
                     }
                 }
@@ -2788,111 +2826,16 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                Set<Evolution> extraEvolutions = new HashSet<>();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-
-                    int item;
-                    switch (evo.getType()) {
-                        case HAPPINESS_DAY:
-                            if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                                // We can't set Eevee to evolve into Espeon with happiness at night because that's how
-                                // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.sunStone);
-                                addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                            } else {
-                                // Add an extra evo for Happiness at Night
-                                addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.HAPPINESS_NIGHT, 0);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case HAPPINESS_NIGHT:
-                            if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                                // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
-                                // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.moonStone);
-                                addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                            } else {
-                                // Add an extra evo for Happiness at Day
-                                addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.HAPPINESS_DAY, 0);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case LEVEL_ITEM_DAY:
-                            item = evo.getExtraInfo();
-                            // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
-                            if (evo.getFrom().getEvolutionsFrom().stream()
-                                    .noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
-                                // Add an extra evo for Level w/ Item During Night
-                                addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.LEVEL_ITEM_NIGHT, item);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        case LEVEL_ITEM_NIGHT:
-                            item = evo.getExtraInfo();
-                            // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
-                            if (evo.getFrom().getEvolutionsFrom().stream()
-                                    .noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
-                                // Add an extra evo for Level w/ Item During Day
-                                addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
-                                Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                        EvolutionType.LEVEL_ITEM_DAY, item);
-                                extraEntry.setForme(evo.getForme());
-                                extraEvolutions.add(extraEntry);
-                            }
-                            break;
-                        // Rockruff and Cosmoem (if impossible evos are changed) have multiple LEVEL_[TIME] evolutions,
-                        // so they can't all be changed to LEVEL. Thus, Sun/Moon/Dusk stones are used instead.
-                        case LEVEL_DAY:
-                        case LEVEL_DAY_GAME:
-                            if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                    evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.sunStone);
-                                addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                            } else {
-                                addEvoUpdateLevel(timeBasedEvolutionUpdates, evo);
-                                evo.setType(EvolutionType.LEVEL);
-                            }
-                            break;
-                        case LEVEL_NIGHT:
-                        case LEVEL_NIGHT_GAME:
-                            if (evo.getFrom().getNumber() == SpeciesIDs.rockruff ||
-                                    evo.getFrom().getNumber() == SpeciesIDs.cosmoem) {
-                                evo.setType(EvolutionType.STONE);
-                                evo.setExtraInfo(ItemIDs.moonStone);
-                                addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                            } else {
-                                addEvoUpdateLevel(timeBasedEvolutionUpdates, evo);
-                                evo.setType(EvolutionType.LEVEL);
-                            }
-                            break;
-                        case LEVEL_DUSK:
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.duskStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                            break;
-                    }
-                }
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
-            }
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        if (!et.usesLocation()) {
+            throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
         }
+        List<String> names = new ArrayList<>();
+        List<Integer> areaIndices = Gen7Constants.getAreaIndicesForLocationEvolution(et, romEntry.getRomType());
+        for (int areaIndex : areaIndices) {
+            names.add(areaDataList.get(areaIndex).name);
+        }
+        return names;
     }
 
     @Override
@@ -3012,9 +2955,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean canSetIntroPokemon() {
+        return false;
+    }
+
+    @Override
     public boolean setIntroPokemon(Species pk) {
-        // For now, do nothing.
-        return true;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -3040,20 +2987,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>(Gen7Constants.uselessAbilities);
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
-        // which represents "Either Ability 1 or 2". During randomization, we make sure to
-        // to set abilitySlot to some non-zero value, but if you call this method without
-        // randomization, then you'll hit this case.
-        if (tp.getAbilitySlot() < 1 || tp.getAbilitySlot() > 3) {
-            return 0;
-        }
-
-        List<Integer> abilityList = Arrays.asList(tp.getSpecies().getAbility1(), tp.getSpecies().getAbility2(), tp.getSpecies().getAbility3());
-        return abilityList.get(tp.getAbilitySlot() - 1);
     }
 
     @Override
@@ -3544,7 +3477,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return icon.getImage();
     }
 
-    private class ZoneData {
+    private static class ZoneData {
         public int worldIndex;
         public int areaIndex;
         public int parentMap;
@@ -3558,9 +3491,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             System.arraycopy(zoneDataBytes, index * size, data, 0, size);
             parentMap = FileFunctions.readFullInt(data, 0x1C);
         }
+
+        @Override
+        public String toString() {
+            return locationName;
+        }
     }
 
-    private class AreaData {
+    private static class AreaData {
         public int fileNumber;
         public boolean hasTables;
         public List<byte[]> encounterTables;
@@ -3569,6 +3507,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         public AreaData() {
             encounterTables = new ArrayList<>();
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 

@@ -31,7 +31,9 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.constants.AbilityIDs;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.constants.ItemIDs;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
@@ -55,6 +57,8 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected final TypeService typeService = new TypeService(this);
 
     protected int perfectAccuracy = 100; // default
+
+    private List<Type> starterTypeTriangle = null;
 
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
@@ -110,7 +114,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
         for (EncounterArea area : areas) {
             if (area.isPartiallyPostGame()) {
-                for (int i = area.getPartiallyPostGameCutoff(); i < area.size(); i++) {
+                for (int i = 0; i < area.getPartiallyPostGameCutoff(); i++) {
                     wildPokemon.add(area.get(i).getSpecies());
                 }
             } else if (!area.isPostGame()) {
@@ -147,6 +151,38 @@ public abstract class AbstractRomHandler implements RomHandler {
         return (starterCount() % 3 == 0);
     }
 
+    public void setStarterTypeTriangle(List<Type> triangle) {
+        if(triangle.size() != 3) {
+            throw new IllegalArgumentException("Type triangle must contain three types!");
+        }
+        starterTypeTriangle = Collections.unmodifiableList(triangle);
+    }
+
+    public List<Type> getStarterTypeTriangle() {
+        if(isTypeTriangleChanged()) {
+            return starterTypeTriangle;
+        } else {
+            return getStandardTypeTriangle();
+        }
+    }
+
+    public boolean isTypeTriangleChanged() {
+        return starterTypeTriangle != null;
+    }
+
+    public List<Type> getStandardTypeTriangle(){
+        List<Type> typesInOrder;
+        if(generationOfPokemon() <= 2) {
+            //the order is Fire, Water, Grass
+            typesInOrder = Arrays.asList(Type.FIRE, Type.WATER, Type.GRASS);
+        } else {
+            //the order is Grass, Fire, Water
+            typesInOrder = Arrays.asList(Type.GRASS, Type.FIRE, Type.WATER);
+        }
+
+        return Collections.unmodifiableList(typesInOrder);
+    }
+
     @Override
     public boolean canChangeStaticPokemon() {
         return getRomEntry().hasStaticPokemonSupport();
@@ -162,16 +198,16 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // If evo is intermediate and too high, bring it down
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
+                            markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                         }
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markImprovedEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
-                        addEvoUpdateCondensed(easierEvolutionUpdates, checkEvo, false);
                     }
                 }
             }
@@ -180,69 +216,97 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        return impossibleEvolutionUpdates;
+    public void removeTimeBasedEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                EvolutionType et = evo.getType();
+
+                if (et == EvolutionType.LEVEL_DUSK) {
+                    markImprovedEvolutions(pk);
+                    evo.setType(EvolutionType.STONE);
+                    evo.setExtraInfo(ItemIDs.duskStone);
+                } else if (et.usesTime()) {
+                    markImprovedEvolutions(pk);
+                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
+                        // Here we have just ascertained that this Species evolves by time,
+                        // and that this evolution is paired; it has another similar evolution
+                        // at the opposite time.
+                        // E.g. Eevee -> Espeon/Umbreon, which is a HAPPINESS_DAY/HAPPINESS_NIGHT pair.
+                        // In this case, we can't just remove the time-based-less,
+                        // so instead we use Sun/Moon Stone.
+                        evo.setType(EvolutionType.STONE);
+                        int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
+                        evo.setExtraInfo(item);
+                    } else {
+                        evo.setType(et.timeless());
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean hadEvolutionOfType(Species pk, EvolutionType et) {
+        List<Evolution> evos = preImprovedEvolutions.get(pk);
+        if (evos == null) {
+            throw new IllegalStateException("Species should always have been added to preImprovedEvolutions.");
+        }
+        return evos.stream().map(Evolution::getType).anyMatch(et2 -> et2 == et);
     }
 
     @Override
-    public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        return easierEvolutionUpdates;
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
+        return preImprovedEvolutions;
     }
-
-    @Override
-    public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
-        return timeBasedEvolutionUpdates;
-    }
-
 
     /* Private methods/structs used internally by the above methods */
 
-    protected Set<EvolutionUpdate> impossibleEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> timeBasedEvolutionUpdates = new TreeSet<>();
-    protected Set<EvolutionUpdate> easierEvolutionUpdates = new TreeSet<>();
+    private final Map<Species, List<Evolution>> preImprovedEvolutions = new TreeMap<>();
 
-    protected void addEvoUpdateLevel(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                false, false));
+    /**
+     * Marks that a {@link Species} is getting its {@link Evolution}s improved,
+     * (and saves its original Evolutions) for logging purposes.
+     */
+    protected void markImprovedEvolutions(Species pk) {
+        // We can't overwrite these entries, because then species with
+        // multiple evos to change (e.g. HGSS Eevee) will store their partially-changed evos,
+        // instead of the original ones.
+        if (!preImprovedEvolutions.containsKey(pk)) {
+            List<Evolution> evosCopy = new ArrayList<>(pk.getEvolutionsFrom().size());
+            for (Evolution original : pk.getEvolutionsFrom()) {
+                evosCopy.add(new Evolution(original));
+            }
+            preImprovedEvolutions.put(pk, evosCopy);
+        }
     }
 
-    protected void addEvoUpdateStone(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, Item item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.STONE, item.getName(),
-                false, false));
-    }
+    @Override
+    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
+        if (abilitiesPerSpecies() == 0) {
+            throw new IllegalStateException("No abilities in this game.");
+        }
+        if (tp.getAbilitySlot() > abilitiesPerSpecies()) {
+            throw new IllegalStateException("tp.abilitySlot too high for this game. Should be <="
+                    + abilitiesPerSpecies() + ", is " + tp.getAbilitySlot());
+        }
 
-    protected void addEvoUpdateHappiness(Set<EvolutionUpdate> evolutionUpdates, Evolution evo) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.HAPPINESS, "",
-                false, false));
-    }
+        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
+        // which represents "Either Ability 1 or 2". During randomization, we make sure
+        // to set abilitySlot to some non-zero value, but if you call this method without
+        // randomization, then you'll hit this case.
+        if (tp.getAbilitySlot() == 0) {
+            return AbilityIDs.undefined;
+        }
 
-    protected void addEvoUpdateHeldItem(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, Item item) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_ITEM_DAY, item.getName(),
-                false, false));
-    }
+        Species pk = !tp.getSpecies().isBaseForme() && isTrainerPokemonUseBaseFormeAbilities() ?
+                tp.getSpecies().getBaseForme() : tp.getSpecies();
+        int[] abilities = new int[] {pk.getAbility1(), pk.getAbility2(), pk.getAbility3()};
 
-    protected void addEvoUpdateParty(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, String otherPk) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL_WITH_OTHER, otherPk,
-                false, false));
-    }
+        int slot = isTrainerPokemonAlwaysUseAbility1() ? 1 : tp.getAbilitySlot();
 
-    protected void addEvoUpdateCondensed(Set<EvolutionUpdate> evolutionUpdates, Evolution evo, boolean additional) {
-        Species pkFrom = evo.getFrom();
-        Species pkTo = evo.getTo();
-        int level = evo.getExtraInfo();
-        evolutionUpdates.add(new EvolutionUpdate(pkFrom, pkTo, EvolutionType.LEVEL, String.valueOf(level),
-                true, additional));
+        return abilities[slot - 1];
     }
 
     protected void checkFieldItemsTMsReplaceTMs(List<Item> replacement) {
@@ -255,6 +319,68 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     /* Helper methods used by subclasses and/or this class */
+
+    /**
+     * Splits occurrences of {@link EvolutionType#LEVEL_ITEM} into
+     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.<br>
+     * Since LEVEL_ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
+     * Assumes each Species has at most one LEVEL_ITEM Evolution.
+     */
+    protected void splitLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution levelItemEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM) {
+                    levelItemEvo = evo;
+                }
+            }
+            if (levelItemEvo != null) {
+                levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                Evolution nightEvo = new Evolution(levelItemEvo);
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
+                nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+            }
+        }
+    }
+
+    /**
+     * Merge occurrences of otherwise identical {@link EvolutionType#LEVEL_ITEM_DAY} and
+     * {@link EvolutionType#LEVEL_ITEM_NIGHT} {@link Evolution}s into a single one
+     * using {@link EvolutionType#LEVEL_ITEM}.<br>
+     * Assumes each Species has at most one pair of LEVEL_ITEM_DAY/NIGHT Evolutions.
+     */
+    protected void mergeLevelItemEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            Evolution dayEvo = null;
+            Evolution nightEvo = null;
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
+                    dayEvo = evo;
+                } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
+                    nightEvo = evo;
+                }
+            }
+            if (dayEvo != null && nightEvo != null) {
+                nightEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                if (nightEvo.equals(dayEvo)) {
+                    dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                    nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
+                    nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
+                } else {
+                    // If nightEvo differs from dayEvo in ways other than the EvolutionType,
+                    // then we can not merge them.
+                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                }
+            }
+        }
+    }
 
     protected void applyCamelCaseNames() {
         getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
@@ -275,6 +401,41 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public boolean canTMsBeHeld() {
         return false;
+    }
+
+    @Override
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
+    public boolean isTrainerPokemonUseBaseFormeAbilities() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        throw new UnsupportedOperationException("This game has no location-based evolutions.");
+    }
+
+    @Override
+    public boolean canSetIntroPokemon() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
+    public boolean hasTimeBasedEvolutions() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
+    public boolean canGiveEverySpeciesOneEvolutionEach() {
+        // DEFAULT: yes
+        return true;
     }
 
     @Override
@@ -320,11 +481,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        return 0;
     }
 
     @Override
@@ -442,11 +598,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void writeCheckValueToROM(int value) {
-        // do nothing
-    }
-
-    @Override
     public int miscTweaksAvailable() {
         // default: none
         return 0;
@@ -542,6 +693,11 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public boolean hasCustomPlayerGraphicsSupport() {
+        return false;
+    }
+
+    @Override
+    public boolean customPlayerGraphicsSupportDependsOnOS() {
         return false;
     }
 

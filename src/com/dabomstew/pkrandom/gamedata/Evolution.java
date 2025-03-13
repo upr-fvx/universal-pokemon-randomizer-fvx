@@ -42,6 +42,14 @@ public class Evolution implements Comparable<Evolution> {
         this.extraInfo = extra;
     }
 
+    public Evolution(Evolution original) {
+        this.from = original.from;
+        this.to = original.to;
+        this.type = original.type;
+        this.extraInfo = original.extraInfo;;
+        this.forme = original.forme;
+    }
+
     /**
      * Returns the {@link Species} this Evolution is "from".<br>
      * E.g. for the Evolution "Bulbasaur->Ivysaur" this would return Bulbasaur.
@@ -109,7 +117,7 @@ public class Evolution implements Comparable<Evolution> {
         if (getClass() != obj.getClass())
             return false;
         Evolution other = (Evolution) obj;
-        return from == other.from && to == other.to && type == other.type;
+        return from == other.from && to == other.to && type == other.type && extraInfo == other.extraInfo;
     }
 
     @Override

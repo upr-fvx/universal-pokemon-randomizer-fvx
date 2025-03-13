@@ -121,6 +121,12 @@ public class Gen5Constants {
     public static final int fossilPokemonFile = 877;
     public static final int fossilPokemonLevelOffset = 0x3F7;
 
+    // It is intentional that "after" is 4 bytes longer that "before".
+    // 2 of those last 4 bytes in "before" vary between games, so we don't want to search for
+    // them/confirm they're there. Still, they need to be overwritten by "after".
+    public static final String hmsForgettableBefore = "08 4A 00 23 59 00 51 18 B8 31 09 88 88 42 01 D1 01 20 70 47 59 1C 09 06 0B 0E 06 2B F2 D3 00 20 70 47 C0 46",
+            hmsForgettableAfter = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 70 47 00 00 00 00 00 00";
+
     public static final Map<Integer,List<Integer>> abilityVariations = setupAbilityVariations();
 
     private static Map<Integer,List<Integer>> setupAbilityVariations() {
@@ -547,8 +553,8 @@ public class Gen5Constants {
             EvolutionType.LEVEL_IS_EXTRA, EvolutionType.LEVEL_HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY,
             EvolutionType.STONE_FEMALE_ONLY, EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT,
             EvolutionType.LEVEL_WITH_MOVE, EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY,
-            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_ELECTRIFIED_AREA, EvolutionType.LEVEL_MOSS_ROCK,
-            EvolutionType.LEVEL_ICY_ROCK
+            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK,
+            EvolutionType.LEVEL_ICE_ROCK
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
@@ -565,6 +571,19 @@ public class Gen5Constants {
             return EvolutionType.NONE;
         }
         return evolutionTypeTable[index - 1];
+    }
+
+    public static int getMapIndexForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                return romType == Type_BW ? 41 : 20; // Chargestone Cave
+            case LEVEL_MOSS_ROCK:
+                return romType == Type_BW ? 5 : 8; // Pinwheel Forest
+            case LEVEL_ICE_ROCK:
+                return romType == Type_BW ? 44 : 23; // Twist Mountain
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
     }
 
     public static int getAreaDataEntryLength(int romType) {
@@ -2292,7 +2311,7 @@ public class Gen5Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:Black_and_White_walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrderBW = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW = Collections.unmodifiableList(Arrays.asList(
             "ROUTE 1", "ROUTE 2", "STRIATON CITY", "DREAMYARD", "ROUTE 3", "WELLSPRING CAVE",
             "PINWHEEL FOREST", "CASTELIA CITY", "ROUTE 4", "DESERT RESORT", "ROUTE 5", "RELIC CASTLE", "ROUTE 5",
             "DRIFTVEIL DRAWBRIDGE", "DRIFTVEIL CITY", "COLD STORAGE", "ROUTE 6", "CHARGESTONE CAVE", "ROUTE 7",
@@ -2306,7 +2325,7 @@ public class Gen5Constants {
     /**
      * Same order as the in-game Pokédex Habitat List.
      */
-    public static final List<String> locationTagsTraverseOrderBW2 = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW2 = Collections.unmodifiableList(Arrays.asList(
             "ASPERTIA CITY", "ROUTE 19", "ROUTE 20", "FLOCCESY RANCH", "VIRBANK CITY", "VIRBANK COMPLEX",
             "CASTELIA CITY", "CASTELIA SEWERS", "ROUTE 4", "DESERT RESORT", "RELIC CASTLE", "ROUTE 5", "ROUTE 16",
             "LOSTLORN FOREST", "DRIFTVEIL DRAWBRIDGE", "ROUTE 6", "RELIC PASSAGE", "CLAY TUNNEL", "MISTRALTON CAVE",
@@ -2318,6 +2337,10 @@ public class Gen5Constants {
             "DREAMYARD", "ROUTE 2", "ROUTE 1", "ROUTE 17", "ROUTE 18", "P2 LABORATORY",
             "NATURE PRESERVE"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_BW ? locationTagsTraverseOrderBW : locationTagsTraverseOrderBW2;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
         if (encounterAreas.size() != locationTags.size()) {

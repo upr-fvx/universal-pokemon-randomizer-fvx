@@ -11,6 +11,7 @@ public class Gen7RomEntry extends Abstract3DSRomEntry {
 
         protected Gen7RomEntryReader() {
             putSpecialKeyMethod("Type", Gen7RomEntry::setRomType);
+            putSpecialKeyMethod("IsSunny", Gen7RomEntry::setSunny);
         }
 
         /**
@@ -28,6 +29,8 @@ public class Gen7RomEntry extends Abstract3DSRomEntry {
 
     public static final Gen7RomEntryReader<Gen7RomEntry> READER = new Gen7RomEntryReader<>();
 
+    private boolean sunny;
+
     public Gen7RomEntry(String name) {
         super(name);
     }
@@ -39,6 +42,17 @@ public class Gen7RomEntry extends Abstract3DSRomEntry {
         } else {
             setRomType(Gen7Constants.Type_SM);
         }
+    }
+
+    /**
+     * Returns true if the ROM is either Sun or Ultra Sun.
+     */
+    public boolean isSunny() {
+        return sunny;
+    }
+
+    private void setSunny(String s) {
+        sunny = IniEntryReader.parseBoolean(s);
     }
 
 }

@@ -128,6 +128,11 @@ public interface RomHandler {
     // Methods to set up Gen Restrictions
     // ==================================
 
+    /**
+     * When using {@link RestrictedSpeciesService} to restrict which Pokémon
+     * may appear, we want to prevent allowed Pokémon from evolving (or breeding)
+     * into ones that are not. This does that.
+     */
     void removeEvosForPokemonPool();
 
     // ===============
@@ -150,6 +155,32 @@ public interface RomHandler {
 
     void setStarterHeldItems(List<Item> items);
 
+    /**
+     * If the assigned starters have been chosen according to a new type triangle,
+     * sets the types of this triangle so that other aspects of the game can be changed to match.
+     * @param triangle The three types chosen, in the same order as the starters.
+     */
+    void setStarterTypeTriangle(List<Type> triangle);
+
+    /**
+     * Gets an unmodifiable copy of the starter type triangle in use.
+     * If no type triangle has been set, returns FIRE_WATER_GRASS,
+     * even if the starters have been changed from those types.
+     * @return The three types chosen, in the same order as the starters.
+     */
+    List<Type> getStarterTypeTriangle();
+
+    /**
+     * Returns true if a custom type triangle has been set, false otherwise.
+     */
+    boolean isTypeTriangleChanged();
+
+    /**
+     * Returns the standard type triangle (Fire, Water, Grass) in the order used by this game.
+     * @return The standard type triangle in the correct order.
+     */
+    List<Type> getStandardTypeTriangle();
+
     // =================
     // Pokemon Abilities
     // =================
@@ -165,6 +196,18 @@ public interface RomHandler {
     List<Integer> getUselessAbilities();
 
     int getAbilityForTrainerPokemon(TrainerPokemon tp);
+
+    /**
+     * Returns true if {@link TrainerPokemon} in this game always use ability 1.
+     */
+    boolean isTrainerPokemonAlwaysUseAbility1();
+
+    /**
+     * In some games, when alt formes are used as {@link TrainerPokemon},
+     * they don't use their own abilities but those of their base forme.<br>
+     * Returns true if that is the case for this game.
+     */
+    boolean isTrainerPokemonUseBaseFormeAbilities();
 
     boolean hasMegaEvolutions();
 
@@ -368,6 +411,10 @@ public interface RomHandler {
 
     void setMoveTutorMoves(List<Integer> moves);
 
+    /**
+     * Gets the Move Tutor compatibility for this game. 
+     * If {@link #hasMoveTutors()}==false, there is no guarantee this method will work.
+     */
     Map<Species, boolean[]> getMoveTutorCompatibility();
 
     void setMoveTutorCompatibility(Map<Species, boolean[]> compatData);
@@ -498,18 +545,35 @@ public interface RomHandler {
 
     void makeEvolutionsEasier(Settings settings);
 
+    boolean hasTimeBasedEvolutions();
+
     void removeTimeBasedEvolutions();
 
-    Set<EvolutionUpdate> getImpossibleEvoUpdates();
+    /**
+     * Some {@link EvolutionType}s only allow evolution in specific locations.
+     * This method gets the name of said location(s), given an EvolutionType.
+     */
+    List<String> getLocationNamesForEvolution(EvolutionType et);
 
-    Set<EvolutionUpdate> getEasierEvoUpdates();
-
-    Set<EvolutionUpdate> getTimeBasedEvoUpdates();
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(Settings)},
+     * {@link #makeEvolutionsEasier(Settings)}, or {@link #removeTimeBasedEvolutions()},
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If those methods have not been called, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getPreImprovedEvolutions();
 
     // In the earlier games, alt formes use the same evolutions as the base forme.
     // In later games, this was changed so that alt formes can have unique evolutions
     // compared to the base forme.
     boolean altFormesCanHaveDifferentEvolutions();
+
+    /**
+     * Returns whether it is possible to give every {@link Species} <i>exactly</i>
+     * one {@link Evolution} each, and successfully save the ROM.
+     */
+    boolean canGiveEverySpeciesOneEvolutionEach();
 
     // ==================================
     // (Mostly) unchanging lists of moves
@@ -551,14 +615,15 @@ public interface RomHandler {
 
     int internalStringLength(String string);
 
+    boolean canSetIntroPokemon();
+
     /**
-     * Sets the Species shown in the intro. Returns false if pk is not a valid intro Species.
+     * Sets the {@link Species} shown in the intro. Returns false if pk is not a valid intro Species.
+     * Throws {@link UnsupportedOperationException} if {@link #canSetIntroPokemon()} is not true.
      */
     boolean setIntroPokemon(Species pk);
 
     int generationOfPokemon();
-
-    void writeCheckValueToROM(int value);
 
     // ===========
     // code tweaks
@@ -592,6 +657,8 @@ public interface RomHandler {
     boolean pokemonPaletteSupportIsPartial();
 
     boolean hasCustomPlayerGraphicsSupport();
+
+    boolean customPlayerGraphicsSupportDependsOnOS();
 
     void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace);
 

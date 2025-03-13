@@ -92,6 +92,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private List<String> shopNames;
     private int shopItemsOffset;
     private int pickupItemsTableOffset;
+    private TypeTable typeTable;
     private long actualCodeCRC32;
     private Map<String, Long> actualFileCRC32s;
 
@@ -665,6 +666,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeEvolutions() {
+        splitLevelItemEvolutions();
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
@@ -696,6 +698,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        mergeLevelItemEvolutions();
     }
 
     private void writeShedinjaEvolution() throws IOException {
@@ -1420,8 +1423,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        List<String> locationTagsTraverseOrder = romEntry.getRomType() == Gen6Constants.Type_XY ?
-                Gen6Constants.locationTagsTraverseOrderXY : Gen6Constants.locationTagsTraverseOrderORAS;
+        List<String> locationTagsTraverseOrder = Gen6Constants.getLocationTagsTraverseOrder(getROMType());
         return getEncounters(useTimeOfDay).stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());
@@ -2042,10 +2044,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 while (readWord(movedata, moveDataLoc) != 0xFFFF || readWord(movedata, moveDataLoc + 2) != 0xFFFF) {
                     int move = readWord(movedata, moveDataLoc);
                     int level = readWord(movedata, moveDataLoc + 2);
-                    MoveLearnt ml = new MoveLearnt();
-                    ml.level = level;
-                    ml.move = move;
-                    learnt.add(ml);
+                    learnt.add(new MoveLearnt(move, level));
                     moveDataLoc += 4;
                 }
                 movesets.put(pkmn.getNumber(), learnt);
@@ -2677,6 +2676,100 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean hasTypeEffectivenessSupport() {
+        return true;
+    }
+
+    @Override
+    public TypeTable getTypeTable() {
+        if (typeTable == null) {
+            typeTable = readTypeTable();
+        }
+        return typeTable;
+    }
+
+    private TypeTable readTypeTable() {
+        try {
+            TypeTable typeTable = new TypeTable(Type.getAllTypes(6));
+            byte[] battleFile = readFile(romEntry.getFile("Battle"));
+            int tableOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+            int tableWidth = typeTable.getTypes().size();
+
+            for (Type attacker : typeTable.getTypes()) {
+                for (Type defender : typeTable.getTypes()) {
+                    int offset = tableOffset + (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
+                    int effectivenessInternal = battleFile[offset];
+                    Effectiveness effectiveness;
+                    switch (effectivenessInternal) {
+                        case 8:
+                            effectiveness = Effectiveness.DOUBLE;
+                            break;
+                        case 4:
+                            effectiveness = Effectiveness.NEUTRAL;
+                            break;
+                        case 2:
+                            effectiveness = Effectiveness.HALF;
+                            break;
+                        case 0:
+                            effectiveness = Effectiveness.ZERO;
+                            break;
+                        default:
+                            effectiveness = null;
+                            break;
+                    }
+                    typeTable.setEffectiveness(attacker, defender, effectiveness);
+                }
+            }
+
+            return typeTable;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public void setTypeTable(TypeTable typeTable) {
+        this.typeTable = typeTable;
+        writeTypeTable(typeTable);
+    }
+
+    private void writeTypeTable(TypeTable typeTable) {
+        try {
+            byte[] battleFile = readFile(romEntry.getFile("Battle"));
+            int tableOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+            int tableWidth = typeTable.getTypes().size();
+
+            for (Type attacker : typeTable.getTypes()) {
+                for (Type defender : typeTable.getTypes()) {
+                    int offset = tableOffset + (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
+                    Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
+                    byte effectivenessInternal;
+                    switch (effectiveness) {
+                        case DOUBLE:
+                            effectivenessInternal = 8;
+                            break;
+                        case NEUTRAL:
+                            effectivenessInternal = 4;
+                            break;
+                        case HALF:
+                            effectivenessInternal = 2;
+                            break;
+                        case ZERO:
+                            effectivenessInternal = 0;
+                            break;
+                        default:
+                            effectivenessInternal = 0;
+                    }
+                    battleFile[offset] = effectivenessInternal;
+                }
+            }
+            writeFile(romEntry.getFile("Battle"), battleFile);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
     public List<Integer> getTMMoves() {
         String tmDataPrefix = Gen6Constants.tmDataPrefix;
         int offset = find(code, tmDataPrefix);
@@ -3002,10 +3095,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-        Set<Evolution> extraEvolutions = new HashSet<>();
         for (Species pkmn : pokes) {
             if (pkmn != null) {
-                extraEvolutions.clear();
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
                         // read move
@@ -3022,38 +3113,28 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             levelLearntAt = 45;
                         }
                         // change to pure level evo
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(levelLearntAt);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Replace w/ level 37
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates, evo);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
-                        // Get the current item & evolution
-                        int item = evo.getExtraInfo();
+                        markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
-                            // Slowpoke is awkward - he already has a level evo
-                            // So we can't do Level up w/ Held Item for him
+                            // Slowpoke is awkward - it already has a level evo
+                            // So we can't do Level up w/ Held Item
                             // Put Water Stone instead
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
-                            addEvoUpdateStone(impossibleEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
                         } else {
-                            addEvoUpdateHeldItem(impossibleEvolutionUpdates, evo, items.get(item));
-                            // Replace, for this entry, w/
-                            // Level up w/ Held Item at Day
-                            evo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                            // now add an extra evo for
-                            // Level up w/ Held Item at Night
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEvolutions.add(extraEntry);
+                            evo.setType(EvolutionType.LEVEL_ITEM);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
@@ -3061,20 +3142,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // Replace it with Level up w/ Other Species in Party
                         // (22)
                         // Based on what species we're currently dealing with
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL_WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
-                        addEvoUpdateParty(impossibleEvolutionUpdates, evo, pokes[evo.getExtraInfo()].getFullName());
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }
-
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
             }
         }
-
     }
 
     @Override
@@ -3104,9 +3179,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
+                            markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(35);
-                            addEvoUpdateCondensed(easierEvolutionUpdates, evo, false);
                         }
                     }
                 }
@@ -3115,72 +3190,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        Set<Evolution> extraEvolutions = new HashSet<>();
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                extraEvolutions.clear();
-                for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Espeon with happiness at night because that's how
-                            // Umbreon works in the original game. Instead, make Eevee: == sun stone => Espeon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                        } else {
-                            // Add an extra evo for Happiness at Night
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_NIGHT, 0);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                        if (evo.getFrom().getNumber() == SpeciesIDs.eevee) {
-                            // We can't set Eevee to evolve into Umbreon with happiness at day because that's how
-                            // Espeon works in the original game. Instead, make Eevee: == moon stone => Umbreon
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
-                            addEvoUpdateStone(timeBasedEvolutionUpdates, evo, items.get(evo.getExtraInfo()));
-                        } else {
-                            // Add an extra evo for Happiness at Day
-                            addEvoUpdateHappiness(timeBasedEvolutionUpdates, evo);
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.HAPPINESS_DAY, 0);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at night (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_NIGHT && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Night
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_NIGHT, item);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
-                        int item = evo.getExtraInfo();
-                        // Make sure we don't already have an evo for the same item at day (e.g., when using Change Impossible Evos)
-                        if (evo.getFrom().getEvolutionsFrom().stream().noneMatch(e -> e.getType() == EvolutionType.LEVEL_ITEM_DAY && e.getExtraInfo() == item)) {
-                            // Add an extra evo for Level w/ Item During Day
-                            addEvoUpdateHeldItem(timeBasedEvolutionUpdates, evo, items.get(item));
-                            Evolution extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL_ITEM_DAY, item);
-                            extraEvolutions.add(extraEntry);
-                        }
-                    } else if (evo.getType() == EvolutionType.LEVEL_DAY || evo.getType() == EvolutionType.LEVEL_NIGHT) {
-                        addEvoUpdateLevel(timeBasedEvolutionUpdates, evo);
-                        evo.setType(EvolutionType.LEVEL);
-                    }
-                }
-                pkmn.getEvolutionsFrom().addAll(extraEvolutions);
-                for (Evolution ev : extraEvolutions) {
-                    ev.getTo().getEvolutionsTo().add(ev);
-                }
-            }
+    public List<String> getLocationNamesForEvolution(EvolutionType et) {
+        if (!et.usesLocation()) {
+            throw new IllegalArgumentException(et + " is not a location-based EvolutionType.");
         }
-
+        if (!loadedWildMapNames) {
+            loadWildMapNames();
+        }
+        int mapIndex = Gen5Constants.getMapIndexForLocationEvolution(et, romEntry.getRomType());
+        return Collections.singletonList(wildMapNames.get(mapIndex));
     }
 
     @Override
@@ -3295,80 +3313,84 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public boolean canSetIntroPokemon() {
+        return romEntry.getRomType() == Gen6Constants.Type_XY;
+    }
+
+    @Override
     public boolean setIntroPokemon(Species pk) {
-        // Doesn't do anything for ORAS
-        if (romEntry.getRomType() == Gen6Constants.Type_XY) {
+        if (!canSetIntroPokemon()) {
+            throw new IllegalStateException("Can't set intro pokemon in ORAS");
+        }
+        int introPokemonNum = pk.getNumber();
+        int introPokemonForme = 0;
+        if (pk.getFormeNumber() > 0) {
+            introPokemonForme = pk.getFormeNumber();
+            introPokemonNum = pk.getBaseForme().getNumber();
+        }
 
-            int introPokemonNum = pk.getNumber();
-            int introPokemonForme = 0;
-            if (pk.getFormeNumber() > 0) {
-                introPokemonForme = pk.getFormeNumber();
-                introPokemonNum = pk.getBaseForme().getNumber();
-            }
+        // Find the value for the Pokemon's cry
 
-            // Find the value for the Pokemon's cry
+        int baseAddr = find(code, Gen6Constants.criesTablePrefixXY);
+        baseAddr += Gen6Constants.criesTablePrefixXY.length() / 2;
 
-            int baseAddr = find(code, Gen6Constants.criesTablePrefixXY);
-            baseAddr += Gen6Constants.criesTablePrefixXY.length() / 2;
+        if (introPokemonForme != 0) {
+            int extraOffset = readLong(code, baseAddr + (introPokemonNum * 0x14));
+            introPokemonNum = extraOffset + (introPokemonForme - 1);
+        }
 
-            if (introPokemonForme != 0) {
-                int extraOffset = readLong(code, baseAddr + (introPokemonNum * 0x14));
-                introPokemonNum = extraOffset + (introPokemonForme - 1);
-            }
+        int initialCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x4);
+        int repeatedCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x10);
 
-            int initialCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x4);
-            int repeatedCry = readLong(code, baseAddr + (introPokemonNum * 0x14) + 0x10);
+        // Write to DLLIntro.cro
+        try {
+            byte[] introCRO = readFile(romEntry.getFile("Intro"));
 
-            // Write to DLLIntro.cro
-            try {
-                byte[] introCRO = readFile(romEntry.getFile("Intro"));
+            // Replace the Pokemon model that's loaded, and set its forme
 
-                // Replace the Pokemon model that's loaded, and set its forme
+            int croModelOffset = find(introCRO, Gen6Constants.introPokemonModelOffsetXY);
+            croModelOffset += Gen6Constants.introPokemonModelOffsetXY.length() / 2;
 
-                int croModelOffset = find(introCRO, Gen6Constants.introPokemonModelOffsetXY);
-                croModelOffset += Gen6Constants.introPokemonModelOffsetXY.length() / 2;
+            writeWord(introCRO, croModelOffset, introPokemonNum);
+            introCRO[croModelOffset + 2] = (byte) introPokemonForme;
 
-                writeWord(introCRO, croModelOffset, introPokemonNum);
-                introCRO[croModelOffset + 2] = (byte) introPokemonForme;
+            // Replace the initial cry when the Pokemon exits the ball
+            // First, re-point two branches
 
-                // Replace the initial cry when the Pokemon exits the ball
-                // First, re-point two branches
+            int croInitialCryOffset1 = find(introCRO, Gen6Constants.introInitialCryOffset1XY);
+            croInitialCryOffset1 += Gen6Constants.introInitialCryOffset1XY.length() / 2;
 
-                int croInitialCryOffset1 = find(introCRO, Gen6Constants.introInitialCryOffset1XY);
-                croInitialCryOffset1 += Gen6Constants.introInitialCryOffset1XY.length() / 2;
+            introCRO[croInitialCryOffset1] = 0x5E;
 
-                introCRO[croInitialCryOffset1] = 0x5E;
+            int croInitialCryOffset2 = find(introCRO, Gen6Constants.introInitialCryOffset2XY);
+            croInitialCryOffset2 += Gen6Constants.introInitialCryOffset2XY.length() / 2;
 
-                int croInitialCryOffset2 = find(introCRO, Gen6Constants.introInitialCryOffset2XY);
-                croInitialCryOffset2 += Gen6Constants.introInitialCryOffset2XY.length() / 2;
+            introCRO[croInitialCryOffset2] = 0x2F;
 
-                introCRO[croInitialCryOffset2] = 0x2F;
+            // Then change the parameters that are loaded for a function call, and also change the function call
+            // itself to a function that uses the "cry value" instead of Pokemon ID + forme + emotion (same function
+            // that is used for the repeated cries)
 
-                // Then change the parameters that are loaded for a function call, and also change the function call
-                // itself to a function that uses the "cry value" instead of Pokemon ID + forme + emotion (same function
-                // that is used for the repeated cries)
+            int croInitialCryOffset3 = find(introCRO, Gen6Constants.introInitialCryOffset3XY);
+            croInitialCryOffset3 += Gen6Constants.introInitialCryOffset3XY.length() / 2;
 
-                int croInitialCryOffset3 = find(introCRO, Gen6Constants.introInitialCryOffset3XY);
-                croInitialCryOffset3 += Gen6Constants.introInitialCryOffset3XY.length() / 2;
+            writeLong(introCRO, croInitialCryOffset3, 0xE1A02000);  // cpy r2,r0
+            writeLong(introCRO, croInitialCryOffset3 + 0x4, 0xE59F100C);    // ldr r1,=#CRY_VALUE
+            writeLong(introCRO, croInitialCryOffset3 + 0x8, 0xE58D0000);    // str r0,[sp]
+            writeLong(introCRO, croInitialCryOffset3 + 0xC, 0xEBFFFDE9);    // bl FUN_006a51d4
+            writeLong(introCRO, croInitialCryOffset3 + 0x10, readLong(introCRO, croInitialCryOffset3 + 0x14)); // Move these two instructions up four bytes
+            writeLong(introCRO, croInitialCryOffset3 + 0x14, readLong(introCRO, croInitialCryOffset3 + 0x18));
+            writeLong(introCRO, croInitialCryOffset3 + 0x18, initialCry);   // CRY_VALUE pool
 
-                writeLong(introCRO, croInitialCryOffset3, 0xE1A02000);  // cpy r2,r0
-                writeLong(introCRO, croInitialCryOffset3 + 0x4, 0xE59F100C);    // ldr r1,=#CRY_VALUE
-                writeLong(introCRO, croInitialCryOffset3 + 0x8, 0xE58D0000);    // str r0,[sp]
-                writeLong(introCRO, croInitialCryOffset3 + 0xC, 0xEBFFFDE9);    // bl FUN_006a51d4
-                writeLong(introCRO, croInitialCryOffset3 + 0x10, readLong(introCRO, croInitialCryOffset3 + 0x14)); // Move these two instructions up four bytes
-                writeLong(introCRO, croInitialCryOffset3 + 0x14, readLong(introCRO, croInitialCryOffset3 + 0x18));
-                writeLong(introCRO, croInitialCryOffset3 + 0x18, initialCry);   // CRY_VALUE pool
+            // Replace the repeated cry that the Pokemon does while standing around
+            // Just replace a pool value
+            int croRepeatedCryOffset = find(introCRO, Gen6Constants.introRepeatedCryOffsetXY);
+            croRepeatedCryOffset += Gen6Constants.introRepeatedCryOffsetXY.length() / 2;
+            writeLong(introCRO, croRepeatedCryOffset, repeatedCry);
 
-                // Replace the repeated cry that the Pokemon does while standing around
-                // Just replace a pool value
-                int croRepeatedCryOffset = find(introCRO, Gen6Constants.introRepeatedCryOffsetXY);
-                croRepeatedCryOffset += Gen6Constants.introRepeatedCryOffsetXY.length() / 2;
-                writeLong(introCRO, croRepeatedCryOffset, repeatedCry);
-
-                writeFile(romEntry.getFile("Intro"), introCRO);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            writeFile(romEntry.getFile("Intro"), introCRO);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return true;
     }
@@ -3396,20 +3418,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Integer> getUselessAbilities() {
         return new ArrayList<>(Gen6Constants.uselessAbilities);
-    }
-
-    @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
-        // which represents "Either Ability 1 or 2". During randomization, we make sure to
-        // to set abilitySlot to some non-zero value, but if you call this method without
-        // randomization, then you'll hit this case.
-        if (tp.getAbilitySlot() < 1 || tp.getAbilitySlot() > 3) {
-            return 0;
-        }
-
-        List<Integer> abilityList = Arrays.asList(tp.getSpecies().getAbility1(), tp.getSpecies().getAbility2(), tp.getSpecies().getAbility3());
-        return abilityList.get(tp.getAbilitySlot() - 1);
     }
 
     @Override

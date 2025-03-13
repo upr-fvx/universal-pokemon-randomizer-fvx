@@ -5,14 +5,14 @@ name: Moves
 
 Following are the moves that have been updated in each generation. Note that only the base statistics of the moves are updated when using this setting; additional effects are not added (for example, updating moves to Generation 8 will update Rapid Spin's power to 50, but it will not grant the Speed increase that was added in Generation 8). Updating moves to a certain generation will also include all updates from previous generations (for example, updating a Generation 5 game's moves to Generation 7 will also include all updates that happened in Generation 6).
 
-* [Generation 2](Moves#generation-2)
-* [Generation 3](Moves#generation-3)
-* [Generation 4](Moves#generation-4)
-* [Generation 5](Moves#generation-5)
-* [Generation 6](Moves#generation-6)
-* [Generation 7](Moves#generation-7)
-* [Generation 8](Moves#generation-8)
-* [Generation 9](Moves#generation-9)
+* [Generation 2](#generation-2)
+* [Generation 3](#generation-3)
+* [Generation 4](#generation-4)
+* [Generation 5](#generation-5)
+* [Generation 6](#generation-6)
+* [Generation 7](#generation-7)
+* [Generation 8](#generation-8)
+* [Generation 9](#generation-9)
 
 ### Generation 2
 

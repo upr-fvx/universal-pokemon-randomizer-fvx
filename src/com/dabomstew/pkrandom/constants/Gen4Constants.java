@@ -520,53 +520,156 @@ public class Gen4Constants {
             SpeciesIDs.rayquaza, SpeciesIDs.dialga, SpeciesIDs.palkia, SpeciesIDs.regigigas, SpeciesIDs.giratina, SpeciesIDs.arceus
     ));
 
+    private static final Map<Integer, int[][]> otherPokemonGraphicsImagesDP = initOtherPokemonGraphicsImagesDP();
+    private static final Map<Integer, int[][]> otherPokemonGraphicsImagesPt = initOtherPokemonGraphicsImagesPt();
+    private static final Map<Integer, int[][]> otherPokemonGraphicsImagesHGSS = initOtherPokemonGraphicsImagesHGSS();
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsImagesDP() {
+        Map<Integer, int[][]> map = new HashMap<>();
+        map.put(SpeciesIDs.unown, new int[][]{
+                // alphabetical order, !, ?
+                {9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63},
+                {8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62}});
+        map.put(SpeciesIDs.castform, new int[][]{{68, 69, 70, 71}, {64, 65, 66, 67}}); // normal, sunny, rainy, snowy
+        map.put(SpeciesIDs.deoxys, new int[][]{{1, 3, 5, 7}, {0, 2, 4, 6}}); // normal, attack, defense, speed
+        map.put(SpeciesIDs.burmy, new int[][]{{73, 75, 77}, {72, 74, 76}}); // plant, sandy, trash
+        map.put(SpeciesIDs.wormadam, new int[][]{{79, 81, 83}, {78, 80, 82}}); // plant, sandy, trash
+        map.put(SpeciesIDs.cherrim, new int[][]{{94, 95}, {92, 93}}); // normal, sunny
+        map.put(SpeciesIDs.shellos, new int[][]{{86, 87}, {84, 85}}); // west, east
+        map.put(SpeciesIDs.gastrodon, new int[][]{{90, 91}, {88, 89}}); // west, east
+        map.put(SpeciesIDs.arceus, new int[][]{
+                // same order as types internally, see typeToByte() (though ??? type is also included)
+                {97, 99, 101, 103, 105, 107, 109, 111, 113, 115, 117, 119, 121, 123, 125, 127, 129, 131},
+                {96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130}});
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsImagesPt() {
+        Map<Integer, int[][]> map = new HashMap<>(otherPokemonGraphicsImagesDP);
+        map.put(SpeciesIDs.rotom, new int[][]{
+                // normal, heat, wash, frost, fan, mow
+                {139, 141, 143, 145, 147, 149}, {138, 140, 142, 144, 146, 148}});
+        map.put(SpeciesIDs.giratina, new int[][]{{151, 153}, {150, 152}}); // normal, origin
+        map.put(SpeciesIDs.shaymin, new int[][]{{135, 137}, {134, 136}}); // normal, sky
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsImagesHGSS() {
+        Map<Integer, int[][]> map = new HashMap<>(otherPokemonGraphicsImagesPt);
+        map.put(SpeciesIDs.pichu, new int[][]{{155, 157}, {154, 156}}); // normal, spiky-eared
+        return Collections.unmodifiableMap(map);
+    }
+
     /**
      * Maps {@link SpeciesIDs} IDs to the file indices of images found in the OtherPokemonGraphics NARC.<br>
      * [0] lists the front images, [1] the back images.
      */
-    public static final Map<Integer, int[][]> otherPokemonGraphicsImages = initOtherPokemonGraphicsImages();
+    public static Map<Integer, int[][]> getOtherPokemonGraphicsImages(int romType) {
+        if (romType == Type_DP) {
+            return otherPokemonGraphicsImagesDP;
+        } else if (romType == Type_Plat) {
+            return otherPokemonGraphicsImagesPt;
+        } else {
+            return otherPokemonGraphicsImagesHGSS;
+        }
+    }
 
-    private static Map<Integer,int[][]> initOtherPokemonGraphicsImages() {
-        Map<Integer, int[][]> palettes = new HashMap<>();
-        palettes.put(SpeciesIDs.unown, new int[][]{
+    public static final Map<Integer, int[][]> otherPokemonGraphicsPalettesDP = initOtherPokemonGraphicsPalettesDP();
+    public static final Map<Integer, int[][]> otherPokemonGraphicsPalettesPt = initOtherPokemonGraphicsPalettesPt();
+    public static final Map<Integer, int[][]> otherPokemonGraphicsPalettesHGSS = initOtherPokemonGraphicsPalettesHGSS();
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsPalettesDP() {
+        Map<Integer, int[][]> map = new HashMap<>();
+        map.put(SpeciesIDs.unown, new int[][]{
                 // alphabetical order, !, ?
-                {9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63},
-                {8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62}});
-        palettes.put(SpeciesIDs.castform, new int[][]{{68, 69, 70, 71}, {64, 65, 66, 67}}); // normal, sunny, rainy, snowy
-        palettes.put(SpeciesIDs.deoxys, new int[][]{{1, 3, 5, 7}, {0, 2, 4, 6}}); // normal, attack, defense, speed
-        palettes.put(SpeciesIDs.burmy, new int[][]{{73, 75, 77}, {72, 74, 76}}); // plant, sandy, trash
-        palettes.put(SpeciesIDs.wormadam, new int[][]{{79, 81, 83}, {78, 80, 82}}); // plant, sandy, trash
-        palettes.put(SpeciesIDs.cherrim, new int[][]{{94, 95}, {92, 93}}); // normal, sunny
-        palettes.put(SpeciesIDs.shellos, new int[][]{{86, 87}, {84, 85}}); // west, east
-        palettes.put(SpeciesIDs.gastrodon, new int[][]{{90, 91}, {88, 89}}); // west, east
-        palettes.put(SpeciesIDs.arceus, new int[][]{
-                // same order as types internally, see typeToByte() (though ??? type is also included)
-                {97, 99, 101, 103, 105, 107, 109, 111, 113, 115, 117, 119, 121, 123, 125, 127, 129, 131},
-                {96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130}});
-        return Collections.unmodifiableMap(palettes);
+                {136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136, 136},
+                {137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137}});
+        map.put(SpeciesIDs.castform, new int[][]{{138, 139, 140, 141}, {142, 143, 144, 145}}); // normal, sunny, rainy, snowy
+        map.put(SpeciesIDs.deoxys, new int[][]{{134, 134, 134, 134}, {135, 135, 135, 135}});
+        map.put(SpeciesIDs.burmy, new int[][]{{146, 148, 150}, {147, 149, 151}}); // plant, sandy, trash
+        map.put(SpeciesIDs.wormadam, new int[][]{{152, 154, 156}, {153, 155, 157}}); // plant, sandy, trash
+        map.put(SpeciesIDs.cherrim, new int[][]{{166, 167}, {168, 169}}); // normal, sunny
+        map.put(SpeciesIDs.shellos, new int[][]{{158, 160}, {159, 161}}); // west, east
+        map.put(SpeciesIDs.gastrodon, new int[][]{{162, 164}, {163, 165}}); // west, east
+        map.put(SpeciesIDs.arceus, new int[][]{
+                // same order as types internally, see typeToByte() (though this also includes a ???-type)
+                {170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204},
+                {171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199, 201, 203, 205}});
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsPalettesPt() {
+        int shift = calculateShift(otherPokemonGraphicsImagesDP, otherPokemonGraphicsImagesPt);
+        Map<Integer, int[][]> map = new HashMap<>(shiftAllValues(otherPokemonGraphicsPalettesDP, shift));
+
+        map.put(SpeciesIDs.rotom, new int[][] {
+                // normal, heat, wash, frost, fan, mow
+                {232, 234, 236, 238, 240, 242}, {233, 235, 237, 239, 241, 243}});
+        map.put(SpeciesIDs.giratina, new int[][]{{244, 246}, {245, 247}});
+        map.put(SpeciesIDs.shaymin, new int[][]{{228, 230}, {229, 231}}); // normal, sky
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static Map<Integer, int[][]> initOtherPokemonGraphicsPalettesHGSS() {
+        int shift = calculateShift(otherPokemonGraphicsImagesPt, otherPokemonGraphicsImagesHGSS);
+        Map<Integer, int[][]> map = new HashMap<>(shiftAllValues(otherPokemonGraphicsPalettesPt, shift));
+
+        map.put(SpeciesIDs.pichu, new int[][]{{252, 254}, {253, 255}}); // normal, spiky-eared
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static int calculateShift(Map<Integer, int[][]> before, Map<Integer, int[][]> after) {
+        return countValues(after) - countValues(before);
+    }
+
+    private static int countValues(Map<Integer, int[][]> before) {
+        int count = 0;
+        for (int[][] arr : before.values()) {
+            for (int[] row : arr) {
+                count += row.length;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Returns a copy of the {@link Map}, where all the values in its int array have been shifted/increased by 'shift'.
+     */
+    private static Map<Integer, int[][]> shiftAllValues(Map<Integer, int[][]> original, int shift) {
+        // The palettes in OtherPokemonGraphics are in the same order between games,
+        // but their file indices get shifted up when images for new forms (Rotom/Giratina/Shaymin in Pt, Pichu in HGSS)
+        // are added to OtherPokemonGraphics. Here, we shift up all values in our _description_ of palettes in
+        // OtherPokemonGraphics, so that they match the shifted indices in the actual games.
+        Map<Integer, int[][]> shifted = new HashMap<>(original.size());
+
+        for (Map.Entry<Integer, int[][]> entry : original.entrySet()) {
+            int[][] arr = entry.getValue();
+            int[][] arrCopy = new int[arr.length][];
+            for (int i = 0; i < arr.length; i++) {
+                int[] rowCopy = new int[arr[i].length];
+                for (int j = 0; j < arr[i].length; j++) {
+                    rowCopy[j] = arr[i][j] + shift;
+                }
+                arrCopy[i] = rowCopy;
+            }
+            shifted.put(entry.getKey(), arrCopy);
+        }
+
+        return shifted;
     }
 
     /**
      * Maps {@link SpeciesIDs} IDs to the file indices of palettes found in the OtherPokemonGraphics NARC.<br>
      * [0] lists the normal palettes, [1] the shiny palettes.
      */
-    public static final Map<Integer, int[][]> otherPokemonGraphicsPalettes = initOtherPokemonGraphicsPalettes();
-
-    private static Map<Integer,int[][]> initOtherPokemonGraphicsPalettes() {
-        Map<Integer, int[][]> palettes = new HashMap<>();
-        palettes.put(SpeciesIDs.unown, new int[][]{{136}, {137}});
-        palettes.put(SpeciesIDs.castform, new int[][]{{138, 139, 140, 141}, {142, 143, 144, 145}}); // normal, sunny, rainy, snowy
-        palettes.put(SpeciesIDs.deoxys, new int[][]{{134}, {135}});
-        palettes.put(SpeciesIDs.burmy, new int[][]{{146, 148, 150}, {147, 149, 151}}); // plant, sandy, trash
-        palettes.put(SpeciesIDs.wormadam, new int[][]{{152, 154, 156}, {153, 155, 157}}); // plant, sandy, trash
-        palettes.put(SpeciesIDs.cherrim, new int[][]{{166, 167}, {168, 169}}); // normal, sunny
-        palettes.put(SpeciesIDs.shellos, new int[][]{{158, 160}, {159, 161}}); // west, east
-        palettes.put(SpeciesIDs.gastrodon, new int[][]{{162, 164}, {163, 165}}); // west, east
-        palettes.put(SpeciesIDs.arceus, new int[][]{
-                // same order as types internally, see typeToByte() (though this also includes a ???-type)
-                {170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204},
-                {171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199, 201, 203, 205}});
-        return Collections.unmodifiableMap(palettes);
+    public static Map<Integer, int[][]> getOtherPokemonGraphicsPalettes(int romType) {
+        if (romType == Type_DP) {
+            return otherPokemonGraphicsPalettesDP;
+        } else if (romType == Type_Plat) {
+            return otherPokemonGraphicsPalettesPt;
+        } else {
+            return otherPokemonGraphicsPalettesHGSS;
+        }
     }
 
     // The original slot each of the 20 "alternate" slots is mapped to
@@ -1520,7 +1623,7 @@ public class Gen4Constants {
             EvolutionType.LEVEL_HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY, EvolutionType.STONE_FEMALE_ONLY,
             EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT, EvolutionType.LEVEL_WITH_MOVE,
             EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY, EvolutionType.LEVEL_FEMALE_ONLY,
-            EvolutionType.LEVEL_ELECTRIFIED_AREA, EvolutionType.LEVEL_MOSS_ROCK, EvolutionType.LEVEL_ICY_ROCK
+            EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK, EvolutionType.LEVEL_ICE_ROCK
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
@@ -1537,6 +1640,20 @@ public class Gen4Constants {
             return EvolutionType.NONE;
         }
         return evolutionTypeTable[index - 1];
+    }
+
+    public static int getMapIndexForLocationEvolution(EvolutionType et) {
+        // assumes this is for DPPt
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                return 10; // Mt. Coronet
+            case LEVEL_MOSS_ROCK:
+                return 8; // Eterna Forest
+            case LEVEL_ICE_ROCK:
+                return 166; // Route 217
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
     }
 
     public static int getFormeCount(int romType) {
@@ -2649,7 +2766,7 @@ public class Gen4Constants {
     /**
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Diamond_and_Pearl/Walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrderDPPt = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderDPPt = Collections.unmodifiableList(Arrays.asList(
             "TWINLEAF TOWN", "ROUTE 201", "LAKE VERITY", "ROUTE 202", "ROUTE 203", "OREBURGH GATE",
             "OREBURGH MINE", "ROUTE 204", "RAVAGED PATH", "VALLEY WINDWORKS", "ROUTE 205", "ETERNA FOREST",
             "OLD CHATEAU", "ETERNA CITY", "ROUTE 206", "WAYWARD CAVE", "ROUTE 207", "ROUTE 208", "ROUTE 209",
@@ -2666,7 +2783,7 @@ public class Gen4Constants {
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Gold_and_Silver/Walkthrough>this walkthrough</a>,
      * with Gen IV-only locations added.
      */
-    public static final List<String> locationTagsTraverseOrderHGSS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderHGSS = Collections.unmodifiableList(Arrays.asList(
             "NEW BARK TOWN", "ROUTE 29", "ROUTE 46", "CHERRYGROVE CITY", "ROUTE 30", "ROUTE 31", "DARK CAVE",
             "VIOLET CITY", "SPROUT TOWER", "ROUTE 32", "RUINS OF ALPH", "UNION CAVE", "ROUTE 33", "AZALEA TOWN",
             "SLOWPOKE WELL", "ILEX FOREST", "ROUTE 34", "GOLDENROD CITY", "ROUTE 35", "NATIONAL PARK",
@@ -2683,6 +2800,10 @@ public class Gen4Constants {
             "ROUTE 21", "CINNABAR ISLAND", "ROUTE 20", "SEAFOAM ISLANDS", "ROUTE 19", "ROUTE 22", "ROUTE 28",
             "MT. SILVER", "MT. SILVER CAVE", "CERULEAN CAVE", "BUG CATCHING CONTEST"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_HGSS ? locationTagsTraverseOrderHGSS : locationTagsTraverseOrderDPPt;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags,
                                           int[] postGameAreas, int[] partialPostGameAreas) {

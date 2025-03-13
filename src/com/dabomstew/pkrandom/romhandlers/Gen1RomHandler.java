@@ -1483,10 +1483,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 List<MoveLearnt> ourMoves = new ArrayList<>();
                 for (int delta = Gen1Constants.bsLevel1MovesOffset; delta < Gen1Constants.bsLevel1MovesOffset + 4; delta++) {
                     if (rom[statsOffset + delta] != 0x00) {
-                        MoveLearnt learnt = new MoveLearnt();
-                        learnt.level = 1;
-                        learnt.move = moveRomToNumTable[rom[statsOffset + delta] & 0xFF];
-                        ourMoves.add(learnt);
+                        int move = moveRomToNumTable[rom[statsOffset + delta] & 0xFF];
+                        ourMoves.add(new MoveLearnt(move, 1));
                     }
                 }
                 // Skip over evolution data
@@ -1501,10 +1499,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 }
                 pointer++;
                 while (rom[pointer] != 0) {
-                    MoveLearnt learnt = new MoveLearnt();
-                    learnt.level = rom[pointer] & 0xFF;
-                    learnt.move = moveRomToNumTable[rom[pointer + 1] & 0xFF];
-                    ourMoves.add(learnt);
+                    int move = moveRomToNumTable[rom[pointer + 1] & 0xFF];
+                    int level = rom[pointer] & 0xFF;
+                    ourMoves.add(new MoveLearnt(move, level));
                     pointer += 2;
                 }
                 movesets.put(pk.getNumber(), ourMoves);
@@ -1817,9 +1814,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (evo.getType() == EvolutionType.TRADE) {
                         // change
+                        markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
                         evo.setExtraInfo(37);
-                        addEvoUpdateLevel(impossibleEvolutionUpdates,evo);
                     }
                 }
             }
@@ -1832,8 +1829,14 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        // No such thing
+    public boolean hasTimeBasedEvolutions() {
+        return false;
+    }
+
+    @Override
+    public boolean canGiveEverySpeciesOneEvolutionEach() {
+        // because there isn't enough space in the bank with evolution data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
     }
 
     @Override
@@ -2053,6 +2056,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
             available |= MiscTweak.REUSABLE_TMS.getValue();
         }
+        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        }
         return available;
     }
 
@@ -2072,6 +2078,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             applyCamelCaseNames();
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
+        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
         }
     }
 
@@ -2112,6 +2120,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
         writeByte(offset, GBConstants.gbZ80Ret);
         tmsReusable = true;
+    }
+
+    private void applyForgettableHMsPatch() {
+        // Changes a jump ("JR C, e8") to two NOPs,
+        // and thus ignores the special handling for HMs when forgetting moves.
+        int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
+        if (offset == 0) {
+            return;
+        }
+        if (rom[offset] != GBConstants.gbZ80JumpRelativeC) {
+            throw new RuntimeException("Unexpected byte found for the ROM's move forgetting function, " +
+                    "likely ROM entry value \"HMMovesForgettableFunctionOffset\" is faulty.");
+        }
+        writeByte(offset++, GBConstants.gbZ80Nop);
+        writeByte(offset, GBConstants.gbZ80Nop);
     }
 
     @Override

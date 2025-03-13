@@ -30,6 +30,7 @@ import java.util.Objects;
  */
 public class InGameTrade {
 
+    // requestedSpecies can be null, in which case it represents "any Pokémon"
     private Species requestedSpecies;
     private Species givenSpecies;
 
@@ -108,7 +109,7 @@ public class InGameTrade {
         if (o instanceof InGameTrade) {
             InGameTrade other = (InGameTrade) o;
             return otId == other.otId
-                    && requestedSpecies.equals(other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
+                    && Objects.equals(requestedSpecies, other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
                     && nickname.equals(other.nickname) && Objects.equals(otName, other.otName)
                     && Arrays.equals(ivs, other.ivs) && Objects.equals(heldItem, other.heldItem);
         }

@@ -837,6 +837,15 @@ public class Gen7Constants {
         }
     }
 
+    public static final byte sunnyEvolutionExtraInfo = 0x1E, moonyEvolutionExtraInfo = 0x1F;
+
+    public static final int evolutionMethodLevelGame = 0x24,
+            evolutionMethodLevelGameDay = 0x25, evolutionMethodLevelGameNight = 0x26;
+
+    public static final List<Integer> gameSpecificEvolutionMethods = Collections.unmodifiableList(Arrays.asList(
+            evolutionMethodLevelGame, evolutionMethodLevelGameDay, evolutionMethodLevelGameNight
+    ));
+
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
             EvolutionType.HAPPINESS, EvolutionType.HAPPINESS_DAY, EvolutionType.HAPPINESS_NIGHT, EvolutionType.LEVEL,
             EvolutionType.TRADE, EvolutionType.TRADE_ITEM, EvolutionType.TRADE_SPECIAL, EvolutionType.STONE,
@@ -845,19 +854,26 @@ public class Gen7Constants {
             EvolutionType.LEVEL_IS_EXTRA, EvolutionType.LEVEL_HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY,
             EvolutionType.STONE_FEMALE_ONLY, EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT,
             EvolutionType.LEVEL_WITH_MOVE, EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY,
-            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_ELECTRIFIED_AREA, EvolutionType.LEVEL_MOSS_ROCK,
-            EvolutionType.LEVEL_ICY_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
+            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK,
+            EvolutionType.LEVEL_ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
-            EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.LEVEL_GAME,
-            EvolutionType.LEVEL_DAY_GAME, EvolutionType.LEVEL_NIGHT_GAME, EvolutionType.LEVEL_SNOWY,
+            EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.NONE,
+            EvolutionType.NONE, EvolutionType.NONE, EvolutionType.LEVEL_SNOWY,
             EvolutionType.LEVEL_DUSK, EvolutionType.LEVEL_ULTRA, EvolutionType.STONE_ULTRA
     };
 
-    public static int evolutionTypeToIndex(EvolutionType evolutionType) {
+    public static int evolutionTypeToIndex(EvolutionType et) {
         for (int i = 0; i < evolutionTypeTable.length; i++) {
-            if (evolutionType == evolutionTypeTable[i]) {
+            if (et == evolutionTypeTable[i]) {
                 return i + 1;
             }
+        }
+        if (et == EvolutionType.LEVEL_GAME_THIS || et == EvolutionType.LEVEL_GAME_OTHER) {
+            return evolutionMethodLevelGame;
+        } else if (et == EvolutionType.LEVEL_GAME_THIS_DAY || et == EvolutionType.LEVEL_GAME_OTHER_DAY) {
+            return evolutionMethodLevelGameDay;
+        } else if (et == EvolutionType.LEVEL_GAME_THIS_NIGHT || et == EvolutionType.LEVEL_GAME_OTHER_NIGHT) {
+            return evolutionMethodLevelGameNight;
         }
         return -1;
     }
@@ -867,6 +883,21 @@ public class Gen7Constants {
             return EvolutionType.NONE;
         }
         return evolutionTypeTable[index - 1];
+    }
+
+    public static List<Integer> getAreaIndicesForLocationEvolution(EvolutionType et, int romType) {
+        switch (et) {
+            case LEVEL_MAGNETIC_FIELD:
+                // {Vast Poni Canyon} : {Blush Mountain, Vast Poni Canyon}
+                return romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
+            case LEVEL_MOSS_ROCK:
+                return Collections.singletonList(74); // {Lush Jungle}
+            case LEVEL_ICE_ROCK:
+            case LEVEL_SNOWY:
+                return Collections.singletonList(138); // {Mount Lanakila}
+            default:
+                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        }
     }
 
     private static List<Boolean> setupRelevantEncounterFiles(int romType) {
@@ -1401,7 +1432,7 @@ public class Gen7Constants {
         addCopies(tags, 14, "LUSH JUNGLE");
         addCopies(tags, 8, "PANIOLA TOWN"); //Paniola Ranch
         addCopies(tags, 2, "UNUSED");
-        addCopies(tags, 6, "MALIE CITY"); //OUTER COVE
+        addCopies(tags, 6, "MALIE CITY"); //Outer Cape
         addCopies(tags, 8, "ROUTE 10");
         addCopies(tags, 2, "UNUSED");
         addCopies(tags, 2, "ROUTE 10");
@@ -1415,8 +1446,6 @@ public class Gen7Constants {
         addCopies(tags, 6, "ROUTE 13");
         addCopies(tags, 2, "TAPU VILLAGE");
         addCopies(tags, 14, "ROUTE 14");
-
-
         addCopies(tags, 8, "ROUTE 15");
         //the first 2 of these are indistinguishable from route 16; I'm only assuming they're in the
         //same order as in USUM
@@ -1428,7 +1457,6 @@ public class Gen7Constants {
         //TODO: spading to verify these are the correct locations
         addCopies(tags, 2, "ROUTE 15");
         addCopies(tags, 2, "UNUSED");
-
         addCopies(tags, 18, "ROUTE 17");
         addCopies(tags, 12, "ROUTE 11");
         addCopies(tags, 36, "HAINA DESERT");
@@ -2038,6 +2066,43 @@ public class Gen7Constants {
                 throw new IllegalStateException("Unexpected value for romType: " + romType);
         }
         tagEncounterAreas(encounterAreas, locationTags, encounterTypes, postGameAreas);
+    }
+
+    /**
+     * Based on
+     * <a href=https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Sun_and_Moon>this walkthrough</a>.
+     */
+    private static final List<String> locationTagsTraverseOrderSM = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 1", "HAU'OLI CITY", "ROUTE 2", "HAU'OLI CEMETERY", "VERDANT CAVERN", "ROUTE 3", "MELEMELE MEADOW",
+            "SEAWARD CAVE", "KALA'E BAY", "TEN CARAT HILL", "ROUTE 4", "PANIOLA TOWN", "ROUTE 5", "BROOKLET HILL",
+            "ROUTE 6",  "ROUTE 7", "WELA VOLCANO PARK", "ROUTE 8", "LUSH JUNGLE", "DIGLETT'S TUNNEL", "ROUTE 9",
+            "MEMORIAL HILL", "AKALA OUTSKIRTS", "HANO BEACH", "MALIE GARDEN", "MALIE CITY", "ROUTE 10",
+            "MOUNT HOKULANI", "ROUTE 11", "ROUTE 12", "BLUSH MOUNTAIN", "SECLUDED SHORE", "ROUTE 13", "TAPU VILLAGE",
+            "ROUTE 15", "ROUTE 14", "THRIFTY MEGAMART", "ROUTE 16", "ULA'ULA MEADOW", "ROUTE 17", "SEAFOLK VILLAGE",
+            "PONI WILDS", "ANCIENT PONI PATH", "PONI BREAKER COAST", "EXEGGUTOR ISLAND", "VAST PONI CANYON",
+            "MOUNT LANAKILA", "HAINA DESERT", "PONI GROVE", "PONI PLAINS", "PONI MEADOW", "RESOLUTION CAVE",
+            "MELEMELE SEA", "PONI COAST", "PONI GAUNTLET", "UNUSED"
+    ));
+
+    /**
+     * Based on
+     * <a href=https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Sun_and_Moon>this walkthrough</a>,
+     * but adding "SANDY CAVE" and "DIVIDING PEAK TUNNEL" in appropriate spots.
+     */
+    private static final List<String> locationTagsTraverseOrderUSUM = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 1", "HAU'OLI CITY", "ROUTE 2", "SANDY CAVE", "HAU'OLI CEMETERY", "VERDANT CAVERN", "ROUTE 3",
+            "MELEMELE MEADOW", "SEAWARD CAVE", "KALA'E BAY", "TEN CARAT HILL", "ROUTE 4", "PANIOLA TOWN", "ROUTE 5",
+            "BROOKLET HILL", "ROUTE 6",  "ROUTE 7", "WELA VOLCANO PARK", "DIVIDING PEAK TUNNEL", "ROUTE 8",
+            "LUSH JUNGLE", "DIGLETT'S TUNNEL", "ROUTE 9", "MEMORIAL HILL", "AKALA OUTSKIRTS", "HANO BEACH",
+            "MALIE GARDEN", "MALIE CITY", "ROUTE 10", "MOUNT HOKULANI", "ROUTE 11", "ROUTE 12", "BLUSH MOUNTAIN",
+            "ULA'ULA BEACH", "ROUTE 13", "TAPU VILLAGE", "ROUTE 15", "ROUTE 14", "THRIFTY MEGAMART", "ROUTE 16",
+            "ULA'ULA MEADOW", "ROUTE 17", "SEAFOLK VILLAGE", "PONI WILDS", "ANCIENT PONI PATH", "PONI BREAKER COAST",
+            "EXEGGUTOR ISLAND", "VAST PONI CANYON", "MOUNT LANAKILA", "HAINA DESERT", "PONI GROVE", "PONI PLAINS",
+            "PONI MEADOW", "RESOLUTION CAVE", "MELEMELE SEA", "PONI COAST", "PONI GAUNTLET", "UNUSED"
+    ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_SM ? locationTagsTraverseOrderSM : locationTagsTraverseOrderUSUM;
     }
 
     public static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {

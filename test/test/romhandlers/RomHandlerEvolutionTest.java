@@ -1,8 +1,10 @@
 package test.romhandlers;
 
+import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.Evolution;
 import com.dabomstew.pkrandom.gamedata.EvolutionType;
 import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -10,6 +12,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEvolutionTest extends RomHandlerTest {
 
@@ -32,7 +35,9 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     public void noEvolutionUsesEvoTypeNone(String romName) {
         loadROM(romName);
         for (Species pk : romHandler.getSpeciesSet()) {
+            System.out.println(pk.getFullName());
             for (Evolution evo : pk.getEvolutionsFrom()) {
+                System.out.println(evo);
                 assertNotEquals(EvolutionType.NONE, evo.getType());
             }
         }
@@ -64,6 +69,28 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         System.out.println("------");
         withDuplicateEvos.forEach(pk -> System.out.println(pk.getEvolutionsFrom()));
         assertTrue(withDuplicateEvos.isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allSpeciesCanBeGivenExactlyOneEvolutionAndSaved(String romName) {
+        // for testing whether "Random Every Level" evolutions would work
+        loadROM(romName);
+        assumeTrue(romHandler.canGiveEverySpeciesOneEvolutionEach());
+        Species universalTo = romHandler.getSpecies().get(SpeciesIDs.krabby); // lol
+        universalTo.getEvolutionsTo().clear();
+        for (Species pk : romHandler.getSpecies()) {
+            if (pk == null || pk == universalTo) {
+                continue;
+            }
+            pk.getEvolutionsTo().clear();
+            pk.getEvolutionsFrom().clear();
+            // evolution type and extra should not matter
+            Evolution evo = new Evolution(pk, universalTo, EvolutionType.LEVEL, 1);
+            pk.getEvolutionsFrom().add(evo);
+            universalTo.getEvolutionsTo().add(evo);
+        }
+        ((AbstractRomHandler) romHandler).savePokemonStats();
     }
 
     @ParameterizedTest

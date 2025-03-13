@@ -103,12 +103,11 @@ public class CustomNamesSet {
     }
 
     private void writeNamesBlock(OutputStream out, List<String> names) throws IOException {
-        String newln = SysConstants.LINE_SEP;
         StringBuilder outNames = new StringBuilder();
         boolean first = true;
         for (String name : names) {
             if (!first) {
-                outNames.append(newln);
+                outNames.append(System.lineSeparator());
             }
             first = false;
             outNames.append(name);

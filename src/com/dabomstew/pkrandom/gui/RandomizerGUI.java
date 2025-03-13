@@ -36,7 +36,9 @@ import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.random.SeedPicker;
+import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -344,7 +346,7 @@ public class RandomizerGUI {
     private JRadioButton teKeepTypeIdentitiesRadioButton;
     private JRadioButton teInverseRadioButton;
     private JCheckBox teAddRandomImmunitiesCheckBox;
-    private JCheckBox teUpdateTypeEffectivenessCheckbox;
+    private JCheckBox teUpdateCheckbox;
     private JLabel spBstLimitsLabel;
     private JCheckBox spBSTMinimumCheckbox;
     private JCheckBox spBSTMaximumCheckbox;
@@ -361,6 +363,7 @@ public class RandomizerGUI {
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
+    private JLabel cpgUnsupportedOSLabel;
 
     private static final Random RND = new Random();
 
@@ -1841,7 +1844,7 @@ public class RandomizerGUI {
         teKeepTypeIdentitiesRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.KEEP_IDENTITIES);
         teInverseRadioButton.setSelected(settings.getTypeEffectivenessMod() == Settings.TypeEffectivenessMod.INVERSE);
         teAddRandomImmunitiesCheckBox.setSelected(settings.isInverseTypesRandomImmunities());
-        teUpdateTypeEffectivenessCheckbox.setSelected(settings.isUpdateTypeEffectiveness());
+        teUpdateCheckbox.setSelected(settings.isUpdateTypeEffectiveness());
 
         ppalUnchangedRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.UNCHANGED);
         ppalRandomRadioButton.setSelected(settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.RANDOM);
@@ -2073,7 +2076,7 @@ public class RandomizerGUI {
         settings.setTypeEffectivenessMod(teUnchangedRadioButton.isSelected(), teRandomRadioButton.isSelected(),
                 teRandomBalancedRadioButton.isSelected(), teKeepTypeIdentitiesRadioButton.isSelected(), teInverseRadioButton.isSelected());
         settings.setInverseTypesRandomImmunities(teAddRandomImmunitiesCheckBox.isSelected());
-        settings.setUpdateTypeEffectiveness(teUpdateTypeEffectivenessCheckbox.isSelected());
+        settings.setUpdateTypeEffectiveness(teUpdateCheckbox.isSelected());
 
         settings.setPokemonPalettesMod(ppalUnchangedRadioButton.isSelected(), ppalRandomRadioButton.isSelected());
         settings.setPokemonPalettesFollowTypes(ppalFollowTypesCheckBox.isSelected());
@@ -2375,7 +2378,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
                 teKeepTypeIdentitiesRadioButton, teInverseRadioButton, teAddRandomImmunitiesCheckBox,
-                teUpdateTypeEffectivenessCheckbox);
+                teUpdateCheckbox);
 
         setInitialButtonState(ppalUnchangedRadioButton, ppalRandomRadioButton, ppalFollowTypesCheckBox,
                 ppalFollowEvolutionsCheckBox, ppalShinyFromNormalCheckBox,
@@ -2572,11 +2575,12 @@ public class RandomizerGUI {
             peUnchangedRadioButton.setEnabled(true);
             peUnchangedRadioButton.setSelected(true);
             peRandomRadioButton.setEnabled(true);
-            peRandomEveryLevelRadioButton.setVisible(pokemonGeneration >= 3);
-            peRandomEveryLevelRadioButton.setEnabled(pokemonGeneration >= 3);
+            peRandomEveryLevelRadioButton.setVisible(romHandler.canGiveEverySpeciesOneEvolutionEach());
+            peRandomEveryLevelRadioButton.setEnabled(romHandler.canGiveEverySpeciesOneEvolutionEach());
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
-            peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
+            peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
+            peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
             peAllowAltFormesCheckBox.setVisible(pokemonGeneration >= 7);
 
             // Starters, Statics & Trades
@@ -2727,8 +2731,8 @@ public class RandomizerGUI {
 
             tpNoEarlyWonderGuardCheckBox.setVisible(pokemonGeneration >= 3);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
-            tpBetterMovesetsCheckBox.setVisible(pokemonGeneration >= 3);
-            tpBetterMovesetsCheckBox.setEnabled(pokemonGeneration >= 3);
+            tpBetterMovesetsCheckBox.setVisible(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
+            tpBetterMovesetsCheckBox.setEnabled(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
 
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {
@@ -2839,8 +2843,9 @@ public class RandomizerGUI {
             teKeepTypeIdentitiesRadioButton.setEnabled(typeSupport);
             teInverseRadioButton.setEnabled(typeSupport);
             disableAndDeselectButtons(teAddRandomImmunitiesCheckBox);
-            teUpdateTypeEffectivenessCheckbox.setEnabled(typeSupport);
-            teUpdateTypeEffectivenessCheckbox.setSelected(false);
+            teUpdateCheckbox.setVisible(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
+            teUpdateCheckbox.setEnabled(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
+            teUpdateCheckbox.setSelected(false);
 
             // Graphics
             boolean ppalSupport = romHandler.hasPokemonPaletteSupport();
@@ -2860,7 +2865,9 @@ public class RandomizerGUI {
             ppalShinyFromNormalCheckBox.setEnabled(false);
 
             boolean cpgSupport = romHandler.hasCustomPlayerGraphicsSupport();
-            cpgNotExistLabel.setVisible(!cpgSupport);
+            boolean cpgOSSupport = romHandler.customPlayerGraphicsSupportDependsOnOS();
+            cpgNotExistLabel.setVisible(!cpgSupport && !cpgOSSupport);
+            cpgUnsupportedOSLabel.setVisible(!cpgSupport && cpgOSSupport);
             cpgUnchangedRadioButton.setVisible(cpgSupport);
             cpgUnchangedRadioButton.setEnabled(cpgSupport);
             cpgUnchangedRadioButton.setSelected(true);
@@ -3824,7 +3831,7 @@ public class RandomizerGUI {
             if (!initialPopup) {
                 ps.println("firststart=" + Version.VERSION_STRING);
             }
-            if (gameUpdates.size() > 0) {
+            if (!gameUpdates.isEmpty()) {
                 ps.println();
                 ps.println("[Game Updates]");
                 for (Map.Entry<String, String> update : gameUpdates.entrySet()) {

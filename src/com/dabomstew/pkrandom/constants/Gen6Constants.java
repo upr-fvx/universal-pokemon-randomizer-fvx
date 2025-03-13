@@ -1344,7 +1344,7 @@ public class Gen6Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:X_and_Y_walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrderXY = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderXY = Collections.unmodifiableList(Arrays.asList(
             "ROUTE 2", "SANTALUNE FOREST", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "PARFUM PALACE", "ROUTE 7",
             "CONNECTING CAVE", "ROUTE 8", "AMBRETTE TOWN", "ROUTE 9", "GLITTERING CAVE", "CYLLAGE CITY", "ROUTE 10",
             "ROUTE 11", "REFLECTION CAVE", "SHALOUR CITY", "ROUTE 12", "AZURE BAY", "ROUTE 13", "ROUTE 14",
@@ -1358,7 +1358,7 @@ public class Gen6Constants {
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:Omega_Ruby_and_Alpha_Sapphire_walkthrough>this walkthrough</a>,
      * with ROUTE 105 & 108 moved down since you can't explore them at all until later.
      */
-    public static final List<String> locationTagsTraverseOrderORAS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderORAS = Collections.unmodifiableList(Arrays.asList(
             "ROUTE 101", "ROUTE 103", "ROUTE 102", "PETALBURG CITY", "ROUTE 104", "PETALBURG WOODS", "ROUTE 116",
             "RUSTURF TUNNEL", "DEWFORD TOWN", "ROUTE 106", "ROUTE 107", "GRANITE CAVE", "ROUTE 109",
             "SLATEPORT CITY", "ROUTE 110", "ROUTE 117", "ROUTE 111", "ROUTE 112", "FIERY PATH", "ROUTE 113",
@@ -1370,6 +1370,10 @@ public class Gen6Constants {
             "ROUTE 105", "ROUTE 108", "SEA MAUVILLE", "SCORCHED SLAB", "EVER GRANDE CITY", "MIRAGE ISLAND",
             "MIRAGE FOREST", "MIRAGE CAVE", "MIRAGE MOUNTAIN", "VICTORY ROAD", "SKY PILLAR", "BATTLE RESORT"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_XY ? locationTagsTraverseOrderXY : locationTagsTraverseOrderORAS;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
         if (encounterAreas.size() != locationTags.size()) {

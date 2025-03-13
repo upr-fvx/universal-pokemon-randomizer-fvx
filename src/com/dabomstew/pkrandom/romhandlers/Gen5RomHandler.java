@@ -815,8 +815,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        List<String> locationTagsTraverseOrder = romEntry.getRomType() == Gen5Constants.Type_BW ?
-                Gen5Constants.locationTagsTraverseOrderBW : Gen5Constants.locationTagsTraverseOrderBW2;
+        List<String> locationTagsTraverseOrder = Gen5Constants.getLocationTagsTraverseOrder(getROMType());
         return getEncounters(useTimeOfDay).stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());

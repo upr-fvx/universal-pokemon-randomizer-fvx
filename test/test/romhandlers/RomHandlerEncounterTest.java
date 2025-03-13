@@ -158,8 +158,6 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void allLocationTagsAreFoundInTraverseOrder(String romName) {
-        // because Gen 7 traverse order is not implemented
-        assumeTrue(getGenerationNumberOf(romName) <= 6);
         loadROM(romName);
         Set<String> inOrder = new HashSet<>(getLocationTagsTraverseOrder());
         Set<String> used = new HashSet<>();
@@ -183,17 +181,15 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         } else if (romHandler instanceof Gen2RomHandler) {
             return Gen2Constants.locationTagsTraverseOrder;
         } else if (romHandler instanceof Gen3RomHandler) {
-            return (((Gen3RomHandler) romHandler).getRomEntry().getRomType() == Gen3Constants.RomType_FRLG ?
-                    Gen3Constants.locationTagsTraverseOrderFRLG : Gen3Constants.locationTagsTraverseOrderRSE);
+            return Gen3Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen4RomHandler) {
-            return (((Gen4RomHandler) romHandler).getRomEntry().getRomType() == Gen4Constants.Type_HGSS ?
-                    Gen4Constants.locationTagsTraverseOrderHGSS : Gen4Constants.locationTagsTraverseOrderDPPt);
+            return Gen4Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen5RomHandler) {
-            return (((Gen5RomHandler) romHandler).getRomEntry().getRomType() == Gen5Constants.Type_BW2 ?
-                    Gen5Constants.locationTagsTraverseOrderBW2 : Gen5Constants.locationTagsTraverseOrderBW);
+            return Gen5Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen6RomHandler) {
-            return (((Gen6RomHandler) romHandler).getRomEntry().getRomType() == Gen6Constants.Type_ORAS ?
-                    Gen6Constants.locationTagsTraverseOrderORAS : Gen6Constants.locationTagsTraverseOrderXY);
+            return Gen6Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
+        } else if (romHandler instanceof  Gen7RomHandler) {
+            return Gen7Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         }
         return Collections.emptyList();
     }

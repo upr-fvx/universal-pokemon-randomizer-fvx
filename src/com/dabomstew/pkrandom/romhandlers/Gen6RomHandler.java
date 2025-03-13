@@ -1401,8 +1401,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        List<String> locationTagsTraverseOrder = romEntry.getRomType() == Gen6Constants.Type_XY ?
-                Gen6Constants.locationTagsTraverseOrderXY : Gen6Constants.locationTagsTraverseOrderORAS;
+        List<String> locationTagsTraverseOrder = Gen6Constants.getLocationTagsTraverseOrder(getROMType());
         return getEncounters(useTimeOfDay).stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());

@@ -1335,7 +1335,7 @@ public class Gen3Constants {
             "ALTERING CAVE","ALTERING CAVE","ALTERING CAVE"
     ));
 
-    public static final List<String> locationTagsTraverseOrderRSE = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderRSE = Collections.unmodifiableList(Arrays.asList(
             "ROUTE 101", "ROUTE 103",
             "ROUTE 102", "PETALBURG CITY", "ROUTE 104", "PETALBURG WOODS", "ROUTE 116", "RUSTURF TUNNEL",
             "DEWFORD TOWN", "GRANITE CAVE", "ROUTE 109", "SLATEPORT CITY", "ROUTE 110", "ALTERING CAVE",
@@ -1349,7 +1349,7 @@ public class Gen3Constants {
             "ARTISAN CAVE"
     ));
 
-    public static final List<String> locationTagsTraverseOrderFRLG = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderFRLG = Collections.unmodifiableList(Arrays.asList(
             "PALLET TOWN", "ROUTE 1",
             "VIRIDIAN CITY", "ROUTE 22", "ROUTE 2", "VIRIDIAN FOREST", "ROUTE 3", "MT. MOON", "ROUTE 4",
             "CERULEAN CITY", "ROUTE 24", "ROUTE 25", "ROUTE 5", "ROUTE 6", "VERMILION CITY", "S.S. ANNE", "ROUTE 11",
@@ -1363,6 +1363,10 @@ public class Gen3Constants {
             "LOST CAVE", "TRAINER TOWER", "CANYON ENTRANCE", "SEVAULT CANYON", "TANOBY RUINS", "TANOBY CHAMBERS",
             "CERULEAN CAVE"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == RomType_FRLG ? locationTagsTraverseOrderFRLG : locationTagsTraverseOrderRSE;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
         if (encounterAreas.size() != locationTags.size()) {

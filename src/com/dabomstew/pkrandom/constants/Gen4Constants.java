@@ -2752,7 +2752,7 @@ public class Gen4Constants {
     /**
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Diamond_and_Pearl/Walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrderDPPt = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderDPPt = Collections.unmodifiableList(Arrays.asList(
             "TWINLEAF TOWN", "ROUTE 201", "LAKE VERITY", "ROUTE 202", "ROUTE 203", "OREBURGH GATE",
             "OREBURGH MINE", "ROUTE 204", "RAVAGED PATH", "VALLEY WINDWORKS", "ROUTE 205", "ETERNA FOREST",
             "OLD CHATEAU", "ETERNA CITY", "ROUTE 206", "WAYWARD CAVE", "ROUTE 207", "ROUTE 208", "ROUTE 209",
@@ -2769,7 +2769,7 @@ public class Gen4Constants {
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Gold_and_Silver/Walkthrough>this walkthrough</a>,
      * with Gen IV-only locations added.
      */
-    public static final List<String> locationTagsTraverseOrderHGSS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderHGSS = Collections.unmodifiableList(Arrays.asList(
             "NEW BARK TOWN", "ROUTE 29", "ROUTE 46", "CHERRYGROVE CITY", "ROUTE 30", "ROUTE 31", "DARK CAVE",
             "VIOLET CITY", "SPROUT TOWER", "ROUTE 32", "RUINS OF ALPH", "UNION CAVE", "ROUTE 33", "AZALEA TOWN",
             "SLOWPOKE WELL", "ILEX FOREST", "ROUTE 34", "GOLDENROD CITY", "ROUTE 35", "NATIONAL PARK",
@@ -2786,6 +2786,10 @@ public class Gen4Constants {
             "ROUTE 21", "CINNABAR ISLAND", "ROUTE 20", "SEAFOAM ISLANDS", "ROUTE 19", "ROUTE 22", "ROUTE 28",
             "MT. SILVER", "MT. SILVER CAVE", "CERULEAN CAVE", "BUG CATCHING CONTEST"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_HGSS ? locationTagsTraverseOrderHGSS : locationTagsTraverseOrderDPPt;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags,
                                           int[] postGameAreas, int[] partialPostGameAreas) {

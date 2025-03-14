@@ -1154,8 +1154,10 @@ public class RandomizationLogger {
             IngameTrade oldT = oldTrades.get(i);
             IngameTrade newT = newTrades.get(i);
             table.addRow(
-                    oldT.requestedSpecies.getFullName(), oldT.givenSpecies.getFullName(), oldT.nickname,
-                    newT.requestedSpecies.getFullName(), newT.givenSpecies.getFullName(), newT.nickname
+                    oldT.requestedSpecies == null ? getBS("Log.igt.any") : oldT.requestedSpecies.getFullName(),
+                    oldT.givenSpecies.getFullName(), oldT.nickname,
+                    newT.requestedSpecies == null ? getBS("Log.igt.any") : newT.requestedSpecies.getFullName(),
+                    newT.givenSpecies.getFullName(), newT.nickname
             );
         }
         log.print(table);

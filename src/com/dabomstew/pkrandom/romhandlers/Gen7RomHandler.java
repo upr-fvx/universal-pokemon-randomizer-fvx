@@ -1285,6 +1285,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
+        List<String> locationTagsTraverseOrder = Gen7Constants.getLocationTagsTraverseOrder(getROMType());
+        return getEncounters(useTimeOfDay).stream()
+                .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
         for (AreaData areaData : areaDataList) {

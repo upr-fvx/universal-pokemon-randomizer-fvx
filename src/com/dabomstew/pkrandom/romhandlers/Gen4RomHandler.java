@@ -1859,8 +1859,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-		List<String> locationTagsTraverseOrder = romEntry.getRomType() == Gen4Constants.Type_HGSS ?
-				Gen4Constants.locationTagsTraverseOrderHGSS : Gen4Constants.locationTagsTraverseOrderDPPt;
+		List<String> locationTagsTraverseOrder = Gen4Constants.getLocationTagsTraverseOrder(getROMType());
 		return getEncounters(useTimeOfDay).stream()
 				.sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
 				.collect(Collectors.toList());

@@ -1115,118 +1115,15 @@ public class RandomizerGUI {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
-        // Setup verbose log
+        // Setup log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream log;
-        try {
-            log = new PrintStream(baos, false, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log = new PrintStream(baos);
-        }
-
-        final PrintStream verboseLog = log;
+        final PrintStream log = getPrintStream(baos);
 
         try {
-            final AtomicInteger finishedCV = new AtomicInteger(0);
             opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
-            Thread t = new Thread(() -> {
-                SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-                boolean succeededSave = false;
-                try {
-                    finishedCV.set(new GameRandomizer(settings, romHandler, bundle, saveAsDirectory).randomize(filename,
-                            verboseLog, seed));
-                    succeededSave = true;
-                } catch (RandomizationException ex) {
-                    attemptToLogException(ex, "GUI.saveFailedMessage",
-                            "GUI.saveFailedMessageNoLog", true, settings.toString(), Long.toString(seed));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                } catch (CannotWriteToLocationException ex) {
-                    JOptionPane.showMessageDialog(mainPanel, String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                } catch (Exception ex) {
-                    attemptToLogException(ex, "GUI.saveFailedIO", "GUI.saveFailedIONoLog", settings.toString(), Long.toString(seed));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                }
-                if (succeededSave) {
-                    SwingUtilities.invokeLater(() -> {
-                        opDialog.setVisible(false);
-                        // Log?
-                        verboseLog.close();
-                        byte[] out = baos.toByteArray();
-
-                        if (raceMode) {
-                            JOptionPane.showMessageDialog(frame,
-                                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"),
-                                            finishedCV.get()));
-                        } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
-                            try {
-                                saveLogFile(filename, out);
-                            } catch (IOException e) {
-                                JOptionPane.showMessageDialog(frame,
-                                        bundle.getString("GUI.logSaveFailed"));
-                                return;
-                            }
-                        } else if (!batchRandomization) {
-                            int response = JOptionPane.showConfirmDialog(frame,
-                                    bundle.getString("GUI.saveLogDialog.text"),
-                                    bundle.getString("GUI.saveLogDialog.title"),
-                                    JOptionPane.YES_NO_OPTION);
-                            if (response == JOptionPane.YES_OPTION) {
-                                try {
-                                    saveLogFile(filename, out);
-                                } catch (IOException e) {
-                                    JOptionPane.showMessageDialog(frame,
-                                            bundle.getString("GUI.logSaveFailed"));
-                                    return;
-                                }
-                                JOptionPane.showMessageDialog(frame,
-                                        String.format(bundle.getString("GUI.logSaved"), filename));
-                            }
-                        }
-                        if (presetMode) {
-                            JOptionPane.showMessageDialog(frame,
-                                    bundle.getString("GUI.randomizationDone"));
-                            // Done
-                            if (this.unloadGameOnSuccess) {
-                                romHandler = null;
-                                initialState();
-                            } else {
-                                reinitializeRomHandler(false);
-                            }
-                        } else if (!batchRandomization) {
-                            // Compile a config string
-                            try {
-                                String configString = getCurrentSettings().toString();
-                                // Show the preset maker
-                                new PresetMakeDialog(frame, seed, configString);
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(frame,
-                                        bundle.getString("GUI.cantLoadCustomNames"));
-                            }
-
-                            // Done
-                            if (this.unloadGameOnSuccess) {
-                                romHandler = null;
-                                initialState();
-                            } else {
-                                reinitializeRomHandler(false);
-                            }
-                        }
-                    });
-                } else {
-                    SwingUtilities.invokeLater(() -> {
-                        opDialog.setVisible(false);
-                        romHandler = null;
-                        initialState();
-                    });
-                }
-            });
+            Thread t = new Thread(() -> performRandomizationInner(
+                    filename, seed, settings, baos, log, raceMode, batchRandomization, saveAsDirectory
+            ));
             t.start();
             if (batchRandomization) {
                 t.join();
@@ -1234,10 +1131,112 @@ public class RandomizerGUI {
             }
         } catch (Exception ex) {
             attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
-            if (verboseLog != null) {
-                verboseLog.close();
+            log.close();
+        }
+    }
+
+    private PrintStream getPrintStream(ByteArrayOutputStream baos) {
+        PrintStream log;
+        try {
+            log = new PrintStream(baos, false, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log = new PrintStream(baos);
+        }
+        return log;
+    }
+
+    private void performRandomizationInner(String filename,
+                                           long seed, Settings settings,
+                                           ByteArrayOutputStream baos, PrintStream log,
+                                           boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
+        final AtomicInteger checkValue = new AtomicInteger(0);
+        SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
+        boolean succeededSave = false;
+        try {
+            GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+            checkValue.set(randomizer.randomize(filename, log, seed));
+            succeededSave = true;
+        } catch (RandomizationException ex) {
+            attemptToLogException(ex, "GUI.saveFailedMessage", "GUI.saveFailedMessageNoLog", true, settings.toString(), Long.toString(seed));
+        } catch (CannotWriteToLocationException ex) {
+            JOptionPane.showMessageDialog(mainPanel, String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
+        } catch (Exception ex) {
+            attemptToLogException(ex, "GUI.saveFailedIO", "GUI.saveFailedIONoLog", settings.toString(), Long.toString(seed));
+        }
+        log.close();
+        if (succeededSave) {
+            SwingUtilities.invokeLater(() -> finishRandomization(
+                    filename, seed, baos, checkValue, raceMode, batchRandomization
+            ));
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                opDialog.setVisible(false);
+                romHandler = null;
+                initialState();
+            });
+        }
+    }
+
+    private void finishRandomization(String filename, long seed,
+                                     ByteArrayOutputStream baos,
+                                     AtomicInteger checkValue,
+                                     boolean raceMode, boolean batchRandomization) {
+        opDialog.setVisible(false);
+        byte[] out = baos.toByteArray();
+
+        if (raceMode) {
+            JOptionPane.showMessageDialog(frame,
+                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue.get()));
+        } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
+            try {
+                saveLogFile(filename, out);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.logSaveFailed"));
+                return;
+            }
+        } else if (!batchRandomization) {
+            int response = JOptionPane.showConfirmDialog(frame,
+                    bundle.getString("GUI.saveLogDialog.text"),
+                    bundle.getString("GUI.saveLogDialog.title"),
+                    JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                try {
+                    saveLogFile(filename, out);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(frame,
+                            bundle.getString("GUI.logSaveFailed"));
+                    return;
+                }
+                JOptionPane.showMessageDialog(frame,
+                        String.format(bundle.getString("GUI.logSaved"), filename));
             }
         }
+
+        if (presetMode) {
+            JOptionPane.showMessageDialog(frame,
+                    bundle.getString("GUI.randomizationDone"));
+
+        } else if (!batchRandomization) {
+            // Compile a config string
+            try {
+                String configString = getCurrentSettings().toString();
+                // Show the preset maker
+                new PresetMakeDialog(frame, seed, configString);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.cantLoadCustomNames"));
+            }
+        }
+
+        // Done
+        if (this.unloadGameOnSuccess) {
+            romHandler = null;
+            initialState();
+        } else {
+            reinitializeRomHandler(false);
+        }
+
     }
 
     private void saveLogFile(String filename, byte[] out) throws IOException {

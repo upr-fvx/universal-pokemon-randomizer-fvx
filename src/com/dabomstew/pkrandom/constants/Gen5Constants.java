@@ -2293,7 +2293,7 @@ public class Gen5Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:Black_and_White_walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrderBW = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW = Collections.unmodifiableList(Arrays.asList(
             "ROUTE 1", "ROUTE 2", "STRIATON CITY", "DREAMYARD", "ROUTE 3", "WELLSPRING CAVE",
             "PINWHEEL FOREST", "CASTELIA CITY", "ROUTE 4", "DESERT RESORT", "ROUTE 5", "RELIC CASTLE", "ROUTE 5",
             "DRIFTVEIL DRAWBRIDGE", "DRIFTVEIL CITY", "COLD STORAGE", "ROUTE 6", "CHARGESTONE CAVE", "ROUTE 7",
@@ -2307,7 +2307,7 @@ public class Gen5Constants {
     /**
      * Same order as the in-game Pokédex Habitat List.
      */
-    public static final List<String> locationTagsTraverseOrderBW2 = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW2 = Collections.unmodifiableList(Arrays.asList(
             "ASPERTIA CITY", "ROUTE 19", "ROUTE 20", "FLOCCESY RANCH", "VIRBANK CITY", "VIRBANK COMPLEX",
             "CASTELIA CITY", "CASTELIA SEWERS", "ROUTE 4", "DESERT RESORT", "RELIC CASTLE", "ROUTE 5", "ROUTE 16",
             "LOSTLORN FOREST", "DRIFTVEIL DRAWBRIDGE", "ROUTE 6", "RELIC PASSAGE", "CLAY TUNNEL", "MISTRALTON CAVE",
@@ -2319,6 +2319,10 @@ public class Gen5Constants {
             "DREAMYARD", "ROUTE 2", "ROUTE 1", "ROUTE 17", "ROUTE 18", "P2 LABORATORY",
             "NATURE PRESERVE"
     ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == Type_BW ? locationTagsTraverseOrderBW : locationTagsTraverseOrderBW2;
+    }
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
         if (encounterAreas.size() != locationTags.size()) {

@@ -1513,8 +1513,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        List<String> locationTagsTraverseOrder = romEntry.getRomType() == Gen3Constants.RomType_FRLG ?
-                Gen3Constants.locationTagsTraverseOrderFRLG : Gen3Constants.locationTagsTraverseOrderRSE;
+        List<String> locationTagsTraverseOrder = Gen3Constants.getLocationTagsTraverseOrder(getROMType());
         return getEncounters(useTimeOfDay).stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());

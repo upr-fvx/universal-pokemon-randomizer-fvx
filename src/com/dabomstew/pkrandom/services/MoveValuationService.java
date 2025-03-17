@@ -35,7 +35,7 @@ public class MoveValuationService {
 
         //calculated values
         private int baseValue;
-        private int totalEffectsValue;
+        private int totalResultsValue; //results meaning power and effects combined
         private int lostInaccuracyValue;
         private boolean finalized = false;
 
@@ -109,12 +109,12 @@ public class MoveValuationService {
         private void calculateValues() {
             finalized = true;
 
-            totalEffectsValue = powerValue + effectsValue + (speedDependantEffectsValue / 2)
+            totalResultsValue = powerValue + effectsValue + (speedDependantEffectsValue / 2)
                     + (doubleBattleEffectsValue / 2);
-            int perUseValue = (totalEffectsValue * accuracy) / 100;
+            int perUseValue = (totalResultsValue * accuracy) / 100;
             double finalMultiplier = useMultiplier * ((doubleBattleRangeModifier + 1) / 2.0);
             baseValue = (int) (perUseValue * finalMultiplier);
-            lostInaccuracyValue = (int) ((totalEffectsValue - perUseValue) * finalMultiplier);
+            lostInaccuracyValue = (int) ((totalResultsValue - perUseValue) * finalMultiplier);
         }
 
         public int getBaseValue() {
@@ -125,7 +125,44 @@ public class MoveValuationService {
             return baseValue;
         }
 
+        public int getValueForPokemon(Species species, int ability, List<Move> currentMoves, int heldItem){
+            int hp = species.getHp();
+            int attack = species.getAttack();
+            int defense = species.getDefense();
+            int speed = species.getSpeed();
+            int spAtk, spDef;
+            if(species instanceof Gen1Species) {
+                spAtk = species.getSpecial();
+                spDef = spAtk;
+            } else {
+                spAtk = species.getSpatk();
+                spDef = species.getSpdef();
+            }
 
+            int offenseValue = (int) ((Math.max(attack, spAtk) + speed / 2) / 1.5);
+            int defenseValue = (hp + defense + spDef) / 3;
+            double atkSpRatio = species.getAttackSpecialAttackRatio();
+
+            //step 1: speed-dependent power and unique power modifiers
+
+            //step 2: modify power value for atk/spatk ratio & STAB
+
+            //step 3: type valuation of power (covers new weaknesses, resistances, other new types)
+
+            //step 4: unique effects modifiers
+
+            //step 5: add in synergy with other moves (to effects and/or power)
+
+            //step 6: modify effects & power values by offense/defense ratio; combine into results
+
+            //step 7: modify results value by accuracy (unless synergied away)
+
+            //is that all? it's all i can think of right now, it might be all the steps.
+
+            //...so I'm realizing this process needs to know what effects are offensive or defensive... for all moves...
+
+
+        }
     }
 
     public List<Move> getAllMoves() {
@@ -149,6 +186,66 @@ public class MoveValuationService {
         }
 
         return moveValues.get(move).getBaseValue();
+    }
+
+    public int getValueForTrainerPokemon(Move move, TrainerPokemon tp){
+        Species species = tp.species;
+        int ability;
+        switch (tp.abilitySlot) {
+            case 1:
+                ability = species.getAbility1();
+                break;
+            case 2:
+                ability = species.getAbility2();
+                break;
+            case 3:
+                ability = species.getAbility3();
+                break;
+            default:
+                throw new IllegalArgumentException(tp + " has no valid ability");
+        }
+        List<Move> moves = new ArrayList<>();
+        for(int moveID : tp.moves) {
+            if(moveID > 0) {
+                moves.add(allMoves.get(moveID));
+            }
+        }
+        return getValueForSpecificPokemon(move, species, ability, moves, tp.heldItem);
+    }
+
+    public int getValueForSpecificPokemon(Move move, Species species, int ability, List<Move> currentMoves,
+                                          int heldItem){
+        return moveValues.get(move).getValueForPokemon(species, ability, currentMoves, heldItem);
+    }
+
+    public List<Integer> getValuesForTrainerPokemon(List<Move> moves, TrainerPokemon tp){
+        Species species = tp.species;
+        int ability;
+        switch (tp.abilitySlot) {
+            case 1:
+                ability = species.getAbility1();
+                break;
+            case 2:
+                ability = species.getAbility2();
+                break;
+            case 3:
+                ability = species.getAbility3();
+                break;
+            default:
+                throw new IllegalArgumentException(tp + " has no valid ability");
+        }
+        List<Move> currentMoves = new ArrayList<>();
+        for(int moveID : tp.moves) {
+            if(moveID > 0) {
+                currentMoves.add(allMoves.get(moveID));
+            }
+        }
+        return getValuesForSpecificPokemon(moves, species, ability, currentMoves, tp.heldItem);
+    }
+
+    public List<Integer> getValuesForSpecificPokemon(List<Move> moves, Species species, int ability,
+                                                    List<Move> currentMoves, int heldItem) {
+
     }
 
     private MoveValues generateDamagingMoveValues(Move move) {

@@ -214,7 +214,7 @@ public class RandomizationLogger {
         if (shouldLogTrainers())
             printContentsRow("tp");
         if (shouldLogTotemPokemon())
-            printContentsRow("topk");
+            printContentsRow("totp");
         if (shouldLogTrainers() || shouldLogTotemPokemon())
             log.println();
         if (shouldLogWildPokemon()) {

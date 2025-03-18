@@ -431,7 +431,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     break;
                 }
                 int nameLength = lengthOfStringAt(trOffset + 4) - 1;
-                if (nameLength >= tNameLen) {
+                if (nameLength > tNameLen) {
                     break;
                 }
                 // found a valid trainer entry, recognize it

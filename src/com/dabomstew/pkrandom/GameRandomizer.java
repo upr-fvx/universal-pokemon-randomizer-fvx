@@ -28,16 +28,18 @@ import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.*;
 import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.updaters.MoveUpdater;
-import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
-import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.*;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
 
 /**
- * Coordinates and logs the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s.
+ * Coordinates the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s,
+ * and sub-{@link Updater}s.<br>
+ * Also passes the results to a {@link RandomizationLogger} and a {@link CheckValueCalculator} for
+ * logging/check value calculation.
+ * <br><br>
  * Output varies by seed.
  */
 public class GameRandomizer {

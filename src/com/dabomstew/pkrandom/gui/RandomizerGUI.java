@@ -1146,26 +1146,31 @@ public class RandomizerGUI {
                                            long seed, Settings settings,
                                            ByteArrayOutputStream baos, PrintStream log,
                                            boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
-        final AtomicInteger checkValue = new AtomicInteger(0);
         SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-        boolean succeededSave = false;
-        try {
-            GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
-            checkValue.set(randomizer.randomize(filename, log, seed));
-            succeededSave = true;
-        } catch (RandomizationException ex) {
-            attemptToLogException(ex, "GUI.saveFailedMessage", "GUI.saveFailedMessageNoLog", true, settings.toString(), Long.toString(seed));
-        } catch (CannotWriteToLocationException ex) {
-            JOptionPane.showMessageDialog(mainPanel, String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
-        } catch (Exception ex) {
-            attemptToLogException(ex, "GUI.saveFailedIO", "GUI.saveFailedIONoLog", settings.toString(), Long.toString(seed));
-        }
-        log.close();
-        if (succeededSave) {
+        GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+        GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
+
+        if (results.wasSaveSuccessful()) {
+            if (!results.wasLogSuccessful()) {
+                attemptToLogException(results.getLogException(), "GUI.logFailedMessage", "GUI.logFailedMessageNoLog",
+                        true, settings.toString(), Long.toString(seed));
+            }
             SwingUtilities.invokeLater(() -> finishRandomization(
-                    filename, seed, baos, checkValue, raceMode, batchRandomization
+                    filename, seed, baos, results.getCheckValue(), raceMode, batchRandomization
             ));
         } else {
+            Exception e = results.getException();
+            if (e instanceof RandomizationException) {
+                attemptToLogException(e, "GUI.saveFailedMessage", "GUI.saveFailedMessageNoLog", true,
+                        settings.toString(), Long.toString(seed));
+            } else if (e instanceof CannotWriteToLocationException) {
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
+            } else {
+                attemptToLogException(e, "GUI.saveFailedIO", "GUI.saveFailedIONoLog",
+                        settings.toString(), Long.toString(seed));
+            }
+
             SwingUtilities.invokeLater(() -> {
                 opDialog.setVisible(false);
                 romHandler = null;
@@ -1176,14 +1181,14 @@ public class RandomizerGUI {
 
     private void finishRandomization(String filename, long seed,
                                      ByteArrayOutputStream baos,
-                                     AtomicInteger checkValue,
+                                     int checkValue,
                                      boolean raceMode, boolean batchRandomization) {
         opDialog.setVisible(false);
         byte[] out = baos.toByteArray();
 
         if (raceMode) {
             JOptionPane.showMessageDialog(frame,
-                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue.get()));
+                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue));
         } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
             try {
                 saveLogFile(filename, out);

@@ -36,13 +36,48 @@ import java.util.ResourceBundle;
 
 /**
  * Coordinates the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s,
- * and sub-{@link Updater}s.<br>
+ * and {@link Updater}s.<br>
  * Also passes the results to a {@link RandomizationLogger} and a {@link CheckValueCalculator} for
  * logging/check value calculation.
  * <br><br>
  * Output varies by seed.
  */
 public class GameRandomizer {
+
+    public static class Results {
+
+        private Exception e;
+        private Exception logE;
+        private int checkValue;
+
+        private Results() {}
+
+        public boolean wasSaveSuccessful() {
+            return e == null;
+        }
+
+        public Exception getException() {
+            if (wasSaveSuccessful()) {
+                throw new IllegalStateException("Randomization successful; no Exception to be gotten.");
+            }
+            return e;
+        }
+
+        public boolean wasLogSuccessful() {
+            return logE == null;
+        }
+
+        public Exception getLogException() {
+            if (wasLogSuccessful()) {
+                throw new IllegalStateException("Logging successful; no Exception to be gotten.");
+            }
+            return logE;
+        }
+
+        public int getCheckValue() {
+            return checkValue;
+        }
+    }
 
     private final RandomSource randomSource = new RandomSource();
 
@@ -132,7 +167,7 @@ public class GameRandomizer {
                 typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
     }
 
-    public int randomize(final String filename) {
+    public Results randomize(final String filename) {
         return randomize(filename, new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
@@ -140,27 +175,37 @@ public class GameRandomizer {
         }));
     }
 
-    public int randomize(final String filename, final PrintStream log) {
+    public Results randomize(final String filename, final PrintStream log) {
         long seed = SeedPicker.pickSeed();
         // long seed = 123456789;    // TESTING
         return randomize(filename, log, seed);
     }
 
-    public int randomize(final String filename, final PrintStream log, long seed) {
+    public Results randomize(final String filename, final PrintStream log, long seed) {
+        Results results = new Results();
+        try {
+            final long startTime = System.currentTimeMillis();
+            randomSource.seed(seed);
 
-        final long startTime = System.currentTimeMillis();
-        randomSource.seed(seed);
+            setupSpeciesRestrictions();
+            applyUpdaters();
+            applyRandomizers();
+            maybeSetCustomPlayerGraphics();
 
-        setupSpeciesRestrictions();
-        applyUpdaters();
-        applyRandomizers();
-        maybeSetCustomPlayerGraphics();
+            results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
 
-        romHandler.saveRom(filename, seed, saveAsDirectory);
+            romHandler.saveRom(filename, seed, saveAsDirectory);
 
-        logger.logResults(log, startTime);
+            try {
+                logger.logResults(log, startTime);
+            } catch (Exception e) {
+                results.logE = e;
+            }
+        } catch (Exception e) {
+            results.e = e;
+        }
 
-        return new CheckValueCalculator(romHandler, settings).calculate();
+        return results;
     }
 
     private void setupSpeciesRestrictions() {

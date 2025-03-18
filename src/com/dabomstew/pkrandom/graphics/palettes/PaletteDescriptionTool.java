@@ -21,9 +21,10 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.Utils;
+import com.dabomstew.pkrandom.exceptions.InvalidROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gui.ROMFilter;
@@ -322,8 +323,8 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
 
     private void openRom(File file) {
         try {
-            Utils.validateRomFile(file);
-        } catch (Utils.InvalidROMException e) {
+            FileFunctions.validateRomFile(file);
+        } catch (InvalidROMException e) {
             throw new RomIOException("Invalid ROM file.\n" + Arrays.toString(e.getStackTrace()));
         }
 

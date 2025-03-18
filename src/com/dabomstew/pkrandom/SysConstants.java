@@ -26,7 +26,11 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gui.RandomizerGUI;
+
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 public class SysConstants {
 
@@ -50,11 +54,18 @@ public class SysConstants {
 
     private static String getRootPath() {
         try {
-            File fh = Utils.getExecutionLocation().getParentFile();
+            File fh = getExecutionLocation().getParentFile();
             return fh.getAbsolutePath() + File.separator;
         } catch (Exception e) {
             return "./";
         }
+    }
+
+    private static File getExecutionLocation() throws UnsupportedEncodingException {
+        URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
+        String file = location.getFile();
+        String plusEncoded = file.replaceAll("\\+", "%2b");
+        return new File(java.net.URLDecoder.decode(plusEncoded, "UTF-8"));
     }
 
 }

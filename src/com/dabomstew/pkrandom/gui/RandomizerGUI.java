@@ -26,10 +26,7 @@ import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
-import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
-import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
-import com.dabomstew.pkrandom.exceptions.RandomizationException;
+import com.dabomstew.pkrandom.exceptions.*;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.gamedata.ExpCurve;
@@ -850,8 +847,8 @@ public class RandomizerGUI {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             final File fh = romOpenChooser.getSelectedFile();
             try {
-                Utils.validateRomFile(fh);
-            } catch (Utils.InvalidROMException e) {
+                FileFunctions.validateRomFile(fh);
+            } catch (InvalidROMException e) {
                 switch (e.getType()) {
                     case LENGTH:
                         JOptionPane.showMessageDialog(mainPanel,
@@ -2170,9 +2167,9 @@ public class RandomizerGUI {
     }
 
     public String getValidRequiredROMName(String config, CustomNamesSet customNames)
-            throws UnsupportedEncodingException, InvalidSupplementFilesException {
+            throws InvalidSupplementFilesException {
         try {
-            Utils.validatePresetSupplementFiles(config, customNames);
+            FileFunctions.validatePresetSupplementFiles(config, customNames);
         } catch (InvalidSupplementFilesException e) {
             switch (e.getType()) {
                 case CUSTOM_NAMES:
@@ -3848,7 +3845,7 @@ public class RandomizerGUI {
 
     private void testForRequiredConfigs() {
         try {
-            Utils.testForRequiredConfigs();
+            FileFunctions.testForRequiredConfigs();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null,
                     String.format(bundle.getString("GUI.configFileMissing"), e.getMessage()));

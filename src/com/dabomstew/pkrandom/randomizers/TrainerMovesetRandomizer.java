@@ -15,8 +15,8 @@ public class TrainerMovesetRandomizer extends Randomizer {
      * Returns whether a TrainerMovesetRandomizer can be used on games of the given generation.
      */
     public static boolean hasSupport(int generation) {
-        // This is because MoveSynergy is dependent on move IDs,
-        // which are only unified starting in Gen 3.
+        // For some unknown reason, only Gen 3+ are supported by this class.
+        // Might be due to abilities, might be due to ROM space concerns.
         // TODO: give Gen1+2 support, and remove this method
         return generation >= 3;
     }
@@ -38,6 +38,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         for (Trainer t : trainers) {
             t.setPokemonHaveCustomMoves(true);
+            System.out.println(t);
 
             for (TrainerPokemon tp : t.pokemon) {
                 tp.resetMoves = false;
@@ -154,6 +155,8 @@ public class TrainerMovesetRandomizer extends Randomizer {
                     }
                 }
 
+                System.out.println("PiM=" + pickedMoves.stream().map(m -> m.name).collect(Collectors.toList()));
+                System.out.println("MAL=" + movesAtLevel.stream().distinct().map(m -> m.name).collect(Collectors.toList()));
                 int movesPicked = pickedMoves.size();
 
                 for (int i = 0; i < 4; i++) {
@@ -571,6 +574,17 @@ public class TrainerMovesetRandomizer extends Randomizer {
     }
 
     private List<Move> getMoveSelectionPoolAtLevel(TrainerPokemon tp, boolean cyclicEvolutions) {
+
+        // This method unexpectedly (to me) includes random elements,
+        // to only allow egg/prevo/tm/move tutor moves *sometimes*.
+        // This fills two purposes, in that every lvl. 5 Rattata
+        // having Thunderbolt access may both lead to a too difficult
+        // and too "samey" gameplay experience.
+        // However, "better movesets" *is* meant as a challenge option,
+        // and though sameyness is discouraged, there are other parts
+        // of the code for randomly selecting moves from the move pool.
+        // It should not be done here.
+        // TODO: mitigate; move this functionality or just remove it.
 
         List<Move> moves = romHandler.getMoves();
         double eggMoveProbability = 0.1;

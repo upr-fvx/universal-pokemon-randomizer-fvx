@@ -735,7 +735,7 @@ public class RandomizationLogger {
             }
             List<String> row = new ArrayList<>(Arrays.asList(
                     mv.internalId + "", mv.name, (mv.type == null) ? "???" : mv.type.toString(),
-                    mv.power + "", (int) mv.hitratio + "%", mv.pp + ""
+                    mv.power + "", (int) mv.hitRatio + "%", mv.pp + ""
             ));
             if (romHandler.hasPhysicalSpecialSplit()) {
                 row.add(mv.category.toString());
@@ -815,7 +815,7 @@ public class RandomizationLogger {
         sb.append(String.format("%-12s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%",
                 mv.name, mv.type, mv.category,
                 mv.category == MoveCategory.STATUS ? "--" : String.format("%3d", mv.power),
-                mv.pp, mv.hitratio));
+                mv.pp, mv.hitRatio));
         if (mv.category != MoveCategory.STATUS && learner.hasType(mv.type, false)) {
             sb.append(" (STAB)");
         }

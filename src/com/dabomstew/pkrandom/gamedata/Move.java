@@ -25,7 +25,6 @@ package com.dabomstew.pkrandom.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.constants.MoveIDs;
 
 import java.util.Objects;
 
@@ -116,7 +115,7 @@ public class Move implements Comparable<Move> {
         this.internalId = original.internalId;
         this.power = original.power;
         this.pp = original.pp;
-        this.hitratio = original.hitratio;
+        this.hitRatio = original.hitRatio;
         this.type = original.type;
         this.category = original.category;
         this.statChangeMoveType = original.statChangeMoveType;

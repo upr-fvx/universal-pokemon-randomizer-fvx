@@ -534,6 +534,71 @@ public class TrainerRandomizersTest extends RandomizerTest {
         }
     }
 
+    private int countRealMoves(TrainerPokemon tp) {
+        int realMoves = 0;
+        for (int moveID : tp.moves) {
+            if (moveID != 0) {
+                realMoves++;
+            }
+        }
+        return realMoves;
+    }
+
+    private String movesToString(TrainerPokemon tp, List<Move> allMoves) {
+        return Arrays.stream(tp.moves).mapToObj(allMoves::get)
+                .map(m -> m == null ? "NONE" : m.name)
+                .collect(Collectors.toList()).toString();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesetsGivesNoDuplicateMoves(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBetterTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+
+        List<Move> moves = romHandler.getMoves();
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+            for (TrainerPokemon tp : tr.pokemon) {
+                System.out.println("\t" + movesToString(tp, moves));
+
+                int noDuplicateCount = (int) Arrays.stream(tp.moves).filter(i -> i != 0).distinct().count();
+                assertEquals(countRealMoves(tp), noDuplicateCount);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesetsGivesNoSameSpeciesAtSameLevelDifferentAmountOfMoves(String romName) {
+        // Some Species can't fill up all of their 4 move slots,
+        // especially at low levels.
+        // But if *some* lvl.5 Caterpie has N move slots filled,
+        // there is no reason for all Caterpies to not fill as many slots.
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBetterTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+
+        List<Move> moves = romHandler.getMoves();
+
+        Map<List<Integer>, Integer> moveSlotCounts = new HashMap<>();
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+            for (TrainerPokemon tp : tr.pokemon) {
+                System.out.println("\t" + movesToString(tp, moves));
+
+                List<Integer> key = Arrays.asList(tp.species.getNumber(), tp.level);
+                moveSlotCounts.putIfAbsent(key, countRealMoves(tp));
+                assertEquals(moveSlotCounts.get(key), countRealMoves(tp));
+            }
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {

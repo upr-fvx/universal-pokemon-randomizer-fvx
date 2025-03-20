@@ -3933,8 +3933,8 @@
                     </constraints>
                     <properties>
                       <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.fiUnchangedRadioButton.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.fiUnchangedRadioButton.toolTipText"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.ppalUnchangedRadioButton.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.ppalUnchangedRadioButton.toolTipText"/>
                     </properties>
                   </component>
                   <hspacer id="83fde">
@@ -3968,8 +3968,8 @@
                     </constraints>
                     <properties>
                       <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.fiRandomRadioButton.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.fiRandomRadioButton.toolTipText"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.ppalRandomRadioButton.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.ppalRandomRadioButton.toolTipText"/>
                     </properties>
                   </component>
                   <component id="57659" class="javax.swing.JCheckBox" binding="ppalFollowTypesCheckBox">

@@ -248,7 +248,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
-    private boolean hadEvolutionOfType(Species pk, EvolutionType et) {
+    protected boolean hadEvolutionOfType(Species pk, EvolutionType et) {
         List<Evolution> evos = preImprovedEvolutions.get(pk);
         if (evos == null) {
             throw new IllegalStateException("Species should always have been added to preImprovedEvolutions.");

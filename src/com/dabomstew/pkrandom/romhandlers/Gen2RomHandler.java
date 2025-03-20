@@ -1963,6 +1963,33 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
+    /**
+     * The same as {@link AbstractRomHandler#removeTimeBasedEvolutions()}
+     * except it uses {@link Gen2ItemIDs}.
+     */
+    @Override
+    public void removeTimeBasedEvolutions() {
+        for (Species pk : getSpecies()) {
+            if (pk == null) {
+                continue;
+            }
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                EvolutionType et = evo.getType();
+
+                if (et.usesTime()) {
+                    markImprovedEvolutions(pk);
+                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
+                        evo.setType(EvolutionType.STONE);
+                        int item = et.isDayType() ? Gen2ItemIDs.sunStone : Gen2ItemIDs.moonStone;
+                        evo.setExtraInfo(item);
+                    } else {
+                        evo.setType(et.timeless());
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public boolean canGiveEverySpeciesOneEvolutionEach() {
         // because there isn't enough space in the bank with evolution data; the Japanese ROMs are smaller

@@ -807,7 +807,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Integer> getEvolutionItems() {
-        return null;
+        return Collections.emptyList(); // implemented properly in an experimental branch
     }
 
     @Override

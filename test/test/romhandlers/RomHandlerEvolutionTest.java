@@ -1,9 +1,11 @@
 package test.romhandlers;
 
+import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.Evolution;
 import com.dabomstew.pkrandom.gamedata.EvolutionType;
 import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.randomizers.EvolutionRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -92,6 +94,33 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         }
         ((AbstractRomHandler) romHandler).savePokemonStats();
     }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void removeTimeEvosGivesSensibleEvoItems(String romName) {
+        loadROM(romName);
+
+        romHandler.removeTimeBasedEvolutions();
+
+        String[] itemNames = romHandler.getItemNames();
+        List<Integer> evolutionItems = romHandler.getEvolutionItems();
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                // In Gens 2+3, TRADE_ITEM items are not counted as evo items,
+                // as the player is not expected to trade.
+                // The player is not expected to trade in other games either,
+                // but as Gen 4 introduces LEVEL_ITEM, TRADE_ITEM items
+                // become relevant evo items within that context.
+                if (evo.getType().usesItem() &&
+                        !(romHandler.generationOfPokemon() < 4 && evo.getType() == EvolutionType.TRADE_ITEM)) {
+                    System.out.println(evo);
+                    System.out.println(itemNames[evo.getExtraInfo()]);
+                    assertTrue(evolutionItems.contains(evo.getExtraInfo()));
+                }
+            }
+        }
+    }
+
 
     @ParameterizedTest
     @MethodSource("getRomNames")

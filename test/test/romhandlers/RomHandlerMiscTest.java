@@ -8,7 +8,6 @@ import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerMiscTest extends RomHandlerTest {
@@ -82,26 +80,22 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void pokemonListIsNotEmpty(String romName) {
+    public void speciesListIsNotEmpty(String romName) {
         loadROM(romName);
         assertFalse(romHandler.getSpecies().isEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void firstPokemonInPokemonListIsNull(String romName) {
+    public void firstSpeciesInSpeciesListIsNull(String romName) {
         loadROM(romName);
         assertNull(romHandler.getSpecies().get(0));
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void numberOfPokemonInPokemonListEqualsPokemonCountConstant(String romName) {
+    public void numberOfSpeciesInSpeciesListEqualsPokemonCountConstant(String romName) {
         loadROM(romName);
-        // Because Gen 7 doesn't have a pokemonCount constant really
-        // Also, I personally won't be working much on those games...
-        assumeFalse(romHandler.generationOfPokemon() == 7);
-
         int pokemonCount = getPokemonCount();
         assertEquals(pokemonCount + 1, romHandler.getSpecies().size());
     }
@@ -121,7 +115,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
             case 6:
                 return Gen6Constants.pokemonCount;
             default:
-                return 0;
+                return Gen7Constants.getPokemonCount(romHandler.getROMType());
         }
     }
 
@@ -152,7 +146,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonAreSameAsSpeciesSetWithNoRestrictionsSet(String romName) {
+    public void restrictedSpeciesAreSameAsSpeciesSetWithNoRestrictionsSet(String romName) {
         loadROM(romName);
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(null);
@@ -161,7 +155,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonWithNoRelativesDoesNotContainUnrelatedPokemonFromWrongGeneration(String romName) {
+    public void restrictedSpeciesWithNoRelativesDoesNotContainUnrelatedSpeciesFromWrongGeneration(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
@@ -187,7 +181,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonWithNoRelativesDoesNotContainRelatedPokemonFromWrongGeneration(String romName) {
+    public void restrictedSpeciesWithNoRelativesDoesNotContainRelatedSpeciesFromWrongGeneration(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
@@ -218,7 +212,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonWithRelativesDoesNotContainUnrelatedPokemonFromWrongGeneration(String romName) {
+    public void restrictedSpeciesWithRelativesDoesNotContainUnrelatedSpeciesFromWrongGeneration(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
@@ -245,7 +239,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void restrictedPokemonWithRelativesAlwaysContainsRelatedPokemonFromWrongGeneration(String romName) {
+    public void restrictedSpeciesWithRelativesAlwaysContainsRelatedSpeciesFromWrongGeneration(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
@@ -309,7 +303,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void allPokemonHaveAGeneration(String romName){
+    public void allSpeciesHaveAGeneration(String romName){
         loadROM(romName);
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {

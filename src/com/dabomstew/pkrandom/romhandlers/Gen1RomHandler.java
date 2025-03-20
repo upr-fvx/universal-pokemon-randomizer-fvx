@@ -1841,17 +1841,88 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        return false;
+        return true;
     }
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        return new HashMap<>(); // Not implemented
+        List<Shop> shops = readShops();
+        System.out.println(shops);
+
+        Map<Integer, Shop> shopMap = new TreeMap<>(); // important this is a TreeMap
+        for (int i = 0; i < shops.size(); i++) {
+            if (!Gen1Constants.skipShops.contains(i)) {
+                shopMap.put(i, shops.get(i));
+            }
+        }
+        System.out.println(shopMap);
+        return shopMap;
+    }
+
+    private List<Shop> readShops() {
+        List<Shop> shops = new ArrayList<>();
+
+        int offset = romEntry.getIntValue("ShopItemOffset");
+        int shopAmount = romEntry.getIntValue("ShopAmount");
+        int shopNum = 0;
+
+        while (shopNum < shopAmount) {
+            System.out.println(rom[offset] & 0xFF);
+            if (rom[offset++] != Gen1Constants.shopItemsScript) {
+                throw new RomIOException("Invalid start of shop data. Should be 0x"
+                        + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
+                        + Integer.toHexString(rom[--offset] & 0xFF) + ".");
+            }
+            int itemCount = rom[offset++] & 0xFF;
+            List<Item> shopItems = new ArrayList<>();
+            for (int i = 0; i < itemCount; i++) {
+                shopItems.add(items.get(rom[offset++] & 0xFF));
+            }
+            if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
+                throw new RomIOException("Shop size mismatch/terminator missing.");
+            }
+
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(Gen1Constants.shopNames.get(shopNum));
+            shop.setMainGame(true);
+            shops.add(shop);
+            shopNum++;
+        }
+        return shops;
     }
 
     @Override
     public void setShopItems(Map<Integer, Shop> shopItems) {
-        // Not implemented
+        for (Map.Entry<Integer, Shop> entry : shopItems.entrySet()) {
+            writeShop(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void writeShop(int shopNum, Shop shop) {
+        System.out.println("writing " + shop);
+        if (shopNum >= romEntry.getIntValue("ShopAmount")) {
+            throw new IndexOutOfBoundsException("shopNum too high");
+        }
+        int offset = romEntry.getIntValue("ShopItemOffset");
+        int currShopNum = 0;
+
+        while (currShopNum < shopNum) {
+            while (rom[offset++] != Gen1Constants.shopItemsTerminator); // intentional empty body while
+            currShopNum++;
+        }
+
+        offset++; // skip the initial script byte
+        if ((rom[offset++] & 0xFF) != shop.getItems().size()) {
+            throw new IllegalArgumentException("Wrong amount of items in shop.");
+        }
+        for (Item item : shop.getItems()) {
+            rom[offset++] = (byte) item.getId();
+        }
+
+        if (rom[offset] != Gen1Constants.shopItemsTerminator) {
+            throw new RomIOException("Shop terminator not found.");
+        }
     }
 
     @Override

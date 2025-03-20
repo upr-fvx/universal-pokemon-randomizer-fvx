@@ -173,6 +173,32 @@ public class Gen1Constants {
         }
     }
 
+    public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
+
+    public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
+            "Viridian Poké Mart",
+            "Pewter Poké Mart",
+            "Cerulean Poké Mart",
+            "Unused Bike Shop",
+            "Vermilion Poké Mart",
+            "Lavender Poké Mart",
+            "Celadon Department Store 2F Left",
+            "Celadon Department Store 2F Right",
+            "Celadon Department Store 4F",
+            "Celadon Department Store 5F Left",
+            "Celadon Department Store 5F Right",
+            "Fuchsia Poké Mart",
+            "Unused Poké Mart",
+            "Cinnabar Poké Mart",
+            "Saffron Poké Mart",
+            "Indigo Plateau Lobby"
+    ));
+
+    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
+    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16)
+    );
+
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
             Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
     ));

@@ -233,6 +233,29 @@ public class Gen7Constants {
 
     public static List<Integer> bannedMoves = Arrays.asList(MoveIDs.darkVoid, MoveIDs.hyperspaceFury);
 
+    public static final Set<Integer> impossibleMetronomeMoves = setupImpossibleMetronomeMoves();
+
+    private static Set<Integer> setupImpossibleMetronomeMoves() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(
+                MoveIDs.metronome, MoveIDs.struggle, MoveIDs.afterYou, MoveIDs.assist, MoveIDs.banefulBunker,
+                MoveIDs.beakBlast, MoveIDs.belch, MoveIDs.bestow, MoveIDs.celebrate, MoveIDs.chatter, MoveIDs.copycat,
+                MoveIDs.counter, MoveIDs.covet, MoveIDs.craftyShield, MoveIDs.destinyBond, MoveIDs.detect,
+                MoveIDs.diamondStorm, MoveIDs.dragonAscent, MoveIDs.endure, MoveIDs.feint, MoveIDs.fleurCannon,
+                MoveIDs.focusPunch, MoveIDs.followMe, MoveIDs.freezeShock, MoveIDs.helpingHand, MoveIDs.holdHands,
+                MoveIDs.hyperspaceFury, MoveIDs.hyperspaceHole, MoveIDs.iceBurn, MoveIDs.instruct, MoveIDs.kingsShield,
+                MoveIDs.lightOfRuin, MoveIDs.matBlock, MoveIDs.meFirst, MoveIDs.mimic, MoveIDs.mirrorCoat,
+                MoveIDs.mirrorMove, MoveIDs.naturePower, MoveIDs.originPulse, MoveIDs.photonGeyser, MoveIDs.plasmaFists,
+                MoveIDs.precipiceBlades, MoveIDs.protect, MoveIDs.quash, MoveIDs.quickGuard, MoveIDs.ragePowder,
+                MoveIDs.relicSong, MoveIDs.secretSword, MoveIDs.shellTrap, MoveIDs.sketch, MoveIDs.sleepTalk,
+                MoveIDs.snarl, MoveIDs.snatch, MoveIDs.snore, MoveIDs.spectralThief, MoveIDs.spikyShield,
+                MoveIDs.spotlight, MoveIDs.steamEruption, MoveIDs.switcheroo, MoveIDs.technoBlast, MoveIDs.thief,
+                MoveIDs.thousandArrows, MoveIDs.thousandWaves, MoveIDs.transform, MoveIDs.trick, MoveIDs.vCreate,
+                MoveIDs.wideGuard
+        ));
+        set.addAll(GlobalConstants.zMoves);
+        return Collections.unmodifiableSet(set);
+    }
+
     public static final Type[] typeTable = constructTypeTable();
 
     private static final String tmDataPrefixSM = "034003410342034303",  tmDataPrefixUSUM = "03BC03BD03BE03BF03";

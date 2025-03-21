@@ -24,10 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.dabomstew.pkrandom.gamedata.*;
 
@@ -69,6 +66,10 @@ public class Gen1Constants {
 
     // ban transform because of Transform assumption glitch
     public static final List<Integer> bannedLevelupMoves = Collections.singletonList(MoveIDs.transform);
+
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle
+    ));
 
     public static final List<Integer> fieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport);

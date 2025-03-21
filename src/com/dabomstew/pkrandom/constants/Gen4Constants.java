@@ -764,6 +764,14 @@ public class Gen4Constants {
 
     public static final List<Integer> hgssEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle, MoveIDs.assist, MoveIDs.chatter, MoveIDs.copycat, MoveIDs.counter,
+            MoveIDs.covet, MoveIDs.destinyBond, MoveIDs.detect, MoveIDs.endure, MoveIDs.feint, MoveIDs.focusPunch,
+            MoveIDs.followMe, MoveIDs.helpingHand, MoveIDs.meFirst, MoveIDs.mimic, MoveIDs.mirrorCoat,
+            MoveIDs.mirrorMove, MoveIDs.protect, MoveIDs.sketch, MoveIDs.sleepTalk, MoveIDs.snatch, MoveIDs.switcheroo,
+            MoveIDs.thief, MoveIDs.trick
+    ));
+
     public static ItemList allowedItems, nonBadItems;
     public static List<Integer> regularShopItems, opShopItems;
 

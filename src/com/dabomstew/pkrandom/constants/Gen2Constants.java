@@ -137,6 +137,11 @@ public class Gen2Constants {
     // ban transform because of Transform assumption glitch
     public static final List<Integer> bannedLevelupMoves = Arrays.asList(MoveIDs.transform, MoveIDs.thief);
 
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle, MoveIDs.counter, MoveIDs.destinyBond, MoveIDs.detect, MoveIDs.endure,
+            MoveIDs.mimic, MoveIDs.mirrorCoat, MoveIDs.protect, MoveIDs.sketch, MoveIDs.sleepTalk, MoveIDs.thief
+    ));
+
     public static final List<Integer> brokenMoves = Arrays.asList(
             MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.hornDrill, MoveIDs.fissure, MoveIDs.guillotine);
 

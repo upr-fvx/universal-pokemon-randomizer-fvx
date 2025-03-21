@@ -281,6 +281,13 @@ public class Gen3Constants {
 
     public static final List<Integer> frlgEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle, MoveIDs.counter, MoveIDs.covet, MoveIDs.destinyBond, MoveIDs.detect,
+            MoveIDs.endure, MoveIDs.focusPunch, MoveIDs.followMe, MoveIDs.helpingHand, MoveIDs.mimic,
+            MoveIDs.mirrorCoat, MoveIDs.protect, MoveIDs.sketch, MoveIDs.sleepTalk, MoveIDs.snatch, MoveIDs.thief,
+            MoveIDs.trick
+    ));
+
     private static final List<String> rsShopNames = Arrays.asList(
             "Slateport Vitamins",
             "Slateport TMs",

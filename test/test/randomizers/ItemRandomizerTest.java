@@ -182,8 +182,8 @@ public class ItemRandomizerTest extends RandomizerTest{
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomizeShopItemsCanBanBadItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasShopSupport());
 
         Settings s = new Settings();
         s.setBanBadRandomShopItems(true);
@@ -201,8 +201,8 @@ public class ItemRandomizerTest extends RandomizerTest{
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomizeShopItemsCanBadRegularShopItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasShopSupport());
 
         Settings s = new Settings();
         s.setBanRegularShopItems(true);
@@ -221,8 +221,8 @@ public class ItemRandomizerTest extends RandomizerTest{
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomizeShopItemsCanBanOverpoweredShopItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasShopSupport());
 
         Settings s = new Settings();
         s.setBanOPShopItems(true);
@@ -241,8 +241,8 @@ public class ItemRandomizerTest extends RandomizerTest{
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomizeShopItemsCanGuaranteeEvolutionAndXItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasShopSupport());
 
         Settings s = new Settings();
         s.setGuaranteeEvolutionItems(true);

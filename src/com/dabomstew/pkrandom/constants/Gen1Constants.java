@@ -24,11 +24,9 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.EncounterArea;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Trainer;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Gen1Constants {
@@ -201,6 +199,11 @@ public class Gen1Constants {
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
             Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
+    ));
+
+    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
+            Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
     ));
     
     public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(

@@ -806,6 +806,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public Set<Item> getXItems() {
+        return itemIdsToSet(Gen1Constants.xItems);
+    }
+
+    @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
         List<EncounterArea> encounterAreas = new ArrayList<>();
 
@@ -1841,7 +1846,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        return true;
+        // Gen 1 *does* have shop support, but since the only editable shops as-is are the special ones:
+        // three shops in the Celadon Department Store, and Gen 1 also doesn't have much in the way
+        // of interesting items beyond what those shops hold in Vanilla...
+        // Yeah, there's no reason to have the feature turned on.
+        return false;
     }
 
     @Override
@@ -1867,7 +1876,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int shopNum = 0;
 
         while (shopNum < shopAmount) {
-            System.out.println(rom[offset] & 0xFF);
             if (rom[offset++] != Gen1Constants.shopItemsScript) {
                 throw new RomIOException("Invalid start of shop data. Should be 0x"
                         + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"

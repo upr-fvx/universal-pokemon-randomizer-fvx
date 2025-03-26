@@ -329,7 +329,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             while (true) {
                 int nameOffset = namesOffset + (iPokemonCount + 1) * nameLen;
                 int nameStrLen = lengthOfStringAt(nameOffset);
-                if (nameStrLen > 0 && nameStrLen < nameLen && rom[nameOffset] != 0) {
+                if (nameStrLen > 0 && nameStrLen <= nameLen && rom[nameOffset] != 0) {
                     iPokemonCount++;
                 } else {
                     break;

@@ -80,6 +80,13 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void romIsValid(String romName) {
+        loadROM(romName);
+        assertTrue(romHandler.isRomValid(System.out));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void speciesListIsNotEmpty(String romName) {
         loadROM(romName);
         assertFalse(romHandler.getSpecies().isEmpty());

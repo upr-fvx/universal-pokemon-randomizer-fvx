@@ -79,6 +79,7 @@ public class Version {
     public static final Version v4_5_0 = new Version(319, "4.5.0");
     public static final Version v4_5_1 = new Version(320, "4.5.1");
     public static final Version v4_6_0 = new Version(321, "4.6.0");
+    public static final Version v4_6_1 = new Version(322, "4.6.0");
 
     // Due to UPR FVX's origin as a merge of two branches, these share IDs with V branch Versions, and vice versa.
     public static final Version CTV_4_7_0 = new Version(322, "4.7.0", "closer-to-vanilla");
@@ -116,9 +117,10 @@ public class Version {
     public static final List<Version> ALL_VERSIONS = Collections.unmodifiableList(Arrays.asList(
             v1_0_1a, v1_0_2a, v1_1_0, v1_1_1, v1_1_2, v1_2_0a, v1_5_0, v1_6_0a, v1_6_1, v1_6_2, v1_6_3b, v1_7_0b,
             v1_7_1, v1_7_2, v3_1_0, v4_0_0, v4_0_1, v4_0_2, v4_1_0, v4_2_0, v4_2_1, v4_3_0, v4_4_0, v4_5_0, v4_5_1,
-            v4_6_0, CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0,
-            Vb_0_10_1, Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0,
-            FVX_1_0_1, FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3, FVX_1_2_0, FVX_1_2_1
+            v4_6_0, v4_6_1, // keep this gap so new ZX versions can easily be added
+            CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0, Vb_0_10_1,
+            Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0, FVX_1_0_1,
+            FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3, FVX_1_2_0, FVX_1_2_1
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {

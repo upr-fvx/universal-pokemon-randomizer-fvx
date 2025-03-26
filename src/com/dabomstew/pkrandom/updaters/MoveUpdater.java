@@ -299,6 +299,8 @@ public class MoveUpdater extends Updater<Move, MoveUpdateType, Object> {
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
+            updateMovePower(moves, MoveIDs.lusterPurge, 95);
+            updateMovePower(moves, MoveIDs.mistBall, 95);
             updateMovePP(moves, MoveIDs.slackOff, 5);
         }
 
@@ -311,7 +313,7 @@ public class MoveUpdater extends Updater<Move, MoveUpdateType, Object> {
         }
 
         if (romHandler.generationOfPokemon() >= 8) {
-            updateMovePower(moves, MoveIDs.grassyGlide, 60);
+            updateMovePower(moves, MoveIDs.grassyGlide, 55);
             updateMovePower(moves, MoveIDs.wickedBlow, 75);
             updateMovePower(moves, MoveIDs.glacialLance, 120);
         }

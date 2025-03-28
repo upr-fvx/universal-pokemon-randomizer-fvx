@@ -45,7 +45,13 @@ public class Gen2CmpTest {
                 byte[] decompressed = Gen2Decmp.decompress(compressed, 0);
                 if (Arrays.equals(uncompressed, decompressed)) {
                     succeeded.add(cmp);
+                    System.out.printf("%d->%d (rate: %.2f)%n",
+                            uncompressed.length, compressed.length,
+                            ((double) compressed.length) / ((double) uncompressed.length));
+
                 } else {
+                    System.out.println("bef=" + Arrays.toString(uncompressed));
+                    System.out.println("aft=" + Arrays.toString(decompressed));
                     failed.add(cmp);
                 }
             } catch (Exception e) {

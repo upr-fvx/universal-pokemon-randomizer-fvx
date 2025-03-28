@@ -1,5 +1,7 @@
 package compressors;
 
+import compressors.gen2.Gen2Compressor;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,10 +14,6 @@ import java.util.List;
  * This generally compresses better/gives you fewer bytes.
  */
 public class Gen2Cmp {
-
-    private interface Compressor {
-        byte[] compress(byte[] uncompressed, byte[] bitFlipped);
-    }
 
     private static final int[] bit_flipping_table = new int[] {
             // For each byte, the table contains that same byte with its bits flipped around (for instance,
@@ -40,17 +38,14 @@ public class Gen2Cmp {
             0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef, 0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
     };
 
-    private static final List<Compressor> COMPRESSORS = Arrays.asList(new NoneCompressor(), new FooCompressor());
+    public static final List<Gen2Compressor> COMPRESSORS = Arrays.asList(new NoneCompressor(), new FooCompressor());
 
     public static byte[] compress(byte[] uncompressed) {
 
-        byte[] bitFlipped = new byte[uncompressed.length];
-        for (int i = 0; i < uncompressed.length; i++) {
-            bitFlipped[i] = (byte) bit_flipping_table[uncompressed[i] & 0xFF];
-        }
+        byte[] bitFlipped = flipBits(uncompressed);
 
         byte[] bestCompressed = new byte[uncompressed.length * 2];
-        for (Compressor cmp : COMPRESSORS) {
+        for (Gen2Compressor cmp : COMPRESSORS) {
             byte[] compressed = cmp.compress(uncompressed, bitFlipped);
             if (compressed.length < bestCompressed.length) {
                 bestCompressed = compressed;
@@ -59,14 +54,22 @@ public class Gen2Cmp {
         return bestCompressed;
     }
 
-    private static class NoneCompressor implements Compressor {
+    public static byte[] flipBits(byte[] data) {
+        byte[] bitFlipped = new byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            bitFlipped[i] = (byte) bit_flipping_table[data[i] & 0xFF];
+        }
+        return bitFlipped;
+    }
+
+    private static class NoneCompressor implements Gen2Compressor {
         @Override
         public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
             return new byte[0];
         }
     }
 
-    private static class FooCompressor implements Compressor {
+    private static class FooCompressor implements Gen2Compressor {
         @Override
         public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
             return new byte[0];

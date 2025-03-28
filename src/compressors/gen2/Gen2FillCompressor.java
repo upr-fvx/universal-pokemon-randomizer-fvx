@@ -21,12 +21,12 @@ public class Gen2FillCompressor implements Gen2Compressor {
         }
     }
 
-    private static class Repetition {
+    private static class Chunk {
         private final Command command;
         private final int count;
         private final byte[] value;
 
-        public Repetition(Command command, int count, byte[] value) {
+        public Chunk(Command command, int count, byte[] value) {
             this.command = command;
             this.count = count;
             this.value = value;
@@ -40,26 +40,26 @@ public class Gen2FillCompressor implements Gen2Compressor {
         byte[] board = new byte[uncompressed.length * 2];
 
         while (pos < uncompressed.length) {
-            Repetition rep = findRepetition(uncompressed, pos);
+            Chunk chunk = findBestRepetition(uncompressed, pos);
 
-            board[size++] = (byte) ((rep.command.bits << 5) + ((rep.count - 1) & 0b11111));
+            board[size++] = (byte) ((chunk.command.bits << 5) + ((chunk.count - 1) & 0b11111));
 
-            System.arraycopy(rep.value, 0, board, size, rep.value.length);
-            size += rep.value.length;
-            pos += rep.count;
+            System.arraycopy(chunk.value, 0, board, size, chunk.value.length);
+            size += chunk.value.length;
+            pos += chunk.count;
         }
         board[size++] = TERMINATOR;
 
         return Arrays.copyOf(board, size);
     }
 
-    private Repetition findRepetition(byte[] data, int pos) {
+    private Chunk findBestRepetition(byte[] data, int pos) {
 
         if (pos + 1 >= data.length) {
             if (data[pos] != 0) {
-                return new Repetition(Command.BYTE_FILL, 1, new byte[]{data[pos]});
+                return new Chunk(Command.BYTE_FILL, 1, new byte[]{data[pos]});
             } else {
-                return new Repetition(Command.ZERO_FILL, 1, new byte[]{});
+                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
             }
         }
 
@@ -73,14 +73,14 @@ public class Gen2FillCompressor implements Gen2Compressor {
 
         if (value[0] != value[1]) {
             if (value[0] == 0 && repCount < 3) {
-                return new Repetition(Command.ZERO_FILL, 1, new byte[]{});
+                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
             } else {
-                return new Repetition(Command.WORD_FILL, repCount, value);
+                return new Chunk(Command.WORD_FILL, repCount, value);
             }
         } else if (value[0] != 0) {
-            return new Repetition(Command.BYTE_FILL, repCount, new byte[]{value[0]});
+            return new Chunk(Command.BYTE_FILL, repCount, new byte[]{value[0]});
         } else {
-            return new Repetition(Command.ZERO_FILL, repCount, new byte[]{});
+            return new Chunk(Command.ZERO_FILL, repCount, new byte[]{});
         }
     }
 }

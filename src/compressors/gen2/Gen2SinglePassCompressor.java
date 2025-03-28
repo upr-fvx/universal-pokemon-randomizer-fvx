@@ -1,9 +1,32 @@
 package compressors.gen2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Gen2SinglePassCompressor implements Gen2Compressor {
 
+    private enum Command {
+        DIRECT_COPY(0), BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3),
+        REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6), LONG_LENGTH(7);
+
+        private final int bits;
+
+        Command(int bits) {
+            this.bits = bits;
+        }
+    }
+
+    private static class Chunk {
+        private final Command command;
+        private final int count;
+        private final byte[] value;
+
+        public Chunk(Command command, int count, byte[] value) {
+            this.command = command;
+            this.count = count;
+            this.value = value;
+        }
+    }
 
     /*
    Single-pass compressor: attempts to compress the data in a single pass, selecting the best command at each
@@ -30,79 +53,104 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         NRF, RFN, FRN
     }
 
-    public Gen2SinglePassCompressor(boolean preferRepetitionOverCopy, boolean avoidCopyOrRepeat, boolean avoidLongCopy,
+    private final boolean preferFillOverRepeat;
+    private final boolean avoidFillOrRepeat;
+    private final boolean avoidLongRepeat;
+    private final int scanDelay;
+    private final CopyCommandPref copyCommandPref;
+
+    public Gen2SinglePassCompressor(boolean preferFillOverRepeat, boolean avoidFillOrRepeat, boolean avoidLongRepeat,
                                     int scanDelay, CopyCommandPref copyCommandPref) {
         if (scanDelay < 0 || scanDelay > 2) {
             throw new IllegalArgumentException("Scan delay must be between 0-2");
         }
+        this.preferFillOverRepeat = preferFillOverRepeat;
+        this.avoidFillOrRepeat = avoidFillOrRepeat;
+        this.avoidLongRepeat = avoidLongRepeat;
+        this.scanDelay = scanDelay;
+        this.copyCommandPref = copyCommandPref;
     }
 
     @Override
     public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
-        List<Command> commands = new ArrayList<>();
 
-        // init commands array
-        struct command * commands = malloc(sizeof(struct command) * *length);
-        memset(commands, -1, sizeof(struct command) * *length);
+        // init chunks array
+        List<Chunk> chunks = new ArrayList<>();
         // current_command = commands[0]
-        struct command * current_command = commands;
+        Chunk current = new Chunk();
+        chunks.add(current);
         // init some values
-        unsigned short position = 0, previous_data = 0;
-        unsigned char scan_delay = 0, scan_delay_flag = (flags >> 3) % 3;
-        struct command copy, repetition;
-        while (position < *length) {
-            copy = find_best_copy(data, position, *length, bitflipped, flags);
-            repetition = find_best_repetition(data, position, *length);
-            if (flags & 1) {
-                *current_command = pick_best_command(2, repetition, copy);
+        int pos = 0;
+        int previousData = 0;
+        int scanDDelay = 0;
+        Chunk fill;
+        Chunk repeat;
+        while (pos < uncompressed.length) {
+            fill = findBestFill(uncompressed, pos);
+            repeat = findBestRepeat(uncompressed, bitFlipped, pos);
+            if (preferFillOverRepeat) {
+                current = pick_best_command(2, fill, repeat);
             } else {
-                *current_command = pick_best_command(2, copy, repetition);
+                current = pick_best_command(2, repeat, fill);
             }
-            *current_command = pick_best_command(2, (struct command) {.command = 0, .count = 1, .value = position}, *current_command);
-            if ((flags & 2) && (command_size(*current_command) == current_command -> count)){
-                if (previous_data && (previous_data != SHORT_COMMAND_COUNT) && (previous_data != MAX_COMMAND_COUNT)) {
-                    *current_command = (struct command){.command = 0, .count = 1, .value = position} ;
+            Chunk direct = {.command = 0, .count = 1, .value = position};
+            current = pick_best_command(2, direct, current);
+            if (avoidFillOrRepeat && (command_size(current) == current.count)
+                && previousData && (previousData != SHORT_COMMAND_COUNT) && (previousData != MAX_COMMAND_COUNT)) {
+                current = {.command = 0, .count = 1, .value = position} ;
+            }
+            if (scanDelay != 0) {
+                if (scanDDelay >= scanDDelay) {
+                    scanDDelay = 0;
+                } else if (current.command != Command.DIRECT_COPY) {
+                    scanDDelay++;
+                    current = {.command = 0, .count = 1, .value = position};
                 }
             }
-            if (scan_delay_flag) {
-                if (scan_delay >= scan_delay_flag) {
-                    scan_delay = 0;
-                } else if (current_command -> command) {
-                    scan_delay ++;
-                    *current_command = (struct command) {.command = 0, .count = 1, .value = position};
-                }
-            }
-            if (current_command -> command) {
-                previous_data = 0;
+            if (current.command != Command.DIRECT_COPY) {
+                previousData = 0;
             } else {
-                previous_data += current_command -> count;
+                previousData += current.count;
             }
-            position += (current_command ++) -> count;
+            pos += current.count;
+            current = new Chunk();
+            chunks.add(current);
         }
         optimize(commands, current_command - commands);
         repack(&commands, length);
         return commands;
-
     }
 
-    struct command find_best_copy (const unsigned char * data, unsigned short position, unsigned short length, const unsigned char * bitflipped, unsigned flags) {
-        struct command simple = {.command = 7};
-        struct command flipped = simple, backwards = simple;
-        short count, offset;
-        if ((count = scan_forwards(data + position, length - position, data, position, &offset)))
-        simple = (struct command) {.command = 4, .count = count, .value = offset};
-        if ((count = scan_forwards(data + position, length - position, bitflipped, position, &offset)))
-        flipped = (struct command) {.command = 5, .count = count, .value = offset};
-        if ((count = scan_backwards(data, length - position, position, &offset)))
-        backwards = (struct command) {.command = 6, .count = count, .value = offset};
-        struct command command;
-        switch (flags / 24) {
-            case 0: command = pick_best_command(3, simple, backwards, flipped); break;
-            case 1: command = pick_best_command(3, backwards, flipped, simple); break;
-            case 2: command = pick_best_command(3, flipped, backwards, simple);
+    private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
+        Chunk simple = {.command = 7};
+        Chunk flipped = simple;
+        Chunk backwards = simple;
+        int count;
+        int offset;
+        if ((count = scan_forwards(data + position, length - position, data, pos, &offset))){
+            simple = {.command = 4, .count = count, .value = offset} ;
         }
-        if ((flags & 4) && (command.count > SHORT_COMMAND_COUNT)) command.count = SHORT_COMMAND_COUNT;
-        return command;
+        if ((count = scan_forwards(data + position, length - position, bitFlipped, pos, &offset))){
+            flipped = {.command = 5, .count = count, .value = offset};
+        }
+        if ((count = scan_backwards(data, length - position, pos, &offset))){
+            backwards = {.command = 6, .count = count, .value = offset };
+        }
+        Chunk chunk;
+        switch (copyCommandPref) {
+            case NRF:
+                chunk = pick_best_command(3, simple, backwards, flipped);
+                break;
+            case RFN:
+                chunk = pick_best_command(3, backwards, flipped, simple);
+                break;
+            case FRN:
+                chunk = pick_best_command(3, flipped, backwards, simple);
+        }
+        if (avoidLongRepeat && (chunk.count > SHORT_COMMAND_COUNT)) {
+            chunk.count = SHORT_COMMAND_COUNT;
+        }
+        return chunk;
     }
 
     unsigned short scan_forwards (const unsigned char * target, unsigned short limit, const unsigned char * source, unsigned short real_position, short * offset) {
@@ -112,16 +160,21 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         for (position = 0; position < real_position; position ++) {
             if (source[position] != *target) continue;
             for (current_length = 0; (current_length < limit) && (source[position + current_length] == target[current_length]); current_length ++);
-            if (current_length > MAX_COMMAND_COUNT) current_length = MAX_COMMAND_COUNT;
+            if (current_length > MAX_COMMAND_COUNT) {
+                current_length = MAX_COMMAND_COUNT;
+            }
             if (current_length < best_length) continue;
             best_match = position;
             best_length = current_length;
         }
-        if (!best_length) return 0;
-        if ((best_match + LOOKBACK_LIMIT) >= real_position)
-    *offset = best_match - real_position;
-  else
-    *offset = best_match;
+        if (!best_length) {
+            return 0;
+        }
+        if ((best_match + LOOKBACK_LIMIT) >= real_position) {
+            *offset = best_match - real_position;
+        } else {
+            *offset = best_match;
+        }
         return best_length;
     }
 
@@ -134,36 +187,51 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
             if (data[position] != data[real_position]) continue;
             for (current_length = 0; (current_length <= position) && (current_length < limit) &&
                     (data[position - current_length] == data[real_position + current_length]); current_length ++);
-            if (current_length > MAX_COMMAND_COUNT) current_length = MAX_COMMAND_COUNT;
+            if (current_length > MAX_COMMAND_COUNT) {
+                current_length = MAX_COMMAND_COUNT;
+            }
             if (current_length < best_length) continue;
             best_match = position;
             best_length = current_length;
         }
         if (!best_length) return 0;
-        if ((best_match + LOOKBACK_LIMIT) >= real_position)
-    *offset = best_match - real_position;
-  else
-    *offset = best_match;
+        if ((best_match + LOOKBACK_LIMIT) >= real_position) {
+            *offset = best_match - real_position;
+        } else {
+            *offset = best_match;
+        }
         return best_length;
     }
 
-    struct command find_best_repetition (const unsigned char * data, unsigned short position, unsigned short length) {
-        if ((position + 1) >= length) return data[position] ? ((struct command) {.command = 7}) : ((struct command) {.command = 3, .count = 1});
-        unsigned char value[2] = {data[position], data[position + 1]};
-        unsigned repcount, limit = length - position;
-        if (limit > MAX_COMMAND_COUNT) limit = MAX_COMMAND_COUNT;
-        for (repcount = 2; (repcount < limit) && (data[position + repcount] == value[repcount & 1]); repcount ++);
-        struct command result;
-        result.count = repcount;
-        if (*value != value[1]) {
-            if (!*value && (repcount < 3)) return (struct command) {.command = 3, .count = 1};
-            result.command = 2;
-            result.value = ((unsigned) (*value)) | (((unsigned) (value[1])) << 8);
-        } else if (*value) {
-            result.command = 1;
-            result.value = *value;
-        } else
-        result.command = 3;
-        return result;
+
+    private Chunk findBestFill(byte[] data, int pos) {
+
+        if (pos + 1 >= data.length) {
+            if (data[pos] != 0) {
+                return new Chunk(Command.BYTE_FILL, 1, new byte[]{data[pos]});
+            } else {
+                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
+            }
+        }
+
+        byte[] value = {data[pos], data[pos + 1]};
+        int limit = data.length - pos;
+        limit = Math.min(limit, MAX_CHUNK_LENGTH);
+        int repCount = 2;
+        while ((repCount < limit) && (data[pos + repCount] == value[repCount & 1])) {
+            repCount++;
+        }
+
+        if (value[0] != value[1]) {
+            if (value[0] == 0 && repCount < 3) {
+                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
+            } else {
+                return new Chunk(Command.WORD_FILL, repCount, value);
+            }
+        } else if (value[0] != 0) {
+            return new Chunk(Command.BYTE_FILL, repCount, new byte[]{value[0]});
+        } else {
+            return new Chunk(Command.ZERO_FILL, repCount, new byte[]{});
+        }
     }
 }

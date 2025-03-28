@@ -36,10 +36,12 @@ public class Gen2CmpTest {
         List<Gen2Compressor> erred = new ArrayList<>();
 
         byte[] uncompressed = bim.toBytes();
+        System.out.println(Arrays.toString(uncompressed));
         byte[] bitFlipped = Gen2Cmp.flipBits(uncompressed);
         for (Gen2Compressor cmp : compressors) {
             try {
                 byte[] compressed = cmp.compress(uncompressed, bitFlipped);
+                System.out.println(Arrays.toString(compressed));
                 byte[] decompressed = Gen2Decmp.decompress(compressed, 0);
                 if (Arrays.equals(uncompressed, decompressed)) {
                     succeeded.add(cmp);

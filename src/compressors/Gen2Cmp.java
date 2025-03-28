@@ -1,6 +1,7 @@
 package compressors;
 
 import compressors.gen2.Gen2Compressor;
+import compressors.gen2.Gen2NullCompressor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Gen2Cmp {
             0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef, 0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
     };
 
-    public static final List<Gen2Compressor> COMPRESSORS = Arrays.asList(new NoneCompressor(), new FooCompressor());
+    public static final List<Gen2Compressor> COMPRESSORS = Arrays.asList(new Gen2NullCompressor());
 
     public static byte[] compress(byte[] uncompressed) {
 
@@ -60,20 +61,6 @@ public class Gen2Cmp {
             bitFlipped[i] = (byte) bit_flipping_table[data[i] & 0xFF];
         }
         return bitFlipped;
-    }
-
-    private static class NoneCompressor implements Gen2Compressor {
-        @Override
-        public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
-            return new byte[0];
-        }
-    }
-
-    private static class FooCompressor implements Gen2Compressor {
-        @Override
-        public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
-            return new byte[0];
-        }
     }
 
     // TODO: remove after testing

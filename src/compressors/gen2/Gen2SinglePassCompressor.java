@@ -1,6 +1,7 @@
 package compressors.gen2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Gen2SinglePassCompressor implements Gen2Compressor {
@@ -11,8 +12,9 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     private static final int LOOKAHEAD_LIMIT = 3072;
 
     private enum Command {
+        // "Long Length" functionality baked into the logic, instead of being an option here
         DIRECT_COPY(0), BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3),
-        REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6), LONG_LENGTH(7);
+        REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6);
 
         private final int bits;
 
@@ -38,6 +40,14 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
             this.value = new byte[]{(byte) value};
         }
 
+        public int size() {
+            int headerSize = count > SHORT_COMMAND_COUNT ? 2 : 1;
+            if (command.bits >= 4) { // the Repeat commands
+                return headerSize + 1 + 
+            }
+            if (command.command & 4) return header_size + 1 + (command.value >= 0);
+            return header_size + command.command[(short []) {command.count, 1, 2, 0}];
+        }
     }
 
     /*
@@ -242,4 +252,17 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
             return new Chunk(Command.ZERO_FILL, repCount, new byte[]{});
         }
     }
+
+    private Chunk pickBestChunk(Chunk... chunks) {
+        return Arrays.stream(chunks).max((a, b) ->
+                {
+                    if (a == null) return -1;
+                    if (b == null) return 1;
+                    int aSavings = a.count - a.size();
+                    int bSavings = b.count - b.size();
+                    return Integer.compare(aSavings, bSavings);
+                }
+        );
+    }
+
 }

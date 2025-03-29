@@ -3713,13 +3713,38 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
+    public List<Integer> getShopPrices() {
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
         try {
             NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
             for (int i = 1; i < itemPriceNarc.files.size(); i++) {
-                writeWord(itemPriceNarc.files.get(i),0,Gen5Constants.balancedItemPrices.get(i));
+                prices.add(readWord(itemPriceNarc.files.get(i), 0));
             }
-            writeNARC(romEntry.getFile("ItemData"),itemPriceNarc);
+            writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+        return prices;
+    }
+
+    @Override
+    public void setBalancedShopPrices() {
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen5Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
+    }
+
+    @Override
+    public void setShopPrices(List<Integer> prices) {
+        try {
+            NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
+            for (int i = 1; i < itemPriceNarc.files.size(); i++) {
+                writeWord(itemPriceNarc.files.get(i), 0, prices.get(i));
+            }
+            writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
         } catch (IOException e) {
             throw new RomIOException(e);
         }

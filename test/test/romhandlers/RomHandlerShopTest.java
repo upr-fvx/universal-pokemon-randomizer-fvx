@@ -1,6 +1,7 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.constants.Gen4Constants;
 import com.dabomstew.pkrandom.gamedata.ItemList;
 import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
@@ -296,17 +297,41 @@ public class RomHandlerShopTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void canGetPricesWithoutThrowing(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) == 2);
+    public void shopPricesDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        List<Integer> prices = ((Gen2RomHandler) romHandler).getShopPrices();
+        List<Integer> prices = romHandler.getShopPrices();
         String[] names = romHandler.getItemNames();
         if (prices.size() != names.length) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("prices.size()=" + prices.size() + " names.length=" + names.length);
         }
         for (int i = 0; i < prices.size(); i++) {
             System.out.println(names[i] + ": " + prices.get(i) + "¥");
         }
+
+        romHandler.setShopPrices(prices);
+        List<Integer> after = romHandler.getShopPrices();
+
+        assertEquals(prices, after);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void foo(String romName) {
+        loadROM(romName);
+
+        String[] names = romHandler.getItemNames();
+        Map<Integer, Integer> balanced = Gen4Constants.balancedItemPrices;
+        List<Integer> realPrices = romHandler.getShopPrices();
+
+        System.out.println("\tpublic static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {");
+        for (int i = 1; i < 500; i++) {
+            if (realPrices.get(i) != balanced.get(i) * 10) {
+                System.out.println("\t\t\t{ItemIDs." + names[i] + ", " + balanced.get(i) * 10 + "},");
+            }
+        }
+
+
+        assertNotNull(romHandler);
     }
 
 }

@@ -35,6 +35,7 @@ import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -1860,8 +1861,20 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public List<Integer> getShopPrices() {
+        // Not implemented
+        throw new NotImplementedException();
+    }
+
+    @Override
     public void setBalancedShopPrices() {
         // Not implemented
+    }
+
+    @Override
+    public void setShopPrices(List<Integer> prices) {
+        // Not implemented
+        throw new NotImplementedException();
     }
 
     /**

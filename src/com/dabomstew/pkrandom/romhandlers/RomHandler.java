@@ -488,6 +488,10 @@ public interface RomHandler {
 
     void setShopItems(Map<Integer, Shop> shopItems);
 
+    List<Integer> getShopPrices();
+
+    void setShopPrices(List<Integer> prices);
+
     void setBalancedShopPrices();
 
     // ============

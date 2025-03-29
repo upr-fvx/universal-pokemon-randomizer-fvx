@@ -2070,6 +2070,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         return shopToBytes(readShop(offset)).length;
     }
 
+    @Override
     public List<Integer> getShopPrices() {
         int itemAttributesOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;
@@ -2092,6 +2093,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         setShopPrices(prices);
     }
 
+    @Override
     public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;

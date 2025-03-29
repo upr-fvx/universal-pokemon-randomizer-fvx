@@ -48,8 +48,6 @@ import java.util.stream.Collectors;
  */
 public class Gen7RomHandler extends Abstract3DSRomHandler {
 
-    // TODO: implement location traverse order
-
     public static class Factory extends RomHandler.Factory {
 
         @Override
@@ -3437,13 +3435,38 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
+    public List<Integer> getShopPrices() {
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
         try {
-            GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"),true);
+            GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
             for (int i = 1; i < itemPriceGarc.files.size(); i++) {
-                writeWord(itemPriceGarc.files.get(i).get(0),0, Gen7Constants.balancedItemPrices.get(i));
+                prices.add(readWord(itemPriceGarc.files.get(i).get(0), 0));
             }
-            writeGARC(romEntry.getFile("ItemData"),itemPriceGarc);
+            writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+        return prices;
+    }
+
+    @Override
+    public void setBalancedShopPrices() {
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen7Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
+    }
+
+    @Override
+    public void setShopPrices(List<Integer> prices) {
+        try {
+            GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
+            for (int i = 1; i < itemPriceGarc.files.size(); i++) {
+                writeWord(itemPriceGarc.files.get(i).get(0), 0, prices.get(i));
+            }
+            writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
         } catch (IOException e) {
             throw new RomIOException(e);
         }

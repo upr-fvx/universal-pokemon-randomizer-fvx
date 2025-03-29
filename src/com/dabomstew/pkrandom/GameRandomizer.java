@@ -247,19 +247,17 @@ public class GameRandomizer {
 
         maybeStandardizeEXPCurves();
 
-        maybeRandomizeSpeciesTypes();
-
-        maybeRandomizeWildHeldItems();
-
-        // Applied after type to pick new evos based on new types.
+        // Applied before anything that can be carried up evolutions, so the new evos are used for that.
         maybeRandomizeEvolutions();
 
+        maybeRandomizeSpeciesTypes();
+        maybeRandomizeWildHeldItems();
         maybeRandomizeSpeciesBaseStats();
         maybeRandomizeSpeciesAbilities();
 
         maybeApplyEvolutionImprovements();
 
-        // Applied after type to update the strings correctly based on new types
+        // Applied after species types both some settings and the in-game strings should depend on the new types.
         maybeRandomizeStarters();
 
         maybeRandomizeMovesets();

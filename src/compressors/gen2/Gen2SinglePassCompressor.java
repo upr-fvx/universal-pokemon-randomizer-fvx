@@ -5,6 +5,11 @@ import java.util.List;
 
 public class Gen2SinglePassCompressor implements Gen2Compressor {
 
+    private static final int SHORT_COMMAND_COUNT = 32;
+    private static final int MAX_COMMAND_COUNT = 1024;
+    private static final int LOOKBACK_LIMIT = 128;
+    private static final int LOOKAHEAD_LIMIT = 3072;
+
     private enum Command {
         DIRECT_COPY(0), BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3),
         REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6), LONG_LENGTH(7);
@@ -18,7 +23,7 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
 
     private static class Chunk {
         private final Command command;
-        private final int count;
+        private int count;
         private final byte[] value;
 
         public Chunk(Command command, int count, byte[] value) {
@@ -26,6 +31,13 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
             this.count = count;
             this.value = value;
         }
+
+        public Chunk(Command command, int count, int value) {
+            this.command = command;
+            this.count = count;
+            this.value = new byte[]{(byte) value};
+        }
+
     }
 
     /*
@@ -93,18 +105,18 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
             } else {
                 current = pick_best_command(2, repeat, fill);
             }
-            Chunk direct = {.command = 0, .count = 1, .value = position};
+            Chunk direct = new Chunk(Command.DIRECT_COPY, 1, pos);
             current = pick_best_command(2, direct, current);
             if (avoidFillOrRepeat && (command_size(current) == current.count)
                 && previousData && (previousData != SHORT_COMMAND_COUNT) && (previousData != MAX_COMMAND_COUNT)) {
-                current = {.command = 0, .count = 1, .value = position} ;
+                current = = new Chunk(Command.DIRECT_COPY, 1, pos);
             }
             if (scanDelay != 0) {
                 if (scanDDelay >= scanDDelay) {
                     scanDDelay = 0;
                 } else if (current.command != Command.DIRECT_COPY) {
                     scanDDelay++;
-                    current = {.command = 0, .count = 1, .value = position};
+                    current = new Chunk(Command.DIRECT_COPY, 1, pos);
                 }
             }
             if (current.command != Command.DIRECT_COPY) {
@@ -122,20 +134,9 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
-        Chunk simple = {.command = 7};
-        Chunk flipped = simple;
-        Chunk backwards = simple;
-        int count;
-        int offset;
-        if ((count = scan_forwards(data + position, length - position, data, pos, &offset))){
-            simple = {.command = 4, .count = count, .value = offset} ;
-        }
-        if ((count = scan_forwards(data + position, length - position, bitFlipped, pos, &offset))){
-            flipped = {.command = 5, .count = count, .value = offset};
-        }
-        if ((count = scan_backwards(data, length - position, pos, &offset))){
-            backwards = {.command = 6, .count = count, .value = offset };
-        }
+        Chunk simple = scanForwards(data, data, pos, Command.REPEAT);
+        Chunk flipped = scanForwards(data, bitFlipped, pos, Command.BIT_REVERSE_REPEAT);
+        Chunk backwards = scanBackwards(data, pos);
         Chunk chunk;
         switch (copyCommandPref) {
             case NRF:
@@ -153,54 +154,61 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         return chunk;
     }
 
-    unsigned short scan_forwards (const unsigned char * target, unsigned short limit, const unsigned char * source, unsigned short real_position, short * offset) {
-        unsigned short best_match, best_length = 0;
-        unsigned short current_length;
-        unsigned short position;
-        for (position = 0; position < real_position; position ++) {
-            if (source[position] != *target) continue;
-            for (current_length = 0; (current_length < limit) && (source[position + current_length] == target[current_length]); current_length ++);
-            if (current_length > MAX_COMMAND_COUNT) {
-                current_length = MAX_COMMAND_COUNT;
+    private Chunk scanForwards(byte[] target, byte[] source, int realPos, Command command) {
+        int limit = source.length - realPos;
+        int bestMatch = 0;
+        int bestLength = 0;
+        for (int pos = 0; pos < realPos; pos++) {
+            if (source[pos] != target[realPos]) continue;
+
+            int currentLength = 0;
+            while ((currentLength < limit) && (source[pos + currentLength] == target[realPos + currentLength])) {
+                currentLength++;
             }
-            if (current_length < best_length) continue;
-            best_match = position;
-            best_length = current_length;
+            currentLength = Math.min(currentLength, MAX_COMMAND_COUNT);
+            if (currentLength > bestLength) {
+                bestMatch = pos;
+                bestLength = currentLength;
+            }
         }
-        if (!best_length) {
-            return 0;
+        if (bestLength == 0) {
+            return null;
         }
-        if ((best_match + LOOKBACK_LIMIT) >= real_position) {
-            *offset = best_match - real_position;
-        } else {
-            *offset = best_match;
+        int offset = bestMatch;
+        if (offset + LOOKBACK_LIMIT >= realPos) {
+            offset -= realPos;
         }
-        return best_length;
+        return new Chunk(command, bestLength, offset);
     }
 
-    unsigned short scan_backwards (const unsigned char * data, unsigned short limit, unsigned short real_position, short * offset) {
-        if (real_position < limit) limit = real_position;
-        unsigned short best_match, best_length = 0;
-        unsigned short current_length;
-        unsigned short position;
-        for (position = 0; position < real_position; position ++) {
-            if (data[position] != data[real_position]) continue;
-            for (current_length = 0; (current_length <= position) && (current_length < limit) &&
-                    (data[position - current_length] == data[real_position + current_length]); current_length ++);
-            if (current_length > MAX_COMMAND_COUNT) {
-                current_length = MAX_COMMAND_COUNT;
+    private Chunk scanBackwards (byte[] data, int realPos) {
+        int limit = data.length - realPos;
+        limit = Math.min(realPos, limit);
+
+        int bestMatch = 0;
+        int bestLength = 0;
+        for (int pos = 0; pos < realPos; pos++) {
+            if (data[pos] != data[realPos]) continue;
+
+            int currentLength = 0;
+            while ((currentLength <= pos) && (currentLength < limit) &&
+                    (data[pos - currentLength] == data[realPos + currentLength])) {
+                currentLength++;
             }
-            if (current_length < best_length) continue;
-            best_match = position;
-            best_length = current_length;
+            currentLength = Math.min(currentLength, MAX_COMMAND_COUNT);
+            if (currentLength > bestLength) {
+                bestMatch = pos;
+                bestLength = currentLength;
+            }
         }
-        if (!best_length) return 0;
-        if ((best_match + LOOKBACK_LIMIT) >= real_position) {
-            *offset = best_match - real_position;
-        } else {
-            *offset = best_match;
+        if (bestLength == 0) {
+            return null;
         }
-        return best_length;
+        int offset = bestMatch;
+        if (offset + LOOKBACK_LIMIT >= realPos) {
+            offset -= realPos;
+        }
+        return new Chunk(Command.BACKWARDS_REPEAT, bestLength, offset);
     }
 
 

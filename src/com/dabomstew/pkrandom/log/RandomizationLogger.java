@@ -1099,8 +1099,14 @@ public class RandomizationLogger {
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
 
-        for (int i = 0; i < encounterAreas.size(); i++) {
-            EncounterArea area = encounterAreas.get(i);
+        int i = 0;
+        for (EncounterArea area : encounterAreas) {
+            if (area.getEncounterType() == EncounterType.UNUSED) {
+                continue;
+            }
+
+            i++;
+
             if (area.getDisplayName() == null) {
                 log.printf(getBS("Log.wp.areaNoDisplayName"), i, area.getRate());
             } else {

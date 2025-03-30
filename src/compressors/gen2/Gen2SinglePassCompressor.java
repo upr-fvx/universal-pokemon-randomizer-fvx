@@ -1,37 +1,24 @@
 package compressors.gen2;
 
-import compressors.Gen2Decmp;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Attempts to compress the data in a single pass, selecting the best command at each
+ * position within some constraints.<br>
+ * (<a href=https://sneslab.net/wiki/LZ3>Documentation for the compression format</a>).
+ * <br><br>
+ * Essentially a Java translation of pokecrystal's
+ * <a href=https://github.com/pret/pokecrystal/blob/master/tools/lz/spcomp.c>spcomp.c</a>.
+ */
 public class Gen2SinglePassCompressor extends Gen2Compressor {
 
-    /*
-   Single-pass compressor: attempts to compress the data in a single pass, selecting the best command at each
-                           position within some constraints.
-   Methods defined: 72
-   Flags values:
-     Bit fields (will trigger alternate behavior if set):
-     1: prefer repetition commands over copy commands of equal count
-     2: don't emit a copy or repetition with a count equal to its size when the previous command is a literal (0) that
-        is not at maximum size (32 or 1024)
-     4: don't emit long copy commands
-     Selector values (pick one from each group and add them to the bit fields):
-     - Scan delay: number of bytes that are forced into literal (0) commands after each non-literal command:
-       0: 0 bytes
-       8: 1 byte
-       16: 2 bytes
-     - Copy command preference (when the command counts are tied), in order from most to least:
-       0: normal (4), reversed (6), flipped (5)
-       24: reversed (6), flipped (5), normal (4)
-       48: flipped (5), reversed (6), normal (4)
-*/
-
     public enum CopyCommandPref {
-        NRF, RFN, FRN
+        NRF, // Normal (100), Reversed (110), Flipped (101)
+        RFN, // Reversed (110), Flipped (101), Normal (100)
+        FRN  // Flipped (101), Reversed (110), Normal (100)
     }
 
     public static List<Gen2SinglePassCompressor> ALL_OPTIONS = initAllOptions();
@@ -63,6 +50,15 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
     private final int maxScanDelay;
     private final CopyCommandPref copyCommandPref;
 
+    /**
+     * @param preferFillOverRepeat If true: prefer fill chunks over repeat chunks of equal count.
+     * @param avoidFillOrRepeat If true: don't emit a fill or repeat with a count equal to its size when the previous
+     *                          chunks is a Direct Copy (000) that is not at maximum size (32 or 1024).
+     * @param avoidLongRepeat If true: don't emit long copy chunks.
+     * @param maxScanDelay Number of bytes that are forced into Direct Copy (000) chunks after each
+     *                     non-Direct Copy chunk.
+     * @param copyCommandPref Copy command preference (when the command counts are tied), in order from most to least.
+     */
     public Gen2SinglePassCompressor(boolean preferFillOverRepeat, boolean avoidFillOrRepeat, boolean avoidLongRepeat,
                                     int maxScanDelay, CopyCommandPref copyCommandPref) {
         if (maxScanDelay < 0 || maxScanDelay > 2) {
@@ -88,18 +84,16 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
     @Override
     public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
 
-        // init chunks array
         Chunk[] chunks = new Chunk[uncompressed.length];
         int curr = 0;
-        // init some values
+
         int pos = 0;
         int previousData = 0;
         int scanDelay = 0;
-        Chunk fill;
-        Chunk repeat;
+
         while (pos < uncompressed.length) {
-            fill = findBestFill(uncompressed, pos);
-            repeat = findBestRepeat(uncompressed, bitFlipped, pos);
+            Chunk fill = findBestFill(uncompressed, pos);
+            Chunk repeat = findBestRepeat(uncompressed, bitFlipped, pos);
             if (preferFillOverRepeat) {
                 chunks[curr] = pickBestChunk(fill, repeat);
             } else {

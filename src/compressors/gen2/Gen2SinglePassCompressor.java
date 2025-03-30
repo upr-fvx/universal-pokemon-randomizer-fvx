@@ -9,7 +9,6 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     private static final int SHORT_COMMAND_COUNT = 32;
     private static final int MAX_COMMAND_COUNT = 1024;
     private static final int LOOKBACK_LIMIT = 128;
-    private static final int LOOKAHEAD_LIMIT = 3072;
 
     private enum Command {
         // "Long Length" functionality baked into the logic, instead of being an option here
@@ -26,27 +25,21 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     private static class Chunk {
         private final Command command;
         private int count;
-        private final byte[] value;
+        private final int value;
 
-        public Chunk(Command command, int count, byte[] value) {
+        public Chunk(Command command, int count, int value) {
             this.command = command;
             this.count = count;
             this.value = value;
         }
 
-        public Chunk(Command command, int count, int value) {
-            this.command = command;
-            this.count = count;
-            this.value = new byte[]{(byte) value};
-        }
-
         public int size() {
             int headerSize = count > SHORT_COMMAND_COUNT ? 2 : 1;
             if (command.bits >= 4) { // the Repeat commands
-                return headerSize + 1 + 
+                return headerSize + 1 + (value >= 0 ? 1 : 0);
             }
-            if (command.command & 4) return header_size + 1 + (command.value >= 0);
-            return header_size + command.command[(short []) {command.count, 1, 2, 0}];
+            int[] commandSizes = new int[] {count, 1, 2, 0};
+            return headerSize + commandSizes[command.bits];
         }
     }
 
@@ -78,18 +71,18 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     private final boolean preferFillOverRepeat;
     private final boolean avoidFillOrRepeat;
     private final boolean avoidLongRepeat;
-    private final int scanDelay;
+    private final int maxScanDelay;
     private final CopyCommandPref copyCommandPref;
 
     public Gen2SinglePassCompressor(boolean preferFillOverRepeat, boolean avoidFillOrRepeat, boolean avoidLongRepeat,
-                                    int scanDelay, CopyCommandPref copyCommandPref) {
-        if (scanDelay < 0 || scanDelay > 2) {
-            throw new IllegalArgumentException("Scan delay must be between 0-2");
+                                    int maxScanDelay, CopyCommandPref copyCommandPref) {
+        if (maxScanDelay < 0 || maxScanDelay > 2) {
+            throw new IllegalArgumentException("Max scan delay must be between 0-2");
         }
         this.preferFillOverRepeat = preferFillOverRepeat;
         this.avoidFillOrRepeat = avoidFillOrRepeat;
         this.avoidLongRepeat = avoidLongRepeat;
-        this.scanDelay = scanDelay;
+        this.maxScanDelay = maxScanDelay;
         this.copyCommandPref = copyCommandPref;
     }
 
@@ -97,50 +90,53 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
     public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
 
         // init chunks array
-        List<Chunk> chunks = new ArrayList<>();
-        // current_command = commands[0]
-        Chunk current = new Chunk();
-        chunks.add(current);
+        Chunk[] chunks = new Chunk[uncompressed.length];
+        int curr = 0;
         // init some values
         int pos = 0;
         int previousData = 0;
-        int scanDDelay = 0;
+        int scanDelay = 0;
         Chunk fill;
         Chunk repeat;
         while (pos < uncompressed.length) {
             fill = findBestFill(uncompressed, pos);
             repeat = findBestRepeat(uncompressed, bitFlipped, pos);
             if (preferFillOverRepeat) {
-                current = pick_best_command(2, fill, repeat);
+                chunks[curr] = pickBestChunk(fill, repeat);
             } else {
-                current = pick_best_command(2, repeat, fill);
+                chunks[curr] = pickBestChunk(repeat, fill);
             }
+
             Chunk direct = new Chunk(Command.DIRECT_COPY, 1, pos);
-            current = pick_best_command(2, direct, current);
-            if (avoidFillOrRepeat && (command_size(current) == current.count)
-                && previousData && (previousData != SHORT_COMMAND_COUNT) && (previousData != MAX_COMMAND_COUNT)) {
-                current = = new Chunk(Command.DIRECT_COPY, 1, pos);
+            chunks[curr] = pickBestChunk(direct, chunks[curr]);
+            if (avoidFillOrRepeat && (chunks[curr].size() == chunks[curr].count)
+                    && (previousData != 0) && (previousData != SHORT_COMMAND_COUNT)
+                    && (previousData != MAX_COMMAND_COUNT)) {
+                chunks[curr] = new Chunk(Command.DIRECT_COPY, 1, pos);
             }
-            if (scanDelay != 0) {
-                if (scanDDelay >= scanDDelay) {
-                    scanDDelay = 0;
-                } else if (current.command != Command.DIRECT_COPY) {
-                    scanDDelay++;
-                    current = new Chunk(Command.DIRECT_COPY, 1, pos);
+
+            if (maxScanDelay != 0) {
+                if (scanDelay >= maxScanDelay) {
+                    scanDelay = 0;
+                } else if (chunks[curr].command != Command.DIRECT_COPY) {
+                    scanDelay++;
+                    chunks[curr] = new Chunk(Command.DIRECT_COPY, 1, pos);
                 }
             }
-            if (current.command != Command.DIRECT_COPY) {
+
+            if (chunks[curr].command != Command.DIRECT_COPY) {
                 previousData = 0;
             } else {
-                previousData += current.count;
+                previousData += chunks[curr].count;
             }
-            pos += current.count;
-            current = new Chunk();
-            chunks.add(current);
+            pos += chunks[curr].count;
+
+            curr++;
         }
-        optimize(commands, current_command - commands);
-        repack(&commands, length);
-        return commands;
+//        optimize(commands, current_command - commands);
+//        repack(&commands, length);
+//        return commands;
+        return null; // TODO
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
@@ -150,13 +146,16 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         Chunk chunk;
         switch (copyCommandPref) {
             case NRF:
-                chunk = pick_best_command(3, simple, backwards, flipped);
+                chunk = pickBestChunk(simple, backwards, flipped);
                 break;
             case RFN:
-                chunk = pick_best_command(3, backwards, flipped, simple);
+                chunk = pickBestChunk(backwards, flipped, simple);
                 break;
             case FRN:
-                chunk = pick_best_command(3, flipped, backwards, simple);
+                chunk = pickBestChunk(flipped, backwards, simple);
+                break;
+            default:
+                throw new RuntimeException("Should be unreachable...");
         }
         if (avoidLongRepeat && (chunk.count > SHORT_COMMAND_COUNT)) {
             chunk.count = SHORT_COMMAND_COUNT;
@@ -226,15 +225,15 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
 
         if (pos + 1 >= data.length) {
             if (data[pos] != 0) {
-                return new Chunk(Command.BYTE_FILL, 1, new byte[]{data[pos]});
+                return new Chunk(Command.BYTE_FILL, 1, data[pos]);
             } else {
-                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
+                return new Chunk(Command.ZERO_FILL, 1, 0);
             }
         }
 
         byte[] value = {data[pos], data[pos + 1]};
         int limit = data.length - pos;
-        limit = Math.min(limit, MAX_CHUNK_LENGTH);
+        limit = Math.min(limit, MAX_COMMAND_COUNT);
         int repCount = 2;
         while ((repCount < limit) && (data[pos + repCount] == value[repCount & 1])) {
             repCount++;
@@ -242,14 +241,14 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
 
         if (value[0] != value[1]) {
             if (value[0] == 0 && repCount < 3) {
-                return new Chunk(Command.ZERO_FILL, 1, new byte[]{});
+                return new Chunk(Command.ZERO_FILL, 1, 0);
             } else {
-                return new Chunk(Command.WORD_FILL, repCount, value);
+                return new Chunk(Command.WORD_FILL, repCount, ((value[0] & 0xFF) << 8) + (value[1] & 0xFF));
             }
         } else if (value[0] != 0) {
-            return new Chunk(Command.BYTE_FILL, repCount, new byte[]{value[0]});
+            return new Chunk(Command.BYTE_FILL, repCount, value[0]);
         } else {
-            return new Chunk(Command.ZERO_FILL, repCount, new byte[]{});
+            return new Chunk(Command.ZERO_FILL, repCount, 0);
         }
     }
 
@@ -262,7 +261,7 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
                     int bSavings = b.count - b.size();
                     return Integer.compare(aSavings, bSavings);
                 }
-        );
+        ).orElseThrow(RuntimeException::new);
     }
 
 }

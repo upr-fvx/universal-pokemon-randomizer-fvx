@@ -123,8 +123,9 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
 //        optimize(commands, current_command - commands);
 //        repack(&commands, length);
 //        return commands;
-        chunks = Arrays.copyOf(chunks, curr); // cut off the nulls
-        return chunksToBytes(chunks, uncompressed);
+        List<Chunk> chunksList = Arrays.asList(Arrays.copyOf(chunks, curr)); // cut off the nulls
+        chunksList = mergeDirectCopy(chunksList);
+        return chunksToBytes(chunksList, uncompressed);
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {

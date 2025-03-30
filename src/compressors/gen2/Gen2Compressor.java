@@ -1,6 +1,8 @@
 package compressors.gen2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A compressor for the compression format used by the Generation 2 Pokémon games.
@@ -73,9 +75,29 @@ public abstract class Gen2Compressor {
         ).orElseThrow(RuntimeException::new);
     }
 
-    protected byte[] chunksToBytes(Chunk[] chunks, byte[] uncompressed) {
+    protected List<Chunk> mergeDirectCopy(List<Chunk> chunks) {
+        List<Chunk> merged = new ArrayList<>();
+        int sum = 0;
+        for (Chunk chunk : chunks) {
+            if (chunk.command == Command.DIRECT_COPY) {
+                sum += chunk.count;
+            } else {
+                if (sum != 0) {
+                    merged.add(new Chunk(Command.DIRECT_COPY, sum, 0));
+                    sum = 0;
+                }
+                merged.add(chunk);
+            }
+        }
+        if (sum != 0) {
+            merged.add(new Chunk(Command.DIRECT_COPY, sum, 0));
+        }
+        return merged;
+    }
+
+    protected byte[] chunksToBytes(List<Chunk> chunks, byte[] uncompressed) {
         System.out.println("------converting to bytes");
-        Arrays.stream(chunks).forEach(c -> System.out.println("\t" + c));
+        chunks.forEach(c -> System.out.println("\t" + c));
         byte[] board = new byte[uncompressed.length * 2];
         int size = 0;
         int pos = 0;

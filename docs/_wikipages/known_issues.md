@@ -15,7 +15,7 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 - [All Gen 6 Games](#all-gen-6-games)
 - [X/Y](#xy)
 - [All Gen 7 Games](#all-gen-7-games)
-- [Sun/Moon](#sun-moon) 
+- [Sun/Moon](#sunmoon) 
 
 ## All Games
 
@@ -24,10 +24,6 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 ## Red/Blue/Green
 
 * Evolving a Pokemon into Mew, will give it glitchy stats. If you are using "Random Evolutions Every Level", evolving the Pokemon again and healing at a Pokemon center will fix all issues. Otherwise, the Mew will continue having glitchy stats, but this should be mostly harmless.
-
-## All Gen 2 Games
-
-* The "Custom Player Graphics" setting, does not work on non-Windows computers. This is because it (in this Generation only) depends on a (Windows-only) DLL file.
 
 ## Gold/Silver
 

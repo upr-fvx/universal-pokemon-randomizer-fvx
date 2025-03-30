@@ -596,7 +596,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         writeByte(offset + Gen2Constants.bsDefenseOffset, (byte) pkmn.getDefense());
         writeByte(offset + Gen2Constants.bsSpeedOffset, (byte) pkmn.getSpeed());
         writeByte(offset + Gen2Constants.bsSpAtkOffset, (byte) pkmn.getSpatk());
-        writeByte(offset + Gen2Constants.bsSpDefOffset, (byte) pkmn.getDefense());
+        writeByte(offset + Gen2Constants.bsSpDefOffset, (byte) pkmn.getSpdef());
         writeByte(offset + Gen2Constants.bsPrimaryTypeOffset, Gen2Constants.typeToByte(pkmn.getPrimaryType(false)));
         byte secondaryTypeByte = pkmn.getSecondaryType(false) == null ? rom[offset + Gen2Constants.bsPrimaryTypeOffset]
                 : Gen2Constants.typeToByte(pkmn.getSecondaryType(false));

@@ -3088,11 +3088,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public boolean customPlayerGraphicsSupportDependsOnOS() {
-        return true;
-    }
-
-    @Override
     public void setCustomPlayerGraphics(GraphicsPack unchecked, Settings.PlayerCharacterMod toReplace) {
         if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");

@@ -6,7 +6,6 @@ import compressors.gen2.Gen2NullCompressor;
 import compressors.gen2.Gen2SinglePassCompressor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import java.util.List;
  */
 public class Gen2Cmp {
 
-    private static final int[] bit_flipping_table = new int[] {
+    private static final int[] bit_flipping_table = new int[]{
             // For each byte, the table contains that same byte with its bits flipped around (for instance,
             // 0x58 (01011000 binary) becomes 0x1a (00011010 binary)). This is faster than flipping bits
             // manually at runtime.
@@ -75,10 +74,14 @@ public class Gen2Cmp {
         return bitFlipped;
     }
 
+    // This is the old method for compression, which relies on a DLL.
+    // (And thus doesn't run off Windows).
+    // Keeping it here for now, until I've gotten the opportunity to compare it
+    // with the new compressors. Both in terms of compression rate and speed.
     // TODO: remove after testing
     public static byte[] lunarCompress(byte[] uncompressed) {
         LunarCompressLibrary lunarCompress = LunarCompressLibrary.INSTANCE;
-        byte[] compressBoard = new byte[uncompressed.length*2];
+        byte[] compressBoard = new byte[uncompressed.length * 2];
         int compressedLength = lunarCompress.LunarRecompress(uncompressed, compressBoard, uncompressed.length,
                 compressBoard.length, LunarCompressLibrary.LC_LZ3_FORMAT, LunarCompressLibrary.LC_LZ3_FORMAT2);
         byte[] compressed = new byte[compressedLength];

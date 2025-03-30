@@ -635,8 +635,6 @@ public interface RomHandler {
 
     boolean hasCustomPlayerGraphicsSupport();
 
-    boolean customPlayerGraphicsSupportDependsOnOS();
-
     void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace);
 
     /**

@@ -95,12 +95,10 @@ public abstract class Gen2Compressor {
     }
 
     protected byte[] chunksToBytes(List<Chunk> chunks, byte[] uncompressed) {
-        System.out.println("------converting to bytes");
         byte[] board = new byte[uncompressed.length * 2];
         int size = 0;
         int pos = 0;
         for (Chunk chunk : chunks) {
-            System.out.println("\t" + chunk);
             if (chunk.count < SHORT_COMMAND_COUNT) { // short header
                 board[size++] = (byte) ((chunk.command.bits << 5) + ((chunk.count - 1) & 0b11111));
             } else { // long header (i.e. command 111 / "Long length")
@@ -127,10 +125,8 @@ public abstract class Gen2Compressor {
                         throw new IllegalStateException("invalid command");
                     }
                     if (chunk.value < 0) {
-                        System.out.println("\tSET");
                         board[size++] = (byte) (chunk.value ^ 127);
                     } else {
-                        System.out.println("\tUNSET");
                         board[size++] = (byte) (chunk.value >>> 8);
                         board[size++] = (byte) (chunk.value);
                     }

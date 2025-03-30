@@ -25,7 +25,7 @@ public class Gen2CmpTest {
 
     @ParameterizedTest
     @MethodSource("getImageNames")
-    public void testImage(String name) throws IOException {
+    public void testAllCompressorsWorkOnImage(String name) throws IOException {
         System.out.println(name);
         GBCImage bim = new GBCImage.Builder(new File(IN_ADRESS + "/" + name + ".png")).columnMode(true).build();
 
@@ -69,6 +69,18 @@ public class Gen2CmpTest {
         assertTrue(erred.isEmpty());
     }
 
+    @ParameterizedTest
+    @MethodSource("getImageNames")
+    public void testCompressionRateOnImage(String name) throws IOException {
+        System.out.println(name);
+        GBCImage bim = new GBCImage.Builder(new File(IN_ADRESS + "/" + name + ".png")).columnMode(true).build();
 
+        byte[] uncompressed = bim.toBytes();
+        byte[] compressed = Gen2Cmp.compress(uncompressed);
+
+        System.out.printf("%d->%d (rate: %.2f)%n",
+                uncompressed.length, compressed.length,
+                ((double) compressed.length) / ((double) uncompressed.length));
+    }
 
 }

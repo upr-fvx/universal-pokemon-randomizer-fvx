@@ -5,7 +5,9 @@ import compressors.gen2.Gen2FillCompressor;
 import compressors.gen2.Gen2NullCompressor;
 import compressors.gen2.Gen2SinglePassCompressor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,10 +43,15 @@ public class Gen2Cmp {
             0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef, 0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
     };
 
-    public static final List<Gen2Compressor> COMPRESSORS = Arrays.asList(new Gen2NullCompressor(),
-            new Gen2FillCompressor(),
-            new Gen2SinglePassCompressor(false, false, false,
-                    0, Gen2SinglePassCompressor.CopyCommandPref.NRF));
+    public static final List<Gen2Compressor> COMPRESSORS = initCompressors();
+
+    private static List<Gen2Compressor> initCompressors() {
+        List<Gen2Compressor> l = new ArrayList<>();
+        l.add(new Gen2NullCompressor());
+        l.add(new Gen2FillCompressor());
+        l.addAll(Gen2SinglePassCompressor.ALL_OPTIONS);
+        return Collections.unmodifiableList(l);
+    }
 
     public static byte[] compress(byte[] uncompressed) {
 

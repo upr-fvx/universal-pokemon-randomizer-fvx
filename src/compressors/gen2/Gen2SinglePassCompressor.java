@@ -76,6 +76,16 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
     }
 
     @Override
+    public String toString() {
+        return "SPC{" + preferFillOverRepeat +
+                ", " + avoidFillOrRepeat +
+                ", " + avoidLongRepeat +
+                ", " + maxScanDelay +
+                ", " + copyCommandPref +
+                '}';
+    }
+
+    @Override
     public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
 
         // init chunks array
@@ -127,32 +137,7 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
 //        return commands;
         List<Chunk> chunksList = Arrays.asList(Arrays.copyOf(chunks, curr)); // cut off the nulls
         chunksList = mergeDirectCopy(chunksList);
-
-        // debugging
-        byte[] compressed = chunksToBytes(chunksList, uncompressed);
-        byte[] decompressed = Gen2Decmp.decompress(compressed, 0);
-
-        System.out.println("Bef=" + Arrays.toString(uncompressed));
-        System.out.println("Aft=" + Arrays.toString(decompressed));
-        int err = -1;
-        for (int i = 0; i < uncompressed.length; i++) {
-            if (uncompressed[i] != decompressed[i]) {
-                err = i;
-                break;
-            }
-        }
-        int foo = 0;
-        System.out.println("Chunks: ");
-        for (Chunk chunk : chunksList) {
-            System.out.println("\t" + chunk);
-            System.out.println("\t" + Arrays.toString(Arrays.copyOfRange(uncompressed, foo, foo + chunk.count)));
-            if (foo == err) {
-                System.out.println("ERROR HERE");
-            }
-            foo += chunk.count;
-        }
-
-        return compressed;
+        return chunksToBytes(chunksList, uncompressed);
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
@@ -173,7 +158,7 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
             default:
                 throw new RuntimeException("Should be unreachable...");
         }
-        if (avoidLongRepeat && (chunk.count > SHORT_COMMAND_COUNT)) {
+        if (avoidLongRepeat && chunk != null && (chunk.count > SHORT_COMMAND_COUNT)) {
             chunk.count = SHORT_COMMAND_COUNT;
         }
         return chunk;

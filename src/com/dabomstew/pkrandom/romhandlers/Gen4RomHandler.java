@@ -648,7 +648,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-	private void loadPokemonStats() {
+	@Override
+	public void loadPokemonStats() {
 		try {
 			String pstatsnarc = romEntry.getFile("PokemonStats");
 			pokeNarc = this.readNARC(pstatsnarc);

@@ -678,6 +678,9 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     public abstract void savePokemonPalettes();
 
+    // here for testing, please do not use otherwise
+    public abstract void loadPokemonStats();
+
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         try {

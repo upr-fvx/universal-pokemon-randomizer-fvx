@@ -190,7 +190,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private void loadPokemonStats() {
+    @Override
+    public void loadPokemonStats() {
         try {
             pokeNarc = this.readNARC(romEntry.getFile("PokemonStats"));
             String[] pokeNames = readPokemonNames();

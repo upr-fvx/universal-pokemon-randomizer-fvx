@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Uses "direct copy" / 000 only.<br>
  * (<a href=https://sneslab.net/wiki/LZ3>Documentation for the compression format</a>).
  */
-public class Gen2NullCompressor implements Gen2Compressor {
+public class Gen2NullCompressor extends Gen2Compressor {
 
     // https://sneslab.net/wiki/LZ3
 

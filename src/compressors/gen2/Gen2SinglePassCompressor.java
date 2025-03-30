@@ -2,46 +2,10 @@ package compressors.gen2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class Gen2SinglePassCompressor implements Gen2Compressor {
-
-    private static final int SHORT_COMMAND_COUNT = 32;
-    private static final int MAX_COMMAND_COUNT = 1024;
-    private static final int LOOKBACK_LIMIT = 128;
-
-    private enum Command {
-        // "Long Length" functionality baked into the logic, instead of being an option here
-        DIRECT_COPY(0), BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3),
-        REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6);
-
-        private final int bits;
-
-        Command(int bits) {
-            this.bits = bits;
-        }
-    }
-
-    private static class Chunk {
-        private final Command command;
-        private int count;
-        private final int value;
-
-        public Chunk(Command command, int count, int value) {
-            this.command = command;
-            this.count = count;
-            this.value = value;
-        }
-
-        public int size() {
-            int headerSize = count > SHORT_COMMAND_COUNT ? 2 : 1;
-            if (command.bits >= 4) { // the Repeat commands
-                return headerSize + 1 + (value >= 0 ? 1 : 0);
-            }
-            int[] commandSizes = new int[] {count, 1, 2, 0};
-            return headerSize + commandSizes[command.bits];
-        }
-    }
+public class Gen2SinglePassCompressor extends Gen2Compressor {
 
     /*
    Single-pass compressor: attempts to compress the data in a single pass, selecting the best command at each
@@ -66,6 +30,29 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
 
     public enum CopyCommandPref {
         NRF, RFN, FRN
+    }
+
+    public static List<Gen2SinglePassCompressor> ALL_OPTIONS = initAllOptions();
+
+    private static List<Gen2SinglePassCompressor> initAllOptions() {
+        List<Gen2SinglePassCompressor> l = new ArrayList<>(2 * 2 * 2 * 3 * 3);
+        for (int pfor = 0; pfor < 2; pfor++) {
+            for (int afor = 0; afor < 2; afor++) {
+                for (int alr = 0; alr < 2; alr++) {
+                    for (int maxScanDelay = 0; maxScanDelay < 3; maxScanDelay++) {
+                        for (CopyCommandPref pref : CopyCommandPref.values()) {
+                            l.add(new Gen2SinglePassCompressor(
+                                    pfor == 1,
+                                    afor == 1,
+                                    alr == 1,
+                                    maxScanDelay, pref
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+        return Collections.unmodifiableList(l);
     }
 
     private final boolean preferFillOverRepeat;
@@ -136,7 +123,8 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
 //        optimize(commands, current_command - commands);
 //        repack(&commands, length);
 //        return commands;
-        return null; // TODO
+        chunks = Arrays.copyOf(chunks, curr); // cut off the nulls
+        return chunksToBytes(chunks, uncompressed);
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
@@ -220,7 +208,6 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         return new Chunk(Command.BACKWARDS_REPEAT, bestLength, offset);
     }
 
-
     private Chunk findBestFill(byte[] data, int pos) {
 
         if (pos + 1 >= data.length) {
@@ -250,18 +237,6 @@ public class Gen2SinglePassCompressor implements Gen2Compressor {
         } else {
             return new Chunk(Command.ZERO_FILL, repCount, 0);
         }
-    }
-
-    private Chunk pickBestChunk(Chunk... chunks) {
-        return Arrays.stream(chunks).max((a, b) ->
-                {
-                    if (a == null) return -1;
-                    if (b == null) return 1;
-                    int aSavings = a.count - a.size();
-                    int bSavings = b.count - b.size();
-                    return Integer.compare(aSavings, bSavings);
-                }
-        ).orElseThrow(RuntimeException::new);
     }
 
 }

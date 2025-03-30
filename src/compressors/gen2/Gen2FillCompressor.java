@@ -9,7 +9,7 @@ import java.util.Arrays;
  * Based on pokecrystal's
  * <a href=https://github.com/pret/pokecrystal/blob/master/tools/lz/repcomp.c>repcomp.c</a>.
  */
-public class Gen2FillCompressor implements Gen2Compressor {
+public class Gen2FillCompressor extends Gen2Compressor {
 
     private enum Command {
         BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3);

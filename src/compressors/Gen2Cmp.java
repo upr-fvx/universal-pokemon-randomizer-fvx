@@ -3,6 +3,7 @@ package compressors;
 import compressors.gen2.Gen2Compressor;
 import compressors.gen2.Gen2FillCompressor;
 import compressors.gen2.Gen2NullCompressor;
+import compressors.gen2.Gen2SinglePassCompressor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,9 @@ public class Gen2Cmp {
     };
 
     public static final List<Gen2Compressor> COMPRESSORS = Arrays.asList(new Gen2NullCompressor(),
-            new Gen2FillCompressor());
+            new Gen2FillCompressor(),
+            new Gen2SinglePassCompressor(false, false, false,
+                    0, Gen2SinglePassCompressor.CopyCommandPref.NRF));
 
     public static byte[] compress(byte[] uncompressed) {
 

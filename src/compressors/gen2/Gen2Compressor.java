@@ -63,7 +63,6 @@ public abstract class Gen2Compressor {
         if (Arrays.equals(Arrays.stream(chunks).distinct().toArray(), new Chunk[]{null})) {
             return null;
         }
-        System.out.println(Arrays.toString(chunks));
         return Arrays.stream(chunks).max((a, b) ->
                 {
                     if (a == null) return -1;
@@ -97,11 +96,11 @@ public abstract class Gen2Compressor {
 
     protected byte[] chunksToBytes(List<Chunk> chunks, byte[] uncompressed) {
         System.out.println("------converting to bytes");
-        chunks.forEach(c -> System.out.println("\t" + c));
         byte[] board = new byte[uncompressed.length * 2];
         int size = 0;
         int pos = 0;
         for (Chunk chunk : chunks) {
+            System.out.println("\t" + chunk);
             if (chunk.count < SHORT_COMMAND_COUNT) { // short header
                 board[size++] = (byte) ((chunk.command.bits << 5) + ((chunk.count - 1) & 0b11111));
             } else { // long header (i.e. command 111 / "Long length")
@@ -127,9 +126,11 @@ public abstract class Gen2Compressor {
                     if ((chunk.value < -LOOKBACK_LIMIT) || (chunk.value >= MAX_FILE_SIZE)) {
                         throw new IllegalStateException("invalid command");
                     }
-                    if ((chunk.value & 0b10000000) != 0) {
+                    if (chunk.value < 0) {
+                        System.out.println("\tSET");
                         board[size++] = (byte) (chunk.value ^ 127);
                     } else {
+                        System.out.println("\tUNSET");
                         board[size++] = (byte) (chunk.value >>> 8);
                         board[size++] = (byte) (chunk.value);
                     }

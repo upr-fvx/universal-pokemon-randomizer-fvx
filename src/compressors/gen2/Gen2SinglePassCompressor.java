@@ -1,5 +1,7 @@
 package compressors.gen2;
 
+import compressors.Gen2Decmp;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -125,7 +127,32 @@ public class Gen2SinglePassCompressor extends Gen2Compressor {
 //        return commands;
         List<Chunk> chunksList = Arrays.asList(Arrays.copyOf(chunks, curr)); // cut off the nulls
         chunksList = mergeDirectCopy(chunksList);
-        return chunksToBytes(chunksList, uncompressed);
+
+        // debugging
+        byte[] compressed = chunksToBytes(chunksList, uncompressed);
+        byte[] decompressed = Gen2Decmp.decompress(compressed, 0);
+
+        System.out.println("Bef=" + Arrays.toString(uncompressed));
+        System.out.println("Aft=" + Arrays.toString(decompressed));
+        int err = -1;
+        for (int i = 0; i < uncompressed.length; i++) {
+            if (uncompressed[i] != decompressed[i]) {
+                err = i;
+                break;
+            }
+        }
+        int foo = 0;
+        System.out.println("Chunks: ");
+        for (Chunk chunk : chunksList) {
+            System.out.println("\t" + chunk);
+            System.out.println("\t" + Arrays.toString(Arrays.copyOfRange(uncompressed, foo, foo + chunk.count)));
+            if (foo == err) {
+                System.out.println("ERROR HERE");
+            }
+            foo += chunk.count;
+        }
+
+        return compressed;
     }
 
     private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {

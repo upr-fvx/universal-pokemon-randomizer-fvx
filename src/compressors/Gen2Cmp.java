@@ -53,6 +53,11 @@ public class Gen2Cmp {
     }
 
     public static byte[] compress(byte[] uncompressed) {
+        // The Lunar Compress DLL is orders of magnitude faster than the
+        // in-Java implementation, so use it when possible.
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            return lunarCompress(uncompressed);
+        }
 
         byte[] bitFlipped = flipBits(uncompressed);
 
@@ -74,11 +79,10 @@ public class Gen2Cmp {
         return bitFlipped;
     }
 
-    // This is the old method for compression, which relies on a DLL.
-    // (And thus doesn't run off Windows).
-    // Keeping it here for now, until I've gotten the opportunity to compare it
-    // with the new compressors. Both in terms of compression rate and speed.
-    // TODO: remove after testing
+
+    /**
+     * Compress the file using FuSoYa's LunarCompress DLL. Does not work on non-Windows computers.
+     */
     public static byte[] lunarCompress(byte[] uncompressed) {
         LunarCompressLibrary lunarCompress = LunarCompressLibrary.INSTANCE;
         byte[] compressBoard = new byte[uncompressed.length * 2];

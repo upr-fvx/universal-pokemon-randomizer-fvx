@@ -212,8 +212,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             pokes[i].setGeneration(pokes[i].getNumber() >= SpeciesIDs.chikorita ? 2 : 1);
         }
         this.speciesList = Arrays.asList(pokes);
-
-        testCompareLunarComp();
     }
 
     @Override
@@ -232,61 +230,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         // Write evolutions and movesets
         saveEvosAndMovesLearnt();
-    }
-
-    private void testCompareLunarComp() {
-        test1();
-        test2();
-    }
-
-    private void test1() {
-        List<Double> ratios = new ArrayList<>();
-        for (int pkNum = 1; pkNum <= 251; pkNum++) {
-            int pointerOffset = getPokemonImagePointerOffset(pokes[pkNum], false);
-            int offset = readPokemonOrTrainerImagePointer(pointerOffset);
-            byte[] uncompressed = Gen2Decmp.decompress(rom, offset);
-            byte[] lunarCompressed = Gen2Cmp.lunarCompress(uncompressed);
-            byte[] newCompressed = Gen2Cmp.compress(uncompressed);
-            double ratio = ((double)newCompressed.length / (double) lunarCompressed.length);
-            ratios.add(ratio);
-            System.out.println(uncompressed.length
-                    + " -> LC=" + lunarCompressed.length + " NC=" + newCompressed.length
-                    + " (NC/LC=" +  ratio + ")");
-        }
-        double averageRatio = ratios.stream().mapToDouble(d -> d).average().orElseThrow(RuntimeException::new);
-        System.out.println(averageRatio);
-    }
-
-    private void test2() {
-        List<Long> lunarTimes = new ArrayList<>();
-        List<Long> newTimes = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            System.out.println("rep:" + i);
-
-            long bef = System.currentTimeMillis();
-            for (int pkNum = 1; pkNum <= 251; pkNum++) {
-                int pointerOffset = getPokemonImagePointerOffset(pokes[pkNum], false);
-                int offset = readPokemonOrTrainerImagePointer(pointerOffset);
-                byte[] uncompressed = Gen2Decmp.decompress(rom, offset);
-                Gen2Cmp.lunarCompress(uncompressed);
-            }
-            lunarTimes.add(System.currentTimeMillis() - bef);
-
-            bef = System.currentTimeMillis();
-            for (int pkNum = 1; pkNum <= 251; pkNum++) {
-                int pointerOffset = getPokemonImagePointerOffset(pokes[pkNum], false);
-                int offset = readPokemonOrTrainerImagePointer(pointerOffset);
-                byte[] uncompressed = Gen2Decmp.decompress(rom, offset);
-                Gen2Cmp.compress(uncompressed);
-            }
-            newTimes.add(System.currentTimeMillis() - bef);
-        }
-        System.out.println("lunarTimes=" + lunarTimes);
-        System.out.println("newTimes=" + newTimes);
-        double lunarAverage = lunarTimes.stream().mapToDouble(d -> d).average().orElseThrow(RuntimeException::new);
-        double newAverage = newTimes.stream().mapToDouble(d -> d).average().orElseThrow(RuntimeException::new);
-        System.out.println("lunarAverage=" + lunarAverage);
-        System.out.println("newAverage=" + newAverage);
     }
 
     private String[] readMoveNames() {

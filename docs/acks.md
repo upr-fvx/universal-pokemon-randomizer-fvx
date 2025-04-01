@@ -85,6 +85,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - CFA (Luigi)
 - jojobear13 (Violet)
 - Pokeli (Red)
+- DelyBulacha (Frisk, Chara)
 
 ## Direct code contributors
 

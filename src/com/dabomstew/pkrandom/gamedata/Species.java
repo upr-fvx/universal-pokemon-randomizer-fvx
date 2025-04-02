@@ -237,6 +237,11 @@ public class Species implements Comparable<Species> {
     }
 
     public int getBaseNumber() {
+        // One might think this could just be turned into
+        // return getBaseForme().getNumber()
+        // but note the "while"; this works with formes-of-formes.
+        // Formes-of-formes admittedly only exist in Gen 7,
+        // but until something is done about them, don't touch this code.
         Species base = this;
         while (base.baseForme != null) {
             base = base.baseForme;
@@ -608,11 +613,11 @@ public class Species implements Comparable<Species> {
             SpeciesIDs.stakataka, SpeciesIDs.blacephalon);
 
     public boolean isLegendary() {
-        return isBaseForme() ? legendaries.contains(this.number) : baseForme.isLegendary();
+        return legendaries.contains(getBaseForme().number);
     }
 
     public boolean isStrongLegendary() {
-        return formeNumber == 0 ? strongLegendaries.contains(this.number) : strongLegendaries.contains(this.baseForme.number);
+        return strongLegendaries.contains(getBaseForme().number);
     }
 
     // This method can only be used in contexts where alt formes are NOT involved; otherwise, some alt formes
@@ -668,10 +673,12 @@ public class Species implements Comparable<Species> {
         this.formeSuffix = formeSuffix;
     }
 
+    /**
+     * Returns the base forme of this Species, or itself if it is the base forme.<br>
+     * E.g. Deoxys and Deoxys-Attack would both return Deoxys, and Gloom would return Gloom.
+     */
     public Species getBaseForme() {
-        // TODO: return self if baseForme == null
-        //  (check that getBaseForme() == null isn't used instead of isBaseForme() first)
-        return baseForme;
+        return isBaseForme() ? this : baseForme;
     }
 
     public void setBaseForme(Species baseForme) {

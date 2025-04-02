@@ -223,7 +223,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private int generationOf(Species pk) {
-        if (pk.getBaseForme() != null) {
+        if (!pk.isBaseForme()) {
             return pk.getBaseForme().getGeneration();
         }
         if (pk.getNumber() >= SpeciesIDs.victini) {
@@ -3087,7 +3087,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         try {
             int introPokemon = pk.getNumber();
             // Assume alt formes can't be used. I haven't actually tested this, but it seemed like the safer guess.
-            if (pk.getBaseForme() != null) {
+            if (!pk.isBaseForme()) {
                 return false;
             }
             byte[] introGraphicOverlay = readOverlay(romEntry.getIntValue("IntroGraphicOvlNumber"));

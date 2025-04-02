@@ -219,7 +219,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (pk.getFormeSuffix().startsWith("-Mega") || pk.getFormeSuffix().equals("-Primal")) {
             return 6;
         }
-        if (pk.getBaseForme() != null) {
+        if (!pk.isBaseForme()) {
             if (pk.getBaseNumber() == SpeciesIDs.pikachu) {
                 return 6; // contest pikachu
             }
@@ -957,7 +957,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
                 StaticEncounter newStatic = new StaticEncounter();
                 Species starter = starterIter.next();
-                if (starter.getFormeNumber() > 0) {
+                if (!starter.isBaseForme()) {
                     newStatic.forme = starter.getFormeNumber();
                     starter = starter.getBaseForme();
                 }
@@ -3302,7 +3302,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
         int introPokemonNum = pk.getNumber();
         int introPokemonForme = 0;
-        if (pk.getFormeNumber() > 0) {
+        if (!pk.isBaseForme()) {
             introPokemonForme = pk.getFormeNumber();
             introPokemonNum = pk.getBaseForme().getNumber();
         }

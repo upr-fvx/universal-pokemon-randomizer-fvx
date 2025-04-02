@@ -687,7 +687,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private int generationOf(Species pk) {
-		if (pk.getBaseForme() != null) {
+		if (!pk.isBaseForme()) {
 			return pk.getBaseForme().getGeneration();
 		}
 		if (pk.getNumber() >= SpeciesIDs.turtwig) {
@@ -4645,7 +4645,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					return false;
 				}
 				// Assume alt formes can't be used. I haven't actually tested this, but it seemed like the safer guess.
-				if (pk.getBaseForme() != null) {
+				if (pk.isBaseForme()) {
 					return false;
 				}
 				byte[] introOverlay = readOverlay(romEntry.getIntValue("IntroOvlNumber"));
@@ -4662,7 +4662,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// This is really cool, but there *is* an actual intro Pokemon to randomize,
 				// and it is a Marill to boot too! Ideally, Ethan/Lyra's Marill should be
 				// in addition to the intro one, not instead of.
-				if (pk.getBaseForme() != null) {
+				if (!pk.isBaseForme()) {
 					return false;
 				}
 				int spriteID = Gen4Constants.getOverworldSpriteIDOfSpecies(pk.getNumber());
@@ -5707,8 +5707,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			String NARCpath = getRomEntry().getFile("PokemonGraphics");
 			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 			for (Species pk : getSpeciesSetInclFormes()) {
-				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-				if (getGraphicalFormePokes().contains(base.getNumber())) {
+				if (getGraphicalFormePokes().contains(pk.getBaseForme().getNumber())) {
 					loadGraphicalFormePokemonPalettes(pk);
 				} else {
 					pk.setNormalPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4));
@@ -5728,9 +5727,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
 
 			for (Species pk : getSpeciesSetInclFormes()) {
-				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-				if (getGraphicalFormePokes().contains(base.getNumber())) {
-					saveGraphicalFormePokemonPalettes(base);
+				if (getGraphicalFormePokes().contains(pk.getBaseForme().getNumber())) {
+					saveGraphicalFormePokemonPalettes(pk);
 				} else {
 					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4, pk.getNormalPalette());
 					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5, pk.getShinyPalette());
@@ -5751,8 +5749,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
         NARCArchive NARC = readNARC(NARCpath);
 
-		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType())
+				.get(pk.getBaseForme().getNumber());
 		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
 		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
     }
@@ -5761,8 +5759,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
 		NARCArchive NARC = readNARC(NARCpath);
 
-		Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
-		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).get(base.getNumber());
+		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType())
+				.get(pk.getBaseForme().getNumber());
 		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
 		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
     }
@@ -5845,9 +5843,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		private int getImageIndex() {
 			int imageIndex;
 			if (getGraphicalFormeAmount() > 1 || !pk.isBaseForme()) {
-				Species base = pk.isBaseForme() ? pk : pk.getBaseForme();
 				int formeNum = forme != 0 ? forme : pk.getFormeNumber();
-				int[][] imageIndexes = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType()).get(base.getNumber());
+				int[][] imageIndexes = Gen4Constants.getOtherPokemonGraphicsImages(romEntry.getRomType())
+						.get(pk.getBaseForme().getNumber());
 				imageIndex = imageIndexes[back ? 1 : 0][formeNum];
 			} else {
 				imageIndex = pk.getNumber() * 6 + 2;

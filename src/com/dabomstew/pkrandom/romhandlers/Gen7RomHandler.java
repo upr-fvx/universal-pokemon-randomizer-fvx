@@ -209,7 +209,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i] = new Species(i);
                 loadBasicPokeStats(pokes[i], pokeGarc.files.get(k).get(0),formeMappings);
                 FormeInfo fi = formeMappings.get(k);
-                int realBaseForme = pokes[fi.baseForme].getBaseForme() == null ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
+                int realBaseForme = pokes[fi.baseForme].isBaseForme() ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
                 pokes[i].setName(pokeNames[realBaseForme]);
                 pokes[i].setBaseForme(pokes[fi.baseForme]);
                 pokes[i].setFormeNumber(fi.formeNumber);
@@ -248,7 +248,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         if (pk.getFormeSuffix().startsWith("-Mega") || pk.getFormeSuffix().equals("-Primal")) {
             return 6;
         }
-        if (pk.getBaseForme() != null) {
+        if (!pk.isBaseForme()) {
             if (pk.getBaseNumber() == SpeciesIDs.pikachu) {
                 return 6; // contest pikachu
             }
@@ -1059,7 +1059,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int offset = i * 0x14;
                 Species starter = newStarters.get(i);
                 int forme = 0;
-                if (starter.getFormeNumber() > 0) {
+                if (!starter.isBaseForme()) {
                     forme = starter.getFormeNumber();
                     starter = starter.getBaseForme();
                 }
@@ -1991,7 +1991,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i: totemIndices) {
                 int offset = i * 0x38;
                 TotemPokemon totem = totemIter.next();
-                if (totem.spec.getFormeNumber() > 0) {
+                if (!totem.spec.isBaseForme()) {
                     totem.forme = totem.spec.getFormeNumber();
                     totem.spec = totem.spec.getBaseForme();
                 }
@@ -2013,7 +2013,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Integer allyIndex: totem.allies.keySet()) {
                     offset = allyIndex * 0x38;
                     StaticEncounter ally = totem.allies.get(allyIndex);
-                    if (ally.spec.getFormeNumber() > 0) {
+                    if (!ally.spec.isBaseForme()) {
                         ally.forme = ally.spec.getFormeNumber();
                         ally.spec = ally.spec.getBaseForme();
                     }
@@ -3236,7 +3236,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int offset = i * 0x34;
                 Species givenSpecies = trade.givenSpecies;
                 int forme = 0;
-                if (givenSpecies.getFormeNumber() > 0) {
+                if (!givenSpecies.isBaseForme()) {
                     forme = givenSpecies.getFormeNumber();
                     givenSpecies = givenSpecies.getBaseForme();
                 }

@@ -992,11 +992,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 SpeciesSet speciesInArea = new SpeciesSet();
                 for (Species poke : area.getSpeciesInArea()) {
                     //Different formes of the same species do not contribute to load
-                    if(poke.isBaseForme()) {
-                        speciesInArea.add(poke);
-                    } else {
-                        speciesInArea.add(poke.getBaseForme());
-                    }
+                    speciesInArea.add(poke.getBaseForme());
                 }
 
                 load += speciesInArea.size();

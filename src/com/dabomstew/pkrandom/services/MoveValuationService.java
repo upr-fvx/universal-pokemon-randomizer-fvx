@@ -126,6 +126,10 @@ public class MoveValuationService {
         }
 
         public int getValueForPokemon(Species species, int ability, List<Move> currentMoves, int heldItem){
+            if(!finalized) {
+                throw new IllegalStateException("Attempted to get value of non-finalized move!");
+            }
+
             int hp = species.getHp();
             int attack = species.getAttack();
             int defense = species.getDefense();
@@ -149,7 +153,7 @@ public class MoveValuationService {
 
             //step 3: type valuation of power (covers new weaknesses, resistances, other new types)
 
-            //step 4: unique effects modifiers
+            //step 4: speed-dependent value and unique effects modifiers
 
             //step 5: add in synergy with other moves (to effects and/or power)
 

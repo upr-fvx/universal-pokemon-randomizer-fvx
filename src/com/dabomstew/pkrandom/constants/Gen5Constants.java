@@ -366,6 +366,17 @@ public class Gen5Constants {
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
             MoveIDs.waterfall, MoveIDs.sweetScent, MoveIDs.dive);
 
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle, MoveIDs.afterYou, MoveIDs.assist, MoveIDs.bestow, MoveIDs.chatter,
+            MoveIDs.copycat, MoveIDs.counter, MoveIDs.covet, MoveIDs.destinyBond, MoveIDs.detect, MoveIDs.endure,
+            MoveIDs.feint, MoveIDs.focusPunch, MoveIDs.followMe, MoveIDs.freezeShock, MoveIDs.helpingHand,
+            MoveIDs.iceBurn, MoveIDs.meFirst, MoveIDs.mimic, MoveIDs.mirrorCoat, MoveIDs.mirrorMove,
+            MoveIDs.naturePower, MoveIDs.protect, MoveIDs.quash, MoveIDs.quickGuard, MoveIDs.ragePowder,
+            MoveIDs.relicSong, MoveIDs.secretSword, MoveIDs.sketch, MoveIDs.sleepTalk, MoveIDs.snarl, MoveIDs.snatch,
+            MoveIDs.snore, MoveIDs.switcheroo, MoveIDs.technoBlast, MoveIDs.thief, MoveIDs.transform, MoveIDs.trick,
+            MoveIDs.vCreate, MoveIDs.wideGuard
+    ));
+
     public static final String shedinjaSpeciesLocator = "24010000";
 
     public static final String runningShoesPrefix = "01D0012008BD002008BD63";

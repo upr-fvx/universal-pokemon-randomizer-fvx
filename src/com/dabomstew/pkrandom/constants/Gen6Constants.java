@@ -335,6 +335,20 @@ public class Gen6Constants {
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
             MoveIDs.waterfall, MoveIDs.sweetScent, MoveIDs.rockSmash, MoveIDs.secretPower, MoveIDs.dive);
 
+    public static final List<Integer> impossibleMetronomeMoves = Collections.unmodifiableList(Arrays.asList(
+            MoveIDs.metronome, MoveIDs.struggle, MoveIDs.afterYou, MoveIDs.assist, MoveIDs.belch, MoveIDs.bestow,
+            MoveIDs.celebrate, MoveIDs.chatter, MoveIDs.copycat, MoveIDs.counter, MoveIDs.covet, MoveIDs.craftyShield,
+            MoveIDs.destinyBond, MoveIDs.detect, MoveIDs.diamondStorm, MoveIDs.dragonAscent, MoveIDs.endure,
+            MoveIDs.feint, MoveIDs.focusPunch, MoveIDs.followMe, MoveIDs.freezeShock, MoveIDs.helpingHand,
+            MoveIDs.holdHands, MoveIDs.hyperspaceFury, MoveIDs.hyperspaceHole, MoveIDs.iceBurn, MoveIDs.kingsShield,
+            MoveIDs.lightOfRuin, MoveIDs.matBlock, MoveIDs.meFirst, MoveIDs.mimic, MoveIDs.mirrorCoat,
+            MoveIDs.mirrorMove, MoveIDs.naturePower, MoveIDs.originPulse, MoveIDs.precipiceBlades, MoveIDs.protect,
+            MoveIDs.quash, MoveIDs.quickGuard, MoveIDs.ragePowder, MoveIDs.relicSong, MoveIDs.secretSword,
+            MoveIDs.sketch, MoveIDs.sleepTalk, MoveIDs.snarl, MoveIDs.snatch, MoveIDs.snore, MoveIDs.spikyShield,
+            MoveIDs.steamEruption, MoveIDs.switcheroo, MoveIDs.technoBlast, MoveIDs.thief, MoveIDs.thousandArrows,
+            MoveIDs.thousandWaves, MoveIDs.transform, MoveIDs.trick, MoveIDs.vCreate, MoveIDs.wideGuard
+    ));
+
     public static final int fallingEncounterOffset = 0xF4270, fallingEncounterCount = 55, fieldEncounterSize = 0x3C,
                             rustlingBushEncounterOffset = 0xF40CC, rustlingBushEncounterCount = 7;
     public static final Map<Integer, String> fallingEncounterNameMap = constructFallingEncounterNameMap();

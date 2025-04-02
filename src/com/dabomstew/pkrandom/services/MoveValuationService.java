@@ -1,14 +1,10 @@
 package com.dabomstew.pkrandom.services;
 
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.constants.MoveIDs;
+import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MoveValuationService {
     private final RomHandler romHandler;
@@ -876,7 +872,23 @@ public class MoveValuationService {
             case MoveIDs.assist:
                 return 1; //Synergy based on other moves' potency.
             case MoveIDs.metronome:
-                return 50; //TODO: calculate average move value
+                Collection<Integer> impossibleMoveIDs;
+                if (romHandler.generationOfPokemon() > 7) {
+                    impossibleMoveIDs = Collections.emptyList();
+                } else {
+                    impossibleMoveIDs = Arrays.asList(
+                            Gen1Constants.impossibleMetronomeMoves, Gen2Constants.impossibleMetronomeMoves,
+                            Gen3Constants.impossibleMetronomeMoves, Gen4Constants.impossibleMetronomeMoves,
+                            Gen5Constants.impossibleMetronomeMoves, Gen6Constants.impossibleMetronomeMoves,
+                            Gen7Constants.impossibleMetronomeMoves
+                            ).get(romHandler.generationOfPokemon());
+                }
+                int[] possibleMoveIDs = getAllMoves().stream()
+                        .filter(Objects::nonNull)
+                        .mapToInt(m -> m.number)
+                        .filter(id -> !impossibleMoveIDs.contains(id))
+                        .toArray();
+                return averageMoveValue(possibleMoveIDs);
             case MoveIDs.naturePower:
                 switch (romHandler.generationOfPokemon()) {
                     case 3:

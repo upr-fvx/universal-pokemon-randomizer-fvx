@@ -37,6 +37,122 @@ import static java.util.stream.Collectors.toCollection;
 
 public class MoveSynergy {
 
+    //
+    public static int getSpeedFactoredPower(Move move, int speed, int averageStat, List<Move> currentMoves) {
+        int speedDependentPower;
+        switch(move.internalId) {
+            case MoveIDs.gyroBall:
+                speedDependentPower = -250;
+                break;
+            case MoveIDs.payback:
+                speedDependentPower = -50;
+                break;
+            case MoveIDs.electroBall:
+                speedDependentPower = 110;
+                break;
+            default:
+                return 0;
+        } //TODO: this is not the right place to have a switch like this...
+
+        return (int)(speedDependentPower * getSpeedRatio(speed, averageStat, currentMoves));
+    }
+
+
+    //helper functions
+
+    /**
+     * Checks if any of the moves contained in the given list can move the stat in the given direction for its user,
+     * or move the opposing stat in the opposite direction for its target.
+     * If positive is true, it checks if the stat increases for its user, or decreases for the target.
+     * If false, it does the opposite.
+     * @param moves The List of Moves to check for stat changes.
+     * @param stat The stat to check for.
+     * @param positive If true, checks if the stat relatively increases; if false, checks if it decreases.
+     * @return True if the list contains a move which changes the stat in the appropriate way, false otherwise.
+     */
+    private static boolean containsRelativeStatChanger(List<Move> moves, StatChangeType stat, boolean positive) {
+        for(Move move : moves) {
+            if(isRelativeStatChanger(move, stat, positive)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean containsSelfStatChanger(List<Move> moves, StatChangeType stat, boolean positive) {
+        for(Move move : moves) {
+            if(isSelfStatChanger(move, stat, positive)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean containsOpponentStatChanger(List<Move> moves, StatChangeType stat, boolean positive) {
+        for(Move move : moves) {
+            if(isOpponentStatChanger(move, stat, positive)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isRelativeStatChanger(Move move, StatChangeType stat, boolean positive) {
+        if(isSelfStatChanger(move, stat, positive)) {
+            return true;
+        }
+        if(isOpponentStatChanger(move, stat.opposingStat(), !positive)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean isSelfStatChanger(Move move, StatChangeType stat, boolean positive) {
+        if(!(move.statChangeMoveType == StatChangeMoveType.DAMAGE_USER
+                || move.statChangeMoveType == StatChangeMoveType.NO_DAMAGE_USER
+                || move.statChangeMoveType == StatChangeMoveType.NO_DAMAGE_ALL_ALLIES ) ) {
+            return false;
+        }
+
+        return move.hasSpecificStatChange(stat, positive);
+    }
+
+    private static boolean isOpponentStatChanger(Move move, StatChangeType stat, boolean positive) {
+        if(!(move.statChangeMoveType == StatChangeMoveType.DAMAGE_TARGET
+                || move.statChangeMoveType == StatChangeMoveType.NO_DAMAGE_TARGET) ) {
+            return false;
+        }
+
+        return move.hasSpecificStatChange(stat, positive);
+    }
+
+    /**
+     * Gets the ratio at which speed-dependent values should be counted. Scales from 0-1.
+     * @param speed
+     * @param averageStat
+     * @param currentMoves
+     * @return
+     */
+    private static double getSpeedRatio(int speed, int averageStat, List<Move> currentMoves) {
+        double speedRatio = ((double)speed / averageStat) - .5;
+        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, true)) {
+            speedRatio += .75;
+        }
+        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, false)) {
+            speedRatio -= .75;
+        }
+        //having both moves is represented as cancelling out, though truly it ought to make it on both extremes at once.
+        //That's a bit hard to represent though.
+
+        speedRatio = Math.max(0, Math.min(speedRatio, 1)); //clamp between 0 and 1
+
+        return speedRatio;
+    }
+
+    //TODO: remove all methods below (after appropriately transferring their contents)
     public static List<Move> getSoftAbilityMoveSynergy(int ability, List<Move> moveList, Type pkType1, Type pkType2) {
         List<Integer> synergisticMoves = new ArrayList<>();
 
@@ -1214,4 +1330,6 @@ public class MoveSynergy {
                 .distinct()
                 .collect(toCollection(ArrayList::new));
     }
+
+
 }

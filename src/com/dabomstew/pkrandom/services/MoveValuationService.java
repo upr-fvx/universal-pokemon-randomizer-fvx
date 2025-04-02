@@ -139,11 +139,14 @@ public class MoveValuationService {
                 spDef = species.getSpdef();
             }
 
+            int averageStat = (hp + attack + defense + speed + spAtk + spDef) / 6;
             int offenseValue = (int) ((Math.max(attack, spAtk) + speed / 2) / 1.5);
             int defenseValue = (hp + defense + spDef) / 3;
             double atkSpRatio = species.getAttackSpecialAttackRatio();
 
             //step 1: speed-dependent power and unique power modifiers
+            int effectivePower = move.power;
+            effectivePower += MoveSynergy.getSpeedFactoredPower(move, speed, averageStat, currentMoves);
 
             //step 2: modify power value for atk/spatk ratio & STAB
 
@@ -478,7 +481,7 @@ public class MoveValuationService {
             case NO_DAMAGE_TARGET:
                 value *= -1;
                 break;
-            case NO_DAMAGE_ALL:
+            case NO_DAMAGE_ALL_ALLIES:
             case NONE_OR_UNKNOWN:
                 //?????
                 value = 0;

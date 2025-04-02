@@ -75,7 +75,7 @@ public class Move implements Comparable<Move> {
     public int internalId;
     public int power;
     public int pp;
-    public double hitRatio; //why is this a double if it's 0-100 not 0-1
+    public double hitRatio; //why is this a double if it's 0-100 not 0-1. do we really need "63.79%" or whatever.
     public Type type;
     public MoveCategory category;
     public StatChangeMoveType statChangeMoveType = StatChangeMoveType.NONE_OR_UNKNOWN;
@@ -146,6 +146,9 @@ public class Move implements Comparable<Move> {
 
     public boolean hasSpecificStatChange(StatChangeType type, boolean isPositive) {
         for (StatChange sc: this.statChanges) {
+            if (type == StatChangeType.ANY && (isPositive ^ sc.stages < 0)) {
+                return true;
+            }
             if (sc.type == type && (isPositive ^ sc.stages < 0)) {
                 return true;
             }

@@ -506,7 +506,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         } else if (moves[i].target == 2) {
                             moves[i].statChangeMoveType = StatChangeMoveType.NO_DAMAGE_ALLY;
                         } else if (moves[i].target == 8) {
-                            moves[i].statChangeMoveType = StatChangeMoveType.NO_DAMAGE_ALL;
+                            moves[i].statChangeMoveType = StatChangeMoveType.NO_DAMAGE_ALL_ALLIES;
                         } else {
                             moves[i].statChangeMoveType = StatChangeMoveType.NO_DAMAGE_TARGET;
                         }

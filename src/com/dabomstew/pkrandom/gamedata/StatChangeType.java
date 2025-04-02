@@ -34,7 +34,8 @@ public enum StatChangeType {
     ACCURACY,
     EVASION,
     ALL,
-    SPECIAL;
+    SPECIAL,
+    ANY; //a special case used internally. Should not be applied to any moves.
 
     public boolean containedInAll() {
         switch(this) {
@@ -46,6 +47,38 @@ public enum StatChangeType {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    /**
+     * Returns the StatChangeType that has (essentially) the same effect if inversely applied on the opposing pokemon.
+     * For example, Attack and Defense are opposing because raising a Pokemon's attack is roughly equivalent to
+     * lowering its opponent's defense.
+     * This is a two-way relationship, so calling opposingStat on the opposing stat should yield the initial stat.
+     * @return The opposing stat.
+     */
+    public StatChangeType opposingStat() {
+        switch (this) {
+            case ATTACK:
+                return DEFENSE;
+            case DEFENSE:
+                return ATTACK;
+            case SPECIAL_ATTACK:
+                return SPECIAL_DEFENSE;
+            case SPECIAL_DEFENSE:
+                return SPECIAL_ATTACK;
+            case ACCURACY:
+                return EVASION;
+            case EVASION:
+                return ACCURACY;
+            case NONE:
+            case ALL:
+            case ANY:
+            case SPEED:
+            case SPECIAL:
+                return this;
+            default:
+                throw new UnsupportedOperationException("No opposing stat recorded for stat " + this);
         }
     }
 }

@@ -1438,6 +1438,7 @@ public class Gen3Constants {
             {Gen3ItemIDs.leafStone, 3000},
             {Gen3ItemIDs.heartScale, 5000},
             {Gen3ItemIDs.retroMail, 50},
+
             {Gen3ItemIDs.cheriBerry, 200},
             {Gen3ItemIDs.chestoBerry, 250},
             {Gen3ItemIDs.pechaBerry, 100},
@@ -1482,6 +1483,7 @@ public class Gen3Constants {
             {Gen3ItemIDs.starfBerry, 1000},
             {Gen3ItemIDs.enigmaBerry, 1000},
             {Gen3ItemIDs.brightPowder, 3000},
+
             {Gen3ItemIDs.whiteHerb, 1000},
             {Gen3ItemIDs.expShare, 6000},
             {Gen3ItemIDs.quickClaw, 4500},
@@ -1519,6 +1521,7 @@ public class Gen3Constants {
             {Gen3ItemIDs.shellBell, 6000},
             {Gen3ItemIDs.seaIncense, 2000},
             {Gen3ItemIDs.laxIncense, 3000},
+
             {Gen3ItemIDs.tm04, 1500},
             {Gen3ItemIDs.tm07, 2000},
             {Gen3ItemIDs.tm08, 1500},

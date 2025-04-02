@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -324,12 +325,12 @@ public class RomHandlerShopTest extends RomHandlerTest {
         List<Integer> realPrices = romHandler.getShopPrices();
 
         System.out.println("\tpublic static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {");
-        for (int i = 1; i < 500; i++) {
-            if (realPrices.get(i) != balanced.get(i) * 10) {
+        for (int i = 1; i < 700; i++) {
+            if (balanced.get(i) != null && !Objects.equals(realPrices.get(i), balanced.get(i))) {
+                //System.out.println(i + "\t" + names[i] + "\tr=" + realPrices.get(i) + ", b=" + balanced.get(i));
                 System.out.println("\t\t\t{ItemIDs." + names[i] + ", " + balanced.get(i) * 10 + "},");
             }
         }
-
 
         assertNotNull(romHandler);
     }

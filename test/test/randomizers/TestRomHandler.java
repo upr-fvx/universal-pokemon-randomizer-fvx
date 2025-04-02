@@ -1194,7 +1194,17 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public List<Integer> getShopPrices() {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public void setBalancedShopPrices() {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void setShopPrices(List<Integer> prices) {
         throw new NotImplementedException();
     }
 

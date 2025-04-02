@@ -21,7 +21,12 @@ public class MoveValuationService {
 
     public static class MoveValues{
         private final Move move;
-        private int powerValue = 0;
+
+        private int power;
+        private int effectivePower = power;
+        private int speedDependentPower = 0;
+        private EffectsValue powerScalingEffectsValue;
+
         private int effectsValue = 0;
         private int speedDependantEffectsValue = 0;
         private int doubleBattleEffectsValue = 0;
@@ -30,28 +35,44 @@ public class MoveValuationService {
         private double useMultiplier = 1; //for charge moves, etc
 
         //calculated values
-        private int baseValue;
-        private int totalResultsValue; //results meaning power and effects combined
-        private int lostInaccuracyValue;
+        private EffectsValue baseValue;
+        private EffectsValue totalResultsValue; //results meaning power and effects combined
+        private EffectsValue lostInaccuracyValue;
         private boolean finalized = false;
 
 
         public MoveValues(Move move) {
             this.move = move;
+            power = move.power;
         }
 
-        public MoveValues(Move move, int baseValue, int powerValue, int speedDependantEffectsValue) {
-            this.move = move;
-            this.baseValue = baseValue;
-            this.powerValue = powerValue;
-            this.speedDependantEffectsValue = speedDependantEffectsValue;
-        }
-        private void setPowerValue(int value) {
+        private void setEffectivePower(int power) {
             if(finalized) {
                 throw new IllegalStateException("Attempted to change value of finalized move!");
             }
 
-            powerValue = value;
+            this.effectivePower = power;
+        }
+
+        private void setSpeedDependentPower(int power) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            speedDependentPower = power;
+        }
+
+        /**
+         * Allows to set values for effects that scale with power.
+         * The values given should be the value of the effect if power is 100.
+         * @param value
+         */
+        private void setPowerScalingEffectsValue(EffectsValue value) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            powerScalingEffectsValue = value;
         }
 
         private void setEffectsValue(int effectsValue) {
@@ -105,12 +126,19 @@ public class MoveValuationService {
         private void calculateValues() {
             finalized = true;
 
-            totalResultsValue = powerValue + effectsValue + (speedDependantEffectsValue / 2)
-                    + (doubleBattleEffectsValue / 2);
-            int perUseValue = (totalResultsValue * accuracy) / 100;
+            int totalPower = effectivePower + speedDependentPower / 2;
+            int totalOffenseValue = power + (powerScalingEffectsValue.offensive * power / 100) + effectsValue +
+                    (speedDependantEffectsValue / 2) + (doubleBattleEffectsValue / 2);
+            int totalDefenseValue = (powerScalingEffectsValue.defensive * power / 100) + effectsValue +
+                    (speedDependantEffectsValue / 2) + (doubleBattleEffectsValue / 2);
+
+            totalResultsValue = new EffectsValue(totalOffenseValue, totalDefenseValue);
+
+            EffectsValue perUseValue = totalResultsValue.multiply(accuracy / 100);
             double finalMultiplier = useMultiplier * ((doubleBattleRangeModifier + 1) / 2.0);
-            baseValue = (int) (perUseValue * finalMultiplier);
-            lostInaccuracyValue = (int) ((totalResultsValue - perUseValue) * finalMultiplier);
+            baseValue = perUseValue.multiply(finalMultiplier);
+
+            lostInaccuracyValue = totalResultsValue.subtract(perUseValue).multiply(finalMultiplier);
         }
 
         public int getBaseValue() {
@@ -118,7 +146,7 @@ public class MoveValuationService {
                 throw new IllegalStateException("Attempted to get value of non-finalized move!");
             }
 
-            return baseValue;
+            return baseValue.offensive + baseValue.defensive;
         }
 
         public int getValueForPokemon(Species species, int ability, List<Move> currentMoves, int heldItem){
@@ -165,6 +193,32 @@ public class MoveValuationService {
             //...so I'm realizing this process needs to know what effects are offensive or defensive... for all moves...
 
 
+        }
+    }
+
+    private static class EffectsValue {
+        public int offensive;
+        public int defensive;
+
+        public EffectsValue(int offensive, int defensive) {
+            this.offensive = offensive;
+            this.defensive = defensive;
+        }
+
+        public EffectsValue add(EffectsValue other) {
+            return new EffectsValue(offensive + other.offensive, defensive + other.defensive);
+        }
+
+        public EffectsValue subtract(EffectsValue other) {
+            return new EffectsValue(offensive - other.offensive, defensive - other.defensive);
+        }
+
+        public EffectsValue multiply(int factor) {
+            return new EffectsValue(offensive * factor, defensive * factor);
+        }
+
+        public EffectsValue multiply(double factor) {
+            return new EffectsValue((int)(offensive * factor), (int)(defensive * factor));
         }
     }
 
@@ -258,19 +312,20 @@ public class MoveValuationService {
         if(power <= 1) {
             power = generateUniqueDamagingMovePower(move);
         }
-        double powerValue = power;
-
         if(move.hitCount > 1) {
-            powerValue *= move.hitCount;
+            power *= move.hitCount;
         } else {
-            powerValue *= generateUniquePowerMultiplier(move);
+            power *= generateUniquePowerMultiplier(move);
+        }
+        if(power != move.power) {
+            values.setEffectivePower(power);
         }
 
-        powerValue += move.absorbPercent / 100.0 * power;
-        powerValue -= (move.recoilPercent / 100.0 * power) / 2;
+        values.setSpeedDependentPower(generateSpeedDependentPowerValue(move));
 
-        powerValue += power * generateCriticalChanceMultiplier(generation, move.criticalChance);
-        values.setPowerValue((int)powerValue);
+        int critValue = (int)(generateCriticalChanceMultiplier(generation, move.criticalChance) * 100);
+        EffectsValue powerValue = new EffectsValue(critValue, move.absorbPercent - move.recoilPercent);
+        values.setPowerScalingEffectsValue(powerValue);
 
 
         int effectsValue = 0;
@@ -561,6 +616,25 @@ public class MoveValuationService {
         return 0;
     }
 
+    private int generateSpeedDependentPowerValue(Move move) {
+        switch (move.internalId) {
+            case MoveIDs.gyroBall:
+                return -250;
+                //at speed neutral, power is 25.
+                //This does mean for fast pokemon, the value can go negative, which is technically incorrect, but
+            case MoveIDs.payback:
+                return -50;
+                //Payback cares about *turn order*, while the other two care about *speed*.
+                //This does mean that its value should be handled slightly differently, synergy-wise
+                //(for example, Trick Room effects it but not the other two.)
+                //However, it's close enough that I probably just won't bother.
+            case MoveIDs.electroBall:
+                return 110;
+            default:
+                return 0;
+        }
+    }
+
     private double generateUniquePowerMultiplier(Move move) {
         switch (move.internalId) {
             case MoveIDs.selfDestruct:
@@ -679,16 +753,17 @@ public class MoveValuationService {
             default:
                 throw new IllegalArgumentException("Crit chance calculator does not support generation " + generation + "!");
         }
+        double damageIncrease = critMultiplier - 1;
 
         switch (criticalChance) {
             case NORMAL:
                 return 0;
             case NONE:
-                return baseCritChance * critMultiplier * -1;
+                return baseCritChance * damageIncrease * -1;
             case INCREASED:
-                return critChanceIncrease * critMultiplier;
+                return critChanceIncrease * damageIncrease;
             case GUARANTEED:
-                return critMultiplier; //technically this probably should be times 1 - base chance, but...
+                return damageIncrease; //technically this probably should be times 1 - base chance, but...
                 // this *feels* more correct, even if it isn't.
             default:
                 //should never occur
@@ -698,14 +773,6 @@ public class MoveValuationService {
 
     private int generateUniqueSpeedValue(Move move) {
         switch (move.internalId) {
-            case MoveIDs.gyroBall:
-                return -250; //at speed neutral, power is 25.
-                // (Ideally there'd be a way to do this which put this factor into power,
-                // but that seems too specific to bother. (100 counting STAB isn't that great for a damage move anyway.))
-            case MoveIDs.payback:
-                return -50; //hmm... maybe we do need a speed-based power value?
-            case MoveIDs.electroBall:
-                return 110; //also speed-dependent-power.
             case MoveIDs.metalBurst:
                 return -120; //no effect if moves first.
             case MoveIDs.copycat:

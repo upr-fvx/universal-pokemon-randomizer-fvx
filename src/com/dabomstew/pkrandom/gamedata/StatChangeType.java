@@ -36,6 +36,7 @@ public enum StatChangeType {
     ALL,
     SPECIAL,
     ANY; //a special case used internally. Should not be applied to any moves.
+    //(Although, actually, an argument could be made for Acupressure...)
 
     public boolean containedInAll() {
         switch(this) {

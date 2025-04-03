@@ -38,25 +38,41 @@ import static java.util.stream.Collectors.toCollection;
 public class MoveSynergy {
 
     //
-    public static int getSpeedFactoredPower(Move move, int speed, int averageStat, List<Move> currentMoves) {
-        int speedDependentPower;
-        switch(move.internalId) {
-            case MoveIDs.gyroBall:
-                speedDependentPower = -250;
-                break;
-            case MoveIDs.payback:
-                speedDependentPower = -50;
-                break;
-            case MoveIDs.electroBall:
-                speedDependentPower = 110;
-                break;
-            default:
-                return 0;
-        } //TODO: this is not the right place to have a switch like this...
+    public static int getSpeedFactoredPower(int speedDependentPower, int speed, int averageStat,
+                                            List<Move> currentMoves) {
+        if (speedDependentPower == 0){
+            return 0;
+        }
 
         return (int)(speedDependentPower * getSpeedRatio(speed, averageStat, currentMoves));
     }
 
+    //major sub-functions
+    /**
+     * Gets the ratio at which speed-dependent values should be counted. Scales from 0-1.
+     * @param speed
+     * @param averageStat
+     * @param currentMoves
+     * @return
+     */
+    private static double getSpeedRatio(int speed, int averageStat, List<Move> currentMoves) {
+        double speedRatio = ((double)speed / averageStat) - .5;
+        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, true)) {
+            speedRatio += .75;
+        }
+        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, false)) {
+            speedRatio -= .75;
+        }
+        //having both moves is represented as cancelling out, though truly it ought to make it on both extremes at once.
+        //That's a bit hard to represent though.
+
+        //TODO: paralysis should affect this, also Tailwind
+        // Also, Curse...
+
+        speedRatio = Math.max(0, Math.min(speedRatio, 1)); //clamp between 0 and 1
+
+        return speedRatio;
+    }
 
     //helper functions
 
@@ -127,29 +143,6 @@ public class MoveSynergy {
         }
 
         return move.hasSpecificStatChange(stat, positive);
-    }
-
-    /**
-     * Gets the ratio at which speed-dependent values should be counted. Scales from 0-1.
-     * @param speed
-     * @param averageStat
-     * @param currentMoves
-     * @return
-     */
-    private static double getSpeedRatio(int speed, int averageStat, List<Move> currentMoves) {
-        double speedRatio = ((double)speed / averageStat) - .5;
-        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, true)) {
-            speedRatio += .75;
-        }
-        if(containsRelativeStatChanger(currentMoves, StatChangeType.SPEED, false)) {
-            speedRatio -= .75;
-        }
-        //having both moves is represented as cancelling out, though truly it ought to make it on both extremes at once.
-        //That's a bit hard to represent though.
-
-        speedRatio = Math.max(0, Math.min(speedRatio, 1)); //clamp between 0 and 1
-
-        return speedRatio;
     }
 
     //TODO: remove all methods below (after appropriately transferring their contents)

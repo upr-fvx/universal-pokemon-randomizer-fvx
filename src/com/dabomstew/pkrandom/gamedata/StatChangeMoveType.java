@@ -31,5 +31,27 @@ public enum StatChangeMoveType {
     NO_DAMAGE_ALL_ALLIES,
     NO_DAMAGE_ALLY,
     DAMAGE_TARGET,
-    DAMAGE_USER
+    DAMAGE_USER;
+
+    public boolean affectsSelf() {
+        switch (this) {
+            case DAMAGE_USER:
+            case NO_DAMAGE_USER:
+            case NO_DAMAGE_ALLY:
+            case NO_DAMAGE_ALL_ALLIES:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean affectsFoe() {
+        switch (this) {
+            case DAMAGE_TARGET:
+            case NO_DAMAGE_TARGET:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

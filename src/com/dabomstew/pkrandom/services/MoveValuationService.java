@@ -209,39 +209,29 @@ public class MoveValuationService {
         public int offensive;
         public int defensive;
 
-        public int agnostic = 0; //significantly rarer
-
         public EffectsValue(int offensive, int defensive) {
             this.offensive = offensive;
             this.defensive = defensive;
         }
 
-        public EffectsValue(int offensive, int defensive, int agnostic) {
-            this.offensive = offensive;
-            this.defensive = defensive;
-            this.agnostic = agnostic;
-        }
-
         public EffectsValue add(EffectsValue other) {
-            return new EffectsValue(offensive + other.offensive, defensive + other.defensive,
-                    agnostic + other.agnostic);
+            return new EffectsValue(offensive + other.offensive, defensive + other.defensive);
         }
 
         public EffectsValue subtract(EffectsValue other) {
-            return new EffectsValue(offensive - other.offensive, defensive - other.defensive,
-                    agnostic - other.agnostic);
+            return new EffectsValue(offensive - other.offensive, defensive - other.defensive);
         }
 
         public EffectsValue multiply(int factor) {
-            return new EffectsValue(offensive * factor, defensive * factor, agnostic * factor);
+            return new EffectsValue(offensive * factor, defensive * factor);
         }
 
         public EffectsValue multiply(double factor) {
-            return new EffectsValue((int)(offensive * factor), (int)(defensive * factor), (int)(agnostic * factor));
+            return new EffectsValue((int)(offensive * factor), (int)(defensive * factor));
         }
 
         public EffectsValue divide(int factor) {
-            return new EffectsValue(offensive / factor, defensive / factor, agnostic / factor);
+            return new EffectsValue(offensive / factor, defensive / factor);
         }
 
         public EffectsValue halve() {
@@ -249,7 +239,7 @@ public class MoveValuationService {
         }
 
         public int total() {
-            return offensive + defensive + agnostic;
+            return offensive + defensive;
         }
     }
 
@@ -973,8 +963,7 @@ public class MoveValuationService {
             case MoveIDs.pursuit:
                 return new EffectsValue(10, 0); //good, but situational
             case MoveIDs.uproar:
-                return new EffectsValue(0, 0, 10);
-                //ensuring that you don't lose your turn is ALWAYS good
+                return new EffectsValue(0, 10);
 
             //disabling moves
             case MoveIDs.disable:
@@ -997,20 +986,20 @@ public class MoveValuationService {
             //copying moves
             case MoveIDs.mirrorMove:
             case MoveIDs.copycat:
-                return new EffectsValue(0, 0, 50);
+                return new EffectsValue(25, 25);
                 //can't know if the effect is offensive or defensive
             case MoveIDs.mimic:
             case MoveIDs.sketch:
-                return new EffectsValue(0, 55);
+                return new EffectsValue(20, 35);
                 //these ones are better defensively, because of the extra turn involved
             case MoveIDs.transform:
-                return new EffectsValue(0, 0, 80);
+                return new EffectsValue(0, 80);
                 //????
 
             //other calling moves
             case MoveIDs.sleepTalk:
             case MoveIDs.assist:
-                return new EffectsValue(0, 0, 1); //Synergy based on other moves' potency.
+                return new EffectsValue(0, 1); //Synergy based on other moves' potency.
             case MoveIDs.metronome:
                 Collection<Integer> impossibleMoveIDs;
                 if (romHandler.generationOfPokemon() > 7) {
@@ -1141,10 +1130,9 @@ public class MoveValuationService {
                 //atk (40) * 6 stages; half health
                 //I don't know that I value it that highly, but I'm not the kind of player that likes such a move
             case MoveIDs.memento:
-                return new EffectsValue(0, -200, 160);
+                return new EffectsValue(160, -200);
                 //160 for reducing 4 stat stages, -200 for causing faint.
-                //(Kind not sure that's right, though...)
-                //The 160 is agnostic due to not affecting this pokemon.
+                //(Kinda not sure that's right, though...)
             case MoveIDs.focusEnergy:
                 return new EffectsValue(50, 0); //sort of a stat change
             case MoveIDs.laserFocus:
@@ -1161,12 +1149,12 @@ public class MoveValuationService {
                 //without synergy (including <100% accurate moves as synergy), both groups have the same use case
             case MoveIDs.stockpile:
                 if(generation == 3) {
-                    return new EffectsValue(0, 0, 1); //does nothing on its own
+                    return new EffectsValue(0, 1); //does nothing on its own
                 } else {
                     return new EffectsValue(0, 80); //raises def + spdef
                 }
             case MoveIDs.psychUp:
-                return new EffectsValue(0, 0, 60); //weird stat change
+                return new EffectsValue(20, 40); //weird stat change
             case MoveIDs.swagger:
                 return new EffectsValue(0, 80); //the two effects have synergy with each other,
                 //so boosting the opponent's Attack should not count as a negative.

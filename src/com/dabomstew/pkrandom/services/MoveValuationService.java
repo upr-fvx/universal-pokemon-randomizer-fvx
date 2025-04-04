@@ -408,10 +408,20 @@ public class MoveValuationService {
         }
         effectsValue += priorityValue; //Priority is a speed-dependent value, actually
 
+        case MoveIDs.matBlock:
+        return new EffectsValue(0, 60); //requires first move
+
         case MoveIDs.tailwind:
         return 80; //double speed is a lot, but has short duration.
         case MoveIDs.trickRoom:
         return 80; //similar to tailwind, except with a speed penalty
+        case MoveIDs.speedSwap:
+        return 80; //guaranteed to switch who acts first... if used correctly, very potent!
+        case MoveIDs.coreEnforcer:
+        return 90; //removes ability (but only if slower)
+        case MoveIDs.thunderFang:
+        return new EffectsValue(5, 0);
+        //has synergy with ITSELF (paralysis+flinch) but it's still a small chance
 
 
         int accuracy;
@@ -1145,6 +1155,7 @@ public class MoveValuationService {
             case MoveIDs.odorSleuth:
             case MoveIDs.miracleEye:
             case MoveIDs.telekinesis:
+            case MoveIDs.gravity:
                 return new EffectsValue(50, 0);
                 //without synergy (including <100% accurate moves as synergy), both groups have the same use case
             case MoveIDs.stockpile:
@@ -1165,122 +1176,151 @@ public class MoveValuationService {
                 //but needing to use it multiple times makes it more effective for defenders.
             case MoveIDs.powerTrick:
             case MoveIDs.wonderRoom:
-                return 30; //tricky, doubt the AI knows how to use effectively
+                return new EffectsValue(15, 15); //tricky, doubt the AI knows how to use effectively
             case MoveIDs.powerSplit:
             case MoveIDs.guardSplit:
-                return 20; //entirely dependent on synergy (poor stats) to determine if it's useful
+                return new EffectsValue(0, 50);
             case MoveIDs.powerSwap:
             case MoveIDs.guardSwap:
-                return 20; //without synergy, is likely to do nothing
+                return new EffectsValue(5, 15); //without synergy, is likely to do nothing
             case MoveIDs.heartSwap:
-                return 40; //somewhat more likely to have effect
+                return new EffectsValue(10, 30); //somewhat more likely to have effect
             case MoveIDs.skullBash:
                 if(romHandler.generationOfPokemon() > 1) {
-                    return 40; //for raising defence
+                    return new EffectsValue(0, 40); //for raising defence
                 } else {
-                    return 0;
+                    return new EffectsValue(0, 0);
                 }
             case MoveIDs.rage:
                 if(generation == 2) {
-                    return 0; //in gen 2, is a power multiplier instead.
+                    return new EffectsValue(0, 0); //in gen 2, is a power multiplier instead.
                 } else {
-                    return 32; //attack boost (40) contingent on opponent damaging (*.8)
+                    return new EffectsValue(32, 0); //attack boost (40) contingent on opponent damaging (*.8)
                 }
             case MoveIDs.defog:
-                return 70; //lower evasion + essentially rapid spin
-                //has some negative synergies
+                if (generation <= 5) {
+                    return new EffectsValue(70, 0);
+                    //lowers evasion + essentially rapid spin
+                    //has some negative synergies
+                } else {
+                    return new EffectsValue(70, 10); //now also clears entry hazards from user's side
+                }
             case MoveIDs.shellSmash:
-                return 160; //gain 6 stages, lose 2, all of them 40-value stats
+                return new EffectsValue(240, -80);
+                //gain 6 stages, lose 2, all of them 40-value stats
             case MoveIDs.rototiller:
-                return 80; //1 stage in 2 stats... when it works (synergy)
+                return new EffectsValue(80, 0); //1 stage in 2 stats... when it works (synergy)
             case MoveIDs.flowerShield:
-                return 35; //1 stage, and it might also give it to opponents. (synergy makes better).
+                return new EffectsValue(0, 35);
+                //1 stage, and it might also give it to opponents. (synergy makes better).
             case MoveIDs.stickyWeb:
-                return 80; //1 stage on each new pokemon; 2 is a reasonable estimate. May do synergy: front of party.
+                return new EffectsValue(80, 0);
+                //1 stage on each new pokemon; 2 is a reasonable estimate. May do synergy: front of party.
             case MoveIDs.fellStinger:
                 if(generation == 6) {
-                    return 40; //two stages, but only if you can pull off the kill
+                    return new EffectsValue(50, 0);
+                    //two stages, but only if you can pull off the kill
                 } else {
-                    return 70; //now three stages (and easier to do)
+                    return new EffectsValue(90, 0);
+                    //now three stages (and easier to do)
                 }
             case MoveIDs.topsyTurvy:
-                return 60; //if opponent has any stat buffs, very solid. also potential synergy
+                return new EffectsValue(20, 40);
+                //if opponent has any stat buffs, very solid. also potential synergy
             case MoveIDs.diamondStorm:
                 if(generation == 6) {
-                    return 20; //50% to raise one stage
+                    return new EffectsValue(0, 30);
+                    //only 50% chance, but there was always some premium for the first
                 } else {
-                    return 40; //now two stages
+                    return new EffectsValue(0, 50); //now two stages
                 }
             case MoveIDs.venomDrench:
-                return 120; //three stats by 1; requires synergy
+                return new EffectsValue(0, 120);
+                //three stats by 1; requires synergy
             case MoveIDs.strengthSap:
-                return 140; //heals... probably around half of HP?? also one stat stage
-            case MoveIDs.speedSwap:
-                return 80; //guaranteed to switch who acts first... if used correctly, very potent!
+                return new EffectsValue(0, 140);
+                //heals... probably around half of HP?? also one stat stage
             case MoveIDs.spectralThief:
-                return 100; //steal any positive stat changes! if they exist
+                return new EffectsValue(50, 50);
+                //steal any positive stat changes! if they exist
+                //more possible offensive stats is balanced by more likely for opponent to have stats if defensive
 
 
             //protect / damage reduction
             case MoveIDs.protect:
             case MoveIDs.detect:
-                return 80;
-            case MoveIDs.matBlock:
-                return 60; //only works on damaging moves
+                return new EffectsValue(0, 80);
             case MoveIDs.craftyShield:
-                return 30; //only works on status moves
+                return new EffectsValue(0, 30); //only works on status moves
             case MoveIDs.kingsShield:
                 if(generation <= 7) {
-                    return 130; //blocks damaging moves PLUS reduces attack if contacted PLUS form change
+                    return new EffectsValue(0, 130);
+                    //blocks damaging moves PLUS reduces attack if contacted PLUS form change
                     //although, maybe the form change should be a synergy thing? hmm.
                 } else {
-                    return 110; //attack reduction nerfed. still good.
+                    return new EffectsValue(0, 110); //attack reduction nerfed. still good.
                 }
             case MoveIDs.spikyShield:
-                return 95; //blocks all move plus damages if contacted
+                return new EffectsValue(0, 95);
+                //blocks all move plus damages if contacted
             case MoveIDs.banefulBunker:
-                return 115; //blocks all moves, poison if contacted
+                return new EffectsValue(0, 115); //blocks all moves, poison if contacted
             case MoveIDs.wideGuard:
             case MoveIDs.quickGuard:
-                return 20; //only work on small subset of moves
+                return new EffectsValue(0, 20); //only work on small subset of moves
             case MoveIDs.endure:
-                return 50;
+                return new EffectsValue(0, 50); //only saves last HP
             case MoveIDs.reflect:
             case MoveIDs.lightScreen:
-                return 70;
+                return new EffectsValue(0, 70);
             case MoveIDs.auroraVeil:
-                return 140; //both physical AND special halved!
+                return new EffectsValue(0, 140); //both physical AND special halved!
             case MoveIDs.mudSport:
             case MoveIDs.waterSport:
-                return 30; //synergy goes up if they're weak to that type
+                return new EffectsValue(0, 30); //synergy goes up if they're weak to that type
 
             //item shenanigans
             //most of these are deliberately undervalued due to being annoying to players
             //(as they can result in permanent item loss AFAIK)
+            //...text from some NPCs indicates that thievery is NOT permanent so maybe will not deliberately undervalue?
+            //...starting in gen 5. Okay.
             case MoveIDs.thief:
             case MoveIDs.covet:
-                return 5;
+                if(generation <= 5) {
+                    return new EffectsValue(0, 5);
+                    //undervalue to avoid player annoyance
+                } else {
+                    return new EffectsValue(0, 20);
+                    //still not that great TBH. depends on the item though.
+                }
             case MoveIDs.trick:
             case MoveIDs.switcheroo:
-                return 5; //AI doesn't know how to use these moves anyway
+                return new EffectsValue(0, 5);
+                //AI doesn't know how to use these moves anyway
+                //...but, after gen 5, will probably do some synergy about it
             case MoveIDs.recycle:
-                return 5; //not an annoying one, but I don't think the AI knows how to use it
+                return new EffectsValue(0, 5);
+                //not an annoying one, but limited use
             case MoveIDs.fling:
-                return 1; //power entirely depends on held item
+                return new EffectsValue(1, 0);
+                //power entirely depends on held item
             case MoveIDs.embargo:
-                return 60; //hard to value, but pretty solid
+                return new EffectsValue(60, 20);
+                //hard to value, but pretty solid
             case MoveIDs.magicRoom:
-                return 40; //doesn't prevent active items, so less useful
+                return new EffectsValue(20, 20); //doesn't prevent active items, so less useful
             case MoveIDs.pluck:
             case MoveIDs.bugBite:
-                return 15; //narrow but useful
+                return new EffectsValue(10, 10);
+                //narrow but useful
                 //(Not undervalued because berries are consumable anyway)
             case MoveIDs.incinerate:
-                return 10; //only destroys it, rather than stealing, but still a bit useful
+                return new EffectsValue(10, 0);
+                //only destroys it, rather than stealing, but still a bit useful
             case MoveIDs.bestow:
-                return 5; //without synergy, is actively bad
+                return new EffectsValue(0, 5); //without synergy, is actively bad
             case MoveIDs.knockOff:
-                return 15; //not undervalued because only temporarily removes
+                return new EffectsValue(20, 20); //not undervalued because only temporarily removes
 
             //switch effects
             case MoveIDs.whirlwind:
@@ -1289,56 +1329,72 @@ public class MoveValuationService {
             case MoveIDs.dragonTail:
                 //switch opponent
                 if(generation == 1) {
-                    return 0;
+                    return new EffectsValue(0, 0); //useless in this gen
                 } else {
-                    return 50;
+                    return new EffectsValue(20, 30);
+                    //bit higher for defense because of "tank up, then remove enemy's tanking" strategy
                 }
             case MoveIDs.uTurn:
-            case MoveIDs.batonPass:
             case MoveIDs.voltSwitch:
             case MoveIDs.partingShot:
                 //switch user
                 //not that *inherently* useful (since switching is just an option, even if the AI doesn't often use it),
                 //but get around trap moves & can be synergized
-                return 30;
+                return new EffectsValue(30, 0);
+                //defender is more likely to not want to switch
+            case MoveIDs.batonPass:
+                return new EffectsValue(0, 30);
+                //for "tank up, then give stats to ally" strat
             case MoveIDs.teleport:
                 if(generation < 8) {
-                    return 0;
+                    return new EffectsValue(0,0);
                 } else {
-                    return 30;
+                    return new EffectsValue(0, 30);
+                    //lowered priority means the user tanks a hit, then switches out
                 }
 
             //type changes
             case MoveIDs.conversion:
-                return 50;
+                if(generation == 1) {
+                    new EffectsValue(0, 70);
+                    //matching opponent's type means likely resistance
+                } else {
+                    new EffectsValue(50, 0);
+                    //matching move's type means STAB
+                }
             case MoveIDs.conversion2:
-                return 90; //guaranteed resistance
+                return new EffectsValue(0, 90);
+                //guaranteed resistance
             case MoveIDs.soak:
-                return 50; //better with synergy
-            case MoveIDs.reflectType:
-                return 70; //usually gives resistance
             case MoveIDs.trickOrTreat:
             case MoveIDs.forestsCurse:
-                return 70; //need synergy to be good. (easy synergy though)
+                return new EffectsValue(0, 50);
+                //much offensive synergy, but without synergy it mostly just turns off STAB
+            case MoveIDs.reflectType:
+                return new EffectsValue(0, 70);
+                //usually gives resistance
 
             //ability changes
             case MoveIDs.gastroAcid:
-                return 90; //depends on foe, but usually pretty good
+                return new EffectsValue(20, 70);
+                //depends on foe, but usually pretty good
             case MoveIDs.worrySeed:
-                return 92; //also prevents Rest
+                return new EffectsValue(22, 70);
+                //also prevents Rest
                 //(Has anti-synergy with inflicting sleep, obviously)
             case MoveIDs.simpleBeam:
-                return 80; //could end up increasing opponent's stats
+                return new EffectsValue(15, 65);
+                //could end up increasing opponent's stats
                 //(Has synergy with stat reductions)
             case MoveIDs.entrainment:
-                return 80; //depends largely on the user's ability,
-                //but this seems like a decent base value
-            case MoveIDs.coreEnforcer:
-                return 90; //removes ability (but only if slower)
+                return new EffectsValue(20, 60);
+                //depends largely on the user's ability,
+                //but still removes the original ability
             case MoveIDs.sunsteelStrike:
             case MoveIDs.moongeistBeam:
             case MoveIDs.photonGeyser:
-                return 20; //ignores abilities. not sure how many that matters for.
+                return new EffectsValue(20, 0);
+                //ignores abilities. not sure how many that matters for.
 
             //work despite protection
             case MoveIDs.feint:
@@ -1346,15 +1402,19 @@ public class MoveValuationService {
             case MoveIDs.phantomForce:
             case MoveIDs.hyperspaceHole:
             case MoveIDs.hyperspaceFury:
-                return 10; //works through protect/detect/etc
+                return new EffectsValue(10, 0);
+                //works through protect/detect/etc
             //not putting the substitute-piercing moves because a: that's very specific and b: there's so many
             case MoveIDs.thousandArrows:
-                return 30; //works against ungrounded, + grounds them
+                return new EffectsValue(30, 0);
+                //works against ungrounded, + grounds them
             case MoveIDs.darkestLariat:
-                return 30; //ignores defence and evasion buffs
+                return new EffectsValue(50, 0);
+                //ignores defence and evasion buffs
             case MoveIDs.brickBreak:
             case MoveIDs.psychicFangs:
-                return 15; //break screens; narrow, but pretty good when it comes up
+                return new EffectsValue(15, 0);
+                //break screens; narrow, but pretty good when it comes up
 
             //other effects
             case MoveIDs.spiderWeb:
@@ -1363,77 +1423,90 @@ public class MoveValuationService {
             case MoveIDs.thousandWaves:
             case MoveIDs.spiritShackle:
             case MoveIDs.anchorShot:
-                return 40; //trap moves
+                return new EffectsValue(0, 40); //trap moves
             case MoveIDs.fairyLock:
-                return 15; //trap, but only for one turn.
+                return new EffectsValue(0, 15); //trap, but only for one turn.
             case MoveIDs.spite:
-                return 50;
+                return new EffectsValue(0, 50);
             case MoveIDs.grudge:
-                return 30; //grudge is just Destiny Bond but bad
+                return new EffectsValue(0, 30);
+                //grudge is just Destiny Bond but bad
             case MoveIDs.rainDance:
             case MoveIDs.sunnyDay:
-                return 15; //weather moves do barely anything without synergy
+                return new EffectsValue(0, 15);
+                //weather moves do barely anything without synergy
+                //(they only nerf certain types of moves)
             case MoveIDs.grassyTerrain:
             case MoveIDs.electricTerrain:
             case MoveIDs.psychicTerrain:
-                return 15; //same for terrains
-            case MoveIDs.gravity:
-                return 15;
+                return new EffectsValue(0, 15); //same for terrains
             case MoveIDs.destinyBond:
-                return 50;
+                return new EffectsValue(50, 0);
+                //weird to call it offensive, but defenses nerf it
             case MoveIDs.perishSong:
-                return 30; //without synergy, just forces a switch
+                return new EffectsValue(0, 30);
+                //without synergy, just forces a switch
             case MoveIDs.rolePlay:
             case MoveIDs.skillSwap:
             case MoveIDs.camouflage:
-                return 5; //these moves are too weird for the AI to use correctly
+                return new EffectsValue(0, 5); //these moves are too weird for the AI to use correctly
             case MoveIDs.magicCoat:
             case MoveIDs.snatch:
-                return 30; //potent effects, but mostly luck based to see if they work
-            // (excepting with very specific synergy)
+                return new EffectsValue(0, 30);
+                //potent effects, but mostly luck based to see if they work
+                //(excepting with very specific synergy)
             case MoveIDs.healBlock:
-                return 40; //potent, but situational
+                return new EffectsValue(40, 0); //potent, but situational
             case MoveIDs.magnetRise:
-                return 40; //become immune to a category of moves
+                return new EffectsValue(0, 40);
+                //become immune to a category of moves
                 //(Very common synergy for types)
             case MoveIDs.smackDown:
-                return 20; //remove opponent's immunity to move category
+                return new EffectsValue(20, 0);
+                //remove opponent's immunity to move category
                 //(synergy dependent)
-            case MoveIDs.thunderFang:
-                return 5; //has synergy with ITSELF (paralysis+flinch) but it's still a small chance
             case MoveIDs.rapidSpin:
-                return 10; //doesn't apply to many effects
+                return new EffectsValue(0, 10);
+                //doesn't apply to many effects
             case MoveIDs.foulPlay:
-                return 0; //not inherently valuable, but good if the user has low attack
+                return new EffectsValue(0, 5);
+                //not inherently valuable, but good if the user has low attack
             case MoveIDs.autotomize:
-                return 2; //I think there's slightly more punish-heavy moves than punish-light moves,
+                return new EffectsValue(0, 5);
+                //I think there's slightly more punish-heavy moves than punish-light moves,
                 //but not many of each.
             case MoveIDs.ionDeluge:
             case MoveIDs.plasmaFists:
-                return 20; //might make a resist?
+                return new EffectsValue(0, 20);
+                //might make a resist? should only apply if that resist exists
             case MoveIDs.electrify:
-                return 40; //at least doesn't need it to be Normal type. still kinda bad.
+                return new EffectsValue(0, 40);
+                //at least doesn't need it to be Normal type. still kinda bad.
             case MoveIDs.powder:
-                return 80; //protect plus damage! when it works
+                return new EffectsValue(0, 30); //protect plus damage! when it works
             case MoveIDs.falseSwipe:
             case MoveIDs.holdBack:
-                return -5; //actively bad in a trainer battle
+                return new EffectsValue(-5, 0);
+                //actively bad in a trainer battle
             case MoveIDs.beakBlast:
-                return 30; //burns on contact
+                return new EffectsValue(0, 30);
+                //burns on contact
 
 
             default:
                 if(GlobalConstants.bindingMoves.contains(move.internalId)) {
                     if(romHandler.generationOfPokemon() == 1) {
-                        return 100; //essentially, 100% chance to flinch
+                        return new EffectsValue(0,0); //covered elsewhere
                     } else {
-                        return 30; //trap temporarily, plus a tiny bit of damage
+                        return new EffectsValue(5, 25);
+                        //trap temporarily, plus a tiny bit of damage
                     }
                 }
                 if(GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
-                    return 80; //about as good as a protect move
+                    return new EffectsValue(0, 80);
+                    //about as good as a protect move
                 }
-                return 0;
+                return new EffectsValue(0, 0);
         }
     }
 

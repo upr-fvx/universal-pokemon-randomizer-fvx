@@ -287,26 +287,35 @@ public abstract class AbstractRomHandler implements RomHandler {
         if (abilitiesPerSpecies() == 0) {
             throw new IllegalStateException("No abilities in this game.");
         }
-        if (tp.abilitySlot > abilitiesPerSpecies()) {
+        if (tp.getAbilitySlot() > abilitiesPerSpecies()) {
             throw new IllegalStateException("tp.abilitySlot too high for this game. Should be <="
-                    + abilitiesPerSpecies() + ", is " + tp.abilitySlot);
+                    + abilitiesPerSpecies() + ", is " + tp.getAbilitySlot());
         }
 
         // Before randomizing Trainer Pokemon, one possible value for abilitySlot is 0,
         // which represents "Either Ability 1 or 2". During randomization, we make sure
         // to set abilitySlot to some non-zero value, but if you call this method without
         // randomization, then you'll hit this case.
-        if (tp.abilitySlot == 0) {
+        if (tp.getAbilitySlot() == 0) {
             return AbilityIDs.undefined;
         }
 
-        Species pk = !tp.species.isBaseForme() && isTrainerPokemonUseBaseFormeAbilities() ?
-                tp.species.getBaseForme() : tp.species;
+        Species pk = !tp.getSpecies().isBaseForme() && isTrainerPokemonUseBaseFormeAbilities() ?
+                tp.getSpecies().getBaseForme() : tp.getSpecies();
         int[] abilities = new int[] {pk.getAbility1(), pk.getAbility2(), pk.getAbility3()};
 
-        int slot = isTrainerPokemonAlwaysUseAbility1() ? 1 : tp.abilitySlot;
+        int slot = isTrainerPokemonAlwaysUseAbility1() ? 1 : tp.getAbilitySlot();
 
         return abilities[slot - 1];
+    }
+
+    protected void checkFieldItemsTMsReplaceTMs(List<Item> replacement) {
+        List<Item> current = getFieldItems();
+        for (int i = 0; i < current.size(); i++) {
+            if (current.get(i).isTM() != replacement.get(i).isTM()) {
+                throw new IllegalArgumentException("TMs must replace TMs, non-TMs must replace non-TMs");
+            }
+        }
     }
 
     /* Helper methods used by subclasses and/or this class */
@@ -383,6 +392,16 @@ public abstract class AbstractRomHandler implements RomHandler {
      * The implication here is that these WILL be overridden by at least one
      * subclass.
      */
+
+    @Override
+    public boolean isTMsReusable() {
+        return true;
+    }
+
+    @Override
+    public boolean canTMsBeHeld() {
+        return false;
+    }
 
     @Override
     public boolean isTrainerPokemonAlwaysUseAbility1() {
@@ -466,6 +485,18 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public boolean hasTimeBasedEncounters() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
+    public boolean hasGuaranteedWildHeldItems() {
+        // DEFAULT: yes
+        return true;
+    }
+
+    @Override
+    public boolean hasDarkGrassHeldItems() {
         // DEFAULT: no
         return false;
     }
@@ -583,33 +614,56 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public List<Integer> getXItems() {
-        return GlobalConstants.xItems;
+    protected Set<Item> itemIdsToSet(Collection<Integer> ids) {
+        List<Item> allItems = getItems();
+        return ids.stream()
+                .filter(id -> id < allItems.size())
+                .map(allItems::get)
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        return Collections.singletonList(0);
+    public Set<Item> getAllowedItems() {
+        return getItems().stream().filter(item -> item != null && item.isAllowed()).collect(Collectors.toSet());
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
-        return Collections.singletonList(0);
+    public Set<Item> getNonBadItems() {
+        return getAllowedItems().stream().filter(item -> !item.isBad()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Item> getXItems() {
+        return itemIdsToSet(GlobalConstants.xItems);
+    }
+
+    @Override
+    public Set<Item> getMegaStones() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+        return Collections.singletonList(null);
+    }
+
+    @Override
+    public Set<Item> getAllConsumableHeldItems() {
+        return Collections.singleton(null);
     }
 
     /**
-     * Returns a list of item IDs of all items that may have an effect for enemy trainers in battle.<br>
+     * Returns a {@link Set} of all {@link Item}s that may have an effect for enemy trainers in battle.<br>
      * So e.g. Everstone is excluded, but also Metal Powder or other items that only have effects for
      * certain Pokémon species, since when picked for any other Pokémon they will do nothing.
      */
     @Override
-    public List<Integer> getAllHeldItems() {
-        return Collections.singletonList(0);
+    public Set<Item> getAllHeldItems() {
+        return Collections.singleton(null);
     }
 
     @Override

@@ -72,15 +72,15 @@ public class SpeciesTypeRandomizer extends Randomizer {
         if (megaEvolutionSanity) {
             List<MegaEvolution> allMegaEvos = romHandler.getMegaEvolutions();
             for (MegaEvolution megaEvo: allMegaEvos) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1) continue;
-                megaEvo.to.setPrimaryType(megaEvo.from.getPrimaryType(false));
-                megaEvo.to.setSecondaryType(megaEvo.from.getSecondaryType(false));
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1) continue;
+                megaEvo.getTo().setPrimaryType(megaEvo.getFrom().getPrimaryType(false));
+                megaEvo.getTo().setSecondaryType(megaEvo.getFrom().getSecondaryType(false));
 
-                if (megaEvo.to.getSecondaryType(false) == null) {
+                if (megaEvo.getTo().getSecondaryType(false) == null) {
                     if (random.nextDouble() < 0.25) {
-                        megaEvo.to.setSecondaryType(typeService.randomType(random));
-                        while (megaEvo.to.getSecondaryType(false) == megaEvo.to.getPrimaryType(false)) {
-                            megaEvo.to.setSecondaryType(typeService.randomType(random));
+                        megaEvo.getTo().setSecondaryType(typeService.randomType(random));
+                        while (megaEvo.getTo().getSecondaryType(false) == megaEvo.getTo().getPrimaryType(false)) {
+                            megaEvo.getTo().setSecondaryType(typeService.randomType(random));
                         }
                     }
                 }

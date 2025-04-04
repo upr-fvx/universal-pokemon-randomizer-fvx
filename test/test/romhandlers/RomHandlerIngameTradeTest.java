@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.gamedata.IngameTrade;
+import com.dabomstew.pkrandom.gamedata.InGameTrade;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -15,10 +15,10 @@ public class RomHandlerIngameTradeTest extends RomHandlerTest {
     public void tradesDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
         // assumes trades are not cached by the RomHandler
-        List<IngameTrade> before = romHandler.getIngameTrades();
+        List<InGameTrade> before = romHandler.getInGameTrades();
         System.out.println("Before: " + before);
-        romHandler.setIngameTrades(before);
-        List<IngameTrade> after = romHandler.getIngameTrades();
+        romHandler.setInGameTrades(before);
+        List<InGameTrade> after = romHandler.getInGameTrades();
         System.out.println("After: " + after);
         assertEquals(before, after);
     }

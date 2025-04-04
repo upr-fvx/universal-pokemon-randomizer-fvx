@@ -170,7 +170,7 @@ public class RestrictedSpeciesService {
         if (restrictions != null) {
             allInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormesFromRestrictions(restrictions));
             megaEvolutions = romHandler.getMegaEvolutions().stream()
-                    .filter(mevo -> allInclAltFormes.contains(mevo.to))
+                    .filter(mevo -> allInclAltFormes.contains(mevo.getTo()))
                     .collect(Collectors.toSet());
             megaEvolutions = Collections.unmodifiableSet(megaEvolutions);
         } else {

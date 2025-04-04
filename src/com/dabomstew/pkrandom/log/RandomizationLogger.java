@@ -30,7 +30,7 @@ public class RandomizationLogger {
     private final List<String> originalTrainerNames;
     private final List<StaticEncounter> originalStatics;
     private final List<TotemPokemon> originalTotems;
-    private final List<IngameTrade> originalTrades;
+    private final List<InGameTrade> originalTrades;
 
     // this huge list of shared attributes with GameRandomizer could maybe be shared in a better way?
     private final SpeciesBaseStatUpdater speciesBSUpdater;
@@ -83,7 +83,7 @@ public class RandomizationLogger {
         this.originalTrainerNames = getTrainerNames(romHandler.getTrainers());
         this.originalStatics = romHandler.canChangeStaticPokemon() ? romHandler.getStaticPokemon() : null;
         this.originalTotems = romHandler.hasTotemPokemon() ? romHandler.getTotemPokemon() : null;
-        this.originalTrades = romHandler.getIngameTrades();
+        this.originalTrades = romHandler.getInGameTrades();
 
         this.speciesBSUpdater = speciesBSUpdater;
         this.moveUpdater = moveUpdater;
@@ -522,7 +522,7 @@ public class RandomizationLogger {
         String evoTypeStr = getBS("Log.pe." + evo.getType());
 
         if (evo.getType().usesItem()) {
-            String itemName = romHandler.getItemNames()[evo.getExtraInfo()];
+            String itemName = romHandler.getItems().get(evo.getExtraInfo()).getName();
             evoTypeStr = String.format(evoTypeStr, itemName);
         } else if (evo.getType().usesMove()) {
             String moveName = romHandler.getMoves().get(evo.getExtraInfo()).name;
@@ -557,7 +557,6 @@ public class RandomizationLogger {
         printSectionTitle("psta");
 
         List<Species> allSpecies = romHandler.getSpeciesInclFormes();
-        String[] itemNames = romHandler.getItemNames();
 
         // TODO: This puts the alt forms at the end. It would be nice to have them near their base forms.
 
@@ -625,17 +624,17 @@ public class RandomizationLogger {
             if (romHandler.generationOfPokemon() != 1) {// i.e. wild pokes have held items
                 log.print("|");
                 List<String> itemStrings = new ArrayList<>();
-                if (pk.getGuaranteedHeldItem() > 0) {
-                    itemStrings.add(itemNames[pk.getGuaranteedHeldItem()] + getBS("Log.psta.itemGuaranteed"));
+                if (pk.getGuaranteedHeldItem() != null) {
+                    itemStrings.add(pk.getGuaranteedHeldItem().getName() + getBS("Log.psta.itemGuaranteed"));
                 } else {
-                    if (pk.getCommonHeldItem() > 0) {
-                        itemStrings.add(itemNames[pk.getCommonHeldItem()] + getBS("Log.psta.itemCommon"));
+                    if (pk.getCommonHeldItem() != null) {
+                        itemStrings.add(pk.getCommonHeldItem().getName() + getBS("Log.psta.itemCommon"));
                     }
-                    if (pk.getRareHeldItem() > 0) {
-                        itemStrings.add(itemNames[pk.getRareHeldItem()] + getBS("Log.psta.itemRare"));
+                    if (pk.getRareHeldItem() != null) {
+                        itemStrings.add(pk.getRareHeldItem().getName() + getBS("Log.psta.itemRare"));
                     }
-                    if (pk.getDarkGrassHeldItem() > 0) {
-                        itemStrings.add(itemNames[pk.getDarkGrassHeldItem()] + getBS("Log.psta.itemDarkGrass"));
+                    if (pk.getDarkGrassHeldItem() != null) {
+                        itemStrings.add(pk.getDarkGrassHeldItem().getName() + getBS("Log.psta.itemDarkGrass"));
                     }
                 }
                 log.print(String.join(", ", itemStrings));
@@ -688,18 +687,17 @@ public class RandomizationLogger {
         log.printf(getBS("Log.sp.mode"), mode);
 
         List<Species> starters = romHandler.getStarters();
-        List<Integer> heldItems = romHandler.getStarterHeldItems();
-        String[] itemNames = romHandler.getItemNames();
+        List<Item> heldItems = romHandler.getStarterHeldItems();
 
         for (int i = 0; i < starters.size(); i++) {
             if (heldItems.isEmpty()) {
                 log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
             } else if (heldItems.size() == 1) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
-                        itemNames[heldItems.get(0)]);
+                        heldItems.get(0).getName());
             } else if (heldItems.size() == starters.size()) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
-                        itemNames[heldItems.get(i)]);
+                        heldItems.get(i).getName());
             } else {
                 log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
                 log.println("Something went weird with the held items. Please report this as a GitHub issue.");
@@ -1007,17 +1005,16 @@ public class RandomizationLogger {
                 log.printf("@%X", t.offset);
             }
 
-            String[] itemNames = romHandler.getItemNames();
             if (trainerMovesetRandomizer.isChangesMade()) {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
+                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
                     log.print(", " + getBS("Log.tp.ability") + ": "
                             + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
                     boolean first = true;
-                    for (int move : tpk.moves) {
+                    for (int move : tpk.getMoves()) {
                         if (move != 0) {
                             if (!first) {
                                 log.print(", ");
@@ -1035,7 +1032,7 @@ public class RandomizationLogger {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
+                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
                     first = false;
                 }
             }
@@ -1078,12 +1075,11 @@ public class RandomizationLogger {
         printSectionTitle("totp");
         List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
 
-        String[] itemNames = romHandler.getItemNames();
         for (int i = 0; i < oldTotems.size(); i++) {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
-            log.println(oldP.spec.getFullName() + " =>");
-            log.printf(newP.toString(), itemNames[newP.heldItem]);
+            log.println(oldP.getSpecies().getFullName() + " =>");
+            log.printf(newP.toString(), newP.getHeldItem().getName());
         }
         printSectionSeparator();
     }
@@ -1147,9 +1143,9 @@ public class RandomizationLogger {
         return tradeRandomizer.isChangesMade();
     }
 
-    private void logInGameTrades(List<IngameTrade> oldTrades) {
+    private void logInGameTrades(List<InGameTrade> oldTrades) {
         printSectionTitle("igt");
-        List<IngameTrade> newTrades = romHandler.getIngameTrades();
+        List<InGameTrade> newTrades = romHandler.getInGameTrades();
 
         TextTable table = new TextTable(6);
         table.addRow(
@@ -1157,13 +1153,13 @@ public class RandomizationLogger {
                 getBS("Log.igt.newRequested"), getBS("Log.igt.newGiven"), getBS("Log.igt.newNickname")
         );
         for (int i = 0; i < oldTrades.size(); i++) {
-            IngameTrade oldT = oldTrades.get(i);
-            IngameTrade newT = newTrades.get(i);
+            InGameTrade oldT = oldTrades.get(i);
+            InGameTrade newT = newTrades.get(i);
             table.addRow(
-                    oldT.requestedSpecies == null ? getBS("Log.igt.any") : oldT.requestedSpecies.getFullName(),
-                    oldT.givenSpecies.getFullName(), oldT.nickname,
-                    newT.requestedSpecies == null ? getBS("Log.igt.any") : newT.requestedSpecies.getFullName(),
-                    newT.givenSpecies.getFullName(), newT.nickname
+                    oldT.getRequestedSpecies() == null ? getBS("Log.igt.any") : oldT.getRequestedSpecies().getFullName(),
+                    oldT.getGivenSpecies().getFullName(), oldT.getNickname(),
+                    newT.getRequestedSpecies() == null ? getBS("Log.igt.any") : newT.getRequestedSpecies().getFullName(),
+                    newT.getGivenSpecies().getFullName(), newT.getNickname()
             );
         }
         log.print(table);
@@ -1177,15 +1173,14 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        String[] itemNames = romHandler.getItemNames();
         Map<Integer, Shop> shopsDict = romHandler.getShopItems();
         for (int shopID : shopsDict.keySet()) {
             Shop shop = shopsDict.get(shopID);
-            log.printf("%s", shop.name);
+            log.printf("%s", shop.getName());
             log.println();
-            List<Integer> shopItems = shop.items;
-            for (int shopItemID : shopItems) {
-                log.printf("- %5s", itemNames[shopItemID]);
+            List<Item> shopItems = shop.getItems();
+            for (Item shopItem : shopItems) {
+                log.printf("- %5s", shopItem.getName());
                 log.println();
             }
 
@@ -1201,19 +1196,18 @@ public class RandomizationLogger {
     private void logPickupItems() {
         printSectionTitle("pu");
         List<PickupItem> pickupItems = romHandler.getPickupItems();
-        String[] itemNames = romHandler.getItemNames();
         for (int levelRange = 0; levelRange < 10; levelRange++) {
             int startingLevel = (levelRange * 10) + 1;
             int endingLevel = (levelRange + 1) * 10;
             log.printf(getBS("Log.pu.level"), startingLevel, endingLevel);
             TreeMap<Integer, List<String>> itemListPerProbability = new TreeMap<>();
             for (PickupItem pickupItem : pickupItems) {
-                int probability = pickupItem.probabilities[levelRange];
+                int probability = pickupItem.getProbabilities()[levelRange];
                 if (itemListPerProbability.containsKey(probability)) {
-                    itemListPerProbability.get(probability).add(itemNames[pickupItem.item]);
+                    itemListPerProbability.get(probability).add(pickupItem.getItem().getName());
                 } else if (probability > 0) {
                     List<String> itemList = new ArrayList<>();
-                    itemList.add(itemNames[pickupItem.item]);
+                    itemList.add(pickupItem.getItem().getName());
                     itemListPerProbability.put(probability, itemList);
                 }
             }

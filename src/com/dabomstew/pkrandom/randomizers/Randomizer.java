@@ -1,8 +1,8 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;

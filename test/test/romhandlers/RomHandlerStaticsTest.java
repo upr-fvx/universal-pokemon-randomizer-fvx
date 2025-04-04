@@ -37,15 +37,15 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
         List<StaticEncounter> statics = romHandler.getStaticPokemon();
         for (int i = 0; i < statics.size(); i++) {
             StaticEncounter se = statics.get(i);
-            System.out.println(i + "\t" + se + " " + se.linkedEncounters);
-            for (StaticEncounter linked : se.linkedEncounters) {
-                if (!linked.spec.equals(se.spec)) {
+            System.out.println(i + "\t" + se + " " + se.getLinkedEncounters());
+            for (StaticEncounter linked : se.getLinkedEncounters()) {
+                if (!linked.getSpecies().equals(se.getSpecies())) {
                     bad.put(i, se);
                 }
             }
         }
         for (Map.Entry<Integer, StaticEncounter> entry : bad.entrySet()) {
-            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().linkedEncounters);
+            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().getLinkedEncounters());
         }
         assertTrue(bad.isEmpty());
     }
@@ -74,38 +74,38 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
 
     private String toLongString(StaticEncounter se, boolean isLinkedEncounter) {
         StringBuilder sb = new StringBuilder();
-        sb.append(se.spec.getFullName());
-        sb.append(" forme=").append(se.forme);
-        sb.append(" level=").append(se.level);
-        if (se.maxLevel > 0) {
-            sb.append(" maxLevel=").append(se.maxLevel);
+        sb.append(se.getSpecies().getFullName());
+        sb.append(" forme=").append(se.getForme());
+        sb.append(" level=").append(se.getLevel());
+        if (se.getMaxLevel() > 0) {
+            sb.append(" maxLevel=").append(se.getMaxLevel());
         }
-        sb.append(" isEgg=").append(se.isEgg);
-        sb.append(" resetMoves=").append(se.resetMoves);
-        sb.append(" restrictedPool=").append(se.restrictedPool);
+        sb.append(" isEgg=").append(se.isEgg());
+        sb.append(" resetMoves=").append(se.isResetMoves());
+        sb.append(" restrictedPool=").append(se.isRestrictedPool());
 
         sb.append(" restrictedList=");
-        if (se.restrictedList == null) {
+        if (se.getRestrictedList() == null) {
             sb.append("null");
         } else {
             sb.append("(");
-            sb.append(se.restrictedList.stream()
+            sb.append(se.getRestrictedList().stream()
                     .map(Species::getFullName)
                     .collect(Collectors.joining(",")));
             sb.append(")");
         }
 
         sb.append(" linkedEncounters=");
-        if (se.linkedEncounters == null) {
+        if (se.getLinkedEncounters() == null) {
             sb.append("null");
-        } else if (se.linkedEncounters.isEmpty()) {
+        } else if (se.getLinkedEncounters().isEmpty()) {
             sb.append("[]");
         } else {
             if (isLinkedEncounter) {
                 throw new IllegalArgumentException("linkedEncounter should not have linkedEncounters of its own!");
             }
             sb.append("[\n");
-            for (StaticEncounter linked : se.linkedEncounters) {
+            for (StaticEncounter linked : se.getLinkedEncounters()) {
                 sb.append("\t");
                 sb.append(toLongString(linked, true));
                 sb.append("\n");

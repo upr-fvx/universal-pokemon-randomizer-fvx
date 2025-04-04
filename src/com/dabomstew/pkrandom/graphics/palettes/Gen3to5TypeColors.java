@@ -21,10 +21,10 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.Type;
+
 import java.util.Map;
 import java.util.Random;
-
-import com.dabomstew.pkrandom.gamedata.Type;
 
 /**
  * Contains methods for accessing TypeColor constants for Gen 3-5 games. The constants

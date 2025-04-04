@@ -24,7 +24,9 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the

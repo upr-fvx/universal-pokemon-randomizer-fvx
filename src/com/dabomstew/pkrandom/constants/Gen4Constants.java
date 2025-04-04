@@ -24,12 +24,11 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen4Constants {
 
@@ -746,11 +745,18 @@ public class Gen4Constants {
             MoveIDs.machPunch, MoveIDs.focusPunch, MoveIDs.dizzyPunch, MoveIDs.dynamicPunch, MoveIDs.hammerArm, MoveIDs.megaPunch,
             MoveIDs.cometPunch, MoveIDs.meteorMash, MoveIDs.shadowPunch, MoveIDs.drainPunch, MoveIDs.bulletPunch, MoveIDs.skyUppercut);
 
-    public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(2, 3, 5, 9, 12, 19, 23, 28,
-            34, 39, 41, 43, 46, 47, 49, 50, 62, 69, 79, 80, 82, 84, 85, 87);
+    public static final int tmsStartIndex = ItemIDs.tm01;
 
-    public static final List<Integer> ptRequiredFieldTMs = Arrays.asList(2, 3, 5, 7, 9, 11, 12, 18, 19,
-            23, 28, 34, 37, 39, 41, 43, 46, 47, 49, 50, 62, 69, 79, 80, 82, 84, 85, 87);
+    public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm19, ItemIDs.tm23, ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm39,
+            ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62,
+            ItemIDs.tm69, ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm82, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm87);
+
+    public static final List<Integer> ptRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm07, ItemIDs.tm09, ItemIDs.tm11, ItemIDs.tm12, ItemIDs.tm18, ItemIDs.tm19, ItemIDs.tm23,
+            ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm37, ItemIDs.tm39, ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46,
+            ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62, ItemIDs.tm69, ItemIDs.tm79, ItemIDs.tm80,
+            ItemIDs.tm82, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm87);
 
     public static final List<Integer> dpptFieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
@@ -763,9 +769,6 @@ public class Gen4Constants {
     public static final List<Integer> dpptEarlyRequiredHMMoves = Arrays.asList(MoveIDs.rockSmash, MoveIDs.cut);
 
     public static final List<Integer> hgssEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
-
-    public static ItemList allowedItems, nonBadItems;
-    public static List<Integer> regularShopItems, opShopItems;
 
     public static final String shedinjaSpeciesLocator = "492080000090281C0521";
 
@@ -903,48 +906,59 @@ public class Gen4Constants {
     public static final List<Integer> dpptOverworldHoneyTreeDexIndicies = Arrays.asList(6, 7, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 34, 36, 37, 50);
     public static final List<Integer> partnerTrainerIndices = Arrays.asList(608, 609, 610, 611, 612);
 
-    static {
-        setupAllowedItems();
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    public static final Set<Integer> badItems = setupBadItems();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
+
+    private static Set<Integer> setupBannedItems() {
+        Set<Integer> set = new HashSet<>();
+        // Key items + version exclusives
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.enigmaStone);
+        // Unknown blank items or version exclusives
+        addBetween(set, ItemIDs.griseousOrb, ItemIDs.sweetHeart);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
+        return Collections.unmodifiableSet(set);
     }
 
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(ItemIDs.enigmaStone);
-        // Key items + version exclusives
-        allowedItems.banRange(ItemIDs.explorerKit, 109);
-        // Unknown blank items or version exclusives
-        allowedItems.banRange(ItemIDs.griseousOrb, 23);
-        // HMs
-        allowedItems.banRange(ItemIDs.hm01, 8);
-        // TMs
-        allowedItems.tmRange(ItemIDs.tm01, 92);
-
-        // non-bad items
+    private static Set<Integer> setupBadItems() {
         // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItems = allowedItems.copy();
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew,
+                ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.shoalSalt, ItemIDs.shoalShell,
+                ItemIDs.adamantOrb, ItemIDs.lustrousOrb));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
+        return Collections.unmodifiableSet(set);
+    }
 
-        nonBadItems.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder);
-        nonBadItems.banRange(ItemIDs.shoalSalt,2);
-        nonBadItems.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItems.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItems.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItems.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItems.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItems.banRange(ItemIDs.redScarf, 5); // contest scarves
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        return Collections.unmodifiableSet(set);
+    }
 
-        regularShopItems = new ArrayList<>();
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(ItemIDs.rareCandy);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        set.add(ItemIDs.luckyEgg);
+        return Collections.unmodifiableSet(set);
+    }
 
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.add(ItemIDs.luckyEgg);
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
     }
 
     public static String getDoubleBattleFixPrefix(int romType) {

@@ -29,6 +29,7 @@ import com.dabomstew.pkrandom.ctr.NCCH;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.Effectiveness;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Type;
@@ -42,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -408,6 +410,11 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		case FAIRY:
 			return isGen7 ? 555 : 546;
 		}
+	}
+
+	@Override
+	public Set<Item> getMegaStones() {
+		return itemIdsToSet(Gen6Constants.megaStones);
 	}
 
 	@Override

@@ -74,10 +74,10 @@ public class Species implements Comparable<Species> {
     private int catchRate;
     private int expYield;
 
-    private int guaranteedHeldItem;
-    private int commonHeldItem;
-    private int rareHeldItem;
-    private int darkGrassHeldItem;
+    private Item guaranteedHeldItem;
+    private Item commonHeldItem;
+    private Item rareHeldItem;
+    private Item darkGrassHeldItem;
 
     private int genderRatio;
 
@@ -951,35 +951,35 @@ public class Species implements Comparable<Species> {
         this.expYield = expYield;
     }
 
-    public int getGuaranteedHeldItem() {
+    public Item getGuaranteedHeldItem() {
         return guaranteedHeldItem;
     }
 
-    public void setGuaranteedHeldItem(int guaranteedHeldItem) {
+    public void setGuaranteedHeldItem(Item guaranteedHeldItem) {
         this.guaranteedHeldItem = guaranteedHeldItem;
     }
 
-    public int getCommonHeldItem() {
+    public Item getCommonHeldItem() {
         return commonHeldItem;
     }
 
-    public void setCommonHeldItem(int commonHeldItem) {
+    public void setCommonHeldItem(Item commonHeldItem) {
         this.commonHeldItem = commonHeldItem;
     }
 
-    public int getRareHeldItem() {
+    public Item getRareHeldItem() {
         return rareHeldItem;
     }
 
-    public void setRareHeldItem(int rareHeldItem) {
+    public void setRareHeldItem(Item rareHeldItem) {
         this.rareHeldItem = rareHeldItem;
     }
 
-    public int getDarkGrassHeldItem() {
+    public Item getDarkGrassHeldItem() {
         return darkGrassHeldItem;
     }
 
-    public void setDarkGrassHeldItem(int darkGrassHeldItem) {
+    public void setDarkGrassHeldItem(Item darkGrassHeldItem) {
         this.darkGrassHeldItem = darkGrassHeldItem;
     }
 

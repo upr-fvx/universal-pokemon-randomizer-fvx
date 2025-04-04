@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class StaticPokemonRandomizerTest extends RandomizerTest {
@@ -31,8 +30,8 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Species befPk = before.get(i).spec;
-            Species aftPk = after.get(i).spec;
+            Species befPk = before.get(i).getSpecies();
+            Species aftPk = after.get(i).getSpecies();
             System.out.println("bef=" + befPk.getFullName() + (befPk.isLegendary() ? " (legendary)" : "") +
                     ", aft=" + aftPk.getFullName() + (aftPk.isLegendary() ? " (legendary)" : ""));
             assertEquals(befPk.isLegendary(), aftPk.isLegendary());
@@ -56,8 +55,8 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
             throw new RuntimeException("static pokemon list mismatch");
         }
         for (int i = 0; i < before.size(); i++) {
-            Species befPk = before.get(i).spec;
-            Species aftPk = after.get(i).spec;
+            Species befPk = before.get(i).getSpecies();
+            Species aftPk = after.get(i).getSpecies();
             System.out.println("bef=" + befPk.getFullName() + (isUltraBeast(befPk) ? " (ultra beast)" : "") +
                     ", aft=" + aftPk.getFullName() + (isUltraBeast(aftPk) ? " (ultra beast)" : ""));
             assertEquals(isUltraBeast(befPk), isUltraBeast(aftPk));
@@ -79,13 +78,14 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         if (before.size() != after.size()) {
             throw new RuntimeException("static pokemon list mismatch");
         }
-        String[] itemNames = romHandler.getItemNames();
         for (int i = 0; i < before.size(); i++) {
             StaticEncounter bef = before.get(i);
             StaticEncounter aft = after.get(i);
-            System.out.println("bef=" + bef.spec.getFullName() + (bef.heldItem == 0 ? "" : "w. " + itemNames[bef.heldItem])
+            System.out.println("bef=" + bef.getSpecies().getFullName()
+                    + (bef.getHeldItem() == null ? "" : "w. " + bef.getHeldItem().getName())
                     + (bef.canMegaEvolve() ? " (can mega evolve)" : "") +
-                    ", aft=" + aft.spec.getFullName() + (aft.heldItem == 0 ? "" : "w. " + itemNames[aft.heldItem])
+                    ", aft=" + aft.getSpecies().getFullName()
+                    + (aft.getHeldItem() == null ? "" : "w. " + aft.getHeldItem().getName())
                     + (aft.canMegaEvolve() ? " (can mega evolve)" : ""));
             assertEquals(bef.canMegaEvolve(), aft.canMegaEvolve());
         }

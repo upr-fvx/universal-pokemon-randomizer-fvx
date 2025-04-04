@@ -93,9 +93,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private Species[] pokes;
     private List<Species> speciesList;
     private List<Trainer> trainers;
+    private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
-    private String[] itemNames;
     private String[] mapNames;
     private SubMap[] maps;
     private boolean xAccNerfed;
@@ -604,11 +604,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         pkmn.setFrontImageDimensions(rom[offset + Gen1Constants.bsFrontImageDimensionsOffset] & 0xFF);
         pkmn.setFrontImagePointer(readWord(offset + Gen1Constants.bsFrontImagePointerOffset));
         pkmn.setBackImagePointer(readWord(offset + Gen1Constants.bsBackImagePointerOffset));
-        
-        pkmn.setGuaranteedHeldItem(-1);
-        pkmn.setCommonHeldItem(-1);
-        pkmn.setRareHeldItem(-1);
-        pkmn.setDarkGrassHeldItem(-1);
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {
@@ -795,19 +790,24 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
+    public List<Item> getStarterHeldItems() {
         // do nothing
         return new ArrayList<>();
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         // do nothing
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
-        return Collections.emptyList(); // implemented properly in an experimental branch
+    public Set<Item> getEvolutionItems() {
+        return itemIdsToSet(Gen1Constants.evolutionItems);
+    }
+
+    @Override
+    public Set<Item> getXItems() {
+        return itemIdsToSet(Gen1Constants.xItems);
     }
 
     @Override
@@ -1205,8 +1205,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
-                tp.level = rom[offset] & 0xFF;
-                tp.species = pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]];
+                tp.setLevel(rom[offset] & 0xFF);
+                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
                 tr.pokemon.add(tp);
                 offset += 2;
             }
@@ -1215,8 +1215,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
-                tp.level = dataType;
-                tp.species = pokes[pokeRBYToNumTable[rom[offset] & 0xFF]];
+                tp.setLevel(dataType);
+                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset] & 0xFF]]);
                 tr.pokemon.add(tp);
                 offset++;
             }
@@ -1305,17 +1305,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (trainer.poketype == 0) {
             // Regular trainer
-            int fixedLevel = trainer.pokemon.get(0).level;
+            int fixedLevel = trainer.pokemon.get(0).getLevel();
             baos.write(fixedLevel);
             for (TrainerPokemon tp : trainer.pokemon) {
-                baos.write((byte) pokeNumToRBYTable[tp.species.getNumber()]);
+                baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }
         } else {
             // Special trainer
             baos.write(0xFF);
             for (TrainerPokemon tp : trainer.pokemon) {
-                baos.write(tp.level);
-                baos.write((byte) pokeNumToRBYTable[tp.species.getNumber()]);
+                baos.write(tp.getLevel());
+                baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }
         }
         baos.write(Gen1Constants.trainerDataTerminator);
@@ -1579,8 +1579,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getIntValue("StaticPokemonSupport") > 0) {
             for (StaticPokemon sp : romEntry.getStaticPokemon()) {
                 StaticEncounter se = new StaticEncounter();
-                se.spec = sp.getPokemon(this);
-                se.level = sp.getLevel(rom, 0);
+                se.setSpecies(sp.getPokemon(this));
+                se.setLevel(sp.getLevel(rom, 0));
                 statics.add(se);
             }
         }
@@ -1595,8 +1595,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
             StaticEncounter se = staticPokemon.get(i);
             StaticPokemon sp = romEntry.getStaticPokemon().get(i);
-            sp.setPokemon(this, se.spec);
-            sp.setLevel(rom, se.level, 0);
+            sp.setPokemon(this, se.getSpecies());
+            sp.setLevel(rom, se.getLevel(), 0);
         }
 
         return true;
@@ -1846,17 +1846,91 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasShopSupport() {
+        // Gen 1 *does* have shop support, but since the only editable shops as-is are the special ones:
+        // three shops in the Celadon Department Store, and Gen 1 also doesn't have much in the way
+        // of interesting items beyond what those shops hold in Vanilla...
+        // Yeah, there's no reason to have the feature turned on.
         return false;
     }
 
     @Override
     public Map<Integer, Shop> getShopItems() {
-        return null; // Not implemented
+        List<Shop> shops = readShops();
+        System.out.println(shops);
+
+        Map<Integer, Shop> shopMap = new TreeMap<>(); // important this is a TreeMap
+        for (int i = 0; i < shops.size(); i++) {
+            if (!Gen1Constants.skipShops.contains(i)) {
+                shopMap.put(i, shops.get(i));
+            }
+        }
+        System.out.println(shopMap);
+        return shopMap;
+    }
+
+    private List<Shop> readShops() {
+        List<Shop> shops = new ArrayList<>();
+
+        int offset = romEntry.getIntValue("ShopItemOffset");
+        int shopAmount = romEntry.getIntValue("ShopAmount");
+        int shopNum = 0;
+
+        while (shopNum < shopAmount) {
+            if (rom[offset++] != Gen1Constants.shopItemsScript) {
+                throw new RomIOException("Invalid start of shop data. Should be 0x"
+                        + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
+                        + Integer.toHexString(rom[--offset] & 0xFF) + ".");
+            }
+            int itemCount = rom[offset++] & 0xFF;
+            List<Item> shopItems = new ArrayList<>();
+            for (int i = 0; i < itemCount; i++) {
+                shopItems.add(items.get(rom[offset++] & 0xFF));
+            }
+            if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
+                throw new RomIOException("Shop size mismatch/terminator missing.");
+            }
+
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(Gen1Constants.shopNames.get(shopNum));
+            shop.setMainGame(true);
+            shops.add(shop);
+            shopNum++;
+        }
+        return shops;
     }
 
     @Override
     public void setShopItems(Map<Integer, Shop> shopItems) {
-        // Not implemented
+        for (Map.Entry<Integer, Shop> entry : shopItems.entrySet()) {
+            writeShop(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void writeShop(int shopNum, Shop shop) {
+        System.out.println("writing " + shop);
+        if (shopNum >= romEntry.getIntValue("ShopAmount")) {
+            throw new IndexOutOfBoundsException("shopNum too high");
+        }
+        int offset = romEntry.getIntValue("ShopItemOffset");
+        int currShopNum = 0;
+
+        while (currShopNum < shopNum) {
+            while (rom[offset++] != Gen1Constants.shopItemsTerminator); // intentional empty body while
+            currShopNum++;
+        }
+
+        offset++; // skip the initial script byte
+        if ((rom[offset++] & 0xFF) != shop.getItems().size()) {
+            throw new IllegalArgumentException("Wrong amount of items in shop.");
+        }
+        for (Item item : shop.getItems()) {
+            rom[offset++] = (byte) item.getId();
+        }
+
+        if (rom[offset] != Gen1Constants.shopItemsTerminator) {
+            throw new RomIOException("Shop terminator not found.");
+        }
     }
 
     @Override
@@ -2124,6 +2198,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     "likely ROM entry value \"TMMovesReusableFunctionOffset\" is faulty.");
         }
         writeByte(offset, GBConstants.gbZ80Ret);
+        tmsReusable = true;
     }
 
     private void applyForgettableHMsPatch() {
@@ -2187,14 +2262,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!getAllowedItems().getItemSet().contains(itemID)) {
-                String itemName = itemID >= itemNames.length ? "unknown item, ID=" + itemID : itemNames[itemID];
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + itemName);
+            if (item.isAllowed()) {
+                throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeByte(romEntry.getIntValue("PCPotionOffset"),
-                    (byte) itemID);
+            writeByte(romEntry.getIntValue("PCPotionOffset"), (byte) (item.getId() & 0xFF));
         }
     }
 
@@ -2233,35 +2306,33 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        return Gen1Constants.allowedItems;
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(Gen1Constants.regularShopItems);
     }
 
     @Override
-    public ItemList getNonBadItems() {
-        // Gen 1 has no bad items Kappa
-        return Gen1Constants.allowedItems;
+    public Set<Item> getOPShopItems() {
+        return itemIdsToSet(Gen1Constants.opShopItems);
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        return new ArrayList<>();
+    public void loadItems() {
+        String[] names = readItemNames();
+        items = new ArrayList<>(names.length);
+        items.add(null);
+        for (int i = 1; i < names.length; i++) {
+            items.add(new Item(i, names[i]));
+        }
+
+        Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        for (int i = Gen1Constants.tmsStartIndex; i < Gen1Constants.tmsStartIndex + Gen1Constants.tmCount; i++) {
+            items.get(i).setTM(true);
+        }
+        // Gen 1 has no bad items Kappa, so we don't set any as such
     }
 
-    @Override
-    public List<Integer> getRegularShopItems() {
-        return null; // Not implemented
-    }
-
-    @Override
-    public List<Integer> getOPShopItems() {
-        return null; // Not implemented
-    }
-
-    @Override
-    public void loadItemNames() {
-        itemNames = new String[256];
-        itemNames[0] = "glitch";
+    public String[] readItemNames() {
+        String[] itemNames = new String[256];
         // trying to emulate pretty much what the game does here
         // normal items
         int origOffset = romEntry.getIntValue("ItemNamesOffset");
@@ -2288,11 +2359,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         for (int index = Gen1Constants.tmsStartIndex; index < 0x100; index++) {
             itemNames[index] = String.format("TM%02d", index - Gen1Constants.tmsStartIndex + 1);
         }
+        return itemNames;
     }
 
     @Override
-    public String[] getItemNames() {
-        return itemNames;
+    public List<Item> getItems() {
+        return items;
     }
 
     private static class SubMap {
@@ -2457,124 +2529,108 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private List<Integer> getItemOffsets() {
+    /**
+     * Gets all offsets for "field items", i.e. the offsets of the item ids, that are either item balls or hidden items.
+     * The hidden items work as described
+     * <a href=https://github.com/pret/pokered/blob/master/data/events/hidden_objects.asm">here</a> and
+     * <a href=https://github.com/pret/pokeyellow/blob/master/data/events/hidden_objects.asm>here</a>.
+     */
+    private List<Integer> getFieldItemOffsets() {
 
         List<Integer> itemOffs = new ArrayList<>();
 
+        // -- Item balls --
         for (SubMap map : maps) {
             if (map != null) {
                 itemOffs.addAll(map.itemOffsets);
             }
         }
 
-        int hiRoutine = romEntry.getIntValue("HiddenItemRoutine");
-        int spclTable = romEntry.getIntValue("SpecialMapPointerTable");
+        // -- Hidden items --
+        int pointerTableOffset = romEntry.getIntValue("HiddenObjectMapPointerTable");
 
-        if (!isYellow()) {
+        if (isYellow()) {
+            while ((rom[pointerTableOffset] & 0xFF) != Gen1Constants.hiddenObjectMapsTerminator) {
+                int hiddenObjectsOffset = readPointer(pointerTableOffset + 1);
+                itemOffs.addAll(readHiddenItems(hiddenObjectsOffset));
 
-            int lOffs = romEntry.getIntValue("SpecialMapList");
-            int idx = 0;
-
-            while ((rom[lOffs] & 0xFF) != 0xFF) {
-
-                int spclOffset = readPointer(spclTable + idx);
-
-                while ((rom[spclOffset] & 0xFF) != 0xFF) {
-                    if (readPointer(spclOffset + 4, rom[spclOffset + 3] & 0xFF) == hiRoutine) {
-                        itemOffs.add(spclOffset + 2);
-                    }
-                    spclOffset += 6;
-                }
-                lOffs++;
-                idx += 2;
+                pointerTableOffset += 3;
             }
+
         } else {
+            // before yellow, the table that has pointers in it has no terminator.
+            // luckily, there is a table of equal length right before it with a terminator,
+            // but that still means we got to iterate through two tables at once.
+            int listOffset = romEntry.getIntValue("HiddenObjectMapList");
+            while ((rom[listOffset] & 0xFF) != Gen1Constants.hiddenObjectMapsTerminator) {
+                int hiddenObjectsOffset = readPointer(pointerTableOffset);
+                itemOffs.addAll(readHiddenItems(hiddenObjectsOffset));
 
-            int lOffs = spclTable;
-
-            while ((rom[lOffs] & 0xFF) != 0xFF) {
-
-                int spclOffset = readPointer(lOffs + 1);
-
-                while ((rom[spclOffset] & 0xFF) != 0xFF) {
-                    if (readPointer(readWord(spclOffset + 4), rom[spclOffset + 3] & 0xFF) == hiRoutine) {
-                        itemOffs.add(spclOffset + 2);
-                    }
-                    spclOffset += 6;
-                }
-                lOffs += 3;
+                listOffset++;
+                pointerTableOffset += 2;
             }
         }
 
         return itemOffs;
     }
 
-    @Override
-    public List<Integer> getRequiredFieldTMs() {
-        return Gen1Constants.requiredFieldTMs;
-    }
+    /**
+     * Returns a list of offsets of item IDs, given the offset of a hidden objects table.
+     */
+    private List<Integer> readHiddenItems(int offset) {
+        int hiRoutine = romEntry.getIntValue("HiddenItemRoutine");
+        List<Integer> itemOffsets = new ArrayList<>();
 
-    @Override
-    public List<Integer> getCurrentFieldTMs() {
-        List<Integer> itemOffsets = getItemOffsets();
-        List<Integer> fieldTMs = new ArrayList<>();
-
-        for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isTM(itemHere)) {
-                fieldTMs.add(itemHere - Gen1Constants.tmsStartIndex + 1); // TM
-                                                                          // offset
+        while ((rom[offset] & 0xFF) != Gen1Constants.hiddenObjectsTerminator) {
+            int routineOffset = readPointer(offset + 4, rom[offset + 3] & 0xFF);
+            if (routineOffset == hiRoutine) {
+                itemOffsets.add(offset + 2);
             }
+            offset += 6;
         }
-        return fieldTMs;
+
+        return itemOffsets;
     }
 
     @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        List<Integer> itemOffsets = getItemOffsets();
-        Iterator<Integer> iterTMs = fieldTMs.iterator();
-
-        for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isTM(itemHere)) {
-                // Replace this with a TM from the list
-                writeByte(offset, (byte) (iterTMs.next() + Gen1Constants.tmsStartIndex - 1));
-            }
-        }
+    public Set<Item> getRequiredFieldTMs() {
+        return itemIdsToSet(Gen1Constants.requiredFieldTMs);
     }
 
     @Override
-    public List<Integer> getRegularFieldItems() {
-        List<Integer> itemOffsets = getItemOffsets();
-        List<Integer> fieldItems = new ArrayList<>();
+    public List<Item> getFieldItems() {
+        List<Integer> itemOffsets = getFieldItemOffsets();
+        List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
-                fieldItems.add(itemHere);
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isAllowed()) {
+                fieldItems.add(item);
             }
         }
         return fieldItems;
     }
 
     @Override
-    public void setRegularFieldItems(List<Integer> items) {
-        List<Integer> itemOffsets = getItemOffsets();
-        Iterator<Integer> iterItems = items.iterator();
+    public void setFieldItems(List<Item> fieldItems) {
+        checkFieldItemsTMsReplaceTMs(fieldItems);
+
+        List<Integer> itemOffsets = getFieldItemOffsets();
+        Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffsets) {
-            int itemHere = rom[offset] & 0xFF;
-            if (Gen1Constants.allowedItems.isAllowed(itemHere) && !(Gen1Constants.allowedItems.isTM(itemHere))) {
+            Item item = items.get(rom[offset] & 0xFF);
+            if (item.isAllowed()) {
                 // Replace it
-                writeByte(offset, (byte) (iterItems.next().intValue()));
+                writeByte(offset, (byte) (iterItems.next().getId()));
             }
         }
 
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        List<IngameTrade> trades = new ArrayList<>();
+    public List<InGameTrade> getInGameTrades() {
+        List<InGameTrade> trades = new ArrayList<>();
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -2589,11 +2645,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = new IngameTrade();
+            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.requestedSpecies = pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]];
-            trade.givenSpecies = pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]];
-            trade.nickname = readString(entryOffset + 3, nicknameLength, false);
+            trade.setRequestedSpecies(pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]]);
+            trade.setGivenSpecies(pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]]);
+            trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             trades.add(trade);
         }
 
@@ -2601,7 +2657,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
 
         // info
         int tableOffset = romEntry.getIntValue("TradeTableOffset");
@@ -2617,13 +2673,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            IngameTrade trade = trades.get(tradeOffset++);
+            InGameTrade trade = trades.get(tradeOffset++);
             int entryOffset = tableOffset + entry * entryLength;
             writeBytes(entryOffset, new byte[]{
-                    (byte) pokeNumToRBYTable[trade.requestedSpecies.getNumber()],
-                    (byte) pokeNumToRBYTable[trade.givenSpecies.getNumber()]});
+                    (byte) pokeNumToRBYTable[trade.getRequestedSpecies().getNumber()],
+                    (byte) pokeNumToRBYTable[trade.getGivenSpecies().getNumber()]});
             if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-                writeFixedLengthString(trade.nickname, entryOffset + 3, nicknameLength);
+                writeFixedLengthString(trade.getNickname(), entryOffset + 3, nicknameLength);
             }
         }
     }

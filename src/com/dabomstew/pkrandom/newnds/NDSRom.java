@@ -1,17 +1,16 @@
 package com.dabomstew.pkrandom.newnds;
 
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.RomFunctions;
+import com.dabomstew.pkrandom.SysConstants;
+import com.dabomstew.pkrandom.exceptions.RomIOException;
+import cuecompressors.BLZCoder;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import com.dabomstew.pkrandom.SysConstants;
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.RomFunctions;
-
-import com.dabomstew.pkrandom.exceptions.RomIOException;
-import cuecompressors.BLZCoder;
 
 /*----------------------------------------------------------------------------*/
 /*--  NDSRom.java - base class for opening/saving ROMs                      --*/

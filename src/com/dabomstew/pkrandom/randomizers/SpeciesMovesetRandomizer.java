@@ -498,7 +498,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
 
         for (Trainer t : trainers) {
             for (TrainerPokemon tpk : t.pokemon) {
-                tpk.resetMoves = true;
+                tpk.setResetMoves(true);
             }
         }
 

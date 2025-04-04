@@ -25,7 +25,10 @@ package com.dabomstew.pkrandom.constants;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.EncounterArea;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gamedata.Type;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -124,8 +127,11 @@ public class Gen2Constants {
     public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorWind, MoveIDs.razorLeaf,
             MoveIDs.crabhammer, MoveIDs.slash, MoveIDs.aeroblast, MoveIDs.crossChop);
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(4, 20, 22, 26, 28, 34, 35, 39,
-            40, 43, 44, 46);
+    public static final int tmsStartIndex = Gen2ItemIDs.tm01;
+
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen2ItemIDs.tm04, Gen2ItemIDs.tm20,
+            Gen2ItemIDs.tm22, Gen2ItemIDs.tm26, Gen2ItemIDs.tm28, Gen2ItemIDs.tm34, Gen2ItemIDs.tm35,
+            Gen2ItemIDs.tm39, Gen2ItemIDs.tm40, Gen2ItemIDs.tm43, Gen2ItemIDs.tm44, Gen2ItemIDs.tm46);
 
     public static final List<Integer> fieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
@@ -300,46 +306,62 @@ public class Gen2Constants {
             Gen2ItemIDs.stardust, Gen2ItemIDs.stardust, Gen2ItemIDs.brickPiece, Gen2ItemIDs.silverLeaf, Gen2ItemIDs.goldLeaf
     ));
 
-    public static ItemList allowedItems;
-    public static ItemList nonBadItems;
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    public static final Set<Integer> badItems = setupBadItems();
+    public static final Set<Integer> tmItems = setupTMItems();
+    // In VietCrystal only, these items crash your game if used, glitch out your inventory if carried
+    public static final List<Integer> vietCrystalBannedItems = Collections.unmodifiableList(Arrays.asList(
+            Gen2ItemIDs.burnHeal, Gen2ItemIDs.calcium, Gen2ItemIDs.elixer, Gen2ItemIDs.twistedSpoon
+    ));
 
-    static {
-        setupAllowedItems();
-    }
-
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(Gen2ItemIDs.hm07); // 250-255 are junk and cancel
-        // Assorted key items
-        allowedItems.banSingles(Gen2ItemIDs.bicycle, Gen2ItemIDs.coinCase, Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod,
-                Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod, Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey,
-                Gen2ItemIDs.pass, Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing);
-        allowedItems.banRange(Gen2ItemIDs.redScale, 6);
-        allowedItems.banRange(Gen2ItemIDs.cardKey, 4);
+    private static Set<Integer> setupBannedItems() {
+        // Assorted key items &
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen2ItemIDs.bicycle, Gen2ItemIDs.coinCase,
+                Gen2ItemIDs.itemfinder, Gen2ItemIDs.oldRod, Gen2ItemIDs.goodRod, Gen2ItemIDs.superRod,
+                Gen2ItemIDs.gsBall, Gen2ItemIDs.blueCard, Gen2ItemIDs.basementKey, Gen2ItemIDs.pass,
+                Gen2ItemIDs.squirtBottle, Gen2ItemIDs.rainbowWing));
+        addBetween(set, Gen2ItemIDs.redScale, Gen2ItemIDs.silverWing);
+        addBetween(set, Gen2ItemIDs.cardKey, Gen2ItemIDs.lostItem);
         // HMs
-        allowedItems.banRange(Gen2ItemIDs.hm01, 7);
+        addBetween(set, Gen2ItemIDs.hm01, Gen2ItemIDs.hm07);
         // Unused items (Teru-Samas and dummy TMs)
-        allowedItems.banSingles(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
+        set.addAll(Arrays.asList(Gen2ItemIDs.terusama6, Gen2ItemIDs.terusama25, Gen2ItemIDs.terusama45,
                 Gen2ItemIDs.terusama50, Gen2ItemIDs.terusama56, Gen2ItemIDs.terusama90, Gen2ItemIDs.terusama100,
                 Gen2ItemIDs.terusama120, Gen2ItemIDs.terusama135, Gen2ItemIDs.terusama136, Gen2ItemIDs.terusama137,
                 Gen2ItemIDs.terusama141, Gen2ItemIDs.terusama142, Gen2ItemIDs.terusama145, Gen2ItemIDs.terusama147,
                 Gen2ItemIDs.terusama148, Gen2ItemIDs.terusama149, Gen2ItemIDs.terusama153, Gen2ItemIDs.terusama154,
                 Gen2ItemIDs.terusama155, Gen2ItemIDs.terusama162, Gen2ItemIDs.terusama171, Gen2ItemIDs.terusama176,
-                Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused);
-        // Real TMs
-        allowedItems.tmRange(tmBlockOneIndex, tmBlockOneSize);
-        allowedItems.tmRange(tmBlockTwoIndex, tmBlockTwoSize);
-        allowedItems.tmRange(tmBlockThreeIndex, tmBlockThreeSize);
+                Gen2ItemIDs.terusama179, Gen2ItemIDs.terusama190, Gen2ItemIDs.tm04Unused, Gen2ItemIDs.tm28Unused));
+        // 250-255 are junk and cancel
+        addBetween(set, Gen2ItemIDs.hm08, Gen2ItemIDs.cancel);
+        return Collections.unmodifiableSet(set);
+    }
 
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItems = allowedItems.copy();
-        nonBadItems.banSingles(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
+    private static Set<Integer> setupBadItems() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen2ItemIDs.luckyPunch, Gen2ItemIDs.metalPowder, Gen2ItemIDs.silverLeaf,
                 Gen2ItemIDs.goldLeaf, Gen2ItemIDs.redApricorn, Gen2ItemIDs.bluApricorn, Gen2ItemIDs.whtApricorn,
-                Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.stick, Gen2ItemIDs.thickClub,
-                Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall, Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece);
-        nonBadItems.banRange(Gen2ItemIDs.ylwApricorn, 2);
-        nonBadItems.banRange(Gen2ItemIDs.normalBox, 2);
-        nonBadItems.banRange(Gen2ItemIDs.surfMail, 9);
+                Gen2ItemIDs.blkApricorn, Gen2ItemIDs.pnkApricorn, Gen2ItemIDs.ylwApricorn, Gen2ItemIDs.grnApricorn,
+                Gen2ItemIDs.stick, Gen2ItemIDs.thickClub, Gen2ItemIDs.flowerMail, Gen2ItemIDs.lightBall,
+                Gen2ItemIDs.berry, Gen2ItemIDs.brickPiece, Gen2ItemIDs.normalBox, Gen2ItemIDs.gorgeousBox));
+        addBetween(set, Gen2ItemIDs.surfMail, Gen2ItemIDs.mirageMail);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupTMItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, Gen2ItemIDs.tm01, Gen2ItemIDs.tm04);
+        addBetween(set, Gen2ItemIDs.tm05, Gen2ItemIDs.tm28);
+        addBetween(set, Gen2ItemIDs.tm29, Gen2ItemIDs.tm50);
+        return set;
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
     }
 
     public static final String friendshipValueForEvoLocator = "FEDCDA";

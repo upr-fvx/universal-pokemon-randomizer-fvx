@@ -26,27 +26,19 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
+import com.dabomstew.pkrandom.romhandlers.*;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
-
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen5RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 public class Settings {
 

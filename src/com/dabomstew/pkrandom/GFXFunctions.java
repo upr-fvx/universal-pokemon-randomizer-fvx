@@ -30,7 +30,7 @@ package com.dabomstew.pkrandom;
 
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;

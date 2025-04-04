@@ -7,12 +7,11 @@ import com.dabomstew.pkrandom.gamedata.TypeTable;
 import com.dabomstew.pkrandom.randomizers.TypeEffectivenessRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import test.romhandlers.RomHandlerTest;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TypeEffectivenessRandomizerTest extends RandomizerTest {

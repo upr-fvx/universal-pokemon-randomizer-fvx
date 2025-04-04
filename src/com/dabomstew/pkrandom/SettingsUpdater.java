@@ -28,7 +28,6 @@ package com.dabomstew.pkrandom;
 /*----------------------------------------------------------------------------*/
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.CRC32;
 

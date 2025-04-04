@@ -24,12 +24,10 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import com.dabomstew.pkrandom.gamedata.*;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Gen1Constants {
 
@@ -94,8 +92,12 @@ public class Gen1Constants {
 
     public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(3, 4, 8, 10, 12, 14, 16, 19, 20,
-            22, 25, 26, 30, 40, 43, 44, 45, 47);
+    public static final int hiddenObjectMapsTerminator = 0xFF, hiddenObjectsTerminator = 0xFF;
+
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen1ItemIDs.tm03, Gen1ItemIDs.tm04,
+            Gen1ItemIDs.tm08, Gen1ItemIDs.tm10, Gen1ItemIDs.tm12, Gen1ItemIDs.tm14, Gen1ItemIDs.tm16, Gen1ItemIDs.tm19,
+            Gen1ItemIDs.tm20, Gen1ItemIDs.tm22, Gen1ItemIDs.tm25, Gen1ItemIDs.tm26, Gen1ItemIDs.tm30, Gen1ItemIDs.tm40,
+            Gen1ItemIDs.tm43, Gen1ItemIDs.tm44, Gen1ItemIDs.tm45, Gen1ItemIDs.tm47);
 
     public static final int towerMapsStartIndex = 0x90, towerMapsEndIndex = 0x94;
 
@@ -169,25 +171,80 @@ public class Gen1Constants {
         }
     }
 
-    public static final ItemList allowedItems = setupAllowedItems();
+    public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
 
-    private static ItemList setupAllowedItems() {
-        ItemList allowedItems = new ItemList(Gen1ItemIDs.tm50); // 251-255 are junk TMs
+    public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
+            "Viridian Poké Mart",
+            "Pewter Poké Mart",
+            "Cerulean Poké Mart",
+            "Unused Bike Shop",
+            "Vermilion Poké Mart",
+            "Lavender Poké Mart",
+            "Celadon Department Store 2F Left",
+            "Celadon Department Store 2F Right",
+            "Celadon Department Store 4F",
+            "Celadon Department Store 5F Left",
+            "Celadon Department Store 5F Right",
+            "Fuchsia Poké Mart",
+            "Unused Poké Mart",
+            "Cinnabar Poké Mart",
+            "Saffron Poké Mart",
+            "Indigo Plateau Lobby"
+    ));
+
+    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
+    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16)
+    );
+
+    public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
+    ));
+
+    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
+            Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
+    ));
+    
+    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall, 
+            Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
+            Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
+            Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
+            Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
+    ));
+    
+    public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
+    ));
+
+    public static final Set<Integer> bannedItems = setupBannedItems();
+
+    private static Set<Integer> setupBannedItems() {
         // Assorted key items & junk
-        // 23/01/2014: ban fake PP Up
-        allowedItems.banSingles(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle, Gen1ItemIDs.questionMark7,
-                Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber, Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch,
-                Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket, Gen1ItemIDs.goldTeeth);
-        allowedItems.banRange(Gen1ItemIDs.boulderBadge, 8);
-        allowedItems.banRange(Gen1ItemIDs.domeFossil, 5);
-        allowedItems.banRange(Gen1ItemIDs.coinCase, 10);
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle,
+                Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
+                Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
+                Gen1ItemIDs.goldTeeth));
+        addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
+        addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
+        addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
         // Unused
-        allowedItems.banRange(Gen1ItemIDs.unused84, 112);
+        addBetween(set, Gen1ItemIDs.unused84, Gen1ItemIDs.unused195);
         // HMs
-        allowedItems.banRange(hmsStartIndex, hmCount);
-        // Real TMs
-        allowedItems.tmRange(tmsStartIndex, tmCount);
-        return allowedItems;
+        addBetween(set, Gen1ItemIDs.hm01, Gen1ItemIDs.hm05);
+        // Junk at end
+        addBetween(set, Gen1ItemIDs.tm51, Gen1ItemIDs.tm55); // 251-255 are junk TMs
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
     }
 
     public static void tagTrainersUniversal(List<Trainer> trs) {

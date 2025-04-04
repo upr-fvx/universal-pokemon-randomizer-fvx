@@ -24,22 +24,47 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Shop {
-    public List<Integer> items;
-    public String name;
-    public boolean isMainGame;
+    private List<Item> items;
+    private String name;
+    private boolean isMainGame;
 
     public Shop() {
         this.isMainGame = false;
     }
 
     public Shop(Shop otherShop) {
-        this.items = otherShop.items;
+        this.items = new ArrayList<>(otherShop.items);
         this.name = otherShop.name;
         this.isMainGame = otherShop.isMainGame;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isMainGame() {
+        return isMainGame;
+    }
+
+    public void setMainGame(boolean mainGame) {
+        isMainGame = mainGame;
     }
 
     @Override

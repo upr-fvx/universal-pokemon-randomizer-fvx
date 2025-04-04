@@ -1,8 +1,6 @@
 package com.dabomstew.pkrandom.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  IngameTrade.java - stores Pokemon trades with in-game NPCs.           --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -27,42 +25,101 @@ package com.dabomstew.pkrandom.gamedata;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class IngameTrade {
-
-    public int id;
+/**
+ * Represents a Pokemon trade with an in-game NPC.
+ */
+public class InGameTrade {
 
     // requestedSpecies can be null, in which case it represents "any Pokémon"
-    public Species requestedSpecies, givenSpecies;
+    private Species requestedSpecies;
+    private Species givenSpecies;
 
-    public String nickname, otName;
+    private String nickname;
+    private String otName;
 
-    public int otId;
+    private int otId;
 
-    public int[] ivs = new int[0];
+    private int[] ivs = new int[0];
 
-    public int item = 0;
+    private Item heldItem;
+
+    public Species getRequestedSpecies() {
+        return requestedSpecies;
+    }
+
+    public void setRequestedSpecies(Species requestedSpecies) {
+        this.requestedSpecies = requestedSpecies;
+    }
+
+    public Species getGivenSpecies() {
+        return givenSpecies;
+    }
+
+    public void setGivenSpecies(Species givenSpecies) {
+        this.givenSpecies = givenSpecies;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getOtName() {
+        return otName;
+    }
+
+    public void setOtName(String otName) {
+        this.otName = otName;
+    }
+
+    public int getOtId() {
+        return otId;
+    }
+
+    public void setOtId(int otId) {
+        this.otId = otId;
+    }
+
+    public int[] getIVs() {
+        return ivs;
+    }
+
+    public void setIVs(int[] ivs) {
+        this.ivs = ivs;
+    }
+
+    public Item getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
+    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(requestedSpecies, givenSpecies, otId);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof IngameTrade) {
-            IngameTrade other = (IngameTrade) o;
-            return id == other.id && otId == other.otId && item == other.item
+        if (o instanceof InGameTrade) {
+            InGameTrade other = (InGameTrade) o;
+            return otId == other.otId
                     && Objects.equals(requestedSpecies, other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
                     && nickname.equals(other.nickname) && Objects.equals(otName, other.otName)
-                    && Arrays.equals(ivs, other.ivs);
+                    && Arrays.equals(ivs, other.ivs) && Objects.equals(heldItem, other.heldItem);
         }
         return false;
     }
 
     @Override
     public String toString() {
-        return "IngameTrade(id=" + id + ", requested=" + requestedSpecies + ", given=" + givenSpecies +
+        return "IngameTrade(requested=" + requestedSpecies + ", given=" + givenSpecies +
                 ", nickname=" + nickname + ", otName=" + otName + ", otId=" + otId + ", ivs=" + Arrays.toString(ivs) +
-                ", item=" + item + ")";
+                ", heldItem=" + heldItem + ")";
     }
 }

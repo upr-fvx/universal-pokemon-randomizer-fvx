@@ -24,8 +24,8 @@ package com.dabomstew.pkrandom.romhandlers;
 
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
 import com.dabomstew.pkrandom.services.TypeService;
 
@@ -33,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Responsible for direct handling a Rom/game file, and the data therein.
@@ -150,9 +151,9 @@ public interface RomHandler {
 
     boolean supportsStarterHeldItems();
 
-    List<Integer> getStarterHeldItems();
+    List<Item> getStarterHeldItems();
 
-    void setStarterHeldItems(List<Integer> items);
+    void setStarterHeldItems(List<Item> items);
 
     /**
      * If the assigned starters have been chosen according to a new type triangle,
@@ -248,6 +249,16 @@ public interface RomHandler {
 
     SpeciesSet getBannedForWildEncounters();
 
+    /**
+     * Returns whether the game supports wild encounters having guaranteed held items.
+     */
+    boolean hasGuaranteedWildHeldItems();
+
+    /**
+     * Returns whether the game supports wild encounters having (rare) held items in dark grass only.
+     */
+    boolean hasDarkGrassHeldItems();
+
     void enableGuaranteedPokemonCatching();
 
     // ===============
@@ -281,11 +292,15 @@ public interface RomHandler {
 
     boolean canAddHeldItemsToRegularTrainers();
 
-    List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
+    /**
+     * Returns a {@link List} of {@link Item}s that would be sensible/good for a {@link TrainerPokemon} to hold.
+     * The List allows duplication of Items to make them more likely when chosen at random.
+     */
+    List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
 
-    List<Integer> getAllConsumableHeldItems();
+    Set<Item> getAllConsumableHeldItems();
 
-    List<Integer> getAllHeldItems();
+    Set<Item> getAllHeldItems();
 
     boolean hasRivalFinalBattle();
 
@@ -368,6 +383,10 @@ public interface RomHandler {
 
     int getHMCount();
 
+    boolean isTMsReusable();
+
+    boolean canTMsBeHeld();
+
     /**
      * Get TM/HM compatibility data from this rom. The result should contain a
      * boolean array for each Species indexed as such:
@@ -444,39 +463,43 @@ public interface RomHandler {
     // Items
     // =====
 
-    ItemList getAllowedItems();
+    /**
+     * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
+     * The first element is always null, both to offset the other elements and to represent the "nothing" item.
+     */
+    List<Item> getItems();
 
-    ItemList getNonBadItems();
+    Set<Item> getAllowedItems();
 
-    List<Integer> getEvolutionItems();
+    Set<Item> getNonBadItems();
 
-    List<Integer> getXItems();
+    Set<Item> getEvolutionItems();
 
-    List<Integer> getUniqueNoSellItems();
+    Set<Item> getXItems();
 
-    List<Integer> getRegularShopItems();
+    Set<Item> getMegaStones();
 
-    List<Integer> getOPShopItems();
+    Set<Item> getRegularShopItems();
 
-    String[] getItemNames();
+    Set<Item> getOPShopItems();
 
     // ===========
     // Field Items
     // ===========
 
-    // TMs on the field
+    // "Required" seems to mean that you can only get the TM as a field item in vanilla.
+    // Thus, when randomizing field items they must be included, or otherwise become unavailable.
+    Set<Item> getRequiredFieldTMs();
 
-    List<Integer> getRequiredFieldTMs();
+    List<Item> getFieldItems();
 
-    List<Integer> getCurrentFieldTMs();
-
-    void setFieldTMs(List<Integer> fieldTMs);
-
-    // Everything else
-
-    List<Integer> getRegularFieldItems();
-
-    void setRegularFieldItems(List<Integer> items);
+    /**
+     * Sets field items. Due to an old requirement from the Randomizer (unclear where it comes from, might be a design
+     * decision, might be necessary for some Gens to work), TMs must be replaced by TMs, and non-TMs by non-TMs.
+     * This means the TM-ness at each given index, must be the same as in the returned value of {@link #getFieldItems()}.
+     * If not followed, this will throw an {@link IllegalArgumentException}.
+     */
+    void setFieldItems(List<Item> items);
 
     // ============
     // Special Shops
@@ -502,9 +525,9 @@ public interface RomHandler {
     // In-Game Trades
     // ==============
 
-    List<IngameTrade> getIngameTrades();
+    List<InGameTrade> getInGameTrades();
 
-    void setIngameTrades(List<IngameTrade> trades);
+    void setInGameTrades(List<InGameTrade> trades);
 
     boolean hasDVs();
 
@@ -615,7 +638,7 @@ public interface RomHandler {
      */
     boolean setCatchingTutorial(Species opponent, Species player);
 
-    void setPCPotionItem(int itemID);
+    void setPCPotionItem(Item item);
 
     // ==========================
     // Misc forme-related methods

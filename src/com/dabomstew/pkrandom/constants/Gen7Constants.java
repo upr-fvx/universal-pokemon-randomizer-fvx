@@ -27,7 +27,6 @@ import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Gen7Constants {
@@ -364,14 +363,6 @@ public class Gen7Constants {
         return pokemonCountSM;
     }
 
-    public static List<Integer> getRegularShopItems(int romType) {
-        if (romType == Type_SM) {
-            return regularShopItemsSM;
-        } else {
-            return regularShopItemsUSUM;
-        }
-    }
-
     public static final List<Integer> consumableHeldItems = setupAllConsumableItems();
 
     private static List<Integer> setupAllConsumableItems() {
@@ -447,14 +438,6 @@ public class Gen7Constants {
     public static final Map<Integer, List<Integer>> speciesBoostingItems = Gen6Constants.speciesBoostingItems;
     public static final Map<Type, List<Integer>> typeBoostingItems = Gen6Constants.typeBoostingItems;
     public static final Map<Type, Integer> weaknessReducingBerries = Gen6Constants.weaknessReducingBerries;
-
-    public static boolean isZCrystal(int itemIndex) {
-        // From https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)
-        return (itemIndex >= ItemIDs.normaliumZHeld && itemIndex <= ItemIDs.pikaniumZHeld) ||
-                (itemIndex >= ItemIDs.decidiumZHeld && itemIndex <= ItemIDs.pikashuniumZBag) ||
-                (itemIndex >= ItemIDs.solganiumZBag && itemIndex <= ItemIDs.kommoniumZBag);
-
-    }
 
     public static List<String> getShopNames(int romType) {
         List<String> shopNames = new ArrayList<>();
@@ -568,7 +551,6 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
         putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
         putFormSuffixes(map, SpeciesIDs.groudon, "-Primal");
-        putFormSuffixes(map, SpeciesIDs.rayquaza, "-Mega"); // the other megas are put using stones
         putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
         putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
@@ -604,7 +586,7 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.necrozma, "-DuskMane", "-DawnWings", "-Ultra");
         putFormSuffixes(map, SpeciesIDs.magearna, "-OGColors");
 
-        for (Integer speciesID : Gen6Constants.speciesToMegaStoneORAS.keySet()) {
+        for (Integer speciesID : Gen6Constants.speciesWithMegaEvos) {
             if (speciesID == SpeciesIDs.charizard || speciesID == SpeciesIDs.mewtwo) {
                 putFormSuffixes(map, speciesID, "-Mega-X", "-Mega-Y");
             } else {
@@ -949,147 +931,181 @@ public class Gen7Constants {
         return hardcodedTradeTextOffsets;
     }
 
-    public static ItemList allowedItemsSM, allowedItemsUSUM, nonBadItems;
-    public static List<Integer> regularShopItemsSM, regularShopItemsUSUM, opShopItems;
+    private static final Set<Integer> bannedItemsSM = setupBannedItemsSM();
+    private static final Set<Integer> bannedItemsUSUM = setupBannedItemsUSUM();
+    public static final Set<Integer> badItems = setupBadItems();
+    private static final Set<Integer> regularShopItemsSM = setupRegularShopItemsSM();
+    private static final Set<Integer> regularShopItemsUSUM = setupRegularShopItemsUSUM();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
+    public static final Set<Integer> heldZCrystals = setupHeldZCrystals();
 
-    static {
-        setupAllowedItems();
-    }
-
-    private static void setupAllowedItems() {
-        allowedItemsSM = new ItemList(ItemIDs.fairyMemory);
+    private static Set<Integer> setupBannedItemsSM() {
+        Set<Integer> set = new HashSet<>();
         // Key items + version exclusives
-        allowedItemsSM.banRange(ItemIDs.explorerKit, 76);
-        allowedItemsSM.banRange(ItemIDs.dataCard01, 32);
-        allowedItemsSM.banRange(ItemIDs.xtransceiverMale, 18);
-        allowedItemsSM.banSingles(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
-                ItemIDs.lightStone, ItemIDs.darkStone);
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.tidalBell);
+        addBetween(set, ItemIDs.dataCard01, ItemIDs.enigmaStone);
+        addBetween(set, ItemIDs.xtransceiverMale, ItemIDs.revealGlass);
+        set.addAll(Arrays.asList(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
+                ItemIDs.lightStone, ItemIDs.darkStone));
         // Unknown blank items or version exclusives
-        allowedItemsSM.banRange(ItemIDs.tea, 3);
-        allowedItemsSM.banRange(ItemIDs.unused120, 14);
-        // TMs & HMs - tms cant be held in gen7
-        allowedItemsSM.tmRange(ItemIDs.tm01, 92);
-        allowedItemsSM.tmRange(ItemIDs.tm93, 3);
-        allowedItemsSM.banRange(ItemIDs.tm01, 100);
-        allowedItemsSM.banRange(ItemIDs.tm93, 3);
+        addBetween(set, ItemIDs.tea, ItemIDs.autograph);
+        addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         // Battle Launcher exclusives
-        allowedItemsSM.banRange(ItemIDs.direHit2, 24);
-
+        addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         // Key items (Gen 6)
-        allowedItemsSM.banRange(ItemIDs.holoCasterMale,3);
-        allowedItemsSM.banSingles(ItemIDs.pokeFlute, ItemIDs.sprinklotad);
-        allowedItemsSM.banRange(ItemIDs.powerPlantPass,4);
-        allowedItemsSM.banRange(ItemIDs.elevatorKey,4);
-        allowedItemsSM.banRange(ItemIDs.lensCase,3);
-        allowedItemsSM.banRange(ItemIDs.lookerTicket,3);
-        allowedItemsSM.banRange(ItemIDs.megaCharm,2);
-
-        // TMs (Gen 6)
-        allowedItemsSM.tmRange(ItemIDs.tm96,5);
-        allowedItemsSM.banRange(ItemIDs.tm96,5);
-
-        // Key items and an HM
-        allowedItemsSM.banRange(ItemIDs.machBike,34);
-        allowedItemsSM.banRange(ItemIDs.prisonBottle,2);
-        allowedItemsSM.banRange(ItemIDs.meteoriteThirdForm,5);
+        addBetween(set, ItemIDs.holoCasterMale, ItemIDs.rollerSkates);
+        addBetween(set, ItemIDs.powerPlantPass, ItemIDs.commonStone);
+        addBetween(set, ItemIDs.elevatorKey, ItemIDs.adventureGuide);
+        addBetween(set, ItemIDs.lensCase, ItemIDs.travelTrunk);
+        addBetween(set, ItemIDs.lookerTicket, ItemIDs.holoCasterFemale);
+        set.addAll(Arrays.asList(ItemIDs.pokeFlute, ItemIDs.sprinklotad, ItemIDs.megaCharm, ItemIDs.megaGlove));
+        addBetween(set, ItemIDs.machBike, ItemIDs.meteoriteSecondForm);
+        addBetween(set, ItemIDs.prisonBottle, ItemIDs.megaCuff);
+        addBetween(set, ItemIDs.meteoriteThirdForm, ItemIDs.eonFlute);
 
         // Z-Crystals
-        allowedItemsSM.banRange(ItemIDs.normaliumZHeld,19);
-        allowedItemsSM.banRange(ItemIDs.decidiumZHeld,39);
+        addBetween(set, ItemIDs.normaliumZHeld, ItemIDs.pikaniumZHeld);
+        addBetween(set, ItemIDs.decidiumZHeld, ItemIDs.pikashuniumZBag);
 
         // Key Items (Gen 7)
-        allowedItemsSM.banSingles(ItemIDs.zRing, ItemIDs.sparklingStone, ItemIDs.zygardeCube, ItemIDs.ridePager,
-                ItemIDs.sunFlute, ItemIDs.moonFlute, ItemIDs.enigmaticCard);
-        allowedItemsSM.banRange(ItemIDs.forageBag,3);
+        set.addAll(Arrays.asList(ItemIDs.zRing, ItemIDs.sparklingStone, ItemIDs.zygardeCube, ItemIDs.ridePager,
+                ItemIDs.sunFlute, ItemIDs.moonFlute, ItemIDs.enigmaticCard));
+        addBetween(set, ItemIDs.forageBag, ItemIDs.professorsMask);
 
         // Unused
-        allowedItemsSM.banSingles(ItemIDs.unused848, ItemIDs.unused859);
-        allowedItemsSM.banRange(ItemIDs.unused837,4);
-        allowedItemsSM.banRange(ItemIDs.silverRazzBerry,18);
-        allowedItemsSM.banRange(ItemIDs.stretchySpring,19);
-
-        allowedItemsUSUM = allowedItemsSM.copy(ItemIDs.rotoCatch);
-
-        // Z-Crystals
-        allowedItemsUSUM.banRange(ItemIDs.solganiumZBag,12);
-
-        // Key Items
-        allowedItemsUSUM.banRange(ItemIDs.zPowerRing,16);
-
-        // ROTO LOTO
-        allowedItemsUSUM.banRange(ItemIDs.rotoHatch,11);
-
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItems = allowedItemsSM.copy();
-
-        nonBadItems.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir,
-                ItemIDs.festivalTicket);
-        nonBadItems.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItems.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItems.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItems.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItems.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItems.banRange(ItemIDs.redScarf, 5); // contest scarves
-        nonBadItems.banRange(ItemIDs.richMulch,4); // more mulch
-        nonBadItems.banRange(ItemIDs.gengarite, 30); // Mega Stones, part 1
-        nonBadItems.banRange(ItemIDs.swampertite, 13); // Mega Stones, part 2
-        nonBadItems.banRange(ItemIDs.cameruptite, 4); // Mega Stones, part 3
-        nonBadItems.banRange(ItemIDs.fightingMemory,17); // Memories
-        nonBadItems.banRange(ItemIDs.relicCopper,7); // relic items
-        nonBadItems.banSingles(ItemIDs.shoalSalt, ItemIDs.shoalShell); // Shoal items; have no purpose and sell for $10.
-        nonBadItems.banRange(ItemIDs.blueFlute, 5); // Flutes; have no purpose and sell for $10.
-
-        regularShopItemsSM = new ArrayList<>();
-
-        regularShopItemsSM.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItemsSM.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItemsSM.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
-        regularShopItemsSM.add(ItemIDs.honey);
-        regularShopItemsSM.add(ItemIDs.adrenalineOrb);
-
-        regularShopItemsUSUM = new ArrayList<>(regularShopItemsSM);
-        regularShopItemsUSUM.add(ItemIDs.pokeToy);
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(ItemIDs.lavaCookie);
-        opShopItems.add(ItemIDs.berryJuice);
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.add(ItemIDs.oldGateau);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.lansatBerry, ItemIDs.rowapBerry).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.luckyEgg);
-        opShopItems.add(ItemIDs.prettyFeather);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.balmMushroom, ItemIDs.casteliacone).boxed().collect(Collectors.toList()));
+        set.addAll(Arrays.asList(ItemIDs.unused848, ItemIDs.unused859));
+        addBetween(set, ItemIDs.unused837, ItemIDs.unused840);
+        addBetween(set, ItemIDs.silverRazzBerry, ItemIDs.liftKey);
+        addBetween(set, ItemIDs.stretchySpring, ItemIDs.pewterCrunchies);
+        return Collections.unmodifiableSet(set);
     }
 
-    public static ItemList getAllowedItems(int romType) {
+    private static Set<Integer> setupBannedItemsUSUM() {
+        Set<Integer> set = new HashSet<>(bannedItemsSM);
+        // Z-Crystals
+        addBetween(set, ItemIDs.solganiumZBag, ItemIDs.kommoniumZBag);
+        // Key Items
+        addBetween(set, ItemIDs.zPowerRing, ItemIDs.leftPokeBall);
+        // ROTO LOTO
+        addBetween(set, ItemIDs.rotoHatch, ItemIDs.rotoCatch);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupBadItems() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
+                ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
+                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir, ItemIDs.festivalTicket));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
+        addBetween(set, ItemIDs.relicCopper, ItemIDs.relicCrown); // relic items
+        addBetween(set, ItemIDs.richMulch, ItemIDs.amazeMulch); // more mulch
+        addBetween(set, ItemIDs.gengarite, ItemIDs.latiosite); // Mega Stones, part 1
+        addBetween(set, ItemIDs.swampertite, ItemIDs.beedrillite); // Mega Stones, part 2
+        addBetween(set, ItemIDs.cameruptite, ItemIDs.beedrillite); // Mega Stones, part 3
+        addBetween(set, ItemIDs.fightingMemory, ItemIDs.fairyMemory); // Memories
+        set.addAll(Arrays.asList(ItemIDs.shoalSalt, ItemIDs.shoalShell)); // Shoal items; have no purpose and sell for $10.
+        addBetween(set, ItemIDs.blueFlute, ItemIDs.whiteFlute); // Flutes; have no purpose and sell for $10.
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupRegularShopItemsSM() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        set.add(ItemIDs.honey);
+        set.add(ItemIDs.adrenalineOrb);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupRegularShopItemsUSUM() {
+        Set<Integer> set = new HashSet<>(regularShopItemsSM);
+        set.add(ItemIDs.pokeToy);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        // "Money items" etc
+        set.add(ItemIDs.lavaCookie);
+        set.add(ItemIDs.berryJuice);
+        set.add(ItemIDs.rareCandy);
+        set.add(ItemIDs.oldGateau);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
+        set.add(ItemIDs.prettyFeather);
+        addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupHeldZCrystals() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.normaliumZHeld, ItemIDs.pikaniumZHeld);
+        addBetween(set, ItemIDs.decidiumZHeld, ItemIDs.mewniumZHeld);
+        set.add(ItemIDs.pikashuniumZHeld);
+        addBetween(set, ItemIDs.mimikiumZHeld, ItemIDs.ultranecroziumZHeld); // USUM only
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
+    }
+
+    public static Set<Integer> getBannedItems(int romType) {
         if (romType == Type_SM) {
-            return allowedItemsSM;
+            return bannedItemsSM;
         } else {
-            return allowedItemsUSUM;
+            return bannedItemsUSUM;
+        }
+    }
+
+    public static Set<Integer> getRegularShopItems(int romType) {
+        if (romType == Type_SM) {
+            return regularShopItemsSM;
+        } else {
+            return regularShopItemsUSUM;
         }
     }
 
     private static final List<Integer> requiredFieldTMsSM = Arrays.asList(
-            80, 49, 5, 83, 64, 62, 100, 31, 46, 88, 57, 41, 59, 73, 53, 61, 28, 39, 55, 86, 30, 93, 81, 84, 74, 85, 72,
-            3, 3, 13, 36, 91, 79, 24, 97, 50, 99, 35, 2, 26, 6, 6
+            ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05, ItemIDs.tm06, ItemIDs.tm13, ItemIDs.tm24, ItemIDs.tm26,
+            ItemIDs.tm28, ItemIDs.tm30, ItemIDs.tm31, ItemIDs.tm35, ItemIDs.tm36, ItemIDs.tm39, ItemIDs.tm41,
+            ItemIDs.tm46, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm53, ItemIDs.tm55, ItemIDs.tm57, ItemIDs.tm59,
+            ItemIDs.tm61, ItemIDs.tm62, ItemIDs.tm64, ItemIDs.tm72, ItemIDs.tm73, ItemIDs.tm74, ItemIDs.tm79,
+            ItemIDs.tm80, ItemIDs.tm81, ItemIDs.tm83, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm86, ItemIDs.tm88,
+            ItemIDs.tm91, ItemIDs.tm93, ItemIDs.tm97, ItemIDs.tm99, ItemIDs.tm100
     );
 
     private static final List<Integer> requiredFieldTMsUSUM = Arrays.asList(
-            49, 5, 83, 64, 23, 100, 79, 24, 31, 46, 88, 41, 59, 32, 53, 61, 28, 39, 57, 86, 30, 62, 81, 80, 74, 85, 73,
-            72, 3, 3, 84, 13, 36, 91, 55, 97, 50, 93, 93, 99, 35, 2, 26, 6, 6
+            ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05, ItemIDs.tm06, ItemIDs.tm13, ItemIDs.tm23, ItemIDs.tm24,
+            ItemIDs.tm26, ItemIDs.tm28, ItemIDs.tm30, ItemIDs.tm31, ItemIDs.tm32, ItemIDs.tm35, ItemIDs.tm36,
+            ItemIDs.tm39, ItemIDs.tm41, ItemIDs.tm46, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm53, ItemIDs.tm55,
+            ItemIDs.tm57, ItemIDs.tm59, ItemIDs.tm61, ItemIDs.tm62, ItemIDs.tm64, ItemIDs.tm72, ItemIDs.tm73,
+            ItemIDs.tm74, ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm81, ItemIDs.tm83, ItemIDs.tm84, ItemIDs.tm85,
+            ItemIDs.tm86, ItemIDs.tm88, ItemIDs.tm91, ItemIDs.tm93, ItemIDs.tm97, ItemIDs.tm99, ItemIDs.tm100
     );
+
+    public static void main(String[] args) {
+        System.out.println(requiredFieldTMsSM.stream().distinct().sorted().collect(Collectors.toList()));
+        System.out.println(requiredFieldTMsUSUM.stream().distinct().sorted().collect(Collectors.toList()));
+    }
 
     public static List<Integer> getRequiredFieldTMs(int romType) {
         if (romType == Type_SM) {
             return requiredFieldTMsSM.stream().distinct().collect(Collectors.toList());
         } else {
-            return requiredFieldTMsUSUM.stream().distinct().collect(Collectors.toList());
+            return requiredFieldTMsUSUM;
         }
     }
 
@@ -1186,12 +1202,6 @@ public class Gen7Constants {
         allTrainers.get(offset).tag = tag + "-1";
         allTrainers.get(offset + 1).tag = tag + "-2";
 
-    }
-
-    private static void tag(List<Trainer> allTrainers, int number, String tag) {
-        if (allTrainers.size() > (number - 1)) {
-            allTrainers.get(number - 1).tag = tag;
-        }
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {

@@ -28,15 +28,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class StaticEncounter {
-    public Species spec;
-    public int forme = 0;
-    public int level;
-    public int maxLevel = 0;
-    public int heldItem;
-    public boolean isEgg = false;
-    public boolean resetMoves = false;
-    public boolean restrictedPool = false;
-    public List<Species> restrictedList = new ArrayList<>();
+    private Species species;
+    private int forme = 0;
+    private int level;
+    private int maxLevel = 0;
+    private Item heldItem;
+    private boolean isEgg = false;
+    private boolean resetMoves = false;
+    private boolean restrictedPool = false;
+    private List<Species> restrictedList = new ArrayList<>();
 
     // In the games, sometimes what is logically an encounter or set of encounters with one specific Pokemon
     // can actually consist of multiple encounters internally. This can happen because:
@@ -45,14 +45,14 @@ public class StaticEncounter {
     // - Rebattling a Pokemon actually is different encounter entirely (e.g., Xerneas/Yveltal in XY)
     // This list tracks encounters that should logically have the same species and forme, but *may* have
     // differences in other properties like level.
-    public List<StaticEncounter> linkedEncounters;
+    private final List<StaticEncounter> linkedEncounters;
 
     public StaticEncounter() {
         this.linkedEncounters = new ArrayList<>();
     }
 
-    public StaticEncounter(Species spec) {
-        this.spec = spec;
+    public StaticEncounter(Species species) {
+        this.species = species;
         this.linkedEncounters = new ArrayList<>();
     }
 
@@ -62,7 +62,7 @@ public class StaticEncounter {
      * @param original The StaticEncounter to copy.
      */
     public StaticEncounter(StaticEncounter original) {
-        this.spec = original.spec;
+        this.species = original.species;
         this.forme = original.forme;
         this.level = original.level;
         this.maxLevel = original.maxLevel;
@@ -74,7 +74,7 @@ public class StaticEncounter {
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
             StaticEncounter newLinked = new StaticEncounter(); //is there a reason to not use the copy constructor here?
-            newLinked.spec = oldLinked.spec;
+            newLinked.species = oldLinked.species;
             newLinked.forme = oldLinked.forme;
             newLinked.level = oldLinked.level;
             newLinked.maxLevel = oldLinked.maxLevel;
@@ -87,15 +87,90 @@ public class StaticEncounter {
         }
     }
 
+
+    public Species getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Species species) {
+        this.species = species;
+    }
+
+    public int getForme() {
+        return forme;
+    }
+
+    public void setForme(int forme) {
+        this.forme = forme;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
+
+    public Item getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
+    }
+
     public boolean canMegaEvolve() {
-        if (heldItem != 0) {
-            for (MegaEvolution mega: spec.getMegaEvolutionsFrom()) {
-                if (mega.argument == heldItem) {
-                    return true;
-                }
+        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+            if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
+                return true;
             }
         }
         return false;
+    }
+
+    public boolean isEgg() {
+        return isEgg;
+    }
+
+    public void setEgg(boolean egg) {
+        isEgg = egg;
+    }
+
+    public boolean isResetMoves() {
+        return resetMoves;
+    }
+
+    public void setResetMoves(boolean resetMoves) {
+        this.resetMoves = resetMoves;
+    }
+
+    public boolean isRestrictedPool() {
+        return restrictedPool;
+    }
+
+    public void setRestrictedPool(boolean restrictedPool) {
+        this.restrictedPool = restrictedPool;
+    }
+
+    public List<Species> getRestrictedList() {
+        return restrictedList;
+    }
+
+    public void setRestrictedList(List<Species> restrictedList) {
+        this.restrictedList = restrictedList;
+    }
+
+    public List<StaticEncounter> getLinkedEncounters() {
+        return linkedEncounters;
     }
 
     @Override
@@ -105,7 +180,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(spec == null ? null : spec.getFullName());
+        sb.append(species == null ? null : species.getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {
@@ -134,18 +209,19 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(spec, level);
+        return Objects.hash(species, level);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof StaticEncounter) {
             StaticEncounter other = (StaticEncounter) o;
-            return Objects.equals(other.spec, spec) && other.forme == forme && other.level == level
+            return Objects.equals(other.species, species) && other.forme == forme && other.level == level
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);
         }
         return false;
     }
+
 }

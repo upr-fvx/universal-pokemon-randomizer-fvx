@@ -27,7 +27,6 @@ import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Gen6Constants {
@@ -66,8 +65,19 @@ public class Gen6Constants {
     public static final String introInitialCryOffset3XY = "0020E0E30310A0E1E4FDFFEB0000A0E3";
     public static final String introRepeatedCryOffsetXY = "1080BDE800002041000000008D001000";
 
-    public static final Map<Integer,List<Integer>> speciesToMegaStoneXY = setupSpeciesToMegaStone(Type_XY);
-    public static final Map<Integer,List<Integer>> speciesToMegaStoneORAS = setupSpeciesToMegaStone(Type_ORAS);
+    public static final List<Integer> speciesWithMegaEvos = Collections.unmodifiableList(Arrays.asList(
+            SpeciesIDs.venusaur, SpeciesIDs.charizard, SpeciesIDs.blastoise, SpeciesIDs.alakazam, SpeciesIDs.gengar,
+            SpeciesIDs.kangaskhan, SpeciesIDs.pinsir, SpeciesIDs.gyarados, SpeciesIDs.aerodactyl, SpeciesIDs.mewtwo,
+            SpeciesIDs.ampharos, SpeciesIDs.scizor, SpeciesIDs.heracross, SpeciesIDs.houndoom, SpeciesIDs.tyranitar,
+            SpeciesIDs.blaziken, SpeciesIDs.gardevoir, SpeciesIDs.mawile, SpeciesIDs.aggron, SpeciesIDs.medicham,
+            SpeciesIDs.manectric, SpeciesIDs.banette, SpeciesIDs.absol, SpeciesIDs.latias, SpeciesIDs.latios,
+            SpeciesIDs.garchomp, SpeciesIDs.lucario, SpeciesIDs.abomasnow,
+            // ORAS onlies:
+            SpeciesIDs.beedrill, SpeciesIDs.pidgeot, SpeciesIDs.slowbro, SpeciesIDs.steelix, SpeciesIDs.sceptile,
+            SpeciesIDs.swampert, SpeciesIDs.sableye, SpeciesIDs.sharpedo, SpeciesIDs.camerupt, SpeciesIDs.altaria,
+            SpeciesIDs.glalie, SpeciesIDs.salamence, SpeciesIDs.metagross, SpeciesIDs.rayquaza, SpeciesIDs.lopunny,
+            SpeciesIDs.gallade, SpeciesIDs.audino, SpeciesIDs.diancie
+    ));
 
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
     private static final Map<Integer,Map<Integer,String>> formeSuffixesByBaseForme = setupFormeSuffixesByBaseForme();
@@ -314,7 +324,6 @@ public class Gen6Constants {
             "Lilycove Dept. Store 4F Left (TMs)",
             "Lilycove Dept. Store 4F Right (TMs)");
 
-
     public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone, ItemIDs.fireStone,
             ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone, ItemIDs.shinyStone, ItemIDs.duskStone, ItemIDs.dawnStone,
             ItemIDs.ovalStone, ItemIDs.kingsRock, ItemIDs.deepSeaTooth, ItemIDs.deepSeaScale, ItemIDs.metalCoat, ItemIDs.dragonScale,
@@ -322,11 +331,18 @@ public class Gen6Constants {
             ItemIDs.razorClaw, ItemIDs.razorFang, ItemIDs.prismScale, ItemIDs.whippedDream, ItemIDs.sachet);
 
     private static final List<Integer> requiredFieldTMsXY = Arrays.asList(
-            1, 9, 40, 19, 65, 73, 69, 74, 81, 57, 61, 97, 95, 71, 79, 30, 31, 36, 53, 29, 22, 3, 2, 80, 26);
+            ItemIDs.tm01, ItemIDs.tm09, ItemIDs.tm40, ItemIDs.tm19, ItemIDs.tm65, ItemIDs.tm73, ItemIDs.tm69,
+            ItemIDs.tm74, ItemIDs.tm81, ItemIDs.tm57, ItemIDs.tm61, ItemIDs.tm97, ItemIDs.tm95, ItemIDs.tm71,
+            ItemIDs.tm79, ItemIDs.tm30, ItemIDs.tm31, ItemIDs.tm36, ItemIDs.tm53, ItemIDs.tm29, ItemIDs.tm22,
+            ItemIDs.tm03, ItemIDs.tm02, ItemIDs.tm80, ItemIDs.tm26);
 
     private static final List<Integer> requiredFieldTMsORAS = Arrays.asList(
-            37, 32, 62, 11, 86, 29, 59, 43, 53, 69, 6, 2, 13, 18, 22, 61, 30, 97, 7, 90, 26, 55, 34, 35, 64, 65, 66,
-            74, 79, 80, 81, 84, 89, 91, 93, 95);
+            ItemIDs.tm37, ItemIDs.tm32, ItemIDs.tm62, ItemIDs.tm11, ItemIDs.tm86, ItemIDs.tm29, ItemIDs.tm59,
+            ItemIDs.tm43, ItemIDs.tm53, ItemIDs.tm69, ItemIDs.tm06, ItemIDs.tm02, ItemIDs.tm13, ItemIDs.tm18,
+            ItemIDs.tm22, ItemIDs.tm61, ItemIDs.tm30, ItemIDs.tm97, ItemIDs.tm07, ItemIDs.tm90, ItemIDs.tm26,
+            ItemIDs.tm55, ItemIDs.tm34, ItemIDs.tm35, ItemIDs.tm64, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm74,
+            ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm81, ItemIDs.tm84, ItemIDs.tm89, ItemIDs.tm91, ItemIDs.tm93,
+            ItemIDs.tm95);
 
     public static final List<Integer> fieldMovesXY = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
@@ -595,13 +611,6 @@ public class Gen6Constants {
         return shopItemsLocatorXY;
     }
 
-    public static boolean isMegaStone(int itemIndex) {
-        // These values come from https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)
-        return (itemIndex >= ItemIDs.gengarite && itemIndex <= ItemIDs.latiosite) ||
-                (itemIndex >= ItemIDs.swampertite && itemIndex <= ItemIDs.diancite) ||
-                (itemIndex >= ItemIDs.cameruptite && itemIndex <= ItemIDs.beedrillite);
-    }
-
     private static Type[] constructTypeTable() {
         Type[] table = new Type[256];
         table[0x00] = Type.NORMAL;
@@ -730,7 +739,6 @@ public class Gen6Constants {
         putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
         putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
         putFormSuffixes(map, SpeciesIDs.groudon, "-Primal");
-        putFormSuffixes(map, SpeciesIDs.rayquaza, "-Mega"); // the other megas are put using stones
         putFormSuffixes(map, SpeciesIDs.deoxys, "-Attack", "-Defense", "-Speed");
 
         putFormSuffixes(map, SpeciesIDs.wormadam, "-Sandy", "-Trash");
@@ -754,7 +762,7 @@ public class Gen6Constants {
         putFormSuffixes(map, SpeciesIDs.floette, "", "", "", "", "-Eternal"); // first 4 are just colors
         putFormSuffixes(map, SpeciesIDs.hoopa, "-Unbound");
 
-        for (Integer speciesID : Gen6Constants.speciesToMegaStoneORAS.keySet()) {
+        for (Integer speciesID : Gen6Constants.speciesWithMegaEvos) {
             if (speciesID == SpeciesIDs.charizard || speciesID == SpeciesIDs.mewtwo) {
                 putFormSuffixes(map, speciesID, "-Mega-X", "-Mega-Y");
             } else {
@@ -779,182 +787,124 @@ public class Gen6Constants {
         return m;
     }
 
-    public static ItemList allowedItemsXY, allowedItemsORAS, nonBadItemsXY, nonBadItemsORAS;
-    public static List<Integer> regularShopItems, opShopItems;
+    private static final Set<Integer> bannedItemsXY = setupBannedItemsXY();
+    private static final Set<Integer> bannedItemsORAS = setupBannedItemsORAS();
+    private static final Set<Integer> badItemsORAS = setupBadItemsORAS();
+    private static final Set<Integer> badItemsXY = setupBadItemsXY();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems =  setupOPShopItems();
+    public static final Set<Integer> megaStones = setupMegaStones();
 
-    static {
-        setupAllowedItems();
-    }
-
-    private static void setupAllowedItems() {
-        allowedItemsXY = new ItemList(ItemIDs.megaGlove);
+    private static Set<Integer> setupBannedItemsXY() {
+        Set<Integer> set = new HashSet<>();
         // Key items + version exclusives
-        allowedItemsXY.banRange(ItemIDs.explorerKit, 76);
-        allowedItemsXY.banRange(ItemIDs.dataCard01, 32);
-        allowedItemsXY.banRange(ItemIDs.xtransceiverMale, 18);
-        allowedItemsXY.banSingles(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
-                ItemIDs.lightStone, ItemIDs.darkStone);
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.tidalBell);
+        addBetween(set, ItemIDs.dataCard01, ItemIDs.enigmaStone);
+        addBetween(set, ItemIDs.xtransceiverMale, ItemIDs.revealGlass);
+        set.addAll(Arrays.asList(ItemIDs.expShare, ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
+                ItemIDs.lightStone, ItemIDs.darkStone));
         // Unknown blank items or version exclusives
-        allowedItemsXY.banRange(ItemIDs.tea, 3);
-        allowedItemsXY.banRange(ItemIDs.unused120, 14);
-        // TMs & HMs - tms cant be held in gen6
-        allowedItemsXY.tmRange(ItemIDs.tm01, 92);
-        allowedItemsXY.tmRange(ItemIDs.tm93, 3);
-        allowedItemsXY.banRange(ItemIDs.tm01, 100);
-        allowedItemsXY.banRange(ItemIDs.tm93, 3);
+        addBetween(set, ItemIDs.tea, ItemIDs.autograph);
+        addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         // Battle Launcher exclusives
-        allowedItemsXY.banRange(ItemIDs.direHit2, 24);
-
+        addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
         // Key items (Gen 6)
-        allowedItemsXY.banRange(ItemIDs.holoCasterMale,3);
-        allowedItemsXY.banSingles(ItemIDs.pokeFlute, ItemIDs.sprinklotad);
-        allowedItemsXY.banRange(ItemIDs.powerPlantPass,4);
-        allowedItemsXY.banRange(ItemIDs.elevatorKey,4);
-        allowedItemsXY.banRange(ItemIDs.lensCase,3);
-        allowedItemsXY.banRange(ItemIDs.lookerTicket,3);
-        allowedItemsXY.banRange(ItemIDs.megaCharm,2);
+        addBetween(set, ItemIDs.holoCasterMale, ItemIDs.rollerSkates);
+        addBetween(set, ItemIDs.powerPlantPass, ItemIDs.commonStone);
+        addBetween(set, ItemIDs.elevatorKey, ItemIDs.adventureGuide);
+        addBetween(set, ItemIDs.lensCase, ItemIDs.travelTrunk);
+        addBetween(set, ItemIDs.lookerTicket, ItemIDs.holoCasterFemale);
+        set.addAll(Arrays.asList(ItemIDs.pokeFlute, ItemIDs.sprinklotad, ItemIDs.megaCharm, ItemIDs.megaGlove));
+        return Collections.unmodifiableSet(set);
+    }
 
-        // TMs (Gen 6)
-        allowedItemsXY.tmRange(ItemIDs.tm96,5);
-        allowedItemsXY.banRange(ItemIDs.tm96,5);
-
-        allowedItemsORAS = allowedItemsXY.copy(ItemIDs.eonFlute);
+    private static Set<Integer> setupBannedItemsORAS() {
+        Set<Integer> set = new HashSet<>(bannedItemsXY);
         // Key items and an HM
-        allowedItemsORAS.banRange(ItemIDs.machBike,34);
-        allowedItemsORAS.banRange(ItemIDs.prisonBottle,2);
-        allowedItemsORAS.banRange(ItemIDs.meteoriteThirdForm,5);
+        addBetween(set, ItemIDs.machBike, ItemIDs.meteoriteSecondForm);
+        addBetween(set, ItemIDs.prisonBottle, ItemIDs.megaCuff);
+        addBetween(set, ItemIDs.meteoriteThirdForm, ItemIDs.eonFlute);
+        return Collections.unmodifiableSet(set);
+    }
 
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItemsXY = allowedItemsXY.copy();
+    private static Set<Integer> setupBadItemsORAS() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
+                ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
+                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
+        addBetween(set, ItemIDs.relicCopper, ItemIDs.relicCrown); // relic items
+        addBetween(set, ItemIDs.richMulch, ItemIDs.amazeMulch); // more mulch
+        return Collections.unmodifiableSet(set);
+    }
 
-        nonBadItemsXY.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir);
-        nonBadItemsXY.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItemsXY.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItemsXY.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItemsXY.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsXY.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsXY.banRange(ItemIDs.redScarf, 5); // contest scarves
-        nonBadItemsXY.banRange(ItemIDs.relicCopper,7); // relic items
-        nonBadItemsXY.banRange(ItemIDs.richMulch,4); // more mulch
-        nonBadItemsXY.banRange(ItemIDs.shoalSalt, 6); // Shoal items and Shards; they serve no purpose in XY
+    private static Set<Integer> setupBadItemsXY() {
+        Set<Integer> set = new HashSet<>(badItemsORAS);
+        addBetween(set,ItemIDs.shoalSalt, ItemIDs.greenShard); // Shoal items and Shards; they serve no purpose in XY
+        return Collections.unmodifiableSet(set);
+    }
 
-        nonBadItemsORAS = allowedItemsORAS.copy();
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        return Collections.unmodifiableSet(set);
+    }
 
-        nonBadItemsORAS.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir);
-        nonBadItemsORAS.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItemsORAS.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItemsORAS.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItemsORAS.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsORAS.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsORAS.banRange(ItemIDs.redScarf, 5); // contest scarves
-        nonBadItemsORAS.banRange(ItemIDs.relicCopper,7); // relic items
-        nonBadItemsORAS.banRange(ItemIDs.richMulch,4); // more mulch
-
-        regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
         // "Money items" etc
-        opShopItems.add(ItemIDs.lavaCookie);
-        opShopItems.add(ItemIDs.berryJuice);
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.add(ItemIDs.oldGateau);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.blueFlute, ItemIDs.shoalShell).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.lansatBerry, ItemIDs.rowapBerry).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.luckyEgg);
-        opShopItems.add(ItemIDs.prettyFeather);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.balmMushroom, ItemIDs.casteliacone).boxed().collect(Collectors.toList()));
+        set.add(ItemIDs.lavaCookie);
+        set.add(ItemIDs.berryJuice);
+        set.add(ItemIDs.rareCandy);
+        set.add(ItemIDs.oldGateau);
+        addBetween(set, ItemIDs.blueFlute, ItemIDs.shoalShell);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
+        set.add(ItemIDs.luckyEgg);
+        set.add(ItemIDs.prettyFeather);
+        addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return Collections.unmodifiableSet(set);
     }
 
-    public static ItemList getAllowedItems(int romType) {
-        if (romType == Type_XY) {
-            return allowedItemsXY;
+    private static Set<Integer> setupMegaStones() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.gengarite, ItemIDs.latiosite);
+        addBetween(set, ItemIDs.swampertite, ItemIDs.diancite);
+        addBetween(set, ItemIDs.cameruptite, ItemIDs.beedrillite);
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
+    }
+
+    public static Set<Integer> getBannedItems(int romType) {
+        if (romType == Gen6Constants.Type_XY) {
+            return bannedItemsXY;
         } else {
-            return allowedItemsORAS;
+            return bannedItemsORAS;
         }
     }
 
-    public static ItemList getNonBadItems(int romType) {
-        if (romType == Type_XY) {
-            return nonBadItemsXY;
+    public static Set<Integer> getBadItems(int romType) {
+        if (romType == Gen6Constants.Type_XY) {
+            return badItemsXY;
         } else {
-            return nonBadItemsORAS;
+            return badItemsORAS;
         }
-    }
-
-    public static final List<Integer> uniqueNoSellItems = Arrays.asList(ItemIDs.gengarite, ItemIDs.gardevoirite,
-            ItemIDs.ampharosite, ItemIDs.venusaurite, ItemIDs.charizarditeX, ItemIDs.blastoisinite, ItemIDs.mewtwoniteX,
-            ItemIDs.mewtwoniteY, ItemIDs.blazikenite, ItemIDs.medichamite, ItemIDs.houndoominite, ItemIDs.aggronite,
-            ItemIDs.banettite, ItemIDs.tyranitarite, ItemIDs.scizorite, ItemIDs.pinsirite, ItemIDs.aerodactylite,
-            ItemIDs.lucarionite, ItemIDs.abomasite, ItemIDs.kangaskhanite, ItemIDs.gyaradosite, ItemIDs.absolite,
-            ItemIDs.charizarditeY, ItemIDs.alakazite, ItemIDs.heracronite, ItemIDs.mawilite, ItemIDs.manectite, ItemIDs.garchompite,
-            ItemIDs.latiasite, ItemIDs.latiosite, ItemIDs.swampertite, ItemIDs.sceptilite, ItemIDs.sablenite, ItemIDs.altarianite,
-            ItemIDs.galladite, ItemIDs.audinite, ItemIDs.metagrossite, ItemIDs.sharpedonite, ItemIDs.slowbronite,
-            ItemIDs.steelixite, ItemIDs.pidgeotite, ItemIDs.glalitite, ItemIDs.diancite, ItemIDs.cameruptite, ItemIDs.lopunnite,
-            ItemIDs.salamencite, ItemIDs.beedrillite);
-
-    private static Map<Integer,List<Integer>> setupSpeciesToMegaStone(int romType) {
-        Map<Integer,List<Integer>> map = new TreeMap<>();
-
-        map.put(SpeciesIDs.venusaur, Collections.singletonList(ItemIDs.venusaurite));
-        map.put(SpeciesIDs.charizard, Arrays.asList(ItemIDs.charizarditeX, ItemIDs.charizarditeY));
-        map.put(SpeciesIDs.blastoise, Collections.singletonList(ItemIDs.blastoisinite));
-        map.put(SpeciesIDs.alakazam, Collections.singletonList(ItemIDs.alakazite));
-        map.put(SpeciesIDs.gengar, Collections.singletonList(ItemIDs.gengarite));
-        map.put(SpeciesIDs.kangaskhan, Collections.singletonList(ItemIDs.kangaskhanite));
-        map.put(SpeciesIDs.pinsir, Collections.singletonList(ItemIDs.pinsirite));
-        map.put(SpeciesIDs.gyarados, Collections.singletonList(ItemIDs.gyaradosite));
-        map.put(SpeciesIDs.aerodactyl, Collections.singletonList(ItemIDs.aerodactylite));
-        map.put(SpeciesIDs.mewtwo, Arrays.asList(ItemIDs.mewtwoniteX, ItemIDs.mewtwoniteY));
-        map.put(SpeciesIDs.ampharos, Collections.singletonList(ItemIDs.ampharosite));
-        map.put(SpeciesIDs.scizor, Collections.singletonList(ItemIDs.scizorite));
-        map.put(SpeciesIDs.heracross, Collections.singletonList(ItemIDs.heracronite));
-        map.put(SpeciesIDs.houndoom, Collections.singletonList(ItemIDs.houndoominite));
-        map.put(SpeciesIDs.tyranitar, Collections.singletonList(ItemIDs.tyranitarite));
-        map.put(SpeciesIDs.blaziken, Collections.singletonList(ItemIDs.blazikenite));
-        map.put(SpeciesIDs.gardevoir, Collections.singletonList(ItemIDs.gardevoirite));
-        map.put(SpeciesIDs.mawile, Collections.singletonList(ItemIDs.mawilite));
-        map.put(SpeciesIDs.aggron, Collections.singletonList(ItemIDs.aggronite));
-        map.put(SpeciesIDs.medicham, Collections.singletonList(ItemIDs.medichamite));
-        map.put(SpeciesIDs.manectric, Collections.singletonList(ItemIDs.manectite));
-        map.put(SpeciesIDs.banette, Collections.singletonList(ItemIDs.banettite));
-        map.put(SpeciesIDs.absol, Collections.singletonList(ItemIDs.absolite));
-        map.put(SpeciesIDs.latias, Collections.singletonList(ItemIDs.latiasite));
-        map.put(SpeciesIDs.latios, Collections.singletonList(ItemIDs.latiosite));
-        map.put(SpeciesIDs.garchomp, Collections.singletonList(ItemIDs.garchompite));
-        map.put(SpeciesIDs.lucario, Collections.singletonList(ItemIDs.lucarionite));
-        map.put(SpeciesIDs.abomasnow, Collections.singletonList(ItemIDs.abomasite));
-
-        if (romType == Type_ORAS) {
-            map.put(SpeciesIDs.beedrill, Collections.singletonList(ItemIDs.beedrillite));
-            map.put(SpeciesIDs.pidgeot, Collections.singletonList(ItemIDs.pidgeotite));
-            map.put(SpeciesIDs.slowbro, Collections.singletonList(ItemIDs.slowbronite));
-            map.put(SpeciesIDs.steelix, Collections.singletonList(ItemIDs.steelixite));
-            map.put(SpeciesIDs.sceptile, Collections.singletonList(ItemIDs.sceptilite));
-            map.put(SpeciesIDs.swampert, Collections.singletonList(ItemIDs.swampertite));
-            map.put(SpeciesIDs.sableye, Collections.singletonList(ItemIDs.sablenite));
-            map.put(SpeciesIDs.sharpedo, Collections.singletonList(ItemIDs.sharpedonite));
-            map.put(SpeciesIDs.camerupt, Collections.singletonList(ItemIDs.cameruptite));
-            map.put(SpeciesIDs.altaria, Collections.singletonList(ItemIDs.altarianite));
-            map.put(SpeciesIDs.glalie, Collections.singletonList(ItemIDs.glalitite));
-            map.put(SpeciesIDs.salamence, Collections.singletonList(ItemIDs.salamencite));
-            map.put(SpeciesIDs.metagross, Collections.singletonList(ItemIDs.metagrossite));
-            map.put(SpeciesIDs.lopunny, Collections.singletonList(ItemIDs.lopunnite));
-            map.put(SpeciesIDs.gallade, Collections.singletonList(ItemIDs.galladite));
-            map.put(SpeciesIDs.audino, Collections.singletonList(ItemIDs.audinite));
-            map.put(SpeciesIDs.diancie, Collections.singletonList(ItemIDs.diancite));
-        }
-
-        return map;
     }
 
     public static void tagTrainersXY(List<Trainer> trs) {

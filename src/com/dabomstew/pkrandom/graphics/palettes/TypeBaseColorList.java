@@ -21,13 +21,13 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.Type;
 
 /**
  * A list of {@link TypeColor}s based on a Pokémon's types. Which TypeColors are

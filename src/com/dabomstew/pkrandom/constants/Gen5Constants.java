@@ -24,12 +24,11 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import com.dabomstew.pkrandom.gamedata.*;
 
 public class Gen5Constants {
 
@@ -350,13 +349,20 @@ public class Gen5Constants {
             ItemIDs.upgrade, ItemIDs.protector, ItemIDs.electirizer, ItemIDs.magmarizer, ItemIDs.dubiousDisc, ItemIDs.reaperCloth,
             ItemIDs.razorClaw, ItemIDs.razorFang, ItemIDs.prismScale);
 
-    public static final List<Integer> bw1RequiredFieldTMs = Arrays.asList(2, 3, 5, 6, 9, 12, 13, 19,
-            22, 24, 26, 29, 30, 35, 36, 39, 41, 46, 47, 50, 52, 53, 55, 58, 61, 63, 65, 66, 71, 80, 81, 84, 85, 86, 90,
-            91, 92, 93);
+    public static final List<Integer> bw1RequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
+            ItemIDs.tm06, ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm13, ItemIDs.tm19, ItemIDs.tm22, ItemIDs.tm24,
+            ItemIDs.tm26, ItemIDs.tm29, ItemIDs.tm30, ItemIDs.tm35, ItemIDs.tm36, ItemIDs.tm39, ItemIDs.tm41,
+            ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm50, ItemIDs.tm52, ItemIDs.tm53, ItemIDs.tm55, ItemIDs.tm58,
+            ItemIDs.tm61, ItemIDs.tm63, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm71, ItemIDs.tm80, ItemIDs.tm81,
+            ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm86, ItemIDs.tm90, ItemIDs.tm91, ItemIDs.tm92, ItemIDs.tm93);
 
-    public static final List<Integer> bw2RequiredFieldTMs = Arrays.asList(1, 2, 3, 5, 6, 12, 13, 19,
-            22, 26, 28, 29, 30, 36, 39, 41, 46, 47, 50, 52, 53, 56, 58, 61, 63, 65, 66, 67, 69, 71, 80, 81, 84, 85, 86,
-            90, 91, 92, 93);
+    public static final List<Integer> bw2RequiredFieldTMs = Arrays.asList(ItemIDs.tm01, ItemIDs.tm02, ItemIDs.tm03,
+            ItemIDs.tm05, ItemIDs.tm06, ItemIDs.tm12, ItemIDs.tm13, ItemIDs.tm19, ItemIDs.tm22, ItemIDs.tm26,
+            ItemIDs.tm28, ItemIDs.tm29, ItemIDs.tm30, ItemIDs.tm36, ItemIDs.tm39, ItemIDs.tm41, ItemIDs.tm46,
+            ItemIDs.tm47, ItemIDs.tm50, ItemIDs.tm52, ItemIDs.tm53, ItemIDs.tm56, ItemIDs.tm58, ItemIDs.tm61,
+            ItemIDs.tm63, ItemIDs.tm65, ItemIDs.tm66, ItemIDs.tm67, ItemIDs.tm69, ItemIDs.tm71, ItemIDs.tm80,
+            ItemIDs.tm81, ItemIDs.tm84, ItemIDs.tm85, ItemIDs.tm86, ItemIDs.tm90, ItemIDs.tm91, ItemIDs.tm92,
+            ItemIDs.tm93);
 
     public static final List<Integer> bw1EarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
@@ -768,78 +774,90 @@ public class Gen5Constants {
         return m;
     }
 
-    public static ItemList allowedItems, nonBadItemsBW1, nonBadItemsBW2;
-    public static List<Integer> regularShopItems, opShopItems;
-
     public static String blackBoxLegendaryCheckPrefix1 = "79F6BAEF07B0F0BDC046", blackBoxLegendaryCheckPrefix2 = "DEDB0020C04302B0F8BDC046",
         whiteBoxLegendaryCheckPrefix1 = "00F0FEF8002070BD", whiteBoxLegendaryCheckPrefix2 = "64F62EF970BD0000";
 
-    static {
-        setupAllowedItems();
-    }
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    private static final Set<Integer> badItemsBW2 = setupBadItemsBW2();
+    private static final Set<Integer> badItemsBW1 = setupBadItemsBW1();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
 
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(ItemIDs.revealGlass);
-        // Key items + version exclusives
-        allowedItems.banRange(ItemIDs.explorerKit, 76);
-        allowedItems.banRange(ItemIDs.dataCard01, 32);
-        allowedItems.banRange(ItemIDs.xtransceiverMale, 18);
-        allowedItems.banSingles(ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull, ItemIDs.lightStone, ItemIDs.darkStone);
+    private static Set<Integer> setupBannedItems() {
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
+                ItemIDs.lightStone, ItemIDs.darkStone));
+        addBetween(set, ItemIDs.explorerKit, ItemIDs.tidalBell);
+        addBetween(set, ItemIDs.dataCard01, ItemIDs.enigmaStone);
+        addBetween(set, ItemIDs.xtransceiverMale, ItemIDs.revealGlass);
         // Unknown blank items or version exclusives
-        allowedItems.banRange(ItemIDs.tea, 3);
-        allowedItems.banRange(ItemIDs.unused120, 14);
-        // TMs & HMs - tms cant be held in gen5
-        allowedItems.tmRange(ItemIDs.tm01, 92);
-        allowedItems.tmRange(ItemIDs.tm93, 3);
-        allowedItems.banRange(ItemIDs.tm01, 100);
-        allowedItems.banRange(ItemIDs.tm93, 3);
+        addBetween(set, ItemIDs.tea, ItemIDs.autograph);
+        addBetween(set, ItemIDs.unused120, ItemIDs.unused133);
+        // HMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
         // Battle Launcher exclusives
-        allowedItems.banRange(ItemIDs.direHit2, 24);
-
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItemsBW2 = allowedItems.copy();
-
-        nonBadItemsBW2.banSingles(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.soulDew, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.quickPowder, ItemIDs.passOrb);
-        nonBadItemsBW2.banRange(ItemIDs.growthMulch, 4); // mulch
-        nonBadItemsBW2.banRange(ItemIDs.adamantOrb, 2); // orbs
-        nonBadItemsBW2.banRange(ItemIDs.mail1, 12); // mails
-        nonBadItemsBW2.banRange(ItemIDs.figyBerry, 25); // berries without useful battle effects
-        nonBadItemsBW2.banRange(ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsBW2.banRange(ItemIDs.redScarf, 5); // contest scarves
-
-        // Ban the shards in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
-        nonBadItemsBW1 = nonBadItemsBW2.copy();
-        nonBadItemsBW1.banRange(ItemIDs.redShard, 4);
-
-        regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.ultraBall, ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.potion, ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(ItemIDs.superRepel, ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(ItemIDs.lavaCookie);
-        opShopItems.add(ItemIDs.berryJuice);
-        opShopItems.add(ItemIDs.rareCandy);
-        opShopItems.add(ItemIDs.oldGateau);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.blueFlute, ItemIDs.shoalShell).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.tinyMushroom, ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.rareBone);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.lansatBerry, ItemIDs.rowapBerry).boxed().collect(Collectors.toList()));
-        opShopItems.add(ItemIDs.luckyEgg);
-        opShopItems.add(ItemIDs.prettyFeather);
-        opShopItems.addAll(IntStream.rangeClosed(ItemIDs.balmMushroom, ItemIDs.casteliacone).boxed().collect(Collectors.toList()));
+        addBetween(set, ItemIDs.direHit2, ItemIDs.direHit3);
+        return Collections.unmodifiableSet(set);
     }
 
-    public static ItemList getNonBadItems(int romType) {
+    private static Set<Integer> setupBadItemsBW2() {
+        // specific pokemon hold items, berries, apricorns, mail
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
+                ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
+                ItemIDs.passOrb));
+        addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
+        addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
+        addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupBadItemsBW1() {
+        Set<Integer> set = new HashSet<>(badItemsBW2);
+        // The shards are bad in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
+        addBetween(set, ItemIDs.redShard, ItemIDs.greenShard);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
+        addBetween(set, ItemIDs.potion, ItemIDs.revive);
+        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        // "Money items" etc
+        set.add(ItemIDs.lavaCookie);
+        set.add(ItemIDs.berryJuice);
+        set.add(ItemIDs.rareCandy);
+        set.add(ItemIDs.oldGateau);
+        addBetween(set, ItemIDs.blueFlute, ItemIDs.shoalShell);
+        addBetween(set, ItemIDs.tinyMushroom, ItemIDs.nugget);
+        set.add(ItemIDs.rareBone);
+        addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
+        set.add(ItemIDs.luckyEgg);
+        set.add(ItemIDs.prettyFeather);
+        addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
+    }
+
+    public static Set<Integer> getBadItems(int romType) {
         if (romType == Gen5Constants.Type_BW2) {
-            return nonBadItemsBW2;
+            return badItemsBW2;
         } else {
-            return nonBadItemsBW1;
+            return badItemsBW1;
         }
     }
 

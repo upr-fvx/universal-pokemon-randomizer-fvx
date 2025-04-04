@@ -391,11 +391,11 @@ public class StarterRandomizer extends Randomizer {
     public void randomizeStarterHeldItems() {
         boolean banBadItems = settings.isBanBadRandomStarterHeldItems();
 
-        List<Integer> oldHeldItems = romHandler.getStarterHeldItems();
-        List<Integer> newHeldItems = new ArrayList<>();
-        ItemList possibleItems = banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems();
+        List<Item> oldHeldItems = romHandler.getStarterHeldItems();
+        List<Item> newHeldItems = new ArrayList<>();
+        List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         for (int i = 0; i < oldHeldItems.size(); i++) {
-            newHeldItems.add(possibleItems.randomItem(this.random));
+            newHeldItems.add(possibleItems.get(random.nextInt(possibleItems.size())));
         }
         romHandler.setStarterHeldItems(newHeldItems);
         changesMade = true;

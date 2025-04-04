@@ -622,8 +622,6 @@ public class GameRandomizer {
     private void maybeRandomizeFieldItems() {
         switch (settings.getFieldItemsMod()) {
             case SHUFFLE:
-                itemRandomizer.shuffleFieldItems();
-                break;
             case RANDOM:
             case RANDOM_EVEN:
                 itemRandomizer.randomizeFieldItems();

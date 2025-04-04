@@ -2,8 +2,6 @@ package com.dabomstew.pkrandom;
 
 // TODO: location likely temporary
 
-import com.dabomstew.pkrandom.constants.Gen4Constants;
-
 import java.util.*;
 
 /**

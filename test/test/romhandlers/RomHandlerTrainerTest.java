@@ -1,13 +1,17 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gamedata.TrainerPokemon;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -316,7 +320,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             } else {
                 for (TrainerPokemon tp : tr.pokemon) {
                     System.out.println(tp);
-                    assertNotEquals(0, tp.heldItem);
+                    assertNotEquals(null, tp.getHeldItem());
                 }
             }
         }

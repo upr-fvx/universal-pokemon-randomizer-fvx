@@ -21,11 +21,11 @@ package com.dabomstew.pkrandom.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Map;
-import java.util.Random;
-
 import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.randomizers.Gen2PaletteRandomizer;
+
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Contains methods for accessing TypeColor constants for Gen 2 games (G/S/C).

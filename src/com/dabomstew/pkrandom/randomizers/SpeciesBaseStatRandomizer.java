@@ -1,7 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
+import com.dabomstew.pkrandom.gamedata.MegaEvolution;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
 import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
@@ -27,9 +30,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1)
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
                     continue;
-                megaEvo.to.copyShuffledStatsUpEvolution(megaEvo.from);
+                megaEvo.getTo().copyShuffledStatsUpEvolution(megaEvo.getFrom());
             }
         }
         changesMade = true;
@@ -54,10 +57,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
-                    megaEvo.to.assignNewStatsForEvolution(megaEvo.from, random);
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
+                    megaEvo.getTo().assignNewStatsForEvolution(megaEvo.getFrom(), random);
                 } else {
-                    megaEvo.to.copyRandomizedStatsUpEvolution(megaEvo.from);
+                    megaEvo.getTo().copyRandomizedStatsUpEvolution(megaEvo.getFrom());
                 }
             }
         }

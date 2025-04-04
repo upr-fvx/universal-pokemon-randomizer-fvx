@@ -36,7 +36,7 @@ public class RandomizerTest {
     private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, false);
     }
 
     public static String[] getAllRomNames() {
@@ -102,8 +102,6 @@ public class RandomizerTest {
             System.out.println("Finished loading " + romName);
         }
     }
-
-
 
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));

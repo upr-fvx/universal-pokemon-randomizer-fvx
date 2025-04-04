@@ -25,11 +25,13 @@ package com.dabomstew.pkrandom.constants;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gamedata.EncounterArea;
+import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gamedata.Type;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Gen3Constants {
@@ -260,14 +262,21 @@ public class Gen3Constants {
             MoveIDs.screech, MoveIDs.snore, MoveIDs.uproar, MoveIDs.metalSound, MoveIDs.grassWhistle, MoveIDs.hyperVoice,
             MoveIDs.perishSong, MoveIDs.healBell);
 
-    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(1, 2, 6, 7, 11, 18, 22, 23,
-            26, 30, 37, 48);
+    public static final int tmsStartIndex = Gen3ItemIDs.tm01;
 
-    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(2, 6, 7, 11, 18, 22, 23, 30,
-            37, 48);
+    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
+            Gen3ItemIDs.tm06, Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23,
+            Gen3ItemIDs.tm26, Gen3ItemIDs.tm30, Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
 
-    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(1, 2, 7, 8, 9, 11, 12, 14,
-            17, 18, 21, 22, 25, 32, 36, 37, 40, 41, 44, 46, 47, 48, 49, 50);
+    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm02, Gen3ItemIDs.tm06,
+            Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23, Gen3ItemIDs.tm30,
+            Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
+
+    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
+            Gen3ItemIDs.tm07, Gen3ItemIDs.tm08, Gen3ItemIDs.tm09, Gen3ItemIDs.tm11, Gen3ItemIDs.tm12, Gen3ItemIDs.tm14,
+            Gen3ItemIDs.tm17, Gen3ItemIDs.tm18, Gen3ItemIDs.tm21, Gen3ItemIDs.tm22, Gen3ItemIDs.tm25, Gen3ItemIDs.tm32,
+            Gen3ItemIDs.tm36, Gen3ItemIDs.tm37, Gen3ItemIDs.tm40, Gen3ItemIDs.tm41, Gen3ItemIDs.tm44, Gen3ItemIDs.tm46,
+            Gen3ItemIDs.tm47, Gen3ItemIDs.tm48, Gen3ItemIDs.tm49, Gen3ItemIDs.tm50);
 
     public static final List<Integer> rseFieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
@@ -552,8 +561,6 @@ public class Gen3Constants {
         return evolutionTypeTable[index - 1];
     }
 
-    public static ItemList allowedItems, nonBadItemsRSE, nonBadItemsFRLG;
-    public static List<Integer> regularShopItems, opShopItems;
 
     public static String getRunningShoesCheckPrefix(int romType) {
         if (romType == Gen3Constants.RomType_Ruby || romType == Gen3Constants.RomType_Sapp) {
@@ -565,64 +572,77 @@ public class Gen3Constants {
         }
     }
 
-    static {
-        setupAllowedItems();
-    }
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    private static final Set<Integer> badItemsRSE = setupBadItemsRSE();
+    private static final Set<Integer> badItemsFRLG = setupBadItemsFRLG();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
 
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(Gen3ItemIDs.oldSeaMap);
+    private static Set<Integer> setupBannedItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(Gen3ItemIDs.oldSeaMap);
         // Key items (+1 unknown item)
-        allowedItems.banRange(Gen3ItemIDs.machBike, 30);
-        allowedItems.banRange(Gen3ItemIDs.oaksParcel, 28);
+        addBetween(set, Gen3ItemIDs.machBike, Gen3ItemIDs.devonScope);
+        addBetween(set, Gen3ItemIDs.oaksParcel, Gen3ItemIDs.oldSeaMap);
         // Unknown blank items
-        allowedItems.banRange(Gen3ItemIDs.unknown52, 11);
-        allowedItems.banRange(Gen3ItemIDs.unknown87, 6);
-        allowedItems.banRange(Gen3ItemIDs.unknown99, 4);
-        allowedItems.banRange(Gen3ItemIDs.unknown112, 9);
-        allowedItems.banRange(Gen3ItemIDs.unknown176, 3);
-        allowedItems.banRange(Gen3ItemIDs.unknown226, 28);
-        allowedItems.banRange(Gen3ItemIDs.unknown347, 2);
-        allowedItems.banSingles(Gen3ItemIDs.unknown72, Gen3ItemIDs.unknown82, Gen3ItemIDs.unknown105, Gen3ItemIDs.unknown267);
+        addBetween(set, Gen3ItemIDs.unknown52, Gen3ItemIDs.unknown62);
+        addBetween(set, Gen3ItemIDs.unknown87, Gen3ItemIDs.unknown92);
+        addBetween(set, Gen3ItemIDs.unknown99, Gen3ItemIDs.unknown102);
+        addBetween(set, Gen3ItemIDs.unknown112, Gen3ItemIDs.unknown120);
+        addBetween(set, Gen3ItemIDs.unknown176, Gen3ItemIDs.unknown178);
+        addBetween(set, Gen3ItemIDs.unknown226, Gen3ItemIDs.unknown253);
+        set.addAll(Arrays.asList(Gen3ItemIDs.unknown72, Gen3ItemIDs.unknown82, Gen3ItemIDs.unknown105,
+                Gen3ItemIDs.unknown267, Gen3ItemIDs.unknown347, Gen3ItemIDs.unknown348));
         // HMs
-        allowedItems.banRange(Gen3ItemIDs.hm01, 8);
-        // TMs
-        allowedItems.tmRange(Gen3ItemIDs.tm01, 50);
-
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItemsRSE = allowedItems.copy();
-        nonBadItemsRSE.banSingles(Gen3ItemIDs.lightBall, Gen3ItemIDs.oranBerry, Gen3ItemIDs.soulDew);
-        nonBadItemsRSE.banRange(Gen3ItemIDs.orangeMail, 12); // mail
-        nonBadItemsRSE.banRange(Gen3ItemIDs.figyBerry, 33); // berries
-        nonBadItemsRSE.banRange(Gen3ItemIDs.luckyPunch, 4); // pokemon specific
-        nonBadItemsRSE.banRange(Gen3ItemIDs.redScarf, 5); // contest scarves
-
-        // FRLG-exclusive bad items
-        // Ban Shoal items and Shards, since they don't do anything
-        nonBadItemsFRLG = nonBadItemsRSE.copy();
-        nonBadItemsFRLG.banRange(Gen3ItemIDs.shoalSalt, 6);
-
-        regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.potion, Gen3ItemIDs.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.superRepel, Gen3ItemIDs.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(Gen3ItemIDs.rareCandy);
-        opShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(Gen3ItemIDs.pearl, Gen3ItemIDs.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(Gen3ItemIDs.luckyEgg);
+        addBetween(set, Gen3ItemIDs.hm01, Gen3ItemIDs.hm08);
+        return Collections.unmodifiableSet(set);
     }
 
-    public static ItemList getNonBadItems(int romType) {
-        if (romType == Gen3Constants.RomType_FRLG) {
-            return nonBadItemsFRLG;
-        } else {
-            return nonBadItemsRSE;
+    private static Set<Integer> setupBadItemsRSE() {
+        // ban specific pokemon hold items, berries, apricorns, mail
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen3ItemIDs.lightBall, Gen3ItemIDs.oranBerry, Gen3ItemIDs.soulDew));
+        addBetween(set, Gen3ItemIDs.orangeMail, Gen3ItemIDs.retroMail); // mail
+        addBetween(set, Gen3ItemIDs.figyBerry, Gen3ItemIDs.enigmaBerry); // berries
+        addBetween(set, Gen3ItemIDs.luckyPunch, Gen3ItemIDs.stick); // pokemon specific
+        addBetween(set, Gen3ItemIDs.redScarf, Gen3ItemIDs.yellowScarf); // contest scarves
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupBadItemsFRLG() {
+        Set<Integer> set = new HashSet<>(badItemsRSE);
+        // Ban Shoal items and Shards, since they don't do anything
+        addBetween(set, Gen3ItemIDs.shoalSalt, Gen3ItemIDs.greenShard);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall);
+        addBetween(set, Gen3ItemIDs.potion, Gen3ItemIDs.revive);
+        addBetween(set, Gen3ItemIDs.superRepel, Gen3ItemIDs.repel);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(Gen3ItemIDs.rareCandy);
+        addBetween(set, Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom);
+        addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
+        set.add(Gen3ItemIDs.luckyEgg);
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
         }
+    }
+
+    public static Set<Integer> getBadItems(int romType) {
+        return romType == Gen3Constants.RomType_FRLG ? badItemsFRLG : badItemsRSE;
     }
 
     public static void trainerTagsRS(List<Trainer> trs, int romType) {

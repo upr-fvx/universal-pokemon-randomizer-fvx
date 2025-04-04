@@ -5,10 +5,10 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.constants.GBConstants;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gbspace.FreedSpace;
 import com.dabomstew.pkrandom.gamedata.Move;
+import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Trainer;
+import com.dabomstew.pkrandom.gbspace.FreedSpace;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractGBRomEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
 
@@ -30,6 +30,8 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     protected byte[] originalRom;
     private String loadedFileName;
     private long actualCRC32;
+
+    protected boolean tmsReusable;
 
     @Override
     public boolean loadRom(String filename) {
@@ -82,11 +84,11 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
      * and {@link Trainer}s.
      */
     protected void loadGameData() {
+        loadItems();
         loadPokemonStats();
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();
-        loadItemNames();
         loadTrainers();
     }
 
@@ -99,7 +101,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract void loadPokemonPalettes();
 
-    public abstract void loadItemNames();
+    public abstract void loadItems();
 
     public abstract void loadTrainers();
 
@@ -433,8 +435,21 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 	protected abstract byte getFreeSpaceByte();
 
     @Override
+    public boolean isTMsReusable() {
+        return tmsReusable;
+    }
+
+    @Override
+    public boolean canTMsBeHeld() { return true; }
+
+    @Override
     public boolean hasTypeEffectivenessSupport() {
         return true;
+    }
+
+    @Override
+    public boolean hasGuaranteedWildHeldItems() {
+        return false; // no held items in Gen 1 and Gen 2 has no guaranteed ones still
     }
 
     @Override

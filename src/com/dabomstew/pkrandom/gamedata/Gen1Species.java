@@ -25,11 +25,11 @@ package com.dabomstew.pkrandom.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import com.dabomstew.pkrandom.graphics.palettes.SGBPaletteID;
 
 public class Gen1Species extends Species {
 

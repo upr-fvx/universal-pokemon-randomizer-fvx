@@ -83,7 +83,7 @@ public class Trainer implements Comparable<Trainer> {
             if (!first) {
                 sb.append(',');
             }
-            sb.append(p.species.getName()).append(" Lv").append(p.level);
+            sb.append(p.getSpecies().getName()).append(" Lv").append(p.getLevel());
             first = false;
         }
         sb.append(']');
@@ -159,13 +159,13 @@ public class Trainer implements Comparable<Trainer> {
     }
 
     public boolean pokemonHaveUniqueHeldItems() {
-        List<Integer> heldItemsForThisTrainer = new ArrayList<>();
+        List<Item> heldItemsForThisTrainer = new ArrayList<>();
         for (TrainerPokemon poke : this.pokemon) {
-            if (poke.heldItem > 0) {
-                if (heldItemsForThisTrainer.contains(poke.heldItem)) {
+            if (poke.getHeldItem() != null) {
+                if (heldItemsForThisTrainer.contains(poke.getHeldItem())) {
                     return false;
                 } else {
-                    heldItemsForThisTrainer.add(poke.heldItem);
+                    heldItemsForThisTrainer.add(poke.getHeldItem());
                 }
             }
         }

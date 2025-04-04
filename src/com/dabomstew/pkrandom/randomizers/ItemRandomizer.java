@@ -12,6 +12,18 @@ import java.util.stream.Collectors;
 
 public class ItemRandomizer extends Randomizer {
 
+    // TODO: the whole deal with Mega Stones
+    // Mega Stones should get treated better. There currently *is* some logic for dealing with them,
+    // in that they are the only "unique items" when Balanced Item Prices make them buyable.
+    // But whether they show up as (non-random) field items, and the behavior of the Shop and Pickup
+    // randomization... it is unclear and varies from game to game.
+    // Ultimately, there is a need of design direction - how *should* Mega Stones be treated -
+    // which I'm not taking charge of at the time being.
+    // Why? Because it requires 3DS hacking which is tricky as is, more so when your computer
+    // can't run said games in an emulator.
+    // And the current situation isn't dire enough to keep a major refactor branch from rejoining
+    // with the main branch, for yet who-knows-how-many months. So here we are!
+
     private boolean fieldChangesMade;
     private boolean shopChangesMade;
     private boolean pickupChangesMade;
@@ -101,7 +113,7 @@ public class ItemRandomizer extends Randomizer {
     private void randomizeNonTMFieldItems(List<Item> nonTMs) {
 
         boolean banBadItems = settings.isBanBadRandomFieldItems();
-        boolean uniqueItems = !settings.isBalanceShopPrices(); // TODO: why is uniqueItems related to shop prices???
+        boolean uniqueItems = !settings.isBalanceShopPrices();
         boolean evenItems = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
@@ -165,7 +177,6 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void randomizeShopItems() {
-        // TODO: how to deal with mega stones?
         Set<Item> possible = setupPossible();
         Set<Item> guaranteed = setupGuaranteed();
 

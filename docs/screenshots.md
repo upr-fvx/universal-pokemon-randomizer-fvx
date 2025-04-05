@@ -52,10 +52,13 @@ Most screenshots below were borrowed (with permission) from Dabomstew's original
 
 ### Generation 6 (X/Y/OR/AS)
 
-![the starters are Cherrim, Floette-Eternal, and Terrakion]({{ site.baseurl }}/assets/images/screenshots/g6_starter.png "Some starters are small, others are BIG.")
-![a shop with Insect Plate, Big Mushroom, Heart Scale, X Attack, Metal Powder, Gardevoirite, Ampharosite, Qualot Berry]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Finally, a replacement for Luvdisc-fishing!")
-![two level 3 Quilladins battling. one knows crafty shield, hyper fang, and psyshock]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Underleveled mirror-match")
-// TODO: ORAS
+![the XY starters are Cherrim, Floette-Eternal, and Terrakion]({{ site.baseurl }}/assets/images/screenshots/g6_starter.jpg "Some starters are small, others are BIG."){:.screenshot}
+![a shop with Insect Plate, Big Mushroom, Heart Scale, X Attack, Metal Powder, Gardevoirite, Ampharosite, Qualot Berry]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Finally, a replacement for Luvdisc-fishing!"){:.screenshot}
+![two level 3 Quilladins battling. one knows crafty shield, hyper fang, and psyshock]({{ site.baseurl }}/assets/images/screenshots/g6_quilladin.jpg "Underleveled mirror-match"){:.screenshot}
+![the ORAS starters are Aipom, Vibrava, and Onix]({{ site.baseurl }}/assets/images/screenshots/g6_starter_oras.jpeg "Birch has a more varied set in his bag."){:.screenshot}
+![the stats screen of Vibrava. It is a flying/electric-type with the moves "Tranch' Air", "Chargeur", "Bourdon", and "Coup Victoire"]({{ site.baseurl }}/assets/images/screenshots/g6_moveset.jpeg "That's French for Victory Flare, btw."){:.screenshot}
+![a horde battle with three Natu, one Emboar, and one Spritzee. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde2.jpeg "Odd fellows"){:.screenshot}
+![a horde battle with four Spinda, and one one Emboar, and one Carnivine. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde1.jpeg "Spinda party in Petalburg forest, with one extra carnivorous plant."){:.screenshot}
 
 
 ### Generation 7 (S/M/US/UM)

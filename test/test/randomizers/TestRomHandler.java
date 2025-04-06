@@ -1301,7 +1301,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
         throw new NotImplementedException();
     }
 
@@ -1311,7 +1311,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
         throw new NotImplementedException();
     }
 

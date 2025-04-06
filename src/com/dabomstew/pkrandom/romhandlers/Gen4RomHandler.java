@@ -4259,8 +4259,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void removeImpossibleEvolutions(Settings settings) {
-		boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
+	public void removeImpossibleEvolutions(boolean changeMoveEvos) {
 
 		Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
 		for (Species pkmn : pokes) {
@@ -4343,8 +4342,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void makeEvolutionsEasier(Settings settings) {
-		boolean wildsRandomized = settings.isRandomizeWildPokemon();
+	public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
 
 		// Reduce the amount of happiness required to evolve.
 		int offset = find(arm9, Gen4Constants.friendshipValueForEvoLocator);
@@ -4363,7 +4361,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 		}
 
-		if (wildsRandomized) {
+		if (changeWithOtherEvos) {
 			for (Species pkmn : pokes) {
 				if (pkmn != null) {
 					for (Evolution evo : pkmn.getEvolutionsFrom()) {

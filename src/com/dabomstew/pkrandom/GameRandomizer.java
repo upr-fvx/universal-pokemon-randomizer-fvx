@@ -387,12 +387,14 @@ public class GameRandomizer {
     private void maybeApplyEvolutionImprovements() {
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
-            romHandler.removeImpossibleEvolutions(settings);
+            boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
+            romHandler.removeImpossibleEvolutions(changeMoveEvos);
         }
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(40, 30);
+            boolean wildsRandomizer = settings.isRandomizeWildPokemon();
             romHandler.makeEvolutionsEasier(settings);
         }
 

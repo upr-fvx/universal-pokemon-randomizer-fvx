@@ -2633,9 +2633,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
-        boolean changeMoveEvos = !(settings.getMovesetsMod() == Settings.MovesetsMod.UNCHANGED);
-
+    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species sp : pokes) {
             if (sp == null)
@@ -2747,8 +2745,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
-        boolean wildsRandomized = settings.isRandomizeWildPokemon();
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);
@@ -2771,7 +2768,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             if (pkmn != null) {
                 Evolution extraEntry = null;
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (wildsRandomized) {
+                    if (changeWithOtherEvos) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
                             // Replace w/ level 35
                             markImprovedEvolutions(pkmn);

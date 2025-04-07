@@ -1,7 +1,6 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
@@ -527,6 +526,11 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadPokemonStats() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
     }
@@ -649,7 +653,7 @@ public class TestRomHandler extends AbstractRomHandler {
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         if(testRSS == null) {
             testRSS = new RestrictedSpeciesService(this);
-            testRSS.setRestrictions(new Settings());
+            testRSS.setRestrictions(new GenRestrictions());
         }
         return testRSS;
     }
@@ -1461,7 +1465,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
         throw new NotImplementedException();
     }
 

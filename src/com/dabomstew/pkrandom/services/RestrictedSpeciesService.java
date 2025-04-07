@@ -1,6 +1,5 @@
 package com.dabomstew.pkrandom.services;
 
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
 import com.dabomstew.pkrandom.gamedata.MegaEvolution;
@@ -15,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(Settings)},
+ * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(GenRestrictions)},
  * you can access a number of <i>unmodifiable</i> {@link SpeciesSet}s, following those restrictions.<br>
  * When randomizing, you generally want to use these sets,
  * rather than anything provided directly by the {@link RomHandler}, like {@link RomHandler#getSpecies()} or
@@ -154,18 +153,7 @@ public class RestrictedSpeciesService {
         return bannedFormes;
     }
 
-    public void setRestrictions(Settings settings) {
-        GenRestrictions restrictions = null;
-        if (settings != null) {
-            restrictions = settings.getCurrentRestrictions();
-
-            // restrictions should already be null if "Limit Pokemon" is disabled, but this is a safeguard
-            if (!settings.isLimitPokemon()) {
-                restrictions = null;
-            }
-        }
-
-        restrictionsSet = true;
+    public void setRestrictions(GenRestrictions restrictions) {
 
         if (restrictions != null) {
             allInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormesFromRestrictions(restrictions));
@@ -187,6 +175,8 @@ public class RestrictedSpeciesService {
         legendaries = SpeciesSet.unmodifiable(legendariesInclAltFormes.filter(pk -> !altFormes.contains(pk)));
         ultraBeasts = SpeciesSet.unmodifiable(ultraBeastsInclAltFormes.filter(pk -> !altFormes.contains(pk)));
 
+        restrictionsSet = true;
+
         //While this doesn't seem like the ideal place to put this,
         //it's the least bad one I can think of at this time.
         //TODO: place this somewhere more sensible.
@@ -199,30 +189,14 @@ public class RestrictedSpeciesService {
         SpeciesSet allInclAltFormes = new SpeciesSet();
         SpeciesSet allNonRestricted = romHandler.getSpeciesSetInclFormes();
 
-        if (restrictions.allow_gen1) {
-            addFromGen(allInclAltFormes, allNonRestricted, 1);
-        }
-        if (restrictions.allow_gen2) {
-            addFromGen(allInclAltFormes, allNonRestricted, 2);
-        }
-        if (restrictions.allow_gen3) {
-            addFromGen(allInclAltFormes, allNonRestricted, 3);
-        }
-        if (restrictions.allow_gen4) {
-            addFromGen(allInclAltFormes, allNonRestricted, 4);
-        }
-        if (restrictions.allow_gen5) {
-            addFromGen(allInclAltFormes, allNonRestricted, 5);
-        }
-        if (restrictions.allow_gen6) {
-            addFromGen(allInclAltFormes, allNonRestricted, 6);
-        }
-        if (restrictions.allow_gen7) {
-            addFromGen(allInclAltFormes, allNonRestricted, 7);
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            if (restrictions.isGenAllowed(gen)) {
+                addFromGen(allInclAltFormes, allNonRestricted, gen);
+            }
         }
 
         // If the user specified it, add all the evolutionary relatives for everything in the mainPokemonList
-        if (restrictions.allow_evolutionary_relatives) {
+        if (restrictions.isAllowEvolutionaryRelatives()) {
             allInclAltFormes.addFullFamilies(false);
         }
 

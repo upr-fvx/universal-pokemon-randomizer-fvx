@@ -1,7 +1,6 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
 import com.dabomstew.pkrandom.gamedata.MegaEvolution;
@@ -157,7 +156,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     public void restrictedSpeciesAreSameAsSpeciesSetWithNoRestrictionsSet(String romName) {
         loadROM(romName);
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
-        rPokeService.setRestrictions(null);
+        rPokeService.setRestrictions(new GenRestrictions());
         assertEquals(romHandler.getSpeciesSet(), rPokeService.getAll(false));
     }
 
@@ -167,12 +166,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
-        settings.setLimitPokemon(true);
-        settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
-
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
-        rPokeService.setRestrictions(settings);
+        rPokeService.setRestrictions(genRestrictionsFromBools(false, new int[]{1}));
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
             boolean anyFromRightGen = false;
@@ -193,12 +188,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
-        settings.setLimitPokemon(true);
-        settings.setCurrentRestrictions(genRestrictionsFromBools(false, new int[]{1}));
-
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
-        rPokeService.setRestrictions(settings);
+        rPokeService.setRestrictions(genRestrictionsFromBools(false, new int[]{1}));
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
             SpeciesSet related = pk.getFamily(false);
@@ -224,13 +215,9 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
-        settings.setLimitPokemon(true);
-        settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
-        // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
-
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
-        rPokeService.setRestrictions(settings);
+        rPokeService.setRestrictions(genRestrictionsFromBools(true, new int[]{1}));
+        // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
             boolean anyFromRightGen = false;
@@ -251,12 +238,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.generationOfPokemon() >= 2);
 
-        Settings settings = new Settings();
-        settings.setLimitPokemon(true);
-        settings.setCurrentRestrictions(genRestrictionsFromBools(true, new int[]{1}));
-
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
-        rPokeService.setRestrictions(settings);
+        rPokeService.setRestrictions(genRestrictionsFromBools(true, new int[]{1}));
         SpeciesSet restrictedPokemon = rPokeService.getAll(false);
         for (Species pk : restrictedPokemon) {
             SpeciesSet related = pk.getFamily(false);
@@ -288,7 +271,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void canApplyAllLegalTweaksWithoutThrowing(String romName){
+    public void canApplyAllLegalTweaksWithoutThrowing(String romName) {
         loadROM(romName);
 
         int codeTweaksAvailable = romHandler.miscTweaksAvailable();
@@ -310,7 +293,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void allSpeciesHaveAGeneration(String romName){
+    public void allSpeciesHaveAGeneration(String romName) {
         loadROM(romName);
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
@@ -323,7 +306,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void megaEvosShareNameWithBaseFormes(String romName){
+    public void megaEvosShareNameWithBaseFormes(String romName) {
         loadROM(romName);
 
         for (MegaEvolution mev : romHandler.getMegaEvolutions()) {
@@ -334,7 +317,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void megaEvosNeedItemOfAppropriateName(String romName){
+    public void megaEvosNeedItemOfAppropriateName(String romName) {
         // i.e. Venusaur is linked to Venusaurite, Sableye to Sablenite
         loadROM(romName);
 
@@ -358,12 +341,12 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         System.out.println("Cosmetic replacements which are cosmetic formes: ");
 
         for (Species forme : romHandler.getSpeciesSetInclFormes()) {
-            if(forme.isCosmeticReplacement() != forme.isActuallyCosmetic()) {
+            if (forme.isCosmeticReplacement() != forme.isActuallyCosmetic()) {
                 mismatched.add(forme);
             }
-            if(forme.isCosmeticReplacement() && forme.isActuallyCosmetic()) {
+            if (forme.isCosmeticReplacement() && forme.isActuallyCosmetic()) {
                 System.out.print(forme.getFullName());
-                if(forme.getName().equals(forme.getFullName())) {
+                if (forme.getName().equals(forme.getFullName())) {
                     System.out.print(" " + forme.getFormeNumber());
                 }
                 System.out.println();
@@ -371,8 +354,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         }
         System.out.println();
 
-        if(!mismatched.isEmpty()) {
-            for(Species forme : mismatched) {
+        if (!mismatched.isEmpty()) {
+            for (Species forme : mismatched) {
                 System.out.println(forme.getFullName() +
                         (forme.getFormeSuffix().isEmpty() ? " " + forme.getFormeNumber() : "")
                         + ": isCosmeticReplacement = " + forme.isCosmeticReplacement()

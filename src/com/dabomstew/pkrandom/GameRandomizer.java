@@ -209,7 +209,7 @@ public class GameRandomizer {
     }
 
     private void setupSpeciesRestrictions() {
-        romHandler.getRestrictedSpeciesService().setRestrictions(settings);
+        romHandler.getRestrictedSpeciesService().setRestrictions(settings.getCurrentRestrictions());
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();
         }

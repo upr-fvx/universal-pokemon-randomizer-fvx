@@ -1,11 +1,10 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.gamedata.Evolution;
 import com.dabomstew.pkrandom.gamedata.EvolutionType;
+import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.randomizers.EvolutionRandomizer;
 import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -102,8 +101,9 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
         romHandler.removeTimeBasedEvolutions();
 
-        String[] itemNames = romHandler.getItemNames();
-        List<Integer> evolutionItems = romHandler.getEvolutionItems();
+        List<Item> allItems = romHandler.getItems();
+        Set<Item> evolutionItems = romHandler.getEvolutionItems();
+
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 // In Gens 2+3, TRADE_ITEM items are not counted as evo items,
@@ -114,13 +114,13 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                 if (evo.getType().usesItem() &&
                         !(romHandler.generationOfPokemon() < 4 && evo.getType() == EvolutionType.TRADE_ITEM)) {
                     System.out.println(evo);
-                    System.out.println(itemNames[evo.getExtraInfo()]);
-                    assertTrue(evolutionItems.contains(evo.getExtraInfo()));
+                    Item evoItem = allItems.get(evo.getExtraInfo());
+                    System.out.println(evoItem.getName());
+                    assertTrue(evolutionItems.contains(evoItem));
                 }
             }
         }
     }
-
 
     @ParameterizedTest
     @MethodSource("getRomNames")

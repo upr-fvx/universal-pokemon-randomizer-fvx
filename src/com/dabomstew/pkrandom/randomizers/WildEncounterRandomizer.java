@@ -54,22 +54,17 @@ public class WildEncounterRandomizer extends Randomizer {
                                     boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
                                     boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
                                     int levelModifier, boolean abilitiesAreRandomized) {
-        // - prep settings
-        // - get encounters
-        // - setup banned + allowed
-        // - randomize inner
-        // - apply level modifier
-        // - set encounters
 
-        rSpecService.setRestrictions(settings);
-
+        // get encounters
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
         List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
+        // setup banned + allowed
         SpeciesSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
         SpeciesSet allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
 
+        // randomize inner
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
                 basicPokemonOnly, sameEvoStage, keepEvolutions);
@@ -96,7 +91,9 @@ public class WildEncounterRandomizer extends Randomizer {
                 break;
         }
 
+        // apply level modifier
         applyLevelModifier(levelModifier, encounterAreas);
+        // set encounters
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }
 

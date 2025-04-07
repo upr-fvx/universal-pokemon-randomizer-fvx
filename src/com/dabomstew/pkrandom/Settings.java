@@ -47,7 +47,7 @@ public class Settings {
 
     private String romName;
     private boolean updatedFromOldVersion = false;
-    private GenRestrictions currentRestrictions;
+    private GenRestrictions currentRestrictions = new GenRestrictions();
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
@@ -920,10 +920,7 @@ public class Settings {
 
         // gen restrictions
         int genLimit = FileFunctions.readFullIntBigEndian(data, 30);
-        GenRestrictions restrictions = null;
-        if (genLimit != 0) {
-            restrictions = new GenRestrictions(genLimit);
-        }
+        GenRestrictions restrictions = new GenRestrictions(genLimit);
         settings.setCurrentRestrictions(restrictions);
 
         int codeTweaks = FileFunctions.readFullIntBigEndian(data, 34);
@@ -1106,7 +1103,7 @@ public class Settings {
         if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;
             this.setLimitPokemon(false);
-        } else if (this.currentRestrictions != null) {
+        } else {
             this.currentRestrictions.limitToGen(rh.generationOfPokemon());
         }
 

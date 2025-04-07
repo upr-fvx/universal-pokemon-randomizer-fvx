@@ -40,7 +40,6 @@ public class EvolutionRandomizer extends Randomizer {
                                      boolean forceChange, boolean forceGrowth, boolean noConvergence,
                                      boolean banIrregularAltFormes, boolean abilitiesAreRandomized,
                                      boolean evolveEveryLevel) {
-        rSpecService.setRestrictions(settings);
 
         SpeciesSet pokemonPool = rSpecService.getSpecies(false,
                 romHandler.altFormesCanHaveDifferentEvolutions(), false);

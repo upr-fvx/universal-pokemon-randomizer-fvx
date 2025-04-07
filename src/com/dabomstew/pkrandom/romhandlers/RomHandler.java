@@ -395,7 +395,6 @@ public interface RomHandler {
      * 
      * @return Map of TM/HM compatibility
      */
-
     Map<Species, boolean[]> getTMHMCompatibility();
 
     void setTMHMCompatibility(Map<Species, boolean[]> compatData);
@@ -593,6 +592,8 @@ public interface RomHandler {
     // ====
     // Misc
     // ====
+
+    ExpCurve[] getExpCurves();
 
     boolean isYellow();
 

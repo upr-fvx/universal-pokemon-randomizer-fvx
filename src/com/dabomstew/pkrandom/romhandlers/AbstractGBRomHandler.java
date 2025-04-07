@@ -5,6 +5,7 @@ import com.dabomstew.pkrandom.GFXFunctions;
 import com.dabomstew.pkrandom.constants.GBConstants;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.ExpCurve;
 import com.dabomstew.pkrandom.gamedata.Move;
 import com.dabomstew.pkrandom.gamedata.Species;
 import com.dabomstew.pkrandom.gamedata.Trainer;
@@ -433,6 +434,11 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     protected abstract FreedSpace getFreedSpace();
 
 	protected abstract byte getFreeSpaceByte();
+
+    @Override
+    public ExpCurve[] getExpCurves() {
+        return new ExpCurve[]{ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW};
+    }
 
     @Override
     public boolean isTMsReusable() {

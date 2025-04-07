@@ -1579,7 +1579,7 @@ public class RandomizerGUI {
         pbsLegendariesSlowRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.LEGENDARIES);
         pbsStrongLegendariesSlowRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.STRONG_LEGENDARIES);
         pbsAllMediumFastRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.ALL);
-        ExpCurve[] expCurves = getEXPCurvesForGeneration(romHandler.generationOfPokemon());
+        ExpCurve[] expCurves = romHandler.getExpCurves();
         int index = 0;
         for (int i = 0; i < expCurves.length; i++) {
             if (expCurves[i] == settings.getSelectedEXPCurve()) {
@@ -1887,7 +1887,7 @@ public class RandomizerGUI {
         settings.setStandardizeEXPCurves(pbsStandardizeEXPCurvesCheckBox.isSelected());
         settings.setExpCurveMod(pbsLegendariesSlowRadioButton.isSelected(), pbsStrongLegendariesSlowRadioButton.isSelected(),
                 pbsAllMediumFastRadioButton.isSelected());
-        ExpCurve[] expCurves = getEXPCurvesForGeneration(romHandler.generationOfPokemon());
+        ExpCurve[] expCurves = romHandler.getExpCurves();
         settings.setSelectedEXPCurve(expCurves[pbsEXPCurveComboBox.getSelectedIndex()]);
         settings.setBaseStatsFollowMegaEvolutions(pbsFollowMegaEvosCheckBox.isSelected() && pbsFollowMegaEvosCheckBox.isVisible());
         settings.setAssignEvoStatsRandomly(pbsAssignEvoStatsRandomlyCheckBox.isSelected() && pbsAssignEvoStatsRandomlyCheckBox.isVisible());
@@ -2537,7 +2537,7 @@ public class RandomizerGUI {
             pbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
             pbsFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             pbsUpdateComboBox.setVisible(pokemonGeneration < 8);
-            ExpCurve[] expCurves = getEXPCurvesForGeneration(pokemonGeneration);
+            ExpCurve[] expCurves = romHandler.getExpCurves();
             String[] expCurveNames = new String[expCurves.length];
             for (int i = 0; i < expCurves.length; i++) {
                 expCurveNames[i] = expCurves[i].toString();
@@ -3853,16 +3853,6 @@ public class RandomizerGUI {
                     String.format(bundle.getString("GUI.configFileMissing"), e.getMessage()));
             System.exit(1);
         }
-    }
-
-    private ExpCurve[] getEXPCurvesForGeneration(int generation) {
-        ExpCurve[] result;
-        if (generation < 3) {
-            result = new ExpCurve[]{ ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW };
-        } else {
-            result = new ExpCurve[]{ ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW, ExpCurve.ERRATIC, ExpCurve.FLUCTUATING };
-        }
-        return result;
     }
 
     private String[] getTrainerSettingsForGeneration(int generation) {

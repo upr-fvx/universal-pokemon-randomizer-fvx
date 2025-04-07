@@ -394,6 +394,14 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public ExpCurve[] getExpCurves() {
+        return new ExpCurve[]{
+                ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW,
+                ExpCurve.ERRATIC, ExpCurve.FLUCTUATING
+        };
+    }
+
+    @Override
     public boolean isTMsReusable() {
         return true;
     }

@@ -1,7 +1,7 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
+import com.dabomstew.pkrandom.gamedata.PlayerCharacterType;
 import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,9 +30,9 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasCustomPlayerGraphicsSupport());
         GraphicsPack cpg = getCustomPlayerGraphics();
-        romHandler.setCustomPlayerGraphics(cpg, Settings.PlayerCharacterMod.PC1);
+        romHandler.setCustomPlayerGraphics(cpg, PlayerCharacterType.PC1);
         if (romHandler.hasMultiplePlayerCharacters()) {
-            romHandler.setCustomPlayerGraphics(cpg, Settings.PlayerCharacterMod.PC2);
+            romHandler.setCustomPlayerGraphics(cpg, PlayerCharacterType.PC2);
         }
         assertTrue(true);
     }

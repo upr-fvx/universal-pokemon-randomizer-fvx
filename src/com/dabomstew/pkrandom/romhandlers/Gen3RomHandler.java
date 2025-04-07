@@ -25,7 +25,6 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.*;
@@ -4205,7 +4204,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
         if (!(unchecked instanceof Gen3PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -4263,7 +4262,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void setRSECustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, Settings.PlayerCharacterMod toReplace) {
+    private void setRSECustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, PlayerCharacterType toReplace) {
         if (!(unchecked instanceof RSEPlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -4291,7 +4290,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void setFRLGCustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, Settings.PlayerCharacterMod toReplace) {
+    private void setFRLGCustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, PlayerCharacterType toReplace) {
         if (!(unchecked instanceof FRLGPlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -4347,7 +4346,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         rewriteCompressedPalette(palettePointerOffset, image.getPalette());
     }
 
-    private void writePlayerSprite(GBAImage sprite, Settings.PlayerCharacterMod toReplace, String key) {
+    private void writePlayerSprite(GBAImage sprite, PlayerCharacterType toReplace, String key) {
         for (int i = 0; i < sprite.getFrameAmount(); i++) {
             GBAImage frame = sprite.getSubimageFromFrame(i);
             String name = romEntry.getRomType() == Gen3Constants.RomType_FRLG ?
@@ -4357,7 +4356,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void writePlayerWateringCanSprite(GBAImage sprite, Settings.PlayerCharacterMod toReplace) {
+    private void writePlayerWateringCanSprite(GBAImage sprite, PlayerCharacterType toReplace) {
         int imageNum = romEntry.getIntValue(Gen3Constants.rseGetName(toReplace) + "WateringCanImage");
         writeOverworldImage(imageNum, sprite.getSubimageFromFrame(0));
         writeOverworldImage(imageNum + 1, sprite.getSubimageFromFrame(2));
@@ -4375,15 +4374,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void writePlayerBirdSprite(GBAImage sprite, Settings.PlayerCharacterMod toReplace) {
+    private void writePlayerBirdSprite(GBAImage sprite, PlayerCharacterType toReplace) {
         int imageTableOffset = romEntry.getIntValue("OverworldBirdImages");
 
         writeOverworldImage(0, sprite.getSubimageFromFrame(0), imageTableOffset);
 
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-            writeOverworldImage(toReplace == Settings.PlayerCharacterMod.PC1 ? 1 : 3,
+            writeOverworldImage(toReplace == PlayerCharacterType.PC1 ? 1 : 3,
                     sprite.getSubimageFromFrame(1), imageTableOffset);
-            writeOverworldImage(toReplace == Settings.PlayerCharacterMod.PC1 ? 2 : 4,
+            writeOverworldImage(toReplace == PlayerCharacterType.PC1 ? 2 : 4,
                     sprite.getSubimageFromFrame(2), imageTableOffset);
         }
     }
@@ -4423,7 +4422,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         writeBytes(paletteOffset, palette.toBytes());
     }
 
-    private void writePlayerMapIcon(GBAImage mapIcon, Settings.PlayerCharacterMod toReplace) {
+    private void writePlayerMapIcon(GBAImage mapIcon, PlayerCharacterType toReplace) {
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             int imagePointerOffset = romEntry.getIntValue(Gen3Constants.frlgGetName(toReplace)
                     + "MapIconImagePointer");

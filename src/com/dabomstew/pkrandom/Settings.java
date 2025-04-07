@@ -26,10 +26,7 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -361,13 +358,9 @@ public class Settings {
         UNCHANGED, RANDOM
     }
 
-    public enum PlayerCharacterMod {
-        PC1, PC2
-    }
-
     private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
     private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterMod customPlayerGraphicsCharacterMod;
+    private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
     // to and from strings etc
     public void write(FileOutputStream out) throws IOException {
@@ -2732,15 +2725,15 @@ public class Settings {
         this.customPlayerGraphics = customPlayerGraphics;
     }
 
-    public PlayerCharacterMod getCustomPlayerGraphicsCharacterMod() {
+    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
         return customPlayerGraphicsCharacterMod;
     }
 
     public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterMod.class, bools));
+        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
     }
 
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterMod playerCharacterMod) {
+    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
         this.customPlayerGraphicsCharacterMod = playerCharacterMod;
     }
 

@@ -23,7 +23,6 @@ package com.dabomstew.pkrandom.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
@@ -558,7 +557,7 @@ public interface RomHandler {
     /**
      * Returns a {@link Map} containing all Species whose
      * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean)},
-     * {@link #makeEvolutionsEasier(Settings)}, or {@link #removeTimeBasedEvolutions()},
+     * {@link #makeEvolutionsEasier(boolean)}, or {@link #removeTimeBasedEvolutions()},
      * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
      * If those methods have not been called, this Set is empty.
      */
@@ -658,7 +657,7 @@ public interface RomHandler {
 
     boolean hasCustomPlayerGraphicsSupport();
 
-    void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace);
+    void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace);
 
     /**
      * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.

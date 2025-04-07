@@ -395,7 +395,7 @@ public class GameRandomizer {
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(40, 30);
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
-            romHandler.makeEvolutionsEasier(settings);
+            romHandler.makeEvolutionsEasier(wildsRandomizer);
         }
 
         // Remove time-based evolutions

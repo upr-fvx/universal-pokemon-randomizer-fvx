@@ -24,11 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.EncounterArea;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Trainer;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -185,20 +181,20 @@ public class Gen3Constants {
 
     public static final int emMeteorFallsStevenIndex = 804;
 
-    public static String rseGetName(Settings.PlayerCharacterMod playerCharacter) {
-        if (playerCharacter == Settings.PlayerCharacterMod.PC1) {
+    public static String rseGetName(PlayerCharacterType playerCharacter) {
+        if (playerCharacter == PlayerCharacterType.PC1) {
             return "Brendan";
-        } else if (playerCharacter == Settings.PlayerCharacterMod.PC2){
+        } else if (playerCharacter == PlayerCharacterType.PC2) {
             return "May";
         } else {
             throw new IllegalArgumentException("Invalid enum. RSE only has two playable characters, Brendan and May.");
         }
     }
 
-    public static String frlgGetName(Settings.PlayerCharacterMod playerCharacter) {
-        if (playerCharacter == Settings.PlayerCharacterMod.PC1) {
+    public static String frlgGetName(PlayerCharacterType playerCharacter) {
+        if (playerCharacter == PlayerCharacterType.PC1) {
             return "Red";
-        } else if (playerCharacter == Settings.PlayerCharacterMod.PC2){
+        } else if (playerCharacter == PlayerCharacterType.PC2) {
             return "Leaf";
         } else {
             throw new IllegalArgumentException("Invalid enum. FRLG only has two playable characters, Red and Leaf.");

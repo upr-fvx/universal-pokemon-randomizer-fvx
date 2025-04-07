@@ -24,11 +24,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.EncounterArea;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Trainer;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.gamedata.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,7 +42,7 @@ public class Gen2Constants {
     public static final String vietCrystalROMName = "Pokemon VietCrystal";
 
     public static final int pokemonCount = 251, moveCount = 251;
-    
+
     public static final int unownFormeCount = 26;
 
     public static final int baseStatsEntrySize = 0x20;
@@ -366,10 +362,10 @@ public class Gen2Constants {
 
     public static final String friendshipValueForEvoLocator = "FEDCDA";
 
-    public static String getName(Settings.PlayerCharacterMod playerCharacter) {
-        if (playerCharacter == Settings.PlayerCharacterMod.PC1) {
+    public static String getName(PlayerCharacterType playerCharacter) {
+        if (playerCharacter == PlayerCharacterType.PC1) {
             return "Chris";
-        } else if (playerCharacter == Settings.PlayerCharacterMod.PC2){
+        } else if (playerCharacter == PlayerCharacterType.PC2) {
             return "Kris";
         } else {
             throw new IllegalArgumentException("Invalid enum. Gen 2 only has two playable characters, Chris and Kris.");

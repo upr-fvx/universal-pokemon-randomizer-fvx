@@ -22,7 +22,10 @@ package com.dabomstew.pkrandom.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.*;
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.GFXFunctions;
+import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.*;
@@ -3026,7 +3029,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
         if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -3038,7 +3041,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
 
         if (playerGraphics.hasBackImage()) {
-            if (toReplace == Settings.PlayerCharacterMod.PC1) {
+            if (toReplace == PlayerCharacterType.PC1) {
                 rewriteChrisBackImage(playerGraphics.getBackImage());
             } else {
                 rewriteKrisBackImage(playerGraphics.getBackImage());
@@ -3067,7 +3070,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void rewritePlayerFrontImage(GBCImage frontImage, Settings.PlayerCharacterMod toReplace) {
+    private void rewritePlayerFrontImage(GBCImage frontImage, PlayerCharacterType toReplace) {
         if (romEntry.isCrystal()) {
             int frontOffset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "FrontImage");
             writeImage(frontOffset, frontImage);
@@ -3076,16 +3079,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void rewritePlayerTrainerCardImage(GBCImage trainerCardImage, Settings.PlayerCharacterMod toReplace) {
+    private void rewritePlayerTrainerCardImage(GBCImage trainerCardImage, PlayerCharacterType toReplace) {
         int trainerCardOffset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "TrainerCardImage");
         // the trainer card image has different column modes in GS / Crystal, for whatever reason
         writeImage(trainerCardOffset, new GBCImage.Builder(trainerCardImage).columnMode(romEntry.isCrystal()).build());
     }
 
-    private void rewritePlayerImagePalette(Palette palette, Settings.PlayerCharacterMod toReplace) {
-        if (toReplace == Settings.PlayerCharacterMod.PC1) {
+    private void rewritePlayerImagePalette(Palette palette, PlayerCharacterType toReplace) {
+        if (toReplace == PlayerCharacterType.PC1) {
             rewriteChrisImagePalette(palette);
-        } else if (toReplace == Settings.PlayerCharacterMod.PC2) {
+        } else if (toReplace == PlayerCharacterType.PC2) {
             rewriteKrisImagePalette(palette);
         } else {
             throw new IllegalArgumentException("Unexpected value for toReplace: " + toReplace);
@@ -3250,7 +3253,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void rewritePlayerSpritePalette(Gen2SpritePaletteID spritePaletteID,
-                                            Settings.PlayerCharacterMod toReplace) {
+                                            PlayerCharacterType toReplace) {
         int offset = romEntry.getIntValue(Gen2Constants.getName(toReplace) + "SpritePalette");
         byte value = (byte) ((spritePaletteID.ordinal() | 0b1000) << 4);
         System.out.println(spritePaletteID);

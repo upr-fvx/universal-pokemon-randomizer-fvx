@@ -505,9 +505,9 @@ public interface RomHandler {
 
     boolean hasShopSupport();
 
-    Map<Integer, Shop> getShopItems();
+    List<Shop> getShops();
 
-    void setShopItems(Map<Integer, Shop> shopItems);
+    void setShops(List<Shop> shops);
 
     void setBalancedShopPrices();
 

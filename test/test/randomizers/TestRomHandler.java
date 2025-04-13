@@ -119,8 +119,8 @@ public class TestRomHandler extends AbstractRomHandler {
     private List<PickupItem> testPickupItems;
 
     //Shops
-    private final Map<Integer, Shop> originalShopItems;
-    private Map<Integer, Shop> testShopItems;
+    private final List<Shop> originalShops;
+    private List<Shop> testShops;
 
     //Trainers
     private final SpeciesSet originalBannedForTrainers;
@@ -204,7 +204,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         originalPickupItems = Collections.unmodifiableList(mockupOf.getPickupItems());
 
-        originalShopItems = Collections.unmodifiableMap(mockupOf.getShopItems());
+        originalShops = Collections.unmodifiableList(mockupOf.getShops());
 
         originalBannedForTrainers = SpeciesSet.unmodifiable(mockupOf.getBannedFormesForTrainerPokemon());
         originalTrainers = Collections.unmodifiableList(mockupOf.getTrainers());
@@ -269,7 +269,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         testFieldItems = null;
 
-        testShopItems = null;
+        testShops = null;
 
         testBannedForTrainers = null;
         testTrainers = null;
@@ -1239,23 +1239,23 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        return !originalShopItems.isEmpty();
+        return !originalShops.isEmpty();
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        if (testShopItems == null) {
-            testShopItems = new HashMap<>(originalShopItems.size());
-            for (Map.Entry<Integer, Shop> entry : originalShopItems.entrySet()) {
-                testShopItems.put(entry.getKey(), new Shop(entry.getValue()));
+    public List<Shop> getShops() {
+        if (testShops == null) {
+            testShops = new ArrayList<>();
+            for (Shop shop : originalShops) {
+                testShops.add(new Shop(shop));
             }
         }
-        return testShopItems;
+        return testShops;
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        testShopItems = shopItems;
+    public void setShops(List<Shop> shops) {
+        testShops = shops;
     }
 
     @Override

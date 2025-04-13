@@ -1850,7 +1850,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // three shops in the Celadon Department Store, and Gen 1 also doesn't have much in the way
         // of interesting items beyond what those shops hold in Vanilla...
         // Yeah, there's no reason to have the feature turned on.
-        return false;
+        return true; // TODO: temporary while we figure things out
     }
 
     @Override

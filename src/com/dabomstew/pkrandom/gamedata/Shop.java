@@ -93,6 +93,6 @@ public class Shop {
 
     @Override
     public String toString() {
-        return "Shop [name=" + name + ", isMainGame=" + isMainGame + ", items=" + items + "]";
+        return "Shop [name=" + name + ", isMainGame=" + isMainGame + ", isSpecialShop=" + isSpecialShop +", items=" + items + "]";
     }
 }

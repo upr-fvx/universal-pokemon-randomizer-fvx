@@ -439,8 +439,9 @@ public class Gen4Constants {
             return ptShopNames;
         } else if (romType == Type_HGSS) {
             return hgssShopNames;
+        } else {
+            throw new IllegalArgumentException("Invalid RomType");
         }
-        return null;
     }
 
     public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone, ItemIDs.fireStone,

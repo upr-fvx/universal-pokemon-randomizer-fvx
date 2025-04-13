@@ -4416,7 +4416,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			int val = (FileFunctions.read2ByteInt(arm9, offset));
 			while ((val & 0xFFFF) != 0xFFFF) {
 				if (val != 0) {
-					shopItems.add(items.get(val));
+					// The Pokéathlon card shop contains out-of-bounds values.
+					// We use null for these, out of simplicity's sake.
+					shopItems.add(val >= items.size() ? null : items.get(val));
 				}
 				offset += 2;
 				val = (FileFunctions.read2ByteInt(arm9, offset));
@@ -4445,7 +4447,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			int val = (FileFunctions.read2ByteInt(arm9, offset));
 			while ((val & 0xFFFF) != 0xFFFF) {
 				if (val != 0) {
-					FileFunctions.write2ByteInt(arm9, offset, iterItems.next().getId());
+					Item item = iterItems.next();
+					if (item != null) {
+						FileFunctions.write2ByteInt(arm9, offset, item.getId());
+					}
 				}
 				offset += 2;
 				val = (FileFunctions.read2ByteInt(arm9, offset));

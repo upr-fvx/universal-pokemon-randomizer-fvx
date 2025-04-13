@@ -1173,9 +1173,8 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        Map<Integer, Shop> shopsDict = romHandler.getShopItems();
-        for (int shopID : shopsDict.keySet()) {
-            Shop shop = shopsDict.get(shopID);
+        List<Shop> shops = romHandler.getShops();
+        for (Shop shop : shops) {
             log.printf("%s", shop.getName());
             log.println();
             List<Item> shopItems = shop.getItems();

@@ -194,7 +194,7 @@ public class Gen1Constants {
 
     // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
     public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16)
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15)
     );
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(

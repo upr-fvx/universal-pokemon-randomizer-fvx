@@ -1854,18 +1854,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
+    public List<Shop> getShops() {
         List<Shop> shops = readShops();
-        System.out.println(shops);
 
-        Map<Integer, Shop> shopMap = new TreeMap<>(); // important this is a TreeMap
-        for (int i = 0; i < shops.size(); i++) {
-            if (!Gen1Constants.skipShops.contains(i)) {
-                shopMap.put(i, shops.get(i));
-            }
-        }
-        System.out.println(shopMap);
-        return shopMap;
+        shops.forEach(shop -> shop.setSpecialShop(true));
+        Gen1Constants.skipShops.forEach(i -> shops.get(i).setSpecialShop(false));
+
+        return shops;
     }
 
     private List<Shop> readShops() {
@@ -1901,9 +1896,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        for (Map.Entry<Integer, Shop> entry : shopItems.entrySet()) {
-            writeShop(entry.getKey(), entry.getValue());
+    public void setShops(List<Shop> shops) {
+        // Yes this is a silly way of writing all shops, I don't bother fixing it though.
+        // O(n^2) is still small for small n.
+        for (int i = 0; i < shops.size(); i++) {
+            writeShop(i, shops.get(i));
         }
     }
 

@@ -3064,43 +3064,41 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
+    public List<Shop> getShops() {
         List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
         List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
         List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
-        Map<Integer, Shop> shopItemsMap = new TreeMap<>();
+
+        List<Shop> shops = new ArrayList<>();
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
         for (int i = 0; i < shopItemOffsets.length; i++) {
-            if (!skipShops.contains(i)) {
-                int offset = shopItemOffsets[i];
-                List<Item> shopItems = new ArrayList<>();
-                int val = FileFunctions.read2ByteInt(rom, offset);
-                while (val != 0x0000) {
-                    shopItems.add(items.get(val));
-                    offset += 2;
-                    val = FileFunctions.read2ByteInt(rom, offset);
-                }
-                Shop shop = new Shop();
-                shop.setItems(shopItems);
-                shop.setName(shopNames.get(i));
-                shop.setMainGame(mainGameShops.contains(i));
-                shopItemsMap.put(i, shop);
+            int offset = shopItemOffsets[i];
+            List<Item> shopItems = new ArrayList<>();
+            int val = FileFunctions.read2ByteInt(rom, offset);
+            while (val != 0x0000) {
+                shopItems.add(items.get(val));
+                offset += 2;
+                val = FileFunctions.read2ByteInt(rom, offset);
             }
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(shopNames.get(i));
+            shop.setMainGame(mainGameShops.contains(i));
+            shop.setSpecialShop(!skipShops.contains(i));
+            shops.add(shop);
         }
-        return shopItemsMap;
+        return shops;
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
+    public void setShops(List<Shop> shops) {
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
         for (int i = 0; i < shopItemOffsets.length; i++) {
-            Shop thisShop = shopItems.get(i);
-            if (thisShop != null && thisShop.getItems() != null) {
-                int offset = shopItemOffsets[i];
-                for (Item item : thisShop.getItems()) {
-                    FileFunctions.write2ByteInt(rom, offset, item.getId());
-                    offset += 2;
-                }
+            Shop shop = shops.get(i);
+            int offset = shopItemOffsets[i];
+            for (Item item : shop.getItems()) {
+                FileFunctions.write2ByteInt(rom, offset, item.getId());
+                offset += 2;
             }
         }
     }

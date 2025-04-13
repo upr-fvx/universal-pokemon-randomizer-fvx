@@ -3754,86 +3754,53 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
+    public List<Shop> getShops() {
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
         int shopCount = romEntry.getIntValue("ShopCount");
-        Map<Integer, Shop> shopItemsMap = new TreeMap<>();
+        List<Shop> shops = new ArrayList<>();
 
         int offset = getShopItemsOffset();
         if (offset <= 0) {
-            return shopItemsMap;
+            throw new RomIOException("Invalid shop items offset");
         }
         for (int i = 0; i < shopCount; i++) {
-            boolean badShop = false;
-            for (int tmShop: tmShops) {
-                if (i == tmShop) {
-                    badShop = true;
-                    offset += (shopItemSizes[i] * 2);
-                    break;
-                }
+            List<Item> shopItems = new ArrayList<>();
+            for (int j = 0; j < shopItemSizes[i]; j++) {
+                shopItems.add(items.get(FileFunctions.read2ByteInt(code, offset)));
+                offset += 2;
             }
-            for (int regularShop: regularShops) {
-                if (badShop) break;
-                if (i == regularShop) {
-                    badShop = true;
-                    offset += (shopItemSizes[i] * 2);
-                    break;
-                }
-            }
-            if (!badShop) {
-                List<Item> shopItems = new ArrayList<>();
-                for (int j = 0; j < shopItemSizes[i]; j++) {
-                    shopItems.add(items.get(FileFunctions.read2ByteInt(code,offset)));
-                    offset += 2;
-                }
-                Shop shop = new Shop();
-                shop.setItems(shopItems);
-                shop.setName(shopNames.get(i));
-                shop.setMainGame(Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i));
-                shopItemsMap.put(i, shop);
-            }
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(shopNames.get(i));
+            shop.setMainGame(Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+            shops.add(shop);
         }
-        return shopItemsMap;
+
+        int[] tmShops = romEntry.getArrayValue("TMShops");
+        int[] regularShops = romEntry.getArrayValue("RegularShops");
+
+        Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+        Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+
+        return shops;
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
+    public void setShops(List<Shop> shops) {
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
         int shopCount = romEntry.getIntValue("ShopCount");
 
         int offset = getShopItemsOffset();
         if (offset <= 0) {
-            return;
+            throw new RomIOException("Invalid shop items offset");
         }
         for (int i = 0; i < shopCount; i++) {
-            boolean badShop = false;
-            for (int tmShop: tmShops) {
-                if (i == tmShop) {
-                    badShop = true;
-                    offset += (shopItemSizes[i] * 2);
-                    break;
-                }
-            }
-            for (int regularShop: regularShops) {
-                if (badShop) break;
-                if (i == regularShop) {
-                    badShop = true;
-                    offset += (shopItemSizes[i] * 2);
-                    break;
-                }
-            }
-            if (!badShop) {
-                List<Item> shopContents = shopItems.get(i).getItems();
-                Iterator<Item> iterItems = shopContents.iterator();
-                for (int j = 0; j < shopItemSizes[i]; j++) {
-                    Item item = iterItems.next();
-                    FileFunctions.write2ByteInt(code, offset, item.getId());
-                    offset += 2;
-                }
+            List<Item> shopContents = shops.get(i).getItems();
+            Iterator<Item> iterItems = shopContents.iterator();
+            for (int j = 0; j < shopItemSizes[i]; j++) {
+                Item item = iterItems.next();
+                FileFunctions.write2ByteInt(code, offset, item.getId());
+                offset += 2;
             }
         }
     }

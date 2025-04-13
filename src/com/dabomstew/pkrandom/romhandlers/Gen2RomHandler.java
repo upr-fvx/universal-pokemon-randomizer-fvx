@@ -1996,16 +1996,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
+    public List<Shop> getShops() {
         List<Shop> shops = readShops();
 
-        Map<Integer, Shop> shopMap = new HashMap<>();
-        for (int i = 0; i < shops.size(); i++) {
-            if (!Gen2Constants.skipShops.contains(i)) {
-                shopMap.put(i, shops.get(i));
-            }
-        }
-        return shopMap;
+        shops.forEach(shop -> shop.setSpecialShop(true));
+        Gen2Constants.skipShops.forEach(i -> shops.get(i).setSpecialShop(false));
+
+        return shops;
     }
 
     private List<Shop> readShops() {
@@ -2039,14 +2036,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
+    public void setShops(List<Shop> shops) {
         int tableOffset = romEntry.getIntValue("ShopItemOffset");
 
-        for (Map.Entry<Integer, Shop> entry : shopItems.entrySet()) {
-            int shopNum = entry.getKey();
-            Shop shop = entry.getValue();
-            new SameBankDataRewriter<Shop>().rewriteData(tableOffset + shopNum * 2, shop, this::shopToBytes,
-                    this::lengthOfShopAt);
+        for (int i = 0; i < shops.size(); i++) {
+            new SameBankDataRewriter<Shop>().rewriteData(tableOffset + i * 2, shops.get(i),
+                    this::shopToBytes, this::lengthOfShopAt);
         }
     }
 

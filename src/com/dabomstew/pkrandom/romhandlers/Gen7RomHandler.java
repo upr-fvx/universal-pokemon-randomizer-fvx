@@ -24,7 +24,6 @@ package com.dabomstew.pkrandom.romhandlers;
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.ctr.AMX;
 import com.dabomstew.pkrandom.ctr.BFLIM;
@@ -3285,85 +3284,52 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
+    public List<Shop> getShops() {
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
         int shopCount = romEntry.getIntValue("ShopCount");
-        Map<Integer, Shop> shopItemsMap = new TreeMap<>();
+        List<Shop> shops = new ArrayList<>();
         try {
             byte[] shopsCRO = readFile(romEntry.getFile("ShopsAndTutors"));
             int offset = Gen7Constants.getShopItemsOffset(romEntry.getRomType());
             for (int i = 0; i < shopCount; i++) {
-                boolean badShop = false;
-                for (int tmShop : tmShops) {
-                    if (i == tmShop) {
-                        badShop = true;
-                        offset += (shopItemSizes[i] * 2);
-                        break;
-                    }
+                List<Item> shopItems = new ArrayList<>();
+                for (int j = 0; j < shopItemSizes[i]; j++) {
+                    shopItems.add(items.get(FileFunctions.read2ByteInt(shopsCRO, offset)));
+                    offset += 2;
                 }
-                for (int regularShop : regularShops) {
-                    if (badShop) break;
-                    if (i == regularShop) {
-                        badShop = true;
-                        offset += (shopItemSizes[i] * 2);
-                        break;
-                    }
-                }
-                if (!badShop) {
-                    List<Item> shopItems = new ArrayList<>();
-                    for (int j = 0; j < shopItemSizes[i]; j++) {
-                        shopItems.add(items.get(FileFunctions.read2ByteInt(shopsCRO, offset)));
-                        offset += 2;
-                    }
-                    Shop shop = new Shop();
-                    shop.setItems(shopItems);
-                    shop.setName(shopNames.get(i));
-                    shop.setMainGame(Gen7Constants.getMainGameShops(romEntry.getRomType()).contains(i));
-                    shopItemsMap.put(i, shop);
-                }
+                Shop shop = new Shop();
+                shop.setItems(shopItems);
+                shop.setName(shopNames.get(i));
+                shop.setMainGame(Gen7Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+                shops.add(shop);
             }
-            return shopItemsMap;
+
+            int[] tmShops = romEntry.getArrayValue("TMShops");
+            int[] regularShops = romEntry.getArrayValue("RegularShops");
+
+            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+
+            return shops;
         } catch (IOException e) {
             throw new RomIOException(e);
         }
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
+    public void setShops(List<Shop> shops) {
         int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
         int shopCount = romEntry.getIntValue("ShopCount");
         try {
             byte[] shopsCRO = readFile(romEntry.getFile("ShopsAndTutors"));
             int offset = Gen7Constants.getShopItemsOffset(romEntry.getRomType());
             for (int i = 0; i < shopCount; i++) {
-                boolean badShop = false;
-                for (int tmShop : tmShops) {
-                    if (i == tmShop) {
-                        badShop = true;
-                        offset += (shopItemSizes[i] * 2);
-                        break;
-                    }
-                }
-                for (int regularShop : regularShops) {
-                    if (badShop) break;
-                    if (i == regularShop) {
-                        badShop = true;
-                        offset += (shopItemSizes[i] * 2);
-                        break;
-                    }
-                }
-                if (!badShop) {
-                    List<Item> shopContents = shopItems.get(i).getItems();
-                    Iterator<Item> iterItems = shopContents.iterator();
-                    for (int j = 0; j < shopItemSizes[i]; j++) {
-                        Item item = iterItems.next();
-                        FileFunctions.write2ByteInt(shopsCRO, offset, item.getId());
-                        offset += 2;
-                    }
+                List<Item> shopContents = shops.get(i).getItems();
+                Iterator<Item> iterItems = shopContents.iterator();
+                for (int j = 0; j < shopItemSizes[i]; j++) {
+                    Item item = iterItems.next();
+                    FileFunctions.write2ByteInt(shopsCRO, offset, item.getId());
+                    offset += 2;
                 }
             }
             writeFile(romEntry.getFile("ShopsAndTutors"), shopsCRO);

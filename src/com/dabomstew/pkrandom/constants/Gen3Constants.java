@@ -376,8 +376,9 @@ public class Gen3Constants {
             return frlgShopNames;
         } else if (romType == RomType_Em) {
             return emShopNames;
+        } else {
+            throw new IllegalArgumentException("Invalid RomType");
         }
-        return null;
     }
 
     public static final List<Integer> evolutionItems = Arrays.asList(Gen3ItemIDs.sunStone, Gen3ItemIDs.moonStone,

@@ -1009,7 +1009,7 @@ public class RandomizationLogger {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     log.print(", " + getBS("Log.tp.ability") + ": "
                             + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
@@ -1032,7 +1032,7 @@ public class RandomizationLogger {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     first = false;
                 }
             }
@@ -1079,7 +1079,7 @@ public class RandomizationLogger {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
             log.println(oldP.getSpecies().getFullName() + " =>");
-            log.printf(newP.toString(), newP.getHeldItem().getName());
+            log.print(newP.toString());
         }
         printSectionSeparator();
     }

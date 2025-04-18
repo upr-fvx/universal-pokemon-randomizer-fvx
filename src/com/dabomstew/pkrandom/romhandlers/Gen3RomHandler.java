@@ -1794,6 +1794,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
         int entryLen = romEntry.getIntValue("TrainerEntrySize");
+        int nameLen = romEntry.getIntValue("TrainerNameLength");
         Iterator<Trainer> trainerIterator = trainers.iterator();
 
         for (int i = 1; i < amount; i++) {
@@ -1808,6 +1809,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
 
             writeByte(trOffset, (byte) tr.poketype);
+            writeFixedLengthString(tr.name, trOffset + 4, nameLen);
             writeByte(trOffset + (entryLen - 8), (byte) tr.pokemon.size());
             if (tr.forcedDoubleBattle) {
                 writeByte(trOffset + (entryLen - 16), (byte) 0x01);

@@ -1997,8 +1997,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean canChangeShopSizes() {
-        // Only works yet in non-Japanese Gold/Silver due to memory constraints
-        return romEntry.isNonJapanese() && !romEntry.isCrystal();
+        // The Japanese ROMs might have space for it, but I don't have the ROM maps for them so am not sure.
+        // Disallow them for now.
+        return romEntry.isNonJapanese();
     }
 
     @Override

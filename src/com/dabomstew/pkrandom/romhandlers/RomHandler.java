@@ -505,6 +505,13 @@ public interface RomHandler {
 
     boolean hasShopSupport();
 
+    /**
+     * Returns true if {@link Item}s may be added or removed from {@link Shop}s.<br>
+     * If it returns false, all Shops must have <i>exactly</i> the same number of Items
+     * when set using {@link #setShops(List)} as the Shops gotten through {@link #getShops()}.
+     */
+    boolean canChangeShopSizes();
+
     List<Shop> getShops();
 
     void setShops(List<Shop> shops);

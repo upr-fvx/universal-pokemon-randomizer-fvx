@@ -394,6 +394,12 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean canChangeShopSizes() {
+        // DEFAULT: no
+        return false;
+    }
+
+    @Override
     public ExpCurve[] getExpCurves() {
         return new ExpCurve[]{
                 ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW,

@@ -102,6 +102,22 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assertFalse(romHandler.getOPShopItems().isEmpty());
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void canAddOneItemToEveryShop(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.hasShopSupport());
+        assumeTrue(romHandler.canChangeShopSizes());
+
+        List<Item> allItems = romHandler.getItems();
+
+        List<Shop> shops = romHandler.getShops();
+        shops.forEach(s -> s.getItems().add(allItems.get(1)));
+        romHandler.setShops(deepCopy(shops));
+
+        assertEquals(shops, romHandler.getShops());
+    }
+
     private String toMultilineString(List<Shop> shops) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
@@ -113,6 +129,14 @@ public class RomHandlerShopTest extends RomHandlerTest {
         }
         sb.append("}\n");
         return sb.toString();
+    }
+
+    private List<Shop> deepCopy(List<Shop> original) {
+        List<Shop> copy = new ArrayList<>(original.size());
+        for (Shop shop : original) {
+            copy.add(new Shop(shop));
+        }
+        return copy;
     }
 
     @ParameterizedTest

@@ -2963,6 +2963,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
+    public boolean canChangeShopSizes() {
+        return romEntry.getRomType() == Gen5Constants.Type_BW2;
+    }
+
+    @Override
     public boolean canChangeTrainerText() {
         return true;
     }
@@ -3627,10 +3632,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         writeWord(shopItemOverlay, shopItemOffsets[i] + j * 2, iterItems.next().getId());
                     }
                 } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-                    byte[] shop = shopNarc.files.get(i);
+                    byte[] shop = new byte[shopContents.size() * 2];
                     for (int j = 0; j < shop.length; j += 2) {
                         writeWord(shop, j, iterItems.next().getId());
                     }
+                    shopNarc.files.set(i, shop);
                 }
             }
             if (romEntry.getRomType() == Gen5Constants.Type_BW2) {

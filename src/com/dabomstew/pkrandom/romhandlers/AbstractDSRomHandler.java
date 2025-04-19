@@ -13,6 +13,7 @@ import com.dabomstew.pkrandom.newnds.NDSRom;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractDSRomEntry;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -313,9 +314,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * @param arm9 The current ARM9.
      * @param extendBy The number of bytes to extend by.
      * @param prefix Bytes that come right before the TCM pointer section. Used to find said section.
-     * @param arm9Offset The offset of ARM9 in ROM (??). Affects how pointers are read out.
      */
-    protected byte[] extendARM9(byte[] arm9, int extendBy, byte[] prefix, int arm9Offset) {
+    protected byte[] extendARM9(byte[] arm9, int extendBy, byte[] prefix) {
         /*
         Simply extending the ARM9 at the end doesn't work. Towards the end of the ARM9, the following sections exist:
         1. A section that is copied to ITCM (Instruction Tightly Coupled Memory)
@@ -350,6 +350,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             throw new IllegalStateException("Don't try to extend the ARM9 more than once.");
         }
 
+        int arm9Offset = getARM9Offset();
+
         int tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
         tcmCopyingPointersOffset += prefix.length; // because it was a prefix
 
@@ -380,6 +382,22 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         arm9Extended = true;
 
         return newARM9;
+    }
+
+    protected abstract int getARM9Offset();
+
+    /**
+     * Reads a pointer located in ARM9.
+     */
+    protected int readARM9Pointer(byte[] arm9, int offset) {
+        return readLong(arm9, offset) - getARM9Offset();
+    }
+
+    /**
+     * Writes a pointer to "offset" located in ARM9, pointing at "pointer".
+     */
+    protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
+        writeLong(arm9, offset, pointer);
     }
     
 	private byte[] concatenate(byte[] a, byte[] b) {

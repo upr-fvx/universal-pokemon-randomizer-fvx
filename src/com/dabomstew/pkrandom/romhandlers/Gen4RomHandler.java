@@ -99,6 +99,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private Gen4RomEntry romEntry;
 
 	@Override
+	protected int getARM9Offset() {
+		return Gen4Constants.arm9Offset;
+	}
+
+	@Override
 	protected boolean detectNDSRom(String ndsCode, byte version) {
 		return detectNDSRomInner(ndsCode, version);
 	}
@@ -164,7 +169,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
 		if (extendBy != 0) {
 			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-			arm9 = extendARM9(arm9, extendBy, prefix, Gen4Constants.arm9Offset);
+			arm9 = extendARM9(arm9, extendBy, prefix);
 		}
 
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
@@ -4398,11 +4403,62 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<Shop> getShops() {
+		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
+			return getShopsOld();
+		}
+
+		List<Shop> shops = new ArrayList<>();
+
+		readProgressiveShop(shops);
+		readSpecialShops(shops);
+
+		return shops;
+	}
+
+	private void readProgressiveShop(List<Shop> shops) {
+		// TODO
+	}
+
+	private void readSpecialShops(List<Shop> shops) {
+		// TODO: all other games but Platinum (U)
+		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
+		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
+		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
+
+		int specialShopCount = 20;
+		int pointerTableOffset = 0x100B1C;
+
+		for (int i = 0; i < specialShopCount; i++) {
+			int offset = readARM9Pointer(arm9, pointerTableOffset + 4 * i);
+
+			List<Item> shopItems = new ArrayList<>();
+			int itemID = (FileFunctions.read2ByteInt(arm9, offset));
+			while ((itemID & 0xFFFF) != 0xFFFF) {
+				if (itemID == 0 || itemID > items.size()) {
+					throw new RomIOException("Invalid item in shop.");
+				}
+				shopItems.add(items.get(itemID));
+				offset += 2;
+				itemID = (FileFunctions.read2ByteInt(arm9, offset));
+			}
+
+			Shop shop = new Shop();
+			shop.setItems(shopItems);
+			shop.setName(shopNames.get(i));
+			shop.setMainGame(mainGameShops.contains(i));
+			shop.setSpecialShop(!skipShops.contains(i));
+			shops.add(shop);
+		}
+	}
+
+	private List<Shop> getShopsOld() {
 		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
 		int shopCount = romEntry.getIntValue("ShopCount");
 		int offset = romEntry.getIntValue("ShopDataOffset");
+
+		System.out.println("0x" + Integer.toHexString(offset).toUpperCase());
 
 		List<Shop> shops = new ArrayList<>();
 
@@ -4432,6 +4488,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public void setShops(List<Shop> shops) {
+		// TODO: setting the shops (and repoint them to end of arm9 if needed)
 		int shopCount = romEntry.getIntValue("ShopCount");
 		int offset = romEntry.getIntValue("ShopDataOffset");
 

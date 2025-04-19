@@ -105,6 +105,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private NARCArchive pokeNarc, moveNarc, stringsNarc, storyTextNarc, scriptNarc, shopNarc;
 
     @Override
+    protected int getARM9Offset() {
+        return Gen5Constants.arm9Offset;
+    }
+
+    @Override
     protected boolean detectNDSRom(String ndsCode, byte version) {
         return detectNDSRomInner(ndsCode, version);
     }
@@ -181,7 +186,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (shouldExtendARM9) {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
             byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-            arm9 = extendARM9(arm9, extendBy, prefix, Gen5Constants.arm9Offset);
+            arm9 = extendARM9(arm9, extendBy, prefix);
         }
     }
 

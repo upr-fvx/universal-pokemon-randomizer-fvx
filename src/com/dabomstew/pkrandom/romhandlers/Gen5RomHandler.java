@@ -180,7 +180,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         boolean shouldExtendARM9 = romEntry.hasTweakFile("ShedinjaEvolutionTweak") || romEntry.hasTweakFile("NewIndexToMusicTweak");
         if (shouldExtendARM9) {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-            arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen5Constants.arm9Offset);
+            byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
+            arm9 = extendARM9(arm9, extendBy, prefix, Gen5Constants.arm9Offset);
         }
     }
 

@@ -306,7 +306,16 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
     }
 
-    protected byte[] extendARM9(byte[] arm9, int extendBy, String prefix, int arm9Offset) {
+    /**
+     * Returns an extended version of the ARM9 file. The ARM9 can only be extended once,
+     * so subsequent times simply return the same ARM9 passed as an argument.
+     *
+     * @param arm9 The current ARM9.
+     * @param extendBy The number of bytes to extend by.
+     * @param prefix Bytes that come right before the TCM pointer section. Used to find said section.
+     * @param arm9Offset The offset of ARM9 in ROM (??). Affects how pointers are read out.
+     */
+    protected byte[] extendARM9(byte[] arm9, int extendBy, byte[] prefix, int arm9Offset) {
         /*
         Simply extending the ARM9 at the end doesn't work. Towards the end of the ARM9, the following sections exist:
         1. A section that is copied to ITCM (Instruction Tightly Coupled Memory)
@@ -337,10 +346,12 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         specified size for the ITCM area since we're enlarging it.
          */
 
+        // TODO: Not a big fan of this soft and secretive "can't extend the ARM9 twice".
+        //  Ideally should throw an IllegalStateException instead.
         if (arm9Extended) return arm9;  // Don't try to extend the ARM9 more than once
 
-        int tcmCopyingPointersOffset = find(arm9, prefix);
-        tcmCopyingPointersOffset += prefix.length() / 2; // because it was a prefix
+        int tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
+        tcmCopyingPointersOffset += prefix.length; // because it was a prefix
 
         int oldDestPointersOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - arm9Offset;
         int itcmSrcOffset =

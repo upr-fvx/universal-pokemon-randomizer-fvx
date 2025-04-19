@@ -4402,12 +4402,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
 		int shopCount = romEntry.getIntValue("ShopCount");
+		int offset = romEntry.getIntValue("ShopDataOffset");
 
 		List<Shop> shops = new ArrayList<>();
-
-		String shopDataPrefix = romEntry.getStringValue("ShopDataPrefix");
-		int offset = find(arm9, shopDataPrefix);
-		offset += shopDataPrefix.length() / 2;
 
 		for (int i = 0; i < shopCount; i++) {
 			List<Item> shopItems = new ArrayList<>();
@@ -4436,9 +4433,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public void setShops(List<Shop> shops) {
 		int shopCount = romEntry.getIntValue("ShopCount");
-		String shopDataPrefix = romEntry.getStringValue("ShopDataPrefix");
-		int offset = find(arm9, shopDataPrefix);
-		offset += shopDataPrefix.length() / 2;
+		int offset = romEntry.getIntValue("ShopDataOffset");
 
 		for (int i = 0; i < shopCount; i++) {
 			Iterator<Item> iterItems = shops.get(i).getItems().iterator();

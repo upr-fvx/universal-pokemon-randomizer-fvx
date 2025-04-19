@@ -4416,14 +4416,32 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readProgressiveShop(List<Shop> shops) {
-		// TODO
+		int offset = 0xEBAFC;
+		int count = 19;
+
+		List<Item> shopItems = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
+			int itemID = readWord(arm9,offset + i * 4);
+			if (itemID == 0 || itemID >= items.size()) {
+				throw new RomIOException("Invalid item in shop.");
+			}
+			shopItems.add(items.get(itemID));
+		}
+
+		Shop shop = new Shop();
+		shop.setItems(shopItems);
+		shop.setName("Progressive");
+		shop.setMainGame(true);
+		shop.setSpecialShop(false);
+
+		shops.add(shop);
 	}
 
 	private void readSpecialShops(List<Shop> shops) {
 		// TODO: all other games but Platinum (U)
 		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
+		// TODO: redo which shops are mainGameShops
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
-		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
 
 		int specialShopCount = 20;
 		int pointerTableOffset = 0x100B1C;
@@ -4432,21 +4450,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			int offset = readARM9Pointer(arm9, pointerTableOffset + 4 * i);
 
 			List<Item> shopItems = new ArrayList<>();
-			int itemID = (FileFunctions.read2ByteInt(arm9, offset));
-			while ((itemID & 0xFFFF) != 0xFFFF) {
-				if (itemID == 0 || itemID > items.size()) {
+			int itemID = readWord(arm9, offset);
+			while (itemID != 0xFFFF) {
+				if (itemID == 0 || itemID >= items.size()) {
 					throw new RomIOException("Invalid item in shop.");
 				}
 				shopItems.add(items.get(itemID));
 				offset += 2;
-				itemID = (FileFunctions.read2ByteInt(arm9, offset));
+				itemID = readWord(arm9, offset);
 			}
 
 			Shop shop = new Shop();
 			shop.setItems(shopItems);
 			shop.setName(shopNames.get(i));
 			shop.setMainGame(mainGameShops.contains(i));
-			shop.setSpecialShop(!skipShops.contains(i));
+			shop.setSpecialShop(true);
 			shops.add(shop);
 		}
 	}

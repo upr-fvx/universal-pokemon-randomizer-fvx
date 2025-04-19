@@ -308,7 +308,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     /**
      * Returns an extended version of the ARM9 file. The ARM9 can only be extended once,
-     * so subsequent times simply return the same ARM9 passed as an argument.
+     * subsequent times it throws an {@link IllegalStateException}.
      *
      * @param arm9 The current ARM9.
      * @param extendBy The number of bytes to extend by.
@@ -346,9 +346,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         specified size for the ITCM area since we're enlarging it.
          */
 
-        // TODO: Not a big fan of this soft and secretive "can't extend the ARM9 twice".
-        //  Ideally should throw an IllegalStateException instead.
-        if (arm9Extended) return arm9;  // Don't try to extend the ARM9 more than once
+        if (arm9Extended) {
+            throw new IllegalStateException("Don't try to extend the ARM9 more than once.");
+        }
 
         int tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
         tcmCopyingPointersOffset += prefix.length; // because it was a prefix

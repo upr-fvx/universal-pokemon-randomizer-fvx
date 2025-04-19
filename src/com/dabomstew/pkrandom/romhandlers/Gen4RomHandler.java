@@ -159,17 +159,20 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
-		
+
+		// If the ARM9 can be expanded, do it here to keep it simple.
+		int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
+		if (extendBy != 0) {
+			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
+			arm9 = extendARM9(arm9, extendBy, prefix, Gen4Constants.arm9Offset);
+		}
+
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
 		// We also want to allow the option of randomizing the enemy Pokemon too. Unfortunately,
 		// the latter can occur *before* the former, but there's no guarantee that it will even happen.
-		// Since we *know* we'll need to do this patch eventually, just expand the arm9 here to make
-		// things easy.
+		// Since we *know* we'll need to do this patch eventually, just do it here.
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS
 				&& romEntry.hasTweakFile("NewCatchingTutorialSubroutineTweak")) {
-			int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-			arm9 = extendARM9(arm9, extendBy, prefix, Gen4Constants.arm9Offset);
 			genericIPSPatch(arm9, "NewCatchingTutorialSubroutineTweak");
 		}
 	}
@@ -3621,10 +3624,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} else if (romEntry.getRomType() == Gen4Constants.Type_Plat || romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 			int firstSpeciesOffset = romEntry.getRoamingPokemon().get(0).speciesCodeOffsets[0];
 			if (arm9.length < firstSpeciesOffset || readWord(arm9, firstSpeciesOffset) == 0) {
-				// Either the arm9 hasn't been extended, or the patch hasn't been written
-				int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-				byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-				arm9 = extendARM9(arm9, extendBy, prefix, Gen4Constants.arm9Offset);
+				// Confirms the patch hasn't been written yet.
 				genericIPSPatch(arm9, "NewRoamerSubroutineTweak");
 			}
 		}
@@ -5504,9 +5504,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 			}
 		} else {
-			int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-			arm9 = extendARM9(arm9, extendBy, prefix, Gen4Constants.arm9Offset);
 			genericIPSPatch(arm9, "NewIndexToMusicTweak");
 			newIndexToMusicPrefix = romEntry.getStringValue("NewIndexToMusicPrefix");
 			newIndexToMusicPoolOffset = find(arm9, newIndexToMusicPrefix);

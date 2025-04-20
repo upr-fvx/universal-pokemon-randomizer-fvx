@@ -4416,8 +4416,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readProgressiveShop(List<Shop> shops) {
-		int offset = 0xEBAFC;
-		int count = 19;
+
+		String countPrefix = "631C1B061C0E521C1206120E";
+		int countOffset = find(arm9, countPrefix);
+		countOffset += countPrefix.length() / 2;
+		int count = arm9[countOffset] & 0xFF;
+
+		String pointerPrefix = "012021B0F0BD";
+		int pointerOffset = find(arm9, pointerPrefix);
+		pointerOffset += pointerPrefix.length() / 2;
+		int offset = readARM9Pointer(arm9, pointerOffset);
 
 		List<Item> shopItems = new ArrayList<>();
 		for (int i = 0; i < count; i++) {

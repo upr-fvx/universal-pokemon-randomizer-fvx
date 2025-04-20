@@ -460,4 +460,25 @@ public class RomFunctions {
         return new String(hexChars);
     }
 
+    /**
+     * A debugging tool. Creates a nice hex block that is easy to read.
+     */
+    public static String bytesToHexBlock(byte[] bytes, int offset, int length) {
+        final int rowLen = 0x10;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length / rowLen; i++) {
+            byte[] row = new byte[rowLen];
+            System.arraycopy(bytes, offset + i * rowLen, row, 0, rowLen);
+            sb.append(bytesToHex(row));
+            sb.append("\n");
+        }
+        if (length % rowLen != 0) {
+            byte[] row = new byte[length % rowLen];
+            System.arraycopy(bytes, offset + (length / rowLen) * rowLen, row, 0, row.length);
+            sb.append(bytesToHex(row));
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
 }

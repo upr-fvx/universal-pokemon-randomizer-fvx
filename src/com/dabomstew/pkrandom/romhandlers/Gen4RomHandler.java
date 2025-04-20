@@ -4515,6 +4515,59 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public void setShops(List<Shop> shops) {
 		// TODO: setting the shops (and repoint them to end of arm9 if needed)
+		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
+			setShopsOld(shops);
+		}
+
+		writeProgressiveShop(shops);
+		writeSpecialShops(shops);
+	}
+
+	private void writeProgressiveShop(List<Shop> shops) {
+		String countPrefix = "631C1B061C0E521C1206120E";
+		int countOffset = find(arm9, countPrefix);
+		countOffset += countPrefix.length() / 2;
+		int count = arm9[countOffset] & 0xFF;
+
+		String pointerPrefix = "012021B0F0BD";
+		int pointerOffset = find(arm9, pointerPrefix);
+		pointerOffset += pointerPrefix.length() / 2;
+		int offset = readARM9Pointer(arm9, pointerOffset);
+
+		List<Item> shopItems = shops.get(0).getItems();
+		if (shopItems.size() != count) {
+			// TODO: until we learn how to repoint
+			throw new IllegalArgumentException("shopItems.size() must equal count");
+		}
+		for (Item item : shopItems) {
+			int itemID = item.getId();
+			if (itemID == 0 || itemID >= items.size()) {
+				throw new RomIOException("Invalid item to write.");
+			}
+			writeWord(arm9, offset, itemID);
+			offset += 4;
+		}
+	}
+
+	private void writeSpecialShops(List<Shop> shops) {
+		int specialShopCount = 20;
+		int pointerTableOffset = 0x100B1C;
+
+		for (int i = 1; i < specialShopCount; i++) {
+			int offset = readARM9Pointer(arm9, pointerTableOffset + 4 * (i - 1));
+
+			for (Item item : shops.get(i).getItems()) {
+				int itemID = item.getId();
+				if (itemID == 0 || itemID >= items.size()) {
+					throw new RomIOException("Invalid item to write.");
+				}
+				writeWord(arm9, offset, itemID);
+				offset += 2;
+			}
+		}
+	}
+
+	private void setShopsOld(List<Shop> shops) {
 		int shopCount = romEntry.getIntValue("ShopCount");
 		int offset = romEntry.getIntValue("ShopDataOffset");
 

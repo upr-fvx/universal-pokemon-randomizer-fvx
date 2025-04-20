@@ -4397,9 +4397,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<Shop> getShops() {
-		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
-			return getShopsOld();
-		}
+//		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
+//			return getShopsOld();
+//		}
 
 		List<Shop> shops = new ArrayList<>();
 
@@ -4416,7 +4416,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		countOffset += countPrefix.length() / 2;
 		int count = arm9[countOffset] & 0xFF;
 
-		String pointerPrefix = "012021B0F0BD";
+		String pointerPrefix = romEntry.getRomType() == Gen4Constants.Type_HGSS ? "012023B0F0BD" : "012021B0F0BD";
 		int pointerOffset = find(arm9, pointerPrefix);
 		pointerOffset += pointerPrefix.length() / 2;
 		int offset = readARM9Pointer(arm9, pointerOffset);
@@ -4436,6 +4436,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		shop.setMainGame(true);
 		shop.setSpecialShop(false);
 
+		System.out.println(shop);
+
 		shops.add(shop);
 	}
 
@@ -4449,6 +4451,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		String locator = "054A 606F 8034 D258 2168 0023";
 		int tablePointerOffset = find(arm9, locator) + 22;
+		System.out.println("tablePointerOffset=" + tablePointerOffset);
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 
 		for (int i = 0; i < specialShopCount; i++) {
@@ -4512,9 +4515,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public void setShops(List<Shop> shops) {
 		// TODO: setting the shops (and repoint them to end of arm9 if needed)
-		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
-			setShopsOld(shops);
-		}
+//		if (romEntry.getRomType() != Gen4Constants.Type_Plat) {
+//			setShopsOld(shops);
+//			return;
+//		}
 
 		writeProgressiveShop(shops);
 		writeSpecialShops(shops);

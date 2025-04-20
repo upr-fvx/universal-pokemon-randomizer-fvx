@@ -4436,22 +4436,30 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		shop.setMainGame(true);
 		shop.setSpecialShop(false);
 
-		System.out.println(shop);
-
 		shops.add(shop);
 	}
 
 	private void readSpecialShops(List<Shop> shops) {
-		// TODO: all other games but Platinum (U)
+		if (getROMType() == Gen4Constants.Type_HGSS) {
+			System.out.println(RomFunctions.bytesToHexBlock(arm9, 0x48158, 0x48194 - 0x48158));
+		} else if (getROMType() == Gen4Constants.Type_Plat) {
+			System.out.println(RomFunctions.bytesToHexBlock(arm9, 0x46B9C, 0x46BF4 - 0x46B9C));
+		}
+
 		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
 		// TODO: redo which shops are mainGameShops
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 
 		int specialShopCount = 20;
 
-		String locator = "054A 606F 8034 D258 2168 0023";
-		int tablePointerOffset = find(arm9, locator) + 22;
-		System.out.println("tablePointerOffset=" + tablePointerOffset);
+		String locator;
+		if (getROMType() == Gen4Constants.Type_Plat) {
+			locator = "606F 8034 D258 2168 0023";
+		} else { // HGSS
+			locator = "2168 9400 034A 1259";
+		}
+		int tablePointerOffset = find(arm9, locator) + 20;
+		System.out.println("tablePointerOffset=0x" + Integer.toHexString(tablePointerOffset));
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 
 		for (int i = 0; i < specialShopCount; i++) {
@@ -4530,7 +4538,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		countOffset += countPrefix.length() / 2;
 		int count = arm9[countOffset] & 0xFF;
 
-		String pointerPrefix = "012021B0F0BD";
+		String pointerPrefix = romEntry.getRomType() == Gen4Constants.Type_HGSS ? "012023B0F0BD" : "012021B0F0BD";
 		int pointerOffset = find(arm9, pointerPrefix);
 		pointerOffset += pointerPrefix.length() / 2;
 		int offset = readARM9Pointer(arm9, pointerOffset);
@@ -4553,8 +4561,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void writeSpecialShops(List<Shop> shops) {
 		int specialShopCount = 20;
 
-		String locator = "054A 606F 8034 D258 2168 0023";
-		int tablePointerOffset = find(arm9, locator) + 22;
+		String locator;
+		if (getROMType() == Gen4Constants.Type_Plat) {
+			locator = "606F 8034 D258 2168 0023";
+		} else { // HGSS
+			locator = "2168 9400 034A 1259";
+		}
+		int tablePointerOffset = find(arm9, locator) + 20;
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 
 		for (int i = 1; i < specialShopCount; i++) {

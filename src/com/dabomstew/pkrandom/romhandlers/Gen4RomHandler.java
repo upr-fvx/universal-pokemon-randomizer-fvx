@@ -4049,13 +4049,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private int find(byte[] data, String hexString) {
-		if (hexString.length() % 2 != 0) {
-			return -3; // error
-		}
-		byte[] searchFor = new byte[hexString.length() / 2];
-		for (int i = 0; i < searchFor.length; i++) {
-			searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-		}
+		byte[] searchFor = RomFunctions.hexToBytes(hexString);
 		List<Integer> found = RomFunctions.search(data, searchFor);
 		if (found.isEmpty()) {
 			return -1; // not found
@@ -4452,10 +4446,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 
 		int specialShopCount = 20;
-		int pointerTableOffset = 0x100B1C;
+
+		String locator = "054A 606F 8034 D258 2168 0023";
+		int tablePointerOffset = find(arm9, locator) + 22;
+		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 
 		for (int i = 0; i < specialShopCount; i++) {
-			int offset = readARM9Pointer(arm9, pointerTableOffset + 4 * i);
+			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
 
 			List<Item> shopItems = new ArrayList<>();
 			int itemID = readWord(arm9, offset);
@@ -4551,10 +4548,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void writeSpecialShops(List<Shop> shops) {
 		int specialShopCount = 20;
-		int pointerTableOffset = 0x100B1C;
+
+		String locator = "054A 606F 8034 D258 2168 0023";
+		int tablePointerOffset = find(arm9, locator) + 22;
+		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 
 		for (int i = 1; i < specialShopCount; i++) {
-			int offset = readARM9Pointer(arm9, pointerTableOffset + 4 * (i - 1));
+			int offset = readARM9Pointer(arm9, tableOffset + 4 * (i - 1));
 
 			for (Item item : shops.get(i).getItems()) {
 				int itemID = item.getId();

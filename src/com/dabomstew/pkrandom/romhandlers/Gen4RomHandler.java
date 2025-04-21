@@ -4449,11 +4449,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 
 		if (getROMType() == Gen4Constants.Type_DP) {
-			System.out.println(RomFunctions.bytesToHexBlock(arm9, 0x3fe04 - 0x58, 0x5C));
+			if (getROMName().contains("(J")) {
+				System.out.println(RomFunctions.bytesToHexBlock(arm9, 0x4262c - 0x58, 0x5C));
+			} else {
+				System.out.println(RomFunctions.bytesToHexBlock(arm9, 0x3fe04 - 0x58, 0x5C));
+			}
 
-			System.out.println("0x" + Integer.toHexString(find(arm9, "105E1002")));
+			System.out.println("0x" + Integer.toHexString(find(arm9, "D0761002")));
 
-			System.out.println("0x" + Integer.toHexString(find(arm9, "A6400F02 B4400F02 AC400F02")));
+			System.out.println("0x" + Integer.toHexString(find(arm9, "B05E0F02 C05E0F02 B85E0F02")));
 
 			System.out.println("0x" + Integer.toHexString(find(arm9, "92 00 0E 00 FF FF")));
 			System.out.println("0x" + Integer.toHexString(find(arm9, "8D 00 0E 00 06 00 FF FF")));
@@ -4470,9 +4474,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int tablePointerOffset;
 
 		if (getROMType() == Gen4Constants.Type_DP) { // DP
-			specialShopCount = 19;
-			String locator = "606F 8034 D258 2168 0023";
-			tablePointerOffset = find(arm9, locator) + 24;
+			if (getROMName().contains("(J")) {
+				specialShopCount = 19;
+				String locator = "2168 9300 044A D258 0023";
+				tablePointerOffset = find(arm9, locator) + 24;
+			} else {
+				specialShopCount = 19;
+				String locator = "606F 8034 D258 2168 0023";
+				tablePointerOffset = find(arm9, locator) + 24;
+			}
 		} else if (getROMType() == Gen4Constants.Type_Plat) {
 			specialShopCount = 20;
 			String locator = "606F 8034 D258 2168 0023";
@@ -4556,7 +4566,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void writeProgressiveShop(List<Shop> shops) {
-		String countPrefix = "631C1B061C0E521C1206120E";
+		String countPrefix = getROMType() == Gen4Constants.Type_DP && getROMName().contains("(J") ?
+				"1C0E491C0906090E" : "631C1B061C0E521C1206120E";
 		int countOffset = find(arm9, countPrefix);
 		countOffset += countPrefix.length() / 2;
 		int count = arm9[countOffset] & 0xFF;
@@ -4587,9 +4598,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int tablePointerOffset;
 
 		if (getROMType() == Gen4Constants.Type_DP) { // DP
-			specialShopCount = 19;
-			String locator = "606F 8034 D258 2168 0023";
-			tablePointerOffset = find(arm9, locator) + 24;
+			if (getROMName().contains("(J")) {
+				specialShopCount = 19;
+				String locator = "2168 9300 044A D258 0023";
+				tablePointerOffset = find(arm9, locator) + 24;
+			} else {
+				specialShopCount = 19;
+				String locator = "606F 8034 D258 2168 0023";
+				tablePointerOffset = find(arm9, locator) + 24;
+			}
 		} else if (getROMType() == Gen4Constants.Type_Plat) {
 			specialShopCount = 20;
 			String locator = "606F 8034 D258 2168 0023";

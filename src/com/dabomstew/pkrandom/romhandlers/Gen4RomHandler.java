@@ -4406,20 +4406,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readProgressiveShop(List<Shop> shops) {
-
-		String countPrefix = getROMType() == Gen4Constants.Type_DP && getROMName().contains("(J") ?
-				"1C0E491C0906090E" : "631C1B061C0E521C1206120E";
-		int countOffset = find(arm9, countPrefix);
-		countOffset += countPrefix.length() / 2;
-		int count = arm9[countOffset] & 0xFF;
-
-		String pointerPrefix = romEntry.getRomType() == Gen4Constants.Type_HGSS ? "012023B0F0BD" : "012021B0F0BD";
-		int pointerOffset = find(arm9, pointerPrefix);
-		pointerOffset += pointerPrefix.length() / 2;
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
 		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
 
 		List<Item> shopItems = new ArrayList<>();
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < size; i++) {
 			int itemID = readWord(arm9,offset + i * 4);
 			if (itemID == 0 || itemID >= items.size()) {
 				throw new RomIOException("Invalid item in shop.");
@@ -4438,28 +4431,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void readSpecialShops(List<Shop> shops) {
 		List<String> shopNames = Gen4Constants.getSpecialShopNames(romEntry.getRomType());
-		// TODO: redo which shops are mainGameShops
-		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
+		List<Integer> mainGameShops = Gen4Constants.getMainGameShops(romEntry.getRomType());
 
-		int specialShopCount;
-		String locator;
-		int locatorOffset;
-		if (getROMType() == Gen4Constants.Type_DP) {
-			specialShopCount = 19;
-			locator = getROMName().contains("(J") ? "2168 9300 044A D258 0023" : "606F 8034 D258 2168 0023";
-			locatorOffset = 24;
-		} else if (getROMType() == Gen4Constants.Type_Plat) {
-			specialShopCount = 20;
-			locator = "606F 8034 D258 2168 0023";
-			locatorOffset = 20;
-		} else { // HGSS
-			specialShopCount = 30;
-			locator = "2168 9400 034A 1259";
-			locatorOffset = 20;
-		}
-		int tablePointerOffset = find(arm9, locator) + locatorOffset;
-		System.out.println("tablePointerOffset=0x" + Integer.toHexString(tablePointerOffset));
+		int tablePointerOffset = romEntry.getIntValue("SpecialShopsPointerOffset");
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
+		int specialShopCount = romEntry.getIntValue("SpecialShopCount");
 
 		for (int i = 0; i < specialShopCount; i++) {
 			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
@@ -4492,19 +4468,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void writeProgressiveShop(List<Shop> shops) {
-		String countPrefix = getROMType() == Gen4Constants.Type_DP && getROMName().contains("(J") ?
-				"1C0E491C0906090E" : "631C1B061C0E521C1206120E";
-		int countOffset = find(arm9, countPrefix);
-		countOffset += countPrefix.length() / 2;
-		int count = arm9[countOffset] & 0xFF;
-
-		String pointerPrefix = romEntry.getRomType() == Gen4Constants.Type_HGSS ? "012023B0F0BD" : "012021B0F0BD";
-		int pointerOffset = find(arm9, pointerPrefix);
-		pointerOffset += pointerPrefix.length() / 2;
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
 		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
 
 		List<Item> shopItems = shops.get(0).getItems();
-		if (shopItems.size() != count) {
+		if (shopItems.size() != size) {
 			// TODO: until we learn how to repoint
 			throw new IllegalArgumentException("shopItems.size() must equal count");
 		}
@@ -4519,30 +4489,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void writeSpecialShops(List<Shop> shops) {
-
-		int specialShopCount;
-		String locator;
-		int locatorOffset;
-		if (getROMType() == Gen4Constants.Type_DP) {
-			specialShopCount = 19;
-			locator = getROMName().contains("(J") ? "2168 9300 044A D258 0023" : "606F 8034 D258 2168 0023";
-			locatorOffset = 24;
-		} else if (getROMType() == Gen4Constants.Type_Plat) {
-			specialShopCount = 20;
-			locator = "606F 8034 D258 2168 0023";
-			locatorOffset = 20;
-		} else { // HGSS
-			specialShopCount = 22;
-			locator = "2168 9400 034A 1259";
-			locatorOffset = 20;
-		}
-		int tablePointerOffset = find(arm9, locator) + locatorOffset;
+		int tablePointerOffset = romEntry.getIntValue("SpecialShopsPointerOffset");
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
+		int specialShopCount = romEntry.getIntValue("SpecialShopCount");
 
-		for (int i = 1; i < specialShopCount; i++) {
-			int offset = readARM9Pointer(arm9, tableOffset + 4 * (i - 1));
+		for (int i = 0; i < specialShopCount; i++) {
+			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
 
-			for (Item item : shops.get(i).getItems()) {
+			for (Item item : shops.get(i + 1).getItems()) {
 				int itemID = item.getId();
 				if (itemID == 0 || itemID >= items.size()) {
 					throw new RomIOException("Invalid item to write.");

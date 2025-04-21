@@ -13,7 +13,6 @@ import com.dabomstew.pkrandom.newnds.NDSRom;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractDSRomEntry;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;

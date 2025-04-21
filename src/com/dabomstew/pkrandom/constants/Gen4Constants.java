@@ -323,7 +323,7 @@ public class Gen4Constants {
             "Celestic Secondary",
             "Snowpoint Secondary",
             "Canalave Secondary",
-            "Sunyshory Secondary",
+            "Sunyshore Secondary",
             "Pokemon League Secondary",
             "Veilstone Department Store B1F Berries"
     );
@@ -376,6 +376,35 @@ public class Gen4Constants {
             return ptSpecialShopNames;
         } else if (romType == Type_HGSS) {
             return hgssSpecialShopNames;
+        } else {
+            throw new IllegalArgumentException("Invalid RomType");
+        }
+    }
+
+    private static final List<Integer> dpMainGameShops = Collections.unmodifiableList(Arrays.asList(
+       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+    ));
+
+    private static final List<Integer> ptMainGameShops = setupPTMainGameShops();
+
+    private static List<Integer> setupPTMainGameShops() {
+        List<Integer> l = new ArrayList<>(dpMainGameShops);
+        l.add(20);
+        return Collections.unmodifiableList(l);
+    }
+
+    private static final List<Integer> hgssMainGameShops = Collections.unmodifiableList(Arrays.asList(
+            // Mahogony Before Hideout intentionally excluded, as its items won't be forever accessible
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 30
+    ));
+
+    public static List<Integer> getMainGameShops(int romType) {
+        if (romType == Type_DP) {
+            return dpMainGameShops;
+        } else if (romType == Type_Plat) {
+            return ptMainGameShops;
+        } else if (romType == Type_HGSS) {
+            return hgssMainGameShops;
         } else {
             throw new IllegalArgumentException("Invalid RomType");
         }

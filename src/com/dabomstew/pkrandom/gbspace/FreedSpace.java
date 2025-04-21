@@ -58,6 +58,7 @@ public class FreedSpace {
     protected final LinkedList<FreedChunk> freedChunks = new LinkedList<>();
 
     public void free(int start, int length) {
+        // System.out.printf("freeing %d bytes starting from 0x%x.%n", length, start);
         if (length < 1) {
             throw new IllegalArgumentException("length must be at least 1");
         }
@@ -86,6 +87,7 @@ public class FreedSpace {
         if (!freedChunkAdded) {
             freedChunks.add(toFree);
         }
+        // System.out.println("after:\t" + this);
     }
 
     protected final void addChunkBeforeOrMergeWithRightNeighbor(FreedChunk toFree, FreedChunk rightNeighbor,
@@ -123,12 +125,14 @@ public class FreedSpace {
     }
 
     public int findAndUnfree(int length) {
+        // System.out.println("looking for " + length + " bytes");
         FreedChunk found = find(length);
         if (found == null) {
             return -1;
         }
         int offset = found.start;
         unfree(found, length);
+        // System.out.println("after:\t" + this);
         return offset;
     }
 

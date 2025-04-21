@@ -26,6 +26,7 @@ import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.gbspace.FreedSpace;
 import com.dabomstew.pkrandom.graphics.palettes.Palette;
 import com.dabomstew.pkrandom.newnds.NARCArchive;
 import com.dabomstew.pkrandom.romhandlers.romentries.DSStaticPokemon;
@@ -96,6 +97,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private Map<String, Long> actualFileCRC32s;
 	private boolean tmsReusable;
 
+	private FreedSpace arm9FreedSpace = new FreedSpace();
+
 	private Gen4RomEntry romEntry;
 
 	@Override
@@ -165,11 +168,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(e);
 		}
 
-		// If the ARM9 can be expanded, do it here to keep it simple.
-		int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
+		// Do all ARM9 extension here to keep it simple.
+		// Some of the extra space is ear-marked for patches, and some for repointing data.
+		int extendBy = romEntry.getIntValue("Arm9PatchExtensionSize")
+				+ romEntry.getIntValue("Arm9RepointExtensionSize");
 		if (extendBy != 0) {
 			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
 			arm9 = extendARM9(arm9, extendBy, prefix);
+			int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
+			arm9FreedSpace.free(arm9.length - repointExtendBy, repointExtendBy);
 		}
 
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
@@ -3619,10 +3626,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (romEntry.getRomType() == Gen4Constants.Type_DP) {
 			int offset = romEntry.getIntValue("RoamingPokemonFunctionStartOffset");
 			if (readWord(arm9, offset + 44) != 0) {
-				// In the original code, the code at this offset would be performing a shift to
-				// put
-				// Cresselia's constant in r7. After applying the patch, this is now a nop,
-				// since
+				// In the original code, the code at this offset would be performing a shift to put
+				// Cresselia's constant in r7. After applying the patch, this is now a nop, since
 				// we just pc-relative load it instead. So if a nop isn't here, apply the patch.
 				applyDiamondPearlRoamerPatch();
 			}
@@ -4396,6 +4401,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
+	public boolean canChangeShopSizes() {
+		return true;
+	}
+
+	@Override
 	public List<Shop> getShops() {
 		List<Shop> shops = new ArrayList<>();
 
@@ -4462,7 +4472,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public void setShops(List<Shop> shops) {
-		// TODO: repoint the shops to end of arm9 if needed
 		writeProgressiveShop(shops);
 		writeSpecialShops(shops);
 	}
@@ -4475,8 +4484,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		List<Item> shopItems = shops.get(0).getItems();
 		if (shopItems.size() != size) {
-			// TODO: until we learn how to repoint
-			throw new IllegalArgumentException("shopItems.size() must equal count");
+			offset = repointProgressiveShop(offset, size, shopItems.size(), pointerOffset, sizeOffset);
 		}
 		for (Item item : shopItems) {
 			int itemID = item.getId();
@@ -4488,15 +4496,35 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
+	private int repointProgressiveShop(int offset, int oldSize, int newSize, int pointerOffset, int sizeOffset) {
+		arm9FreedSpace.free(offset, oldSize * 4);
+		offset = arm9FreedSpace.findAndUnfree(newSize * 4);
+		writeARM9Pointer(arm9, pointerOffset, offset);
+		arm9[sizeOffset] = (byte) newSize;
+		return offset;
+	}
+
 	private void writeSpecialShops(List<Shop> shops) {
 		int tablePointerOffset = romEntry.getIntValue("SpecialShopsPointerOffset");
 		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
 		int specialShopCount = romEntry.getIntValue("SpecialShopCount");
 
+		// Free all old at once
 		for (int i = 0; i < specialShopCount; i++) {
 			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
+			int size = 0;
+			while (readWord(arm9, offset + size * 2) != 0xFFFF) {
+				size++;
+			}
+			arm9FreedSpace.free(offset, (size + 1) * 2);
+		}
 
-			for (Item item : shops.get(i + 1).getItems()) {
+		for (int i = 0; i < specialShopCount; i++) {
+			List<Item> shopItems = shops.get(i + 1).getItems();
+			int offset = arm9FreedSpace.findAndUnfree((shopItems.size() + 1) * 2);
+			writeARM9Pointer(arm9, tableOffset + 4 * i, offset);
+
+			for (Item item : shopItems) {
 				int itemID = item.getId();
 				if (itemID == 0 || itemID >= items.size()) {
 					throw new RomIOException("Invalid item to write.");
@@ -4504,6 +4532,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				writeWord(arm9, offset, itemID);
 				offset += 2;
 			}
+			writeWord(arm9, offset, 0xFFFF);
 		}
 	}
 

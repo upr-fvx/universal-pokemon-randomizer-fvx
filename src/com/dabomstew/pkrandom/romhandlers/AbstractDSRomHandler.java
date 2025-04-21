@@ -396,7 +396,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * Writes a pointer to "offset" located in ARM9, pointing at "pointer".
      */
     protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
-        writeLong(arm9, offset, pointer);
+        writeLong(arm9, offset, pointer + getARM9Offset());
     }
     
 	private byte[] concatenate(byte[] a, byte[] b) {

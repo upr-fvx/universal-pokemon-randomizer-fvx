@@ -4437,9 +4437,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readSpecialShops(List<Shop> shops) {
-
-		// TODO: redo what the shops are named (fixed for Plat but not the rest)
-		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
+		List<String> shopNames = Gen4Constants.getSpecialShopNames(romEntry.getRomType());
 		// TODO: redo which shops are mainGameShops
 		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
 
@@ -4455,7 +4453,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			locator = "606F 8034 D258 2168 0023";
 			locatorOffset = 20;
 		} else { // HGSS
-			specialShopCount = 22;
+			specialShopCount = 30;
 			locator = "2168 9400 034A 1259";
 			locatorOffset = 20;
 		}

@@ -305,39 +305,7 @@ public class Gen4Constants {
 
     public static final int itemScriptVariable = 0x8008;
 
-    private static final List<String> dpShopNames = Arrays.asList(
-            "Sunyshore Secondary",
-            "Jubilife Secondary",
-            "Floaroma Secondary",
-            "Oreburgh Secondary",
-            "Eterna Secondary",
-            "Eterna Herbs",
-            "Snowpoint Secondary",
-            "Solaceon Secondary",
-            "Pastoria Secondary",
-            "Celestic Secondary",
-            "Hearthome Secondary",
-            "Canalave Secondary",
-            "Veilstone Department Store Secret Base Decorations 1",
-            "Veilstone Department Store Secret Base Decorations 2",
-            "Veilstone Department Store Vitamins",
-            "Veilstone Department Store TMs 1",
-            "Sunyshore Market Seals 1",
-            "Sunyshore Market Seals 2",
-            "Sunyshore Market Seals 3",
-            "Sunyshore Market Seals 4",
-            "Veilstone Department Store TMs 2",
-            "Sunyshore Market Seals 5",
-            "Sunyshore Market Seals 6",
-            "Sunyshore Market Seals 7",
-            "Pokemon League Secondary",
-            "Veilstone Department Store X Items",
-            "Veilstone Department Store Healing",
-            "Veilstone Department Store Balls Etc.",
-            "Progressive Shops"
-    );
-
-    private static final List<String> ptShopNames = Arrays.asList(
+    private static final List<String> dpSpecialShopNames = Arrays.asList(
             "Jubilife Secondary",
             "Oreburgh Secondary",
             "Floaroma Secondary",
@@ -360,75 +328,54 @@ public class Gen4Constants {
             "Veilstone Department Store B1F Berries"
     );
 
-    private static final List<String> hgssShopNames = Arrays.asList(
+    private static final List<String> ptSpecialShopNames = setupPTSpecialShopNames();
+
+    private static List<String> setupPTSpecialShopNames() {
+        List<String> l = new ArrayList<>(dpSpecialShopNames);
+        l.add("Veilstone Department Store B1F Berries");
+        return Collections.unmodifiableList(l);
+    }
+
+    private static final List<String> hgssSpecialShopNames = Arrays.asList(
             "Cherrygrove Secondary",
-            "Cerulean Secondary",
-            "Ecruteak Secondary",
-            "Celadon Department Store Mail",
-            "Saffron Secondary",
             "Violet Secondary",
-            "Blackthorn Secondary",
+            "Azalea Secondary",
+            "Goldenrod Department Store 2F (Lower)",
+            "Goldenrod Department Store 2F (Upper)",
+            "Goldenrod Department Store 3F",
+            "Goldenrod Department Store 4F",
+            "Goldenrod Department Store 5F",
+            "Goldenrod Herb Shop",
+            "Ecruteak Secondary",
             "Olivine Secondary",
-            "Fuchsia Secondary",
+            "Cianwood Pharmacy",
+            "Blackthorn Secondary",
+            "Unused Secondary",
+            "Safari Zone Gate Southwest",
+            "Saffron Secondary",
             "Lavender Secondary",
+            "Cerulean Secondary",
+            "Celadon Department Store 2F (Left)",
+            "Celadon Department Store 2F (Right)",
+            "Celadon Department Store 3F",
+            "Celadon Department Store 4F",
+            "Celadon Department Store 5F (Left)",
+            "Celadon Department Store 5F (Right)",
+            "Fuchsia Secondary",
             "Pewter Secondary",
             "Viridian Secondary",
-            "Azalea Secondary",
-            "Mahogany Before Hideout",
-            "Safari Zone Gate Southwest",
-            "Goldenrod Herb Shop",
-            "Cianwood Pharmacy",
-            "Veilstone Department Store Secret Base Decorations 1",
-            "Veilstone Department Store Secret Base Decorations 2",
-            "Goldenrod Department Store Vitamins",
-            "Celadon Department Store Vitamins",
             "Mt. Moon Square",
-            "Sunyshore Market Seals 1",
-            "Sunyshore Market Seals 2",
-            "Sunyshore Market Seals 3",
-            "Sunyshore Market Seals 4",
-            "Sunyshore Market Seals 5",
-            "Sunyshore Market Seals 6",
-            "Unused Secondary",
-            "Sunyshore Market Seals 7",
-            "Pokeathlon Dome Data Card Shop 25-27",
-            "Goldenrod Department Store X Items",
-            "Celadon Department Store X Items",
-            "Mahogany After Hideout",
-            "Goldenrod Department Store Healing",
-            "Celadon Department Store Healing",
-            "Goldenrod Department Store Balls Etc.",
-            "Goldenrod TMs",
-            "Celadon Department Store Balls Etc.",
-            "Celadon TMs",
-            "Pokeathlon Dome Athlete Shop Sunday (Pre-National Dex)",
-            "Pokeathlon Dome Data Card Shop 19-24",
-            "Pokeathlon Dome Data Card Shop 1-6",
-            "Pokeathlon Dome Athlete Shop Monday (Pre-National Dex)",
-            "Pokeathlon Dome Athlete Shop Tuesday (Pre-National Dex)",
-            "Pokeathlon Dome Data Card Shop 7-12",
-            "Pokeathlon Dome Athlete Shop Wednesday (Pre-National Dex)",
-            "Pokeathlon Dome Athlete Shop Thursday (Pre-National Dex)",
-            "Pokeathlon Dome Athlete Shop Friday (Pre-National Dex)",
-            "Pokeathlon Dome Athlete Shop Saturday (Pre-National Dex)",
-            "Pokeathlon Dome Data Card Shop 13-18",
-            "Pokeathlon Dome Athlete Shop Sunday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Monday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Tuesday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Wednesday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Thursday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Friday (Post-National Dex)",
-            "Pokeathlon Dome Athlete Shop Saturday (Post-National Dex)",
-            "Progressive Shops"
+            "Mahogany Before Hideout",
+            "Mahogany After Hideout"
     );
 
-    public static List<String> getShopNames(int romType) {
+    public static List<String> getSpecialShopNames(int romType) {
         if (romType == Type_DP) {
-            return dpShopNames;
+            return dpSpecialShopNames;
         } else if (romType == Type_Plat) {
-            return ptShopNames;
+            return ptSpecialShopNames;
         } else if (romType == Type_HGSS) {
-            return hgssShopNames;
+            return hgssSpecialShopNames;
         } else {
             throw new IllegalArgumentException("Invalid RomType");
         }

@@ -871,6 +871,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void forceFullyEvolvedTrainerPokes() {
+        // TODO add option to keep moves if TP unchanged here AND no better moveset selected
         int minLevel = settings.getTrainersForceFullyEvolvedLevel();
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
@@ -912,34 +913,36 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 continue;
             }
 
+            List<TrainerPokemon> originalPokes = new ArrayList<>();
             int lowest = 100;
-            List<TrainerPokemon> potentialPokes = new ArrayList<>();
+            int highest = 0;
 
-            // First pass: find lowest level
+            // First pass: find lowest and highest level while copying the original Pokemon
             for (TrainerPokemon tpk : t.pokemon) {
                 if (tpk.getLevel() < lowest) {
                     lowest = tpk.getLevel();
                 }
-            }
-
-            // Second pass: find all Pokemon at lowest level
-            for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.getLevel() == lowest) {
-                    potentialPokes.add(tpk);
+                if (tpk.getLevel() > highest) {
+                    highest = tpk.getLevel();
                 }
+                originalPokes.add(tpk);
             }
 
             // If a trainer can appear in a Multi Battle (i.e., a Double Battle where the enemy consists
             // of two independent trainers), we want to be aware of that so we don't give them a team of
             // six Pokemon and have a 6v12 battle
             int maxPokemon = t.multiBattleStatus != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
+            int originalSize = originalPokes.size();
             for (int i = 0; i < additional; i++) {
                 if (t.pokemon.size() >= maxPokemon) break;
 
                 // We want to preserve the original last Pokemon because the order is sometimes used to
                 // determine the rival's starter
                 int secondToLastIndex = t.pokemon.size() - 1;
-                TrainerPokemon newPokemon = potentialPokes.get(i % potentialPokes.size()).copy();
+                // Insert a random original Pokemon as placeholder and give it a random level
+                // between the lowest and highest level of the original team
+                TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
+                newPokemon.setLevel(random.nextInt(highest - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables

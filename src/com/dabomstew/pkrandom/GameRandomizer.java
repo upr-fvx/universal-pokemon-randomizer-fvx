@@ -513,11 +513,16 @@ public class GameRandomizer {
 
     private void maybeRandomizeTrainerPokemon() {
         // Trainer Pokemon
-        // 1. Add extra Trainer Pokemon
-        // 2. Set trainers to be double battles and add extra Pokemon if necessary
-        // 3. Modify levels
+        // 1. Modify levels first to get larger level variety if additional Pokemon are added in the next step
+        // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
+        // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
         // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing)
+
+
+        if (settings.isTrainersLevelModified()) {
+            trainerPokeRandomizer.applyTrainerLevelModifier();
+        }
 
         if (settings.getAdditionalRegularTrainerPokemon() > 0
                 || settings.getAdditionalImportantTrainerPokemon() > 0
@@ -529,10 +534,6 @@ public class GameRandomizer {
             trainerPokeRandomizer.setDoubleBattleMode();
         }
 
-        if (settings.isTrainersLevelModified()) {
-            trainerPokeRandomizer.applyTrainerLevelModifier();
-        }
-
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
                 || settings.getStartersMod() != Settings.StartersMod.UNCHANGED)
                 && settings.isRivalCarriesStarterThroughout()) {
@@ -541,8 +542,8 @@ public class GameRandomizer {
 
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersForceFullyEvolved()) {
-            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        } else if (settings.isTrainersForceFullyEvolved()) { // TODO This cannot be else if anymore if UNCHANGED does something, also, does this mean randomized Pkmn cannot be fully evoled?
+            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes(); // TODO adapt to keep moves even if evolved (just do it for unchanged now)
         }
     }
 

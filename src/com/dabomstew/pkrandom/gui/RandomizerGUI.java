@@ -2696,13 +2696,13 @@ public class RandomizerGUI {
 
             tpAdditionalPokemonForLabel.setVisible(additionalPokemonAvailable);
             tpBossTrainersCheckBox.setVisible(canAddPokesToBoss);
-            tpBossTrainersCheckBox.setEnabled(false);
+            tpBossTrainersCheckBox.setEnabled(canAddPokesToBoss);
             tpBossTrainersSpinner.setVisible(canAddPokesToBoss);
             tpImportantTrainersCheckBox.setVisible(canAddPokesToImportant);
-            tpImportantTrainersCheckBox.setEnabled(false);
+            tpImportantTrainersCheckBox.setEnabled(canAddPokesToImportant);
             tpImportantTrainersSpinner.setVisible(canAddPokesToImportant);
             tpRegularTrainersCheckBox.setVisible(canAddPokesToRegular);
-            tpRegularTrainersCheckBox.setEnabled(false);
+            tpRegularTrainersCheckBox.setEnabled(canAddPokesToRegular);
             tpRegularTrainersSpinner.setVisible(canAddPokesToRegular);
 
             boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
@@ -3248,7 +3248,6 @@ public class RandomizerGUI {
             disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
-                    tpBossTrainersCheckBox, tpImportantTrainersCheckBox, tpRegularTrainersCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
                     tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,

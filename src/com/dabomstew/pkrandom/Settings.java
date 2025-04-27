@@ -26,6 +26,7 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
 import com.dabomstew.pkrandom.romhandlers.*;
@@ -706,7 +707,7 @@ public class Settings {
 
         try {
             writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, FileFunctions.getFileChecksum(SysConstants.customNamesFile));
+            writeFullInt(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }

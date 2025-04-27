@@ -22,6 +22,7 @@ package launcher;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.RootPath;
 import com.dabomstew.pkrandom.SysConstants;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class Launcher {
     public static void main(String[] args) {
         try {
             ProcessBuilder pb = new ProcessBuilder("java", "-Xmx4096M", "-jar", "./PokeRandoFVX.jar", "please-use-the-launcher");
-            File log = new File(SysConstants.ROOT_PATH + "launcher-log.txt");
+            File log = new File(RootPath.path + "launcher-log.txt");
             if (!log.exists()) {
                 log.createNewFile();
             }

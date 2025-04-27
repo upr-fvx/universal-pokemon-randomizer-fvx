@@ -3,6 +3,7 @@ package com.dabomstew.pkrandom.cli;
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.romhandlers.*;
 
 import java.io.*;
@@ -35,7 +36,7 @@ public class CliRandomizer {
             FileInputStream fis = new FileInputStream(fh);
             settings = Settings.read(fis);
             // taken from com.dabomstew.pkrandom.newgui.RandomizerGUI.saveROM, set distinctly from all other settings
-            settings.setCustomNames(FileFunctions.getCustomNames());
+            settings.setCustomNames(CustomNamesSet.readNamesFromFile());
             fis.close();
         } catch (UnsupportedOperationException | IllegalArgumentException | IOException ex) {
             ex.printStackTrace();

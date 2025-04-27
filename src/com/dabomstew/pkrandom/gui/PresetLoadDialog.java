@@ -30,8 +30,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.CustomNamesSet;
-import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.romhandlers.Abstract3DSRomHandler;
@@ -324,7 +323,7 @@ public class PresetLoadDialog extends JDialog {
     private void acceptButtonActionPerformed() {// GEN-FIRST:event_acceptButtonActionPerformed
         if (customNames == null) {
             try {
-                customNames = FileFunctions.getCustomNames();
+                customNames = CustomNamesSet.readNamesFromFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

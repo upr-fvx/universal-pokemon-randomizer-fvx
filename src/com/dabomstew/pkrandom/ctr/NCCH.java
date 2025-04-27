@@ -22,6 +22,7 @@ package com.dabomstew.pkrandom.ctr;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.RootPath;
 import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
@@ -87,11 +88,11 @@ public class NCCH {
         String dataFolder = "tmp_" + rawFilename.substring(0, rawFilename.lastIndexOf('.'));
         // remove nonsensical chars
         dataFolder = dataFolder.replaceAll("[^A-Za-z0-9_]+", "");
-        File tmpFolder = new File(SysConstants.ROOT_PATH + dataFolder);
+        File tmpFolder = new File(RootPath.path + dataFolder);
         tmpFolder.mkdirs();
         if (tmpFolder.canWrite()) {
             writingEnabled = true;
-            this.tmpFolder = SysConstants.ROOT_PATH + dataFolder + File.separator;
+            this.tmpFolder = RootPath.path + dataFolder + File.separator;
             tmpFolder.deleteOnExit();
         } else {
             writingEnabled = false;

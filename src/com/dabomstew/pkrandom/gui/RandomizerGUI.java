@@ -26,6 +26,7 @@ import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
 import com.dabomstew.pkrandom.constants.Gen3Constants;
 import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.*;
 import com.dabomstew.pkrandom.gamedata.ExpCurve;
 import com.dabomstew.pkrandom.gamedata.GenRestrictions;
@@ -52,7 +53,6 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -415,7 +415,6 @@ public class RandomizerGUI {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
-        testForRequiredConfigs();
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };
@@ -733,16 +732,16 @@ public class RandomizerGUI {
     }
 
     private void initFileChooserDirectories() {
-        romOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        romSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        if (new File(SysConstants.ROOT_PATH + "settings/").exists()) {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
+        romOpenChooser.setCurrentDirectory(new File(RootPath.path));
+        romSaveChooser.setCurrentDirectory(new File(RootPath.path));
+        if (new File(RootPath.path + "settings/").exists()) {
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
         } else {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path));
         }
     }
 
@@ -1037,7 +1036,7 @@ public class RandomizerGUI {
         presetMode = false;
 
         try {
-            CustomNamesSet cns = FileFunctions.getCustomNames();
+            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
             performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
@@ -2108,7 +2107,7 @@ public class RandomizerGUI {
     }
 
     private Settings getCurrentSettings() throws IOException {
-        return createSettingsFromState(FileFunctions.getCustomNames());
+        return createSettingsFromState(CustomNamesSet.readNamesFromFile());
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
@@ -2215,9 +2214,9 @@ public class RandomizerGUI {
         }
 
         // Check the trainerclass & trainernames & nicknames crc
-        if (customNames == null && !FileFunctions.checkOtherCRC(data, 16, 4, SysConstants.customNamesFile, data.length - 4)) {
+        if (customNames == null && !CustomNamesSet.checkOtherCRC(data, 16, 4, data.length - 4)) {
             throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
-                    "Can't use this preset because you have a different set " + "of custom names to the creator.");
+                    "Can't use this preset because you have a different set of custom names to the creator.");
         }
     }
 
@@ -3740,7 +3739,7 @@ public class RandomizerGUI {
 
         boolean foundFile = false;
         for (int file = 0; file < 3; file++) {
-            File currentFile = new File(SysConstants.ROOT_PATH + cnamefiles[file]);
+            File currentFile = new File(RootPath.path + cnamefiles[file]);
             if (currentFile.exists()) {
                 foundFile = true;
                 break;
@@ -3771,7 +3770,7 @@ public class RandomizerGUI {
         // Things that should be true by default should be manually set here
         unloadGameOnSuccess = true;
         batchRandomizationSettings = new BatchRandomizationSettings();
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (!fh.exists() || !fh.canRead()) {
             return;
         }
@@ -3843,7 +3842,7 @@ public class RandomizerGUI {
     }
 
     private boolean attemptWriteConfig() {
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (fh.exists() && !fh.canWrite()) {
             return false;
         }
@@ -3874,16 +3873,6 @@ public class RandomizerGUI {
 
     }
 
-    private void testForRequiredConfigs() {
-        try {
-            FileFunctions.testForRequiredConfigs();
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                    String.format(bundle.getString("GUI.configFileMissing"), e.getMessage()));
-            System.exit(1);
-        }
-    }
-
     private String[] getTrainerSettingsForGeneration(int generation) {
         List<String> result = new ArrayList<>(trainerSettings);
         if (generation != 5) {
@@ -3897,6 +3886,8 @@ public class RandomizerGUI {
     }
 
     public static void main(String[] args) {
+        setRootPath();
+
         String firstCliArg = args.length > 0 ? args[0] : "";
         // invoke as CLI program
         if (firstCliArg.equals("cli")) {
@@ -3924,6 +3915,22 @@ public class RandomizerGUI {
                 frame.pack();
                 frame.setVisible(true);
             });
+        }
+    }
+
+    private static void setRootPath() {
+        // Honestly I don't know why the Randomizer needs a different RootPath from just "./",
+        // but it was written in earlier versions so it feels safer to just keep it.
+        // Feel free to investigate if you feel like it. Maybe it's entirely redundant.
+        // --voliol 2025-04-27
+        try {
+            URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
+            String file = location.getFile();
+            String plusEncoded = file.replaceAll("\\+", "%2b");
+            File f = new File(java.net.URLDecoder.decode(plusEncoded, "UTF-8"));
+            RootPath.path = f.getParentFile() + File.separator;
+        } catch (UnsupportedEncodingException ignored) {
+            RootPath.path = "./";
         }
     }
 }

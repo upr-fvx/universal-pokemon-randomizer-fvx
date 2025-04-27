@@ -1,4 +1,4 @@
-package com.dabomstew.pkrandom;
+package com.dabomstew.pkrandom.customNames;
 
 /*----------------------------------------------------------------------------*/
 /*--  CustomNamesSet.java - handles functionality related to custom names.  --*/
@@ -24,22 +24,159 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.RootPath;
+import com.dabomstew.pkrandom.SysConstants;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.zip.CRC32;
 
 public class CustomNamesSet {
 
-    private List<String> trainerNames;
-    private List<String> trainerClasses;
-    private List<String> doublesTrainerNames;
-    private List<String> doublesTrainerClasses;
-    private List<String> pokemonNicknames;
-
     private static final int CUSTOM_NAMES_VERSION = 1;
+    private static final String DEFAULT_FILE_PATH = "/com/dabomstew/pkrandom/customnames/";
+
+    public static CustomNamesSet readNamesFromFile() throws IOException {
+        InputStream is = openFile(SysConstants.customNamesFile);
+        CustomNamesSet cns = new CustomNamesSet(is);
+        is.close();
+        return cns;
+    }
+
+    public static CustomNamesSet importOldNames() throws IOException {
+        CustomNamesSet cns = new CustomNamesSet();
+
+        // Trainer Names
+        if (fileExists(SysConstants.tnamesFile)) {
+            Scanner sc = new Scanner(openFile(SysConstants.tnamesFile), "UTF-8");
+            while (sc.hasNextLine()) {
+                String trainername = sc.nextLine().trim();
+                if (trainername.isEmpty()) {
+                    continue;
+                }
+                if (trainername.startsWith("\uFEFF")) {
+                    trainername = trainername.substring(1);
+                }
+                if (trainername.contains("&")) {
+                    cns.doublesTrainerNames.add(trainername);
+                } else {
+                    cns.trainerNames.add(trainername);
+                }
+            }
+            sc.close();
+        }
+
+        // Trainer Classes
+        if (fileExists(SysConstants.tclassesFile)) {
+            Scanner sc = new Scanner(openFile(SysConstants.tclassesFile), "UTF-8");
+            while (sc.hasNextLine()) {
+                String trainerClassName = sc.nextLine().trim();
+                if (trainerClassName.isEmpty()) {
+                    continue;
+                }
+                if (trainerClassName.startsWith("\uFEFF")) {
+                    trainerClassName = trainerClassName.substring(1);
+                }
+                String checkName = trainerClassName.toLowerCase();
+                int idx = (checkName.endsWith("couple") || checkName.contains(" and ") || checkName.endsWith("kin")
+                        || checkName.endsWith("team") || checkName.contains("&") || (checkName.endsWith("s") && !checkName
+                        .endsWith("ss"))) ? 1 : 0;
+                if (idx == 1) {
+                    cns.doublesTrainerClasses.add(trainerClassName);
+                } else {
+                    cns.trainerClasses.add(trainerClassName);
+                }
+            }
+            sc.close();
+        }
+
+        // Nicknames
+        if (fileExists(SysConstants.nnamesFile)) {
+            Scanner sc = new Scanner(openFile(SysConstants.nnamesFile), "UTF-8");
+            while (sc.hasNextLine()) {
+                String nickname = sc.nextLine().trim();
+                if (nickname.isEmpty()) {
+                    continue;
+                }
+                if (nickname.startsWith("\uFEFF")) {
+                    nickname = nickname.substring(1);
+                }
+                cns.pokemonNicknames.add(nickname);
+            }
+            sc.close();
+        }
+
+        return cns;
+    }
+
+    private static InputStream openFile(String filename) throws IOException {
+        File fh = new File(RootPath.path + filename);
+        if (fh.exists() && fh.canRead()) {
+            return Files.newInputStream(fh.toPath());
+        }
+
+        String resourcePath = DEFAULT_FILE_PATH + filename;
+        InputStream is = FileFunctions.class.getResourceAsStream(resourcePath);
+        if (is == null) {
+            throw new FileNotFoundException("Could not find resource " + resourcePath);
+        }
+        return is;
+    }
+
+    private static boolean fileExists(String filename) {
+        File fh = new File(RootPath.path + filename);
+        if (fh.exists() && fh.canRead()) {
+            return true;
+        }
+
+        return FileFunctions.class.getResource(DEFAULT_FILE_PATH + filename) != null;
+    }
+
+    // Custom Names use TWO custom check sum methods for whatever reason.
+    // It might be possible to replace them with something more standard,
+    // but am not looking into that now. -- voliol 2025-04-27
+
+    public static int getFileChecksum() {
+        try {
+            Scanner sc = new Scanner(openFile(SysConstants.customNamesFile), "UTF-8");
+            CRC32 checksum = new CRC32();
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (!line.isEmpty()) {
+                    checksum.update(line.getBytes(StandardCharsets.UTF_8));
+                }
+            }
+            sc.close();
+            return (int) checksum.getValue();
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
+    public static boolean checkOtherCRC(byte[] data, int byteIndex, int switchIndex, int offsetInData) {
+        // If the switch at data[byteIndex].switchIndex is on, then check that
+        // the CRC at data[offsetInData] ... data[offsetInData+3] matches the
+        // CRC of filename.
+        // If not, return false.
+        // If any other case, return true.
+        int switches = data[byteIndex] & 0xFF;
+        if (((switches >> switchIndex) & 0x01) == 0x01) {
+            // have to check the CRC
+            int crc = FileFunctions.readFullIntBigEndian(data, offsetInData);
+
+            return getFileChecksum() == crc;
+        }
+        return true;
+    }
+
+    private final List<String> trainerNames;
+    private final List<String> trainerClasses;
+    private final List<String> doublesTrainerNames;
+    private final List<String> doublesTrainerClasses;
+    private final List<String> pokemonNicknames;
 
     // Standard constructor: read binary data from an input stream.
     public CustomNamesSet(InputStream data) throws IOException {
@@ -162,72 +299,6 @@ public class CustomNamesSet {
     public void setPokemonNicknames(List<String> names) {
         pokemonNicknames.clear();
         pokemonNicknames.addAll(names);
-    }
-
-    public static CustomNamesSet importOldNames() throws FileNotFoundException {
-        CustomNamesSet cns = new CustomNamesSet();
-
-        // Trainer Names
-        if (FileFunctions.configExists(SysConstants.tnamesFile)) {
-            Scanner sc = new Scanner(FileFunctions.openConfig(SysConstants.tnamesFile), "UTF-8");
-            while (sc.hasNextLine()) {
-                String trainername = sc.nextLine().trim();
-                if (trainername.isEmpty()) {
-                    continue;
-                }
-                if (trainername.startsWith("\uFEFF")) {
-                    trainername = trainername.substring(1);
-                }
-                if (trainername.contains("&")) {
-                    cns.doublesTrainerNames.add(trainername);
-                } else {
-                    cns.trainerNames.add(trainername);
-                }
-            }
-            sc.close();
-        }
-
-        // Trainer Classes
-        if (FileFunctions.configExists(SysConstants.tclassesFile)) {
-            Scanner sc = new Scanner(FileFunctions.openConfig(SysConstants.tclassesFile), "UTF-8");
-            while (sc.hasNextLine()) {
-                String trainerClassName = sc.nextLine().trim();
-                if (trainerClassName.isEmpty()) {
-                    continue;
-                }
-                if (trainerClassName.startsWith("\uFEFF")) {
-                    trainerClassName = trainerClassName.substring(1);
-                }
-                String checkName = trainerClassName.toLowerCase();
-                int idx = (checkName.endsWith("couple") || checkName.contains(" and ") || checkName.endsWith("kin")
-                        || checkName.endsWith("team") || checkName.contains("&") || (checkName.endsWith("s") && !checkName
-                        .endsWith("ss"))) ? 1 : 0;
-                if (idx == 1) {
-                    cns.doublesTrainerClasses.add(trainerClassName);
-                } else {
-                    cns.trainerClasses.add(trainerClassName);
-                }
-            }
-            sc.close();
-        }
-
-        // Nicknames
-        if (FileFunctions.configExists(SysConstants.nnamesFile)) {
-            Scanner sc = new Scanner(FileFunctions.openConfig(SysConstants.nnamesFile), "UTF-8");
-            while (sc.hasNextLine()) {
-                String nickname = sc.nextLine().trim();
-                if (nickname.isEmpty()) {
-                    continue;
-                }
-                if (nickname.startsWith("\uFEFF")) {
-                    nickname = nickname.substring(1);
-                }
-                cns.pokemonNicknames.add(nickname);
-            }
-            sc.close();
-        }
-
-        return cns;
     }
 
 }

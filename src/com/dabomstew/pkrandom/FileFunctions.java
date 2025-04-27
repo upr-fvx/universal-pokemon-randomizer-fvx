@@ -25,20 +25,19 @@ package com.dabomstew.pkrandom;
 import com.dabomstew.pkrandom.exceptions.InvalidROMException;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Objects;
 import java.util.zip.CRC32;
 
 /**
  * Functions relating to file I/O.
  */
 public class FileFunctions {
+
+    private static final String CONFIG_RESOURCE_PATH = "/com/dabomstew/pkrandom/config/";
 
     public static void validateRomFile(File fh) throws InvalidROMException {
         // first, check for common filetypes that aren't ROMs
@@ -94,66 +93,13 @@ public class FileFunctions {
         return new File(absolutePath);
     }
 
-    // RomHandlers implicitly rely on these - call this before creating settings
-    // etc.
-    public static void testForRequiredConfigs() throws FileNotFoundException {
-        String[] required = new String[] { "gameboy_jpn.tbl", "rby_english.tbl", "rby_freger.tbl", "rby_espita.tbl",
-                "green_translation.tbl", "gsc_english.tbl", "gsc_freger.tbl", "gsc_espita.tbl", "gba_english.tbl",
-                "gba_jpn.tbl", "Generation4.tbl", "Generation5.tbl", "gen1_offsets.ini", "gen2_offsets.ini",
-                "gen3_offsets.ini", "gen4_offsets.ini", "gen5_offsets.ini", "gen6_offsets.ini", "gen7_offsets.ini",
-                SysConstants.customNamesFile };
-        for (String filename : required) {
-            if (!configExists(filename)) {
-                throw new FileNotFoundException(filename);
-            }
-        }
-    }
-
-    private static List<String> overrideFiles = Arrays.asList(SysConstants.customNamesFile,
-            SysConstants.tclassesFile, SysConstants.tnamesFile, SysConstants.nnamesFile);
-
-    public static boolean configExists(String filename) {
-        if (overrideFiles.contains(filename)) {
-            File fh = new File(SysConstants.ROOT_PATH + filename);
-            if (fh.exists() && fh.canRead()) {
-                return true;
-            }
-            fh = new File("./" + filename);
-            if (fh.exists() && fh.canRead()) {
-                return true;
-            }
-        }
-        return FileFunctions.class.getResource("/com/dabomstew/pkrandom/config/" + filename) != null;
-    }
-
     public static InputStream openConfig(String filename) throws FileNotFoundException {
-        if (overrideFiles.contains(filename)) {
-            File fh = new File(SysConstants.ROOT_PATH + filename);
-            if (fh.exists() && fh.canRead()) {
-                return new FileInputStream(fh);
-            }
-            fh = new File("./" + filename);
-            if (fh.exists() && fh.canRead()) {
-                return new FileInputStream(fh);
-            }
-        }
-
-        String resourcePath = "/com/dabomstew/pkrandom/config/" + filename;
+        String resourcePath = CONFIG_RESOURCE_PATH + filename;
         InputStream is = FileFunctions.class.getResourceAsStream(resourcePath);
         if (is == null) {
-            // FileNotFoundException is not strictly correct, I think? I believe IOException might be what should
-            // really be used, but this should do as a quickfix.
             throw new FileNotFoundException("Could not find resource " + resourcePath);
         }
         return is;
-
-    }
-
-    public static CustomNamesSet getCustomNames() throws IOException {
-        InputStream is = openConfig(SysConstants.customNamesFile);
-        CustomNamesSet cns = new CustomNamesSet(is);
-        is.close();
-        return cns;
     }
 
     public static long readFullLong(byte[] data, int offset) {
@@ -261,50 +207,6 @@ public class FileFunctions {
         fos.close();
     }
 
-    public static byte[] getConfigAsBytes(String filename) throws IOException {
-        InputStream in = openConfig(filename);
-        byte[] buf = readFullyIntoBuffer(in, in.available());
-        in.close();
-        return buf;
-    }
-
-    public static int getFileChecksum(String filename) {
-        try {
-            return getFileChecksum(openConfig(filename));
-        } catch (IOException e) {
-            return 0;
-        }
-    }
-
-    private static int getFileChecksum(InputStream stream) {
-        Scanner sc = new Scanner(stream, "UTF-8");
-        CRC32 checksum = new CRC32();
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine().trim();
-            if (!line.isEmpty()) {
-                checksum.update(line.getBytes(StandardCharsets.UTF_8));
-            }
-        }
-        sc.close();
-        return (int) checksum.getValue();
-    }
-
-    public static boolean checkOtherCRC(byte[] data, int byteIndex, int switchIndex, String filename, int offsetInData) {
-        // If the switch at data[byteIndex].switchIndex is on, then check that
-        // the CRC at data[offsetInData] ... data[offsetInData+3] matches the
-        // CRC of filename.
-        // If not, return false.
-        // If any other case, return true.
-        int switches = data[byteIndex] & 0xFF;
-        if (((switches >> switchIndex) & 0x01) == 0x01) {
-            // have to check the CRC
-            int crc = readFullIntBigEndian(data, offsetInData);
-
-            return getFileChecksum(filename) == crc;
-        }
-        return true;
-    }
-
     public static long getCRC32(byte[] data) {
         CRC32 checksum = new CRC32();
         checksum.update(data);
@@ -312,23 +214,11 @@ public class FileFunctions {
     }
 
     private static byte[] getCodeTweakFile(String filename) throws IOException {
-        System.out.println(filename);
-        InputStream is = FileFunctions.class.getResourceAsStream("/com/dabomstew/pkrandom/patches/" + filename);
+        InputStream is = Objects.requireNonNull(
+                FileFunctions.class.getResourceAsStream("/com/dabomstew/pkrandom/patches/" + filename));
         byte[] buf = readFullyIntoBuffer(is, is.available());
         is.close();
         return buf;
-    }
-
-    public static byte[] downloadFile(String url) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        int count;
-        while ((count = in.read(buf, 0, 1024)) != -1) {
-            out.write(buf, 0, count);
-        }
-        in.close();
-        return out.toByteArray();
     }
 
     public static void applyPatch(byte[] rom, String patchName) throws IOException {
@@ -397,13 +287,5 @@ public class FileFunctions {
 
     private static int readIPSSize(byte[] data, int offset) {
         return ((data[offset] & 0xFF) << 8) | (data[offset + 1] & 0xFF);
-    }
-
-    public static byte[] convIntArrToByteArr(int[] arg) {
-        byte[] out = new byte[arg.length];
-        for (int i = 0; i < arg.length; i++) {
-            out[i] = (byte) arg[i];
-        }
-        return out;
     }
 }

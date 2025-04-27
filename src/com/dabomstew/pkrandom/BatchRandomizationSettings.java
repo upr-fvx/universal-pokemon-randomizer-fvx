@@ -43,7 +43,7 @@ public class BatchRandomizationSettings implements Cloneable {
         numberOfRandomizedROMs = 10;
         startingIndex = 0;
         fileNamePrefix = "random";
-        outputDirectory = SysConstants.ROOT_PATH;
+        outputDirectory = RootPath.path;
     }
 
     public boolean isBatchRandomizationEnabled() {

@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.CustomNamesSet;
+import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.romhandlers.RomHandler;

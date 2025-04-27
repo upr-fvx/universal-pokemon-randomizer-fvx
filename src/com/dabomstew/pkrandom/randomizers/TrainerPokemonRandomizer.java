@@ -71,7 +71,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
 
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
-        // added that needs to be randomize according to the following settings
+        // added that needs to be randomized according to the following settings
         if (isUnchanged) {
             keepTypeThemes = true;
             banIrregularAltFormes = true;
@@ -224,15 +224,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()){
                     // We do not want to randomize Pkmn that were not added to the team
                     if (forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel) {
-                        newSp = fullyEvolve(oldSp);
-                        if (newSp != oldSp) {
-                            tp.setSpecies(newSp);
-                            setFormeForTrainerPokemon(tp, newSp);
-                            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
-                            tp.setResetMoves(true);
-                        }
+                        createFullyEvolvedPokemon(tp);
+                        newSp = tp.getSpecies();
                     }
-                    else { newSp = oldSp; }
+                    else {
+                        newSp = oldSp;
+                    }
                 } else {
                     SpeciesSet cacheReplacement = null;
                     boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
@@ -900,18 +897,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.pokemon) {
                 if (tp.getLevel() >= minLevel) {
-                    Species newSpecies = fullyEvolve(tp.getSpecies());
-                    if (newSpecies != tp.getSpecies()) {
-                        tp.setSpecies(newSpecies);
-                        setFormeForTrainerPokemon(tp, newSpecies);
-                        tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-                        tp.setResetMoves(true);
-                    }
+                    createFullyEvolvedPokemon(tp);
                 }
             }
         }
         romHandler.setTrainers(currentTrainers);
         changesMade = true;
+    }
+
+    public void createFullyEvolvedPokemon(TrainerPokemon tp) {
+        Species newSpecies = fullyEvolve(tp.getSpecies());
+        if (newSpecies != tp.getSpecies()) {
+            tp.setSpecies(newSpecies);
+            setFormeForTrainerPokemon(tp, newSpecies);
+            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
+            tp.setResetMoves(true);
+        }
     }
 
     public void addTrainerPokemon() {
@@ -962,9 +963,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // determine the rival's starter
                 int secondToLastIndex = t.pokemon.size() - 1;
                 // Insert a random original Pokemon as placeholder and give it a random level
-                // between the lowest and highest level of the original team
+                // between the lowest and highest level - 1 (if highest level higher than lowest) of the original team
                 TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
-                newPokemon.setLevel(random.nextInt(highest - lowest + 1) + lowest);
+                newPokemon.setLevel(random.nextInt(Math.max(highest - 1, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables

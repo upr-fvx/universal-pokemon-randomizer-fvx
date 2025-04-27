@@ -1,10 +1,10 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.PickupItem;
-import com.dabomstew.pkrandom.gamedata.Shop;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.PickupItem;
+import com.dabomstew.pkromio.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

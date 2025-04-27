@@ -1,11 +1,11 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.Shop;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen6RomHandler;
+import com.dabomstew.pkromio.romhandlers.Gen2RomHandler;
+import com.dabomstew.pkromio.romhandlers.Gen6RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

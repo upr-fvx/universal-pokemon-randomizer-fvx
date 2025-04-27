@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.gamedata.Effectiveness;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.gamedata.TypeTable;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Effectiveness;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.gamedata.TypeTable;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Map;
 import java.util.TreeMap;

@@ -25,6 +25,8 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.RootPath;
+
 import java.util.StringJoiner;
 
 public class BatchRandomizationSettings implements Cloneable {

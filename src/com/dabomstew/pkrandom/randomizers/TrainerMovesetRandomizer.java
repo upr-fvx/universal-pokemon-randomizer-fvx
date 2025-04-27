@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -38,8 +38,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.nameInfoLabel.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.nameInfoLabel.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.nameInfoLabel.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.nameInfoLabel.toolTipText"/>
             </properties>
           </component>
           <component id="d7230" class="javax.swing.JLabel" binding="descriptionInfoLabel">
@@ -48,8 +48,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.descriptionInfoLabel.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.descriptionInfoLabel.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.descriptionInfoLabel.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.descriptionInfoLabel.toolTipText"/>
             </properties>
           </component>
           <component id="cbe11" class="javax.swing.JLabel" binding="fromInfoLabel">
@@ -58,8 +58,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.fromInfoLabel.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.fromInfoLabel.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.fromInfoLabel.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.fromInfoLabel.toolTipText"/>
             </properties>
           </component>
           <component id="eb0b5" class="javax.swing.JLabel" binding="creatorInfoLabel">
@@ -68,8 +68,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.creatorInfoLabel.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.creatorInfoLabel.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.creatorInfoLabel.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.creatorInfoLabel.toolTipText"/>
             </properties>
           </component>
           <component id="790d8" class="javax.swing.JLabel" binding="adapterInfoLabel">
@@ -78,8 +78,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.adapterInfoLabel.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GraphicsPackInfo.adapterInfoLabel.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.adapterInfoLabel.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="GraphicsPackInfo.adapterInfoLabel.toolTipText"/>
             </properties>
           </component>
           <component id="3004" class="javax.swing.JLabel" binding="nameLabel">

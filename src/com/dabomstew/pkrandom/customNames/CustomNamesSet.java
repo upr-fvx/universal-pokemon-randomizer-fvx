@@ -24,8 +24,8 @@ package com.dabomstew.pkrandom.customNames;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.RootPath;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.RootPath;
 import com.dabomstew.pkrandom.SysConstants;
 
 import java.io.*;
@@ -37,7 +37,7 @@ import java.util.zip.CRC32;
 public class CustomNamesSet {
 
     private static final int CUSTOM_NAMES_VERSION = 1;
-    private static final String DEFAULT_FILE_PATH = "/com/dabomstew/pkrandom/customnames/";
+    private static final String DEFAULT_FILE_PATH = "/com/dabomstew/pkromio/customnames/";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
         InputStream is = openFile(SysConstants.customNamesFile);

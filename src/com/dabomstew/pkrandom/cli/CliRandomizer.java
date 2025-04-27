@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.cli;
 
-import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkromio.romhandlers.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class CliRandomizer {
 
-    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
 
     private static boolean performDirectRandomization(String settingsFilePath, String sourceRomFilePath,
                                                       String destinationRomFilePath, boolean saveAsDirectory,

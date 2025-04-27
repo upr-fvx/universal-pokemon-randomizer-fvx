@@ -1,9 +1,9 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.Effectiveness;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.gamedata.TypeTable;
+import com.dabomstew.pkromio.gamedata.Effectiveness;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.gamedata.TypeTable;
 import com.dabomstew.pkrandom.randomizers.TypeEffectivenessRandomizer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

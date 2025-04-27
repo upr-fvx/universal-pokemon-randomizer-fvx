@@ -23,19 +23,22 @@ package com.dabomstew.pkrandom.gui;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.*;
+import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
+import com.dabomstew.pkrandom.exceptions.RandomizationException;
+import com.dabomstew.pkromio.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
-import com.dabomstew.pkrandom.exceptions.*;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.graphics.packs.*;
+import com.dabomstew.pkromio.exceptions.*;
+import com.dabomstew.pkromio.gamedata.ExpCurve;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.graphics.packs.*;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkromio.romhandlers.*;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 
 import javax.swing.*;
@@ -399,7 +402,7 @@ public class RandomizerGUI {
     private JMenuItem keepOrUnloadGameAfterRandomizingMenuItem;
     private JMenuItem batchRandomizationMenuItem;
 
-    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkrandom/gui/emptyIcon.png"));
+    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkromio/gui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
     private Map<String, String> gameUpdates = new TreeMap<>();
 
@@ -414,7 +417,7 @@ public class RandomizerGUI {
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
-        bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+        bundle = ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };

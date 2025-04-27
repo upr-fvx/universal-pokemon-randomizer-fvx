@@ -3,7 +3,7 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 

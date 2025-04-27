@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Map;
 

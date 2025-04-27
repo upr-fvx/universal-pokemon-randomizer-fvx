@@ -1,13 +1,13 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.constants.*;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.MegaEvolution;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
-import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.MegaEvolution;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

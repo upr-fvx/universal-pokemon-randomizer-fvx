@@ -1,6 +1,6 @@
 package test;
 
-import com.dabomstew.pkrandom.ARMThumbCode;
+import com.dabomstew.pkromio.ARMThumbCode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

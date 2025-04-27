@@ -1,13 +1,13 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.MegaEvolution;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
-import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.ExpCurve;
+import com.dabomstew.pkromio.gamedata.MegaEvolution;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
+import com.dabomstew.pkromio.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkromio.gamedata.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Random;
 

@@ -22,7 +22,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
 
 import javax.swing.*;
 
@@ -116,7 +116,7 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
 
     private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
         setTitle(bundle.getString("GenerationLimitDialog.title"));
         gen1CheckBox.addActionListener(ev -> enableAndDisableBoxes());
         gen2CheckBox.addActionListener(ev -> enableAndDisableBoxes());

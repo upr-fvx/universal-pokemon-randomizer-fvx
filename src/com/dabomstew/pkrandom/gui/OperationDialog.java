@@ -24,7 +24,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkromio.FileFunctions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -123,7 +123,7 @@ public class OperationDialog extends javax.swing.JDialog {
     private ImageIcon getLoadingIcon() {
         try {
             InputStream in = OperationDialog.class
-                    .getResourceAsStream("/com/dabomstew/pkrandom/gui/loading.gif");
+                    .getResourceAsStream("/com/dabomstew/pkromio/gui/loading.gif");
             byte[] buf = FileFunctions.readFullyIntoBuffer(in, in.available());
             in.close();
             Image image = Toolkit.getDefaultToolkit().createImage(buf);

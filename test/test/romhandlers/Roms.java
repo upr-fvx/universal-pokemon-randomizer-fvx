@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.romhandlers.romentries.*;
+import com.dabomstew.pkromio.romhandlers.romentries.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

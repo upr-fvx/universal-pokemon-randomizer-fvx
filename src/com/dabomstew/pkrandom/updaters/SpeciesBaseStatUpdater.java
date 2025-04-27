@@ -1,8 +1,8 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Arrays;
 import java.util.List;

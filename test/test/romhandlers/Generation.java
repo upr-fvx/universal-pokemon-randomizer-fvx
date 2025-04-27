@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkromio.romhandlers.*;
 
 import java.util.HashMap;
 import java.util.Map;

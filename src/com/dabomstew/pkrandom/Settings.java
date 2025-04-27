@@ -27,9 +27,10 @@ package com.dabomstew.pkrandom;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.*;
 
 import java.io.*;
 import java.nio.ByteBuffer;

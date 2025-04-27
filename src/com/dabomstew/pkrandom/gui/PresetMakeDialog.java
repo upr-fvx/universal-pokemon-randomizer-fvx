@@ -30,7 +30,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 
@@ -93,7 +93,7 @@ public class PresetMakeDialog extends javax.swing.JDialog {
         presetFileChooser.setFileFilter(new PresetFileFilter());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle"); // NOI18N
         setTitle(bundle.getString("PresetMakeDialog.title")); // NOI18N
         setModal(true);
         setResizable(false);

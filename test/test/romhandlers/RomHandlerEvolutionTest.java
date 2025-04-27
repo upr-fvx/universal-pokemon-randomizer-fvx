@@ -1,11 +1,11 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.constants.SpeciesIDs;
-import com.dabomstew.pkrandom.gamedata.Evolution;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.gamedata.Evolution;
+import com.dabomstew.pkromio.gamedata.EvolutionType;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

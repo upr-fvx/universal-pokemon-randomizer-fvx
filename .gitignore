@@ -21,7 +21,7 @@ tmp_*
 config.ini
 *.pkm
 error_*.txt
-src/com/dabomstew/pkrandom/localtests
+src/com/dabomstew/pkromio/localtests
 bin
 *.log
 *.bin

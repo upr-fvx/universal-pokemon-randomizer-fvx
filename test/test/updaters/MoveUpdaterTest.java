@@ -1,8 +1,8 @@
 package test.updaters;
 
-import com.dabomstew.pkrandom.gamedata.Move;
-import com.dabomstew.pkrandom.gamedata.MoveCategory;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkromio.gamedata.Move;
+import com.dabomstew.pkromio.gamedata.MoveCategory;
+import com.dabomstew.pkromio.gamedata.Type;
 import com.dabomstew.pkrandom.updaters.MoveUpdater;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

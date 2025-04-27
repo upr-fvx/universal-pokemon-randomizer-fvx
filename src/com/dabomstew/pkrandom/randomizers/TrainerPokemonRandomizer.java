@@ -1,13 +1,13 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.RomFunctions;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.Gen7Constants;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.Gen7Constants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;

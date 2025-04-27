@@ -1,9 +1,9 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.Gen5Constants;
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.Gen5Constants;
+import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
 import javafx.util.Pair;
 import org.junit.jupiter.params.ParameterizedTest;

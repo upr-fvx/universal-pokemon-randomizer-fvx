@@ -22,8 +22,7 @@ package launcher;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.RootPath;
-import com.dabomstew.pkrandom.SysConstants;
+import com.dabomstew.pkromio.RootPath;
 
 import javax.swing.*;
 import java.awt.*;

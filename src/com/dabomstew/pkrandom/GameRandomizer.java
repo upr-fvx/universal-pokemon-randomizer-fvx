@@ -26,8 +26,9 @@ import com.dabomstew.pkrandom.log.RandomizationLogger;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.*;
 
 import java.io.OutputStream;

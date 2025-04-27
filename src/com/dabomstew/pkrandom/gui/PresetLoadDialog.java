@@ -33,8 +33,8 @@ package com.dabomstew.pkrandom.gui;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
 import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
-import com.dabomstew.pkrandom.romhandlers.Abstract3DSRomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -70,7 +70,7 @@ public class PresetLoadDialog extends JDialog {
      */
     public PresetLoadDialog(RandomizerGUI parent, JFrame frame) {
         super(frame, true);
-        bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
+        bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle"); // NOI18N
         initComponents();
         this.parentGUI = parent;
         this.presetFileChooser.setCurrentDirectory(new File("./"));
@@ -368,7 +368,7 @@ public class PresetLoadDialog extends JDialog {
         romFileChooser.setFileFilter(new ROMFilter());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle"); // NOI18N
         setTitle(bundle.getString("PresetLoadDialog.title")); // NOI18N
         setModal(true);
         setResizable(false);

@@ -3244,7 +3244,18 @@ public class RandomizerGUI {
             pmsForceGoodDamagingSlider.setValue(pmsForceGoodDamagingSlider.getMinimum());
         }
 
-        if (isTrainerSetting(TRAINER_UNCHANGED)) {
+        boolean pokemonAdded = tpBossTrainersCheckBox.isSelected() || tpImportantTrainersCheckBox.isSelected() ||
+                tpRegularTrainersCheckBox.isSelected();
+        if (isTrainerSetting(TRAINER_UNCHANGED) && pokemonAdded) {
+            disableAndDeselectButtons(tpSwapMegaEvosCheckBox,
+                    tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
+                    tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
+                    tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                    tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
+            enableButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
+                    tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
+                    tpRandomShinyTrainerPokemonCheckBox);
+        } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
             disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,

@@ -48,12 +48,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
         boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
+        boolean isUnchanged = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
+        boolean skipOriginalTeamMembers = false;
         boolean isTypeThemed = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED;
         boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
         boolean keepTypeThemes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEMED;
         boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEME_OR_PRIMARY;
-        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
-                || keepThemeOrPrimaryTypes;
         boolean distributionSetting = settings.getTrainersMod() == Settings.TrainersMod.DISTRIBUTED;
         boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
@@ -69,6 +69,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
         boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
+
+        // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
+        // added that needs to be randomize according to the following settings
+        if (isUnchanged) {
+            keepTypeThemes = true;
+            banIrregularAltFormes = true;
+            skipOriginalTeamMembers = true;
+        }
+
+        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
+                || keepThemeOrPrimaryTypes;
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();
@@ -210,6 +221,18 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
+                } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()){
+                    // We do not want to randomize Pkmn that were not added to the team
+                    if (forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel) {
+                        newSp = fullyEvolve(oldSp);
+                        if (newSp != oldSp) {
+                            tp.setSpecies(newSp);
+                            setFormeForTrainerPokemon(tp, newSp);
+                            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
+                            tp.setResetMoves(true);
+                        }
+                    }
+                    else { newSp = oldSp; }
                 } else {
                     SpeciesSet cacheReplacement = null;
                     boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
@@ -871,7 +894,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void forceFullyEvolvedTrainerPokes() {
-        // TODO add option to keep moves if TP unchanged here AND no better moveset selected
         int minLevel = settings.getTrainersForceFullyEvolvedLevel();
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
@@ -947,6 +969,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables
                 newPokemon.setHeldItem(null);
+                newPokemon.setIsAddedTeamMember(true);
                 t.pokemon.add(secondToLastIndex, newPokemon);
             }
         }

@@ -23,14 +23,16 @@ package com.dabomstew.pkrandom;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.exceptions.InvalidROMException;
-import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.zip.CRC32;
 
 /**
@@ -285,33 +287,6 @@ public class FileFunctions {
         }
         sc.close();
         return (int) checksum.getValue();
-    }
-
-    public static void validatePresetSupplementFiles(String config, CustomNamesSet customNames)
-            throws InvalidSupplementFilesException {
-        byte[] data = Base64.getDecoder().decode(config);
-
-        if (data.length < Settings.LENGTH_OF_SETTINGS_DATA + 9) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.UNKNOWN,
-                    "The preset config is too short to be valid");
-        }
-
-        // Check the checksum
-        ByteBuffer buf = ByteBuffer.allocate(4).put(data, data.length - 8, 4);
-        buf.rewind();
-        int crc = buf.getInt();
-
-        CRC32 checksum = new CRC32();
-        checksum.update(data, 0, data.length - 8);
-        if ((int) checksum.getValue() != crc) {
-            throw new IllegalArgumentException("Checksum failure.");
-        }
-
-        // Check the trainerclass & trainernames & nicknames crc
-        if (customNames == null && !FileFunctions.checkOtherCRC(data, 16, 4, SysConstants.customNamesFile, data.length - 4)) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
-                    "Can't use this preset because you have a different set " + "of custom names to the creator.");
-        }
     }
 
     public static boolean checkOtherCRC(byte[] data, int byteIndex, int switchIndex, String filename, int offsetInData) {

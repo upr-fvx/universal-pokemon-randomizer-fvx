@@ -939,14 +939,21 @@ public class TrainerPokemonRandomizer extends Randomizer {
             List<TrainerPokemon> originalPokes = new ArrayList<>();
             int lowest = 100;
             int highest = 0;
+            boolean duplicateHighest = false;
 
             // First pass: find lowest and highest level while copying the original Pokemon
+            // and checking if more than one Pokemon has the highest level in the team
             for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.getLevel() < lowest) {
-                    lowest = tpk.getLevel();
+                int curLevel= tpk.getLevel();
+                if (curLevel == highest) {
+                    duplicateHighest = true; // Seen this highest level more than once
                 }
-                if (tpk.getLevel() > highest) {
-                    highest = tpk.getLevel();
+                if (curLevel < lowest) {
+                    lowest = curLevel;
+                }
+                if (curLevel > highest) {
+                    highest = curLevel;
+                    duplicateHighest = false; // Seen this highest level for the first time
                 }
                 originalPokes.add(tpk);
             }
@@ -956,6 +963,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // six Pokemon and have a 6v12 battle
             int maxPokemon = t.multiBattleStatus != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
             int originalSize = originalPokes.size();
+            // Determine max level of additional Pokemon, either
+            // 1. the highest level in the original team if there is more than one Pokemon with that level
+            // 2. the highest level in the original team - 1 if there is only one Pokemon of that level (keep the Ace of the trainer)
+            int upperLevelBound = duplicateHighest ? highest : highest - 1;
             for (int i = 0; i < additional; i++) {
                 if (t.pokemon.size() >= maxPokemon) break;
 
@@ -963,9 +974,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // determine the rival's starter
                 int secondToLastIndex = t.pokemon.size() - 1;
                 // Insert a random original Pokemon as placeholder and give it a random level
-                // between the lowest and highest level - 1 (if highest level higher than lowest) of the original team
+                // between the lowest and upperLevelBound
                 TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
-                newPokemon.setLevel(random.nextInt(Math.max(highest - 1, lowest) - lowest + 1) + lowest);
+                newPokemon.setLevel(random.nextInt(Math.max(upperLevelBound, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables

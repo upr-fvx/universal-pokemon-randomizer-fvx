@@ -65,7 +65,7 @@ public class MiscTweakRandomizer extends Randomizer {
         Item item;
         do {
             item = possible.get(random.nextInt(possible.size()));
-        } while (!item.isTM()); // assumes there will always be >0 non-TMs, otherwise this will loop infinitely
+        } while (item.isTM()); // assumes there will always be >0 non-TMs, otherwise this will loop infinitely
         romHandler.setPCPotionItem(item);
     }
 

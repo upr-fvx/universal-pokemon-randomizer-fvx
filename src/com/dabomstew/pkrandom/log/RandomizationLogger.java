@@ -690,16 +690,16 @@ public class RandomizationLogger {
         List<Item> heldItems = romHandler.getStarterHeldItems();
 
         for (int i = 0; i < starters.size(); i++) {
-            if (heldItems.isEmpty()) {
-                log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
-            } else if (heldItems.size() == 1) {
+            if (heldItems.size() == 1 && heldItems.get(0) != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
                         heldItems.get(0).getName());
-            } else if (heldItems.size() == starters.size()) {
+            } else if (heldItems.size() == starters.size() && heldItems.get(i) != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
                         heldItems.get(i).getName());
             } else {
                 log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
+            }
+            if (!heldItems.isEmpty() && heldItems.size() != 1 && heldItems.size() != starters.size()) {
                 log.println("Something went weird with the held items. Please report this as a GitHub issue.");
             }
         }

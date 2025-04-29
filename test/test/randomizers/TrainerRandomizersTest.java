@@ -490,6 +490,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
         settings.setDiverseTypesForRegularTrainers(true);
         settings.setDiverseTypesForImportantTrainers(true);
         settings.setDiverseTypesForBossTrainers(true);

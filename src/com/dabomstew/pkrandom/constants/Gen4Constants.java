@@ -324,8 +324,7 @@ public class Gen4Constants {
             "Snowpoint Secondary",
             "Canalave Secondary",
             "Sunyshore Secondary",
-            "Pokemon League Secondary",
-            "Veilstone Department Store B1F Berries"
+            "Pokemon League Secondary"
     );
 
     private static final List<String> ptSpecialShopNames = setupPTSpecialShopNames();

@@ -65,6 +65,8 @@ public class TrainerPokemon {
     
     private boolean resetMoves = false;
 
+    private boolean isAddedTeamMember = false;
+
     public TrainerPokemon() { }
 
     public TrainerPokemon(TrainerPokemon original) {
@@ -153,6 +155,14 @@ public class TrainerPokemon {
 
     public void setHasZCrystal(boolean hasZCrystal) {
         this.hasZCrystal = hasZCrystal;
+    }
+
+    public boolean isAddedTeamMember() {
+        return isAddedTeamMember;
+    }
+
+    public void setIsAddedTeamMember(boolean isAddedTeamMember) {
+        this.isAddedTeamMember = isAddedTeamMember;
     }
 
     public int getAbilitySlot() {

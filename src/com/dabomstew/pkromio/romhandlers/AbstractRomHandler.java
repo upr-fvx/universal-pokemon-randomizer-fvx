@@ -330,18 +330,20 @@ public abstract class AbstractRomHandler implements RomHandler {
             if (pk == null) {
                 continue;
             }
-            Evolution levelItemEvo = null;
+            List<Evolution> levelItemEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 if (evo.getType() == EvolutionType.LEVEL_ITEM) {
-                    levelItemEvo = evo;
+                    levelItemEvos.add(evo);
                 }
             }
-            if (levelItemEvo != null) {
-                levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                Evolution nightEvo = new Evolution(levelItemEvo);
-                nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
-                nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
-                nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+            if (!levelItemEvos.isEmpty()) {
+                for (Evolution levelItemEvo : levelItemEvos) {
+                    levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                    Evolution nightEvo = new Evolution(levelItemEvo);
+                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                    nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
+                    nightEvo.getTo().getEvolutionsTo().add(nightEvo);
+                }
             }
         }
     }
@@ -357,25 +359,31 @@ public abstract class AbstractRomHandler implements RomHandler {
             if (pk == null) {
                 continue;
             }
-            Evolution dayEvo = null;
-            Evolution nightEvo = null;
+            List<Evolution> dayEvos = new ArrayList<>();
+            List<Evolution> nightEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
-                    dayEvo = evo;
+                    dayEvos.add(evo);
                 } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
-                    nightEvo = evo;
+                    nightEvos.add(evo);
                 }
             }
-            if (dayEvo != null && nightEvo != null) {
-                nightEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
-                if (nightEvo.equals(dayEvo)) {
-                    dayEvo.setType(EvolutionType.LEVEL_ITEM);
-                    nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
-                    nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
-                } else {
-                    // If nightEvo differs from dayEvo in ways other than the EvolutionType,
-                    // then we can not merge them.
-                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+
+            for (Evolution dayEvo : dayEvos) {
+                boolean merged = false;
+
+                dayEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                for (Evolution nightEvo : nightEvos) {
+                    if (dayEvo.equals(nightEvo)) {
+                        dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                        nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
+                        nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
+                        merged = true;
+                    }
+                }
+                if (!merged) {
+                    // The dayEvo didn't have an identical nightEvo, so turn it back
+                    dayEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
                 }
             }
         }

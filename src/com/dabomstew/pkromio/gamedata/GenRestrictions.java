@@ -159,4 +159,18 @@ public class GenRestrictions {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("GenRestrictions[");
+        sb.append("gens allowed:");
+        for (int gen = 1; gen <= MAX_GENERATION; gen++) {
+            if (isGenAllowed(gen)) {
+                sb.append(gen).append(" ");
+            }
+        }
+        sb.append("allow evolutionary relatives=");
+        sb.append(allowEvolutionaryRelatives);
+        sb.append("]");
+        return sb.toString();
+    }
 }

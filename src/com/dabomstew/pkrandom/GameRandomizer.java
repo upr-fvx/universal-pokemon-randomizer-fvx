@@ -124,7 +124,9 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.speciesBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.speciesBSRandomizer = romHandler.generationOfPokemon() == 1 ?
+                new Gen1SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic()) :
+                new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());

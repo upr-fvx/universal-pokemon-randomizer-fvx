@@ -1,10 +1,6 @@
 package com.dabomstew.pkromio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  Gen1Species.java - represents an individual Gen 1 Species. Used to    --*/
-/*--                 handle things related to stats because of the lack     --*/
-/*--                 of the Special split in Gen 1.                         --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -27,15 +23,14 @@ package com.dabomstew.pkromio.gamedata;
 
 import com.dabomstew.pkromio.graphics.palettes.SGBPaletteID;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
+/**
+ * Represents an individual Gen 1 Species.
+ * Used to handle things related to stats because of the lack of the Special split in Gen 1.
+ */
 public class Gen1Species extends Species {
 
     public Gen1Species(int number) {
         super(number);
-        shuffledStatsOrder = Arrays.asList(0, 1, 2, 3, 4);
         setGeneration(1);
     }
 
@@ -44,100 +39,14 @@ public class Gen1Species extends Species {
 	
 	private SGBPaletteID paletteID;
 
-	@Override
-	public void copyShuffledStatsUpEvolution(Species evolvesFrom) {
-		// If stats were already shuffled once, un-shuffle them
-		shuffledStatsOrder = Arrays.asList(shuffledStatsOrder.indexOf(0), shuffledStatsOrder.indexOf(1),
-				shuffledStatsOrder.indexOf(2), shuffledStatsOrder.indexOf(3), shuffledStatsOrder.indexOf(4));
-		applyShuffledOrderToStats();
-		shuffledStatsOrder = evolvesFrom.shuffledStatsOrder;
-		applyShuffledOrderToStats();
-	}
-
     @Override
-    protected void applyShuffledOrderToStats() {
-        List<Integer> stats = Arrays.asList(getHp(), getAttack(), getDefense(), getSpecial(), getSpeed());
-
-        // Copy in new stats
-        setHp(stats.get(shuffledStatsOrder.get(0)));
-        setAttack(stats.get(shuffledStatsOrder.get(1)));
-        setDefense(stats.get(shuffledStatsOrder.get(2)));
-        setSpecial(stats.get(shuffledStatsOrder.get(3)));
-        setSpeed(stats.get(shuffledStatsOrder.get(4)));
-    }
-
-	@Override
-	public void randomizeStatsWithinBST(Random random) {
-		// Minimum 20 HP, 10 everything else
-		int bst = getBST() - 60;
-
-		// Make weightings
-		double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-		double specW = random.nextDouble(), speW = random.nextDouble();
-
-		double totW = hpW + atkW + defW + specW + speW;
-
-        setHp((int) Math.max(1, Math.round(hpW / totW * bst)) + 20);
-        setAttack((int) Math.max(1, Math.round(atkW / totW * bst)) + 10);
-        setDefense((int) Math.max(1, Math.round(defW / totW * bst)) + 10);
-        setSpecial((int) Math.max(1, Math.round(specW / totW * bst)) + 10);
-        setSpeed((int) Math.max(1, Math.round(speW / totW * bst)) + 10);
-
-        // Check for something we can't store
-        if (getHp() > 255 || getAttack() > 255 || getDefense() > 255 || getSpecial() > 255 || getSpeed() > 255) {
-            // re roll
-            randomizeStatsWithinBST(random);
-        }
-    }
-
-	@Override
-	public void copyRandomizedStatsUpEvolution(Species evolvesFrom) {
-		double ourBST = getBST();
-		double theirBST = evolvesFrom.getBST();
-
-		double bstRatio = ourBST / theirBST;
-
-        setHp((int) Math.min(255, Math.max(1, Math.round(evolvesFrom.getHp() * bstRatio))));
-        setAttack((int) Math.min(255, Math.max(1, Math.round(evolvesFrom.getAttack() * bstRatio))));
-        setDefense((int) Math.min(255, Math.max(1, Math.round(evolvesFrom.getDefense() * bstRatio))));
-        setSpeed((int) Math.min(255, Math.max(1, Math.round(evolvesFrom.getSpeed() * bstRatio))));
-        setSpecial((int) Math.min(255, Math.max(1, Math.round(evolvesFrom.getSpecial() * bstRatio))));
-    }
-
-	@Override
-	public void assignNewStatsForEvolution(Species evolvesFrom, Random random) {
-		double ourBST = getBST();
-		double theirBST = evolvesFrom.getBST();
-
-		double bstDiff = ourBST - theirBST;
-
-		// Make weightings
-		double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-		double specW = random.nextDouble(), speW = random.nextDouble();
-
-		double totW = hpW + atkW + defW + specW + speW;
-
-		double hpDiff = Math.round((hpW / totW) * bstDiff);
-		double atkDiff = Math.round((atkW / totW) * bstDiff);
-		double defDiff = Math.round((defW / totW) * bstDiff);
-		double specDiff = Math.round((specW / totW) * bstDiff);
-		double speDiff = Math.round((speW / totW) * bstDiff);
-
-        setHp((int) Math.min(255, Math.max(1, evolvesFrom.getHp() + hpDiff)));
-        setAttack((int) Math.min(255, Math.max(1, evolvesFrom.getAttack() + atkDiff)));
-        setDefense((int) Math.min(255, Math.max(1, evolvesFrom.getDefense() + defDiff)));
-        setSpeed((int) Math.min(255, Math.max(1, evolvesFrom.getSpeed() + speDiff)));
-        setSpecial((int) Math.min(255, Math.max(1, evolvesFrom.getSpecial() + specDiff)));
-    }
-
-    @Override
-    protected int getBST() {
+    public int getBST() {
         return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
     }
 
     @Override
     public int getBSTForPowerLevels() {
-        return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
+        return getBST(); // no Shedinja clause
     }
 
     @Override

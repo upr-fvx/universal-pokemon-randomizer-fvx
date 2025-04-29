@@ -96,130 +96,15 @@ public class Species implements Comparable<Species> {
     private List<MegaEvolution> megaEvolutionsFrom = new ArrayList<>();
     private List<MegaEvolution> megaEvolutionsTo = new ArrayList<>();
 
-    protected List<Integer> shuffledStatsOrder;
-
     public Species(int number) {
         this.number = number;
-        shuffledStatsOrder = Arrays.asList(0, 1, 2, 3, 4, 5);
     }
 
-    public void shuffleStats(Random random) {
-        Collections.shuffle(shuffledStatsOrder, random);
-        applyShuffledOrderToStats();
-    }
-    
-    public void copyShuffledStatsUpEvolution(Species evolvesFrom) {
-        // If stats were already shuffled once, un-shuffle them
-        shuffledStatsOrder = Arrays.asList(
-                shuffledStatsOrder.indexOf(0),
-                shuffledStatsOrder.indexOf(1),
-                shuffledStatsOrder.indexOf(2),
-                shuffledStatsOrder.indexOf(3),
-                shuffledStatsOrder.indexOf(4),
-                shuffledStatsOrder.indexOf(5));
-        applyShuffledOrderToStats();
-        shuffledStatsOrder = evolvesFrom.shuffledStatsOrder;
-        applyShuffledOrderToStats();
-    }
-
-    protected void applyShuffledOrderToStats() {
-        List<Integer> stats = Arrays.asList(hp, attack, defense, spatk, spdef, speed);
-
-        // Copy in new stats
-        hp = stats.get(shuffledStatsOrder.get(0));
-        attack = stats.get(shuffledStatsOrder.get(1));
-        defense = stats.get(shuffledStatsOrder.get(2));
-        spatk = stats.get(shuffledStatsOrder.get(3));
-        spdef = stats.get(shuffledStatsOrder.get(4));
-        speed = stats.get(shuffledStatsOrder.get(5));
-    }
-
-    public void randomizeStatsWithinBST(Random random) {
-        if (number == SpeciesIDs.shedinja) {
-            // Shedinja is horribly broken unless we restrict him to 1HP.
-            int bst = getBST() - 51;
-
-            // Make weightings
-            double atkW = random.nextDouble(), defW = random.nextDouble();
-            double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
-
-            double totW = atkW + defW + spaW + spdW + speW;
-
-            hp = 1;
-            attack = (int) Math.max(1, Math.round(atkW / totW * bst)) + 10;
-            defense = (int) Math.max(1, Math.round(defW / totW * bst)) + 10;
-            spatk = (int) Math.max(1, Math.round(spaW / totW * bst)) + 10;
-            spdef = (int) Math.max(1, Math.round(spdW / totW * bst)) + 10;
-            speed = (int) Math.max(1, Math.round(speW / totW * bst)) + 10;
-        } else {
-            // Minimum 20 HP, 10 everything else
-            int bst = getBST() - 70;
-
-            // Make weightings
-            double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
-
-            double totW = hpW + atkW + defW + spaW + spdW + speW;
-
-            hp = (int) Math.max(1, Math.round(hpW / totW * bst)) + 20;
-            attack = (int) Math.max(1, Math.round(atkW / totW * bst)) + 10;
-            defense = (int) Math.max(1, Math.round(defW / totW * bst)) + 10;
-            spatk = (int) Math.max(1, Math.round(spaW / totW * bst)) + 10;
-            spdef = (int) Math.max(1, Math.round(spdW / totW * bst)) + 10;
-            speed = (int) Math.max(1, Math.round(speW / totW * bst)) + 10;
-        }
-
-        // Check for something we can't store
-        if (hp > 255 || attack > 255 || defense > 255 || spatk > 255 || spdef > 255 || speed > 255) {
-            // re roll
-            randomizeStatsWithinBST(random);
-        }
-
-    }
-
-    public void copyRandomizedStatsUpEvolution(Species evolvesFrom) {
-        double ourBST = getBST();
-        double theirBST = evolvesFrom.getBST();
-
-        double bstRatio = ourBST / theirBST;
-
-        hp = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.hp * bstRatio)));
-        attack = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.attack * bstRatio)));
-        defense = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.defense * bstRatio)));
-        speed = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.speed * bstRatio)));
-        spatk = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.spatk * bstRatio)));
-        spdef = (int) Math.min(255, Math.max(1, Math.round(evolvesFrom.spdef * bstRatio)));
-    }
-
-    public void assignNewStatsForEvolution(Species evolvesFrom, Random random) {
-
-        double ourBST = getBST();
-        double theirBST = evolvesFrom.getBST();
-
-        double bstDiff = ourBST - theirBST;
-
-        // Make weightings
-        double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-        double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
-
-        double totW = hpW + atkW + defW + spaW + spdW + speW;
-
-        double hpDiff = Math.round((hpW / totW) * bstDiff);
-        double atkDiff = Math.round((atkW / totW) * bstDiff);
-        double defDiff = Math.round((defW / totW) * bstDiff);
-        double spaDiff = Math.round((spaW / totW) * bstDiff);
-        double spdDiff = Math.round((spdW / totW) * bstDiff);
-        double speDiff = Math.round((speW / totW) * bstDiff);
-
-        hp = (int) Math.min(255, Math.max(1, evolvesFrom.hp + hpDiff));
-        attack = (int) Math.min(255, Math.max(1, evolvesFrom.attack + atkDiff));
-        defense = (int) Math.min(255, Math.max(1, evolvesFrom.defense + defDiff));
-        speed = (int) Math.min(255, Math.max(1, evolvesFrom.speed + speDiff));
-        spatk = (int) Math.min(255, Math.max(1, evolvesFrom.spatk + spaDiff));
-        spdef = (int) Math.min(255, Math.max(1, evolvesFrom.spdef + spdDiff));
-    }
-
-    protected int getBST() {
+    /**
+     * Gets the raw Base Stat Total. In most cases, {@link #getBSTForPowerLevels()}
+     * should be used instead.
+     */
+    public int getBST() {
         return hp + attack + defense + spatk + spdef + speed;
     }
 

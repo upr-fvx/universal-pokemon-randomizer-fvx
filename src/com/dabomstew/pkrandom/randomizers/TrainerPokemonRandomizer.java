@@ -48,12 +48,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
         boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
+        boolean isUnchanged = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
+        boolean skipOriginalTeamMembers = false;
         boolean isTypeThemed = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED;
         boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
         boolean keepTypeThemes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEMED;
         boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEME_OR_PRIMARY;
-        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
-                || keepThemeOrPrimaryTypes;
         boolean distributionSetting = settings.getTrainersMod() == Settings.TrainersMod.DISTRIBUTED;
         boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
@@ -69,6 +69,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
         boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
+
+        // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
+        // added that needs to be randomized according to the following settings
+        if (isUnchanged) {
+            keepTypeThemes = true;
+            banIrregularAltFormes = true;
+            skipOriginalTeamMembers = true;
+        }
+
+        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
+                || keepThemeOrPrimaryTypes;
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();
@@ -210,6 +221,15 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
+                } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()){
+                    // We do not want to randomize Pkmn that were not added to the team
+                    if (forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel) {
+                        createFullyEvolvedPokemon(tp);
+                        newSp = tp.getSpecies();
+                    }
+                    else {
+                        newSp = oldSp;
+                    }
                 } else {
                     SpeciesSet cacheReplacement = null;
                     boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
@@ -877,18 +897,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.pokemon) {
                 if (tp.getLevel() >= minLevel) {
-                    Species newSpecies = fullyEvolve(tp.getSpecies());
-                    if (newSpecies != tp.getSpecies()) {
-                        tp.setSpecies(newSpecies);
-                        setFormeForTrainerPokemon(tp, newSpecies);
-                        tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-                        tp.setResetMoves(true);
-                    }
+                    createFullyEvolvedPokemon(tp);
                 }
             }
         }
         romHandler.setTrainers(currentTrainers);
         changesMade = true;
+    }
+
+    public void createFullyEvolvedPokemon(TrainerPokemon tp) {
+        Species newSpecies = fullyEvolve(tp.getSpecies());
+        if (newSpecies != tp.getSpecies()) {
+            tp.setSpecies(newSpecies);
+            setFormeForTrainerPokemon(tp, newSpecies);
+            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
+            tp.setResetMoves(true);
+        }
     }
 
     public void addTrainerPokemon() {
@@ -912,38 +936,52 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 continue;
             }
 
+            List<TrainerPokemon> originalPokes = new ArrayList<>();
             int lowest = 100;
-            List<TrainerPokemon> potentialPokes = new ArrayList<>();
+            int highest = 0;
+            boolean duplicateHighest = false;
 
-            // First pass: find lowest level
+            // First pass: find lowest and highest level while copying the original Pokemon
+            // and checking if more than one Pokemon has the highest level in the team
             for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.getLevel() < lowest) {
-                    lowest = tpk.getLevel();
+                int curLevel= tpk.getLevel();
+                if (curLevel == highest) {
+                    duplicateHighest = true; // Seen this highest level more than once
                 }
-            }
-
-            // Second pass: find all Pokemon at lowest level
-            for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.getLevel() == lowest) {
-                    potentialPokes.add(tpk);
+                if (curLevel < lowest) {
+                    lowest = curLevel;
                 }
+                if (curLevel > highest) {
+                    highest = curLevel;
+                    duplicateHighest = false; // Seen this highest level for the first time
+                }
+                originalPokes.add(tpk);
             }
 
             // If a trainer can appear in a Multi Battle (i.e., a Double Battle where the enemy consists
             // of two independent trainers), we want to be aware of that so we don't give them a team of
             // six Pokemon and have a 6v12 battle
             int maxPokemon = t.multiBattleStatus != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
+            int originalSize = originalPokes.size();
+            // Determine max level of additional Pokemon, either
+            // 1. the highest level in the original team if there is more than one Pokemon with that level
+            // 2. the highest level in the original team - 1 if there is only one Pokemon of that level (keep the Ace of the trainer)
+            int upperLevelBound = duplicateHighest ? highest : highest - 1;
             for (int i = 0; i < additional; i++) {
                 if (t.pokemon.size() >= maxPokemon) break;
 
                 // We want to preserve the original last Pokemon because the order is sometimes used to
                 // determine the rival's starter
                 int secondToLastIndex = t.pokemon.size() - 1;
-                TrainerPokemon newPokemon = potentialPokes.get(i % potentialPokes.size()).copy();
+                // Insert a random original Pokemon as placeholder and give it a random level
+                // between the lowest and upperLevelBound
+                TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
+                newPokemon.setLevel(random.nextInt(Math.max(upperLevelBound, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables
                 newPokemon.setHeldItem(null);
+                newPokemon.setIsAddedTeamMember(true);
                 t.pokemon.add(secondToLastIndex, newPokemon);
             }
         }

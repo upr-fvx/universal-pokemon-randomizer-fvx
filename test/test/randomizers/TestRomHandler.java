@@ -133,6 +133,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private final Map<String, Type> gymAndEliteTypeThemes;
     private final boolean trainerPokemonAlwaysUseAbility1;
     private final boolean trainerPokemonUseBaseFormeAbilities;
+    private final boolean canAddPokemonToBossTrainers;
+    private final boolean canAddPokemonToImportantTrainers;
+    private final boolean canAddPokemonToRegularTrainers;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -214,6 +217,9 @@ public class TestRomHandler extends AbstractRomHandler {
         gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
         trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
         trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
+        canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
+        canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
+        canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
     }
@@ -835,17 +841,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean canAddPokemonToBossTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToBossTrainers;
     }
 
     @Override
     public boolean canAddPokemonToImportantTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToImportantTrainers;
     }
 
     @Override
     public boolean canAddPokemonToRegularTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToRegularTrainers;
     }
 
     @Override

@@ -1864,7 +1864,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private void findShopPointerOffsets() {
-        System.out.println(RomFunctions.bytesToHexBlock(rom, 0x5C95D, 0x30));
+        // TODO: find for Red/Green (J), Blue (J) and Yellow (all)
+
+        System.out.println(RomFunctions.bytesToHexBlock(rom, 0x19C95, 0x50));
 
         List<Integer> shopOffsets = new ArrayList<>();
         // Viridian
@@ -1933,10 +1935,141 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         a -= 0x495d - 0x492f;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("lavender = 0x" + Integer.toHexString(shopOffsets.get(4)));
+        // Celadon 2F
+        a = find(rom,
+                "0F \n" +
+                        "03 \n" +
+                        "01 0C 04 7A \n" +
+                        "01 10 01 7C \n" +
+                        "01 01 00 7F \n" +
+                        "01 \n" +
+                        "01 0E 05 \n" +
+                        "04 \n" +
+                        "26 07 09 FF D0 01 \n" +
+                        "26 07 0A FF D0 02 \n" +
+                        "0A 09 17 FF FF 03 \n" +
+                        "0D 08 12 FE 01 04");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x6111 - 0x60f8;
+        shopOffsets.add(readPointer(a, 0));
+        shopOffsets.add(readPointer(a + 2, 0));
+        System.out.println("celadon 2f left = 0x" + Integer.toHexString(shopOffsets.get(5)));
+        System.out.println("celadon 2f right = 0x" + Integer.toHexString(shopOffsets.get(6)));
+        // Celadon 4F
+        a = find(rom,
+                "0F \n" +
+                        "03 \n" +
+                        "01 0C 00 7C \n" +
+                        "01 10 01 88 \n" +
+                        "01 01 00 7F \n" +
+                        "01 \n" +
+                        "01 0E 04 \n" +
+                        "03 \n" +
+                        "26 0B 09 FF FF 01 \n" +
+                        "0C 09 13 FE 02 02 \n" +
+                        "04 06 09 FE 02 03");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x4370 - 0x4359;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("celadon 4f = 0x" + Integer.toHexString(shopOffsets.get(7)));
+        // Celadon 2F
+        a = find(rom,
+                "0F \n" +
+                        "03 \n" +
+                        "01 0C 00 7E \n" +
+                        "01 10 01 7D \n" +
+                        "01 01 00 7F \n" +
+                        "01 \n" +
+                        "01 0E 05 \n" +
+                        "04 \n" +
+                        "10 09 12 FE 01 01 \n" +
+                        "13 0A 06 FF FF 02 \n" +
+                        "26 07 09 FF D0 03 \n" +
+                        "26 07 0A FF D0 04");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x5085 - 0x506c;
+        shopOffsets.add(readPointer(a + 4, 0));
+        shopOffsets.add(readPointer(a + 6, 0));
+        System.out.println("celadon 5f left = 0x" + Integer.toHexString(shopOffsets.get(8)));
+        System.out.println("celadon 5f right = 0x" + Integer.toHexString(shopOffsets.get(9)));
+        // fuchsia
+        a = find(rom,
+                "00 \n" +
+                        "02 \n" +
+                        "07 03 00 FF \n" +
+                        "07 04 00 FF \n" +
+                        "00 \n" +
+                        "03 \n" +
+                        "26 09 04 FF D3 01 \n" +
+                        "0A 06 08 FF FF 02 \n" +
+                        "06 09 0A FE 01 03");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x5d9b - 0x5d8b;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("fuchsia = 0x" + Integer.toHexString(shopOffsets.get(10)));
+        // cinnabar
+        a = find(rom,
+                "00 \n" +
+                        "02 \n" +
+                        "07 03 04 FF \n" +
+                        "07 04 04 FF \n" +
+                        "00 \n" +
+                        "03 \n" +
+                        "26 09 04 FF D3 01 \n" +
+                        "1B 06 0A FF FF 02 \n" +
+                        "20 08 07 FF FF 03 ");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x5e91 - 0x5e81;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("cinnabar = 0x" + Integer.toHexString(shopOffsets.get(11)));
+        // saffron
+        a = find(rom,
+                "00 \n" +
+                        "02 \n" +
+                        "07 03 04 FF \n" +
+                        "07 04 04 FF \n" +
+                        "00 \n" +
+                        "03\n" +
+                        "26 09 04 FF D3 01 \n" +
+                        "0C 06 08 FF FF 02 \n" +
+                        "06 09 0A FE 00 03 ");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x541c - 0x540c;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("saffron = 0x" + Integer.toHexString(shopOffsets.get(12)));
+        // indigo
+        a = find(rom,
+                "00 \n" +
+                        "03 \n" +
+                        "0B 07 00 FF\n" +
+                        "0B 08 01 FF\n" +
+                        "00 08 00 F5 \n" +
+                        "00 \n" +
+                        "05 \n" +
+                        "29 09 0B FF D0 01 \n" +
+                        "24 0D 08 FF D3 02 \n" +
+                        "06 05 09 FF D0 03 \n" +
+                        "26 09 04 FF D3 04 \n" +
+                        "2A 0A 11 FF D0 05");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x5c95 - 0x5c7f;
+        shopOffsets.add(readPointer(a + 6, 0));
+        System.out.println("indigo = 0x" + Integer.toHexString(shopOffsets.get(13)));
+
 
 
         for (int i = 0; i < shopOffsets.size(); i++) {
-            readShopItems(shopOffsets.get(i), (i >= 3 ? i + 1 : i));
+            int shopNum = i;
+            if (i >= 3) shopNum++;
+            if (i >= 11) shopNum++;
+            readShopItems(shopOffsets.get(i), shopNum);
         }
     }
 

@@ -22,7 +22,10 @@ package com.dabomstew.pkrandom.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.*;
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.GFXFunctions;
+import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.constants.*;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gamedata.*;
@@ -1758,13 +1761,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private static int find(byte[] haystack, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
+        byte[] searchFor = RomFunctions.hexToBytes(hexString);
         List<Integer> found = RomFunctions.search(haystack, searchFor);
         if (found.isEmpty()) {
             return -1; // not found
@@ -1855,6 +1852,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Shop> getShops() {
+
+        findShopPointerOffsets();
+
         List<Shop> shops = readShops();
 
         shops.forEach(shop -> shop.setSpecialShop(true));
@@ -1863,36 +1863,127 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         return shops;
     }
 
+    private void findShopPointerOffsets() {
+        System.out.println(RomFunctions.bytesToHexBlock(rom, 0x5C95D, 0x30));
+
+        List<Integer> shopOffsets = new ArrayList<>();
+        // Viridian
+        int a = find(rom, "20 01 40 02 FF");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        a += 0xEA - 0xBB;
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("viridian = 0x" + Integer.toHexString(shopOffsets.get(0)));
+        // Pewter
+        a = find(rom, "00 \n" +
+                "02 \n" +
+                "07 03 04 FF \n" +
+                "07 04 04 FF \n" +
+                "00 \n" +
+                "03 \n" +
+                "26 09 04 FF D3 01 \n" +
+                "04 07 07 FE 01 02 \n" +
+                "0C 09 09 FF FF 03 ");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        a -= 0x4cda - 0x4cb6;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("pewter = 0x" + Integer.toHexString(shopOffsets.get(1)));
+        // Cerulean
+        a = find(rom,
+                "00\n" +
+                        "02\n" +
+                        "07 03 05 FF\n" +
+                        "07 04 05 FF\n" +
+                        "00\n" +
+                        "03");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x48a8 - 0x4898;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("cerulean = 0x" + Integer.toHexString(shopOffsets.get(2)));
+        // Vermilion
+        a = find(rom,
+                "00 \n" +
+                        "02 \n" +
+                        "07 03 02 FF \n" +
+                        "07 04 02 FF \n" +
+                        "00 \n" +
+                        "03 \n" +
+                        "26 09 04 FF D3 01 \n" +
+                        "07 0A 09 FF FF 02 \n" +
+                        "06 07 07 FE 02 03 ");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x49f4 - 0x49e4;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("vermilion = 0x" + Integer.toHexString(shopOffsets.get(3)));
+        // Lavender
+        a = find(rom,
+                "00 \n" +
+                        "02 \n" +
+                        "07 03 03 FF \n" +
+                        "07 04 03 FF \n" +
+                        "00 \n" +
+                        "03 \n" +
+                        "26 09 04 FF D3 01 \n" +
+                        "34 08 07 FF FF 02 \n" +
+                        "07 06 0B FF FF 03 \n");
+        System.out.println("a = 0x" + Integer.toHexString(a));
+        System.out.println(a);
+        a -= 0x495d - 0x492f;
+        shopOffsets.add(readPointer(a, 0));
+        System.out.println("lavender = 0x" + Integer.toHexString(shopOffsets.get(4)));
+
+
+        for (int i = 0; i < shopOffsets.size(); i++) {
+            readShopItems(shopOffsets.get(i), (i >= 3 ? i + 1 : i));
+        }
+    }
+
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
 
         int offset = romEntry.getIntValue("ShopItemOffset");
+        System.out.println("0x" + Integer.toHexString(offset));
         int shopAmount = romEntry.getIntValue("ShopAmount");
         int shopNum = 0;
 
         while (shopNum < shopAmount) {
-            if (rom[offset++] != Gen1Constants.shopItemsScript) {
-                throw new RomIOException("Invalid start of shop data. Should be 0x"
-                        + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
-                        + Integer.toHexString(rom[--offset] & 0xFF) + ".");
-            }
-            int itemCount = rom[offset++] & 0xFF;
-            List<Item> shopItems = new ArrayList<>();
-            for (int i = 0; i < itemCount; i++) {
-                shopItems.add(items.get(rom[offset++] & 0xFF));
-            }
-            if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
-                throw new RomIOException("Shop size mismatch/terminator missing.");
-            }
+
+            List<Item> shopItems = readShopItems(offset, shopNum);
 
             Shop shop = new Shop();
             shop.setItems(shopItems);
             shop.setName(Gen1Constants.shopNames.get(shopNum));
             shop.setMainGame(true);
+
             shops.add(shop);
+            offset += 2 + shopItems.size() + 1;
             shopNum++;
         }
         return shops;
+    }
+
+    private List<Item> readShopItems(int offset, int shopNum) {
+        int offset2 = offset;
+        int start = offset2;
+        if (rom[offset2++] != Gen1Constants.shopItemsScript) {
+            throw new RomIOException("Invalid start of shop data. Should be 0x"
+                    + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
+                    + Integer.toHexString(rom[--offset2] & 0xFF) + ".");
+        }
+        int itemCount = rom[offset2++] & 0xFF;
+        List<Item> shopItems = new ArrayList<>();
+        for (int i = 0; i < itemCount; i++) {
+            shopItems.add(items.get(rom[offset2++] & 0xFF));
+        }
+        if (rom[offset2++] != Gen1Constants.shopItemsTerminator) {
+            throw new RomIOException("Shop size mismatch/terminator missing.");
+        }
+
+        System.out.println(Gen1Constants.shopNames.get(shopNum));
+        System.out.println(RomFunctions.bytesToHexBlock(rom, start, offset2 - start));
+        return shopItems;
     }
 
     @Override

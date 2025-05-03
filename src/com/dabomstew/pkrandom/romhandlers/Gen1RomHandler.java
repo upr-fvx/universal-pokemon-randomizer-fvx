@@ -1866,14 +1866,22 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private void findShopPointerOffsets() {
         // TODO: find for Red/Green (J), Blue (J) and Yellow (all)
 
-        System.out.println(RomFunctions.bytesToHexBlock(rom, 0x19C95, 0x50));
+        System.out.println(RomFunctions.bytesToHexBlock(rom, 0x19D99, 0x50));
 
         List<Integer> shopOffsets = new ArrayList<>();
+        int a;
         // Viridian
-        int a = find(rom, "20 01 40 02 FF");
+        a = find(rom, "00 \n" +
+                "02 \n" +
+                "07 03 01 FF \n" +
+                "07 04 01 FF \n" +
+                "00 \n" +
+                "03 \n" +
+                "26 09 04 FF D3 01 \n" +
+                "04 09 09 FE 01 02 \n" +
+                "07 07 07 FF FF 03");
         System.out.println("a = 0x" + Integer.toHexString(a));
-        a += 0xEA - 0xBB;
-        System.out.println("a = 0x" + Integer.toHexString(a));
+        a -= 0x550a - 0x54ea;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("viridian = 0x" + Integer.toHexString(shopOffsets.get(0)));
         // Pewter
@@ -2044,7 +2052,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         shopOffsets.add(readPointer(a, 0));
         System.out.println("saffron = 0x" + Integer.toHexString(shopOffsets.get(12)));
         // indigo
-        a = find(rom,
+        a = isYellow() ? find(rom,
+                "00 \n" +
+                        "03 \n" +
+                        "0B 07 00 FF \n" +
+                        "0B 08 01 FF \n" +
+                        "00 08 00 F5 \n" +
+                        "00 \n" +
+                        "06 \n" +
+                        "29 09 0B FF D0 01 \n" +
+                        "24 0D 08 FF D3 02 \n" +
+                        "06 05 09 FF D0 03 \n" +
+                        "26 09 04 FF D3 04 \n" +
+                        "2A 0A 11 FF D0 05 \n" +
+                        "44 09 0C FF D0 06 ") :
+                find(rom,
                 "00 \n" +
                         "03 \n" +
                         "0B 07 00 FF\n" +
@@ -2059,10 +2081,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "2A 0A 11 FF D0 05");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x5c95 - 0x5c7f;
+        a -= isYellow() ? 0x5d99 - 0x5d75 : 0x5c95 - 0x5c7f;
         shopOffsets.add(readPointer(a + 6, 0));
         System.out.println("indigo = 0x" + Integer.toHexString(shopOffsets.get(13)));
-
 
 
         for (int i = 0; i < shopOffsets.size(); i++) {

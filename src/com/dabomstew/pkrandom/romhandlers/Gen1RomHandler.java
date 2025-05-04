@@ -1881,7 +1881,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 "04 09 09 FE 01 02 \n" +
                 "07 07 07 FF FF 03");
         System.out.println("a = 0x" + Integer.toHexString(a));
-        a -= 0x550a - 0x54ea;
+        a -= romEntry.isNonJapanese() ? 0x550a - 0x54ea : 0x573a - 0x5686;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("viridian = 0x" + Integer.toHexString(shopOffsets.get(0)));
         // Pewter
@@ -1895,7 +1895,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 "04 07 07 FE 01 02 \n" +
                 "0C 09 09 FF FF 03 ");
         System.out.println("a = 0x" + Integer.toHexString(a));
-        a -= 0x4cda - 0x4cb6;
+        a -= romEntry.isNonJapanese() ? 0x4cda - 0x4cb6 : 0x49c6 - 0x494c;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("pewter = 0x" + Integer.toHexString(shopOffsets.get(1)));
         // Cerulean
@@ -1908,7 +1908,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "03");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x48a8 - 0x4898;
+        a -= romEntry.isNonJapanese() ? 0x48a8 - 0x4898 : 0x531d - 0x5299;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("cerulean = 0x" + Integer.toHexString(shopOffsets.get(2)));
         // Vermilion
@@ -1924,7 +1924,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "06 07 07 FE 02 03 ");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x49f4 - 0x49e4;
+        a -= romEntry.isNonJapanese() ? 0x49f4 - 0x49e4 : 0x567f - 0x55d7;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("vermilion = 0x" + Integer.toHexString(shopOffsets.get(3)));
         // Lavender
@@ -1940,7 +1940,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "07 06 0B FF FF 03 \n");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x495d - 0x492f;
+        a -= romEntry.isNonJapanese() ? 0x495d - 0x492f : 0x54f6 - 0x53fa;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("lavender = 0x" + Integer.toHexString(shopOffsets.get(4)));
         // Celadon 2F
@@ -1959,7 +1959,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "0D 08 12 FE 01 04");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x6111 - 0x60f8;
+        a -= romEntry.isNonJapanese() ? 0x6111 - 0x60f8 : 0x706d - 0x6ff0;
         shopOffsets.add(readPointer(a, 0));
         shopOffsets.add(readPointer(a + 2, 0));
         System.out.println("celadon 2f left = 0x" + Integer.toHexString(shopOffsets.get(5)));
@@ -1979,10 +1979,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "04 06 09 FE 02 03");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x4370 - 0x4359;
+        a -= romEntry.isNonJapanese() ? 0x4370 - 0x4359 : 0x46c0 - 0x45f8;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("celadon 4f = 0x" + Integer.toHexString(shopOffsets.get(7)));
-        // Celadon 2F
+        // Celadon 5F
         a = find(rom,
                 "0F \n" +
                         "03 \n" +
@@ -1998,7 +1998,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "26 07 0A FF D0 04");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x5085 - 0x506c;
+        a -= romEntry.isNonJapanese() ? 0x5085 - 0x506c : 0x5fb8 - 0x5f03;
         shopOffsets.add(readPointer(a + 4, 0));
         shopOffsets.add(readPointer(a + 6, 0));
         System.out.println("celadon 5f left = 0x" + Integer.toHexString(shopOffsets.get(8)));
@@ -2016,7 +2016,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "06 09 0A FE 01 03");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x5d9b - 0x5d8b;
+        a -= romEntry.isNonJapanese() ? 0x5d9b - 0x5d8b : 0x6816 - 0x67b3;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("fuchsia = 0x" + Integer.toHexString(shopOffsets.get(10)));
         // cinnabar
@@ -2032,7 +2032,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "20 08 07 FF FF 03 ");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x5e91 - 0x5e81;
+        a -= romEntry.isNonJapanese() ? 0x5e91 - 0x5e81 : 0x6e80 - 0x6e30;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("cinnabar = 0x" + Integer.toHexString(shopOffsets.get(11)));
         // saffron
@@ -2048,7 +2048,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "06 09 0A FE 00 03 ");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= 0x541c - 0x540c;
+        a -= romEntry.isNonJapanese() ? 0x541c - 0x540c : 0x6d9d - 0x6d3c;
         shopOffsets.add(readPointer(a, 0));
         System.out.println("saffron = 0x" + Integer.toHexString(shopOffsets.get(12)));
         // indigo
@@ -2081,7 +2081,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         "2A 0A 11 FF D0 05");
         System.out.println("a = 0x" + Integer.toHexString(a));
         System.out.println(a);
-        a -= isYellow() ? 0x5d99 - 0x5d75 : 0x5c95 - 0x5c7f;
+        a -= romEntry.isNonJapanese() ? (
+                isYellow() ? 0x5d99 - 0x5d75 : 0x5c95 - 0x5c7f
+        ) : 0x7149 - 0x709a;
         shopOffsets.add(readPointer(a + 6, 0));
         System.out.println("indigo = 0x" + Integer.toHexString(shopOffsets.get(13)));
 

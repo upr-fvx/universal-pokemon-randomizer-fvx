@@ -852,4 +852,8 @@ public class MoveIDs {
     public static final int glacialLance = 824;
     public static final int astralBarrage = 825;
     public static final int eerieSpell = 826;
+
+    //psuedo moves
+    public static final int slow = -1; //AKA, Curse for a non-Ghost type
+    //(They're so different that it's easier to treat them as two entirely different moves)
 }

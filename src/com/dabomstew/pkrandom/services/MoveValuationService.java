@@ -28,10 +28,11 @@ public class MoveValuationService {
         private EffectsValue powerScalingEffectsValue;
 
         private EffectsValue effectsValue;
-        private int speedDependantEffectsValue = 0;
+        private EffectsValue fastEffectsValue;
+        private EffectsValue slowEffectsValue;
         private int doubleBattleEffectsValue = 0;
         private double doubleBattleRangeModifier = 1;
-        private int accuracy = 100;
+        private double accuracy = 1;
         private double useMultiplier = 1; //for charge moves, etc
 
         //calculated values
@@ -83,15 +84,23 @@ public class MoveValuationService {
             this.effectsValue = effectsValue;
         }
 
-        private void setSpeedDependantEffectsValue(int speedDependantEffectsValue) {
+        private void setFastEffectsValue(EffectsValue fastEffectsValue) {
             if(finalized) {
                 throw new IllegalStateException("Attempted to change value of finalized move!");
             }
 
-            this.speedDependantEffectsValue = speedDependantEffectsValue;
+            this.fastEffectsValue = fastEffectsValue;
         }
 
-        private void setAccuracy(int accuracy) {
+        private void setSlowEffectsValue(EffectsValue slowEffectsValue) {
+            if(finalized) {
+                throw new IllegalStateException("Attempted to change value of finalized move!");
+            }
+
+            this.slowEffectsValue = slowEffectsValue;
+        }
+
+        private void setAccuracy(double accuracy) {
             if(finalized) {
                 throw new IllegalStateException("Attempted to change value of finalized move!");
             }
@@ -130,12 +139,13 @@ public class MoveValuationService {
             EffectsValue fullValue = new EffectsValue(totalPower, 0);
             fullValue = fullValue.add(powerScalingEffectsValue.multiply((double)totalPower / 100));
             fullValue = fullValue.add(effectsValue);
-            fullValue.offensive += (speedDependantEffectsValue / 2) + (doubleBattleEffectsValue / 2);
-            fullValue.defensive += (speedDependantEffectsValue / 2) + (doubleBattleEffectsValue / 2);
+            fullValue = fullValue.add(fastEffectsValue.divide(2)).add(slowEffectsValue.divide(2));
+            fullValue.offensive += doubleBattleEffectsValue / 2;
+            fullValue.defensive += doubleBattleEffectsValue / 2;
 
             totalResultsValue = fullValue;
 
-            EffectsValue perUseValue = totalResultsValue.multiply(accuracy / 100);
+            EffectsValue perUseValue = totalResultsValue.multiply(accuracy);
             double finalMultiplier = useMultiplier * ((doubleBattleRangeModifier + 1) / 2.0);
             baseValue = perUseValue.multiply(finalMultiplier);
 
@@ -371,7 +381,7 @@ public class MoveValuationService {
         }
 
         if(move.statusPercentChance != 0) {
-            effectsValue = effectsValue.add(generateStatusConditionValue(move).multiply(move.statusPercentChance / 100));
+            effectsValue = effectsValue.add(generateStatusConditionValue(move));
         }
 
         if(GlobalConstants.semiInvulnerableMoves.contains(move)) {
@@ -379,73 +389,28 @@ public class MoveValuationService {
         }
 
         effectsValue = effectsValue.add(generateUniqueEffectsValue(move));
-
         values.setEffectsValue(effectsValue);
 
+        values.setFastEffectsValue(generateFastEffectsValue(move));
+        values.setSlowEffectsValue(generateSlowEffectsValue(move));
 
-        int speedValue;
-        if(move.flinchPercentChance > 0 && move.flinchPercentChance < 1) {
-            speedValue = (int) (move.flinchPercentChance * 100);
-        } else {
-            speedValue = (int) move.flinchPercentChance;
-        }
-
-        speedValue += generateUniqueSpeedValue(move);
-
-        values.setSpeedDependantEffectsValue(speedValue);
-
-        int priority = move.priority;
-        if(romHandler.generationOfPokemon() == 2) {
-            priority--; //All gen 2 moves have one higher priority than typical
-        }
-        int priorityValue;
-        if(priority > 0 ) {
-            priorityValue = 10 + priority;
-        } else if (priority < 0) {
-            priorityValue = -10 + priority;
-        } else {
-            priorityValue = 0;
-        }
-        effectsValue += priorityValue; //Priority is a speed-dependent value, actually
-
-        case MoveIDs.matBlock:
-        return new EffectsValue(0, 60); //requires first move
-
-        case MoveIDs.tailwind:
-        return 80; //double speed is a lot, but has short duration.
-        case MoveIDs.trickRoom:
-        return 80; //similar to tailwind, except with a speed penalty
-        case MoveIDs.speedSwap:
-        return 80; //guaranteed to switch who acts first... if used correctly, very potent!
-        case MoveIDs.coreEnforcer:
-        return 90; //removes ability (but only if slower)
-        case MoveIDs.thunderFang:
-        return new EffectsValue(5, 0);
-        //has synergy with ITSELF (paralysis+flinch) but it's still a small chance
-
-
-        int accuracy;
+        double accuracy;
         if(romHandler.getPerfectAccuracy() != 100 && move.hitRatio == romHandler.getPerfectAccuracy()) {
-            accuracy = 150;
+            accuracy = 1.5;
         } else {
-            switch(move.internalId) {
+            switch (move.internalId) {
                 case MoveIDs.swift:
                 case MoveIDs.feintAttack:
                 case MoveIDs.vitalThrow:
                     //because gen 1 through 3 encoded perfect-accuracy moves differently, and they can't be distinguished
                     //from other moves except by ID.
-                    accuracy = 150;
+                    //TODO: standardize the encoding of perfect accuracy, so we can skip this
+                    accuracy = 1.5;
                     break;
                 default:
-                    if(move.hitRatio < 1) {
-                        accuracy = (int) (move.hitRatio * 100);
-                    } else {
-                        accuracy = (int) move.hitRatio;
-                    }
+                    accuracy = getStandardizedChance(move.hitRatio);
             }
         }
-        //TODO: have romHandlers standardize accuracy, so we don't need all this shenanigans
-
         values.setAccuracy(accuracy);
 
         double useMultiplier = 1;
@@ -464,6 +429,7 @@ public class MoveValuationService {
         values.setUseMultiplier(useMultiplier);
 
         values.setDoubleBattleEffectsValue(generateUniqueDoubleBattleEffectsValue(move));
+        //TODO: convert double battle to EffectsValue
         values.setDoubleBattleRangeModifier(generateDoubleBattleRangeModifier(move));
 
         values.calculateValues();
@@ -492,20 +458,15 @@ public class MoveValuationService {
 
         values.setEffectsValue(effectsValue);
 
-        int accuracy;
+        double accuracy;
         if(romHandler.getPerfectAccuracy() != 100 && move.hitRatio == romHandler.getPerfectAccuracy()) {
-            accuracy = 110; //perfect accuracy is less valuable for status moves than attack moves
+            accuracy = 1.1; //perfect accuracy is less valuable for status moves than attack moves
         } else {
-            if(move.hitRatio < 1) {
-                accuracy = (int) (move.hitRatio * 100);
-            } else {
-                accuracy = (int) move.hitRatio;
-            }
+            accuracy = getStandardizedChance(move.hitRatio);
         }
-
         values.setAccuracy(accuracy);
 
-        values.setSpeedDependantEffectsValue(generateUniqueSpeedValue(move));
+        values.setFastEffectsValue(generateFastEffectsValue(move));
 
         double useRestrictionMultiplier = 1;
         if(move.isChargeMove && !GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
@@ -525,6 +486,21 @@ public class MoveValuationService {
 
         values.calculateValues();
         return values;
+    }
+
+    /**
+     * Standardizes a chance given to it to be between 0 and 1.
+     * @param statedChance The chance initially stated by the move; expected to be on a scale of either 0-1 or 0-100.
+     * @return The same chance expressed as between 0-1.
+     */
+    private double getStandardizedChance(double statedChance) {
+        //TODO: standardize all chances in ROMHandlers, then remove this method
+        //(Flinch, status condition, stat change, accuracy, (more?) )
+        if(statedChance > 1) {
+            return statedChance / 100;
+        } else {
+            return statedChance;
+        }
     }
 
     private EffectsValue generateStatChangeValue(Move move) {
@@ -551,10 +527,8 @@ public class MoveValuationService {
                     changeValue = new EffectsValue(0, 40);
                     break;
                 case SPEED:
-                    changeValue = new EffectsValue(35, 0);
-                    //not so much because Speed is less useful, as because it has a max effect,
-                    //so stacking more stages is often less viable.
-                    //(But also thinking about, like, Curse, which definitely has a positive offensive effect, if minor.)
+                    changeValue = new EffectsValue(0, 0);
+                    //speed change is a speed-dependent effect, so will be handled by FastEffectValue and SlowEffectValue
                     break;
                 case SPECIAL:
                     changeValue = new EffectsValue(40, 40);
@@ -570,8 +544,8 @@ public class MoveValuationService {
                     changeValue = new EffectsValue(0, 60);
                     break;
                 case ALL:
-                    changeValue = new EffectsValue(115, 80);
-                    //add ATK+SPATK+SPEED+DEF+SPDEF together
+                    changeValue = new EffectsValue(80, 80);
+                    //add ATK+SPATK+DEF+SPDEF together (speed covered elsewhere)
                     break;
                 case NONE:
                 default:
@@ -580,12 +554,8 @@ public class MoveValuationService {
             }
             changeValue = changeValue.multiply(change.stages);
 
-            if(change.percentChance > 1) {
-                value = value.add(changeValue.multiply(change.percentChance / 100));
-                //aaarrrgh why is it encoded differently in different games....
-                //TODO: standardize across ROMHandlers
-            } else if(change.percentChance != 0) {
-                value = value.add(changeValue.multiply(change.percentChance));
+            if(change.percentChance != 0) {
+                value = value.add(changeValue.multiply(getStandardizedChance(change.percentChance)));
             } else {
                 value = value.add(changeValue);
             }
@@ -600,29 +570,39 @@ public class MoveValuationService {
     }
 
     private EffectsValue generateStatusConditionValue(Move move) {
+        EffectsValue baseValue;
         switch(move.statusType) {
             case POISON:
-                return new EffectsValue(0, 50);
+                baseValue = new EffectsValue(0, 50);
                 //DOT is technically an offensive effect, but it synergizes with defensive moves and stats
                 //and therefore is better classified as a defensive effect.
             case TOXIC_POISON:
-                return new EffectsValue(0, 70);
+                baseValue = new EffectsValue(0, 70);
             case BURN:
-                return new EffectsValue(0, 80);
+                baseValue = new EffectsValue(0, 80);
                 //course, here's where having them as offensive would help clarify things...
             case CONFUSION:
-                return new EffectsValue(0, 90);
+                baseValue = new EffectsValue(0, 90);
                 //again, confusion is partially offensive - but it works better with defensive buffs.
+                //bonus 10 FastEffectsValue for less time *not* confused
             case PARALYZE:
+                baseValue = new EffectsValue(0, 60);
+                //not shown: 60/20 SlowEffectsValue for the near-guaranteed speed change
             case SLEEP:
             case FREEZE:
-                return new EffectsValue(0, 100);
+                baseValue = new EffectsValue(0, 100);
+                //also get a bonus 10 FastEffectsValue
             case NONE:
             default:
-                return new EffectsValue(0,0);
+                baseValue = new EffectsValue(0,0);
         }
         //These values are a bit arbitrary and may betray my personal biases.
         //But that applies to all status values... and some of the damage factors as well...
+        if(move.statusPercentChance != 0) {
+            return baseValue.multiply(getStandardizedChance(move.statusPercentChance));
+        } else {
+            return baseValue;
+        }
     }
 
     private int generateUniqueDamagingMovePower(Move move) {
@@ -676,17 +656,15 @@ public class MoveValuationService {
     private int generateSpeedDependentPowerValue(Move move) {
         switch (move.internalId) {
             case MoveIDs.gyroBall:
-                return -250;
-                //at speed neutral, power is 25.
-                //This does mean for fast pokemon, the value can go negative, which is technically incorrect, but
+                return -149;
+            case MoveIDs.electroBall:
+                return 110;
             case MoveIDs.payback:
                 return -50;
                 //Payback cares about *turn order*, while the other two care about *speed*.
                 //This does mean that its value should be handled slightly differently, synergy-wise
                 //(for example, Trick Room effects it but not the other two.)
                 //However, it's close enough that I probably just won't bother.
-            case MoveIDs.electroBall:
-                return 110;
             default:
                 return 0;
         }
@@ -828,30 +806,151 @@ public class MoveValuationService {
         }
     }
 
-    private int generateUniqueSpeedValue(Move move) {
+    private EffectsValue generateFastEffectsValue(Move move) {
         switch (move.internalId) {
-            case MoveIDs.metalBurst:
-                return -120; //no effect if moves first.
             case MoveIDs.copycat:
             case MoveIDs.mimic:
             case MoveIDs.mirrorMove:
             case MoveIDs.sketch:
-                return 30; //Allows making choices about the move copied (although I'm not sure the AI *does* that)
+                return new EffectsValue(15, 15);
+                //Allows making choices about the move copied (although I'm not sure the AI *does* that)
+                //this makes them better for all purposes
+            case MoveIDs.disable:
+            case MoveIDs.encore:
+                return new EffectsValue(0, 30);
+                //similarly, allows choosing what move is disabled/encored
+                //this, however, is a purely defensive effect
             case MoveIDs.destinyBond:
-                return 40; //if faster, player can't avoid the kill
+                return new EffectsValue(40, 0); //if faster, player can't avoid the kill
             case MoveIDs.meFirst:
-                return 70; //only works on damaging moves, but buffs them.
+                return new EffectsValue(70, 0); //only works on damaging moves, but buffs them.
             case MoveIDs.trickRoom:
-                return -80; //I guess? Like Tailwind for slow pokemon.
-            case MoveIDs.coreEnforcer:
-                return -90; //no secondary effect if faster
-
+            case MoveIDs.speedSwap:
+                return new EffectsValue(-60, -20);
+                //temporary swap of speed... which is actively bad if fast.
+                //(Although, it could provide synergy.)
+            case MoveIDs.matBlock:
+                return new EffectsValue(0, 60); //no effect unless moves first
+            case MoveIDs.slow:
+                return new EffectsValue(-30, -10);
             default:
                 if(GlobalConstants.bindingMoves.contains(move.internalId) && generation == 1) {
-                    return 100; //essentially a 100% chance to flinch
+                    return new EffectsValue(0, 100); //essentially a 100% chance to flinch
                 }
-                return 0;
+
+                //now general stuff
+                EffectsValue fastEffectsValue = new EffectsValue(0, 0);
+
+                if(move.flinchPercentChance > 0) {
+                    fastEffectsValue = fastEffectsValue.add(new EffectsValue(0,
+                            (int) getStandardizedChance(move.flinchPercentChance) * 100));
+                }
+
+                int priority = getStandardizedPriority(move);
+                if (priority < 0) {
+                    fastEffectsValue = fastEffectsValue.add(new EffectsValue(-10 + priority, 0));
+                }
+
+                fastEffectsValue = fastEffectsValue.add(generateSpeedChangeValue(move, true));
+
+                if(move.statusType == StatusType.SLEEP || move.statusType == StatusType.FREEZE
+                        || move.statusType == StatusType.CONFUSION) {
+                    fastEffectsValue = fastEffectsValue.add(
+                            new EffectsValue(0, (int)(10 * getStandardizedChance(move.statusPercentChance))));
+                    //because this reduces the time gap between it wearing off & reapplying it
+                    //(unless you happen to be using the same move anyway)
+                }
+                return fastEffectsValue;
         }
+    }
+
+    private EffectsValue generateSlowEffectsValue(Move move) {
+        switch (move.internalId) {
+            case MoveIDs.tailwind:
+            case MoveIDs.trickRoom:
+            case MoveIDs.speedSwap:
+                return new EffectsValue(60, 20);
+                //tailwind isn't guaranteed to swap like the other two... but nearly so
+            case MoveIDs.coreEnforcer:
+                return new EffectsValue(20, 70);
+                //removes ability if slower
+            case MoveIDs.metalBurst:
+                return new EffectsValue(120, 0);
+            default:
+
+                //now general stuff
+                EffectsValue slowEffectsValue = new EffectsValue(0, 0);
+
+                int priority = getStandardizedPriority(move);
+                if (priority > 0) {
+                    slowEffectsValue = slowEffectsValue.add(new EffectsValue(-10 + priority, 0));
+                }
+
+                slowEffectsValue = slowEffectsValue.add(generateSpeedChangeValue(move, false));
+
+                if(move.statusType == StatusType.PARALYZE) {
+                    EffectsValue paralysisValue = new EffectsValue(60, 20);
+                    paralysisValue = paralysisValue.add(generateFastEffectsValue(move));
+                    paralysisValue = paralysisValue.multiply(getStandardizedChance(move.statusPercentChance));
+                    slowEffectsValue = slowEffectsValue.add(paralysisValue);
+                }
+                return slowEffectsValue;
+        }
+    }
+
+    private int getStandardizedPriority(Move move) {
+        int priority = move.priority;
+        if(romHandler.generationOfPokemon() == 2) {
+            priority--; //All gen 2 moves have one higher priority than typical
+            //TODO: have Gen2ROMHandler standardize priority
+            //After this is done, this method can be removed.
+        }
+        return priority;
+    }
+
+    private EffectsValue generateSpeedChangeValue(Move move, boolean fast) {
+        int speedChange = 0;
+        double chance = 1;
+
+        for(Move.StatChange change : move.statChanges) {
+            if(change == null) {
+                continue;
+            }
+            if (!(change.type == StatChangeType.SPEED || change.type == StatChangeType.ALL)) {
+                continue;
+            }
+
+            if(move.statChangeMoveType.affectsSelf()){
+                speedChange += change.stages;
+            } else if(move.statChangeMoveType.affectsFoe()) {
+                speedChange -= change.stages;
+            } else {
+                //probably unreachable, BUT
+                continue;
+            }
+
+            chance = getStandardizedChance(change.percentChance);
+            //theoretically, there shouldn't be any moves which have multiple separate speed-changing chances...
+        }
+
+        if(fast && speedChange < 0) {
+            EffectsValue value = new EffectsValue(30, 10).multiply(speedChange);
+
+            //check for self synergy
+            value = value.add(generateSlowEffectsValue(move));
+
+            return value.multiply(chance);
+        } else if (!fast && speedChange > 0) {
+            EffectsValue value = new EffectsValue(30, 10).multiply(speedChange);
+
+            //check for self synergy
+            value = value.add(generateFastEffectsValue(move));
+
+            return value.multiply(chance);
+        } else {
+            return new EffectsValue(0,0);
+        }
+
     }
 
     private double generateUniqueUseLimitValue(Move move) {
@@ -952,7 +1051,6 @@ public class MoveValuationService {
                 return new EffectsValue(80, 0);
             case MoveIDs.counter:
             case MoveIDs.mirrorCoat:
-            case MoveIDs.metalBurst:
             case MoveIDs.bide:
                 return new EffectsValue(120, 0);
                 //not really sure how to handle the retaliate moves, but they're strong when they work
@@ -1077,9 +1175,8 @@ public class MoveValuationService {
             case MoveIDs.nightmare:
                 return new EffectsValue(0, 100); //synergy baked into usage
             case MoveIDs.curse:
-                return new EffectsValue(5, 40);
-                //this is for the stat change mode; curse mode is more like 50 def (150 for massive dot - 100 for half health)
-                //...I almost feel like the easiest way to handle this is to treat them as two different moves...
+                return new EffectsValue(0, 50);
+                //150 for massive dot - 100 for half health
             case MoveIDs.spikes:
             case MoveIDs.stealthRock:
                 return new EffectsValue(40, 0);
@@ -1214,7 +1311,7 @@ public class MoveValuationService {
                 return new EffectsValue(0, 35);
                 //1 stage, and it might also give it to opponents. (synergy makes better).
             case MoveIDs.stickyWeb:
-                return new EffectsValue(80, 0);
+                return new EffectsValue(60, 20);
                 //1 stage on each new pokemon; 2 is a reasonable estimate. May do synergy: front of party.
             case MoveIDs.fellStinger:
                 if(generation == 6) {
@@ -1244,6 +1341,9 @@ public class MoveValuationService {
                 return new EffectsValue(50, 50);
                 //steal any positive stat changes! if they exist
                 //more possible offensive stats is balanced by more likely for opponent to have stats if defensive
+            case MoveIDs.slow:
+                return new EffectsValue(40, 40);
+                //(aka, Curse when used by a non-Ghost type)
 
 
             //protect / damage reduction

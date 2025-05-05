@@ -1851,6 +1851,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean canChangeShopSizes() {
+        return true;
+    }
+
+    @Override
     public List<Shop> getShops() {
         List<Shop> shops = readShops();
 
@@ -1902,6 +1907,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void setShops(List<Shop> shops) {
+
         int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
         if (shops.size() != pointerOffsets.length) {
             throw new IllegalArgumentException("shops.size() must be: " + pointerOffsets.length
@@ -1910,6 +1916,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         SpecificBankDataRewriter<Shop> rewriter = new SpecificBankDataRewriter<>(0);
         for (int i = 0; i < shops.size(); i++) {
+            System.out.println(getFreedSpace());
             rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
                     offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
         }

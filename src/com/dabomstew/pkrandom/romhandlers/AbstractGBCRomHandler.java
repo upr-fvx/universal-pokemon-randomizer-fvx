@@ -29,6 +29,7 @@ import com.dabomstew.pkrandom.exceptions.RomIOException;
 import com.dabomstew.pkrandom.gbspace.BankDividedFreedSpace;
 import com.dabomstew.pkrandom.graphics.images.GBCImage;
 import com.dabomstew.pkrandom.romhandlers.romentries.AbstractGBCRomEntry;
+import com.dabomstew.pkrandom.romhandlers.romentries.GBUnusedChunkEntry;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -60,6 +61,7 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 getRomEntry().getArrayValue("ReservedBanks"));
         freeUnusedSpaceAtEndOfBanks();
         freeUnusedBanks();
+        freeUnusedChunks();
     }
 
     /**
@@ -96,6 +98,15 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
             }
         }
         return true;
+    }
+
+    /**
+     * Frees and clears specific chunks of data that have been marked as "unused".
+     */
+    protected void freeUnusedChunks() {
+        for (GBUnusedChunkEntry unusedChunk : getRomEntry().getUnusedChunks()) {
+            freeSpace(unusedChunk.getOffset(), unusedChunk.getLength());
+        }
     }
 
     @Override

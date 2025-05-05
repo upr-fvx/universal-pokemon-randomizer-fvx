@@ -1854,9 +1854,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public List<Shop> getShops() {
         List<Shop> shops = readShops();
 
-        shops.forEach(shop -> shop.setSpecialShop(true));
-        // TODO: mark the special shops
-        // Gen1Constants.skipShops.forEach(i -> shops.get(i).setSpecialShop(false));
+        Gen1Constants.specialShops.forEach(i -> shops.get(i).setSpecialShop(true));
 
         return shops;
     }

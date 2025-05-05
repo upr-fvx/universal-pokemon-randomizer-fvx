@@ -190,10 +190,9 @@ public class Gen1Constants {
             "Indigo Plateau Lobby"
     ));
 
-    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
-    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15)
-    );
+    public static final List<Integer> specialShops = Collections.unmodifiableList(Arrays.asList(
+            8, 9 // just the Celadon 5F ones
+    ));
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
             Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone

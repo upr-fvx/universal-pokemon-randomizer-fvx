@@ -1867,6 +1867,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
 
+        int a = find(rom, "FE 01 06 FF FE 06 04 13 0D 0E 0F 1E");
+        int b = find(rom, "FE 05 03 12 13 34 35 FF FE 07 02 03");
+        int c = find(rom, "A0 79 F9 7E B0 7E 09 7F 4E 7F 8E 7F 90 7F 50");
+
+        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(a) + ", 4] // Unused shop data (bike)");
+        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(b) + ", 8] // Unused shop data (normal)");
+        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(c) + ", 0x2A] // \"Garbage 0\"");
+
+
         int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
 
         for (int i = 0; i < pointerOffsets.length; i++) {
@@ -1880,6 +1889,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
             shops.add(shop);
         }
+        System.out.println(shops.size());
         return shops;
     }
 
@@ -1907,7 +1917,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void setShops(List<Shop> shops) {
-
         int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
         if (shops.size() != pointerOffsets.length) {
             throw new IllegalArgumentException("shops.size() must be: " + pointerOffsets.length

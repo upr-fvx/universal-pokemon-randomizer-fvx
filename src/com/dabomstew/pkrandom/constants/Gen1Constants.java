@@ -177,7 +177,6 @@ public class Gen1Constants {
             "Viridian Poké Mart",
             "Pewter Poké Mart",
             "Cerulean Poké Mart",
-            "Unused Bike Shop",
             "Vermilion Poké Mart",
             "Lavender Poké Mart",
             "Celadon Department Store 2F Left",
@@ -186,7 +185,6 @@ public class Gen1Constants {
             "Celadon Department Store 5F Left",
             "Celadon Department Store 5F Right",
             "Fuchsia Poké Mart",
-            "Unused Poké Mart",
             "Cinnabar Poké Mart",
             "Saffron Poké Mart",
             "Indigo Plateau Lobby"

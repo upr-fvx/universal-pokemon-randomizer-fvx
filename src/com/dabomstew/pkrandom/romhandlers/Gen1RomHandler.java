@@ -1902,38 +1902,29 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void setShops(List<Shop> shops) {
-        // TODO: rewriting the shops, allowing for size increase/decrease
-        // Yes this is a silly way of writing all shops, I don't bother fixing it though.
-        // O(n^2) is still small for small n.
+        int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        if (shops.size() != pointerOffsets.length) {
+            throw new IllegalArgumentException("shops.size() must be: " + pointerOffsets.length
+                    + ", is: " + shops.size());
+        }
+
+        SpecificBankDataRewriter<Shop> rewriter = new SpecificBankDataRewriter<>(0);
         for (int i = 0; i < shops.size(); i++) {
-            writeShop(i, shops.get(i));
+            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
         }
     }
 
-    private void writeShop(int shopNum, Shop shop) {
-        System.out.println("writing " + shop);
-        if (shopNum >= romEntry.getIntValue("ShopAmount")) {
-            throw new IndexOutOfBoundsException("shopNum too high");
+    private byte[] shopToBytes(Shop shop) {
+        List<Item> shopItems = shop.getItems();
+        byte[] data = new byte[2 + shop.getItems().size() + 1];
+        data[0] = Gen1Constants.shopItemsScript;
+        data[1] = (byte) shopItems.size();
+        for (int i = 0; i < shopItems.size(); i++) {
+            data[2 + i] = (byte) shopItems.get(i).getId();
         }
-        int offset = romEntry.getIntValue("ShopItemOffset");
-        int currShopNum = 0;
-
-        while (currShopNum < shopNum) {
-            while (rom[offset++] != Gen1Constants.shopItemsTerminator); // intentional empty body while
-            currShopNum++;
-        }
-
-        offset++; // skip the initial script byte
-        if ((rom[offset++] & 0xFF) != shop.getItems().size()) {
-            throw new IllegalArgumentException("Wrong amount of items in shop.");
-        }
-        for (Item item : shop.getItems()) {
-            rom[offset++] = (byte) item.getId();
-        }
-
-        if (rom[offset] != Gen1Constants.shopItemsTerminator) {
-            throw new RomIOException("Shop terminator not found.");
-        }
+        data[data.length - 1] = Gen1Constants.shopItemsTerminator;
+        return data;
     }
 
     @Override

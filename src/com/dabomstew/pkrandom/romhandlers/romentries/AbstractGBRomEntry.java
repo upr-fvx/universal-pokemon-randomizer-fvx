@@ -70,6 +70,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
         super.copyFrom(other);
         if (other instanceof AbstractGBRomEntry) {
             AbstractGBRomEntry gbOther = (AbstractGBRomEntry) other;
+            // TODO: fix CopyUnusedChunks not working properly
             if (getIntValue("CopyUnusedChunks") == 1) {
                 unusedChunks.addAll(gbOther.unusedChunks);
             }

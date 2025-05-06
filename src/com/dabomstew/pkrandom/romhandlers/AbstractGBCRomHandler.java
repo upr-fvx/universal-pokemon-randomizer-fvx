@@ -286,6 +286,18 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         return (offset / GBConstants.bankSize);
     }
 
+    /**
+     * Write a far text to "offset", pointing at "pointer".
+     */
+    protected void writeFarText(int offset, int pointer) {
+        rom[offset] = getFarTextStart();
+        writePointer(offset + 1, pointer);
+        rom[offset + 3] = (byte) bankOf(pointer);
+        rom[offset + 4] = GBConstants.stringTerminator;
+    }
+
+    protected abstract byte getFarTextStart();
+
     protected String readVariableLengthString(int offset, boolean textEngineMode) {
         return readString(offset, Integer.MAX_VALUE, textEngineMode);
     }

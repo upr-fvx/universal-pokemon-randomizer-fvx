@@ -1894,24 +1894,31 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private List<Item> readShopItems(int offset, int shopNum) {
-        int offset2 = offset;
-        int start = offset2;
-        if (rom[offset2++] != Gen1Constants.shopItemsScript) {
+        // Shop item data is "text" internally,
+        // so at our given offset can be a "far text",
+        // which points to the actual offset of the shop item data.
+        if (rom[offset] == Gen1Constants.farTextStart) {
+            System.out.print(RomFunctions.bytesToHexBlock(rom, offset, 10));
+            offset = readPointer(offset + 1, rom[offset + 3]);
+        }
+
+        int start = offset;
+        if (rom[offset++] != Gen1Constants.shopItemsScript) {
             throw new RomIOException("Invalid start of shop data. Should be 0x"
                     + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
-                    + Integer.toHexString(rom[--offset2] & 0xFF) + ".");
+                    + Integer.toHexString(rom[--offset] & 0xFF) + ".");
         }
-        int itemCount = rom[offset2++] & 0xFF;
+        int itemCount = rom[offset++] & 0xFF;
         List<Item> shopItems = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
-            shopItems.add(items.get(rom[offset2++] & 0xFF));
+            shopItems.add(items.get(rom[offset++] & 0xFF));
         }
-        if (rom[offset2++] != Gen1Constants.shopItemsTerminator) {
+        if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
             throw new RomIOException("Shop size mismatch/terminator missing.");
         }
 
         System.out.println(Gen1Constants.shopNames.get(shopNum));
-        System.out.println(RomFunctions.bytesToHexBlock(rom, start, offset2 - start));
+        System.out.println(RomFunctions.bytesToHexBlock(rom, start, offset - start));
         return shopItems;
     }
 
@@ -1923,12 +1930,30 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     + ", is: " + shops.size());
         }
 
-        SpecificBankDataRewriter<Shop> rewriter = new SpecificBankDataRewriter<>(0);
         for (int i = 0; i < shops.size(); i++) {
             System.out.println(getFreedSpace());
-            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
-                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
+            System.out.println(shops.get(i));
+            int oldOffset = readPointer(pointerOffsets[i], 0);
+            int oldLength = lengthOfDataWithTerminatorAt(oldOffset, Gen1Constants.shopItemsTerminator);
+            freeSpace(oldOffset, oldLength);
+
+            byte[] newData = shopToBytes(shops.get(i));
+            int dataOffset = findAndUnfreeSpace(newData.length);
+            writeBytes(dataOffset, newData);
+            int farTextOffset = findAndUnfreeSpaceInBank(GBConstants.farTextLength, 0);
+            writeFarText(farTextOffset, dataOffset);
+
+            writePointer(pointerOffsets[i], farTextOffset);
         }
+
+        System.out.println(getFreedSpace());
+
+//        SpecificBankDataRewriter<Shop> rewriter = new SpecificBankDataRewriter<>(0);
+//        for (int i = 0; i < shops.size(); i++) {
+//            System.out.println(getFreedSpace());
+//            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+//                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
+//        }
     }
 
     private byte[] shopToBytes(Shop shop) {
@@ -3002,6 +3027,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Gen1Decmp decmp = new Gen1Decmp(rom, offset);
         decmp.decompress();
         return decmp.getCompressedLength();
+    }
+
+    @Override
+    protected byte getFarTextStart() {
+        return Gen1Constants.farTextStart;
     }
 
     @Override

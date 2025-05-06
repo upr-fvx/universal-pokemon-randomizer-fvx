@@ -3265,6 +3265,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    protected byte getFarTextStart() {
+        return Gen2Constants.farTextStart;
+    }
+
+    @Override
     public Gen2PokemonImageGetter createPokemonImageGetter(Species pk) {
         return new Gen2PokemonImageGetter(pk);
     }

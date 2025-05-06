@@ -171,6 +171,8 @@ public class Gen1Constants {
         }
     }
 
+    public static final byte farTextStart = (byte) 0x17;
+
     public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
 
     public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(

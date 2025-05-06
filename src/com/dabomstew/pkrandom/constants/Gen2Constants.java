@@ -155,6 +155,8 @@ public class Gen2Constants {
     // probably the terminator for all move-lists, like TM/HM compatibility
     public static final byte eggMovesTerminator = (byte) 0xFF;
 
+    public static final byte farTextStart = 0x16;
+
     public static final byte shopItemsTerminator = (byte) 0xFF;
 
     public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(

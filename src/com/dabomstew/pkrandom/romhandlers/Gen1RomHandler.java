@@ -1879,7 +1879,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
 
         for (int i = 0; i < pointerOffsets.length; i++) {
-            int offset = readPointer(pointerOffsets[i], 0);
+            int offset = readPointer(pointerOffsets[i]);
             List<Item> shopItems = readShopItems(offset, i);
 
             Shop shop = new Shop();
@@ -1894,6 +1894,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private List<Item> readShopItems(int offset, int shopNum) {
+        System.out.println("reading shop at 0x" + Integer.toHexString(offset));
         int start = offset;
         if (rom[offset++] != Gen1Constants.shopItemsScript) {
             throw new RomIOException("Invalid start of shop data. Should be 0x"

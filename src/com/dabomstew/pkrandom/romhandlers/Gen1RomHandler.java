@@ -1894,14 +1894,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private List<Item> readShopItems(int offset, int shopNum) {
-        // Shop item data is "text" internally,
-        // so at our given offset can be a "far text",
-        // which points to the actual offset of the shop item data.
-        if (rom[offset] == Gen1Constants.farTextStart) {
-            System.out.print(RomFunctions.bytesToHexBlock(rom, offset, 10));
-            offset = readPointer(offset + 1, rom[offset + 3]);
-        }
-
         int start = offset;
         if (rom[offset++] != Gen1Constants.shopItemsScript) {
             throw new RomIOException("Invalid start of shop data. Should be 0x"
@@ -1930,30 +1922,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     + ", is: " + shops.size());
         }
 
+        DataRewriter<Shop> rewriter = new SameBankDataRewriter<>();
         for (int i = 0; i < shops.size(); i++) {
             System.out.println(getFreedSpace());
-            System.out.println(shops.get(i));
-            int oldOffset = readPointer(pointerOffsets[i], 0);
-            int oldLength = lengthOfDataWithTerminatorAt(oldOffset, Gen1Constants.shopItemsTerminator);
-            freeSpace(oldOffset, oldLength);
-
-            byte[] newData = shopToBytes(shops.get(i));
-            int dataOffset = findAndUnfreeSpace(newData.length);
-            writeBytes(dataOffset, newData);
-            int farTextOffset = findAndUnfreeSpaceInBank(GBConstants.farTextLength, 0);
-            writeFarText(farTextOffset, dataOffset);
-
-            writePointer(pointerOffsets[i], farTextOffset);
+            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
         }
-
-        System.out.println(getFreedSpace());
-
-//        SpecificBankDataRewriter<Shop> rewriter = new SpecificBankDataRewriter<>(0);
-//        for (int i = 0; i < shops.size(); i++) {
-//            System.out.println(getFreedSpace());
-//            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
-//                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
-//        }
     }
 
     private byte[] shopToBytes(Shop shop) {

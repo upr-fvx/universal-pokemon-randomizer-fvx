@@ -279,7 +279,11 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
     }
 
     protected int calculateOffset(int pointer, int bank) {
-        return (pointer % GBConstants.bankSize) + bank * GBConstants.bankSize;
+        if (pointer < GBConstants.bankSize) {
+            return pointer; // in bank 0
+        } else {
+            return (pointer % GBConstants.bankSize) + bank * GBConstants.bankSize;
+        }
     }
 
     protected int bankOf(int offset) {
@@ -319,8 +323,10 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
 
     /**
      * A {@link GBCDataRewriter} for when the data is and must stay in a specific bank,
-     * but this bank not shared by the pointer. If the data must share the pointer's bank,
-     * use {@link SameBankDataRewriter}.
+     * but this bank not shared by the pointer.<br>
+     * If the data must share the pointer's bank, use {@link SameBankDataRewriter}.<br>
+     * If the bank is controlled by a byte somewhere, and the offset for said bank-byte is known,
+     * use {@link IndirectBankDataRewriter};
      */
     protected class SpecificBankDataRewriter<E> extends GBCDataRewriter<E> {
 
@@ -343,18 +349,18 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
     }
 
     /**
-     * A {@link GBCDataRewriter} for when the data is and must stay in the same bank as the pointer.
+     * A {@link GBCDataRewriter} for when the data is and must stay in
+     * either A) the same bank as the pointer, or B) bank 0.<br>
      * <b>This is almost always the right Rewriter</b> for data in a GBC game, since normal 2-byte pointers only
-     * reach within a single bank. If your code uses another Rewriter, make sure you understand why. If you don't
+     * reach within a single bank + bank 0. If your code uses another Rewriter, make sure you understand why. If you don't
      * understand why, you are probably wrong and should use this instead.
      */
     protected class SameBankDataRewriter<E> extends GBCDataRewriter<E> {
 
         @Override
         protected int repointAndWriteToFreeSpace(int pointerOffset, byte[] data) {
-            int bank = bankOf(pointerReader.apply(pointerOffset));
-            int newOffset = findAndUnfreeSpaceInBank(data.length, bank);
-
+            int bank = bankOf(pointerOffset);
+            int newOffset = findAndUnfreeSpaceInBankOrZeroBank(data.length, bank);
             pointerWriter.accept(pointerOffset, newOffset);
             writeBytes(newOffset, data);
 
@@ -362,6 +368,14 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
     }
 
+    /**
+     * A {@link GBCDataRewriter} for when the data is in a specific bank,
+     * and this is not the same bank as the pointer, <i>but also</i> the offset(s)
+     * for the byte(s) which decide said bank are known.<br>
+     * This is essentially a more powerful version of {@link SpecificBankDataRewriter},
+     * since it allows for repointing to any non-reserved bank, instead of just the given one.
+     * However, it also requires extra information to work: the bankOffsets.
+     */
     protected class IndirectBankDataRewriter<E> extends GBCDataRewriter<E> {
 
         private final int[] bankOffsets;
@@ -404,10 +418,26 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         do {
             foundOffset = getFreedSpace().findAndUnfreeInBank(length, bank);
         } while (isRomSpaceUsed(foundOffset, length));
-
         if (foundOffset == -1) {
             throw new RomIOException("Bank 0x" + Integer.toHexString(bank) + " full. Can't find " + length +
                     " free bytes anywhere.");
+        }
+        return foundOffset;
+    }
+
+    private int findAndUnfreeSpaceInBankOrZeroBank(int length, int bank) {
+        int foundOffset;
+        do {
+            foundOffset = getFreedSpace().findAndUnfreeInBank(length, bank);
+        } while (isRomSpaceUsed(foundOffset, length));
+        if (foundOffset == -1) {
+            do {
+                foundOffset = getFreedSpace().findAndUnfreeInBank(length, 0);
+            } while (isRomSpaceUsed(foundOffset, length));
+        }
+        if (foundOffset == -1) {
+            throw new RomIOException("Both bank 0x" + Integer.toHexString(bank) + " and bank 0x0 full. " +
+                    "Can't find " + length + " free bytes anywhere.");
         }
         return foundOffset;
     }

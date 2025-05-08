@@ -2,12 +2,20 @@ package com.dabomstew.pkrandom.romhandlers.romentries;
 
 import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * An abstract {@link RomEntry} to be used by GB games. Corresponds to {@link AbstractGBRomHandler}.
+ * <br><br>
+ * Provides the powerful, but risky, UnusedChunk functionality.
+ * Each UnusedChunk corresponds to a known chunk of data, which can be safely deleted from the ROM
+ * to make space for other data.<br>
+ * <b>Be aware of the UnusedChunks when copying.</b> If offset and/or length of the data changes
+ * between the copy-source and the copy-er, <b>copied UnusedChunks may cause corruption!!</b><br>
+ * Since each UnusedChunk is tied to a name, their location and length can be overwritten.
+ * And they can be removed by setting them to <code>null</code>. (e.g. <code>UnusedChunk&lt;Garb00&gt;=null</code>).
+ * <br><br>
+ * Since UnusedChunks are so risky, use other methods of space management when you can.
  */
 public abstract class AbstractGBRomEntry extends RomEntry {
 
@@ -16,7 +24,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
         public GBRomEntryReader() {
             super(DefaultReadMode.INT, CopyFromMode.NAME);
             putSpecialKeyMethod("CRC32", AbstractGBRomEntry::setExpectedCRC32);
-            putSpecialKeyMethod("UnusedChunk[]", AbstractGBRomEntry::addUnusedChunk);
+            putKeyPrefixMethod("UnusedChunk<", AbstractGBRomEntry::addUnusedChunk);
             putKeySuffixMethod("Locator", this::addStringValue);
             putKeySuffixMethod("Prefix", this::addStringValue);
             putKeySuffixMethod("String", this::addStringValue);
@@ -25,7 +33,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
 
     private int version;
     private long expectedCRC32 = -1;
-    private final List<GBUnusedChunkEntry> unusedChunks = new ArrayList<>();
+    private final Map<String, GBUnusedChunkEntry> unusedChunks = new HashMap<>();
 
     public AbstractGBRomEntry(String name) {
         super(name);
@@ -35,7 +43,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
         super(original);
         this.version = original.version;
         this.expectedCRC32 = original.expectedCRC32;
-        this.unusedChunks.addAll(original.unusedChunks);
+        this.unusedChunks.putAll(original.unusedChunks);
     }
 
     @Override
@@ -51,17 +59,27 @@ public abstract class AbstractGBRomEntry extends RomEntry {
         this.expectedCRC32 = IniEntryReader.parseLong("0x" + s);
     }
 
-    public List<GBUnusedChunkEntry> getUnusedChunks() {
-        return Collections.unmodifiableList(unusedChunks);
+    public Set<GBUnusedChunkEntry> getUnusedChunks() {
+        return Collections.unmodifiableSet(new HashSet<>(unusedChunks.values()));
     }
 
-    private void addUnusedChunk(String s)  {
-        if (s.startsWith("[") && s.endsWith("]")) {
-            String[] parts = s.substring(1, s.length() - 1).split(",", 2);
+    private void addUnusedChunk(String[] valuePair)  {
+        String key = valuePair[0].split("<")[1].split(">")[0];
+        String value = valuePair[1];
+        if (value.equals("null")) {
+            unusedChunks.remove(key);
+        } else {
+            if (!value.startsWith("[") || !value.endsWith("]")) {
+                throw new IllegalArgumentException("Invalid format; brackets missing. " + Arrays.toString(valuePair));
+            }
+            String[] parts = value.substring(1, value.length() - 1).split(",");
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid format, must have 2 args in brackets. " + Arrays.toString(valuePair));
+            }
             int offset = IniEntryReader.parseInt(parts[0]);
             int length = IniEntryReader.parseInt(parts[1]);
             GBUnusedChunkEntry chunk = new GBUnusedChunkEntry(offset, length);
-            unusedChunks.add(chunk);
+            unusedChunks.put(key, chunk);
         }
     }
 
@@ -70,10 +88,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
         super.copyFrom(other);
         if (other instanceof AbstractGBRomEntry) {
             AbstractGBRomEntry gbOther = (AbstractGBRomEntry) other;
-            // TODO: fix CopyUnusedChunks not working properly
-            if (getIntValue("CopyUnusedChunks") == 1) {
-                unusedChunks.addAll(gbOther.unusedChunks);
-            }
+            unusedChunks.putAll(gbOther.unusedChunks);
         }
     }
 

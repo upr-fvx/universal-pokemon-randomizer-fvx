@@ -71,7 +71,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
 
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
-        // added that needs to be randomized according to the following settings
+        // added that are supposed to be randomized according to the following settings
         if (isUnchanged) {
             keepTypeThemes = true;
             banIrregularAltFormes = true;
@@ -911,7 +911,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
             tp.setSpecies(newSpecies);
             setFormeForTrainerPokemon(tp, newSpecies);
             tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-            tp.setResetMoves(true);
         }
     }
 

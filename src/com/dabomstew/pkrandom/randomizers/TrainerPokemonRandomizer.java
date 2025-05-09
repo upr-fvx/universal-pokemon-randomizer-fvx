@@ -71,7 +71,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
 
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
-        // added that needs to be randomized according to the following settings
+        // added that are supposed to be randomized according to the following settings
         if (isUnchanged) {
             keepTypeThemes = true;
             banIrregularAltFormes = true;
@@ -906,12 +906,21 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void createFullyEvolvedPokemon(TrainerPokemon tp) {
-        Species newSpecies = fullyEvolve(tp.getSpecies());
-        if (newSpecies != tp.getSpecies()) {
+        Species oldSpecies = tp.getSpecies();
+        Species newSpecies = fullyEvolve(oldSpecies);
+        if (newSpecies != oldSpecies) {
             tp.setSpecies(newSpecies);
             setFormeForTrainerPokemon(tp, newSpecies);
             tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-            tp.setResetMoves(true);
+
+            // If the type of the Pokemon changed through evolution, reset its moves, otherwise keep them
+            Type oldPrimaryType = oldSpecies.getPrimaryType(false);
+            Type oldSecondaryType = oldSpecies.getSecondaryType(false);
+            Type newPrimaryType = newSpecies.getPrimaryType(false);
+            Type newSecondaryType = newSpecies.getSecondaryType(false);
+            if (oldPrimaryType != newPrimaryType || oldSecondaryType != newSecondaryType) {
+                tp.setResetMoves(true);
+            }
         }
     }
 

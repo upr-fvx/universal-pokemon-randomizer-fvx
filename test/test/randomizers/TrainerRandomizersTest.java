@@ -623,6 +623,61 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void forcedEvolutionsOfOriginalPokemonResetMovesIfAndOnlyIfTypeChanged(String romName) {
+        activateRomHandler(romName);
+
+        // Record original types of all trainer Pokemon
+        Map<Trainer, List<List<Type>>> originalTypes = new HashMap<>();;
+        for (Trainer tr : romHandler.getTrainers()) {
+            List<List<Type>> typesBefore = new ArrayList<>();
+            originalTypes.put(tr, typesBefore);
+            for (TrainerPokemon tp : tr.pokemon) {
+                List<Type> typesOfPokemon = Arrays.asList(tp.getSpecies().getPrimaryType(false),
+                        tp.getSpecies().getSecondaryType(false));
+                typesBefore.add(typesOfPokemon);
+            }
+        }
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(1);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        // Test
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println("\n" + tr);
+            List<List<Type>> typesBefore = originalTypes.get(tr);
+            for (int k = 0; k<tr.pokemon.size(); k++) {
+                TrainerPokemon tp = tr.pokemon.get(k);
+
+                Species newSpecies = tp.getSpecies();
+                Type newPrimaryType = newSpecies.getPrimaryType(false);
+                Type newSecondaryType = newSpecies.getSecondaryType(false);
+
+                Type oldPrimaryType = typesBefore.get(k).get(0);
+                Type oldSecondaryType = typesBefore.get(k).get(1);
+
+                System.out.println(tp + " : Forced evolution type change: (" + oldPrimaryType + ", " + oldSecondaryType +
+                        ") --> (" + newPrimaryType + ", " + newSecondaryType + ")");
+
+                if (tp.isResetMoves()) {
+                    // Pokemon has to be evolved with a different type
+                    System.out.println("resetMoves = TRUE");
+                    assertTrue(oldPrimaryType != newPrimaryType || oldSecondaryType != newSecondaryType);
+                }
+                else {
+                    // Pokemon has to have the same type as pre randomization (can be different species though)
+                    System.out.println("resetMoves = FALSE");
+                    assertTrue(oldPrimaryType == newPrimaryType && oldSecondaryType == newSecondaryType);
+                }
+
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);

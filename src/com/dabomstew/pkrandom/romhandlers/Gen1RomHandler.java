@@ -1874,21 +1874,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
-
-        int a = find(rom, "FE 01 06 FF FE 06 04 13 0D 0E 0F 1E");
-        int b = find(rom, "FE 05 03 12 13 34 35 FF FE 07 02 03");
-        int c = find(rom, "A0 79 F9 7E B0 7E 09 7F 4E 7F 8E 7F 90 7F 50");
-
-        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(a) + ", 4] // Unused shop data (bike)");
-        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(b) + ", 8] // Unused shop data (normal)");
-        System.out.println("UnusedChunk[]=[0x" + Integer.toHexString(c) + ", 0x2A] // \"Garbage 0\"");
-
-
         int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
 
         for (int i = 0; i < pointerOffsets.length; i++) {
             int offset = readPointer(pointerOffsets[i]);
-            List<Item> shopItems = readShopItems(offset, i);
+            List<Item> shopItems = readShopItems(offset);
 
             Shop shop = new Shop();
             shop.setItems(shopItems);
@@ -1897,29 +1887,25 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
             shops.add(shop);
         }
-        System.out.println(shops.size());
         return shops;
     }
 
-    private List<Item> readShopItems(int offset, int shopNum) {
-        System.out.println("reading shop at 0x" + Integer.toHexString(offset));
-        int start = offset;
+    private List<Item> readShopItems(int offset) {
         if (rom[offset++] != Gen1Constants.shopItemsScript) {
             throw new RomIOException("Invalid start of shop data. Should be 0x"
                     + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
                     + Integer.toHexString(rom[--offset] & 0xFF) + ".");
         }
+
         int itemCount = rom[offset++] & 0xFF;
         List<Item> shopItems = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
             shopItems.add(items.get(rom[offset++] & 0xFF));
         }
-        if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
+
+        if (rom[offset] != Gen1Constants.shopItemsTerminator) {
             throw new RomIOException("Shop size mismatch/terminator missing.");
         }
-
-        System.out.println(Gen1Constants.shopNames.get(shopNum));
-        System.out.println(RomFunctions.bytesToHexBlock(rom, start, offset - start));
         return shopItems;
     }
 
@@ -1933,7 +1919,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         DataRewriter<Shop> rewriter = new SameBankDataRewriter<>();
         for (int i = 0; i < shops.size(); i++) {
-            System.out.println(getFreedSpace());
             rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
                     offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
         }

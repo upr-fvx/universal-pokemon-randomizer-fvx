@@ -1852,7 +1852,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean canChangeShopSizes() {
-        return true;
+        // Yellow (J) does have all the offsets needed to repoint the shops,
+        // but finding free space to repoint bigger shop data is... tricky.
+        // Like all Japanese games, the ends of banks are filled with garbage
+        // data instead of 0xFF, but unlike other Japanese games there isn't
+        // a disassembly of Yellow (J) to tell us exactly where said garbage
+        // data starts.
+        // Feel free to give it a try if you want a Game Boy hacking challenge!
+        // -- voliol 2025-05-10
+        return !(isYellow() && !romEntry.isNonJapanese());
     }
 
     @Override

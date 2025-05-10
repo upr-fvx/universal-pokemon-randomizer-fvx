@@ -30,7 +30,7 @@ public class MoveValuationService {
         private EffectsValue effectsValue;
         private EffectsValue fastEffectsValue;
         private EffectsValue slowEffectsValue;
-        private int doubleBattleEffectsValue = 0;
+        private EffectsValue doubleBattleEffectsValue;
         private double doubleBattleRangeModifier = 1;
         private double accuracy = 1;
         private double useMultiplier = 1; //for charge moves, etc
@@ -116,7 +116,7 @@ public class MoveValuationService {
             this.useMultiplier = useMultiplier;
         }
 
-        public void setDoubleBattleEffectsValue(int doubleBattleEffectsValue) {
+        public void setDoubleBattleEffectsValue(EffectsValue doubleBattleEffectsValue) {
             if(finalized) {
                 throw new IllegalStateException("Attempted to change value of finalized move!");
             }
@@ -140,8 +140,7 @@ public class MoveValuationService {
             fullValue = fullValue.add(powerScalingEffectsValue.multiply((double)totalPower / 100));
             fullValue = fullValue.add(effectsValue);
             fullValue = fullValue.add(fastEffectsValue.divide(2)).add(slowEffectsValue.divide(2));
-            fullValue.offensive += doubleBattleEffectsValue / 2;
-            fullValue.defensive += doubleBattleEffectsValue / 2;
+            fullValue = fullValue.add(doubleBattleEffectsValue.divide(2));
 
             totalResultsValue = fullValue;
 
@@ -1557,49 +1556,72 @@ public class MoveValuationService {
         }
     }
 
-    private int generateUniqueDoubleBattleEffectsValue(Move move) {
+    private EffectsValue generateUniqueDoubleBattleEffectsValue(Move move) {
         switch(move.internalId) {
+            //this may actually need to be split into MORE variables, but i'm not dealing with that yet
+
+            //speed dependent
             case MoveIDs.assurance:
                 //this is also dependent on speed, not sure how to handle that
                 //ignoring it for now
-                return 50;
+                //It also factors in to power... yeah, this is a weird one to handle
+                //TODO: figure out a way to represent this
+                if (generation <= 5) {
+                    return new EffectsValue(50, 0);
+                } else {
+                    return new EffectsValue(60, 0);
+                }
+            case MoveIDs.afterYou:
+            case MoveIDs.quash:
+                return new EffectsValue(10, 0);
+                //even for a fast pokemon with a slow partner, not that great
+
+            //values apply to self
             case MoveIDs.followMe:
             case MoveIDs.ragePowder:
-                return 30; //low value, high synergy. Synergizes with defenses.
+                return new EffectsValue(0, 50);
             case MoveIDs.spotlight:
-                return 35; //slightly better since it's targeted. But only slightly.
-            case MoveIDs.helpingHand:
-                return 50;
+                return new EffectsValue(0, 55);
+                //slightly better since it's targeted. But only slightly.
+            case MoveIDs.allySwitch:
+                return new EffectsValue(0, 30); //kinda like a bad version of the previous
+
+            //values apply to ally
             case MoveIDs.feint:
             case MoveIDs.shadowForce:
             case MoveIDs.phantomForce:
             case MoveIDs.hyperspaceHole:
             case MoveIDs.hyperspaceFury:
-                return 10; //lifts protect/detect/etc
+                return new EffectsValue(10, 0);
+                //lifts protect/detect/etc
+                //...do I need to separate these effects into offense/defense for self and offense/defense for ally??
             case MoveIDs.flameBurst:
-                return 5; //very small amount of damage
-            case MoveIDs.afterYou:
-            case MoveIDs.quash:
-                return 10; //even for a fast pokemon with a slow partner, not that great
-            case MoveIDs.allySwitch:
-                return 5; //kinda useless tbh?
+                return new EffectsValue(5, 0); //very small amount of damage
             case MoveIDs.healPulse:
             case MoveIDs.pollenPuff:
-                return 100; //half health healing
+                return new EffectsValue(0, 100); //half health healing
+            case MoveIDs.instruct:
+                return new EffectsValue(40, 40); //???? idk what this is for tbh
+
+            //values apply to both
+            case MoveIDs.purify:
+                return new EffectsValue(0, 60);
+                //can cure allies, plus can cure sleep and freeze in that case
+            case MoveIDs.helpingHand:
+                return new EffectsValue(0, 50);
+            //the current value applies to self, but this would make more sense as 50 offense for ally
+
+            //synergy reminders
             case MoveIDs.waterPledge:
             case MoveIDs.firePledge:
             case MoveIDs.grassPledge:
-                return 0; //synergy only
+                return new EffectsValue(0, 0);
             case MoveIDs.fusionFlare:
             case MoveIDs.fusionBolt:
-                return 0; //synergy only and also hard to use even then
-            case MoveIDs.purify:
-                return 60; //much better when used to cure an ally
-            case MoveIDs.instruct:
-                return 80; //???? idk what this is for tbh
+                return new EffectsValue(0, 0); //synergy only and also hard to use even then
         }
 
-        return 0;
+        return new EffectsValue(0, 0);
     }
 
     private double generateDoubleBattleRangeModifier(Move move) {

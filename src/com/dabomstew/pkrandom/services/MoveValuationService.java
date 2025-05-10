@@ -209,9 +209,6 @@ public class MoveValuationService {
 
             //is that all? it's all i can think of right now, it might be all the steps.
 
-            //...so I'm realizing this process needs to know what effects are offensive or defensive... for all moves...
-
-
         }
     }
 
@@ -263,14 +260,7 @@ public class MoveValuationService {
 
     public int getBaseValue(Move move) {
         if(!moveValues.containsKey(move)) {
-            MoveValues value;
-            if(move.category != MoveCategory.STATUS) {
-                value = generateDamagingMoveValues(move);
-            } else {
-                value = generateStatusMoveValue(move);
-            }
-
-            moveValues.put(move, value);
+            moveValues.put(move, generateMoveValues(move));
         }
 
         return moveValues.get(move).getBaseValue();
@@ -278,14 +268,7 @@ public class MoveValuationService {
 
     private EffectsValue getBaseValues(Move move) {
         if(!moveValues.containsKey(move)) {
-            MoveValues value;
-            if(move.category != MoveCategory.STATUS) {
-                value = generateDamagingMoveValues(move);
-            } else {
-                value = generateStatusMoveValue(move);
-            }
-
-            moveValues.put(move, value);
+            moveValues.put(move, generateMoveValues(move));
         }
 
         return moveValues.get(move).getBaseValues();
@@ -351,48 +334,14 @@ public class MoveValuationService {
 
     }
 
-    private MoveValues generateDamagingMoveValues(Move move) {
+    private MoveValues generateMoveValues(Move move) {
         MoveValues values = new MoveValues(move);
 
-        int power = move.power;
-        if(power <= 1) {
-            power = generateUniqueDamagingMovePower(move);
+        if(GlobalConstants.uselessMoves.contains(move.internalId)) {
+            values.effectsValue = new EffectsValue(0,0);
+            values.calculateValues();
+            return values;
         }
-        if(move.hitCount > 1) {
-            power *= move.hitCount;
-        } else {
-            power *= generateUniquePowerMultiplier(move);
-        }
-        if(power != move.power) {
-            values.setEffectivePower(power);
-        }
-
-        values.setSpeedDependentPower(generateSpeedDependentPowerValue(move));
-
-        int critValue = (int)(generateCriticalChanceMultiplier(generation, move.criticalChance) * 100);
-        EffectsValue powerValue = new EffectsValue(critValue, move.absorbPercent - move.recoilPercent);
-        values.setPowerScalingEffectsValue(powerValue);
-
-
-        EffectsValue effectsValue = new EffectsValue(0,0);
-
-        if(move.statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-            effectsValue = effectsValue.add(generateStatChangeValue(move));
-        }
-
-        if(move.statusPercentChance != 0) {
-            effectsValue = effectsValue.add(generateStatusConditionValue(move));
-        }
-
-        if(GlobalConstants.semiInvulnerableMoves.contains(move)) {
-            effectsValue = effectsValue.add(new EffectsValue(0, 10));
-        }
-
-        effectsValue = effectsValue.add(generateUniqueEffectsValue(move));
-        values.setEffectsValue(effectsValue);
-
-        values.setFastEffectsValue(generateFastEffectsValue(move));
-        values.setSlowEffectsValue(generateSlowEffectsValue(move));
 
         double accuracy;
         if(romHandler.getPerfectAccuracy() != 100 && move.hitRatio == romHandler.getPerfectAccuracy()) {
@@ -411,7 +360,35 @@ public class MoveValuationService {
                     accuracy = getStandardizedChance(move.hitRatio);
             }
         }
+
+        if(move.category != MoveCategory.STATUS) {
+            generatePowerRelevantValues(move, values);
+        } else if(accuracy == 1.5) {
+            accuracy = 1.2; //perfect accuracy is less valuable for status moves
+        }
+
         values.setAccuracy(accuracy);
+
+
+        EffectsValue effectsValue = new EffectsValue(0,0);
+
+        if(move.statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
+            effectsValue = effectsValue.add(generateStatChangeValue(move));
+        }
+
+        if(move.statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
+            effectsValue = effectsValue.add(generateStatusConditionValue(move));
+        }
+
+        if(GlobalConstants.semiInvulnerableMoves.contains(move)) {
+            effectsValue = effectsValue.add(new EffectsValue(0, 60));
+        }
+
+        effectsValue = effectsValue.add(generateUniqueEffectsValue(move));
+        values.setEffectsValue(effectsValue);
+
+        values.setFastEffectsValue(generateFastEffectsValue(move));
+        values.setSlowEffectsValue(generateSlowEffectsValue(move));
 
         double useMultiplier = 1;
         if(move.isChargeMove && !GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
@@ -437,55 +414,25 @@ public class MoveValuationService {
         return values;
     }
 
-    private MoveValues generateStatusMoveValue(Move move) {
-        MoveValues values = new MoveValues(move);
-
-        if(GlobalConstants.uselessMoves.contains(move.internalId)) {
-            values.effectsValue = new EffectsValue(0,0);
-            values.calculateValues();
-            return values;
+    private void generatePowerRelevantValues(Move move, MoveValues values) {
+        int power = move.power;
+        if(power <= 1) {
+            power = generateUniqueDamagingMovePower(move);
         }
-
-        int effectsValue = 0;
-
-        if(move.statChangeMoveType != StatChangeMoveType.NONE_OR_UNKNOWN) {
-            effectsValue += (int) generateStatChangeValue(move);
-        }
-        if(move.statusMoveType != StatusMoveType.NONE_OR_UNKNOWN) {
-            effectsValue += generateStatusConditionValue(move);
-        }
-        effectsValue += generateUniqueEffectsValue(move);
-
-        values.setEffectsValue(effectsValue);
-
-        double accuracy;
-        if(romHandler.getPerfectAccuracy() != 100 && move.hitRatio == romHandler.getPerfectAccuracy()) {
-            accuracy = 1.1; //perfect accuracy is less valuable for status moves than attack moves
+        if(move.hitCount > 1) {
+            power *= move.hitCount;
         } else {
-            accuracy = getStandardizedChance(move.hitRatio);
+            power *= generateUniquePowerMultiplier(move);
         }
-        values.setAccuracy(accuracy);
-
-        values.setFastEffectsValue(generateFastEffectsValue(move));
-
-        double useRestrictionMultiplier = 1;
-        if(move.isChargeMove && !GlobalConstants.semiInvulnerableMoves.contains(move.internalId)) {
-            useRestrictionMultiplier = .5;
+        if(power != move.power) {
+            values.setEffectivePower(power);
         }
-        if(move.isRechargeMove)
-            useRestrictionMultiplier = .75;
 
-        if(move.pp < 10) {
-            useRestrictionMultiplier *= .9;
-        }
-        useRestrictionMultiplier *= generateUniqueUseLimitValue(move);
-        values.setUseMultiplier(useRestrictionMultiplier);
+        values.setSpeedDependentPower(generateSpeedDependentPowerValue(move));
 
-        values.setDoubleBattleEffectsValue(generateUniqueDoubleBattleEffectsValue(move));
-        values.setDoubleBattleRangeModifier(generateDoubleBattleRangeModifier(move));
-
-        values.calculateValues();
-        return values;
+        int critValue = (int)(generateCriticalChanceMultiplier(generation, move.criticalChance) * 100);
+        EffectsValue powerValue = new EffectsValue(critValue, move.absorbPercent - move.recoilPercent);
+        values.setPowerScalingEffectsValue(powerValue);
     }
 
     /**

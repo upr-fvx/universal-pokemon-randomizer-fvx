@@ -623,6 +623,40 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void forcedEvolutionsDoNotResetMoves(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = new HashMap<>();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            List<String> namesBefore = new ArrayList<>();
+            originalNames.put(tr, namesBefore);
+            for (TrainerPokemon tp : tr.pokemon) {
+                namesBefore.add(tp.getSpecies().getName());
+            }
+        }
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(1);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        // Test
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println("\n" + tr);
+            for (int k = 0; k<tr.pokemon.size(); k++) {
+                TrainerPokemon tp = tr.pokemon.get(k);
+                System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName() +
+                        ": resetMoves = " + tp.isResetMoves());
+                assertFalse(tp.isResetMoves());
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);

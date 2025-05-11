@@ -623,7 +623,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void forcedEvolutionsOfOriginalPokemonResetMovesIfAndOnlyIfTypeChanged(String romName) {
+    public void forcedEvolutionsDoNotResetMoves(String romName) {
         activateRomHandler(romName);
 
         // Record original species of all trainer Pokemon (for better console output only)

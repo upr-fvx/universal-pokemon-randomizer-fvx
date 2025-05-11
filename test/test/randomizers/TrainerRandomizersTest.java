@@ -626,15 +626,14 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void forcedEvolutionsOfOriginalPokemonResetMovesIfAndOnlyIfTypeChanged(String romName) {
         activateRomHandler(romName);
 
-        // Record original types of all trainer Pokemon
-        Map<Trainer, List<List<Type>>> originalTypes = new HashMap<>();;
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = new HashMap<>();
+
         for (Trainer tr : romHandler.getTrainers()) {
-            List<List<Type>> typesBefore = new ArrayList<>();
-            originalTypes.put(tr, typesBefore);
+            List<String> namesBefore = new ArrayList<>();
+            originalNames.put(tr, namesBefore);
             for (TrainerPokemon tp : tr.pokemon) {
-                List<Type> typesOfPokemon = Arrays.asList(tp.getSpecies().getPrimaryType(false),
-                        tp.getSpecies().getSecondaryType(false));
-                typesBefore.add(typesOfPokemon);
+                namesBefore.add(tp.getSpecies().getName());
             }
         }
 
@@ -647,31 +646,11 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Test
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
-            List<List<Type>> typesBefore = originalTypes.get(tr);
             for (int k = 0; k<tr.pokemon.size(); k++) {
                 TrainerPokemon tp = tr.pokemon.get(k);
-
-                Species newSpecies = tp.getSpecies();
-                Type newPrimaryType = newSpecies.getPrimaryType(false);
-                Type newSecondaryType = newSpecies.getSecondaryType(false);
-
-                Type oldPrimaryType = typesBefore.get(k).get(0);
-                Type oldSecondaryType = typesBefore.get(k).get(1);
-
-                System.out.println(tp + " : Forced evolution type change: (" + oldPrimaryType + ", " + oldSecondaryType +
-                        ") --> (" + newPrimaryType + ", " + newSecondaryType + ")");
-
-                if (tp.isResetMoves()) {
-                    // Pokemon has to be evolved with a different type
-                    System.out.println("resetMoves = TRUE");
-                    assertTrue(oldPrimaryType != newPrimaryType || oldSecondaryType != newSecondaryType);
-                }
-                else {
-                    // Pokemon has to have the same type as pre randomization (can be different species though)
-                    System.out.println("resetMoves = FALSE");
-                    assertTrue(oldPrimaryType == newPrimaryType && oldSecondaryType == newSecondaryType);
-                }
-
+                System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName() +
+                        ": resetMoves = " + tp.isResetMoves());
+                assertFalse(tp.isResetMoves());
             }
         }
     }

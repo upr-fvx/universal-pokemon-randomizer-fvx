@@ -906,21 +906,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void createFullyEvolvedPokemon(TrainerPokemon tp) {
-        Species oldSpecies = tp.getSpecies();
-        Species newSpecies = fullyEvolve(oldSpecies);
-        if (newSpecies != oldSpecies) {
+        Species newSpecies = fullyEvolve(tp.getSpecies());
+        if (newSpecies != tp.getSpecies()) {
             tp.setSpecies(newSpecies);
             setFormeForTrainerPokemon(tp, newSpecies);
             tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-
-            // If the type of the Pokemon changed through evolution, reset its moves, otherwise keep them
-            Type oldPrimaryType = oldSpecies.getPrimaryType(false);
-            Type oldSecondaryType = oldSpecies.getSecondaryType(false);
-            Type newPrimaryType = newSpecies.getPrimaryType(false);
-            Type newSecondaryType = newSpecies.getSecondaryType(false);
-            if (oldPrimaryType != newPrimaryType || oldSecondaryType != newSecondaryType) {
-                tp.setResetMoves(true);
-            }
         }
     }
 

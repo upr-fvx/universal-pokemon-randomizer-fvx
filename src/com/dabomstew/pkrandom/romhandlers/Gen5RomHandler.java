@@ -2702,24 +2702,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private int find(byte[] data, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
-        List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.isEmpty()) {
-            return -1; // not found
-        } else if (found.size() > 1) {
-            return -2; // not unique
-        } else {
-            return found.get(0);
-        }
-    }
-
     private List<String> getStrings(boolean isStoryText, int index) {
         NARCArchive baseNARC = isStoryText ? storyTextNarc : stringsNarc;
         byte[] rawFile = baseNARC.files.get(index);
@@ -3596,9 +3578,24 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         List<Shop> shops = new ArrayList<>();
 
         try {
+
+            int oa = overlayAddress(21);
             byte[] shopItemOverlay = readOverlay(romEntry.getIntValue("ShopItemOvlNumber"));
+
+            int a = find(shopItemOverlay, "38941D02 86951D02");
+            System.out.println("0x" + Integer.toHexString(a));
+            if (a > 0) {
+                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, a, shopCount * 4));
+            }
+
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = new ArrayList<>();
+
+                System.out.println(shopNames.get(i));
+                System.out.println("0x" + Integer.toHexString(shopItemOffsets[i] + oa));
+                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, shopItemOffsets[i],
+                        shopItemSizes[i] * 2));
+
                 for (int j = 0; j < shopItemSizes[i]; j++) {
                     int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
                     shopItems.add(items.get(id));

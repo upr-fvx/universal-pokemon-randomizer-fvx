@@ -230,6 +230,10 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         baseRom.writeOverlay(number, data);
     }
 
+    protected int overlayAddress(int number) {
+        return baseRom.getOverlayAddress(number);
+    }
+
     protected void readByteIntoFlags(byte[] data, boolean[] flags, int offsetIntoFlags, int offsetIntoData) {
         int thisByte = data[offsetIntoData] & 0xFF;
         for (int i = 0; i < 8 && (i + offsetIntoFlags) < flags.length; i++) {
@@ -288,14 +292,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
     }
 
-    private int find(byte[] data, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
+    protected int find(byte[] data, String hexString) {
+        // TODO: merge all the "find" methods, move to RomFunctions maybe??
+        byte[] searchFor = RomFunctions.hexToBytes(hexString);
         List<Integer> found = RomFunctions.search(data, searchFor);
         if (found.isEmpty()) {
             return -1; // not found

@@ -4053,18 +4053,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-	private int find(byte[] data, String hexString) {
-		byte[] searchFor = RomFunctions.hexToBytes(hexString);
-		List<Integer> found = RomFunctions.search(data, searchFor);
-		if (found.isEmpty()) {
-			return -1; // not found
-		} else if (found.size() > 1) {
-			return -2; // not unique
-		} else {
-			return found.get(0);
-		}
-	}
-
 	private boolean lastStringsCompressed = false;
 
 	private List<String> getStrings(int index) {

@@ -3588,10 +3588,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, a, shopCount * 4));
             }
 
+            int b = find(shopItemOverlay, "02 0B 0E 11 12 13 07 08 09 0B");
+            System.out.println("0x" + Integer.toHexString(b));
+            if (b > 0) {
+                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, b, shopCount));
+            }
+
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = new ArrayList<>();
 
                 System.out.println(shopNames.get(i));
+                System.out.println(shopItemSizes[i]);
                 System.out.println("0x" + Integer.toHexString(shopItemOffsets[i] + oa));
                 System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, shopItemOffsets[i],
                         shopItemSizes[i] * 2));

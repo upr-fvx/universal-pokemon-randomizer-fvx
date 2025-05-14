@@ -41,7 +41,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public static final int LENGTH_OF_SETTINGS_DATA = 63;
 
     private CustomNamesSet customNames;
 
@@ -178,6 +178,8 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
+    private boolean trainersForceMiddleStage;
+    private int trainersForceMiddleStageLevel = 10;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -711,6 +713,9 @@ public class Settings {
             e.printStackTrace(); // better than nothing
         }
 
+        // 62 trainer pokemon force evolutions
+        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
@@ -1037,6 +1042,9 @@ public class Settings {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+
+        settings.setTrainersForceFullyEvolved(restoreState(data[62], 7));
+        settings.setTrainersForceFullyEvolvedLevel(data[62] & 0x7F);
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1861,6 +1869,22 @@ public class Settings {
 
     public void setRandomizeTrainerClassNames(boolean randomizeTrainerClassNames) {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
+    }
+
+    public boolean isTrainersForceMiddleStage() {
+        return trainersForceMiddleStage;
+    }
+
+    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
+        this.trainersForceMiddleStage = trainersForceMiddleStage;
+    }
+
+    public int getTrainersForceMiddleStageLevel() {
+        return trainersForceMiddleStageLevel;
+    }
+
+    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
+        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
     }
 
     public boolean isTrainersForceFullyEvolved() {

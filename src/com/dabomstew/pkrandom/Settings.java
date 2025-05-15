@@ -1043,8 +1043,8 @@ public class Settings {
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
 
-        settings.setTrainersForceFullyEvolved(restoreState(data[62], 7));
-        settings.setTrainersForceFullyEvolvedLevel(data[62] & 0x7F);
+        settings.setTrainersForceMiddleStage(restoreState(data[62], 7));
+        settings.setTrainersForceMiddleStageLevel(data[62] & 0x7F);
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

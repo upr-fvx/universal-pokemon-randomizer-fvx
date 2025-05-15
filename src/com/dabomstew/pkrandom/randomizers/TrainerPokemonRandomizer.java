@@ -62,6 +62,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean shinyChance = settings.isShinyChance();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
+        boolean forceMiddleStage = settings.isTrainersForceMiddleStage();
+        int forceMiddleStageLevel = settings.getTrainersForceMiddleStageLevel();
         boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
         int forceFullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
         boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
@@ -518,6 +520,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         if(finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
+        } else if (middleFormOnly) {
+            // TODO will this ONLY keep middle evos? Figure this out and change it accordingly
+            // Maybe just put it in new SpeciesSet variable and append it when everything else is done
+            pickFrom = pickFrom.filterMiddleEvos(false);
         }
 
         if (usePlacementHistory) {
@@ -684,6 +690,16 @@ public class TrainerPokemonRandomizer extends Randomizer {
             }
         }
 
+    }
+
+    private Species evolveOnce(Species species) {
+        if (!species.getEvolutionsFrom().isEmpty()) {
+            // not already fully evolved
+            List<Evolution> evolutions = species.getEvolutionsFrom();
+            int evolutionIndex = random.nextInt(species.getEvolutionsFrom().size());
+            species = species.getEvolutionsFrom().get(evolutionIndex).getTo();
+        }
+        return species;
     }
 
     private Species fullyEvolve(Species species) {
@@ -888,6 +904,35 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
 
         return evolutions;
+    }
+
+    public void forceMiddleStageTrainerPokes() {
+        int minLevel = settings.getTrainersForceMiddleStageLevel();
+
+        List<Trainer> currentTrainers = romHandler.getTrainers();
+        for (Trainer t : currentTrainers) {
+            for (TrainerPokemon tp : t.pokemon) {
+                if (tp.getLevel() >= minLevel) {
+                    createMiddleStagePokemon(tp);
+                }
+            }
+        }
+        romHandler.setTrainers(currentTrainers);
+        changesMade = true;
+    }
+
+    public void createMiddleStagePokemon(TrainerPokemon tp) {
+        Species species = tp.getSpecies();
+        if (species.getEvolutionsTo().isEmpty()) {
+            // We have a basic Pokemon (no pre-evolutions)
+            Species newSpecies = evolveOnce(tp.getSpecies());
+            if (newSpecies != tp.getSpecies() && !newSpecies.getEvolutionsFrom().isEmpty()) {
+                // Pokemon evolved once and its evolution has an evolution of its own, i.e., newSpecies is middle stage
+                tp.setSpecies(newSpecies);
+                setFormeForTrainerPokemon(tp, newSpecies);
+                tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
+            }
+        }
     }
 
     public void forceFullyEvolvedTrainerPokes() {

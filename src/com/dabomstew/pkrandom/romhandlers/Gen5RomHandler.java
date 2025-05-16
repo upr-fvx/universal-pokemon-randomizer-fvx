@@ -3582,26 +3582,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             int oa = overlayAddress(21);
             byte[] shopItemOverlay = readOverlay(romEntry.getIntValue("ShopItemOvlNumber"));
 
-            int a = find(shopItemOverlay, "38941D02 86951D02");
-            System.out.println("0x" + Integer.toHexString(a));
-            if (a > 0) {
-                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, a, shopCount * 4));
-            }
-
-            int b = find(shopItemOverlay, "02 0B 0E 11 12 13 07 08 09 0B");
-            System.out.println("0x" + Integer.toHexString(b));
-            if (b > 0) {
-                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, b, shopCount));
-            }
+            byte[] needle = new byte[4 * 6];
+            int n = 0;
 
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = new ArrayList<>();
 
-                System.out.println(shopNames.get(i));
-                System.out.println(shopItemSizes[i]);
-                System.out.println("0x" + Integer.toHexString(shopItemOffsets[i] + oa));
-                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, shopItemOffsets[i],
-                        shopItemSizes[i] * 2));
+//                System.out.println(shopNames.get(i));
+//                System.out.println(shopItemSizes[i]);
+//                System.out.println("0x" + Integer.toHexString(shopItemOffsets[i] + oa));
+                if (shopNames.get(i).startsWith("Primary")) {
+                    writeLong(needle, n * 4, shopItemOffsets[i] + oa);
+                    n++;
+                }
+//                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, shopItemOffsets[i],
+//                        shopItemSizes[i] * 2));
 
                 for (int j = 0; j < shopItemSizes[i]; j++) {
                     int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
@@ -3614,6 +3609,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
                 shops.add(shop);
             }
+
+            int a = find(shopItemOverlay, RomFunctions.bytesToHex(needle));
+            System.out.println("ShopPointerTableOffset=0x" + Integer.toHexString(a));
+
+            int b = find(shopItemOverlay, "02 0B 0E 11 12 13 07 08 09 0B");
+            System.out.println("ShopLengthTableOffset=0x" + Integer.toHexString(b));
 
             int[] tmShops = romEntry.getArrayValue("TMShops");
             int[] regularShops = romEntry.getArrayValue("RegularShops");

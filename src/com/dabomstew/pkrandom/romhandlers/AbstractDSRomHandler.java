@@ -397,6 +397,22 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
         writeLong(arm9, offset, pointer + getARM9Offset());
     }
+
+    /**
+     * Reads a pointer located in an overlay.
+     * Assumes the pointer points to somewhere else in the overlay.
+     */
+    protected int readOverlayPointer(byte[] overlay, int overlayNum, int offset) {
+        return readLong(overlay, offset) - overlayAddress(overlayNum);
+    }
+
+    /**
+     * Writes a pointer to "offset" located in an overlay, pointing at "pointer".
+     * Assumes the pointer will point to somewhere else in the overlay.
+     */
+    protected void writeOverlayPointer(byte[] arm9, int overlayNum, int offset, int pointer) {
+        writeLong(arm9, offset, pointer + overlayAddress(overlayNum));
+    }
     
 	private byte[] concatenate(byte[] a, byte[] b) {
 	    byte[] sum = new byte[a.length + b.length];

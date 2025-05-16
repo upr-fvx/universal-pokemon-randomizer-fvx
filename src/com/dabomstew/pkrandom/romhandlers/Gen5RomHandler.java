@@ -3572,34 +3572,22 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
     
     private List<Shop> getShopsBW() {
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
+        int overlayNum = romEntry.getIntValue("ShopItemOvlNumber");
+        int pointerTableOffset = romEntry.getIntValue("ShopPointerTableOffset");
+        int sizeTableOffset = romEntry.getIntValue("ShopSizeTableOffset");
         int shopCount = romEntry.getIntValue("ShopCount");
         List<Shop> shops = new ArrayList<>();
 
         try {
-
-            int oa = overlayAddress(21);
-            byte[] shopItemOverlay = readOverlay(romEntry.getIntValue("ShopItemOvlNumber"));
-
-            byte[] needle = new byte[4 * 6];
-            int n = 0;
+            byte[] shopItemOverlay = readOverlay(overlayNum);
 
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = new ArrayList<>();
 
-//                System.out.println(shopNames.get(i));
-//                System.out.println(shopItemSizes[i]);
-//                System.out.println("0x" + Integer.toHexString(shopItemOffsets[i] + oa));
-                if (shopNames.get(i).startsWith("Primary")) {
-                    writeLong(needle, n * 4, shopItemOffsets[i] + oa);
-                    n++;
-                }
-//                System.out.println(RomFunctions.bytesToHexBlock(shopItemOverlay, shopItemOffsets[i],
-//                        shopItemSizes[i] * 2));
-
-                for (int j = 0; j < shopItemSizes[i]; j++) {
-                    int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
+                int itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerTableOffset + i * 4);
+                int itemsSize = shopItemOverlay[sizeTableOffset + i];
+                for (int j = 0; j < itemsSize; j++) {
+                    int id = readWord(shopItemOverlay, itemsOffset + j * 2);
                     shopItems.add(items.get(id));
                 }
 
@@ -3610,17 +3598,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 shops.add(shop);
             }
 
-            int a = find(shopItemOverlay, RomFunctions.bytesToHex(needle));
-            System.out.println("ShopPointerTableOffset=0x" + Integer.toHexString(a));
-
-            int b = find(shopItemOverlay, "02 0B 0E 11 12 13 07 08 09 0B");
-            System.out.println("ShopLengthTableOffset=0x" + Integer.toHexString(b));
-
-            int[] tmShops = romEntry.getArrayValue("TMShops");
-            int[] regularShops = romEntry.getArrayValue("RegularShops");
-
-            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
-            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+            // TODO: re-mark which are the TM/regular shops
+//            int[] tmShops = romEntry.getArrayValue("TMShops");
+//            int[] regularShops = romEntry.getArrayValue("RegularShops");
+//
+//            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+//            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
 
             return shops;
         } catch (IOException e) {
@@ -3667,17 +3650,30 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     private void setShopsBW(List<Shop> shops) {
         int overlayNum = romEntry.getIntValue("ShopItemOvlNumber");
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
+        int pointerTableOffset = romEntry.getIntValue("ShopPointerTableOffset");
+        int sizeTableOffset = romEntry.getIntValue("ShopSizeTableOffset");
         int shopCount = romEntry.getIntValue("ShopCount");
+        if (shops.size() != shopCount) {
+            throw new IllegalArgumentException("shops.size() must be: " + shopCount
+                + ", is: " + shops.size());
+        }
 
         try {
+            // TODO: repoint the shops so we can have variable sizes, that's the whole point of this rewrite haha
             byte[] shopItemOverlay = readOverlay(overlayNum);
+
             for (int i = 0; i < shopCount; i++) {
-                List<Item> shopContents = shops.get(i).getItems();
-                Iterator<Item> iterItems = shopContents.iterator();
-                for (int j = 0; j < shopItemSizes[i]; j++) {
-                    writeWord(shopItemOverlay, shopItemOffsets[i] + j * 2, iterItems.next().getId());
+                List<Item> shopItems = shops.get(i).getItems();
+
+                int itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerTableOffset + i * 4);
+                int itemsSize = shopItemOverlay[sizeTableOffset + i];
+                if (shopItems.size() != itemsSize) {
+                    throw new IllegalArgumentException("Incorrect shop size.");
+                }
+
+                for (int j = 0; j < itemsSize; j++) {
+                    int id = shopItems.get(j).getId();
+                    writeWord(shopItemOverlay, itemsOffset + j * 2, id);
                 }
             }
             writeOverlay(overlayNum, shopItemOverlay);

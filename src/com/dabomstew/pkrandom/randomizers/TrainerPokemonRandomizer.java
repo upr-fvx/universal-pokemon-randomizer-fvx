@@ -520,7 +520,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         if(finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
-        } else if (middleFormOnly) {
+        } else if (finalFormOnly) { //middleFormOnly
             // TODO will this ONLY keep middle evos? Figure this out and change it accordingly
             // Maybe just put it in new SpeciesSet variable and append it when everything else is done
             pickFrom = pickFrom.filterMiddleEvos(false);

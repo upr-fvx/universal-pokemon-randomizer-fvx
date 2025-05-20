@@ -334,10 +334,15 @@ public class SettingsUpdater {
             insertExtraByte(60, (byte) 0);
         }
 
-        if (oldVersion < Version.FVX_1_1_0.id)
-        {
+        if (oldVersion < Version.FVX_1_1_0.id) {
             //add byte for trainer type diversity
             insertExtraByte(61, (byte) 0);
+        }
+
+        if (oldVersion < Version.FVX_1_2_2.id) {
+            // add byte for shop items, and move "balanceShopPrices" there
+            boolean balanceShopPrices = (dataBlock[39] & (1 << 6)) != 0;
+            insertExtraByte(62, (byte) (balanceShopPrices ? 1 : 0));
         }
 
         // fix checksum

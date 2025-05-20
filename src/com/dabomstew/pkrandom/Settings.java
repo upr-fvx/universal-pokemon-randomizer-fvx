@@ -41,7 +41,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public static final int LENGTH_OF_SETTINGS_DATA = 63;
 
     private CustomNamesSet customNames;
 
@@ -326,9 +326,11 @@ public class Settings {
     private boolean banBadRandomShopItems;
     private boolean banRegularShopItems;
     private boolean banOPShopItems;
-    private boolean balanceShopPrices;
     private boolean guaranteeEvolutionItems;
     private boolean guaranteeXItems;
+
+    private boolean balanceShopPrices;
+    private boolean addCheapRareCandiesToShops;
 
     public enum PickupItemsMod {
         UNCHANGED, RANDOM
@@ -575,10 +577,10 @@ public class Settings {
         // 38 trainer pokemon level modifier
         out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
 
-        // 39 shop items
+        // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
                 shopItemsMod == ShopItemsMod.UNCHANGED, banBadRandomShopItems, banRegularShopItems, banOPShopItems,
-                balanceShopPrices, guaranteeEvolutionItems));
+                false, guaranteeEvolutionItems));
 
         // 40 wild level modifier
         out.write((wildLevelsModified ? 0x80 : 0) | (wildLevelModifier+50));
@@ -691,6 +693,10 @@ public class Settings {
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
                 diverseTypesForRegularTrainers,
                 false, false, false, false, false));
+
+        // 62 shop items 2
+        out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
+                false, false, false, false, false, false));
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -937,7 +943,6 @@ public class Settings {
         settings.setBanBadRandomShopItems(restoreState(data[39],3));
         settings.setBanRegularShopItems(restoreState(data[39],4));
         settings.setBanOPShopItems(restoreState(data[39],5));
-        settings.setBalanceShopPrices(restoreState(data[39],6));
         settings.setGuaranteeEvolutionItems(restoreState(data[39],7));
 
         settings.setWildLevelsModified(restoreState(data[40],7));
@@ -1037,6 +1042,9 @@ public class Settings {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+
+        settings.setBalanceShopPrices(restoreState(data[62],0));
+        settings.setAddCheapRareCandiesToShops(restoreState(data[62], 1));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -2594,14 +2602,6 @@ public class Settings {
         this.banOPShopItems = banOPShopItems;
     }
 
-    public boolean isBalanceShopPrices() {
-        return balanceShopPrices;
-    }
-
-    public void setBalanceShopPrices(boolean balanceShopPrices) {
-        this.balanceShopPrices = balanceShopPrices;
-    }
-   
     public boolean isGuaranteeEvolutionItems() {
         return guaranteeEvolutionItems;
     }
@@ -2616,6 +2616,22 @@ public class Settings {
 
     public void setGuaranteeXItems(boolean guaranteeXItems) {
         this.guaranteeXItems = guaranteeXItems;
+    }
+
+    public boolean isBalanceShopPrices() {
+        return balanceShopPrices;
+    }
+
+    public void setBalanceShopPrices(boolean balanceShopPrices) {
+        this.balanceShopPrices = balanceShopPrices;
+    }
+
+    public boolean isAddCheapRareCandiesToShops() {
+        return addCheapRareCandiesToShops;
+    }
+
+    public void setAddCheapRareCandiesToShops(boolean addCheapRareCandiesToShops) {
+        this.addCheapRareCandiesToShops = addCheapRareCandiesToShops;
     }
 
     public PickupItemsMod getPickupItemsMod() {

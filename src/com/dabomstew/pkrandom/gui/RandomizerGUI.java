@@ -51,7 +51,6 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -360,6 +359,8 @@ public class RandomizerGUI {
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
+    private JPanel specialShopsPanel;
+    private JCheckBox shAddRareCandyCheckBox;
 
     private static final Random RND = new Random();
 

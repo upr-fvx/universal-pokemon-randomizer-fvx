@@ -341,8 +341,8 @@ public class SettingsUpdater {
 
         if (oldVersion < Version.FVX_1_2_2.id) {
             // add byte for shop items, and move "balanceShopPrices" there
-            boolean balanceShopPrices = (dataBlock[39] & (1 << 6)) != 0;
-            insertExtraByte(62, (byte) (balanceShopPrices ? 1 : 0));
+            insertExtraByte(62, (byte) ((dataBlock[39] & 0x20) >> 5));
+            dataBlock[39] &= ~0x20;
         }
 
         // fix checksum

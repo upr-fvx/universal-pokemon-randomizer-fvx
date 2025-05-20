@@ -188,13 +188,30 @@ public class MoveValuationService {
             int averageStat = (hp + attack + defense + speed + spAtk + spDef) / 6;
             int offenseValue = (int) ((Math.max(attack, spAtk) + speed / 2) / 1.5);
             int defenseValue = (hp + defense + spDef) / 3;
-            double atkSpRatio = species.getAttackSpecialAttackRatio();
+            double atkSpRatio = (double) attack / (double) spAtk;
 
             //step 1: speed-dependent power and unique power modifiers
-            int effectivePower = move.power;
+            int effectivePower = this.effectivePower;
             effectivePower += MoveSynergy.getSpeedFactoredPower(speedDependentPower, speed, averageStat, currentMoves);
+            //TODO: get unique power modifiers
 
             //step 2: modify power value for atk/spatk ratio & STAB
+            if (species.hasType(move.type, false)) {
+                effectivePower *= 1.5;
+            }
+
+            int powerValue;
+            if(move.category == MoveCategory.PHYSICAL) {
+                powerValue = (int) (effectivePower * atkSpRatio);
+            } else if(move.category == MoveCategory.SPECIAL) {
+                powerValue = (int) (effectivePower / atkSpRatio);
+            } else {
+                if(effectivePower != 0) {
+                    //what??
+                    throw new IllegalStateException("Non-attack move " + move.name + " has power???");
+                }
+                powerValue = 0;
+            }
 
             //step 3: type valuation of power (covers new weaknesses, resistances, other new types)
 

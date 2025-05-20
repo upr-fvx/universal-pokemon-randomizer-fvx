@@ -1831,9 +1831,10 @@ public class RandomizerGUI {
         shBanBadItemsCheckBox.setSelected(settings.isBanBadRandomShopItems());
         shBanRegularShopItemsCheckBox.setSelected(settings.isBanRegularShopItems());
         shBanOverpoweredShopItemsCheckBox.setSelected(settings.isBanOPShopItems());
-        shBalanceShopItemPricesCheckBox.setSelected(settings.isBalanceShopPrices());
         shGuaranteeEvolutionItemsCheckBox.setSelected(settings.isGuaranteeEvolutionItems());
         shGuaranteeXItemsCheckBox.setSelected(settings.isGuaranteeXItems());
+        shBalanceShopItemPricesCheckBox.setSelected(settings.isBalanceShopPrices());
+        shAddRareCandyCheckBox.setSelected(settings.isAddCheapRareCandiesToShops());
 
         puUnchangedRadioButton.setSelected(settings.getPickupItemsMod() == Settings.PickupItemsMod.UNCHANGED);
         puRandomRadioButton.setSelected(settings.getPickupItemsMod() == Settings.PickupItemsMod.RANDOM);
@@ -2067,9 +2068,10 @@ public class RandomizerGUI {
         settings.setBanBadRandomShopItems(shBanBadItemsCheckBox.isSelected());
         settings.setBanRegularShopItems(shBanRegularShopItemsCheckBox.isSelected());
         settings.setBanOPShopItems(shBanOverpoweredShopItemsCheckBox.isSelected());
-        settings.setBalanceShopPrices(shBalanceShopItemPricesCheckBox.isSelected());
         settings.setGuaranteeEvolutionItems(shGuaranteeEvolutionItemsCheckBox.isSelected());
         settings.setGuaranteeXItems(shGuaranteeXItemsCheckBox.isSelected());
+        settings.setBalanceShopPrices(shBalanceShopItemPricesCheckBox.isSelected());
+        settings.setAddCheapRareCandiesToShops(shAddRareCandyCheckBox.isSelected());
 
         settings.setPickupItemsMod(puUnchangedRadioButton.isSelected(), puRandomRadioButton.isSelected());
         settings.setBanBadRandomPickupItems(puBanBadItemsCheckBox.isSelected());
@@ -2375,7 +2377,8 @@ public class RandomizerGUI {
 				fiRandomEvenDistributionRadioButton, fiBanBadItemsCheckBox, shUnchangedRadioButton,
 				shShuffleRadioButton, shRandomRadioButton, shBanOverpoweredShopItemsCheckBox, shBanBadItemsCheckBox,
 				shBanRegularShopItemsCheckBox, shBalanceShopItemPricesCheckBox, shGuaranteeEvolutionItemsCheckBox,
-				shGuaranteeXItemsCheckBox, puUnchangedRadioButton, puRandomRadioButton, puBanBadItemsCheckBox);
+				shGuaranteeXItemsCheckBox, shAddRareCandyCheckBox, puUnchangedRadioButton, puRandomRadioButton,
+                puBanBadItemsCheckBox);
 
         setInitialButtonState(teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
                 teKeepTypeIdentitiesRadioButton, teInverseRadioButton, teAddRandomImmunitiesCheckBox,
@@ -2825,6 +2828,8 @@ public class RandomizerGUI {
             shUnchangedRadioButton.setSelected(true);
             shShuffleRadioButton.setEnabled(true);
             shRandomRadioButton.setEnabled(true);
+            shBalanceShopItemPricesCheckBox.setEnabled(true);
+            shAddRareCandyCheckBox.setEnabled(true);
 
             pickupItemsPanel.setVisible(romHandler.abilitiesPerSpecies() > 0);
             puUnchangedRadioButton.setEnabled(true);
@@ -3524,12 +3529,12 @@ public class RandomizerGUI {
 
         if (shRandomRadioButton.isSelected() && shRandomRadioButton.isVisible() && shRandomRadioButton.isEnabled()) {
             enableButtons(shBanBadItemsCheckBox, shBanRegularShopItemsCheckBox,
-                    shBanOverpoweredShopItemsCheckBox, shBalanceShopItemPricesCheckBox,
-                    shGuaranteeEvolutionItemsCheckBox, shGuaranteeXItemsCheckBox);
+                    shBanOverpoweredShopItemsCheckBox, shGuaranteeEvolutionItemsCheckBox,
+                    shGuaranteeXItemsCheckBox);
         } else {
             disableAndDeselectButtons(shBanBadItemsCheckBox, shBanRegularShopItemsCheckBox,
-                    shBanOverpoweredShopItemsCheckBox, shBalanceShopItemPricesCheckBox,
-                    shGuaranteeEvolutionItemsCheckBox, shGuaranteeXItemsCheckBox);
+                    shBanOverpoweredShopItemsCheckBox, shGuaranteeEvolutionItemsCheckBox,
+                    shGuaranteeXItemsCheckBox);
         }
 
         if (puRandomRadioButton.isSelected() && puRandomRadioButton.isVisible() && puRandomRadioButton.isEnabled()) {

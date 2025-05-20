@@ -1182,6 +1182,11 @@ public class Settings {
 
         if (!rh.hasShopSupport()) {
             this.setShopItemsMod(ShopItemsMod.UNCHANGED);
+            this.setBalanceShopPrices(false);
+        }
+
+        if (!rh.canChangeShopSizes()) {
+            this.setAddCheapRareCandiesToShops(false);
         }
 
         // done

@@ -3719,7 +3719,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         try {
             NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
             for (int i = 1; i < itemPriceNarc.files.size(); i++) {
-                prices.add(readWord(itemPriceNarc.files.get(i), 0));
+                prices.add(readWord(itemPriceNarc.files.get(i), 0) * 10);
             }
             writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
         } catch (IOException e) {
@@ -3738,11 +3738,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
+    // Internally, item prices are stored as multiples of 10,
+    // so the last digit of each input price will be ignored.
     public void setShopPrices(List<Integer> prices) {
         try {
             NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
             for (int i = 1; i < itemPriceNarc.files.size(); i++) {
-                writeWord(itemPriceNarc.files.get(i), 0, prices.get(i));
+                writeWord(itemPriceNarc.files.get(i), 0, prices.get(i) / 10);
             }
             writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
         } catch (IOException e) {

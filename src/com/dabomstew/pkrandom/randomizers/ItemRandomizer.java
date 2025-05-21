@@ -1,6 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.constants.Gen1ItemIDs;
+import com.dabomstew.pkrandom.constants.Gen2ItemIDs;
+import com.dabomstew.pkrandom.constants.Gen3ItemIDs;
+import com.dabomstew.pkrandom.constants.ItemIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.Item;
 import com.dabomstew.pkrandom.gamedata.PickupItem;
@@ -286,6 +290,46 @@ public class ItemRandomizer extends Randomizer {
         if (!newItems.isEmpty()) {
             throw new IllegalStateException("newItems has not been emptied");
         }
+    }
+
+    public void addCheapRareCandiesToShops() {
+        int rareCandyID = getRareCandyID();
+        addRareCandiesToShops(rareCandyID);
+        makeRareCandiesCheap(rareCandyID);
+    }
+
+    private int getRareCandyID() {
+        // Alas, the Randomizer is stuck on Java 8...
+        int rareCandyID;
+        switch (romHandler.generationOfPokemon()) {
+            case 1:
+                rareCandyID = Gen1ItemIDs.rareCandy;
+                break;
+            case 2:
+                rareCandyID = Gen2ItemIDs.rareCandy;
+                break;
+            case 3:
+                rareCandyID = Gen3ItemIDs.rareCandy;
+                break;
+            default:
+                rareCandyID = ItemIDs.rareCandy;
+        }
+        return rareCandyID;
+    }
+
+    private void addRareCandiesToShops(int rareCandyID) {
+        List<Item> allItems = romHandler.getItems();
+        List<Shop> shops = romHandler.getShops();
+        for (Shop sh : shops) {
+            sh.getItems().add(allItems.get(rareCandyID));
+        }
+        romHandler.setShops(shops);
+    }
+
+    private void makeRareCandiesCheap(int rareCandyID) {
+        List<Integer> prices = romHandler.getShopPrices();
+        prices.set(rareCandyID, 10); // TODO: does 10 work for all gens?
+        romHandler.setShopPrices(prices);
     }
 
     public void randomizePickupItems() {

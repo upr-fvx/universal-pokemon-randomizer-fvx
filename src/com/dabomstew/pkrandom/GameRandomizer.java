@@ -638,6 +638,12 @@ public class GameRandomizer {
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
         }
+        if (settings.isBalanceShopPrices()) {
+            romHandler.setBalancedShopPrices();
+        }
+        if (settings.isAddCheapRareCandiesToShops()) {
+            itemRandomizer.addCheapRareCandiesToShops();
+        }
     }
 
     private void maybeRandomizePickupItems() {

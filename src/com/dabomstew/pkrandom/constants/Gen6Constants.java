@@ -1694,6 +1694,7 @@ public class Gen6Constants {
             {ItemIDs.roseliBerry, 1000},
             {ItemIDs.keeBerry, 1000},
             {ItemIDs.marangaBerry, 1000},
+            // TODO: accidentally skipped out on items above ID 699, gotta include them too (if any are relevant)
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
     public static final int[] xyMapNumToPokedexIndex = {

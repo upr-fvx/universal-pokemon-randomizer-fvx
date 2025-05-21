@@ -3441,7 +3441,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
             for (int i = 1; i < itemPriceGarc.files.size(); i++) {
-                prices.add(readWord(itemPriceGarc.files.get(i).get(0), 0));
+                prices.add(readWord(itemPriceGarc.files.get(i).get(0), 0) * 10);
             }
             writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
         } catch (IOException e) {
@@ -3461,10 +3461,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void setShopPrices(List<Integer> prices) {
+        // Internally, item prices are stored as multiples of 10,
+        // so the last digit of each input price will be ignored.
         try {
             GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
             for (int i = 1; i < itemPriceGarc.files.size(); i++) {
-                writeWord(itemPriceGarc.files.get(i).get(0), 0, prices.get(i));
+                writeWord(itemPriceGarc.files.get(i).get(0), 0, prices.get(i) / 10);
             }
             writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
         } catch (IOException e) {

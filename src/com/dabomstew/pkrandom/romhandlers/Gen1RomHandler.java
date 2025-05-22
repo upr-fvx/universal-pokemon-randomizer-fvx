@@ -1892,7 +1892,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void setBalancedShopPrices() {
-        // Not implemented
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen2Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
     }
 
     /**

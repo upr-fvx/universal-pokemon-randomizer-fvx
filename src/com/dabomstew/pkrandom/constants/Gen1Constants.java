@@ -24,10 +24,9 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.dabomstew.pkrandom.gamedata.*;
 
@@ -522,5 +521,19 @@ public class Gen1Constants {
     public static void tagEncounterAreasYellow(List<EncounterArea> encounterAreas) {
         tagEncounterAreas(encounterAreas, locationTagsYellow, postGameEncounterAreasYellow);
     }
+
+    public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
+            {Gen1ItemIDs.masterBall, 3000},
+            {Gen1ItemIDs.safariBall, 1200}, // same as ultra ball
+
+            {Gen1ItemIDs.moonStone, 2100}, // same as other evo stones
+
+            {Gen1ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
+
+            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
+    }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
 }

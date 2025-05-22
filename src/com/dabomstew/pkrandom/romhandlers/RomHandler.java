@@ -518,6 +518,10 @@ public interface RomHandler {
 
     void setShops(List<Shop> shops);
 
+    List<Integer> getShopPrices();
+
+    void setShopPrices(List<Integer> prices);
+
     void setBalancedShopPrices();
 
     // ============

@@ -1155,7 +1155,7 @@ public class Gen2Constants {
             {Gen2ItemIDs.expShare, 6000}, // same as in Gen3Constants
             {Gen2ItemIDs.quickClaw, 4500}, // sane as in Gen3Constants
             {Gen2ItemIDs.kingsRock, 5000}, // same as in Gen3Constants
-            {Gen2ItemIDs.amuletCoin, 1500}, // same as in Gen3Constants, could be too low
+            {Gen2ItemIDs.amuletCoin, 15000}, // same as in Gen3Constants
             {Gen2ItemIDs.smokeBall, 1200}, // vanilla value of 200 felt too low
             {Gen2ItemIDs.everstone, 200}, // same as in Gen3Constants
             {Gen2ItemIDs.focusBand, 3000}, // same as in Gen3Constants
@@ -1216,6 +1216,12 @@ public class Gen2Constants {
             {Gen2ItemIDs.friendBall, 300},
             {Gen2ItemIDs.moonBall, 300},
             {Gen2ItemIDs.loveBall, 300},
+
+            // pp related
+            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
 
             // misc
             {Gen2ItemIDs.moonStone, 2100}, // same as other stones

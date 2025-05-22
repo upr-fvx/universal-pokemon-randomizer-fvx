@@ -230,6 +230,31 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         return (byte) thisByte;
     }
 
+    /**
+     * Reads a nybble at <code>offset</code> in ROM. If high is true, reads the high nybble.
+     */
+    protected int readNybble(int offset, boolean high) {
+        int b = rom[offset] & 0xFF;
+        if (high) {
+            b >>= 4;
+        }
+        return b & 0xF;
+    }
+
+    /**
+     * Writes a nybble to <code>offset</code> in ROM. If high is true, writes the high nybble.
+     */
+    protected void writeNybble(int offset, boolean high, int value) {
+        value &= 0xF;
+        int mask = 0xF;
+        if (high) {
+            value <<= 4;
+        } else {
+            mask <<= 4;
+        }
+        rom[offset] = (byte) ((rom[offset] & mask) | value);
+    }
+
     protected int readWord(int offset) {
         return readWord(rom, offset);
     }

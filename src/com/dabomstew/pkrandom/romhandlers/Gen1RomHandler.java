@@ -35,7 +35,6 @@ import com.dabomstew.pkrandom.romhandlers.romentries.GBCTMTextEntry;
 import com.dabomstew.pkrandom.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -1862,8 +1861,33 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Integer> getShopPrices() {
-        // Not implemented
-        throw new NotImplementedException();
+        int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
+        int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
+
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
+        // normal items
+        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+            int price = read3ByteDecimalHex(offset);
+            prices.add(price);
+        }
+        // unused items and HMs
+        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
+            prices.add(0);
+        }
+        // TMs
+        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+            int price = readNybble(offset, i % 2 == 1) * 1000;
+            prices.add(price);
+        }
+        // unused TMs
+        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
+            prices.add(0);
+        }
+
+        return prices;
     }
 
     @Override
@@ -1871,10 +1895,59 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         // Not implemented
     }
 
+    /**
+     * Sets shop prices in a Gen 1 game.<br>
+     * TMs are stored as multiples of 1000, and will thus be rounded down,
+     * or set to 1000 for inputs >1000.
+     */
     @Override
     public void setShopPrices(List<Integer> prices) {
-        // Not implemented
-        throw new NotImplementedException();
+        int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
+        int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
+
+        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+            write3ByteDecimalHex(offset, prices.get(i));
+        }
+        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+            int price = prices.get(i) / 1000;
+            if (price == 0) {
+                price = 1;
+            }
+            writeNybble(offset, i % 2 == 1, price);
+        }
+    }
+
+    /**
+     * Reads a "decimal hex" value which is 3 bytes long, starting at <code>offset</code> in ROM.<br>
+     * "Decimal hex" is when each nybble stores a decimal digit,
+     * so the hex strings look like the decimal number they represent.
+     * I.e. "0x198000" would represent 198000 in decimal.
+     */
+    private int read3ByteDecimalHex(int offset) {
+        int value = readNybble(offset, true) * 100000;
+        value += readNybble(offset, false) * 10000;
+        value += readNybble(offset + 1, true) * 1000;
+        value += readNybble(offset + 1, false) * 100;
+        value += readNybble(offset + 2, true) * 10;
+        value += readNybble(offset + 2, false);
+        return value;
+    }
+
+    /**
+     * Writes a "decimal hex" value which is 3 bytes long, starting at <code>offset</code> in ROM.<br>
+     * "Decimal hex" is when each nybble stores a decimal digit,
+     * so the hex strings look like the decimal number they represent.
+     * I.e. "0x198000" would represent 198000 in decimal.
+     */
+    private void write3ByteDecimalHex(int offset, int value) {
+        writeNybble(offset, true, (value % 1000000) / 100000);
+        writeNybble(offset, false, (value % 100000) / 10000);
+        writeNybble(offset + 1, true, (value % 10000) / 1000);
+        writeNybble(offset + 1, false, (value % 1000) / 100);
+        writeNybble(offset + 2, true, (value % 100) / 10);
+        writeNybble(offset + 2, false, value % 10);
     }
 
     /**

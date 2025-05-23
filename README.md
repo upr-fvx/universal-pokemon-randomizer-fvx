@@ -1,7 +1,7 @@
 # Universal Pokemon Randomizer FVX
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/upr-fvx/universal-pokemon-randomizer-fvx/total)
 ![GitHub Release](https://img.shields.io/github/v/release/upr-fvx/universal-pokemon-randomizer-fvx)
-![GitHub Release Date](https://img.shields.io/github/release-date-pre/upr-fvx/universal-pokemon-randomizer-fvx)ajarmar
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/upr-fvx/universal-pokemon-randomizer-fvx)
 
 
 [Website](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/)

@@ -57,7 +57,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     public BatchRandomizationSettingsDialog(JFrame parent, BatchRandomizationSettings currentSettings) {
         super(parent, true);
         add(mainPanel);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
         setTitle(bundle.getString("BatchRandomizationSettingsDialog.title"));
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 

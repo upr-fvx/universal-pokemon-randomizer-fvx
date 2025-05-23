@@ -31,7 +31,7 @@
               <maximumSize width="100" height="30"/>
               <minimumSize width="100" height="30"/>
               <preferredSize width="100" height="30"/>
-              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.okButton.text"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.okButton.text"/>
             </properties>
           </component>
           <component id="5723f" class="javax.swing.JButton" binding="cancelButton">
@@ -44,7 +44,7 @@
               <minimumSize width="100" height="30"/>
               <opaque value="false"/>
               <preferredSize width="100" height="30"/>
-              <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.cancelButton.text"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.cancelButton.text"/>
             </properties>
           </component>
         </children>
@@ -67,7 +67,7 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexLabel.text"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexLabel.text"/>
         </properties>
       </component>
       <component id="c81ca" class="javax.swing.JTextField" binding="fileNamePrefixTextField">
@@ -82,7 +82,7 @@
           <maximumSize width="160" height="30"/>
           <minimumSize width="160" height="30"/>
           <preferredSize width="160" height="30"/>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixTextBox.toolTipText"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixTextBox.toolTipText"/>
         </properties>
       </component>
       <component id="a4367" class="javax.swing.JLabel">
@@ -91,7 +91,7 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixLabel.text"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixLabel.text"/>
         </properties>
       </component>
       <component id="e86c2" class="javax.swing.JLabel">
@@ -100,7 +100,7 @@
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsLabel.text"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsLabel.text"/>
         </properties>
       </component>
       <component id="3ee4c" class="javax.swing.JSpinner" binding="startingIndexSpinner">
@@ -109,7 +109,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexSpinner.toolTipText"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexSpinner.toolTipText"/>
         </properties>
       </component>
       <component id="76f06" class="javax.swing.JSpinner" binding="numberOfRandomizedROMsSpinner">
@@ -118,7 +118,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsSpinner.toolTipText"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsSpinner.toolTipText"/>
         </properties>
       </component>
       <component id="f8d94" class="javax.swing.JCheckBox" binding="enableBatchRandomizationCheckBox">
@@ -128,8 +128,8 @@
         </constraints>
         <properties>
           <alignmentY value="0.5"/>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.text"/>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.toolTipText"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.toolTipText"/>
         </properties>
       </component>
       <component id="33deb" class="javax.swing.JButton" binding="chooseDirectoryButton">
@@ -144,8 +144,8 @@
           <maximumSize width="165" height="30"/>
           <minimumSize width="165" height="30"/>
           <preferredSize width="165" height="30"/>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.text"/>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.toolTipText"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.toolTipText"/>
         </properties>
       </component>
       <component id="52169" class="javax.swing.JLabel" binding="outputDirectoryLabel">
@@ -166,8 +166,8 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.text"/>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.toolTipText"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.toolTipText"/>
         </properties>
       </component>
       <component id="ebf20" class="javax.swing.JCheckBox" binding="autoAdvanceIndexCheckBox">
@@ -176,8 +176,8 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.text"/>
-          <toolTipText resource-bundle="com/dabomstew/pkromio/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.toolTipText"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.toolTipText"/>
         </properties>
       </component>
       <hspacer id="ff006">

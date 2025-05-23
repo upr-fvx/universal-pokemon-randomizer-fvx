@@ -70,7 +70,7 @@ public class PresetLoadDialog extends JDialog {
      */
     public PresetLoadDialog(RandomizerGUI parent, JFrame frame) {
         super(frame, true);
-        bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle"); // NOI18N
+        bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
         initComponents();
         this.parentGUI = parent;
         this.presetFileChooser.setCurrentDirectory(new File("./"));
@@ -368,7 +368,7 @@ public class PresetLoadDialog extends JDialog {
         romFileChooser.setFileFilter(new ROMFilter());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
         setTitle(bundle.getString("PresetLoadDialog.title")); // NOI18N
         setModal(true);
         setResizable(false);

@@ -6,6 +6,7 @@ import com.dabomstew.pkromio.romhandlers.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RomOpener {
@@ -17,11 +18,8 @@ public class RomOpener {
     public enum FailType {
         UNREADABLE,
         INVALID_TOO_SHORT,
-        INVALID_ZIP,
-        INVALID_RAR,
-        INVALID_IPS,
+        INVALID_ZIP_FILE, INVALID_RAR_FILE, INVALID_IPS_FILE,
         EXTRA_MEMORY_NOT_AVAILABLE, ENCRYPTED_ROM, UNSUPPORTED_ROM,
-        UNDEFINED_FAILURE
     }
 
     public static class Results {
@@ -38,7 +36,6 @@ public class RomOpener {
         }
 
         private RomHandler romHandler;
-
         private FailType failType;
 
         public boolean wasOpeningSuccessful() {
@@ -60,7 +57,7 @@ public class RomOpener {
         }
     }
 
-    private Map<String, String> gameUpdates;
+    private Map<String, String> gameUpdates = new HashMap<>();
     private boolean extraMemoryAvailable;
 
     public void setGameUpdates(Map<String, String> gameUpdates) {
@@ -97,8 +94,6 @@ public class RomOpener {
 
                 } catch (EncryptedROMException e) {
                     return Results.failure(FailType.ENCRYPTED_ROM);
-                } catch (Exception e) {
-                    return Results.failure(FailType.UNDEFINED_FAILURE);
                 }
             }
         }
@@ -121,14 +116,14 @@ public class RomOpener {
                 return FailType.INVALID_TOO_SHORT;
             }
             if (sig[0] == 0x50 && sig[1] == 0x4b && sig[2] == 0x03 && sig[3] == 0x04) {
-                return FailType.INVALID_ZIP;
+                return FailType.INVALID_ZIP_FILE;
             }
             if (sig[0] == 0x52 && sig[1] == 0x61 && sig[2] == 0x72 && sig[3] == 0x21 && sig[4] == 0x1A
                     && sig[5] == 0x07) {
-                return FailType.INVALID_RAR;
+                return FailType.INVALID_RAR_FILE;
             }
             if (sig[0] == 'P' && sig[1] == 'A' && sig[2] == 'T' && sig[3] == 'C' && sig[4] == 'H') {
-                return FailType.INVALID_ZIP;
+                return FailType.INVALID_ZIP_FILE;
             }
         } catch (IOException ex) {
             return FailType.UNREADABLE;

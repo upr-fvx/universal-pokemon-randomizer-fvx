@@ -402,7 +402,7 @@ public class RandomizerGUI {
     private JMenuItem keepOrUnloadGameAfterRandomizingMenuItem;
     private JMenuItem batchRandomizationMenuItem;
 
-    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkromio/gui/emptyIcon.png"));
+    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkrandom/gui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
     private Map<String, String> gameUpdates = new TreeMap<>();
 
@@ -417,7 +417,7 @@ public class RandomizerGUI {
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
-        bundle = ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
+        bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };
@@ -849,75 +849,54 @@ public class RandomizerGUI {
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             final File fh = romOpenChooser.getSelectedFile();
+
             try {
-                FileFunctions.validateRomFile(fh);
-            } catch (InvalidROMException e) {
-                switch (e.getType()) {
-                    case LENGTH:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.tooShortToBeARom"), fh.getName()));
-                        return;
-                    case ZIP_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedZIPfile"), fh.getName()));
-                        return;
-                    case RAR_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedRARfile"), fh.getName()));
-                        return;
-                    case IPS_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedIPSfile"), fh.getName()));
-                        return;
-                    case UNREADABLE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.unreadableRom"), fh.getName()));
-                        return;
-                }
-            }
+                RomOpener romOpener = new RomOpener();
+                RomOpener.Results results = romOpener.openRomFile(fh);
 
-            for (RomHandler.Factory rhf : checkHandlers) {
-                if (rhf.isLoadable(fh.getAbsolutePath())) {
-                    this.romHandler = rhf.create();
-                    if (!usedLauncher && this.romHandler instanceof Abstract3DSRomHandler) {
-                        String message = bundle.getString("GUI.pleaseUseTheLauncher");
-                        Object[] messages = {message};
-                        JOptionPane.showMessageDialog(frame, messages);
-                        this.romHandler = null;
-                        return;
-                    }
-                    opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
-                    Thread t = new Thread(() -> {
-                        boolean romLoaded = false;
-                        SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
-                        try {
-                            this.romHandler.loadRom(fh.getAbsolutePath());
-                            if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                                this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-                            }
-                            romLoaded = true;
-                        } catch (EncryptedROMException ex) {
+                initialState();
+                if (results.wasOpeningSuccessful()) {
+                    romHandler = results.getRomHandler();
+                    romLoaded();
+                } else {
+                    switch (results.getFailType()) {
+                        case UNREADABLE:
                             JOptionPane.showMessageDialog(mainPanel,
-                                    String.format(bundle.getString("GUI.encryptedRom"), fh.getAbsolutePath()));
-                        } catch (Exception ex) {
-                            attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-                        }
-                        final boolean loadSuccess = romLoaded;
-                        SwingUtilities.invokeLater(() -> {
-                            this.opDialog.setVisible(false);
-                            this.initialState();
-                            if (loadSuccess) {
-                                this.romLoaded();
-                            }
-                        });
-                    });
-                    t.start();
-
-                    return;
+                                    String.format(bundle.getString("GUI.unreadableRom"), fh.getName()));
+                            break;
+                        case INVALID_TOO_SHORT:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.tooShortToBeARom"), fh.getName()));
+                            break;
+                        case INVALID_ZIP_FILE:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.openedZIPfile"), fh.getName()));
+                            break;
+                        case INVALID_RAR_FILE:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.openedRARfile"), fh.getName()));
+                            break;
+                        case INVALID_IPS_FILE:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.openedIPSfile"), fh.getName()));
+                            break;
+                        case EXTRA_MEMORY_NOT_AVAILABLE:
+                            JOptionPane.showMessageDialog(frame,
+                                    bundle.getString("GUI.pleaseUseTheLauncher"));
+                            break;
+                        case ENCRYPTED_ROM:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.encryptedRom"), fh.getName()));
+                            break;
+                        case UNSUPPORTED_ROM:
+                            JOptionPane.showMessageDialog(mainPanel,
+                                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
+                            break;
+                    }
                 }
+            } catch (Exception e) {
+                attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
             }
-            JOptionPane.showMessageDialog(mainPanel,
-                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
         }
     }
 

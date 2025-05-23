@@ -35,7 +35,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;
 
-    private static final ResourceBundle bundle = ResourceBundle.getBundle("com/dabomstew/pkromio/gui/Bundle");
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
 
     public static List<MiscTweak> allTweaks = new ArrayList<>();
 

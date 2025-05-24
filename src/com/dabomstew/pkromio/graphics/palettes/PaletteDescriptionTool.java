@@ -24,6 +24,7 @@ package com.dabomstew.pkromio.graphics.palettes;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkromio.RomOpener;
 import com.dabomstew.pkromio.exceptions.InvalidROMException;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Species;
@@ -140,8 +141,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private RomHandler romHandler;
-    private final RomHandler.Factory[] checkHandlers = new RomHandler.Factory[]{new Gen3RomHandler.Factory(),
-            new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory()};
+    private RomOpener romOpener = new RomOpener(3, 4, 5);
     private boolean romLoaded;
 
     private final Map<Species, Palette> originalPalettes = new HashMap<>();
@@ -325,27 +325,15 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private void openRom(File file) {
-        try {
-            FileFunctions.validateRomFile(file);
-        } catch (InvalidROMException e) {
-            throw new RomIOException("Invalid ROM file.\n" + Arrays.toString(e.getStackTrace()));
+        System.out.println("Loading " + file.getName() + "...");
+        RomOpener.Results results = romOpener.openRomFile(file);
+        if (results.wasOpeningSuccessful()) {
+            romHandler = results.getRomHandler();
+            this.setTitle(TITLE + " - " + romHandler.getROMName());
+            romLoaded = true;
+        } else {
+            System.out.println("Could not load " + file.getName() + ". Reason: " + results.getFailType());
         }
-
-        for (RomHandler.Factory rhf : checkHandlers) {
-            if (rhf.isLoadable(file.getAbsolutePath())) {
-                romHandler = rhf.create();
-                try {
-                    romHandler.loadRom(file.getAbsolutePath());
-                } catch (Exception e) {
-                    romHandler = null;
-                    throw new RomIOException("ROM file could not be loaded.\n" + Arrays.toString(e.getStackTrace()));
-                }
-            }
-        }
-
-        this.setTitle(TITLE + " - " + romHandler.getROMName());
-
-        romLoaded = true;
     }
 
     private void savePaletteDescriptionsFile() {

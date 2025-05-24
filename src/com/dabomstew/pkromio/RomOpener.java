@@ -8,12 +8,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class RomOpener {
 
-    private static final RomHandler.Factory[] FACTORIES = new RomHandler.Factory[]{new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
-            new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
-            new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory()};
+    private static final RomHandler.Factory[] FACTORIES = new RomHandler.Factory[]{
+            new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(), new Gen3RomHandler.Factory(),
+            new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(), new Gen6RomHandler.Factory(),
+            new Gen7RomHandler.Factory()
+    };
+
+    private static final int MAX_GENERATION = FACTORIES.length;
 
     public enum FailType {
         UNREADABLE,
@@ -57,8 +62,32 @@ public class RomOpener {
         }
     }
 
+    private final int[] allowedGenerations;
     private Map<String, String> gameUpdates = new HashMap<>();
     private boolean extraMemoryAvailable;
+
+    /**
+     * Creates a RomOpener, allowing ROMs of all Generations to be opened.
+     */
+    public RomOpener() {
+        this(IntStream.rangeClosed(1, MAX_GENERATION).toArray());
+    }
+
+    /**
+     * Creates a RomOpener, which only allows ROMs of select Generations to be opened.
+     * @param allowedGenerations The allowed Generations. "1" means Gen 1, etc.
+     */
+    public RomOpener(int... allowedGenerations) {
+        if (allowedGenerations.length == 0) {
+            throw new IllegalArgumentException("allowedGenerations can't be empty");
+        }
+        for (int gen : allowedGenerations) {
+            if (gen < 1 || gen > MAX_GENERATION) {
+                throw new IllegalArgumentException(gen + " is not a valid Generation");
+            }
+        }
+        this.allowedGenerations = allowedGenerations;
+    }
 
     public void setGameUpdates(Map<String, String> gameUpdates) {
         this.gameUpdates = gameUpdates;
@@ -76,7 +105,8 @@ public class RomOpener {
             return Results.failure(invalidity);
         }
 
-        for (RomHandler.Factory rhf : FACTORIES) {
+        for (int gen : allowedGenerations) {
+            RomHandler.Factory rhf = FACTORIES[gen - 1];
             if (rhf.isLoadable(romFile.getAbsolutePath())) {
                 romHandler = rhf.create();
 

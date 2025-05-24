@@ -387,6 +387,8 @@ public class RandomizerGUI {
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
 
+    private RomOpener romOpener = new RomOpener();
+
     private JFileChooser romOpenChooser = new JFileChooser();
     private JFileChooser romSaveChooser = new JFileChooser();
     private JFileChooser qsOpenChooser = new JFileChooser();
@@ -851,7 +853,9 @@ public class RandomizerGUI {
             final File fh = romOpenChooser.getSelectedFile();
 
             try {
-                RomOpener romOpener = new RomOpener();
+                // TODO: add spinning load icon
+                // TODO: connect GameUpdates
+                // TODO: connect "extra memory available"
                 RomOpener.Results results = romOpener.openRomFile(fh);
 
                 initialState();

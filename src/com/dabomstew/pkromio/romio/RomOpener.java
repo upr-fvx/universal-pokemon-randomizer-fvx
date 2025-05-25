@@ -1,4 +1,4 @@
-package com.dabomstew.pkromio;
+package com.dabomstew.pkromio.romio;
 
 import com.dabomstew.pkromio.exceptions.EncryptedROMException;
 import com.dabomstew.pkromio.romhandlers.*;

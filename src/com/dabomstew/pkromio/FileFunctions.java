@@ -22,8 +22,6 @@ package com.dabomstew.pkromio;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.exceptions.InvalidROMException;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

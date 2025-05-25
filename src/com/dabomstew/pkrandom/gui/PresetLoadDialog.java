@@ -273,6 +273,8 @@ public class PresetLoadDialog extends JDialog {
     }// GEN-LAST:event_presetFileButtonActionPerformed
 
     private void romFileButtonActionPerformed() {// GEN-FIRST:event_romFileButtonActionPerformed
+        // TODO: use RomOpener here too!!
+
         romFileChooser.setSelectedFile(null);
         int returnVal = romFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {

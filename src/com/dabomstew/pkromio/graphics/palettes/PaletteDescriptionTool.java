@@ -21,14 +21,12 @@ package com.dabomstew.pkromio.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkromio.RomOpener;
-import com.dabomstew.pkromio.exceptions.InvalidROMException;
+import com.dabomstew.pkromio.romio.RomOpener;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Species;
-import com.dabomstew.pkrandom.gui.ROMFilter;
+import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
 import com.dabomstew.pkromio.romhandlers.*;
 
@@ -122,22 +120,6 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
         gbc.gridwidth = gridwidth;
         gbc.gridheight = gridheight;
         return gbc;
-    }
-
-    private static class Gen3to5ROMFilter extends ROMFilter {
-        @Override
-        public boolean accept(File arg0) {
-            if (!super.accept(arg0)) {
-                return false;
-            }
-            String extension = arg0.getName().substring(arg0.getName().lastIndexOf('.') + 1).toLowerCase();
-            return extension.equals("gba") || extension.equals("nds");
-        }
-
-        @Override
-        public String getDescription() {
-            return "Gen 3-5 ROM file (.gba, .nds)";
-        }
     }
 
     private RomHandler romHandler;
@@ -302,7 +284,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     private void loadBoth() {
 
         JFileChooser romChooser = new JFileChooser(new File(ROMS_FOLDER));
-        romChooser.setFileFilter(new Gen3to5ROMFilter());
+        romChooser.setFileFilter(new ROMFilter(3, 4, 5));
         if (romChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }

@@ -4,7 +4,7 @@ import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.customNames.CustomNamesSet;
-import com.dabomstew.pkromio.RomOpener;
+import com.dabomstew.pkromio.romio.RomOpener;
 import com.dabomstew.pkromio.romhandlers.*;
 
 import java.io.*;
@@ -109,7 +109,7 @@ public class CliRandomizer {
                 printError("Could not load " + romFile.getAbsolutePath() + "; " + results.getFailType());
                 return false;
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

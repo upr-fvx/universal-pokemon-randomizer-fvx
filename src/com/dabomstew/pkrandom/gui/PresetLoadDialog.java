@@ -35,6 +35,7 @@ import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romio.ROMFilter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

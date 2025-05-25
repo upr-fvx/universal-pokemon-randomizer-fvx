@@ -1,7 +1,7 @@
 package com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.gamedata.Species;
-import com.dabomstew.pkromio.graphics.palettes.PaletteDescriptionTool;
+import com.dabomstew.pkdevtools.PaletteDescriptionTool;
 
 import java.awt.image.BufferedImage;
 

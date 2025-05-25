@@ -1,4 +1,4 @@
-package com.dabomstew.pkromio.graphics.palettes;
+package com.dabomstew.pkdevtools;
 
 /*----------------------------------------------------------------------------*/
 /*--  Part of "Universal Pokemon Randomizer" by Dabomstew                   --*/
@@ -23,6 +23,7 @@ package com.dabomstew.pkromio.graphics.palettes;
 
 import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkromio.graphics.palettes.*;
 import com.dabomstew.pkromio.romio.RomOpener;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Species;
@@ -46,7 +47,7 @@ import java.util.*;
  * A developer tool for filling in files with {@link PaletteDescription}s, and
  * see how each related image looks with accordingly randomized palettes.
  * <p>
- * Which file to fill is decided automatically, depending on the paletteFilesID assigned.
+ * Which file to fill is decided automatically, depending on the assigned paletteFilesID.
  * <p>
  * Currently only works for Pokémon palettes.
  */
@@ -123,7 +124,7 @@ public class PaletteDescriptionTool extends javax.swing.JFrame {
     }
 
     private RomHandler romHandler;
-    private RomOpener romOpener = new RomOpener(3, 4, 5);
+    private final RomOpener romOpener = new RomOpener(3, 4, 5);
     private boolean romLoaded;
 
     private final Map<Species, Palette> originalPalettes = new HashMap<>();

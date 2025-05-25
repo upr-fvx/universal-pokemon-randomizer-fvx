@@ -23,16 +23,16 @@ package com.dabomstew.pkrandom.ctr;
 
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.SysConstants;
-import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
-import com.dabomstew.pkrandom.exceptions.RandomizerIOException;
+import com.dabomstew.pkrandom.exceptions.RomIOException;
 import cuecompressors.BLZCoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class NCCH {
@@ -234,7 +234,7 @@ public class NCCH {
     private void visitFile(int offset, String rootPath, byte[] fileMetadataBlock) {
         FileMetadata metadata = new FileMetadata(fileMetadataBlock, offset);
         String currentPath = rootPath + metadata.name;
-        System.out.println("NCCH: Visiting file " + currentPath);
+        //System.out.println("NCCH: Visiting file " + currentPath);
         RomfsFile file = new RomfsFile(this);
         file.offset = fileDataOffset + metadata.fileDataOffset;
         file.size = (int) metadata.fileDataLength;  // no Pokemon game has a file larger than unsigned int max
@@ -300,7 +300,7 @@ public class NCCH {
 
         // Update the SMDH so that Citra displays the seed in the title
         smdh.setAllDescriptions(gameAcronym + " randomizer seed: " + seed);
-        smdh.setAllPublishers("Universal Pokemon Randomizer ZX");
+        smdh.setAllPublishers("Universal Pokemon Randomizer FVX");
 
         // Now, reconstruct the exefs based on our new version of .code and our new SMDH
         long newExefsOffset = header_and_exheader_size + logoLength + plainLength;
@@ -488,7 +488,7 @@ public class NCCH {
             } catch (Exception e) {
                 String message = String.format("Error when building romfs: File: %s, offset: %s, size: %s",
                         metadata.file.fullPath, metadata.offset, metadata.file.size);
-                throw new RandomizerIOException(message, e);
+                throw new RomIOException(message, e);
             }
         }
 
@@ -723,6 +723,10 @@ public class NCCH {
         }
     }
 
+    public Set<String> getFileNames() {
+        return Collections.unmodifiableSet(romfsFiles.keySet());
+    }
+
     public boolean hasFile(String filename) {
         return romfsFiles.containsKey(filename);
     }
@@ -866,7 +870,7 @@ public class NCCH {
             long tmdHeaderOffset = tmdOffset + 4 + signatureSize + paddingSize;
             return FileFunctions.read2ByteBigEndianIntFromFile(this.baseRom, tmdHeaderOffset + 0x9C);
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
     }
 
@@ -917,7 +921,7 @@ public class NCCH {
                 return -1;
             }
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
     }
 

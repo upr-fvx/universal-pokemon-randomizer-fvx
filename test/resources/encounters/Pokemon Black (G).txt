@@ -1,0 +1,1511 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Orion City Surfing, Rate = 3, MapIndex = 0,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Orion City Surfing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Orion City Fishing, Rate = 50, MapIndex = 0,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Orion City Fishing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Marea City Surfing, Rate = 3, MapIndex = 1,
+		Encounters = [Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25]]
+	[Name = Marea City Surfing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [Mamolida Lvs 10-30, Mamolida Lvs 10-30, Mamolida Lvs 10-30, Apoquallyp Lvs 10-30, Apoquallyp Lvs 10-30]]
+	[Name = Marea City Fishing, Rate = 50, MapIndex = 1,
+		Encounters = [Krabby Lvs 35-55, Lampi Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Marea City Fishing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [Lampi Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Lanturn Lvs 45-70, Lanturn Lvs 45-70]]
+	[Name = Nevaio City Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Nevaio City Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Nevaio City Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Nevaio City Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Nevaio City Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Traumbrache Grass/Cave, Rate = 8, MapIndex = 3,
+		Encounters = [Nagelotz Lvs 8-8, Felilou Lvs 8-8, Nagelotz Lvs 9-9, Felilou Lvs 9-9, Somniam Lvs 8-8, Somniam Lvs 10-10, Nagelotz Lvs 10-10, Felilou Lvs 10-10, Nagelotz Lvs 11-11, Felilou Lvs 11-11, Nagelotz Lvs 11-11, Felilou Lvs 11-11]]
+	[Name = Traumbrache Doubles Grass, Rate = 8, MapIndex = 3,
+		Encounters = [Kukmarda Lvs 47-47, Kleoparda Lvs 47-47, Rattikarl Lvs 48-48, Somniam Lvs 48-48, Ledian Lvs 49-49, Ariados Lvs 49-49, Zirpeise Lvs 48-48, Omot Lvs 48-48, Zirpeise Lvs 50-50, Omot Lvs 50-50, Zirpeise Lvs 50-50, Omot Lvs 50-50]]
+	[Name = Traumbrache Shaking Spots, Rate = 1, MapIndex = 3,
+		Encounters = [Ohrdoch Lvs 8-8, Ohrdoch Lvs 8-8, Ohrdoch Lvs 9-9, Ohrdoch Lvs 9-9, Ohrdoch Lvs 10-10, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Somnivora Lvs 11-11, Ohrdoch Lvs 11-11, Somnivora Lvs 11-11]]
+	[Name = Traumbrache Doubles Grass, Rate = 8, MapIndex = 4,
+		Encounters = [Rattikarl Lvs 47-47, Zirpeise Lvs 47-47, Somniam Lvs 48-48, Rattikarl Lvs 48-48, Zirpeise Lvs 48-48, Somniam Lvs 49-49, Ariados Lvs 49-49, Ledian Lvs 49-49, Rattikarl Lvs 50-50, Zirpeise Lvs 50-50, Rattikarl Lvs 50-50, Zirpeise Lvs 50-50]]
+	[Name = Ewigenwald Grass/Cave, Rate = 8, MapIndex = 5,
+		Encounters = [Schallquap Lvs 12-12, Dusselgurr Lvs 12-12, Schallquap Lvs 13-13, Dusselgurr Lvs 13-13, Praktibalk Lvs 13-13, Praktibalk Lvs 14-14, Schallquap Lvs 14-14, Karadonis Lvs 12-12, Schallquap Lvs 15-15, Karadonis Lvs 15-15, Schallquap Lvs 15-15, Karadonis Lvs 15-15]]
+	[Name = Ewigenwald Doubles Grass, Rate = 8, MapIndex = 5,
+		Encounters = [Schallquap Lvs 14-14, Dusselgurr Lvs 14-14, Schallquap Lvs 15-15, Dusselgurr Lvs 15-15, Praktibalk Lvs 15-15, Praktibalk Lvs 16-16, Schallquap Lvs 16-16, Karadonis Lvs 14-14, Schallquap Lvs 17-17, Karadonis Lvs 17-17, Schallquap Lvs 17-17, Karadonis Lvs 17-17]]
+	[Name = Ewigenwald Shaking Spots, Rate = 1, MapIndex = 5,
+		Encounters = [Ohrdoch Lvs 12-12, Ohrdoch Lvs 12-12, Ohrdoch Lvs 13-13, Ohrdoch Lvs 13-13, Ohrdoch Lvs 14-14, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Jiutesto Lvs 15-15, Ohrdoch Lvs 15-15, Jiutesto Lvs 15-15]]
+	[Name = Ewigenwald Grass/Cave, Rate = 8, MapIndex = 6,
+		Encounters = [Waumboll Lvs 14-14, Strawickl Lvs 14-14, Waumboll Lvs 15-15, Strawickl Lvs 15-15, Dusselgurr Lvs 15-15, Toxiped Lvs 15-15, Dusselgurr Lvs 16-16, Toxiped Lvs 16-16, Waumboll Lvs 16-16, Strawickl Lvs 16-16, Waumboll Lvs 17-17, Strawickl Lvs 17-17]]
+	[Name = Ewigenwald Doubles Grass, Rate = 8, MapIndex = 6,
+		Encounters = [Waumboll Lvs 22-22, Folikon Lvs 22-22, Waumboll Lvs 23-23, Folikon Lvs 23-23, Navitaub Lvs 23-23, Rollum Lvs 23-23, Navitaub Lvs 24-24, Rollum Lvs 24-24, Waumboll Lvs 24-24, Folikon Lvs 24-24, Waumboll Lvs 25-25, Folikon Lvs 25-25]]
+	[Name = Ewigenwald Shaking Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Ohrdoch Lvs 14-14, Ohrdoch Lvs 15-15, Vegimak Lvs 15-15, Grillmak Lvs 15-15, Sodamak Lvs 15-15, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Elfun Lvs 17-17, Ohrdoch Lvs 17-17, Elfun Lvs 17-17]]
+	[Name = Ewigenwald Surfing, Rate = 3, MapIndex = 6,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Ewigenwald Surfing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Ewigenwald Fishing, Rate = 50, MapIndex = 6,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Ewigenwald Fishing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Wüstenresort Grass/Cave, Rate = 3, MapIndex = 7,
+		Encounters = [Ganovil Lvs 19-19, Flampion Lvs 19-19, Ganovil Lvs 20-20, Flampion Lvs 20-20, Maracamba Lvs 20-20, Zurrokex Lvs 20-20, Ganovil Lvs 21-21, Lithomith Lvs 20-20, Ganovil Lvs 22-22, Lithomith Lvs 22-22, Ganovil Lvs 22-22, Lithomith Lvs 22-22]]
+	[Name = Wüstenresort Grass/Cave, Rate = 3, MapIndex = 8,
+		Encounters = [Ganovil Lvs 19-19, Flampion Lvs 19-19, Ganovil Lvs 20-20, Flampion Lvs 20-20, Maracamba Lvs 20-20, Symvolara Lvs 20-20, Ganovil Lvs 21-21, Lithomith Lvs 20-20, Ganovil Lvs 22-22, Lithomith Lvs 22-22, Ganovil Lvs 22-22, Lithomith Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 9,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 10,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 11,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 12,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 13,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 14,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 15,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 16,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 17,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 18,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 19,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 20,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 21,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 22,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 23,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 24,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 25,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 26,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 27,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 28,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 29,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 30,
+		Encounters = [Lepumentas Lvs 47-47, Lepumentas Lvs 47-47, Lepumentas Lvs 48-48, Lepumentas Lvs 48-48, Lepumentas Lvs 49-49, Lepumentas Lvs 49-49, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 31,
+		Encounters = [Lepumentas Lvs 47-47, Lepumentas Lvs 47-47, Lepumentas Lvs 48-48, Lepumentas Lvs 48-48, Lepumentas Lvs 49-49, Lepumentas Lvs 49-49, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 32,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 33,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 34,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 35,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 36,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 37,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 38,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 39,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Tiefkühlcontainer Grass/Cave, Rate = 8, MapIndex = 40,
+		Encounters = [Terribark Lvs 21-21, Picochilla Lvs 20-20, Terribark Lvs 22-22, Praktibalk Lvs 21-21, Gelatini Lvs 20-20, Gelatini Lvs 21-21, Praktibalk Lvs 22-22, Gelatini Lvs 22-22, Terribark Lvs 23-23, Gelatini Lvs 23-23, Terribark Lvs 23-23, Gelatini Lvs 23-23]]
+	[Name = Tiefkühlcontainer Doubles Grass, Rate = 8, MapIndex = 40,
+		Encounters = [Terribark Lvs 25-25, Picochilla Lvs 24-24, Terribark Lvs 26-26, Praktibalk Lvs 25-25, Gelatini Lvs 24-24, Gelatini Lvs 25-25, Praktibalk Lvs 26-26, Gelatini Lvs 26-26, Terribark Lvs 27-27, Gelatini Lvs 27-27, Terribark Lvs 27-27, Gelatini Lvs 27-27]]
+	[Name = Tiefkühlcontainer Shaking Spots, Rate = 1, MapIndex = 40,
+		Encounters = [Ohrdoch Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Ohrdoch Lvs 23-23, Ohrdoch Lvs 23-23, Chillabell Lvs 23-23, Bissbark Lvs 23-23, Chillabell Lvs 23-23, Bissbark Lvs 23-23]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 41,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 24-24, Kastadur Lvs 25-25, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Wattzapf Lvs 27-27, Klikk Lvs 27-27, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 41,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 42,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 25-25, Kastadur Lvs 26-26, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Wattzapf Lvs 27-27, Klikk Lvs 27-27, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 42,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 43,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 26-26, Kastadur Lvs 27-27, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27, Wattzapf Lvs 27-27, Klikk Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 43,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 31-31, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Navitaub Lvs 36-36, Lin-Fu Lvs 36-36, Shardrago Lvs 35-35, Lin-Fu Lvs 37-37, Shardrago Lvs 36-36, Lin-Fu Lvs 37-37, Shardrago Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35]]
+	[Name = Drachenstiege Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40]]
+	[Name = Drachenstiege Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-55, Barschuft Lvs 35-55, Dratini Lvs 35-55, Dragonir Lvs 35-55, Dragonir Lvs 35-55]]
+	[Name = Drachenstiege Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-60, Barschuft Lvs 35-60, Dragonir Lvs 35-70, Dragonir Lvs 45-70, Dragoran Lvs 50-70]]
+	[Name = Drachenstiege Grass/Cave, Rate = 3, MapIndex = 50,
+		Encounters = [Golbit Lvs 30-30, Lin-Fu Lvs 33-33, Golbit Lvs 31-31, Shardrago Lvs 30-30, Golbit Lvs 32-32, Shardrago Lvs 31-31, Golbit Lvs 32-32, Shardrago Lvs 32-32, Golbit Lvs 33-33, Shardrago Lvs 33-33, Golbit Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 3, MapIndex = 51,
+		Encounters = [Golbit Lvs 30-30, Golbit Lvs 30-30, Golbit Lvs 31-31, Golbit Lvs 31-31, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 33-33, Golbit Lvs 33-33, Golbit Lvs 33-33, Golbit Lvs 33-33]]
+	[Name = Siegesstraße Grass/Cave, Rate = 8, MapIndex = 52,
+		Encounters = [Skallyk Lvs 38-38, Furnifraß Lvs 37-37, Skallyk Lvs 40-40, Furnifraß Lvs 38-38, Lin-Fu Lvs 38-38, Furnifraß Lvs 39-39, Lin-Fu Lvs 40-40, Sharfax Lvs 40-40, Skallyk Lvs 37-37, Furnifraß Lvs 40-40, Skallyk Lvs 39-39, Furnifraß Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 6, MapIndex = 53,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 39-39, Fermicula Lvs 38-38, Kapuno Lvs 38-38, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Kapuno Lvs 38-38, Fermicula Lvs 40-40, Kapuno Lvs 39-39, Fermicula Lvs 40-40, Kapuno Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Surfing, Rate = 3, MapIndex = 53,
+		Encounters = [Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45]]
+	[Name = Siegesstraße Surfing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50]]
+	[Name = Siegesstraße Fishing, Rate = 50, MapIndex = 53,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Siegesstraße Fishing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 54,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 54,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 55,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 55,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 56,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 42-42, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 56,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 57,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 57,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 6, MapIndex = 58,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 39-39, Fermicula Lvs 38-38, Kapuno Lvs 38-38, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Kapuno Lvs 38-38, Fermicula Lvs 40-40, Kapuno Lvs 39-39, Fermicula Lvs 40-40, Kapuno Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Surfing, Rate = 3, MapIndex = 58,
+		Encounters = [Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45]]
+	[Name = Siegesstraße Surfing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50]]
+	[Name = Siegesstraße Fishing, Rate = 50, MapIndex = 58,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Siegesstraße Fishing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 59,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 59,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 60,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 60,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 61,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 61,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 62,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 62,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 63,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 63,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 64,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 64,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 65,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 65,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 66,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 66,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Kammer der Prüfung Grass/Cave, Rate = 3, MapIndex = 67,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Kammer der Prüfung Shaking Spots, Rate = 1, MapIndex = 67,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Riesengrotte Grass/Cave, Rate = 8, MapIndex = 68,
+		Encounters = [Tangela Lvs 47-47, Schwalboss Lvs 47-47, Golbat Lvs 48-48, Lunastein Lvs 48-48, Sonnfel Lvs 48-48, Drifzepeli Lvs 49-49, Absol Lvs 48-48, Absol Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50]]
+	[Name = Riesengrotte Doubles Grass, Rate = 8, MapIndex = 68,
+		Encounters = [Tangela Lvs 57-57, Schwalboss Lvs 57-57, Golbat Lvs 58-58, Lunastein Lvs 58-58, Sonnfel Lvs 58-58, Drifzepeli Lvs 59-59, Absol Lvs 58-58, Absol Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 68,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50]]
+	[Name = Riesengrotte Grass/Cave, Rate = 3, MapIndex = 69,
+		Encounters = [Golbat Lvs 47-47, Keifel Lvs 47-47, Sniebel Lvs 48-48, Botogel Lvs 48-48, Lunastein Lvs 50-50, Sonnfel Lvs 50-50, Sedimantur Lvs 49-49, Rossana Lvs 48-48, Keifel Lvs 49-49, Rossana Lvs 50-50, Keifel Lvs 49-49, Rossana Lvs 50-50]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Riesengrotte Surfing, Rate = 3, MapIndex = 69,
+		Encounters = [Barschuft Lvs 25-55, Jurob Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Riesengrotte Surfing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Jurob Lvs 25-60, Barschuft Lvs 25-60, Jugong Lvs 35-70, Jugong Lvs 35-70, Jugong Lvs 35-70]]
+	[Name = Riesengrotte Fishing, Rate = 50, MapIndex = 69,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Riesengrotte Fishing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Riesengrotte Grass/Cave, Rate = 8, MapIndex = 70,
+		Encounters = [Piepi Lvs 52-52, Keifel Lvs 52-52, Piepi Lvs 54-54, Ditto Lvs 53-53, Lunastein Lvs 55-55, Sonnfel Lvs 55-55, Ditto Lvs 55-55, Metang Lvs 53-53, Keifel Lvs 54-54, Metang Lvs 55-55, Keifel Lvs 54-54, Metang Lvs 55-55]]
+	[Name = Riesengrotte Doubles Grass, Rate = 8, MapIndex = 70,
+		Encounters = [Piepi Lvs 62-62, Keifel Lvs 62-62, Piepi Lvs 64-64, Ditto Lvs 63-63, Lunastein Lvs 65-65, Sonnfel Lvs 65-65, Ditto Lvs 65-65, Metang Lvs 63-63, Keifel Lvs 64-64, Metang Lvs 65-65, Keifel Lvs 64-64, Metang Lvs 65-65]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 70,
+		Encounters = [Ohrdoch Lvs 52-52, Ohrdoch Lvs 52-52, Ohrdoch Lvs 53-53, Ohrdoch Lvs 53-53, Ohrdoch Lvs 54-54, Ohrdoch Lvs 55-55, Ohrdoch Lvs 55-55, Mamutel Lvs 55-55, Pixi Lvs 55-55, Metagross Lvs 55-55, Pixi Lvs 55-55, Metagross Lvs 55-55]]
+	[Name = Riesengrotte Grass/Cave, Rate = 3, MapIndex = 71,
+		Encounters = [Golbat Lvs 57-57, Keifel Lvs 57-57, Sniebel Lvs 58-58, Botogel Lvs 58-58, Lunastein Lvs 60-60, Sonnfel Lvs 60-60, Sedimantur Lvs 59-59, Rossana Lvs 58-58, Keifel Lvs 59-59, Rossana Lvs 60-60, Keifel Lvs 59-59, Rossana Lvs 60-60]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Stalobor Lvs 57-57, Stalobor Lvs 57-57, Stalobor Lvs 58-58, Stalobor Lvs 58-58, Stalobor Lvs 59-59, Stalobor Lvs 59-59, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60]]
+	[Name = Riesengrotte Surfing, Rate = 3, MapIndex = 71,
+		Encounters = [Barschuft Lvs 25-55, Jurob Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Riesengrotte Surfing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Jurob Lvs 25-60, Barschuft Lvs 25-60, Jugong Lvs 35-70, Jugong Lvs 35-70, Jugong Lvs 35-70]]
+	[Name = Riesengrotte Fishing, Rate = 50, MapIndex = 71,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Riesengrotte Fishing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 45-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = P2-Labor Grass/Cave, Rate = 8, MapIndex = 72,
+		Encounters = [Kukmarda Lvs 28-28, Terribark Lvs 28-28, Kukmarda Lvs 29-29, Terribark Lvs 29-29, Klikk Lvs 29-29, Zurrokex Lvs 29-29, Kukmarda Lvs 30-30, Terribark Lvs 30-30, Klikk Lvs 31-31, Zurrokex Lvs 31-31, Kukmarda Lvs 31-31, Terribark Lvs 31-31]]
+	[Name = P2-Labor Shaking Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Ohrdoch Lvs 28-28, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Bissbark Lvs 31-31, Ohrdoch Lvs 31-31, Bissbark Lvs 31-31]]
+	[Name = P2-Labor Surfing, Rate = 5, MapIndex = 72,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = P2-Labor Surfing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = P2-Labor Fishing, Rate = 80, MapIndex = 72,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Finneon Lvs 35-55]]
+	[Name = P2-Labor Fishing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+	[Name = Bucht von Ondula Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Bucht von Ondula Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Wailmer Lvs 25-60, Wailmer Lvs 25-60, Mantax Lvs 35-70, Wailord Lvs 35-70, Wailord Lvs 35-70]]
+	[Name = Bucht von Ondula Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Bucht von Ondula Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Marea-Zugbrücke Shaking Spots, Rate = 1, MapIndex = 74,
+		Encounters = [Piccolente Lvs 22-22, Piccolente Lvs 22-22, Piccolente Lvs 23-23, Piccolente Lvs 23-23, Piccolente Lvs 24-24, Piccolente Lvs 24-24, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25]]
+	[Name = Dorfbrücke Grass/Cave, Rate = 8, MapIndex = 75,
+		Encounters = [Entoron Lvs 47-47, Bidifas Lvs 47-47, Sengo Lvs 48-48, Vipitis Lvs 48-48, Skallyk Lvs 48-48, Skallyk Lvs 50-50, Entoron Lvs 49-49, Bidifas Lvs 49-49, Sengo Lvs 50-50, Vipitis Lvs 50-50, Sengo Lvs 50-50, Vipitis Lvs 50-50]]
+	[Name = Dorfbrücke Doubles Grass, Rate = 8, MapIndex = 75,
+		Encounters = [Entoron Lvs 57-57, Bidifas Lvs 57-57, Sengo Lvs 58-58, Vipitis Lvs 58-58, Grypheldis Lvs 58-58, Grypheldis Lvs 60-60, Entoron Lvs 59-59, Bidifas Lvs 59-59, Sengo Lvs 60-60, Vipitis Lvs 60-60, Sengo Lvs 60-60, Vipitis Lvs 60-60]]
+	[Name = Dorfbrücke Shaking Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Dorfbrücke Surfing, Rate = 3, MapIndex = 75,
+		Encounters = [Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Dorfbrücke Surfing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Barschuft Lvs 25-60, Barschuft Lvs 25-60, Barschuft Lvs 35-70, Lapras Lvs 35-70, Lapras Lvs 35-70]]
+	[Name = Dorfbrücke Fishing, Rate = 50, MapIndex = 75,
+		Encounters = [Kanivanha Lvs 35-55, Barschuft Lvs 35-55, Kanivanha Lvs 35-55, Kanivanha Lvs 35-55, Kanivanha Lvs 35-55]]
+	[Name = Dorfbrücke Fishing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Kanivanha Lvs 35-60, Barschuft Lvs 35-60, Tohaido Lvs 35-70, Tohaido Lvs 45-70, Tohaido Lvs 45-70]]
+	[Name = Wunderbrücke Shaking Spots, Rate = 1, MapIndex = 76,
+		Encounters = [Swaroness Lvs 47-47, Swaroness Lvs 47-47, Swaroness Lvs 48-48, Swaroness Lvs 48-48, Swaroness Lvs 49-49, Swaroness Lvs 49-49, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50]]
+	[Name = Route 1 Grass/Cave, Rate = 8, MapIndex = 77,
+		Encounters = [Nagelotz Lvs 2-2, Yorkleff Lvs 2-2, Nagelotz Lvs 3-3, Yorkleff Lvs 3-3, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4]]
+	[Name = Route 1 Doubles Grass, Rate = 8, MapIndex = 77,
+		Encounters = [Kukmarda Lvs 32-32, Terribark Lvs 32-32, Kukmarda Lvs 33-33, Terribark Lvs 33-33, Zurrokex Lvs 32-32, Zurrokex Lvs 33-33, Kukmarda Lvs 34-34, Terribark Lvs 34-34, Zurrokex Lvs 34-34, Terribark Lvs 34-34, Kukmarda Lvs 35-35, Zurrokex Lvs 35-35]]
+	[Name = Route 1 Shaking Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Ohrdoch Lvs 2-2, Ohrdoch Lvs 2-2, Ohrdoch Lvs 3-3, Ohrdoch Lvs 3-3, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4]]
+	[Name = Route 1 Surfing, Rate = 3, MapIndex = 77,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Route 1 Surfing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Route 1 Fishing, Rate = 50, MapIndex = 77,
+		Encounters = [Barschuft Lvs 35-55, Barschuft Lvs 35-55, Barschuft Lvs 35-55, Barschwa Lvs 35-55, Barschwa Lvs 35-55]]
+	[Name = Route 1 Fishing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Barschwa Lvs 35-60, Barschuft Lvs 35-60, Barschuft Lvs 35-70, Milotic Lvs 45-70, Milotic Lvs 45-70]]
+	[Name = Route 2 Grass/Cave, Rate = 8, MapIndex = 78,
+		Encounters = [Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 5-5, Yorkleff Lvs 5-5, Felilou Lvs 4-4, Felilou Lvs 5-5, Nagelotz Lvs 6-6, Yorkleff Lvs 6-6, Nagelotz Lvs 7-7, Yorkleff Lvs 7-7, Nagelotz Lvs 7-7, Yorkleff Lvs 7-7]]
+	[Name = Route 2 Shaking Spots, Rate = 1, MapIndex = 78,
+		Encounters = [Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 5-5, Ohrdoch Lvs 5-5, Ohrdoch Lvs 6-6, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7]]
+	[Name = Route 3 Grass/Cave, Rate = 8, MapIndex = 79,
+		Encounters = [Nagelotz Lvs 8-8, Dusselgurr Lvs 8-8, Elezeba Lvs 8-8, Dusselgurr Lvs 9-9, Yorkleff Lvs 9-9, Felilou Lvs 9-9, Elezeba Lvs 9-9, Dusselgurr Lvs 10-10, Elezeba Lvs 10-10, Dusselgurr Lvs 11-11, Elezeba Lvs 11-11, Dusselgurr Lvs 11-11]]
+	[Name = Route 3 Doubles Grass, Rate = 8, MapIndex = 79,
+		Encounters = [Nagelotz Lvs 10-10, Dusselgurr Lvs 10-10, Elezeba Lvs 10-10, Dusselgurr Lvs 11-11, Yorkleff Lvs 11-11, Felilou Lvs 11-11, Elezeba Lvs 11-11, Dusselgurr Lvs 12-12, Elezeba Lvs 12-12, Dusselgurr Lvs 13-13, Elezeba Lvs 13-13, Dusselgurr Lvs 13-13]]
+	[Name = Route 3 Shaking Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Ohrdoch Lvs 8-8, Ohrdoch Lvs 8-8, Ohrdoch Lvs 9-9, Ohrdoch Lvs 9-9, Ohrdoch Lvs 10-10, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11]]
+	[Name = Route 3 Surfing, Rate = 3, MapIndex = 79,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Route 3 Surfing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Route 3 Fishing, Rate = 50, MapIndex = 79,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 3 Fishing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Grundwassersenke Grass/Cave, Rate = 3, MapIndex = 80,
+		Encounters = [Kiesling Lvs 10-10, Fleknoil Lvs 10-10, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 12-12, Fleknoil Lvs 12-12, Kiesling Lvs 13-13, Fleknoil Lvs 13-13, Kiesling Lvs 13-13, Fleknoil Lvs 13-13]]
+	[Name = Grundwassersenke Shaking Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Rotomurf Lvs 10-10, Rotomurf Lvs 10-10, Rotomurf Lvs 11-11, Rotomurf Lvs 11-11, Rotomurf Lvs 12-12, Rotomurf Lvs 12-12, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13]]
+	[Name = Grundwassersenke Surfing, Rate = 3, MapIndex = 80,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Grundwassersenke Surfing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Grundwassersenke Fishing, Rate = 50, MapIndex = 80,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Grundwassersenke Fishing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-60, Quappo Lvs 35-60, Quappo Lvs 35-60]]
+	[Name = Grundwassersenke Grass/Cave, Rate = 3, MapIndex = 81,
+		Encounters = [Kiesling Lvs 10-10, Fleknoil Lvs 10-10, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 12-12, Fleknoil Lvs 12-12, Kiesling Lvs 13-13, Fleknoil Lvs 13-13, Kiesling Lvs 13-13, Fleknoil Lvs 13-13]]
+	[Name = Grundwassersenke Shaking Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Rotomurf Lvs 10-10, Rotomurf Lvs 10-10, Rotomurf Lvs 11-11, Rotomurf Lvs 11-11, Rotomurf Lvs 12-12, Rotomurf Lvs 12-12, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13]]
+	[Name = Grundwassersenke Surfing, Rate = 3, MapIndex = 81,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Grundwassersenke Surfing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Grundwassersenke Fishing, Rate = 50, MapIndex = 81,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Grundwassersenke Fishing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-60, Quappo Lvs 35-60, Quappo Lvs 35-60]]
+	[Name = Route 4 Grass/Cave, Rate = 3, MapIndex = 82,
+		Encounters = [Ganovil Lvs 15-15, Flampion Lvs 15-15, Ganovil Lvs 16-16, Flampion Lvs 16-16, Zurrokex Lvs 16-16, Zurrokex Lvs 17-17, Ganovil Lvs 17-17, Flampion Lvs 17-17, Ganovil Lvs 18-18, Flampion Lvs 18-18, Ganovil Lvs 18-18, Flampion Lvs 18-18]]
+	[Name = Route 4 Surfing, Rate = 3, MapIndex = 82,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 4 Surfing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 4 Fishing, Rate = 50, MapIndex = 82,
+		Encounters = [Krabby Lvs 35-55, Perlu Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Route 4 Fishing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [Relicanth Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Aalabyss Lvs 45-70, Aalabyss Lvs 45-70]]
+	[Name = Route 5 Grass/Cave, Rate = 8, MapIndex = 83,
+		Encounters = [Mollimorba Lvs 19-19, Picochilla Lvs 19-19, Unratütox Lvs 19-19, Unratütox Lvs 21-21, Kleoparda Lvs 20-20, Kleoparda Lvs 22-22, Picochilla Lvs 20-20, Mollimorba Lvs 20-20, Picochilla Lvs 21-21, Mollimorba Lvs 21-21, Picochilla Lvs 22-22, Mollimorba Lvs 22-22]]
+	[Name = Route 5 Doubles Grass, Rate = 8, MapIndex = 83,
+		Encounters = [Mollimorba Lvs 22-22, Picochilla Lvs 22-22, Unratütox Lvs 22-22, Unratütox Lvs 24-24, Kleoparda Lvs 23-23, Kleoparda Lvs 25-25, Picochilla Lvs 23-23, Mollimorba Lvs 23-23, Picochilla Lvs 24-24, Mollimorba Lvs 24-24, Picochilla Lvs 25-25, Mollimorba Lvs 25-25]]
+	[Name = Route 5 Shaking Spots, Rate = 1, MapIndex = 83,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 19-19, Emolga Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22]]
+	[Name = Route 6 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 22-22, Laukaps Lvs 22-22, Navitaub Lvs 23-23, Tarnpignon Lvs 23-23, Sesokitz Lvs 23-23, Folikon Lvs 23-23, Sesokitz Lvs 24-24, Laukaps Lvs 24-24, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25]]
+	[Name = Route 6 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 26-26, Laukaps Lvs 26-26, Navitaub Lvs 27-27, Tarnpignon Lvs 27-27, Sesokitz Lvs 27-27, Folikon Lvs 27-27, Sesokitz Lvs 28-28, Laukaps Lvs 28-28, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 6 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Emolga Lvs 23-23, Emolga Lvs 25-25, Ohrdoch Lvs 24-24, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25]]
+	[Name = Route 6 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25]]
+	[Name = Route 6 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30]]
+	[Name = Route 6 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Route 6 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quaxo Lvs 45-70, Quaxo Lvs 45-70]]
+	[Name = Panaero-Höhle Grass/Cave, Rate = 3, MapIndex = 85,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Panaero-Höhle Shaking Spots, Rate = 1, MapIndex = 85,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Panaero-Höhle Grass/Cave, Rate = 3, MapIndex = 86,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Panaero-Höhle Shaking Spots, Rate = 1, MapIndex = 86,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Kammer der Weisung Grass/Cave, Rate = 3, MapIndex = 87,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Kammer der Weisung Shaking Spots, Rate = 1, MapIndex = 87,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Route 7 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 26-26, Sesokitz Lvs 26-26, Kukmarda Lvs 27-27, Zebritz Lvs 27-27, Navitaub Lvs 28-28, Zebritz Lvs 29-29, Kukmarda Lvs 28-28, Tarnpignon Lvs 27-27, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 7 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 30-30, Kukmarda Lvs 31-31, Zebritz Lvs 31-31, Navitaub Lvs 32-32, Zebritz Lvs 33-33, Kukmarda Lvs 32-32, Tarnpignon Lvs 31-31, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33]]
+	[Name = Route 7 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [Ohrdoch Lvs 26-26, Ohrdoch Lvs 26-26, Emolga Lvs 27-27, Ohrdoch Lvs 27-27, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 89,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 27-27, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 29-29, Lichtel Lvs 29-29, Lichtel Lvs 29-29, Lichtel Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 90,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 26-26, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 27-27, Lichtel Lvs 29-29, Pygraulon Lvs 28-28]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 91,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 26-26, Pygraulon Lvs 26-26, Lichtel Lvs 28-28, Pygraulon Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 29-29, Lichtel Lvs 29-29, Pygraulon Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 92,
+		Encounters = [Lichtel Lvs 26-26, Pygraulon Lvs 26-26, Lichtel Lvs 27-27, Pygraulon Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 29-29, Lichtel Lvs 29-29, Pygraulon Lvs 29-29]]
+	[Name = Route 8 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Route 8 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Route 8 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Route 8 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Route 8 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Moor von Nevaio Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Moor von Nevaio Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Moor von Nevaio Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Moor von Nevaio Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Moor von Nevaio Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Route 9 Grass/Cave, Rate = 8, MapIndex = 95,
+		Encounters = [Hypnomorba Lvs 31-31, Picochilla Lvs 32-32, Deponitox Lvs 31-31, Deponitox Lvs 33-33, Gladiantri Lvs 31-31, Kleoparda Lvs 33-33, Gladiantri Lvs 32-32, Hypnomorba Lvs 32-32, Gladiantri Lvs 33-33, Hypnomorba Lvs 33-33, Gladiantri Lvs 34-34, Hypnomorba Lvs 34-34]]
+	[Name = Route 9 Doubles Grass, Rate = 8, MapIndex = 95,
+		Encounters = [Hypnomorba Lvs 36-36, Picochilla Lvs 37-37, Deponitox Lvs 36-36, Deponitox Lvs 38-38, Gladiantri Lvs 31-31, Kleoparda Lvs 38-38, Gladiantri Lvs 37-37, Hypnomorba Lvs 37-37, Gladiantri Lvs 38-38, Hypnomorba Lvs 38-38, Gladiantri Lvs 39-39, Hypnomorba Lvs 39-39]]
+	[Name = Route 9 Shaking Spots, Rate = 1, MapIndex = 95,
+		Encounters = [Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Emolga Lvs 32-32, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 34-34, Chillabell Lvs 34-34, Morbitesse Lvs 34-34, Chillabell Lvs 34-34, Morbitesse Lvs 34-34]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 96,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Schlurp Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 96,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 97,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 97,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 98,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Surfing, Rate = 3, MapIndex = 98,
+		Encounters = [Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Höhle der Schulung Surfing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70]]
+	[Name = Höhle der Schulung Fishing, Rate = 50, MapIndex = 98,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Höhle der Schulung Fishing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Route 10 Grass/Cave, Rate = 8, MapIndex = 99,
+		Encounters = [Terribark Lvs 33-33, Skallyk Lvs 34-34, Terribark Lvs 34-34, Skallyk Lvs 36-36, Bisofank Lvs 34-34, Bisofank Lvs 35-35, Tarnpignon Lvs 34-34, Karadonis Lvs 33-33, Tarnpignon Lvs 34-34, Karadonis Lvs 36-36, Tarnpignon Lvs 35-35, Karadonis Lvs 36-36]]
+	[Name = Route 10 Doubles Grass, Rate = 8, MapIndex = 99,
+		Encounters = [Terribark Lvs 38-38, Skallyk Lvs 39-39, Terribark Lvs 39-39, Skallyk Lvs 41-41, Bisofank Lvs 39-39, Bisofank Lvs 40-40, Hutsassa Lvs 39-39, Karadonis Lvs 38-38, Hutsassa Lvs 39-39, Karadonis Lvs 41-41, Hutsassa Lvs 40-40, Karadonis Lvs 41-41]]
+	[Name = Route 10 Shaking Spots, Rate = 1, MapIndex = 99,
+		Encounters = [Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Emolga Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 35-35, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36]]
+	[Name = Route 10 Grass/Cave, Rate = 8, MapIndex = 100,
+		Encounters = [Terribark Lvs 33-33, Skallyk Lvs 34-34, Terribark Lvs 34-34, Skallyk Lvs 36-36, Bisofank Lvs 34-34, Bisofank Lvs 35-35, Tarnpignon Lvs 33-33, Karadonis Lvs 33-33, Tarnpignon Lvs 34-34, Karadonis Lvs 36-36, Tarnpignon Lvs 35-35, Karadonis Lvs 36-36]]
+	[Name = Route 10 Doubles Grass, Rate = 8, MapIndex = 100,
+		Encounters = [Terribark Lvs 38-38, Skallyk Lvs 39-39, Terribark Lvs 39-39, Skallyk Lvs 41-41, Bisofank Lvs 39-39, Bisofank Lvs 40-40, Hutsassa Lvs 38-38, Karadonis Lvs 38-38, Hutsassa Lvs 39-39, Karadonis Lvs 41-41, Hutsassa Lvs 40-40, Karadonis Lvs 41-41]]
+	[Name = Route 10 Shaking Spots, Rate = 1, MapIndex = 100,
+		Encounters = [Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Emolga Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 35-35, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36]]
+	[Name = Route 11 Grass/Cave, Rate = 8, MapIndex = 101,
+		Encounters = [Skallyk Lvs 48-48, Entoron Lvs 47-47, Skorgla Lvs 47-47, Hutsassa Lvs 48-48, Sengo Lvs 48-48, Vipitis Lvs 48-48, Laukaps Lvs 49-49, Gladiantri Lvs 50-50, Skorgla Lvs 50-50, Skallyk Lvs 50-50, Skorgla Lvs 50-50, Skallyk Lvs 50-50]]
+	[Name = Route 11 Doubles Grass, Rate = 8, MapIndex = 101,
+		Encounters = [Grypheldis Lvs 58-58, Entoron Lvs 57-57, Skorgla Lvs 57-57, Hutsassa Lvs 58-58, Sengo Lvs 58-58, Vipitis Lvs 58-58, Laukaps Lvs 59-59, Caesurio Lvs 60-60, Skorgla Lvs 60-60, Grypheldis Lvs 60-60, Skorgla Lvs 60-60, Grypheldis Lvs 60-60]]
+	[Name = Route 11 Shaking Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Skorgro Lvs 50-50, Ohrdoch Lvs 50-50, Skorgro Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Route 11 Surfing, Rate = 3, MapIndex = 101,
+		Encounters = [Barschuft Lvs 25-55, Bamelin Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Route 11 Surfing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Bamelin Lvs 25-60, Barschuft Lvs 25-60, Bojelin Lvs 35-70, Bojelin Lvs 35-70, Bojelin Lvs 35-70]]
+	[Name = Route 11 Fishing, Rate = 50, MapIndex = 101,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 11 Fishing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Route 12 Grass/Cave, Rate = 8, MapIndex = 102,
+		Encounters = [Wadribie Lvs 47-47, Sonnkern Lvs 47-47, Gallopa Lvs 49-49, Navitaub Lvs 48-48, Kinoso Lvs 48-48, Kokuna Lvs 48-48, Skaraborn Lvs 50-50, Pinsir Lvs 50-50, Dummisel Lvs 48-48, Navitaub Lvs 50-50, Dummisel Lvs 48-48, Navitaub Lvs 50-50]]
+	[Name = Route 12 Doubles Grass, Rate = 8, MapIndex = 102,
+		Encounters = [Wadribie Lvs 57-57, Sonnkern Lvs 57-57, Gallopa Lvs 59-59, Navitaub Lvs 58-58, Kinoso Lvs 58-58, Kokuna Lvs 59-59, Skaraborn Lvs 60-60, Pinsir Lvs 60-60, Dummisel Lvs 59-59, Navitaub Lvs 60-60, Dummisel Lvs 59-59, Navitaub Lvs 60-60]]
+	[Name = Route 12 Shaking Spots, Rate = 1, MapIndex = 102,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Fasasnob Lvs 50-50, Bibor Lvs 50-50, Honweisel Lvs 50-50, Sonnflora Lvs 50-50, Honweisel Lvs 50-50, Sonnflora Lvs 50-50]]
+	[Name = Route 13 Grass/Cave, Rate = 8, MapIndex = 103,
+		Encounters = [Tangela Lvs 47-47, Schwalboss Lvs 47-47, Golbat Lvs 48-48, Lunastein Lvs 48-48, Sonnfel Lvs 48-48, Drifzepeli Lvs 49-49, Absol Lvs 48-48, Absol Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50]]
+	[Name = Route 13 Doubles Grass, Rate = 8, MapIndex = 103,
+		Encounters = [Tangela Lvs 57-57, Schwalboss Lvs 57-57, Golbat Lvs 58-58, Lunastein Lvs 58-58, Sonnfel Lvs 58-58, Drifzepeli Lvs 59-59, Absol Lvs 58-58, Absol Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60]]
+	[Name = Route 13 Shaking Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50]]
+	[Name = Route 13 Surfing, Rate = 3, MapIndex = 103,
+		Encounters = [Wingull Lvs 25-55, Sterndu Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Route 13 Surfing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Sterndu Lvs 25-60, Corasonn Lvs 25-60, Starmie Lvs 35-70, Starmie Lvs 35-70, Starmie Lvs 35-70]]
+	[Name = Route 13 Fishing, Rate = 50, MapIndex = 103,
+		Encounters = [Krabby Lvs 35-55, Muschas Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Route 13 Fishing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Route 14 Grass/Cave, Rate = 8, MapIndex = 104,
+		Encounters = [Entoron Lvs 47-47, Pummeluff Lvs 48-48, Tropius Lvs 48-48, Lin-Fu Lvs 49-49, Altaria Lvs 49-49, Drifzepeli Lvs 49-49, Pottrott Lvs 49-49, Megalon Lvs 48-48, Tropius Lvs 50-50, Megalon Lvs 50-50, Tropius Lvs 50-50, Megalon Lvs 50-50]]
+	[Name = Route 14 Doubles Grass, Rate = 8, MapIndex = 104,
+		Encounters = [Entoron Lvs 57-57, Pummeluff Lvs 58-58, Tropius Lvs 58-58, Wie-Shu Lvs 59-59, Altaria Lvs 59-59, Drifzepeli Lvs 59-59, Pottrott Lvs 59-59, Megalon Lvs 58-58, Tropius Lvs 60-60, Megalon Lvs 60-60, Tropius Lvs 60-60, Megalon Lvs 60-60]]
+	[Name = Route 14 Shaking Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Knuddeluff Lvs 50-50, Ohrdoch Lvs 50-50, Knuddeluff Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Route 14 Surfing, Rate = 3, MapIndex = 104,
+		Encounters = [Barschuft Lvs 25-55, Bamelin Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Route 14 Surfing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Bamelin Lvs 25-60, Barschuft Lvs 25-60, Bojelin Lvs 35-70, Bojelin Lvs 35-70, Bojelin Lvs 35-70]]
+	[Name = Route 14 Fishing, Rate = 50, MapIndex = 104,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 14 Fishing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Schrein der Ernte Grass/Cave, Rate = 8, MapIndex = 105,
+		Encounters = [Vulpix Lvs 47-47, Palimpalim Lvs 47-47, Waumboll Lvs 48-48, Palimpalim Lvs 49-49, Damhirplex Lvs 48-48, Noctuh Lvs 48-48, Kramurx Lvs 48-48, Bronzong Lvs 48-48, Noctuh Lvs 50-50, Bronzong Lvs 50-50, Noctuh Lvs 50-50, Bronzong Lvs 50-50]]
+	[Name = Schrein der Ernte Doubles Grass, Rate = 8, MapIndex = 105,
+		Encounters = [Vulpix Lvs 57-57, Palimpalim Lvs 57-57, Waumboll Lvs 58-58, Palimpalim Lvs 59-59, Damhirplex Lvs 58-58, Noctuh Lvs 58-58, Kramurx Lvs 58-58, Bronzong Lvs 58-58, Noctuh Lvs 60-60, Bronzong Lvs 60-60, Noctuh Lvs 60-60, Bronzong Lvs 60-60]]
+	[Name = Schrein der Ernte Shaking Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Kramshef Lvs 50-50, Elfun Lvs 50-50, Ohrdoch Lvs 50-50, Vulnona Lvs 50-50, Ohrdoch Lvs 50-50, Vulnona Lvs 50-50]]
+	[Name = Schrein der Ernte Surfing, Rate = 3, MapIndex = 105,
+		Encounters = [Barschuft Lvs 25-55, Flegmon Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Schrein der Ernte Surfing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Flegmon Lvs 25-60, Barschuft Lvs 25-60, Lahmus Lvs 35-70, Laschoking Lvs 35-70, Laschoking Lvs 35-70]]
+	[Name = Schrein der Ernte Fishing, Rate = 50, MapIndex = 105,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Schrein der Ernte Fishing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Route 15 Grass/Cave, Rate = 8, MapIndex = 106,
+		Encounters = [Knogga Lvs 47-47, Ibitak Lvs 48-48, Skorgla Lvs 47-47, Kangama Lvs 49-49, Ibitak Lvs 50-50, Karadonis Lvs 48-48, Pupitar Lvs 48-48, Karadonis Lvs 49-49, Pupitar Lvs 50-50, Skorgla Lvs 49-49, Pupitar Lvs 50-50, Skorgla Lvs 49-49]]
+	[Name = Route 15 Doubles Grass, Rate = 8, MapIndex = 106,
+		Encounters = [Knogga Lvs 57-57, Ibitak Lvs 58-58, Skorgla Lvs 57-57, Kangama Lvs 59-59, Ibitak Lvs 60-60, Karadonis Lvs 58-58, Pupitar Lvs 58-58, Karadonis Lvs 59-59, Kukmarda Lvs 60-60, Pupitar Lvs 59-59, Kukmarda Lvs 60-60, Pupitar Lvs 59-59]]
+	[Name = Route 15 Shaking Spots, Rate = 1, MapIndex = 106,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Jiutesto Lvs 50-50, Skorgro Lvs 50-50, Despotar Lvs 50-50, Skorgro Lvs 50-50, Despotar Lvs 50-50]]
+	[Name = Route 16 Grass/Cave, Rate = 8, MapIndex = 107,
+		Encounters = [Mollimorba Lvs 19-19, Picochilla Lvs 19-19, Unratütox Lvs 19-19, Unratütox Lvs 21-21, Kleoparda Lvs 20-20, Kleoparda Lvs 22-22, Picochilla Lvs 20-20, Mollimorba Lvs 20-20, Picochilla Lvs 21-21, Mollimorba Lvs 21-21, Picochilla Lvs 22-22, Mollimorba Lvs 22-22]]
+	[Name = Route 16 Doubles Grass, Rate = 8, MapIndex = 107,
+		Encounters = [Mollimorba Lvs 22-22, Picochilla Lvs 22-22, Unratütox Lvs 22-22, Unratütox Lvs 24-24, Kleoparda Lvs 23-23, Kleoparda Lvs 25-25, Picochilla Lvs 23-23, Mollimorba Lvs 23-23, Picochilla Lvs 24-24, Mollimorba Lvs 24-24, Picochilla Lvs 25-25, Mollimorba Lvs 25-25]]
+	[Name = Route 16 Shaking Spots, Rate = 1, MapIndex = 107,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 19-19, Emolga Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22]]
+	[Name = Hain der Täuschung Grass/Cave, Rate = 8, MapIndex = 108,
+		Encounters = [Waumboll Lvs 19-19, Folikon Lvs 20-20, Waumboll Lvs 20-20, Folikon Lvs 21-21, Navitaub Lvs 21-21, Toxiped Lvs 20-20, Navitaub Lvs 22-22, Toxiped Lvs 21-21, Waumboll Lvs 21-21, Folikon Lvs 22-22, Waumboll Lvs 22-22, Folikon Lvs 22-22]]
+	[Name = Hain der Täuschung Doubles Grass, Rate = 8, MapIndex = 108,
+		Encounters = [Waumboll Lvs 22-22, Folikon Lvs 23-23, Waumboll Lvs 23-23, Folikon Lvs 24-24, Navitaub Lvs 24-24, Toxiped Lvs 23-23, Navitaub Lvs 25-25, Toxiped Lvs 24-24, Waumboll Lvs 24-24, Folikon Lvs 25-25, Waumboll Lvs 25-25, Folikon Lvs 25-25]]
+	[Name = Hain der Täuschung Shaking Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 20-20, Emolga Lvs 20-20, Vegimak Lvs 20-20, Grillmak Lvs 20-20, Sodamak Lvs 20-20, Ohrdoch Lvs 21-21, Fasasnob Lvs 22-22, Matrifol Lvs 22-22, Elfun Lvs 22-22, Matrifol Lvs 22-22, Elfun Lvs 22-22]]
+	[Name = Hain der Täuschung Surfing, Rate = 3, MapIndex = 108,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Hain der Täuschung Surfing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Hain der Täuschung Fishing, Rate = 50, MapIndex = 108,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Hain der Täuschung Fishing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Goldini Lvs 35-70, Goldini Lvs 35-70, Goldini Lvs 35-70]]
+	[Name = Route 18 Grass/Cave, Rate = 8, MapIndex = 109,
+		Encounters = [Zurrokex Lvs 28-28, Lithomith Lvs 30-30, Kukmarda Lvs 28-28, Lithomith Lvs 31-31, Zurrokex Lvs 29-29, Kukmarda Lvs 30-30, Zurrokex Lvs 30-30, Karadonis Lvs 29-29, Zurrokex Lvs 31-31, Karadonis Lvs 31-31, Zurrokex Lvs 31-31, Karadonis Lvs 31-31]]
+	[Name = Route 18 Doubles Grass, Rate = 8, MapIndex = 109,
+		Encounters = [Zurrokex Lvs 32-32, Castellith Lvs 34-34, Kukmarda Lvs 32-32, Castellith Lvs 35-35, Zurrokex Lvs 33-33, Kukmarda Lvs 34-34, Zurrokex Lvs 34-34, Karadonis Lvs 33-33, Zurrokex Lvs 35-35, Karadonis Lvs 35-35, Zurrokex Lvs 35-35, Karadonis Lvs 35-35]]
+	[Name = Route 18 Shaking Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Ohrdoch Lvs 28-28, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 30-30, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Jiutesto Lvs 31-31, Ohrdoch Lvs 31-31, Jiutesto Lvs 31-31]]
+	[Name = Route 18 Surfing, Rate = 3, MapIndex = 109,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 18 Surfing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 18 Fishing, Rate = 50, MapIndex = 109,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Lampi Lvs 35-55]]
+	[Name = Route 18 Fishing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+	[Name = Ondula Surfing, Rate = 3, MapIndex = 110,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Ondula Surfing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [Wailmer Lvs 25-60, Corasonn Lvs 25-60, Mantax Lvs 35-70, Mantax Lvs 35-70, Mantax Lvs 35-70]]
+	[Name = Ondula Fishing, Rate = 50, MapIndex = 110,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Ondula Fishing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Route 17 Surfing, Rate = 5, MapIndex = 111,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 17 Surfing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 17 Fishing, Rate = 80, MapIndex = 111,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Finneon Lvs 35-55]]
+	[Name = Route 17 Fishing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Orion City Surfing, Rate = 3, MapIndex = 0,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Orion City Surfing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Orion City Fishing, Rate = 50, MapIndex = 0,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Orion City Fishing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Marea City Surfing, Rate = 3, MapIndex = 1,
+		Encounters = [Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25, Quabbel Lvs 10-25]]
+	[Name = Marea City Surfing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [Mamolida Lvs 10-30, Mamolida Lvs 10-30, Mamolida Lvs 10-30, Apoquallyp Lvs 10-30, Apoquallyp Lvs 10-30]]
+	[Name = Marea City Fishing, Rate = 50, MapIndex = 1,
+		Encounters = [Krabby Lvs 35-55, Lampi Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Marea City Fishing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [Lampi Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Lanturn Lvs 45-70, Lanturn Lvs 45-70]]
+	[Name = Nevaio City Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Nevaio City Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Nevaio City Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Nevaio City Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Nevaio City Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Nevaio City Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Nevaio City Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Nevaio City Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Nevaio City Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Nevaio City Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Nevaio City Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Nevaio City Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Nevaio City Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Nevaio City Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Nevaio City Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Nevaio City Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Nevaio City Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Nevaio City Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Nevaio City Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Traumbrache Grass/Cave, Rate = 8, MapIndex = 3,
+		Encounters = [Nagelotz Lvs 8-8, Felilou Lvs 8-8, Nagelotz Lvs 9-9, Felilou Lvs 9-9, Somniam Lvs 8-8, Somniam Lvs 10-10, Nagelotz Lvs 10-10, Felilou Lvs 10-10, Nagelotz Lvs 11-11, Felilou Lvs 11-11, Nagelotz Lvs 11-11, Felilou Lvs 11-11]]
+	[Name = Traumbrache Doubles Grass, Rate = 8, MapIndex = 3,
+		Encounters = [Kukmarda Lvs 47-47, Kleoparda Lvs 47-47, Rattikarl Lvs 48-48, Somniam Lvs 48-48, Ledian Lvs 49-49, Ariados Lvs 49-49, Zirpeise Lvs 48-48, Omot Lvs 48-48, Zirpeise Lvs 50-50, Omot Lvs 50-50, Zirpeise Lvs 50-50, Omot Lvs 50-50]]
+	[Name = Traumbrache Shaking Spots, Rate = 1, MapIndex = 3,
+		Encounters = [Ohrdoch Lvs 8-8, Ohrdoch Lvs 8-8, Ohrdoch Lvs 9-9, Ohrdoch Lvs 9-9, Ohrdoch Lvs 10-10, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Somnivora Lvs 11-11, Ohrdoch Lvs 11-11, Somnivora Lvs 11-11]]
+	[Name = Traumbrache Doubles Grass, Rate = 8, MapIndex = 4,
+		Encounters = [Rattikarl Lvs 47-47, Zirpeise Lvs 47-47, Somniam Lvs 48-48, Rattikarl Lvs 48-48, Zirpeise Lvs 48-48, Somniam Lvs 49-49, Ariados Lvs 49-49, Ledian Lvs 49-49, Rattikarl Lvs 50-50, Zirpeise Lvs 50-50, Rattikarl Lvs 50-50, Zirpeise Lvs 50-50]]
+	[Name = Ewigenwald Grass/Cave, Rate = 8, MapIndex = 5,
+		Encounters = [Schallquap Lvs 12-12, Dusselgurr Lvs 12-12, Schallquap Lvs 13-13, Dusselgurr Lvs 13-13, Praktibalk Lvs 13-13, Praktibalk Lvs 14-14, Schallquap Lvs 14-14, Karadonis Lvs 12-12, Schallquap Lvs 15-15, Karadonis Lvs 15-15, Schallquap Lvs 15-15, Karadonis Lvs 15-15]]
+	[Name = Ewigenwald Doubles Grass, Rate = 8, MapIndex = 5,
+		Encounters = [Schallquap Lvs 14-14, Dusselgurr Lvs 14-14, Schallquap Lvs 15-15, Dusselgurr Lvs 15-15, Praktibalk Lvs 15-15, Praktibalk Lvs 16-16, Schallquap Lvs 16-16, Karadonis Lvs 14-14, Schallquap Lvs 17-17, Karadonis Lvs 17-17, Schallquap Lvs 17-17, Karadonis Lvs 17-17]]
+	[Name = Ewigenwald Shaking Spots, Rate = 1, MapIndex = 5,
+		Encounters = [Ohrdoch Lvs 12-12, Ohrdoch Lvs 12-12, Ohrdoch Lvs 13-13, Ohrdoch Lvs 13-13, Ohrdoch Lvs 14-14, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Ohrdoch Lvs 15-15, Jiutesto Lvs 15-15, Ohrdoch Lvs 15-15, Jiutesto Lvs 15-15]]
+	[Name = Ewigenwald Grass/Cave, Rate = 8, MapIndex = 6,
+		Encounters = [Waumboll Lvs 14-14, Strawickl Lvs 14-14, Waumboll Lvs 15-15, Strawickl Lvs 15-15, Dusselgurr Lvs 15-15, Toxiped Lvs 15-15, Dusselgurr Lvs 16-16, Toxiped Lvs 16-16, Waumboll Lvs 16-16, Strawickl Lvs 16-16, Waumboll Lvs 17-17, Strawickl Lvs 17-17]]
+	[Name = Ewigenwald Doubles Grass, Rate = 8, MapIndex = 6,
+		Encounters = [Waumboll Lvs 22-22, Folikon Lvs 22-22, Waumboll Lvs 23-23, Folikon Lvs 23-23, Navitaub Lvs 23-23, Rollum Lvs 23-23, Navitaub Lvs 24-24, Rollum Lvs 24-24, Waumboll Lvs 24-24, Folikon Lvs 24-24, Waumboll Lvs 25-25, Folikon Lvs 25-25]]
+	[Name = Ewigenwald Shaking Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Ohrdoch Lvs 14-14, Ohrdoch Lvs 15-15, Vegimak Lvs 15-15, Grillmak Lvs 15-15, Sodamak Lvs 15-15, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Ohrdoch Lvs 17-17, Elfun Lvs 17-17, Ohrdoch Lvs 17-17, Elfun Lvs 17-17]]
+	[Name = Ewigenwald Surfing, Rate = 3, MapIndex = 6,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Ewigenwald Surfing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Ewigenwald Fishing, Rate = 50, MapIndex = 6,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Ewigenwald Fishing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Wüstenresort Grass/Cave, Rate = 3, MapIndex = 7,
+		Encounters = [Ganovil Lvs 19-19, Flampion Lvs 19-19, Ganovil Lvs 20-20, Flampion Lvs 20-20, Maracamba Lvs 20-20, Zurrokex Lvs 20-20, Ganovil Lvs 21-21, Lithomith Lvs 20-20, Ganovil Lvs 22-22, Lithomith Lvs 22-22, Ganovil Lvs 22-22, Lithomith Lvs 22-22]]
+	[Name = Wüstenresort Grass/Cave, Rate = 3, MapIndex = 8,
+		Encounters = [Ganovil Lvs 19-19, Flampion Lvs 19-19, Ganovil Lvs 20-20, Flampion Lvs 20-20, Maracamba Lvs 20-20, Symvolara Lvs 20-20, Ganovil Lvs 21-21, Lithomith Lvs 20-20, Ganovil Lvs 22-22, Lithomith Lvs 22-22, Ganovil Lvs 22-22, Lithomith Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 9,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 10,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 11,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 12,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 13,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 14,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 15,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 16,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 17,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 18,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 19,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 20,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 21,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 22,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 23,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 24,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 25,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 26,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 27,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 28,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 29,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 30,
+		Encounters = [Lepumentas Lvs 47-47, Lepumentas Lvs 47-47, Lepumentas Lvs 48-48, Lepumentas Lvs 48-48, Lepumentas Lvs 49-49, Lepumentas Lvs 49-49, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 31,
+		Encounters = [Lepumentas Lvs 47-47, Lepumentas Lvs 47-47, Lepumentas Lvs 48-48, Lepumentas Lvs 48-48, Lepumentas Lvs 49-49, Lepumentas Lvs 49-49, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50, Lepumentas Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 32,
+		Encounters = [Rokkaiman Lvs 47-47, Sandamer Lvs 47-47, Echnatoll Lvs 48-48, Onix Lvs 48-48, Rokkaiman Lvs 48-48, Sandamer Lvs 49-49, Echnatoll Lvs 49-49, Onix Lvs 49-49, Rokkaiman Lvs 49-49, Echnatoll Lvs 50-50, Rokkaiman Lvs 50-50, Echnatoll Lvs 50-50]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 33,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 34,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 35,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 36,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 37,
+		Encounters = [Rokkaiman Lvs 34-34, Echnatoll Lvs 34-34, Rokkaiman Lvs 35-35, Echnatoll Lvs 35-35, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 36-36, Echnatoll Lvs 36-36, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37, Rokkaiman Lvs 37-37, Echnatoll Lvs 37-37]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 38,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Alter Palast Grass/Cave, Rate = 3, MapIndex = 39,
+		Encounters = [Ganovil Lvs 19-19, Makabaja Lvs 19-19, Ganovil Lvs 20-20, Makabaja Lvs 20-20, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 21-21, Makabaja Lvs 21-21, Ganovil Lvs 22-22, Makabaja Lvs 22-22, Ganovil Lvs 22-22, Makabaja Lvs 22-22]]
+	[Name = Tiefkühlcontainer Grass/Cave, Rate = 8, MapIndex = 40,
+		Encounters = [Terribark Lvs 21-21, Picochilla Lvs 20-20, Terribark Lvs 22-22, Praktibalk Lvs 21-21, Gelatini Lvs 20-20, Gelatini Lvs 21-21, Praktibalk Lvs 22-22, Gelatini Lvs 22-22, Terribark Lvs 23-23, Gelatini Lvs 23-23, Terribark Lvs 23-23, Gelatini Lvs 23-23]]
+	[Name = Tiefkühlcontainer Doubles Grass, Rate = 8, MapIndex = 40,
+		Encounters = [Terribark Lvs 25-25, Picochilla Lvs 24-24, Terribark Lvs 26-26, Praktibalk Lvs 25-25, Gelatini Lvs 24-24, Gelatini Lvs 25-25, Praktibalk Lvs 26-26, Gelatini Lvs 26-26, Terribark Lvs 27-27, Gelatini Lvs 27-27, Terribark Lvs 27-27, Gelatini Lvs 27-27]]
+	[Name = Tiefkühlcontainer Shaking Spots, Rate = 1, MapIndex = 40,
+		Encounters = [Ohrdoch Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Ohrdoch Lvs 23-23, Ohrdoch Lvs 23-23, Chillabell Lvs 23-23, Bissbark Lvs 23-23, Chillabell Lvs 23-23, Bissbark Lvs 23-23]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 41,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 24-24, Kastadur Lvs 25-25, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Wattzapf Lvs 27-27, Klikk Lvs 27-27, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 41,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 42,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 25-25, Kastadur Lvs 26-26, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Wattzapf Lvs 27-27, Klikk Lvs 27-27, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 42,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Elektrolithhöhle Grass/Cave, Rate = 3, MapIndex = 43,
+		Encounters = [Wattzapf Lvs 24-24, Klikk Lvs 25-25, Wattzapf Lvs 25-25, Sedimantur Lvs 24-24, Kastadur Lvs 26-26, Kastadur Lvs 27-27, Wattzapf Lvs 26-26, Klikk Lvs 26-26, Zapplardin Lvs 27-27, Zapplardin Lvs 27-27, Wattzapf Lvs 27-27, Klikk Lvs 27-27]]
+	[Name = Elektrolithhöhle Shaking Spots, Rate = 1, MapIndex = 43,
+		Encounters = [Rotomurf Lvs 24-24, Rotomurf Lvs 24-24, Rotomurf Lvs 25-25, Rotomurf Lvs 25-25, Rotomurf Lvs 26-26, Rotomurf Lvs 26-26, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27, Rotomurf Lvs 27-27]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Fleknoil Lvs 28-28, Sedimantur Lvs 31-31, Fleknoil Lvs 29-29, Petznief Lvs 28-28, Fleknoil Lvs 30-30, Frigometri Lvs 28-28, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [Petznief Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 29-29, Petznief Lvs 29-29, Sedimantur Lvs 30-30, Petznief Lvs 30-30, Petznief Lvs 31-31, Fleknoil Lvs 28-28, Frigometri Lvs 31-31, Fleknoil Lvs 29-29, Frigometri Lvs 31-31, Fleknoil Lvs 30-30]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Fleknoil Lvs 28-28, Sedimantur Lvs 31-31, Fleknoil Lvs 29-29, Petznief Lvs 28-28, Fleknoil Lvs 30-30, Frigometri Lvs 28-28, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [Petznief Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 29-29, Petznief Lvs 29-29, Sedimantur Lvs 30-30, Petznief Lvs 30-30, Petznief Lvs 31-31, Fleknoil Lvs 28-28, Frigometri Lvs 31-31, Fleknoil Lvs 29-29, Frigometri Lvs 31-31, Fleknoil Lvs 30-30]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Fleknoil Lvs 28-28, Sedimantur Lvs 31-31, Fleknoil Lvs 29-29, Petznief Lvs 28-28, Fleknoil Lvs 30-30, Frigometri Lvs 28-28, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [Petznief Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 29-29, Petznief Lvs 29-29, Sedimantur Lvs 30-30, Petznief Lvs 30-30, Petznief Lvs 31-31, Fleknoil Lvs 28-28, Frigometri Lvs 31-31, Fleknoil Lvs 29-29, Frigometri Lvs 31-31, Fleknoil Lvs 30-30]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Fleknoil Lvs 28-28, Sedimantur Lvs 31-31, Fleknoil Lvs 29-29, Petznief Lvs 28-28, Fleknoil Lvs 30-30, Frigometri Lvs 28-28, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [Sedimantur Lvs 28-28, Strepoli Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 30-30, Sedimantur Lvs 30-30, Petznief Lvs 28-28, Sedimantur Lvs 30-30, Fleknoil Lvs 29-29, Sedimantur Lvs 31-31, Fleknoil Lvs 30-30, Frigometri Lvs 31-31, Fleknoil Lvs 31-31]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Wendelberg Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [Petznief Lvs 28-28, Sedimantur Lvs 29-29, Strepoli Lvs 29-29, Petznief Lvs 29-29, Sedimantur Lvs 30-30, Petznief Lvs 30-30, Petznief Lvs 31-31, Fleknoil Lvs 28-28, Frigometri Lvs 31-31, Fleknoil Lvs 29-29, Frigometri Lvs 31-31, Fleknoil Lvs 30-30]]
+	[Name = Wendelberg Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 31-31, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 31-31, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 31-31, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [Gelatini Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Petznief Lvs 33-33, Lin-Fu Lvs 32-32, Gelatini Lvs 31-31, Lin-Fu Lvs 33-33, Gelatini Lvs 32-32, Lin-Fu Lvs 33-33, Gelatini Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 48,
+		Encounters = [Gelatroppo Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Siberio Lvs 37-37, Lin-Fu Lvs 36-36, Gelatroppo Lvs 35-35, Lin-Fu Lvs 37-37, Gelatroppo Lvs 36-36, Lin-Fu Lvs 37-37, Gelatroppo Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Navitaub Lvs 36-36, Lin-Fu Lvs 36-36, Shardrago Lvs 35-35, Lin-Fu Lvs 37-37, Shardrago Lvs 36-36, Lin-Fu Lvs 37-37, Shardrago Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35]]
+	[Name = Drachenstiege Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40]]
+	[Name = Drachenstiege Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-55, Barschuft Lvs 35-55, Dratini Lvs 35-55, Dragonir Lvs 35-55, Dragonir Lvs 35-55]]
+	[Name = Drachenstiege Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-60, Barschuft Lvs 35-60, Dragonir Lvs 35-70, Dragonir Lvs 45-70, Dragoran Lvs 50-70]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Navitaub Lvs 36-36, Lin-Fu Lvs 36-36, Shardrago Lvs 35-35, Lin-Fu Lvs 37-37, Shardrago Lvs 36-36, Lin-Fu Lvs 37-37, Shardrago Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35]]
+	[Name = Drachenstiege Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40]]
+	[Name = Drachenstiege Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-55, Barschuft Lvs 35-55, Dratini Lvs 35-55, Dragonir Lvs 35-55, Dragonir Lvs 35-55]]
+	[Name = Drachenstiege Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-60, Barschuft Lvs 35-60, Dragonir Lvs 35-70, Dragonir Lvs 45-70, Dragoran Lvs 50-70]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Navitaub Lvs 32-32, Lin-Fu Lvs 32-32, Shardrago Lvs 31-31, Lin-Fu Lvs 33-33, Shardrago Lvs 32-32, Lin-Fu Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [Navitaub Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Navitaub Lvs 36-36, Lin-Fu Lvs 36-36, Shardrago Lvs 35-35, Lin-Fu Lvs 37-37, Shardrago Lvs 36-36, Lin-Fu Lvs 37-37, Shardrago Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33, Ohrdoch Lvs 33-33, Fasasnob Lvs 33-33]]
+	[Name = Drachenstiege Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35]]
+	[Name = Drachenstiege Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40]]
+	[Name = Drachenstiege Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-55, Barschuft Lvs 35-55, Dratini Lvs 35-55, Dragonir Lvs 35-55, Dragonir Lvs 35-55]]
+	[Name = Drachenstiege Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-60, Barschuft Lvs 35-60, Dragonir Lvs 35-70, Dragonir Lvs 45-70, Dragoran Lvs 50-70]]
+	[Name = Drachenstiege Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [Gelatini Lvs 31-31, Sesokitz Lvs 30-30, Lin-Fu Lvs 30-30, Sesokitz Lvs 32-32, Lin-Fu Lvs 31-31, Petznief Lvs 33-33, Lin-Fu Lvs 32-32, Gelatini Lvs 32-32, Lin-Fu Lvs 33-33, Gelatini Lvs 32-32, Lin-Fu Lvs 33-33, Gelatini Lvs 33-33]]
+	[Name = Drachenstiege Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [Gelatroppo Lvs 35-35, Kronjuwild Lvs 34-34, Lin-Fu Lvs 34-34, Kronjuwild Lvs 36-36, Lin-Fu Lvs 35-35, Siberio Lvs 37-37, Lin-Fu Lvs 36-36, Gelatroppo Lvs 36-36, Lin-Fu Lvs 37-37, Gelatroppo Lvs 36-36, Lin-Fu Lvs 37-37, Gelatroppo Lvs 37-37]]
+	[Name = Drachenstiege Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Emolga Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33]]
+	[Name = Drachenstiege Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35, Barschuft Lvs 15-35]]
+	[Name = Drachenstiege Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40, Barschuft Lvs 15-40]]
+	[Name = Drachenstiege Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-55, Barschuft Lvs 35-55, Dratini Lvs 35-55, Dragonir Lvs 35-55, Dragonir Lvs 35-55]]
+	[Name = Drachenstiege Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [Dratini Lvs 35-60, Barschuft Lvs 35-60, Dragonir Lvs 35-70, Dragonir Lvs 45-70, Dragoran Lvs 50-70]]
+	[Name = Drachenstiege Grass/Cave, Rate = 3, MapIndex = 50,
+		Encounters = [Golbit Lvs 30-30, Lin-Fu Lvs 33-33, Golbit Lvs 31-31, Shardrago Lvs 30-30, Golbit Lvs 32-32, Shardrago Lvs 31-31, Golbit Lvs 32-32, Shardrago Lvs 32-32, Golbit Lvs 33-33, Shardrago Lvs 33-33, Golbit Lvs 33-33, Shardrago Lvs 33-33]]
+	[Name = Drachenstiege Grass/Cave, Rate = 3, MapIndex = 51,
+		Encounters = [Golbit Lvs 30-30, Golbit Lvs 30-30, Golbit Lvs 31-31, Golbit Lvs 31-31, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 32-32, Golbit Lvs 33-33, Golbit Lvs 33-33, Golbit Lvs 33-33, Golbit Lvs 33-33]]
+	[Name = Siegesstraße Grass/Cave, Rate = 8, MapIndex = 52,
+		Encounters = [Skallyk Lvs 38-38, Furnifraß Lvs 37-37, Skallyk Lvs 40-40, Furnifraß Lvs 38-38, Lin-Fu Lvs 38-38, Furnifraß Lvs 39-39, Lin-Fu Lvs 40-40, Sharfax Lvs 40-40, Skallyk Lvs 37-37, Furnifraß Lvs 40-40, Skallyk Lvs 39-39, Furnifraß Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 6, MapIndex = 53,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 39-39, Fermicula Lvs 38-38, Kapuno Lvs 38-38, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Kapuno Lvs 38-38, Fermicula Lvs 40-40, Kapuno Lvs 39-39, Fermicula Lvs 40-40, Kapuno Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Surfing, Rate = 3, MapIndex = 53,
+		Encounters = [Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45]]
+	[Name = Siegesstraße Surfing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50]]
+	[Name = Siegesstraße Fishing, Rate = 50, MapIndex = 53,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Siegesstraße Fishing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 54,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 54,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 55,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 55,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 56,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 42-42, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 56,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 57,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 57,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 6, MapIndex = 58,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 39-39, Fermicula Lvs 38-38, Kapuno Lvs 38-38, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Kapuno Lvs 38-38, Fermicula Lvs 40-40, Kapuno Lvs 39-39, Fermicula Lvs 40-40, Kapuno Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Surfing, Rate = 3, MapIndex = 58,
+		Encounters = [Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45, Barschuft Lvs 20-45]]
+	[Name = Siegesstraße Surfing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50, Barschuft Lvs 20-50]]
+	[Name = Siegesstraße Fishing, Rate = 50, MapIndex = 58,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Siegesstraße Fishing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 59,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 59,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 60,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 60,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 61,
+		Encounters = [Fermicula Lvs 37-37, Sedimantur Lvs 37-37, Fermicula Lvs 38-38, Sedimantur Lvs 39-39, Fleknoil Lvs 37-37, Lin-Fu Lvs 39-39, Fermicula Lvs 39-39, Fleknoil Lvs 38-38, Fermicula Lvs 40-40, Fleknoil Lvs 39-39, Fermicula Lvs 40-40, Fleknoil Lvs 40-40]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 61,
+		Encounters = [Stalobor Lvs 37-37, Stalobor Lvs 37-37, Stalobor Lvs 38-38, Stalobor Lvs 38-38, Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 40-40]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 62,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 62,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 63,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 63,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 64,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 64,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 65,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 65,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Siegesstraße Grass/Cave, Rate = 3, MapIndex = 66,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Siegesstraße Shaking Spots, Rate = 1, MapIndex = 66,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Kammer der Prüfung Grass/Cave, Rate = 3, MapIndex = 67,
+		Encounters = [Fermicula Lvs 39-39, Sedimantur Lvs 39-39, Fermicula Lvs 40-40, Sedimantur Lvs 41-41, Fleknoil Lvs 39-39, Lin-Fu Lvs 41-41, Fermicula Lvs 41-41, Fleknoil Lvs 40-40, Fermicula Lvs 42-42, Fleknoil Lvs 41-41, Fermicula Lvs 42-42, Fleknoil Lvs 42-42]]
+	[Name = Kammer der Prüfung Shaking Spots, Rate = 1, MapIndex = 67,
+		Encounters = [Stalobor Lvs 39-39, Stalobor Lvs 39-39, Stalobor Lvs 40-40, Stalobor Lvs 40-40, Stalobor Lvs 41-41, Stalobor Lvs 41-41, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42, Stalobor Lvs 42-42]]
+	[Name = Riesengrotte Grass/Cave, Rate = 8, MapIndex = 68,
+		Encounters = [Tangela Lvs 47-47, Schwalboss Lvs 47-47, Golbat Lvs 48-48, Lunastein Lvs 48-48, Sonnfel Lvs 48-48, Drifzepeli Lvs 49-49, Absol Lvs 48-48, Absol Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50]]
+	[Name = Riesengrotte Doubles Grass, Rate = 8, MapIndex = 68,
+		Encounters = [Tangela Lvs 57-57, Schwalboss Lvs 57-57, Golbat Lvs 58-58, Lunastein Lvs 58-58, Sonnfel Lvs 58-58, Drifzepeli Lvs 59-59, Absol Lvs 58-58, Absol Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 68,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50]]
+	[Name = Riesengrotte Grass/Cave, Rate = 3, MapIndex = 69,
+		Encounters = [Golbat Lvs 47-47, Keifel Lvs 47-47, Sniebel Lvs 48-48, Botogel Lvs 48-48, Lunastein Lvs 50-50, Sonnfel Lvs 50-50, Sedimantur Lvs 49-49, Rossana Lvs 48-48, Keifel Lvs 49-49, Rossana Lvs 50-50, Keifel Lvs 49-49, Rossana Lvs 50-50]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Riesengrotte Surfing, Rate = 3, MapIndex = 69,
+		Encounters = [Barschuft Lvs 25-55, Jurob Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Riesengrotte Surfing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Jurob Lvs 25-60, Barschuft Lvs 25-60, Jugong Lvs 35-70, Jugong Lvs 35-70, Jugong Lvs 35-70]]
+	[Name = Riesengrotte Fishing, Rate = 50, MapIndex = 69,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Riesengrotte Fishing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Riesengrotte Grass/Cave, Rate = 8, MapIndex = 70,
+		Encounters = [Piepi Lvs 52-52, Keifel Lvs 52-52, Piepi Lvs 54-54, Ditto Lvs 53-53, Lunastein Lvs 55-55, Sonnfel Lvs 55-55, Ditto Lvs 55-55, Metang Lvs 53-53, Keifel Lvs 54-54, Metang Lvs 55-55, Keifel Lvs 54-54, Metang Lvs 55-55]]
+	[Name = Riesengrotte Doubles Grass, Rate = 8, MapIndex = 70,
+		Encounters = [Piepi Lvs 62-62, Keifel Lvs 62-62, Piepi Lvs 64-64, Ditto Lvs 63-63, Lunastein Lvs 65-65, Sonnfel Lvs 65-65, Ditto Lvs 65-65, Metang Lvs 63-63, Keifel Lvs 64-64, Metang Lvs 65-65, Keifel Lvs 64-64, Metang Lvs 65-65]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 70,
+		Encounters = [Ohrdoch Lvs 52-52, Ohrdoch Lvs 52-52, Ohrdoch Lvs 53-53, Ohrdoch Lvs 53-53, Ohrdoch Lvs 54-54, Ohrdoch Lvs 55-55, Ohrdoch Lvs 55-55, Mamutel Lvs 55-55, Pixi Lvs 55-55, Metagross Lvs 55-55, Pixi Lvs 55-55, Metagross Lvs 55-55]]
+	[Name = Riesengrotte Grass/Cave, Rate = 3, MapIndex = 71,
+		Encounters = [Golbat Lvs 57-57, Keifel Lvs 57-57, Sniebel Lvs 58-58, Botogel Lvs 58-58, Lunastein Lvs 60-60, Sonnfel Lvs 60-60, Sedimantur Lvs 59-59, Rossana Lvs 58-58, Keifel Lvs 59-59, Rossana Lvs 60-60, Keifel Lvs 59-59, Rossana Lvs 60-60]]
+	[Name = Riesengrotte Shaking Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Stalobor Lvs 57-57, Stalobor Lvs 57-57, Stalobor Lvs 58-58, Stalobor Lvs 58-58, Stalobor Lvs 59-59, Stalobor Lvs 59-59, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60, Stalobor Lvs 60-60]]
+	[Name = Riesengrotte Surfing, Rate = 3, MapIndex = 71,
+		Encounters = [Barschuft Lvs 25-55, Jurob Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Riesengrotte Surfing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Jurob Lvs 25-60, Barschuft Lvs 25-60, Jugong Lvs 35-70, Jugong Lvs 35-70, Jugong Lvs 35-70]]
+	[Name = Riesengrotte Fishing, Rate = 50, MapIndex = 71,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Riesengrotte Fishing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 45-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = P2-Labor Grass/Cave, Rate = 8, MapIndex = 72,
+		Encounters = [Kukmarda Lvs 28-28, Terribark Lvs 28-28, Kukmarda Lvs 29-29, Terribark Lvs 29-29, Klikk Lvs 29-29, Zurrokex Lvs 29-29, Kukmarda Lvs 30-30, Terribark Lvs 30-30, Klikk Lvs 31-31, Zurrokex Lvs 31-31, Kukmarda Lvs 31-31, Terribark Lvs 31-31]]
+	[Name = P2-Labor Shaking Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Ohrdoch Lvs 28-28, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 30-30, Ohrdoch Lvs 30-30, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Bissbark Lvs 31-31, Ohrdoch Lvs 31-31, Bissbark Lvs 31-31]]
+	[Name = P2-Labor Surfing, Rate = 5, MapIndex = 72,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = P2-Labor Surfing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = P2-Labor Fishing, Rate = 80, MapIndex = 72,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Finneon Lvs 35-55]]
+	[Name = P2-Labor Fishing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+	[Name = Bucht von Ondula Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Bucht von Ondula Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Wailmer Lvs 25-60, Wailmer Lvs 25-60, Mantax Lvs 35-70, Wailord Lvs 35-70, Wailord Lvs 35-70]]
+	[Name = Bucht von Ondula Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Bucht von Ondula Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Bucht von Ondula Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Bucht von Ondula Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Wailmer Lvs 25-60, Wailmer Lvs 25-60, Mantax Lvs 35-70, Wailord Lvs 35-70, Wailord Lvs 35-70]]
+	[Name = Bucht von Ondula Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Bucht von Ondula Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Bucht von Ondula Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Bucht von Ondula Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Wailmer Lvs 25-60, Wailmer Lvs 25-60, Mantax Lvs 35-70, Wailord Lvs 35-70, Wailord Lvs 35-70]]
+	[Name = Bucht von Ondula Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Bucht von Ondula Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Bucht von Ondula Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [Wingull Lvs 25-55, Seemops Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Bucht von Ondula Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Wailmer Lvs 25-60, Seejong Lvs 25-60, Wailord Lvs 35-70, Walraisa Lvs 35-70, Walraisa Lvs 35-70]]
+	[Name = Bucht von Ondula Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Bucht von Ondula Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Marea-Zugbrücke Shaking Spots, Rate = 1, MapIndex = 74,
+		Encounters = [Piccolente Lvs 22-22, Piccolente Lvs 22-22, Piccolente Lvs 23-23, Piccolente Lvs 23-23, Piccolente Lvs 24-24, Piccolente Lvs 24-24, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25, Piccolente Lvs 25-25]]
+	[Name = Dorfbrücke Grass/Cave, Rate = 8, MapIndex = 75,
+		Encounters = [Entoron Lvs 47-47, Bidifas Lvs 47-47, Sengo Lvs 48-48, Vipitis Lvs 48-48, Skallyk Lvs 48-48, Skallyk Lvs 50-50, Entoron Lvs 49-49, Bidifas Lvs 49-49, Sengo Lvs 50-50, Vipitis Lvs 50-50, Sengo Lvs 50-50, Vipitis Lvs 50-50]]
+	[Name = Dorfbrücke Doubles Grass, Rate = 8, MapIndex = 75,
+		Encounters = [Entoron Lvs 57-57, Bidifas Lvs 57-57, Sengo Lvs 58-58, Vipitis Lvs 58-58, Grypheldis Lvs 58-58, Grypheldis Lvs 60-60, Entoron Lvs 59-59, Bidifas Lvs 59-59, Sengo Lvs 60-60, Vipitis Lvs 60-60, Sengo Lvs 60-60, Vipitis Lvs 60-60]]
+	[Name = Dorfbrücke Shaking Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Dorfbrücke Surfing, Rate = 3, MapIndex = 75,
+		Encounters = [Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Dorfbrücke Surfing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Barschuft Lvs 25-60, Barschuft Lvs 25-60, Barschuft Lvs 35-70, Lapras Lvs 35-70, Lapras Lvs 35-70]]
+	[Name = Dorfbrücke Fishing, Rate = 50, MapIndex = 75,
+		Encounters = [Kanivanha Lvs 35-55, Barschuft Lvs 35-55, Kanivanha Lvs 35-55, Kanivanha Lvs 35-55, Kanivanha Lvs 35-55]]
+	[Name = Dorfbrücke Fishing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [Kanivanha Lvs 35-60, Barschuft Lvs 35-60, Tohaido Lvs 35-70, Tohaido Lvs 45-70, Tohaido Lvs 45-70]]
+	[Name = Wunderbrücke Shaking Spots, Rate = 1, MapIndex = 76,
+		Encounters = [Swaroness Lvs 47-47, Swaroness Lvs 47-47, Swaroness Lvs 48-48, Swaroness Lvs 48-48, Swaroness Lvs 49-49, Swaroness Lvs 49-49, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50, Swaroness Lvs 50-50]]
+	[Name = Route 1 Grass/Cave, Rate = 8, MapIndex = 77,
+		Encounters = [Nagelotz Lvs 2-2, Yorkleff Lvs 2-2, Nagelotz Lvs 3-3, Yorkleff Lvs 3-3, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 4-4, Yorkleff Lvs 4-4]]
+	[Name = Route 1 Doubles Grass, Rate = 8, MapIndex = 77,
+		Encounters = [Kukmarda Lvs 32-32, Terribark Lvs 32-32, Kukmarda Lvs 33-33, Terribark Lvs 33-33, Zurrokex Lvs 32-32, Zurrokex Lvs 33-33, Kukmarda Lvs 34-34, Terribark Lvs 34-34, Zurrokex Lvs 34-34, Terribark Lvs 34-34, Kukmarda Lvs 35-35, Zurrokex Lvs 35-35]]
+	[Name = Route 1 Shaking Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Ohrdoch Lvs 2-2, Ohrdoch Lvs 2-2, Ohrdoch Lvs 3-3, Ohrdoch Lvs 3-3, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4]]
+	[Name = Route 1 Surfing, Rate = 3, MapIndex = 77,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Route 1 Surfing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Route 1 Fishing, Rate = 50, MapIndex = 77,
+		Encounters = [Barschuft Lvs 35-55, Barschuft Lvs 35-55, Barschuft Lvs 35-55, Barschwa Lvs 35-55, Barschwa Lvs 35-55]]
+	[Name = Route 1 Fishing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [Barschwa Lvs 35-60, Barschuft Lvs 35-60, Barschuft Lvs 35-70, Milotic Lvs 45-70, Milotic Lvs 45-70]]
+	[Name = Route 2 Grass/Cave, Rate = 8, MapIndex = 78,
+		Encounters = [Nagelotz Lvs 4-4, Yorkleff Lvs 4-4, Nagelotz Lvs 5-5, Yorkleff Lvs 5-5, Felilou Lvs 4-4, Felilou Lvs 5-5, Nagelotz Lvs 6-6, Yorkleff Lvs 6-6, Nagelotz Lvs 7-7, Yorkleff Lvs 7-7, Nagelotz Lvs 7-7, Yorkleff Lvs 7-7]]
+	[Name = Route 2 Shaking Spots, Rate = 1, MapIndex = 78,
+		Encounters = [Ohrdoch Lvs 4-4, Ohrdoch Lvs 4-4, Ohrdoch Lvs 5-5, Ohrdoch Lvs 5-5, Ohrdoch Lvs 6-6, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7, Ohrdoch Lvs 7-7]]
+	[Name = Route 3 Grass/Cave, Rate = 8, MapIndex = 79,
+		Encounters = [Nagelotz Lvs 8-8, Dusselgurr Lvs 8-8, Elezeba Lvs 8-8, Dusselgurr Lvs 9-9, Yorkleff Lvs 9-9, Felilou Lvs 9-9, Elezeba Lvs 9-9, Dusselgurr Lvs 10-10, Elezeba Lvs 10-10, Dusselgurr Lvs 11-11, Elezeba Lvs 11-11, Dusselgurr Lvs 11-11]]
+	[Name = Route 3 Doubles Grass, Rate = 8, MapIndex = 79,
+		Encounters = [Nagelotz Lvs 10-10, Dusselgurr Lvs 10-10, Elezeba Lvs 10-10, Dusselgurr Lvs 11-11, Yorkleff Lvs 11-11, Felilou Lvs 11-11, Elezeba Lvs 11-11, Dusselgurr Lvs 12-12, Elezeba Lvs 12-12, Dusselgurr Lvs 13-13, Elezeba Lvs 13-13, Dusselgurr Lvs 13-13]]
+	[Name = Route 3 Shaking Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Ohrdoch Lvs 8-8, Ohrdoch Lvs 8-8, Ohrdoch Lvs 9-9, Ohrdoch Lvs 9-9, Ohrdoch Lvs 10-10, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11, Ohrdoch Lvs 11-11]]
+	[Name = Route 3 Surfing, Rate = 3, MapIndex = 79,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Route 3 Surfing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Route 3 Fishing, Rate = 50, MapIndex = 79,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 3 Fishing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Grundwassersenke Grass/Cave, Rate = 3, MapIndex = 80,
+		Encounters = [Kiesling Lvs 10-10, Fleknoil Lvs 10-10, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 12-12, Fleknoil Lvs 12-12, Kiesling Lvs 13-13, Fleknoil Lvs 13-13, Kiesling Lvs 13-13, Fleknoil Lvs 13-13]]
+	[Name = Grundwassersenke Shaking Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Rotomurf Lvs 10-10, Rotomurf Lvs 10-10, Rotomurf Lvs 11-11, Rotomurf Lvs 11-11, Rotomurf Lvs 12-12, Rotomurf Lvs 12-12, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13]]
+	[Name = Grundwassersenke Surfing, Rate = 3, MapIndex = 80,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Grundwassersenke Surfing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Grundwassersenke Fishing, Rate = 50, MapIndex = 80,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Grundwassersenke Fishing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-60, Quappo Lvs 35-60, Quappo Lvs 35-60]]
+	[Name = Grundwassersenke Grass/Cave, Rate = 3, MapIndex = 81,
+		Encounters = [Kiesling Lvs 10-10, Fleknoil Lvs 10-10, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 11-11, Fleknoil Lvs 11-11, Kiesling Lvs 12-12, Fleknoil Lvs 12-12, Kiesling Lvs 13-13, Fleknoil Lvs 13-13, Kiesling Lvs 13-13, Fleknoil Lvs 13-13]]
+	[Name = Grundwassersenke Shaking Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Rotomurf Lvs 10-10, Rotomurf Lvs 10-10, Rotomurf Lvs 11-11, Rotomurf Lvs 11-11, Rotomurf Lvs 12-12, Rotomurf Lvs 12-12, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13, Rotomurf Lvs 13-13]]
+	[Name = Grundwassersenke Surfing, Rate = 3, MapIndex = 81,
+		Encounters = [Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15, Barschuft Lvs 5-15]]
+	[Name = Grundwassersenke Surfing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Grundwassersenke Fishing, Rate = 50, MapIndex = 81,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Grundwassersenke Fishing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-60, Quappo Lvs 35-60, Quappo Lvs 35-60]]
+	[Name = Route 4 Grass/Cave, Rate = 3, MapIndex = 82,
+		Encounters = [Ganovil Lvs 15-15, Flampion Lvs 15-15, Ganovil Lvs 16-16, Flampion Lvs 16-16, Zurrokex Lvs 16-16, Zurrokex Lvs 17-17, Ganovil Lvs 17-17, Flampion Lvs 17-17, Ganovil Lvs 18-18, Flampion Lvs 18-18, Ganovil Lvs 18-18, Flampion Lvs 18-18]]
+	[Name = Route 4 Surfing, Rate = 3, MapIndex = 82,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 4 Surfing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 4 Fishing, Rate = 50, MapIndex = 82,
+		Encounters = [Krabby Lvs 35-55, Perlu Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Route 4 Fishing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [Relicanth Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Aalabyss Lvs 45-70, Aalabyss Lvs 45-70]]
+	[Name = Route 5 Grass/Cave, Rate = 8, MapIndex = 83,
+		Encounters = [Mollimorba Lvs 19-19, Picochilla Lvs 19-19, Unratütox Lvs 19-19, Unratütox Lvs 21-21, Kleoparda Lvs 20-20, Kleoparda Lvs 22-22, Picochilla Lvs 20-20, Mollimorba Lvs 20-20, Picochilla Lvs 21-21, Mollimorba Lvs 21-21, Picochilla Lvs 22-22, Mollimorba Lvs 22-22]]
+	[Name = Route 5 Doubles Grass, Rate = 8, MapIndex = 83,
+		Encounters = [Mollimorba Lvs 22-22, Picochilla Lvs 22-22, Unratütox Lvs 22-22, Unratütox Lvs 24-24, Kleoparda Lvs 23-23, Kleoparda Lvs 25-25, Picochilla Lvs 23-23, Mollimorba Lvs 23-23, Picochilla Lvs 24-24, Mollimorba Lvs 24-24, Picochilla Lvs 25-25, Mollimorba Lvs 25-25]]
+	[Name = Route 5 Shaking Spots, Rate = 1, MapIndex = 83,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 19-19, Emolga Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22]]
+	[Name = Route 6 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 22-22, Laukaps Lvs 22-22, Navitaub Lvs 23-23, Tarnpignon Lvs 23-23, Sesokitz Lvs 23-23, Folikon Lvs 23-23, Sesokitz Lvs 24-24, Laukaps Lvs 24-24, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25]]
+	[Name = Route 6 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 26-26, Laukaps Lvs 26-26, Navitaub Lvs 27-27, Tarnpignon Lvs 27-27, Sesokitz Lvs 27-27, Folikon Lvs 27-27, Sesokitz Lvs 28-28, Laukaps Lvs 28-28, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 6 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Emolga Lvs 23-23, Emolga Lvs 25-25, Ohrdoch Lvs 24-24, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25]]
+	[Name = Route 6 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25]]
+	[Name = Route 6 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30]]
+	[Name = Route 6 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Route 6 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quaxo Lvs 45-70, Quaxo Lvs 45-70]]
+	[Name = Route 6 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 22-22, Laukaps Lvs 22-22, Navitaub Lvs 23-23, Tarnpignon Lvs 23-23, Sesokitz Lvs 23-23, Folikon Lvs 23-23, Sesokitz Lvs 24-24, Laukaps Lvs 24-24, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25]]
+	[Name = Route 6 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 26-26, Laukaps Lvs 26-26, Navitaub Lvs 27-27, Tarnpignon Lvs 27-27, Sesokitz Lvs 27-27, Folikon Lvs 27-27, Sesokitz Lvs 28-28, Laukaps Lvs 28-28, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 6 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Emolga Lvs 23-23, Emolga Lvs 25-25, Ohrdoch Lvs 24-24, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25]]
+	[Name = Route 6 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25]]
+	[Name = Route 6 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30]]
+	[Name = Route 6 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Route 6 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quaxo Lvs 45-70, Quaxo Lvs 45-70]]
+	[Name = Route 6 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 22-22, Laukaps Lvs 22-22, Navitaub Lvs 23-23, Tarnpignon Lvs 23-23, Sesokitz Lvs 23-23, Folikon Lvs 23-23, Sesokitz Lvs 24-24, Laukaps Lvs 24-24, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25, Navitaub Lvs 25-25, Tarnpignon Lvs 25-25]]
+	[Name = Route 6 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 26-26, Laukaps Lvs 26-26, Navitaub Lvs 27-27, Tarnpignon Lvs 27-27, Sesokitz Lvs 27-27, Folikon Lvs 27-27, Sesokitz Lvs 28-28, Laukaps Lvs 28-28, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29, Navitaub Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 6 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Emolga Lvs 23-23, Emolga Lvs 25-25, Ohrdoch Lvs 24-24, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25, Fasasnob Lvs 25-25, Matrifol Lvs 25-25]]
+	[Name = Route 6 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25]]
+	[Name = Route 6 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30]]
+	[Name = Route 6 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Route 6 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quaxo Lvs 45-70, Quaxo Lvs 45-70]]
+	[Name = Route 6 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 22-22, Laukaps Lvs 22-22, Gelatini Lvs 23-23, Tarnpignon Lvs 23-23, Sesokitz Lvs 23-23, Folikon Lvs 23-23, Sesokitz Lvs 24-24, Laukaps Lvs 24-24, Gelatini Lvs 25-25, Tarnpignon Lvs 25-25, Gelatini Lvs 25-25, Tarnpignon Lvs 25-25]]
+	[Name = Route 6 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [Sesokitz Lvs 26-26, Laukaps Lvs 26-26, Gelatini Lvs 27-27, Tarnpignon Lvs 27-27, Sesokitz Lvs 27-27, Folikon Lvs 27-27, Sesokitz Lvs 28-28, Laukaps Lvs 28-28, Gelatini Lvs 29-29, Tarnpignon Lvs 29-29, Gelatini Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 6 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Ohrdoch Lvs 22-22, Ohrdoch Lvs 23-23, Emolga Lvs 23-23, Emolga Lvs 25-25, Ohrdoch Lvs 24-24, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Ohrdoch Lvs 25-25, Matrifol Lvs 25-25, Ohrdoch Lvs 25-25, Matrifol Lvs 25-25]]
+	[Name = Route 6 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25, Barschuft Lvs 10-25]]
+	[Name = Route 6 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30, Barschuft Lvs 10-30]]
+	[Name = Route 6 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Route 6 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quaxo Lvs 45-70, Quaxo Lvs 45-70]]
+	[Name = Panaero-Höhle Grass/Cave, Rate = 3, MapIndex = 85,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Panaero-Höhle Shaking Spots, Rate = 1, MapIndex = 85,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Panaero-Höhle Grass/Cave, Rate = 3, MapIndex = 86,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Panaero-Höhle Shaking Spots, Rate = 1, MapIndex = 86,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Kammer der Weisung Grass/Cave, Rate = 3, MapIndex = 87,
+		Encounters = [Sedimantur Lvs 28-28, Fleknoil Lvs 28-28, Sedimantur Lvs 29-29, Fleknoil Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 30-30, Sedimantur Lvs 30-30, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31, Sedimantur Lvs 31-31, Milza Lvs 31-31]]
+	[Name = Kammer der Weisung Shaking Spots, Rate = 1, MapIndex = 87,
+		Encounters = [Rotomurf Lvs 28-28, Rotomurf Lvs 28-28, Rotomurf Lvs 29-29, Rotomurf Lvs 29-29, Rotomurf Lvs 30-30, Rotomurf Lvs 30-30, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31, Rotomurf Lvs 31-31]]
+	[Name = Route 7 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 26-26, Sesokitz Lvs 26-26, Kukmarda Lvs 27-27, Zebritz Lvs 27-27, Navitaub Lvs 28-28, Zebritz Lvs 29-29, Kukmarda Lvs 28-28, Tarnpignon Lvs 27-27, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 7 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 30-30, Kukmarda Lvs 31-31, Zebritz Lvs 31-31, Navitaub Lvs 32-32, Zebritz Lvs 33-33, Kukmarda Lvs 32-32, Tarnpignon Lvs 31-31, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33]]
+	[Name = Route 7 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [Ohrdoch Lvs 26-26, Ohrdoch Lvs 26-26, Emolga Lvs 27-27, Ohrdoch Lvs 27-27, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29]]
+	[Name = Route 7 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 26-26, Sesokitz Lvs 26-26, Kukmarda Lvs 27-27, Zebritz Lvs 27-27, Navitaub Lvs 28-28, Zebritz Lvs 29-29, Kukmarda Lvs 28-28, Tarnpignon Lvs 27-27, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 7 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 30-30, Kukmarda Lvs 31-31, Zebritz Lvs 31-31, Navitaub Lvs 32-32, Zebritz Lvs 33-33, Kukmarda Lvs 32-32, Tarnpignon Lvs 31-31, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33]]
+	[Name = Route 7 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [Ohrdoch Lvs 26-26, Ohrdoch Lvs 26-26, Emolga Lvs 27-27, Ohrdoch Lvs 27-27, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29]]
+	[Name = Route 7 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 26-26, Sesokitz Lvs 26-26, Kukmarda Lvs 27-27, Zebritz Lvs 27-27, Navitaub Lvs 28-28, Zebritz Lvs 29-29, Kukmarda Lvs 28-28, Tarnpignon Lvs 27-27, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 7 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [Navitaub Lvs 30-30, Sesokitz Lvs 30-30, Kukmarda Lvs 31-31, Zebritz Lvs 31-31, Navitaub Lvs 32-32, Zebritz Lvs 33-33, Kukmarda Lvs 32-32, Tarnpignon Lvs 31-31, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33]]
+	[Name = Route 7 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [Ohrdoch Lvs 26-26, Ohrdoch Lvs 26-26, Emolga Lvs 27-27, Ohrdoch Lvs 27-27, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29, Ohrdoch Lvs 29-29, Fasasnob Lvs 29-29]]
+	[Name = Route 7 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [Petznief Lvs 26-26, Sesokitz Lvs 26-26, Kukmarda Lvs 27-27, Zebritz Lvs 27-27, Petznief Lvs 28-28, Zebritz Lvs 29-29, Kukmarda Lvs 28-28, Tarnpignon Lvs 27-27, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29, Kukmarda Lvs 29-29, Tarnpignon Lvs 29-29]]
+	[Name = Route 7 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [Petznief Lvs 30-30, Sesokitz Lvs 30-30, Kukmarda Lvs 31-31, Zebritz Lvs 31-31, Petznief Lvs 32-32, Zebritz Lvs 33-33, Kukmarda Lvs 32-32, Tarnpignon Lvs 31-31, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33, Kukmarda Lvs 33-33, Tarnpignon Lvs 33-33]]
+	[Name = Route 7 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [Ohrdoch Lvs 26-26, Ohrdoch Lvs 26-26, Emolga Lvs 27-27, Ohrdoch Lvs 27-27, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 89,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 27-27, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 29-29, Lichtel Lvs 29-29, Lichtel Lvs 29-29, Lichtel Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 90,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 26-26, Lichtel Lvs 28-28, Lichtel Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 27-27, Lichtel Lvs 29-29, Pygraulon Lvs 28-28]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 91,
+		Encounters = [Lichtel Lvs 26-26, Lichtel Lvs 27-27, Lichtel Lvs 26-26, Pygraulon Lvs 26-26, Lichtel Lvs 28-28, Pygraulon Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 29-29, Lichtel Lvs 29-29, Pygraulon Lvs 29-29]]
+	[Name = Turm des Himmels Grass/Cave, Rate = 3, MapIndex = 92,
+		Encounters = [Lichtel Lvs 26-26, Pygraulon Lvs 26-26, Lichtel Lvs 27-27, Pygraulon Lvs 27-27, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 28-28, Pygraulon Lvs 28-28, Lichtel Lvs 29-29, Pygraulon Lvs 29-29, Lichtel Lvs 29-29, Pygraulon Lvs 29-29]]
+	[Name = Route 8 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Route 8 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Route 8 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Route 8 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Route 8 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Route 8 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Route 8 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Route 8 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Route 8 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Route 8 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Route 8 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Route 8 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Route 8 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Route 8 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Route 8 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Route 8 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Route 8 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Route 8 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Route 8 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Moor von Nevaio Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Moor von Nevaio Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Moor von Nevaio Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Moor von Nevaio Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Moor von Nevaio Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Moor von Nevaio Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Moor von Nevaio Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Moor von Nevaio Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Moor von Nevaio Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Moor von Nevaio Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Moor von Nevaio Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [Mebrana Lvs 30-30, Schnuthelm Lvs 30-30, Mebrana Lvs 31-31, Schnuthelm Lvs 31-31, Flunschlik Lvs 31-31, Flunschlik Lvs 32-32, Mebrana Lvs 32-32, Schnuthelm Lvs 32-32, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33, Mebrana Lvs 33-33, Schnuthelm Lvs 33-33]]
+	[Name = Moor von Nevaio Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Moor von Nevaio Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Moor von Nevaio Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Moor von Nevaio Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Moor von Nevaio Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35, Flunschlik Lvs 15-35]]
+	[Name = Moor von Nevaio Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Flunschlik Lvs 15-40, Branawarz Lvs 15-40, Branawarz Lvs 15-40]]
+	[Name = Moor von Nevaio Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-55, Flunschlik Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55, Schmerbe Lvs 35-55]]
+	[Name = Moor von Nevaio Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [Schmerbe Lvs 35-60, Flunschlik Lvs 35-60, Welsar Lvs 35-70, Welsar Lvs 45-70, Welsar Lvs 45-70]]
+	[Name = Route 9 Grass/Cave, Rate = 8, MapIndex = 95,
+		Encounters = [Hypnomorba Lvs 31-31, Picochilla Lvs 32-32, Deponitox Lvs 31-31, Deponitox Lvs 33-33, Gladiantri Lvs 31-31, Kleoparda Lvs 33-33, Gladiantri Lvs 32-32, Hypnomorba Lvs 32-32, Gladiantri Lvs 33-33, Hypnomorba Lvs 33-33, Gladiantri Lvs 34-34, Hypnomorba Lvs 34-34]]
+	[Name = Route 9 Doubles Grass, Rate = 8, MapIndex = 95,
+		Encounters = [Hypnomorba Lvs 36-36, Picochilla Lvs 37-37, Deponitox Lvs 36-36, Deponitox Lvs 38-38, Gladiantri Lvs 31-31, Kleoparda Lvs 38-38, Gladiantri Lvs 37-37, Hypnomorba Lvs 37-37, Gladiantri Lvs 38-38, Hypnomorba Lvs 38-38, Gladiantri Lvs 39-39, Hypnomorba Lvs 39-39]]
+	[Name = Route 9 Shaking Spots, Rate = 1, MapIndex = 95,
+		Encounters = [Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Emolga Lvs 32-32, Ohrdoch Lvs 32-32, Ohrdoch Lvs 33-33, Ohrdoch Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 34-34, Chillabell Lvs 34-34, Morbitesse Lvs 34-34, Chillabell Lvs 34-34, Morbitesse Lvs 34-34]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 96,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Schlurp Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 96,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 97,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Schlurp Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 97,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Grass/Cave, Rate = 3, MapIndex = 98,
+		Encounters = [Sedimantur Lvs 48-48, Fleknoil Lvs 47-47, Georok Lvs 47-47, Georok Lvs 49-49, Zobiris Lvs 49-49, Schlurp Lvs 49-49, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 50-50, Flunkifer Lvs 49-49, Riolu Lvs 49-49]]
+	[Name = Höhle der Schulung Shaking Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Stalobor Lvs 47-47, Stalobor Lvs 47-47, Stalobor Lvs 48-48, Stalobor Lvs 48-48, Stalobor Lvs 49-49, Stalobor Lvs 49-49, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50, Stalobor Lvs 50-50]]
+	[Name = Höhle der Schulung Surfing, Rate = 3, MapIndex = 98,
+		Encounters = [Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Höhle der Schulung Surfing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70, Barschuft Lvs 25-70]]
+	[Name = Höhle der Schulung Fishing, Rate = 50, MapIndex = 98,
+		Encounters = [Quapsel Lvs 35-55, Barschuft Lvs 35-55, Quaputzi Lvs 35-55, Quapsel Lvs 35-55, Quapsel Lvs 35-55]]
+	[Name = Höhle der Schulung Fishing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [Quaputzi Lvs 35-60, Barschuft Lvs 35-60, Quaputzi Lvs 35-70, Quappo Lvs 45-70, Quappo Lvs 45-70]]
+	[Name = Route 10 Grass/Cave, Rate = 8, MapIndex = 99,
+		Encounters = [Terribark Lvs 33-33, Skallyk Lvs 34-34, Terribark Lvs 34-34, Skallyk Lvs 36-36, Bisofank Lvs 34-34, Bisofank Lvs 35-35, Tarnpignon Lvs 34-34, Karadonis Lvs 33-33, Tarnpignon Lvs 34-34, Karadonis Lvs 36-36, Tarnpignon Lvs 35-35, Karadonis Lvs 36-36]]
+	[Name = Route 10 Doubles Grass, Rate = 8, MapIndex = 99,
+		Encounters = [Terribark Lvs 38-38, Skallyk Lvs 39-39, Terribark Lvs 39-39, Skallyk Lvs 41-41, Bisofank Lvs 39-39, Bisofank Lvs 40-40, Hutsassa Lvs 39-39, Karadonis Lvs 38-38, Hutsassa Lvs 39-39, Karadonis Lvs 41-41, Hutsassa Lvs 40-40, Karadonis Lvs 41-41]]
+	[Name = Route 10 Shaking Spots, Rate = 1, MapIndex = 99,
+		Encounters = [Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Emolga Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 35-35, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36]]
+	[Name = Route 10 Grass/Cave, Rate = 8, MapIndex = 100,
+		Encounters = [Terribark Lvs 33-33, Skallyk Lvs 34-34, Terribark Lvs 34-34, Skallyk Lvs 36-36, Bisofank Lvs 34-34, Bisofank Lvs 35-35, Tarnpignon Lvs 33-33, Karadonis Lvs 33-33, Tarnpignon Lvs 34-34, Karadonis Lvs 36-36, Tarnpignon Lvs 35-35, Karadonis Lvs 36-36]]
+	[Name = Route 10 Doubles Grass, Rate = 8, MapIndex = 100,
+		Encounters = [Terribark Lvs 38-38, Skallyk Lvs 39-39, Terribark Lvs 39-39, Skallyk Lvs 41-41, Bisofank Lvs 39-39, Bisofank Lvs 40-40, Hutsassa Lvs 38-38, Karadonis Lvs 38-38, Hutsassa Lvs 39-39, Karadonis Lvs 41-41, Hutsassa Lvs 40-40, Karadonis Lvs 41-41]]
+	[Name = Route 10 Shaking Spots, Rate = 1, MapIndex = 100,
+		Encounters = [Ohrdoch Lvs 33-33, Ohrdoch Lvs 33-33, Emolga Lvs 34-34, Ohrdoch Lvs 34-34, Ohrdoch Lvs 35-35, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Ohrdoch Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36, Bissbark Lvs 36-36, Jiutesto Lvs 36-36]]
+	[Name = Route 11 Grass/Cave, Rate = 8, MapIndex = 101,
+		Encounters = [Skallyk Lvs 48-48, Entoron Lvs 47-47, Skorgla Lvs 47-47, Hutsassa Lvs 48-48, Sengo Lvs 48-48, Vipitis Lvs 48-48, Laukaps Lvs 49-49, Gladiantri Lvs 50-50, Skorgla Lvs 50-50, Skallyk Lvs 50-50, Skorgla Lvs 50-50, Skallyk Lvs 50-50]]
+	[Name = Route 11 Doubles Grass, Rate = 8, MapIndex = 101,
+		Encounters = [Grypheldis Lvs 58-58, Entoron Lvs 57-57, Skorgla Lvs 57-57, Hutsassa Lvs 58-58, Sengo Lvs 58-58, Vipitis Lvs 58-58, Laukaps Lvs 59-59, Caesurio Lvs 60-60, Skorgla Lvs 60-60, Grypheldis Lvs 60-60, Skorgla Lvs 60-60, Grypheldis Lvs 60-60]]
+	[Name = Route 11 Shaking Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Skorgro Lvs 50-50, Ohrdoch Lvs 50-50, Skorgro Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Route 11 Surfing, Rate = 3, MapIndex = 101,
+		Encounters = [Barschuft Lvs 25-55, Bamelin Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Route 11 Surfing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Bamelin Lvs 25-60, Barschuft Lvs 25-60, Bojelin Lvs 35-70, Bojelin Lvs 35-70, Bojelin Lvs 35-70]]
+	[Name = Route 11 Fishing, Rate = 50, MapIndex = 101,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 11 Fishing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Route 12 Grass/Cave, Rate = 8, MapIndex = 102,
+		Encounters = [Wadribie Lvs 47-47, Sonnkern Lvs 47-47, Gallopa Lvs 49-49, Navitaub Lvs 48-48, Kinoso Lvs 48-48, Kokuna Lvs 48-48, Skaraborn Lvs 50-50, Pinsir Lvs 50-50, Dummisel Lvs 48-48, Navitaub Lvs 50-50, Dummisel Lvs 48-48, Navitaub Lvs 50-50]]
+	[Name = Route 12 Doubles Grass, Rate = 8, MapIndex = 102,
+		Encounters = [Wadribie Lvs 57-57, Sonnkern Lvs 57-57, Gallopa Lvs 59-59, Navitaub Lvs 58-58, Kinoso Lvs 58-58, Kokuna Lvs 59-59, Skaraborn Lvs 60-60, Pinsir Lvs 60-60, Dummisel Lvs 59-59, Navitaub Lvs 60-60, Dummisel Lvs 59-59, Navitaub Lvs 60-60]]
+	[Name = Route 12 Shaking Spots, Rate = 1, MapIndex = 102,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Fasasnob Lvs 50-50, Bibor Lvs 50-50, Honweisel Lvs 50-50, Sonnflora Lvs 50-50, Honweisel Lvs 50-50, Sonnflora Lvs 50-50]]
+	[Name = Route 13 Grass/Cave, Rate = 8, MapIndex = 103,
+		Encounters = [Tangela Lvs 47-47, Schwalboss Lvs 47-47, Golbat Lvs 48-48, Lunastein Lvs 48-48, Sonnfel Lvs 48-48, Drifzepeli Lvs 49-49, Absol Lvs 48-48, Absol Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50, Tangela Lvs 49-49, Golbat Lvs 50-50]]
+	[Name = Route 13 Doubles Grass, Rate = 8, MapIndex = 103,
+		Encounters = [Tangela Lvs 57-57, Schwalboss Lvs 57-57, Golbat Lvs 58-58, Lunastein Lvs 58-58, Sonnfel Lvs 58-58, Drifzepeli Lvs 59-59, Absol Lvs 58-58, Absol Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60, Tangela Lvs 59-59, Golbat Lvs 60-60]]
+	[Name = Route 13 Shaking Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50, Iksbat Lvs 50-50, Tangoloss Lvs 50-50]]
+	[Name = Route 13 Surfing, Rate = 3, MapIndex = 103,
+		Encounters = [Wingull Lvs 25-55, Sterndu Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Route 13 Surfing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Sterndu Lvs 25-60, Corasonn Lvs 25-60, Starmie Lvs 35-70, Starmie Lvs 35-70, Starmie Lvs 35-70]]
+	[Name = Route 13 Fishing, Rate = 50, MapIndex = 103,
+		Encounters = [Krabby Lvs 35-55, Muschas Lvs 35-55, Krabby Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Route 13 Fishing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Kingler Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Route 14 Grass/Cave, Rate = 8, MapIndex = 104,
+		Encounters = [Entoron Lvs 47-47, Pummeluff Lvs 48-48, Tropius Lvs 48-48, Lin-Fu Lvs 49-49, Altaria Lvs 49-49, Drifzepeli Lvs 49-49, Pottrott Lvs 49-49, Megalon Lvs 48-48, Tropius Lvs 50-50, Megalon Lvs 50-50, Tropius Lvs 50-50, Megalon Lvs 50-50]]
+	[Name = Route 14 Doubles Grass, Rate = 8, MapIndex = 104,
+		Encounters = [Entoron Lvs 57-57, Pummeluff Lvs 58-58, Tropius Lvs 58-58, Wie-Shu Lvs 59-59, Altaria Lvs 59-59, Drifzepeli Lvs 59-59, Pottrott Lvs 59-59, Megalon Lvs 58-58, Tropius Lvs 60-60, Megalon Lvs 60-60, Tropius Lvs 60-60, Megalon Lvs 60-60]]
+	[Name = Route 14 Shaking Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Knuddeluff Lvs 50-50, Ohrdoch Lvs 50-50, Knuddeluff Lvs 50-50, Ohrdoch Lvs 50-50]]
+	[Name = Route 14 Surfing, Rate = 3, MapIndex = 104,
+		Encounters = [Barschuft Lvs 25-55, Bamelin Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Route 14 Surfing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Bamelin Lvs 25-60, Barschuft Lvs 25-60, Bojelin Lvs 35-70, Bojelin Lvs 35-70, Bojelin Lvs 35-70]]
+	[Name = Route 14 Fishing, Rate = 50, MapIndex = 104,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Route 14 Fishing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Schrein der Ernte Grass/Cave, Rate = 8, MapIndex = 105,
+		Encounters = [Vulpix Lvs 47-47, Palimpalim Lvs 47-47, Waumboll Lvs 48-48, Palimpalim Lvs 49-49, Damhirplex Lvs 48-48, Noctuh Lvs 48-48, Kramurx Lvs 48-48, Bronzong Lvs 48-48, Noctuh Lvs 50-50, Bronzong Lvs 50-50, Noctuh Lvs 50-50, Bronzong Lvs 50-50]]
+	[Name = Schrein der Ernte Doubles Grass, Rate = 8, MapIndex = 105,
+		Encounters = [Vulpix Lvs 57-57, Palimpalim Lvs 57-57, Waumboll Lvs 58-58, Palimpalim Lvs 59-59, Damhirplex Lvs 58-58, Noctuh Lvs 58-58, Kramurx Lvs 58-58, Bronzong Lvs 58-58, Noctuh Lvs 60-60, Bronzong Lvs 60-60, Noctuh Lvs 60-60, Bronzong Lvs 60-60]]
+	[Name = Schrein der Ernte Shaking Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Kramshef Lvs 50-50, Elfun Lvs 50-50, Ohrdoch Lvs 50-50, Vulnona Lvs 50-50, Ohrdoch Lvs 50-50, Vulnona Lvs 50-50]]
+	[Name = Schrein der Ernte Surfing, Rate = 3, MapIndex = 105,
+		Encounters = [Barschuft Lvs 25-55, Flegmon Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55, Barschuft Lvs 25-55]]
+	[Name = Schrein der Ernte Surfing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Flegmon Lvs 25-60, Barschuft Lvs 25-60, Lahmus Lvs 35-70, Laschoking Lvs 35-70, Laschoking Lvs 35-70]]
+	[Name = Schrein der Ernte Fishing, Rate = 50, MapIndex = 105,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Schrein der Ernte Fishing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Golking Lvs 35-70, Golking Lvs 45-70, Golking Lvs 45-70]]
+	[Name = Route 15 Grass/Cave, Rate = 8, MapIndex = 106,
+		Encounters = [Knogga Lvs 47-47, Ibitak Lvs 48-48, Skorgla Lvs 47-47, Kangama Lvs 49-49, Ibitak Lvs 50-50, Karadonis Lvs 48-48, Pupitar Lvs 48-48, Karadonis Lvs 49-49, Pupitar Lvs 50-50, Skorgla Lvs 49-49, Pupitar Lvs 50-50, Skorgla Lvs 49-49]]
+	[Name = Route 15 Doubles Grass, Rate = 8, MapIndex = 106,
+		Encounters = [Knogga Lvs 57-57, Ibitak Lvs 58-58, Skorgla Lvs 57-57, Kangama Lvs 59-59, Ibitak Lvs 60-60, Karadonis Lvs 58-58, Pupitar Lvs 58-58, Karadonis Lvs 59-59, Kukmarda Lvs 60-60, Pupitar Lvs 59-59, Kukmarda Lvs 60-60, Pupitar Lvs 59-59]]
+	[Name = Route 15 Shaking Spots, Rate = 1, MapIndex = 106,
+		Encounters = [Ohrdoch Lvs 47-47, Ohrdoch Lvs 47-47, Emolga Lvs 48-48, Ohrdoch Lvs 48-48, Ohrdoch Lvs 49-49, Ohrdoch Lvs 50-50, Ohrdoch Lvs 50-50, Jiutesto Lvs 50-50, Skorgro Lvs 50-50, Despotar Lvs 50-50, Skorgro Lvs 50-50, Despotar Lvs 50-50]]
+	[Name = Route 16 Grass/Cave, Rate = 8, MapIndex = 107,
+		Encounters = [Mollimorba Lvs 19-19, Picochilla Lvs 19-19, Unratütox Lvs 19-19, Unratütox Lvs 21-21, Kleoparda Lvs 20-20, Kleoparda Lvs 22-22, Picochilla Lvs 20-20, Mollimorba Lvs 20-20, Picochilla Lvs 21-21, Mollimorba Lvs 21-21, Picochilla Lvs 22-22, Mollimorba Lvs 22-22]]
+	[Name = Route 16 Doubles Grass, Rate = 8, MapIndex = 107,
+		Encounters = [Mollimorba Lvs 22-22, Picochilla Lvs 22-22, Unratütox Lvs 22-22, Unratütox Lvs 24-24, Kleoparda Lvs 23-23, Kleoparda Lvs 25-25, Picochilla Lvs 23-23, Mollimorba Lvs 23-23, Picochilla Lvs 24-24, Mollimorba Lvs 24-24, Picochilla Lvs 25-25, Mollimorba Lvs 25-25]]
+	[Name = Route 16 Shaking Spots, Rate = 1, MapIndex = 107,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 19-19, Emolga Lvs 20-20, Ohrdoch Lvs 20-20, Ohrdoch Lvs 21-21, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22, Chillabell Lvs 22-22, Ohrdoch Lvs 22-22]]
+	[Name = Hain der Täuschung Grass/Cave, Rate = 8, MapIndex = 108,
+		Encounters = [Waumboll Lvs 19-19, Folikon Lvs 20-20, Waumboll Lvs 20-20, Folikon Lvs 21-21, Navitaub Lvs 21-21, Toxiped Lvs 20-20, Navitaub Lvs 22-22, Toxiped Lvs 21-21, Waumboll Lvs 21-21, Folikon Lvs 22-22, Waumboll Lvs 22-22, Folikon Lvs 22-22]]
+	[Name = Hain der Täuschung Doubles Grass, Rate = 8, MapIndex = 108,
+		Encounters = [Waumboll Lvs 22-22, Folikon Lvs 23-23, Waumboll Lvs 23-23, Folikon Lvs 24-24, Navitaub Lvs 24-24, Toxiped Lvs 23-23, Navitaub Lvs 25-25, Toxiped Lvs 24-24, Waumboll Lvs 24-24, Folikon Lvs 25-25, Waumboll Lvs 25-25, Folikon Lvs 25-25]]
+	[Name = Hain der Täuschung Shaking Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Ohrdoch Lvs 19-19, Ohrdoch Lvs 20-20, Emolga Lvs 20-20, Vegimak Lvs 20-20, Grillmak Lvs 20-20, Sodamak Lvs 20-20, Ohrdoch Lvs 21-21, Fasasnob Lvs 22-22, Matrifol Lvs 22-22, Elfun Lvs 22-22, Matrifol Lvs 22-22, Elfun Lvs 22-22]]
+	[Name = Hain der Täuschung Surfing, Rate = 3, MapIndex = 108,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Hain der Täuschung Surfing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20, Barschuft Lvs 5-20]]
+	[Name = Hain der Täuschung Fishing, Rate = 50, MapIndex = 108,
+		Encounters = [Goldini Lvs 35-55, Barschuft Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55, Goldini Lvs 35-55]]
+	[Name = Hain der Täuschung Fishing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [Goldini Lvs 35-60, Barschuft Lvs 35-60, Goldini Lvs 35-70, Goldini Lvs 35-70, Goldini Lvs 35-70]]
+	[Name = Route 18 Grass/Cave, Rate = 8, MapIndex = 109,
+		Encounters = [Zurrokex Lvs 28-28, Lithomith Lvs 30-30, Kukmarda Lvs 28-28, Lithomith Lvs 31-31, Zurrokex Lvs 29-29, Kukmarda Lvs 30-30, Zurrokex Lvs 30-30, Karadonis Lvs 29-29, Zurrokex Lvs 31-31, Karadonis Lvs 31-31, Zurrokex Lvs 31-31, Karadonis Lvs 31-31]]
+	[Name = Route 18 Doubles Grass, Rate = 8, MapIndex = 109,
+		Encounters = [Zurrokex Lvs 32-32, Castellith Lvs 34-34, Kukmarda Lvs 32-32, Castellith Lvs 35-35, Zurrokex Lvs 33-33, Kukmarda Lvs 34-34, Zurrokex Lvs 34-34, Karadonis Lvs 33-33, Zurrokex Lvs 35-35, Karadonis Lvs 35-35, Zurrokex Lvs 35-35, Karadonis Lvs 35-35]]
+	[Name = Route 18 Shaking Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Ohrdoch Lvs 28-28, Ohrdoch Lvs 28-28, Ohrdoch Lvs 29-29, Ohrdoch Lvs 29-29, Ohrdoch Lvs 30-30, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Ohrdoch Lvs 31-31, Jiutesto Lvs 31-31, Ohrdoch Lvs 31-31, Jiutesto Lvs 31-31]]
+	[Name = Route 18 Surfing, Rate = 3, MapIndex = 109,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 18 Surfing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 18 Fishing, Rate = 50, MapIndex = 109,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Lampi Lvs 35-55]]
+	[Name = Route 18 Fishing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+	[Name = Ondula Surfing, Rate = 3, MapIndex = 110,
+		Encounters = [Wingull Lvs 25-55, Mantirps Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55, Pelipper Lvs 25-55]]
+	[Name = Ondula Surfing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [Wailmer Lvs 25-60, Corasonn Lvs 25-60, Mantax Lvs 35-70, Mantax Lvs 35-70, Mantax Lvs 35-70]]
+	[Name = Ondula Fishing, Rate = 50, MapIndex = 110,
+		Encounters = [Remoraid Lvs 35-55, Muschas Lvs 35-55, Remoraid Lvs 35-55, Liebiskus Lvs 35-55, Liebiskus Lvs 35-55]]
+	[Name = Ondula Fishing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [Muschas Lvs 35-60, Liebiskus Lvs 35-60, Octillery Lvs 35-70, Austos Lvs 45-70, Austos Lvs 45-70]]
+	[Name = Route 17 Surfing, Rate = 5, MapIndex = 111,
+		Encounters = [Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15, Quabbel Lvs 5-15]]
+	[Name = Route 17 Surfing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [Mamolida Lvs 5-20, Mamolida Lvs 5-20, Mamolida Lvs 5-20, Apoquallyp Lvs 5-20, Apoquallyp Lvs 5-20]]
+	[Name = Route 17 Fishing, Rate = 80, MapIndex = 111,
+		Encounters = [Finneon Lvs 35-55, Seeper Lvs 35-55, Seeper Lvs 35-55, Finneon Lvs 35-55, Finneon Lvs 35-55]]
+	[Name = Route 17 Fishing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [Seemon Lvs 35-60, Baldorfish Lvs 35-60, Lumineon Lvs 35-70, Seedraking Lvs 45-70, Seedraking Lvs 45-70]]
+]

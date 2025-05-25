@@ -24,28 +24,32 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.dabomstew.pkrandom.gamedata.*;
 
-import com.dabomstew.pkrandom.pokemon.ItemList;
-import com.dabomstew.pkrandom.pokemon.Trainer;
-import com.dabomstew.pkrandom.pokemon.Type;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Gen1Constants {
 
+    public static final int Type_RB = 0;
+    public static final int Type_Yellow = 1;
+
     public static final int baseStatsEntrySize = 0x1C;
 
-    public static final int bsHPOffset = 1, bsAttackOffset = 2, bsDefenseOffset = 3, bsSpeedOffset = 4,
-            bsSpecialOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7, bsCatchRateOffset = 8,
-            bsExpYieldOffset = 9, bsFrontSpriteOffset = 11, bsLevel1MovesOffset = 15, bsGrowthCurveOffset = 19,
-            bsTMHMCompatOffset = 20;
+	public static final int bsHPOffset = 1, bsAttackOffset = 2, bsDefenseOffset = 3, bsSpeedOffset = 4,
+			bsSpecialOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7, bsCatchRateOffset = 8,
+			bsExpYieldOffset = 9, bsFrontImageDimensionsOffset = 10, bsFrontImagePointerOffset = 11,
+            bsBackImagePointerOffset = 13, bsLevel1MovesOffset = 15, bsGrowthCurveOffset = 19, bsTMHMCompatOffset = 20;
 
     public static final int encounterTableEnd = 0xFFFF, encounterTableSize = 10, yellowSuperRodTableSize = 4;
 
     public static final int trainerClassCount = 47;
 
+    public static final byte trainerDataTerminator = 0x00;
+
     public static final int champRivalOffsetFromGymLeaderMoves = 0x44;
+
+    public static final int pokemonCount = 151;
 
     public static final int tmCount = 50, hmCount = 5;
 
@@ -56,16 +60,16 @@ public class Gen1Constants {
     public static final List<Integer> singularTrainers = Arrays.asList(28, 32, 33, 34, 35, 36, 37, 38, 39, 43, 45, 46);
 
     public static final List<Integer> bannedMovesWithXAccBanned = Arrays.asList(
-            Moves.sonicBoom, Moves.dragonRage, Moves.spore);
+            MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.spore);
 
     public static final List<Integer> bannedMovesWithoutXAccBanned = Arrays.asList(
-            Moves.sonicBoom, Moves.dragonRage, Moves.spore, Moves.hornDrill, Moves.fissure, Moves.guillotine);
+            MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.spore, MoveIDs.hornDrill, MoveIDs.fissure, MoveIDs.guillotine);
 
     // ban transform because of Transform assumption glitch
-    public static final List<Integer> bannedLevelupMoves = Collections.singletonList(Moves.transform);
+    public static final List<Integer> bannedLevelupMoves = Collections.singletonList(MoveIDs.transform);
 
     public static final List<Integer> fieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport);
 
     public static final int damagePoison20PercentEffect = 2, damageAbsorbEffect = 3, damageBurn10PercentEffect = 4,
             damageFreeze10PercentEffect = 5, damageParalyze10PercentEffect = 6, dreamEaterEffect = 8,
@@ -82,18 +86,31 @@ public class Gen1Constants {
             twineedleEffect = 77, hyperBeamEffect = 80;
 
     // Taken from critical_hit_moves.asm; we could read this from the ROM, but it's easier to hardcode it.
-    public static final List<Integer> increasedCritMoves = Arrays.asList(Moves.karateChop, Moves.razorLeaf, Moves.crabhammer, Moves.slash);
+    public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorLeaf, MoveIDs.crabhammer, MoveIDs.slash);
 
-    public static final List<Integer> earlyRequiredHMs = Collections.singletonList(Moves.cut);
+    public static final List<Integer> earlyRequiredHMs = Collections.singletonList(MoveIDs.cut);
 
-    public static final int hmsStartIndex = Gen1Items.hm01, tmsStartIndex = Gen1Items.tm01;
+    public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(3, 4, 8, 10, 12, 14, 16, 19, 20,
-            22, 25, 26, 30, 40, 43, 44, 45, 47);
+    public static final int hiddenObjectMapsTerminator = 0xFF, hiddenObjectsTerminator = 0xFF;
+
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen1ItemIDs.tm03, Gen1ItemIDs.tm04,
+            Gen1ItemIDs.tm08, Gen1ItemIDs.tm10, Gen1ItemIDs.tm12, Gen1ItemIDs.tm14, Gen1ItemIDs.tm16, Gen1ItemIDs.tm19,
+            Gen1ItemIDs.tm20, Gen1ItemIDs.tm22, Gen1ItemIDs.tm25, Gen1ItemIDs.tm26, Gen1ItemIDs.tm30, Gen1ItemIDs.tm40,
+            Gen1ItemIDs.tm43, Gen1ItemIDs.tm44, Gen1ItemIDs.tm45, Gen1ItemIDs.tm47);
 
     public static final int towerMapsStartIndex = 0x90, towerMapsEndIndex = 0x94;
 
     public static final String guaranteedCatchPrefix = "CF7EFE01";
+
+    public static final int playerFrontImageOffset5 = 54; // "5" because it is used to put a value at index 5 of PlayerFrontImagePointers
+
+    public static final int playerFrontBankOffset1 = 4, playerFrontBankOffset2 = 3, playerFrontBankOffset3 = 4,
+            playerFrontBankOffset4 = 3, playerFrontBankOffset5 = 4;
+
+    public static final int playerBackImageOffsetRGB0 = 8, playerBackImageOffset1 = 3, playerBackImageOffsetYellow0 = 3;
+
+    public static final int oldManBackImageOffsetRGB = 5, oldManBackImageOffsetYellow = -14, oakBackImageOffset = -7;
 
     public static final Type[] typeTable = constructTypeTable();
 
@@ -126,37 +143,120 @@ public class Gen1Constants {
         return (byte) 0;
     }
 
-    public static final ItemList allowedItems = setupAllowedItems();
+    public static final int nonNeutralEffectivenessCount = 82;
 
-    private static ItemList setupAllowedItems() {
-        ItemList allowedItems = new ItemList(Gen1Items.tm50); // 251-255 are junk TMs
+    public static int evolutionTypeToIndex(EvolutionType evolutionType) {
+        switch (evolutionType) {
+            case LEVEL:
+                return 1;
+            case STONE:
+                return 2;
+            case TRADE:
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    public static EvolutionType evolutionTypeFromIndex(int index) {
+        switch (index) {
+            case 1:
+                return EvolutionType.LEVEL;
+            case 2:
+                return EvolutionType.STONE;
+            case 3:
+                return EvolutionType.TRADE;
+            default:
+                return EvolutionType.NONE;
+        }
+    }
+
+    public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
+
+    public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
+            "Viridian Poké Mart",
+            "Pewter Poké Mart",
+            "Cerulean Poké Mart",
+            "Unused Bike Shop",
+            "Vermilion Poké Mart",
+            "Lavender Poké Mart",
+            "Celadon Department Store 2F Left",
+            "Celadon Department Store 2F Right",
+            "Celadon Department Store 4F",
+            "Celadon Department Store 5F Left",
+            "Celadon Department Store 5F Right",
+            "Fuchsia Poké Mart",
+            "Unused Poké Mart",
+            "Cinnabar Poké Mart",
+            "Saffron Poké Mart",
+            "Indigo Plateau Lobby"
+    ));
+
+    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
+    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16)
+    );
+
+    public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
+    ));
+
+    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
+            Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
+    ));
+    
+    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall, 
+            Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
+            Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
+            Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
+            Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
+    ));
+    
+    public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
+            Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
+    ));
+
+    public static final Set<Integer> bannedItems = setupBannedItems();
+
+    private static Set<Integer> setupBannedItems() {
         // Assorted key items & junk
-        // 23/01/2014: ban fake PP Up
-        allowedItems.banSingles(Gen1Items.townMap, Gen1Items.bicycle, Gen1Items.questionMark7,
-                Gen1Items.safariBall, Gen1Items.pokedex, Gen1Items.oldAmber, Gen1Items.cardKey, Gen1Items.ppUpGlitch,
-                Gen1Items.coin, Gen1Items.ssTicket, Gen1Items.goldTeeth);
-        allowedItems.banRange(Gen1Items.boulderBadge, 8);
-        allowedItems.banRange(Gen1Items.domeFossil, 5);
-        allowedItems.banRange(Gen1Items.coinCase, 10);
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle,
+                Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
+                Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
+                Gen1ItemIDs.goldTeeth));
+        addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
+        addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
+        addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
         // Unused
-        allowedItems.banRange(Gen1Items.unused84, 112);
+        addBetween(set, Gen1ItemIDs.unused84, Gen1ItemIDs.unused195);
         // HMs
-        allowedItems.banRange(hmsStartIndex, hmCount);
-        // Real TMs
-        allowedItems.tmRange(tmsStartIndex, tmCount);
-        return allowedItems;
+        addBetween(set, Gen1ItemIDs.hm01, Gen1ItemIDs.hm05);
+        // Junk at end
+        addBetween(set, Gen1ItemIDs.tm51, Gen1ItemIDs.tm55); // 251-255 are junk TMs
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
+        }
     }
 
     public static void tagTrainersUniversal(List<Trainer> trs) {
         // Gym Leaders
-        tbc(trs, 34, 0, "GYM1");
-        tbc(trs, 35, 0, "GYM2");
-        tbc(trs, 36, 0, "GYM3");
-        tbc(trs, 37, 0, "GYM4");
-        tbc(trs, 38, 0, "GYM5");
-        tbc(trs, 40, 0, "GYM6");
-        tbc(trs, 39, 0, "GYM7");
-        tbc(trs, 29, 2, "GYM8");
+        tbc(trs, 34, 0, "GYM1-LEADER");
+        tbc(trs, 35, 0, "GYM2-LEADER");
+        tbc(trs, 36, 0, "GYM3-LEADER");
+        tbc(trs, 37, 0, "GYM4-LEADER");
+        tbc(trs, 38, 0, "GYM5-LEADER");
+        tbc(trs, 40, 0, "GYM6-LEADER");
+        tbc(trs, 39, 0, "GYM7-LEADER");
+        tbc(trs, 29, 2, "GYM8-LEADER");
 
         // Other giovanni teams
         tbc(trs, 29, 0, "GIO1");
@@ -337,10 +437,30 @@ public class Gen1Constants {
         tbc(trs, 31, 9, "GYM8");
     }
 
+    public static final HashMap<String, Type> gymAndEliteThemes = setupGymAndEliteThemes();
+
+    private static HashMap<String, Type> setupGymAndEliteThemes() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        themeMap.put("ELITE1", Type.ICE); //Lorelei
+        themeMap.put("ELITE2", Type.FIGHTING); //Bruno
+        themeMap.put("ELITE3", Type.GHOST); //Agatha
+        themeMap.put("ELITE4", Type.DRAGON); //Lance
+        themeMap.put("GYM1", Type.ROCK); //Brock
+        themeMap.put("GYM2", Type.WATER); //Misty
+        themeMap.put("GYM3", Type.ELECTRIC); //Lt. Surge
+        themeMap.put("GYM4", Type.GRASS); //Erika
+        themeMap.put("GYM5", Type.POISON); //Koga
+        themeMap.put("GYM6", Type.PSYCHIC); //Sabrina
+        themeMap.put("GYM7", Type.FIRE); //Blaine
+        themeMap.put("GYM8", Type.GROUND); //Giovanni
+        return themeMap;
+    }
+
     private static void tbc(List<Trainer> allTrainers, int classNum, int number, String tag) {
         int currnum = -1;
         for (Trainer t : allTrainers) {
-            if (t.trainerclass == classNum) {
+            // adjusted to not change the above but use 0-indexing properly
+            if (t.trainerclass == classNum - 1) {
                 currnum++;
                 if (currnum == number) {
                     t.tag = tag;
@@ -348,6 +468,116 @@ public class Gen1Constants {
                 }
             }
         }
+    }
+
+    private static final int[] postGameEncounterAreasRBG = new int[] {
+            53, 54, 55, 67, //CERULEAN CAVE
+    };
+
+    private static final int[] postGameEncounterAreasJapaneseBlue = new int[] {
+            54, 55, 56, 68, //CERULEAN CAVE
+    };
+
+    private static final int[] postGameEncounterAreasYellow = new int[] {
+            59, 60, 61, 94, 95, //CERULEAN CAVE
+    };
+
+    // the ones tagged "SUPER ROD N" are super rod encounters shared between several locations
+    private static final List<String> locationTagsRBG = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 7", "ROUTE 8", "ROUTE 9",
+            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 13", "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
+            "ROUTE 19/20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
+            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
+            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
+            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "POKEMON MANSION", "SEAFOAM ISLANDS",
+            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
+            "CERULEAN CAVE", "ROCK TUNNEL",
+            "OLD ROD", "GOOD ROD", "SUPER ROD 1", "SUPER ROD 2", "SUPER ROD 3", "SUPER ROD 4", "SUPER ROD 5",
+            "SUPER ROD 6", "SUPER ROD 7", "SUPER ROD 8", "SUPER ROD 9", "SUPER ROD 10"));
+
+    // for whatever reason Japanese blue loads Route 19/20 as separate encounters,
+    // the only difference to locationTagsRBG.
+    private static final List<String> locationTagsJapaneseBlue = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 7", "ROUTE 8", "ROUTE 9",
+            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 13", "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
+            "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
+            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
+            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
+            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "POKEMON MANSION", "SEAFOAM ISLANDS",
+            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
+            "CERULEAN CAVE", "ROCK TUNNEL",
+            "OLD ROD", "GOOD ROD", "SUPER ROD 1", "SUPER ROD 2", "SUPER ROD 3", "SUPER ROD 4", "SUPER ROD 5",
+            "SUPER ROD 6", "SUPER ROD 7", "SUPER ROD 8", "SUPER ROD 9", "SUPER ROD 10"));
+
+    // yellow has more specific super rod encounters
+    private static final List<String> locationTagsYellow = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 6",
+            "ROUTE 7", "ROUTE 8", "ROUTE 9",
+            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 12", "ROUTE 13", "ROUTE 13",
+            "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
+            "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
+            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
+            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
+            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS",
+            "POKEMON MANSION", "SEAFOAM ISLANDS",
+            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
+            "CERULEAN CAVE", "ROCK TUNNEL",
+            "OLD ROD", "GOOD ROD",
+            "PALLET TOWN", "VIRIDIAN CITY", "CERULEAN CITY", "VERMILION CITY", "CELADON CITY", "FUCHSIA CITY",
+            "CINNABAR ISLAND", "ROUTE 4", "ROUTE 6", "ROUTE 24", "ROUTE 25", "ROUTE 10", "ROUTE 11", "ROUTE 12",
+            "ROUTE 13", "ROUTE 17", "ROUTE 18", "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 22", "ROUTE 23",
+            "VERMILION CITY", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SEAFOAM ISLANDS",
+            "SEAFOAM ISLANDS", "CERULEAN CAVE", "CERULEAN CAVE"));
+
+    /**
+     * The order the player is "expected" to traverse locations. Taken from
+     * <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Red_and_Blue/Walkthrough>this walkthrough</a>.
+     */
+    public static final List<String> locationTagsTraverseOrder = Collections.unmodifiableList(Arrays.asList(
+            "PALLET TOWN", "ROUTE 1", "VIRIDIAN CITY", "ROUTE 2", "ROUTE 22", "VIRIDIAN FOREST", "ROUTE 3",
+            "MT.MOON", "ROUTE 4", "CERULEAN CITY", "ROUTE 24", "ROUTE 25", "ROUTE 5", "ROUTE 6", "VERMILION CITY",
+            "ROUTE 11", "DIGLETT'S CAVE", "ROUTE 9", "ROUTE 10", "ROCK TUNNEL", "ROUTE 8", "ROUTE 7", "CELADON CITY",
+            "POKEMON TOWER", "ROUTE 16", "ROUTE 17", "ROUTE 18", "FUCHSIA CITY", "SAFARI ZONE", "ROUTE 12", "ROUTE 13",
+            "ROUTE 14", "ROUTE 15", "ROUTE 21", "CINNABAR ISLAND", "POKEMON MANSION", "POWER PLANT", "ROUTE 19",
+            "ROUTE 20", "ROUTE 19/20", "SEAFOAM ISLANDS", "ROUTE 23", "VICTORY ROAD", "CERULEAN CAVE",
+            "OLD ROD", "GOOD ROD",
+            "SUPER ROD 1", // pallet, viridian
+            "SUPER ROD 2", // route 22
+            "SUPER ROD 3", // route 4, cerulean, cerulean gym, route 24, route 25
+            "SUPER ROD 4", // route 6, vermilion, vermilion dock, route 11
+            "SUPER ROD 5", // route 10, celadon city
+            "SUPER ROD 7", // route 17, route 18, route 12, route 13
+            "SUPER ROD 10", // fuchsia city
+            "SUPER ROD 6", // safari zone
+            "SUPER ROD 8", // route 19, route 20, route 21, seafoam islands
+            "SUPER ROD 9" // route 23, cerulean cave
+    ));
+
+    private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
+        if (encounterAreas.size() != locationTags.size()) {
+            throw new IllegalArgumentException("Unexpected amount of encounter areas");
+        }
+        for (int i = 0; i < encounterAreas.size(); i++) {
+            encounterAreas.get(i).setLocationTag(locationTags.get(i));
+        }
+        for (int areaIndex : postGameAreas) {
+            encounterAreas.get(areaIndex).setPostGame(true);
+        }
+    }
+
+    public static void tagEncounterAreasRBG(List<EncounterArea> encounterAreas) {
+        tagEncounterAreas(encounterAreas, locationTagsRBG, postGameEncounterAreasRBG);
+    }
+
+    public static void tagEncounterAreasJapaneseBlue(List<EncounterArea> encounterAreas) {
+        tagEncounterAreas(encounterAreas, locationTagsJapaneseBlue, postGameEncounterAreasJapaneseBlue);
+    }
+
+    public static void tagEncounterAreasYellow(List<EncounterArea> encounterAreas) {
+        tagEncounterAreas(encounterAreas, locationTagsYellow, postGameEncounterAreasYellow);
     }
 
 }

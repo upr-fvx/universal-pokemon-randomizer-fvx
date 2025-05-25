@@ -24,12 +24,8 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +76,7 @@ public class CustomNamesSet {
         // Read the block and translate it into a list of names.
         byte[] namesData = FileFunctions.readFullyIntoBuffer(in, size);
         List<String> names = new ArrayList<>();
-        Scanner sc = new Scanner(new ByteArrayInputStream(namesData), "UTF-8");
+        Scanner sc = new Scanner(new ByteArrayInputStream(namesData),"UTF-8");
         while (sc.hasNextLine()) {
             String name = sc.nextLine().trim();
             if (!name.isEmpty()) {
@@ -107,17 +103,16 @@ public class CustomNamesSet {
     }
 
     private void writeNamesBlock(OutputStream out, List<String> names) throws IOException {
-        String newln = SysConstants.LINE_SEP;
         StringBuilder outNames = new StringBuilder();
         boolean first = true;
         for (String name : names) {
             if (!first) {
-                outNames.append(newln);
+                outNames.append(System.lineSeparator());
             }
             first = false;
             outNames.append(name);
         }
-        byte[] namesData = outNames.toString().getBytes("UTF-8");
+        byte[] namesData = outNames.toString().getBytes(StandardCharsets.UTF_8);
         byte[] szData = new byte[4];
         FileFunctions.writeFullIntBigEndian(szData, 0, namesData.length);
         out.write(szData);

@@ -1,0 +1,1127 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = マダツボミのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = やけたとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ドガース Lv14, コラッタ Lv15, ズバット Lv14, コラッタ Lv15, ラッタ Lv15, ラッタ Lv15]]
+	[Name = やけたとう Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ドガース Lv14, ドガース Lv16, ズバット Lv15, ドガース Lv12, ドガース Lv16, マタドガス Lv16]]
+	[Name = しぜんこうえん Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♀ Lv12, ニドラン♂ Lv12, ヒマナッツ Lv14, ポッポ Lv13, キャタピー Lv10, ビードル Lv10, ビードル Lv10]]
+	[Name = アルフのいせき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ネイティ Lv20, ネイティ Lv22, ネイティ Lv18, ネイティ Lv24, ドーブル Lv20, ドーブル Lv22, ドーブル Lv22]]
+	[Name = アルフのいせき Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5]]
+	[Name = つながりのどうくつ Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv6, サンド Lv6, ズバット Lv5, コラッタ Lv4, ズバット Lv7, イワーク Lv6, イワーク Lv6]]
+	[Name = つながりのどうくつ Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv8, ズバット Lv6, ズバット Lv8, イワーク Lv8, コラッタ Lv6, コラッタ Lv8, コラッタ Lv8]]
+	[Name = つながりのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lv22, ゴルバット Lv22, ズバット Lv22, ラッタ Lv21, イシツブテ Lv20, イワーク Lv23, イワーク Lv23]]
+	[Name = ヤドンのいど Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv5, ズバット Lv6, ズバット Lv7, ヤドン Lv6, ズバット Lv8, ヤドン Lv8, ヤドン Lv8]]
+	[Name = ヤドンのいど Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv21, ズバット Lv23, ズバット Lv19, ヤドン Lv21, ゴルバット Lv23, ヤドン Lv23, ヤドン Lv23]]
+	[Name = ウバメのもり Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [キャタピー Lv5, ビードル Lv5, トランセル Lv7, コクーン Lv7, ポッポ Lv7, パラス Lv6, パラス Lv6]]
+	[Name = スりバチやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ズバット Lv13, ワンりキー Lv14, ゴルバット Lv13, イシツブテ Lv14, ラッタ Lv16, ラッタ Lv16]]
+	[Name = スりバチやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv13, コラッタ Lv14, ワンりキー Lv15, ラッタ Lv14, ズバット Lv15, ゴルバット Lv15, ゴルバット Lv15]]
+	[Name = スりバチやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv31, ゴーりキー Lv32, イシツブテ Lv31, ラッタ Lv30, ワンりキー Lv28, ゴルバット Lv30, ゴルバット Lv30]]
+	[Name = スりバチやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv15, ズバット Lv17, ゴルバット Lv17, ワンりキー Lv16, イシツブテ Lv16, ラッタ Lv18, ラッタ Lv18]]
+	[Name = こおりのぬけみち Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv21, ズバット Lv22, ゴルバット Lv22, ウりムー Lv23, ゴルバット Lv24, ゴルバット Lv22, ゴルバット Lv22]]
+	[Name = こおりのぬけみち Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv22, ズバット Lv23, ゴルバット Lv23, ウりムー Lv24, ゴルバット Lv25, ゴルバット Lv23, ルージュラ Lv22]]
+	[Name = こおりのぬけみち Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv24, ズバット Lv25, ゴルバット Lv25, ウりムー Lv26, ルージュラ Lv22, ルージュラ Lv24, ルージュラ Lv26]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv23, ズバット Lv24, パウワウ Lv23, クラブ Lv25, ゴルバット Lv26, パウワウ Lv25, パウワウ Lv25]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv24, ズバット Lv25, パウワウ Lv24, クラブ Lv26, ゴルバット Lv27, パウワウ Lv26, パウワウ Lv26]]
+	[Name = うずまきじま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv25, ズバット Lv26, パウワウ Lv25, クラブ Lv27, ゴルバット Lv28, パウワウ Lv27, パウワウ Lv27]]
+	[Name = シロガネやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv43, りングマ Lv44, イワーク Lv42, ブーバー Lv45, ゴルバット Lv45, ヨーギラス Lv20, ヨーギラス Lv15]]
+	[Name = シロガネやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴーりキー Lv48, りングマ Lv47, パラセクト Lv46, パラセクト Lv48, ヨーギラス Lv15, ヨーギラス Lv20]]
+	[Name = シロガネやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv51, イワーク Lv48, ゴローン Lv48, りングマ Lv50, ヨーギラス Lv20, ヨーギラス Lv15, サナギラス Lv20]]
+	[Name = シロガネやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴルバット Lv46, ゴルバット Lv50, パラセクト Lv46, パラセクト Lv48, パラセクト Lv50, パラセクト Lv52]]
+	[Name = くらやみのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ズバット Lv2, イシツブテ Lv2, イシツブテ Lv4, ズバット Lv2, ズバット Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ズバット Lv23, ゴローン Lv25, りングマ Lv25, りングマ Lv30, ゴルバット Lv23, ゴルバット Lv23]]
+	[Name = 29\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, オタチ Lv2, ポッポ Lv3, オタチ Lv3, コラッタ Lv2, ハネッコ Lv3, ハネッコ Lv3]]
+	[Name = 30\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv3, キャタピー Lv3, キャタピー Lv4, ポッポ Lv4, ビードル Lv3, ハネッコ Lv4, ハネッコ Lv4]]
+	[Name = 31\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv4, キャタピー Lv4, マダツボミ Lv5, ポッポ Lv5, ビードル Lv4, ハネッコ Lv5, ハネッコ Lv5]]
+	[Name = 32\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv4, コラッタ Lv5, マダツボミ Lv7, ハネッコ Lv6, ポッポ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 33\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv6, オニスズメ Lv6, イシツブテ Lv6, ハネッコ Lv6, アーボ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 34\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv10, コラッタ Lv11, ポッポ Lv12, ケーシィ Lv10, プりン Lv12, メタモン Lv10, メタモン Lv10]]
+	[Name = 35\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv12, ポッポ Lv14, ガーディ Lv13, ケーシィ Lv10, プりン Lv12, メタモン Lv10, ヤンヤンマ Lv12]]
+	[Name = 36\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv4, ポッポ Lv4, マダツボミ Lv5, ガーディ Lv5, ポッポ Lv5, ポッポ Lv6, ポッポ Lv6]]
+	[Name = 37\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv13, ガーディ Lv14, ポッポ Lv15, ガーディ Lv16, ピジョン Lv15, ポッポ Lv15, ポッポ Lv15]]
+	[Name = 38\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ケンタロス Lv13, ミルタンク Lv13, ミルタンク Lv13]]
+	[Name = 39\x35 Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ミルタンク Lv15, ケンタロス Lv15, ケンタロス Lv15]]
+	[Name = 42\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv13, オニスズメ Lv14, コラッタ Lv15, ラッタ Lv16, アーボック Lv15, オニドりル Lv16, オニドりル Lv16]]
+	[Name = 43\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [オタチ Lv15, ピジョン Lv16, カモネギ Lv16, オオタチ Lv15, ラッタ Lv17, オオタチ Lv17, オオタチ Lv17]]
+	[Name = 44\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv23, べロりンガ Lv22, マダツボミ Lv22, ウツドン Lv24, べロりンガ Lv24, べロりンガ Lv26, べロりンガ Lv26]]
+	[Name = 45\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ゴローン Lv23, グライガー Lv24, ドンファン Lv25, ドンファン Lv30, エアームド Lv27, エアームド Lv27]]
+	[Name = 46\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv2, オニスズメ Lv2, イシツブテ Lv3, コラッタ Lv3, コラッタ Lv2, コラッタ Lv2, コラッタ Lv2]]
+	[Name = シロガネやま Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv41, ポニータ Lv42, アーボック Lv42, ギャロップ Lv44, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = アルフのいせき Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [メノクラゲ Lv15, ヌオー Lv20, ドククラゲ Lv20]]
+	[Name = ヤドンのいど Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ヤドン Lv15, ヤドン Lv20, ヤドン Lv10]]
+	[Name = ヤドンのいど Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ヤドン Lv15, ヤドン Lv20, ヤドラン Lv20]]
+	[Name = ウバメのもり Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コダック Lv15, コダック Lv10, ゴルダック Lv15]]
+	[Name = スりバチやま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, マりル Lv20, アズマオウ Lv20]]
+	[Name = スりバチやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [トサキント Lv20, マりル Lv25, アズマオウ Lv25]]
+	[Name = スりバチやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [トサキント Lv15, マりル Lv20, アズマオウ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, タッツー Lv15, ドククラゲ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [タッツー Lv15, タッツー Lv20, ドククラゲ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [タッツー Lv20, ドククラゲ Lv20, シードラ Lv20]]
+	[Name = シロガネやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [アズマオウ Lv35, ゴルダック Lv35, トサキント Lv35]]
+	[Name = くらやみのほらあな Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = くらやみのほらあな Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = りゅうのあな Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, ミニりュウ Lv10]]
+	[Name = アサギシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 30\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = 31\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = 32\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv15, ヌオー Lv20, ドククラゲ Lv20]]
+	[Name = 34\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 35\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コダック Lv20, コダック Lv15, ゴルダック Lv20]]
+	[Name = 40ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 41ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, ドククラゲ Lv20, マンタイン Lv20]]
+	[Name = 42\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv20, トサキント Lv15, アズマオウ Lv20]]
+	[Name = 43\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv10]]
+	[Name = 44\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv25, ニョロモ Lv20, ニョロゾ Lv25]]
+	[Name = 45\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv5]]
+	[Name = ワカバタウン Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = ヨシノシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = キキョウシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = タンバシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = アサギシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = エンジュシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = いかりのみずうみ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, ギャラドス Lv15]]
+	[Name = フスべシティ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = シロガネやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロゾ Lv35, ニョロゾ Lv40, ニョロモ Lv35]]
+	[Name = ディグダのあな Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ディグダ Lv2, ディグダ Lv4, ディグダ Lv8, ディグダ Lv16, ダグトりオ Lv16, ダグトりオ Lv16, ダグトりオ Lv16]]
+	[Name = おつきみやま Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv6, イシツブテ Lv8, サンド Lv8, パラス Lv12, イシツブテ Lv10, ピッピ Lv8, ピッピ Lv8]]
+	[Name = イワヤマトンネル Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv10, イシツブテ Lv11, ワンりキー Lv12, ズバット Lv12, ゴーりキー Lv15, ガラガラ Lv12, ガラガラ Lv12]]
+	[Name = イワヤマトンネル Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv12, イシツブテ Lv14, イワーク Lv16, ズバット Lv12, ガラガラ Lv15, ガルーラ Lv15, ガルーラ Lv15]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv34, サイホーン Lv32, イワーク Lv33, ゴルバット Lv34, サンドパン Lv35, サイドン Lv35, サイドン Lv35]]
+	[Name = トージョウのたき Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv22, ラッタ Lv22, ゴルバット Lv24, ヤドン Lv21, コラッタ Lv20, ヤドン Lv23, ヤドン Lv23]]
+	[Name = 1\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, コラッタ Lv2, オタチ Lv3, ポッポ Lv3, オオタチ Lv6, ポッポ Lv4, ポッポ Lv4]]
+	[Name = 2\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv3, ポッポ Lv3, ポッポ Lv5, バタフりー Lv7, ピジョン Lv7, ピカチュウ Lv4, ピカチュウ Lv4]]
+	[Name = 3\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 4\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 5\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv13, ブルー Lv13, ピジョン Lv15, ケーシィ Lv12, プりン Lv14, ケーシィ Lv14, ケーシィ Lv14]]
+	[Name = 6\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ブルー Lv13, コイル Lv14, ラッタ Lv15, プりン Lv12, グランブル Lv15, グランブル Lv15]]
+	[Name = 7\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv17, オニスズメ Lv17, ブルー Lv18, ラッタ Lv18, プりン Lv18, ケーシィ Lv16, ケーシィ Lv16]]
+	[Name = 8\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv17, ピジョン Lv19, ケーシィ Lv16, ガーディ Lv17, プりン Lv16, ユンゲラー Lv18, ユンゲラー Lv18]]
+	[Name = 9\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv15, オニスズメ Lv15, ラッタ Lv15, オニドりル Lv15, オニドりル Lv15, ガラガラ Lv18, ガラガラ Lv18]]
+	[Name = 10\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv15, ビりりダマ Lv17, ラッタ Lv15, オニドりル Lv15, ガラガラ Lv15, エレブー Lv18, エレブー Lv18]]
+	[Name = 11\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ハネッコ Lv14, ラッタ Lv13, コイル Lv15, ピジョン Lv16, コラッタ Lv16, ハネッコ Lv16, ハネッコ Lv16]]
+	[Name = 13\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 14\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv26, ニドりーナ Lv26, ピジョン Lv28, ハネッコ Lv28, ポポッコ Lv30, ポポッコ Lv30, ラッキー Lv28]]
+	[Name = 15\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 16\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, マグマッグ Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 17\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [オニドりル Lv30, マグマッグ Lv29, べトべター Lv29, オニドりル Lv32, マグマッグ Lv32, べトべトン Lv33, べトべトン Lv33]]
+	[Name = 18\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, マグマッグ Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 21ばん すいどう Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [モンジャラ Lv30, コラッタ Lv25, モンジャラ Lv35, ラッタ Lv20, バりヤード Lv28, バりヤード Lv30, バりヤード Lv30]]
+	[Name = 22\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv3, オニスズメ Lv3, オニスズメ Lv5, ドードー Lv4, ポニータ Lv6, オニドりル Lv7, オニドりル Lv7]]
+	[Name = 24\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv8, ヒマナッツ Lv12, キャタピー Lv10, ケーシィ Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 25\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv10, ポッポ Lv10, ピジョン Lv12, トランセル Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 26\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, サンドパン Lv28, ポニータ Lv32, ラッタ Lv30, ドードー Lv30, アーボック Lv30, アーボック Lv30]]
+	[Name = 27\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, アーボック Lv28, ラッタ Lv30, ドードー Lv30, ポニータ Lv32, ドードりオ Lv30, ドードりオ Lv30]]
+	[Name = 28\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv39, ポニータ Lv40, ギャロップ Lv40, アーボック Lv42, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = トージョウのたき Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv20, ヤドン Lv20, アズマオウ Lv20]]
+	[Name = クチバシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 4\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 6\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コダック Lv10, コダック Lv5, ゴルダック Lv10]]
+	[Name = 9\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, トサキント Lv10, アズマオウ Lv15]]
+	[Name = 10\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, トサキント Lv10, アズマオウ Lv15]]
+	[Name = 12\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv25, ヌオー Lv25, ドククラゲ Lv25]]
+	[Name = 13\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv25, ヌオー Lv25, ドククラゲ Lv25]]
+	[Name = 19ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 20ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 21ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 22\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv10, ニョロモ Lv5, ニョロゾ Lv10]]
+	[Name = 24\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 25\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 26\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv30, メノクラゲ Lv25, ドククラゲ Lv30]]
+	[Name = 27\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 28\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv40, ニョロモ Lv35, ニョロゾ Lv40]]
+	[Name = マサラタウン Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = トキワシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv10, ニョロモ Lv5, ニョロゾ Lv10]]
+	[Name = ハナダシティ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = クチバシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = タマムシシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [べトべター Lv20, べトべター Lv15, べトべトン Lv15]]
+	[Name = セキチクシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv10]]
+	[Name = グレンじま Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = くらやみのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ノコッチ Lv3, ズバット Lv2, イシツブテ Lv2, ノコッチ Lv2, ノコッチ Lv4, ノコッチ Lv4]]
+	[Name = 35\x35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♂ Lv12, ニドラン♀ Lv12, ヤンヤンマ Lv12, ヤンヤンマ Lv14, ポッポ Lv14, メタモン Lv10, メタモン Lv10]]
+	[Name = Fishing Shore, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, クラブ Lv10, コイキング Lv20, クラブ Lv20, クラブ Lv20, ヒトデマン Lv20, クラブ Lv40, ヒトデマン Lv40, クラブ Lv40, キングラー Lv40]]
+	[Name = Fishing Ocean, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, メノクラゲ Lv10, コイキング Lv20, メノクラゲ Lv20, チョンチー Lv20, シェルダー Lv20, チョンチー Lv40, シェルダー Lv40, ドククラゲ Lv40, ランターン Lv40]]
+	[Name = Fishing Lake, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, トサキント Lv10, コイキング Lv20, トサキント Lv20, トサキント Lv20, トサキント Lv20, トサキント Lv40, トサキント Lv40, コイキング Lv40, アズマオウ Lv40]]
+	[Name = Fishing Pond, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, ニョロモ Lv10, コイキング Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv40, ニョロモ Lv40, コイキング Lv40, ニョロモ Lv40]]
+	[Name = Fishing Dratini 1 (Ice Path, Dragon's Den), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv20, コイキング Lv20, コイキング Lv20, ミニりュウ Lv20, コイキング Lv40, ミニりュウ Lv40, コイキング Lv40, ハクりュー Lv40]]
+	[Name = Fishing Qwilfish Swarm (Route 32), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv5, コイキング Lv5, ハりーセン Lv5, コイキング Lv20, ハりーセン Lv20, ハりーセン Lv20, ハりーセン Lv20, ハりーセン Lv40, ハりーセン Lv40, ハりーセン Lv40, ハりーセン Lv40]]
+	[Name = Fishing Remoraid Swarm (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, テッポウオ Lv10, コイキング Lv20, テッポウオ Lv20, テッポウオ Lv20, テッポウオ Lv20, テッポウオ Lv40, テッポウオ Lv40, テッポウオ Lv40, テッポウオ Lv40]]
+	[Name = Fishing Gyarados (Lake of Rage, Fuchsia City), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv20, コイキング Lv20, コイキング Lv20, ギャラドス Lv20, コイキング Lv40, ギャラドス Lv40, コイキング Lv40, コイキング Lv40]]
+	[Name = Fishing Dratini 2 (Route 45), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, ミニりュウ Lv10, コイキング Lv10, ミニりュウ Lv10, コイキング Lv10, ハクりュー Lv10]]
+	[Name = Fishing Whirl Islands, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, クラブ Lv10, コイキング Lv20, クラブ Lv20, クラブ Lv20, タッツー Lv20, クラブ Lv40, タッツー Lv40, キングラー Lv40, シードラ Lv40]]
+	[Name = Fishing Qwilfish (Routes 32, 12, 13), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, メノクラゲ Lv10, コイキング Lv20, メノクラゲ Lv20, メノクラゲ Lv20, メノクラゲ Lv20, メノクラゲ Lv40, メノクラゲ Lv40, コイキング Lv40, ハりーセン Lv40]]
+	[Name = Fishing Remoraid (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, ニョロモ Lv10, コイキング Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv40, ニョロモ Lv40, コイキング Lv40, テッポウオ Lv40]]
+	[Name = Headbutt (Routes 44, 45, 46) (common), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, オニスズメ Lv10, オニスズメ Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Routes 44, 45, 46) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, へラクロス Lv10, へラクロス Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (common), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, アーボ Lv10, オニスズメ Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, へラクロス Lv10, へラクロス Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, イトマル Lv10, レディバ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, アーボ Lv10, ホーホー Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Route 43) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, コンパン Lv10, ホーホー Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Route 43) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Ilex Forest) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, ヨルノズク Lv10, バタフりー Lv10, スピアー Lv10]]
+	[Name = Headbutt (Ilex Forest) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, キャタピー Lv10, ビードル Lv10, ホーホー Lv10, トランセル Lv10, コクーン Lv10]]
+	[Name = Rock Smash, Rate = 0, MapIndex = -1,
+		Encounters = [クラブ Lv15, ツボツボ Lv15]]
+	[Name = Bug Catching Contest, Rate = 0, MapIndex = -1,
+		Encounters = [キャタピー Lvs 7-18, ビードル Lvs 7-18, トランセル Lvs 9-18, コクーン Lvs 9-18, バタフりー Lvs 12-15, スピアー Lvs 12-15, コンパン Lvs 10-16, パラス Lvs 10-17, ストライク Lvs 13-14, カイロス Lvs 13-14]
+		Banned = [Species [name=アンノーン, number=201, primaryType=PSYCHIC, secondaryType=null, hp=48, attack=72, defense=48, spatk=72, spdef=48, speed=48]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = マダツボミのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv3, ゴース Lv4, ゴース Lv5, コラッタ Lv3, ゴース Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv3, コラッタ Lv4, コラッタ Lv5, コラッタ Lv3, コラッタ Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = マダツボミのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv3, ゴース Lv4, ゴース Lv5, コラッタ Lv3, ゴース Lv6, コラッタ Lv5, コラッタ Lv5]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv20, コラッタ Lv21, コラッタ Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = スズのとう Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, コラッタ Lv22, コラッタ Lv23, コラッタ Lv24, コラッタ Lv24]]
+	[Name = やけたとう Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ドガース Lv14, コラッタ Lv15, ズバット Lv14, コラッタ Lv15, ラッタ Lv15, ラッタ Lv15]]
+	[Name = やけたとう Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ドガース Lv14, コラッタ Lv15, ズバット Lv14, コラッタ Lv15, ラッタ Lv15, ラッタ Lv15]]
+	[Name = やけたとう Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ドガース Lv14, コラッタ Lv15, ズバット Lv14, コラッタ Lv15, ラッタ Lv15, ラッタ Lv15]]
+	[Name = やけたとう Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ドガース Lv14, ドガース Lv16, ズバット Lv15, ドガース Lv12, ドガース Lv16, マタドガス Lv16]]
+	[Name = やけたとう Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ドガース Lv14, ドガース Lv16, ズバット Lv15, ドガース Lv12, ドガース Lv16, マタドガス Lv16]]
+	[Name = やけたとう Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ドガース Lv14, ドガース Lv16, ズバット Lv15, ドガース Lv12, ドガース Lv16, マタドガス Lv16]]
+	[Name = しぜんこうえん Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♂ Lv12, ニドラン♀ Lv12, レディバ Lv14, ポッポ Lv13, キャタピー Lv10, ビードル Lv10, ビードル Lv10]]
+	[Name = しぜんこうえん Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♀ Lv12, ニドラン♂ Lv12, ヒマナッツ Lv14, ポッポ Lv13, キャタピー Lv10, ビードル Lv10, ビードル Lv10]]
+	[Name = しぜんこうえん Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コダック Lv12, ホーホー Lv13, イトマル Lv14, ホーホー Lv15, コンパン Lv10, コンパン Lv12, コンパン Lv12]]
+	[Name = アルフのいせき Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [ネイティ Lv20, ネイティ Lv22, ネイティ Lv18, ネイティ Lv24, ドーブル Lv20, ドーブル Lv22, ドーブル Lv22]]
+	[Name = アルフのいせき Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [ネイティ Lv20, ネイティ Lv22, ネイティ Lv18, ネイティ Lv24, ドーブル Lv20, ドーブル Lv22, ドーブル Lv22]]
+	[Name = アルフのいせき Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [ネイティ Lv20, ネイティ Lv22, ネイティ Lv18, ネイティ Lv24, ウパー Lv22, ヌオー Lv22, ヌオー Lv22]]
+	[Name = アルフのいせき Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5]]
+	[Name = アルフのいせき Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5]]
+	[Name = アルフのいせき Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5, アンノーン Lv5]]
+	[Name = つながりのどうくつ Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv6, サンド Lv6, ズバット Lv5, コラッタ Lv4, ズバット Lv7, イワーク Lv6, イワーク Lv6]]
+	[Name = つながりのどうくつ Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv6, サンド Lv6, ズバット Lv5, コラッタ Lv4, ズバット Lv7, イワーク Lv6, イワーク Lv6]]
+	[Name = つながりのどうくつ Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv6, コラッタ Lv6, ウパー Lv5, コラッタ Lv4, ズバット Lv7, イワーク Lv6, イワーク Lv6]]
+	[Name = つながりのどうくつ Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv8, ズバット Lv6, ズバット Lv8, イワーク Lv8, コラッタ Lv6, コラッタ Lv8, コラッタ Lv8]]
+	[Name = つながりのどうくつ Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv8, ズバット Lv6, ズバット Lv8, イワーク Lv8, コラッタ Lv6, コラッタ Lv8, コラッタ Lv8]]
+	[Name = つながりのどうくつ Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv8, ズバット Lv6, ウパー Lv8, イワーク Lv8, コラッタ Lv6, コラッタ Lv8, コラッタ Lv8]]
+	[Name = つながりのどうくつ Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lv22, ゴルバット Lv22, ズバット Lv22, ラッタ Lv21, イシツブテ Lv20, イワーク Lv23, イワーク Lv23]]
+	[Name = つながりのどうくつ Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lv22, ゴルバット Lv22, ズバット Lv22, ラッタ Lv21, イシツブテ Lv20, イワーク Lv23, イワーク Lv23]]
+	[Name = つながりのどうくつ Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lv22, ゴルバット Lv22, ヌオー Lv22, ラッタ Lv21, イシツブテ Lv20, イワーク Lv23, イワーク Lv23]]
+	[Name = ヤドンのいど Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv5, ズバット Lv6, ズバット Lv7, ヤドン Lv6, ズバット Lv8, ヤドン Lv8, ヤドン Lv8]]
+	[Name = ヤドンのいど Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv5, ズバット Lv6, ズバット Lv7, ヤドン Lv6, ズバット Lv8, ヤドン Lv8, ヤドン Lv8]]
+	[Name = ヤドンのいど Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv5, ズバット Lv6, ズバット Lv7, ヤドン Lv6, ズバット Lv8, ヤドン Lv8, ヤドン Lv8]]
+	[Name = ヤドンのいど Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv21, ズバット Lv23, ズバット Lv19, ヤドン Lv21, ゴルバット Lv23, ヤドン Lv23, ヤドン Lv23]]
+	[Name = ヤドンのいど Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv21, ズバット Lv23, ズバット Lv19, ヤドン Lv21, ゴルバット Lv23, ヤドン Lv23, ヤドン Lv23]]
+	[Name = ヤドンのいど Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ズバット Lv21, ズバット Lv23, ズバット Lv19, ヤドン Lv21, ゴルバット Lv23, ヤドン Lv23, ヤドン Lv23]]
+	[Name = ウバメのもり Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [キャタピー Lv5, ビードル Lv5, トランセル Lv7, コクーン Lv7, ポッポ Lv7, パラス Lv6, パラス Lv6]]
+	[Name = ウバメのもり Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [キャタピー Lv5, ビードル Lv5, トランセル Lv7, コクーン Lv7, ポッポ Lv7, パラス Lv6, パラス Lv6]]
+	[Name = ウバメのもり Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [ナゾノクサ Lv5, コンパン Lv5, ナゾノクサ Lv7, コダック Lv7, ホーホー Lv7, パラス Lv6, パラス Lv6]]
+	[Name = スりバチやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ズバット Lv13, ワンりキー Lv14, ゴルバット Lv13, イシツブテ Lv14, ラッタ Lv16, ラッタ Lv16]]
+	[Name = スりバチやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ズバット Lv13, ワンりキー Lv14, ゴルバット Lv13, イシツブテ Lv14, ラッタ Lv16, ラッタ Lv16]]
+	[Name = スりバチやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [コラッタ Lv14, ズバット Lv13, マりル Lv14, ゴルバット Lv13, イシツブテ Lv14, ラッタ Lv16, ラッタ Lv16]]
+	[Name = スりバチやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv13, コラッタ Lv14, ワンりキー Lv15, ラッタ Lv14, ズバット Lv15, ゴルバット Lv15, ゴルバット Lv15]]
+	[Name = スりバチやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv13, コラッタ Lv14, ワンりキー Lv15, ラッタ Lv14, ズバット Lv15, ゴルバット Lv15, ゴルバット Lv15]]
+	[Name = スりバチやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [イシツブテ Lv13, コラッタ Lv14, ラッタ Lv15, ズバット Lv14, マりル Lv15, ゴルバット Lv15, ゴルバット Lv15]]
+	[Name = スりバチやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv31, ゴーりキー Lv32, イシツブテ Lv31, ラッタ Lv30, ワンりキー Lv28, ゴルバット Lv30, ゴルバット Lv30]]
+	[Name = スりバチやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv31, ゴーりキー Lv32, イシツブテ Lv31, ラッタ Lv30, ワンりキー Lv28, ゴルバット Lv30, ゴルバット Lv30]]
+	[Name = スりバチやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv31, イシツブテ Lv31, ラッタ Lv30, ゴルバット Lv30, マりル Lv28, ゴルバット Lv32, ゴルバット Lv32]]
+	[Name = スりバチやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv15, ズバット Lv17, ゴルバット Lv17, ワンりキー Lv16, イシツブテ Lv16, ラッタ Lv18, ラッタ Lv18]]
+	[Name = スりバチやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv15, ズバット Lv17, ゴルバット Lv17, ワンりキー Lv16, イシツブテ Lv16, ラッタ Lv18, ラッタ Lv18]]
+	[Name = スりバチやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv15, ズバット Lv17, ゴルバット Lv17, マりル Lv16, イシツブテ Lv16, ラッタ Lv18, ラッタ Lv18]]
+	[Name = こおりのぬけみち Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv21, ズバット Lv22, ゴルバット Lv22, ウりムー Lv23, ゴルバット Lv24, ゴルバット Lv22, ゴルバット Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv21, ズバット Lv22, ゴルバット Lv22, ウりムー Lv23, ゴルバット Lv24, ゴルバット Lv22, ゴルバット Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [デりバード Lv21, ズバット Lv22, ゴルバット Lv22, デりバード Lv23, ゴルバット Lv24, ゴルバット Lv22, ゴルバット Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv22, ズバット Lv23, ゴルバット Lv23, ウりムー Lv24, ゴルバット Lv25, ゴルバット Lv23, ルージュラ Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv22, ズバット Lv23, ゴルバット Lv23, ウりムー Lv24, ゴルバット Lv25, ゴルバット Lv23, ルージュラ Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [デりバード Lv22, ズバット Lv23, ゴルバット Lv23, デりバード Lv24, ゴルバット Lv25, ゴルバット Lv23, ニューラ Lv22]]
+	[Name = こおりのぬけみち Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [デりバード Lv23, ズバット Lv24, ゴルバット Lv24, デりバード Lv25, ゴルバット Lv26, ニューラ Lv22, ニューラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv23, ズバット Lv24, ゴルバット Lv24, ウりムー Lv25, ゴルバット Lv26, ルージュラ Lv22, ルージュラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [デりバード Lv23, ズバット Lv24, ゴルバット Lv24, デりバード Lv25, ゴルバット Lv26, ニューラ Lv22, ニューラ Lv24]]
+	[Name = こおりのぬけみち Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv24, ズバット Lv25, ゴルバット Lv25, ウりムー Lv26, ルージュラ Lv22, ルージュラ Lv24, ルージュラ Lv26]]
+	[Name = こおりのぬけみち Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ウりムー Lv24, ズバット Lv25, ゴルバット Lv25, ウりムー Lv26, ルージュラ Lv22, ルージュラ Lv24, ルージュラ Lv26]]
+	[Name = こおりのぬけみち Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [デりバード Lv24, ズバット Lv25, ゴルバット Lv25, デりバード Lv26, ニューラ Lv22, ニューラ Lv24, ニューラ Lv26]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, クラブ Lv22, クラブ Lv24, ゴルバット Lv25, ゴルバット Lv24, ゴルバット Lv24]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, クラブ Lv22, クラブ Lv24, ゴルバット Lv25, ゴルバット Lv24, ゴルバット Lv24]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, クラブ Lv22, クラブ Lv24, ゴルバット Lv25, ゴルバット Lv24, ゴルバット Lv24]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, クラブ Lv22, クラブ Lv24, ゴルバット Lv25, ゴルバット Lv24, ゴルバット Lv24]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, パウワウ Lv22, クラブ Lv24, ゴルバット Lv25, パウワウ Lv24, パウワウ Lv24]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv22, ズバット Lv23, クラブ Lv22, クラブ Lv24, ゴルバット Lv25, ゴルバット Lv24, ゴルバット Lv24]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv23, ズバット Lv24, パウワウ Lv23, クラブ Lv25, ゴルバット Lv26, パウワウ Lv25, パウワウ Lv25]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv23, ズバット Lv24, パウワウ Lv23, クラブ Lv25, ゴルバット Lv26, パウワウ Lv25, パウワウ Lv25]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv23, ズバット Lv24, クラブ Lv23, クラブ Lv25, ゴルバット Lv26, ゴルバット Lv25, ゴルバット Lv25]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv24, ズバット Lv25, パウワウ Lv24, クラブ Lv26, ゴルバット Lv27, パウワウ Lv26, パウワウ Lv26]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv24, ズバット Lv25, パウワウ Lv24, クラブ Lv26, ゴルバット Lv27, パウワウ Lv26, パウワウ Lv26]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv24, ズバット Lv25, クラブ Lv24, クラブ Lv26, ゴルバット Lv27, ゴルバット Lv26, ゴルバット Lv26]]
+	[Name = うずまきじま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv25, ズバット Lv26, パウワウ Lv25, クラブ Lv27, ゴルバット Lv28, パウワウ Lv27, パウワウ Lv27]]
+	[Name = うずまきじま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv25, ズバット Lv26, パウワウ Lv25, クラブ Lv27, ゴルバット Lv28, パウワウ Lv27, パウワウ Lv27]]
+	[Name = うずまきじま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [クラブ Lv25, ズバット Lv26, クラブ Lv25, クラブ Lv27, ゴルバット Lv28, ゴルバット Lv27, ゴルバット Lv27]]
+	[Name = シロガネやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv43, りングマ Lv44, イワーク Lv42, ブーバー Lv45, ゴルバット Lv45, ヨーギラス Lv20, ヨーギラス Lv15]]
+	[Name = シロガネやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv43, りングマ Lv44, イワーク Lv42, ブーバー Lv45, ゴルバット Lv45, ヨーギラス Lv20, ヨーギラス Lv15]]
+	[Name = シロガネやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv43, ゴルバット Lv44, イワーク Lv42, ゴルバット Lv42, ゴルダック Lv45, ゴルバット Lv46, ゴルバット Lv46]]
+	[Name = シロガネやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴーりキー Lv48, りングマ Lv47, パラセクト Lv46, パラセクト Lv48, ヨーギラス Lv15, ヨーギラス Lv20]]
+	[Name = シロガネやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴーりキー Lv48, りングマ Lv47, パラセクト Lv46, パラセクト Lv48, ヨーギラス Lv15, ヨーギラス Lv20]]
+	[Name = シロガネやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴルダック Lv48, ゴルバット Lv46, パラセクト Lv46, パラセクト Lv48, ムウマ Lv45, ムウマ Lv45]]
+	[Name = シロガネやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv51, イワーク Lv48, ゴローン Lv48, りングマ Lv50, ヨーギラス Lv20, ヨーギラス Lv15, サナギラス Lv20]]
+	[Name = シロガネやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv51, イワーク Lv48, ゴローン Lv48, りングマ Lv50, ヨーギラス Lv20, ヨーギラス Lv15, サナギラス Lv20]]
+	[Name = シロガネやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv51, イワーク Lv48, ゴローン Lv48, ゴルバット Lv49, ゴルダック Lv45, ゴルバット Lv53, ゴルバット Lv53]]
+	[Name = シロガネやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴルバット Lv46, ゴルバット Lv50, パラセクト Lv46, パラセクト Lv48, パラセクト Lv50, パラセクト Lv52]]
+	[Name = シロガネやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv48, ゴルバット Lv46, ゴルバット Lv50, パラセクト Lv46, パラセクト Lv48, パラセクト Lv50, パラセクト Lv52]]
+	[Name = シロガネやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ムウマ Lv45, ゴルバット Lv48, ゴルバット Lv50, パラセクト Lv46, パラセクト Lv48, パラセクト Lv50, パラセクト Lv52]]
+	[Name = くらやみのほらあな Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ズバット Lv2, イシツブテ Lv2, イシツブテ Lv4, ヒメグマ Lv2, ズバット Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ズバット Lv2, イシツブテ Lv2, イシツブテ Lv4, ズバット Lv2, ズバット Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ズバット Lv2, イシツブテ Lv2, イシツブテ Lv4, ズバット Lv2, ズバット Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ズバット Lv23, ゴローン Lv25, りングマ Lv25, ヒメグマ Lv20, ゴルバット Lv23, ゴルバット Lv23]]
+	[Name = くらやみのほらあな Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ズバット Lv23, ゴローン Lv25, りングマ Lv25, りングマ Lv30, ゴルバット Lv23, ゴルバット Lv23]]
+	[Name = くらやみのほらあな Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ズバット Lv23, ゴローン Lv25, ソーナンス Lv20, ソーナンス Lv25, ゴルバット Lv23, ゴルバット Lv23]]
+	[Name = 29\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, オタチ Lv2, ポッポ Lv3, オタチ Lv3, コラッタ Lv2, ハネッコ Lv3, ハネッコ Lv3]]
+	[Name = 29\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, オタチ Lv2, ポッポ Lv3, オタチ Lv3, コラッタ Lv2, ハネッコ Lv3, ハネッコ Lv3]]
+	[Name = 29\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ホーホー Lv2, コラッタ Lv2, ホーホー Lv3, コラッタ Lv3, コラッタ Lv2, ホーホー Lv3, ホーホー Lv3]]
+	[Name = 30\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [レディバ Lv3, キャタピー Lv3, キャタピー Lv4, ポッポ Lv4, ビードル Lv3, ハネッコ Lv4, ハネッコ Lv4]]
+	[Name = 30\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv3, キャタピー Lv3, キャタピー Lv4, ポッポ Lv4, ビードル Lv3, ハネッコ Lv4, ハネッコ Lv4]]
+	[Name = 30\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イトマル Lv3, ホーホー Lv3, ニョロモ Lv4, ホーホー Lv4, ズバット Lv3, ホーホー Lv4, ホーホー Lv4]]
+	[Name = 31\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [レディバ Lv4, キャタピー Lv4, マダツボミ Lv5, ポッポ Lv5, ビードル Lv4, ハネッコ Lv5, ハネッコ Lv5]]
+	[Name = 31\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv4, キャタピー Lv4, マダツボミ Lv5, ポッポ Lv5, ビードル Lv4, ハネッコ Lv5, ハネッコ Lv5]]
+	[Name = 31\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イトマル Lv4, ニョロモ Lv4, マダツボミ Lv5, ホーホー Lv5, ズバット Lv4, ゴース Lv5, ゴース Lv5]]
+	[Name = 32\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv4, コラッタ Lv5, マダツボミ Lv7, ハネッコ Lv6, ポッポ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 32\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv4, コラッタ Lv5, マダツボミ Lv7, ハネッコ Lv6, ポッポ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 32\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ウパー Lv4, コラッタ Lv5, マダツボミ Lv7, ズバット Lv6, ホーホー Lv7, ゴース Lv7, ゴース Lv7]]
+	[Name = 33\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv6, オニスズメ Lv6, イシツブテ Lv6, ハネッコ Lv6, アーボ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 33\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv6, オニスズメ Lv6, イシツブテ Lv6, ハネッコ Lv6, アーボ Lv7, ハネッコ Lv7, ハネッコ Lv7]]
+	[Name = 33\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv6, ズバット Lv6, イシツブテ Lv6, ズバット Lv6, コラッタ Lv7, コラッタ Lv7, コラッタ Lv7]]
+	[Name = 34\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv10, コラッタ Lv11, ポッポ Lv12, ケーシィ Lv10, プりン Lv12, メタモン Lv10, メタモン Lv10]]
+	[Name = 34\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv10, コラッタ Lv11, ポッポ Lv12, ケーシィ Lv10, プりン Lv12, メタモン Lv10, メタモン Lv10]]
+	[Name = 34\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [スりープ Lv12, コラッタ Lv11, ホーホー Lv12, ケーシィ Lv10, プりン Lv12, メタモン Lv10, メタモン Lv10]]
+	[Name = 35\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv12, ポッポ Lv14, ガーディ Lv13, ケーシィ Lv10, プりン Lv12, メタモン Lv10, ヤンヤンマ Lv12]]
+	[Name = 35\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv12, ポッポ Lv14, ガーディ Lv13, ケーシィ Lv10, プりン Lv12, メタモン Lv10, ヤンヤンマ Lv12]]
+	[Name = 35\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [スりープ Lv12, ホーホー Lv14, コダック Lv13, ケーシィ Lv10, プりン Lv12, メタモン Lv10, ヤンヤンマ Lv12]]
+	[Name = 36\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [レディバ Lv4, ポッポ Lv4, マダツボミ Lv5, ガーディ Lv5, ポッポ Lv5, ポッポ Lv6, ポッポ Lv6]]
+	[Name = 36\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv4, ポッポ Lv4, マダツボミ Lv5, ガーディ Lv5, ポッポ Lv5, ポッポ Lv6, ポッポ Lv6]]
+	[Name = 36\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イトマル Lv4, ホーホー Lv4, マダツボミ Lv5, ホーホー Lv5, ホーホー Lv5, ゴース Lv5, ゴース Lv5]]
+	[Name = 37\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [レディバ Lv13, ガーディ Lv14, ポッポ Lv15, ガーディ Lv16, ピジョン Lv15, レディアン Lv15, レディアン Lv15]]
+	[Name = 37\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv13, ガーディ Lv14, ポッポ Lv15, ガーディ Lv16, ピジョン Lv15, ポッポ Lv15, ポッポ Lv15]]
+	[Name = 37\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イトマル Lv13, オドシシ Lv14, ホーホー Lv15, オドシシ Lv16, ヨルノズク Lv15, アりアドス Lv15, アりアドス Lv15]]
+	[Name = 38\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ケンタロス Lv13, ミルタンク Lv13, ミルタンク Lv13]]
+	[Name = 38\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ケンタロス Lv13, ミルタンク Lv13, ミルタンク Lv13]]
+	[Name = 38\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ニャース Lv16, ラッタ Lv16, コイル Lv16, ヨルノズク Lv16, ニャース Lv16, ニャース Lv16, ニャース Lv16]]
+	[Name = 39\x35 Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ミルタンク Lv15, ケンタロス Lv15, ケンタロス Lv15]]
+	[Name = 39\x35 Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [コラッタ Lv16, ラッタ Lv16, コイル Lv16, ピジョン Lv16, ミルタンク Lv15, ケンタロス Lv15, ケンタロス Lv15]]
+	[Name = 39\x35 Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ニャース Lv16, ラッタ Lv16, コイル Lv16, ヨルノズク Lv16, ニャース Lv18, ニャース Lv18, ニャース Lv18]]
+	[Name = 42\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv13, オニスズメ Lv14, コラッタ Lv15, ラッタ Lv16, アーボック Lv15, オニドりル Lv16, オニドりル Lv16]]
+	[Name = 42\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [アーボ Lv13, オニスズメ Lv14, コラッタ Lv15, ラッタ Lv16, アーボック Lv15, オニドりル Lv16, オニドりル Lv16]]
+	[Name = 42\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ズバット Lv14, ラッタ Lv15, ゴルバット Lv16, マりル Lv15, ゴルバット Lv16, ゴルバット Lv16]]
+	[Name = 43\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [オタチ Lv15, ピジョン Lv16, カモネギ Lv16, オオタチ Lv15, ラッタ Lv17, オオタチ Lv17, オオタチ Lv17]]
+	[Name = 43\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [オタチ Lv15, ピジョン Lv16, カモネギ Lv16, オオタチ Lv15, ラッタ Lv17, オオタチ Lv17, オオタチ Lv17]]
+	[Name = 43\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv15, ヨルノズク Lv16, ラッタ Lv16, コンパン Lv17, ラッタ Lv17, モルフォン Lv17, モルフォン Lv17]]
+	[Name = 44\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv23, べロりンガ Lv22, マダツボミ Lv22, ウツドン Lv24, べロりンガ Lv24, べロりンガ Lv26, べロりンガ Lv26]]
+	[Name = 44\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv23, べロりンガ Lv22, マダツボミ Lv22, ウツドン Lv24, べロりンガ Lv24, べロりンガ Lv26, べロりンガ Lv26]]
+	[Name = 44\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv23, ニョロモ Lv22, マダツボミ Lv22, ウツドン Lv24, ニョロゾ Lv24, ニョロゾ Lv26, ニョロゾ Lv26]]
+	[Name = 45\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ゴローン Lv23, グライガー Lv24, ドンファン Lv25, ゴマゾウ Lv20, エアームド Lv27, エアームド Lv27]]
+	[Name = 45\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ゴローン Lv23, グライガー Lv24, ドンファン Lv25, ドンファン Lv30, エアームド Lv27, エアームド Lv27]]
+	[Name = 45\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv23, ゴローン Lv23, グライガー Lv24, ゴローン Lv25, ゴローン Lv27, ゴローン Lv27, ゴローン Lv27]]
+	[Name = 46\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv2, オニスズメ Lv2, イシツブテ Lv3, コラッタ Lv3, ゴマゾウ Lv2, コラッタ Lv2, コラッタ Lv2]]
+	[Name = 46\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv2, オニスズメ Lv2, イシツブテ Lv3, コラッタ Lv3, コラッタ Lv2, コラッタ Lv2, コラッタ Lv2]]
+	[Name = 46\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lv2, コラッタ Lv2, イシツブテ Lv3, コラッタ Lv3, コラッタ Lv2, コラッタ Lv2, コラッタ Lv2]]
+	[Name = シロガネやま Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv41, ポニータ Lv42, アーボック Lv42, ギャロップ Lv44, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = シロガネやま Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv41, ポニータ Lv42, アーボック Lv42, ギャロップ Lv44, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = シロガネやま Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv41, ニョロゾ Lv42, ゴルバット Lv42, ニョロゾ Lv44, ゴルバット Lv40, ゴルバット Lv44, ゴルバット Lv44]]
+	[Name = アルフのいせき Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ウパー Lv15, ヌオー Lv20, ヌオー Lv15]]
+	[Name = つながりのどうくつ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [メノクラゲ Lv15, ヌオー Lv20, ドククラゲ Lv20]]
+	[Name = ヤドンのいど Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ヤドン Lv15, ヤドン Lv20, ヤドン Lv10]]
+	[Name = ヤドンのいど Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ヤドン Lv15, ヤドン Lv20, ヤドラン Lv20]]
+	[Name = ウバメのもり Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コダック Lv15, コダック Lv10, ゴルダック Lv15]]
+	[Name = スりバチやま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, マりル Lv20, アズマオウ Lv20]]
+	[Name = スりバチやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [トサキント Lv20, マりル Lv25, アズマオウ Lv25]]
+	[Name = スりバチやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [トサキント Lv15, マりル Lv20, アズマオウ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, タッツー Lv15, ドククラゲ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [タッツー Lv15, タッツー Lv20, ドククラゲ Lv20]]
+	[Name = うずまきじま Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [タッツー Lv20, ドククラゲ Lv20, シードラ Lv20]]
+	[Name = シロガネやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [アズマオウ Lv35, ゴルダック Lv35, トサキント Lv35]]
+	[Name = くらやみのほらあな Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = くらやみのほらあな Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = りゅうのあな Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, ミニりュウ Lv10]]
+	[Name = アサギシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 30\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = 31\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = 32\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv15, ヌオー Lv20, ドククラゲ Lv20]]
+	[Name = 34\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 35\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コダック Lv20, コダック Lv15, ゴルダック Lv20]]
+	[Name = 40ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 41ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, ドククラゲ Lv20, マンタイン Lv20]]
+	[Name = 42\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv20, トサキント Lv15, アズマオウ Lv20]]
+	[Name = 43\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv10]]
+	[Name = 44\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv25, ニョロモ Lv20, ニョロゾ Lv25]]
+	[Name = 45\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv5]]
+	[Name = ワカバタウン Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = ヨシノシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = キキョウシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = タンバシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = アサギシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = エンジュシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv15, ニョロゾ Lv20]]
+	[Name = いかりのみずうみ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, ギャラドス Lv15]]
+	[Name = フスべシティ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lv15, コイキング Lv10, コイキング Lv5]]
+	[Name = シロガネやま Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロゾ Lv35, ニョロゾ Lv40, ニョロモ Lv35]]
+	[Name = ディグダのあな Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [ディグダ Lv3, ディグダ Lv6, ディグダ Lv12, ディグダ Lv24, ダグトりオ Lv24, ダグトりオ Lv24, ダグトりオ Lv24]]
+	[Name = ディグダのあな Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ディグダ Lv2, ディグダ Lv4, ディグダ Lv8, ディグダ Lv16, ダグトりオ Lv16, ダグトりオ Lv16, ダグトりオ Lv16]]
+	[Name = ディグダのあな Grass/Cave (Night), Rate = 20, MapIndex = -1,
+		Encounters = [ディグダ Lv4, ディグダ Lv8, ディグダ Lv16, ディグダ Lv32, ダグトりオ Lv32, ダグトりオ Lv32, ダグトりオ Lv32]]
+	[Name = おつきみやま Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv6, イシツブテ Lv8, サンド Lv8, パラス Lv12, イシツブテ Lv10, ピッピ Lv8, ピッピ Lv8]]
+	[Name = おつきみやま Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv6, イシツブテ Lv8, サンド Lv8, パラス Lv12, イシツブテ Lv10, ピッピ Lv8, ピッピ Lv8]]
+	[Name = おつきみやま Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv6, イシツブテ Lv8, ピッピ Lv8, パラス Lv12, イシツブテ Lv10, ピッピ Lv12, ピッピ Lv12]]
+	[Name = イワヤマトンネル Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv10, イシツブテ Lv11, ワンりキー Lv12, ズバット Lv12, ゴーりキー Lv15, ガラガラ Lv12, ガラガラ Lv12]]
+	[Name = イワヤマトンネル Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv10, イシツブテ Lv11, ワンりキー Lv12, ズバット Lv12, ゴーりキー Lv15, ガラガラ Lv12, ガラガラ Lv12]]
+	[Name = イワヤマトンネル Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv12, イシツブテ Lv11, イシツブテ Lv12, ゴースト Lv17, ズバット Lv15, ズバット Lv15, ズバット Lv15]]
+	[Name = イワヤマトンネル Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv12, イシツブテ Lv14, イワーク Lv16, ズバット Lv12, ガラガラ Lv15, ガルーラ Lv15, ガルーラ Lv15]]
+	[Name = イワヤマトンネル Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [カラカラ Lv12, イシツブテ Lv14, イワーク Lv16, ズバット Lv12, ガラガラ Lv15, ガルーラ Lv15, ガルーラ Lv15]]
+	[Name = イワヤマトンネル Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv12, イシツブテ Lv14, イワーク Lv16, ズバット Lv15, ゴースト Lv15, ゴルバット Lv15, ゴルバット Lv15]]
+	[Name = チャンピオンロード Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv34, サイホーン Lv32, イワーク Lv33, ゴルバット Lv34, サンドパン Lv35, サイドン Lv35, サイドン Lv35]]
+	[Name = チャンピオンロード Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ゴローン Lv34, サイホーン Lv32, イワーク Lv33, ゴルバット Lv34, サンドパン Lv35, サイドン Lv35, サイドン Lv35]]
+	[Name = チャンピオンロード Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ゴルバット Lv34, ゴローン Lv34, イワーク Lv32, ゴローン Lv36, ゴローン Lv38, ゴローン Lv40, ゴローン Lv40]]
+	[Name = トージョウのたき Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv22, ラッタ Lv22, ゴルバット Lv24, ヤドン Lv21, コラッタ Lv20, ヤドン Lv23, ヤドン Lv23]]
+	[Name = トージョウのたき Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv22, ラッタ Lv22, ゴルバット Lv24, ヤドン Lv21, コラッタ Lv20, ヤドン Lv23, ヤドン Lv23]]
+	[Name = トージョウのたき Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ズバット Lv22, ラッタ Lv22, ゴルバット Lv24, ヤドン Lv21, コラッタ Lv20, ヤドン Lv23, ヤドン Lv23]]
+	[Name = 1\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, コラッタ Lv2, オタチ Lv3, ポッポ Lv3, オオタチ Lv6, ポッポ Lv4, ポッポ Lv4]]
+	[Name = 1\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv2, コラッタ Lv2, オタチ Lv3, ポッポ Lv3, オオタチ Lv6, ポッポ Lv4, ポッポ Lv4]]
+	[Name = 1\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ホーホー Lv2, コラッタ Lv2, コラッタ Lv3, ホーホー Lv3, ラッタ Lv6, ホーホー Lv4, ホーホー Lv4]]
+	[Name = 2\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv3, レディバ Lv3, ポッポ Lv5, バタフりー Lv7, レディアン Lv7, ピカチュウ Lv4, ピカチュウ Lv4]]
+	[Name = 2\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv3, ポッポ Lv3, ポッポ Lv5, バタフりー Lv7, ピジョン Lv7, ピカチュウ Lv4, ピカチュウ Lv4]]
+	[Name = 2\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ホーホー Lv3, イトマル Lv3, ホーホー Lv5, ヨルノズク Lv7, アりアドス Lv7, ヨルノズク Lv4, ヨルノズク Lv4]]
+	[Name = 3\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 3\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 3\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv5, コラッタ Lv10, ラッタ Lv10, ズバット Lv6, コラッタ Lv5, ピッピ Lv6, ピッピ Lv6]]
+	[Name = 4\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 4\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv5, コラッタ Lv5, アーボ Lv8, ラッタ Lv10, アーボック Lv10, サンド Lv10, サンド Lv10]]
+	[Name = 4\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv5, コラッタ Lv10, ラッタ Lv10, ズバット Lv6, コラッタ Lv5, ピッピ Lv6, ピッピ Lv6]]
+	[Name = 5\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv13, ブルー Lv13, ピジョン Lv15, ケーシィ Lv12, プりン Lv14, ケーシィ Lv14, ケーシィ Lv14]]
+	[Name = 5\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ポッポ Lv13, ブルー Lv13, ピジョン Lv15, ケーシィ Lv12, プりン Lv14, ケーシィ Lv14, ケーシィ Lv14]]
+	[Name = 5\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ホーホー Lv13, ニャース Lv13, ヨルノズク Lv15, ケーシィ Lv12, プりン Lv14, ケーシィ Lv14, ケーシィ Lv14]]
+	[Name = 6\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ブルー Lv13, コイル Lv14, ラッタ Lv15, プりン Lv12, グランブル Lv15, グランブル Lv15]]
+	[Name = 6\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv13, ブルー Lv13, コイル Lv14, ラッタ Lv15, プりン Lv12, グランブル Lv15, グランブル Lv15]]
+	[Name = 6\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ニャース Lv13, スりープ Lv13, コイル Lv14, コダック Lv15, プりン Lv12, ラッタ Lv15, ラッタ Lv15]]
+	[Name = 7\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv17, オニスズメ Lv17, ブルー Lv18, ラッタ Lv18, プりン Lv18, ケーシィ Lv16, ケーシィ Lv16]]
+	[Name = 7\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv17, オニスズメ Lv17, ブルー Lv18, ラッタ Lv18, プりン Lv18, ケーシィ Lv16, ケーシィ Lv16]]
+	[Name = 7\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ニャース Lv17, ヤミカラス Lv17, デルビル Lv18, ぺルシアン Lv18, プりン Lv18, ケーシィ Lv16, ケーシィ Lv16]]
+	[Name = 8\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv17, ピジョン Lv19, ケーシィ Lv16, ガーディ Lv17, プりン Lv16, ユンゲラー Lv18, ユンゲラー Lv18]]
+	[Name = 8\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ブルー Lv17, ピジョン Lv19, ケーシィ Lv16, ガーディ Lv17, プりン Lv16, ユンゲラー Lv18, ユンゲラー Lv18]]
+	[Name = 8\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ニャース Lv17, ヨルノズク Lv20, ケーシィ Lv16, ゴースト Lv17, プりン Lv16, ユンゲラー Lv18, ユンゲラー Lv18]]
+	[Name = 9\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv15, オニスズメ Lv15, ラッタ Lv15, オニドりル Lv15, オニドりル Lv15, ガラガラ Lv18, ガラガラ Lv18]]
+	[Name = 9\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv15, オニスズメ Lv15, ラッタ Lv15, オニドりル Lv15, オニドりル Lv15, ガラガラ Lv18, ガラガラ Lv18]]
+	[Name = 9\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv15, コンパン Lv15, ラッタ Lv15, モルフォン Lv15, ズバット Lv15, ラッタ Lv18, ラッタ Lv18]]
+	[Name = 10\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv15, ビりりダマ Lv17, ラッタ Lv15, オニドりル Lv15, ガラガラ Lv15, エレブー Lv16, エレブー Lv16]]
+	[Name = 10\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [オニスズメ Lv15, ビりりダマ Lv17, ラッタ Lv15, オニドりル Lv15, ガラガラ Lv15, エレブー Lv18, エレブー Lv18]]
+	[Name = 10\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv15, ビりりダマ Lv17, ラッタ Lv15, モルフォン Lv15, ズバット Lv15, エレブー Lv16, エレブー Lv16]]
+	[Name = 11\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ハネッコ Lv14, ラッタ Lv13, コイル Lv15, ピジョン Lv16, コラッタ Lv16, ハネッコ Lv16, ハネッコ Lv16]]
+	[Name = 11\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ハネッコ Lv14, ラッタ Lv13, コイル Lv15, ピジョン Lv16, コラッタ Lv16, ハネッコ Lv16, ハネッコ Lv16]]
+	[Name = 11\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [スりープ Lv14, ニャース Lv13, コイル Lv15, ヨルノズク Lv16, ラッタ Lv16, スりーパー Lv16, スりーパー Lv16]]
+	[Name = 13\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 13\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 13\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv23, ヌオー Lv23, ヨルノズク Lv25, モルフォン Lv25, ヌオー Lv25, ヌオー Lv25, ラッキー Lv25]]
+	[Name = 14\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv26, ニドりーナ Lv26, ピジョン Lv28, ハネッコ Lv28, ポポッコ Lv30, ポポッコ Lv30, ラッキー Lv28]]
+	[Name = 14\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv26, ニドりーナ Lv26, ピジョン Lv28, ハネッコ Lv28, ポポッコ Lv30, ポポッコ Lv30, ラッキー Lv28]]
+	[Name = 14\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv26, ヌオー Lv26, ヨルノズク Lv28, モルフォン Lv28, ヌオー Lv28, ヌオー Lv28, ラッキー Lv28]]
+	[Name = 15\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 15\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ニドりーノ Lv23, ニドりーナ Lv23, ピジョン Lv25, ハネッコ Lv25, ハネッコ Lv27, ハネッコ Lv27, ラッキー Lv25]]
+	[Name = 15\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv23, ヌオー Lv23, ヨルノズク Lv25, モルフォン Lv25, ヌオー Lv25, ヌオー Lv25, ラッキー Lv25]]
+	[Name = 16\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, オニドりル Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 16\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, マグマッグ Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 16\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, べトべター Lv27, べトべター Lv28, ヤミカラス Lv29, ヤミカラス Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 17\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [オニドりル Lv30, べトべター Lv29, べトべター Lv31, オニドりル Lv32, べトべター Lv33, べトべトン Lv33, べトべトン Lv33]]
+	[Name = 17\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [オニドりル Lv30, マグマッグ Lv29, べトべター Lv29, オニドりル Lv32, マグマッグ Lv32, べトべトン Lv33, べトべトン Lv33]]
+	[Name = 17\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv30, べトべター Lv29, べトべター Lv31, べトべター Lv32, べトべター Lv33, べトべトン Lv33, べトべトン Lv33]]
+	[Name = 18\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, オニドりル Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 18\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, オニドりル Lv27, べトべター Lv28, オニドりル Lv29, マグマッグ Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 18\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [べトべター Lv26, べトべター Lv27, べトべター Lv28, べトべター Lv29, べトべター Lv29, べトべトン Lv30, べトべトン Lv30]]
+	[Name = 21ばん すいどう Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [モンジャラ Lv30, コラッタ Lv25, モンジャラ Lv35, ラッタ Lv20, バりヤード Lv30, バりヤード Lv28, バりヤード Lv28]]
+	[Name = 21ばん すいどう Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [モンジャラ Lv30, コラッタ Lv25, モンジャラ Lv35, ラッタ Lv20, バりヤード Lv28, バりヤード Lv30, バりヤード Lv30]]
+	[Name = 21ばん すいどう Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [モンジャラ Lv30, コラッタ Lv25, モンジャラ Lv35, ラッタ Lv20, モンジャラ Lv30, モンジャラ Lv28, モンジャラ Lv28]]
+	[Name = 22\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv3, オニスズメ Lv3, オニスズメ Lv5, ドードー Lv4, ポニータ Lv6, オニドりル Lv7, オニドりル Lv7]]
+	[Name = 22\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv3, オニスズメ Lv3, オニスズメ Lv5, ドードー Lv4, ポニータ Lv6, オニドりル Lv7, オニドりル Lv7]]
+	[Name = 22\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コラッタ Lv3, ニョロモ Lv3, コラッタ Lv5, ニョロモ Lv4, コラッタ Lv6, コラッタ Lv7, コラッタ Lv7]]
+	[Name = 24\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv8, キャタピー Lv10, トランセル Lv12, ケーシィ Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 24\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv8, ヒマナッツ Lv12, キャタピー Lv10, ケーシィ Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 24\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [コンパン Lv10, ナゾノクサ Lv10, ナゾノクサ Lv12, ケーシィ Lv12, マダツボミ Lv10, クサイハナ Lv14, クサイハナ Lv14]]
+	[Name = 25\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv10, ポッポ Lv10, ピジョン Lv12, トランセル Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 25\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [キャタピー Lv10, ポッポ Lv10, ピジョン Lv12, トランセル Lv12, マダツボミ Lv10, バタフりー Lv14, バタフりー Lv14]]
+	[Name = 25\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ナゾノクサ Lv10, ホーホー Lv10, コンパン Lv10, ヨルノズク Lv12, マダツボミ Lv10, ヨルノズク Lv14, ヨルノズク Lv14]]
+	[Name = 26\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, サンドパン Lv28, ポニータ Lv32, ラッタ Lv30, ドードー Lv30, アーボック Lv30, アーボック Lv30]]
+	[Name = 26\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, サンドパン Lv28, ポニータ Lv32, ラッタ Lv30, ドードー Lv30, アーボック Lv30, アーボック Lv30]]
+	[Name = 26\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ヨルノズク Lv28, ラッタ Lv28, ヨルノズク Lv32, ラッタ Lv30, ヌオー Lv30, ヌオー Lv30, ヌオー Lv30]]
+	[Name = 27\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, アーボック Lv28, ラッタ Lv30, ドードー Lv30, ポニータ Lv32, ドードりオ Lv30, ドードりオ Lv30]]
+	[Name = 27\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ドードー Lv28, アーボック Lv28, ラッタ Lv30, ドードー Lv30, ポニータ Lv32, ドードりオ Lv30, ドードりオ Lv30]]
+	[Name = 27\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ヌオー Lv28, ヨルノズク Lv28, ラッタ Lv30, ヌオー Lv30, ヨルノズク Lv32, ヨルノズク Lv32, ヨルノズク Lv32]]
+	[Name = 28\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv39, ポニータ Lv40, ギャロップ Lv40, アーボック Lv42, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = 28\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv39, ポニータ Lv40, ギャロップ Lv40, アーボック Lv42, ドードー Lv41, ドードりオ Lv43, ドードりオ Lv43]]
+	[Name = 28\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [モンジャラ Lv39, ニョロゾ Lv40, ゴルバット Lv40, ニョロゾ Lv40, ゴルバット Lv42, ゴルバット Lv42, ゴルバット Lv42]]
+	[Name = トージョウのたき Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv20, ヤドン Lv20, アズマオウ Lv20]]
+	[Name = クチバシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 4\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 6\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コダック Lv10, コダック Lv5, ゴルダック Lv10]]
+	[Name = 9\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, トサキント Lv10, アズマオウ Lv15]]
+	[Name = 10\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv15, トサキント Lv10, アズマオウ Lv15]]
+	[Name = 12\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv25, ヌオー Lv25, ドククラゲ Lv25]]
+	[Name = 13\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv25, ヌオー Lv25, ドククラゲ Lv25]]
+	[Name = 19ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 20ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 21ばん すいどう Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = 22\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv10, ニョロモ Lv5, ニョロゾ Lv10]]
+	[Name = 24\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 25\x35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = 26\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv30, メノクラゲ Lv25, ドククラゲ Lv30]]
+	[Name = 27\x35 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv15, ドククラゲ Lv20]]
+	[Name = 28\x35 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv40, ニョロモ Lv35, ニョロゾ Lv40]]
+	[Name = マサラタウン Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = トキワシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ニョロモ Lv10, ニョロモ Lv5, ニョロゾ Lv10]]
+	[Name = ハナダシティ Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [トサキント Lv10, トサキント Lv5, アズマオウ Lv10]]
+	[Name = クチバシティ Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = タマムシシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [べトべター Lv20, べトべター Lv15, べトべトン Lv15]]
+	[Name = セキチクシティ Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [コイキング Lv20, コイキング Lv15, コイキング Lv10]]
+	[Name = グレンじま Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [メノクラゲ Lv35, メノクラゲ Lv30, ドククラゲ Lv35]]
+	[Name = くらやみのほらあな Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ノコッチ Lv3, ズバット Lv2, イシツブテ Lv2, ノコッチ Lv2, ノコッチ Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ノコッチ Lv3, ズバット Lv2, イシツブテ Lv2, ノコッチ Lv2, ノコッチ Lv4, ノコッチ Lv4]]
+	[Name = くらやみのほらあな Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lv3, ノコッチ Lv3, ズバット Lv2, イシツブテ Lv2, ノコッチ Lv2, ノコッチ Lv4, ノコッチ Lv4]]
+	[Name = 35\x35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♂ Lv12, ニドラン♀ Lv12, ヤンヤンマ Lv12, ヤンヤンマ Lv14, ポッポ Lv14, メタモン Lv10, メタモン Lv10]]
+	[Name = 35\x35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♂ Lv12, ニドラン♀ Lv12, ヤンヤンマ Lv12, ヤンヤンマ Lv14, ポッポ Lv14, メタモン Lv10, メタモン Lv10]]
+	[Name = 35\x35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ニドラン♂ Lv12, ニドラン♀ Lv12, ヤンヤンマ Lv12, ヤンヤンマ Lv14, ホーホー Lv14, メタモン Lv10, メタモン Lv10]]
+	[Name = Fishing Shore, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, クラブ Lv10, コイキング Lv20, クラブ Lv20, クラブ Lv20, クラブ Lv40, クラブ Lv40, キングラー Lv40]]
+	[Name = Fishing Ocean, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, メノクラゲ Lv10, コイキング Lv20, メノクラゲ Lv20, チョンチー Lv20, チョンチー Lv40, ドククラゲ Lv40, ランターン Lv40]]
+	[Name = Fishing Lake, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, トサキント Lv10, コイキング Lv20, トサキント Lv20, トサキント Lv20, トサキント Lv40, コイキング Lv40, アズマオウ Lv40]]
+	[Name = Fishing Pond, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, ニョロモ Lv10, コイキング Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv40, コイキング Lv40, ニョロモ Lv40]]
+	[Name = Fishing Dratini 1 (Ice Path, Dragon's Den), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv20, コイキング Lv20, コイキング Lv20, コイキング Lv40, コイキング Lv40, ハクりュー Lv40]]
+	[Name = Fishing Qwilfish Swarm (Route 32), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv5, コイキング Lv5, ハりーセン Lv5, コイキング Lv20, ハりーセン Lv20, ハりーセン Lv20, ハりーセン Lv40, ハりーセン Lv40, ハりーセン Lv40]]
+	[Name = Fishing Remoraid Swarm (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, テッポウオ Lv10, コイキング Lv20, テッポウオ Lv20, テッポウオ Lv20, テッポウオ Lv40, テッポウオ Lv40, テッポウオ Lv40]]
+	[Name = Fishing Gyarados (Lake of Rage, Fuchsia City), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv20, コイキング Lv20, コイキング Lv20, コイキング Lv40, コイキング Lv40, コイキング Lv40]]
+	[Name = Fishing Dratini 2 (Route 45), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, コイキング Lv10, ハクりュー Lv10]]
+	[Name = Fishing Whirl Islands, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, クラブ Lv10, コイキング Lv20, クラブ Lv20, クラブ Lv20, クラブ Lv40, キングラー Lv40, シードラ Lv40]]
+	[Name = Fishing Qwilfish (Routes 32, 12, 13), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, メノクラゲ Lv10, コイキング Lv20, メノクラゲ Lv20, メノクラゲ Lv20, メノクラゲ Lv40, コイキング Lv40, ハりーセン Lv40]]
+	[Name = Fishing Remoraid (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv10, コイキング Lv10, ニョロモ Lv10, コイキング Lv20, ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv40, コイキング Lv40, テッポウオ Lv40]]
+	[Name = Time-Specific Fishing 1, Rate = 0, MapIndex = -1,
+		Encounters = [サニーゴ Lv20, ヒトデマン Lv20, サニーゴ Lv40, ヒトデマン Lv40]]
+	[Name = Time-Specific Fishing 2, Rate = 0, MapIndex = -1,
+		Encounters = [シェルダー Lv20, シェルダー Lv20, シェルダー Lv40, シェルダー Lv40]]
+	[Name = Time-Specific Fishing 3, Rate = 0, MapIndex = -1,
+		Encounters = [トサキント Lv20, トサキント Lv20, トサキント Lv40, トサキント Lv40]]
+	[Name = Time-Specific Fishing 4, Rate = 0, MapIndex = -1,
+		Encounters = [ニョロモ Lv20, ニョロモ Lv20, ニョロモ Lv40, ニョロモ Lv40]]
+	[Name = Time-Specific Fishing 5, Rate = 0, MapIndex = -1,
+		Encounters = [ミニりュウ Lv20, ミニりュウ Lv20, ミニりュウ Lv40, ミニりュウ Lv40]]
+	[Name = Time-Specific Fishing 6, Rate = 0, MapIndex = -1,
+		Encounters = [ハりーセン Lv20, ハりーセン Lv20, ハりーセン Lv40, ハりーセン Lv40]]
+	[Name = Time-Specific Fishing 7, Rate = 0, MapIndex = -1,
+		Encounters = [テッポウオ Lv20, テッポウオ Lv20, テッポウオ Lv40, テッポウオ Lv40]]
+	[Name = Time-Specific Fishing 8, Rate = 0, MapIndex = -1,
+		Encounters = [ギャラドス Lv20, ギャラドス Lv20, ギャラドス Lv40, ギャラドス Lv40]]
+	[Name = Time-Specific Fishing 9, Rate = 0, MapIndex = -1,
+		Encounters = [ミニりュウ Lv10, ミニりュウ Lv10, ミニりュウ Lv10, ミニりュウ Lv10]]
+	[Name = Time-Specific Fishing 10, Rate = 0, MapIndex = -1,
+		Encounters = [タッツー Lv20, タッツー Lv20, タッツー Lv40, タッツー Lv40]]
+	[Name = Time-Specific Fishing 11, Rate = 0, MapIndex = -1,
+		Encounters = [メノクラゲ Lv20, メノクラゲ Lv20, メノクラゲ Lv40, メノクラゲ Lv40]]
+	[Name = Headbutt (Routes 44, 45, 46) (common), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, オニスズメ Lv10, オニスズメ Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Routes 44, 45, 46) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, へラクロス Lv10, へラクロス Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (common), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, アーボ Lv10, オニスズメ Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [オニスズメ Lv10, へラクロス Lv10, へラクロス Lv10, エイパム Lv10, エイパム Lv10, エイパム Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, イトマル Lv10, レディバ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, アーボ Lv10, ホーホー Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Route 43) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, コンパン Lv10, ホーホー Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Route 43) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, タマタマ Lv10, タマタマ Lv10, タマタマ Lv10]]
+	[Name = Headbutt (Ilex Forest) (common), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, クヌギダマ Lv10, クヌギダマ Lv10, ヨルノズク Lv10, バタフりー Lv10, スピアー Lv10]]
+	[Name = Headbutt (Ilex Forest) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [ホーホー Lv10, キャタピー Lv10, ビードル Lv10, ホーホー Lv10, トランセル Lv10, コクーン Lv10]]
+	[Name = Rock Smash, Rate = 0, MapIndex = -1,
+		Encounters = [クラブ Lv15, ツボツボ Lv15]]
+	[Name = Bug Catching Contest, Rate = 0, MapIndex = -1,
+		Encounters = [キャタピー Lvs 7-18, ビードル Lvs 7-18, トランセル Lvs 9-18, コクーン Lvs 9-18, バタフりー Lvs 12-15, スピアー Lvs 12-15, コンパン Lvs 10-16, パラス Lvs 10-17, ストライク Lvs 13-14, カイロス Lvs 13-14]
+		Banned = [Species [name=アンノーン, number=201, primaryType=PSYCHIC, secondaryType=null, hp=48, attack=72, defense=48, spatk=72, spdef=48, speed=48]]]
+]

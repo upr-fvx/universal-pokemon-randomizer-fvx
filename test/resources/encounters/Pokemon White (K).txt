@@ -1,0 +1,1511 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = 성신시티 Surfing, Rate = 3, MapIndex = 0,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 성신시티 Surfing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 성신시티 Fishing, Rate = 50, MapIndex = 0,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 성신시티 Fishing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 물풍경시티 Surfing, Rate = 3, MapIndex = 1,
+		Encounters = [탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25]]
+	[Name = 물풍경시티 Surfing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [맘복치 Lvs 10-30, 맘복치 Lvs 10-30, 맘복치 Lvs 10-30, 탱탱겔 Lvs 10-30, 탱탱겔 Lvs 10-30]]
+	[Name = 물풍경시티 Fishing, Rate = 50, MapIndex = 1,
+		Encounters = [크랩 Lvs 35-55, 초라기 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물풍경시티 Fishing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [초라기 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 랜턴 Lvs 45-70, 랜턴 Lvs 45-70]]
+	[Name = 설화시티 Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화시티 Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화시티 Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화시티 Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화시티 Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 꿈터 Grass/Cave, Rate = 8, MapIndex = 3,
+		Encounters = [보르쥐 Lvs 8-8, 쌔비냥 Lvs 8-8, 보르쥐 Lvs 9-9, 쌔비냥 Lvs 9-9, 몽나 Lvs 8-8, 몽나 Lvs 10-10, 보르쥐 Lvs 10-10, 쌔비냥 Lvs 10-10, 보르쥐 Lvs 11-11, 쌔비냥 Lvs 11-11, 보르쥐 Lvs 11-11, 쌔비냥 Lvs 11-11]]
+	[Name = 꿈터 Doubles Grass, Rate = 8, MapIndex = 3,
+		Encounters = [보르그 Lvs 47-47, 레파르다스 Lvs 47-47, 레트라 Lvs 48-48, 몽나 Lvs 48-48, 레디안 Lvs 49-49, 아리아도스 Lvs 49-49, 귀뚤톡크 Lvs 48-48, 도나리 Lvs 48-48, 귀뚤톡크 Lvs 50-50, 도나리 Lvs 50-50, 귀뚤톡크 Lvs 50-50, 도나리 Lvs 50-50]]
+	[Name = 꿈터 Shaking Spots, Rate = 1, MapIndex = 3,
+		Encounters = [다부니 Lvs 8-8, 다부니 Lvs 8-8, 다부니 Lvs 9-9, 다부니 Lvs 9-9, 다부니 Lvs 10-10, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 몽얌나 Lvs 11-11, 다부니 Lvs 11-11, 몽얌나 Lvs 11-11]]
+	[Name = 꿈터 Doubles Grass, Rate = 8, MapIndex = 4,
+		Encounters = [레트라 Lvs 47-47, 귀뚤톡크 Lvs 47-47, 몽나 Lvs 48-48, 레트라 Lvs 48-48, 귀뚤톡크 Lvs 48-48, 몽나 Lvs 49-49, 아리아도스 Lvs 49-49, 레디안 Lvs 49-49, 레트라 Lvs 50-50, 귀뚤톡크 Lvs 50-50, 레트라 Lvs 50-50, 귀뚤톡크 Lvs 50-50]]
+	[Name = 바람개비숲 Grass/Cave, Rate = 8, MapIndex = 5,
+		Encounters = [동챙이 Lvs 12-12, 콩둘기 Lvs 12-12, 동챙이 Lvs 13-13, 콩둘기 Lvs 13-13, 으랏차 Lvs 13-13, 으랏차 Lvs 14-14, 동챙이 Lvs 14-14, 던지미 Lvs 12-12, 동챙이 Lvs 15-15, 던지미 Lvs 15-15, 동챙이 Lvs 15-15, 던지미 Lvs 15-15]]
+	[Name = 바람개비숲 Doubles Grass, Rate = 8, MapIndex = 5,
+		Encounters = [동챙이 Lvs 14-14, 콩둘기 Lvs 14-14, 동챙이 Lvs 15-15, 콩둘기 Lvs 15-15, 으랏차 Lvs 15-15, 으랏차 Lvs 16-16, 동챙이 Lvs 16-16, 던지미 Lvs 14-14, 동챙이 Lvs 17-17, 던지미 Lvs 17-17, 동챙이 Lvs 17-17, 던지미 Lvs 17-17]]
+	[Name = 바람개비숲 Shaking Spots, Rate = 1, MapIndex = 5,
+		Encounters = [다부니 Lvs 12-12, 다부니 Lvs 12-12, 다부니 Lvs 13-13, 다부니 Lvs 13-13, 다부니 Lvs 14-14, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 타격귀 Lvs 15-15, 다부니 Lvs 15-15, 타격귀 Lvs 15-15]]
+	[Name = 바람개비숲 Grass/Cave, Rate = 8, MapIndex = 6,
+		Encounters = [치릴리 Lvs 14-14, 두르보 Lvs 14-14, 치릴리 Lvs 15-15, 두르보 Lvs 15-15, 콩둘기 Lvs 15-15, 마디네 Lvs 15-15, 콩둘기 Lvs 16-16, 마디네 Lvs 16-16, 치릴리 Lvs 16-16, 두르보 Lvs 16-16, 치릴리 Lvs 17-17, 두르보 Lvs 17-17]]
+	[Name = 바람개비숲 Doubles Grass, Rate = 8, MapIndex = 6,
+		Encounters = [치릴리 Lvs 22-22, 두르쿤 Lvs 22-22, 치릴리 Lvs 23-23, 두르쿤 Lvs 23-23, 유토브 Lvs 23-23, 휠구 Lvs 23-23, 유토브 Lvs 24-24, 휠구 Lvs 24-24, 치릴리 Lvs 24-24, 두르쿤 Lvs 24-24, 치릴리 Lvs 25-25, 두르쿤 Lvs 25-25]]
+	[Name = 바람개비숲 Shaking Spots, Rate = 1, MapIndex = 6,
+		Encounters = [다부니 Lvs 14-14, 다부니 Lvs 15-15, 야나프 Lvs 15-15, 바오프 Lvs 15-15, 앗차프 Lvs 15-15, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 드레디어 Lvs 17-17, 다부니 Lvs 17-17, 드레디어 Lvs 17-17]]
+	[Name = 바람개비숲 Surfing, Rate = 3, MapIndex = 6,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 바람개비숲 Surfing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 바람개비숲 Fishing, Rate = 50, MapIndex = 6,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 바람개비숲 Fishing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 리조트데저트 Grass/Cave, Rate = 3, MapIndex = 7,
+		Encounters = [깜눈크 Lvs 19-19, 달막화 Lvs 19-19, 깜눈크 Lvs 20-20, 달막화 Lvs 20-20, 마라카치 Lvs 20-20, 곤율랭 Lvs 20-20, 깜눈크 Lvs 21-21, 돌살이 Lvs 20-20, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22]]
+	[Name = 리조트데저트 Grass/Cave, Rate = 3, MapIndex = 8,
+		Encounters = [깜눈크 Lvs 19-19, 달막화 Lvs 19-19, 깜눈크 Lvs 20-20, 달막화 Lvs 20-20, 마라카치 Lvs 20-20, 심보러 Lvs 20-20, 깜눈크 Lvs 21-21, 돌살이 Lvs 20-20, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 9,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 10,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 11,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 12,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 13,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 14,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 15,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 16,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 17,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 18,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 19,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 20,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 21,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 22,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 23,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 24,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 25,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 26,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 27,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 28,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 29,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 30,
+		Encounters = [점토도리 Lvs 47-47, 점토도리 Lvs 47-47, 점토도리 Lvs 48-48, 점토도리 Lvs 48-48, 점토도리 Lvs 49-49, 점토도리 Lvs 49-49, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 31,
+		Encounters = [점토도리 Lvs 47-47, 점토도리 Lvs 47-47, 점토도리 Lvs 48-48, 점토도리 Lvs 48-48, 점토도리 Lvs 49-49, 점토도리 Lvs 49-49, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 32,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 33,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 34,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 35,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 36,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 37,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 38,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 39,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 냉동컨테이너 Grass/Cave, Rate = 8, MapIndex = 40,
+		Encounters = [하데리어 Lvs 21-21, 치라미 Lvs 20-20, 하데리어 Lvs 22-22, 으랏차 Lvs 21-21, 바닐프티 Lvs 20-20, 바닐프티 Lvs 21-21, 으랏차 Lvs 22-22, 바닐프티 Lvs 22-22, 하데리어 Lvs 23-23, 바닐프티 Lvs 23-23, 하데리어 Lvs 23-23, 바닐프티 Lvs 23-23]]
+	[Name = 냉동컨테이너 Doubles Grass, Rate = 8, MapIndex = 40,
+		Encounters = [하데리어 Lvs 25-25, 치라미 Lvs 24-24, 하데리어 Lvs 26-26, 으랏차 Lvs 25-25, 바닐프티 Lvs 24-24, 바닐프티 Lvs 25-25, 으랏차 Lvs 26-26, 바닐프티 Lvs 26-26, 하데리어 Lvs 27-27, 바닐프티 Lvs 27-27, 하데리어 Lvs 27-27, 바닐프티 Lvs 27-27]]
+	[Name = 냉동컨테이너 Shaking Spots, Rate = 1, MapIndex = 40,
+		Encounters = [다부니 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 23-23, 다부니 Lvs 23-23, 다부니 Lvs 23-23, 치라치노 Lvs 23-23, 바랜드 Lvs 23-23, 치라치노 Lvs 23-23, 바랜드 Lvs 23-23]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 41,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 24-24, 철시드 Lvs 25-25, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27, 저리어 Lvs 27-27, 저리어 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 41,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 42,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 25-25, 철시드 Lvs 26-26, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27, 저리어 Lvs 27-27, 저리어 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 42,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 43,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 26-26, 철시드 Lvs 27-27, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 저리어 Lvs 27-27, 저리어 Lvs 27-27, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 43,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 31-31, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 유토브 Lvs 36-36, 비조푸 Lvs 36-36, 크리만 Lvs 35-35, 비조푸 Lvs 37-37, 크리만 Lvs 36-36, 비조푸 Lvs 37-37, 크리만 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35]]
+	[Name = 용나선탑 Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40]]
+	[Name = 용나선탑 Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-55, 배쓰나이 Lvs 35-55, 미뇽 Lvs 35-55, 신뇽 Lvs 35-55, 신뇽 Lvs 35-55]]
+	[Name = 용나선탑 Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-60, 배쓰나이 Lvs 35-60, 신뇽 Lvs 35-70, 신뇽 Lvs 45-70, 망나뇽 Lvs 50-70]]
+	[Name = 용나선탑 Grass/Cave, Rate = 3, MapIndex = 50,
+		Encounters = [골비람 Lvs 30-30, 비조푸 Lvs 33-33, 골비람 Lvs 31-31, 크리만 Lvs 30-30, 골비람 Lvs 32-32, 크리만 Lvs 31-31, 골비람 Lvs 32-32, 크리만 Lvs 32-32, 골비람 Lvs 33-33, 크리만 Lvs 33-33, 골비람 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 3, MapIndex = 51,
+		Encounters = [골비람 Lvs 30-30, 골비람 Lvs 30-30, 골비람 Lvs 31-31, 골비람 Lvs 31-31, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 33-33, 골비람 Lvs 33-33, 골비람 Lvs 33-33, 골비람 Lvs 33-33]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 8, MapIndex = 52,
+		Encounters = [수리둥보 Lvs 38-38, 앤티골 Lvs 37-37, 수리둥보 Lvs 40-40, 앤티골 Lvs 38-38, 비조푸 Lvs 38-38, 앤티골 Lvs 39-39, 비조푸 Lvs 40-40, 액슨도 Lvs 40-40, 수리둥보 Lvs 37-37, 앤티골 Lvs 40-40, 수리둥보 Lvs 39-39, 앤티골 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 6, MapIndex = 53,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 39-39, 아이앤트 Lvs 38-38, 모노두 Lvs 38-38, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 모노두 Lvs 38-38, 아이앤트 Lvs 40-40, 모노두 Lvs 39-39, 아이앤트 Lvs 40-40, 모노두 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 53,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Surfing, Rate = 3, MapIndex = 53,
+		Encounters = [배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45]]
+	[Name = 챔피언로드 Surfing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50]]
+	[Name = 챔피언로드 Fishing, Rate = 50, MapIndex = 53,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 챔피언로드 Fishing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 54,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 54,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 55,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 55,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 56,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 56,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 57,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 57,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 6, MapIndex = 58,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 39-39, 아이앤트 Lvs 38-38, 모노두 Lvs 38-38, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 모노두 Lvs 38-38, 아이앤트 Lvs 40-40, 모노두 Lvs 39-39, 아이앤트 Lvs 40-40, 모노두 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 58,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Surfing, Rate = 3, MapIndex = 58,
+		Encounters = [배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45]]
+	[Name = 챔피언로드 Surfing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50]]
+	[Name = 챔피언로드 Fishing, Rate = 50, MapIndex = 58,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 챔피언로드 Fishing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 59,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 59,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 60,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 60,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 61,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 61,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 62,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 62,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 63,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 63,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 64,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 64,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 65,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 65,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 66,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 66,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 시련의 석굴 Grass/Cave, Rate = 3, MapIndex = 67,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 시련의 석굴 Shaking Spots, Rate = 1, MapIndex = 67,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 8, MapIndex = 68,
+		Encounters = [덩쿠리 Lvs 47-47, 스왈로 Lvs 47-47, 골뱃 Lvs 48-48, 루나톤 Lvs 48-48, 솔록 Lvs 48-48, 둥실라이드 Lvs 49-49, 앱솔 Lvs 48-48, 앱솔 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50]]
+	[Name = 자이언트홀 Doubles Grass, Rate = 8, MapIndex = 68,
+		Encounters = [덩쿠리 Lvs 57-57, 스왈로 Lvs 57-57, 골뱃 Lvs 58-58, 루나톤 Lvs 58-58, 솔록 Lvs 58-58, 둥실라이드 Lvs 59-59, 앱솔 Lvs 58-58, 앱솔 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 68,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 3, MapIndex = 69,
+		Encounters = [골뱃 Lvs 47-47, 메꾸리 Lvs 47-47, 포푸니 Lvs 48-48, 딜리버드 Lvs 48-48, 루나톤 Lvs 50-50, 솔록 Lvs 50-50, 암트르 Lvs 49-49, 루주라 Lvs 48-48, 메꾸리 Lvs 49-49, 루주라 Lvs 50-50, 메꾸리 Lvs 49-49, 루주라 Lvs 50-50]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 69,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 자이언트홀 Surfing, Rate = 3, MapIndex = 69,
+		Encounters = [배쓰나이 Lvs 25-55, 쥬쥬 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 자이언트홀 Surfing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [쥬쥬 Lvs 25-60, 배쓰나이 Lvs 25-60, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70]]
+	[Name = 자이언트홀 Fishing, Rate = 50, MapIndex = 69,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 자이언트홀 Fishing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 8, MapIndex = 70,
+		Encounters = [삐삐 Lvs 52-52, 메꾸리 Lvs 52-52, 삐삐 Lvs 54-54, 메타몽 Lvs 53-53, 루나톤 Lvs 55-55, 솔록 Lvs 55-55, 메타몽 Lvs 55-55, 메탕구 Lvs 53-53, 메꾸리 Lvs 54-54, 메탕구 Lvs 55-55, 메꾸리 Lvs 54-54, 메탕구 Lvs 55-55]]
+	[Name = 자이언트홀 Doubles Grass, Rate = 8, MapIndex = 70,
+		Encounters = [삐삐 Lvs 62-62, 메꾸리 Lvs 62-62, 삐삐 Lvs 64-64, 메타몽 Lvs 63-63, 루나톤 Lvs 65-65, 솔록 Lvs 65-65, 메타몽 Lvs 65-65, 메탕구 Lvs 63-63, 메꾸리 Lvs 64-64, 메탕구 Lvs 65-65, 메꾸리 Lvs 64-64, 메탕구 Lvs 65-65]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 70,
+		Encounters = [다부니 Lvs 52-52, 다부니 Lvs 52-52, 다부니 Lvs 53-53, 다부니 Lvs 53-53, 다부니 Lvs 54-54, 다부니 Lvs 55-55, 다부니 Lvs 55-55, 맘모꾸리 Lvs 55-55, 픽시 Lvs 55-55, 메타그로스 Lvs 55-55, 픽시 Lvs 55-55, 메타그로스 Lvs 55-55]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 3, MapIndex = 71,
+		Encounters = [골뱃 Lvs 57-57, 메꾸리 Lvs 57-57, 포푸니 Lvs 58-58, 딜리버드 Lvs 58-58, 루나톤 Lvs 60-60, 솔록 Lvs 60-60, 암트르 Lvs 59-59, 루주라 Lvs 58-58, 메꾸리 Lvs 59-59, 루주라 Lvs 60-60, 메꾸리 Lvs 59-59, 루주라 Lvs 60-60]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 71,
+		Encounters = [몰드류 Lvs 57-57, 몰드류 Lvs 57-57, 몰드류 Lvs 58-58, 몰드류 Lvs 58-58, 몰드류 Lvs 59-59, 몰드류 Lvs 59-59, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60]]
+	[Name = 자이언트홀 Surfing, Rate = 3, MapIndex = 71,
+		Encounters = [배쓰나이 Lvs 25-55, 쥬쥬 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 자이언트홀 Surfing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [쥬쥬 Lvs 25-60, 배쓰나이 Lvs 25-60, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70]]
+	[Name = 자이언트홀 Fishing, Rate = 50, MapIndex = 71,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 자이언트홀 Fishing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 45-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = P2랩 Grass/Cave, Rate = 8, MapIndex = 72,
+		Encounters = [보르그 Lvs 28-28, 하데리어 Lvs 28-28, 보르그 Lvs 29-29, 하데리어 Lvs 29-29, 기어르 Lvs 29-29, 곤율랭 Lvs 29-29, 보르그 Lvs 30-30, 하데리어 Lvs 30-30, 기어르 Lvs 31-31, 곤율랭 Lvs 31-31, 보르그 Lvs 31-31, 하데리어 Lvs 31-31]]
+	[Name = P2랩 Shaking Spots, Rate = 1, MapIndex = 72,
+		Encounters = [다부니 Lvs 28-28, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 30-30, 다부니 Lvs 30-30, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 바랜드 Lvs 31-31, 다부니 Lvs 31-31, 바랜드 Lvs 31-31]]
+	[Name = P2랩 Surfing, Rate = 5, MapIndex = 72,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = P2랩 Surfing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = P2랩 Fishing, Rate = 80, MapIndex = 72,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 형광어 Lvs 35-55]]
+	[Name = P2랩 Fishing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+	[Name = 물결만 Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결만 Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [고래왕자 Lvs 25-60, 고래왕자 Lvs 25-60, 만타인 Lvs 35-70, 고래왕 Lvs 35-70, 고래왕 Lvs 35-70]]
+	[Name = 물결만 Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결만 Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 물풍경도개교 Shaking Spots, Rate = 1, MapIndex = 74,
+		Encounters = [꼬지보리 Lvs 22-22, 꼬지보리 Lvs 22-22, 꼬지보리 Lvs 23-23, 꼬지보리 Lvs 23-23, 꼬지보리 Lvs 24-24, 꼬지보리 Lvs 24-24, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25]]
+	[Name = 빌리지 브리지 Grass/Cave, Rate = 8, MapIndex = 75,
+		Encounters = [골덕 Lvs 47-47, 비버통 Lvs 47-47, 쟝고 Lvs 48-48, 세비퍼 Lvs 48-48, 수리둥보 Lvs 48-48, 수리둥보 Lvs 50-50, 골덕 Lvs 49-49, 비버통 Lvs 49-49, 쟝고 Lvs 50-50, 세비퍼 Lvs 50-50, 쟝고 Lvs 50-50, 세비퍼 Lvs 50-50]]
+	[Name = 빌리지 브리지 Doubles Grass, Rate = 8, MapIndex = 75,
+		Encounters = [골덕 Lvs 57-57, 비버통 Lvs 57-57, 쟝고 Lvs 58-58, 세비퍼 Lvs 58-58, 워글 Lvs 58-58, 워글 Lvs 60-60, 골덕 Lvs 59-59, 비버통 Lvs 59-59, 쟝고 Lvs 60-60, 세비퍼 Lvs 60-60, 쟝고 Lvs 60-60, 세비퍼 Lvs 60-60]]
+	[Name = 빌리지 브리지 Shaking Spots, Rate = 1, MapIndex = 75,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 빌리지 브리지 Surfing, Rate = 3, MapIndex = 75,
+		Encounters = [배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 빌리지 브리지 Surfing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [배쓰나이 Lvs 25-60, 배쓰나이 Lvs 25-60, 배쓰나이 Lvs 35-70, 라프라스 Lvs 35-70, 라프라스 Lvs 35-70]]
+	[Name = 빌리지 브리지 Fishing, Rate = 50, MapIndex = 75,
+		Encounters = [샤프니아 Lvs 35-55, 배쓰나이 Lvs 35-55, 샤프니아 Lvs 35-55, 샤프니아 Lvs 35-55, 샤프니아 Lvs 35-55]]
+	[Name = 빌리지 브리지 Fishing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [샤프니아 Lvs 35-60, 배쓰나이 Lvs 35-60, 샤크니아 Lvs 35-70, 샤크니아 Lvs 45-70, 샤크니아 Lvs 45-70]]
+	[Name = 원더 브리지 Shaking Spots, Rate = 1, MapIndex = 76,
+		Encounters = [스완나 Lvs 47-47, 스완나 Lvs 47-47, 스완나 Lvs 48-48, 스완나 Lvs 48-48, 스완나 Lvs 49-49, 스완나 Lvs 49-49, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50]]
+	[Name = 1번도로 Grass/Cave, Rate = 8, MapIndex = 77,
+		Encounters = [보르쥐 Lvs 2-2, 요테리 Lvs 2-2, 보르쥐 Lvs 3-3, 요테리 Lvs 3-3, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4]]
+	[Name = 1번도로 Doubles Grass, Rate = 8, MapIndex = 77,
+		Encounters = [보르그 Lvs 32-32, 하데리어 Lvs 32-32, 보르그 Lvs 33-33, 하데리어 Lvs 33-33, 곤율랭 Lvs 32-32, 곤율랭 Lvs 33-33, 보르그 Lvs 34-34, 하데리어 Lvs 34-34, 곤율랭 Lvs 34-34, 하데리어 Lvs 34-34, 보르그 Lvs 35-35, 곤율랭 Lvs 35-35]]
+	[Name = 1번도로 Shaking Spots, Rate = 1, MapIndex = 77,
+		Encounters = [다부니 Lvs 2-2, 다부니 Lvs 2-2, 다부니 Lvs 3-3, 다부니 Lvs 3-3, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4]]
+	[Name = 1번도로 Surfing, Rate = 3, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 1번도로 Surfing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 1번도로 Fishing, Rate = 50, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 35-55, 배쓰나이 Lvs 35-55, 배쓰나이 Lvs 35-55, 빈티나 Lvs 35-55, 빈티나 Lvs 35-55]]
+	[Name = 1번도로 Fishing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [빈티나 Lvs 35-60, 배쓰나이 Lvs 35-60, 배쓰나이 Lvs 35-70, 밀로틱 Lvs 45-70, 밀로틱 Lvs 45-70]]
+	[Name = 2번도로 Grass/Cave, Rate = 8, MapIndex = 78,
+		Encounters = [보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 5-5, 요테리 Lvs 5-5, 쌔비냥 Lvs 4-4, 쌔비냥 Lvs 5-5, 보르쥐 Lvs 6-6, 요테리 Lvs 6-6, 보르쥐 Lvs 7-7, 요테리 Lvs 7-7, 보르쥐 Lvs 7-7, 요테리 Lvs 7-7]]
+	[Name = 2번도로 Shaking Spots, Rate = 1, MapIndex = 78,
+		Encounters = [다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 5-5, 다부니 Lvs 5-5, 다부니 Lvs 6-6, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7]]
+	[Name = 3번도로 Grass/Cave, Rate = 8, MapIndex = 79,
+		Encounters = [보르쥐 Lvs 8-8, 콩둘기 Lvs 8-8, 줄뮤마 Lvs 8-8, 콩둘기 Lvs 9-9, 요테리 Lvs 9-9, 쌔비냥 Lvs 9-9, 줄뮤마 Lvs 9-9, 콩둘기 Lvs 10-10, 줄뮤마 Lvs 10-10, 콩둘기 Lvs 11-11, 줄뮤마 Lvs 11-11, 콩둘기 Lvs 11-11]]
+	[Name = 3번도로 Doubles Grass, Rate = 8, MapIndex = 79,
+		Encounters = [보르쥐 Lvs 10-10, 콩둘기 Lvs 10-10, 줄뮤마 Lvs 10-10, 콩둘기 Lvs 11-11, 요테리 Lvs 11-11, 쌔비냥 Lvs 11-11, 줄뮤마 Lvs 11-11, 콩둘기 Lvs 12-12, 줄뮤마 Lvs 12-12, 콩둘기 Lvs 13-13, 줄뮤마 Lvs 13-13, 콩둘기 Lvs 13-13]]
+	[Name = 3번도로 Shaking Spots, Rate = 1, MapIndex = 79,
+		Encounters = [다부니 Lvs 8-8, 다부니 Lvs 8-8, 다부니 Lvs 9-9, 다부니 Lvs 9-9, 다부니 Lvs 10-10, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11]]
+	[Name = 3번도로 Surfing, Rate = 3, MapIndex = 79,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 3번도로 Surfing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 3번도로 Fishing, Rate = 50, MapIndex = 79,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 3번도로 Fishing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 지하수맥굴 Grass/Cave, Rate = 3, MapIndex = 80,
+		Encounters = [단굴 Lvs 10-10, 또르박쥐 Lvs 10-10, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 12-12, 또르박쥐 Lvs 12-12, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13]]
+	[Name = 지하수맥굴 Shaking Spots, Rate = 1, MapIndex = 80,
+		Encounters = [두더류 Lvs 10-10, 두더류 Lvs 10-10, 두더류 Lvs 11-11, 두더류 Lvs 11-11, 두더류 Lvs 12-12, 두더류 Lvs 12-12, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13]]
+	[Name = 지하수맥굴 Surfing, Rate = 3, MapIndex = 80,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 지하수맥굴 Surfing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 지하수맥굴 Fishing, Rate = 50, MapIndex = 80,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 지하수맥굴 Fishing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-60, 강챙이 Lvs 35-60, 강챙이 Lvs 35-60]]
+	[Name = 지하수맥굴 Grass/Cave, Rate = 3, MapIndex = 81,
+		Encounters = [단굴 Lvs 10-10, 또르박쥐 Lvs 10-10, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 12-12, 또르박쥐 Lvs 12-12, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13]]
+	[Name = 지하수맥굴 Shaking Spots, Rate = 1, MapIndex = 81,
+		Encounters = [두더류 Lvs 10-10, 두더류 Lvs 10-10, 두더류 Lvs 11-11, 두더류 Lvs 11-11, 두더류 Lvs 12-12, 두더류 Lvs 12-12, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13]]
+	[Name = 지하수맥굴 Surfing, Rate = 3, MapIndex = 81,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 지하수맥굴 Surfing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 지하수맥굴 Fishing, Rate = 50, MapIndex = 81,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 지하수맥굴 Fishing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-60, 강챙이 Lvs 35-60, 강챙이 Lvs 35-60]]
+	[Name = 4번도로 Grass/Cave, Rate = 3, MapIndex = 82,
+		Encounters = [깜눈크 Lvs 15-15, 달막화 Lvs 15-15, 깜눈크 Lvs 16-16, 달막화 Lvs 16-16, 곤율랭 Lvs 16-16, 곤율랭 Lvs 17-17, 깜눈크 Lvs 17-17, 달막화 Lvs 17-17, 깜눈크 Lvs 18-18, 달막화 Lvs 18-18, 깜눈크 Lvs 18-18, 달막화 Lvs 18-18]]
+	[Name = 4번도로 Surfing, Rate = 3, MapIndex = 82,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 4번도로 Surfing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 4번도로 Fishing, Rate = 50, MapIndex = 82,
+		Encounters = [크랩 Lvs 35-55, 진주몽 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 4번도로 Fishing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [시라칸 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 분홍장이 Lvs 45-70, 분홍장이 Lvs 45-70]]
+	[Name = 5번도로 Grass/Cave, Rate = 8, MapIndex = 83,
+		Encounters = [유니란 Lvs 19-19, 치라미 Lvs 19-19, 깨봉이 Lvs 19-19, 깨봉이 Lvs 21-21, 레파르다스 Lvs 20-20, 레파르다스 Lvs 22-22, 치라미 Lvs 20-20, 유니란 Lvs 20-20, 치라미 Lvs 21-21, 유니란 Lvs 21-21, 치라미 Lvs 22-22, 유니란 Lvs 22-22]]
+	[Name = 5번도로 Doubles Grass, Rate = 8, MapIndex = 83,
+		Encounters = [유니란 Lvs 22-22, 치라미 Lvs 22-22, 깨봉이 Lvs 22-22, 깨봉이 Lvs 24-24, 레파르다스 Lvs 23-23, 레파르다스 Lvs 25-25, 치라미 Lvs 23-23, 유니란 Lvs 23-23, 치라미 Lvs 24-24, 유니란 Lvs 24-24, 치라미 Lvs 25-25, 유니란 Lvs 25-25]]
+	[Name = 5번도로 Shaking Spots, Rate = 1, MapIndex = 83,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 19-19, 에몽가 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22]]
+	[Name = 6번도로 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 22-22, 딱정곤 Lvs 22-22, 유토브 Lvs 23-23, 깜놀버슬 Lvs 23-23, 사철록 Lvs 23-23, 두르쿤 Lvs 23-23, 사철록 Lvs 24-24, 딱정곤 Lvs 24-24, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25]]
+	[Name = 6번도로 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 26-26, 딱정곤 Lvs 26-26, 유토브 Lvs 27-27, 깜놀버슬 Lvs 27-27, 사철록 Lvs 27-27, 두르쿤 Lvs 27-27, 사철록 Lvs 28-28, 딱정곤 Lvs 28-28, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 6번도로 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [다부니 Lvs 22-22, 다부니 Lvs 23-23, 에몽가 Lvs 23-23, 에몽가 Lvs 25-25, 다부니 Lvs 24-24, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25]]
+	[Name = 6번도로 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25]]
+	[Name = 6번도로 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30]]
+	[Name = 6번도로 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 6번도로 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 왕구리 Lvs 45-70, 왕구리 Lvs 45-70]]
+	[Name = 궐수의 동굴 Grass/Cave, Rate = 3, MapIndex = 85,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 궐수의 동굴 Shaking Spots, Rate = 1, MapIndex = 85,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 궐수의 동굴 Grass/Cave, Rate = 3, MapIndex = 86,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 궐수의 동굴 Shaking Spots, Rate = 1, MapIndex = 86,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 길잡이의 공간 Grass/Cave, Rate = 3, MapIndex = 87,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 길잡이의 공간 Shaking Spots, Rate = 1, MapIndex = 87,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 7번도로 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 26-26, 사철록 Lvs 26-26, 보르그 Lvs 27-27, 제브라이카 Lvs 27-27, 유토브 Lvs 28-28, 제브라이카 Lvs 29-29, 보르그 Lvs 28-28, 깜놀버슬 Lvs 27-27, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 7번도로 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 30-30, 보르그 Lvs 31-31, 제브라이카 Lvs 31-31, 유토브 Lvs 32-32, 제브라이카 Lvs 33-33, 보르그 Lvs 32-32, 깜놀버슬 Lvs 31-31, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33]]
+	[Name = 7번도로 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [다부니 Lvs 26-26, 다부니 Lvs 26-26, 에몽가 Lvs 27-27, 다부니 Lvs 27-27, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 89,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 27-27, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 90,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 26-26, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 27-27, 불켜미 Lvs 29-29, 리그레 Lvs 28-28]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 91,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 26-26, 리그레 Lvs 26-26, 불켜미 Lvs 28-28, 리그레 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 29-29, 불켜미 Lvs 29-29, 리그레 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 92,
+		Encounters = [불켜미 Lvs 26-26, 리그레 Lvs 26-26, 불켜미 Lvs 27-27, 리그레 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 29-29, 불켜미 Lvs 29-29, 리그레 Lvs 29-29]]
+	[Name = 8번도로 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 8번도로 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 8번도로 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 8번도로 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 8번도로 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화의 습지초원 Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화의 습지초원 Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화의 습지초원 Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화의 습지초원 Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화의 습지초원 Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 9번도로 Grass/Cave, Rate = 8, MapIndex = 95,
+		Encounters = [듀란 Lvs 31-31, 치라미 Lvs 32-32, 더스트나 Lvs 31-31, 더스트나 Lvs 33-33, 자망칼 Lvs 31-31, 레파르다스 Lvs 33-33, 자망칼 Lvs 32-32, 듀란 Lvs 32-32, 자망칼 Lvs 33-33, 듀란 Lvs 33-33, 자망칼 Lvs 34-34, 듀란 Lvs 34-34]]
+	[Name = 9번도로 Doubles Grass, Rate = 8, MapIndex = 95,
+		Encounters = [듀란 Lvs 36-36, 치라미 Lvs 37-37, 더스트나 Lvs 36-36, 더스트나 Lvs 38-38, 자망칼 Lvs 36-36, 레파르다스 Lvs 38-38, 자망칼 Lvs 37-37, 듀란 Lvs 37-37, 자망칼 Lvs 38-38, 듀란 Lvs 38-38, 자망칼 Lvs 39-39, 듀란 Lvs 39-39]]
+	[Name = 9번도로 Shaking Spots, Rate = 1, MapIndex = 95,
+		Encounters = [다부니 Lvs 31-31, 다부니 Lvs 31-31, 에몽가 Lvs 32-32, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 34-34, 치라치노 Lvs 34-34, 란쿨루스 Lvs 34-34, 치라치노 Lvs 34-34, 란쿨루스 Lvs 34-34]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 96,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 내루미 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 96,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 97,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 97,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 98,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 98,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Surfing, Rate = 3, MapIndex = 98,
+		Encounters = [배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 수행의 바위동굴 Surfing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70]]
+	[Name = 수행의 바위동굴 Fishing, Rate = 50, MapIndex = 98,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 수행의 바위동굴 Fishing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 10번도로 Grass/Cave, Rate = 8, MapIndex = 99,
+		Encounters = [하데리어 Lvs 33-33, 수리둥보 Lvs 34-34, 하데리어 Lvs 34-34, 수리둥보 Lvs 36-36, 버프론 Lvs 34-34, 버프론 Lvs 35-35, 깜놀버슬 Lvs 34-34, 던지미 Lvs 33-33, 깜놀버슬 Lvs 34-34, 던지미 Lvs 36-36, 깜놀버슬 Lvs 35-35, 던지미 Lvs 36-36]]
+	[Name = 10번도로 Doubles Grass, Rate = 8, MapIndex = 99,
+		Encounters = [하데리어 Lvs 38-38, 수리둥보 Lvs 39-39, 하데리어 Lvs 39-39, 수리둥보 Lvs 41-41, 버프론 Lvs 39-39, 버프론 Lvs 40-40, 뽀록나 Lvs 39-39, 던지미 Lvs 38-38, 뽀록나 Lvs 39-39, 던지미 Lvs 41-41, 뽀록나 Lvs 40-40, 던지미 Lvs 41-41]]
+	[Name = 10번도로 Shaking Spots, Rate = 1, MapIndex = 99,
+		Encounters = [다부니 Lvs 33-33, 다부니 Lvs 33-33, 에몽가 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 35-35, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36]]
+	[Name = 10번도로 Grass/Cave, Rate = 8, MapIndex = 100,
+		Encounters = [하데리어 Lvs 33-33, 수리둥보 Lvs 34-34, 하데리어 Lvs 34-34, 수리둥보 Lvs 36-36, 버프론 Lvs 34-34, 버프론 Lvs 35-35, 깜놀버슬 Lvs 33-33, 던지미 Lvs 33-33, 깜놀버슬 Lvs 34-34, 던지미 Lvs 36-36, 깜놀버슬 Lvs 35-35, 던지미 Lvs 36-36]]
+	[Name = 10번도로 Doubles Grass, Rate = 8, MapIndex = 100,
+		Encounters = [하데리어 Lvs 38-38, 수리둥보 Lvs 39-39, 하데리어 Lvs 39-39, 수리둥보 Lvs 41-41, 버프론 Lvs 39-39, 버프론 Lvs 40-40, 뽀록나 Lvs 38-38, 던지미 Lvs 38-38, 뽀록나 Lvs 39-39, 던지미 Lvs 41-41, 뽀록나 Lvs 40-40, 던지미 Lvs 41-41]]
+	[Name = 10번도로 Shaking Spots, Rate = 1, MapIndex = 100,
+		Encounters = [다부니 Lvs 33-33, 다부니 Lvs 33-33, 에몽가 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 35-35, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36]]
+	[Name = 11번도로 Grass/Cave, Rate = 8, MapIndex = 101,
+		Encounters = [수리둥보 Lvs 48-48, 골덕 Lvs 47-47, 글라이거 Lvs 47-47, 뽀록나 Lvs 48-48, 쟝고 Lvs 48-48, 세비퍼 Lvs 48-48, 딱정곤 Lvs 49-49, 자망칼 Lvs 50-50, 글라이거 Lvs 50-50, 수리둥보 Lvs 50-50, 글라이거 Lvs 50-50, 수리둥보 Lvs 50-50]]
+	[Name = 11번도로 Doubles Grass, Rate = 8, MapIndex = 101,
+		Encounters = [워글 Lvs 58-58, 골덕 Lvs 57-57, 글라이거 Lvs 57-57, 뽀록나 Lvs 58-58, 쟝고 Lvs 58-58, 세비퍼 Lvs 58-58, 딱정곤 Lvs 59-59, 절각참 Lvs 60-60, 글라이거 Lvs 60-60, 워글 Lvs 60-60, 글라이거 Lvs 60-60, 워글 Lvs 60-60]]
+	[Name = 11번도로 Shaking Spots, Rate = 1, MapIndex = 101,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 글라이온 Lvs 50-50, 다부니 Lvs 50-50, 글라이온 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 11번도로 Surfing, Rate = 3, MapIndex = 101,
+		Encounters = [배쓰나이 Lvs 25-55, 브이젤 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 11번도로 Surfing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [브이젤 Lvs 25-60, 배쓰나이 Lvs 25-60, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70]]
+	[Name = 11번도로 Fishing, Rate = 50, MapIndex = 101,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 11번도로 Fishing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 12번도로 Grass/Cave, Rate = 8, MapIndex = 102,
+		Encounters = [세꿀버리 Lvs 47-47, 해너츠 Lvs 47-47, 날쌩마 Lvs 49-49, 유토브 Lvs 48-48, 체리꼬 Lvs 48-48, 단데기 Lvs 48-48, 헤라크로스 Lvs 50-50, 쁘사이저 Lvs 50-50, 노고치 Lvs 48-48, 유토브 Lvs 50-50, 노고치 Lvs 48-48, 유토브 Lvs 50-50]]
+	[Name = 12번도로 Doubles Grass, Rate = 8, MapIndex = 102,
+		Encounters = [세꿀버리 Lvs 57-57, 해너츠 Lvs 57-57, 날쌩마 Lvs 59-59, 유토브 Lvs 58-58, 체리꼬 Lvs 58-58, 단데기 Lvs 59-59, 헤라크로스 Lvs 60-60, 쁘사이저 Lvs 60-60, 노고치 Lvs 59-59, 유토브 Lvs 60-60, 노고치 Lvs 59-59, 유토브 Lvs 60-60]]
+	[Name = 12번도로 Shaking Spots, Rate = 1, MapIndex = 102,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 켄호로우 Lvs 50-50, 버터플 Lvs 50-50, 비퀸 Lvs 50-50, 해루미 Lvs 50-50, 비퀸 Lvs 50-50, 해루미 Lvs 50-50]]
+	[Name = 13번도로 Grass/Cave, Rate = 8, MapIndex = 103,
+		Encounters = [덩쿠리 Lvs 47-47, 스왈로 Lvs 47-47, 골뱃 Lvs 48-48, 루나톤 Lvs 48-48, 솔록 Lvs 48-48, 둥실라이드 Lvs 49-49, 앱솔 Lvs 48-48, 앱솔 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50]]
+	[Name = 13번도로 Doubles Grass, Rate = 8, MapIndex = 103,
+		Encounters = [덩쿠리 Lvs 57-57, 스왈로 Lvs 57-57, 골뱃 Lvs 58-58, 루나톤 Lvs 58-58, 솔록 Lvs 58-58, 둥실라이드 Lvs 59-59, 앱솔 Lvs 58-58, 앱솔 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60]]
+	[Name = 13번도로 Shaking Spots, Rate = 1, MapIndex = 103,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50]]
+	[Name = 13번도로 Surfing, Rate = 3, MapIndex = 103,
+		Encounters = [갈모매 Lvs 25-55, 별가사리 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 13번도로 Surfing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [별가사리 Lvs 25-60, 코산호 Lvs 25-60, 아쿠스타 Lvs 35-70, 아쿠스타 Lvs 35-70, 아쿠스타 Lvs 35-70]]
+	[Name = 13번도로 Fishing, Rate = 50, MapIndex = 103,
+		Encounters = [크랩 Lvs 35-55, 셀러 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 13번도로 Fishing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 14번도로 Grass/Cave, Rate = 8, MapIndex = 104,
+		Encounters = [골덕 Lvs 47-47, 푸린 Lvs 48-48, 트로피우스 Lvs 48-48, 비조푸 Lvs 49-49, 파비코리 Lvs 49-49, 둥실라이드 Lvs 49-49, 단단지 Lvs 49-49, 벰크 Lvs 48-48, 트로피우스 Lvs 50-50, 벰크 Lvs 50-50, 트로피우스 Lvs 50-50, 벰크 Lvs 50-50]]
+	[Name = 14번도로 Doubles Grass, Rate = 8, MapIndex = 104,
+		Encounters = [골덕 Lvs 57-57, 푸린 Lvs 58-58, 트로피우스 Lvs 58-58, 비조도 Lvs 59-59, 파비코리 Lvs 59-59, 둥실라이드 Lvs 59-59, 단단지 Lvs 59-59, 벰크 Lvs 58-58, 트로피우스 Lvs 60-60, 벰크 Lvs 60-60, 트로피우스 Lvs 60-60, 벰크 Lvs 60-60]]
+	[Name = 14번도로 Shaking Spots, Rate = 1, MapIndex = 104,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 푸크린 Lvs 50-50, 다부니 Lvs 50-50, 푸크린 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 14번도로 Surfing, Rate = 3, MapIndex = 104,
+		Encounters = [배쓰나이 Lvs 25-55, 브이젤 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 14번도로 Surfing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [브이젤 Lvs 25-60, 배쓰나이 Lvs 25-60, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70]]
+	[Name = 14번도로 Fishing, Rate = 50, MapIndex = 104,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 14번도로 Fishing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 풍요의 사당 Grass/Cave, Rate = 8, MapIndex = 105,
+		Encounters = [식스테일 Lvs 47-47, 치렁 Lvs 47-47, 치릴리 Lvs 48-48, 치렁 Lvs 49-49, 노라키 Lvs 48-48, 야부엉 Lvs 48-48, 무우마 Lvs 48-48, 동탁군 Lvs 48-48, 야부엉 Lvs 50-50, 동탁군 Lvs 50-50, 야부엉 Lvs 50-50, 동탁군 Lvs 50-50]]
+	[Name = 풍요의 사당 Doubles Grass, Rate = 8, MapIndex = 105,
+		Encounters = [식스테일 Lvs 57-57, 치렁 Lvs 57-57, 치릴리 Lvs 58-58, 치렁 Lvs 59-59, 노라키 Lvs 58-58, 야부엉 Lvs 58-58, 무우마 Lvs 58-58, 동탁군 Lvs 58-58, 야부엉 Lvs 60-60, 동탁군 Lvs 60-60, 야부엉 Lvs 60-60, 동탁군 Lvs 60-60]]
+	[Name = 풍요의 사당 Shaking Spots, Rate = 1, MapIndex = 105,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 무우마직 Lvs 50-50, 드레디어 Lvs 50-50, 다부니 Lvs 50-50, 나인테일 Lvs 50-50, 다부니 Lvs 50-50, 나인테일 Lvs 50-50]]
+	[Name = 풍요의 사당 Surfing, Rate = 3, MapIndex = 105,
+		Encounters = [배쓰나이 Lvs 25-55, 야돈 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 풍요의 사당 Surfing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [야돈 Lvs 25-60, 배쓰나이 Lvs 25-60, 야도란 Lvs 35-70, 야도킹 Lvs 35-70, 야도킹 Lvs 35-70]]
+	[Name = 풍요의 사당 Fishing, Rate = 50, MapIndex = 105,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 풍요의 사당 Fishing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 15번도로 Grass/Cave, Rate = 8, MapIndex = 106,
+		Encounters = [텅구리 Lvs 47-47, 깨비드릴조 Lvs 48-48, 글라이거 Lvs 47-47, 캥카 Lvs 49-49, 깨비드릴조 Lvs 50-50, 던지미 Lvs 48-48, 데기라스 Lvs 48-48, 던지미 Lvs 49-49, 데기라스 Lvs 50-50, 글라이거 Lvs 49-49, 데기라스 Lvs 50-50, 글라이거 Lvs 49-49]]
+	[Name = 15번도로 Doubles Grass, Rate = 8, MapIndex = 106,
+		Encounters = [텅구리 Lvs 57-57, 깨비드릴조 Lvs 58-58, 글라이거 Lvs 57-57, 캥카 Lvs 59-59, 깨비드릴조 Lvs 60-60, 던지미 Lvs 58-58, 데기라스 Lvs 58-58, 던지미 Lvs 59-59, 보르그 Lvs 60-60, 데기라스 Lvs 59-59, 보르그 Lvs 60-60, 데기라스 Lvs 59-59]]
+	[Name = 15번도로 Shaking Spots, Rate = 1, MapIndex = 106,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 타격귀 Lvs 50-50, 글라이온 Lvs 50-50, 마기라스 Lvs 50-50, 글라이온 Lvs 50-50, 마기라스 Lvs 50-50]]
+	[Name = 16번도로 Grass/Cave, Rate = 8, MapIndex = 107,
+		Encounters = [유니란 Lvs 19-19, 치라미 Lvs 19-19, 깨봉이 Lvs 19-19, 깨봉이 Lvs 21-21, 레파르다스 Lvs 20-20, 레파르다스 Lvs 22-22, 치라미 Lvs 20-20, 유니란 Lvs 20-20, 치라미 Lvs 21-21, 유니란 Lvs 21-21, 치라미 Lvs 22-22, 유니란 Lvs 22-22]]
+	[Name = 16번도로 Doubles Grass, Rate = 8, MapIndex = 107,
+		Encounters = [유니란 Lvs 22-22, 치라미 Lvs 22-22, 깨봉이 Lvs 22-22, 깨봉이 Lvs 24-24, 레파르다스 Lvs 23-23, 레파르다스 Lvs 25-25, 치라미 Lvs 23-23, 유니란 Lvs 23-23, 치라미 Lvs 24-24, 유니란 Lvs 24-24, 치라미 Lvs 25-25, 유니란 Lvs 25-25]]
+	[Name = 16번도로 Shaking Spots, Rate = 1, MapIndex = 107,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 19-19, 에몽가 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22]]
+	[Name = 미혹의 숲 Grass/Cave, Rate = 8, MapIndex = 108,
+		Encounters = [치릴리 Lvs 19-19, 두르쿤 Lvs 20-20, 치릴리 Lvs 20-20, 두르쿤 Lvs 21-21, 유토브 Lvs 21-21, 마디네 Lvs 20-20, 유토브 Lvs 22-22, 마디네 Lvs 21-21, 치릴리 Lvs 21-21, 두르쿤 Lvs 22-22, 치릴리 Lvs 22-22, 두르쿤 Lvs 22-22]]
+	[Name = 미혹의 숲 Doubles Grass, Rate = 8, MapIndex = 108,
+		Encounters = [치릴리 Lvs 22-22, 두르쿤 Lvs 23-23, 치릴리 Lvs 23-23, 두르쿤 Lvs 24-24, 유토브 Lvs 24-24, 마디네 Lvs 23-23, 유토브 Lvs 25-25, 마디네 Lvs 24-24, 치릴리 Lvs 24-24, 두르쿤 Lvs 25-25, 치릴리 Lvs 25-25, 두르쿤 Lvs 25-25]]
+	[Name = 미혹의 숲 Shaking Spots, Rate = 1, MapIndex = 108,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 20-20, 에몽가 Lvs 20-20, 야나프 Lvs 20-20, 바오프 Lvs 20-20, 앗차프 Lvs 20-20, 다부니 Lvs 21-21, 켄호로우 Lvs 22-22, 모아머 Lvs 22-22, 드레디어 Lvs 22-22, 모아머 Lvs 22-22, 드레디어 Lvs 22-22]]
+	[Name = 미혹의 숲 Surfing, Rate = 3, MapIndex = 108,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 미혹의 숲 Surfing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 미혹의 숲 Fishing, Rate = 50, MapIndex = 108,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 미혹의 숲 Fishing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 콘치 Lvs 35-70, 콘치 Lvs 35-70, 콘치 Lvs 35-70]]
+	[Name = 18번도로 Grass/Cave, Rate = 8, MapIndex = 109,
+		Encounters = [곤율랭 Lvs 28-28, 돌살이 Lvs 30-30, 보르그 Lvs 28-28, 돌살이 Lvs 31-31, 곤율랭 Lvs 29-29, 보르그 Lvs 30-30, 곤율랭 Lvs 30-30, 던지미 Lvs 29-29, 곤율랭 Lvs 31-31, 던지미 Lvs 31-31, 곤율랭 Lvs 31-31, 던지미 Lvs 31-31]]
+	[Name = 18번도로 Doubles Grass, Rate = 8, MapIndex = 109,
+		Encounters = [곤율랭 Lvs 32-32, 암팰리스 Lvs 34-34, 보르그 Lvs 32-32, 암팰리스 Lvs 35-35, 곤율랭 Lvs 33-33, 보르그 Lvs 34-34, 곤율랭 Lvs 34-34, 던지미 Lvs 33-33, 곤율랭 Lvs 35-35, 던지미 Lvs 35-35, 곤율랭 Lvs 35-35, 던지미 Lvs 35-35]]
+	[Name = 18번도로 Shaking Spots, Rate = 1, MapIndex = 109,
+		Encounters = [다부니 Lvs 28-28, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 30-30, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 타격귀 Lvs 31-31, 다부니 Lvs 31-31, 타격귀 Lvs 31-31]]
+	[Name = 18번도로 Surfing, Rate = 3, MapIndex = 109,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 18번도로 Surfing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 18번도로 Fishing, Rate = 50, MapIndex = 109,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 초라기 Lvs 35-55]]
+	[Name = 18번도로 Fishing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+	[Name = 물결마을 Surfing, Rate = 3, MapIndex = 110,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결마을 Surfing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [고래왕자 Lvs 25-60, 코산호 Lvs 25-60, 만타인 Lvs 35-70, 만타인 Lvs 35-70, 만타인 Lvs 35-70]]
+	[Name = 물결마을 Fishing, Rate = 50, MapIndex = 110,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결마을 Fishing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 17번수로 Surfing, Rate = 5, MapIndex = 111,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 17번수로 Surfing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 17번수로 Fishing, Rate = 80, MapIndex = 111,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 형광어 Lvs 35-55]]
+	[Name = 17번수로 Fishing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = 성신시티 Surfing, Rate = 3, MapIndex = 0,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 성신시티 Surfing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 성신시티 Fishing, Rate = 50, MapIndex = 0,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 성신시티 Fishing Spots, Rate = 1, MapIndex = 0,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 물풍경시티 Surfing, Rate = 3, MapIndex = 1,
+		Encounters = [탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25, 탱그릴 Lvs 10-25]]
+	[Name = 물풍경시티 Surfing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [맘복치 Lvs 10-30, 맘복치 Lvs 10-30, 맘복치 Lvs 10-30, 탱탱겔 Lvs 10-30, 탱탱겔 Lvs 10-30]]
+	[Name = 물풍경시티 Fishing, Rate = 50, MapIndex = 1,
+		Encounters = [크랩 Lvs 35-55, 초라기 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물풍경시티 Fishing Spots, Rate = 1, MapIndex = 1,
+		Encounters = [초라기 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 랜턴 Lvs 45-70, 랜턴 Lvs 45-70]]
+	[Name = 설화시티 Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화시티 Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화시티 Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화시티 Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화시티 Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화시티 Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화시티 Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화시티 Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화시티 Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화시티 Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화시티 Grass/Cave, Rate = 8, MapIndex = 2,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화시티 Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화시티 Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화시티 Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화시티 Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화시티 Surfing, Rate = 3, MapIndex = 2,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화시티 Surfing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화시티 Fishing, Rate = 50, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화시티 Fishing Spots, Rate = 1, MapIndex = 2,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 꿈터 Grass/Cave, Rate = 8, MapIndex = 3,
+		Encounters = [보르쥐 Lvs 8-8, 쌔비냥 Lvs 8-8, 보르쥐 Lvs 9-9, 쌔비냥 Lvs 9-9, 몽나 Lvs 8-8, 몽나 Lvs 10-10, 보르쥐 Lvs 10-10, 쌔비냥 Lvs 10-10, 보르쥐 Lvs 11-11, 쌔비냥 Lvs 11-11, 보르쥐 Lvs 11-11, 쌔비냥 Lvs 11-11]]
+	[Name = 꿈터 Doubles Grass, Rate = 8, MapIndex = 3,
+		Encounters = [보르그 Lvs 47-47, 레파르다스 Lvs 47-47, 레트라 Lvs 48-48, 몽나 Lvs 48-48, 레디안 Lvs 49-49, 아리아도스 Lvs 49-49, 귀뚤톡크 Lvs 48-48, 도나리 Lvs 48-48, 귀뚤톡크 Lvs 50-50, 도나리 Lvs 50-50, 귀뚤톡크 Lvs 50-50, 도나리 Lvs 50-50]]
+	[Name = 꿈터 Shaking Spots, Rate = 1, MapIndex = 3,
+		Encounters = [다부니 Lvs 8-8, 다부니 Lvs 8-8, 다부니 Lvs 9-9, 다부니 Lvs 9-9, 다부니 Lvs 10-10, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 몽얌나 Lvs 11-11, 다부니 Lvs 11-11, 몽얌나 Lvs 11-11]]
+	[Name = 꿈터 Doubles Grass, Rate = 8, MapIndex = 4,
+		Encounters = [레트라 Lvs 47-47, 귀뚤톡크 Lvs 47-47, 몽나 Lvs 48-48, 레트라 Lvs 48-48, 귀뚤톡크 Lvs 48-48, 몽나 Lvs 49-49, 아리아도스 Lvs 49-49, 레디안 Lvs 49-49, 레트라 Lvs 50-50, 귀뚤톡크 Lvs 50-50, 레트라 Lvs 50-50, 귀뚤톡크 Lvs 50-50]]
+	[Name = 바람개비숲 Grass/Cave, Rate = 8, MapIndex = 5,
+		Encounters = [동챙이 Lvs 12-12, 콩둘기 Lvs 12-12, 동챙이 Lvs 13-13, 콩둘기 Lvs 13-13, 으랏차 Lvs 13-13, 으랏차 Lvs 14-14, 동챙이 Lvs 14-14, 던지미 Lvs 12-12, 동챙이 Lvs 15-15, 던지미 Lvs 15-15, 동챙이 Lvs 15-15, 던지미 Lvs 15-15]]
+	[Name = 바람개비숲 Doubles Grass, Rate = 8, MapIndex = 5,
+		Encounters = [동챙이 Lvs 14-14, 콩둘기 Lvs 14-14, 동챙이 Lvs 15-15, 콩둘기 Lvs 15-15, 으랏차 Lvs 15-15, 으랏차 Lvs 16-16, 동챙이 Lvs 16-16, 던지미 Lvs 14-14, 동챙이 Lvs 17-17, 던지미 Lvs 17-17, 동챙이 Lvs 17-17, 던지미 Lvs 17-17]]
+	[Name = 바람개비숲 Shaking Spots, Rate = 1, MapIndex = 5,
+		Encounters = [다부니 Lvs 12-12, 다부니 Lvs 12-12, 다부니 Lvs 13-13, 다부니 Lvs 13-13, 다부니 Lvs 14-14, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 다부니 Lvs 15-15, 타격귀 Lvs 15-15, 다부니 Lvs 15-15, 타격귀 Lvs 15-15]]
+	[Name = 바람개비숲 Grass/Cave, Rate = 8, MapIndex = 6,
+		Encounters = [치릴리 Lvs 14-14, 두르보 Lvs 14-14, 치릴리 Lvs 15-15, 두르보 Lvs 15-15, 콩둘기 Lvs 15-15, 마디네 Lvs 15-15, 콩둘기 Lvs 16-16, 마디네 Lvs 16-16, 치릴리 Lvs 16-16, 두르보 Lvs 16-16, 치릴리 Lvs 17-17, 두르보 Lvs 17-17]]
+	[Name = 바람개비숲 Doubles Grass, Rate = 8, MapIndex = 6,
+		Encounters = [치릴리 Lvs 22-22, 두르쿤 Lvs 22-22, 치릴리 Lvs 23-23, 두르쿤 Lvs 23-23, 유토브 Lvs 23-23, 휠구 Lvs 23-23, 유토브 Lvs 24-24, 휠구 Lvs 24-24, 치릴리 Lvs 24-24, 두르쿤 Lvs 24-24, 치릴리 Lvs 25-25, 두르쿤 Lvs 25-25]]
+	[Name = 바람개비숲 Shaking Spots, Rate = 1, MapIndex = 6,
+		Encounters = [다부니 Lvs 14-14, 다부니 Lvs 15-15, 야나프 Lvs 15-15, 바오프 Lvs 15-15, 앗차프 Lvs 15-15, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 다부니 Lvs 17-17, 드레디어 Lvs 17-17, 다부니 Lvs 17-17, 드레디어 Lvs 17-17]]
+	[Name = 바람개비숲 Surfing, Rate = 3, MapIndex = 6,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 바람개비숲 Surfing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 바람개비숲 Fishing, Rate = 50, MapIndex = 6,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 바람개비숲 Fishing Spots, Rate = 1, MapIndex = 6,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 리조트데저트 Grass/Cave, Rate = 3, MapIndex = 7,
+		Encounters = [깜눈크 Lvs 19-19, 달막화 Lvs 19-19, 깜눈크 Lvs 20-20, 달막화 Lvs 20-20, 마라카치 Lvs 20-20, 곤율랭 Lvs 20-20, 깜눈크 Lvs 21-21, 돌살이 Lvs 20-20, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22]]
+	[Name = 리조트데저트 Grass/Cave, Rate = 3, MapIndex = 8,
+		Encounters = [깜눈크 Lvs 19-19, 달막화 Lvs 19-19, 깜눈크 Lvs 20-20, 달막화 Lvs 20-20, 마라카치 Lvs 20-20, 심보러 Lvs 20-20, 깜눈크 Lvs 21-21, 돌살이 Lvs 20-20, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22, 깜눈크 Lvs 22-22, 돌살이 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 9,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 10,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 11,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 12,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 13,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 14,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 15,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 16,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 17,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 18,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 19,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 20,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 21,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 22,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 23,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 24,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 25,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 26,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 27,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 28,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 29,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 30,
+		Encounters = [점토도리 Lvs 47-47, 점토도리 Lvs 47-47, 점토도리 Lvs 48-48, 점토도리 Lvs 48-48, 점토도리 Lvs 49-49, 점토도리 Lvs 49-49, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 31,
+		Encounters = [점토도리 Lvs 47-47, 점토도리 Lvs 47-47, 점토도리 Lvs 48-48, 점토도리 Lvs 48-48, 점토도리 Lvs 49-49, 점토도리 Lvs 49-49, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50, 점토도리 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 32,
+		Encounters = [악비르 Lvs 47-47, 고지 Lvs 47-47, 데스니칸 Lvs 48-48, 롱스톤 Lvs 48-48, 악비르 Lvs 48-48, 고지 Lvs 49-49, 데스니칸 Lvs 49-49, 롱스톤 Lvs 49-49, 악비르 Lvs 49-49, 데스니칸 Lvs 50-50, 악비르 Lvs 50-50, 데스니칸 Lvs 50-50]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 33,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 34,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 35,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 36,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 37,
+		Encounters = [악비르 Lvs 34-34, 데스니칸 Lvs 34-34, 악비르 Lvs 35-35, 데스니칸 Lvs 35-35, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 36-36, 데스니칸 Lvs 36-36, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37, 악비르 Lvs 37-37, 데스니칸 Lvs 37-37]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 38,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 고대의 성 Grass/Cave, Rate = 3, MapIndex = 39,
+		Encounters = [깜눈크 Lvs 19-19, 데스마스 Lvs 19-19, 깜눈크 Lvs 20-20, 데스마스 Lvs 20-20, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 21-21, 데스마스 Lvs 21-21, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22, 깜눈크 Lvs 22-22, 데스마스 Lvs 22-22]]
+	[Name = 냉동컨테이너 Grass/Cave, Rate = 8, MapIndex = 40,
+		Encounters = [하데리어 Lvs 21-21, 치라미 Lvs 20-20, 하데리어 Lvs 22-22, 으랏차 Lvs 21-21, 바닐프티 Lvs 20-20, 바닐프티 Lvs 21-21, 으랏차 Lvs 22-22, 바닐프티 Lvs 22-22, 하데리어 Lvs 23-23, 바닐프티 Lvs 23-23, 하데리어 Lvs 23-23, 바닐프티 Lvs 23-23]]
+	[Name = 냉동컨테이너 Doubles Grass, Rate = 8, MapIndex = 40,
+		Encounters = [하데리어 Lvs 25-25, 치라미 Lvs 24-24, 하데리어 Lvs 26-26, 으랏차 Lvs 25-25, 바닐프티 Lvs 24-24, 바닐프티 Lvs 25-25, 으랏차 Lvs 26-26, 바닐프티 Lvs 26-26, 하데리어 Lvs 27-27, 바닐프티 Lvs 27-27, 하데리어 Lvs 27-27, 바닐프티 Lvs 27-27]]
+	[Name = 냉동컨테이너 Shaking Spots, Rate = 1, MapIndex = 40,
+		Encounters = [다부니 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 23-23, 다부니 Lvs 23-23, 다부니 Lvs 23-23, 치라치노 Lvs 23-23, 바랜드 Lvs 23-23, 치라치노 Lvs 23-23, 바랜드 Lvs 23-23]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 41,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 24-24, 철시드 Lvs 25-25, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27, 저리어 Lvs 27-27, 저리어 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 41,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 42,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 25-25, 철시드 Lvs 26-26, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27, 저리어 Lvs 27-27, 저리어 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 42,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 전기돌동굴 Grass/Cave, Rate = 3, MapIndex = 43,
+		Encounters = [파쪼옥 Lvs 24-24, 기어르 Lvs 25-25, 파쪼옥 Lvs 25-25, 암트르 Lvs 24-24, 철시드 Lvs 26-26, 철시드 Lvs 27-27, 파쪼옥 Lvs 26-26, 기어르 Lvs 26-26, 저리어 Lvs 27-27, 저리어 Lvs 27-27, 파쪼옥 Lvs 27-27, 기어르 Lvs 27-27]]
+	[Name = 전기돌동굴 Shaking Spots, Rate = 1, MapIndex = 43,
+		Encounters = [두더류 Lvs 24-24, 두더류 Lvs 24-24, 두더류 Lvs 25-25, 두더류 Lvs 25-25, 두더류 Lvs 26-26, 두더류 Lvs 26-26, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27, 두더류 Lvs 27-27]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 또르박쥐 Lvs 28-28, 암트르 Lvs 31-31, 또르박쥐 Lvs 29-29, 코고미 Lvs 28-28, 또르박쥐 Lvs 30-30, 프리지오 Lvs 28-28, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 44,
+		Encounters = [코고미 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 29-29, 코고미 Lvs 29-29, 암트르 Lvs 30-30, 코고미 Lvs 30-30, 코고미 Lvs 31-31, 또르박쥐 Lvs 28-28, 프리지오 Lvs 31-31, 또르박쥐 Lvs 29-29, 프리지오 Lvs 31-31, 또르박쥐 Lvs 30-30]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 44,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 또르박쥐 Lvs 28-28, 암트르 Lvs 31-31, 또르박쥐 Lvs 29-29, 코고미 Lvs 28-28, 또르박쥐 Lvs 30-30, 프리지오 Lvs 28-28, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 45,
+		Encounters = [코고미 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 29-29, 코고미 Lvs 29-29, 암트르 Lvs 30-30, 코고미 Lvs 30-30, 코고미 Lvs 31-31, 또르박쥐 Lvs 28-28, 프리지오 Lvs 31-31, 또르박쥐 Lvs 29-29, 프리지오 Lvs 31-31, 또르박쥐 Lvs 30-30]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 45,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 또르박쥐 Lvs 28-28, 암트르 Lvs 31-31, 또르박쥐 Lvs 29-29, 코고미 Lvs 28-28, 또르박쥐 Lvs 30-30, 프리지오 Lvs 28-28, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 46,
+		Encounters = [코고미 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 29-29, 코고미 Lvs 29-29, 암트르 Lvs 30-30, 코고미 Lvs 30-30, 코고미 Lvs 31-31, 또르박쥐 Lvs 28-28, 프리지오 Lvs 31-31, 또르박쥐 Lvs 29-29, 프리지오 Lvs 31-31, 또르박쥐 Lvs 30-30]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 46,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 또르박쥐 Lvs 28-28, 암트르 Lvs 31-31, 또르박쥐 Lvs 29-29, 코고미 Lvs 28-28, 또르박쥐 Lvs 30-30, 프리지오 Lvs 28-28, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [암트르 Lvs 28-28, 토쇠골 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 30-30, 암트르 Lvs 30-30, 코고미 Lvs 28-28, 암트르 Lvs 30-30, 또르박쥐 Lvs 29-29, 암트르 Lvs 31-31, 또르박쥐 Lvs 30-30, 프리지오 Lvs 31-31, 또르박쥐 Lvs 31-31]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 태엽산 Grass/Cave, Rate = 3, MapIndex = 47,
+		Encounters = [코고미 Lvs 28-28, 암트르 Lvs 29-29, 토쇠골 Lvs 29-29, 코고미 Lvs 29-29, 암트르 Lvs 30-30, 코고미 Lvs 30-30, 코고미 Lvs 31-31, 또르박쥐 Lvs 28-28, 프리지오 Lvs 31-31, 또르박쥐 Lvs 29-29, 프리지오 Lvs 31-31, 또르박쥐 Lvs 30-30]]
+	[Name = 태엽산 Shaking Spots, Rate = 1, MapIndex = 47,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 31-31, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 31-31, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 31-31, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 48,
+		Encounters = [바닐프티 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 코고미 Lvs 33-33, 비조푸 Lvs 32-32, 바닐프티 Lvs 31-31, 비조푸 Lvs 33-33, 바닐프티 Lvs 32-32, 비조푸 Lvs 33-33, 바닐프티 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 48,
+		Encounters = [바닐리치 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 툰베어 Lvs 37-37, 비조푸 Lvs 36-36, 바닐리치 Lvs 35-35, 비조푸 Lvs 37-37, 바닐리치 Lvs 36-36, 비조푸 Lvs 37-37, 바닐리치 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 48,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 유토브 Lvs 36-36, 비조푸 Lvs 36-36, 크리만 Lvs 35-35, 비조푸 Lvs 37-37, 크리만 Lvs 36-36, 비조푸 Lvs 37-37, 크리만 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35]]
+	[Name = 용나선탑 Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40]]
+	[Name = 용나선탑 Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-55, 배쓰나이 Lvs 35-55, 미뇽 Lvs 35-55, 신뇽 Lvs 35-55, 신뇽 Lvs 35-55]]
+	[Name = 용나선탑 Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-60, 배쓰나이 Lvs 35-60, 신뇽 Lvs 35-70, 신뇽 Lvs 45-70, 망나뇽 Lvs 50-70]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 유토브 Lvs 36-36, 비조푸 Lvs 36-36, 크리만 Lvs 35-35, 비조푸 Lvs 37-37, 크리만 Lvs 36-36, 비조푸 Lvs 37-37, 크리만 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35]]
+	[Name = 용나선탑 Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40]]
+	[Name = 용나선탑 Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-55, 배쓰나이 Lvs 35-55, 미뇽 Lvs 35-55, 신뇽 Lvs 35-55, 신뇽 Lvs 35-55]]
+	[Name = 용나선탑 Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-60, 배쓰나이 Lvs 35-60, 신뇽 Lvs 35-70, 신뇽 Lvs 45-70, 망나뇽 Lvs 50-70]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 유토브 Lvs 32-32, 비조푸 Lvs 32-32, 크리만 Lvs 31-31, 비조푸 Lvs 33-33, 크리만 Lvs 32-32, 비조푸 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [유토브 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 유토브 Lvs 36-36, 비조푸 Lvs 36-36, 크리만 Lvs 35-35, 비조푸 Lvs 37-37, 크리만 Lvs 36-36, 비조푸 Lvs 37-37, 크리만 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33, 다부니 Lvs 33-33, 켄호로우 Lvs 33-33]]
+	[Name = 용나선탑 Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35]]
+	[Name = 용나선탑 Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40]]
+	[Name = 용나선탑 Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-55, 배쓰나이 Lvs 35-55, 미뇽 Lvs 35-55, 신뇽 Lvs 35-55, 신뇽 Lvs 35-55]]
+	[Name = 용나선탑 Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-60, 배쓰나이 Lvs 35-60, 신뇽 Lvs 35-70, 신뇽 Lvs 45-70, 망나뇽 Lvs 50-70]]
+	[Name = 용나선탑 Grass/Cave, Rate = 8, MapIndex = 49,
+		Encounters = [바닐프티 Lvs 31-31, 사철록 Lvs 30-30, 비조푸 Lvs 30-30, 사철록 Lvs 32-32, 비조푸 Lvs 31-31, 코고미 Lvs 33-33, 비조푸 Lvs 32-32, 바닐프티 Lvs 32-32, 비조푸 Lvs 33-33, 바닐프티 Lvs 32-32, 비조푸 Lvs 33-33, 바닐프티 Lvs 33-33]]
+	[Name = 용나선탑 Doubles Grass, Rate = 8, MapIndex = 49,
+		Encounters = [바닐리치 Lvs 35-35, 바라철록 Lvs 34-34, 비조푸 Lvs 34-34, 바라철록 Lvs 36-36, 비조푸 Lvs 35-35, 툰베어 Lvs 37-37, 비조푸 Lvs 36-36, 바닐리치 Lvs 36-36, 비조푸 Lvs 37-37, 바닐리치 Lvs 36-36, 비조푸 Lvs 37-37, 바닐리치 Lvs 37-37]]
+	[Name = 용나선탑 Shaking Spots, Rate = 1, MapIndex = 49,
+		Encounters = [다부니 Lvs 30-30, 다부니 Lvs 30-30, 에몽가 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33, 다부니 Lvs 33-33]]
+	[Name = 용나선탑 Surfing, Rate = 3, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35, 배쓰나이 Lvs 15-35]]
+	[Name = 용나선탑 Surfing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40, 배쓰나이 Lvs 15-40]]
+	[Name = 용나선탑 Fishing, Rate = 50, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-55, 배쓰나이 Lvs 35-55, 미뇽 Lvs 35-55, 신뇽 Lvs 35-55, 신뇽 Lvs 35-55]]
+	[Name = 용나선탑 Fishing Spots, Rate = 1, MapIndex = 49,
+		Encounters = [미뇽 Lvs 35-60, 배쓰나이 Lvs 35-60, 신뇽 Lvs 35-70, 신뇽 Lvs 45-70, 망나뇽 Lvs 50-70]]
+	[Name = 용나선탑 Grass/Cave, Rate = 3, MapIndex = 50,
+		Encounters = [골비람 Lvs 30-30, 비조푸 Lvs 33-33, 골비람 Lvs 31-31, 크리만 Lvs 30-30, 골비람 Lvs 32-32, 크리만 Lvs 31-31, 골비람 Lvs 32-32, 크리만 Lvs 32-32, 골비람 Lvs 33-33, 크리만 Lvs 33-33, 골비람 Lvs 33-33, 크리만 Lvs 33-33]]
+	[Name = 용나선탑 Grass/Cave, Rate = 3, MapIndex = 51,
+		Encounters = [골비람 Lvs 30-30, 골비람 Lvs 30-30, 골비람 Lvs 31-31, 골비람 Lvs 31-31, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 32-32, 골비람 Lvs 33-33, 골비람 Lvs 33-33, 골비람 Lvs 33-33, 골비람 Lvs 33-33]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 8, MapIndex = 52,
+		Encounters = [수리둥보 Lvs 38-38, 앤티골 Lvs 37-37, 수리둥보 Lvs 40-40, 앤티골 Lvs 38-38, 비조푸 Lvs 38-38, 앤티골 Lvs 39-39, 비조푸 Lvs 40-40, 액슨도 Lvs 40-40, 수리둥보 Lvs 37-37, 앤티골 Lvs 40-40, 수리둥보 Lvs 39-39, 앤티골 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 6, MapIndex = 53,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 39-39, 아이앤트 Lvs 38-38, 모노두 Lvs 38-38, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 모노두 Lvs 38-38, 아이앤트 Lvs 40-40, 모노두 Lvs 39-39, 아이앤트 Lvs 40-40, 모노두 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 53,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Surfing, Rate = 3, MapIndex = 53,
+		Encounters = [배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45]]
+	[Name = 챔피언로드 Surfing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50]]
+	[Name = 챔피언로드 Fishing, Rate = 50, MapIndex = 53,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 챔피언로드 Fishing Spots, Rate = 1, MapIndex = 53,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 54,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 54,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 55,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 55,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 56,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 56,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 57,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 57,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 6, MapIndex = 58,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 39-39, 아이앤트 Lvs 38-38, 모노두 Lvs 38-38, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 모노두 Lvs 38-38, 아이앤트 Lvs 40-40, 모노두 Lvs 39-39, 아이앤트 Lvs 40-40, 모노두 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 58,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Surfing, Rate = 3, MapIndex = 58,
+		Encounters = [배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45, 배쓰나이 Lvs 20-45]]
+	[Name = 챔피언로드 Surfing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50, 배쓰나이 Lvs 20-50]]
+	[Name = 챔피언로드 Fishing, Rate = 50, MapIndex = 58,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 챔피언로드 Fishing Spots, Rate = 1, MapIndex = 58,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 59,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 59,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 60,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 60,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 61,
+		Encounters = [아이앤트 Lvs 37-37, 암트르 Lvs 37-37, 아이앤트 Lvs 38-38, 암트르 Lvs 39-39, 또르박쥐 Lvs 37-37, 비조푸 Lvs 39-39, 아이앤트 Lvs 39-39, 또르박쥐 Lvs 38-38, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 39-39, 아이앤트 Lvs 40-40, 또르박쥐 Lvs 40-40]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 61,
+		Encounters = [몰드류 Lvs 37-37, 몰드류 Lvs 37-37, 몰드류 Lvs 38-38, 몰드류 Lvs 38-38, 몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 62,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 62,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 63,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 63,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 64,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 64,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 65,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 65,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 챔피언로드 Grass/Cave, Rate = 3, MapIndex = 66,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 챔피언로드 Shaking Spots, Rate = 1, MapIndex = 66,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 시련의 석굴 Grass/Cave, Rate = 3, MapIndex = 67,
+		Encounters = [아이앤트 Lvs 39-39, 암트르 Lvs 39-39, 아이앤트 Lvs 40-40, 암트르 Lvs 41-41, 또르박쥐 Lvs 39-39, 비조푸 Lvs 41-41, 아이앤트 Lvs 41-41, 또르박쥐 Lvs 40-40, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 41-41, 아이앤트 Lvs 42-42, 또르박쥐 Lvs 42-42]]
+	[Name = 시련의 석굴 Shaking Spots, Rate = 1, MapIndex = 67,
+		Encounters = [몰드류 Lvs 39-39, 몰드류 Lvs 39-39, 몰드류 Lvs 40-40, 몰드류 Lvs 40-40, 몰드류 Lvs 41-41, 몰드류 Lvs 41-41, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42, 몰드류 Lvs 42-42]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 8, MapIndex = 68,
+		Encounters = [덩쿠리 Lvs 47-47, 스왈로 Lvs 47-47, 골뱃 Lvs 48-48, 루나톤 Lvs 48-48, 솔록 Lvs 48-48, 둥실라이드 Lvs 49-49, 앱솔 Lvs 48-48, 앱솔 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50]]
+	[Name = 자이언트홀 Doubles Grass, Rate = 8, MapIndex = 68,
+		Encounters = [덩쿠리 Lvs 57-57, 스왈로 Lvs 57-57, 골뱃 Lvs 58-58, 루나톤 Lvs 58-58, 솔록 Lvs 58-58, 둥실라이드 Lvs 59-59, 앱솔 Lvs 58-58, 앱솔 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 68,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 3, MapIndex = 69,
+		Encounters = [골뱃 Lvs 47-47, 메꾸리 Lvs 47-47, 포푸니 Lvs 48-48, 딜리버드 Lvs 48-48, 루나톤 Lvs 50-50, 솔록 Lvs 50-50, 암트르 Lvs 49-49, 루주라 Lvs 48-48, 메꾸리 Lvs 49-49, 루주라 Lvs 50-50, 메꾸리 Lvs 49-49, 루주라 Lvs 50-50]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 69,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 자이언트홀 Surfing, Rate = 3, MapIndex = 69,
+		Encounters = [배쓰나이 Lvs 25-55, 쥬쥬 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 자이언트홀 Surfing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [쥬쥬 Lvs 25-60, 배쓰나이 Lvs 25-60, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70]]
+	[Name = 자이언트홀 Fishing, Rate = 50, MapIndex = 69,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 자이언트홀 Fishing Spots, Rate = 1, MapIndex = 69,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 8, MapIndex = 70,
+		Encounters = [삐삐 Lvs 52-52, 메꾸리 Lvs 52-52, 삐삐 Lvs 54-54, 메타몽 Lvs 53-53, 루나톤 Lvs 55-55, 솔록 Lvs 55-55, 메타몽 Lvs 55-55, 메탕구 Lvs 53-53, 메꾸리 Lvs 54-54, 메탕구 Lvs 55-55, 메꾸리 Lvs 54-54, 메탕구 Lvs 55-55]]
+	[Name = 자이언트홀 Doubles Grass, Rate = 8, MapIndex = 70,
+		Encounters = [삐삐 Lvs 62-62, 메꾸리 Lvs 62-62, 삐삐 Lvs 64-64, 메타몽 Lvs 63-63, 루나톤 Lvs 65-65, 솔록 Lvs 65-65, 메타몽 Lvs 65-65, 메탕구 Lvs 63-63, 메꾸리 Lvs 64-64, 메탕구 Lvs 65-65, 메꾸리 Lvs 64-64, 메탕구 Lvs 65-65]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 70,
+		Encounters = [다부니 Lvs 52-52, 다부니 Lvs 52-52, 다부니 Lvs 53-53, 다부니 Lvs 53-53, 다부니 Lvs 54-54, 다부니 Lvs 55-55, 다부니 Lvs 55-55, 맘모꾸리 Lvs 55-55, 픽시 Lvs 55-55, 메타그로스 Lvs 55-55, 픽시 Lvs 55-55, 메타그로스 Lvs 55-55]]
+	[Name = 자이언트홀 Grass/Cave, Rate = 3, MapIndex = 71,
+		Encounters = [골뱃 Lvs 57-57, 메꾸리 Lvs 57-57, 포푸니 Lvs 58-58, 딜리버드 Lvs 58-58, 루나톤 Lvs 60-60, 솔록 Lvs 60-60, 암트르 Lvs 59-59, 루주라 Lvs 58-58, 메꾸리 Lvs 59-59, 루주라 Lvs 60-60, 메꾸리 Lvs 59-59, 루주라 Lvs 60-60]]
+	[Name = 자이언트홀 Shaking Spots, Rate = 1, MapIndex = 71,
+		Encounters = [몰드류 Lvs 57-57, 몰드류 Lvs 57-57, 몰드류 Lvs 58-58, 몰드류 Lvs 58-58, 몰드류 Lvs 59-59, 몰드류 Lvs 59-59, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60, 몰드류 Lvs 60-60]]
+	[Name = 자이언트홀 Surfing, Rate = 3, MapIndex = 71,
+		Encounters = [배쓰나이 Lvs 25-55, 쥬쥬 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 자이언트홀 Surfing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [쥬쥬 Lvs 25-60, 배쓰나이 Lvs 25-60, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70, 쥬레곤 Lvs 35-70]]
+	[Name = 자이언트홀 Fishing, Rate = 50, MapIndex = 71,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 자이언트홀 Fishing Spots, Rate = 1, MapIndex = 71,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 45-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = P2랩 Grass/Cave, Rate = 8, MapIndex = 72,
+		Encounters = [보르그 Lvs 28-28, 하데리어 Lvs 28-28, 보르그 Lvs 29-29, 하데리어 Lvs 29-29, 기어르 Lvs 29-29, 곤율랭 Lvs 29-29, 보르그 Lvs 30-30, 하데리어 Lvs 30-30, 기어르 Lvs 31-31, 곤율랭 Lvs 31-31, 보르그 Lvs 31-31, 하데리어 Lvs 31-31]]
+	[Name = P2랩 Shaking Spots, Rate = 1, MapIndex = 72,
+		Encounters = [다부니 Lvs 28-28, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 30-30, 다부니 Lvs 30-30, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 바랜드 Lvs 31-31, 다부니 Lvs 31-31, 바랜드 Lvs 31-31]]
+	[Name = P2랩 Surfing, Rate = 5, MapIndex = 72,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = P2랩 Surfing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = P2랩 Fishing, Rate = 80, MapIndex = 72,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 형광어 Lvs 35-55]]
+	[Name = P2랩 Fishing Spots, Rate = 1, MapIndex = 72,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+	[Name = 물결만 Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결만 Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [고래왕자 Lvs 25-60, 고래왕자 Lvs 25-60, 만타인 Lvs 35-70, 고래왕 Lvs 35-70, 고래왕 Lvs 35-70]]
+	[Name = 물결만 Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결만 Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 물결만 Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결만 Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [고래왕자 Lvs 25-60, 고래왕자 Lvs 25-60, 만타인 Lvs 35-70, 고래왕 Lvs 35-70, 고래왕 Lvs 35-70]]
+	[Name = 물결만 Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결만 Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 물결만 Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결만 Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [고래왕자 Lvs 25-60, 고래왕자 Lvs 25-60, 만타인 Lvs 35-70, 고래왕 Lvs 35-70, 고래왕 Lvs 35-70]]
+	[Name = 물결만 Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결만 Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 물결만 Surfing, Rate = 5, MapIndex = 73,
+		Encounters = [갈모매 Lvs 25-55, 대굴레오 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결만 Surfing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [고래왕자 Lvs 25-60, 씨레오 Lvs 25-60, 고래왕 Lvs 35-70, 씨카이저 Lvs 35-70, 씨카이저 Lvs 35-70]]
+	[Name = 물결만 Fishing, Rate = 80, MapIndex = 73,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결만 Fishing Spots, Rate = 1, MapIndex = 73,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 물풍경도개교 Shaking Spots, Rate = 1, MapIndex = 74,
+		Encounters = [꼬지보리 Lvs 22-22, 꼬지보리 Lvs 22-22, 꼬지보리 Lvs 23-23, 꼬지보리 Lvs 23-23, 꼬지보리 Lvs 24-24, 꼬지보리 Lvs 24-24, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25, 꼬지보리 Lvs 25-25]]
+	[Name = 빌리지 브리지 Grass/Cave, Rate = 8, MapIndex = 75,
+		Encounters = [골덕 Lvs 47-47, 비버통 Lvs 47-47, 쟝고 Lvs 48-48, 세비퍼 Lvs 48-48, 수리둥보 Lvs 48-48, 수리둥보 Lvs 50-50, 골덕 Lvs 49-49, 비버통 Lvs 49-49, 쟝고 Lvs 50-50, 세비퍼 Lvs 50-50, 쟝고 Lvs 50-50, 세비퍼 Lvs 50-50]]
+	[Name = 빌리지 브리지 Doubles Grass, Rate = 8, MapIndex = 75,
+		Encounters = [골덕 Lvs 57-57, 비버통 Lvs 57-57, 쟝고 Lvs 58-58, 세비퍼 Lvs 58-58, 워글 Lvs 58-58, 워글 Lvs 60-60, 골덕 Lvs 59-59, 비버통 Lvs 59-59, 쟝고 Lvs 60-60, 세비퍼 Lvs 60-60, 쟝고 Lvs 60-60, 세비퍼 Lvs 60-60]]
+	[Name = 빌리지 브리지 Shaking Spots, Rate = 1, MapIndex = 75,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 빌리지 브리지 Surfing, Rate = 3, MapIndex = 75,
+		Encounters = [배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 빌리지 브리지 Surfing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [배쓰나이 Lvs 25-60, 배쓰나이 Lvs 25-60, 배쓰나이 Lvs 35-70, 라프라스 Lvs 35-70, 라프라스 Lvs 35-70]]
+	[Name = 빌리지 브리지 Fishing, Rate = 50, MapIndex = 75,
+		Encounters = [샤프니아 Lvs 35-55, 배쓰나이 Lvs 35-55, 샤프니아 Lvs 35-55, 샤프니아 Lvs 35-55, 샤프니아 Lvs 35-55]]
+	[Name = 빌리지 브리지 Fishing Spots, Rate = 1, MapIndex = 75,
+		Encounters = [샤프니아 Lvs 35-60, 배쓰나이 Lvs 35-60, 샤크니아 Lvs 35-70, 샤크니아 Lvs 45-70, 샤크니아 Lvs 45-70]]
+	[Name = 원더 브리지 Shaking Spots, Rate = 1, MapIndex = 76,
+		Encounters = [스완나 Lvs 47-47, 스완나 Lvs 47-47, 스완나 Lvs 48-48, 스완나 Lvs 48-48, 스완나 Lvs 49-49, 스완나 Lvs 49-49, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50, 스완나 Lvs 50-50]]
+	[Name = 1번도로 Grass/Cave, Rate = 8, MapIndex = 77,
+		Encounters = [보르쥐 Lvs 2-2, 요테리 Lvs 2-2, 보르쥐 Lvs 3-3, 요테리 Lvs 3-3, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 4-4, 요테리 Lvs 4-4]]
+	[Name = 1번도로 Doubles Grass, Rate = 8, MapIndex = 77,
+		Encounters = [보르그 Lvs 32-32, 하데리어 Lvs 32-32, 보르그 Lvs 33-33, 하데리어 Lvs 33-33, 곤율랭 Lvs 32-32, 곤율랭 Lvs 33-33, 보르그 Lvs 34-34, 하데리어 Lvs 34-34, 곤율랭 Lvs 34-34, 하데리어 Lvs 34-34, 보르그 Lvs 35-35, 곤율랭 Lvs 35-35]]
+	[Name = 1번도로 Shaking Spots, Rate = 1, MapIndex = 77,
+		Encounters = [다부니 Lvs 2-2, 다부니 Lvs 2-2, 다부니 Lvs 3-3, 다부니 Lvs 3-3, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 4-4]]
+	[Name = 1번도로 Surfing, Rate = 3, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 1번도로 Surfing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 1번도로 Fishing, Rate = 50, MapIndex = 77,
+		Encounters = [배쓰나이 Lvs 35-55, 배쓰나이 Lvs 35-55, 배쓰나이 Lvs 35-55, 빈티나 Lvs 35-55, 빈티나 Lvs 35-55]]
+	[Name = 1번도로 Fishing Spots, Rate = 1, MapIndex = 77,
+		Encounters = [빈티나 Lvs 35-60, 배쓰나이 Lvs 35-60, 배쓰나이 Lvs 35-70, 밀로틱 Lvs 45-70, 밀로틱 Lvs 45-70]]
+	[Name = 2번도로 Grass/Cave, Rate = 8, MapIndex = 78,
+		Encounters = [보르쥐 Lvs 4-4, 요테리 Lvs 4-4, 보르쥐 Lvs 5-5, 요테리 Lvs 5-5, 쌔비냥 Lvs 4-4, 쌔비냥 Lvs 5-5, 보르쥐 Lvs 6-6, 요테리 Lvs 6-6, 보르쥐 Lvs 7-7, 요테리 Lvs 7-7, 보르쥐 Lvs 7-7, 요테리 Lvs 7-7]]
+	[Name = 2번도로 Shaking Spots, Rate = 1, MapIndex = 78,
+		Encounters = [다부니 Lvs 4-4, 다부니 Lvs 4-4, 다부니 Lvs 5-5, 다부니 Lvs 5-5, 다부니 Lvs 6-6, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7, 다부니 Lvs 7-7]]
+	[Name = 3번도로 Grass/Cave, Rate = 8, MapIndex = 79,
+		Encounters = [보르쥐 Lvs 8-8, 콩둘기 Lvs 8-8, 줄뮤마 Lvs 8-8, 콩둘기 Lvs 9-9, 요테리 Lvs 9-9, 쌔비냥 Lvs 9-9, 줄뮤마 Lvs 9-9, 콩둘기 Lvs 10-10, 줄뮤마 Lvs 10-10, 콩둘기 Lvs 11-11, 줄뮤마 Lvs 11-11, 콩둘기 Lvs 11-11]]
+	[Name = 3번도로 Doubles Grass, Rate = 8, MapIndex = 79,
+		Encounters = [보르쥐 Lvs 10-10, 콩둘기 Lvs 10-10, 줄뮤마 Lvs 10-10, 콩둘기 Lvs 11-11, 요테리 Lvs 11-11, 쌔비냥 Lvs 11-11, 줄뮤마 Lvs 11-11, 콩둘기 Lvs 12-12, 줄뮤마 Lvs 12-12, 콩둘기 Lvs 13-13, 줄뮤마 Lvs 13-13, 콩둘기 Lvs 13-13]]
+	[Name = 3번도로 Shaking Spots, Rate = 1, MapIndex = 79,
+		Encounters = [다부니 Lvs 8-8, 다부니 Lvs 8-8, 다부니 Lvs 9-9, 다부니 Lvs 9-9, 다부니 Lvs 10-10, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11, 다부니 Lvs 11-11]]
+	[Name = 3번도로 Surfing, Rate = 3, MapIndex = 79,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 3번도로 Surfing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 3번도로 Fishing, Rate = 50, MapIndex = 79,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 3번도로 Fishing Spots, Rate = 1, MapIndex = 79,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 지하수맥굴 Grass/Cave, Rate = 3, MapIndex = 80,
+		Encounters = [단굴 Lvs 10-10, 또르박쥐 Lvs 10-10, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 12-12, 또르박쥐 Lvs 12-12, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13]]
+	[Name = 지하수맥굴 Shaking Spots, Rate = 1, MapIndex = 80,
+		Encounters = [두더류 Lvs 10-10, 두더류 Lvs 10-10, 두더류 Lvs 11-11, 두더류 Lvs 11-11, 두더류 Lvs 12-12, 두더류 Lvs 12-12, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13]]
+	[Name = 지하수맥굴 Surfing, Rate = 3, MapIndex = 80,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 지하수맥굴 Surfing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 지하수맥굴 Fishing, Rate = 50, MapIndex = 80,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 지하수맥굴 Fishing Spots, Rate = 1, MapIndex = 80,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-60, 강챙이 Lvs 35-60, 강챙이 Lvs 35-60]]
+	[Name = 지하수맥굴 Grass/Cave, Rate = 3, MapIndex = 81,
+		Encounters = [단굴 Lvs 10-10, 또르박쥐 Lvs 10-10, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 11-11, 또르박쥐 Lvs 11-11, 단굴 Lvs 12-12, 또르박쥐 Lvs 12-12, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13, 단굴 Lvs 13-13, 또르박쥐 Lvs 13-13]]
+	[Name = 지하수맥굴 Shaking Spots, Rate = 1, MapIndex = 81,
+		Encounters = [두더류 Lvs 10-10, 두더류 Lvs 10-10, 두더류 Lvs 11-11, 두더류 Lvs 11-11, 두더류 Lvs 12-12, 두더류 Lvs 12-12, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13, 두더류 Lvs 13-13]]
+	[Name = 지하수맥굴 Surfing, Rate = 3, MapIndex = 81,
+		Encounters = [배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15, 배쓰나이 Lvs 5-15]]
+	[Name = 지하수맥굴 Surfing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 지하수맥굴 Fishing, Rate = 50, MapIndex = 81,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 지하수맥굴 Fishing Spots, Rate = 1, MapIndex = 81,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-60, 강챙이 Lvs 35-60, 강챙이 Lvs 35-60]]
+	[Name = 4번도로 Grass/Cave, Rate = 3, MapIndex = 82,
+		Encounters = [깜눈크 Lvs 15-15, 달막화 Lvs 15-15, 깜눈크 Lvs 16-16, 달막화 Lvs 16-16, 곤율랭 Lvs 16-16, 곤율랭 Lvs 17-17, 깜눈크 Lvs 17-17, 달막화 Lvs 17-17, 깜눈크 Lvs 18-18, 달막화 Lvs 18-18, 깜눈크 Lvs 18-18, 달막화 Lvs 18-18]]
+	[Name = 4번도로 Surfing, Rate = 3, MapIndex = 82,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 4번도로 Surfing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 4번도로 Fishing, Rate = 50, MapIndex = 82,
+		Encounters = [크랩 Lvs 35-55, 진주몽 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 4번도로 Fishing Spots, Rate = 1, MapIndex = 82,
+		Encounters = [시라칸 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 분홍장이 Lvs 45-70, 분홍장이 Lvs 45-70]]
+	[Name = 5번도로 Grass/Cave, Rate = 8, MapIndex = 83,
+		Encounters = [유니란 Lvs 19-19, 치라미 Lvs 19-19, 깨봉이 Lvs 19-19, 깨봉이 Lvs 21-21, 레파르다스 Lvs 20-20, 레파르다스 Lvs 22-22, 치라미 Lvs 20-20, 유니란 Lvs 20-20, 치라미 Lvs 21-21, 유니란 Lvs 21-21, 치라미 Lvs 22-22, 유니란 Lvs 22-22]]
+	[Name = 5번도로 Doubles Grass, Rate = 8, MapIndex = 83,
+		Encounters = [유니란 Lvs 22-22, 치라미 Lvs 22-22, 깨봉이 Lvs 22-22, 깨봉이 Lvs 24-24, 레파르다스 Lvs 23-23, 레파르다스 Lvs 25-25, 치라미 Lvs 23-23, 유니란 Lvs 23-23, 치라미 Lvs 24-24, 유니란 Lvs 24-24, 치라미 Lvs 25-25, 유니란 Lvs 25-25]]
+	[Name = 5번도로 Shaking Spots, Rate = 1, MapIndex = 83,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 19-19, 에몽가 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22]]
+	[Name = 6번도로 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 22-22, 딱정곤 Lvs 22-22, 유토브 Lvs 23-23, 깜놀버슬 Lvs 23-23, 사철록 Lvs 23-23, 두르쿤 Lvs 23-23, 사철록 Lvs 24-24, 딱정곤 Lvs 24-24, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25]]
+	[Name = 6번도로 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 26-26, 딱정곤 Lvs 26-26, 유토브 Lvs 27-27, 깜놀버슬 Lvs 27-27, 사철록 Lvs 27-27, 두르쿤 Lvs 27-27, 사철록 Lvs 28-28, 딱정곤 Lvs 28-28, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 6번도로 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [다부니 Lvs 22-22, 다부니 Lvs 23-23, 에몽가 Lvs 23-23, 에몽가 Lvs 25-25, 다부니 Lvs 24-24, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25]]
+	[Name = 6번도로 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25]]
+	[Name = 6번도로 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30]]
+	[Name = 6번도로 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 6번도로 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 왕구리 Lvs 45-70, 왕구리 Lvs 45-70]]
+	[Name = 6번도로 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 22-22, 딱정곤 Lvs 22-22, 유토브 Lvs 23-23, 깜놀버슬 Lvs 23-23, 사철록 Lvs 23-23, 두르쿤 Lvs 23-23, 사철록 Lvs 24-24, 딱정곤 Lvs 24-24, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25]]
+	[Name = 6번도로 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 26-26, 딱정곤 Lvs 26-26, 유토브 Lvs 27-27, 깜놀버슬 Lvs 27-27, 사철록 Lvs 27-27, 두르쿤 Lvs 27-27, 사철록 Lvs 28-28, 딱정곤 Lvs 28-28, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 6번도로 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [다부니 Lvs 22-22, 다부니 Lvs 23-23, 에몽가 Lvs 23-23, 에몽가 Lvs 25-25, 다부니 Lvs 24-24, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25]]
+	[Name = 6번도로 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25]]
+	[Name = 6번도로 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30]]
+	[Name = 6번도로 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 6번도로 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 왕구리 Lvs 45-70, 왕구리 Lvs 45-70]]
+	[Name = 6번도로 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 22-22, 딱정곤 Lvs 22-22, 유토브 Lvs 23-23, 깜놀버슬 Lvs 23-23, 사철록 Lvs 23-23, 두르쿤 Lvs 23-23, 사철록 Lvs 24-24, 딱정곤 Lvs 24-24, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25, 유토브 Lvs 25-25, 깜놀버슬 Lvs 25-25]]
+	[Name = 6번도로 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 26-26, 딱정곤 Lvs 26-26, 유토브 Lvs 27-27, 깜놀버슬 Lvs 27-27, 사철록 Lvs 27-27, 두르쿤 Lvs 27-27, 사철록 Lvs 28-28, 딱정곤 Lvs 28-28, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29, 유토브 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 6번도로 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [다부니 Lvs 22-22, 다부니 Lvs 23-23, 에몽가 Lvs 23-23, 에몽가 Lvs 25-25, 다부니 Lvs 24-24, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25, 켄호로우 Lvs 25-25, 모아머 Lvs 25-25]]
+	[Name = 6번도로 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25]]
+	[Name = 6번도로 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30]]
+	[Name = 6번도로 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 6번도로 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 왕구리 Lvs 45-70, 왕구리 Lvs 45-70]]
+	[Name = 6번도로 Grass/Cave, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 22-22, 딱정곤 Lvs 22-22, 바닐프티 Lvs 23-23, 깜놀버슬 Lvs 23-23, 사철록 Lvs 23-23, 두르쿤 Lvs 23-23, 사철록 Lvs 24-24, 딱정곤 Lvs 24-24, 바닐프티 Lvs 25-25, 깜놀버슬 Lvs 25-25, 바닐프티 Lvs 25-25, 깜놀버슬 Lvs 25-25]]
+	[Name = 6번도로 Doubles Grass, Rate = 8, MapIndex = 84,
+		Encounters = [사철록 Lvs 26-26, 딱정곤 Lvs 26-26, 바닐프티 Lvs 27-27, 깜놀버슬 Lvs 27-27, 사철록 Lvs 27-27, 두르쿤 Lvs 27-27, 사철록 Lvs 28-28, 딱정곤 Lvs 28-28, 바닐프티 Lvs 29-29, 깜놀버슬 Lvs 29-29, 바닐프티 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 6번도로 Shaking Spots, Rate = 1, MapIndex = 84,
+		Encounters = [다부니 Lvs 22-22, 다부니 Lvs 23-23, 에몽가 Lvs 23-23, 에몽가 Lvs 25-25, 다부니 Lvs 24-24, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 다부니 Lvs 25-25, 모아머 Lvs 25-25, 다부니 Lvs 25-25, 모아머 Lvs 25-25]]
+	[Name = 6번도로 Surfing, Rate = 3, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25, 배쓰나이 Lvs 10-25]]
+	[Name = 6번도로 Surfing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30, 배쓰나이 Lvs 10-30]]
+	[Name = 6번도로 Fishing, Rate = 50, MapIndex = 84,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 6번도로 Fishing Spots, Rate = 1, MapIndex = 84,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 왕구리 Lvs 45-70, 왕구리 Lvs 45-70]]
+	[Name = 궐수의 동굴 Grass/Cave, Rate = 3, MapIndex = 85,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 궐수의 동굴 Shaking Spots, Rate = 1, MapIndex = 85,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 궐수의 동굴 Grass/Cave, Rate = 3, MapIndex = 86,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 궐수의 동굴 Shaking Spots, Rate = 1, MapIndex = 86,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 길잡이의 공간 Grass/Cave, Rate = 3, MapIndex = 87,
+		Encounters = [암트르 Lvs 28-28, 또르박쥐 Lvs 28-28, 암트르 Lvs 29-29, 또르박쥐 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 30-30, 암트르 Lvs 30-30, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31, 암트르 Lvs 31-31, 터검니 Lvs 31-31]]
+	[Name = 길잡이의 공간 Shaking Spots, Rate = 1, MapIndex = 87,
+		Encounters = [두더류 Lvs 28-28, 두더류 Lvs 28-28, 두더류 Lvs 29-29, 두더류 Lvs 29-29, 두더류 Lvs 30-30, 두더류 Lvs 30-30, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31, 두더류 Lvs 31-31]]
+	[Name = 7번도로 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 26-26, 사철록 Lvs 26-26, 보르그 Lvs 27-27, 제브라이카 Lvs 27-27, 유토브 Lvs 28-28, 제브라이카 Lvs 29-29, 보르그 Lvs 28-28, 깜놀버슬 Lvs 27-27, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 7번도로 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 30-30, 보르그 Lvs 31-31, 제브라이카 Lvs 31-31, 유토브 Lvs 32-32, 제브라이카 Lvs 33-33, 보르그 Lvs 32-32, 깜놀버슬 Lvs 31-31, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33]]
+	[Name = 7번도로 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [다부니 Lvs 26-26, 다부니 Lvs 26-26, 에몽가 Lvs 27-27, 다부니 Lvs 27-27, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29]]
+	[Name = 7번도로 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 26-26, 사철록 Lvs 26-26, 보르그 Lvs 27-27, 제브라이카 Lvs 27-27, 유토브 Lvs 28-28, 제브라이카 Lvs 29-29, 보르그 Lvs 28-28, 깜놀버슬 Lvs 27-27, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 7번도로 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 30-30, 보르그 Lvs 31-31, 제브라이카 Lvs 31-31, 유토브 Lvs 32-32, 제브라이카 Lvs 33-33, 보르그 Lvs 32-32, 깜놀버슬 Lvs 31-31, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33]]
+	[Name = 7번도로 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [다부니 Lvs 26-26, 다부니 Lvs 26-26, 에몽가 Lvs 27-27, 다부니 Lvs 27-27, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29]]
+	[Name = 7번도로 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 26-26, 사철록 Lvs 26-26, 보르그 Lvs 27-27, 제브라이카 Lvs 27-27, 유토브 Lvs 28-28, 제브라이카 Lvs 29-29, 보르그 Lvs 28-28, 깜놀버슬 Lvs 27-27, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 7번도로 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [유토브 Lvs 30-30, 사철록 Lvs 30-30, 보르그 Lvs 31-31, 제브라이카 Lvs 31-31, 유토브 Lvs 32-32, 제브라이카 Lvs 33-33, 보르그 Lvs 32-32, 깜놀버슬 Lvs 31-31, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33]]
+	[Name = 7번도로 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [다부니 Lvs 26-26, 다부니 Lvs 26-26, 에몽가 Lvs 27-27, 다부니 Lvs 27-27, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29, 다부니 Lvs 29-29, 켄호로우 Lvs 29-29]]
+	[Name = 7번도로 Grass/Cave, Rate = 15, MapIndex = 88,
+		Encounters = [코고미 Lvs 26-26, 사철록 Lvs 26-26, 보르그 Lvs 27-27, 제브라이카 Lvs 27-27, 코고미 Lvs 28-28, 제브라이카 Lvs 29-29, 보르그 Lvs 28-28, 깜놀버슬 Lvs 27-27, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29, 보르그 Lvs 29-29, 깜놀버슬 Lvs 29-29]]
+	[Name = 7번도로 Doubles Grass, Rate = 15, MapIndex = 88,
+		Encounters = [코고미 Lvs 30-30, 사철록 Lvs 30-30, 보르그 Lvs 31-31, 제브라이카 Lvs 31-31, 코고미 Lvs 32-32, 제브라이카 Lvs 33-33, 보르그 Lvs 32-32, 깜놀버슬 Lvs 31-31, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33, 보르그 Lvs 33-33, 깜놀버슬 Lvs 33-33]]
+	[Name = 7번도로 Shaking Spots, Rate = 1, MapIndex = 88,
+		Encounters = [다부니 Lvs 26-26, 다부니 Lvs 26-26, 에몽가 Lvs 27-27, 다부니 Lvs 27-27, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 89,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 27-27, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29, 불켜미 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 90,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 26-26, 불켜미 Lvs 28-28, 불켜미 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 27-27, 불켜미 Lvs 29-29, 리그레 Lvs 28-28]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 91,
+		Encounters = [불켜미 Lvs 26-26, 불켜미 Lvs 27-27, 불켜미 Lvs 26-26, 리그레 Lvs 26-26, 불켜미 Lvs 28-28, 리그레 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 29-29, 불켜미 Lvs 29-29, 리그레 Lvs 29-29]]
+	[Name = 타워오브해븐 Grass/Cave, Rate = 3, MapIndex = 92,
+		Encounters = [불켜미 Lvs 26-26, 리그레 Lvs 26-26, 불켜미 Lvs 27-27, 리그레 Lvs 27-27, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 28-28, 리그레 Lvs 28-28, 불켜미 Lvs 29-29, 리그레 Lvs 29-29, 불켜미 Lvs 29-29, 리그레 Lvs 29-29]]
+	[Name = 8번도로 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 8번도로 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 8번도로 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 8번도로 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 8번도로 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 8번도로 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 8번도로 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 8번도로 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 8번도로 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 8번도로 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 8번도로 Grass/Cave, Rate = 8, MapIndex = 93,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 8번도로 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 8번도로 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 8번도로 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 8번도로 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 8번도로 Surfing, Rate = 3, MapIndex = 93,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 8번도로 Surfing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 8번도로 Fishing, Rate = 50, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 8번도로 Fishing Spots, Rate = 1, MapIndex = 93,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화의 습지초원 Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화의 습지초원 Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화의 습지초원 Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화의 습지초원 Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화의 습지초원 Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화의 습지초원 Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화의 습지초원 Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화의 습지초원 Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화의 습지초원 Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화의 습지초원 Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화의 습지초원 Grass/Cave, Rate = 8, MapIndex = 94,
+		Encounters = [두까비 Lvs 30-30, 쪼마리 Lvs 30-30, 두까비 Lvs 31-31, 쪼마리 Lvs 31-31, 메더 Lvs 31-31, 메더 Lvs 32-32, 두까비 Lvs 32-32, 쪼마리 Lvs 32-32, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33, 두까비 Lvs 33-33, 쪼마리 Lvs 33-33]]
+	[Name = 설화의 습지초원 Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화의 습지초원 Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화의 습지초원 Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화의 습지초원 Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 설화의 습지초원 Surfing, Rate = 3, MapIndex = 94,
+		Encounters = [메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35, 메더 Lvs 15-35]]
+	[Name = 설화의 습지초원 Surfing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [메더 Lvs 15-40, 메더 Lvs 15-40, 메더 Lvs 15-40, 두빅굴 Lvs 15-40, 두빅굴 Lvs 15-40]]
+	[Name = 설화의 습지초원 Fishing, Rate = 50, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-55, 메더 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55, 미꾸리 Lvs 35-55]]
+	[Name = 설화의 습지초원 Fishing Spots, Rate = 1, MapIndex = 94,
+		Encounters = [미꾸리 Lvs 35-60, 메더 Lvs 35-60, 메깅 Lvs 35-70, 메깅 Lvs 45-70, 메깅 Lvs 45-70]]
+	[Name = 9번도로 Grass/Cave, Rate = 8, MapIndex = 95,
+		Encounters = [듀란 Lvs 31-31, 치라미 Lvs 32-32, 더스트나 Lvs 31-31, 더스트나 Lvs 33-33, 자망칼 Lvs 31-31, 레파르다스 Lvs 33-33, 자망칼 Lvs 32-32, 듀란 Lvs 32-32, 자망칼 Lvs 33-33, 듀란 Lvs 33-33, 자망칼 Lvs 34-34, 듀란 Lvs 34-34]]
+	[Name = 9번도로 Doubles Grass, Rate = 8, MapIndex = 95,
+		Encounters = [듀란 Lvs 36-36, 치라미 Lvs 37-37, 더스트나 Lvs 36-36, 더스트나 Lvs 38-38, 자망칼 Lvs 36-36, 레파르다스 Lvs 38-38, 자망칼 Lvs 37-37, 듀란 Lvs 37-37, 자망칼 Lvs 38-38, 듀란 Lvs 38-38, 자망칼 Lvs 39-39, 듀란 Lvs 39-39]]
+	[Name = 9번도로 Shaking Spots, Rate = 1, MapIndex = 95,
+		Encounters = [다부니 Lvs 31-31, 다부니 Lvs 31-31, 에몽가 Lvs 32-32, 다부니 Lvs 32-32, 다부니 Lvs 33-33, 다부니 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 34-34, 치라치노 Lvs 34-34, 란쿨루스 Lvs 34-34, 치라치노 Lvs 34-34, 란쿨루스 Lvs 34-34]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 96,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 내루미 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 96,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 97,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 내루미 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 97,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Grass/Cave, Rate = 3, MapIndex = 98,
+		Encounters = [암트르 Lvs 48-48, 또르박쥐 Lvs 47-47, 데구리 Lvs 47-47, 데구리 Lvs 49-49, 깜까미 Lvs 49-49, 내루미 Lvs 49-49, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 50-50, 입치트 Lvs 49-49, 리오르 Lvs 49-49]]
+	[Name = 수행의 바위동굴 Shaking Spots, Rate = 1, MapIndex = 98,
+		Encounters = [몰드류 Lvs 47-47, 몰드류 Lvs 47-47, 몰드류 Lvs 48-48, 몰드류 Lvs 48-48, 몰드류 Lvs 49-49, 몰드류 Lvs 49-49, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50, 몰드류 Lvs 50-50]]
+	[Name = 수행의 바위동굴 Surfing, Rate = 3, MapIndex = 98,
+		Encounters = [배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 수행의 바위동굴 Surfing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70, 배쓰나이 Lvs 25-70]]
+	[Name = 수행의 바위동굴 Fishing, Rate = 50, MapIndex = 98,
+		Encounters = [발챙이 Lvs 35-55, 배쓰나이 Lvs 35-55, 슈륙챙이 Lvs 35-55, 발챙이 Lvs 35-55, 발챙이 Lvs 35-55]]
+	[Name = 수행의 바위동굴 Fishing Spots, Rate = 1, MapIndex = 98,
+		Encounters = [슈륙챙이 Lvs 35-60, 배쓰나이 Lvs 35-60, 슈륙챙이 Lvs 35-70, 강챙이 Lvs 45-70, 강챙이 Lvs 45-70]]
+	[Name = 10번도로 Grass/Cave, Rate = 8, MapIndex = 99,
+		Encounters = [하데리어 Lvs 33-33, 수리둥보 Lvs 34-34, 하데리어 Lvs 34-34, 수리둥보 Lvs 36-36, 버프론 Lvs 34-34, 버프론 Lvs 35-35, 깜놀버슬 Lvs 34-34, 던지미 Lvs 33-33, 깜놀버슬 Lvs 34-34, 던지미 Lvs 36-36, 깜놀버슬 Lvs 35-35, 던지미 Lvs 36-36]]
+	[Name = 10번도로 Doubles Grass, Rate = 8, MapIndex = 99,
+		Encounters = [하데리어 Lvs 38-38, 수리둥보 Lvs 39-39, 하데리어 Lvs 39-39, 수리둥보 Lvs 41-41, 버프론 Lvs 39-39, 버프론 Lvs 40-40, 뽀록나 Lvs 39-39, 던지미 Lvs 38-38, 뽀록나 Lvs 39-39, 던지미 Lvs 41-41, 뽀록나 Lvs 40-40, 던지미 Lvs 41-41]]
+	[Name = 10번도로 Shaking Spots, Rate = 1, MapIndex = 99,
+		Encounters = [다부니 Lvs 33-33, 다부니 Lvs 33-33, 에몽가 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 35-35, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36]]
+	[Name = 10번도로 Grass/Cave, Rate = 8, MapIndex = 100,
+		Encounters = [하데리어 Lvs 33-33, 수리둥보 Lvs 34-34, 하데리어 Lvs 34-34, 수리둥보 Lvs 36-36, 버프론 Lvs 34-34, 버프론 Lvs 35-35, 깜놀버슬 Lvs 33-33, 던지미 Lvs 33-33, 깜놀버슬 Lvs 34-34, 던지미 Lvs 36-36, 깜놀버슬 Lvs 35-35, 던지미 Lvs 36-36]]
+	[Name = 10번도로 Doubles Grass, Rate = 8, MapIndex = 100,
+		Encounters = [하데리어 Lvs 38-38, 수리둥보 Lvs 39-39, 하데리어 Lvs 39-39, 수리둥보 Lvs 41-41, 버프론 Lvs 39-39, 버프론 Lvs 40-40, 뽀록나 Lvs 38-38, 던지미 Lvs 38-38, 뽀록나 Lvs 39-39, 던지미 Lvs 41-41, 뽀록나 Lvs 40-40, 던지미 Lvs 41-41]]
+	[Name = 10번도로 Shaking Spots, Rate = 1, MapIndex = 100,
+		Encounters = [다부니 Lvs 33-33, 다부니 Lvs 33-33, 에몽가 Lvs 34-34, 다부니 Lvs 34-34, 다부니 Lvs 35-35, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 다부니 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36, 바랜드 Lvs 36-36, 타격귀 Lvs 36-36]]
+	[Name = 11번도로 Grass/Cave, Rate = 8, MapIndex = 101,
+		Encounters = [수리둥보 Lvs 48-48, 골덕 Lvs 47-47, 글라이거 Lvs 47-47, 뽀록나 Lvs 48-48, 쟝고 Lvs 48-48, 세비퍼 Lvs 48-48, 딱정곤 Lvs 49-49, 자망칼 Lvs 50-50, 글라이거 Lvs 50-50, 수리둥보 Lvs 50-50, 글라이거 Lvs 50-50, 수리둥보 Lvs 50-50]]
+	[Name = 11번도로 Doubles Grass, Rate = 8, MapIndex = 101,
+		Encounters = [워글 Lvs 58-58, 골덕 Lvs 57-57, 글라이거 Lvs 57-57, 뽀록나 Lvs 58-58, 쟝고 Lvs 58-58, 세비퍼 Lvs 58-58, 딱정곤 Lvs 59-59, 절각참 Lvs 60-60, 글라이거 Lvs 60-60, 워글 Lvs 60-60, 글라이거 Lvs 60-60, 워글 Lvs 60-60]]
+	[Name = 11번도로 Shaking Spots, Rate = 1, MapIndex = 101,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 글라이온 Lvs 50-50, 다부니 Lvs 50-50, 글라이온 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 11번도로 Surfing, Rate = 3, MapIndex = 101,
+		Encounters = [배쓰나이 Lvs 25-55, 브이젤 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 11번도로 Surfing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [브이젤 Lvs 25-60, 배쓰나이 Lvs 25-60, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70]]
+	[Name = 11번도로 Fishing, Rate = 50, MapIndex = 101,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 11번도로 Fishing Spots, Rate = 1, MapIndex = 101,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 12번도로 Grass/Cave, Rate = 8, MapIndex = 102,
+		Encounters = [세꿀버리 Lvs 47-47, 해너츠 Lvs 47-47, 날쌩마 Lvs 49-49, 유토브 Lvs 48-48, 체리꼬 Lvs 48-48, 단데기 Lvs 48-48, 헤라크로스 Lvs 50-50, 쁘사이저 Lvs 50-50, 노고치 Lvs 48-48, 유토브 Lvs 50-50, 노고치 Lvs 48-48, 유토브 Lvs 50-50]]
+	[Name = 12번도로 Doubles Grass, Rate = 8, MapIndex = 102,
+		Encounters = [세꿀버리 Lvs 57-57, 해너츠 Lvs 57-57, 날쌩마 Lvs 59-59, 유토브 Lvs 58-58, 체리꼬 Lvs 58-58, 단데기 Lvs 59-59, 헤라크로스 Lvs 60-60, 쁘사이저 Lvs 60-60, 노고치 Lvs 59-59, 유토브 Lvs 60-60, 노고치 Lvs 59-59, 유토브 Lvs 60-60]]
+	[Name = 12번도로 Shaking Spots, Rate = 1, MapIndex = 102,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 켄호로우 Lvs 50-50, 버터플 Lvs 50-50, 비퀸 Lvs 50-50, 해루미 Lvs 50-50, 비퀸 Lvs 50-50, 해루미 Lvs 50-50]]
+	[Name = 13번도로 Grass/Cave, Rate = 8, MapIndex = 103,
+		Encounters = [덩쿠리 Lvs 47-47, 스왈로 Lvs 47-47, 골뱃 Lvs 48-48, 루나톤 Lvs 48-48, 솔록 Lvs 48-48, 둥실라이드 Lvs 49-49, 앱솔 Lvs 48-48, 앱솔 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50, 덩쿠리 Lvs 49-49, 골뱃 Lvs 50-50]]
+	[Name = 13번도로 Doubles Grass, Rate = 8, MapIndex = 103,
+		Encounters = [덩쿠리 Lvs 57-57, 스왈로 Lvs 57-57, 골뱃 Lvs 58-58, 루나톤 Lvs 58-58, 솔록 Lvs 58-58, 둥실라이드 Lvs 59-59, 앱솔 Lvs 58-58, 앱솔 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60, 덩쿠리 Lvs 59-59, 골뱃 Lvs 60-60]]
+	[Name = 13번도로 Shaking Spots, Rate = 1, MapIndex = 103,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50, 크로뱃 Lvs 50-50, 덩쿠림보 Lvs 50-50]]
+	[Name = 13번도로 Surfing, Rate = 3, MapIndex = 103,
+		Encounters = [갈모매 Lvs 25-55, 별가사리 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 13번도로 Surfing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [별가사리 Lvs 25-60, 코산호 Lvs 25-60, 아쿠스타 Lvs 35-70, 아쿠스타 Lvs 35-70, 아쿠스타 Lvs 35-70]]
+	[Name = 13번도로 Fishing, Rate = 50, MapIndex = 103,
+		Encounters = [크랩 Lvs 35-55, 셀러 Lvs 35-55, 크랩 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 13번도로 Fishing Spots, Rate = 1, MapIndex = 103,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 킹크랩 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 14번도로 Grass/Cave, Rate = 8, MapIndex = 104,
+		Encounters = [골덕 Lvs 47-47, 푸린 Lvs 48-48, 트로피우스 Lvs 48-48, 비조푸 Lvs 49-49, 파비코리 Lvs 49-49, 둥실라이드 Lvs 49-49, 단단지 Lvs 49-49, 벰크 Lvs 48-48, 트로피우스 Lvs 50-50, 벰크 Lvs 50-50, 트로피우스 Lvs 50-50, 벰크 Lvs 50-50]]
+	[Name = 14번도로 Doubles Grass, Rate = 8, MapIndex = 104,
+		Encounters = [골덕 Lvs 57-57, 푸린 Lvs 58-58, 트로피우스 Lvs 58-58, 비조도 Lvs 59-59, 파비코리 Lvs 59-59, 둥실라이드 Lvs 59-59, 단단지 Lvs 59-59, 벰크 Lvs 58-58, 트로피우스 Lvs 60-60, 벰크 Lvs 60-60, 트로피우스 Lvs 60-60, 벰크 Lvs 60-60]]
+	[Name = 14번도로 Shaking Spots, Rate = 1, MapIndex = 104,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 푸크린 Lvs 50-50, 다부니 Lvs 50-50, 푸크린 Lvs 50-50, 다부니 Lvs 50-50]]
+	[Name = 14번도로 Surfing, Rate = 3, MapIndex = 104,
+		Encounters = [배쓰나이 Lvs 25-55, 브이젤 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 14번도로 Surfing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [브이젤 Lvs 25-60, 배쓰나이 Lvs 25-60, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70, 플로젤 Lvs 35-70]]
+	[Name = 14번도로 Fishing, Rate = 50, MapIndex = 104,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 14번도로 Fishing Spots, Rate = 1, MapIndex = 104,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 풍요의 사당 Grass/Cave, Rate = 8, MapIndex = 105,
+		Encounters = [식스테일 Lvs 47-47, 치렁 Lvs 47-47, 치릴리 Lvs 48-48, 치렁 Lvs 49-49, 노라키 Lvs 48-48, 야부엉 Lvs 48-48, 무우마 Lvs 48-48, 동탁군 Lvs 48-48, 야부엉 Lvs 50-50, 동탁군 Lvs 50-50, 야부엉 Lvs 50-50, 동탁군 Lvs 50-50]]
+	[Name = 풍요의 사당 Doubles Grass, Rate = 8, MapIndex = 105,
+		Encounters = [식스테일 Lvs 57-57, 치렁 Lvs 57-57, 치릴리 Lvs 58-58, 치렁 Lvs 59-59, 노라키 Lvs 58-58, 야부엉 Lvs 58-58, 무우마 Lvs 58-58, 동탁군 Lvs 58-58, 야부엉 Lvs 60-60, 동탁군 Lvs 60-60, 야부엉 Lvs 60-60, 동탁군 Lvs 60-60]]
+	[Name = 풍요의 사당 Shaking Spots, Rate = 1, MapIndex = 105,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 무우마직 Lvs 50-50, 드레디어 Lvs 50-50, 다부니 Lvs 50-50, 나인테일 Lvs 50-50, 다부니 Lvs 50-50, 나인테일 Lvs 50-50]]
+	[Name = 풍요의 사당 Surfing, Rate = 3, MapIndex = 105,
+		Encounters = [배쓰나이 Lvs 25-55, 야돈 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55, 배쓰나이 Lvs 25-55]]
+	[Name = 풍요의 사당 Surfing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [야돈 Lvs 25-60, 배쓰나이 Lvs 25-60, 야도란 Lvs 35-70, 야도킹 Lvs 35-70, 야도킹 Lvs 35-70]]
+	[Name = 풍요의 사당 Fishing, Rate = 50, MapIndex = 105,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 풍요의 사당 Fishing Spots, Rate = 1, MapIndex = 105,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 왕콘치 Lvs 35-70, 왕콘치 Lvs 45-70, 왕콘치 Lvs 45-70]]
+	[Name = 15번도로 Grass/Cave, Rate = 8, MapIndex = 106,
+		Encounters = [텅구리 Lvs 47-47, 깨비드릴조 Lvs 48-48, 글라이거 Lvs 47-47, 캥카 Lvs 49-49, 깨비드릴조 Lvs 50-50, 던지미 Lvs 48-48, 데기라스 Lvs 48-48, 던지미 Lvs 49-49, 데기라스 Lvs 50-50, 글라이거 Lvs 49-49, 데기라스 Lvs 50-50, 글라이거 Lvs 49-49]]
+	[Name = 15번도로 Doubles Grass, Rate = 8, MapIndex = 106,
+		Encounters = [텅구리 Lvs 57-57, 깨비드릴조 Lvs 58-58, 글라이거 Lvs 57-57, 캥카 Lvs 59-59, 깨비드릴조 Lvs 60-60, 던지미 Lvs 58-58, 데기라스 Lvs 58-58, 던지미 Lvs 59-59, 보르그 Lvs 60-60, 데기라스 Lvs 59-59, 보르그 Lvs 60-60, 데기라스 Lvs 59-59]]
+	[Name = 15번도로 Shaking Spots, Rate = 1, MapIndex = 106,
+		Encounters = [다부니 Lvs 47-47, 다부니 Lvs 47-47, 에몽가 Lvs 48-48, 다부니 Lvs 48-48, 다부니 Lvs 49-49, 다부니 Lvs 50-50, 다부니 Lvs 50-50, 타격귀 Lvs 50-50, 글라이온 Lvs 50-50, 마기라스 Lvs 50-50, 글라이온 Lvs 50-50, 마기라스 Lvs 50-50]]
+	[Name = 16번도로 Grass/Cave, Rate = 8, MapIndex = 107,
+		Encounters = [유니란 Lvs 19-19, 치라미 Lvs 19-19, 깨봉이 Lvs 19-19, 깨봉이 Lvs 21-21, 레파르다스 Lvs 20-20, 레파르다스 Lvs 22-22, 치라미 Lvs 20-20, 유니란 Lvs 20-20, 치라미 Lvs 21-21, 유니란 Lvs 21-21, 치라미 Lvs 22-22, 유니란 Lvs 22-22]]
+	[Name = 16번도로 Doubles Grass, Rate = 8, MapIndex = 107,
+		Encounters = [유니란 Lvs 22-22, 치라미 Lvs 22-22, 깨봉이 Lvs 22-22, 깨봉이 Lvs 24-24, 레파르다스 Lvs 23-23, 레파르다스 Lvs 25-25, 치라미 Lvs 23-23, 유니란 Lvs 23-23, 치라미 Lvs 24-24, 유니란 Lvs 24-24, 치라미 Lvs 25-25, 유니란 Lvs 25-25]]
+	[Name = 16번도로 Shaking Spots, Rate = 1, MapIndex = 107,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 19-19, 에몽가 Lvs 20-20, 다부니 Lvs 20-20, 다부니 Lvs 21-21, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22, 치라치노 Lvs 22-22, 다부니 Lvs 22-22]]
+	[Name = 미혹의 숲 Grass/Cave, Rate = 8, MapIndex = 108,
+		Encounters = [치릴리 Lvs 19-19, 두르쿤 Lvs 20-20, 치릴리 Lvs 20-20, 두르쿤 Lvs 21-21, 유토브 Lvs 21-21, 마디네 Lvs 20-20, 유토브 Lvs 22-22, 마디네 Lvs 21-21, 치릴리 Lvs 21-21, 두르쿤 Lvs 22-22, 치릴리 Lvs 22-22, 두르쿤 Lvs 22-22]]
+	[Name = 미혹의 숲 Doubles Grass, Rate = 8, MapIndex = 108,
+		Encounters = [치릴리 Lvs 22-22, 두르쿤 Lvs 23-23, 치릴리 Lvs 23-23, 두르쿤 Lvs 24-24, 유토브 Lvs 24-24, 마디네 Lvs 23-23, 유토브 Lvs 25-25, 마디네 Lvs 24-24, 치릴리 Lvs 24-24, 두르쿤 Lvs 25-25, 치릴리 Lvs 25-25, 두르쿤 Lvs 25-25]]
+	[Name = 미혹의 숲 Shaking Spots, Rate = 1, MapIndex = 108,
+		Encounters = [다부니 Lvs 19-19, 다부니 Lvs 20-20, 에몽가 Lvs 20-20, 야나프 Lvs 20-20, 바오프 Lvs 20-20, 앗차프 Lvs 20-20, 다부니 Lvs 21-21, 켄호로우 Lvs 22-22, 모아머 Lvs 22-22, 드레디어 Lvs 22-22, 모아머 Lvs 22-22, 드레디어 Lvs 22-22]]
+	[Name = 미혹의 숲 Surfing, Rate = 3, MapIndex = 108,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 미혹의 숲 Surfing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20, 배쓰나이 Lvs 5-20]]
+	[Name = 미혹의 숲 Fishing, Rate = 50, MapIndex = 108,
+		Encounters = [콘치 Lvs 35-55, 배쓰나이 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55, 콘치 Lvs 35-55]]
+	[Name = 미혹의 숲 Fishing Spots, Rate = 1, MapIndex = 108,
+		Encounters = [콘치 Lvs 35-60, 배쓰나이 Lvs 35-60, 콘치 Lvs 35-70, 콘치 Lvs 35-70, 콘치 Lvs 35-70]]
+	[Name = 18번도로 Grass/Cave, Rate = 8, MapIndex = 109,
+		Encounters = [곤율랭 Lvs 28-28, 돌살이 Lvs 30-30, 보르그 Lvs 28-28, 돌살이 Lvs 31-31, 곤율랭 Lvs 29-29, 보르그 Lvs 30-30, 곤율랭 Lvs 30-30, 던지미 Lvs 29-29, 곤율랭 Lvs 31-31, 던지미 Lvs 31-31, 곤율랭 Lvs 31-31, 던지미 Lvs 31-31]]
+	[Name = 18번도로 Doubles Grass, Rate = 8, MapIndex = 109,
+		Encounters = [곤율랭 Lvs 32-32, 암팰리스 Lvs 34-34, 보르그 Lvs 32-32, 암팰리스 Lvs 35-35, 곤율랭 Lvs 33-33, 보르그 Lvs 34-34, 곤율랭 Lvs 34-34, 던지미 Lvs 33-33, 곤율랭 Lvs 35-35, 던지미 Lvs 35-35, 곤율랭 Lvs 35-35, 던지미 Lvs 35-35]]
+	[Name = 18번도로 Shaking Spots, Rate = 1, MapIndex = 109,
+		Encounters = [다부니 Lvs 28-28, 다부니 Lvs 28-28, 다부니 Lvs 29-29, 다부니 Lvs 29-29, 다부니 Lvs 30-30, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 다부니 Lvs 31-31, 타격귀 Lvs 31-31, 다부니 Lvs 31-31, 타격귀 Lvs 31-31]]
+	[Name = 18번도로 Surfing, Rate = 3, MapIndex = 109,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 18번도로 Surfing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 18번도로 Fishing, Rate = 50, MapIndex = 109,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 초라기 Lvs 35-55]]
+	[Name = 18번도로 Fishing Spots, Rate = 1, MapIndex = 109,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+	[Name = 물결마을 Surfing, Rate = 3, MapIndex = 110,
+		Encounters = [갈모매 Lvs 25-55, 타만타 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55, 패리퍼 Lvs 25-55]]
+	[Name = 물결마을 Surfing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [고래왕자 Lvs 25-60, 코산호 Lvs 25-60, 만타인 Lvs 35-70, 만타인 Lvs 35-70, 만타인 Lvs 35-70]]
+	[Name = 물결마을 Fishing, Rate = 50, MapIndex = 110,
+		Encounters = [총어 Lvs 35-55, 셀러 Lvs 35-55, 총어 Lvs 35-55, 사랑동이 Lvs 35-55, 사랑동이 Lvs 35-55]]
+	[Name = 물결마을 Fishing Spots, Rate = 1, MapIndex = 110,
+		Encounters = [셀러 Lvs 35-60, 사랑동이 Lvs 35-60, 대포무노 Lvs 35-70, 파르셀 Lvs 45-70, 파르셀 Lvs 45-70]]
+	[Name = 17번수로 Surfing, Rate = 5, MapIndex = 111,
+		Encounters = [탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15, 탱그릴 Lvs 5-15]]
+	[Name = 17번수로 Surfing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 맘복치 Lvs 5-20, 탱탱겔 Lvs 5-20, 탱탱겔 Lvs 5-20]]
+	[Name = 17번수로 Fishing, Rate = 80, MapIndex = 111,
+		Encounters = [형광어 Lvs 35-55, 쏘드라 Lvs 35-55, 쏘드라 Lvs 35-55, 형광어 Lvs 35-55, 형광어 Lvs 35-55]]
+	[Name = 17번수로 Fishing Spots, Rate = 1, MapIndex = 111,
+		Encounters = [시드라 Lvs 35-60, 침바루 Lvs 35-60, 네오라이트 Lvs 35-70, 킹드라 Lvs 45-70, 킹드라 Lvs 45-70]]
+]

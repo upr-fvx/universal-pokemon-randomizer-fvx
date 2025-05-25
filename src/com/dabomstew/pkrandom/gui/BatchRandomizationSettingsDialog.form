@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.dabomstew.pkrandom.gui.BatchRandomizationSettingsDialog">
+  <grid id="6cce1" binding="mainPanel" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="48" y="54" width="615" height="250"/>
+    </constraints>
+    <properties>
+      <minimumSize width="615" height="250"/>
+      <preferredSize width="615" height="250"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="94766" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="7" column="1" row-span="1" col-span="3" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <maximumSize width="200" height="50"/>
+          <minimumSize width="200" height="50"/>
+          <preferredSize width="200" height="50"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="e7465" class="javax.swing.JButton" binding="okButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <maximumSize width="100" height="30"/>
+              <minimumSize width="100" height="30"/>
+              <preferredSize width="100" height="30"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.okButton.text"/>
+            </properties>
+          </component>
+          <component id="5723f" class="javax.swing.JButton" binding="cancelButton">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <maximumSize width="100" height="30"/>
+              <minimumSize width="100" height="30"/>
+              <opaque value="false"/>
+              <preferredSize width="100" height="30"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.cancelButton.text"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <hspacer id="46ba8">
+        <constraints>
+          <grid row="0" column="0" row-span="8" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+      <hspacer id="57384">
+        <constraints>
+          <grid row="0" column="4" row-span="8" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+      <component id="59655" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexLabel.text"/>
+        </properties>
+      </component>
+      <component id="c81ca" class="javax.swing.JTextField" binding="fileNamePrefixTextField">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <margin top="2" left="6" bottom="2" right="6"/>
+          <maximumSize width="160" height="30"/>
+          <minimumSize width="160" height="30"/>
+          <preferredSize width="160" height="30"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixTextBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="a4367" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.fileNamePrefixLabel.text"/>
+        </properties>
+      </component>
+      <component id="e86c2" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsLabel.text"/>
+        </properties>
+      </component>
+      <component id="3ee4c" class="javax.swing.JSpinner" binding="startingIndexSpinner">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexSpinner.toolTipText"/>
+        </properties>
+      </component>
+      <component id="76f06" class="javax.swing.JSpinner" binding="numberOfRandomizedROMsSpinner">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsSpinner.toolTipText"/>
+        </properties>
+      </component>
+      <component id="f8d94" class="javax.swing.JCheckBox" binding="enableBatchRandomizationCheckBox">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <alignmentY value="0.5"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.enableCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="33deb" class="javax.swing.JButton" binding="chooseDirectoryButton">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.5" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <alignmentY value="0.0"/>
+          <inheritsPopupMenu value="true"/>
+          <label value="Output directory..."/>
+          <maximumSize width="165" height="30"/>
+          <minimumSize width="165" height="30"/>
+          <preferredSize width="165" height="30"/>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.outputDirectoryButton.toolTipText"/>
+        </properties>
+      </component>
+      <component id="52169" class="javax.swing.JLabel" binding="outputDirectoryLabel">
+        <constraints>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <maximumSize width="350" height="16"/>
+          <minimumSize width="350" height="16"/>
+          <preferredSize width="350" height="16"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="2d8de" class="javax.swing.JCheckBox" binding="generateLogFilesCheckBox">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.generateLogFilesCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="ebf20" class="javax.swing.JCheckBox" binding="autoAdvanceIndexCheckBox">
+        <constraints>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.text"/>
+          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="BatchRandomizationSettingsDialog.autoAdvanceIndexCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <hspacer id="ff006">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+    </children>
+  </grid>
+</form>

@@ -1,0 +1,469 @@
+---
+name: Items
+---
+<!-- Pages like these are easy to forget when you're editing the underlying codes, and thus risk getting outdated. There might be some value in automatically generating them in the future. -->
+
+## Bad Items
+
+There are a variety of settings called "Ban Bad Items". When enabled, these settings will ban the following items, listed by generation.
+
+* [Generation 2](#generation-2)
+* [Generation 3](#generation-3)
+* [Generation 4](#generation-4)
+* [Generation 5](#generation-5)
+* [Generation 6](#generation-6)
+* [Generation 7](#generation-7)
+
+### Generation 2
+
+- Lucky Punch
+- Metal Powder
+- Silver Leaf
+- Gold Leaf
+- Red Apricorn
+- Blu Apricorn
+- Ylw Apricorn
+- Grn Apricorn
+- Wht Apricorn
+- Blk Apricorn
+- Pnk Apricorn
+- Stick
+- Thick Club
+- Flower Mail
+- Light Ball
+- Berry
+- Brick Piece
+- Normal Box
+- Gorgeous Box
+- Surf Mail
+- Litebluemail
+- Portraitmail
+- Lovely Mail
+- Eon Mail
+- Morph Mail
+- Bluesky Mail
+- Music Mail
+- Mirage Mail
+
+### Generation 3
+
+- Shoal Salt (FR/LG only)
+- Shoal Shell (FR/LG only)
+- Red Shard (FR/LG only)
+- Blue Shard (FR/LG only)
+- Yellow Shard (FR/LG only)
+- Green Shard (FR/LG only)
+- Orange Mail
+- Harbor Mail
+- Glitter Mail
+- Mech Mail
+- Wood Mail
+- Wave Mail
+- Bead Mail
+- Shadow Mail
+- Tropic Mail
+- Dream Mail
+- Fab Mail
+- Retro Mail
+- Oran Berry
+- Figy Berry
+- Wiki Berry
+- Mago Berry
+- Aguav Berry
+- Iapapa Berry
+- Razz Berry
+- Bluk Berry
+- Nanab Berry
+- Wepear Berry
+- Pinap Berry
+- Pomeg Berry
+- Kelpsy Berry
+- Qualot Berry
+- Hondew Berry
+- Grepa Berry
+- Tamato Berry
+- Cornn Berry
+- Magost Berry
+- Rabuta Berry
+- Nomel Berry
+- Spelon Berry
+- Pamtre Berry
+- Watmel Berry
+- Durin Berry
+- Belue Berry
+- Liechi Berry
+- Ganlon Berry
+- Salac Berry
+- Petaya Berry
+- Apicot Berry
+- Lansat Berry
+- Starf Berry
+- Enigma Berry
+- Soul Dew
+- Light Ball
+- Lucky Punch
+- Metal Powder
+- Thick Club
+- Stick
+- Red Scarf
+- Blue Scarf
+- Pink Scarf
+- Green Scarf
+- Yellow Scarf
+
+### Generation 4
+
+- Shoal Salt
+- Shoal Shell
+- Growth Mulch
+- Damp Mulch
+- Stable Mulch
+- Gooey Mulch
+- Odd Keystone
+- Griseous Orb
+- Adamant Orb
+- Lustrous Orb
+- Grass Mail
+- Flame Mail
+- Bubble Mail
+- Bloom Mail
+- Tunnel Mail
+- Steel Mail
+- Heart Mail
+- Snow Mail
+- Space Mail
+- Air Mail
+- Mosaic Mail
+- Brick Mail
+- Oran Berry
+- Figy Berry
+- Wiki Berry
+- Mago Berry
+- Aguav Berry
+- Iapapa Berry
+- Razz Berry
+- Bluk Berry
+- Nanab Berry
+- Wepear Berry
+- Pinap Berry
+- Pomeg Berry
+- Kelpsy Berry
+- Qualot Berry
+- Hondew Berry
+- Grepa Berry
+- Tamato Berry
+- Cornn Berry
+- Magost Berry
+- Rabuta Berry
+- Nomel Berry
+- Spelon Berry
+- Pamtre Berry
+- Watmel Berry
+- Durin Berry
+- Belue Berry
+- Soul Dew
+- Light Ball
+- Lucky Punch
+- Metal Powder
+- Thick Club
+- Stick
+- Red Scarf
+- Blue Scarf
+- Pink Scarf
+- Green Scarf
+- Yellow Scarf
+- Quick Powder
+
+### Generation 5
+
+- Red Shard (B/W only)
+- Blue Shard (B/W only)
+- Yellow Shard (B/W only)
+- Green Shard (B/W only)
+- Growth Mulch
+- Damp Mulch
+- Stable Mulch
+- Gooey Mulch
+- Odd Keystone
+- Griseous Orb
+- Adamant Orb
+- Lustrous Orb
+- Greet Mail
+- Favored Mail
+- RSVP Mail
+- Thanks Mail
+- Inquiry Mail
+- Like Mail
+- Reply Mail
+- BridgeMail S
+- BridgeMail D
+- BridgeMail T
+- BridgeMail V
+- BridgeMail M
+- Oran Berry
+- Figy Berry
+- Wiki Berry
+- Mago Berry
+- Aguav Berry
+- Iapapa Berry
+- Razz Berry
+- Bluk Berry
+- Nanab Berry
+- Wepear Berry
+- Pinap Berry
+- Pomeg Berry
+- Kelpsy Berry
+- Qualot Berry
+- Hondew Berry
+- Grepa Berry
+- Tamato Berry
+- Cornn Berry
+- Magost Berry
+- Rabuta Berry
+- Nomel Berry
+- Spelon Berry
+- Pamtre Berry
+- Watmel Berry
+- Durin Berry
+- Belue Berry
+- Soul Dew
+- Light Ball
+- Lucky Punch
+- Metal Powder
+- Thick Club
+- Stick
+- Red Scarf
+- Blue Scarf
+- Pink Scarf
+- Green Scarf
+- Yellow Scarf
+- Quick Powder
+- Pass Orb
+
+### Generation 6
+
+- Shoal Salt (X/Y only)
+- Shoal Shell (X/Y only)
+- Red Shard (X/Y only)
+- Blue Shard (X/Y only)
+- Yellow Shard (X/Y only)
+- Green Shard (X/Y only)
+- Growth Mulch
+- Damp Mulch
+- Stable Mulch
+- Gooey Mulch
+- Odd Keystone
+- Griseous Orb
+- Adamant Orb
+- Lustrous Orb
+- Greet Mail
+- Favored Mail
+- RSVP Mail
+- Thanks Mail
+- Inquiry Mail
+- Like Mail
+- Reply Mail
+- Bridge Mail S
+- Bridge Mail D
+- Bridge Mail T
+- Bridge Mail V
+- Bridge Mail M
+- Oran Berry
+- Figy Berry
+- Wiki Berry
+- Mago Berry
+- Aguav Berry
+- Iapapa Berry
+- Razz Berry
+- Bluk Berry
+- Nanab Berry
+- Wepear Berry
+- Pinap Berry
+- Pomeg Berry
+- Kelpsy Berry
+- Qualot Berry
+- Hondew Berry
+- Grepa Berry
+- Tamato Berry
+- Cornn Berry
+- Magost Berry
+- Rabuta Berry
+- Nomel Berry
+- Spelon Berry
+- Pamtre Berry
+- Watmel Berry
+- Durin Berry
+- Belue Berry
+- Soul Dew
+- Light Ball
+- Lucky Punch
+- Metal Powder
+- Thick Club
+- Stick
+- Red Scarf
+- Blue Scarf
+- Pink Scarf
+- Green Scarf
+- Yellow Scarf
+- Quick Powder
+- Pass Orb
+- Relic Copper
+- Relic Silver
+- Relic Gold
+- Relic Vase
+- Relic Band
+- Relic Statue
+- Relic Crown
+- Rich Mulch
+- Surprise Mulch
+- Boost Mulch
+- Amaze Mulch
+- Discount Coupon
+- Strange Souvenir
+
+### Generation 7
+
+- Blue Flute
+- Yellow Flute
+- Red Flute
+- Black Flute
+- White Flute
+- Shoal Salt
+- Shoal Shell
+- Growth Mulch
+- Damp Mulch
+- Stable Mulch
+- Gooey Mulch
+- Odd Keystone
+- Griseous Orb
+- Adamant Orb
+- Lustrous Orb
+- Greet Mail
+- Favored Mail
+- RSVP Mail
+- Thanks Mail
+- Inquiry Mail
+- Like Mail
+- Reply Mail
+- Bridge Mail S
+- Bridge Mail D
+- Bridge Mail T
+- Bridge Mail V
+- Bridge Mail M
+- Oran Berry
+- Figy Berry
+- Wiki Berry
+- Mago Berry
+- Aguav Berry
+- Iapapa Berry
+- Razz Berry
+- Bluk Berry
+- Nanab Berry
+- Wepear Berry
+- Pinap Berry
+- Pomeg Berry
+- Kelpsy Berry
+- Qualot Berry
+- Hondew Berry
+- Grepa Berry
+- Tamato Berry
+- Cornn Berry
+- Magost Berry
+- Rabuta Berry
+- Nomel Berry
+- Spelon Berry
+- Pamtre Berry
+- Watmel Berry
+- Durin Berry
+- Belue Berry
+- Soul Dew
+- Light Ball
+- Lucky Punch
+- Metal Powder
+- Thick Club
+- Stick
+- Red Scarf
+- Blue Scarf
+- Pink Scarf
+- Green Scarf
+- Yellow Scarf
+- Quick Powder
+- Pass Orb
+- Relic Copper
+- Relic Silver
+- Relic Gold
+- Relic Vase
+- Relic Band
+- Relic Statue
+- Relic Crown
+- Rich Mulch
+- Surprise Mulch
+- Boost Mulch
+- Amaze Mulch
+- Gengarite
+- Gardevoirite
+- Ampharosite
+- Venusaurite
+- Charizardite X
+- Blastoisinite
+- Mewtwonite X
+- Mewtwonite Y
+- Blazikenite
+- Medichamite
+- Houndoominite
+- Aggronite
+- Banettite
+- Tyranitarite
+- Scizorite
+- Pinsirite
+- Aerodactylite
+- Lucarionite
+- Abomasite
+- Kangaskhanite
+- Gyaradosite
+- Absolite
+- Charizardite Y
+- Alakazite
+- Heracronite
+- Mawilite
+- Manectite
+- Garchompite
+- Latiasite
+- Latiosite
+- Discount Coupon
+- Strange Souvenir
+- Swampertite
+- Sceptilite
+- Sablenite
+- Altarianite
+- Galladite
+- Audinite
+- Metagrossite
+- Sharpedonite
+- Slowbronite
+- Steelixite
+- Pidgeotite
+- Glalitite
+- Diancite
+- Cameruptite
+- Lopunnite
+- Salamencite
+- Beedrillite
+- Festival Ticket
+- Fighting Memory
+- Flying Memory
+- Poison Memory
+- Ground Memory
+- Rock Memory
+- Bug Memory
+- Ghost Memory
+- Steel Memory
+- Fire Memory
+- Water Memory
+- Grass Memory
+- Electric Memory
+- Psychic Memory
+- Ice Memory
+- Dragon Memory
+- Dark Memory
+- Fairy Memory

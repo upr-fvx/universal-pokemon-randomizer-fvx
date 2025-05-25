@@ -1,0 +1,1291 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Couriway Town Surf, Rate = 1, MapIndex = 38,
+		Encounters = [Lombre Lvs 44-44, Floatzel Lvs 44-44, Lombre Lvs 45-45, Floatzel Lvs 46-46, Lombre Lvs 46-46]]
+	[Name = Couriway Town Old Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Couriway Town Good Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Basculin Lvs 35-35, Poliwhirl Lvs 35-35, Basculin Lvs 35-35]]
+	[Name = Couriway Town Super Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Poliwhirl Lvs 45-45, Basculin Lvs 45-45, Poliwhirl Lvs 45-45]]
+	[Name = Ambrette Town Surf, Rate = 1, MapIndex = 45,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Ambrette Town Rock Smash, Rate = 1, MapIndex = 45,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Ambrette Town Old Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Ambrette Town Good Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Skrelp Lvs 25-25, Horsea Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Ambrette Town Super Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Relicanth Lvs 35-35, Dragalge Lvs 35-35, Seadra Lvs 35-35]]
+	[Name = Cyllage City Surf, Rate = 1, MapIndex = 157,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Cyllage City Rock Smash, Rate = 1, MapIndex = 157,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Cyllage City Old Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Cyllage City Good Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Skrelp Lvs 25-25, Horsea Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Cyllage City Super Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Relicanth Lvs 35-35, Dragalge Lvs 35-35, Seadra Lvs 35-35]]
+	[Name = Shalour City Surf, Rate = 1, MapIndex = 172,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Mantyke Lvs 27-27]]
+	[Name = Shalour City Old Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Shalour City Good Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Remoraid Lvs 25-25, Chinchou Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Shalour City Super Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Alomomola Lvs 35-35, Octillery Lvs 35-35, Lanturn Lvs 35-35]]
+	[Name = Laverre City Old Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Laverre City Good Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Laverre City Super Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 2 Grass/Cave, Rate = 1, MapIndex = 259,
+		Encounters = [Bunnelby Lvs 2-2, Bunnelby Lvs 3-3, Zigzagoon Lvs 3-3, Fletchling Lvs 2-2, Fletchling Lvs 3-3, Pidgey Lvs 3-3, Scatterbug Lvs 2-2, Scatterbug Lvs 3-3, Caterpie Lvs 3-3, Zigzagoon Lvs 4-4, Pidgey Lvs 4-4, Caterpie Lvs 4-4]]
+	[Name = Route 3 Grass/Cave, Rate = 1, MapIndex = 260,
+		Encounters = [Bunnelby Lvs 3-3, Bunnelby Lvs 4-4, Bidoof Lvs 3-3, Bidoof Lvs 4-4, Fletchling Lvs 3-3, Fletchling Lvs 5-5, Pidgey Lvs 4-4, Burmy Lvs 5-5, Azurill Lvs 5-5, Dunsparce Lvs 5-5, Pikachu Lvs 4-4, Pikachu Lvs 5-5]]
+	[Name = Route 3 Surf, Rate = 1, MapIndex = 260,
+		Encounters = [Masquerain Lvs 25-25, Marill Lvs 25-25, Masquerain Lvs 26-26, Marill Lvs 27-27, Masquerain Lvs 27-27]]
+	[Name = Route 3 Old Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Route 3 Good Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Goldeen Lvs 25-25, Corphish Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Route 3 Super Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Crawdaunt Lvs 35-35]]
+	[Name = Route 4 Yellow Flowers, Rate = 1, MapIndex = 261,
+		Encounters = [Flabébé Lvs 6-6, Flabébé Lvs 7-7, Flabébé Lvs 8-8, Combee Lvs 6-6, Combee Lvs 7-7, Combee Lvs 8-8, Budew Lvs 8-8, Ledyba Lvs 8-8, Skitty Lvs 8-8, Ralts Lvs 8-8, Flabébé Lvs 7-7, Flabébé Lvs 8-8]]
+	[Name = Route 4 Red Flowers, Rate = 1, MapIndex = 261,
+		Encounters = [Flabébé Lvs 6-6, Flabébé Lvs 7-7, Flabébé Lvs 8-8, Ledyba Lvs 6-6, Ledyba Lvs 7-7, Ledyba Lvs 8-8, Budew Lvs 8-8, Combee Lvs 8-8, Skitty Lvs 8-8, Ralts Lvs 8-8, Flabébé Lvs 7-7, Flabébé Lvs 8-8]]
+	[Name = Route 5 Grass/Cave, Rate = 1, MapIndex = 262,
+		Encounters = [Bunnelby Lvs 8-8, Bunnelby Lvs 9-9, Bunnelby Lvs 10-10, Furfrou Lvs 8-8, Furfrou Lvs 9-9, Pancham Lvs 10-10, Skiddo Lvs 10-10, Doduo Lvs 10-10, Gulpin Lvs 10-10, Abra Lvs 10-10, Minun Lvs 9-9, Minun Lvs 10-10]]
+	[Name = Route 5 Purple Flowers, Rate = 1, MapIndex = 262,
+		Encounters = [Skiddo Lvs 8-8, Skiddo Lvs 9-9, Skiddo Lvs 10-10, Pancham Lvs 8-8, Pancham Lvs 9-9, Furfrou Lvs 10-10, Bunnelby Lvs 10-10, Doduo Lvs 10-10, Gulpin Lvs 10-10, Abra Lvs 10-10, Minun Lvs 9-9, Minun Lvs 10-10]]
+	[Name = Route 5 Common Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5]]
+	[Name = Route 5 Uncommon Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5]]
+	[Name = Route 5 Rare Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Minun Lvs 6-6, Minun Lvs 6-6, Minun Lvs 6-6, Plusle Lvs 6-6, Minun Lvs 6-6]]
+	[Name = Route 6 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 263,
+		Encounters = [Oddish Lvs 10-10, Oddish Lvs 11-11, Oddish Lvs 12-12, Sentret Lvs 10-10, Sentret Lvs 11-11, Nincada Lvs 12-12, Espurr Lvs 11-11, Espurr Lvs 12-12, Honedge Lvs 11-11, Honedge Lvs 12-12, Kecleon Lvs 11-11, Kecleon Lvs 12-12]]
+	[Name = Route 7 Grass/Cave, Rate = 1, MapIndex = 264,
+		Encounters = [Croagunk Lvs 12-12, Croagunk Lvs 13-13, Croagunk Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Yellow Flowers, Rate = 1, MapIndex = 264,
+		Encounters = [Flabébé Lvs 12-12, Flabébé Lvs 13-13, Flabébé Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Purple Flowers, Rate = 1, MapIndex = 264,
+		Encounters = [Flabébé Lvs 12-12, Flabébé Lvs 13-13, Flabébé Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Common Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7]]
+	[Name = Route 7 Uncommon Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8]]
+	[Name = Route 7 Rare Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7]]
+	[Name = Route 8 Grass/Cave, Rate = 1, MapIndex = 266,
+		Encounters = [Drifloon Lvs 13-13, Drifloon Lvs 14-14, Drifloon Lvs 15-15, Spoink Lvs 13-13, Spoink Lvs 14-14, Absol Lvs 15-15, Mienfoo Lvs 15-15, Inkay Lvs 14-14, Seviper Lvs 14-14, Inkay Lvs 15-15, Bagon Lvs 14-14, Bagon Lvs 15-15]]
+	[Name = Route 8 Yellow Flowers, Rate = 1, MapIndex = 266,
+		Encounters = [Mienfoo Lvs 13-13, Mienfoo Lvs 14-14, Mienfoo Lvs 15-15, Absol Lvs 13-13, Absol Lvs 14-14, Spoink Lvs 15-15, Drifloon Lvs 15-15, Inkay Lvs 14-14, Seviper Lvs 14-14, Inkay Lvs 15-15, Bagon Lvs 14-14, Bagon Lvs 15-15]]
+	[Name = Route 8 Surf, Rate = 1, MapIndex = 266,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Route 8 Rock Smash, Rate = 1, MapIndex = 266,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Route 8 Old Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Route 8 Good Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Skrelp Lvs 25-25, Shellder Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Route 8 Super Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Qwilfish Lvs 35-35, Dragalge Lvs 35-35, Cloyster Lvs 35-35]]
+	[Name = Route 8 Common Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7]]
+	[Name = Route 8 Uncommon Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Seviper Lvs 8-8, Zangoose Lvs 8-8, Seviper Lvs 8-8, Seviper Lvs 8-8, Seviper Lvs 8-8]]
+	[Name = Route 8 Rare Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7]]
+	[Name = Route 9 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 267,
+		Encounters = [Sandile Lvs 15-15, Sandile Lvs 16-16, Sandile Lvs 16-16, Sandile Lvs 17-17, Hippopotas Lvs 15-15, Hippopotas Lvs 16-16, Hippopotas Lvs 16-16, Hippopotas Lvs 17-17, Helioptile Lvs 15-15, Helioptile Lvs 16-16, Helioptile Lvs 16-16, Helioptile Lvs 17-17]]
+	[Name = Route 10 Grass/Cave, Rate = 1, MapIndex = 268,
+		Encounters = [Golett Lvs 19-19, Golett Lvs 20-20, Golett Lvs 21-21, Sigilyph Lvs 19-19, Sigilyph Lvs 20-20, Hawlucha Lvs 19-19, Hawlucha Lvs 20-20, Snubbull Lvs 21-21, Electrike Lvs 21-21, Eevee Lvs 21-21, Emolga Lvs 19-19, Emolga Lvs 20-20]]
+	[Name = Route 10 Yellow Flowers, Rate = 1, MapIndex = 268,
+		Encounters = [Snubbull Lvs 19-19, Snubbull Lvs 20-20, Snubbull Lvs 21-21, Electrike Lvs 19-19, Electrike Lvs 20-20, Eevee Lvs 19-19, Eevee Lvs 20-20, Golett Lvs 21-21, Sigilyph Lvs 21-21, Hawlucha Lvs 21-21, Emolga Lvs 19-19, Emolga Lvs 20-20]]
+	[Name = Route 10 Common Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10]]
+	[Name = Route 10 Uncommon Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10]]
+	[Name = Route 10 Rare Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11]]
+	[Name = Route 11 Grass/Cave, Rate = 1, MapIndex = 269,
+		Encounters = [Hariyama Lvs 22-22, Hariyama Lvs 23-23, Throh Lvs 22-22, Throh Lvs 23-23, Staravia Lvs 22-22, Staravia Lvs 23-23, Stunky Lvs 21-21, Chingling Lvs 21-21, Nidorino Lvs 21-21, Nidorina Lvs 21-21, Dedenne Lvs 21-21, Dedenne Lvs 22-22]]
+	[Name = Route 11 Common Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Nidoran♂ Lvs 11-11, Nidoran♀ Lvs 11-11, Nidoran♂ Lvs 11-11, Nidoran♂ Lvs 11-11, Nidoran♂ Lvs 11-11]]
+	[Name = Route 11 Uncommon Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11]]
+	[Name = Route 11 Rare Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12]]
+	[Name = Route 12 Grass/Cave, Rate = 1, MapIndex = 270,
+		Encounters = [Slowpoke Lvs 23-23, Slowpoke Lvs 24-24, Slowpoke Lvs 25-25, Chatot Lvs 23-23, Chatot Lvs 24-24, Chatot Lvs 25-25, Miltank Lvs 25-25, Tauros Lvs 25-25, Exeggcute Lvs 24-24, Heracross Lvs 25-25, Pachirisu Lvs 23-23, Pachirisu Lvs 24-24]]
+	[Name = Route 12 Yellow Flowers, Rate = 1, MapIndex = 270,
+		Encounters = [Tauros Lvs 25-25, Tauros Lvs 26-26, Tauros Lvs 27-27, Miltank Lvs 25-25, Miltank Lvs 26-26, Miltank Lvs 27-27, Chatot Lvs 27-27, Slowpoke Lvs 27-27, Exeggcute Lvs 26-26, Heracross Lvs 27-27, Pachirisu Lvs 25-25, Pachirisu Lvs 26-26]]
+	[Name = Route 12 Surf, Rate = 1, MapIndex = 270,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Lapras Lvs 27-27]]
+	[Name = Route 12 Rock Smash, Rate = 1, MapIndex = 270,
+		Encounters = [Dwebble Lvs 23-23, Binacle Lvs 23-23, Dwebble Lvs 24-24, Binacle Lvs 25-25, Dwebble Lvs 25-25]]
+	[Name = Route 12 Old Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Route 12 Good Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Remoraid Lvs 25-25, Clamperl Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Route 12 Super Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Corsola Lvs 35-35, Octillery Lvs 35-35, Gorebyss Lvs 35-35]]
+	[Name = Route 12 Common Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13]]
+	[Name = Route 12 Uncommon Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13]]
+	[Name = Route 12 Rare Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Tauros Lvs 14-14, Tauros Lvs 14-14, Tauros Lvs 14-14, Miltank Lvs 14-14, Tauros Lvs 14-14]]
+	[Name = Route 13 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 272,
+		Encounters = [Dugtrio Lvs 26-26, Dugtrio Lvs 27-27, Dugtrio Lvs 27-27, Dugtrio Lvs 28-28, Trapinch Lvs 26-26, Trapinch Lvs 27-27, Trapinch Lvs 27-27, Trapinch Lvs 28-28, Gible Lvs 26-26, Gible Lvs 27-27, Gible Lvs 27-27, Gible Lvs 28-28]]
+	[Name = Route 13 Rock Smash, Rate = 1, MapIndex = 272,
+		Encounters = [Graveler Lvs 26-26, Slugma Lvs 26-26, Graveler Lvs 27-27, Slugma Lvs 28-28, Graveler Lvs 28-28]]
+	[Name = Route 14 Grass/Cave, Rate = 1, MapIndex = 273,
+		Encounters = [Skorupi Lvs 30-30, Skorupi Lvs 31-31, Weepinbell Lvs 31-31, Weepinbell Lvs 32-32, Quagsire Lvs 30-30, Goomy Lvs 30-30, Karrablast Lvs 30-30, Shelmet Lvs 30-30, Carnivine Lvs 30-30, Haunter Lvs 31-31, Carnivine Lvs 31-31, Carnivine Lvs 32-32]]
+	[Name = Route 14 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 273,
+		Encounters = [Quagsire Lvs 30-30, Quagsire Lvs 31-31, Quagsire Lvs 32-32, Goomy Lvs 31-31, Goomy Lvs 32-32, Stunfisk Lvs 31-31, Stunfisk Lvs 32-32, Karrablast Lvs 30-30, Shelmet Lvs 30-30, Haunter Lvs 31-31, Carnivine Lvs 31-31, Carnivine Lvs 32-32]]
+	[Name = Route 14 Surf, Rate = 1, MapIndex = 273,
+		Encounters = [Quagsire Lvs 30-30, Stunfisk Lvs 30-30, Goomy Lvs 31-31, Stunfisk Lvs 31-31, Stunfisk Lvs 32-32]]
+	[Name = Route 14 Old Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 14 Good Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Barboach Lvs 25-25, Poliwhirl Lvs 35-35, Barboach Lvs 35-35]]
+	[Name = Route 14 Super Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Poliwhirl Lvs 35-35, Whiscash Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 14 Common Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16]]
+	[Name = Route 14 Uncommon Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16]]
+	[Name = Route 14 Rare Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17]]
+	[Name = Route 15 Grass/Cave, Rate = 1, MapIndex = 275,
+		Encounters = [Liepard Lvs 34-34, Liepard Lvs 35-35, Liepard Lvs 36-36, Skorupi Lvs 34-34, Skorupi Lvs 35-35, Pawniard Lvs 36-36, Watchog Lvs 36-36, Foongus Lvs 34-34, Foongus Lvs 35-35, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 15 Red Flowers, Rate = 1, MapIndex = 275,
+		Encounters = [Watchog Lvs 34-34, Watchog Lvs 35-35, Watchog Lvs 36-36, Pawniard Lvs 34-34, Pawniard Lvs 35-35, Skorupi Lvs 36-36, Liepard Lvs 36-36, Foongus Lvs 34-34, Foongus Lvs 35-35, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 15 Surf, Rate = 1, MapIndex = 275,
+		Encounters = [Lombre Lvs 34-34, Floatzel Lvs 34-34, Lombre Lvs 35-35, Floatzel Lvs 36-36, Lombre Lvs 36-36]]
+	[Name = Route 15 Old Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 15 Good Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Route 15 Super Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 15 Common Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18]]
+	[Name = Route 15 Uncommon Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18]]
+	[Name = Route 15 Rare Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19]]
+	[Name = Route 16 Yellow Flowers, Rate = 1, MapIndex = 276,
+		Encounters = [Weepinbell Lvs 35-35, Weepinbell Lvs 36-36, Skorupi Lvs 34-34, Skorupi Lvs 35-35, Floatzel Lvs 35-35, Floatzel Lvs 36-36, Phantump Lvs 35-35, Foongus Lvs 34-34, Foongus Lvs 36-36, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 16 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 276,
+		Encounters = [Pumpkaboo Lvs 34-34, Pumpkaboo Lvs 34-34, Pumpkaboo Lvs 35-35, Pumpkaboo Lvs 35-35, Pumpkaboo Lvs 36-36, Pumpkaboo Lvs 36-36, Phantump Lvs 35-35, Foongus Lvs 34-34, Foongus Lvs 36-36, Klefki Lvs 34-34, Klefki Lvs 35-35, Pumpkaboo Lvs 36-36]]
+	[Name = Route 16 Surf, Rate = 1, MapIndex = 276,
+		Encounters = [Lombre Lvs 34-34, Floatzel Lvs 34-34, Lombre Lvs 35-35, Floatzel Lvs 36-36, Lombre Lvs 36-36]]
+	[Name = Route 16 Old Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 16 Good Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Route 16 Super Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 16 Common Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18]]
+	[Name = Route 16 Uncommon Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18]]
+	[Name = Route 16 Rare Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19]]
+	[Name = Route 17 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 278,
+		Encounters = [Snover Lvs 38-38, Snover Lvs 39-39, Snover Lvs 39-39, Sneasel Lvs 39-39, Delibird Lvs 38-38, Delibird Lvs 39-39, Delibird Lvs 39-39, Delibird Lvs 40-40, Sneasel Lvs 38-38, Sneasel Lvs 40-40, Sneasel Lvs 40-40, Abomasnow Lvs 40-40]]
+	[Name = Route 18 Grass/Cave, Rate = 1, MapIndex = 279,
+		Encounters = [Gurdurr Lvs 44-44, Gurdurr Lvs 45-45, Gurdurr Lvs 46-46, Torkoal Lvs 44-44, Torkoal Lvs 45-45, Sandslash Lvs 46-46, Pupitar Lvs 46-46, Durant Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Heatmor Lvs 45-45, Heatmor Lvs 46-46]]
+	[Name = Route 18 Red Flowers, Rate = 1, MapIndex = 279,
+		Encounters = [Pupitar Lvs 44-44, Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 44-44, Sandslash Lvs 45-45, Torkoal Lvs 46-46, Gurdurr Lvs 46-46, Durant Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Heatmor Lvs 45-45, Heatmor Lvs 46-46]]
+	[Name = Route 18 Rock Smash, Rate = 1, MapIndex = 279,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Route 18 Common Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Route 18 Uncommon Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Route 18 Rare Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Durant Lvs 24-24, Durant Lvs 24-24, Durant Lvs 24-24, Heatmor Lvs 24-24, Durant Lvs 24-24]]
+	[Name = Route 19 Yellow Flowers, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Quagsire Lvs 47-47, Quagsire Lvs 48-48, Sliggoo Lvs 46-46, Sliggoo Lvs 47-47, Weepinbell Lvs 48-48, Drapion Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Purple Flowers, Rate = 1, MapIndex = 281,
+		Encounters = [Drapion Lvs 46-46, Drapion Lvs 47-47, Drapion Lvs 48-48, Weepinbell Lvs 46-46, Weepinbell Lvs 47-47, Sliggoo Lvs 48-48, Quagsire Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Quagsire Lvs 47-47, Quagsire Lvs 48-48, Sliggoo Lvs 47-47, Sliggoo Lvs 48-48, Stunfisk Lvs 47-47, Stunfisk Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Surf, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Stunfisk Lvs 46-46, Sliggoo Lvs 47-47, Stunfisk Lvs 48-48, Sliggoo Lvs 48-48]]
+	[Name = Route 19 Old Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Route 19 Good Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Barboach Lvs 35-35, Poliwhirl Lvs 35-35, Barboach Lvs 35-35]]
+	[Name = Route 19 Super Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Poliwhirl Lvs 45-45, Whiscash Lvs 45-45, Politoed Lvs 50-50]]
+	[Name = Route 19 Common Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24]]
+	[Name = Route 19 Uncommon Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24]]
+	[Name = Route 19 Rare Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25]]
+	[Name = Route 20 Grass/Cave, Rate = 1, MapIndex = 282,
+		Encounters = [Noctowl Lvs 48-48, Noctowl Lvs 49-49, Noctowl Lvs 50-50, Jigglypuff Lvs 48-48, Jigglypuff Lvs 49-49, Trevenant Lvs 50-50, Gothorita Lvs 50-50, Amoonguss Lvs 48-48, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 50-50]]
+	[Name = Route 20 Red Flowers, Rate = 1, MapIndex = 282,
+		Encounters = [Gothorita Lvs 48-48, Gothorita Lvs 49-49, Gothorita Lvs 50-50, Trevenant Lvs 48-48, Trevenant Lvs 49-49, Jigglypuff Lvs 50-50, Noctowl Lvs 50-50, Amoonguss Lvs 48-48, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 50-50]]
+	[Name = Route 20 Common Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25]]
+	[Name = Route 20 Uncommon Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25]]
+	[Name = Route 20 Rare Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Sudowoodo Lvs 25-25, Trevenant Lvs 25-25]]
+	[Name = Route 21 Purple Flowers, Rate = 1, MapIndex = 283,
+		Encounters = [Floatzel Lvs 50-50, Floatzel Lvs 51-51, Floatzel Lvs 52-52, Altaria Lvs 50-50, Altaria Lvs 51-51, Floatzel Lvs 50-50, Spinda Lvs 50-50, Spinda Lvs 52-52, Ursaring Lvs 52-52, Scyther Lvs 50-50, Scyther Lvs 51-51, Scyther Lvs 52-52]]
+	[Name = Route 21 Red Flowers, Rate = 1, MapIndex = 283,
+		Encounters = [Ursaring Lvs 50-50, Ursaring Lvs 51-51, Ursaring Lvs 52-52, Altaria Lvs 50-50, Altaria Lvs 51-51, Ursaring Lvs 50-50, Spinda Lvs 50-50, Spinda Lvs 52-52, Floatzel Lvs 52-52, Scyther Lvs 50-50, Scyther Lvs 51-51, Scyther Lvs 52-52]]
+	[Name = Route 21 Surf, Rate = 1, MapIndex = 283,
+		Encounters = [Lombre Lvs 50-50, Floatzel Lvs 50-50, Lombre Lvs 51-51, Floatzel Lvs 52-52, Lombre Lvs 52-52]]
+	[Name = Route 21 Old Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Poliwag Lvs 30-30, Poliwag Lvs 30-30, Poliwag Lvs 30-30]]
+	[Name = Route 21 Good Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Basculin Lvs 40-40, Poliwhirl Lvs 40-40, Dratini Lvs 40-40]]
+	[Name = Route 21 Super Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Poliwhirl Lvs 50-50, Basculin Lvs 50-50, Dragonair Lvs 50-50]]
+	[Name = Route 21 Common Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26]]
+	[Name = Route 21 Uncommon Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26]]
+	[Name = Route 21 Rare Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27]]
+	[Name = Route 22 Grass/Cave, Rate = 1, MapIndex = 285,
+		Encounters = [Bunnelby Lvs 5-5, Bunnelby Lvs 6-6, Litleo Lvs 5-5, Litleo Lvs 6-6, Psyduck Lvs 6-6, Bidoof Lvs 6-6, Azurill Lvs 6-6, Azurill Lvs 7-7, Farfetch’d Lvs 7-7, Dunsparce Lvs 7-7, Riolu Lvs 6-6, Riolu Lvs 7-7]]
+	[Name = Route 22 Yellow Flowers, Rate = 1, MapIndex = 285,
+		Encounters = [Bibarel Lvs 26-26, Bibarel Lvs 27-27, Psyduck Lvs 25-25, Psyduck Lvs 26-26, Litleo Lvs 25-25, Diggersby Lvs 27-27, Azumarill Lvs 25-25, Azumarill Lvs 26-26, Farfetch’d Lvs 26-26, Dunsparce Lvs 26-26, Riolu Lvs 25-25, Riolu Lvs 26-26]]
+	[Name = Route 22 Surf, Rate = 1, MapIndex = 285,
+		Encounters = [Psyduck Lvs 25-25, Psyduck Lvs 26-26, Psyduck Lvs 27-27, Azumarill Lvs 25-25, Azumarill Lvs 27-27]]
+	[Name = Route 22 Old Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Route 22 Good Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Goldeen Lvs 25-25, Carvanha Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Route 22 Super Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Sharpedo Lvs 35-35]]
+	[Name = Santalune Forest Grass/Cave, Rate = 1, MapIndex = 286,
+		Encounters = [Scatterbug Lvs 2-2, Scatterbug Lvs 3-3, Caterpie Lvs 2-2, Caterpie Lvs 3-3, Fletchling Lvs 4-4, Pansage Lvs 4-4, Pansear Lvs 4-4, Panpour Lvs 4-4, Weedle Lvs 2-2, Pikachu Lvs 3-3, Metapod Lvs 4-4, Pikachu Lvs 4-4]]
+	[Name = Parfum Palace Old Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Parfum Palace Good Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Goldeen Lvs 25-25, Corphish Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Parfum Palace Super Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Crawdaunt Lvs 35-35]]
+	[Name = Glittering Cave Grass/Cave, Rate = 1, MapIndex = 303,
+		Encounters = [Machop Lvs 15-15, Machop Lvs 16-16, Machop Lvs 17-17, Rhyhorn Lvs 17-17, Onix Lvs 17-17, Cubone Lvs 15-15, Cubone Lvs 16-16, Solrock Lvs 17-17, Lunatone Lvs 17-17, Kangaskhan Lvs 17-17, Mawile Lvs 15-15, Mawile Lvs 16-16]]
+	[Name = Glittering Cave Rock Smash, Rate = 1, MapIndex = 304,
+		Encounters = [Dwebble Lvs 15-15, Onix Lvs 15-15, Dwebble Lvs 17-17, Onix Lvs 16-16, Onix Lvs 17-17]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 305,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 306,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 307,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 308,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Frost Cavern Surf, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwhirl Lvs 38-38, Floatzel Lvs 38-38, Poliwhirl Lvs 39-39, Floatzel Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Old Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwag Lvs 20-20, Poliwag Lvs 20-20, Poliwag Lvs 20-20]]
+	[Name = Frost Cavern Good Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Basculin Lvs 30-30, Poliwhirl Lvs 30-30, Basculin Lvs 30-30]]
+	[Name = Frost Cavern Super Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwhirl Lvs 40-40, Basculin Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 314,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 315,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Haunter Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Surf, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwhirl Lvs 38-38, Floatzel Lvs 38-38, Poliwhirl Lvs 39-39, Floatzel Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Old Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwag Lvs 20-20, Poliwag Lvs 20-20, Poliwag Lvs 20-20]]
+	[Name = Frost Cavern Good Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Basculin Lvs 30-30, Poliwhirl Lvs 30-30, Basculin Lvs 30-30]]
+	[Name = Frost Cavern Super Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwhirl Lvs 40-40, Basculin Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 316,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 317,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Pokémon Village Yellow Flowers, Rate = 1, MapIndex = 318,
+		Encounters = [Gothorita Lvs 48-48, Gothorita Lvs 49-49, Gothorita Lvs 50-50, Ditto Lvs 48-48, Ditto Lvs 49-49, Jigglypuff Lvs 50-50, Noctowl Lvs 50-50, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 49-49, Zoroark Lvs 50-50]]
+	[Name = Pokémon Village Purple Flowers, Rate = 1, MapIndex = 318,
+		Encounters = [Noctowl Lvs 48-48, Noctowl Lvs 49-49, Noctowl Lvs 50-50, Jigglypuff Lvs 48-48, Jigglypuff Lvs 49-49, Ditto Lvs 50-50, Gothorita Lvs 50-50, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 49-49, Zoroark Lvs 50-50]]
+	[Name = Pokémon Village Surf, Rate = 1, MapIndex = 318,
+		Encounters = [Lombre Lvs 48-48, Poliwhirl Lvs 48-48, Lombre Lvs 49-49, Poliwhirl Lvs 50-50, Lombre Lvs 50-50]]
+	[Name = Pokémon Village Old Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwag Lvs 30-30, Poliwag Lvs 30-30, Poliwag Lvs 30-30]]
+	[Name = Pokémon Village Good Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Basculin Lvs 40-40, Poliwhirl Lvs 40-40, Basculin Lvs 40-40]]
+	[Name = Pokémon Village Super Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwhirl Lvs 50-50, Basculin Lvs 50-50, Poliwhirl Lvs 50-50]]
+	[Name = Pokémon Village Common Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25]]
+	[Name = Pokémon Village Uncommon Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Pokémon Village Rare Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 322,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwhirl Lvs 57-57, Floatzel Lvs 57-57, Poliwhirl Lvs 58-58, Floatzel Lvs 59-59, Poliwhirl Lvs 59-59]]
+	[Name = Victory Road Rock Smash, Rate = 1, MapIndex = 322,
+		Encounters = [Graveler Lvs 57-57, Graveler Lvs 58-58, Graveler Lvs 59-59, Shuckle Lvs 57-57, Shuckle Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwhirl Lvs 55-55]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 324,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Rock Smash, Rate = 1, MapIndex = 324,
+		Encounters = [Graveler Lvs 57-57, Graveler Lvs 58-58, Graveler Lvs 59-59, Shuckle Lvs 57-57, Shuckle Lvs 59-59]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 326,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 327,
+		Encounters = [Lombre Lvs 57-57, Floatzel Lvs 57-57, Lombre Lvs 58-58, Floatzel Lvs 59-59, Lombre Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwhirl Lvs 55-55]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 328,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwhirl Lvs 57-57, Floatzel Lvs 57-57, Poliwhirl Lvs 58-58, Floatzel Lvs 59-59, Poliwhirl Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwrath Lvs 60-60]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Connecting Cave Grass/Cave, Rate = 1, MapIndex = 334,
+		Encounters = [Whismur Lvs 13-13, Whismur Lvs 14-14, Whismur Lvs 15-15, Meditite Lvs 13-13, Meditite Lvs 14-14, Meditite Lvs 15-15, Zubat Lvs 13-13, Zubat Lvs 14-14, Zubat Lvs 15-15, Axew Lvs 13-13, Axew Lvs 14-14, Axew Lvs 15-15]]
+	[Name = Connecting Cave Common Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7]]
+	[Name = Connecting Cave Uncommon Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8]]
+	[Name = Connecting Cave Rare Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 343,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 343,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 344,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 344,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 345,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 345,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 347,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 348,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Lost Hotel Grass/Cave, Rate = 1, MapIndex = 349,
+		Encounters = [Magneton Lvs 37-37, Magneton Lvs 38-38, Pawniard Lvs 36-36, Pawniard Lvs 37-37, Litwick Lvs 37-37, Litwick Lvs 38-38, Electrode Lvs 37-37, Electrode Lvs 38-38, Klefki Lvs 36-36, Klefki Lvs 37-37, Klefki Lvs 38-38, Klefki Lvs 38-38]]
+	[Name = Azure Bay Grass/Cave, Rate = 1, MapIndex = 357,
+		Encounters = [Slowpoke Lvs 25-25, Slowpoke Lvs 26-26, Slowpoke Lvs 27-27, Chatot Lvs 25-25, Chatot Lvs 26-26, Chatot Lvs 27-27, Slowpoke Lvs 27-27, Inkay Lvs 26-26, Exeggcute Lvs 26-26, Inkay Lvs 27-27, Chatot Lvs 27-27, Chatot Lvs 27-27]]
+	[Name = Azure Bay Surf, Rate = 1, MapIndex = 357,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Lapras Lvs 27-27]]
+	[Name = Azure Bay Rock Smash, Rate = 1, MapIndex = 357,
+		Encounters = [Dwebble Lvs 23-23, Binacle Lvs 23-23, Dwebble Lvs 24-24, Binacle Lvs 25-25, Dwebble Lvs 25-25]]
+	[Name = Azure Bay Old Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Azure Bay Good Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Remoraid Lvs 25-25, Chinchou Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Azure Bay Super Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Alomomola Lvs 35-35, Octillery Lvs 35-35, Lanturn Lvs 35-35]]
+	[Name = Azure Bay Common Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13]]
+	[Name = Azure Bay Uncommon Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13]]
+	[Name = Azure Bay Rare Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14]]
+	[Name = Glittering Cave Ceiling Encounter #1, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #2, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #3, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #4, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Reflection Cave Ceiling Encounter #1, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #2, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #3, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #4, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #5, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #6, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #7, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #8, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #9, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #10, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #11, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #12, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #13, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #14, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #15, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #16, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Victory Road Outside 2 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #5, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #6, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #7, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #8, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #9, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #10, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Terminus Cave Ceiling Encounter #1, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #2, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #3, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #4, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #5, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #6, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #7, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #8, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #9, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Route 6 Rustling Bush Encounter #1, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 6 Rustling Bush Encounter #2, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 6 Rustling Bush Encounter #3, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 18 Rustling Bush Encounter #1, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #2, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #3, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #4, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Couriway Town Surf, Rate = 1, MapIndex = 38,
+		Encounters = [Lombre Lvs 44-44, Floatzel Lvs 44-44, Lombre Lvs 45-45, Floatzel Lvs 46-46, Lombre Lvs 46-46]]
+	[Name = Couriway Town Old Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Couriway Town Good Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Basculin Lvs 35-35, Poliwhirl Lvs 35-35, Basculin Lvs 35-35]]
+	[Name = Couriway Town Super Rod, Rate = 1, MapIndex = 38,
+		Encounters = [Poliwhirl Lvs 45-45, Basculin Lvs 45-45, Poliwhirl Lvs 45-45]]
+	[Name = Ambrette Town Surf, Rate = 1, MapIndex = 45,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Ambrette Town Rock Smash, Rate = 1, MapIndex = 45,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Ambrette Town Old Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Ambrette Town Good Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Skrelp Lvs 25-25, Horsea Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Ambrette Town Super Rod, Rate = 1, MapIndex = 45,
+		Encounters = [Relicanth Lvs 35-35, Dragalge Lvs 35-35, Seadra Lvs 35-35]]
+	[Name = Cyllage City Surf, Rate = 1, MapIndex = 157,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Cyllage City Rock Smash, Rate = 1, MapIndex = 157,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Cyllage City Old Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Cyllage City Good Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Skrelp Lvs 25-25, Horsea Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Cyllage City Super Rod, Rate = 1, MapIndex = 157,
+		Encounters = [Relicanth Lvs 35-35, Dragalge Lvs 35-35, Seadra Lvs 35-35]]
+	[Name = Shalour City Surf, Rate = 1, MapIndex = 172,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Mantyke Lvs 27-27]]
+	[Name = Shalour City Old Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Shalour City Good Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Remoraid Lvs 25-25, Chinchou Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Shalour City Super Rod, Rate = 1, MapIndex = 172,
+		Encounters = [Alomomola Lvs 35-35, Octillery Lvs 35-35, Lanturn Lvs 35-35]]
+	[Name = Laverre City Old Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Laverre City Good Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Laverre City Super Rod, Rate = 1, MapIndex = 200,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 2 Grass/Cave, Rate = 1, MapIndex = 259,
+		Encounters = [Bunnelby Lvs 2-2, Bunnelby Lvs 3-3, Zigzagoon Lvs 3-3, Fletchling Lvs 2-2, Fletchling Lvs 3-3, Pidgey Lvs 3-3, Scatterbug Lvs 2-2, Scatterbug Lvs 3-3, Caterpie Lvs 3-3, Zigzagoon Lvs 4-4, Pidgey Lvs 4-4, Caterpie Lvs 4-4]]
+	[Name = Route 3 Grass/Cave, Rate = 1, MapIndex = 260,
+		Encounters = [Bunnelby Lvs 3-3, Bunnelby Lvs 4-4, Bidoof Lvs 3-3, Bidoof Lvs 4-4, Fletchling Lvs 3-3, Fletchling Lvs 5-5, Pidgey Lvs 4-4, Burmy Lvs 5-5, Azurill Lvs 5-5, Dunsparce Lvs 5-5, Pikachu Lvs 4-4, Pikachu Lvs 5-5]]
+	[Name = Route 3 Surf, Rate = 1, MapIndex = 260,
+		Encounters = [Masquerain Lvs 25-25, Marill Lvs 25-25, Masquerain Lvs 26-26, Marill Lvs 27-27, Masquerain Lvs 27-27]]
+	[Name = Route 3 Old Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Route 3 Good Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Goldeen Lvs 25-25, Corphish Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Route 3 Super Rod, Rate = 1, MapIndex = 260,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Crawdaunt Lvs 35-35]]
+	[Name = Route 4 Yellow Flowers, Rate = 1, MapIndex = 261,
+		Encounters = [Flabébé Lvs 6-6, Flabébé Lvs 7-7, Flabébé Lvs 8-8, Combee Lvs 6-6, Combee Lvs 7-7, Combee Lvs 8-8, Budew Lvs 8-8, Ledyba Lvs 8-8, Skitty Lvs 8-8, Ralts Lvs 8-8, Flabébé Lvs 7-7, Flabébé Lvs 8-8]]
+	[Name = Route 4 Red Flowers, Rate = 1, MapIndex = 261,
+		Encounters = [Flabébé Lvs 6-6, Flabébé Lvs 7-7, Flabébé Lvs 8-8, Ledyba Lvs 6-6, Ledyba Lvs 7-7, Ledyba Lvs 8-8, Budew Lvs 8-8, Combee Lvs 8-8, Skitty Lvs 8-8, Ralts Lvs 8-8, Flabébé Lvs 7-7, Flabébé Lvs 8-8]]
+	[Name = Route 5 Grass/Cave, Rate = 1, MapIndex = 262,
+		Encounters = [Bunnelby Lvs 8-8, Bunnelby Lvs 9-9, Bunnelby Lvs 10-10, Furfrou Lvs 8-8, Furfrou Lvs 9-9, Pancham Lvs 10-10, Skiddo Lvs 10-10, Doduo Lvs 10-10, Gulpin Lvs 10-10, Abra Lvs 10-10, Minun Lvs 9-9, Minun Lvs 10-10]]
+	[Name = Route 5 Purple Flowers, Rate = 1, MapIndex = 262,
+		Encounters = [Skiddo Lvs 8-8, Skiddo Lvs 9-9, Skiddo Lvs 10-10, Pancham Lvs 8-8, Pancham Lvs 9-9, Furfrou Lvs 10-10, Bunnelby Lvs 10-10, Doduo Lvs 10-10, Gulpin Lvs 10-10, Abra Lvs 10-10, Minun Lvs 9-9, Minun Lvs 10-10]]
+	[Name = Route 5 Common Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5, Gulpin Lvs 5-5]]
+	[Name = Route 5 Uncommon Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5, Scraggy Lvs 5-5]]
+	[Name = Route 5 Rare Horde, Rate = 1, MapIndex = 262,
+		Encounters = [Minun Lvs 6-6, Minun Lvs 6-6, Minun Lvs 6-6, Plusle Lvs 6-6, Minun Lvs 6-6]]
+	[Name = Route 6 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 263,
+		Encounters = [Oddish Lvs 10-10, Oddish Lvs 11-11, Oddish Lvs 12-12, Sentret Lvs 10-10, Sentret Lvs 11-11, Nincada Lvs 12-12, Espurr Lvs 11-11, Espurr Lvs 12-12, Honedge Lvs 11-11, Honedge Lvs 12-12, Kecleon Lvs 11-11, Kecleon Lvs 12-12]]
+	[Name = Route 7 Grass/Cave, Rate = 1, MapIndex = 264,
+		Encounters = [Croagunk Lvs 12-12, Croagunk Lvs 13-13, Croagunk Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Yellow Flowers, Rate = 1, MapIndex = 264,
+		Encounters = [Flabébé Lvs 12-12, Flabébé Lvs 13-13, Flabébé Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Purple Flowers, Rate = 1, MapIndex = 264,
+		Encounters = [Flabébé Lvs 12-12, Flabébé Lvs 13-13, Flabébé Lvs 14-14, Volbeat Lvs 13-13, Illumise Lvs 13-13, Spritzee Lvs 14-14, Smeargle Lvs 14-14, Ducklett Lvs 14-14, Roselia Lvs 14-14, Croagunk Lvs 14-14, Flabébé Lvs 13-13, Flabébé Lvs 14-14]]
+	[Name = Route 7 Common Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7, Hoppip Lvs 7-7]]
+	[Name = Route 7 Uncommon Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8, Psyduck Lvs 8-8]]
+	[Name = Route 7 Rare Horde, Rate = 1, MapIndex = 264,
+		Encounters = [Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7, Roselia Lvs 7-7]]
+	[Name = Route 8 Grass/Cave, Rate = 1, MapIndex = 266,
+		Encounters = [Drifloon Lvs 13-13, Drifloon Lvs 14-14, Drifloon Lvs 15-15, Spoink Lvs 13-13, Spoink Lvs 14-14, Absol Lvs 15-15, Mienfoo Lvs 15-15, Inkay Lvs 14-14, Seviper Lvs 14-14, Inkay Lvs 15-15, Bagon Lvs 14-14, Bagon Lvs 15-15]]
+	[Name = Route 8 Yellow Flowers, Rate = 1, MapIndex = 266,
+		Encounters = [Mienfoo Lvs 13-13, Mienfoo Lvs 14-14, Mienfoo Lvs 15-15, Absol Lvs 13-13, Absol Lvs 14-14, Spoink Lvs 15-15, Drifloon Lvs 15-15, Inkay Lvs 14-14, Seviper Lvs 14-14, Inkay Lvs 15-15, Bagon Lvs 14-14, Bagon Lvs 15-15]]
+	[Name = Route 8 Surf, Rate = 1, MapIndex = 266,
+		Encounters = [Tentacool Lvs 25-25, Wailmer Lvs 25-25, Tentacool Lvs 26-26, Tentacool Lvs 27-27, Wailmer Lvs 27-27]]
+	[Name = Route 8 Rock Smash, Rate = 1, MapIndex = 266,
+		Encounters = [Dwebble Lvs 13-13, Binacle Lvs 13-13, Dwebble Lvs 14-14, Binacle Lvs 15-15, Dwebble Lvs 15-15]]
+	[Name = Route 8 Old Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Route 8 Good Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Skrelp Lvs 25-25, Shellder Lvs 25-25, Skrelp Lvs 25-25]]
+	[Name = Route 8 Super Rod, Rate = 1, MapIndex = 266,
+		Encounters = [Qwilfish Lvs 35-35, Dragalge Lvs 35-35, Cloyster Lvs 35-35]]
+	[Name = Route 8 Common Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7, Wingull Lvs 7-7]]
+	[Name = Route 8 Uncommon Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Seviper Lvs 8-8, Zangoose Lvs 8-8, Seviper Lvs 8-8, Seviper Lvs 8-8, Seviper Lvs 8-8]]
+	[Name = Route 8 Rare Horde, Rate = 1, MapIndex = 266,
+		Encounters = [Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7, Taillow Lvs 7-7]]
+	[Name = Route 9 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 267,
+		Encounters = [Sandile Lvs 15-15, Sandile Lvs 16-16, Sandile Lvs 16-16, Sandile Lvs 17-17, Hippopotas Lvs 15-15, Hippopotas Lvs 16-16, Hippopotas Lvs 16-16, Hippopotas Lvs 17-17, Helioptile Lvs 15-15, Helioptile Lvs 16-16, Helioptile Lvs 16-16, Helioptile Lvs 17-17]]
+	[Name = Route 10 Grass/Cave, Rate = 1, MapIndex = 268,
+		Encounters = [Golett Lvs 19-19, Golett Lvs 20-20, Golett Lvs 21-21, Sigilyph Lvs 19-19, Sigilyph Lvs 20-20, Hawlucha Lvs 19-19, Hawlucha Lvs 20-20, Snubbull Lvs 21-21, Electrike Lvs 21-21, Eevee Lvs 21-21, Emolga Lvs 19-19, Emolga Lvs 20-20]]
+	[Name = Route 10 Yellow Flowers, Rate = 1, MapIndex = 268,
+		Encounters = [Snubbull Lvs 19-19, Snubbull Lvs 20-20, Snubbull Lvs 21-21, Electrike Lvs 19-19, Electrike Lvs 20-20, Eevee Lvs 19-19, Eevee Lvs 20-20, Golett Lvs 21-21, Sigilyph Lvs 21-21, Hawlucha Lvs 21-21, Emolga Lvs 19-19, Emolga Lvs 20-20]]
+	[Name = Route 10 Common Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10, Nosepass Lvs 10-10]]
+	[Name = Route 10 Uncommon Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10, Yanma Lvs 10-10]]
+	[Name = Route 10 Rare Horde, Rate = 1, MapIndex = 268,
+		Encounters = [Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11, Electrike Lvs 11-11]]
+	[Name = Route 11 Grass/Cave, Rate = 1, MapIndex = 269,
+		Encounters = [Hariyama Lvs 22-22, Hariyama Lvs 23-23, Throh Lvs 22-22, Throh Lvs 23-23, Staravia Lvs 22-22, Staravia Lvs 23-23, Stunky Lvs 21-21, Chingling Lvs 21-21, Nidorino Lvs 21-21, Nidorina Lvs 21-21, Dedenne Lvs 21-21, Dedenne Lvs 22-22]]
+	[Name = Route 11 Common Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Nidoran♂ Lvs 11-11, Nidoran♀ Lvs 11-11, Nidoran♂ Lvs 11-11, Nidoran♂ Lvs 11-11, Nidoran♂ Lvs 11-11]]
+	[Name = Route 11 Uncommon Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11, Stunky Lvs 11-11]]
+	[Name = Route 11 Rare Horde, Rate = 1, MapIndex = 269,
+		Encounters = [Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12, Starly Lvs 12-12]]
+	[Name = Route 12 Grass/Cave, Rate = 1, MapIndex = 270,
+		Encounters = [Slowpoke Lvs 23-23, Slowpoke Lvs 24-24, Slowpoke Lvs 25-25, Chatot Lvs 23-23, Chatot Lvs 24-24, Chatot Lvs 25-25, Miltank Lvs 25-25, Tauros Lvs 25-25, Exeggcute Lvs 24-24, Heracross Lvs 25-25, Pachirisu Lvs 23-23, Pachirisu Lvs 24-24]]
+	[Name = Route 12 Yellow Flowers, Rate = 1, MapIndex = 270,
+		Encounters = [Tauros Lvs 25-25, Tauros Lvs 26-26, Tauros Lvs 27-27, Miltank Lvs 25-25, Miltank Lvs 26-26, Miltank Lvs 27-27, Chatot Lvs 27-27, Slowpoke Lvs 27-27, Exeggcute Lvs 26-26, Heracross Lvs 27-27, Pachirisu Lvs 25-25, Pachirisu Lvs 26-26]]
+	[Name = Route 12 Surf, Rate = 1, MapIndex = 270,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Lapras Lvs 27-27]]
+	[Name = Route 12 Rock Smash, Rate = 1, MapIndex = 270,
+		Encounters = [Dwebble Lvs 23-23, Binacle Lvs 23-23, Dwebble Lvs 24-24, Binacle Lvs 25-25, Dwebble Lvs 25-25]]
+	[Name = Route 12 Old Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Route 12 Good Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Remoraid Lvs 25-25, Clamperl Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Route 12 Super Rod, Rate = 1, MapIndex = 270,
+		Encounters = [Corsola Lvs 35-35, Octillery Lvs 35-35, Gorebyss Lvs 35-35]]
+	[Name = Route 12 Common Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13]]
+	[Name = Route 12 Uncommon Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13, Mareep Lvs 13-13]]
+	[Name = Route 12 Rare Horde, Rate = 1, MapIndex = 270,
+		Encounters = [Tauros Lvs 14-14, Tauros Lvs 14-14, Tauros Lvs 14-14, Miltank Lvs 14-14, Tauros Lvs 14-14]]
+	[Name = Route 13 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 272,
+		Encounters = [Dugtrio Lvs 26-26, Dugtrio Lvs 27-27, Dugtrio Lvs 27-27, Dugtrio Lvs 28-28, Trapinch Lvs 26-26, Trapinch Lvs 27-27, Trapinch Lvs 27-27, Trapinch Lvs 28-28, Gible Lvs 26-26, Gible Lvs 27-27, Gible Lvs 27-27, Gible Lvs 28-28]]
+	[Name = Route 13 Rock Smash, Rate = 1, MapIndex = 272,
+		Encounters = [Graveler Lvs 26-26, Slugma Lvs 26-26, Graveler Lvs 27-27, Slugma Lvs 28-28, Graveler Lvs 28-28]]
+	[Name = Route 14 Grass/Cave, Rate = 1, MapIndex = 273,
+		Encounters = [Skorupi Lvs 30-30, Skorupi Lvs 31-31, Weepinbell Lvs 31-31, Weepinbell Lvs 32-32, Quagsire Lvs 30-30, Goomy Lvs 30-30, Karrablast Lvs 30-30, Shelmet Lvs 30-30, Carnivine Lvs 30-30, Haunter Lvs 31-31, Carnivine Lvs 31-31, Carnivine Lvs 32-32]]
+	[Name = Route 14 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 273,
+		Encounters = [Quagsire Lvs 30-30, Quagsire Lvs 31-31, Quagsire Lvs 32-32, Goomy Lvs 31-31, Goomy Lvs 32-32, Stunfisk Lvs 31-31, Stunfisk Lvs 32-32, Karrablast Lvs 30-30, Shelmet Lvs 30-30, Haunter Lvs 31-31, Carnivine Lvs 31-31, Carnivine Lvs 32-32]]
+	[Name = Route 14 Surf, Rate = 1, MapIndex = 273,
+		Encounters = [Quagsire Lvs 30-30, Stunfisk Lvs 30-30, Goomy Lvs 31-31, Stunfisk Lvs 31-31, Stunfisk Lvs 32-32]]
+	[Name = Route 14 Old Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 14 Good Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Barboach Lvs 25-25, Poliwhirl Lvs 35-35, Barboach Lvs 35-35]]
+	[Name = Route 14 Super Rod, Rate = 1, MapIndex = 273,
+		Encounters = [Poliwhirl Lvs 35-35, Whiscash Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 14 Common Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16, Bellsprout Lvs 16-16]]
+	[Name = Route 14 Uncommon Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16, Skorupi Lvs 16-16]]
+	[Name = Route 14 Rare Horde, Rate = 1, MapIndex = 273,
+		Encounters = [Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17, Ekans Lvs 17-17]]
+	[Name = Route 15 Grass/Cave, Rate = 1, MapIndex = 275,
+		Encounters = [Liepard Lvs 34-34, Liepard Lvs 35-35, Liepard Lvs 36-36, Skorupi Lvs 34-34, Skorupi Lvs 35-35, Pawniard Lvs 36-36, Watchog Lvs 36-36, Foongus Lvs 34-34, Foongus Lvs 35-35, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 15 Red Flowers, Rate = 1, MapIndex = 275,
+		Encounters = [Watchog Lvs 34-34, Watchog Lvs 35-35, Watchog Lvs 36-36, Pawniard Lvs 34-34, Pawniard Lvs 35-35, Skorupi Lvs 36-36, Liepard Lvs 36-36, Foongus Lvs 34-34, Foongus Lvs 35-35, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 15 Surf, Rate = 1, MapIndex = 275,
+		Encounters = [Lombre Lvs 34-34, Floatzel Lvs 34-34, Lombre Lvs 35-35, Floatzel Lvs 36-36, Lombre Lvs 36-36]]
+	[Name = Route 15 Old Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 15 Good Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Route 15 Super Rod, Rate = 1, MapIndex = 275,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 15 Common Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18]]
+	[Name = Route 15 Uncommon Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18]]
+	[Name = Route 15 Rare Horde, Rate = 1, MapIndex = 275,
+		Encounters = [Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19]]
+	[Name = Route 16 Yellow Flowers, Rate = 1, MapIndex = 276,
+		Encounters = [Weepinbell Lvs 35-35, Weepinbell Lvs 36-36, Skorupi Lvs 34-34, Skorupi Lvs 35-35, Floatzel Lvs 35-35, Floatzel Lvs 36-36, Phantump Lvs 35-35, Foongus Lvs 34-34, Foongus Lvs 36-36, Klefki Lvs 34-34, Klefki Lvs 35-35, Klefki Lvs 36-36]]
+	[Name = Route 16 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 276,
+		Encounters = [Pumpkaboo Lvs 34-34, Pumpkaboo Lvs 34-34, Pumpkaboo Lvs 35-35, Pumpkaboo Lvs 35-35, Pumpkaboo Lvs 36-36, Pumpkaboo Lvs 36-36, Phantump Lvs 35-35, Foongus Lvs 34-34, Foongus Lvs 36-36, Klefki Lvs 34-34, Klefki Lvs 35-35, Pumpkaboo Lvs 36-36]]
+	[Name = Route 16 Surf, Rate = 1, MapIndex = 276,
+		Encounters = [Lombre Lvs 34-34, Floatzel Lvs 34-34, Lombre Lvs 35-35, Floatzel Lvs 36-36, Lombre Lvs 36-36]]
+	[Name = Route 16 Old Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Poliwag Lvs 15-15, Poliwag Lvs 15-15, Poliwag Lvs 15-15]]
+	[Name = Route 16 Good Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Basculin Lvs 25-25, Poliwhirl Lvs 25-25, Basculin Lvs 25-25]]
+	[Name = Route 16 Super Rod, Rate = 1, MapIndex = 276,
+		Encounters = [Poliwhirl Lvs 35-35, Basculin Lvs 35-35, Poliwhirl Lvs 35-35]]
+	[Name = Route 16 Common Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18, Murkrow Lvs 18-18]]
+	[Name = Route 16 Uncommon Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18, Foongus Lvs 18-18]]
+	[Name = Route 16 Rare Horde, Rate = 1, MapIndex = 276,
+		Encounters = [Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19, Klefki Lvs 19-19]]
+	[Name = Route 17 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 278,
+		Encounters = [Snover Lvs 38-38, Snover Lvs 39-39, Snover Lvs 39-39, Sneasel Lvs 39-39, Delibird Lvs 38-38, Delibird Lvs 39-39, Delibird Lvs 39-39, Delibird Lvs 40-40, Sneasel Lvs 38-38, Sneasel Lvs 40-40, Sneasel Lvs 40-40, Abomasnow Lvs 40-40]]
+	[Name = Route 18 Grass/Cave, Rate = 1, MapIndex = 279,
+		Encounters = [Gurdurr Lvs 44-44, Gurdurr Lvs 45-45, Gurdurr Lvs 46-46, Torkoal Lvs 44-44, Torkoal Lvs 45-45, Sandslash Lvs 46-46, Pupitar Lvs 46-46, Durant Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Heatmor Lvs 45-45, Heatmor Lvs 46-46]]
+	[Name = Route 18 Red Flowers, Rate = 1, MapIndex = 279,
+		Encounters = [Pupitar Lvs 44-44, Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 44-44, Sandslash Lvs 45-45, Torkoal Lvs 46-46, Gurdurr Lvs 46-46, Durant Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Heatmor Lvs 45-45, Heatmor Lvs 46-46]]
+	[Name = Route 18 Rock Smash, Rate = 1, MapIndex = 279,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Route 18 Common Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Route 18 Uncommon Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Route 18 Rare Horde, Rate = 1, MapIndex = 279,
+		Encounters = [Durant Lvs 24-24, Durant Lvs 24-24, Durant Lvs 24-24, Heatmor Lvs 24-24, Durant Lvs 24-24]]
+	[Name = Route 19 Yellow Flowers, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Quagsire Lvs 47-47, Quagsire Lvs 48-48, Sliggoo Lvs 46-46, Sliggoo Lvs 47-47, Weepinbell Lvs 48-48, Drapion Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Purple Flowers, Rate = 1, MapIndex = 281,
+		Encounters = [Drapion Lvs 46-46, Drapion Lvs 47-47, Drapion Lvs 48-48, Weepinbell Lvs 46-46, Weepinbell Lvs 47-47, Sliggoo Lvs 48-48, Quagsire Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Rough Terrain/Tall Grass, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Quagsire Lvs 47-47, Quagsire Lvs 48-48, Sliggoo Lvs 47-47, Sliggoo Lvs 48-48, Stunfisk Lvs 47-47, Stunfisk Lvs 48-48, Karrablast Lvs 47-47, Shelmet Lvs 47-47, Haunter Lvs 47-47, Carnivine Lvs 46-46, Carnivine Lvs 48-48]]
+	[Name = Route 19 Surf, Rate = 1, MapIndex = 281,
+		Encounters = [Quagsire Lvs 46-46, Stunfisk Lvs 46-46, Sliggoo Lvs 47-47, Stunfisk Lvs 48-48, Sliggoo Lvs 48-48]]
+	[Name = Route 19 Old Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Route 19 Good Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Barboach Lvs 35-35, Poliwhirl Lvs 35-35, Barboach Lvs 35-35]]
+	[Name = Route 19 Super Rod, Rate = 1, MapIndex = 281,
+		Encounters = [Poliwhirl Lvs 45-45, Whiscash Lvs 45-45, Politoed Lvs 50-50]]
+	[Name = Route 19 Common Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24, Weepinbell Lvs 24-24]]
+	[Name = Route 19 Uncommon Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24, Gligar Lvs 24-24]]
+	[Name = Route 19 Rare Horde, Rate = 1, MapIndex = 281,
+		Encounters = [Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25, Arbok Lvs 25-25]]
+	[Name = Route 20 Grass/Cave, Rate = 1, MapIndex = 282,
+		Encounters = [Noctowl Lvs 48-48, Noctowl Lvs 49-49, Noctowl Lvs 50-50, Jigglypuff Lvs 48-48, Jigglypuff Lvs 49-49, Trevenant Lvs 50-50, Gothorita Lvs 50-50, Amoonguss Lvs 48-48, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 50-50]]
+	[Name = Route 20 Red Flowers, Rate = 1, MapIndex = 282,
+		Encounters = [Gothorita Lvs 48-48, Gothorita Lvs 49-49, Gothorita Lvs 50-50, Trevenant Lvs 48-48, Trevenant Lvs 49-49, Jigglypuff Lvs 50-50, Noctowl Lvs 50-50, Amoonguss Lvs 48-48, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 50-50]]
+	[Name = Route 20 Common Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25]]
+	[Name = Route 20 Uncommon Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25]]
+	[Name = Route 20 Rare Horde, Rate = 1, MapIndex = 282,
+		Encounters = [Trevenant Lvs 25-25, Trevenant Lvs 25-25, Trevenant Lvs 25-25, Sudowoodo Lvs 25-25, Trevenant Lvs 25-25]]
+	[Name = Route 21 Purple Flowers, Rate = 1, MapIndex = 283,
+		Encounters = [Floatzel Lvs 50-50, Floatzel Lvs 51-51, Floatzel Lvs 52-52, Altaria Lvs 50-50, Altaria Lvs 51-51, Floatzel Lvs 50-50, Spinda Lvs 50-50, Spinda Lvs 52-52, Ursaring Lvs 52-52, Scyther Lvs 50-50, Scyther Lvs 51-51, Scyther Lvs 52-52]]
+	[Name = Route 21 Red Flowers, Rate = 1, MapIndex = 283,
+		Encounters = [Ursaring Lvs 50-50, Ursaring Lvs 51-51, Ursaring Lvs 52-52, Altaria Lvs 50-50, Altaria Lvs 51-51, Ursaring Lvs 50-50, Spinda Lvs 50-50, Spinda Lvs 52-52, Floatzel Lvs 52-52, Scyther Lvs 50-50, Scyther Lvs 51-51, Scyther Lvs 52-52]]
+	[Name = Route 21 Surf, Rate = 1, MapIndex = 283,
+		Encounters = [Lombre Lvs 50-50, Floatzel Lvs 50-50, Lombre Lvs 51-51, Floatzel Lvs 52-52, Lombre Lvs 52-52]]
+	[Name = Route 21 Old Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Poliwag Lvs 30-30, Poliwag Lvs 30-30, Poliwag Lvs 30-30]]
+	[Name = Route 21 Good Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Basculin Lvs 40-40, Poliwhirl Lvs 40-40, Dratini Lvs 40-40]]
+	[Name = Route 21 Super Rod, Rate = 1, MapIndex = 283,
+		Encounters = [Poliwhirl Lvs 50-50, Basculin Lvs 50-50, Dragonair Lvs 50-50]]
+	[Name = Route 21 Common Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26, Spinda Lvs 26-26]]
+	[Name = Route 21 Uncommon Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26, Swablu Lvs 26-26]]
+	[Name = Route 21 Rare Horde, Rate = 1, MapIndex = 283,
+		Encounters = [Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27, Scyther Lvs 27-27]]
+	[Name = Route 22 Grass/Cave, Rate = 1, MapIndex = 285,
+		Encounters = [Bunnelby Lvs 5-5, Bunnelby Lvs 6-6, Litleo Lvs 5-5, Litleo Lvs 6-6, Psyduck Lvs 6-6, Bidoof Lvs 6-6, Azurill Lvs 6-6, Azurill Lvs 7-7, Farfetch’d Lvs 7-7, Dunsparce Lvs 7-7, Riolu Lvs 6-6, Riolu Lvs 7-7]]
+	[Name = Route 22 Yellow Flowers, Rate = 1, MapIndex = 285,
+		Encounters = [Bibarel Lvs 26-26, Bibarel Lvs 27-27, Psyduck Lvs 25-25, Psyduck Lvs 26-26, Litleo Lvs 25-25, Diggersby Lvs 27-27, Azumarill Lvs 25-25, Azumarill Lvs 26-26, Farfetch’d Lvs 26-26, Dunsparce Lvs 26-26, Riolu Lvs 25-25, Riolu Lvs 26-26]]
+	[Name = Route 22 Surf, Rate = 1, MapIndex = 285,
+		Encounters = [Psyduck Lvs 25-25, Psyduck Lvs 26-26, Psyduck Lvs 27-27, Azumarill Lvs 25-25, Azumarill Lvs 27-27]]
+	[Name = Route 22 Old Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Route 22 Good Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Goldeen Lvs 25-25, Carvanha Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Route 22 Super Rod, Rate = 1, MapIndex = 285,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Sharpedo Lvs 35-35]]
+	[Name = Santalune Forest Grass/Cave, Rate = 1, MapIndex = 286,
+		Encounters = [Scatterbug Lvs 2-2, Scatterbug Lvs 3-3, Caterpie Lvs 2-2, Caterpie Lvs 3-3, Fletchling Lvs 4-4, Pansage Lvs 4-4, Pansear Lvs 4-4, Panpour Lvs 4-4, Weedle Lvs 2-2, Pikachu Lvs 3-3, Metapod Lvs 4-4, Pikachu Lvs 4-4]]
+	[Name = Parfum Palace Old Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Magikarp Lvs 15-15, Magikarp Lvs 15-15, Magikarp Lvs 15-15]]
+	[Name = Parfum Palace Good Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Goldeen Lvs 25-25, Corphish Lvs 25-25, Goldeen Lvs 25-25]]
+	[Name = Parfum Palace Super Rod, Rate = 1, MapIndex = 302,
+		Encounters = [Gyarados Lvs 35-35, Seaking Lvs 35-35, Crawdaunt Lvs 35-35]]
+	[Name = Glittering Cave Grass/Cave, Rate = 1, MapIndex = 303,
+		Encounters = [Machop Lvs 15-15, Machop Lvs 16-16, Machop Lvs 17-17, Rhyhorn Lvs 17-17, Onix Lvs 17-17, Cubone Lvs 15-15, Cubone Lvs 16-16, Solrock Lvs 17-17, Lunatone Lvs 17-17, Kangaskhan Lvs 17-17, Mawile Lvs 15-15, Mawile Lvs 16-16]]
+	[Name = Glittering Cave Rock Smash, Rate = 1, MapIndex = 304,
+		Encounters = [Dwebble Lvs 15-15, Onix Lvs 15-15, Dwebble Lvs 17-17, Onix Lvs 16-16, Onix Lvs 17-17]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 305,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 305,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 306,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 306,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 307,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 307,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Grass/Cave, Rate = 1, MapIndex = 308,
+		Encounters = [Mr. Mime Lvs 22-22, Mr. Mime Lvs 23-23, Solosis Lvs 22-22, Solosis Lvs 23-23, Roggenrola Lvs 21-21, Roggenrola Lvs 22-22, Carbink Lvs 23-23, Chingling Lvs 21-21, Wobbuffet Lvs 22-22, Chingling Lvs 22-22, Sableye Lvs 22-22, Sableye Lvs 23-23]]
+	[Name = Reflection Cave Common Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11, Mime Jr. Lvs 11-11]]
+	[Name = Reflection Cave Uncommon Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Reflection Cave Rare Horde, Rate = 1, MapIndex = 308,
+		Encounters = [Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Roggenrola Lvs 11-11, Carbink Lvs 11-11, Roggenrola Lvs 11-11]]
+	[Name = Frost Cavern Surf, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwhirl Lvs 38-38, Floatzel Lvs 38-38, Poliwhirl Lvs 39-39, Floatzel Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Old Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwag Lvs 20-20, Poliwag Lvs 20-20, Poliwag Lvs 20-20]]
+	[Name = Frost Cavern Good Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Basculin Lvs 30-30, Poliwhirl Lvs 30-30, Basculin Lvs 30-30]]
+	[Name = Frost Cavern Super Rod, Rate = 1, MapIndex = 313,
+		Encounters = [Poliwhirl Lvs 40-40, Basculin Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 314,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 314,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 315,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Haunter Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Surf, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwhirl Lvs 38-38, Floatzel Lvs 38-38, Poliwhirl Lvs 39-39, Floatzel Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Old Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwag Lvs 20-20, Poliwag Lvs 20-20, Poliwag Lvs 20-20]]
+	[Name = Frost Cavern Good Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Basculin Lvs 30-30, Poliwhirl Lvs 30-30, Basculin Lvs 30-30]]
+	[Name = Frost Cavern Super Rod, Rate = 1, MapIndex = 315,
+		Encounters = [Poliwhirl Lvs 40-40, Basculin Lvs 40-40, Poliwhirl Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 315,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 316,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 316,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Frost Cavern Grass/Cave, Rate = 1, MapIndex = 317,
+		Encounters = [Piloswine Lvs 38-38, Piloswine Lvs 39-39, Bergmite Lvs 39-39, Bergmite Lvs 40-40, Beartic Lvs 39-39, Beartic Lvs 40-40, Jynx Lvs 39-39, Jynx Lvs 40-40, Haunter Lvs 38-38, Haunter Lvs 39-39, Cryogonal Lvs 40-40, Haunter Lvs 40-40]]
+	[Name = Frost Cavern Common Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20, Vanillite Lvs 20-20]]
+	[Name = Frost Cavern Uncommon Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20, Cubchoo Lvs 20-20]]
+	[Name = Frost Cavern Rare Horde, Rate = 1, MapIndex = 317,
+		Encounters = [Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21, Smoochum Lvs 21-21]]
+	[Name = Pokémon Village Yellow Flowers, Rate = 1, MapIndex = 318,
+		Encounters = [Gothorita Lvs 48-48, Gothorita Lvs 49-49, Gothorita Lvs 50-50, Ditto Lvs 48-48, Ditto Lvs 49-49, Jigglypuff Lvs 50-50, Noctowl Lvs 50-50, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 49-49, Zoroark Lvs 50-50]]
+	[Name = Pokémon Village Purple Flowers, Rate = 1, MapIndex = 318,
+		Encounters = [Noctowl Lvs 48-48, Noctowl Lvs 49-49, Noctowl Lvs 50-50, Jigglypuff Lvs 48-48, Jigglypuff Lvs 49-49, Ditto Lvs 50-50, Gothorita Lvs 50-50, Amoonguss Lvs 49-49, Amoonguss Lvs 50-50, Zoroark Lvs 48-48, Zoroark Lvs 49-49, Zoroark Lvs 50-50]]
+	[Name = Pokémon Village Surf, Rate = 1, MapIndex = 318,
+		Encounters = [Lombre Lvs 48-48, Poliwhirl Lvs 48-48, Lombre Lvs 49-49, Poliwhirl Lvs 50-50, Lombre Lvs 50-50]]
+	[Name = Pokémon Village Old Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwag Lvs 30-30, Poliwag Lvs 30-30, Poliwag Lvs 30-30]]
+	[Name = Pokémon Village Good Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Basculin Lvs 40-40, Poliwhirl Lvs 40-40, Basculin Lvs 40-40]]
+	[Name = Pokémon Village Super Rod, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwhirl Lvs 50-50, Basculin Lvs 50-50, Poliwhirl Lvs 50-50]]
+	[Name = Pokémon Village Common Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25, Foongus Lvs 25-25]]
+	[Name = Pokémon Village Uncommon Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25, Poliwag Lvs 25-25]]
+	[Name = Pokémon Village Rare Horde, Rate = 1, MapIndex = 318,
+		Encounters = [Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25, Lombre Lvs 25-25]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 322,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwhirl Lvs 57-57, Floatzel Lvs 57-57, Poliwhirl Lvs 58-58, Floatzel Lvs 59-59, Poliwhirl Lvs 59-59]]
+	[Name = Victory Road Rock Smash, Rate = 1, MapIndex = 322,
+		Encounters = [Graveler Lvs 57-57, Graveler Lvs 58-58, Graveler Lvs 59-59, Shuckle Lvs 57-57, Shuckle Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 322,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwhirl Lvs 55-55]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 322,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 324,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Rock Smash, Rate = 1, MapIndex = 324,
+		Encounters = [Graveler Lvs 57-57, Graveler Lvs 58-58, Graveler Lvs 59-59, Shuckle Lvs 57-57, Shuckle Lvs 59-59]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 324,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 326,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29, Graveler Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 326,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 327,
+		Encounters = [Lombre Lvs 57-57, Floatzel Lvs 57-57, Lombre Lvs 58-58, Floatzel Lvs 59-59, Lombre Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 327,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwhirl Lvs 55-55]]
+	[Name = Victory Road Grass/Cave, Rate = 1, MapIndex = 328,
+		Encounters = [Gurdurr Lvs 57-57, Gurdurr Lvs 58-58, Gurdurr Lvs 59-59, Druddigon Lvs 58-58, Druddigon Lvs 59-59, Haunter Lvs 58-58, Graveler Lvs 57-57, Graveler Lvs 58-58, Lickitung Lvs 58-58, Lickitung Lvs 59-59, Zweilous Lvs 59-59, Zweilous Lvs 59-59]]
+	[Name = Victory Road Surf, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwhirl Lvs 57-57, Floatzel Lvs 57-57, Poliwhirl Lvs 58-58, Floatzel Lvs 59-59, Poliwhirl Lvs 59-59]]
+	[Name = Victory Road Old Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwag Lvs 35-35, Poliwag Lvs 35-35, Poliwag Lvs 35-35]]
+	[Name = Victory Road Good Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Basculin Lvs 45-45, Poliwhirl Lvs 45-45, Basculin Lvs 45-45]]
+	[Name = Victory Road Super Rod, Rate = 1, MapIndex = 328,
+		Encounters = [Poliwhirl Lvs 55-55, Basculin Lvs 55-55, Poliwrath Lvs 60-60]]
+	[Name = Victory Road Common Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28, Geodude Lvs 28-28]]
+	[Name = Victory Road Uncommon Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29, Floatzel Lvs 29-29]]
+	[Name = Victory Road Rare Horde, Rate = 1, MapIndex = 328,
+		Encounters = [Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30, Lickitung Lvs 30-30]]
+	[Name = Connecting Cave Grass/Cave, Rate = 1, MapIndex = 334,
+		Encounters = [Whismur Lvs 13-13, Whismur Lvs 14-14, Whismur Lvs 15-15, Meditite Lvs 13-13, Meditite Lvs 14-14, Meditite Lvs 15-15, Zubat Lvs 13-13, Zubat Lvs 14-14, Zubat Lvs 15-15, Axew Lvs 13-13, Axew Lvs 14-14, Axew Lvs 15-15]]
+	[Name = Connecting Cave Common Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7, Whismur Lvs 7-7]]
+	[Name = Connecting Cave Uncommon Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8, Zubat Lvs 8-8]]
+	[Name = Connecting Cave Rare Horde, Rate = 1, MapIndex = 334,
+		Encounters = [Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8, Axew Lvs 8-8]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 343,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 343,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 343,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 344,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 344,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 344,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 345,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Rock Smash, Rate = 1, MapIndex = 345,
+		Encounters = [Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Shuckle Lvs 44-44, Shuckle Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 345,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 347,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 347,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Terminus Cave Grass/Cave, Rate = 1, MapIndex = 348,
+		Encounters = [Pupitar Lvs 45-45, Pupitar Lvs 46-46, Sandslash Lvs 45-45, Sandslash Lvs 46-46, Durant Lvs 44-44, Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Graveler Lvs 44-44, Graveler Lvs 45-45, Graveler Lvs 46-46, Graveler Lvs 46-46]]
+	[Name = Terminus Cave Common Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23, Durant Lvs 23-23]]
+	[Name = Terminus Cave Uncommon Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23, Geodude Lvs 23-23]]
+	[Name = Terminus Cave Rare Horde, Rate = 1, MapIndex = 348,
+		Encounters = [Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24, Larvitar Lvs 24-24]]
+	[Name = Lost Hotel Grass/Cave, Rate = 1, MapIndex = 349,
+		Encounters = [Magneton Lvs 37-37, Magneton Lvs 38-38, Pawniard Lvs 36-36, Pawniard Lvs 37-37, Litwick Lvs 37-37, Litwick Lvs 38-38, Electrode Lvs 37-37, Electrode Lvs 38-38, Klefki Lvs 36-36, Klefki Lvs 37-37, Klefki Lvs 38-38, Klefki Lvs 38-38]]
+	[Name = Azure Bay Grass/Cave, Rate = 1, MapIndex = 357,
+		Encounters = [Slowpoke Lvs 25-25, Slowpoke Lvs 26-26, Slowpoke Lvs 27-27, Chatot Lvs 25-25, Chatot Lvs 26-26, Chatot Lvs 27-27, Slowpoke Lvs 27-27, Inkay Lvs 26-26, Exeggcute Lvs 26-26, Inkay Lvs 27-27, Chatot Lvs 27-27, Chatot Lvs 27-27]]
+	[Name = Azure Bay Surf, Rate = 1, MapIndex = 357,
+		Encounters = [Tentacool Lvs 25-25, Tentacool Lvs 26-26, Mantyke Lvs 27-27, Tentacool Lvs 27-27, Lapras Lvs 27-27]]
+	[Name = Azure Bay Rock Smash, Rate = 1, MapIndex = 357,
+		Encounters = [Dwebble Lvs 23-23, Binacle Lvs 23-23, Dwebble Lvs 24-24, Binacle Lvs 25-25, Dwebble Lvs 25-25]]
+	[Name = Azure Bay Old Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Luvdisc Lvs 15-15, Luvdisc Lvs 15-15, Luvdisc Lvs 15-15]]
+	[Name = Azure Bay Good Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Remoraid Lvs 25-25, Chinchou Lvs 25-25, Remoraid Lvs 25-25]]
+	[Name = Azure Bay Super Rod, Rate = 1, MapIndex = 357,
+		Encounters = [Alomomola Lvs 35-35, Octillery Lvs 35-35, Lanturn Lvs 35-35]]
+	[Name = Azure Bay Common Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13, Wingull Lvs 13-13]]
+	[Name = Azure Bay Uncommon Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13, Slowpoke Lvs 13-13]]
+	[Name = Azure Bay Rare Horde, Rate = 1, MapIndex = 357,
+		Encounters = [Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14, Exeggcute Lvs 14-14]]
+	[Name = Glittering Cave Ceiling Encounter #1, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #2, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #3, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Glittering Cave Ceiling Encounter #4, Rate = 0, MapIndex = -303,
+		Encounters = [Woobat Lvs 15-15, Woobat Lvs 16-16, Woobat Lvs 17-17, Ferroseed Lvs 15-15, Ferroseed Lvs 16-16, Ferroseed Lvs 17-17]]
+	[Name = Reflection Cave Ceiling Encounter #1, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #2, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #3, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #4, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #5, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #6, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #7, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #8, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #9, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #10, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #11, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #12, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #13, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #14, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #15, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Reflection Cave Ceiling Encounter #16, Rate = 0, MapIndex = -305,
+		Encounters = [Woobat Lvs 21-21, Woobat Lvs 22-22, Woobat Lvs 23-23, Ferroseed Lvs 21-21, Ferroseed Lvs 22-22, Ferroseed Lvs 23-23]]
+	[Name = Victory Road Outside 2 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 2 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 2 Ceiling Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 3 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Inside 3 Ceiling Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Graveler Lvs 57-57, Ariados Lvs 58-58, Ariados Lvs 59-59, Noibat Lvs 57-57, Noibat Lvs 58-58, Noibat Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #1, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #2, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #3, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #4, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #5, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #6, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #7, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #8, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #9, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Victory Road Outside 4 Sky Encounter #10, Rate = 0, MapIndex = -320,
+		Encounters = [Fearow Lvs 57-57, Fearow Lvs 58-58, Fearow Lvs 59-59, Skarmory Lvs 57-57, Skarmory Lvs 58-58, Skarmory Lvs 59-59, Hydreigon Lvs 59-59]]
+	[Name = Terminus Cave Ceiling Encounter #1, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #2, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #3, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #4, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #5, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #6, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #7, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #8, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Terminus Cave Ceiling Encounter #9, Rate = 0, MapIndex = -343,
+		Encounters = [Ariados Lvs 44-44, Ariados Lvs 45-45, Ariados Lvs 46-46, Noibat Lvs 44-44, Noibat Lvs 45-45, Noibat Lvs 46-46]]
+	[Name = Route 6 Rustling Bush Encounter #1, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 6 Rustling Bush Encounter #2, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 6 Rustling Bush Encounter #3, Rate = 0, MapIndex = 263,
+		Encounters = [Venipede Lvs 10-10, Venipede Lvs 11-11, Venipede Lvs 12-12, Audino Lvs 10-10, Audino Lvs 11-11, Audino Lvs 12-12]]
+	[Name = Route 18 Rustling Bush Encounter #1, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #2, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #3, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+	[Name = Route 18 Rustling Bush Encounter #4, Rate = 0, MapIndex = -279,
+		Encounters = [Durant Lvs 44-44, Durant Lvs 45-45, Durant Lvs 46-46, Heatmor Lvs 45-45]]
+]

@@ -1,0 +1,30 @@
+If you are implementing a new setting, make sure you have added it
+(or confirmed that it's unnecessary to add) to all the following location:
+
+Settings.java:
+    setting definition (variable and/or enum state)
+    accessors (get, set) (if new variable)
+    toString
+    fromString
+    LENGTH_OF_SETTINGS_DATA if adding a new byte
+RandomizerGUI.form:
+    add GUI element to select setting (not necessary if combobox option?)
+bundle.properties:
+    strings for setting label & tooltip
+RandomizerGUI.java:
+    initialState
+    romLoaded
+    restoreStateFromSettings
+    createSettingsFromState
+    enableOrDisableSubControls
+    may also need to add action listeners to the constructor
+SettingsUpdater.java:
+    make update, if needed
+Version.java:
+    increase version number (and log old) if first feature in version
+appropriate Randomizer:
+    implement the actual effect
+GameRandomizer.java:
+    If adding a top-level setting, add method call.
+Tests:
+    Make at least one new unit test to verify the new setting works consistently

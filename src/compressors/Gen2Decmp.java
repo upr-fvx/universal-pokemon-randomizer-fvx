@@ -1,9 +1,9 @@
 package compressors;
 
 /**
- * Pokemon Gen 2 sprite decompressor Source:
- * https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/lz.py 
- * (and gfx.py for flatten())
+ * Pokemon Gen 2 image decompressor
+ * (<a href="https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/lz.py">Source</a>)
+ * (and gfx.py for flatten())<br>
  * Ported to Java by Dabomstew
  *
  */
@@ -12,15 +12,25 @@ public class Gen2Decmp {
     private static final int LZ_END = 0xFF;
     private static final int INITIAL_BUF_SIZE = 0x1000;
 
+    public static byte[] decompress(byte[] data, int offset) {
+        Gen2Decmp gen2Decmp = new Gen2Decmp(data, offset);
+        return gen2Decmp.getData();
+    }
+
+    public static int lengthOfCompressed(byte[] data, int offset) {
+        Gen2Decmp gen2Decmp = new Gen2Decmp(data, offset);
+        return gen2Decmp.getCompressedLength();
+    }
+
     public byte[] data;
+    private final int startAddress;
     private int address;
     private byte[] output;
     private int out_idx;
-    private int cmd;
     private int len;
     private int offset;
 
-    private static int[] bit_flipped;
+    private static final int[] bit_flipped;
 
     static {
         bit_flipped = new int[0x100];
@@ -31,36 +41,20 @@ public class Gen2Decmp {
         }
     }
 
-    public Gen2Decmp(byte[] input, int baseOffset, int tilesWide, int tilesHigh) {
-        this.data = input;
-        this.address = baseOffset;
+
+    private Gen2Decmp(byte[] data, int offset) {
+        this.data = data;
+        this.startAddress = offset;
+        this.address = offset;
         decompress();
-        cutAndTranspose(tilesWide, tilesHigh);
     }
 
-    public byte[] getData() {
+    private byte[] getData() {
         return output;
     }
 
-    public byte[] getFlattenedData() {
-        return flatten(output);
-    }
-
-    private void cutAndTranspose(int width, int height) {
-        if (output == null) {
-            return;
-        }
-        int tiles = width * height;
-
-        byte[] newData = new byte[width * height * 16];
-        for (int tile = 0; tile < tiles; tile++) {
-            int oldTileX = tile % width;
-            int oldTileY = tile / width;
-            int newTileNum = oldTileX * height + oldTileY;
-            System.arraycopy(output, tile * 16, newData, newTileNum * 16, 16);
-        }
-        output = newData;
-
+    private int getCompressedLength() {
+        return address - startAddress;
     }
 
     private void decompress() {
@@ -71,7 +65,7 @@ public class Gen2Decmp {
                 break;
             }
 
-            cmd = (this.peek() & 0xE0) >> 5;
+            int cmd = (this.peek() & 0xE0) >> 5;
             if (cmd == 7) {
                 // LONG command
                 cmd = (this.peek() & 0x1C) >> 2;
@@ -86,41 +80,40 @@ public class Gen2Decmp {
             }
 
             switch (cmd) {
-            case 0:
-                // Literal
-                System.arraycopy(data, address, output, out_idx, len);
-                out_idx += len;
-                address += len;
-                break;
-            case 1:
-                // Iterate
-                byte repe = (byte) next();
-                for (int i = 0; i < len; i++) {
-                    output[out_idx++] = repe;
-                }
-                break;
-            case 2:
-                // Alternate
-                byte[] alts = { (byte) next(), (byte) next() };
-                for (int i = 0; i < len; i++) {
-                    output[out_idx++] = alts[i & 1];
-                }
-                break;
-            case 3:
-                // Zero-fill
-                // Easy, since Java arrays are initialized to 0.
-                out_idx += len;
-                break;
-            case 4:
-                // Default repeat
-                repeat();
-                break;
-            case 5:
-                repeat(1, bit_flipped);
-                break;
-            case 6:
-                repeat(-1, null);
-                break;
+                case 0:
+                    // Literal
+                    System.arraycopy(data, address, output, out_idx, len);
+                    out_idx += len;
+                    address += len;
+                    break;
+                case 1:
+                    // Iterate
+                    byte repe = (byte) next();
+                    for (int i = 0; i < len; i++) {
+                        output[out_idx++] = repe;
+                    }
+                    break;
+                case 2:
+                    // Alternate
+                    byte[] alts = {(byte) next(), (byte) next()};
+                    for (int i = 0; i < len; i++) {
+                        output[out_idx++] = alts[i & 1];
+                    }
+                    break;
+                case 3:
+                    // Zero-fill
+                    // Easy, since Java arrays are initialized to 0.
+                    out_idx += len;
+                    break;
+                case 4:
+                    // Default repeat
+                    repeat();
+                    break;
+                case 5:
+                    repeat(1, bit_flipped);
+                    break;
+                case 6:
+                    repeat(-1, null);
             }
         }
 
@@ -163,22 +156,8 @@ public class Gen2Decmp {
         return data[address] & 0xFF;
     }
 
-    public int next() {
+    private int next() {
         return data[address++] & 0xFF;
-    }
-
-    private static byte[] flatten(byte[] planar) {
-        byte[] strips = new byte[planar.length * 4];
-        for (int j = 0; j < planar.length / 2; j++) {
-            int bottom = planar[j * 2] & 0xFF;
-            int top = planar[j * 2 + 1] & 0xFF;
-            byte[] strip = new byte[8];
-            for (int i = 7; i >= 0; i--) {
-                strip[7 - i] = (byte) (((bottom >>> i) & 1) + ((top * 2 >>> i) & 2));
-            }
-            System.arraycopy(strip, 0, strips, j * 8, 8);
-        }
-        return strips;
     }
 
 }

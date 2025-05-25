@@ -1,0 +1,83 @@
+To make the randomizer easy to understand (and thus develop), 
+methods that do similar things should be named similarly. 
+
+Below are templates for methods that relate to reading 
+and writing data from/to the ROM, as is done in the RomHandlers. 
+If you are writing new methods of that kind you SHOULD 
+follow these templates. More important/universal templates 
+are higher up.
+
+In the off-chance you find a need to write a new method(s) 
+and none of the templates below fit, think about it a second time, 
+and first then write your method with a name of your choosing. 
+After you've done so, add your new method(s) as a template(s) below. 
+That way someone who finds the need of a similar method in 
+the future can also use that template.
+
+This guiding document is WIP, and constructive criticism/discussion
+would be appreciated. It was made with primarily Gens I-III in mind, 
+so it is lacking in methods dealing with the file systems of later
+Generations. 
+Do also note that while the names were taken from extant code, 
+it is also an idealized image, with the actual code being messier.
+This is because this document was created as part of a refactoring 
+effort - sketching out what a desirable end result would be. 
+
+---------------------------------------
+
+void loadXs()	
+Used to load all of X in the ROM into 
+some data structure, which can then be accessed 
+by the randomizing methods.
+Somehow calls readX, directly or indirectly.
+Should only be called once per randomizing.
+E.g. loadPokemon, loadPokemonPalettes, loadTrainers.
+
+void saveXs()
+The reverse of loadX.
+Used to save all of X stored in some data
+structure, and which has possibly been randomized, 
+into the ROM.
+Somehow calls writeX, directly or indirectly.
+Should only be called once per randomizing.
+E.g. savePokemon, savePokemonPalettes, saveTrainers
+
+X readX(int offset)
+Reads data of type X at offset in the ROM, and returns it.
+Not for compressed data.
+
+void writeX(int offset, X x)
+Writes x to offset in the ROM.
+Typically calls something like XToBytes or x.toBytes, 
+followed up by writeBytes.
+Not for compressed data.
+
+byte[] XToBytes(X x)
+or
+byte[] X.toBytes()
+Converts the data x into a byte array representation of itself. 
+This representation may depend on the ROM/Generation, 
+which is why XToBytes . If it doesn't vary too much 
+(or at all, like Palettes), between generations, 
+X.toBytes() is preferred.
+
+int lengthOfXAt(int offset)
+Returns the amount of bytes taken up by the data 
+of type X, found at offset in the ROM. 
+If the data is compressed, returns the length 
+when it is compressed. 
+If the data has terminators, they are counted 
+towards the length.
+
+---------------------------------------
+
+StructureOfX GetXs()
+Returns the internal structure containing X. 
+Should NOT read from ROM, loadX exists for that purpose.
+
+setXs(StructureOfX xs)
+Sets the internal structure containing X.
+Should NOT write to ROM, saveX exists for that purpose. 
+Honestly, this might never have a need.
+
+ 

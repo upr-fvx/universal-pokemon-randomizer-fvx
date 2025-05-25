@@ -1,0 +1,467 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Grass/Cave on ROUTE 1, Rate = 25, MapIndex = 12,
+		Encounters = [ROUCOOL Lv3, ROUCOOL Lv4, RATTATA Lv2, RATTATA Lv3, ROUCOOL Lv2, ROUCOOL Lv3, ROUCOOL Lv5, RATTATA Lv4, ROUCOOL Lv6, ROUCOOL Lv7]]
+	[Name = Grass/Cave on ROUTE 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTATA Lv3, ROUCOOL Lv3, RATTATA Lv4, NIDORAN♂ Lv4, NIDORAN♀ Lv4, ROUCOOL Lv5, NIDORAN♂ Lv6, NIDORAN♀ Lv6, ROUCOOL Lv7, ROUCOOL Lv7]]
+	[Name = Grass/Cave on ROUTE 3, Rate = 20, MapIndex = 14,
+		Encounters = [PIAFABEC Lv8, PIAFABEC Lv9, FEROSINGE Lv9, PIAFABEC Lv10, SABELETTE Lv8, RATTATA Lv10, SABELETTE Lv10, RATTATA Lv12, PIAFABEC Lv11, PIAFABEC Lv12]]
+	[Name = Grass/Cave on ROUTE 4, Rate = 20, MapIndex = 15,
+		Encounters = [PIAFABEC Lv8, PIAFABEC Lv9, FEROSINGE Lv9, PIAFABEC Lv10, SABELETTE Lv8, RATTATA Lv10, SABELETTE Lv10, RATTATA Lv12, PIAFABEC Lv11, PIAFABEC Lv12]]
+	[Name = Grass/Cave on ROUTE 5, Rate = 15, MapIndex = 16,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv14, ABRA Lv7, ROUCOOL Lv16, RATTATA Lv16, ROUCOOL Lv17, ROUCOUPS Lv17, RONDOUDOU Lv3, RONDOUDOU Lv5, RONDOUDOU Lv7]]
+	[Name = Grass/Cave on ROUTE 6, Rate = 15, MapIndex = 17,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv14, ABRA Lv7, ROUCOOL Lv16, RATTATA Lv16, ROUCOOL Lv17, ROUCOUPS Lv17, RONDOUDOU Lv3, RONDOUDOU Lv5, RONDOUDOU Lv7]]
+	[Name = Surfing on ROUTE 6, Rate = 3, MapIndex = 17,
+		Encounters = [PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, AKWAKWAK Lv15, AKWAKWAK Lv20]]
+	[Name = Grass/Cave on ROUTE 7, Rate = 15, MapIndex = 18,
+		Encounters = [ROUCOOL Lv20, ROUCOOL Lv22, RATTATA Lv20, ABRA Lv15, ABRA Lv19, ROUCOUPS Lv24, ABRA Lv26, RONDOUDOU Lv19, RONDOUDOU Lv24, RONDOUDOU Lv24]]
+	[Name = Grass/Cave on ROUTE 8, Rate = 15, MapIndex = 19,
+		Encounters = [ROUCOOL Lv20, ROUCOOL Lv22, RATTATA Lv20, ABRA Lv15, ABRA Lv19, ROUCOUPS Lv24, RONDOUDOU Lv19, RONDOUDOU Lv24, KADABRA Lv20, KADABRA Lv27]]
+	[Name = Grass/Cave on ROUTE 9, Rate = 15, MapIndex = 20,
+		Encounters = [NIDORAN♂ Lv16, NIDORAN♀ Lv16, RATTATA Lv18, NIDORAN♂ Lv18, NIDORAN♀ Lv18, PIAFABEC Lv17, NIDORINO Lv18, NIDORINA Lv18, RATTATAC Lv20, RAPASDEPIC Lv19]]
+	[Name = Grass/Cave on ROUTE 10, Rate = 15, MapIndex = 21,
+		Encounters = [MAGNETI Lv16, RATTATA Lv18, MAGNETI Lv18, MAGNETI Lv20, NIDORAN♂ Lv17, NIDORAN♀ Lv17, MAGNETI Lv22, RATTATAC Lv20, MACHOC Lv16, MACHOC Lv18]]
+	[Name = Grass/Cave on ROUTE 11, Rate = 15, MapIndex = 22,
+		Encounters = [ROUCOOL Lv16, RATTATA Lv15, ROUCOOL Lv18, SOPORIFIK Lv15, RATTATA Lv17, SOPORIFIK Lv17, ROUCOUPS Lv18, ROUCOUPS Lv20, SOPORIFIK Lv19, RATTATAC Lv17]]
+	[Name = Grass/Cave on ROUTE 12, Rate = 15, MapIndex = 23,
+		Encounters = [MYSTHERBE Lv25, CHETIFLOR Lv25, ROUCOOL Lv28, ROUCOUPS Lv28, MYSTHERBE Lv27, CHETIFLOR Lv27, ORTIDE Lv29, BOUSTIFLOR Lv29, CANARTICHO Lv26, CANARTICHO Lv31]]
+	[Name = Surfing on ROUTE 12, Rate = 3, MapIndex = 23,
+		Encounters = [RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, FLAGADOSS Lv15, FLAGADOSS Lv20]]
+	[Name = Grass/Cave on ROUTE 13, Rate = 15, MapIndex = 24,
+		Encounters = [MYSTHERBE Lv25, CHETIFLOR Lv25, ROUCOUPS Lv28, ROUCOOL Lv28, MYSTHERBE Lv27, CHETIFLOR Lv27, ORTIDE Lv29, BOUSTIFLOR Lv29, CANARTICHO Lv26, CANARTICHO Lv31]]
+	[Name = Surfing on ROUTE 13, Rate = 3, MapIndex = 24,
+		Encounters = [RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, FLAGADOSS Lv15, FLAGADOSS Lv20]]
+	[Name = Grass/Cave on ROUTE 14, Rate = 15, MapIndex = 25,
+		Encounters = [MYSTHERBE Lv26, CHETIFLOR Lv26, MIMITOSS Lv24, ROUCOUPS Lv30, MYSTHERBE Lv28, CHETIFLOR Lv28, ORTIDE Lv30, BOUSTIFLOR Lv30, MIMITOSS Lv27, AEROMITE Lv30]]
+	[Name = Grass/Cave on ROUTE 15, Rate = 15, MapIndex = 26,
+		Encounters = [MYSTHERBE Lv26, CHETIFLOR Lv26, MIMITOSS Lv24, ROUCOUPS Lv32, MYSTHERBE Lv28, CHETIFLOR Lv28, ORTIDE Lv30, BOUSTIFLOR Lv30, MIMITOSS Lv27, AEROMITE Lv30]]
+	[Name = Grass/Cave on ROUTE 16, Rate = 25, MapIndex = 27,
+		Encounters = [PIAFABEC Lv22, DODUO Lv22, RATTATA Lv23, DODUO Lv24, RATTATA Lv24, DODUO Lv26, PIAFABEC Lv23, RAPASDEPIC Lv24, RATTATAC Lv25, RATTATAC Lv26]]
+	[Name = Grass/Cave on ROUTE 17, Rate = 25, MapIndex = 28,
+		Encounters = [DODUO Lv26, RAPASDEPIC Lv27, DODUO Lv27, DODUO Lv28, PONYTA Lv28, PONYTA Lv30, RAPASDEPIC Lv29, DODUO Lv28, PONYTA Lv32, DODRIO Lv29]]
+	[Name = Grass/Cave on ROUTE 18, Rate = 25, MapIndex = 29,
+		Encounters = [PIAFABEC Lv22, DODUO Lv22, RATTATA Lv23, DODUO Lv24, RATTATA Lv24, DODUO Lv26, PIAFABEC Lv23, RAPASDEPIC Lv24, RATTATAC Lv25, RATTATAC Lv26]]
+	[Name = Surfing on CHENAL 19, Rate = 5, MapIndex = 30,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Surfing on CHENAL 20, Rate = 5, MapIndex = 31,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on CHENAL 21, Rate = 25, MapIndex = 32,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv13, ROUCOOL Lv13, ROUCOOL Lv11, ROUCOOL Lv17, RATTATA Lv15, RATTATAC Lv15, ROUCOUPS Lv17, ROUCOUPS Lv19, ROUCOUPS Lv15]]
+	[Name = Surfing on CHENAL 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on ROUTE 22, Rate = 25, MapIndex = 33,
+		Encounters = [NIDORAN♂ Lv2, NIDORAN♀ Lv2, FEROSINGE Lv3, RATTATA Lv3, NIDORAN♂ Lv4, NIDORAN♀ Lv4, FEROSINGE Lv5, PIAFABEC Lv2, PIAFABEC Lv4, PIAFABEC Lv6]]
+	[Name = Grass/Cave on ROUTE 23, Rate = 10, MapIndex = 34,
+		Encounters = [NIDORINO Lv41, NIDORINA Lv41, FEROSINGE Lv36, NIDORINO Lv44, NIDORINA Lv44, RAPASDEPIC Lv40, FEROSINGE Lv41, RAPASDEPIC Lv45, COLOSSINGE Lv41, COLOSSINGE Lv46]]
+	[Name = Grass/Cave on ROUTE 24, Rate = 25, MapIndex = 35,
+		Encounters = [MYSTHERBE Lv12, CHETIFLOR Lv12, ROUCOOL Lv13, MYSTHERBE Lv14, CHETIFLOR Lv14, ROUCOOL Lv15, MIMITOSS Lv13, MIMITOSS Lv16, ROUCOOL Lv17, ROUCOUPS Lv17]]
+	[Name = Grass/Cave on ROUTE 25, Rate = 15, MapIndex = 36,
+		Encounters = [MYSTHERBE Lv12, CHETIFLOR Lv12, ROUCOOL Lv13, MYSTHERBE Lv14, CHETIFLOR Lv14, ROUCOOL Lv15, MIMITOSS Lv13, MIMITOSS Lv16, ROUCOOL Lv17, ROUCOUPS Lv17]]
+	[Name = Grass/Cave on FORET DE JADE (1), Rate = 25, MapIndex = 51,
+		Encounters = [CHENIPAN Lv3, CHRYSACIER Lv4, CHENIPAN Lv4, CHENIPAN Lv5, ROUCOOL Lv4, ROUCOOL Lv6, CHENIPAN Lv6, CHRYSACIER Lv6, ROUCOOL Lv8, ROUCOUPS Lv9]]
+	[Name = Grass/Cave on MONT SELENITE (1), Rate = 10, MapIndex = 59,
+		Encounters = [NOSFERAPTI Lv8, NOSFERAPTI Lv9, RACAILLOU Lv10, NOSFERAPTI Lv6, NOSFERAPTI Lv7, NOSFERAPTI Lv10, RACAILLOU Lv10, NOSFERAPTI Lv11, SABELETTE Lv12, MELOFEE Lv11]]
+	[Name = Grass/Cave on MONT SELENITE (2), Rate = 10, MapIndex = 60,
+		Encounters = [NOSFERAPTI Lv8, NOSFERAPTI Lv9, NOSFERAPTI Lv10, RACAILLOU Lv10, RACAILLOU Lv11, NOSFERAPTI Lv11, PARAS Lv9, PARAS Lv11, MELOFEE Lv10, MELOFEE Lv12]]
+	[Name = Grass/Cave on MONT SELENITE (3), Rate = 10, MapIndex = 61,
+		Encounters = [NOSFERAPTI Lv10, RACAILLOU Lv11, PARAS Lv13, NOSFERAPTI Lv11, NOSFERAPTI Lv11, NOSFERAPTI Lv12, NOSFERAPTI Lv13, MELOFEE Lv9, MELOFEE Lv11, MELOFEE Lv13]]
+	[Name = Grass/Cave on GROTTE (2), Rate = 15, MapIndex = 82,
+		Encounters = [NOSFERAPTI Lv15, RACAILLOU Lv16, NOSFERAPTI Lv17, NOSFERAPTI Lv19, RACAILLOU Lv18, RACAILLOU Lv20, NOSFERAPTI Lv21, MACHOC Lv17, MACHOC Lv19, MACHOC Lv21]]
+	[Name = Grass/Cave on CENTRALE (1), Rate = 10, MapIndex = 83,
+		Encounters = [MAGNETI Lv30, MAGNETI Lv35, MAGNETON Lv33, VOLTORBE Lv33, VOLTORBE Lv37, TADMORV Lv33, TADMORV Lv37, MAGNETON Lv38, GROTADMORV Lv33, GROTADMORV Lv37]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (1), Rate = 15, MapIndex = 108,
+		Encounters = [RACAILLOU Lv26, RACAILLOU Lv31, RACAILLOU Lv36, NOSFERAPTI Lv39, NOSFERAPTI Lv44, RACAILLOU Lv41, ONIX Lv43, ONIX Lv45, GRAVALANCH Lv41, GRAVALANCH Lv47]]
+	[Name = Grass/Cave on TOUR [POKé]MON (3), Rate = 10, MapIndex = 144,
+		Encounters = [FANTOMINUS Lv20, FANTOMINUS Lv21, FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv19, FANTOMINUS Lv18, FANTOMINUS Lv25, SPECTRUM Lv20, SPECTRUM Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (4), Rate = 10, MapIndex = 145,
+		Encounters = [FANTOMINUS Lv20, FANTOMINUS Lv21, FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv19, FANTOMINUS Lv18, FANTOMINUS Lv25, SPECTRUM Lv20, SPECTRUM Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (5), Rate = 15, MapIndex = 146,
+		Encounters = [FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv21, OSSELAIT Lv20, FANTOMINUS Lv27, SPECTRUM Lv22, SPECTRUM Lv27]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (6), Rate = 15, MapIndex = 147,
+		Encounters = [FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv21, OSSELAIT Lv22, FANTOMINUS Lv27, SPECTRUM Lv22, SPECTRUM Lv27]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (7), Rate = 20, MapIndex = 148,
+		Encounters = [FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv27, FANTOMINUS Lv28, FANTOMINUS Lv23, OSSELAIT Lv24, FANTOMINUS Lv29, SPECTRUM Lv24, SPECTRUM Lv29]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ILES ECUME (1), Rate = 10, MapIndex = 159,
+		Encounters = [NOSFERAPTI Lv27, KRABBY Lv26, NOSFERAPTI Lv36, KRABBY Lv28, NOSFERALTO Lv27, RAMOLOSS Lv29, NOSFERAPTI Lv18, KRABBOSS Lv28, OTARIA Lv22, OTARIA Lv26]]
+	[Name = Grass/Cave on ILES ECUME (2), Rate = 10, MapIndex = 160,
+		Encounters = [NOSFERAPTI Lv27, KRABBY Lv27, NOSFERAPTI Lv36, NOSFERALTO Lv27, KRABBOSS Lv28, OTARIA Lv24, KRABBY Lv29, NOSFERALTO Lv36, RAMOLOSS Lv31, FLAGADOSS Lv31]]
+	[Name = Grass/Cave on ILES ECUME (3), Rate = 10, MapIndex = 161,
+		Encounters = [NOSFERALTO Lv27, NOSFERAPTI Lv36, KRABBY Lv29, NOSFERAPTI Lv27, KRABBOSS Lv30, OTARIA Lv26, KRABBY Lv31, OTARIA Lv30, LAMANTINE Lv28, LAMANTINE Lv32]]
+	[Name = Surfing on ILES ECUME (3), Rate = 5, MapIndex = 161,
+		Encounters = [TENTACOOL Lv25, TENTACOOL Lv30, TENTACOOL Lv20, STARI Lv30, TENTACOOL Lv35, STARI Lv30, TENTACOOL Lv40, STARI Lv30, STARI Lv30, STARI Lv30]]
+	[Name = Grass/Cave on ILES ECUME (4), Rate = 10, MapIndex = 162,
+		Encounters = [NOSFERALTO Lv36, NOSFERAPTI Lv36, KRABBY Lv30, KRABBOSS Lv32, OTARIA Lv28, OTARIA Lv32, NOSFERALTO Lv27, NOSFERAPTI Lv45, LAMANTINE Lv30, LAMANTINE Lv34]]
+	[Name = Surfing on ILES ECUME (4), Rate = 5, MapIndex = 162,
+		Encounters = [TENTACOOL Lv25, TENTACOOL Lv30, TENTACOOL Lv20, STARI Lv30, TENTACOOL Lv35, STARI Lv30, TENTACOOL Lv40, STARI Lv30, STARI Lv30, STARI Lv30]]
+	[Name = Grass/Cave on MANOIR [pk] (1), Rate = 10, MapIndex = 165,
+		Encounters = [RATTATA Lv34, RATTATAC Lv34, TADMORV Lv23, CANINOS Lv26, RATTATA Lv37, RATTATAC Lv37, CANINOS Lv30, TADMORV Lv26, CANINOS Lv34, CANINOS Lv38]]
+	[Name = Grass/Cave on ILES ECUME (5), Rate = 15, MapIndex = 192,
+		Encounters = [NOSFERAPTI Lv18, KRABBY Lv25, KRABBY Lv27, NOSFERAPTI Lv27, NOSFERAPTI Lv36, RAMOLOSS Lv28, RAMOLOSS Lv30, NOSFERAPTI Lv9, NOSFERALTO Lv27, NOSFERALTO Lv36]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (2), Rate = 10, MapIndex = 194,
+		Encounters = [RACAILLOU Lv31, RACAILLOU Lv36, RACAILLOU Lv41, NOSFERAPTI Lv44, NOSFERALTO Lv39, GRAVALANCH Lv44, ONIX Lv45, ONIX Lv47, MACHOPEUR Lv39, MACHOPEUR Lv42]]
+	[Name = Grass/Cave on CAVE TAUPIQUEUR (1), Rate = 20, MapIndex = 197,
+		Encounters = [TAUPIQUEUR Lv18, TAUPIQUEUR Lv19, TAUPIQUEUR Lv17, TAUPIQUEUR Lv20, TAUPIQUEUR Lv16, TAUPIQUEUR Lv15, TAUPIQUEUR Lv21, TAUPIQUEUR Lv22, TRIOPIKEUR Lv29, TRIOPIKEUR Lv31]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (3), Rate = 15, MapIndex = 198,
+		Encounters = [RACAILLOU Lv36, NOSFERALTO Lv44, RACAILLOU Lv41, ONIX Lv49, RACAILLOU Lv46, GRAVALANCH Lv41, MACHOPEUR Lv42, MACHOPEUR Lv45, GRAVALANCH Lv47, GRAVALANCH Lv47]]
+	[Name = Grass/Cave on MANOIR [pk] (2), Rate = 10, MapIndex = 214,
+		Encounters = [RATTATA Lv37, RATTATAC Lv37, TADMORV Lv26, TADMORV Lv29, RATTATA Lv40, RATTATAC Lv40, TADMORV Lv32, TADMORV Lv35, GROTADMORV Lv35, GROTADMORV Lv38]]
+	[Name = Grass/Cave on MANOIR [pk] (3), Rate = 10, MapIndex = 215,
+		Encounters = [RATTATA Lv40, RATTATAC Lv40, TADMORV Lv32, TADMORV Lv35, RATTATA Lv43, RATTATAC Lv43, TADMORV Lv38, TADMORV Lv38, GROTADMORV Lv38, GROTADMORV Lv41]]
+	[Name = Grass/Cave on MANOIR [pk] (4), Rate = 10, MapIndex = 216,
+		Encounters = [TADMORV Lv35, TADMORV Lv38, RATTATAC Lv37, RATTATAC Lv40, GROTADMORV Lv41, RATTATAC Lv43, METAMORPH Lv24, RATTATAC Lv46, METAMORPH Lv18, METAMORPH Lv12]]
+	[Name = Grass/Cave on PARC SAFARI (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♂ Lv21, NIDORAN♀ Lv29, NOEUNOEUF Lv22, TAUROS Lv21, NIDORINA Lv32, OSSELAIT Lv19, NOEUNOEUF Lv26, OSSATUEUR Lv24, LEVEINARD Lv21, INSECATEUR Lv15]]
+	[Name = Grass/Cave on PARC SAFARI (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♂ Lv36, NIDORAN♀ Lv14, NOEUNOEUF Lv20, RHINOCORNE Lv25, NIDORINA Lv23, KANGOUREX Lv28, OSSELAIT Lv16, KANGOUREX Lv33, INSECATEUR Lv25, SCARABRUTE Lv15]]
+	[Name = Grass/Cave on PARC SAFARI (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♂ Lv29, NIDORAN♀ Lv21, NOEUNOEUF Lv22, TAUROS Lv21, NIDORINO Lv32, OSSELAIT Lv19, NOEUNOEUF Lv26, OSSATUEUR Lv24, SCARABRUTE Lv25, SAQUEDENEU Lv27]]
+	[Name = Grass/Cave on PARC SAFARI (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♂ Lv14, NIDORAN♀ Lv36, NOEUNOEUF Lv24, RHINOCORNE Lv20, NIDORINO Lv23, PARASECT Lv27, PARAS Lv27, PARASECT Lv32, SAQUEDENEU Lv22, LEVEINARD Lv7]]
+	[Name = Grass/Cave on GROTTE INCONNUE (1), Rate = 15, MapIndex = 226,
+		Encounters = [NOSFERALTO Lv52, NOSFERALTO Lv57, GRAVALANCH Lv50, SABLAIREAU Lv56, RHINOCORNE Lv50, METAMORPH Lv60, ORTIDE Lv58, BOUSTIFLOR Lv58, RHINOFEROS Lv60, RHINOFEROS Lv58]]
+	[Name = Grass/Cave on GROTTE INCONNUE (2), Rate = 25, MapIndex = 227,
+		Encounters = [NOSFERALTO Lv54, NOSFERALTO Lv59, GRAVALANCH Lv55, RHINOCORNE Lv52, RHINOFEROS Lv62, METAMORPH Lv60, LEVEINARD Lv56, METAMORPH Lv65, EXCELANGUE Lv55, EXCELANGUE Lv50]]
+	[Name = Grass/Cave on GROTTE INCONNUE (3), Rate = 10, MapIndex = 228,
+		Encounters = [NOSFERALTO Lv50, NOSFERALTO Lv55, GRAVALANCH Lv45, ORTIDE Lv55, BOUSTIFLOR Lv55, SABLAIREAU Lv52, AEROMITE Lv54, PARASECT Lv54, METAMORPH Lv55, METAMORPH Lv60]]
+	[Name = Grass/Cave on GROTTE (3), Rate = 15, MapIndex = 232,
+		Encounters = [NOSFERAPTI Lv20, RACAILLOU Lv17, MACHOC Lv18, NOSFERAPTI Lv21, NOSFERAPTI Lv22, RACAILLOU Lv21, MACHOC Lv20, ONIX Lv14, ONIX Lv18, ONIX Lv22]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [MAGICARPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [POISSIRENE Lv10, PTITARD Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on BOURG PALETTE, Rate = 0, MapIndex = 0,
+		Encounters = [STARI Lv10, TENTACOOL Lv10, STARI Lv5, TENTACOOL Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on JADIELLE, Rate = 0, MapIndex = 1,
+		Encounters = [PTITARD Lv5, PTITARD Lv10, PTITARD Lv15, PTITARD Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZURIA, Rate = 0, MapIndex = 3,
+		Encounters = [POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30, POISSOROY Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CARMIN SUR MER, Rate = 0, MapIndex = 5,
+		Encounters = [TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv10, HYPOTREMPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CELADOPOLE, Rate = 0, MapIndex = 6,
+		Encounters = [POISSIRENE Lv5, POISSIRENE Lv10, POISSIRENE Lv15, POISSIRENE Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARMANIE, Rate = 0, MapIndex = 7,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, LEVIATOR Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CRAMOIS'ILE, Rate = 0, MapIndex = 8,
+		Encounters = [STARI Lv15, TENTACOOL Lv15, STARI Lv10, TENTACOOL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 4, Rate = 0, MapIndex = 15,
+		Encounters = [POISSIRENE Lv20, POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 6, Rate = 0, MapIndex = 17,
+		Encounters = [POISSIRENE Lv5, POISSIRENE Lv10, POISSIRENE Lv15, POISSIRENE Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 24, Rate = 0, MapIndex = 35,
+		Encounters = [POISSIRENE Lv20, POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 25, Rate = 0, MapIndex = 36,
+		Encounters = [KRABBY Lv10, KRABBY Lv15, KRABBOSS Lv15, KRABBOSS Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 10, Rate = 0, MapIndex = 21,
+		Encounters = [KRABBY Lv15, KRABBY Lv20, HYPOTREMPE Lv10, KRABBOSS Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 11, Rate = 0, MapIndex = 22,
+		Encounters = [TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv10, HYPOTREMPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 12, Rate = 0, MapIndex = 23,
+		Encounters = [HYPOTREMPE Lv20, HYPOTREMPE Lv25, HYPOCEAN Lv25, HYPOCEAN Lv35]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 13, Rate = 0, MapIndex = 24,
+		Encounters = [HYPOTREMPE Lv15, HYPOTREMPE Lv20, TENTACOOL Lv10, HYPOCEAN Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 17, Rate = 0, MapIndex = 28,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv15, KOKIYAS Lv25, KOKIYAS Lv35]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 18, Rate = 0, MapIndex = 29,
+		Encounters = [TENTACOOL Lv15, KOKIYAS Lv20, KOKIYAS Lv30, KOKIYAS Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 19, Rate = 0, MapIndex = 30,
+		Encounters = [TENTACOOL Lv15, STARI Lv20, TENTACOOL Lv30, TENTACRUEL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 20, Rate = 0, MapIndex = 31,
+		Encounters = [TENTACOOL Lv20, TENTACRUEL Lv20, STARI Lv30, TENTACRUEL Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 21, Rate = 0, MapIndex = 32,
+		Encounters = [TENTACOOL Lv15, STARI Lv20, TENTACOOL Lv30, TENTACRUEL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 22, Rate = 0, MapIndex = 33,
+		Encounters = [PTITARD Lv5, PTITARD Lv10, PTITARD Lv15, TETARTE Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 23, Rate = 0, MapIndex = 34,
+		Encounters = [PTITARD Lv25, PTITARD Lv30, TETARTE Lv30, TETARTE Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CARMIN SUR MER (Building), Rate = 0, MapIndex = 94,
+		Encounters = [TENTACOOL Lv10, TENTACOOL Lv15, STARI Lv15, KOKIYAS Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (5), Rate = 0, MapIndex = 220,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MINIDRACO Lv10, DRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (2), Rate = 0, MapIndex = 217,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (3), Rate = 0, MapIndex = 218,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (4), Rate = 0, MapIndex = 219,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ILES ECUME (3), Rate = 0, MapIndex = 161,
+		Encounters = [KRABBY Lv25, STARI Lv20, KRABBOSS Lv35, STARI Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ILES ECUME (4), Rate = 0, MapIndex = 162,
+		Encounters = [KRABBY Lv25, STARI Lv20, KRABBOSS Lv35, STARI Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on GROTTE INCONNUE (3), Rate = 0, MapIndex = 228,
+		Encounters = [POISSIRENE Lv25, POISSOROY Lv35, POISSOROY Lv45, POISSOROY Lv55]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on GROTTE INCONNUE (2), Rate = 0, MapIndex = 227,
+		Encounters = [POISSIRENE Lv30, POISSOROY Lv40, POISSOROY Lv50, POISSOROY Lv60]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Grass/Cave on ROUTE 1, Rate = 25, MapIndex = 12,
+		Encounters = [ROUCOOL Lv3, ROUCOOL Lv4, RATTATA Lv2, RATTATA Lv3, ROUCOOL Lv2, ROUCOOL Lv3, ROUCOOL Lv5, RATTATA Lv4, ROUCOOL Lv6, ROUCOOL Lv7]]
+	[Name = Grass/Cave on ROUTE 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTATA Lv3, ROUCOOL Lv3, RATTATA Lv4, NIDORAN♂ Lv4, NIDORAN♀ Lv4, ROUCOOL Lv5, NIDORAN♂ Lv6, NIDORAN♀ Lv6, ROUCOOL Lv7, ROUCOOL Lv7]]
+	[Name = Grass/Cave on ROUTE 3, Rate = 20, MapIndex = 14,
+		Encounters = [PIAFABEC Lv8, PIAFABEC Lv9, FEROSINGE Lv9, PIAFABEC Lv10, SABELETTE Lv8, RATTATA Lv10, SABELETTE Lv10, RATTATA Lv12, PIAFABEC Lv11, PIAFABEC Lv12]]
+	[Name = Grass/Cave on ROUTE 4, Rate = 20, MapIndex = 15,
+		Encounters = [PIAFABEC Lv8, PIAFABEC Lv9, FEROSINGE Lv9, PIAFABEC Lv10, SABELETTE Lv8, RATTATA Lv10, SABELETTE Lv10, RATTATA Lv12, PIAFABEC Lv11, PIAFABEC Lv12]]
+	[Name = Grass/Cave on ROUTE 5, Rate = 15, MapIndex = 16,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv14, ABRA Lv7, ROUCOOL Lv16, RATTATA Lv16, ROUCOOL Lv17, ROUCOUPS Lv17, RONDOUDOU Lv3, RONDOUDOU Lv5, RONDOUDOU Lv7]]
+	[Name = Grass/Cave on ROUTE 6, Rate = 15, MapIndex = 17,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv14, ABRA Lv7, ROUCOOL Lv16, RATTATA Lv16, ROUCOOL Lv17, ROUCOUPS Lv17, RONDOUDOU Lv3, RONDOUDOU Lv5, RONDOUDOU Lv7]]
+	[Name = Surfing on ROUTE 6, Rate = 3, MapIndex = 17,
+		Encounters = [PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, PSYKOKWAK Lv15, AKWAKWAK Lv15, AKWAKWAK Lv20]]
+	[Name = Grass/Cave on ROUTE 7, Rate = 15, MapIndex = 18,
+		Encounters = [ROUCOOL Lv20, ROUCOOL Lv22, RATTATA Lv20, ABRA Lv15, ABRA Lv19, ROUCOUPS Lv24, ABRA Lv26, RONDOUDOU Lv19, RONDOUDOU Lv24, RONDOUDOU Lv24]]
+	[Name = Grass/Cave on ROUTE 8, Rate = 15, MapIndex = 19,
+		Encounters = [ROUCOOL Lv20, ROUCOOL Lv22, RATTATA Lv20, ABRA Lv15, ABRA Lv19, ROUCOUPS Lv24, RONDOUDOU Lv19, RONDOUDOU Lv24, KADABRA Lv20, KADABRA Lv27]]
+	[Name = Grass/Cave on ROUTE 9, Rate = 15, MapIndex = 20,
+		Encounters = [NIDORAN♂ Lv16, NIDORAN♀ Lv16, RATTATA Lv18, NIDORAN♂ Lv18, NIDORAN♀ Lv18, PIAFABEC Lv17, NIDORINO Lv18, NIDORINA Lv18, RATTATAC Lv20, RAPASDEPIC Lv19]]
+	[Name = Grass/Cave on ROUTE 10, Rate = 15, MapIndex = 21,
+		Encounters = [MAGNETI Lv16, RATTATA Lv18, MAGNETI Lv18, MAGNETI Lv20, NIDORAN♂ Lv17, NIDORAN♀ Lv17, MAGNETI Lv22, RATTATAC Lv20, MACHOC Lv16, MACHOC Lv18]]
+	[Name = Grass/Cave on ROUTE 11, Rate = 15, MapIndex = 22,
+		Encounters = [ROUCOOL Lv16, RATTATA Lv15, ROUCOOL Lv18, SOPORIFIK Lv15, RATTATA Lv17, SOPORIFIK Lv17, ROUCOUPS Lv18, ROUCOUPS Lv20, SOPORIFIK Lv19, RATTATAC Lv17]]
+	[Name = Grass/Cave on ROUTE 12, Rate = 15, MapIndex = 23,
+		Encounters = [MYSTHERBE Lv25, CHETIFLOR Lv25, ROUCOOL Lv28, ROUCOUPS Lv28, MYSTHERBE Lv27, CHETIFLOR Lv27, ORTIDE Lv29, BOUSTIFLOR Lv29, CANARTICHO Lv26, CANARTICHO Lv31]]
+	[Name = Surfing on ROUTE 12, Rate = 3, MapIndex = 23,
+		Encounters = [RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, FLAGADOSS Lv15, FLAGADOSS Lv20]]
+	[Name = Grass/Cave on ROUTE 13, Rate = 15, MapIndex = 24,
+		Encounters = [MYSTHERBE Lv25, CHETIFLOR Lv25, ROUCOUPS Lv28, ROUCOOL Lv28, MYSTHERBE Lv27, CHETIFLOR Lv27, ORTIDE Lv29, BOUSTIFLOR Lv29, CANARTICHO Lv26, CANARTICHO Lv31]]
+	[Name = Surfing on ROUTE 13, Rate = 3, MapIndex = 24,
+		Encounters = [RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, RAMOLOSS Lv15, FLAGADOSS Lv15, FLAGADOSS Lv20]]
+	[Name = Grass/Cave on ROUTE 14, Rate = 15, MapIndex = 25,
+		Encounters = [MYSTHERBE Lv26, CHETIFLOR Lv26, MIMITOSS Lv24, ROUCOUPS Lv30, MYSTHERBE Lv28, CHETIFLOR Lv28, ORTIDE Lv30, BOUSTIFLOR Lv30, MIMITOSS Lv27, AEROMITE Lv30]]
+	[Name = Grass/Cave on ROUTE 15, Rate = 15, MapIndex = 26,
+		Encounters = [MYSTHERBE Lv26, CHETIFLOR Lv26, MIMITOSS Lv24, ROUCOUPS Lv32, MYSTHERBE Lv28, CHETIFLOR Lv28, ORTIDE Lv30, BOUSTIFLOR Lv30, MIMITOSS Lv27, AEROMITE Lv30]]
+	[Name = Grass/Cave on ROUTE 16, Rate = 25, MapIndex = 27,
+		Encounters = [PIAFABEC Lv22, DODUO Lv22, RATTATA Lv23, DODUO Lv24, RATTATA Lv24, DODUO Lv26, PIAFABEC Lv23, RAPASDEPIC Lv24, RATTATAC Lv25, RATTATAC Lv26]]
+	[Name = Grass/Cave on ROUTE 17, Rate = 25, MapIndex = 28,
+		Encounters = [DODUO Lv26, RAPASDEPIC Lv27, DODUO Lv27, DODUO Lv28, PONYTA Lv28, PONYTA Lv30, RAPASDEPIC Lv29, DODUO Lv28, PONYTA Lv32, DODRIO Lv29]]
+	[Name = Grass/Cave on ROUTE 18, Rate = 25, MapIndex = 29,
+		Encounters = [PIAFABEC Lv22, DODUO Lv22, RATTATA Lv23, DODUO Lv24, RATTATA Lv24, DODUO Lv26, PIAFABEC Lv23, RAPASDEPIC Lv24, RATTATAC Lv25, RATTATAC Lv26]]
+	[Name = Surfing on CHENAL 19, Rate = 5, MapIndex = 30,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Surfing on CHENAL 20, Rate = 5, MapIndex = 31,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on CHENAL 21, Rate = 25, MapIndex = 32,
+		Encounters = [ROUCOOL Lv15, RATTATA Lv13, ROUCOOL Lv13, ROUCOOL Lv11, ROUCOOL Lv17, RATTATA Lv15, RATTATAC Lv15, ROUCOUPS Lv17, ROUCOUPS Lv19, ROUCOUPS Lv15]]
+	[Name = Surfing on CHENAL 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on ROUTE 22, Rate = 25, MapIndex = 33,
+		Encounters = [NIDORAN♂ Lv2, NIDORAN♀ Lv2, FEROSINGE Lv3, RATTATA Lv3, NIDORAN♂ Lv4, NIDORAN♀ Lv4, FEROSINGE Lv5, PIAFABEC Lv2, PIAFABEC Lv4, PIAFABEC Lv6]]
+	[Name = Grass/Cave on ROUTE 23, Rate = 10, MapIndex = 34,
+		Encounters = [NIDORINO Lv41, NIDORINA Lv41, FEROSINGE Lv36, NIDORINO Lv44, NIDORINA Lv44, RAPASDEPIC Lv40, FEROSINGE Lv41, RAPASDEPIC Lv45, COLOSSINGE Lv41, COLOSSINGE Lv46]]
+	[Name = Grass/Cave on ROUTE 24, Rate = 25, MapIndex = 35,
+		Encounters = [MYSTHERBE Lv12, CHETIFLOR Lv12, ROUCOOL Lv13, MYSTHERBE Lv14, CHETIFLOR Lv14, ROUCOOL Lv15, MIMITOSS Lv13, MIMITOSS Lv16, ROUCOOL Lv17, ROUCOUPS Lv17]]
+	[Name = Grass/Cave on ROUTE 25, Rate = 15, MapIndex = 36,
+		Encounters = [MYSTHERBE Lv12, CHETIFLOR Lv12, ROUCOOL Lv13, MYSTHERBE Lv14, CHETIFLOR Lv14, ROUCOOL Lv15, MIMITOSS Lv13, MIMITOSS Lv16, ROUCOOL Lv17, ROUCOUPS Lv17]]
+	[Name = Grass/Cave on FORET DE JADE (1), Rate = 25, MapIndex = 51,
+		Encounters = [CHENIPAN Lv3, CHRYSACIER Lv4, CHENIPAN Lv4, CHENIPAN Lv5, ROUCOOL Lv4, ROUCOOL Lv6, CHENIPAN Lv6, CHRYSACIER Lv6, ROUCOOL Lv8, ROUCOUPS Lv9]]
+	[Name = Grass/Cave on MONT SELENITE (1), Rate = 10, MapIndex = 59,
+		Encounters = [NOSFERAPTI Lv8, NOSFERAPTI Lv9, RACAILLOU Lv10, NOSFERAPTI Lv6, NOSFERAPTI Lv7, NOSFERAPTI Lv10, RACAILLOU Lv10, NOSFERAPTI Lv11, SABELETTE Lv12, MELOFEE Lv11]]
+	[Name = Grass/Cave on MONT SELENITE (2), Rate = 10, MapIndex = 60,
+		Encounters = [NOSFERAPTI Lv8, NOSFERAPTI Lv9, NOSFERAPTI Lv10, RACAILLOU Lv10, RACAILLOU Lv11, NOSFERAPTI Lv11, PARAS Lv9, PARAS Lv11, MELOFEE Lv10, MELOFEE Lv12]]
+	[Name = Grass/Cave on MONT SELENITE (3), Rate = 10, MapIndex = 61,
+		Encounters = [NOSFERAPTI Lv10, RACAILLOU Lv11, PARAS Lv13, NOSFERAPTI Lv11, NOSFERAPTI Lv11, NOSFERAPTI Lv12, NOSFERAPTI Lv13, MELOFEE Lv9, MELOFEE Lv11, MELOFEE Lv13]]
+	[Name = Grass/Cave on GROTTE (2), Rate = 15, MapIndex = 82,
+		Encounters = [NOSFERAPTI Lv15, RACAILLOU Lv16, NOSFERAPTI Lv17, NOSFERAPTI Lv19, RACAILLOU Lv18, RACAILLOU Lv20, NOSFERAPTI Lv21, MACHOC Lv17, MACHOC Lv19, MACHOC Lv21]]
+	[Name = Grass/Cave on CENTRALE (1), Rate = 10, MapIndex = 83,
+		Encounters = [MAGNETI Lv30, MAGNETI Lv35, MAGNETON Lv33, VOLTORBE Lv33, VOLTORBE Lv37, TADMORV Lv33, TADMORV Lv37, MAGNETON Lv38, GROTADMORV Lv33, GROTADMORV Lv37]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (1), Rate = 15, MapIndex = 108,
+		Encounters = [RACAILLOU Lv26, RACAILLOU Lv31, RACAILLOU Lv36, NOSFERAPTI Lv39, NOSFERAPTI Lv44, RACAILLOU Lv41, ONIX Lv43, ONIX Lv45, GRAVALANCH Lv41, GRAVALANCH Lv47]]
+	[Name = Grass/Cave on TOUR [POKé]MON (3), Rate = 10, MapIndex = 144,
+		Encounters = [FANTOMINUS Lv20, FANTOMINUS Lv21, FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv19, FANTOMINUS Lv18, FANTOMINUS Lv25, SPECTRUM Lv20, SPECTRUM Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (4), Rate = 10, MapIndex = 145,
+		Encounters = [FANTOMINUS Lv20, FANTOMINUS Lv21, FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv19, FANTOMINUS Lv18, FANTOMINUS Lv25, SPECTRUM Lv20, SPECTRUM Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (5), Rate = 15, MapIndex = 146,
+		Encounters = [FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv21, OSSELAIT Lv20, FANTOMINUS Lv27, SPECTRUM Lv22, SPECTRUM Lv27]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (6), Rate = 15, MapIndex = 147,
+		Encounters = [FANTOMINUS Lv22, FANTOMINUS Lv23, FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv21, OSSELAIT Lv22, FANTOMINUS Lv27, SPECTRUM Lv22, SPECTRUM Lv27]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TOUR [POKé]MON (7), Rate = 20, MapIndex = 148,
+		Encounters = [FANTOMINUS Lv24, FANTOMINUS Lv25, FANTOMINUS Lv26, FANTOMINUS Lv27, FANTOMINUS Lv28, FANTOMINUS Lv23, OSSELAIT Lv24, FANTOMINUS Lv29, SPECTRUM Lv24, SPECTRUM Lv29]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ILES ECUME (1), Rate = 10, MapIndex = 159,
+		Encounters = [NOSFERAPTI Lv27, KRABBY Lv26, NOSFERAPTI Lv36, KRABBY Lv28, NOSFERALTO Lv27, RAMOLOSS Lv29, NOSFERAPTI Lv18, KRABBOSS Lv28, OTARIA Lv22, OTARIA Lv26]]
+	[Name = Grass/Cave on ILES ECUME (2), Rate = 10, MapIndex = 160,
+		Encounters = [NOSFERAPTI Lv27, KRABBY Lv27, NOSFERAPTI Lv36, NOSFERALTO Lv27, KRABBOSS Lv28, OTARIA Lv24, KRABBY Lv29, NOSFERALTO Lv36, RAMOLOSS Lv31, FLAGADOSS Lv31]]
+	[Name = Grass/Cave on ILES ECUME (3), Rate = 10, MapIndex = 161,
+		Encounters = [NOSFERALTO Lv27, NOSFERAPTI Lv36, KRABBY Lv29, NOSFERAPTI Lv27, KRABBOSS Lv30, OTARIA Lv26, KRABBY Lv31, OTARIA Lv30, LAMANTINE Lv28, LAMANTINE Lv32]]
+	[Name = Surfing on ILES ECUME (3), Rate = 5, MapIndex = 161,
+		Encounters = [TENTACOOL Lv25, TENTACOOL Lv30, TENTACOOL Lv20, STARI Lv30, TENTACOOL Lv35, STARI Lv30, TENTACOOL Lv40, STARI Lv30, STARI Lv30, STARI Lv30]]
+	[Name = Grass/Cave on ILES ECUME (4), Rate = 10, MapIndex = 162,
+		Encounters = [NOSFERALTO Lv36, NOSFERAPTI Lv36, KRABBY Lv30, KRABBOSS Lv32, OTARIA Lv28, OTARIA Lv32, NOSFERALTO Lv27, NOSFERAPTI Lv45, LAMANTINE Lv30, LAMANTINE Lv34]]
+	[Name = Surfing on ILES ECUME (4), Rate = 5, MapIndex = 162,
+		Encounters = [TENTACOOL Lv25, TENTACOOL Lv30, TENTACOOL Lv20, STARI Lv30, TENTACOOL Lv35, STARI Lv30, TENTACOOL Lv40, STARI Lv30, STARI Lv30, STARI Lv30]]
+	[Name = Grass/Cave on MANOIR [pk] (1), Rate = 10, MapIndex = 165,
+		Encounters = [RATTATA Lv34, RATTATAC Lv34, TADMORV Lv23, CANINOS Lv26, RATTATA Lv37, RATTATAC Lv37, CANINOS Lv30, TADMORV Lv26, CANINOS Lv34, CANINOS Lv38]]
+	[Name = Grass/Cave on ILES ECUME (5), Rate = 15, MapIndex = 192,
+		Encounters = [NOSFERAPTI Lv18, KRABBY Lv25, KRABBY Lv27, NOSFERAPTI Lv27, NOSFERAPTI Lv36, RAMOLOSS Lv28, RAMOLOSS Lv30, NOSFERAPTI Lv9, NOSFERALTO Lv27, NOSFERALTO Lv36]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (2), Rate = 10, MapIndex = 194,
+		Encounters = [RACAILLOU Lv31, RACAILLOU Lv36, RACAILLOU Lv41, NOSFERAPTI Lv44, NOSFERALTO Lv39, GRAVALANCH Lv44, ONIX Lv45, ONIX Lv47, MACHOPEUR Lv39, MACHOPEUR Lv42]]
+	[Name = Grass/Cave on CAVE TAUPIQUEUR (1), Rate = 20, MapIndex = 197,
+		Encounters = [TAUPIQUEUR Lv18, TAUPIQUEUR Lv19, TAUPIQUEUR Lv17, TAUPIQUEUR Lv20, TAUPIQUEUR Lv16, TAUPIQUEUR Lv15, TAUPIQUEUR Lv21, TAUPIQUEUR Lv22, TRIOPIKEUR Lv29, TRIOPIKEUR Lv31]]
+	[Name = Grass/Cave on ROUTE VICTOIRE (3), Rate = 15, MapIndex = 198,
+		Encounters = [RACAILLOU Lv36, NOSFERALTO Lv44, RACAILLOU Lv41, ONIX Lv49, RACAILLOU Lv46, GRAVALANCH Lv41, MACHOPEUR Lv42, MACHOPEUR Lv45, GRAVALANCH Lv47, GRAVALANCH Lv47]]
+	[Name = Grass/Cave on MANOIR [pk] (2), Rate = 10, MapIndex = 214,
+		Encounters = [RATTATA Lv37, RATTATAC Lv37, TADMORV Lv26, TADMORV Lv29, RATTATA Lv40, RATTATAC Lv40, TADMORV Lv32, TADMORV Lv35, GROTADMORV Lv35, GROTADMORV Lv38]]
+	[Name = Grass/Cave on MANOIR [pk] (3), Rate = 10, MapIndex = 215,
+		Encounters = [RATTATA Lv40, RATTATAC Lv40, TADMORV Lv32, TADMORV Lv35, RATTATA Lv43, RATTATAC Lv43, TADMORV Lv38, TADMORV Lv38, GROTADMORV Lv38, GROTADMORV Lv41]]
+	[Name = Grass/Cave on MANOIR [pk] (4), Rate = 10, MapIndex = 216,
+		Encounters = [TADMORV Lv35, TADMORV Lv38, RATTATAC Lv37, RATTATAC Lv40, GROTADMORV Lv41, RATTATAC Lv43, METAMORPH Lv24, RATTATAC Lv46, METAMORPH Lv18, METAMORPH Lv12]]
+	[Name = Grass/Cave on PARC SAFARI (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♂ Lv21, NIDORAN♀ Lv29, NOEUNOEUF Lv22, TAUROS Lv21, NIDORINA Lv32, OSSELAIT Lv19, NOEUNOEUF Lv26, OSSATUEUR Lv24, LEVEINARD Lv21, INSECATEUR Lv15]]
+	[Name = Grass/Cave on PARC SAFARI (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♂ Lv36, NIDORAN♀ Lv14, NOEUNOEUF Lv20, RHINOCORNE Lv25, NIDORINA Lv23, KANGOUREX Lv28, OSSELAIT Lv16, KANGOUREX Lv33, INSECATEUR Lv25, SCARABRUTE Lv15]]
+	[Name = Grass/Cave on PARC SAFARI (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♂ Lv29, NIDORAN♀ Lv21, NOEUNOEUF Lv22, TAUROS Lv21, NIDORINO Lv32, OSSELAIT Lv19, NOEUNOEUF Lv26, OSSATUEUR Lv24, SCARABRUTE Lv25, SAQUEDENEU Lv27]]
+	[Name = Grass/Cave on PARC SAFARI (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♂ Lv14, NIDORAN♀ Lv36, NOEUNOEUF Lv24, RHINOCORNE Lv20, NIDORINO Lv23, PARASECT Lv27, PARAS Lv27, PARASECT Lv32, SAQUEDENEU Lv22, LEVEINARD Lv7]]
+	[Name = Grass/Cave on GROTTE INCONNUE (1), Rate = 15, MapIndex = 226,
+		Encounters = [NOSFERALTO Lv52, NOSFERALTO Lv57, GRAVALANCH Lv50, SABLAIREAU Lv56, RHINOCORNE Lv50, METAMORPH Lv60, ORTIDE Lv58, BOUSTIFLOR Lv58, RHINOFEROS Lv60, RHINOFEROS Lv58]]
+	[Name = Grass/Cave on GROTTE INCONNUE (2), Rate = 25, MapIndex = 227,
+		Encounters = [NOSFERALTO Lv54, NOSFERALTO Lv59, GRAVALANCH Lv55, RHINOCORNE Lv52, RHINOFEROS Lv62, METAMORPH Lv60, LEVEINARD Lv56, METAMORPH Lv65, EXCELANGUE Lv55, EXCELANGUE Lv50]]
+	[Name = Grass/Cave on GROTTE INCONNUE (3), Rate = 10, MapIndex = 228,
+		Encounters = [NOSFERALTO Lv50, NOSFERALTO Lv55, GRAVALANCH Lv45, ORTIDE Lv55, BOUSTIFLOR Lv55, SABLAIREAU Lv52, AEROMITE Lv54, PARASECT Lv54, METAMORPH Lv55, METAMORPH Lv60]]
+	[Name = Grass/Cave on GROTTE (3), Rate = 15, MapIndex = 232,
+		Encounters = [NOSFERAPTI Lv20, RACAILLOU Lv17, MACHOC Lv18, NOSFERAPTI Lv21, NOSFERAPTI Lv22, RACAILLOU Lv21, MACHOC Lv20, ONIX Lv14, ONIX Lv18, ONIX Lv22]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [MAGICARPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [POISSIRENE Lv10, PTITARD Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on BOURG PALETTE, Rate = 0, MapIndex = 0,
+		Encounters = [STARI Lv10, TENTACOOL Lv10, STARI Lv5, TENTACOOL Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on JADIELLE, Rate = 0, MapIndex = 1,
+		Encounters = [PTITARD Lv5, PTITARD Lv10, PTITARD Lv15, PTITARD Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZURIA, Rate = 0, MapIndex = 3,
+		Encounters = [POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30, POISSOROY Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CARMIN SUR MER, Rate = 0, MapIndex = 5,
+		Encounters = [TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv10, HYPOTREMPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CELADOPOLE, Rate = 0, MapIndex = 6,
+		Encounters = [POISSIRENE Lv5, POISSIRENE Lv10, POISSIRENE Lv15, POISSIRENE Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARMANIE, Rate = 0, MapIndex = 7,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, LEVIATOR Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CRAMOIS'ILE, Rate = 0, MapIndex = 8,
+		Encounters = [STARI Lv15, TENTACOOL Lv15, STARI Lv10, TENTACOOL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 4, Rate = 0, MapIndex = 15,
+		Encounters = [POISSIRENE Lv20, POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 6, Rate = 0, MapIndex = 17,
+		Encounters = [POISSIRENE Lv5, POISSIRENE Lv10, POISSIRENE Lv15, POISSIRENE Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 24, Rate = 0, MapIndex = 35,
+		Encounters = [POISSIRENE Lv20, POISSIRENE Lv25, POISSIRENE Lv30, POISSOROY Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 25, Rate = 0, MapIndex = 36,
+		Encounters = [KRABBY Lv10, KRABBY Lv15, KRABBOSS Lv15, KRABBOSS Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 10, Rate = 0, MapIndex = 21,
+		Encounters = [KRABBY Lv15, KRABBY Lv20, HYPOTREMPE Lv10, KRABBOSS Lv25]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 11, Rate = 0, MapIndex = 22,
+		Encounters = [TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv10, HYPOTREMPE Lv5]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 12, Rate = 0, MapIndex = 23,
+		Encounters = [HYPOTREMPE Lv20, HYPOTREMPE Lv25, HYPOCEAN Lv25, HYPOCEAN Lv35]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 13, Rate = 0, MapIndex = 24,
+		Encounters = [HYPOTREMPE Lv15, HYPOTREMPE Lv20, TENTACOOL Lv10, HYPOCEAN Lv20]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 17, Rate = 0, MapIndex = 28,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv15, KOKIYAS Lv25, KOKIYAS Lv35]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 18, Rate = 0, MapIndex = 29,
+		Encounters = [TENTACOOL Lv15, KOKIYAS Lv20, KOKIYAS Lv30, KOKIYAS Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 19, Rate = 0, MapIndex = 30,
+		Encounters = [TENTACOOL Lv15, STARI Lv20, TENTACOOL Lv30, TENTACRUEL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 20, Rate = 0, MapIndex = 31,
+		Encounters = [TENTACOOL Lv20, TENTACRUEL Lv20, STARI Lv30, TENTACRUEL Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CHENAL 21, Rate = 0, MapIndex = 32,
+		Encounters = [TENTACOOL Lv15, STARI Lv20, TENTACOOL Lv30, TENTACRUEL Lv30]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 22, Rate = 0, MapIndex = 33,
+		Encounters = [PTITARD Lv5, PTITARD Lv10, PTITARD Lv15, TETARTE Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 23, Rate = 0, MapIndex = 34,
+		Encounters = [PTITARD Lv25, PTITARD Lv30, TETARTE Lv30, TETARTE Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CARMIN SUR MER (Building), Rate = 0, MapIndex = 94,
+		Encounters = [TENTACOOL Lv10, TENTACOOL Lv15, STARI Lv15, KOKIYAS Lv10]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (5), Rate = 0, MapIndex = 220,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MINIDRACO Lv10, DRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (2), Rate = 0, MapIndex = 217,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (3), Rate = 0, MapIndex = 218,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PARC SAFARI (4), Rate = 0, MapIndex = 219,
+		Encounters = [MAGICARPE Lv5, MAGICARPE Lv10, MAGICARPE Lv15, MINIDRACO Lv15]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ILES ECUME (3), Rate = 0, MapIndex = 161,
+		Encounters = [KRABBY Lv25, STARI Lv20, KRABBOSS Lv35, STARI Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ILES ECUME (4), Rate = 0, MapIndex = 162,
+		Encounters = [KRABBY Lv25, STARI Lv20, KRABBOSS Lv35, STARI Lv40]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on GROTTE INCONNUE (3), Rate = 0, MapIndex = 228,
+		Encounters = [POISSIRENE Lv25, POISSOROY Lv35, POISSOROY Lv45, POISSOROY Lv55]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on GROTTE INCONNUE (2), Rate = 0, MapIndex = 227,
+		Encounters = [POISSIRENE Lv30, POISSOROY Lv40, POISSOROY Lv50, POISSOROY Lv60]
+		Banned = [Species [name=OSSATUEUR, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]

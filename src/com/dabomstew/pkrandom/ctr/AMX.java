@@ -23,7 +23,7 @@ package com.dabomstew.pkrandom.ctr;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.exceptions.RandomizerIOException;
+import com.dabomstew.pkrandom.exceptions.RomIOException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -160,7 +160,7 @@ public class AMX {
                 compressBytes(inBuf, out);
             }
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
 
         return out.toByteArray();
@@ -184,7 +184,7 @@ public class AMX {
             long least7 = instruction & 0b01111111;
             byte byteVal = (byte)least7;
 
-            if (bytes.size() > 0)
+            if (!bytes.isEmpty())
             {
                 // Continuation bit on all but the lowest byte
                 byteVal |= 0x80;

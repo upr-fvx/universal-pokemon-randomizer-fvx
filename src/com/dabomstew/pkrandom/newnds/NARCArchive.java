@@ -25,6 +25,7 @@ package com.dabomstew.pkrandom.newnds;
 /*----------------------------------------------------------------------------*/
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class NARCArchive {
                 offset++;
                 byte[] filenameBA = new byte[fnLength];
                 System.arraycopy(fntbframe, offset, filenameBA, 0, fnLength);
-                String filename = new String(filenameBA, "US-ASCII");
+                String filename = new String(filenameBA, StandardCharsets.US_ASCII);
                 filenames.add(filename);
             }
         } else {
@@ -127,7 +128,7 @@ public class NARCArchive {
         int bytesForFNTBFrame = 16;
         if (hasFilenames) {
             for (String filename : filenames) {
-                bytesForFNTBFrame += filename.getBytes("US-ASCII").length + 1;
+                bytesForFNTBFrame += filename.getBytes(StandardCharsets.US_ASCII).length + 1;
             }
         }
         byte[] fntbFrame = new byte[bytesForFNTBFrame];
@@ -143,7 +144,7 @@ public class NARCArchive {
             writeLong(fntbFrame, 12, 0x10000);
             int fntbOffset = 16;
             for (String filename : filenames) {
-                byte[] fntbfilename = filename.getBytes("US-ASCII");
+                byte[] fntbfilename = filename.getBytes(StandardCharsets.US_ASCII);
                 fntbFrame[fntbOffset] = (byte) fntbfilename.length;
                 System.arraycopy(fntbfilename, 0, fntbFrame, fntbOffset + 1, fntbfilename.length);
                 fntbOffset += 1 + fntbfilename.length;
@@ -182,7 +183,7 @@ public class NARCArchive {
         Map<String, byte[]> frames = new TreeMap<>();
         for (int i = 0; i < frameCount; i++) {
             byte[] magic = new byte[] { data[offset + 3], data[offset + 2], data[offset + 1], data[offset] };
-            String magicS = new String(magic, "US-ASCII");
+            String magicS = new String(magic, StandardCharsets.US_ASCII);
 
             int frame_size = readLong(data, offset + 4);
             // Patch for BB/VW and other DS hacks which don't update

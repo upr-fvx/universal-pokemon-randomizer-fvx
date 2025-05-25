@@ -1,0 +1,1127 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = KNOFENSA-\x25TURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = TURMRUINE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SMOGON Lv14, RATTFRATZ Lv15, ZUBAT Lv14, RATTFRATZ Lv15, RATTIKARL Lv15, RATTIKARL Lv15]]
+	[Name = TURMRUINE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, SMOGON Lv14, SMOGON Lv16, ZUBAT Lv15, SMOGON Lv12, SMOGON Lv16, SMOGMOG Lv16]]
+	[Name = NATIONAL\x1EPARK Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♀ Lv12, NIDORAN♂ Lv12, SONNKERN Lv14, TAUBSI Lv13, RAUPY Lv10, HORNLIU Lv10, HORNLIU Lv10]]
+	[Name = ALPH-RUINEN Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [NATU Lv20, NATU Lv22, NATU Lv18, NATU Lv24, FARBEAGLE Lv20, FARBEAGLE Lv22, FARBEAGLE Lv22]]
+	[Name = ALPH-RUINEN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv6, SANDAN Lv6, ZUBAT Lv5, RATTFRATZ Lv4, ZUBAT Lv7, ONIX Lv6, ONIX Lv6]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv8, ZUBAT Lv6, ZUBAT Lv8, ONIX Lv8, RATTFRATZ Lv6, RATTFRATZ Lv8, RATTFRATZ Lv8]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, GOLBAT Lv22, ZUBAT Lv22, RATTIKARL Lv21, KLEINSTEIN Lv20, ONIX Lv23, ONIX Lv23]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv5, ZUBAT Lv6, ZUBAT Lv7, FLEGMON Lv6, ZUBAT Lv8, FLEGMON Lv8, FLEGMON Lv8]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv21, ZUBAT Lv23, ZUBAT Lv19, FLEGMON Lv21, GOLBAT Lv23, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = STEINEI\x1ECHENWALD Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [RAUPY Lv5, HORNLIU Lv5, SAFCON Lv7, KOKUNA Lv7, TAUBSI Lv7, PARAS Lv6, PARAS Lv6]]
+	[Name = KESSELBERG Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, ZUBAT Lv13, MACHOLLO Lv14, GOLBAT Lv13, KLEINSTEIN Lv14, RATTIKARL Lv16, RATTIKARL Lv16]]
+	[Name = KESSELBERG Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv13, RATTFRATZ Lv14, MACHOLLO Lv15, RATTIKARL Lv14, ZUBAT Lv15, GOLBAT Lv15, GOLBAT Lv15]]
+	[Name = KESSELBERG Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv31, MASCHOCK Lv32, KLEINSTEIN Lv31, RATTIKARL Lv30, MACHOLLO Lv28, GOLBAT Lv30, GOLBAT Lv30]]
+	[Name = KESSELBERG Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv15, ZUBAT Lv17, GOLBAT Lv17, MACHOLLO Lv16, KLEINSTEIN Lv16, RATTIKARL Lv18, RATTIKARL Lv18]]
+	[Name = EISPFAD Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv21, ZUBAT Lv22, GOLBAT Lv22, QUIEKEL Lv23, GOLBAT Lv24, GOLBAT Lv22, GOLBAT Lv22]]
+	[Name = EISPFAD Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv22, ZUBAT Lv23, GOLBAT Lv23, QUIEKEL Lv24, GOLBAT Lv25, GOLBAT Lv23, ROSSANA Lv22]]
+	[Name = EISPFAD Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv24, ZUBAT Lv25, GOLBAT Lv25, QUIEKEL Lv26, ROSSANA Lv22, ROSSANA Lv24, ROSSANA Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv23, ZUBAT Lv24, JUROB Lv23, KRABBY Lv25, GOLBAT Lv26, JUROB Lv25, JUROB Lv25]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv24, ZUBAT Lv25, JUROB Lv24, KRABBY Lv26, GOLBAT Lv27, JUROB Lv26, JUROB Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv25, ZUBAT Lv26, JUROB Lv25, KRABBY Lv27, GOLBAT Lv28, JUROB Lv27, JUROB Lv27]]
+	[Name = SILBERHÖHLE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv43, URSARING Lv44, ONIX Lv42, MAGMAR Lv45, GOLBAT Lv45, LARVITAR Lv20, LARVITAR Lv15]]
+	[Name = SILBERHÖHLE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, MASCHOCK Lv48, URSARING Lv47, PARASEK Lv46, PARASEK Lv48, LARVITAR Lv15, LARVITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv51, ONIX Lv48, GEOROK Lv48, URSARING Lv50, LARVITAR Lv20, LARVITAR Lv15, PUPITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, GOLBAT Lv46, GOLBAT Lv50, PARASEK Lv46, PARASEK Lv48, PARASEK Lv50, PARASEK Lv52]]
+	[Name = DUNKELHÖHLE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, KLEINSTEIN Lv4, ZUBAT Lv2, ZUBAT Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, ZUBAT Lv23, GEOROK Lv25, URSARING Lv25, URSARING Lv30, GOLBAT Lv23, GOLBAT Lv23]]
+	[Name = ROUTE 29 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, WIESOR Lv2, TAUBSI Lv3, WIESOR Lv3, RATTFRATZ Lv2, HOPPSPROSS Lv3, HOPPSPROSS Lv3]]
+	[Name = ROUTE 30 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv3, RAUPY Lv3, RAUPY Lv4, TAUBSI Lv4, HORNLIU Lv3, HOPPSPROSS Lv4, HOPPSPROSS Lv4]]
+	[Name = ROUTE 31 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv4, RAUPY Lv4, KNOFENSA Lv5, TAUBSI Lv5, HORNLIU Lv4, HOPPSPROSS Lv5, HOPPSPROSS Lv5]]
+	[Name = ROUTE 32 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv4, RATTFRATZ Lv5, KNOFENSA Lv7, HOPPSPROSS Lv6, TAUBSI Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 33 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv6, HABITAK Lv6, KLEINSTEIN Lv6, HOPPSPROSS Lv6, RETTAN Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 34 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv10, RATTFRATZ Lv11, TAUBSI Lv12, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv12, TAUBSI Lv14, FUKANO Lv13, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, YANMA Lv12]]
+	[Name = ROUTE 36 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv4, TAUBSI Lv4, KNOFENSA Lv5, FUKANO Lv5, TAUBSI Lv5, TAUBSI Lv6, TAUBSI Lv6]]
+	[Name = ROUTE 37 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv13, FUKANO Lv14, TAUBSI Lv15, FUKANO Lv16, TAUBOGA Lv15, TAUBSI Lv15, TAUBSI Lv15]]
+	[Name = ROUTE 38 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, TAUROS Lv13, MILTANK Lv13, MILTANK Lv13]]
+	[Name = ROUTE 39 Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, MILTANK Lv15, TAUROS Lv15, TAUROS Lv15]]
+	[Name = ROUTE 42 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv13, HABITAK Lv14, RATTFRATZ Lv15, RATTIKARL Lv16, ARBOK Lv15, IBITAK Lv16, IBITAK Lv16]]
+	[Name = ROUTE 43 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [WIESOR Lv15, TAUBOGA Lv16, PORENTA Lv16, WIESENIOR Lv15, RATTIKARL Lv17, WIESENIOR Lv17, WIESENIOR Lv17]]
+	[Name = ROUTE 44 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv23, SCHLURP Lv22, KNOFENSA Lv22, ULTRIGARIA Lv24, SCHLURP Lv24, SCHLURP Lv26, SCHLURP Lv26]]
+	[Name = ROUTE 45 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, GEOROK Lv23, SKORGLA Lv24, DONPHAN Lv25, DONPHAN Lv30, PANZAERON Lv27, PANZAERON Lv27]]
+	[Name = ROUTE 46 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv2, HABITAK Lv2, KLEINSTEIN Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, RATTFRATZ Lv2, RATTFRATZ Lv2]]
+	[Name = SILBERHÖHLE Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv41, PONITA Lv42, ARBOK Lv42, GALLOPA Lv44, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = ALPH-RUINEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [TENTACHA Lv15, MORLORD Lv20, TENTOXA Lv20]]
+	[Name = FLEGMON-\x25BRUNNEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FLEGMON Lv15, FLEGMON Lv20, FLEGMON Lv10]]
+	[Name = FLEGMON-\x25BRUNNEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FLEGMON Lv15, FLEGMON Lv20, LAHMUS Lv20]]
+	[Name = STEINEI\x1ECHENWALD Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ENTON Lv15, ENTON Lv10, ENTORON Lv15]]
+	[Name = KESSELBERG Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, MARILL Lv20, GOLKING Lv20]]
+	[Name = KESSELBERG Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, MARILL Lv25, GOLKING Lv25]]
+	[Name = KESSELBERG Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, MARILL Lv20, GOLKING Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, SEEPER Lv15, TENTOXA Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [SEEPER Lv15, SEEPER Lv20, TENTOXA Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [SEEPER Lv20, TENTOXA Lv20, SEEMON Lv20]]
+	[Name = SILBERHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLKING Lv35, ENTORON Lv35, GOLDINI Lv35]]
+	[Name = DUNKELHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = DUNKELHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = DRACHEN\x1EHÖHLE Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, DRATINI Lv10]]
+	[Name = OLIVIANA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 30 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ROUTE 31 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ROUTE 32 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv15, MORLORD Lv20, TENTOXA Lv20]]
+	[Name = ROUTE 34 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [ENTON Lv20, ENTON Lv15, ENTORON Lv20]]
+	[Name = ROUTE 40 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 41 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTOXA Lv20, MANTAX Lv20]]
+	[Name = ROUTE 42 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, GOLDINI Lv15, GOLKING Lv20]]
+	[Name = ROUTE 43 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv10]]
+	[Name = ROUTE 44 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv25, QUAPSEL Lv20, QUAPUTZI Lv25]]
+	[Name = ROUTE 45 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv5]]
+	[Name = NEUBORKIA Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROSALIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = VIOLA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ANEMONIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = OLIVIANA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = TEAK CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = SEE DES ZORNS Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, GARADOS Lv15]]
+	[Name = EBENHOLZ CITY Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = SILBERHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPUTZI Lv35, QUAPUTZI Lv40, QUAPSEL Lv35]]
+	[Name = DIGDAs HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DIGDA Lv2, DIGDA Lv4, DIGDA Lv8, DIGDA Lv16, DIGDRI Lv16, DIGDRI Lv16, DIGDRI Lv16]]
+	[Name = MONDBERG Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv6, KLEINSTEIN Lv8, SANDAN Lv8, PARAS Lv12, KLEINSTEIN Lv10, PIEPI Lv8, PIEPI Lv8]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv10, KLEINSTEIN Lv11, MACHOLLO Lv12, ZUBAT Lv12, MASCHOCK Lv15, KNOGGA Lv12, KNOGGA Lv12]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv12, KLEINSTEIN Lv14, ONIX Lv16, ZUBAT Lv12, KNOGGA Lv15, KANGAMA Lv15, KANGAMA Lv15]]
+	[Name = SIEGES\x1ESTRASSE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv34, RIHORN Lv32, ONIX Lv33, GOLBAT Lv34, SANDAMER Lv35, RIZEROS Lv35, RIZEROS Lv35]]
+	[Name = TOHJO-FÄLLE Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, RATTIKARL Lv22, GOLBAT Lv24, FLEGMON Lv21, RATTFRATZ Lv20, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = ROUTE 1 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, RATTFRATZ Lv2, WIESOR Lv3, TAUBSI Lv3, WIESENIOR Lv6, TAUBSI Lv4, TAUBSI Lv4]]
+	[Name = ROUTE 2 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv3, TAUBSI Lv3, TAUBSI Lv5, SMETTBO Lv7, TAUBOGA Lv7, PIKACHU Lv4, PIKACHU Lv4]]
+	[Name = ROUTE 3 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 4 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 5 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv13, SNUBBULL Lv13, TAUBOGA Lv15, ABRA Lv12, PUMMELUFF Lv14, ABRA Lv14, ABRA Lv14]]
+	[Name = ROUTE 6 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SNUBBULL Lv13, MAGNETILO Lv14, RATTIKARL Lv15, PUMMELUFF Lv12, GRANBULL Lv15, GRANBULL Lv15]]
+	[Name = ROUTE 7 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv17, HABITAK Lv17, SNUBBULL Lv18, RATTIKARL Lv18, PUMMELUFF Lv18, ABRA Lv16, ABRA Lv16]]
+	[Name = ROUTE 8 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv17, TAUBOGA Lv19, ABRA Lv16, FUKANO Lv17, PUMMELUFF Lv16, KADABRA Lv18, KADABRA Lv18]]
+	[Name = ROUTE 9 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv15, HABITAK Lv15, RATTIKARL Lv15, IBITAK Lv15, IBITAK Lv15, KNOGGA Lv18, KNOGGA Lv18]]
+	[Name = ROUTE 10 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv15, VOLTOBAL Lv17, RATTIKARL Lv15, IBITAK Lv15, KNOGGA Lv15, ELEKTEK Lv18, ELEKTEK Lv18]]
+	[Name = ROUTE 11 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [HOPPSPROSS Lv14, RATTIKARL Lv13, MAGNETILO Lv15, TAUBOGA Lv16, RATTFRATZ Lv16, HOPPSPROSS Lv16, HOPPSPROSS Lv16]]
+	[Name = ROUTE 13 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 14 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv26, NIDORINA Lv26, TAUBOGA Lv28, HOPPSPROSS Lv28, HUBELUPF Lv30, HUBELUPF Lv30, CHANEIRA Lv28]]
+	[Name = ROUTE 15 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 16 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, SCHNECKMAG Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 17 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [IBITAK Lv30, SCHNECKMAG Lv29, SLEIMA Lv29, IBITAK Lv32, SCHNECKMAG Lv32, SLEIMOK Lv33, SLEIMOK Lv33]]
+	[Name = ROUTE 18 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, SCHNECKMAG Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [TANGELA Lv30, RATTFRATZ Lv25, TANGELA Lv35, RATTIKARL Lv20, PANTIMOS Lv28, PANTIMOS Lv30, PANTIMOS Lv30]]
+	[Name = ROUTE 22 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, HABITAK Lv3, HABITAK Lv5, DODU Lv4, PONITA Lv6, IBITAK Lv7, IBITAK Lv7]]
+	[Name = ROUTE 24 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv8, SONNKERN Lv12, RAUPY Lv10, ABRA Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 25 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv10, TAUBSI Lv10, TAUBOGA Lv12, SAFCON Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 26 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, SANDAMER Lv28, PONITA Lv32, RATTIKARL Lv30, DODU Lv30, ARBOK Lv30, ARBOK Lv30]]
+	[Name = ROUTE 27 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, ARBOK Lv28, RATTIKARL Lv30, DODU Lv30, PONITA Lv32, DODRI Lv30, DODRI Lv30]]
+	[Name = ROUTE 28 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv39, PONITA Lv40, GALLOPA Lv40, ARBOK Lv42, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = TOHJO-FÄLLE Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, FLEGMON Lv20, GOLKING Lv20]]
+	[Name = ORANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 4 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 6 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ENTON Lv10, ENTON Lv5, ENTORON Lv10]]
+	[Name = ROUTE 9 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, GOLDINI Lv10, GOLKING Lv15]]
+	[Name = ROUTE 10 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, GOLDINI Lv10, GOLKING Lv15]]
+	[Name = ROUTE 12 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv25, MORLORD Lv25, TENTOXA Lv25]]
+	[Name = ROUTE 13 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv25, MORLORD Lv25, TENTOXA Lv25]]
+	[Name = ROUTE 19 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 20 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 21 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 22 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv10, QUAPSEL Lv5, QUAPUTZI Lv10]]
+	[Name = ROUTE 24 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 25 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 26 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv30, TENTACHA Lv25, TENTOXA Lv30]]
+	[Name = ROUTE 27 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 28 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv40, QUAPSEL Lv35, QUAPUTZI Lv40]]
+	[Name = ALABASTIA Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = VERTANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv10, QUAPSEL Lv5, QUAPUTZI Lv10]]
+	[Name = AZURIA CITY Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ORANIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = PRISMANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [SLEIMA Lv20, SLEIMA Lv15, SLEIMOK Lv15]]
+	[Name = FUCHSANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv10]]
+	[Name = ZINNOBER\x1EINSEL Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = DUNKELHÖHLE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, DUMMISEL Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, DUMMISEL Lv2, DUMMISEL Lv4, DUMMISEL Lv4]]
+	[Name = ROUTE 35 Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lv12, NIDORAN♀ Lv12, YANMA Lv12, YANMA Lv14, TAUBSI Lv14, DITTO Lv10, DITTO Lv10]]
+	[Name = Fishing Shore, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KRABBY Lv10, KARPADOR Lv20, KRABBY Lv20, KRABBY Lv20, STERNDU Lv20, KRABBY Lv40, STERNDU Lv40, KRABBY Lv40, KINGLER Lv40]]
+	[Name = Fishing Ocean, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, TENTACHA Lv10, KARPADOR Lv20, TENTACHA Lv20, LAMPI Lv20, MUSCHAS Lv20, LAMPI Lv40, MUSCHAS Lv40, TENTOXA Lv40, LANTURN Lv40]]
+	[Name = Fishing Lake, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, GOLDINI Lv10, KARPADOR Lv20, GOLDINI Lv20, GOLDINI Lv20, GOLDINI Lv20, GOLDINI Lv40, GOLDINI Lv40, KARPADOR Lv40, GOLKING Lv40]]
+	[Name = Fishing Pond, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, QUAPSEL Lv10, KARPADOR Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv40, QUAPSEL Lv40, KARPADOR Lv40, QUAPSEL Lv40]]
+	[Name = Fishing Dratini 1 (Ice Path, Dragon's Den), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv20, DRATINI Lv20, KARPADOR Lv40, DRATINI Lv40, KARPADOR Lv40, DRAGONIR Lv40]]
+	[Name = Fishing Qwilfish Swarm (Route 32), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv5, KARPADOR Lv5, BALDORFISH Lv5, KARPADOR Lv20, BALDORFISH Lv20, BALDORFISH Lv20, BALDORFISH Lv20, BALDORFISH Lv40, BALDORFISH Lv40, BALDORFISH Lv40, BALDORFISH Lv40]]
+	[Name = Fishing Remoraid Swarm (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, REMORAID Lv10, KARPADOR Lv20, REMORAID Lv20, REMORAID Lv20, REMORAID Lv20, REMORAID Lv40, REMORAID Lv40, REMORAID Lv40, REMORAID Lv40]]
+	[Name = Fishing Gyarados (Lake of Rage, Fuchsia City), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv20, GARADOS Lv20, KARPADOR Lv40, GARADOS Lv40, KARPADOR Lv40, KARPADOR Lv40]]
+	[Name = Fishing Dratini 2 (Route 45), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, DRATINI Lv10, KARPADOR Lv10, DRATINI Lv10, KARPADOR Lv10, DRAGONIR Lv10]]
+	[Name = Fishing Whirl Islands, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KRABBY Lv10, KARPADOR Lv20, KRABBY Lv20, KRABBY Lv20, SEEPER Lv20, KRABBY Lv40, SEEPER Lv40, KINGLER Lv40, SEEMON Lv40]]
+	[Name = Fishing Qwilfish (Routes 32, 12, 13), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, TENTACHA Lv10, KARPADOR Lv20, TENTACHA Lv20, TENTACHA Lv20, TENTACHA Lv20, TENTACHA Lv40, TENTACHA Lv40, KARPADOR Lv40, BALDORFISH Lv40]]
+	[Name = Fishing Remoraid (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, QUAPSEL Lv10, KARPADOR Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv40, QUAPSEL Lv40, KARPADOR Lv40, REMORAID Lv40]]
+	[Name = Headbutt (Routes 44, 45, 46) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, HABITAK Lv10, HABITAK Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Routes 44, 45, 46) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, SKARABORN Lv10, SKARABORN Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, RETTAN Lv10, HABITAK Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, SKARABORN Lv10, SKARABORN Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, WEBARAK Lv10, LEDYBA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, RETTAN Lv10, HOOTHOOT Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Route 43) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, BLUZUK Lv10, HOOTHOOT Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Route 43) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Ilex Forest) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, NOCTUH Lv10, SMETTBO Lv10, BIBOR Lv10]]
+	[Name = Headbutt (Ilex Forest) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, RAUPY Lv10, HORNLIU Lv10, HOOTHOOT Lv10, SAFCON Lv10, KOKUNA Lv10]]
+	[Name = Rock Smash, Rate = 0, MapIndex = -1,
+		Encounters = [KRABBY Lv15, POTTROTT Lv15]]
+	[Name = Bug Catching Contest, Rate = 0, MapIndex = -1,
+		Encounters = [RAUPY Lvs 7-18, HORNLIU Lvs 7-18, SAFCON Lvs 9-18, KOKUNA Lvs 9-18, SMETTBO Lvs 12-15, BIBOR Lvs 12-15, BLUZUK Lvs 10-16, PARAS Lvs 10-17, SICHLOR Lvs 13-14, PINSIR Lvs 13-14]
+		Banned = [Species [name=ICOGNITO, number=201, primaryType=PSYCHIC, secondaryType=null, hp=48, attack=72, defense=48, spatk=72, spdef=48, speed=48]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv3, NEBULAK Lv4, NEBULAK Lv5, RATTFRATZ Lv3, NEBULAK Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, RATTFRATZ Lv4, RATTFRATZ Lv5, RATTFRATZ Lv3, RATTFRATZ Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = KNOFENSA-\x25TURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv3, NEBULAK Lv4, NEBULAK Lv5, RATTFRATZ Lv3, NEBULAK Lv6, RATTFRATZ Lv5, RATTFRATZ Lv5]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv20, RATTFRATZ Lv21, RATTFRATZ Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = ZINNTURM Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, RATTFRATZ Lv22, RATTFRATZ Lv23, RATTFRATZ Lv24, RATTFRATZ Lv24]]
+	[Name = TURMRUINE Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SMOGON Lv14, RATTFRATZ Lv15, ZUBAT Lv14, RATTFRATZ Lv15, RATTIKARL Lv15, RATTIKARL Lv15]]
+	[Name = TURMRUINE Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SMOGON Lv14, RATTFRATZ Lv15, ZUBAT Lv14, RATTFRATZ Lv15, RATTIKARL Lv15, RATTIKARL Lv15]]
+	[Name = TURMRUINE Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SMOGON Lv14, RATTFRATZ Lv15, ZUBAT Lv14, RATTFRATZ Lv15, RATTIKARL Lv15, RATTIKARL Lv15]]
+	[Name = TURMRUINE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, SMOGON Lv14, SMOGON Lv16, ZUBAT Lv15, SMOGON Lv12, SMOGON Lv16, SMOGMOG Lv16]]
+	[Name = TURMRUINE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, SMOGON Lv14, SMOGON Lv16, ZUBAT Lv15, SMOGON Lv12, SMOGON Lv16, SMOGMOG Lv16]]
+	[Name = TURMRUINE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, SMOGON Lv14, SMOGON Lv16, ZUBAT Lv15, SMOGON Lv12, SMOGON Lv16, SMOGMOG Lv16]]
+	[Name = NATIONAL\x1EPARK Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lv12, NIDORAN♀ Lv12, LEDYBA Lv14, TAUBSI Lv13, RAUPY Lv10, HORNLIU Lv10, HORNLIU Lv10]]
+	[Name = NATIONAL\x1EPARK Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♀ Lv12, NIDORAN♂ Lv12, SONNKERN Lv14, TAUBSI Lv13, RAUPY Lv10, HORNLIU Lv10, HORNLIU Lv10]]
+	[Name = NATIONAL\x1EPARK Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [ENTON Lv12, HOOTHOOT Lv13, WEBARAK Lv14, HOOTHOOT Lv15, BLUZUK Lv10, BLUZUK Lv12, BLUZUK Lv12]]
+	[Name = ALPH-RUINEN Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [NATU Lv20, NATU Lv22, NATU Lv18, NATU Lv24, FARBEAGLE Lv20, FARBEAGLE Lv22, FARBEAGLE Lv22]]
+	[Name = ALPH-RUINEN Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [NATU Lv20, NATU Lv22, NATU Lv18, NATU Lv24, FARBEAGLE Lv20, FARBEAGLE Lv22, FARBEAGLE Lv22]]
+	[Name = ALPH-RUINEN Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [NATU Lv20, NATU Lv22, NATU Lv18, NATU Lv24, FELINO Lv22, MORLORD Lv22, MORLORD Lv22]]
+	[Name = ALPH-RUINEN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5]]
+	[Name = ALPH-RUINEN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5]]
+	[Name = ALPH-RUINEN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5, ICOGNITO Lv5]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv6, SANDAN Lv6, ZUBAT Lv5, RATTFRATZ Lv4, ZUBAT Lv7, ONIX Lv6, ONIX Lv6]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv6, SANDAN Lv6, ZUBAT Lv5, RATTFRATZ Lv4, ZUBAT Lv7, ONIX Lv6, ONIX Lv6]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv6, RATTFRATZ Lv6, FELINO Lv5, RATTFRATZ Lv4, ZUBAT Lv7, ONIX Lv6, ONIX Lv6]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv8, ZUBAT Lv6, ZUBAT Lv8, ONIX Lv8, RATTFRATZ Lv6, RATTFRATZ Lv8, RATTFRATZ Lv8]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv8, ZUBAT Lv6, ZUBAT Lv8, ONIX Lv8, RATTFRATZ Lv6, RATTFRATZ Lv8, RATTFRATZ Lv8]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv8, ZUBAT Lv6, FELINO Lv8, ONIX Lv8, RATTFRATZ Lv6, RATTFRATZ Lv8, RATTFRATZ Lv8]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, GOLBAT Lv22, ZUBAT Lv22, RATTIKARL Lv21, KLEINSTEIN Lv20, ONIX Lv23, ONIX Lv23]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, GOLBAT Lv22, ZUBAT Lv22, RATTIKARL Lv21, KLEINSTEIN Lv20, ONIX Lv23, ONIX Lv23]]
+	[Name = EINHEITS\x1ETUNNEL Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, GOLBAT Lv22, MORLORD Lv22, RATTIKARL Lv21, KLEINSTEIN Lv20, ONIX Lv23, ONIX Lv23]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv5, ZUBAT Lv6, ZUBAT Lv7, FLEGMON Lv6, ZUBAT Lv8, FLEGMON Lv8, FLEGMON Lv8]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv5, ZUBAT Lv6, ZUBAT Lv7, FLEGMON Lv6, ZUBAT Lv8, FLEGMON Lv8, FLEGMON Lv8]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv5, ZUBAT Lv6, ZUBAT Lv7, FLEGMON Lv6, ZUBAT Lv8, FLEGMON Lv8, FLEGMON Lv8]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv21, ZUBAT Lv23, ZUBAT Lv19, FLEGMON Lv21, GOLBAT Lv23, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv21, ZUBAT Lv23, ZUBAT Lv19, FLEGMON Lv21, GOLBAT Lv23, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = FLEGMON-\x25BRUNNEN Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lv21, ZUBAT Lv23, ZUBAT Lv19, FLEGMON Lv21, GOLBAT Lv23, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = STEINEI\x1ECHENWALD Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [RAUPY Lv5, HORNLIU Lv5, SAFCON Lv7, KOKUNA Lv7, TAUBSI Lv7, PARAS Lv6, PARAS Lv6]]
+	[Name = STEINEI\x1ECHENWALD Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [RAUPY Lv5, HORNLIU Lv5, SAFCON Lv7, KOKUNA Lv7, TAUBSI Lv7, PARAS Lv6, PARAS Lv6]]
+	[Name = STEINEI\x1ECHENWALD Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [MYRAPLA Lv5, BLUZUK Lv5, MYRAPLA Lv7, ENTON Lv7, HOOTHOOT Lv7, PARAS Lv6, PARAS Lv6]]
+	[Name = KESSELBERG Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, ZUBAT Lv13, MACHOLLO Lv14, GOLBAT Lv13, KLEINSTEIN Lv14, RATTIKARL Lv16, RATTIKARL Lv16]]
+	[Name = KESSELBERG Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, ZUBAT Lv13, MACHOLLO Lv14, GOLBAT Lv13, KLEINSTEIN Lv14, RATTIKARL Lv16, RATTIKARL Lv16]]
+	[Name = KESSELBERG Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv14, ZUBAT Lv13, MARILL Lv14, GOLBAT Lv13, KLEINSTEIN Lv14, RATTIKARL Lv16, RATTIKARL Lv16]]
+	[Name = KESSELBERG Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv13, RATTFRATZ Lv14, MACHOLLO Lv15, RATTIKARL Lv14, ZUBAT Lv15, GOLBAT Lv15, GOLBAT Lv15]]
+	[Name = KESSELBERG Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv13, RATTFRATZ Lv14, MACHOLLO Lv15, RATTIKARL Lv14, ZUBAT Lv15, GOLBAT Lv15, GOLBAT Lv15]]
+	[Name = KESSELBERG Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv13, RATTFRATZ Lv14, RATTIKARL Lv15, ZUBAT Lv14, MARILL Lv15, GOLBAT Lv15, GOLBAT Lv15]]
+	[Name = KESSELBERG Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv31, MASCHOCK Lv32, KLEINSTEIN Lv31, RATTIKARL Lv30, MACHOLLO Lv28, GOLBAT Lv30, GOLBAT Lv30]]
+	[Name = KESSELBERG Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv31, MASCHOCK Lv32, KLEINSTEIN Lv31, RATTIKARL Lv30, MACHOLLO Lv28, GOLBAT Lv30, GOLBAT Lv30]]
+	[Name = KESSELBERG Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv31, KLEINSTEIN Lv31, RATTIKARL Lv30, GOLBAT Lv30, MARILL Lv28, GOLBAT Lv32, GOLBAT Lv32]]
+	[Name = KESSELBERG Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv15, ZUBAT Lv17, GOLBAT Lv17, MACHOLLO Lv16, KLEINSTEIN Lv16, RATTIKARL Lv18, RATTIKARL Lv18]]
+	[Name = KESSELBERG Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv15, ZUBAT Lv17, GOLBAT Lv17, MACHOLLO Lv16, KLEINSTEIN Lv16, RATTIKARL Lv18, RATTIKARL Lv18]]
+	[Name = KESSELBERG Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv15, ZUBAT Lv17, GOLBAT Lv17, MARILL Lv16, KLEINSTEIN Lv16, RATTIKARL Lv18, RATTIKARL Lv18]]
+	[Name = EISPFAD Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv21, ZUBAT Lv22, GOLBAT Lv22, QUIEKEL Lv23, GOLBAT Lv24, GOLBAT Lv22, GOLBAT Lv22]]
+	[Name = EISPFAD Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv21, ZUBAT Lv22, GOLBAT Lv22, QUIEKEL Lv23, GOLBAT Lv24, GOLBAT Lv22, GOLBAT Lv22]]
+	[Name = EISPFAD Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [BOTOGEL Lv21, ZUBAT Lv22, GOLBAT Lv22, BOTOGEL Lv23, GOLBAT Lv24, GOLBAT Lv22, GOLBAT Lv22]]
+	[Name = EISPFAD Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv22, ZUBAT Lv23, GOLBAT Lv23, QUIEKEL Lv24, GOLBAT Lv25, GOLBAT Lv23, ROSSANA Lv22]]
+	[Name = EISPFAD Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv22, ZUBAT Lv23, GOLBAT Lv23, QUIEKEL Lv24, GOLBAT Lv25, GOLBAT Lv23, ROSSANA Lv22]]
+	[Name = EISPFAD Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [BOTOGEL Lv22, ZUBAT Lv23, GOLBAT Lv23, BOTOGEL Lv24, GOLBAT Lv25, GOLBAT Lv23, SNIEBEL Lv22]]
+	[Name = EISPFAD Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [BOTOGEL Lv23, ZUBAT Lv24, GOLBAT Lv24, BOTOGEL Lv25, GOLBAT Lv26, SNIEBEL Lv22, SNIEBEL Lv24]]
+	[Name = EISPFAD Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv23, ZUBAT Lv24, GOLBAT Lv24, QUIEKEL Lv25, GOLBAT Lv26, ROSSANA Lv22, ROSSANA Lv24]]
+	[Name = EISPFAD Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [BOTOGEL Lv23, ZUBAT Lv24, GOLBAT Lv24, BOTOGEL Lv25, GOLBAT Lv26, SNIEBEL Lv22, SNIEBEL Lv24]]
+	[Name = EISPFAD Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv24, ZUBAT Lv25, GOLBAT Lv25, QUIEKEL Lv26, ROSSANA Lv22, ROSSANA Lv24, ROSSANA Lv26]]
+	[Name = EISPFAD Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [QUIEKEL Lv24, ZUBAT Lv25, GOLBAT Lv25, QUIEKEL Lv26, ROSSANA Lv22, ROSSANA Lv24, ROSSANA Lv26]]
+	[Name = EISPFAD Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [BOTOGEL Lv24, ZUBAT Lv25, GOLBAT Lv25, BOTOGEL Lv26, SNIEBEL Lv22, SNIEBEL Lv24, SNIEBEL Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, KRABBY Lv22, KRABBY Lv24, GOLBAT Lv25, GOLBAT Lv24, GOLBAT Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, KRABBY Lv22, KRABBY Lv24, GOLBAT Lv25, GOLBAT Lv24, GOLBAT Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, KRABBY Lv22, KRABBY Lv24, GOLBAT Lv25, GOLBAT Lv24, GOLBAT Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, KRABBY Lv22, KRABBY Lv24, GOLBAT Lv25, GOLBAT Lv24, GOLBAT Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, JUROB Lv22, KRABBY Lv24, GOLBAT Lv25, JUROB Lv24, JUROB Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv22, ZUBAT Lv23, KRABBY Lv22, KRABBY Lv24, GOLBAT Lv25, GOLBAT Lv24, GOLBAT Lv24]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv23, ZUBAT Lv24, JUROB Lv23, KRABBY Lv25, GOLBAT Lv26, JUROB Lv25, JUROB Lv25]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv23, ZUBAT Lv24, JUROB Lv23, KRABBY Lv25, GOLBAT Lv26, JUROB Lv25, JUROB Lv25]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv23, ZUBAT Lv24, KRABBY Lv23, KRABBY Lv25, GOLBAT Lv26, GOLBAT Lv25, GOLBAT Lv25]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv24, ZUBAT Lv25, JUROB Lv24, KRABBY Lv26, GOLBAT Lv27, JUROB Lv26, JUROB Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv24, ZUBAT Lv25, JUROB Lv24, KRABBY Lv26, GOLBAT Lv27, JUROB Lv26, JUROB Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv24, ZUBAT Lv25, KRABBY Lv24, KRABBY Lv26, GOLBAT Lv27, GOLBAT Lv26, GOLBAT Lv26]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv25, ZUBAT Lv26, JUROB Lv25, KRABBY Lv27, GOLBAT Lv28, JUROB Lv27, JUROB Lv27]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv25, ZUBAT Lv26, JUROB Lv25, KRABBY Lv27, GOLBAT Lv28, JUROB Lv27, JUROB Lv27]]
+	[Name = STRUDEL\x1EINSELN Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [KRABBY Lv25, ZUBAT Lv26, KRABBY Lv25, KRABBY Lv27, GOLBAT Lv28, GOLBAT Lv27, GOLBAT Lv27]]
+	[Name = SILBERHÖHLE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv43, URSARING Lv44, ONIX Lv42, MAGMAR Lv45, GOLBAT Lv45, LARVITAR Lv20, LARVITAR Lv15]]
+	[Name = SILBERHÖHLE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv43, URSARING Lv44, ONIX Lv42, MAGMAR Lv45, GOLBAT Lv45, LARVITAR Lv20, LARVITAR Lv15]]
+	[Name = SILBERHÖHLE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv43, GOLBAT Lv44, ONIX Lv42, GOLBAT Lv42, ENTORON Lv45, GOLBAT Lv46, GOLBAT Lv46]]
+	[Name = SILBERHÖHLE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, MASCHOCK Lv48, URSARING Lv47, PARASEK Lv46, PARASEK Lv48, LARVITAR Lv15, LARVITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, MASCHOCK Lv48, URSARING Lv47, PARASEK Lv46, PARASEK Lv48, LARVITAR Lv15, LARVITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, ENTORON Lv48, GOLBAT Lv46, PARASEK Lv46, PARASEK Lv48, TRAUNFUGIL Lv45, TRAUNFUGIL Lv45]]
+	[Name = SILBERHÖHLE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv51, ONIX Lv48, GEOROK Lv48, URSARING Lv50, LARVITAR Lv20, LARVITAR Lv15, PUPITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv51, ONIX Lv48, GEOROK Lv48, URSARING Lv50, LARVITAR Lv20, LARVITAR Lv15, PUPITAR Lv20]]
+	[Name = SILBERHÖHLE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv51, ONIX Lv48, GEOROK Lv48, GOLBAT Lv49, ENTORON Lv45, GOLBAT Lv53, GOLBAT Lv53]]
+	[Name = SILBERHÖHLE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, GOLBAT Lv46, GOLBAT Lv50, PARASEK Lv46, PARASEK Lv48, PARASEK Lv50, PARASEK Lv52]]
+	[Name = SILBERHÖHLE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv48, GOLBAT Lv46, GOLBAT Lv50, PARASEK Lv46, PARASEK Lv48, PARASEK Lv50, PARASEK Lv52]]
+	[Name = SILBERHÖHLE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [TRAUNFUGIL Lv45, GOLBAT Lv48, GOLBAT Lv50, PARASEK Lv46, PARASEK Lv48, PARASEK Lv50, PARASEK Lv52]]
+	[Name = DUNKELHÖHLE Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, KLEINSTEIN Lv4, TEDDIURSA Lv2, ZUBAT Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, KLEINSTEIN Lv4, ZUBAT Lv2, ZUBAT Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, KLEINSTEIN Lv4, ZUBAT Lv2, ZUBAT Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, ZUBAT Lv23, GEOROK Lv25, URSARING Lv25, TEDDIURSA Lv20, GOLBAT Lv23, GOLBAT Lv23]]
+	[Name = DUNKELHÖHLE Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, ZUBAT Lv23, GEOROK Lv25, URSARING Lv25, URSARING Lv30, GOLBAT Lv23, GOLBAT Lv23]]
+	[Name = DUNKELHÖHLE Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, ZUBAT Lv23, GEOROK Lv25, WOINGENAU Lv20, WOINGENAU Lv25, GOLBAT Lv23, GOLBAT Lv23]]
+	[Name = ROUTE 29 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, WIESOR Lv2, TAUBSI Lv3, WIESOR Lv3, RATTFRATZ Lv2, HOPPSPROSS Lv3, HOPPSPROSS Lv3]]
+	[Name = ROUTE 29 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, WIESOR Lv2, TAUBSI Lv3, WIESOR Lv3, RATTFRATZ Lv2, HOPPSPROSS Lv3, HOPPSPROSS Lv3]]
+	[Name = ROUTE 29 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv2, RATTFRATZ Lv2, HOOTHOOT Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, HOOTHOOT Lv3, HOOTHOOT Lv3]]
+	[Name = ROUTE 30 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [LEDYBA Lv3, RAUPY Lv3, RAUPY Lv4, TAUBSI Lv4, HORNLIU Lv3, HOPPSPROSS Lv4, HOPPSPROSS Lv4]]
+	[Name = ROUTE 30 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv3, RAUPY Lv3, RAUPY Lv4, TAUBSI Lv4, HORNLIU Lv3, HOPPSPROSS Lv4, HOPPSPROSS Lv4]]
+	[Name = ROUTE 30 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [WEBARAK Lv3, HOOTHOOT Lv3, QUAPSEL Lv4, HOOTHOOT Lv4, ZUBAT Lv3, HOOTHOOT Lv4, HOOTHOOT Lv4]]
+	[Name = ROUTE 31 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [LEDYBA Lv4, RAUPY Lv4, KNOFENSA Lv5, TAUBSI Lv5, HORNLIU Lv4, HOPPSPROSS Lv5, HOPPSPROSS Lv5]]
+	[Name = ROUTE 31 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv4, RAUPY Lv4, KNOFENSA Lv5, TAUBSI Lv5, HORNLIU Lv4, HOPPSPROSS Lv5, HOPPSPROSS Lv5]]
+	[Name = ROUTE 31 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [WEBARAK Lv4, QUAPSEL Lv4, KNOFENSA Lv5, HOOTHOOT Lv5, ZUBAT Lv4, NEBULAK Lv5, NEBULAK Lv5]]
+	[Name = ROUTE 32 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv4, RATTFRATZ Lv5, KNOFENSA Lv7, HOPPSPROSS Lv6, TAUBSI Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 32 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv4, RATTFRATZ Lv5, KNOFENSA Lv7, HOPPSPROSS Lv6, TAUBSI Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 32 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [FELINO Lv4, RATTFRATZ Lv5, KNOFENSA Lv7, ZUBAT Lv6, HOOTHOOT Lv7, NEBULAK Lv7, NEBULAK Lv7]]
+	[Name = ROUTE 33 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv6, HABITAK Lv6, KLEINSTEIN Lv6, HOPPSPROSS Lv6, RETTAN Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 33 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv6, HABITAK Lv6, KLEINSTEIN Lv6, HOPPSPROSS Lv6, RETTAN Lv7, HOPPSPROSS Lv7, HOPPSPROSS Lv7]]
+	[Name = ROUTE 33 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv6, ZUBAT Lv6, KLEINSTEIN Lv6, ZUBAT Lv6, RATTFRATZ Lv7, RATTFRATZ Lv7, RATTFRATZ Lv7]]
+	[Name = ROUTE 34 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv10, RATTFRATZ Lv11, TAUBSI Lv12, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 34 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv10, RATTFRATZ Lv11, TAUBSI Lv12, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 34 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TRAUMATO Lv12, RATTFRATZ Lv11, HOOTHOOT Lv12, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv12, TAUBSI Lv14, FUKANO Lv13, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, YANMA Lv12]]
+	[Name = ROUTE 35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv12, TAUBSI Lv14, FUKANO Lv13, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, YANMA Lv12]]
+	[Name = ROUTE 35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TRAUMATO Lv12, HOOTHOOT Lv14, ENTON Lv13, ABRA Lv10, PUMMELUFF Lv12, DITTO Lv10, YANMA Lv12]]
+	[Name = ROUTE 36 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [LEDYBA Lv4, TAUBSI Lv4, KNOFENSA Lv5, FUKANO Lv5, TAUBSI Lv5, TAUBSI Lv6, TAUBSI Lv6]]
+	[Name = ROUTE 36 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv4, TAUBSI Lv4, KNOFENSA Lv5, FUKANO Lv5, TAUBSI Lv5, TAUBSI Lv6, TAUBSI Lv6]]
+	[Name = ROUTE 36 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [WEBARAK Lv4, HOOTHOOT Lv4, KNOFENSA Lv5, HOOTHOOT Lv5, HOOTHOOT Lv5, NEBULAK Lv5, NEBULAK Lv5]]
+	[Name = ROUTE 37 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [LEDYBA Lv13, FUKANO Lv14, TAUBSI Lv15, FUKANO Lv16, TAUBOGA Lv15, LEDIAN Lv15, LEDIAN Lv15]]
+	[Name = ROUTE 37 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv13, FUKANO Lv14, TAUBSI Lv15, FUKANO Lv16, TAUBOGA Lv15, TAUBSI Lv15, TAUBSI Lv15]]
+	[Name = ROUTE 37 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [WEBARAK Lv13, DAMHIRPLEX Lv14, HOOTHOOT Lv15, DAMHIRPLEX Lv16, NOCTUH Lv15, ARIADOS Lv15, ARIADOS Lv15]]
+	[Name = ROUTE 38 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, TAUROS Lv13, MILTANK Lv13, MILTANK Lv13]]
+	[Name = ROUTE 38 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, TAUROS Lv13, MILTANK Lv13, MILTANK Lv13]]
+	[Name = ROUTE 38 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MAUZI Lv16, RATTIKARL Lv16, MAGNETILO Lv16, NOCTUH Lv16, MAUZI Lv16, MAUZI Lv16, MAUZI Lv16]]
+	[Name = ROUTE 39 Grass/Cave (Morning), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, MILTANK Lv15, TAUROS Lv15, TAUROS Lv15]]
+	[Name = ROUTE 39 Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv16, RATTIKARL Lv16, MAGNETILO Lv16, TAUBOGA Lv16, MILTANK Lv15, TAUROS Lv15, TAUROS Lv15]]
+	[Name = ROUTE 39 Grass/Cave (Night), Rate = 5, MapIndex = -1,
+		Encounters = [MAUZI Lv16, RATTIKARL Lv16, MAGNETILO Lv16, NOCTUH Lv16, MAUZI Lv18, MAUZI Lv18, MAUZI Lv18]]
+	[Name = ROUTE 42 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv13, HABITAK Lv14, RATTFRATZ Lv15, RATTIKARL Lv16, ARBOK Lv15, IBITAK Lv16, IBITAK Lv16]]
+	[Name = ROUTE 42 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RETTAN Lv13, HABITAK Lv14, RATTFRATZ Lv15, RATTIKARL Lv16, ARBOK Lv15, IBITAK Lv16, IBITAK Lv16]]
+	[Name = ROUTE 42 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, ZUBAT Lv14, RATTIKARL Lv15, GOLBAT Lv16, MARILL Lv15, GOLBAT Lv16, GOLBAT Lv16]]
+	[Name = ROUTE 43 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [WIESOR Lv15, TAUBOGA Lv16, PORENTA Lv16, WIESENIOR Lv15, RATTIKARL Lv17, WIESENIOR Lv17, WIESENIOR Lv17]]
+	[Name = ROUTE 43 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [WIESOR Lv15, TAUBOGA Lv16, PORENTA Lv16, WIESENIOR Lv15, RATTIKARL Lv17, WIESENIOR Lv17, WIESENIOR Lv17]]
+	[Name = ROUTE 43 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv15, NOCTUH Lv16, RATTIKARL Lv16, BLUZUK Lv17, RATTIKARL Lv17, OMOT Lv17, OMOT Lv17]]
+	[Name = ROUTE 44 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv23, SCHLURP Lv22, KNOFENSA Lv22, ULTRIGARIA Lv24, SCHLURP Lv24, SCHLURP Lv26, SCHLURP Lv26]]
+	[Name = ROUTE 44 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv23, SCHLURP Lv22, KNOFENSA Lv22, ULTRIGARIA Lv24, SCHLURP Lv24, SCHLURP Lv26, SCHLURP Lv26]]
+	[Name = ROUTE 44 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv23, QUAPSEL Lv22, KNOFENSA Lv22, ULTRIGARIA Lv24, QUAPUTZI Lv24, QUAPUTZI Lv26, QUAPUTZI Lv26]]
+	[Name = ROUTE 45 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, GEOROK Lv23, SKORGLA Lv24, DONPHAN Lv25, PHANPY Lv20, PANZAERON Lv27, PANZAERON Lv27]]
+	[Name = ROUTE 45 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, GEOROK Lv23, SKORGLA Lv24, DONPHAN Lv25, DONPHAN Lv30, PANZAERON Lv27, PANZAERON Lv27]]
+	[Name = ROUTE 45 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv23, GEOROK Lv23, SKORGLA Lv24, GEOROK Lv25, GEOROK Lv27, GEOROK Lv27, GEOROK Lv27]]
+	[Name = ROUTE 46 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv2, HABITAK Lv2, KLEINSTEIN Lv3, RATTFRATZ Lv3, PHANPY Lv2, RATTFRATZ Lv2, RATTFRATZ Lv2]]
+	[Name = ROUTE 46 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv2, HABITAK Lv2, KLEINSTEIN Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, RATTFRATZ Lv2, RATTFRATZ Lv2]]
+	[Name = ROUTE 46 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv2, RATTFRATZ Lv2, KLEINSTEIN Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, RATTFRATZ Lv2, RATTFRATZ Lv2]]
+	[Name = SILBERHÖHLE Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv41, PONITA Lv42, ARBOK Lv42, GALLOPA Lv44, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = SILBERHÖHLE Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv41, PONITA Lv42, ARBOK Lv42, GALLOPA Lv44, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = SILBERHÖHLE Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv41, QUAPUTZI Lv42, GOLBAT Lv42, QUAPUTZI Lv44, GOLBAT Lv40, GOLBAT Lv44, GOLBAT Lv44]]
+	[Name = ALPH-RUINEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FELINO Lv15, MORLORD Lv20, MORLORD Lv15]]
+	[Name = EINHEITS\x1ETUNNEL Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [TENTACHA Lv15, MORLORD Lv20, TENTOXA Lv20]]
+	[Name = FLEGMON-\x25BRUNNEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FLEGMON Lv15, FLEGMON Lv20, FLEGMON Lv10]]
+	[Name = FLEGMON-\x25BRUNNEN Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [FLEGMON Lv15, FLEGMON Lv20, LAHMUS Lv20]]
+	[Name = STEINEI\x1ECHENWALD Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ENTON Lv15, ENTON Lv10, ENTORON Lv15]]
+	[Name = KESSELBERG Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, MARILL Lv20, GOLKING Lv20]]
+	[Name = KESSELBERG Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, MARILL Lv25, GOLKING Lv25]]
+	[Name = KESSELBERG Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, MARILL Lv20, GOLKING Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, SEEPER Lv15, TENTOXA Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [SEEPER Lv15, SEEPER Lv20, TENTOXA Lv20]]
+	[Name = STRUDEL\x1EINSELN Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [SEEPER Lv20, TENTOXA Lv20, SEEMON Lv20]]
+	[Name = SILBERHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [GOLKING Lv35, ENTORON Lv35, GOLDINI Lv35]]
+	[Name = DUNKELHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = DUNKELHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = DRACHEN\x1EHÖHLE Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, DRATINI Lv10]]
+	[Name = OLIVIANA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 30 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ROUTE 31 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ROUTE 32 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv15, MORLORD Lv20, TENTOXA Lv20]]
+	[Name = ROUTE 34 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 35 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [ENTON Lv20, ENTON Lv15, ENTORON Lv20]]
+	[Name = ROUTE 40 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 41 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTOXA Lv20, MANTAX Lv20]]
+	[Name = ROUTE 42 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, GOLDINI Lv15, GOLKING Lv20]]
+	[Name = ROUTE 43 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv10]]
+	[Name = ROUTE 44 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv25, QUAPSEL Lv20, QUAPUTZI Lv25]]
+	[Name = ROUTE 45 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv5]]
+	[Name = NEUBORKIA Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROSALIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = VIOLA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = ANEMONIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = OLIVIANA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = TEAK CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv15, QUAPUTZI Lv20]]
+	[Name = SEE DES ZORNS Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, GARADOS Lv15]]
+	[Name = EBENHOLZ CITY Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lv15, KARPADOR Lv10, KARPADOR Lv5]]
+	[Name = SILBERHÖHLE Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPUTZI Lv35, QUAPUTZI Lv40, QUAPSEL Lv35]]
+	[Name = DIGDAs HÖHLE Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [DIGDA Lv3, DIGDA Lv6, DIGDA Lv12, DIGDA Lv24, DIGDRI Lv24, DIGDRI Lv24, DIGDRI Lv24]]
+	[Name = DIGDAs HÖHLE Grass/Cave (Day), Rate = 5, MapIndex = -1,
+		Encounters = [DIGDA Lv2, DIGDA Lv4, DIGDA Lv8, DIGDA Lv16, DIGDRI Lv16, DIGDRI Lv16, DIGDRI Lv16]]
+	[Name = DIGDAs HÖHLE Grass/Cave (Night), Rate = 20, MapIndex = -1,
+		Encounters = [DIGDA Lv4, DIGDA Lv8, DIGDA Lv16, DIGDA Lv32, DIGDRI Lv32, DIGDRI Lv32, DIGDRI Lv32]]
+	[Name = MONDBERG Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv6, KLEINSTEIN Lv8, SANDAN Lv8, PARAS Lv12, KLEINSTEIN Lv10, PIEPI Lv8, PIEPI Lv8]]
+	[Name = MONDBERG Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv6, KLEINSTEIN Lv8, SANDAN Lv8, PARAS Lv12, KLEINSTEIN Lv10, PIEPI Lv8, PIEPI Lv8]]
+	[Name = MONDBERG Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv6, KLEINSTEIN Lv8, PIEPI Lv8, PARAS Lv12, KLEINSTEIN Lv10, PIEPI Lv12, PIEPI Lv12]]
+	[Name = FELSTUNNEL Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv10, KLEINSTEIN Lv11, MACHOLLO Lv12, ZUBAT Lv12, MASCHOCK Lv15, KNOGGA Lv12, KNOGGA Lv12]]
+	[Name = FELSTUNNEL Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv10, KLEINSTEIN Lv11, MACHOLLO Lv12, ZUBAT Lv12, MASCHOCK Lv15, KNOGGA Lv12, KNOGGA Lv12]]
+	[Name = FELSTUNNEL Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv12, KLEINSTEIN Lv11, KLEINSTEIN Lv12, ALPOLLO Lv17, ZUBAT Lv15, ZUBAT Lv15, ZUBAT Lv15]]
+	[Name = FELSTUNNEL Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv12, KLEINSTEIN Lv14, ONIX Lv16, ZUBAT Lv12, KNOGGA Lv15, KANGAMA Lv15, KANGAMA Lv15]]
+	[Name = FELSTUNNEL Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [TRAGOSSO Lv12, KLEINSTEIN Lv14, ONIX Lv16, ZUBAT Lv12, KNOGGA Lv15, KANGAMA Lv15, KANGAMA Lv15]]
+	[Name = FELSTUNNEL Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv12, KLEINSTEIN Lv14, ONIX Lv16, ZUBAT Lv15, ALPOLLO Lv15, GOLBAT Lv15, GOLBAT Lv15]]
+	[Name = SIEGES\x1ESTRASSE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv34, RIHORN Lv32, ONIX Lv33, GOLBAT Lv34, SANDAMER Lv35, RIZEROS Lv35, RIZEROS Lv35]]
+	[Name = SIEGES\x1ESTRASSE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [GEOROK Lv34, RIHORN Lv32, ONIX Lv33, GOLBAT Lv34, SANDAMER Lv35, RIZEROS Lv35, RIZEROS Lv35]]
+	[Name = SIEGES\x1ESTRASSE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [GOLBAT Lv34, GEOROK Lv34, ONIX Lv32, GEOROK Lv36, GEOROK Lv38, GEOROK Lv40, GEOROK Lv40]]
+	[Name = TOHJO-FÄLLE Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, RATTIKARL Lv22, GOLBAT Lv24, FLEGMON Lv21, RATTFRATZ Lv20, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = TOHJO-FÄLLE Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, RATTIKARL Lv22, GOLBAT Lv24, FLEGMON Lv21, RATTFRATZ Lv20, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = TOHJO-FÄLLE Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [ZUBAT Lv22, RATTIKARL Lv22, GOLBAT Lv24, FLEGMON Lv21, RATTFRATZ Lv20, FLEGMON Lv23, FLEGMON Lv23]]
+	[Name = ROUTE 1 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, RATTFRATZ Lv2, WIESOR Lv3, TAUBSI Lv3, WIESENIOR Lv6, TAUBSI Lv4, TAUBSI Lv4]]
+	[Name = ROUTE 1 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv2, RATTFRATZ Lv2, WIESOR Lv3, TAUBSI Lv3, WIESENIOR Lv6, TAUBSI Lv4, TAUBSI Lv4]]
+	[Name = ROUTE 1 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv2, RATTFRATZ Lv2, RATTFRATZ Lv3, HOOTHOOT Lv3, RATTIKARL Lv6, HOOTHOOT Lv4, HOOTHOOT Lv4]]
+	[Name = ROUTE 2 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv3, LEDYBA Lv3, TAUBSI Lv5, SMETTBO Lv7, LEDIAN Lv7, PIKACHU Lv4, PIKACHU Lv4]]
+	[Name = ROUTE 2 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv3, TAUBSI Lv3, TAUBSI Lv5, SMETTBO Lv7, TAUBOGA Lv7, PIKACHU Lv4, PIKACHU Lv4]]
+	[Name = ROUTE 2 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv3, WEBARAK Lv3, HOOTHOOT Lv5, NOCTUH Lv7, ARIADOS Lv7, NOCTUH Lv4, NOCTUH Lv4]]
+	[Name = ROUTE 3 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 3 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 3 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv5, RATTFRATZ Lv10, RATTIKARL Lv10, ZUBAT Lv6, RATTFRATZ Lv5, PIEPI Lv6, PIEPI Lv6]]
+	[Name = ROUTE 4 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 4 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv5, RATTFRATZ Lv5, RETTAN Lv8, RATTIKARL Lv10, ARBOK Lv10, SANDAN Lv10, SANDAN Lv10]]
+	[Name = ROUTE 4 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv5, RATTFRATZ Lv10, RATTIKARL Lv10, ZUBAT Lv6, RATTFRATZ Lv5, PIEPI Lv6, PIEPI Lv6]]
+	[Name = ROUTE 5 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv13, SNUBBULL Lv13, TAUBOGA Lv15, ABRA Lv12, PUMMELUFF Lv14, ABRA Lv14, ABRA Lv14]]
+	[Name = ROUTE 5 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TAUBSI Lv13, SNUBBULL Lv13, TAUBOGA Lv15, ABRA Lv12, PUMMELUFF Lv14, ABRA Lv14, ABRA Lv14]]
+	[Name = ROUTE 5 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv13, MAUZI Lv13, NOCTUH Lv15, ABRA Lv12, PUMMELUFF Lv14, ABRA Lv14, ABRA Lv14]]
+	[Name = ROUTE 6 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SNUBBULL Lv13, MAGNETILO Lv14, RATTIKARL Lv15, PUMMELUFF Lv12, GRANBULL Lv15, GRANBULL Lv15]]
+	[Name = ROUTE 6 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv13, SNUBBULL Lv13, MAGNETILO Lv14, RATTIKARL Lv15, PUMMELUFF Lv12, GRANBULL Lv15, GRANBULL Lv15]]
+	[Name = ROUTE 6 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MAUZI Lv13, TRAUMATO Lv13, MAGNETILO Lv14, ENTON Lv15, PUMMELUFF Lv12, RATTIKARL Lv15, RATTIKARL Lv15]]
+	[Name = ROUTE 7 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv17, HABITAK Lv17, SNUBBULL Lv18, RATTIKARL Lv18, PUMMELUFF Lv18, ABRA Lv16, ABRA Lv16]]
+	[Name = ROUTE 7 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv17, HABITAK Lv17, SNUBBULL Lv18, RATTIKARL Lv18, PUMMELUFF Lv18, ABRA Lv16, ABRA Lv16]]
+	[Name = ROUTE 7 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MAUZI Lv17, KRAMURX Lv17, HUNDUSTER Lv18, SNOBILIKAT Lv18, PUMMELUFF Lv18, ABRA Lv16, ABRA Lv16]]
+	[Name = ROUTE 8 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv17, TAUBOGA Lv19, ABRA Lv16, FUKANO Lv17, PUMMELUFF Lv16, KADABRA Lv18, KADABRA Lv18]]
+	[Name = ROUTE 8 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [SNUBBULL Lv17, TAUBOGA Lv19, ABRA Lv16, FUKANO Lv17, PUMMELUFF Lv16, KADABRA Lv18, KADABRA Lv18]]
+	[Name = ROUTE 8 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MAUZI Lv17, NOCTUH Lv20, ABRA Lv16, ALPOLLO Lv17, PUMMELUFF Lv16, KADABRA Lv18, KADABRA Lv18]]
+	[Name = ROUTE 9 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv15, HABITAK Lv15, RATTIKARL Lv15, IBITAK Lv15, IBITAK Lv15, KNOGGA Lv18, KNOGGA Lv18]]
+	[Name = ROUTE 9 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv15, HABITAK Lv15, RATTIKARL Lv15, IBITAK Lv15, IBITAK Lv15, KNOGGA Lv18, KNOGGA Lv18]]
+	[Name = ROUTE 9 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv15, BLUZUK Lv15, RATTIKARL Lv15, OMOT Lv15, ZUBAT Lv15, RATTIKARL Lv18, RATTIKARL Lv18]]
+	[Name = ROUTE 10 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv15, VOLTOBAL Lv17, RATTIKARL Lv15, IBITAK Lv15, KNOGGA Lv15, ELEKTEK Lv16, ELEKTEK Lv16]]
+	[Name = ROUTE 10 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [HABITAK Lv15, VOLTOBAL Lv17, RATTIKARL Lv15, IBITAK Lv15, KNOGGA Lv15, ELEKTEK Lv18, ELEKTEK Lv18]]
+	[Name = ROUTE 10 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv15, VOLTOBAL Lv17, RATTIKARL Lv15, OMOT Lv15, ZUBAT Lv15, ELEKTEK Lv16, ELEKTEK Lv16]]
+	[Name = ROUTE 11 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [HOPPSPROSS Lv14, RATTIKARL Lv13, MAGNETILO Lv15, TAUBOGA Lv16, RATTFRATZ Lv16, HOPPSPROSS Lv16, HOPPSPROSS Lv16]]
+	[Name = ROUTE 11 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [HOPPSPROSS Lv14, RATTIKARL Lv13, MAGNETILO Lv15, TAUBOGA Lv16, RATTFRATZ Lv16, HOPPSPROSS Lv16, HOPPSPROSS Lv16]]
+	[Name = ROUTE 11 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TRAUMATO Lv14, MAUZI Lv13, MAGNETILO Lv15, NOCTUH Lv16, RATTIKARL Lv16, HYPNO Lv16, HYPNO Lv16]]
+	[Name = ROUTE 13 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 13 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 13 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv23, MORLORD Lv23, NOCTUH Lv25, OMOT Lv25, MORLORD Lv25, MORLORD Lv25, CHANEIRA Lv25]]
+	[Name = ROUTE 14 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv26, NIDORINA Lv26, TAUBOGA Lv28, HOPPSPROSS Lv28, HUBELUPF Lv30, HUBELUPF Lv30, CHANEIRA Lv28]]
+	[Name = ROUTE 14 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv26, NIDORINA Lv26, TAUBOGA Lv28, HOPPSPROSS Lv28, HUBELUPF Lv30, HUBELUPF Lv30, CHANEIRA Lv28]]
+	[Name = ROUTE 14 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv26, MORLORD Lv26, NOCTUH Lv28, OMOT Lv28, MORLORD Lv28, MORLORD Lv28, CHANEIRA Lv28]]
+	[Name = ROUTE 15 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 15 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORINO Lv23, NIDORINA Lv23, TAUBOGA Lv25, HOPPSPROSS Lv25, HOPPSPROSS Lv27, HOPPSPROSS Lv27, CHANEIRA Lv25]]
+	[Name = ROUTE 15 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv23, MORLORD Lv23, NOCTUH Lv25, OMOT Lv25, MORLORD Lv25, MORLORD Lv25, CHANEIRA Lv25]]
+	[Name = ROUTE 16 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, IBITAK Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 16 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, SCHNECKMAG Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 16 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, SLEIMA Lv27, SLEIMA Lv28, KRAMURX Lv29, KRAMURX Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 17 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [IBITAK Lv30, SLEIMA Lv29, SLEIMA Lv31, IBITAK Lv32, SLEIMA Lv33, SLEIMOK Lv33, SLEIMOK Lv33]]
+	[Name = ROUTE 17 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [IBITAK Lv30, SCHNECKMAG Lv29, SLEIMA Lv29, IBITAK Lv32, SCHNECKMAG Lv32, SLEIMOK Lv33, SLEIMOK Lv33]]
+	[Name = ROUTE 17 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv30, SLEIMA Lv29, SLEIMA Lv31, SLEIMA Lv32, SLEIMA Lv33, SLEIMOK Lv33, SLEIMOK Lv33]]
+	[Name = ROUTE 18 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, IBITAK Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 18 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, IBITAK Lv27, SLEIMA Lv28, IBITAK Lv29, SCHNECKMAG Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 18 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [SLEIMA Lv26, SLEIMA Lv27, SLEIMA Lv28, SLEIMA Lv29, SLEIMA Lv29, SLEIMOK Lv30, SLEIMOK Lv30]]
+	[Name = ROUTE 21 Grass/Cave (Morning), Rate = 15, MapIndex = -1,
+		Encounters = [TANGELA Lv30, RATTFRATZ Lv25, TANGELA Lv35, RATTIKARL Lv20, PANTIMOS Lv30, PANTIMOS Lv28, PANTIMOS Lv28]]
+	[Name = ROUTE 21 Grass/Cave (Day), Rate = 15, MapIndex = -1,
+		Encounters = [TANGELA Lv30, RATTFRATZ Lv25, TANGELA Lv35, RATTIKARL Lv20, PANTIMOS Lv28, PANTIMOS Lv30, PANTIMOS Lv30]]
+	[Name = ROUTE 21 Grass/Cave (Night), Rate = 15, MapIndex = -1,
+		Encounters = [TANGELA Lv30, RATTFRATZ Lv25, TANGELA Lv35, RATTIKARL Lv20, TANGELA Lv30, TANGELA Lv28, TANGELA Lv28]]
+	[Name = ROUTE 22 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, HABITAK Lv3, HABITAK Lv5, DODU Lv4, PONITA Lv6, IBITAK Lv7, IBITAK Lv7]]
+	[Name = ROUTE 22 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, HABITAK Lv3, HABITAK Lv5, DODU Lv4, PONITA Lv6, IBITAK Lv7, IBITAK Lv7]]
+	[Name = ROUTE 22 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [RATTFRATZ Lv3, QUAPSEL Lv3, RATTFRATZ Lv5, QUAPSEL Lv4, RATTFRATZ Lv6, RATTFRATZ Lv7, RATTFRATZ Lv7]]
+	[Name = ROUTE 24 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv8, RAUPY Lv10, SAFCON Lv12, ABRA Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 24 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv8, SONNKERN Lv12, RAUPY Lv10, ABRA Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 24 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [BLUZUK Lv10, MYRAPLA Lv10, MYRAPLA Lv12, ABRA Lv12, KNOFENSA Lv10, DUFLOR Lv14, DUFLOR Lv14]]
+	[Name = ROUTE 25 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv10, TAUBSI Lv10, TAUBOGA Lv12, SAFCON Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 25 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [RAUPY Lv10, TAUBSI Lv10, TAUBOGA Lv12, SAFCON Lv12, KNOFENSA Lv10, SMETTBO Lv14, SMETTBO Lv14]]
+	[Name = ROUTE 25 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MYRAPLA Lv10, HOOTHOOT Lv10, BLUZUK Lv10, NOCTUH Lv12, KNOFENSA Lv10, NOCTUH Lv14, NOCTUH Lv14]]
+	[Name = ROUTE 26 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, SANDAMER Lv28, PONITA Lv32, RATTIKARL Lv30, DODU Lv30, ARBOK Lv30, ARBOK Lv30]]
+	[Name = ROUTE 26 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, SANDAMER Lv28, PONITA Lv32, RATTIKARL Lv30, DODU Lv30, ARBOK Lv30, ARBOK Lv30]]
+	[Name = ROUTE 26 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [NOCTUH Lv28, RATTIKARL Lv28, NOCTUH Lv32, RATTIKARL Lv30, MORLORD Lv30, MORLORD Lv30, MORLORD Lv30]]
+	[Name = ROUTE 27 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, ARBOK Lv28, RATTIKARL Lv30, DODU Lv30, PONITA Lv32, DODRI Lv30, DODRI Lv30]]
+	[Name = ROUTE 27 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [DODU Lv28, ARBOK Lv28, RATTIKARL Lv30, DODU Lv30, PONITA Lv32, DODRI Lv30, DODRI Lv30]]
+	[Name = ROUTE 27 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [MORLORD Lv28, NOCTUH Lv28, RATTIKARL Lv30, MORLORD Lv30, NOCTUH Lv32, NOCTUH Lv32, NOCTUH Lv32]]
+	[Name = ROUTE 28 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv39, PONITA Lv40, GALLOPA Lv40, ARBOK Lv42, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = ROUTE 28 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv39, PONITA Lv40, GALLOPA Lv40, ARBOK Lv42, DODU Lv41, DODRI Lv43, DODRI Lv43]]
+	[Name = ROUTE 28 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [TANGELA Lv39, QUAPUTZI Lv40, GOLBAT Lv40, QUAPUTZI Lv40, GOLBAT Lv42, GOLBAT Lv42, GOLBAT Lv42]]
+	[Name = TOHJO-FÄLLE Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, FLEGMON Lv20, GOLKING Lv20]]
+	[Name = ORANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 4 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 6 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [ENTON Lv10, ENTON Lv5, ENTORON Lv10]]
+	[Name = ROUTE 9 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, GOLDINI Lv10, GOLKING Lv15]]
+	[Name = ROUTE 10 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv15, GOLDINI Lv10, GOLKING Lv15]]
+	[Name = ROUTE 12 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv25, MORLORD Lv25, TENTOXA Lv25]]
+	[Name = ROUTE 13 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv25, MORLORD Lv25, TENTOXA Lv25]]
+	[Name = ROUTE 19 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 20 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 21 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = ROUTE 22 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv10, QUAPSEL Lv5, QUAPUTZI Lv10]]
+	[Name = ROUTE 24 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 25 Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ROUTE 26 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv30, TENTACHA Lv25, TENTOXA Lv30]]
+	[Name = ROUTE 27 Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv15, TENTOXA Lv20]]
+	[Name = ROUTE 28 Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv40, QUAPSEL Lv35, QUAPUTZI Lv40]]
+	[Name = ALABASTIA Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = VERTANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [QUAPSEL Lv10, QUAPSEL Lv5, QUAPUTZI Lv10]]
+	[Name = AZURIA CITY Surfing, Rate = 10, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, GOLDINI Lv5, GOLKING Lv10]]
+	[Name = ORANIA CITY Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = PRISMANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [SLEIMA Lv20, SLEIMA Lv15, SLEIMOK Lv15]]
+	[Name = FUCHSANIA CITY Surfing, Rate = 5, MapIndex = -1,
+		Encounters = [KARPADOR Lv20, KARPADOR Lv15, KARPADOR Lv10]]
+	[Name = ZINNOBER\x1EINSEL Surfing, Rate = 15, MapIndex = -1,
+		Encounters = [TENTACHA Lv35, TENTACHA Lv30, TENTOXA Lv35]]
+	[Name = DUNKELHÖHLE Grass/Cave (Morning), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, DUMMISEL Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, DUMMISEL Lv2, DUMMISEL Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave (Day), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, DUMMISEL Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, DUMMISEL Lv2, DUMMISEL Lv4, DUMMISEL Lv4]]
+	[Name = DUNKELHÖHLE Grass/Cave (Night), Rate = 10, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lv3, DUMMISEL Lv3, ZUBAT Lv2, KLEINSTEIN Lv2, DUMMISEL Lv2, DUMMISEL Lv4, DUMMISEL Lv4]]
+	[Name = ROUTE 35 Grass/Cave (Morning), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lv12, NIDORAN♀ Lv12, YANMA Lv12, YANMA Lv14, TAUBSI Lv14, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 35 Grass/Cave (Day), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lv12, NIDORAN♀ Lv12, YANMA Lv12, YANMA Lv14, TAUBSI Lv14, DITTO Lv10, DITTO Lv10]]
+	[Name = ROUTE 35 Grass/Cave (Night), Rate = 25, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lv12, NIDORAN♀ Lv12, YANMA Lv12, YANMA Lv14, HOOTHOOT Lv14, DITTO Lv10, DITTO Lv10]]
+	[Name = Fishing Shore, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KRABBY Lv10, KARPADOR Lv20, KRABBY Lv20, KRABBY Lv20, KRABBY Lv40, KRABBY Lv40, KINGLER Lv40]]
+	[Name = Fishing Ocean, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, TENTACHA Lv10, KARPADOR Lv20, TENTACHA Lv20, LAMPI Lv20, LAMPI Lv40, TENTOXA Lv40, LANTURN Lv40]]
+	[Name = Fishing Lake, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, GOLDINI Lv10, KARPADOR Lv20, GOLDINI Lv20, GOLDINI Lv20, GOLDINI Lv40, KARPADOR Lv40, GOLKING Lv40]]
+	[Name = Fishing Pond, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, QUAPSEL Lv10, KARPADOR Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv40, KARPADOR Lv40, QUAPSEL Lv40]]
+	[Name = Fishing Dratini 1 (Ice Path, Dragon's Den), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv40, KARPADOR Lv40, DRAGONIR Lv40]]
+	[Name = Fishing Qwilfish Swarm (Route 32), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv5, KARPADOR Lv5, BALDORFISH Lv5, KARPADOR Lv20, BALDORFISH Lv20, BALDORFISH Lv20, BALDORFISH Lv40, BALDORFISH Lv40, BALDORFISH Lv40]]
+	[Name = Fishing Remoraid Swarm (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, REMORAID Lv10, KARPADOR Lv20, REMORAID Lv20, REMORAID Lv20, REMORAID Lv40, REMORAID Lv40, REMORAID Lv40]]
+	[Name = Fishing Gyarados (Lake of Rage, Fuchsia City), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv20, KARPADOR Lv40, KARPADOR Lv40, KARPADOR Lv40]]
+	[Name = Fishing Dratini 2 (Route 45), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, KARPADOR Lv10, DRAGONIR Lv10]]
+	[Name = Fishing Whirl Islands, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, KRABBY Lv10, KARPADOR Lv20, KRABBY Lv20, KRABBY Lv20, KRABBY Lv40, KINGLER Lv40, SEEMON Lv40]]
+	[Name = Fishing Qwilfish (Routes 32, 12, 13), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, TENTACHA Lv10, KARPADOR Lv20, TENTACHA Lv20, TENTACHA Lv20, TENTACHA Lv40, KARPADOR Lv40, BALDORFISH Lv40]]
+	[Name = Fishing Remoraid (Route 44), Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv10, KARPADOR Lv10, QUAPSEL Lv10, KARPADOR Lv20, QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv40, KARPADOR Lv40, REMORAID Lv40]]
+	[Name = Time-Specific Fishing 1, Rate = 0, MapIndex = -1,
+		Encounters = [CORASONN Lv20, STERNDU Lv20, CORASONN Lv40, STERNDU Lv40]]
+	[Name = Time-Specific Fishing 2, Rate = 0, MapIndex = -1,
+		Encounters = [MUSCHAS Lv20, MUSCHAS Lv20, MUSCHAS Lv40, MUSCHAS Lv40]]
+	[Name = Time-Specific Fishing 3, Rate = 0, MapIndex = -1,
+		Encounters = [GOLDINI Lv20, GOLDINI Lv20, GOLDINI Lv40, GOLDINI Lv40]]
+	[Name = Time-Specific Fishing 4, Rate = 0, MapIndex = -1,
+		Encounters = [QUAPSEL Lv20, QUAPSEL Lv20, QUAPSEL Lv40, QUAPSEL Lv40]]
+	[Name = Time-Specific Fishing 5, Rate = 0, MapIndex = -1,
+		Encounters = [DRATINI Lv20, DRATINI Lv20, DRATINI Lv40, DRATINI Lv40]]
+	[Name = Time-Specific Fishing 6, Rate = 0, MapIndex = -1,
+		Encounters = [BALDORFISH Lv20, BALDORFISH Lv20, BALDORFISH Lv40, BALDORFISH Lv40]]
+	[Name = Time-Specific Fishing 7, Rate = 0, MapIndex = -1,
+		Encounters = [REMORAID Lv20, REMORAID Lv20, REMORAID Lv40, REMORAID Lv40]]
+	[Name = Time-Specific Fishing 8, Rate = 0, MapIndex = -1,
+		Encounters = [GARADOS Lv20, GARADOS Lv20, GARADOS Lv40, GARADOS Lv40]]
+	[Name = Time-Specific Fishing 9, Rate = 0, MapIndex = -1,
+		Encounters = [DRATINI Lv10, DRATINI Lv10, DRATINI Lv10, DRATINI Lv10]]
+	[Name = Time-Specific Fishing 10, Rate = 0, MapIndex = -1,
+		Encounters = [SEEPER Lv20, SEEPER Lv20, SEEPER Lv40, SEEPER Lv40]]
+	[Name = Time-Specific Fishing 11, Rate = 0, MapIndex = -1,
+		Encounters = [TENTACHA Lv20, TENTACHA Lv20, TENTACHA Lv40, TENTACHA Lv40]]
+	[Name = Headbutt (Routes 44, 45, 46) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, HABITAK Lv10, HABITAK Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Routes 44, 45, 46) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, SKARABORN Lv10, SKARABORN Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, RETTAN Lv10, HABITAK Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Azalea Town, Route 42) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HABITAK Lv10, SKARABORN Lv10, SKARABORN Lv10, GRIFFEL Lv10, GRIFFEL Lv10, GRIFFEL Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, WEBARAK Lv10, LEDYBA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 29-31, 34-39) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, RETTAN Lv10, HOOTHOOT Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Routes 32, 26, 27) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Route 43) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, BLUZUK Lv10, HOOTHOOT Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Route 43) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, OWEI Lv10, OWEI Lv10, OWEI Lv10]]
+	[Name = Headbutt (Ilex Forest) (common), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, TANNZA Lv10, TANNZA Lv10, NOCTUH Lv10, SMETTBO Lv10, BIBOR Lv10]]
+	[Name = Headbutt (Ilex Forest) (rare), Rate = 0, MapIndex = -1,
+		Encounters = [HOOTHOOT Lv10, RAUPY Lv10, HORNLIU Lv10, HOOTHOOT Lv10, SAFCON Lv10, KOKUNA Lv10]]
+	[Name = Rock Smash, Rate = 0, MapIndex = -1,
+		Encounters = [KRABBY Lv15, POTTROTT Lv15]]
+	[Name = Bug Catching Contest, Rate = 0, MapIndex = -1,
+		Encounters = [RAUPY Lvs 7-18, HORNLIU Lvs 7-18, SAFCON Lvs 9-18, KOKUNA Lvs 9-18, SMETTBO Lvs 12-15, BIBOR Lvs 12-15, BLUZUK Lvs 10-16, PARAS Lvs 10-17, SICHLOR Lvs 13-14, PINSIR Lvs 13-14]
+		Banned = [Species [name=ICOGNITO, number=201, primaryType=PSYCHIC, secondaryType=null, hp=48, attack=72, defense=48, spatk=72, spdef=48, speed=48]]]
+]

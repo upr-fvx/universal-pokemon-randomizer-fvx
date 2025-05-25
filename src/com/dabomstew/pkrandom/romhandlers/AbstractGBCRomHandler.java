@@ -1,9 +1,6 @@
 package com.dabomstew.pkrandom.romhandlers;
 
 /*----------------------------------------------------------------------------*/
-/*--  AbstractGBCRomHandler.java - an extension of AbstractGBRomHandler     --*/
-/*--                               used for Gen 1 and Gen 2.                --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -25,34 +22,96 @@ package com.dabomstew.pkrandom.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.RomFunctions;
+import com.dabomstew.pkrandom.constants.GBConstants;
+import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gbspace.BankDividedFreedSpace;
+import com.dabomstew.pkrandom.graphics.images.GBCImage;
+import com.dabomstew.pkrandom.romhandlers.romentries.AbstractGBCRomEntry;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.constants.GBConstants;
-
+/**
+ * An extension of {@link AbstractGBRomHandler} used for Gen 1 and Gen 2.
+ */
 public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
 
     private String[] tb;
     private Map<String, Byte> d;
     private int longestTableToken;
 
-    public AbstractGBCRomHandler(Random random, PrintStream logStream) {
-        super(random, logStream);
+    private BankDividedFreedSpace freedSpace;
+
+    @Override
+    protected void midLoadingSetUp() {
+        super.midLoadingSetUp();
+        this.freedSpace = new BankDividedFreedSpace(GBConstants.bankSize, rom.length / GBConstants.bankSize,
+                getRomEntry().getArrayValue("ReservedBanks"));
+        freeUnusedSpaceAtEndOfBanks();
+        freeUnusedBanks();
     }
+
+    /**
+     * Frees the unused space at the end of some banks, so the randomizer knows to use it.
+     */
+    protected void freeUnusedSpaceAtEndOfBanks() {
+        for (Map.Entry<Integer, Integer> margin : getRomEntry().getBankEndFreeSpaceMargins().entrySet()) {
+            freeUnusedSpaceAtEndOfBank(margin.getKey(), margin.getValue());
+        }
+    }
+
+    protected void freeUnusedBanks() {
+        for (int bank : getRomEntry().getArrayValue("UnusedBanks")) {
+            if (isBankEmpty(bank)) {
+                freeSpaceBetween(bank*GBConstants.bankSize, (bank+1)*GBConstants.bankSize - 1);
+            } else {
+                // TODO: what is a good way to log this?
+                System.out.printf(
+                        "Bank 0x%2x was expected to be empty, but is not.\n" +
+                        "This is a sign of a modified ROM which is not supported by the randomizer.\n" +
+                        "The randomizer will handle it as well as it can, but be aware of the risk of\n" +
+                        "the output being corrupted, or otherwise non-functional.",
+                        bank);
+                freeUnusedSpaceAtEndOfBank(bank, 0x100); // arbitrary large amount
+            }
+        }
+    }
+
+    protected boolean isBankEmpty(int bank) {
+        byte unusedByte = this.getFreeSpaceByte();
+        for (int i = 0; i < GBConstants.bankSize; i++) {
+            if (rom[bank*GBConstants.bankSize + i] != unusedByte) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected void loadGameData() {
+        super.loadGameData();
+        loadMovesLearnt();
+    }
+
+    protected abstract void loadMovesLearnt();
 
     protected void clearTextTables() {
         tb = new String[256];
         if (d != null) {
             d.clear();
         } else {
-            d = new HashMap<String, Byte>();
+            d = new HashMap<>();
         }
         longestTableToken = 0;
     }
@@ -81,9 +140,8 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 }
             }
             sc.close();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
         }
-
     }
 
     protected String readString(int offset, int maxLength, boolean textEngineMode) {
@@ -99,7 +157,7 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 if (currChar == GBConstants.stringTerminator) {
                     break;
                 } else {
-                    string.append("\\x" + String.format("%02X", currChar));
+                    string.append("\\x").append(String.format("%02X", currChar));
                 }
             }
         }
@@ -117,12 +175,13 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 && (rom[offset + len] == GBConstants.stringPrintedTextEnd || rom[offset + len] == GBConstants.stringPrintedTextPromptEnd)) {
             len++;
         }
+        len++;
         return len;
     }
 
     protected byte[] translateString(String text) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        while (text.length() != 0) {
+        while (!text.isEmpty()) {
             int i = Math.max(0, longestTableToken - text.length());
             if (text.charAt(0) == '\\' && text.charAt(1) == 'x') {
                 baos.write(Integer.parseInt(text.substring(2, 4), 16));
@@ -146,23 +205,32 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         return readString(offset, length, false);
     }
 
-    // pads the length with terminators, so length should be at least str's len
-    // + 1
     protected void writeFixedLengthString(String str, int offset, int length) {
+        writeFixedLengthString(rom, str, offset, length);
+    }
+
+    // pads the length with terminators, so length should be at least str's len + 1
+    protected void writeFixedLengthString(byte[] data, String str, int offset, int length) {
         byte[] translated = translateString(str);
         int len = Math.min(translated.length, length);
-        System.arraycopy(translated, 0, rom, offset, len);
+        // TODO: should use writeBytes();
+        System.arraycopy(translated, 0, data, offset, len);
         while (len < length) {
-            rom[offset + len] = GBConstants.stringTerminator;
+            data[offset + len] = GBConstants.stringTerminator;
             len++;
         }
     }
 
     protected void writeVariableLengthString(String str, int offset, boolean alreadyTerminated) {
+        writeVariableLengthString(rom, str, offset, alreadyTerminated);
+    }
+
+    protected void writeVariableLengthString(byte[] data, String str, int offset, boolean alreadyTerminated) {
         byte[] translated = translateString(str);
-        System.arraycopy(translated, 0, rom, offset, translated.length);
+        // TODO: should use writeBytes();
+        System.arraycopy(translated, 0, data, offset, translated.length);
         if (!alreadyTerminated) {
-            rom[offset + translated.length] = GBConstants.stringTerminator;
+            data[offset + translated.length] = GBConstants.stringTerminator;
         }
     }
 
@@ -174,52 +242,234 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
     }
 
-    protected int bankOf(int offset) {
-        return (offset / GBConstants.bankSize);
+    /**
+     * Write a GB pointer to "offset", pointing at "pointer".
+     */
+    @Override
+    protected void writePointer(int offset, int pointer) {
+        int gbPointer = makeGBPointer(pointer);
+        writeWord(offset, gbPointer);
     }
 
-    protected int calculateOffset(int bank, int pointer) {
-        if (pointer < GBConstants.bankSize) {
-            return pointer;
-        } else {
-            return (pointer % GBConstants.bankSize) + bank * GBConstants.bankSize;
-        }
+    /**
+     * Reads the pointer at offset. Assumes the bank to be the one offset is in.
+     */
+    @Override
+    protected int readPointer(int offset) {
+        return readPointer(offset, bankOf(offset));
+    }
+
+    /**
+     * Reads the pointer at offset, with a manually given bank.
+     */
+    protected int readPointer(int offset, int bank) {
+        int pointer = readWord(offset);
+        return calculateOffset(pointer, bank);
+    }
+
+    protected int calculateOffset(int pointer, int bank) {
+        return (pointer % GBConstants.bankSize) + bank * GBConstants.bankSize;
+    }
+
+    protected int bankOf(int offset) {
+        return (offset / GBConstants.bankSize);
     }
 
     protected String readVariableLengthString(int offset, boolean textEngineMode) {
         return readString(offset, Integer.MAX_VALUE, textEngineMode);
     }
 
-    protected static boolean romSig(byte[] rom, String sig) {
-        try {
-            int sigOffset = GBConstants.romSigOffset;
-            byte[] sigBytes = sig.getBytes("US-ASCII");
-            for (int i = 0; i < sigBytes.length; i++) {
-                if (rom[sigOffset + i] != sigBytes[i]) {
-                    return false;
+    protected void writeImage(int offset, GBCImage image) {
+        writeBytes(offset, image.toBytes());
+    }
+
+    /**
+     * A {@link DataRewriter} for a GBC game.
+     */
+    protected class GBCDataRewriter<E> extends DataRewriter<E> {
+
+        public GBCDataRewriter() {
+            super();
+            setLongAlignAdresses(false);
+        }
+    }
+
+    /**
+     * A {@link GBCDataRewriter} for when the data is and must stay in a specific bank,
+     * but this bank not shared by the pointer. If the data must share the pointer's bank,
+     * use {@link SameBankDataRewriter}.
+     */
+    protected class SpecificBankDataRewriter<E> extends GBCDataRewriter<E> {
+
+        int bank;
+
+        public SpecificBankDataRewriter(int bank) {
+            this.bank = bank;
+            this.pointerReader = offset -> readPointer(offset, bank);
+        }
+
+        @Override
+        protected int repointAndWriteToFreeSpace(int pointerOffset, byte[] data) {
+            int newOffset = findAndUnfreeSpaceInBank(data.length, bank);
+
+            pointerWriter.accept(pointerOffset, newOffset);
+            writeBytes(newOffset, data);
+
+            return newOffset;
+        }
+    }
+
+    /**
+     * A {@link GBCDataRewriter} for when the data is and must stay in the same bank as the pointer.
+     * <b>This is almost always the right Rewriter</b> for data in a GBC game, since normal 2-byte pointers only
+     * reach within a single bank. If your code uses another Rewriter, make sure you understand why. If you don't
+     * understand why, you are probably wrong and should use this instead.
+     */
+    protected class SameBankDataRewriter<E> extends GBCDataRewriter<E> {
+
+        @Override
+        protected int repointAndWriteToFreeSpace(int pointerOffset, byte[] data) {
+            int bank = bankOf(pointerReader.apply(pointerOffset));
+            int newOffset = findAndUnfreeSpaceInBank(data.length, bank);
+
+            pointerWriter.accept(pointerOffset, newOffset);
+            writeBytes(newOffset, data);
+
+            return newOffset;
+        }
+    }
+
+    protected class IndirectBankDataRewriter<E> extends GBCDataRewriter<E> {
+
+        private final int[] bankOffsets;
+        private final int bank;
+
+        public IndirectBankDataRewriter(int[] bankOffsets) {
+            super();
+            this.bankOffsets = bankOffsets;
+            this.bank = rom[bankOffsets[0]] & 0xFF;
+            for (int i = 1; i < bankOffsets.length; i++) {
+                if ((rom[bankOffsets[i]] & 0xFF) != bank) {
+                    throw new IllegalArgumentException("Invalid bankOffset=0x" + Integer.toHexString(bankOffsets[i]) +
+                            ". Value is 0x" + Integer.toHexString(rom[bankOffsets[i]] & 0xFF) + ", instead of 0x" +
+                            Integer.toHexString(bank) + ".");
                 }
             }
-            return true;
-        } catch (UnsupportedEncodingException ex) {
-            return false;
+
+            System.out.println("Bank before: " + Integer.toHexString(bank));
+            setPointerReader(pointerOffset -> readPointer(pointerOffset, bank));
         }
+
+        @Override
+        protected int repointAndWriteToFreeSpace(int pointerOffset, byte[] data) {
+
+            int newOffset = findAndUnfreeSpace(data.length);
+
+            pointerWriter.accept(pointerOffset, newOffset);
+            writeBytes(newOffset, data);
+
+            for (int bankOffset : bankOffsets) {
+                writeByte(bankOffset, (byte) bankOf(newOffset));
+            }
+
+            return newOffset;
+        }
+    }
+
+    protected int findAndUnfreeSpaceInBank(int length, int bank) {
+        int foundOffset;
+        do {
+            foundOffset = getFreedSpace().findAndUnfreeInBank(length, bank);
+        } while (isRomSpaceUsed(foundOffset, length));
+
+        if (foundOffset == -1) {
+            throw new RomIOException("Bank 0x" + Integer.toHexString(bank) + " full. Can't find " + length +
+                    " free bytes anywhere.");
+        }
+        return foundOffset;
+    }
+
+    @Override
+    protected BankDividedFreedSpace getFreedSpace() {
+        return freedSpace;
+    }
+
+    @Override
+    protected byte getFreeSpaceByte() {
+        return 0;
+    }
+
+    protected void freeUnusedSpaceAtEndOfBank(int bank, int frontMargin) {
+//        System.out.println("Trying to free unused space at end of bank 0x" + Integer.toHexString(bank));
+        freeUnusedSpaceBefore((bank + 1) * GBConstants.bankSize - 1, frontMargin);
+    }
+
+    /**
+     * Scans the ROM and frees "unused" bytes.
+     * @param end The offset for the last byte to free
+     * @param frontMargin The amount of seemingly unused bytes to NOT free, at the front/start.
+     */
+    protected void freeUnusedSpaceBefore(int end, int frontMargin) {
+        int start = end;
+        int minStart = bankOf(end) * GBConstants.bankSize;
+        while (rom[start] == getFreeSpaceByte() && start >= minStart) {
+            start--;
+        }
+        start++;
+        start += frontMargin;
+        if (start <= end) {
+            freeSpaceBetween(start, end);
+        }
+    }
+
+    // for filling the RomEntries
+    public void findImageForRomEntry(String fileName, String romEntryName, boolean columnMode) {
+        try {
+            BufferedImage orig = ImageIO.read(new File(fileName));
+            byte[] data = new GBCImage.Builder(orig).columnMode(columnMode)
+                    .build().toBytes();
+//            System.out.println(RomFunctions.bytesToHex(data));
+//            System.out.println("found at:");
+            List<Integer> foundAt = RomFunctions.search(rom, data);
+//            System.out.println(foundAt);
+            if (!foundAt.isEmpty()) {
+                System.out.println(romEntryName + "=0x" + Integer.toHexString(foundAt.get(0)));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static boolean romSig(byte[] rom, String sig) {
+        int sigOffset = GBConstants.romSigOffset;
+        byte[] sigBytes = sig.getBytes(StandardCharsets.US_ASCII);
+        for (int i = 0; i < sigBytes.length; i++) {
+            if (rom[sigOffset + i] != sigBytes[i]) {
+                return false;
+            }
+        }
+        return true;
 
     }
 
     protected static boolean romCode(byte[] rom, String code) {
-        try {
-            int sigOffset = GBConstants.romCodeOffset;
-            byte[] sigBytes = code.getBytes("US-ASCII");
-            for (int i = 0; i < sigBytes.length; i++) {
-                if (rom[sigOffset + i] != sigBytes[i]) {
-                    return false;
-                }
+        int sigOffset = GBConstants.romCodeOffset;
+        byte[] sigBytes = code.getBytes(StandardCharsets.US_ASCII);
+        for (int i = 0; i < sigBytes.length; i++) {
+            if (rom[sigOffset + i] != sigBytes[i]) {
+                return false;
             }
-            return true;
-        } catch (UnsupportedEncodingException ex) {
-            return false;
         }
+        return true;
 
+    }
+
+    @Override
+    public abstract AbstractGBCRomEntry getRomEntry();
+
+    @Override
+    public String getROMCode() {
+        return getRomEntry().getRomCode() + " (" + getRomEntry().getVersion() + "/" + getRomEntry().getNonJapanese() + ")";
     }
 
 }

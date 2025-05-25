@@ -1,54 +1,41 @@
 package com.dabomstew.pkrandom.romhandlers;
 
-/*----------------------------------------------------------------------------*/
-/*--  AbstractDSRomHandler.java - a base class for DS rom handlers          --*/
-/*--                              which standardises common DS functions.   --*/
-/*--                                                                        --*/
-/*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
-/*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
-/*--  Pokemon and any associated names and the like are                     --*/
-/*--  trademark and (C) Nintendo 1996-2020.                                 --*/
-/*--                                                                        --*/
-/*--  The custom code written here is licensed under the terms of the GPL:  --*/
-/*--                                                                        --*/
-/*--  This program is free software: you can redistribute it and/or modify  --*/
-/*--  it under the terms of the GNU General Public License as published by  --*/
-/*--  the Free Software Foundation, either version 3 of the License, or     --*/
-/*--  (at your option) any later version.                                   --*/
-/*--                                                                        --*/
-/*--  This program is distributed in the hope that it will be useful,       --*/
-/*--  but WITHOUT ANY WARRANTY; without even the implied warranty of        --*/
-/*--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          --*/
-/*--  GNU General Public License for more details.                          --*/
-/*--                                                                        --*/
-/*--  You should have received a copy of the GNU General Public License     --*/
-/*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
-/*----------------------------------------------------------------------------*/
+import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkrandom.GFXFunctions;
+import com.dabomstew.pkrandom.RomFunctions;
+import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
+import com.dabomstew.pkrandom.exceptions.RomIOException;
+import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkrandom.graphics.palettes.Palette;
+import com.dabomstew.pkrandom.newnds.NARCArchive;
+import com.dabomstew.pkrandom.newnds.NDSRom;
+import com.dabomstew.pkrandom.romhandlers.romentries.AbstractDSRomEntry;
+
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.RomFunctions;
-import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
-import com.dabomstew.pkrandom.exceptions.RandomizerIOException;
-import com.dabomstew.pkrandom.newnds.NARCArchive;
-import com.dabomstew.pkrandom.newnds.NDSRom;
-import com.dabomstew.pkrandom.pokemon.Type;
-
+/**
+ * An abstract base class for DS {@link RomHandler}s, which standardises common DS functions.
+ */
 public abstract class AbstractDSRomHandler extends AbstractRomHandler {
+	
+    private static final byte[] PALETTE_PREFIX_BYTES = { (byte) 0x52, (byte) 0x4C, (byte) 0x43, (byte) 0x4E,
+            (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x01, (byte) 0x48, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+            (byte) 0x10, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x54, (byte) 0x54, (byte) 0x4C, (byte) 0x50,
+            (byte) 0x38, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x04, (byte) 0x00, (byte) 0x0A, (byte) 0x00,
+            (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x20, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+            (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
 
-    protected String dataFolder;
     private NDSRom baseRom;
     private String loadedFN;
     private boolean arm9Extended = false;
-
-    public AbstractDSRomHandler(Random random, PrintStream logStream) {
-        super(random, logStream);
-    }
 
     protected abstract boolean detectNDSRom(String ndsCode, byte version);
 
@@ -61,7 +48,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         try {
             baseRom = new NDSRom(filename);
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
         loadedFN = filename;
         loadedROM(baseRom.getCode(), baseRom.getVersion());
@@ -83,18 +70,15 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     protected abstract void loadedROM(String romCode, byte version);
 
-    protected abstract void savingROM();
-
     @Override
     public boolean saveRomFile(String filename, long seed) {
-        savingROM();
         try {
             baseRom.saveTo(filename);
         } catch (IOException e) {
             if (e.getMessage().contains("Access is denied")) {
                 throw new CannotWriteToLocationException("The randomizer cannot write to this location: " + filename);
             } else {
-                throw new RandomizerIOException(e);
+                throw new RomIOException(e);
             }
         }
         return true;
@@ -139,11 +123,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public boolean canChangeStaticPokemon() {
-        return false;
-    }
-
-    @Override
     public boolean hasPhysicalSpecialSplit() {
         // Default value for Gen4+.
         // Handlers can override again in case of ROM hacks etc.
@@ -164,9 +143,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             fis.skip(0x0C);
             byte[] sig = FileFunctions.readFullyIntoBuffer(fis, 4);
             fis.close();
-            return new String(sig, "US-ASCII");
+            return new String(sig, StandardCharsets.US_ASCII);
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
     }
 
@@ -178,13 +157,17 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             fis.close();
             return version[0];
         } catch (IOException e) {
-            throw new RandomizerIOException(e);
+            throw new RomIOException(e);
         }
     }
 
     protected int readByte(byte[] data, int offset) { return data[offset] & 0xFF; }
 
-    protected int readWord(byte[] data, int offset) {
+    protected final void writeBytes(byte[] data, int offset, byte[] values) {
+        System.arraycopy(values, 0, data, offset, values.length);
+    }
+
+    public int readWord(byte[] data, int offset) {
         return (data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8);
     }
 
@@ -197,7 +180,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         return readLong(data, offset) + offset + 4;
     }
 
-    protected void writeWord(byte[] data, int offset, int value) {
+    public void writeWord(byte[] data, int offset, int value) {
         data[offset] = (byte) (value & 0xFF);
         data[offset + 1] = (byte) ((value >> 8) & 0xFF);
     }
@@ -314,7 +297,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
         }
         List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.size() == 0) {
+        if (found.isEmpty()) {
             return -1; // not found
         } else if (found.size() > 1) {
             return -2; // not unique
@@ -387,5 +370,167 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         return newARM9;
     }
+    
+	private byte[] concatenate(byte[] a, byte[] b) {
+	    byte[] sum = new byte[a.length + b.length];
+	    System.arraycopy(a, 0, sum, 0, a.length);
+	    System.arraycopy(b, 0, sum, a.length, b.length);
+	    return sum;
+	}
+
+    @Override
+    public boolean hasTypeEffectivenessSupport() {
+        return true;
+    }
+
+    @Override
+    public boolean hasPokemonPaletteSupport() {
+        return true;
+    }
+
+    @Override
+    public boolean pokemonPaletteSupportIsPartial() {
+        return true;
+    }
+
+    // I dare not rewrite the load ROM structure, so for now loadPokemonPalettes()
+	// is separate methods called in loadROM()/loadedRom() methods. Even though
+	// one call in AbstractRomHandler should suffice.
+    // TODO: move loadPokemonPalettes() up
+	protected abstract void loadPokemonPalettes();
+
+    protected final Palette readPalette(NARCArchive NARC, int index) {
+        byte[] withPrefixBytes = NARC.files.get(index);
+        byte[] paletteBytes = Arrays.copyOfRange(withPrefixBytes, PALETTE_PREFIX_BYTES.length, withPrefixBytes.length);
+        return new Palette(paletteBytes);
+    }
+    
+    protected final void writePalette(NARCArchive NARC, int index, Palette palette) {
+        byte[] paletteBytes = palette.toBytes();
+        paletteBytes = concatenate(PALETTE_PREFIX_BYTES, paletteBytes);
+        NARC.files.set(index, paletteBytes);
+    }
+
+    @Override
+    public List<BufferedImage> getAllPokemonImages() {
+        List<BufferedImage> bims = new ArrayList<>();
+
+		String NARCPath = getRomEntry().getFile("PokemonGraphics");
+		NARCArchive pokeGraphicsNARC;
+		try {
+			pokeGraphicsNARC = readNARC(NARCPath);
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+
+        for (int i = 1; i < getSpecies().size(); i++) {
+            Species pk = getSpecies().get(i);
+            DSPokemonImageGetter pig = createPokemonImageGetter(pk).setPokeGraphicsNARC(pokeGraphicsNARC);
+            bims.add(pig.getFull());
+        }
+        return bims;
+    }
+
+    @Override
+    public boolean hasPokemonImageGetter() {
+        return true;
+    }
+
+    @Override
+    public abstract DSPokemonImageGetter createPokemonImageGetter(Species pk);
+
+    public abstract class DSPokemonImageGetter extends PokemonImageGetter {
+        public static final int MALE = 0;
+        public static final int FEMALE = 1;
+
+        protected NARCArchive pokeGraphicsNARC;
+        protected int gender = FEMALE;
+
+        public DSPokemonImageGetter(Species pk) {
+            super(pk);
+        }
+
+        public DSPokemonImageGetter setPokeGraphicsNARC(NARCArchive pokeGraphicsNARC) {
+            this.pokeGraphicsNARC = pokeGraphicsNARC;
+            return this;
+        }
+
+        public DSPokemonImageGetter setGender(int gender) {
+            if (gender != FEMALE && gender != MALE) {
+                throw new IllegalArgumentException("invalid gender, must be 0(MALE) or 1(FEMALE)");
+            }
+            this.gender = gender;
+            return this;
+        }
+
+        protected void beforeGet() {
+            if (pokeGraphicsNARC == null) {
+                try {
+                    String NARCpath = getRomEntry().getFile("PokemonGraphics");
+                    pokeGraphicsNARC = readNARC(NARCpath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        public abstract boolean hasGenderedImages();
+
+        @Override
+        public BufferedImage getFull() {
+            // TODO: Gen 5 technically allows for alt forms to have graphical gender differences.
+            //  Combine the two methods below.
+            if (getGraphicalFormeAmount() > 1) {
+                return withFormesGetFull();
+            } else {
+                return withGendersGetFull();
+            }
+        }
+
+        private BufferedImage withFormesGetFull() {
+            setIncludePalette(true);
+
+            BufferedImage[] normal = new BufferedImage[getGraphicalFormeAmount()*2];
+            BufferedImage[] shiny = new BufferedImage[getGraphicalFormeAmount()*2];
+            for (int i = 0; i < getGraphicalFormeAmount(); i++) {
+                setGraphicalForme(i);
+
+                normal[i*2] = get();
+                normal[i*2 + 1] = setBack(true).get();
+                shiny[i*2 + 1] = setShiny(true).get();
+                shiny[i*2] = setBack(false).get();
+                setShiny(false);
+            }
+            return GFXFunctions.stitchToGrid(new BufferedImage[][] { normal, shiny });
+        }
+
+        public BufferedImage withGendersGetFull() {
+            setGender(DSPokemonImageGetter.MALE)
+                    .setIncludePalette(true);
+
+            BufferedImage frontNormalM = get();
+            BufferedImage backNormalM = setBack(true).get();
+            BufferedImage backShinyM = setShiny(true).get();
+            BufferedImage frontShinyM = setBack(false).get();
+
+            BufferedImage combined;
+            if (hasGenderedImages()) {
+                BufferedImage frontShinyF = setGender(DSPokemonImageGetter.FEMALE).get();
+                BufferedImage backShinyF = setBack(true).get();
+                BufferedImage backNormalF = setShiny(false).get();
+                BufferedImage frontNormalF = setBack(false).get();
+                combined = GFXFunctions
+                        .stitchToGrid(new BufferedImage[][]{{frontNormalM, backNormalM, frontNormalF, backNormalF},
+                                {frontShinyM, backShinyM, frontShinyF, backShinyF}});
+            } else {
+                combined = GFXFunctions
+                        .stitchToGrid(new BufferedImage[][]{{frontNormalM, backNormalM}, {frontShinyM, backShinyM}});
+            }
+            return combined;
+        }
+    }
+
+    @Override
+    protected abstract AbstractDSRomEntry getRomEntry();
 
 }

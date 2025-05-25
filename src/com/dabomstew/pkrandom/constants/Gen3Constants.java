@@ -24,14 +24,11 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import com.dabomstew.pkrandom.pokemon.ItemList;
-import com.dabomstew.pkrandom.pokemon.Trainer;
-import com.dabomstew.pkrandom.pokemon.Type;
 
 public class Gen3Constants {
 
@@ -49,32 +46,33 @@ public class Gen3Constants {
 
     public static final int pokemonCount = 386;
 
-    public static final String wildPokemonPointerPrefix = "0348048009E00000FFFF0000";
-
-    public static final String mapBanksPointerPrefix = "80180068890B091808687047";
+    public static final int unownFormeCount = 28, unownBIndex = 413;
 
     public static final String rsPokemonNamesPointerSuffix = "30B50025084CC8F7";
 
-    public static final String frlgMapLabelsPointerPrefix = "AC470000AE470000B0470000";
+    // These pointer prefixes aren't used despite being accurate to all vanilla ROMs. Using them to search was slow
+    // enough to become annoying when unit testing, compared to having the offsets they dug out in the RomEntry .ini files.
+    // They remain here in case you want to fill a new RomEntry (for a ROM hack).
+    @SuppressWarnings("unused")
+    public static final String wildPokemonPointerPrefix = "0348048009E00000FFFF0000",
+            mapBanksPointerPrefix = "80180068890B091808687047",
+            frlgMapLabelsPointerPrefix = "AC470000AE470000B0470000",
+            rseMapLabelsPointerPrefix = "C078288030BC01BC00470000",
+            pokedexOrderPointerPrefix = "0448814208D0481C0004000C05E00000";
 
-    public static final String rseMapLabelsPointerPrefix = "C078288030BC01BC00470000";
+    // pointer block 1
+    public static final int pokemonFrontImagesPointer = 0x128, pokemonBackImagesPointer = 0x12C,
+    		pokemonNormalPalettesPointer = 0x130, pokemonShinyPalettesPointer = 0x134,
+    		pokemonIconSpritesPointer = 0x138, pokemonIconPalettesPointer = 0x13C,
+    		pokemonNamesPointer = 0x144, moveNamesPointer = 0x148, decorationNamesPointer = 0x14C;
 
-    public static final String pokedexOrderPointerPrefix = "0448814208D0481C0004000C05E00000";
-
-    public static final String rsFrontSpritesPointerPrefix = "05E0";
-
-    public static final String rsFrontSpritesPointerSuffix = "1068191C";
-
-    public static final String rsPokemonPalettesPointerPrefix = "04D90148006817E0";
-
-    public static final String rsPokemonPalettesPointerSuffix = "080C064A11404840";
+    // pointer block 2
+    public static final int pokemonStatsPointer = 0x1BC, abilityNamesPointer = 0x1C0, 
+    		abilityDescriptionsPointer = 0x1C4, itemDataPointer = 0x1C8, moveDataPointer = 0x1CC,
+    		ballSpritesPointer = 0x1D0, ballPalettesPointer = 0x1D4;    
 
     private static final String runningShoesCheckPrefixRS = "0440002C1DD08620", runningShoesCheckPrefixFRLG = "02200540002D29D0",
             runningShoesCheckPrefixE = "0640002E1BD08C20";
-
-    public static final int efrlgPokemonNamesPointer = 0x144, efrlgMoveNamesPointer = 0x148,
-            efrlgAbilityNamesPointer = 0x1C0, efrlgItemDataPointer = 0x1C8, efrlgMoveDataPointer = 0x1CC,
-            efrlgPokemonStatsPointer = 0x1BC, efrlgFrontSpritesPointer = 0x128, efrlgPokemonPalettesPointer = 0x130;
 
     public static final byte[] emptyPokemonSig = new byte[] { 0x32, (byte) 0x96, 0x32, (byte) 0x96, (byte) 0x96, 0x32,
             0x00, 0x00, 0x03, 0x01, (byte) 0xAA, 0x0A, 0x00, 0x00, 0x00, 0x00, (byte) 0xFF, 0x78, 0x00, 0x00, 0x0F,
@@ -87,14 +85,14 @@ public class Gen3Constants {
             bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsGenderRatioOffset = 16,
             bsGrowthCurveOffset = 19, bsAbility1Offset = 22, bsAbility2Offset = 23;
 
-    public static final int textTerminator = 0xFF, textVariable = 0xFD;
+    public static final byte textTerminator = (byte) 0xFF, textVariable = (byte) 0xFD, textPadding = (byte) 0x00;
 
     public static final byte freeSpaceByte = (byte) 0xFF;
 
+    public static final int unusedSpaceChunkLength = 0x100, unusedSpaceFrontMargin = 0x10;
+
     public static final int rseStarter2Offset = 2, rseStarter3Offset = 4, frlgStarter2Offset = 515,
             frlgStarter3Offset = 461, frlgStarterRepeatOffset = 5;
-
-    public static final int frlgBaseStarter1 = 1, frlgBaseStarter2 = 4, frlgBaseStarter3 = 7;
 
     public static final int frlgStarterItemsOffset = 218;
 
@@ -105,14 +103,17 @@ public class Gen3Constants {
 
     public static final Type[] typeTable = constructTypeTable();
 
-    public static final int grassSlots = 12, surfingSlots = 5, rockSmashSlots = 5, fishingSlots = 10;
+    public static final int walkingSlots = 12, surfingSlots = 5, rockSmashSlots = 5, fishingSlots = 10;
+
+    public static final byte[] vanillaMovesLearntTerminator = new byte[] {(byte) 0xFF, (byte) 0xFF},
+            jamboMovesLearntTerminator = new byte[] {0x00, 0x00, (byte) 0xFF};
 
     public static final int tmCount = 50, hmCount = 8;
 
     public static final List<Integer> hmMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.rockSmash, Moves.waterfall, Moves.dive);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.rockSmash, MoveIDs.waterfall, MoveIDs.dive);
 
-    public static final int tmItemOffset = Gen3Items.tm01;
+    public static final int tmItemOffset = Gen3ItemIDs.tm01;
 
     public static final int rseItemDescCharsPerLine = 18, frlgItemDescCharsPerLine = 24;
 
@@ -134,11 +135,15 @@ public class Gen3Constants {
 
     public static final String rsPokedexScriptIdentifier = "326629010803";
 
+    public static final int rsNatDexScriptLength = 44;
+
     public static final String rsNatDexScriptPart1 = "31720167";
 
     public static final String rsNatDexScriptPart2 = "32662901082B00801102006B02021103016B020211DABE4E020211675A6A02022A008003";
 
     public static final String frlgPokedexScriptIdentifier = "292908258101";
+
+    public static final int frlgNatDexScriptLength = 10;
 
     public static final String frlgNatDexScript = "292908258101256F0103";
 
@@ -158,6 +163,8 @@ public class Gen3Constants {
 
     public static final String ePokedexScriptIdentifier = "3229610825F00129E40816CD40010003";
 
+    public static final int eNatDexScriptLength = 27;
+
     public static final String eNatDexScriptPart1 = "31720167";
 
     public static final String eNatDexScriptPart2 = "3229610825F00129E40825F30116CD40010003";
@@ -174,20 +181,51 @@ public class Gen3Constants {
 
     public static final int emMeteorFallsStevenIndex = 804;
 
+    public static String rseGetName(PlayerCharacterType playerCharacter) {
+        if (playerCharacter == PlayerCharacterType.PC1) {
+            return "Brendan";
+        } else if (playerCharacter == PlayerCharacterType.PC2) {
+            return "May";
+        } else {
+            throw new IllegalArgumentException("Invalid enum. RSE only has two playable characters, Brendan and May.");
+        }
+    }
+
+    public static String frlgGetName(PlayerCharacterType playerCharacter) {
+        if (playerCharacter == PlayerCharacterType.PC1) {
+            return "Red";
+        } else if (playerCharacter == PlayerCharacterType.PC2) {
+            return "Leaf";
+        } else {
+            throw new IllegalArgumentException("Invalid enum. FRLG only has two playable characters, Red and Leaf.");
+        }
+    }
+
+    public static final int emBrendanFrontImageIndex = 71, frlgRedFrontImageIndex = 135;
+
+    public static final int rsTrainerFrontPalettesOffset = 0x298, emTrainerFrontPalettesOffset = 0x2E8,
+            frlgTrainerFrontPalettesOffset = 0x4A0,
+            rsTrainerBackPalettesOffset = 0x18, emTrainerBackPalettesOffset = 0x40,
+            frlgTrainerBackPalettesOffset = 0x30;
+
+    public static final int brendanMapIconPaletteOffset = -0x20, mayMapIconImageOffset = 0xA0,
+            mayMapIconPaletteOffset = 0x80, redMapIconPalettePointerOffset = 0xC4,
+            leafMapIconImagePointerOffset = -0x30, leafMapIconPalettePointerOffset = 0xE0;
+
     public static final Map<Integer,List<Integer>> abilityVariations = setupAbilityVariations();
 
     private static Map<Integer,List<Integer>> setupAbilityVariations() {
         Map<Integer,List<Integer>> map = new HashMap<>();
-        map.put(Abilities.insomnia, Arrays.asList(Abilities.insomnia, Abilities.vitalSpirit));
-        map.put(Abilities.clearBody, Arrays.asList(Abilities.clearBody, Abilities.whiteSmoke));
-        map.put(Abilities.hugePower, Arrays.asList(Abilities.hugePower, Abilities.purePower));
-        map.put(Abilities.battleArmor, Arrays.asList(Abilities.battleArmor, Abilities.shellArmor));
-        map.put(Abilities.cloudNine, Arrays.asList(Abilities.cloudNine, Gen3Constants.airLockIndex));
+        map.put(AbilityIDs.insomnia, Arrays.asList(AbilityIDs.insomnia, AbilityIDs.vitalSpirit));
+        map.put(AbilityIDs.clearBody, Arrays.asList(AbilityIDs.clearBody, AbilityIDs.whiteSmoke));
+        map.put(AbilityIDs.hugePower, Arrays.asList(AbilityIDs.hugePower, AbilityIDs.purePower));
+        map.put(AbilityIDs.battleArmor, Arrays.asList(AbilityIDs.battleArmor, AbilityIDs.shellArmor));
+        map.put(AbilityIDs.cloudNine, Arrays.asList(AbilityIDs.cloudNine, Gen3Constants.airLockIndex));
 
         return map;
     }
 
-    public static final List<Integer> uselessAbilities = Arrays.asList(Abilities.forecast, Gen3Constants.cacophonyIndex);
+    public static final List<Integer> uselessAbilities = Arrays.asList(AbilityIDs.forecast, Gen3Constants.cacophonyIndex);
 
     public static final int frlgMapLabelsStart = 0x58;
 
@@ -216,32 +254,39 @@ public class Gen3Constants {
             noDamageAtkAndDefPlusOneEffect = 208, poisonTailEffect = 209, noDamageSpAtkAndSpDefPlusOneEffect = 211,
             noDamageAtkAndSpePlusOneEffect = 212;
 
-    public static final List<Integer> soundMoves = Arrays.asList(Moves.growl, Moves.roar, Moves.sing, Moves.supersonic,
-            Moves.screech, Moves.snore, Moves.uproar, Moves.metalSound, Moves.grassWhistle, Moves.hyperVoice,
-            Moves.perishSong, Moves.healBell);
+    public static final List<Integer> soundMoves = Arrays.asList(MoveIDs.growl, MoveIDs.roar, MoveIDs.sing, MoveIDs.supersonic,
+            MoveIDs.screech, MoveIDs.snore, MoveIDs.uproar, MoveIDs.metalSound, MoveIDs.grassWhistle, MoveIDs.hyperVoice,
+            MoveIDs.perishSong, MoveIDs.healBell);
 
-    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(1, 2, 6, 7, 11, 18, 22, 23,
-            26, 30, 37, 48);
+    public static final int tmsStartIndex = Gen3ItemIDs.tm01;
 
-    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(2, 6, 7, 11, 18, 22, 23, 30,
-            37, 48);
+    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
+            Gen3ItemIDs.tm06, Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23,
+            Gen3ItemIDs.tm26, Gen3ItemIDs.tm30, Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
 
-    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(1, 2, 7, 8, 9, 11, 12, 14,
-            17, 18, 21, 22, 25, 32, 36, 37, 40, 41, 44, 46, 47, 48, 49, 50);
+    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm02, Gen3ItemIDs.tm06,
+            Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23, Gen3ItemIDs.tm30,
+            Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
+
+    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
+            Gen3ItemIDs.tm07, Gen3ItemIDs.tm08, Gen3ItemIDs.tm09, Gen3ItemIDs.tm11, Gen3ItemIDs.tm12, Gen3ItemIDs.tm14,
+            Gen3ItemIDs.tm17, Gen3ItemIDs.tm18, Gen3ItemIDs.tm21, Gen3ItemIDs.tm22, Gen3ItemIDs.tm25, Gen3ItemIDs.tm32,
+            Gen3ItemIDs.tm36, Gen3ItemIDs.tm37, Gen3ItemIDs.tm40, Gen3ItemIDs.tm41, Gen3ItemIDs.tm44, Gen3ItemIDs.tm46,
+            Gen3ItemIDs.tm47, Gen3ItemIDs.tm48, Gen3ItemIDs.tm49, Gen3ItemIDs.tm50);
 
     public static final List<Integer> rseFieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport,
-            Moves.waterfall, Moves.rockSmash, Moves.sweetScent, Moves.dive, Moves.secretPower);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
+            MoveIDs.waterfall, MoveIDs.rockSmash, MoveIDs.sweetScent, MoveIDs.dive, MoveIDs.secretPower);
 
     public static final List<Integer> frlgFieldMoves = Arrays.asList(
-            Moves.cut, Moves.fly, Moves.surf, Moves.strength, Moves.flash, Moves.dig, Moves.teleport,
-            Moves.waterfall, Moves.rockSmash, Moves.sweetScent);
+            MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
+            MoveIDs.waterfall, MoveIDs.rockSmash, MoveIDs.sweetScent);
 
-    public static final List<Integer> rseEarlyRequiredHMMoves = Collections.singletonList(Moves.rockSmash);
+    public static final List<Integer> rseEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.rockSmash);
 
-    public static final List<Integer> frlgEarlyRequiredHMMoves = Collections.singletonList(Moves.cut);
+    public static final List<Integer> frlgEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
-    private static List<String> rsShopNames = Arrays.asList(
+    private static final List<String> rsShopNames = Arrays.asList(
             "Slateport Vitamins",
             "Slateport TMs",
             "Oldale Poké Mart (Before Pokédex)",
@@ -268,7 +313,7 @@ public class Gen3Constants {
             "Pokémon League Poké Mart"
     );
 
-    private static List<String> frlgShopNames = Arrays.asList(
+    private static final List<String> frlgShopNames = Arrays.asList(
             "Trainer Tower Poké Mart",
             "Two Island Market Stall (Initial)",
             "Two Island Market Stall (After Saving Lostelle)",
@@ -294,7 +339,7 @@ public class Gen3Constants {
             "Six Island Poké Mart"
     );
 
-    private static List<String> emShopNames = Arrays.asList(
+    private static final List<String> emShopNames = Arrays.asList(
             "Slateport Vitamins",
             "Slateport TMs",
             "Oldale Poké Mart (Before Pokédex)",
@@ -335,71 +380,71 @@ public class Gen3Constants {
         return null;
     }
 
-    public static final List<Integer> evolutionItems = Arrays.asList(Gen3Items.sunStone, Gen3Items.moonStone,
-            Gen3Items.fireStone, Gen3Items.thunderstone, Gen3Items.waterStone, Gen3Items.leafStone);
+    public static final List<Integer> evolutionItems = Arrays.asList(Gen3ItemIDs.sunStone, Gen3ItemIDs.moonStone,
+            Gen3ItemIDs.fireStone, Gen3ItemIDs.thunderstone, Gen3ItemIDs.waterStone, Gen3ItemIDs.leafStone);
 
-    public static final List<Integer> xItems = Arrays.asList(Gen3Items.guardSpec, Gen3Items.direHit, Gen3Items.xAttack,
-            Gen3Items.xDefend, Gen3Items.xSpeed, Gen3Items.xAccuracy, Gen3Items.xSpecial);
+    public static final List<Integer> xItems = Arrays.asList(Gen3ItemIDs.guardSpec, Gen3ItemIDs.direHit, Gen3ItemIDs.xAttack,
+            Gen3ItemIDs.xDefend, Gen3ItemIDs.xSpeed, Gen3ItemIDs.xAccuracy, Gen3ItemIDs.xSpecial);
 
     public static final List<Integer> consumableHeldItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3Items.cheriBerry, Gen3Items.chestoBerry, Gen3Items.pechaBerry, Gen3Items.rawstBerry,
-            Gen3Items.rawstBerry, Gen3Items.leppaBerry, Gen3Items.oranBerry, Gen3Items.persimBerry, Gen3Items.lumBerry,
-            Gen3Items.sitrusBerry, Gen3Items.figyBerry, Gen3Items.wikiBerry, Gen3Items.magoBerry, Gen3Items.aguavBerry,
-            Gen3Items.iapapaBerry, Gen3Items.liechiBerry, Gen3Items.ganlonBerry, Gen3Items.salacBerry,
-            Gen3Items.petayaBerry, Gen3Items.apicotBerry, Gen3Items.lansatBerry, Gen3Items.starfBerry,
-            Gen3Items.berryJuice, Gen3Items.whiteHerb, Gen3Items.mentalHerb));
+            Gen3ItemIDs.cheriBerry, Gen3ItemIDs.chestoBerry, Gen3ItemIDs.pechaBerry, Gen3ItemIDs.rawstBerry,
+            Gen3ItemIDs.aspearBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
+            Gen3ItemIDs.sitrusBerry, Gen3ItemIDs.figyBerry, Gen3ItemIDs.wikiBerry, Gen3ItemIDs.magoBerry, Gen3ItemIDs.aguavBerry,
+            Gen3ItemIDs.iapapaBerry, Gen3ItemIDs.liechiBerry, Gen3ItemIDs.ganlonBerry, Gen3ItemIDs.salacBerry,
+            Gen3ItemIDs.petayaBerry, Gen3ItemIDs.apicotBerry, Gen3ItemIDs.lansatBerry, Gen3ItemIDs.starfBerry,
+            Gen3ItemIDs.berryJuice, Gen3ItemIDs.whiteHerb, Gen3ItemIDs.mentalHerb));
 
     public static final List<Integer> allHeldItems = setupAllHeldItems();
 
     private static List<Integer> setupAllHeldItems() {
         List<Integer> list = new ArrayList<>();
-        list.addAll(Arrays.asList(Gen3Items.brightPowder, Gen3Items.quickClaw, Gen3Items.choiceBand,
-                Gen3Items.kingsRock, Gen3Items.silverPowder, Gen3Items.focusBand, Gen3Items.scopeLens,
-                Gen3Items.metalCoat, Gen3Items.leftovers, Gen3Items.softSand, Gen3Items.hardStone,
-                Gen3Items.miracleSeed, Gen3Items.blackGlasses, Gen3Items.blackBelt, Gen3Items.magnet,
-                Gen3Items.mysticWater, Gen3Items.sharpBeak, Gen3Items.poisonBarb, Gen3Items.neverMeltIce,
-                Gen3Items.spellTag, Gen3Items.twistedSpoon, Gen3Items.charcoal, Gen3Items.dragonFang,
-                Gen3Items.silkScarf, Gen3Items.shellBell, Gen3Items.seaIncense, Gen3Items.laxIncense));
+        list.addAll(Arrays.asList(Gen3ItemIDs.brightPowder, Gen3ItemIDs.quickClaw, Gen3ItemIDs.choiceBand,
+                Gen3ItemIDs.kingsRock, Gen3ItemIDs.silverPowder, Gen3ItemIDs.focusBand, Gen3ItemIDs.scopeLens,
+                Gen3ItemIDs.metalCoat, Gen3ItemIDs.leftovers, Gen3ItemIDs.softSand, Gen3ItemIDs.hardStone,
+                Gen3ItemIDs.miracleSeed, Gen3ItemIDs.blackGlasses, Gen3ItemIDs.blackBelt, Gen3ItemIDs.magnet,
+                Gen3ItemIDs.mysticWater, Gen3ItemIDs.sharpBeak, Gen3ItemIDs.poisonBarb, Gen3ItemIDs.neverMeltIce,
+                Gen3ItemIDs.spellTag, Gen3ItemIDs.twistedSpoon, Gen3ItemIDs.charcoal, Gen3ItemIDs.dragonFang,
+                Gen3ItemIDs.silkScarf, Gen3ItemIDs.shellBell, Gen3ItemIDs.seaIncense, Gen3ItemIDs.laxIncense));
         list.addAll(consumableHeldItems);
         return Collections.unmodifiableList(list);
     }
 
     public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3Items.cheriBerry, Gen3Items.chestoBerry, Gen3Items.pechaBerry, Gen3Items.rawstBerry,
-            Gen3Items.aspearBerry, Gen3Items.leppaBerry, Gen3Items.oranBerry, Gen3Items.persimBerry, Gen3Items.lumBerry,
-            Gen3Items.sitrusBerry, Gen3Items.ganlonBerry, Gen3Items.salacBerry,
+            Gen3ItemIDs.cheriBerry, Gen3ItemIDs.chestoBerry, Gen3ItemIDs.pechaBerry, Gen3ItemIDs.rawstBerry,
+            Gen3ItemIDs.aspearBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
+            Gen3ItemIDs.sitrusBerry, Gen3ItemIDs.ganlonBerry, Gen3ItemIDs.salacBerry,
             // An NPC pokemon's nature is generated randomly with IVs during gameplay. Therefore, we do not include
             // the flavor berries because, prior to Gen 7, they aren't worth the risk.
-            Gen3Items.apicotBerry, Gen3Items.lansatBerry, Gen3Items.starfBerry, Gen3Items.berryJuice,
-            Gen3Items.whiteHerb, Gen3Items.mentalHerb
+            Gen3ItemIDs.apicotBerry, Gen3ItemIDs.lansatBerry, Gen3ItemIDs.starfBerry, Gen3ItemIDs.berryJuice,
+            Gen3ItemIDs.whiteHerb, Gen3ItemIDs.mentalHerb
     ));
 
     public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3Items.brightPowder, Gen3Items.quickClaw, Gen3Items.kingsRock, Gen3Items.focusBand, Gen3Items.scopeLens,
-            Gen3Items.leftovers, Gen3Items.shellBell, Gen3Items.laxIncense
+            Gen3ItemIDs.brightPowder, Gen3ItemIDs.quickClaw, Gen3ItemIDs.kingsRock, Gen3ItemIDs.focusBand, Gen3ItemIDs.scopeLens,
+            Gen3ItemIDs.leftovers, Gen3ItemIDs.shellBell, Gen3ItemIDs.laxIncense
     ));
 
     public static final Map<Type, List<Integer>> typeBoostingItems = initializeTypeBoostingItems();
 
     private static Map<Type, List<Integer>> initializeTypeBoostingItems() {
         Map<Type, List<Integer>> map = new HashMap<>();
-        map.put(Type.BUG, Arrays.asList(Gen3Items.silverPowder));
-        map.put(Type.DARK, Arrays.asList(Gen3Items.blackGlasses));
-        map.put(Type.DRAGON, Arrays.asList(Gen3Items.dragonFang));
-        map.put(Type.ELECTRIC, Arrays.asList(Gen3Items.magnet));
-        map.put(Type.FIGHTING, Arrays.asList(Gen3Items.blackBelt));
-        map.put(Type.FIRE, Arrays.asList(Gen3Items.charcoal));
-        map.put(Type.FLYING, Arrays.asList(Gen3Items.sharpBeak));
-        map.put(Type.GHOST, Arrays.asList(Gen3Items.spellTag));
-        map.put(Type.GRASS, Arrays.asList(Gen3Items.miracleSeed));
-        map.put(Type.GROUND, Arrays.asList(Gen3Items.softSand));
-        map.put(Type.ICE, Arrays.asList(Gen3Items.neverMeltIce));
-        map.put(Type.NORMAL, Arrays.asList(Gen3Items.silkScarf));
-        map.put(Type.POISON, Arrays.asList(Gen3Items.poisonBarb));
-        map.put(Type.PSYCHIC, Arrays.asList(Gen3Items.twistedSpoon));
-        map.put(Type.ROCK, Arrays.asList(Gen3Items.hardStone));
-        map.put(Type.STEEL, Arrays.asList(Gen3Items.metalCoat));
-        map.put(Type.WATER, Arrays.asList(Gen3Items.mysticWater, Gen3Items.seaIncense));
+        map.put(Type.BUG, Collections.singletonList(Gen3ItemIDs.silverPowder));
+        map.put(Type.DARK, Collections.singletonList(Gen3ItemIDs.blackGlasses));
+        map.put(Type.DRAGON, Collections.singletonList(Gen3ItemIDs.dragonFang));
+        map.put(Type.ELECTRIC, Collections.singletonList(Gen3ItemIDs.magnet));
+        map.put(Type.FIGHTING, Collections.singletonList(Gen3ItemIDs.blackBelt));
+        map.put(Type.FIRE, Collections.singletonList(Gen3ItemIDs.charcoal));
+        map.put(Type.FLYING, Collections.singletonList(Gen3ItemIDs.sharpBeak));
+        map.put(Type.GHOST, Collections.singletonList(Gen3ItemIDs.spellTag));
+        map.put(Type.GRASS, Collections.singletonList(Gen3ItemIDs.miracleSeed));
+        map.put(Type.GROUND, Collections.singletonList(Gen3ItemIDs.softSand));
+        map.put(Type.ICE, Collections.singletonList(Gen3ItemIDs.neverMeltIce));
+        map.put(Type.NORMAL, Collections.singletonList(Gen3ItemIDs.silkScarf));
+        map.put(Type.POISON, Collections.singletonList(Gen3ItemIDs.poisonBarb));
+        map.put(Type.PSYCHIC, Collections.singletonList(Gen3ItemIDs.twistedSpoon));
+        map.put(Type.ROCK, Collections.singletonList(Gen3ItemIDs.hardStone));
+        map.put(Type.STEEL, Collections.singletonList(Gen3ItemIDs.metalCoat));
+        map.put(Type.WATER, Arrays.asList(Gen3ItemIDs.mysticWater, Gen3ItemIDs.seaIncense));
         map.put(null, Collections.emptyList()); // ??? type
         return Collections.unmodifiableMap(map);
     }
@@ -408,15 +453,15 @@ public class Gen3Constants {
 
     private static Map<Integer, List<Integer>> initializeSpeciesBoostingItems() {
         Map<Integer, List<Integer>> map = new HashMap<>();
-        map.put(Species.latias, Arrays.asList(Gen3Items.soulDew));
-        map.put(Species.latios, Arrays.asList(Gen3Items.soulDew));
-        map.put(Species.clamperl, Arrays.asList(Gen3Items.deepSeaTooth, Gen3Items.deepSeaScale));
-        map.put(Species.pikachu, Arrays.asList(Gen3Items.lightBall));
-        map.put(Species.chansey, Arrays.asList(Gen3Items.luckyPunch));
-        map.put(Species.ditto, Arrays.asList(Gen3Items.metalPowder));
-        map.put(Species.cubone, Arrays.asList(Gen3Items.thickClub));
-        map.put(Species.marowak, Arrays.asList(Gen3Items.thickClub));
-        map.put(Species.farfetchd, Arrays.asList(Gen3Items.stick));
+        map.put(SpeciesIDs.latias, Collections.singletonList(Gen3ItemIDs.soulDew));
+        map.put(SpeciesIDs.latios, Collections.singletonList(Gen3ItemIDs.soulDew));
+        map.put(SpeciesIDs.clamperl, Arrays.asList(Gen3ItemIDs.deepSeaTooth, Gen3ItemIDs.deepSeaScale));
+        map.put(SpeciesIDs.pikachu, Collections.singletonList(Gen3ItemIDs.lightBall));
+        map.put(SpeciesIDs.chansey, Collections.singletonList(Gen3ItemIDs.luckyPunch));
+        map.put(SpeciesIDs.ditto, Collections.singletonList(Gen3ItemIDs.metalPowder));
+        map.put(SpeciesIDs.cubone, Collections.singletonList(Gen3ItemIDs.thickClub));
+        map.put(SpeciesIDs.marowak, Collections.singletonList(Gen3ItemIDs.thickClub));
+        map.put(SpeciesIDs.farfetchd, Collections.singletonList(Gen3ItemIDs.stick));
         return Collections.unmodifiableMap(map);
     }
 
@@ -486,8 +531,32 @@ public class Gen3Constants {
         }
     }
 
-    public static ItemList allowedItems, nonBadItemsRSE, nonBadItemsFRLG;
-    public static List<Integer> regularShopItems, opShopItems;
+    public static final int nonNeutralEffectivenessCount = 110;
+
+    private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
+            EvolutionType.HAPPINESS, EvolutionType.HAPPINESS_DAY, EvolutionType.HAPPINESS_NIGHT, EvolutionType.LEVEL,
+            EvolutionType.TRADE, EvolutionType.TRADE_ITEM, EvolutionType.STONE, EvolutionType.LEVEL_ATTACK_HIGHER,
+            EvolutionType.LEVEL_ATK_DEF_SAME, EvolutionType.LEVEL_DEFENSE_HIGHER, EvolutionType.LEVEL_LOW_PV,
+            EvolutionType.LEVEL_HIGH_PV, EvolutionType.LEVEL_CREATE_EXTRA, EvolutionType.LEVEL_IS_EXTRA,
+            EvolutionType.LEVEL_HIGH_BEAUTY
+    };
+
+    public static int evolutionTypeToIndex(EvolutionType evolutionType) {
+        for (int i = 0; i < evolutionTypeTable.length; i++) {
+            if (evolutionType == evolutionTypeTable[i]) {
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
+    public static EvolutionType evolutionTypeFromIndex(int index) {
+        if (index == -1) {
+            return EvolutionType.NONE;
+        }
+        return evolutionTypeTable[index - 1];
+    }
+
 
     public static String getRunningShoesCheckPrefix(int romType) {
         if (romType == Gen3Constants.RomType_Ruby || romType == Gen3Constants.RomType_Sapp) {
@@ -499,64 +568,77 @@ public class Gen3Constants {
         }
     }
 
-    static {
-        setupAllowedItems();
-    }
+    public static final Set<Integer> bannedItems = setupBannedItems();
+    private static final Set<Integer> badItemsRSE = setupBadItemsRSE();
+    private static final Set<Integer> badItemsFRLG = setupBadItemsFRLG();
+    public static final Set<Integer> regularShopItems = setupRegularShopItems();
+    public static final Set<Integer> opShopItems = setupOPShopItems();
 
-    private static void setupAllowedItems() {
-        allowedItems = new ItemList(Gen3Items.oldSeaMap);
+    private static Set<Integer> setupBannedItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(Gen3ItemIDs.oldSeaMap);
         // Key items (+1 unknown item)
-        allowedItems.banRange(Gen3Items.machBike, 30);
-        allowedItems.banRange(Gen3Items.oaksParcel, 28);
+        addBetween(set, Gen3ItemIDs.machBike, Gen3ItemIDs.devonScope);
+        addBetween(set, Gen3ItemIDs.oaksParcel, Gen3ItemIDs.oldSeaMap);
         // Unknown blank items
-        allowedItems.banRange(Gen3Items.unknown52, 11);
-        allowedItems.banRange(Gen3Items.unknown87, 6);
-        allowedItems.banRange(Gen3Items.unknown99, 4);
-        allowedItems.banRange(Gen3Items.unknown112, 9);
-        allowedItems.banRange(Gen3Items.unknown176, 3);
-        allowedItems.banRange(Gen3Items.unknown226, 28);
-        allowedItems.banRange(Gen3Items.unknown347, 2);
-        allowedItems.banSingles(Gen3Items.unknown72, Gen3Items.unknown82, Gen3Items.unknown105, Gen3Items.unknown267);
+        addBetween(set, Gen3ItemIDs.unknown52, Gen3ItemIDs.unknown62);
+        addBetween(set, Gen3ItemIDs.unknown87, Gen3ItemIDs.unknown92);
+        addBetween(set, Gen3ItemIDs.unknown99, Gen3ItemIDs.unknown102);
+        addBetween(set, Gen3ItemIDs.unknown112, Gen3ItemIDs.unknown120);
+        addBetween(set, Gen3ItemIDs.unknown176, Gen3ItemIDs.unknown178);
+        addBetween(set, Gen3ItemIDs.unknown226, Gen3ItemIDs.unknown253);
+        set.addAll(Arrays.asList(Gen3ItemIDs.unknown72, Gen3ItemIDs.unknown82, Gen3ItemIDs.unknown105,
+                Gen3ItemIDs.unknown267, Gen3ItemIDs.unknown347, Gen3ItemIDs.unknown348));
         // HMs
-        allowedItems.banRange(Gen3Items.hm01, 8);
-        // TMs
-        allowedItems.tmRange(Gen3Items.tm01, 50);
-
-        // non-bad items
-        // ban specific pokemon hold items, berries, apricorns, mail
-        nonBadItemsRSE = allowedItems.copy();
-        nonBadItemsRSE.banSingles(Gen3Items.lightBall, Gen3Items.oranBerry, Gen3Items.soulDew);
-        nonBadItemsRSE.banRange(Gen3Items.orangeMail, 12); // mail
-        nonBadItemsRSE.banRange(Gen3Items.figyBerry, 33); // berries
-        nonBadItemsRSE.banRange(Gen3Items.luckyPunch, 4); // pokemon specific
-        nonBadItemsRSE.banRange(Gen3Items.redScarf, 5); // contest scarves
-
-        // FRLG-exclusive bad items
-        // Ban Shoal items and Shards, since they don't do anything
-        nonBadItemsFRLG = nonBadItemsRSE.copy();
-        nonBadItemsFRLG.banRange(Gen3Items.shoalSalt, 6);
-
-        regularShopItems = new ArrayList<>();
-
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3Items.ultraBall,Gen3Items.pokeBall).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3Items.potion,Gen3Items.revive).boxed().collect(Collectors.toList()));
-        regularShopItems.addAll(IntStream.rangeClosed(Gen3Items.superRepel,Gen3Items.repel).boxed().collect(Collectors.toList()));
-
-        opShopItems = new ArrayList<>();
-
-        // "Money items" etc
-        opShopItems.add(Gen3Items.rareCandy);
-        opShopItems.addAll(IntStream.rangeClosed(Gen3Items.tinyMushroom,Gen3Items.bigMushroom).boxed().collect(Collectors.toList()));
-        opShopItems.addAll(IntStream.rangeClosed(Gen3Items.pearl,Gen3Items.nugget).boxed().collect(Collectors.toList()));
-        opShopItems.add(Gen3Items.luckyEgg);
+        addBetween(set, Gen3ItemIDs.hm01, Gen3ItemIDs.hm08);
+        return Collections.unmodifiableSet(set);
     }
 
-    public static ItemList getNonBadItems(int romType) {
-        if (romType == Gen3Constants.RomType_FRLG) {
-            return nonBadItemsFRLG;
-        } else {
-            return nonBadItemsRSE;
+    private static Set<Integer> setupBadItemsRSE() {
+        // ban specific pokemon hold items, berries, apricorns, mail
+        Set<Integer> set = new HashSet<>(Arrays.asList(Gen3ItemIDs.lightBall, Gen3ItemIDs.oranBerry, Gen3ItemIDs.soulDew));
+        addBetween(set, Gen3ItemIDs.orangeMail, Gen3ItemIDs.retroMail); // mail
+        addBetween(set, Gen3ItemIDs.figyBerry, Gen3ItemIDs.enigmaBerry); // berries
+        addBetween(set, Gen3ItemIDs.luckyPunch, Gen3ItemIDs.stick); // pokemon specific
+        addBetween(set, Gen3ItemIDs.redScarf, Gen3ItemIDs.yellowScarf); // contest scarves
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupBadItemsFRLG() {
+        Set<Integer> set = new HashSet<>(badItemsRSE);
+        // Ban Shoal items and Shards, since they don't do anything
+        addBetween(set, Gen3ItemIDs.shoalSalt, Gen3ItemIDs.greenShard);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupRegularShopItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, Gen3ItemIDs.ultraBall, Gen3ItemIDs.pokeBall);
+        addBetween(set, Gen3ItemIDs.potion, Gen3ItemIDs.revive);
+        addBetween(set, Gen3ItemIDs.superRepel, Gen3ItemIDs.repel);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupOPShopItems() {
+        Set<Integer> set = new HashSet<>();
+        set.add(Gen3ItemIDs.rareCandy);
+        addBetween(set, Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom);
+        addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
+        set.add(Gen3ItemIDs.luckyEgg);
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Adds the Integers to the set, from start to end, inclusive.
+     */
+    private static void addBetween(Set<Integer> set, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            set.add(i);
         }
+    }
+
+    public static Set<Integer> getBadItems(int romType) {
+        return romType == Gen3Constants.RomType_FRLG ? badItemsFRLG : badItemsRSE;
     }
 
     public static void trainerTagsRS(List<Trainer> trs, int romType) {
@@ -814,6 +896,65 @@ public class Gen3Constants {
         }
     }
 
+    public static final HashMap<String, Type> gymAndEliteThemesRS = setupGymAndEliteThemesRS();
+
+    private static HashMap<String, Type> setupGymAndEliteThemesRS() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        themeMap.put("CHAMPION", Type.STEEL); //Steven
+        themeMap.put("ELITE1", Type.DARK); //Sidney
+        themeMap.put("ELITE2", Type.GHOST); //Phoebe
+        themeMap.put("ELITE3", Type.ICE); //Glacia
+        themeMap.put("ELITE4", Type.DRAGON); //Drake
+        themeMap.put("GYM1", Type.ROCK); //Roxanne
+        themeMap.put("GYM2", Type.FIGHTING); //Brawly
+        themeMap.put("GYM3", Type.ELECTRIC); //Wattson
+        themeMap.put("GYM4", Type.FIRE); //Flannery
+        themeMap.put("GYM5", Type.NORMAL); //Norman
+        themeMap.put("GYM6", Type.FLYING); //Winona
+        themeMap.put("GYM7", Type.PSYCHIC); //Tate & Liza
+        themeMap.put("GYM8", Type.WATER); //Wallace
+        return themeMap;
+    }
+
+    public static final HashMap<String, Type> gymAndEliteThemesEm = setupGymAndEliteThemesEm();
+
+    private static HashMap<String, Type> setupGymAndEliteThemesEm() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        themeMap.put("CHAMPION", Type.WATER); //Wallace
+        themeMap.put("ELITE1", Type.DARK); //Sidney
+        themeMap.put("ELITE2", Type.GHOST); //Phoebe
+        themeMap.put("ELITE3", Type.ICE); //Glacia
+        themeMap.put("ELITE4", Type.DRAGON); //Drake
+        themeMap.put("GYM1", Type.ROCK); //Roxanne
+        themeMap.put("GYM2", Type.FIGHTING); //Brawly
+        themeMap.put("GYM3", Type.ELECTRIC); //Wattson
+        themeMap.put("GYM4", Type.FIRE); //Flannery
+        themeMap.put("GYM5", Type.NORMAL); //Norman
+        themeMap.put("GYM6", Type.FLYING); //Winona
+        themeMap.put("GYM7", Type.PSYCHIC); //Tate & Liza
+        themeMap.put("GYM8", Type.WATER); //Juan
+        return themeMap;
+    }
+
+    public static final HashMap<String, Type> gymAndEliteThemesFRLG = setupGymAndEliteThemesFRLG();
+
+    private static HashMap<String, Type> setupGymAndEliteThemesFRLG() {
+        HashMap<String, Type> themeMap = new HashMap<>();
+        themeMap.put("ELITE1", Type.ICE); //Lorelei
+        themeMap.put("ELITE2", Type.FIGHTING); //Bruno
+        themeMap.put("ELITE3", Type.GHOST); //Agatha
+        themeMap.put("ELITE4", Type.DRAGON); //Lance
+        themeMap.put("GYM1", Type.ROCK); //Brock
+        themeMap.put("GYM2", Type.WATER); //Misty
+        themeMap.put("GYM3", Type.ELECTRIC); //Lt. Surge
+        themeMap.put("GYM4", Type.GRASS); //Erika
+        themeMap.put("GYM5", Type.POISON); //Koga
+        themeMap.put("GYM6", Type.PSYCHIC); //Sabrina
+        themeMap.put("GYM7", Type.FIRE); //Blaine
+        themeMap.put("GYM8", Type.GROUND); //Giovanni
+        return themeMap;
+    }
+
     public static void setMultiBattleStatusEm(List<Trainer> trs) {
         // 25 + 569: Double Battle with Team Aqua Grunts on Mt. Pyre
         // 105 + 237: Double Battle with Hex Maniac Patricia and Psychic Joshua
@@ -824,8 +965,9 @@ public class Gen3Constants {
         // 572 + 573: Double Battle with Sailor Brenden and Battle Girl Lilith
         // 721 + 730: Double Battle with Team Magma Grunts in Team Magma Hideout
         // 848 + 850: Double Battle with Psychic Mariela and Gentleman Everett
+        // 855: Steven from the Double Battle in Mossdeep Space Center
         setMultiBattleStatus(trs, Trainer.MultiBattleStatus.ALWAYS, 25, 105, 237, 397, 404, 504, 505, 508, 514,
-                569, 572, 573, 654, 721, 730, 734, 848, 850
+                569, 572, 573, 654, 721, 730, 734, 848, 850, 855
         );
 
         // 1 + 124: Potential Double Battle with Hiker Sawyer and Beauty Melissa
@@ -938,383 +1080,723 @@ public class Gen3Constants {
         }
     }
 
+    private static final int[] rsPostGameEncounterAreas = new int[] {
+            81, 82, 83, //SKY PILLAR
+            153 //Mirage Island - technically not post-game, but not exactly part of the game either
+    };
+
+    private static final int[] emPostGameEncounterAreas = new int[] {
+            174, 177, 178, //SKY PILLAR
+            199, 200, 201, 202, 203, 204, 205, 206, 207, //ALTERING CAVE
+            196, //DESERT UNDERPASS
+            95, //Mirage Island - technically not post-game, but hardly "local" since it almost never exists
+    };
+
+    private static final int[] frlgPostGameEncounterAreas = new int[] {
+            33, 34, 35, 36, 37, 38, 39, 40, 41, 42, //CERULEAN CAVE
+            118, //THREE ISLE PORT
+            214, 215, //FOUR ISLAND
+            82, 83, 84, 85, 86, 87, 88, 89, //ICEFALL CAVE
+            216, 217, //FIVE ISLAND
+            119, 120, //RESORT GORGEOUS
+            91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, //LOST CAVE
+            121, 122, //WATER LABYRINTH
+            123, 124, 125, //FIVE ISLE MEADOW
+            126, 127, 128, //MEMORIAL PILLAR
+            133, 134, 135, //WATER PATH
+            136, 137, 138, //RUIN VALLEY
+            131, 132, //GREEN PATH
+            90, //PATTERN BUSH
+            129, 130, //OUTCAST ISLAND
+            218, 219, 220, 221, 222, 223, 224, 225, 226, //ALTERING CAVE
+            144, 145, //TANOBY RUINS
+            0, 1, 2, 3, 4, 5, 6, //the Tanoby Chambers
+            142, 143, //SEVAULT CANYON
+            141, //CANYON ENTRANCE
+            139, 140, //TRAINER TOWER
+    };
+
+    public static final List<String> locationTagsRS = Collections.unmodifiableList(Arrays.asList(
+            "PETALBURG CITY", "PETALBURG CITY",
+            "SLATEPORT CITY", "SLATEPORT CITY",
+            "LILYCOVE CITY", "LILYCOVE CITY",
+            "MOSSDEEP CITY", "MOSSDEEP CITY",
+            "SOOTOPOLIS CITY", "SOOTOPOLIS CITY",
+            "EVER GRANDE CITY", "EVER GRANDE CITY",
+            "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS",
+            "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS",
+            "RUSTURF TUNNEL",
+            "GRANITE CAVE", "GRANITE CAVE", "GRANITE CAVE", "GRANITE CAVE", "GRANITE CAVE",
+            "PETALBURG WOODS",
+            "JAGGED PASS",
+            "FIERY PATH",
+            "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN",
+            "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD",
+            "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE",
+            "SHOAL CAVE", "SHOAL CAVE",
+            "NEW MAUVILLE", "NEW MAUVILLE",
+            "ABANDONED SHIP", "ABANDONED SHIP", "ABANDONED SHIP", "ABANDONED SHIP",
+            "SKY PILLAR", "SKY PILLAR", "SKY PILLAR",
+            "ROUTE 101",
+            "ROUTE 102", "ROUTE 102", "ROUTE 102",
+            "ROUTE 103", "ROUTE 103", "ROUTE 103",
+            "ROUTE 104", "ROUTE 104", "ROUTE 104",
+            "ROUTE 105", "ROUTE 105",
+            "ROUTE 106", "ROUTE 106",
+            "ROUTE 107", "ROUTE 107",
+            "ROUTE 108", "ROUTE 108",
+            "ROUTE 109", "ROUTE 109",
+            "ROUTE 110", "ROUTE 110", "ROUTE 110",
+            "ROUTE 111", "ROUTE 111", "ROUTE 111", "ROUTE 111",
+            "ROUTE 112",
+            "ROUTE 113",
+            "ROUTE 114", "ROUTE 114", "ROUTE 114", "ROUTE 114",
+            "ROUTE 115", "ROUTE 115", "ROUTE 115",
+            "ROUTE 116",
+            "ROUTE 117", "ROUTE 117", "ROUTE 117",
+            "ROUTE 118", "ROUTE 118", "ROUTE 118",
+            "ROUTE 119", "ROUTE 119", "ROUTE 119",
+            "ROUTE 120", "ROUTE 120", "ROUTE 120",
+            "ROUTE 121", "ROUTE 121", "ROUTE 121",
+            "ROUTE 122", "ROUTE 122",
+            "ROUTE 123", "ROUTE 123", "ROUTE 123",
+            "ROUTE 124", "ROUTE 124",
+            "ROUTE 125", "ROUTE 125",
+            "ROUTE 126", "ROUTE 126",
+            "ROUTE 127", "ROUTE 127",
+            "ROUTE 128", "ROUTE 128",
+            "ROUTE 129", "ROUTE 129",
+            "ROUTE 130", "ROUTE 130", "ROUTE 130",
+            "ROUTE 131", "ROUTE 131",
+            "ROUTE 132", "ROUTE 132",
+            "ROUTE 133", "ROUTE 133",
+            "ROUTE 134", "ROUTE 134",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE",
+            "SAFARI ZONE", "SAFARI ZONE",
+            "DEWFORD TOWN", "DEWFORD TOWN",
+            "PACIFIDLOG TOWN", "PACIFIDLOG TOWN",
+            "UNDERWATER", "UNDERWATER"
+    ));
+
+    public static final List<String> locationTagsEm = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 101",
+            "ROUTE 102", "ROUTE 102", "ROUTE 102",
+            "ROUTE 103", "ROUTE 103", "ROUTE 103",
+            "ROUTE 104", "ROUTE 104", "ROUTE 104",
+            "ROUTE 105", "ROUTE 105",
+            "ROUTE 110", "ROUTE 110", "ROUTE 110",
+            "ROUTE 111", "ROUTE 111", "ROUTE 111", "ROUTE 111",
+            "ROUTE 112",
+            "ROUTE 113",
+            "ROUTE 114", "ROUTE 114", "ROUTE 114", "ROUTE 114",
+            "ROUTE 116",
+            "ROUTE 117", "ROUTE 117", "ROUTE 117",
+            "ROUTE 118", "ROUTE 118", "ROUTE 118",
+            "ROUTE 124", "ROUTE 124",
+            "PETALBURG WOODS",
+            "RUSTURF TUNNEL",
+            "GRANITE CAVE", "GRANITE CAVE",
+            "MT. PYRE",
+            "VICTORY ROAD",
+            "SAFARI ZONE",
+            "UNDERWATER",
+            "ABANDONED SHIP", "ABANDONED SHIP",
+            "GRANITE CAVE", "GRANITE CAVE",
+            "FIERY PATH",
+            "METEOR FALLS", "METEOR FALLS", "METEOR FALLS",
+            "JAGGED PASS",
+            "ROUTE 106", "ROUTE 106",
+            "ROUTE 107", "ROUTE 107",
+            "ROUTE 108", "ROUTE 108",
+            "ROUTE 109", "ROUTE 109",
+            "ROUTE 115", "ROUTE 115", "ROUTE 115",
+            "NEW MAUVILLE",
+            "ROUTE 119", "ROUTE 119", "ROUTE 119",
+            "ROUTE 120", "ROUTE 120", "ROUTE 120",
+            "ROUTE 121", "ROUTE 121", "ROUTE 121",
+            "ROUTE 122", "ROUTE 122",
+            "ROUTE 123", "ROUTE 123", "ROUTE 123",
+            "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE", "MT. PYRE",
+            "GRANITE CAVE",
+            "ROUTE 125", "ROUTE 125",
+            "ROUTE 126", "ROUTE 126",
+            "ROUTE 127", "ROUTE 127",
+            "ROUTE 128", "ROUTE 128",
+            "ROUTE 129", "ROUTE 129",
+            "ROUTE 130", "ROUTE 130", "ROUTE 130",
+            "ROUTE 131", "ROUTE 131",
+            "ROUTE 132", "ROUTE 132",
+            "ROUTE 133", "ROUTE 133",
+            "ROUTE 134", "ROUTE 134",
+            "ABANDONED SHIP", "ABANDONED SHIP",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN", "SEAFLOOR CAVERN",
+            "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN", "CAVE OF ORIGIN",
+            "NEW MAUVILLE",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE",
+            "SAFARI ZONE",
+            "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD",
+            "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS", "METEOR FALLS",
+            "METEOR FALLS", "METEOR FALLS", "METEOR FALLS",
+            "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE", "SHOAL CAVE",
+            "SHOAL CAVE",
+            "LILYCOVE CITY", "LILYCOVE CITY",
+            "DEWFORD TOWN", "DEWFORD TOWN",
+            "SLATEPORT CITY", "SLATEPORT CITY",
+            "MOSSDEEP CITY", "MOSSDEEP CITY",
+            "PACIFIDLOG TOWN", "PACIFIDLOG TOWN",
+            "EVER GRANDE CITY", "EVER GRANDE CITY",
+            "PETALBURG CITY", "PETALBURG CITY",
+            "UNDERWATER",
+            "SHOAL CAVE",
+            "SKY PILLAR",
+            "SOOTOPOLIS CITY", "SOOTOPOLIS CITY",
+            "SKY PILLAR", "SKY PILLAR",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE",
+            "MAGMA HIDEOUT", "MAGMA HIDEOUT", "MAGMA HIDEOUT", "MAGMA HIDEOUT", "MAGMA HIDEOUT", "MAGMA HIDEOUT",
+            "MAGMA HIDEOUT", "MAGMA HIDEOUT",
+            "MIRAGE TOWER", "MIRAGE TOWER", "MIRAGE TOWER", "MIRAGE TOWER",
+            "DESERT UNDERPASS",
+            "ARTISAN CAVE", "ARTISAN CAVE",
+            "ALTERING CAVE", "ALTERING CAVE", "ALTERING CAVE", "ALTERING CAVE", "ALTERING CAVE", "ALTERING CAVE",
+            "ALTERING CAVE", "ALTERING CAVE", "ALTERING CAVE",
+            "METEOR FALLS"
+    ));
+
+    public static final List<String> locationTagsFRLG = Collections.unmodifiableList(Arrays.asList(
+            "TANOBY CHAMBERS", "TANOBY CHAMBERS", "TANOBY CHAMBERS", "TANOBY CHAMBERS", "TANOBY CHAMBERS",
+            "TANOBY CHAMBERS", "TANOBY CHAMBERS",
+            "VIRIDIAN FOREST",
+            "MT. MOON", "MT. MOON", "MT. MOON",
+            "S.S. ANNE", "S.S. ANNE",
+            "DIGLETT'S CAVE",
+            "VICTORY ROAD", "VICTORY ROAD", "VICTORY ROAD",
+            "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE",
+            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE",
+            "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE",
+            "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE", "CERULEAN CAVE",
+            "ROCK TUNNEL", "ROCK TUNNEL", "ROCK TUNNEL",
+            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS",
+            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS",
+            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER",
+            "POWER PLANT",
+            "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER",
+            "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER", "MT. EMBER",
+            "MT. EMBER", "MT. EMBER",
+            "BERRY FOREST", "BERRY FOREST", "BERRY FOREST",
+            "ICEFALL CAVE","ICEFALL CAVE","ICEFALL CAVE","ICEFALL CAVE","ICEFALL CAVE","ICEFALL CAVE","ICEFALL CAVE",
+            "ICEFALL CAVE",
+            "PATTERN BUSH",
+            "LOST CAVE", "LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE",
+            "LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE","LOST CAVE",
+            "KINDLE ROAD","KINDLE ROAD","KINDLE ROAD","KINDLE ROAD",
+            "TREASURE BEACH","TREASURE BEACH","TREASURE BEACH",
+            "CAPE BRINK","CAPE BRINK","CAPE BRINK",
+            "BOND BRIDGE", "BOND BRIDGE", "BOND BRIDGE",
+            "THREE ISLE PORT",
+            "RESORT GORGEOUS", "RESORT GORGEOUS",
+            "WATER LABYRINTH", "WATER LABYRINTH",
+            "FIVE ISLE MEADOW","FIVE ISLE MEADOW","FIVE ISLE MEADOW",
+            "MEMORIAL PILLAR","MEMORIAL PILLAR","MEMORIAL PILLAR",
+            "OUTCAST ISLAND","OUTCAST ISLAND",
+            "GREEN PATH", "GREEN PATH",
+            "WATER PATH", "WATER PATH", "WATER PATH",
+            "RUIN VALLEY","RUIN VALLEY","RUIN VALLEY",
+            "TRAINER TOWER", "TRAINER TOWER",
+            "CANYON ENTRANCE",
+            "SEVAULT CANYON", "SEVAULT CANYON",
+            "TANOBY RUINS", "TANOBY RUINS",
+            "ROUTE 1",
+            "ROUTE 2",
+            "ROUTE 3",
+            "ROUTE 4", "ROUTE 4", "ROUTE 4",
+            "ROUTE 5",
+            "ROUTE 6", "ROUTE 6", "ROUTE 6",
+            "ROUTE 7",
+            "ROUTE 8",
+            "ROUTE 9",
+            "ROUTE 10", "ROUTE 10", "ROUTE 10",
+            "ROUTE 11", "ROUTE 11", "ROUTE 11",
+            "ROUTE 12", "ROUTE 12", "ROUTE 12",
+            "ROUTE 13", "ROUTE 13", "ROUTE 13",
+            "ROUTE 14",
+            "ROUTE 15",
+            "ROUTE 16",
+            "ROUTE 17",
+            "ROUTE 18",
+            "ROUTE 19", "ROUTE 19",
+            "ROUTE 20", "ROUTE 20",
+            "ROUTE 21", "ROUTE 21", "ROUTE 21", "ROUTE 21", "ROUTE 21", "ROUTE 21",
+            "ROUTE 22", "ROUTE 22", "ROUTE 22",
+            "ROUTE 23", "ROUTE 23", "ROUTE 23",
+            "ROUTE 24", "ROUTE 24", "ROUTE 24",
+            "ROUTE 25", "ROUTE 25", "ROUTE 25",
+            "PALLET TOWN", "PALLET TOWN",
+            "VIRIDIAN CITY", "VIRIDIAN CITY",
+            "CERULEAN CITY", "CERULEAN CITY",
+            "VERMILION CITY", "VERMILION CITY",
+            "CELADON CITY", "CELADON CITY",
+            "FUCHSIA CITY", "FUCHSIA CITY",
+            "CINNABAR ISLAND", "CINNABAR ISLAND",
+            "ONE ISLAND", "ONE ISLAND",
+            "FOUR ISLAND", "FOUR ISLAND",
+            "FIVE ISLAND", "FIVE ISLAND",
+            "ALTERING CAVE","ALTERING CAVE","ALTERING CAVE","ALTERING CAVE","ALTERING CAVE","ALTERING CAVE",
+            "ALTERING CAVE","ALTERING CAVE","ALTERING CAVE"
+    ));
+
+    private static final List<String> locationTagsTraverseOrderRSE = Collections.unmodifiableList(Arrays.asList(
+            "ROUTE 101", "ROUTE 103",
+            "ROUTE 102", "PETALBURG CITY", "ROUTE 104", "PETALBURG WOODS", "ROUTE 116", "RUSTURF TUNNEL",
+            "DEWFORD TOWN", "GRANITE CAVE", "ROUTE 109", "SLATEPORT CITY", "ROUTE 110", "ALTERING CAVE",
+            "MAUVILLE CITY", "NEW MAUVILLE", "ROUTE 117", "ROUTE 111", "MIRAGE TOWER", "ROUTE 112", "FIERY PATH",
+            "ROUTE 113", "ROUTE 114", "METEOR FALLS", "ROUTE 115", "JAGGED PASS", "ROUTE 118", "ROUTE 119", "ROUTE 120",
+            "ROUTE 121", "SAFARI ZONE", "LILYCOVE CITY", "ROUTE 122", "MT. PYRE", "ROUTE 123", "MAGMA HIDEOUT",
+            "ROUTE 124", "MOSSDEEP CITY", "UNDERWATER", "ROUTE 125", "SHOAL CAVE", "ROUTE 127", "ROUTE 128",
+            "SEAFLOOR CAVERN", "ROUTE 126", "SOOTOPOLIS CITY", "CAVE OF ORIGIN", "ROUTE 129", "ROUTE 130", "ROUTE 131",
+            "PACIFIDLOG TOWN", "ROUTE 132", "ROUTE 133", "ROUTE 134", "ROUTE 105", "ROUTE 106", "ROUTE 107",
+            "ROUTE 108", "ABANDONED SHIP", "EVER GRANDE CITY", "VICTORY ROAD", "SKY PILLAR", "DESERT UNDERPASS",
+            "ARTISAN CAVE"
+    ));
+
+    private static final List<String> locationTagsTraverseOrderFRLG = Collections.unmodifiableList(Arrays.asList(
+            "PALLET TOWN", "ROUTE 1",
+            "VIRIDIAN CITY", "ROUTE 22", "ROUTE 2", "VIRIDIAN FOREST", "ROUTE 3", "MT. MOON", "ROUTE 4",
+            "CERULEAN CITY", "ROUTE 24", "ROUTE 25", "ROUTE 5", "ROUTE 6", "VERMILION CITY", "S.S. ANNE", "ROUTE 11",
+            "DIGLETT'S CAVE", "ROUTE 9", "ROUTE 10", "ROCK TUNNEL", "ROUTE 8", "ROUTE 7", "CELADON CITY",
+            "POKEMON TOWER", "ROUTE 16", "ROUTE 17", "ROUTE 18", "FUCHSIA CITY", "SAFARI ZONE", "ROUTE 15", "ROUTE 14",
+            "ROUTE 13", "ROUTE 12", "POWER PLANT", "ROUTE 19", "ROUTE 20", "SEAFOAM ISLANDS", "CINNABAR ISLAND",
+            "POKEMON MANSION", "ROUTE 21", "ONE ISLAND", "TREASURE BEACH", "THREE ISLE PORT", "BOND BRIDGE",
+            "BERRY FOREST", "CAPE BRINK", "KINDLE ROAD", "MT. EMBER", "ROUTE 23", "VICTORY ROAD", "FOUR ISLAND",
+            "ICEFALL CAVE", "WATER PATH", "GREEN PATH", "PATTERN BUSH", "RUIN VALLEY", "OUTCAST ISLAND",
+            "ALTERING CAVE", "FIVE ISLAND", "FIVE ISLE MEADOW", "MEMORIAL PILLAR", "WATER LABYRINTH", "RESORT GORGEOUS",
+            "LOST CAVE", "TRAINER TOWER", "CANYON ENTRANCE", "SEVAULT CANYON", "TANOBY RUINS", "TANOBY CHAMBERS",
+            "CERULEAN CAVE"
+    ));
+
+    public static List<String> getLocationTagsTraverseOrder(int romType) {
+        return romType == RomType_FRLG ? locationTagsTraverseOrderFRLG : locationTagsTraverseOrderRSE;
+    }
+
+    private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
+        if (encounterAreas.size() != locationTags.size()) {
+            throw new IllegalArgumentException("Unexpected amount of encounter areas");
+        }
+        for (int i = 0; i < encounterAreas.size(); i++) {
+            encounterAreas.get(i).setLocationTag(locationTags.get(i));
+        }
+        for (int areaIndex : postGameAreas) {
+            encounterAreas.get(areaIndex).setPostGame(true);
+        }
+    }
+
+
+    public static void tagEncounterAreas(List<EncounterArea> encounterAreas, int romType) {
+        List<String> locationTags;
+        int[] postGameAreas;
+        switch (romType) {
+            case 0:
+            case 1:
+                locationTags = locationTagsRS;
+                postGameAreas = rsPostGameEncounterAreas;
+                break;
+            case 2:
+                locationTags = locationTagsEm;
+                postGameAreas = emPostGameEncounterAreas;
+                break;
+            case 3:
+                locationTags = locationTagsFRLG;
+                postGameAreas = frlgPostGameEncounterAreas;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value for romType: " + romType);
+        }
+        tagEncounterAreas(encounterAreas, locationTags, postGameAreas);
+    }
+
     public static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {
             // Skip item index 0. All prices divided by 10
-            {Gen3Items.masterBall, 300},
-            {Gen3Items.ultraBall, 120},
-            {Gen3Items.greatBall, 60},
-            {Gen3Items.pokeBall, 20},
-            {Gen3Items.safariBall, 50},
-            {Gen3Items.netBall, 100},
-            {Gen3Items.diveBall, 100},
-            {Gen3Items.nestBall, 100},
-            {Gen3Items.repeatBall, 100},
-            {Gen3Items.timerBall, 100},
-            {Gen3Items.luxuryBall, 100},
-            {Gen3Items.premierBall, 20},
-            {Gen3Items.potion, 30},
-            {Gen3Items.antidote, 10},
-            {Gen3Items.burnHeal, 25},
-            {Gen3Items.iceHeal, 25},
-            {Gen3Items.awakening, 25},
-            {Gen3Items.parlyzHeal, 20},
-            {Gen3Items.fullRestore, 300},
-            {Gen3Items.maxPotion, 250},
-            {Gen3Items.hyperPotion, 120},
-            {Gen3Items.superPotion, 70},
-            {Gen3Items.fullHeal, 60},
-            {Gen3Items.revive, 150},
-            {Gen3Items.maxRevive, 400},
-            {Gen3Items.freshWater, 40},
-            {Gen3Items.sodaPop, 60},
-            {Gen3Items.lemonade, 70},
-            {Gen3Items.moomooMilk, 80},
-            {Gen3Items.energyPowder, 40},
-            {Gen3Items.energyRoot, 110},
-            {Gen3Items.healPowder, 45},
-            {Gen3Items.revivalHerb, 280},
-            {Gen3Items.ether, 300},
-            {Gen3Items.maxEther, 450},
-            {Gen3Items.elixir, 1500},
-            {Gen3Items.maxElixir, 1800},
-            {Gen3Items.lavaCookie, 45},
-            {Gen3Items.blueFlute, 2},
-            {Gen3Items.yellowFlute, 2},
-            {Gen3Items.redFlute, 2},
-            {Gen3Items.blackFlute, 2},
-            {Gen3Items.whiteFlute, 2},
-            {Gen3Items.berryJuice, 10},
-            {Gen3Items.sacredAsh, 1000},
-            {Gen3Items.shoalSalt, 2},
-            {Gen3Items.shoalShell, 2},
-            {Gen3Items.redShard, 40},
-            {Gen3Items.blueShard, 40},
-            {Gen3Items.yellowShard, 40},
-            {Gen3Items.greenShard, 40},
-            {Gen3Items.unknown52, 0},
-            {Gen3Items.unknown53, 0},
-            {Gen3Items.unknown54, 0},
-            {Gen3Items.unknown55, 0},
-            {Gen3Items.unknown56, 0},
-            {Gen3Items.unknown57, 0},
-            {Gen3Items.unknown58, 0},
-            {Gen3Items.unknown59, 0},
-            {Gen3Items.unknown60, 0},
-            {Gen3Items.unknown61, 0},
-            {Gen3Items.unknown62, 0},
-            {Gen3Items.hpUp, 980},
-            {Gen3Items.protein, 980},
-            {Gen3Items.iron, 980},
-            {Gen3Items.carbos, 980},
-            {Gen3Items.calcium, 980},
-            {Gen3Items.rareCandy, 1000},
-            {Gen3Items.ppUp, 980},
-            {Gen3Items.zinc, 980},
-            {Gen3Items.ppMax, 2490},
-            {Gen3Items.unknown72, 0},
-            {Gen3Items.guardSpec, 70},
-            {Gen3Items.direHit, 65},
-            {Gen3Items.xAttack, 50},
-            {Gen3Items.xDefend, 55},
-            {Gen3Items.xSpeed, 35},
-            {Gen3Items.xAccuracy, 95},
-            {Gen3Items.xSpecial, 35},
-            {Gen3Items.pokeDoll, 100},
-            {Gen3Items.fluffyTail, 100},
-            {Gen3Items.unknown82, 0},
-            {Gen3Items.superRepel, 50},
-            {Gen3Items.maxRepel, 70},
-            {Gen3Items.escapeRope, 55},
-            {Gen3Items.repel, 35},
-            {Gen3Items.unknown87, 0},
-            {Gen3Items.unknown88, 0},
-            {Gen3Items.unknown89, 0},
-            {Gen3Items.unknown90, 0},
-            {Gen3Items.unknown91, 0},
-            {Gen3Items.unknown92, 0},
-            {Gen3Items.sunStone, 300},
-            {Gen3Items.moonStone, 300},
-            {Gen3Items.fireStone, 300},
-            {Gen3Items.thunderstone, 300},
-            {Gen3Items.waterStone, 300},
-            {Gen3Items.leafStone, 300},
-            {Gen3Items.unknown99, 0},
-            {Gen3Items.unknown100, 0},
-            {Gen3Items.unknown101, 0},
-            {Gen3Items.unknown102, 0},
-            {Gen3Items.tinyMushroom, 50},
-            {Gen3Items.bigMushroom, 500},
-            {Gen3Items.unknown105, 0},
-            {Gen3Items.pearl, 140},
-            {Gen3Items.bigPearl, 750},
-            {Gen3Items.stardust, 200},
-            {Gen3Items.starPiece, 980},
-            {Gen3Items.nugget, 1000},
-            {Gen3Items.heartScale, 500},
-            {Gen3Items.unknown112, 0},
-            {Gen3Items.unknown113, 0},
-            {Gen3Items.unknown114, 0},
-            {Gen3Items.unknown115, 0},
-            {Gen3Items.unknown116, 0},
-            {Gen3Items.unknown117, 0},
-            {Gen3Items.unknown118, 0},
-            {Gen3Items.unknown119, 0},
-            {Gen3Items.unknown120, 0},
-            {Gen3Items.orangeMail, 5},
-            {Gen3Items.harborMail, 5},
-            {Gen3Items.glitterMail, 5},
-            {Gen3Items.mechMail, 5},
-            {Gen3Items.woodMail, 5},
-            {Gen3Items.waveMail, 5},
-            {Gen3Items.beadMail, 5},
-            {Gen3Items.shadowMail, 5},
-            {Gen3Items.tropicMail, 5},
-            {Gen3Items.dreamMail, 5},
-            {Gen3Items.fabMail, 5},
-            {Gen3Items.retroMail, 5},
-            {Gen3Items.cheriBerry, 20},
-            {Gen3Items.chestoBerry, 25},
-            {Gen3Items.pechaBerry, 10},
-            {Gen3Items.rawstBerry, 25},
-            {Gen3Items.aspearBerry, 25},
-            {Gen3Items.leppaBerry, 300},
-            {Gen3Items.oranBerry, 5},
-            {Gen3Items.persimBerry, 20},
-            {Gen3Items.lumBerry, 50},
-            {Gen3Items.sitrusBerry, 50},
-            {Gen3Items.figyBerry, 10},
-            {Gen3Items.wikiBerry, 10},
-            {Gen3Items.magoBerry, 10},
-            {Gen3Items.aguavBerry, 10},
-            {Gen3Items.iapapaBerry, 10},
-            {Gen3Items.razzBerry, 50},
-            {Gen3Items.blukBerry, 50},
-            {Gen3Items.nanabBerry, 50},
-            {Gen3Items.wepearBerry, 50},
-            {Gen3Items.pinapBerry, 50},
-            {Gen3Items.pomegBerry, 50},
-            {Gen3Items.kelpsyBerry, 50},
-            {Gen3Items.qualotBerry, 50},
-            {Gen3Items.hondewBerry, 50},
-            {Gen3Items.grepaBerry, 50},
-            {Gen3Items.tamatoBerry, 50},
-            {Gen3Items.cornnBerry, 50},
-            {Gen3Items.magostBerry, 50},
-            {Gen3Items.rabutaBerry, 50},
-            {Gen3Items.nomelBerry, 50},
-            {Gen3Items.spelonBerry, 50},
-            {Gen3Items.pamtreBerry, 50},
-            {Gen3Items.watmelBerry, 50},
-            {Gen3Items.durinBerry, 50},
-            {Gen3Items.belueBerry, 50},
-            {Gen3Items.liechiBerry, 100},
-            {Gen3Items.ganlonBerry, 100},
-            {Gen3Items.salacBerry, 100},
-            {Gen3Items.petayaBerry, 100},
-            {Gen3Items.apicotBerry, 100},
-            {Gen3Items.lansatBerry, 100},
-            {Gen3Items.starfBerry, 100},
-            {Gen3Items.enigmaBerry, 100},
-            {Gen3Items.unknown176, 0},
-            {Gen3Items.unknown177, 0},
-            {Gen3Items.unknown178, 0},
-            {Gen3Items.brightPowder, 300},
-            {Gen3Items.whiteHerb, 100},
-            {Gen3Items.machoBrace, 300},
-            {Gen3Items.expShare, 600},
-            {Gen3Items.quickClaw, 450},
-            {Gen3Items.sootheBell, 100},
-            {Gen3Items.mentalHerb, 100},
-            {Gen3Items.choiceBand, 1000},
-            {Gen3Items.kingsRock, 500},
-            {Gen3Items.silverPowder, 200},
-            {Gen3Items.amuletCoin, 1500},
-            {Gen3Items.cleanseTag, 100},
-            {Gen3Items.soulDew, 20},
-            {Gen3Items.deepSeaTooth, 300},
-            {Gen3Items.deepSeaScale, 300},
-            {Gen3Items.smokeBall, 20},
-            {Gen3Items.everstone, 20},
-            {Gen3Items.focusBand, 300},
-            {Gen3Items.luckyEgg, 1000},
-            {Gen3Items.scopeLens, 500},
-            {Gen3Items.metalCoat, 300},
-            {Gen3Items.leftovers, 1000},
-            {Gen3Items.dragonScale, 300},
-            {Gen3Items.lightBall, 10},
-            {Gen3Items.softSand, 200},
-            {Gen3Items.hardStone, 200},
-            {Gen3Items.miracleSeed, 200},
-            {Gen3Items.blackGlasses, 200},
-            {Gen3Items.blackBelt, 200},
-            {Gen3Items.magnet, 200},
-            {Gen3Items.mysticWater, 200},
-            {Gen3Items.sharpBeak, 200},
-            {Gen3Items.poisonBarb, 200},
-            {Gen3Items.neverMeltIce, 200},
-            {Gen3Items.spellTag, 200},
-            {Gen3Items.twistedSpoon, 200},
-            {Gen3Items.charcoal, 200},
-            {Gen3Items.dragonFang, 200},
-            {Gen3Items.silkScarf, 200},
-            {Gen3Items.upGrade, 300},
-            {Gen3Items.shellBell, 600},
-            {Gen3Items.seaIncense, 200},
-            {Gen3Items.laxIncense, 300},
-            {Gen3Items.luckyPunch, 1},
-            {Gen3Items.metalPowder, 1},
-            {Gen3Items.thickClub, 50},
-            {Gen3Items.stick, 20},
-            {Gen3Items.unknown226, 0},
-            {Gen3Items.unknown227, 0},
-            {Gen3Items.unknown228, 0},
-            {Gen3Items.unknown229, 0},
-            {Gen3Items.unknown230, 0},
-            {Gen3Items.unknown231, 0},
-            {Gen3Items.unknown232, 0},
-            {Gen3Items.unknown233, 0},
-            {Gen3Items.unknown234, 0},
-            {Gen3Items.unknown235, 0},
-            {Gen3Items.unknown236, 0},
-            {Gen3Items.unknown237, 0},
-            {Gen3Items.unknown238, 0},
-            {Gen3Items.unknown239, 0},
-            {Gen3Items.unknown240, 0},
-            {Gen3Items.unknown241, 0},
-            {Gen3Items.unknown242, 0},
-            {Gen3Items.unknown243, 0},
-            {Gen3Items.unknown244, 0},
-            {Gen3Items.unknown245, 0},
-            {Gen3Items.unknown246, 0},
-            {Gen3Items.unknown247, 0},
-            {Gen3Items.unknown248, 0},
-            {Gen3Items.unknown249, 0},
-            {Gen3Items.unknown250, 0},
-            {Gen3Items.unknown251, 0},
-            {Gen3Items.unknown252, 0},
-            {Gen3Items.unknown253, 0},
-            {Gen3Items.redScarf, 10},
-            {Gen3Items.blueScarf, 10},
-            {Gen3Items.pinkScarf, 10},
-            {Gen3Items.greenScarf, 10},
-            {Gen3Items.yellowScarf, 10},
-            {Gen3Items.machBike, 0},
-            {Gen3Items.coinCase, 0},
-            {Gen3Items.itemfinder, 0},
-            {Gen3Items.oldRod, 0},
-            {Gen3Items.goodRod, 0},
-            {Gen3Items.superRod, 0},
-            {Gen3Items.ssTicket, 0},
-            {Gen3Items.contestPass, 0},
-            {Gen3Items.unknown267, 0},
-            {Gen3Items.wailmerPail, 0},
-            {Gen3Items.devonGoods, 0},
-            {Gen3Items.sootSack, 0},
-            {Gen3Items.basementKey, 0},
-            {Gen3Items.acroBike, 0},
-            {Gen3Items.pokeblockCase, 0},
-            {Gen3Items.letter, 0},
-            {Gen3Items.eonTicket, 0},
-            {Gen3Items.redOrb, 0},
-            {Gen3Items.blueOrb, 0},
-            {Gen3Items.scanner, 0},
-            {Gen3Items.goGoggles, 0},
-            {Gen3Items.meteorite, 0},
-            {Gen3Items.rm1Key, 0},
-            {Gen3Items.rm2Key, 0},
-            {Gen3Items.rm4Key, 0},
-            {Gen3Items.rm6Key, 0},
-            {Gen3Items.storageKey, 0},
-            {Gen3Items.rootFossil, 0},
-            {Gen3Items.clawFossil, 0},
-            {Gen3Items.devonScope, 0},
-            {Gen3Items.tm01, 300},
-            {Gen3Items.tm02, 300},
-            {Gen3Items.tm03, 300},
-            {Gen3Items.tm04, 150},
-            {Gen3Items.tm05, 100},
-            {Gen3Items.tm06, 300},
-            {Gen3Items.tm07, 200},
-            {Gen3Items.tm08, 150},
-            {Gen3Items.tm09, 200},
-            {Gen3Items.tm10, 200},
-            {Gen3Items.tm11, 200},
-            {Gen3Items.tm12, 150},
-            {Gen3Items.tm13, 300},
-            {Gen3Items.tm14, 550},
-            {Gen3Items.tm15, 750},
-            {Gen3Items.tm16, 200},
-            {Gen3Items.tm17, 200},
-            {Gen3Items.tm18, 200},
-            {Gen3Items.tm19, 300},
-            {Gen3Items.tm20, 200},
-            {Gen3Items.tm21, 100},
-            {Gen3Items.tm22, 300},
-            {Gen3Items.tm23, 300},
-            {Gen3Items.tm24, 300},
-            {Gen3Items.tm25, 550},
-            {Gen3Items.tm26, 300},
-            {Gen3Items.tm27, 100},
-            {Gen3Items.tm28, 200},
-            {Gen3Items.tm29, 300},
-            {Gen3Items.tm30, 300},
-            {Gen3Items.tm31, 300},
-            {Gen3Items.tm32, 100},
-            {Gen3Items.tm33, 200},
-            {Gen3Items.tm34, 300},
-            {Gen3Items.tm35, 300},
-            {Gen3Items.tm36, 300},
-            {Gen3Items.tm37, 200},
-            {Gen3Items.tm38, 550},
-            {Gen3Items.tm39, 200},
-            {Gen3Items.tm40, 300},
-            {Gen3Items.tm41, 150},
-            {Gen3Items.tm42, 300},
-            {Gen3Items.tm43, 200},
-            {Gen3Items.tm44, 300},
-            {Gen3Items.tm45, 300},
-            {Gen3Items.tm46, 200},
-            {Gen3Items.tm47, 300},
-            {Gen3Items.tm48, 300},
-            {Gen3Items.tm49, 150},
-            {Gen3Items.tm50, 550},
-            {Gen3Items.hm01, 0},
-            {Gen3Items.hm02, 0},
-            {Gen3Items.hm03, 0},
-            {Gen3Items.hm04, 0},
-            {Gen3Items.hm05, 0},
-            {Gen3Items.hm06, 0},
-            {Gen3Items.hm07, 0},
-            {Gen3Items.hm08, 0},
-            {Gen3Items.unknown347, 0},
-            {Gen3Items.unknown348, 0},
-            {Gen3Items.oaksParcel, 0},
-            {Gen3Items.pokeFlute, 0},
-            {Gen3Items.secretKey, 0},
-            {Gen3Items.bikeVoucher, 0},
-            {Gen3Items.goldTeeth, 0},
-            {Gen3Items.oldAmber, 0},
-            {Gen3Items.cardKey, 0},
-            {Gen3Items.liftKey, 0},
-            {Gen3Items.helixFossil, 0},
-            {Gen3Items.domeFossil, 0},
-            {Gen3Items.silphScope, 0},
-            {Gen3Items.bicycle, 0},
-            {Gen3Items.townMap, 0},
-            {Gen3Items.vsSeeker, 0},
-            {Gen3Items.fameChecker, 0},
-            {Gen3Items.tmCase, 0},
-            {Gen3Items.berryPouch, 0},
-            {Gen3Items.teachyTV, 0},
-            {Gen3Items.triPass, 0},
-            {Gen3Items.rainbowPass, 0},
-            {Gen3Items.tea, 0},
-            {Gen3Items.mysticTicket, 0},
-            {Gen3Items.auroraTicket, 0},
-            {Gen3Items.powderJar, 0},
-            {Gen3Items.ruby, 0},
-            {Gen3Items.sapphire, 0},
-            {Gen3Items.magmaEmblem, 0},
-            {Gen3Items.oldSeaMap, 0},
+            {Gen3ItemIDs.masterBall, 300},
+            {Gen3ItemIDs.ultraBall, 120},
+            {Gen3ItemIDs.greatBall, 60},
+            {Gen3ItemIDs.pokeBall, 20},
+            {Gen3ItemIDs.safariBall, 50},
+            {Gen3ItemIDs.netBall, 100},
+            {Gen3ItemIDs.diveBall, 100},
+            {Gen3ItemIDs.nestBall, 100},
+            {Gen3ItemIDs.repeatBall, 100},
+            {Gen3ItemIDs.timerBall, 100},
+            {Gen3ItemIDs.luxuryBall, 100},
+            {Gen3ItemIDs.premierBall, 20},
+            {Gen3ItemIDs.potion, 30},
+            {Gen3ItemIDs.antidote, 10},
+            {Gen3ItemIDs.burnHeal, 25},
+            {Gen3ItemIDs.iceHeal, 25},
+            {Gen3ItemIDs.awakening, 25},
+            {Gen3ItemIDs.parlyzHeal, 20},
+            {Gen3ItemIDs.fullRestore, 300},
+            {Gen3ItemIDs.maxPotion, 250},
+            {Gen3ItemIDs.hyperPotion, 120},
+            {Gen3ItemIDs.superPotion, 70},
+            {Gen3ItemIDs.fullHeal, 60},
+            {Gen3ItemIDs.revive, 150},
+            {Gen3ItemIDs.maxRevive, 400},
+            {Gen3ItemIDs.freshWater, 40},
+            {Gen3ItemIDs.sodaPop, 60},
+            {Gen3ItemIDs.lemonade, 70},
+            {Gen3ItemIDs.moomooMilk, 80},
+            {Gen3ItemIDs.energyPowder, 40},
+            {Gen3ItemIDs.energyRoot, 110},
+            {Gen3ItemIDs.healPowder, 45},
+            {Gen3ItemIDs.revivalHerb, 280},
+            {Gen3ItemIDs.ether, 300},
+            {Gen3ItemIDs.maxEther, 450},
+            {Gen3ItemIDs.elixir, 1500},
+            {Gen3ItemIDs.maxElixir, 1800},
+            {Gen3ItemIDs.lavaCookie, 45},
+            {Gen3ItemIDs.blueFlute, 2},
+            {Gen3ItemIDs.yellowFlute, 2},
+            {Gen3ItemIDs.redFlute, 2},
+            {Gen3ItemIDs.blackFlute, 2},
+            {Gen3ItemIDs.whiteFlute, 2},
+            {Gen3ItemIDs.berryJuice, 10},
+            {Gen3ItemIDs.sacredAsh, 1000},
+            {Gen3ItemIDs.shoalSalt, 2},
+            {Gen3ItemIDs.shoalShell, 2},
+            {Gen3ItemIDs.redShard, 40},
+            {Gen3ItemIDs.blueShard, 40},
+            {Gen3ItemIDs.yellowShard, 40},
+            {Gen3ItemIDs.greenShard, 40},
+            {Gen3ItemIDs.unknown52, 0},
+            {Gen3ItemIDs.unknown53, 0},
+            {Gen3ItemIDs.unknown54, 0},
+            {Gen3ItemIDs.unknown55, 0},
+            {Gen3ItemIDs.unknown56, 0},
+            {Gen3ItemIDs.unknown57, 0},
+            {Gen3ItemIDs.unknown58, 0},
+            {Gen3ItemIDs.unknown59, 0},
+            {Gen3ItemIDs.unknown60, 0},
+            {Gen3ItemIDs.unknown61, 0},
+            {Gen3ItemIDs.unknown62, 0},
+            {Gen3ItemIDs.hpUp, 980},
+            {Gen3ItemIDs.protein, 980},
+            {Gen3ItemIDs.iron, 980},
+            {Gen3ItemIDs.carbos, 980},
+            {Gen3ItemIDs.calcium, 980},
+            {Gen3ItemIDs.rareCandy, 1000},
+            {Gen3ItemIDs.ppUp, 980},
+            {Gen3ItemIDs.zinc, 980},
+            {Gen3ItemIDs.ppMax, 2490},
+            {Gen3ItemIDs.unknown72, 0},
+            {Gen3ItemIDs.guardSpec, 70},
+            {Gen3ItemIDs.direHit, 65},
+            {Gen3ItemIDs.xAttack, 50},
+            {Gen3ItemIDs.xDefend, 55},
+            {Gen3ItemIDs.xSpeed, 35},
+            {Gen3ItemIDs.xAccuracy, 95},
+            {Gen3ItemIDs.xSpecial, 35},
+            {Gen3ItemIDs.pokeDoll, 100},
+            {Gen3ItemIDs.fluffyTail, 100},
+            {Gen3ItemIDs.unknown82, 0},
+            {Gen3ItemIDs.superRepel, 50},
+            {Gen3ItemIDs.maxRepel, 70},
+            {Gen3ItemIDs.escapeRope, 55},
+            {Gen3ItemIDs.repel, 35},
+            {Gen3ItemIDs.unknown87, 0},
+            {Gen3ItemIDs.unknown88, 0},
+            {Gen3ItemIDs.unknown89, 0},
+            {Gen3ItemIDs.unknown90, 0},
+            {Gen3ItemIDs.unknown91, 0},
+            {Gen3ItemIDs.unknown92, 0},
+            {Gen3ItemIDs.sunStone, 300},
+            {Gen3ItemIDs.moonStone, 300},
+            {Gen3ItemIDs.fireStone, 300},
+            {Gen3ItemIDs.thunderstone, 300},
+            {Gen3ItemIDs.waterStone, 300},
+            {Gen3ItemIDs.leafStone, 300},
+            {Gen3ItemIDs.unknown99, 0},
+            {Gen3ItemIDs.unknown100, 0},
+            {Gen3ItemIDs.unknown101, 0},
+            {Gen3ItemIDs.unknown102, 0},
+            {Gen3ItemIDs.tinyMushroom, 50},
+            {Gen3ItemIDs.bigMushroom, 500},
+            {Gen3ItemIDs.unknown105, 0},
+            {Gen3ItemIDs.pearl, 140},
+            {Gen3ItemIDs.bigPearl, 750},
+            {Gen3ItemIDs.stardust, 200},
+            {Gen3ItemIDs.starPiece, 980},
+            {Gen3ItemIDs.nugget, 1000},
+            {Gen3ItemIDs.heartScale, 500},
+            {Gen3ItemIDs.unknown112, 0},
+            {Gen3ItemIDs.unknown113, 0},
+            {Gen3ItemIDs.unknown114, 0},
+            {Gen3ItemIDs.unknown115, 0},
+            {Gen3ItemIDs.unknown116, 0},
+            {Gen3ItemIDs.unknown117, 0},
+            {Gen3ItemIDs.unknown118, 0},
+            {Gen3ItemIDs.unknown119, 0},
+            {Gen3ItemIDs.unknown120, 0},
+            {Gen3ItemIDs.orangeMail, 5},
+            {Gen3ItemIDs.harborMail, 5},
+            {Gen3ItemIDs.glitterMail, 5},
+            {Gen3ItemIDs.mechMail, 5},
+            {Gen3ItemIDs.woodMail, 5},
+            {Gen3ItemIDs.waveMail, 5},
+            {Gen3ItemIDs.beadMail, 5},
+            {Gen3ItemIDs.shadowMail, 5},
+            {Gen3ItemIDs.tropicMail, 5},
+            {Gen3ItemIDs.dreamMail, 5},
+            {Gen3ItemIDs.fabMail, 5},
+            {Gen3ItemIDs.retroMail, 5},
+            {Gen3ItemIDs.cheriBerry, 20},
+            {Gen3ItemIDs.chestoBerry, 25},
+            {Gen3ItemIDs.pechaBerry, 10},
+            {Gen3ItemIDs.rawstBerry, 25},
+            {Gen3ItemIDs.aspearBerry, 25},
+            {Gen3ItemIDs.leppaBerry, 300},
+            {Gen3ItemIDs.oranBerry, 5},
+            {Gen3ItemIDs.persimBerry, 20},
+            {Gen3ItemIDs.lumBerry, 50},
+            {Gen3ItemIDs.sitrusBerry, 50},
+            {Gen3ItemIDs.figyBerry, 10},
+            {Gen3ItemIDs.wikiBerry, 10},
+            {Gen3ItemIDs.magoBerry, 10},
+            {Gen3ItemIDs.aguavBerry, 10},
+            {Gen3ItemIDs.iapapaBerry, 10},
+            {Gen3ItemIDs.razzBerry, 50},
+            {Gen3ItemIDs.blukBerry, 50},
+            {Gen3ItemIDs.nanabBerry, 50},
+            {Gen3ItemIDs.wepearBerry, 50},
+            {Gen3ItemIDs.pinapBerry, 50},
+            {Gen3ItemIDs.pomegBerry, 50},
+            {Gen3ItemIDs.kelpsyBerry, 50},
+            {Gen3ItemIDs.qualotBerry, 50},
+            {Gen3ItemIDs.hondewBerry, 50},
+            {Gen3ItemIDs.grepaBerry, 50},
+            {Gen3ItemIDs.tamatoBerry, 50},
+            {Gen3ItemIDs.cornnBerry, 50},
+            {Gen3ItemIDs.magostBerry, 50},
+            {Gen3ItemIDs.rabutaBerry, 50},
+            {Gen3ItemIDs.nomelBerry, 50},
+            {Gen3ItemIDs.spelonBerry, 50},
+            {Gen3ItemIDs.pamtreBerry, 50},
+            {Gen3ItemIDs.watmelBerry, 50},
+            {Gen3ItemIDs.durinBerry, 50},
+            {Gen3ItemIDs.belueBerry, 50},
+            {Gen3ItemIDs.liechiBerry, 100},
+            {Gen3ItemIDs.ganlonBerry, 100},
+            {Gen3ItemIDs.salacBerry, 100},
+            {Gen3ItemIDs.petayaBerry, 100},
+            {Gen3ItemIDs.apicotBerry, 100},
+            {Gen3ItemIDs.lansatBerry, 100},
+            {Gen3ItemIDs.starfBerry, 100},
+            {Gen3ItemIDs.enigmaBerry, 100},
+            {Gen3ItemIDs.unknown176, 0},
+            {Gen3ItemIDs.unknown177, 0},
+            {Gen3ItemIDs.unknown178, 0},
+            {Gen3ItemIDs.brightPowder, 300},
+            {Gen3ItemIDs.whiteHerb, 100},
+            {Gen3ItemIDs.machoBrace, 300},
+            {Gen3ItemIDs.expShare, 600},
+            {Gen3ItemIDs.quickClaw, 450},
+            {Gen3ItemIDs.sootheBell, 100},
+            {Gen3ItemIDs.mentalHerb, 100},
+            {Gen3ItemIDs.choiceBand, 1000},
+            {Gen3ItemIDs.kingsRock, 500},
+            {Gen3ItemIDs.silverPowder, 200},
+            {Gen3ItemIDs.amuletCoin, 1500},
+            {Gen3ItemIDs.cleanseTag, 100},
+            {Gen3ItemIDs.soulDew, 20},
+            {Gen3ItemIDs.deepSeaTooth, 300},
+            {Gen3ItemIDs.deepSeaScale, 300},
+            {Gen3ItemIDs.smokeBall, 20},
+            {Gen3ItemIDs.everstone, 20},
+            {Gen3ItemIDs.focusBand, 300},
+            {Gen3ItemIDs.luckyEgg, 1000},
+            {Gen3ItemIDs.scopeLens, 500},
+            {Gen3ItemIDs.metalCoat, 300},
+            {Gen3ItemIDs.leftovers, 1000},
+            {Gen3ItemIDs.dragonScale, 300},
+            {Gen3ItemIDs.lightBall, 10},
+            {Gen3ItemIDs.softSand, 200},
+            {Gen3ItemIDs.hardStone, 200},
+            {Gen3ItemIDs.miracleSeed, 200},
+            {Gen3ItemIDs.blackGlasses, 200},
+            {Gen3ItemIDs.blackBelt, 200},
+            {Gen3ItemIDs.magnet, 200},
+            {Gen3ItemIDs.mysticWater, 200},
+            {Gen3ItemIDs.sharpBeak, 200},
+            {Gen3ItemIDs.poisonBarb, 200},
+            {Gen3ItemIDs.neverMeltIce, 200},
+            {Gen3ItemIDs.spellTag, 200},
+            {Gen3ItemIDs.twistedSpoon, 200},
+            {Gen3ItemIDs.charcoal, 200},
+            {Gen3ItemIDs.dragonFang, 200},
+            {Gen3ItemIDs.silkScarf, 200},
+            {Gen3ItemIDs.upGrade, 300},
+            {Gen3ItemIDs.shellBell, 600},
+            {Gen3ItemIDs.seaIncense, 200},
+            {Gen3ItemIDs.laxIncense, 300},
+            {Gen3ItemIDs.luckyPunch, 1},
+            {Gen3ItemIDs.metalPowder, 1},
+            {Gen3ItemIDs.thickClub, 50},
+            {Gen3ItemIDs.stick, 20},
+            {Gen3ItemIDs.unknown226, 0},
+            {Gen3ItemIDs.unknown227, 0},
+            {Gen3ItemIDs.unknown228, 0},
+            {Gen3ItemIDs.unknown229, 0},
+            {Gen3ItemIDs.unknown230, 0},
+            {Gen3ItemIDs.unknown231, 0},
+            {Gen3ItemIDs.unknown232, 0},
+            {Gen3ItemIDs.unknown233, 0},
+            {Gen3ItemIDs.unknown234, 0},
+            {Gen3ItemIDs.unknown235, 0},
+            {Gen3ItemIDs.unknown236, 0},
+            {Gen3ItemIDs.unknown237, 0},
+            {Gen3ItemIDs.unknown238, 0},
+            {Gen3ItemIDs.unknown239, 0},
+            {Gen3ItemIDs.unknown240, 0},
+            {Gen3ItemIDs.unknown241, 0},
+            {Gen3ItemIDs.unknown242, 0},
+            {Gen3ItemIDs.unknown243, 0},
+            {Gen3ItemIDs.unknown244, 0},
+            {Gen3ItemIDs.unknown245, 0},
+            {Gen3ItemIDs.unknown246, 0},
+            {Gen3ItemIDs.unknown247, 0},
+            {Gen3ItemIDs.unknown248, 0},
+            {Gen3ItemIDs.unknown249, 0},
+            {Gen3ItemIDs.unknown250, 0},
+            {Gen3ItemIDs.unknown251, 0},
+            {Gen3ItemIDs.unknown252, 0},
+            {Gen3ItemIDs.unknown253, 0},
+            {Gen3ItemIDs.redScarf, 10},
+            {Gen3ItemIDs.blueScarf, 10},
+            {Gen3ItemIDs.pinkScarf, 10},
+            {Gen3ItemIDs.greenScarf, 10},
+            {Gen3ItemIDs.yellowScarf, 10},
+            {Gen3ItemIDs.machBike, 0},
+            {Gen3ItemIDs.coinCase, 0},
+            {Gen3ItemIDs.itemfinder, 0},
+            {Gen3ItemIDs.oldRod, 0},
+            {Gen3ItemIDs.goodRod, 0},
+            {Gen3ItemIDs.superRod, 0},
+            {Gen3ItemIDs.ssTicket, 0},
+            {Gen3ItemIDs.contestPass, 0},
+            {Gen3ItemIDs.unknown267, 0},
+            {Gen3ItemIDs.wailmerPail, 0},
+            {Gen3ItemIDs.devonGoods, 0},
+            {Gen3ItemIDs.sootSack, 0},
+            {Gen3ItemIDs.basementKey, 0},
+            {Gen3ItemIDs.acroBike, 0},
+            {Gen3ItemIDs.pokeblockCase, 0},
+            {Gen3ItemIDs.letter, 0},
+            {Gen3ItemIDs.eonTicket, 0},
+            {Gen3ItemIDs.redOrb, 0},
+            {Gen3ItemIDs.blueOrb, 0},
+            {Gen3ItemIDs.scanner, 0},
+            {Gen3ItemIDs.goGoggles, 0},
+            {Gen3ItemIDs.meteorite, 0},
+            {Gen3ItemIDs.rm1Key, 0},
+            {Gen3ItemIDs.rm2Key, 0},
+            {Gen3ItemIDs.rm4Key, 0},
+            {Gen3ItemIDs.rm6Key, 0},
+            {Gen3ItemIDs.storageKey, 0},
+            {Gen3ItemIDs.rootFossil, 0},
+            {Gen3ItemIDs.clawFossil, 0},
+            {Gen3ItemIDs.devonScope, 0},
+            {Gen3ItemIDs.tm01, 300},
+            {Gen3ItemIDs.tm02, 300},
+            {Gen3ItemIDs.tm03, 300},
+            {Gen3ItemIDs.tm04, 150},
+            {Gen3ItemIDs.tm05, 100},
+            {Gen3ItemIDs.tm06, 300},
+            {Gen3ItemIDs.tm07, 200},
+            {Gen3ItemIDs.tm08, 150},
+            {Gen3ItemIDs.tm09, 200},
+            {Gen3ItemIDs.tm10, 200},
+            {Gen3ItemIDs.tm11, 200},
+            {Gen3ItemIDs.tm12, 150},
+            {Gen3ItemIDs.tm13, 300},
+            {Gen3ItemIDs.tm14, 550},
+            {Gen3ItemIDs.tm15, 750},
+            {Gen3ItemIDs.tm16, 200},
+            {Gen3ItemIDs.tm17, 200},
+            {Gen3ItemIDs.tm18, 200},
+            {Gen3ItemIDs.tm19, 300},
+            {Gen3ItemIDs.tm20, 200},
+            {Gen3ItemIDs.tm21, 100},
+            {Gen3ItemIDs.tm22, 300},
+            {Gen3ItemIDs.tm23, 300},
+            {Gen3ItemIDs.tm24, 300},
+            {Gen3ItemIDs.tm25, 550},
+            {Gen3ItemIDs.tm26, 300},
+            {Gen3ItemIDs.tm27, 100},
+            {Gen3ItemIDs.tm28, 200},
+            {Gen3ItemIDs.tm29, 300},
+            {Gen3ItemIDs.tm30, 300},
+            {Gen3ItemIDs.tm31, 300},
+            {Gen3ItemIDs.tm32, 100},
+            {Gen3ItemIDs.tm33, 200},
+            {Gen3ItemIDs.tm34, 300},
+            {Gen3ItemIDs.tm35, 300},
+            {Gen3ItemIDs.tm36, 300},
+            {Gen3ItemIDs.tm37, 200},
+            {Gen3ItemIDs.tm38, 550},
+            {Gen3ItemIDs.tm39, 200},
+            {Gen3ItemIDs.tm40, 300},
+            {Gen3ItemIDs.tm41, 150},
+            {Gen3ItemIDs.tm42, 300},
+            {Gen3ItemIDs.tm43, 200},
+            {Gen3ItemIDs.tm44, 300},
+            {Gen3ItemIDs.tm45, 300},
+            {Gen3ItemIDs.tm46, 200},
+            {Gen3ItemIDs.tm47, 300},
+            {Gen3ItemIDs.tm48, 300},
+            {Gen3ItemIDs.tm49, 150},
+            {Gen3ItemIDs.tm50, 550},
+            {Gen3ItemIDs.hm01, 0},
+            {Gen3ItemIDs.hm02, 0},
+            {Gen3ItemIDs.hm03, 0},
+            {Gen3ItemIDs.hm04, 0},
+            {Gen3ItemIDs.hm05, 0},
+            {Gen3ItemIDs.hm06, 0},
+            {Gen3ItemIDs.hm07, 0},
+            {Gen3ItemIDs.hm08, 0},
+            {Gen3ItemIDs.unknown347, 0},
+            {Gen3ItemIDs.unknown348, 0},
+            {Gen3ItemIDs.oaksParcel, 0},
+            {Gen3ItemIDs.pokeFlute, 0},
+            {Gen3ItemIDs.secretKey, 0},
+            {Gen3ItemIDs.bikeVoucher, 0},
+            {Gen3ItemIDs.goldTeeth, 0},
+            {Gen3ItemIDs.oldAmber, 0},
+            {Gen3ItemIDs.cardKey, 0},
+            {Gen3ItemIDs.liftKey, 0},
+            {Gen3ItemIDs.helixFossil, 0},
+            {Gen3ItemIDs.domeFossil, 0},
+            {Gen3ItemIDs.silphScope, 0},
+            {Gen3ItemIDs.bicycle, 0},
+            {Gen3ItemIDs.townMap, 0},
+            {Gen3ItemIDs.vsSeeker, 0},
+            {Gen3ItemIDs.fameChecker, 0},
+            {Gen3ItemIDs.tmCase, 0},
+            {Gen3ItemIDs.berryPouch, 0},
+            {Gen3ItemIDs.teachyTV, 0},
+            {Gen3ItemIDs.triPass, 0},
+            {Gen3ItemIDs.rainbowPass, 0},
+            {Gen3ItemIDs.tea, 0},
+            {Gen3ItemIDs.mysticTicket, 0},
+            {Gen3ItemIDs.auroraTicket, 0},
+            {Gen3ItemIDs.powderJar, 0},
+            {Gen3ItemIDs.ruby, 0},
+            {Gen3ItemIDs.sapphire, 0},
+            {Gen3ItemIDs.magmaEmblem, 0},
+            {Gen3ItemIDs.oldSeaMap, 0},
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 }

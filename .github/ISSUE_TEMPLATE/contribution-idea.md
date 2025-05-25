@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-<!-- Be aware that we do not take feature requests. Please only use this template if you have an idea for something you want to contribute to the codebase yourself. -->
+<!-- This is not the template for feature requests ("Feature Request" is). Please only use this template if you have an idea for something you want to contribute to the codebase yourself. -->
 
 **Is your idea a new setting, a change to an existing setting, or something else? Please describe clearly:** 
 

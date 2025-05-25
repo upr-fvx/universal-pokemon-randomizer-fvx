@@ -1,0 +1,843 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = 101ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ケムッソ Lvs 2-2, ポチエナ Lvs 2-2, ケムッソ Lvs 2-2, ケムッソ Lvs 3-3, ポチエナ Lvs 3-3, ポチエナ Lvs 3-3, ケムッソ Lvs 3-3, ポチエナ Lvs 3-3, ジグザグマ Lvs 2-2, ジグザグマ Lvs 2-2, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3]]
+	[Name = 102ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 3-3, ケムッソ Lvs 3-3, ポチエナ Lvs 4-4, ケムッソ Lvs 4-4, ハスボー Lvs 3-3, ハスボー Lvs 4-4, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3, ジグザグマ Lvs 4-4, ラルトス Lvs 4-4, ジグザグマ Lvs 4-4, タネボー Lvs 3-3]]
+	[Name = 102ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 102ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = 103ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 2-2, ポチエナ Lvs 3-3, ポチエナ Lvs 3-3, ポチエナ Lvs 4-4, キャモメ Lvs 2-2, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3, ジグザグマ Lvs 4-4, キャモメ Lvs 3-3, キャモメ Lvs 3-3, キャモメ Lvs 2-2, キャモメ Lvs 4-4]]
+	[Name = 103ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 103ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 104ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 4-4, ケムッソ Lvs 4-4, ポチエナ Lvs 5-5, マリル Lvs 5-5, マリル Lvs 4-4, ポチエナ Lvs 5-5, スバメ Lvs 4-4, スバメ Lvs 5-5, キャモメ Lvs 4-4, キャモメ Lvs 4-4, キャモメ Lvs 3-3, キャモメ Lvs 5-5]]
+	[Name = 104ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [キャモメ Lvs 10-30, キャモメ Lvs 15-25, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 104ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, コイキング Lvs 5-10, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 25-30, コイキング Lvs 30-35, コイキング Lvs 20-25, コイキング Lvs 35-40, コイキング Lvs 40-45]]
+	[Name = 105ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 105ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 110ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 12-12, ラクライ Lvs 12-12, ゴクリン Lvs 12-12, ラクライ Lvs 13-13, マイナン Lvs 13-13, ナゾノクサ Lvs 13-13, マイナン Lvs 13-13, ゴクリン Lvs 13-13, キャモメ Lvs 12-12, キャモメ Lvs 12-12, プラスル Lvs 12-12, プラスル Lvs 13-13]]
+	[Name = 110ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 110ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 111ばん どうろ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 21-21, ナックラー Lvs 21-21, ヤジロン Lvs 19-19, ヤジロン Lvs 21-21, サンド Lvs 19-19, ナックラー Lvs 19-19, ヤジロン Lvs 20-20, サボネア Lvs 20-20, サボネア Lvs 22-22, サボネア Lvs 22-22]]
+	[Name = 111ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 111ばん どうろ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = 111ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 112ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ドンメル Lvs 15-15, ドンメル Lvs 15-15, マリル Lvs 15-15, ドンメル Lvs 14-14, ドンメル Lvs 14-14, マリル Lvs 14-14, ドンメル Lvs 16-16, マリル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16]]
+	[Name = 113ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [パッチール Lvs 15-15, パッチール Lvs 15-15, マグマッグ Lvs 15-15, パッチール Lvs 14-14, パッチール Lvs 14-14, マグマッグ Lvs 14-14, パッチール Lvs 16-16, マグマッグ Lvs 16-16, パッチール Lvs 16-16, エアームド Lvs 16-16, パッチール Lvs 16-16, エアームド Lvs 16-16]]
+	[Name = 114ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [チルット Lvs 16-16, ハスボー Lvs 16-16, チルット Lvs 17-17, チルット Lvs 15-15, ハスボー Lvs 15-15, ハスブレロ Lvs 16-16, ハスブレロ Lvs 16-16, ハスブレロ Lvs 18-18, ハブネーク Lvs 17-17, ハブネーク Lvs 15-15, ハブネーク Lvs 17-17, コノハナ Lvs 15-15]]
+	[Name = 114ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 114ばん どうろ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = 114ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 116ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 6-6, ゴニョニョ Lvs 6-6, ツチニン Lvs 6-6, ケーシィ Lvs 7-7, ツチニン Lvs 7-7, スバメ Lvs 6-6, スバメ Lvs 7-7, スバメ Lvs 8-8, ポチエナ Lvs 7-7, ポチエナ Lvs 8-8, エネコ Lvs 7-7, エネコ Lvs 8-8]]
+	[Name = 117ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 13-13, ナゾノクサ Lvs 13-13, ポチエナ Lvs 14-14, ナゾノクサ Lvs 14-14, マリル Lvs 13-13, ナゾノクサ Lvs 13-13, イルミーゼ Lvs 13-13, イルミーゼ Lvs 13-13, イルミーゼ Lvs 14-14, イルミーゼ Lvs 14-14, バルビート Lvs 13-13, タネボー Lvs 13-13]]
+	[Name = 117ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 117ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = 118ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ジグザグマ Lvs 24-24, ラクライ Lvs 24-24, ジグザグマ Lvs 26-26, ラクライ Lvs 26-26, マッスグマ Lvs 26-26, ライボルト Lvs 26-26, キャモメ Lvs 25-25, キャモメ Lvs 25-25, キャモメ Lvs 26-26, キャモメ Lvs 26-26, キャモメ Lvs 27-27, カクレオン Lvs 25-25]]
+	[Name = 118ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 118ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, キバニア Lvs 10-30, サメハダー Lvs 30-35, キバニア Lvs 30-35, キバニア Lvs 20-25, キバニア Lvs 35-40, キバニア Lvs 40-45]]
+	[Name = 124ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 124ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トウカのもり Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 5-5, ケムッソ Lvs 5-5, キノココ Lvs 5-5, ポチエナ Lvs 6-6, カラサリス Lvs 5-5, マユルド Lvs 5-5, ケムッソ Lvs 6-6, キノココ Lvs 6-6, スバメ Lvs 5-5, ナマケロ Lvs 5-5, スバメ Lvs 6-6, ナマケロ Lvs 6-6]]
+	[Name = カナシダトンネル Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 7-7, マクノシタ Lvs 8-8, マクノシタ Lvs 7-7, ズバット Lvs 8-8, マクノシタ Lvs 9-9, ケーシィ Lvs 8-8, マクノシタ Lvs 10-10, マクノシタ Lvs 6-6, イシツブテ Lvs 7-7, イシツブテ Lvs 8-8, イシツブテ Lvs 6-6, イシツブテ Lvs 9-9]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 9-9, ココドラ Lvs 10-10, ココドラ Lvs 9-9, ココドラ Lvs 11-11, ズバット Lvs 10-10, ケーシィ Lvs 9-9, マクノシタ Lvs 10-10, マクノシタ Lvs 11-11, ヤミラミ Lvs 10-10, ヤミラミ Lvs 10-10, ヤミラミ Lvs 9-9, ヤミラミ Lvs 11-11]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ハリテヤマ Lvs 40-40, コドラ Lvs 40-40, ドゴーム Lvs 40-40, ズバット Lvs 36-36, マクノシタ Lvs 36-36, ゴルバット Lvs 38-38, ハリテヤマ Lvs 38-38, ココドラ Lvs 36-36, ゴニョニョ Lvs 36-36, ココドラ Lvs 36-36, ゴニョニョ Lvs 36-36]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ナゾノクサ Lvs 25-25, ナゾノクサ Lvs 27-27, キリンリキ Lvs 25-25, キリンリキ Lvs 27-27, ネイティ Lvs 25-25, ドードー Lvs 25-25, クサイハナ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 27-27, ソーナンス Lvs 29-29]]
+	[Name = すいちゅう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [パールル Lvs 20-30, チョンチー Lvs 20-30, パールル Lvs 30-35, ジーランス Lvs 30-35, ジーランス Lvs 30-35]]
+	[Name = すてられぶね Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, ドククラゲ Lvs 30-35]]
+	[Name = すてられぶね Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 25-30, メノクラゲ Lvs 30-35, ドククラゲ Lvs 30-35, ドククラゲ Lvs 25-30, ドククラゲ Lvs 20-25]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 10-10, ココドラ Lvs 11-11, ココドラ Lvs 10-10, ズバット Lvs 11-11, ココドラ Lvs 12-12, ケーシィ Lvs 10-10, ヤミラミ Lvs 10-10, ヤミラミ Lvs 11-11, ヤミラミ Lvs 12-12, ヤミラミ Lvs 10-10, ヤミラミ Lvs 12-12, ヤミラミ Lvs 10-10]]
+	[Name = いしのどうくつ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, ノズパス Lvs 10-20, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = ほのおのぬけみち Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドンメル Lvs 15-15, ドガース Lvs 15-15, ドンメル Lvs 16-16, ワンリキー Lvs 15-15, コータス Lvs 15-15, マグマッグ Lvs 15-15, ドガース Lvs 16-16, ワンリキー Lvs 16-16, コータス Lvs 14-14, コータス Lvs 16-16, ベトベター Lvs 14-14, ベトベター Lvs 14-14]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, タツベイ Lvs 30-30, ソルロック Lvs 35-35, タツベイ Lvs 35-35, ソルロック Lvs 37-37, タツベイ Lvs 25-25, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = デコボコさんどう Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ドンメル Lvs 21-21, ドンメル Lvs 21-21, ワンリキー Lvs 21-21, ドンメル Lvs 20-20, バネブー Lvs 20-20, ワンリキー Lvs 20-20, バネブー Lvs 21-21, ワンリキー Lvs 22-22, ドンメル Lvs 22-22, バネブー Lvs 22-22, ドンメル Lvs 22-22, バネブー Lvs 22-22]]
+	[Name = 106ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 106ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 107ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 107ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 108ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 108ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 109ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 109ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 115ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [チルット Lvs 23-23, スバメ Lvs 23-23, チルット Lvs 25-25, スバメ Lvs 24-24, スバメ Lvs 25-25, オオスバメ Lvs 25-25, プリン Lvs 24-24, プリン Lvs 25-25, キャモメ Lvs 24-24, キャモメ Lvs 24-24, キャモメ Lvs 26-26, キャモメ Lvs 25-25]]
+	[Name = 115ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 115ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ニューキンセツ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ビリリダマ Lvs 24-24, コイル Lvs 24-24, ビリリダマ Lvs 25-25, コイル Lvs 25-25, ビリリダマ Lvs 23-23, コイル Lvs 23-23, ビリリダマ Lvs 26-26, コイル Lvs 26-26, ビリリダマ Lvs 22-22, コイル Lvs 22-22, マルマイン Lvs 26-26, レアコイル Lvs 26-26]]
+	[Name = 119ばん どうろ Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ジグザグマ Lvs 25-25, マッスグマ Lvs 25-25, ジグザグマ Lvs 27-27, ナゾノクサ Lvs 25-25, マッスグマ Lvs 27-27, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 27-27, ナゾノクサ Lvs 24-24, トロピウス Lvs 25-25, トロピウス Lvs 26-26, トロピウス Lvs 27-27, カクレオン Lvs 25-25]]
+	[Name = 119ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 119ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, キバニア Lvs 10-30, キバニア Lvs 25-30, キバニア Lvs 30-35, キバニア Lvs 20-25, キバニア Lvs 35-40, キバニア Lvs 40-45]]
+	[Name = 120ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 25-25, グラエナ Lvs 25-25, グラエナ Lvs 27-27, ナゾノクサ Lvs 25-25, マリル Lvs 25-25, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 27-27, マリル Lvs 27-27, アブソル Lvs 25-25, アブソル Lvs 27-27, カクレオン Lvs 25-25, タネボー Lvs 25-25]]
+	[Name = 120ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 120ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 121ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 26-26, カゲボウズ Lvs 26-26, グラエナ Lvs 26-26, カゲボウズ Lvs 28-28, グラエナ Lvs 28-28, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 28-28, クサイハナ Lvs 28-28, キャモメ Lvs 26-26, キャモメ Lvs 27-27, キャモメ Lvs 28-28, カクレオン Lvs 25-25]]
+	[Name = 121ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 121ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 122ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 122ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 123ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 26-26, カゲボウズ Lvs 26-26, グラエナ Lvs 26-26, カゲボウズ Lvs 28-28, グラエナ Lvs 28-28, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 28-28, クサイハナ Lvs 28-28, キャモメ Lvs 26-26, キャモメ Lvs 27-27, キャモメ Lvs 28-28, カクレオン Lvs 25-25]]
+	[Name = 123ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 123ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 29-29, ロコン Lvs 29-29, ロコン Lvs 27-27, ロコン Lvs 29-29, ロコン Lvs 25-25, キャモメ Lvs 27-27, キャモメ Lvs 27-27, キャモメ Lvs 26-26, キャモメ Lvs 28-28]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 28-28, カゲボウズ Lvs 29-29, カゲボウズ Lvs 27-27, カゲボウズ Lvs 26-26, カゲボウズ Lvs 30-30, カゲボウズ Lvs 25-25, カゲボウズ Lvs 24-24, ヨマワル Lvs 28-28, ヨマワル Lvs 26-26, ヨマワル Lvs 30-30, チリーン Lvs 28-28, チリーン Lvs 28-28]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 7-7, マクノシタ Lvs 8-8, マクノシタ Lvs 7-7, ズバット Lvs 8-8, マクノシタ Lvs 9-9, ケーシィ Lvs 8-8, マクノシタ Lvs 10-10, マクノシタ Lvs 6-6, ココドラ Lvs 7-7, ココドラ Lvs 8-8, ココドラ Lvs 7-7, ココドラ Lvs 8-8]]
+	[Name = 125ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 125ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 126ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 126ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 127ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 127ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 128ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 128ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, ラブカス Lvs 10-30, ホエルコ Lvs 10-30, ラブカス Lvs 30-35, ホエルコ Lvs 30-35, サニーゴ Lvs 30-35, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 129ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ホエルオー Lvs 25-30]]
+	[Name = 129ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 130ばん すいどう Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ソーナノ Lvs 30-30, ソーナノ Lvs 35-35, ソーナノ Lvs 25-25, ソーナノ Lvs 40-40, ソーナノ Lvs 20-20, ソーナノ Lvs 45-45, ソーナノ Lvs 15-15, ソーナノ Lvs 50-50, ソーナノ Lvs 10-10, ソーナノ Lvs 5-5, ソーナノ Lvs 10-10, ソーナノ Lvs 5-5]]
+	[Name = 130ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 130ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 131ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 131ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 132ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 132ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 133ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 133ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 134ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 134ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = すてられぶね Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, ドククラゲ Lvs 30-35]]
+	[Name = すてられぶね Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 25-30, メノクラゲ Lvs 30-35, ドククラゲ Lvs 30-35, ドククラゲ Lvs 25-30, ドククラゲ Lvs 20-25]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = ニューキンセツ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ビリリダマ Lvs 24-24, コイル Lvs 24-24, ビリリダマ Lvs 25-25, コイル Lvs 25-25, ビリリダマ Lvs 23-23, コイル Lvs 23-23, ビリリダマ Lvs 26-26, コイル Lvs 26-26, ビリリダマ Lvs 22-22, コイル Lvs 22-22, ビリリダマ Lvs 22-22, コイル Lvs 22-22]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ナゾノクサ Lvs 25-25, ナゾノクサ Lvs 27-27, キリンリキ Lvs 25-25, キリンリキ Lvs 27-27, ネイティ Lvs 25-25, ドードー Lvs 27-27, クサイハナ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 27-27, ソーナンス Lvs 29-29]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [コダック Lvs 20-30, コダック Lvs 20-30, コダック Lvs 30-35, コダック Lvs 30-35, コダック Lvs 30-35]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-25, トサキント Lvs 10-30, トサキント Lvs 25-30, トサキント Lvs 30-35, アズマオウ Lvs 30-35, アズマオウ Lvs 35-40, アズマオウ Lvs 25-30]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ゴマゾウ Lvs 27-27, ナゾノクサ Lvs 27-27, ゴマゾウ Lvs 29-29, ナゾノクサ Lvs 29-29, ネイティ Lvs 27-27, クサイハナ Lvs 29-29, クサイハナ Lvs 31-31, ネイティ Lvs 29-29, ネイティオ Lvs 29-29, ヘラクロス Lvs 27-27, ネイティオ Lvs 31-31, ヘラクロス Lvs 29-29]]
+	[Name = サファリゾーン Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 20-25, イシツブテ Lvs 25-30]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [サイホーン Lvs 27-27, ナゾノクサ Lvs 27-27, サイホーン Lvs 29-29, ナゾノクサ Lvs 29-29, ドードー Lvs 27-27, クサイハナ Lvs 29-29, クサイハナ Lvs 31-31, ドードー Lvs 29-29, ドードリオ Lvs 29-29, カイロス Lvs 27-27, ドードリオ Lvs 31-31, カイロス Lvs 29-29]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [コダック Lvs 20-30, コダック Lvs 20-30, コダック Lvs 30-35, ゴルダック Lvs 30-35, ゴルダック Lvs 25-40]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-25, トサキント Lvs 10-30, トサキント Lvs 25-30, トサキント Lvs 30-35, アズマオウ Lvs 30-35, アズマオウ Lvs 35-40, アズマオウ Lvs 25-30]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ハリテヤマ Lvs 40-40, コドラ Lvs 40-40, コドラ Lvs 40-40, ゴルバット Lvs 38-38, ハリテヤマ Lvs 38-38, ゴルバット Lvs 42-42, ハリテヤマ Lvs 42-42, コドラ Lvs 42-42, クチート Lvs 38-38, コドラ Lvs 42-42, クチート Lvs 38-38]]
+	[Name = チャンピオンロード Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [ゴローン Lvs 30-40, イシツブテ Lvs 30-40, ゴローン Lvs 35-40, ゴローン Lvs 35-40, ゴローン Lvs 35-40]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ヤミラミ Lvs 40-40, コドラ Lvs 40-40, コドラ Lvs 40-40, ゴルバット Lvs 42-42, ヤミラミ Lvs 42-42, ゴルバット Lvs 44-44, ヤミラミ Lvs 44-44, コドラ Lvs 42-42, クチート Lvs 42-42, コドラ Lvs 44-44, クチート Lvs 44-44]]
+	[Name = チャンピオンロード Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 25-30, ゴルバット Lvs 35-40, ゴルバット Lvs 35-40, ゴルバット Lvs 35-40]]
+	[Name = チャンピオンロード Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 16-16, ズバット Lvs 17-17, ズバット Lvs 18-18, ズバット Lvs 15-15, ズバット Lvs 14-14, ソルロック Lvs 16-16, ソルロック Lvs 18-18, ソルロック Lvs 14-14, ズバット Lvs 19-19, ズバット Lvs 20-20, ズバット Lvs 19-19, ズバット Lvs 20-20]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 5-35, ズバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, タマザラシ Lvs 25-30, タマザラシ Lvs 25-30, タマザラシ Lvs 25-35]]
+	[Name = あさせのほらあな Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, タマザラシ Lvs 25-30, タマザラシ Lvs 25-30, タマザラシ Lvs 25-35]]
+	[Name = あさせのほらあな Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ミナモシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = ミナモシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ヒトデマン Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ムロタウン Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = ムロタウン Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = カイナシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = カイナシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トクサネシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = トクサネシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = キナギタウン Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = キナギタウン Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = サイユウシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = サイユウシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, ラブカス Lvs 10-30, ホエルコ Lvs 10-30, ラブカス Lvs 30-35, ホエルコ Lvs 30-35, サニーゴ Lvs 30-35, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トウカシティ Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, マリル Lvs 5-10]]
+	[Name = トウカシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = すいちゅう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [パールル Lvs 20-30, チョンチー Lvs 20-30, パールル Lvs 30-35, ジーランス Lvs 30-35, ジーランス Lvs 30-35]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ユキワラシ Lvs 26-26, タマザラシ Lvs 32-32, ゴルバット Lvs 30-30, ユキワラシ Lvs 28-28, ゴルバット Lvs 32-32, ユキワラシ Lvs 30-30]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, ネンドール Lvs 38-38, ネンドール Lvs 37-37, ネンドール Lvs 38-38]]
+	[Name = ルネシティ Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-35, コイキング Lvs 10-30, コイキング Lvs 15-25, コイキング Lvs 25-30, コイキング Lvs 25-30]]
+	[Name = ルネシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 30-35, コイキング Lvs 30-35, ギャラドス Lvs 35-40, ギャラドス Lvs 35-45, ギャラドス Lvs 5-45]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, ネンドール Lvs 38-38, ネンドール Lvs 37-37, ネンドール Lvs 38-38]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, チルタリス Lvs 38-38, チルタリス Lvs 39-39, チルタリス Lvs 39-39]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ヒマナッツ Lvs 33-33, メリープ Lvs 34-34, ヒマナッツ Lvs 35-35, メリープ Lvs 36-36, エイパム Lvs 34-34, イトマル Lvs 33-33, ホーホー Lvs 35-35, ブルー Lvs 34-34, オドシシ Lvs 36-36, グライガー Lvs 37-37, オドシシ Lvs 39-39, グライガー Lvs 40-40]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [ウパー Lvs 25-30, マリル Lvs 25-30, マリル Lvs 25-30, マリル Lvs 30-35, ヌオー Lvs 35-40]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 25-30, トサキント Lvs 25-30, コイキング Lvs 25-30, トサキント Lvs 25-30, テッポウオ Lvs 30-35, トサキント Lvs 25-30, テッポウオ Lvs 25-30, テッポウオ Lvs 30-35, テッポウオ Lvs 30-35, オクタン Lvs 35-40]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [エイパム Lvs 33-33, ヒメグマ Lvs 34-34, エイパム Lvs 35-35, ヒメグマ Lvs 36-36, ヒマナッツ Lvs 34-34, レディバ Lvs 33-33, ホーホー Lvs 35-35, クヌギダマ Lvs 34-34, デルビル Lvs 36-36, ミルタンク Lvs 37-37, デルビル Lvs 39-39, ミルタンク Lvs 40-40]]
+	[Name = サファリゾーン Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [ツボツボ Lvs 25-30, ツボツボ Lvs 20-25, ツボツボ Lvs 30-35, ツボツボ Lvs 30-35, ツボツボ Lvs 35-40]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = さばくのちかどう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [メタモン Lvs 38-38, ゴニョニョ Lvs 35-35, メタモン Lvs 40-40, ドゴーム Lvs 40-40, メタモン Lvs 41-41, ゴニョニョ Lvs 36-36, ドゴーム Lvs 38-38, メタモン Lvs 42-42, ゴニョニョ Lvs 38-38, メタモン Lvs 43-43, ドゴーム Lvs 44-44, メタモン Lvs 45-45]]
+	[Name = アトリエのあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドーブル Lvs 40-40, ドーブル Lvs 41-41, ドーブル Lvs 42-42, ドーブル Lvs 43-43, ドーブル Lvs 44-44, ドーブル Lvs 45-45, ドーブル Lvs 46-46, ドーブル Lvs 47-47, ドーブル Lvs 48-48, ドーブル Lvs 49-49, ドーブル Lvs 50-50, ドーブル Lvs 50-50]]
+	[Name = アトリエのあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドーブル Lvs 40-40, ドーブル Lvs 41-41, ドーブル Lvs 42-42, ドーブル Lvs 43-43, ドーブル Lvs 44-44, ドーブル Lvs 45-45, ドーブル Lvs 46-46, ドーブル Lvs 47-47, ドーブル Lvs 48-48, ドーブル Lvs 49-49, ドーブル Lvs 50-50, ドーブル Lvs 50-50]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ズバット Lvs 10-10, ズバット Lvs 12-12, ズバット Lvs 8-8, ズバット Lvs 14-14, ズバット Lvs 10-10, ズバット Lvs 12-12, ズバット Lvs 16-16, ズバット Lvs 6-6, ズバット Lvs 8-8, ズバット Lvs 14-14, ズバット Lvs 8-8, ズバット Lvs 14-14]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [メリープ Lvs 7-7, メリープ Lvs 9-9, メリープ Lvs 5-5, メリープ Lvs 11-11, メリープ Lvs 7-7, メリープ Lvs 9-9, メリープ Lvs 13-13, メリープ Lvs 3-3, メリープ Lvs 5-5, メリープ Lvs 11-11, メリープ Lvs 5-5, メリープ Lvs 11-11]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [クヌギダマ Lvs 23-23, クヌギダマ Lvs 25-25, クヌギダマ Lvs 22-22, クヌギダマ Lvs 27-27, クヌギダマ Lvs 23-23, クヌギダマ Lvs 25-25, クヌギダマ Lvs 29-29, クヌギダマ Lvs 19-19, クヌギダマ Lvs 21-21, クヌギダマ Lvs 27-27, クヌギダマ Lvs 21-21, クヌギダマ Lvs 27-27]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [デルビル Lvs 16-16, デルビル Lvs 18-18, デルビル Lvs 14-14, デルビル Lvs 20-20, デルビル Lvs 16-16, デルビル Lvs 18-18, デルビル Lvs 22-22, デルビル Lvs 12-12, デルビル Lvs 14-14, デルビル Lvs 20-20, デルビル Lvs 14-14, デルビル Lvs 20-20]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ヒメグマ Lvs 10-10, ヒメグマ Lvs 12-12, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14, ヒメグマ Lvs 10-10, ヒメグマ Lvs 12-12, ヒメグマ Lvs 16-16, ヒメグマ Lvs 6-6, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [エイパム Lvs 22-22, エイパム Lvs 24-24, エイパム Lvs 20-20, エイパム Lvs 26-26, エイパム Lvs 22-22, エイパム Lvs 24-24, エイパム Lvs 28-28, エイパム Lvs 18-18, エイパム Lvs 20-20, エイパム Lvs 26-26, エイパム Lvs 20-20, エイパム Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ツボツボ Lvs 22-22, ツボツボ Lvs 24-24, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26, ツボツボ Lvs 22-22, ツボツボ Lvs 24-24, ツボツボ Lvs 28-28, ツボツボ Lvs 18-18, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [オドシシ Lvs 22-22, オドシシ Lvs 24-24, オドシシ Lvs 20-20, オドシシ Lvs 26-26, オドシシ Lvs 22-22, オドシシ Lvs 24-24, オドシシ Lvs 28-28, オドシシ Lvs 18-18, オドシシ Lvs 20-20, オドシシ Lvs 26-26, オドシシ Lvs 20-20, オドシシ Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ドーブル Lvs 22-22, ドーブル Lvs 24-24, ドーブル Lvs 20-20, ドーブル Lvs 26-26, ドーブル Lvs 22-22, ドーブル Lvs 24-24, ドーブル Lvs 28-28, ドーブル Lvs 18-18, ドーブル Lvs 20-20, ドーブル Lvs 26-26, ドーブル Lvs 20-20, ドーブル Lvs 26-26]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = 101ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ケムッソ Lvs 2-2, ポチエナ Lvs 2-2, ケムッソ Lvs 2-2, ケムッソ Lvs 3-3, ポチエナ Lvs 3-3, ポチエナ Lvs 3-3, ケムッソ Lvs 3-3, ポチエナ Lvs 3-3, ジグザグマ Lvs 2-2, ジグザグマ Lvs 2-2, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3]]
+	[Name = 102ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 3-3, ケムッソ Lvs 3-3, ポチエナ Lvs 4-4, ケムッソ Lvs 4-4, ハスボー Lvs 3-3, ハスボー Lvs 4-4, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3, ジグザグマ Lvs 4-4, ラルトス Lvs 4-4, ジグザグマ Lvs 4-4, タネボー Lvs 3-3]]
+	[Name = 102ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 102ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = 103ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 2-2, ポチエナ Lvs 3-3, ポチエナ Lvs 3-3, ポチエナ Lvs 4-4, キャモメ Lvs 2-2, ジグザグマ Lvs 3-3, ジグザグマ Lvs 3-3, ジグザグマ Lvs 4-4, キャモメ Lvs 3-3, キャモメ Lvs 3-3, キャモメ Lvs 2-2, キャモメ Lvs 4-4]]
+	[Name = 103ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 103ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 104ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 4-4, ケムッソ Lvs 4-4, ポチエナ Lvs 5-5, マリル Lvs 5-5, マリル Lvs 4-4, ポチエナ Lvs 5-5, スバメ Lvs 4-4, スバメ Lvs 5-5, キャモメ Lvs 4-4, キャモメ Lvs 4-4, キャモメ Lvs 3-3, キャモメ Lvs 5-5]]
+	[Name = 104ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [キャモメ Lvs 10-30, キャモメ Lvs 15-25, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 104ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, コイキング Lvs 5-10, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 25-30, コイキング Lvs 30-35, コイキング Lvs 20-25, コイキング Lvs 35-40, コイキング Lvs 40-45]]
+	[Name = 105ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 105ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 110ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 12-12, ラクライ Lvs 12-12, ゴクリン Lvs 12-12, ラクライ Lvs 13-13, マイナン Lvs 13-13, ナゾノクサ Lvs 13-13, マイナン Lvs 13-13, ゴクリン Lvs 13-13, キャモメ Lvs 12-12, キャモメ Lvs 12-12, プラスル Lvs 12-12, プラスル Lvs 13-13]]
+	[Name = 110ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 110ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 111ばん どうろ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 21-21, ナックラー Lvs 21-21, ヤジロン Lvs 19-19, ヤジロン Lvs 21-21, サンド Lvs 19-19, ナックラー Lvs 19-19, ヤジロン Lvs 20-20, サボネア Lvs 20-20, サボネア Lvs 22-22, サボネア Lvs 22-22]]
+	[Name = 111ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 111ばん どうろ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = 111ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 112ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ドンメル Lvs 15-15, ドンメル Lvs 15-15, マリル Lvs 15-15, ドンメル Lvs 14-14, ドンメル Lvs 14-14, マリル Lvs 14-14, ドンメル Lvs 16-16, マリル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16, ドンメル Lvs 16-16]]
+	[Name = 113ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [パッチール Lvs 15-15, パッチール Lvs 15-15, マグマッグ Lvs 15-15, パッチール Lvs 14-14, パッチール Lvs 14-14, マグマッグ Lvs 14-14, パッチール Lvs 16-16, マグマッグ Lvs 16-16, パッチール Lvs 16-16, エアームド Lvs 16-16, パッチール Lvs 16-16, エアームド Lvs 16-16]]
+	[Name = 114ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [チルット Lvs 16-16, ハスボー Lvs 16-16, チルット Lvs 17-17, チルット Lvs 15-15, ハスボー Lvs 15-15, ハスブレロ Lvs 16-16, ハスブレロ Lvs 16-16, ハスブレロ Lvs 18-18, ハブネーク Lvs 17-17, ハブネーク Lvs 15-15, ハブネーク Lvs 17-17, コノハナ Lvs 15-15]]
+	[Name = 114ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 114ばん どうろ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = 114ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 116ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 6-6, ゴニョニョ Lvs 6-6, ツチニン Lvs 6-6, ケーシィ Lvs 7-7, ツチニン Lvs 7-7, スバメ Lvs 6-6, スバメ Lvs 7-7, スバメ Lvs 8-8, ポチエナ Lvs 7-7, ポチエナ Lvs 8-8, エネコ Lvs 7-7, エネコ Lvs 8-8]]
+	[Name = 117ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 13-13, ナゾノクサ Lvs 13-13, ポチエナ Lvs 14-14, ナゾノクサ Lvs 14-14, マリル Lvs 13-13, ナゾノクサ Lvs 13-13, イルミーゼ Lvs 13-13, イルミーゼ Lvs 13-13, イルミーゼ Lvs 14-14, イルミーゼ Lvs 14-14, バルビート Lvs 13-13, タネボー Lvs 13-13]]
+	[Name = 117ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 117ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = 118ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ジグザグマ Lvs 24-24, ラクライ Lvs 24-24, ジグザグマ Lvs 26-26, ラクライ Lvs 26-26, マッスグマ Lvs 26-26, ライボルト Lvs 26-26, キャモメ Lvs 25-25, キャモメ Lvs 25-25, キャモメ Lvs 26-26, キャモメ Lvs 26-26, キャモメ Lvs 27-27, カクレオン Lvs 25-25]]
+	[Name = 118ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 118ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, キバニア Lvs 10-30, サメハダー Lvs 30-35, キバニア Lvs 30-35, キバニア Lvs 20-25, キバニア Lvs 35-40, キバニア Lvs 40-45]]
+	[Name = 124ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 124ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トウカのもり Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 5-5, ケムッソ Lvs 5-5, キノココ Lvs 5-5, ポチエナ Lvs 6-6, カラサリス Lvs 5-5, マユルド Lvs 5-5, ケムッソ Lvs 6-6, キノココ Lvs 6-6, スバメ Lvs 5-5, ナマケロ Lvs 5-5, スバメ Lvs 6-6, ナマケロ Lvs 6-6]]
+	[Name = カナシダトンネル Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 6-6, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 7-7, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8, ゴニョニョ Lvs 5-5, ゴニョニョ Lvs 8-8]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 7-7, マクノシタ Lvs 8-8, マクノシタ Lvs 7-7, ズバット Lvs 8-8, マクノシタ Lvs 9-9, ケーシィ Lvs 8-8, マクノシタ Lvs 10-10, マクノシタ Lvs 6-6, イシツブテ Lvs 7-7, イシツブテ Lvs 8-8, イシツブテ Lvs 6-6, イシツブテ Lvs 9-9]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 9-9, ココドラ Lvs 10-10, ココドラ Lvs 9-9, ココドラ Lvs 11-11, ズバット Lvs 10-10, ケーシィ Lvs 9-9, マクノシタ Lvs 10-10, マクノシタ Lvs 11-11, ヤミラミ Lvs 10-10, ヤミラミ Lvs 10-10, ヤミラミ Lvs 9-9, ヤミラミ Lvs 11-11]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ハリテヤマ Lvs 40-40, コドラ Lvs 40-40, ドゴーム Lvs 40-40, ズバット Lvs 36-36, マクノシタ Lvs 36-36, ゴルバット Lvs 38-38, ハリテヤマ Lvs 38-38, ココドラ Lvs 36-36, ゴニョニョ Lvs 36-36, ココドラ Lvs 36-36, ゴニョニョ Lvs 36-36]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ナゾノクサ Lvs 25-25, ナゾノクサ Lvs 27-27, キリンリキ Lvs 25-25, キリンリキ Lvs 27-27, ネイティ Lvs 25-25, ドードー Lvs 25-25, クサイハナ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 27-27, ソーナンス Lvs 29-29]]
+	[Name = すいちゅう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [パールル Lvs 20-30, チョンチー Lvs 20-30, パールル Lvs 30-35, ジーランス Lvs 30-35, ジーランス Lvs 30-35]]
+	[Name = すてられぶね Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, ドククラゲ Lvs 30-35]]
+	[Name = すてられぶね Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 25-30, メノクラゲ Lvs 30-35, ドククラゲ Lvs 30-35, ドククラゲ Lvs 25-30, ドククラゲ Lvs 20-25]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 10-10, ココドラ Lvs 11-11, ココドラ Lvs 10-10, ズバット Lvs 11-11, ココドラ Lvs 12-12, ケーシィ Lvs 10-10, ヤミラミ Lvs 10-10, ヤミラミ Lvs 11-11, ヤミラミ Lvs 12-12, ヤミラミ Lvs 10-10, ヤミラミ Lvs 12-12, ヤミラミ Lvs 10-10]]
+	[Name = いしのどうくつ Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, ノズパス Lvs 10-20, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 15-20]]
+	[Name = ほのおのぬけみち Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドンメル Lvs 15-15, ドガース Lvs 15-15, ドンメル Lvs 16-16, ワンリキー Lvs 15-15, コータス Lvs 15-15, マグマッグ Lvs 15-15, ドガース Lvs 16-16, ワンリキー Lvs 16-16, コータス Lvs 14-14, コータス Lvs 16-16, ベトベター Lvs 14-14, ベトベター Lvs 14-14]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, タツベイ Lvs 30-30, ソルロック Lvs 35-35, タツベイ Lvs 35-35, ソルロック Lvs 37-37, タツベイ Lvs 25-25, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = デコボコさんどう Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ドンメル Lvs 21-21, ドンメル Lvs 21-21, ワンリキー Lvs 21-21, ドンメル Lvs 20-20, バネブー Lvs 20-20, ワンリキー Lvs 20-20, バネブー Lvs 21-21, ワンリキー Lvs 22-22, ドンメル Lvs 22-22, バネブー Lvs 22-22, ドンメル Lvs 22-22, バネブー Lvs 22-22]]
+	[Name = 106ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 106ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 107ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 107ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 108ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 108ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 109ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 109ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 115ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [チルット Lvs 23-23, スバメ Lvs 23-23, チルット Lvs 25-25, スバメ Lvs 24-24, スバメ Lvs 25-25, オオスバメ Lvs 25-25, プリン Lvs 24-24, プリン Lvs 25-25, キャモメ Lvs 24-24, キャモメ Lvs 24-24, キャモメ Lvs 26-26, キャモメ Lvs 25-25]]
+	[Name = 115ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 115ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ニューキンセツ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ビリリダマ Lvs 24-24, コイル Lvs 24-24, ビリリダマ Lvs 25-25, コイル Lvs 25-25, ビリリダマ Lvs 23-23, コイル Lvs 23-23, ビリリダマ Lvs 26-26, コイル Lvs 26-26, ビリリダマ Lvs 22-22, コイル Lvs 22-22, マルマイン Lvs 26-26, レアコイル Lvs 26-26]]
+	[Name = 119ばん どうろ Grass/Cave, Rate = 15, MapIndex = -1,
+		Encounters = [ジグザグマ Lvs 25-25, マッスグマ Lvs 25-25, ジグザグマ Lvs 27-27, ナゾノクサ Lvs 25-25, マッスグマ Lvs 27-27, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 27-27, ナゾノクサ Lvs 24-24, トロピウス Lvs 25-25, トロピウス Lvs 26-26, トロピウス Lvs 27-27, カクレオン Lvs 25-25]]
+	[Name = 119ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 119ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, キバニア Lvs 10-30, キバニア Lvs 25-30, キバニア Lvs 30-35, キバニア Lvs 20-25, キバニア Lvs 35-40, キバニア Lvs 40-45]]
+	[Name = 120ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 25-25, グラエナ Lvs 25-25, グラエナ Lvs 27-27, ナゾノクサ Lvs 25-25, マリル Lvs 25-25, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 27-27, マリル Lvs 27-27, アブソル Lvs 25-25, アブソル Lvs 27-27, カクレオン Lvs 25-25, タネボー Lvs 25-25]]
+	[Name = 120ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, トサキント Lvs 20-30]]
+	[Name = 120ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = 121ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 26-26, カゲボウズ Lvs 26-26, グラエナ Lvs 26-26, カゲボウズ Lvs 28-28, グラエナ Lvs 28-28, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 28-28, クサイハナ Lvs 28-28, キャモメ Lvs 26-26, キャモメ Lvs 27-27, キャモメ Lvs 28-28, カクレオン Lvs 25-25]]
+	[Name = 121ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 121ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 122ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 122ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 123ばん どうろ Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ポチエナ Lvs 26-26, カゲボウズ Lvs 26-26, グラエナ Lvs 26-26, カゲボウズ Lvs 28-28, グラエナ Lvs 28-28, ナゾノクサ Lvs 26-26, ナゾノクサ Lvs 28-28, クサイハナ Lvs 28-28, キャモメ Lvs 26-26, キャモメ Lvs 27-27, キャモメ Lvs 28-28, カクレオン Lvs 25-25]]
+	[Name = 123ばん どうろ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 123ばん どうろ Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 26-26, カゲボウズ Lvs 25-25, カゲボウズ Lvs 29-29, カゲボウズ Lvs 24-24, カゲボウズ Lvs 23-23, カゲボウズ Lvs 22-22, ヨマワル Lvs 27-27, ヨマワル Lvs 27-27, ヨマワル Lvs 25-25, ヨマワル Lvs 29-29]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 27-27, カゲボウズ Lvs 27-27, カゲボウズ Lvs 28-28, カゲボウズ Lvs 29-29, ロコン Lvs 29-29, ロコン Lvs 27-27, ロコン Lvs 29-29, ロコン Lvs 25-25, キャモメ Lvs 27-27, キャモメ Lvs 27-27, キャモメ Lvs 26-26, キャモメ Lvs 28-28]]
+	[Name = おくりびやま Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [カゲボウズ Lvs 28-28, カゲボウズ Lvs 29-29, カゲボウズ Lvs 27-27, カゲボウズ Lvs 26-26, カゲボウズ Lvs 30-30, カゲボウズ Lvs 25-25, カゲボウズ Lvs 24-24, ヨマワル Lvs 28-28, ヨマワル Lvs 26-26, ヨマワル Lvs 30-30, チリーン Lvs 28-28, チリーン Lvs 28-28]]
+	[Name = いしのどうくつ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 7-7, マクノシタ Lvs 8-8, マクノシタ Lvs 7-7, ズバット Lvs 8-8, マクノシタ Lvs 9-9, ケーシィ Lvs 8-8, マクノシタ Lvs 10-10, マクノシタ Lvs 6-6, ココドラ Lvs 7-7, ココドラ Lvs 8-8, ココドラ Lvs 7-7, ココドラ Lvs 8-8]]
+	[Name = 125ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 125ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 126ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 126ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 127ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 127ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 128ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 128ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, ラブカス Lvs 10-30, ホエルコ Lvs 10-30, ラブカス Lvs 30-35, ホエルコ Lvs 30-35, サニーゴ Lvs 30-35, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 129ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ホエルオー Lvs 25-30]]
+	[Name = 129ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 130ばん すいどう Grass/Cave, Rate = 20, MapIndex = -1,
+		Encounters = [ソーナノ Lvs 30-30, ソーナノ Lvs 35-35, ソーナノ Lvs 25-25, ソーナノ Lvs 40-40, ソーナノ Lvs 20-20, ソーナノ Lvs 45-45, ソーナノ Lvs 15-15, ソーナノ Lvs 50-50, ソーナノ Lvs 10-10, ソーナノ Lvs 5-5, ソーナノ Lvs 10-10, ソーナノ Lvs 5-5]]
+	[Name = 130ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 130ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 131ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 131ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 132ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 132ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 133ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 133ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = 134ばん すいどう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = 134ばん すいどう Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, タッツー Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = すてられぶね Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, メノクラゲ Lvs 5-35, ドククラゲ Lvs 30-35]]
+	[Name = すてられぶね Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 10-30, メノクラゲ Lvs 25-30, メノクラゲ Lvs 30-35, ドククラゲ Lvs 30-35, ドククラゲ Lvs 25-30, ドククラゲ Lvs 20-25]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = かいていどうくつ Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = かいていどうくつ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, ズバット Lvs 30-35, ゴルバット Lvs 30-35, ゴルバット Lvs 30-35]]
+	[Name = かいていどうくつ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ズバット Lvs 33-33, ズバット Lvs 28-28, ズバット Lvs 29-29, ズバット Lvs 34-34, ズバット Lvs 35-35, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = めざめのほこら Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 30-30, ズバット Lvs 31-31, ズバット Lvs 32-32, ヤミラミ Lvs 30-30, ヤミラミ Lvs 32-32, ヤミラミ Lvs 34-34, ズバット Lvs 33-33, ズバット Lvs 34-34, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ゴルバット Lvs 36-36]]
+	[Name = ニューキンセツ Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ビリリダマ Lvs 24-24, コイル Lvs 24-24, ビリリダマ Lvs 25-25, コイル Lvs 25-25, ビリリダマ Lvs 23-23, コイル Lvs 23-23, ビリリダマ Lvs 26-26, コイル Lvs 26-26, ビリリダマ Lvs 22-22, コイル Lvs 22-22, ビリリダマ Lvs 22-22, コイル Lvs 22-22]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ナゾノクサ Lvs 25-25, ナゾノクサ Lvs 27-27, キリンリキ Lvs 25-25, キリンリキ Lvs 27-27, ネイティ Lvs 25-25, ドードー Lvs 27-27, クサイハナ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 25-25, ソーナンス Lvs 27-27, ピカチュウ Lvs 27-27, ソーナンス Lvs 29-29]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [コダック Lvs 20-30, コダック Lvs 20-30, コダック Lvs 30-35, コダック Lvs 30-35, コダック Lvs 30-35]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-25, トサキント Lvs 10-30, トサキント Lvs 25-30, トサキント Lvs 30-35, アズマオウ Lvs 30-35, アズマオウ Lvs 35-40, アズマオウ Lvs 25-30]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ゴマゾウ Lvs 27-27, ナゾノクサ Lvs 27-27, ゴマゾウ Lvs 29-29, ナゾノクサ Lvs 29-29, ネイティ Lvs 27-27, クサイハナ Lvs 29-29, クサイハナ Lvs 31-31, ネイティ Lvs 29-29, ネイティオ Lvs 29-29, ヘラクロス Lvs 27-27, ネイティオ Lvs 31-31, ヘラクロス Lvs 29-29]]
+	[Name = サファリゾーン Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 10-15, イシツブテ Lvs 5-10, イシツブテ Lvs 15-20, イシツブテ Lvs 20-25, イシツブテ Lvs 25-30]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [サイホーン Lvs 27-27, ナゾノクサ Lvs 27-27, サイホーン Lvs 29-29, ナゾノクサ Lvs 29-29, ドードー Lvs 27-27, クサイハナ Lvs 29-29, クサイハナ Lvs 31-31, ドードー Lvs 29-29, ドードリオ Lvs 29-29, カイロス Lvs 27-27, ドードリオ Lvs 31-31, カイロス Lvs 29-29]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [コダック Lvs 20-30, コダック Lvs 20-30, コダック Lvs 30-35, ゴルダック Lvs 30-35, ゴルダック Lvs 25-40]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-25, トサキント Lvs 10-30, トサキント Lvs 25-30, トサキント Lvs 30-35, アズマオウ Lvs 30-35, アズマオウ Lvs 35-40, アズマオウ Lvs 25-30]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ハリテヤマ Lvs 40-40, コドラ Lvs 40-40, コドラ Lvs 40-40, ゴルバット Lvs 38-38, ハリテヤマ Lvs 38-38, ゴルバット Lvs 42-42, ハリテヤマ Lvs 42-42, コドラ Lvs 42-42, クチート Lvs 38-38, コドラ Lvs 42-42, クチート Lvs 38-38]]
+	[Name = チャンピオンロード Rock Smash, Rate = 20, MapIndex = -1,
+		Encounters = [ゴローン Lvs 30-40, イシツブテ Lvs 30-40, ゴローン Lvs 35-40, ゴローン Lvs 35-40, ゴローン Lvs 35-40]]
+	[Name = チャンピオンロード Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 40-40, ヤミラミ Lvs 40-40, コドラ Lvs 40-40, コドラ Lvs 40-40, ゴルバット Lvs 42-42, ヤミラミ Lvs 42-42, ゴルバット Lvs 44-44, ヤミラミ Lvs 44-44, コドラ Lvs 42-42, クチート Lvs 42-42, コドラ Lvs 44-44, クチート Lvs 44-44]]
+	[Name = チャンピオンロード Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 25-30, ゴルバット Lvs 35-40, ゴルバット Lvs 35-40, ゴルバット Lvs 35-40]]
+	[Name = チャンピオンロード Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 16-16, ズバット Lvs 17-17, ズバット Lvs 18-18, ズバット Lvs 15-15, ズバット Lvs 14-14, ソルロック Lvs 16-16, ソルロック Lvs 18-18, ソルロック Lvs 14-14, ズバット Lvs 19-19, ズバット Lvs 20-20, ズバット Lvs 19-19, ズバット Lvs 20-20]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ズバット Lvs 5-35, ズバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ドジョッチ Lvs 20-25, ドジョッチ Lvs 35-40, ドジョッチ Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+	[Name = りゅうせいのたき Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 30-35, ゴルバット Lvs 30-35, ソルロック Lvs 25-35, ソルロック Lvs 15-25, ソルロック Lvs 5-15]]
+	[Name = りゅうせいのたき Fishing, Rate = 30, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ドジョッチ Lvs 10-30, ドジョッチ Lvs 25-30, ドジョッチ Lvs 30-35, ナマズン Lvs 30-35, ナマズン Lvs 35-40, ナマズン Lvs 40-45]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, タマザラシ Lvs 25-30, タマザラシ Lvs 25-30, タマザラシ Lvs 25-35]]
+	[Name = あさせのほらあな Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ズバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32, ゴルバット Lvs 32-32, タマザラシ Lvs 32-32]]
+	[Name = あさせのほらあな Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, ズバット Lvs 5-35, タマザラシ Lvs 25-30, タマザラシ Lvs 25-30, タマザラシ Lvs 25-35]]
+	[Name = あさせのほらあな Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ミナモシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = ミナモシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ヒトデマン Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = ムロタウン Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = ムロタウン Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = カイナシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = カイナシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, ホエルコ Lvs 25-30, ホエルコ Lvs 30-35, ホエルコ Lvs 20-25, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トクサネシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = トクサネシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = キナギタウン Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = キナギタウン Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, メノクラゲ Lvs 10-30, ホエルコ Lvs 10-30, サメハダー Lvs 30-35, ホエルコ Lvs 30-35, ホエルコ Lvs 25-30, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = サイユウシティ Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [メノクラゲ Lvs 5-35, キャモメ Lvs 10-30, キャモメ Lvs 15-25, ペリッパー Lvs 25-30, ペリッパー Lvs 25-30]]
+	[Name = サイユウシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, ラブカス Lvs 10-30, ホエルコ Lvs 10-30, ラブカス Lvs 30-35, ホエルコ Lvs 30-35, サニーゴ Lvs 30-35, ホエルコ Lvs 35-40, ホエルコ Lvs 40-45]]
+	[Name = トウカシティ Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [マリル Lvs 20-30, マリル Lvs 10-20, マリル Lvs 30-35, マリル Lvs 5-10, マリル Lvs 5-10]]
+	[Name = トウカシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, トサキント Lvs 5-10, コイキング Lvs 10-30, トサキント Lvs 10-30, ヘイガニ Lvs 10-30, ヘイガニ Lvs 25-30, ヘイガニ Lvs 30-35, ヘイガニ Lvs 20-25, ヘイガニ Lvs 35-40, ヘイガニ Lvs 40-45]]
+	[Name = すいちゅう Surfing, Rate = 4, MapIndex = -1,
+		Encounters = [パールル Lvs 20-30, チョンチー Lvs 20-30, パールル Lvs 30-35, ジーランス Lvs 30-35, ジーランス Lvs 30-35]]
+	[Name = あさせのほらあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ズバット Lvs 26-26, タマザラシ Lvs 26-26, ズバット Lvs 28-28, タマザラシ Lvs 28-28, ズバット Lvs 30-30, タマザラシ Lvs 30-30, ユキワラシ Lvs 26-26, タマザラシ Lvs 32-32, ゴルバット Lvs 30-30, ユキワラシ Lvs 28-28, ゴルバット Lvs 32-32, ユキワラシ Lvs 30-30]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, ネンドール Lvs 38-38, ネンドール Lvs 37-37, ネンドール Lvs 38-38]]
+	[Name = ルネシティ Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-35, コイキング Lvs 10-30, コイキング Lvs 15-25, コイキング Lvs 25-30, コイキング Lvs 25-30]]
+	[Name = ルネシティ Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [コイキング Lvs 5-10, メノクラゲ Lvs 5-10, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 10-30, コイキング Lvs 30-35, コイキング Lvs 30-35, ギャラドス Lvs 35-40, ギャラドス Lvs 35-45, ギャラドス Lvs 5-45]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, ネンドール Lvs 38-38, ネンドール Lvs 37-37, ネンドール Lvs 38-38]]
+	[Name = そらのはしら Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ヤミラミ Lvs 33-33, ゴルバット Lvs 34-34, ゴルバット Lvs 35-35, ヤミラミ Lvs 34-34, ネンドール Lvs 36-36, ジュペッタ Lvs 37-37, ジュペッタ Lvs 38-38, ネンドール Lvs 36-36, ネンドール Lvs 37-37, チルタリス Lvs 38-38, チルタリス Lvs 39-39, チルタリス Lvs 39-39]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [ヒマナッツ Lvs 33-33, メリープ Lvs 34-34, ヒマナッツ Lvs 35-35, メリープ Lvs 36-36, エイパム Lvs 34-34, イトマル Lvs 33-33, ホーホー Lvs 35-35, ブルー Lvs 34-34, オドシシ Lvs 36-36, グライガー Lvs 37-37, オドシシ Lvs 39-39, グライガー Lvs 40-40]]
+	[Name = サファリゾーン Surfing, Rate = 9, MapIndex = -1,
+		Encounters = [ウパー Lvs 25-30, マリル Lvs 25-30, マリル Lvs 25-30, マリル Lvs 30-35, ヌオー Lvs 35-40]]
+	[Name = サファリゾーン Fishing, Rate = 35, MapIndex = -1,
+		Encounters = [コイキング Lvs 25-30, トサキント Lvs 25-30, コイキング Lvs 25-30, トサキント Lvs 25-30, テッポウオ Lvs 30-35, トサキント Lvs 25-30, テッポウオ Lvs 25-30, テッポウオ Lvs 30-35, テッポウオ Lvs 30-35, オクタン Lvs 35-40]]
+	[Name = サファリゾーン Grass/Cave, Rate = 25, MapIndex = -1,
+		Encounters = [エイパム Lvs 33-33, ヒメグマ Lvs 34-34, エイパム Lvs 35-35, ヒメグマ Lvs 36-36, ヒマナッツ Lvs 34-34, レディバ Lvs 33-33, ホーホー Lvs 35-35, クヌギダマ Lvs 34-34, デルビル Lvs 36-36, ミルタンク Lvs 37-37, デルビル Lvs 39-39, ミルタンク Lvs 40-40]]
+	[Name = サファリゾーン Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [ツボツボ Lvs 25-30, ツボツボ Lvs 20-25, ツボツボ Lvs 30-35, ツボツボ Lvs 30-35, ツボツボ Lvs 35-40]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = マグマだん アジト Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [イシツブテ Lvs 27-27, コータス Lvs 28-28, イシツブテ Lvs 28-28, コータス Lvs 30-30, イシツブテ Lvs 29-29, イシツブテ Lvs 30-30, イシツブテ Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 30-30, ゴローン Lvs 31-31, ゴローン Lvs 32-32, ゴローン Lvs 33-33]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = げんえいのとう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [サンド Lvs 21-21, ナックラー Lvs 21-21, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 20-20, ナックラー Lvs 20-20, サンド Lvs 22-22, ナックラー Lvs 22-22, サンド Lvs 23-23, ナックラー Lvs 23-23, サンド Lvs 24-24, ナックラー Lvs 24-24]]
+	[Name = さばくのちかどう Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [メタモン Lvs 38-38, ゴニョニョ Lvs 35-35, メタモン Lvs 40-40, ドゴーム Lvs 40-40, メタモン Lvs 41-41, ゴニョニョ Lvs 36-36, ドゴーム Lvs 38-38, メタモン Lvs 42-42, ゴニョニョ Lvs 38-38, メタモン Lvs 43-43, ドゴーム Lvs 44-44, メタモン Lvs 45-45]]
+	[Name = アトリエのあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドーブル Lvs 40-40, ドーブル Lvs 41-41, ドーブル Lvs 42-42, ドーブル Lvs 43-43, ドーブル Lvs 44-44, ドーブル Lvs 45-45, ドーブル Lvs 46-46, ドーブル Lvs 47-47, ドーブル Lvs 48-48, ドーブル Lvs 49-49, ドーブル Lvs 50-50, ドーブル Lvs 50-50]]
+	[Name = アトリエのあな Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ドーブル Lvs 40-40, ドーブル Lvs 41-41, ドーブル Lvs 42-42, ドーブル Lvs 43-43, ドーブル Lvs 44-44, ドーブル Lvs 45-45, ドーブル Lvs 46-46, ドーブル Lvs 47-47, ドーブル Lvs 48-48, ドーブル Lvs 49-49, ドーブル Lvs 50-50, ドーブル Lvs 50-50]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ズバット Lvs 10-10, ズバット Lvs 12-12, ズバット Lvs 8-8, ズバット Lvs 14-14, ズバット Lvs 10-10, ズバット Lvs 12-12, ズバット Lvs 16-16, ズバット Lvs 6-6, ズバット Lvs 8-8, ズバット Lvs 14-14, ズバット Lvs 8-8, ズバット Lvs 14-14]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [メリープ Lvs 7-7, メリープ Lvs 9-9, メリープ Lvs 5-5, メリープ Lvs 11-11, メリープ Lvs 7-7, メリープ Lvs 9-9, メリープ Lvs 13-13, メリープ Lvs 3-3, メリープ Lvs 5-5, メリープ Lvs 11-11, メリープ Lvs 5-5, メリープ Lvs 11-11]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [クヌギダマ Lvs 23-23, クヌギダマ Lvs 25-25, クヌギダマ Lvs 22-22, クヌギダマ Lvs 27-27, クヌギダマ Lvs 23-23, クヌギダマ Lvs 25-25, クヌギダマ Lvs 29-29, クヌギダマ Lvs 19-19, クヌギダマ Lvs 21-21, クヌギダマ Lvs 27-27, クヌギダマ Lvs 21-21, クヌギダマ Lvs 27-27]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [デルビル Lvs 16-16, デルビル Lvs 18-18, デルビル Lvs 14-14, デルビル Lvs 20-20, デルビル Lvs 16-16, デルビル Lvs 18-18, デルビル Lvs 22-22, デルビル Lvs 12-12, デルビル Lvs 14-14, デルビル Lvs 20-20, デルビル Lvs 14-14, デルビル Lvs 20-20]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ヒメグマ Lvs 10-10, ヒメグマ Lvs 12-12, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14, ヒメグマ Lvs 10-10, ヒメグマ Lvs 12-12, ヒメグマ Lvs 16-16, ヒメグマ Lvs 6-6, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14, ヒメグマ Lvs 8-8, ヒメグマ Lvs 14-14]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [エイパム Lvs 22-22, エイパム Lvs 24-24, エイパム Lvs 20-20, エイパム Lvs 26-26, エイパム Lvs 22-22, エイパム Lvs 24-24, エイパム Lvs 28-28, エイパム Lvs 18-18, エイパム Lvs 20-20, エイパム Lvs 26-26, エイパム Lvs 20-20, エイパム Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ツボツボ Lvs 22-22, ツボツボ Lvs 24-24, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26, ツボツボ Lvs 22-22, ツボツボ Lvs 24-24, ツボツボ Lvs 28-28, ツボツボ Lvs 18-18, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26, ツボツボ Lvs 20-20, ツボツボ Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [オドシシ Lvs 22-22, オドシシ Lvs 24-24, オドシシ Lvs 20-20, オドシシ Lvs 26-26, オドシシ Lvs 22-22, オドシシ Lvs 24-24, オドシシ Lvs 28-28, オドシシ Lvs 18-18, オドシシ Lvs 20-20, オドシシ Lvs 26-26, オドシシ Lvs 20-20, オドシシ Lvs 26-26]]
+	[Name = へんげのどうくつ Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ドーブル Lvs 22-22, ドーブル Lvs 24-24, ドーブル Lvs 20-20, ドーブル Lvs 26-26, ドーブル Lvs 22-22, ドーブル Lvs 24-24, ドーブル Lvs 28-28, ドーブル Lvs 18-18, ドーブル Lvs 20-20, ドーブル Lvs 26-26, ドーブル Lvs 20-20, ドーブル Lvs 26-26]]
+	[Name = りゅうせいのたき Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [ゴルバット Lvs 33-33, ゴルバット Lvs 35-35, ゴルバット Lvs 33-33, ソルロック Lvs 35-35, ソルロック Lvs 33-33, ソルロック Lvs 37-37, ゴルバット Lvs 35-35, ソルロック Lvs 39-39, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40, ゴルバット Lvs 38-38, ゴルバット Lvs 40-40]]
+]

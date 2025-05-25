@@ -1,0 +1,925 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = MONEAN CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = LIPTOO CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = WEEPTH CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = DILFORD CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = SCUFIB CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = RIXY CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = VIAPOIS CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = VIRIDIAN FOREST Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [CATERPIE Lvs 4-4, WEEDLE Lvs 4-4, CATERPIE Lvs 5-5, WEEDLE Lvs 5-5, CATERPIE Lvs 3-3, WEEDLE Lvs 3-3, KAKUNA Lvs 5-5, METAPOD Lvs 5-5, METAPOD Lvs 4-4, PIKACHU Lvs 3-3, METAPOD Lvs 6-6, PIKACHU Lvs 5-5]]
+	[Name = MT. MOON Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 7-7, ZUBAT Lvs 8-8, GEODUDE Lvs 7-7, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, GEODUDE Lvs 8-8, GEODUDE Lvs 9-9, PARAS Lvs 8-8, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, CLEFAIRY Lvs 8-8]]
+	[Name = MT. MOON Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10, PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10]]
+	[Name = MT. MOON Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 8-8, GEODUDE Lvs 9-9, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, GEODUDE Lvs 10-10, PARAS Lvs 10-10, PARAS Lvs 12-12, CLEFAIRY Lvs 10-10, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, CLEFAIRY Lvs 12-12]]
+	[Name = S.S. ANNE Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = S.S. ANNE Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = DIGLETT’S CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DIGLETT Lvs 18-18, DIGLETT Lvs 19-19, DIGLETT Lvs 17-17, DIGLETT Lvs 15-15, DIGLETT Lvs 16-16, DIGLETT Lvs 20-20, DIGLETT Lvs 21-21, DIGLETT Lvs 22-22, DIGLETT Lvs 17-17, DUGTRIO Lvs 29-29, DIGLETT Lvs 17-17, DUGTRIO Lvs 31-31]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 32-32, GEODUDE Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, SANDSLASH Lvs 44-44, GOLBAT Lvs 44-44, MAROWAK Lvs 44-44, MACHOKE Lvs 44-44, MACHOKE Lvs 46-46, MAROWAK Lvs 46-46]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 34-34, GEODUDE Lvs 34-34, PRIMEAPE Lvs 42-42, ONIX Lvs 45-45, ONIX Lvs 48-48, ZUBAT Lvs 34-34, SANDSLASH Lvs 46-46, GOLBAT Lvs 46-46, MAROWAK Lvs 46-46, MACHOKE Lvs 46-46, MACHOKE Lvs 48-48, MAROWAK Lvs 48-48]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 32-32, GEODUDE Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, SANDSLASH Lvs 44-44, GOLBAT Lvs 44-44, MAROWAK Lvs 44-44, MACHOKE Lvs 44-44, MACHOKE Lvs 46-46, MAROWAK Lvs 46-46]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 34-34, GRIMER Lvs 30-30, DITTO Lvs 30-30, VULPIX Lvs 30-30, RATICATE Lvs 38-38, KOFFING Lvs 28-28, MUK Lvs 34-34, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RHYHORN Lvs 25-25, NIDORAN♀ Lvs 22-22, EXEGGCUTE Lvs 24-24, EXEGGCUTE Lvs 25-25, VENONAT Lvs 22-22, NIDORINA Lvs 31-31, NIDORINO Lvs 31-31, PARASECT Lvs 30-30, VENONAT Lvs 22-22, PINSIR Lvs 23-23, VENONAT Lvs 22-22, CHANSEY Lvs 23-23]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NIDORAN♀ Lvs 24-24, DODUO Lvs 26-26, EXEGGCUTE Lvs 23-23, EXEGGCUTE Lvs 25-25, PARAS Lvs 22-22, NIDORINA Lvs 33-33, NIDORAN♂ Lvs 24-24, PARASECT Lvs 25-25, PARAS Lvs 22-22, KANGASKHAN Lvs 25-25, PARAS Lvs 22-22, PINSIR Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RHYHORN Lvs 26-26, NIDORAN♀ Lvs 30-30, EXEGGCUTE Lvs 25-25, EXEGGCUTE Lvs 27-27, PARAS Lvs 23-23, NIDORINA Lvs 30-30, NIDORINO Lvs 30-30, VENOMOTH Lvs 32-32, PARAS Lvs 23-23, CHANSEY Lvs 26-26, PARAS Lvs 23-23, TAUROS Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [DODUO Lvs 26-26, NIDORAN♀ Lvs 22-22, EXEGGCUTE Lvs 25-25, EXEGGCUTE Lvs 27-27, VENONAT Lvs 23-23, NIDORINA Lvs 30-30, NIDORAN♂ Lvs 30-30, VENOMOTH Lvs 32-32, VENONAT Lvs 23-23, TAUROS Lvs 25-25, VENONAT Lvs 23-23, KANGASKHAN Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAGNETON Lvs 49-49, PARASECT Lvs 49-49, GOLBAT Lvs 46-46, MACHOKE Lvs 46-46, PRIMEAPE Lvs 52-52, DITTO Lvs 52-52, ELECTRODE Lvs 58-58, PARASECT Lvs 58-58, GOLBAT Lvs 55-55, WOBBUFFET Lvs 55-55, PRIMEAPE Lvs 61-61, DITTO Lvs 61-61]]
+	[Name = CERULEAN CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 30-40, SLOWBRO Lvs 40-50, SLOWBRO Lvs 45-55, SLOWPOKE Lvs 40-50, SLOWPOKE Lvs 40-50]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 30-40, GRAVELER Lvs 40-50, GRAVELER Lvs 45-55, GEODUDE Lvs 40-50, GEODUDE Lvs 40-50]]
+	[Name = CERULEAN CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GOLBAT Lvs 49-49, MACHOKE Lvs 49-49, MAGNETON Lvs 52-52, PARASECT Lvs 52-52, KADABRA Lvs 55-55, DITTO Lvs 55-55, GOLBAT Lvs 58-58, WOBBUFFET Lvs 58-58, ELECTRODE Lvs 61-61, PARASECT Lvs 61-61, KADABRA Lvs 64-64, DITTO Lvs 64-64]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 35-45, GRAVELER Lvs 45-55, GRAVELER Lvs 50-60, GEODUDE Lvs 45-55, GEODUDE Lvs 45-55]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KADABRA Lvs 58-58, DITTO Lvs 58-58, MAGNETON Lvs 55-55, PARASECT Lvs 55-55, GOLBAT Lvs 52-52, MACHOKE Lvs 52-52, KADABRA Lvs 67-67, DITTO Lvs 67-67, ELECTRODE Lvs 64-64, PARASECT Lvs 64-64, GOLBAT Lvs 61-61, WOBBUFFET Lvs 61-61]]
+	[Name = CERULEAN CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 40-50, SLOWBRO Lvs 50-60, SLOWBRO Lvs 55-65, SLOWPOKE Lvs 50-60, SLOWPOKE Lvs 50-60]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-50, GRAVELER Lvs 50-60, GRAVELER Lvs 55-65, GEODUDE Lvs 50-60, GEODUDE Lvs 50-60]]
+	[Name = CERULEAN CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = ROCK TUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 15-15, GEODUDE Lvs 16-16, MANKEY Lvs 16-16, GEODUDE Lvs 17-17, ZUBAT Lvs 16-16, MACHOP Lvs 16-16, MANKEY Lvs 17-17, MACHOP Lvs 17-17, GEODUDE Lvs 15-15, ONIX Lvs 13-13, GEODUDE Lvs 15-15, ONIX Lvs 15-15]]
+	[Name = ROCK TUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 16-16, GEODUDE Lvs 17-17, MANKEY Lvs 17-17, GEODUDE Lvs 16-16, ZUBAT Lvs 15-15, MACHOP Lvs 17-17, MANKEY Lvs 16-16, ONIX Lvs 13-13, GEODUDE Lvs 15-15, ONIX Lvs 15-15, GEODUDE Lvs 15-15, ONIX Lvs 17-17]]
+	[Name = ROCK TUNNEL Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 27-27, SLOWPOKE Lvs 29-29, SLOWPOKE Lvs 31-31, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, SLOWPOKE Lvs 33-33, ZUBAT Lvs 26-26, SLOWPOKE Lvs 26-26, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 29-29, SLOWPOKE Lvs 31-31, SEEL Lvs 28-28, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, SLOWBRO Lvs 33-33, ZUBAT Lvs 26-26, SLOWBRO Lvs 35-35, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 30-30, SLOWPOKE Lvs 32-32, SEEL Lvs 30-30, SEEL Lvs 32-32, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, SLOWBRO Lvs 34-34, SLOWBRO Lvs 32-32, GOLBAT Lvs 28-28, SLOWBRO Lvs 32-32, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 30-30, SEEL Lvs 32-32, SLOWPOKE Lvs 32-32, SLOWPOKE Lvs 30-30, SLOWBRO Lvs 32-32, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, SLOWBRO Lvs 34-34, DEWGONG Lvs 32-32, GOLBAT Lvs 28-28, DEWGONG Lvs 34-34, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 25-35, KRABBY Lvs 25-30, DEWGONG Lvs 35-40, SLOWPOKE Lvs 30-40, SLOWBRO Lvs 35-40]]
+	[Name = SEAFOAM ISLANDS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 30-30, SEEL Lvs 32-32, SLOWPOKE Lvs 32-32, SEEL Lvs 34-34, SLOWBRO Lvs 32-32, GOLBAT Lvs 26-26, DEWGONG Lvs 34-34, SLOWBRO Lvs 34-34, DEWGONG Lvs 36-36, GOLBAT Lvs 28-28, DEWGONG Lvs 36-36, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 25-35, KRABBY Lvs 25-30, DEWGONG Lvs 35-40, SLOWPOKE Lvs 30-40, SLOWBRO Lvs 35-40]]
+	[Name = SEAFOAM ISLANDS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, GASTLY Lvs 19-19, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, HAUNTER Lvs 20-20]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, HAUNTER Lvs 20-20, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, GASTLY Lvs 19-19]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, HAUNTER Lvs 20-20, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, GASTLY Lvs 19-19]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 18-18, GASTLY Lvs 14-14, GASTLY Lvs 15-15, GASTLY Lvs 19-19, HAUNTER Lvs 21-21, CUBONE Lvs 17-17, GASTLY Lvs 18-18, CUBONE Lvs 19-19, GASTLY Lvs 18-18, HAUNTER Lvs 23-23]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 18-18, GASTLY Lvs 15-15, GASTLY Lvs 19-19, HAUNTER Lvs 23-23, CUBONE Lvs 17-17, CUBONE Lvs 19-19, GASTLY Lvs 18-18, HAUNTER Lvs 23-23, GASTLY Lvs 18-18, HAUNTER Lvs 25-25]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POWER PLANT Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [VOLTORB Lvs 22-22, MAGNEMITE Lvs 22-22, VOLTORB Lvs 25-25, MAGNEMITE Lvs 25-25, PIKACHU Lvs 22-22, PIKACHU Lvs 24-24, MAGNETON Lvs 31-31, MAGNETON Lvs 34-34, PIKACHU Lvs 26-26, MAGNETON Lvs 31-31, PIKACHU Lvs 26-26, MAGNETON Lvs 34-34]]
+	[Name = MT. EMBER Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PONYTA Lvs 30-30, FEAROW Lvs 38-38, PONYTA Lvs 33-33, SPEAROW Lvs 32-32, MACHOP Lvs 35-35, GEODUDE Lvs 33-33, PONYTA Lvs 36-36, FEAROW Lvs 40-40, MAGMAR Lvs 38-38, RAPIDASH Lvs 39-39, MAGMAR Lvs 40-40, RAPIDASH Lvs 42-42]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 33-33, MACHOP Lvs 35-35, GEODUDE Lvs 29-29, GEODUDE Lvs 31-31, MACHOP Lvs 31-31, MACHOP Lvs 33-33, GEODUDE Lvs 35-35, MACHOP Lvs 37-37, GEODUDE Lvs 37-37, MACHOP Lvs 39-39, GEODUDE Lvs 37-37, MACHOP Lvs 39-39]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 34-34, MACHOP Lvs 36-36, GEODUDE Lvs 30-30, GEODUDE Lvs 32-32, MACHOP Lvs 32-32, MACHOP Lvs 34-34, MACHOKE Lvs 38-38, MACHOKE Lvs 38-38, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 33-33, MACHOP Lvs 35-35, GEODUDE Lvs 29-29, GEODUDE Lvs 31-31, MACHOP Lvs 31-31, MACHOP Lvs 33-33, GEODUDE Lvs 35-35, MACHOP Lvs 37-37, GEODUDE Lvs 37-37, MACHOP Lvs 39-39, GEODUDE Lvs 37-37, MACHOP Lvs 39-39]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 36-36, MACHOP Lvs 38-38, GEODUDE Lvs 32-32, GEODUDE Lvs 34-34, MACHOP Lvs 34-34, MACHOP Lvs 36-36, GEODUDE Lvs 38-38, MACHOKE Lvs 40-40, GEODUDE Lvs 40-40, MACHOKE Lvs 42-42, GEODUDE Lvs 40-40, MACHOKE Lvs 42-42]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 38-38, GEODUDE Lvs 36-36, GEODUDE Lvs 34-34, GEODUDE Lvs 40-40, SLUGMA Lvs 24-24, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 28-28, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-40, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 24-24, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, GEODUDE Lvs 44-44, SLUGMA Lvs 32-32, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLUGMA Lvs 26-26, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, SLUGMA Lvs 32-32, SLUGMA Lvs 24-24, SLUGMA Lvs 22-22, SLUGMA Lvs 20-20, SLUGMA Lvs 34-34, SLUGMA Lvs 36-36, SLUGMA Lvs 18-18, SLUGMA Lvs 36-36, SLUGMA Lvs 18-18]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [SLUGMA Lvs 15-25, SLUGMA Lvs 25-35, MAGCARGO Lvs 40-45, MAGCARGO Lvs 35-45, MAGCARGO Lvs 25-35]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-40, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 24-24, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, GEODUDE Lvs 44-44, SLUGMA Lvs 32-32, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 38-38, GEODUDE Lvs 36-36, GEODUDE Lvs 34-34, GEODUDE Lvs 40-40, SLUGMA Lvs 24-24, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 28-28, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = BERRY FOREST Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEOTTO Lvs 37-37, WEEPINBELL Lvs 35-35, PIDGEY Lvs 32-32, BELLSPROUT Lvs 30-30, VENONAT Lvs 34-34, DROWZEE Lvs 34-34, EXEGGCUTE Lvs 35-35, SLOWPOKE Lvs 31-31, VENOMOTH Lvs 37-37, HYPNO Lvs 37-37, VENOMOTH Lvs 40-40, HYPNO Lvs 40-40]]
+	[Name = BERRY FOREST Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-20, SLOWPOKE Lvs 20-35, SLOWPOKE Lvs 35-40, SLOWBRO Lvs 35-40, SLOWBRO Lvs 35-40]]
+	[Name = BERRY FOREST Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 43-43, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SEEL Lvs 47-47, ZUBAT Lvs 40-40, DEWGONG Lvs 49-49, DEWGONG Lvs 51-51, SLOWPOKE Lvs 41-41, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53]]
+	[Name = ICEFALL CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 5-35, SLOWPOKE Lvs 5-35, DEWGONG Lvs 35-40, MARILL Lvs 5-15, MARILL Lvs 5-15]]
+	[Name = ICEFALL CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SWINUB Lvs 25-25, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SWINUB Lvs 27-27, ZUBAT Lvs 40-40, SWINUB Lvs 29-29, SNEASEL Lvs 30-30, SWINUB Lvs 31-31, GOLBAT Lvs 48-48, SWINUB Lvs 23-23, GOLBAT Lvs 48-48, SWINUB Lvs 23-23]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SWINUB Lvs 25-25, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SWINUB Lvs 27-27, ZUBAT Lvs 40-40, SWINUB Lvs 29-29, SNEASEL Lvs 30-30, SWINUB Lvs 31-31, GOLBAT Lvs 48-48, SWINUB Lvs 23-23, GOLBAT Lvs 48-48, SWINUB Lvs 23-23]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 43-43, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SEEL Lvs 47-47, ZUBAT Lvs 40-40, DEWGONG Lvs 49-49, DEWGONG Lvs 51-51, SLOWPOKE Lvs 41-41, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53]]
+	[Name = ICEFALL CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-45, TENTACRUEL Lvs 35-45, LAPRAS Lvs 30-45]]
+	[Name = ICEFALL CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = PATTERN BUSH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [LEDYBA Lvs 9-9, KAKUNA Lvs 9-9, LEDYBA Lvs 14-14, CATERPIE Lvs 6-6, WEEDLE Lvs 6-6, HERACROSS Lvs 15-15, METAPOD Lvs 9-9, HERACROSS Lvs 20-20, SPINARAK Lvs 9-9, HERACROSS Lvs 25-25, SPINARAK Lvs 14-14, HERACROSS Lvs 30-30]]
+	[Name = LOST CAVE Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 3, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 9, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = KINDLE ROAD Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 32-32, PONYTA Lvs 34-34, FEAROW Lvs 36-36, PONYTA Lvs 31-31, GEODUDE Lvs 31-31, MEOWTH Lvs 31-31, SPEAROW Lvs 30-30, SLOWPOKE Lvs 34-34, RAPIDASH Lvs 37-37, PERSIAN Lvs 37-37, RAPIDASH Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = KINDLE ROAD Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = KINDLE ROAD Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = KINDLE ROAD Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = TREASURE BEACH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 32-32, TANGELA Lvs 33-33, SPEAROW Lvs 31-31, TANGELA Lvs 35-35, FEAROW Lvs 36-36, MEOWTH Lvs 31-31, FEAROW Lvs 38-38, SLOWPOKE Lvs 31-31, FEAROW Lvs 40-40, PERSIAN Lvs 37-37, FEAROW Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = TREASURE BEACH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TREASURE BEACH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CAPE BRINK Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 31-31, BELLSPROUT Lvs 30-30, BELLSPROUT Lvs 32-32, WEEPINBELL Lvs 36-36, FEAROW Lvs 36-36, MEOWTH Lvs 31-31, WEEPINBELL Lvs 38-38, SLOWPOKE Lvs 31-31, SLOWBRO Lvs 37-37, PERSIAN Lvs 37-37, SLOWBRO Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = CAPE BRINK Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-20, SLOWPOKE Lvs 20-35, SLOWPOKE Lvs 35-40, SLOWBRO Lvs 35-40, SLOWBRO Lvs 35-40]]
+	[Name = CAPE BRINK Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = BOND BRIDGE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 32-32, BELLSPROUT Lvs 31-31, PIDGEY Lvs 29-29, WEEPINBELL Lvs 36-36, PIDGEOTTO Lvs 34-34, MEOWTH Lvs 31-31, VENONAT Lvs 34-34, SLOWPOKE Lvs 31-31, PIDGEOTTO Lvs 37-37, PERSIAN Lvs 37-37, PIDGEOTTO Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = BOND BRIDGE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = BOND BRIDGE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = THREE ISLE PORT Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [DUNSPARCE Lvs 15-15, DUNSPARCE Lvs 15-15, DUNSPARCE Lvs 10-10, DUNSPARCE Lvs 10-10, DUNSPARCE Lvs 20-20, DUNSPARCE Lvs 20-20, DUNSPARCE Lvs 25-25, DUNSPARCE Lvs 30-30, DUNSPARCE Lvs 25-25, DUNSPARCE Lvs 30-30, DUNSPARCE Lvs 5-5, DUNSPARCE Lvs 35-35]]
+	[Name = RESORT GORGEOUS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = RESORT GORGEOUS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = WATER LABYRINTH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = WATER LABYRINTH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = FIVE ISLE MEADOW Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 44-44, SENTRET Lvs 10-10, PIDGEOTTO Lvs 48-48, HOPPIP Lvs 10-10, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, HOPPIP Lvs 15-15, SLOWPOKE Lvs 41-41, PIDGEOTTO Lvs 50-50, PERSIAN Lvs 47-47, PIDGEOTTO Lvs 50-50, PERSIAN Lvs 50-50]]
+	[Name = FIVE ISLE MEADOW Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = FIVE ISLE MEADOW Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = MEMORIAL PILLAR Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HOPPIP Lvs 10-10, HOPPIP Lvs 12-12, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14, HOPPIP Lvs 10-10, HOPPIP Lvs 12-12, HOPPIP Lvs 16-16, HOPPIP Lvs 6-6, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14]]
+	[Name = MEMORIAL PILLAR Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = MEMORIAL PILLAR Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = OUTCAST ISLAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = OUTCAST ISLAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = GREEN PATH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = GREEN PATH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = WATER PATH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 44-44, SENTRET Lvs 10-10, BELLSPROUT Lvs 44-44, FEAROW Lvs 48-48, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, WEEPINBELL Lvs 48-48, SLOWPOKE Lvs 41-41, FEAROW Lvs 50-50, PERSIAN Lvs 47-47, FEAROW Lvs 50-50, PERSIAN Lvs 50-50]]
+	[Name = WATER PATH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = WATER PATH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = RUIN VALLEY Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NATU Lvs 15-15, SPEAROW Lvs 44-44, YANMA Lvs 18-18, MARILL Lvs 15-15, FEAROW Lvs 49-49, MEOWTH Lvs 43-43, WOBBUFFET Lvs 25-25, SLOWPOKE Lvs 41-41, NATU Lvs 20-20, PERSIAN Lvs 49-49, NATU Lvs 20-20, PERSIAN Lvs 52-52]]
+	[Name = RUIN VALLEY Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [MARILL Lvs 5-20, MARILL Lvs 10-20, MARILL Lvs 15-25, MARILL Lvs 20-25, MARILL Lvs 20-25]]
+	[Name = RUIN VALLEY Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = TRAINER TOWER Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, MANTINE Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TRAINER TOWER Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CANYON ENTRANCE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 44-44, SENTRET Lvs 10-10, PHANPY Lvs 10-10, FEAROW Lvs 48-48, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, FEAROW Lvs 50-50, SLOWPOKE Lvs 41-41, PHANPY Lvs 15-15, PERSIAN Lvs 47-47, PHANPY Lvs 15-15, PERSIAN Lvs 50-50]]
+	[Name = SEVAULT CANYON Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 46-46, PHANPY Lvs 15-15, CUBONE Lvs 46-46, FEAROW Lvs 50-50, MAROWAK Lvs 52-52, MEOWTH Lvs 43-43, ONIX Lvs 54-54, FEAROW Lvs 50-50, LARVITAR Lvs 15-15, PERSIAN Lvs 49-49, LARVITAR Lvs 20-20, PERSIAN Lvs 52-52]]
+	[Name = SEVAULT CANYON Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = TANOBY RUINS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, MANTINE Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TANOBY RUINS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 1 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 2-2, RATTATA Lvs 2-2, PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 4-4, RATTATA Lvs 4-4, PIDGEY Lvs 5-5, RATTATA Lvs 4-4]]
+	[Name = ROUTE 2 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTATA Lvs 3-3, PIDGEY Lvs 3-3, RATTATA Lvs 4-4, PIDGEY Lvs 4-4, RATTATA Lvs 2-2, PIDGEY Lvs 2-2, RATTATA Lvs 5-5, PIDGEY Lvs 5-5, CATERPIE Lvs 4-4, WEEDLE Lvs 4-4, CATERPIE Lvs 5-5, WEEDLE Lvs 5-5]]
+	[Name = ROUTE 3 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 6-6, PIDGEY Lvs 6-6, SPEAROW Lvs 7-7, MANKEY Lvs 7-7, NIDORAN♀ Lvs 6-6, PIDGEY Lvs 7-7, SPEAROW Lvs 8-8, JIGGLYPUFF Lvs 3-3, NIDORAN♀ Lvs 7-7, JIGGLYPUFF Lvs 5-5, NIDORAN♂ Lvs 6-6, JIGGLYPUFF Lvs 7-7]]
+	[Name = ROUTE 4 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 10-10, RATTATA Lvs 10-10, SANDSHREW Lvs 6-6, SANDSHREW Lvs 10-10, SPEAROW Lvs 8-8, RATTATA Lvs 8-8, SPEAROW Lvs 12-12, RATTATA Lvs 12-12, MANKEY Lvs 10-10, SANDSHREW Lvs 8-8, MANKEY Lvs 12-12, SANDSHREW Lvs 12-12]]
+	[Name = ROUTE 4 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 4 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 5 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MEOWTH Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 13-13, MEOWTH Lvs 12-12, BELLSPROUT Lvs 15-15, PIDGEY Lvs 15-15, BELLSPROUT Lvs 16-16, PIDGEY Lvs 16-16, PIDGEY Lvs 15-15, MEOWTH Lvs 14-14, PIDGEY Lvs 15-15, MEOWTH Lvs 16-16]]
+	[Name = ROUTE 6 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MEOWTH Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 13-13, MEOWTH Lvs 12-12, BELLSPROUT Lvs 15-15, PIDGEY Lvs 15-15, BELLSPROUT Lvs 16-16, PIDGEY Lvs 16-16, PIDGEY Lvs 15-15, MEOWTH Lvs 14-14, PIDGEY Lvs 15-15, MEOWTH Lvs 16-16]]
+	[Name = ROUTE 6 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 6 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 7 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 19-19, MEOWTH Lvs 17-17, BELLSPROUT Lvs 19-19, MEOWTH Lvs 18-18, PIDGEY Lvs 22-22, BELLSPROUT Lvs 22-22, VULPIX Lvs 18-18, VULPIX Lvs 20-20, MEOWTH Lvs 17-17, MEOWTH Lvs 19-19, MEOWTH Lvs 17-17, MEOWTH Lvs 20-20]]
+	[Name = ROUTE 8 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 18-18, MEOWTH Lvs 18-18, VULPIX Lvs 16-16, PIDGEY Lvs 20-20, MEOWTH Lvs 20-20, SANDSHREW Lvs 17-17, VULPIX Lvs 17-17, SANDSHREW Lvs 19-19, SANDSHREW Lvs 17-17, VULPIX Lvs 15-15, SANDSHREW Lvs 17-17, VULPIX Lvs 18-18]]
+	[Name = ROUTE 9 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 16-16, RATTATA Lvs 16-16, SANDSHREW Lvs 11-11, SANDSHREW Lvs 15-15, SPEAROW Lvs 13-13, RATTATA Lvs 14-14, SPEAROW Lvs 17-17, RATTATA Lvs 17-17, RATTATA Lvs 14-14, SANDSHREW Lvs 13-13, RATTATA Lvs 14-14, SANDSHREW Lvs 17-17]]
+	[Name = ROUTE 10 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 16-16, VOLTORB Lvs 16-16, SANDSHREW Lvs 11-11, SANDSHREW Lvs 15-15, SPEAROW Lvs 13-13, VOLTORB Lvs 14-14, SPEAROW Lvs 17-17, VOLTORB Lvs 17-17, VOLTORB Lvs 14-14, SANDSHREW Lvs 13-13, VOLTORB Lvs 14-14, SANDSHREW Lvs 17-17]]
+	[Name = ROUTE 10 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 10 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 11 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SANDSHREW Lvs 14-14, SPEAROW Lvs 15-15, SANDSHREW Lvs 12-12, SPEAROW Lvs 13-13, DROWZEE Lvs 11-11, DROWZEE Lvs 13-13, SANDSHREW Lvs 15-15, SPEAROW Lvs 17-17, SANDSHREW Lvs 12-12, DROWZEE Lvs 15-15, SANDSHREW Lvs 12-12, DROWZEE Lvs 15-15]]
+	[Name = ROUTE 11 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 11 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 12 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 23-23, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, PIDGEY Lvs 27-27, PIDGEY Lvs 23-23, WEEPINBELL Lvs 28-28, PIDGEY Lvs 23-23, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 12 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 12 Fishing, Rate = 60, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 13 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 27-27, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, DITTO Lvs 25-25, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 28-28, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 13 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 13 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 14 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, DITTO Lvs 23-23, PIDGEY Lvs 27-27, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, WEEPINBELL Lvs 30-30, DITTO Lvs 23-23, PIDGEOTTO Lvs 29-29, DITTO Lvs 23-23, PIDGEOTTO Lvs 29-29]]
+	[Name = ROUTE 15 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 27-27, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, DITTO Lvs 25-25, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 28-28, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 16 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 18-18, RATTATA Lvs 18-18, RATTATA Lvs 20-20, SPEAROW Lvs 22-22, DODUO Lvs 20-20, RATTATA Lvs 22-22, DODUO Lvs 22-22, RATTATA Lvs 18-18, RATICATE Lvs 23-23, RATTATA Lvs 18-18, RATICATE Lvs 25-25]]
+	[Name = ROUTE 17 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 24-24, SPEAROW Lvs 22-22, DODUO Lvs 26-26, RATICATE Lvs 25-25, RATICATE Lvs 27-27, DODUO Lvs 28-28, RATICATE Lvs 29-29, RATTATA Lvs 22-22, FEAROW Lvs 25-25, RATTATA Lvs 22-22, FEAROW Lvs 27-27]]
+	[Name = ROUTE 18 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 24-24, SPEAROW Lvs 22-22, DODUO Lvs 26-26, RATICATE Lvs 25-25, FEAROW Lvs 25-25, DODUO Lvs 28-28, RATICATE Lvs 29-29, RATTATA Lvs 22-22, FEAROW Lvs 27-27, RATTATA Lvs 22-22, FEAROW Lvs 29-29]]
+	[Name = ROUTE 19 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 19 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 20 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 20 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 22 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTATA Lvs 3-3, MANKEY Lvs 3-3, RATTATA Lvs 4-4, MANKEY Lvs 4-4, RATTATA Lvs 2-2, MANKEY Lvs 2-2, SPEAROW Lvs 3-3, SPEAROW Lvs 5-5, RATTATA Lvs 5-5, MANKEY Lvs 5-5, RATTATA Lvs 5-5, MANKEY Lvs 5-5]]
+	[Name = ROUTE 22 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 22 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 23 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MANKEY Lvs 32-32, FEAROW Lvs 40-40, MANKEY Lvs 34-34, SPEAROW Lvs 34-34, SANDSHREW Lvs 32-32, SANDSHREW Lvs 34-34, PRIMEAPE Lvs 42-42, SANDSLASH Lvs 44-44, SPEAROW Lvs 32-32, FEAROW Lvs 42-42, SPEAROW Lvs 32-32, FEAROW Lvs 44-44]]
+	[Name = ROUTE 23 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 23 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 24 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEEDLE Lvs 7-7, CATERPIE Lvs 7-7, PIDGEY Lvs 11-11, BELLSPROUT Lvs 12-12, BELLSPROUT Lvs 13-13, ABRA Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 14-14, METAPOD Lvs 8-8, ABRA Lvs 8-8, KAKUNA Lvs 8-8, ABRA Lvs 12-12]]
+	[Name = ROUTE 24 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 24 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 25 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEEDLE Lvs 8-8, CATERPIE Lvs 8-8, PIDGEY Lvs 13-13, BELLSPROUT Lvs 14-14, BELLSPROUT Lvs 13-13, ABRA Lvs 11-11, PIDGEY Lvs 11-11, BELLSPROUT Lvs 12-12, METAPOD Lvs 9-9, ABRA Lvs 9-9, KAKUNA Lvs 9-9, ABRA Lvs 13-13]]
+	[Name = ROUTE 25 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 25 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = PALLET TOWN Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = PALLET TOWN Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-10, MAGIKARP Lvs 5-10, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = VIRIDIAN CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = VIRIDIAN CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CERULEAN CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = CERULEAN CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = VERMILION CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = VERMILION CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, HORSEA Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CELADON CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-10, SLOWPOKE Lvs 10-20, SLOWPOKE Lvs 20-30, SLOWPOKE Lvs 30-40, KOFFING Lvs 30-40]]
+	[Name = CELADON CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-15, MAGIKARP Lvs 5-15, MAGIKARP Lvs 5-15, MAGIKARP Lvs 15-25, MAGIKARP Lvs 15-25, MAGIKARP Lvs 15-25, MAGIKARP Lvs 25-35, GRIMER Lvs 30-40]]
+	[Name = FUCHSIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = FUCHSIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CINNABAR ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = CINNABAR ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, SLOWBRO Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ONE ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = ONE ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = FOUR ISLAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [MARILL Lvs 5-15, SLOWPOKE Lvs 5-35, MARILL Lvs 15-25, MARILL Lvs 15-25, MARILL Lvs 15-25]]
+	[Name = FOUR ISLAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = FIVE ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = FIVE ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 16-16, ZUBAT Lvs 6-6, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAREEP Lvs 7-7, MAREEP Lvs 9-9, MAREEP Lvs 5-5, MAREEP Lvs 11-11, MAREEP Lvs 7-7, MAREEP Lvs 9-9, MAREEP Lvs 13-13, MAREEP Lvs 3-3, MAREEP Lvs 5-5, MAREEP Lvs 11-11, MAREEP Lvs 5-5, MAREEP Lvs 11-11]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [PINECO Lvs 23-23, PINECO Lvs 25-25, PINECO Lvs 22-22, PINECO Lvs 27-27, PINECO Lvs 23-23, PINECO Lvs 25-25, PINECO Lvs 29-29, PINECO Lvs 19-19, PINECO Lvs 21-21, PINECO Lvs 27-27, PINECO Lvs 21-21, PINECO Lvs 27-27]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [HOUNDOUR Lvs 16-16, HOUNDOUR Lvs 18-18, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20, HOUNDOUR Lvs 16-16, HOUNDOUR Lvs 18-18, HOUNDOUR Lvs 22-22, HOUNDOUR Lvs 12-12, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 28-28, TEDDIURSA Lvs 18-18, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [AIPOM Lvs 22-22, AIPOM Lvs 24-24, AIPOM Lvs 20-20, AIPOM Lvs 26-26, AIPOM Lvs 22-22, AIPOM Lvs 24-24, AIPOM Lvs 28-28, AIPOM Lvs 18-18, AIPOM Lvs 20-20, AIPOM Lvs 26-26, AIPOM Lvs 20-20, AIPOM Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SHUCKLE Lvs 22-22, SHUCKLE Lvs 24-24, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26, SHUCKLE Lvs 22-22, SHUCKLE Lvs 24-24, SHUCKLE Lvs 28-28, SHUCKLE Lvs 18-18, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [STANTLER Lvs 22-22, STANTLER Lvs 24-24, STANTLER Lvs 20-20, STANTLER Lvs 26-26, STANTLER Lvs 22-22, STANTLER Lvs 24-24, STANTLER Lvs 28-28, STANTLER Lvs 18-18, STANTLER Lvs 20-20, STANTLER Lvs 26-26, STANTLER Lvs 20-20, STANTLER Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMEARGLE Lvs 22-22, SMEARGLE Lvs 24-24, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26, SMEARGLE Lvs 22-22, SMEARGLE Lvs 24-24, SMEARGLE Lvs 28-28, SMEARGLE Lvs 18-18, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = MONEAN CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = LIPTOO CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = WEEPTH CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = DILFORD CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = SCUFIB CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = RIXY CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = VIAPOIS CHAMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25, UNOWN Lvs 25-25]]
+	[Name = VIRIDIAN FOREST Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [CATERPIE Lvs 4-4, WEEDLE Lvs 4-4, CATERPIE Lvs 5-5, WEEDLE Lvs 5-5, CATERPIE Lvs 3-3, WEEDLE Lvs 3-3, KAKUNA Lvs 5-5, METAPOD Lvs 5-5, METAPOD Lvs 4-4, PIKACHU Lvs 3-3, METAPOD Lvs 6-6, PIKACHU Lvs 5-5]]
+	[Name = MT. MOON Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 7-7, ZUBAT Lvs 8-8, GEODUDE Lvs 7-7, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, GEODUDE Lvs 8-8, GEODUDE Lvs 9-9, PARAS Lvs 8-8, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, CLEFAIRY Lvs 8-8]]
+	[Name = MT. MOON Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10, PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10]]
+	[Name = MT. MOON Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 8-8, GEODUDE Lvs 9-9, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, GEODUDE Lvs 10-10, PARAS Lvs 10-10, PARAS Lvs 12-12, CLEFAIRY Lvs 10-10, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, CLEFAIRY Lvs 12-12]]
+	[Name = S.S. ANNE Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = S.S. ANNE Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = DIGLETT’S CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DIGLETT Lvs 18-18, DIGLETT Lvs 19-19, DIGLETT Lvs 17-17, DIGLETT Lvs 15-15, DIGLETT Lvs 16-16, DIGLETT Lvs 20-20, DIGLETT Lvs 21-21, DIGLETT Lvs 22-22, DIGLETT Lvs 17-17, DUGTRIO Lvs 29-29, DIGLETT Lvs 17-17, DUGTRIO Lvs 31-31]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 32-32, GEODUDE Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, SANDSLASH Lvs 44-44, GOLBAT Lvs 44-44, MAROWAK Lvs 44-44, MACHOKE Lvs 44-44, MACHOKE Lvs 46-46, MAROWAK Lvs 46-46]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 34-34, GEODUDE Lvs 34-34, PRIMEAPE Lvs 42-42, ONIX Lvs 45-45, ONIX Lvs 48-48, ZUBAT Lvs 34-34, SANDSLASH Lvs 46-46, GOLBAT Lvs 46-46, MAROWAK Lvs 46-46, MACHOKE Lvs 46-46, MACHOKE Lvs 48-48, MAROWAK Lvs 48-48]]
+	[Name = VICTORY ROAD Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOP Lvs 32-32, GEODUDE Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, SANDSLASH Lvs 44-44, GOLBAT Lvs 44-44, MAROWAK Lvs 44-44, MACHOKE Lvs 44-44, MACHOKE Lvs 46-46, MAROWAK Lvs 46-46]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 32-32, GRIMER Lvs 30-30, RATICATE Lvs 36-36, VULPIX Lvs 30-30, RATTATA Lvs 28-28, KOFFING Lvs 28-28, MUK Lvs 32-32, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = POKéMON MANSION Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GRIMER Lvs 28-28, RATICATE Lvs 34-34, GRIMER Lvs 30-30, DITTO Lvs 30-30, VULPIX Lvs 30-30, RATICATE Lvs 38-38, KOFFING Lvs 28-28, MUK Lvs 34-34, VULPIX Lvs 32-32, RATTATA Lvs 26-26, VULPIX Lvs 32-32, RATTATA Lvs 26-26]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RHYHORN Lvs 25-25, NIDORAN♀ Lvs 22-22, EXEGGCUTE Lvs 24-24, EXEGGCUTE Lvs 25-25, VENONAT Lvs 22-22, NIDORINA Lvs 31-31, NIDORINO Lvs 31-31, PARASECT Lvs 30-30, VENONAT Lvs 22-22, PINSIR Lvs 23-23, VENONAT Lvs 22-22, CHANSEY Lvs 23-23]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NIDORAN♀ Lvs 24-24, DODUO Lvs 26-26, EXEGGCUTE Lvs 23-23, EXEGGCUTE Lvs 25-25, PARAS Lvs 22-22, NIDORINA Lvs 33-33, NIDORAN♂ Lvs 24-24, PARASECT Lvs 25-25, PARAS Lvs 22-22, KANGASKHAN Lvs 25-25, PARAS Lvs 22-22, PINSIR Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RHYHORN Lvs 26-26, NIDORAN♀ Lvs 30-30, EXEGGCUTE Lvs 25-25, EXEGGCUTE Lvs 27-27, PARAS Lvs 23-23, NIDORINA Lvs 30-30, NIDORINO Lvs 30-30, VENOMOTH Lvs 32-32, PARAS Lvs 23-23, CHANSEY Lvs 26-26, PARAS Lvs 23-23, TAUROS Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = SAFARI ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [DODUO Lvs 26-26, NIDORAN♀ Lvs 22-22, EXEGGCUTE Lvs 25-25, EXEGGCUTE Lvs 27-27, VENONAT Lvs 23-23, NIDORINA Lvs 30-30, NIDORAN♂ Lvs 30-30, VENOMOTH Lvs 32-32, VENONAT Lvs 23-23, TAUROS Lvs 25-25, VENONAT Lvs 23-23, KANGASKHAN Lvs 28-28]]
+	[Name = SAFARI ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = SAFARI ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, DRATINI Lvs 15-25, SLOWPOKE Lvs 15-35, DRAGONAIR Lvs 25-35]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAGNETON Lvs 49-49, PARASECT Lvs 49-49, GOLBAT Lvs 46-46, MACHOKE Lvs 46-46, PRIMEAPE Lvs 52-52, DITTO Lvs 52-52, ELECTRODE Lvs 58-58, PARASECT Lvs 58-58, GOLBAT Lvs 55-55, WOBBUFFET Lvs 55-55, PRIMEAPE Lvs 61-61, DITTO Lvs 61-61]]
+	[Name = CERULEAN CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 30-40, SLOWBRO Lvs 40-50, SLOWBRO Lvs 45-55, SLOWPOKE Lvs 40-50, SLOWPOKE Lvs 40-50]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 30-40, GRAVELER Lvs 40-50, GRAVELER Lvs 45-55, GEODUDE Lvs 40-50, GEODUDE Lvs 40-50]]
+	[Name = CERULEAN CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GOLBAT Lvs 49-49, MACHOKE Lvs 49-49, MAGNETON Lvs 52-52, PARASECT Lvs 52-52, KADABRA Lvs 55-55, DITTO Lvs 55-55, GOLBAT Lvs 58-58, WOBBUFFET Lvs 58-58, ELECTRODE Lvs 61-61, PARASECT Lvs 61-61, KADABRA Lvs 64-64, DITTO Lvs 64-64]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 35-45, GRAVELER Lvs 45-55, GRAVELER Lvs 50-60, GEODUDE Lvs 45-55, GEODUDE Lvs 45-55]]
+	[Name = CERULEAN CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KADABRA Lvs 58-58, DITTO Lvs 58-58, MAGNETON Lvs 55-55, PARASECT Lvs 55-55, GOLBAT Lvs 52-52, MACHOKE Lvs 52-52, KADABRA Lvs 67-67, DITTO Lvs 67-67, ELECTRODE Lvs 64-64, PARASECT Lvs 64-64, GOLBAT Lvs 61-61, WOBBUFFET Lvs 61-61]]
+	[Name = CERULEAN CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 40-50, SLOWBRO Lvs 50-60, SLOWBRO Lvs 55-65, SLOWPOKE Lvs 50-60, SLOWPOKE Lvs 50-60]]
+	[Name = CERULEAN CAVE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-50, GRAVELER Lvs 50-60, GRAVELER Lvs 55-65, GEODUDE Lvs 50-60, GEODUDE Lvs 50-60]]
+	[Name = CERULEAN CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = ROCK TUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 15-15, GEODUDE Lvs 16-16, MANKEY Lvs 16-16, GEODUDE Lvs 17-17, ZUBAT Lvs 16-16, MACHOP Lvs 16-16, MANKEY Lvs 17-17, MACHOP Lvs 17-17, GEODUDE Lvs 15-15, ONIX Lvs 13-13, GEODUDE Lvs 15-15, ONIX Lvs 15-15]]
+	[Name = ROCK TUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 16-16, GEODUDE Lvs 17-17, MANKEY Lvs 17-17, GEODUDE Lvs 16-16, ZUBAT Lvs 15-15, MACHOP Lvs 17-17, MANKEY Lvs 16-16, ONIX Lvs 13-13, GEODUDE Lvs 15-15, ONIX Lvs 15-15, GEODUDE Lvs 15-15, ONIX Lvs 17-17]]
+	[Name = ROCK TUNNEL Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 27-27, SLOWPOKE Lvs 29-29, SLOWPOKE Lvs 31-31, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, SLOWPOKE Lvs 33-33, ZUBAT Lvs 26-26, SLOWPOKE Lvs 26-26, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 29-29, SLOWPOKE Lvs 31-31, SEEL Lvs 28-28, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, SLOWBRO Lvs 33-33, ZUBAT Lvs 26-26, SLOWBRO Lvs 35-35, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 30-30, SLOWPOKE Lvs 32-32, SEEL Lvs 30-30, SEEL Lvs 32-32, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, SLOWBRO Lvs 34-34, SLOWBRO Lvs 32-32, GOLBAT Lvs 28-28, SLOWBRO Lvs 32-32, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 30-30, SEEL Lvs 32-32, SLOWPOKE Lvs 32-32, SLOWPOKE Lvs 30-30, SLOWBRO Lvs 32-32, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, SLOWBRO Lvs 34-34, DEWGONG Lvs 32-32, GOLBAT Lvs 28-28, DEWGONG Lvs 34-34, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 25-35, KRABBY Lvs 25-30, DEWGONG Lvs 35-40, SLOWPOKE Lvs 30-40, SLOWBRO Lvs 35-40]]
+	[Name = SEAFOAM ISLANDS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = SEAFOAM ISLANDS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 30-30, SEEL Lvs 32-32, SLOWPOKE Lvs 32-32, SEEL Lvs 34-34, SLOWBRO Lvs 32-32, GOLBAT Lvs 26-26, DEWGONG Lvs 34-34, SLOWBRO Lvs 34-34, DEWGONG Lvs 36-36, GOLBAT Lvs 28-28, DEWGONG Lvs 36-36, GOLBAT Lvs 30-30]]
+	[Name = SEAFOAM ISLANDS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 25-35, KRABBY Lvs 25-30, DEWGONG Lvs 35-40, SLOWPOKE Lvs 30-40, SLOWBRO Lvs 35-40]]
+	[Name = SEAFOAM ISLANDS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, GYARADOS Lvs 25-35]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, GASTLY Lvs 19-19, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, HAUNTER Lvs 20-20]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, HAUNTER Lvs 20-20, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, GASTLY Lvs 19-19]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [GASTLY Lvs 15-15, GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 13-13, GASTLY Lvs 14-14, GASTLY Lvs 18-18, HAUNTER Lvs 20-20, CUBONE Lvs 15-15, GASTLY Lvs 17-17, CUBONE Lvs 17-17, GASTLY Lvs 17-17, GASTLY Lvs 19-19]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 18-18, GASTLY Lvs 14-14, GASTLY Lvs 15-15, GASTLY Lvs 19-19, HAUNTER Lvs 21-21, CUBONE Lvs 17-17, GASTLY Lvs 18-18, CUBONE Lvs 19-19, GASTLY Lvs 18-18, HAUNTER Lvs 23-23]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TOWER Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [GASTLY Lvs 16-16, GASTLY Lvs 17-17, GASTLY Lvs 18-18, GASTLY Lvs 15-15, GASTLY Lvs 19-19, HAUNTER Lvs 23-23, CUBONE Lvs 17-17, CUBONE Lvs 19-19, GASTLY Lvs 18-18, HAUNTER Lvs 23-23, GASTLY Lvs 18-18, HAUNTER Lvs 25-25]
+		Banned = [Species [name=MAGNEMITE, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGLETT, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DUGTRIO, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=TRAPINCH, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=WYNAUT, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOBBUFFET, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NOSEPASS, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POWER PLANT Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [VOLTORB Lvs 22-22, MAGNEMITE Lvs 22-22, VOLTORB Lvs 25-25, MAGNEMITE Lvs 25-25, PIKACHU Lvs 22-22, PIKACHU Lvs 24-24, MAGNETON Lvs 31-31, MAGNETON Lvs 34-34, PIKACHU Lvs 26-26, MAGNETON Lvs 31-31, PIKACHU Lvs 26-26, MAGNETON Lvs 34-34]]
+	[Name = MT. EMBER Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PONYTA Lvs 30-30, FEAROW Lvs 38-38, PONYTA Lvs 33-33, SPEAROW Lvs 32-32, MACHOP Lvs 35-35, GEODUDE Lvs 33-33, PONYTA Lvs 36-36, FEAROW Lvs 40-40, MAGMAR Lvs 38-38, RAPIDASH Lvs 39-39, MAGMAR Lvs 40-40, RAPIDASH Lvs 42-42]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 33-33, MACHOP Lvs 35-35, GEODUDE Lvs 29-29, GEODUDE Lvs 31-31, MACHOP Lvs 31-31, MACHOP Lvs 33-33, GEODUDE Lvs 35-35, MACHOP Lvs 37-37, GEODUDE Lvs 37-37, MACHOP Lvs 39-39, GEODUDE Lvs 37-37, MACHOP Lvs 39-39]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 34-34, MACHOP Lvs 36-36, GEODUDE Lvs 30-30, GEODUDE Lvs 32-32, MACHOP Lvs 32-32, MACHOP Lvs 34-34, MACHOKE Lvs 38-38, MACHOKE Lvs 38-38, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40, MACHOKE Lvs 40-40]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 33-33, MACHOP Lvs 35-35, GEODUDE Lvs 29-29, GEODUDE Lvs 31-31, MACHOP Lvs 31-31, MACHOP Lvs 33-33, GEODUDE Lvs 35-35, MACHOP Lvs 37-37, GEODUDE Lvs 37-37, MACHOP Lvs 39-39, GEODUDE Lvs 37-37, MACHOP Lvs 39-39]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 36-36, MACHOP Lvs 38-38, GEODUDE Lvs 32-32, GEODUDE Lvs 34-34, MACHOP Lvs 34-34, MACHOP Lvs 36-36, GEODUDE Lvs 38-38, MACHOKE Lvs 40-40, GEODUDE Lvs 40-40, MACHOKE Lvs 42-42, GEODUDE Lvs 40-40, MACHOKE Lvs 42-42]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 38-38, GEODUDE Lvs 36-36, GEODUDE Lvs 34-34, GEODUDE Lvs 40-40, SLUGMA Lvs 24-24, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 28-28, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-40, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 24-24, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, GEODUDE Lvs 44-44, SLUGMA Lvs 32-32, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SLUGMA Lvs 26-26, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, SLUGMA Lvs 32-32, SLUGMA Lvs 24-24, SLUGMA Lvs 22-22, SLUGMA Lvs 20-20, SLUGMA Lvs 34-34, SLUGMA Lvs 36-36, SLUGMA Lvs 18-18, SLUGMA Lvs 36-36, SLUGMA Lvs 18-18]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [SLUGMA Lvs 15-25, SLUGMA Lvs 25-35, MAGCARGO Lvs 40-45, MAGCARGO Lvs 35-45, MAGCARGO Lvs 25-35]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 40-40, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 24-24, SLUGMA Lvs 28-28, SLUGMA Lvs 30-30, GEODUDE Lvs 44-44, SLUGMA Lvs 32-32, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22, GEODUDE Lvs 44-44, SLUGMA Lvs 22-22]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = MT. EMBER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 38-38, GEODUDE Lvs 36-36, GEODUDE Lvs 34-34, GEODUDE Lvs 40-40, SLUGMA Lvs 24-24, SLUGMA Lvs 26-26, GEODUDE Lvs 42-42, SLUGMA Lvs 28-28, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30, GEODUDE Lvs 42-42, SLUGMA Lvs 30-30]]
+	[Name = MT. EMBER Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = BERRY FOREST Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEOTTO Lvs 37-37, WEEPINBELL Lvs 35-35, PIDGEY Lvs 32-32, BELLSPROUT Lvs 30-30, VENONAT Lvs 34-34, DROWZEE Lvs 34-34, EXEGGCUTE Lvs 35-35, SLOWPOKE Lvs 31-31, VENOMOTH Lvs 37-37, HYPNO Lvs 37-37, VENOMOTH Lvs 40-40, HYPNO Lvs 40-40]]
+	[Name = BERRY FOREST Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-20, SLOWPOKE Lvs 20-35, SLOWPOKE Lvs 35-40, SLOWBRO Lvs 35-40, SLOWBRO Lvs 35-40]]
+	[Name = BERRY FOREST Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 43-43, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SEEL Lvs 47-47, ZUBAT Lvs 40-40, DEWGONG Lvs 49-49, DEWGONG Lvs 51-51, SLOWPOKE Lvs 41-41, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53]]
+	[Name = ICEFALL CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SEEL Lvs 5-35, SLOWPOKE Lvs 5-35, DEWGONG Lvs 35-40, MARILL Lvs 5-15, MARILL Lvs 5-15]]
+	[Name = ICEFALL CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SWINUB Lvs 25-25, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SWINUB Lvs 27-27, ZUBAT Lvs 40-40, SWINUB Lvs 29-29, SNEASEL Lvs 30-30, SWINUB Lvs 31-31, GOLBAT Lvs 48-48, SWINUB Lvs 23-23, GOLBAT Lvs 48-48, SWINUB Lvs 23-23]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SWINUB Lvs 25-25, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SWINUB Lvs 27-27, ZUBAT Lvs 40-40, SWINUB Lvs 29-29, SNEASEL Lvs 30-30, SWINUB Lvs 31-31, GOLBAT Lvs 48-48, SWINUB Lvs 23-23, GOLBAT Lvs 48-48, SWINUB Lvs 23-23]]
+	[Name = ICEFALL CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SEEL Lvs 43-43, GOLBAT Lvs 45-45, SEEL Lvs 45-45, SEEL Lvs 47-47, ZUBAT Lvs 40-40, DEWGONG Lvs 49-49, DEWGONG Lvs 51-51, SLOWPOKE Lvs 41-41, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53, GOLBAT Lvs 48-48, DEWGONG Lvs 53-53]]
+	[Name = ICEFALL CAVE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-45, TENTACRUEL Lvs 35-45, LAPRAS Lvs 30-45]]
+	[Name = ICEFALL CAVE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = PATTERN BUSH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [LEDYBA Lvs 9-9, KAKUNA Lvs 9-9, LEDYBA Lvs 14-14, CATERPIE Lvs 6-6, WEEDLE Lvs 6-6, HERACROSS Lvs 15-15, METAPOD Lvs 9-9, HERACROSS Lvs 20-20, SPINARAK Lvs 9-9, HERACROSS Lvs 25-25, SPINARAK Lvs 14-14, HERACROSS Lvs 30-30]]
+	[Name = LOST CAVE Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 3, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 9, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, GASTLY Lvs 38-38, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = LOST CAVE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GASTLY Lvs 40-40, ZUBAT Lvs 37-37, HAUNTER Lvs 44-44, HAUNTER Lvs 46-46, GOLBAT Lvs 41-41, MISDREAVUS Lvs 15-15, MISDREAVUS Lvs 20-20, HAUNTER Lvs 48-48, HAUNTER Lvs 50-50, MISDREAVUS Lvs 22-22, HAUNTER Lvs 52-52, MISDREAVUS Lvs 22-22]]
+	[Name = KINDLE ROAD Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 32-32, PONYTA Lvs 34-34, FEAROW Lvs 36-36, PONYTA Lvs 31-31, GEODUDE Lvs 31-31, MEOWTH Lvs 31-31, SPEAROW Lvs 30-30, SLOWPOKE Lvs 34-34, RAPIDASH Lvs 37-37, PERSIAN Lvs 37-37, RAPIDASH Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = KINDLE ROAD Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = KINDLE ROAD Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 5-20, GEODUDE Lvs 10-20, GEODUDE Lvs 15-30, GRAVELER Lvs 25-40, GRAVELER Lvs 30-40]]
+	[Name = KINDLE ROAD Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = TREASURE BEACH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 32-32, TANGELA Lvs 33-33, SPEAROW Lvs 31-31, TANGELA Lvs 35-35, FEAROW Lvs 36-36, MEOWTH Lvs 31-31, FEAROW Lvs 38-38, SLOWPOKE Lvs 31-31, FEAROW Lvs 40-40, PERSIAN Lvs 37-37, FEAROW Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = TREASURE BEACH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TREASURE BEACH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CAPE BRINK Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 31-31, BELLSPROUT Lvs 30-30, BELLSPROUT Lvs 32-32, WEEPINBELL Lvs 36-36, FEAROW Lvs 36-36, MEOWTH Lvs 31-31, WEEPINBELL Lvs 38-38, SLOWPOKE Lvs 31-31, SLOWBRO Lvs 37-37, PERSIAN Lvs 37-37, SLOWBRO Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = CAPE BRINK Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-20, SLOWPOKE Lvs 20-35, SLOWPOKE Lvs 35-40, SLOWBRO Lvs 35-40, SLOWBRO Lvs 35-40]]
+	[Name = CAPE BRINK Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = BOND BRIDGE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 32-32, BELLSPROUT Lvs 31-31, PIDGEY Lvs 29-29, WEEPINBELL Lvs 36-36, PIDGEOTTO Lvs 34-34, MEOWTH Lvs 31-31, VENONAT Lvs 34-34, SLOWPOKE Lvs 31-31, PIDGEOTTO Lvs 37-37, PERSIAN Lvs 37-37, PIDGEOTTO Lvs 40-40, PERSIAN Lvs 40-40]]
+	[Name = BOND BRIDGE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = BOND BRIDGE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = THREE ISLE PORT Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [DUNSPARCE Lvs 15-15, DUNSPARCE Lvs 15-15, DUNSPARCE Lvs 10-10, DUNSPARCE Lvs 10-10, DUNSPARCE Lvs 20-20, DUNSPARCE Lvs 20-20, DUNSPARCE Lvs 25-25, DUNSPARCE Lvs 30-30, DUNSPARCE Lvs 25-25, DUNSPARCE Lvs 30-30, DUNSPARCE Lvs 5-5, DUNSPARCE Lvs 35-35]]
+	[Name = RESORT GORGEOUS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = RESORT GORGEOUS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = WATER LABYRINTH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = WATER LABYRINTH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = FIVE ISLE MEADOW Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 44-44, SENTRET Lvs 10-10, PIDGEOTTO Lvs 48-48, HOPPIP Lvs 10-10, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, HOPPIP Lvs 15-15, SLOWPOKE Lvs 41-41, PIDGEOTTO Lvs 50-50, PERSIAN Lvs 47-47, PIDGEOTTO Lvs 50-50, PERSIAN Lvs 50-50]]
+	[Name = FIVE ISLE MEADOW Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = FIVE ISLE MEADOW Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = MEMORIAL PILLAR Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HOPPIP Lvs 10-10, HOPPIP Lvs 12-12, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14, HOPPIP Lvs 10-10, HOPPIP Lvs 12-12, HOPPIP Lvs 16-16, HOPPIP Lvs 6-6, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14, HOPPIP Lvs 8-8, HOPPIP Lvs 14-14]]
+	[Name = MEMORIAL PILLAR Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = MEMORIAL PILLAR Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = OUTCAST ISLAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = OUTCAST ISLAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = GREEN PATH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = GREEN PATH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = WATER PATH Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 44-44, SENTRET Lvs 10-10, BELLSPROUT Lvs 44-44, FEAROW Lvs 48-48, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, WEEPINBELL Lvs 48-48, SLOWPOKE Lvs 41-41, FEAROW Lvs 50-50, PERSIAN Lvs 47-47, FEAROW Lvs 50-50, PERSIAN Lvs 50-50]]
+	[Name = WATER PATH Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = WATER PATH Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = RUIN VALLEY Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NATU Lvs 15-15, SPEAROW Lvs 44-44, YANMA Lvs 18-18, MARILL Lvs 15-15, FEAROW Lvs 49-49, MEOWTH Lvs 43-43, WOBBUFFET Lvs 25-25, SLOWPOKE Lvs 41-41, NATU Lvs 20-20, PERSIAN Lvs 49-49, NATU Lvs 20-20, PERSIAN Lvs 52-52]]
+	[Name = RUIN VALLEY Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [MARILL Lvs 5-20, MARILL Lvs 10-20, MARILL Lvs 15-25, MARILL Lvs 20-25, MARILL Lvs 20-25]]
+	[Name = RUIN VALLEY Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = TRAINER TOWER Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, MANTINE Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TRAINER TOWER Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CANYON ENTRANCE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 44-44, SENTRET Lvs 10-10, PHANPY Lvs 10-10, FEAROW Lvs 48-48, SENTRET Lvs 15-15, MEOWTH Lvs 41-41, FEAROW Lvs 50-50, SLOWPOKE Lvs 41-41, PHANPY Lvs 15-15, PERSIAN Lvs 47-47, PHANPY Lvs 15-15, PERSIAN Lvs 50-50]]
+	[Name = SEVAULT CANYON Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 46-46, PHANPY Lvs 15-15, CUBONE Lvs 46-46, FEAROW Lvs 50-50, MAROWAK Lvs 52-52, MEOWTH Lvs 43-43, ONIX Lvs 54-54, FEAROW Lvs 50-50, LARVITAR Lvs 15-15, PERSIAN Lvs 49-49, LARVITAR Lvs 20-20, PERSIAN Lvs 52-52]]
+	[Name = SEVAULT CANYON Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [GEODUDE Lvs 25-35, GRAVELER Lvs 30-45, GRAVELER Lvs 35-50, GEODUDE Lvs 30-40, GEODUDE Lvs 30-40]]
+	[Name = TANOBY RUINS Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, MANTINE Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = TANOBY RUINS Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, REMORAID Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 1 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 2-2, RATTATA Lvs 2-2, PIDGEY Lvs 3-3, RATTATA Lvs 3-3, PIDGEY Lvs 4-4, RATTATA Lvs 4-4, PIDGEY Lvs 5-5, RATTATA Lvs 4-4]]
+	[Name = ROUTE 2 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTATA Lvs 3-3, PIDGEY Lvs 3-3, RATTATA Lvs 4-4, PIDGEY Lvs 4-4, RATTATA Lvs 2-2, PIDGEY Lvs 2-2, RATTATA Lvs 5-5, PIDGEY Lvs 5-5, CATERPIE Lvs 4-4, WEEDLE Lvs 4-4, CATERPIE Lvs 5-5, WEEDLE Lvs 5-5]]
+	[Name = ROUTE 3 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 6-6, PIDGEY Lvs 6-6, SPEAROW Lvs 7-7, MANKEY Lvs 7-7, NIDORAN♀ Lvs 6-6, PIDGEY Lvs 7-7, SPEAROW Lvs 8-8, JIGGLYPUFF Lvs 3-3, NIDORAN♀ Lvs 7-7, JIGGLYPUFF Lvs 5-5, NIDORAN♂ Lvs 6-6, JIGGLYPUFF Lvs 7-7]]
+	[Name = ROUTE 4 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 10-10, RATTATA Lvs 10-10, SANDSHREW Lvs 6-6, SANDSHREW Lvs 10-10, SPEAROW Lvs 8-8, RATTATA Lvs 8-8, SPEAROW Lvs 12-12, RATTATA Lvs 12-12, MANKEY Lvs 10-10, SANDSHREW Lvs 8-8, MANKEY Lvs 12-12, SANDSHREW Lvs 12-12]]
+	[Name = ROUTE 4 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 4 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 5 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MEOWTH Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 13-13, MEOWTH Lvs 12-12, BELLSPROUT Lvs 15-15, PIDGEY Lvs 15-15, BELLSPROUT Lvs 16-16, PIDGEY Lvs 16-16, PIDGEY Lvs 15-15, MEOWTH Lvs 14-14, PIDGEY Lvs 15-15, MEOWTH Lvs 16-16]]
+	[Name = ROUTE 6 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MEOWTH Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 13-13, MEOWTH Lvs 12-12, BELLSPROUT Lvs 15-15, PIDGEY Lvs 15-15, BELLSPROUT Lvs 16-16, PIDGEY Lvs 16-16, PIDGEY Lvs 15-15, MEOWTH Lvs 14-14, PIDGEY Lvs 15-15, MEOWTH Lvs 16-16]]
+	[Name = ROUTE 6 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 6 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 7 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 19-19, MEOWTH Lvs 17-17, BELLSPROUT Lvs 19-19, MEOWTH Lvs 18-18, PIDGEY Lvs 22-22, BELLSPROUT Lvs 22-22, VULPIX Lvs 18-18, VULPIX Lvs 20-20, MEOWTH Lvs 17-17, MEOWTH Lvs 19-19, MEOWTH Lvs 17-17, MEOWTH Lvs 20-20]]
+	[Name = ROUTE 8 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PIDGEY Lvs 18-18, MEOWTH Lvs 18-18, VULPIX Lvs 16-16, PIDGEY Lvs 20-20, MEOWTH Lvs 20-20, SANDSHREW Lvs 17-17, VULPIX Lvs 17-17, SANDSHREW Lvs 19-19, SANDSHREW Lvs 17-17, VULPIX Lvs 15-15, SANDSHREW Lvs 17-17, VULPIX Lvs 18-18]]
+	[Name = ROUTE 9 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 16-16, RATTATA Lvs 16-16, SANDSHREW Lvs 11-11, SANDSHREW Lvs 15-15, SPEAROW Lvs 13-13, RATTATA Lvs 14-14, SPEAROW Lvs 17-17, RATTATA Lvs 17-17, RATTATA Lvs 14-14, SANDSHREW Lvs 13-13, RATTATA Lvs 14-14, SANDSHREW Lvs 17-17]]
+	[Name = ROUTE 10 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 16-16, VOLTORB Lvs 16-16, SANDSHREW Lvs 11-11, SANDSHREW Lvs 15-15, SPEAROW Lvs 13-13, VOLTORB Lvs 14-14, SPEAROW Lvs 17-17, VOLTORB Lvs 17-17, VOLTORB Lvs 14-14, SANDSHREW Lvs 13-13, VOLTORB Lvs 14-14, SANDSHREW Lvs 17-17]]
+	[Name = ROUTE 10 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 10 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 11 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SANDSHREW Lvs 14-14, SPEAROW Lvs 15-15, SANDSHREW Lvs 12-12, SPEAROW Lvs 13-13, DROWZEE Lvs 11-11, DROWZEE Lvs 13-13, SANDSHREW Lvs 15-15, SPEAROW Lvs 17-17, SANDSHREW Lvs 12-12, DROWZEE Lvs 15-15, SANDSHREW Lvs 12-12, DROWZEE Lvs 15-15]]
+	[Name = ROUTE 11 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 11 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 12 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 23-23, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, PIDGEY Lvs 27-27, PIDGEY Lvs 23-23, WEEPINBELL Lvs 28-28, PIDGEY Lvs 23-23, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 12 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 12 Fishing, Rate = 60, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 13 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 27-27, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, DITTO Lvs 25-25, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 28-28, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 13 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 13 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 14 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, DITTO Lvs 23-23, PIDGEY Lvs 27-27, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, WEEPINBELL Lvs 30-30, DITTO Lvs 23-23, PIDGEOTTO Lvs 29-29, DITTO Lvs 23-23, PIDGEOTTO Lvs 29-29]]
+	[Name = ROUTE 15 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [BELLSPROUT Lvs 24-24, VENONAT Lvs 24-24, BELLSPROUT Lvs 22-22, PIDGEY Lvs 27-27, PIDGEY Lvs 25-25, VENONAT Lvs 26-26, BELLSPROUT Lvs 26-26, DITTO Lvs 25-25, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 28-28, PIDGEOTTO Lvs 29-29, WEEPINBELL Lvs 30-30]]
+	[Name = ROUTE 16 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 18-18, RATTATA Lvs 18-18, RATTATA Lvs 20-20, SPEAROW Lvs 22-22, DODUO Lvs 20-20, RATTATA Lvs 22-22, DODUO Lvs 22-22, RATTATA Lvs 18-18, RATICATE Lvs 23-23, RATTATA Lvs 18-18, RATICATE Lvs 25-25]]
+	[Name = ROUTE 17 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 24-24, SPEAROW Lvs 22-22, DODUO Lvs 26-26, RATICATE Lvs 25-25, RATICATE Lvs 27-27, DODUO Lvs 28-28, RATICATE Lvs 29-29, RATTATA Lvs 22-22, FEAROW Lvs 25-25, RATTATA Lvs 22-22, FEAROW Lvs 27-27]]
+	[Name = ROUTE 18 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [SPEAROW Lvs 20-20, DODUO Lvs 24-24, SPEAROW Lvs 22-22, DODUO Lvs 26-26, RATICATE Lvs 25-25, FEAROW Lvs 25-25, DODUO Lvs 28-28, RATICATE Lvs 29-29, RATTATA Lvs 22-22, FEAROW Lvs 27-27, RATTATA Lvs 22-22, FEAROW Lvs 29-29]]
+	[Name = ROUTE 19 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 19 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 20 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 20 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 22 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTATA Lvs 3-3, MANKEY Lvs 3-3, RATTATA Lvs 4-4, MANKEY Lvs 4-4, RATTATA Lvs 2-2, MANKEY Lvs 2-2, SPEAROW Lvs 3-3, SPEAROW Lvs 5-5, RATTATA Lvs 5-5, MANKEY Lvs 5-5, RATTATA Lvs 5-5, MANKEY Lvs 5-5]]
+	[Name = ROUTE 22 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 22 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 23 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MANKEY Lvs 32-32, FEAROW Lvs 40-40, MANKEY Lvs 34-34, SPEAROW Lvs 34-34, SANDSHREW Lvs 32-32, SANDSHREW Lvs 34-34, PRIMEAPE Lvs 42-42, SANDSLASH Lvs 44-44, SPEAROW Lvs 32-32, FEAROW Lvs 42-42, SPEAROW Lvs 32-32, FEAROW Lvs 44-44]]
+	[Name = ROUTE 23 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 23 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 24 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEEDLE Lvs 7-7, CATERPIE Lvs 7-7, PIDGEY Lvs 11-11, BELLSPROUT Lvs 12-12, BELLSPROUT Lvs 13-13, ABRA Lvs 10-10, PIDGEY Lvs 13-13, BELLSPROUT Lvs 14-14, METAPOD Lvs 8-8, ABRA Lvs 8-8, KAKUNA Lvs 8-8, ABRA Lvs 12-12]]
+	[Name = ROUTE 24 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = ROUTE 24 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ROUTE 25 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEEDLE Lvs 8-8, CATERPIE Lvs 8-8, PIDGEY Lvs 13-13, BELLSPROUT Lvs 14-14, BELLSPROUT Lvs 13-13, ABRA Lvs 11-11, PIDGEY Lvs 11-11, BELLSPROUT Lvs 12-12, METAPOD Lvs 9-9, ABRA Lvs 9-9, KAKUNA Lvs 9-9, ABRA Lvs 13-13]]
+	[Name = ROUTE 25 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = ROUTE 25 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = PALLET TOWN Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = PALLET TOWN Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-10, MAGIKARP Lvs 5-10, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = VIRIDIAN CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = VIRIDIAN CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CERULEAN CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = CERULEAN CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, KRABBY Lvs 15-25, GYARADOS Lvs 15-25, KRABBY Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = VERMILION CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = VERMILION CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, HORSEA Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = CELADON CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 5-10, SLOWPOKE Lvs 10-20, SLOWPOKE Lvs 20-30, SLOWPOKE Lvs 30-40, KOFFING Lvs 30-40]]
+	[Name = CELADON CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-15, MAGIKARP Lvs 5-15, MAGIKARP Lvs 5-15, MAGIKARP Lvs 15-25, MAGIKARP Lvs 15-25, MAGIKARP Lvs 15-25, MAGIKARP Lvs 25-35, GRIMER Lvs 30-40]]
+	[Name = FUCHSIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 20-25, SLOWPOKE Lvs 25-30, SLOWPOKE Lvs 30-35, SLOWPOKE Lvs 35-40]]
+	[Name = FUCHSIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, GOLDEEN Lvs 5-15, MAGIKARP Lvs 5-15, POLIWAG Lvs 5-15, GOLDEEN Lvs 15-25, SEAKING Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = CINNABAR ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-10, TENTACOOL Lvs 10-20, TENTACOOL Lvs 20-30, TENTACOOL Lvs 30-35, TENTACOOL Lvs 35-40]]
+	[Name = CINNABAR ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, HORSEA Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, SLOWBRO Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ONE ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-20, TENTACOOL Lvs 20-35, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = ONE ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = FOUR ISLAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [MARILL Lvs 5-15, SLOWPOKE Lvs 5-35, MARILL Lvs 15-25, MARILL Lvs 15-25, MARILL Lvs 15-25]]
+	[Name = FOUR ISLAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, POLIWAG Lvs 5-15, MAGIKARP Lvs 5-15, GOLDEEN Lvs 5-15, POLIWAG Lvs 15-25, POLIWHIRL Lvs 20-30, GYARADOS Lvs 15-25, SLOWPOKE Lvs 15-25, SLOWPOKE Lvs 25-35]]
+	[Name = FIVE ISLAND Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACOOL Lvs 5-35, HOPPIP Lvs 5-15, TENTACOOL Lvs 35-40, TENTACRUEL Lvs 35-40, TENTACRUEL Lvs 35-40]]
+	[Name = FIVE ISLAND Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [MAGIKARP Lvs 5-5, MAGIKARP Lvs 5-5, KRABBY Lvs 5-15, MAGIKARP Lvs 5-15, KRABBY Lvs 5-15, KRABBY Lvs 15-25, STARYU Lvs 15-25, GYARADOS Lvs 15-25, KINGLER Lvs 25-35, SLOWPOKE Lvs 25-35]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 16-16, ZUBAT Lvs 6-6, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAREEP Lvs 7-7, MAREEP Lvs 9-9, MAREEP Lvs 5-5, MAREEP Lvs 11-11, MAREEP Lvs 7-7, MAREEP Lvs 9-9, MAREEP Lvs 13-13, MAREEP Lvs 3-3, MAREEP Lvs 5-5, MAREEP Lvs 11-11, MAREEP Lvs 5-5, MAREEP Lvs 11-11]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [PINECO Lvs 23-23, PINECO Lvs 25-25, PINECO Lvs 22-22, PINECO Lvs 27-27, PINECO Lvs 23-23, PINECO Lvs 25-25, PINECO Lvs 29-29, PINECO Lvs 19-19, PINECO Lvs 21-21, PINECO Lvs 27-27, PINECO Lvs 21-21, PINECO Lvs 27-27]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [HOUNDOUR Lvs 16-16, HOUNDOUR Lvs 18-18, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20, HOUNDOUR Lvs 16-16, HOUNDOUR Lvs 18-18, HOUNDOUR Lvs 22-22, HOUNDOUR Lvs 12-12, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20, HOUNDOUR Lvs 14-14, HOUNDOUR Lvs 20-20]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 28-28, TEDDIURSA Lvs 18-18, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [AIPOM Lvs 22-22, AIPOM Lvs 24-24, AIPOM Lvs 20-20, AIPOM Lvs 26-26, AIPOM Lvs 22-22, AIPOM Lvs 24-24, AIPOM Lvs 28-28, AIPOM Lvs 18-18, AIPOM Lvs 20-20, AIPOM Lvs 26-26, AIPOM Lvs 20-20, AIPOM Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SHUCKLE Lvs 22-22, SHUCKLE Lvs 24-24, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26, SHUCKLE Lvs 22-22, SHUCKLE Lvs 24-24, SHUCKLE Lvs 28-28, SHUCKLE Lvs 18-18, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26, SHUCKLE Lvs 20-20, SHUCKLE Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [STANTLER Lvs 22-22, STANTLER Lvs 24-24, STANTLER Lvs 20-20, STANTLER Lvs 26-26, STANTLER Lvs 22-22, STANTLER Lvs 24-24, STANTLER Lvs 28-28, STANTLER Lvs 18-18, STANTLER Lvs 20-20, STANTLER Lvs 26-26, STANTLER Lvs 20-20, STANTLER Lvs 26-26]]
+	[Name = ALTERING CAVE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMEARGLE Lvs 22-22, SMEARGLE Lvs 24-24, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26, SMEARGLE Lvs 22-22, SMEARGLE Lvs 24-24, SMEARGLE Lvs 28-28, SMEARGLE Lvs 18-18, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26, SMEARGLE Lvs 20-20, SMEARGLE Lvs 26-26]]
+]

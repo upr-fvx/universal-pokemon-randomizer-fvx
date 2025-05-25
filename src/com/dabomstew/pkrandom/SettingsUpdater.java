@@ -41,7 +41,7 @@ public class SettingsUpdater {
      * update it to be compatible with the currently running randomizer version.
      * 
      * @param oldVersion
-     *            The PRESET_FILE_VERSION used to generate the given string
+     *            The Version id used to generate the given string
      * @param configString
      *            The outdated config string
      * @return The updated config string to be applied
@@ -58,28 +58,28 @@ public class SettingsUpdater {
         // bit fields 1 2 3 4 5 6 7 8
         // are values 0x01 0x02 0x04 0x08 0x10 0x20 0x40 0x80
 
-        // versions prior to 120 didn't have quick settings file,
+        // versions prior to v1.2.0a didn't have quick settings file,
         // they're just included here for completeness' sake
 
-        // versions < 102: add abilities set to unchanged
-        if (oldVersion < 102) {
+        // versions < v1.0.2a: add abilities set to unchanged
+        if (oldVersion < Version.v1_0_2a.id) {
             dataBlock[1] |= 0x10;
         }
 
-        // versions < 110: add move tutor byte (set both to unchanged)
-        if (oldVersion < 110) {
+        // versions < v1.1.0: add move tutor byte (set both to unchanged)
+        if (oldVersion < Version.v1_1_0.id) {
             insertExtraByte(15, (byte) (0x04 | 0x10));
         }
 
-        // version 110-111 no change (only added trainer names/classes to preset
+        // v1.1.0-v1.1.1 no change (only added trainer names/classes to preset
         // files, and some checkboxes which it is safe to leave as off)
 
-        // 111-112 no change (another checkbox we leave as off)
+        // v1.1.1-v1.1.2 no change (another checkbox we leave as off)
 
-        // 112-120 no change (only another checkbox)
+        // v1.1.2-v1.2.0a no change (only another checkbox)
 
-        // 120-150 new features
-        if (oldVersion < 150) {
+        // v1.2.0a-v1.5.0 new features
+        if (oldVersion < Version.v1_5_0.id) {
             // trades and field items: both unchanged
             insertExtraByte(16, (byte) (0x40));
             insertExtraByte(17, (byte) (0x04));
@@ -88,8 +88,8 @@ public class SettingsUpdater {
             actualDataLength += 4;
         }
 
-        // 150-160 lots of re-org etc
-        if (oldVersion < 160) {
+        // v1.5.0-v1.6.0a lots of re-org etc
+        if (oldVersion < Version.v1_6_0a.id) {
             // byte 0:
             // copy "update moves" to "update legacy moves"
             // move the other 3 fields after it up one
@@ -149,22 +149,22 @@ public class SettingsUpdater {
             insertIntField(23, hasBWPatch);
         }
 
-        // 160 to 161: no change
+        // v1.6.0a to v1.6.1: no change
         // the only changes were in implementation, which broke presets, but
         // leaves settings files the same
 
-        // 161 to 162:
+        // v1.6.1 to v1.6.2:
         // some added fields to tm/move tutors that we can leave blank
         // more crucially: a new general options byte @ offset 3
         // set it to all off by default
-        if (oldVersion < 162) {
+        if (oldVersion < Version.v1_6_2.id) {
             insertExtraByte(3, (byte) 0);
         }
 
-        // no significant changes from 162 to 163
+        // no significant changes from v1.6.2 to v1.6.3b
 
-        if (oldVersion < 170) {
-            // 163 to 170: add move data/evolution randoms and 2nd TM byte
+        if (oldVersion < Version.v1_7_0b.id) {
+            // v1.6.3b to v1.7.0b: add move data/evolution randoms and 2nd TM byte
             insertExtraByte(17, (byte) 0);
             insertExtraByte(21, (byte) 0);
             insertExtraByte(22, (byte) 1);
@@ -178,7 +178,7 @@ public class SettingsUpdater {
                 oldTweaks |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
             }
             if ((dataBlock[0] & (1 << 5)) != 0) {
-                oldTweaks |= MiscTweak.UPDATE_TYPE_EFFECTIVENESS.getValue();
+                oldTweaks |= MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue();
             }
             if ((dataBlock[2] & (1 << 5)) != 0) {
                 oldTweaks |= MiscTweak.FORCE_CHALLENGE_MODE.getValue();
@@ -190,8 +190,8 @@ public class SettingsUpdater {
             dataBlock[2] = getRemappedByte(dataBlock[2], new int[] { 0, 1, 2, 4, 6, 7 });
         }
 
-        if (oldVersion < 171) {
-            // 170 to 171: base stats follow evolutions is now a checkbox
+        if (oldVersion < Version.v1_7_1.id) {
+            // v1.7.0b to v1.7.1: base stats follow evolutions is now a checkbox
             // so if it's set in the settings file (byte 1 bit 0), turn on the
             // "random" radiobox (byte 1 bit 1)
             if ((dataBlock[1] & 1) != 0) {
@@ -221,8 +221,8 @@ public class SettingsUpdater {
             insertExtraByte(22, (byte) 0);
         }
         
-        if(oldVersion < 172) {
-            // 171 to 172: removed separate names files in favor of one unified file
+        if(oldVersion < Version.v1_7_2.id) {
+            // v1.7.1 to v1.7.2: removed separate names files in favor of one unified file
             // so two of the trailing checksums are gone
             actualDataLength -= 8;
             
@@ -233,7 +233,11 @@ public class SettingsUpdater {
             insertExtraByte(35, (byte) 50); // 50 in the settings file = +0% after adjustment
         }
 
-        if (oldVersion < 300) {
+        // TODO: There are seemingly more versions of ZX between Dabomstew's v1.7.2 and ZX v3.0.0,
+        //  and some of these (by the release logs https://github.com/Ajarmar/universal-Pokemon-randomizer-zx/releases)
+        //  add options. Do really old Settings not get updated properly, due to this?
+
+        if (oldVersion < Version.ZX_3_0_0.id) {
             // wild level modifier
             insertExtraByte(38, (byte) 50);
 
@@ -241,7 +245,7 @@ public class SettingsUpdater {
             insertExtraByte(39, (byte) 1);
         }
 
-        if (oldVersion < 311) {
+        if (oldVersion < Version.ZX_4_0_0.id) {
             // double battle mode + boss/important extra pokemon
             insertExtraByte(40, (byte) 0);
 
@@ -261,7 +265,7 @@ public class SettingsUpdater {
             insertExtraByte(45, (byte) 0);
         }
 
-        if (oldVersion < 314) {
+        if (oldVersion < Version.ZX_4_1_0.id) {
             // exp curve
             insertExtraByte(46, (byte) 0);
 
@@ -269,7 +273,7 @@ public class SettingsUpdater {
             insertExtraByte(47, (byte) 50);
         }
 
-        if (oldVersion < 315) {
+        if (oldVersion < Version.ZX_4_2_0.id) {
             // This tweak used to be "Randomize Hidden Hollows", which got moved to static Pokemon
             // randomization, so the misc tweak became unused in this version. It eventually *was*
             // used in a future version for something else, but don't get confused by the new name.
@@ -281,7 +285,7 @@ public class SettingsUpdater {
             insertExtraByte(48, (byte) 0);
         }
 
-        if (oldVersion < 317) {
+        if (oldVersion < Version.ZX_4_3_0.id) {
             // Pickup items
             insertExtraByte(49, (byte) 0);
 
@@ -291,7 +295,7 @@ public class SettingsUpdater {
             FileFunctions.writeFullIntBigEndian(dataBlock, 28, genRestrictions);
         }
 
-        if (oldVersion < 319) {
+        if (oldVersion < Version.ZX_4_5_0.id) {
             // 5-10 custom starters, offset by 1 because of new "Random" option
             int starter1 = FileFunctions.read2ByteInt(dataBlock, 5);
             int starter2 = FileFunctions.read2ByteInt(dataBlock, 7);
@@ -309,12 +313,35 @@ public class SettingsUpdater {
             insertExtraByte(50, (byte) 0);
         }
 
-        if (oldVersion < 321) {
+        if (oldVersion < Version.ZX_4_6_0.id) {
             // Minimum Catch Rate got moved around to give it more space for Guaranteed Catch.
             // Read the old one, clear it out, then write it to the new location.
             int oldMinimumCatchRate = ((dataBlock[16] & 0x60) >> 5) + 1;
             dataBlock[16] &= ~0x60;
-            dataBlock[50] |= ((oldMinimumCatchRate - 1) << 3);
+            dataBlock[50] |= (byte) ((oldMinimumCatchRate - 1) << 3);
+        }
+
+        if (oldVersion < Version.FVX_0_1_0.id) {
+            // The first version of FVX was a merge between two branches with different versions/updaters.
+            // Thus, to ensure settings end up the same, they must take the according branching path.
+            // Older settings also have to take one of these paths, but which is arbitrary.
+            if (isFromCTVVersion(oldVersion)) {
+                updateCTV(oldVersion);
+            } else {
+                updateVBranch(oldVersion);
+            }
+
+            // Then there are settings updates which apply regardless of branch:
+            // add 3 bytes for starter BST limits
+            insertExtraByte(58, (byte) 0);
+            insertExtraByte(59, (byte) 0);
+            insertExtraByte(60, (byte) 0);
+        }
+
+        if (oldVersion < Version.FVX_1_1_0.id)
+        {
+            //add byte for trainer type diversity
+            insertExtraByte(61, (byte) 0);
         }
 
         // fix checksum
@@ -330,6 +357,191 @@ public class SettingsUpdater {
         System.arraycopy(dataBlock, 0, finalConfigString, 0, actualDataLength);
         return Base64.getEncoder().encodeToString(finalConfigString);
     }
+
+    private boolean isFromCTVVersion(int oldVersion) {
+        // Just checks the version ids.
+        // This means V branch versions 0_9_0 to 0_9_3, which have overlapping version ids,
+        // cannot have their settings read correctly. However, there was no easy way to
+        // differentiate them and these versions had very few downloads, so we simply let this be.
+        return oldVersion >= Version.CTV_4_7_0.id && oldVersion <= Version.CTV_4_8_0.id;
+    }
+
+    private void updateCTV(int oldVersion) {
+        if (oldVersion < Version.CTV_4_7_0.id) {
+            //added new enum WildPokemonTypeMod and moved TypeThemed to it,
+            //so we need to select None on RestrictionMod if TypeThemed is selected,
+            //and select None on TypeMod otherwise
+            int typeThemed = dataBlock[15] & 0x08;
+            if (typeThemed != 0) {
+                dataBlock[15] |= 0x04;
+            } else {
+                dataBlock[16] |= 0x20;
+            }
+        }
+
+        if (oldVersion < Version.CTV_4_7_1.id) {
+            //add two new bytes, including new enum
+            dataBlock[51] = 0x01;
+            dataBlock[52] = 0;
+            actualDataLength += 2;
+        }
+
+        if (oldVersion < Version.CTV_4_7_2.id) {
+            //insert two additional wild pokemon bytes and reorganize
+            insertExtraByte(17, (byte) 0);
+            insertExtraByte(18, (byte) 0);
+            byte areaMethod = 0, restriction = 0,
+                    types = 0, various = 0;
+
+            areaMethod |= (byte) ((dataBlock[15] & 0x40) >> 6);
+            areaMethod |= (byte) ((dataBlock[15] & 0x20) >> 4);
+            areaMethod |= (byte) ((dataBlock[15] & 0x02) << 1);
+            areaMethod |= (byte) ((dataBlock[15] & 0x10) >> 1);
+
+            restriction |= (byte) ((dataBlock[15] & 0x04) >> 2);
+            restriction |= (byte) ((dataBlock[16] & 0x04) >> 1);
+            restriction |= (byte) ((dataBlock[15] & 0x01) << 2);
+
+            types |= (byte) ((dataBlock[16] & 0x20) >> 5);
+            types |= (byte) ((dataBlock[16] & 0x40) >> 5);
+            types |= (byte) ((dataBlock[15] & 0x08) >> 1);
+
+            various |= (byte) ((dataBlock[15] & 0x80) >> 7);
+            various |= (byte) ((dataBlock[16] & 0x01) << 1);
+            various |= (byte) ((dataBlock[16] & 0x02) << 1);
+            various |= (byte) (dataBlock[16] & 0x08);
+            various |= (byte) (dataBlock[16] & 0x10);
+            various |= (byte) (dataBlock[16] & 0x80 >> 2);
+
+            dataBlock[15] = areaMethod;
+            dataBlock[16] = restriction;
+            dataBlock[17] = types;
+            dataBlock[18] = various;
+
+        }
+
+        // Pokemon palettes
+        insertExtraByte(55, (byte) 0x1);
+
+        // type effectiveness
+        insertExtraByte(56, (byte) 0x1);
+        // move the former Update Type Effectiveness misctweak to a proper setting
+        int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 34);
+        boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
+        if (updateTypeEffectiveness) {
+            dataBlock[56] |= 0x40;
+        }
+
+        // new evolutions byte
+        insertExtraByte(57, (byte) 0);
+    }
+
+    private void updateVBranch(int oldVersion) {
+        if (oldVersion < Version.Vb_0_9_0.id) {
+            // Pokemon palettes
+            insertExtraByte(51, (byte) 0x1);
+        }
+
+        if (oldVersion < Version.Vb_0_10_0.id) {
+            //added new enum WildPokemonTypeMod and moved TypeThemed to it,
+            //so we need to select None on RestrictionMod if TypeThemed is selected,
+            //and select None on TypeMod otherwise
+            int typeThemed = dataBlock[15] & 0x08;
+            if (typeThemed != 0) {
+                dataBlock[15] |= 0x08;
+            } else {
+                dataBlock[16] |= 0x20;
+            }
+            // we also need to zero out LocationMapping
+            dataBlock[15] &= ~0x4;
+
+            // starter type mod / starter no legendaries / starter no dual type checkbox
+            insertExtraByte(52, (byte) 0x1);
+            // starter single-type type choice
+            insertExtraByte(53, (byte) 0);
+            // new wild pokes byte
+            insertExtraByte(54, (byte) 0);
+        }
+
+        if (oldVersion < Version.Vb_0_11_0.id) {
+            // type effectiveness
+            insertExtraByte(55, (byte) 0x1);
+            // move the former Update Type Effectiveness misctweak to a proper setting
+            int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
+            boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
+            if (updateTypeEffectiveness) {
+                dataBlock[55] |= 0x40;
+            }
+
+            // new evolutions byte
+            insertExtraByte(56, (byte) 0);
+        }
+
+        // insert two additional wild pokemon bytes and reorganize
+        insertExtraByte(17, (byte) 0);
+        insertExtraByte(18, (byte) 0);
+        removeByte(54); // the old "wild pokemon 3", far away from the rest
+        dataBlock[15] = (byte) makeByteSelected(
+                restoreState(dataBlock[15], 6), // WildPokemonMod.UNCHANGED
+                restoreState(dataBlock[15], 5), // WildPokemonMod.RANDOM
+                restoreState(dataBlock[15], 1), // WildPokemonMod.AREA_MAPPING
+                restoreState(dataBlock[15], 4), // WildPokemonMod.GLOBAL_MAPPING
+                false, // WildPokemonMod.FAMILY_MAPPING (not present in older settings)
+                restoreState(dataBlock[15], 2), // WildPokemonMod.LOCATION_MAPPING
+                false, false // unused
+        );
+        dataBlock[16] = (byte) makeByteSelected(
+                false, // unused
+                restoreState(dataBlock[16], 2), // similarStrengthEncounters
+                restoreState(dataBlock[15], 0), // catchEmAllEncounters
+                false, false, false, false, false // unused
+        );
+        dataBlock[17] = (byte) makeByteSelected(
+                restoreState(dataBlock[16], 5), // WildPokemonTypeMod.NONE
+                restoreState(dataBlock[16], 6), // WildPokemonTypeMod.KEEP_PRIMARY
+                restoreState(dataBlock[15], 3), // WildPokemonTypeMod.THEMED_AREAS
+                restoreState(dataBlock[54], 0), // keepWildTypeThemes
+                false, false, false, false // unused
+        );
+        dataBlock[18] = (byte) makeByteSelected(
+                restoreState(dataBlock[15], 7), // useTimeBasedEncounters
+                restoreState(dataBlock[16], 0), // useMinimumCatchRate
+                restoreState(dataBlock[16], 1), // blockWildLegendaries
+                restoreState(dataBlock[16], 3), // randomizeWildPokemonHeldItems
+                restoreState(dataBlock[16], 4), // banBadRandomWildPokemonHeldItems
+                restoreState(dataBlock[16], 7), // balanceShakingGrass
+                false, false // unused
+        );
+
+        // move palette randomization
+        moveByte(53, 55);
+    }
+
+    // TODO: temp copy from Settings; reconcile these to be in one place
+    private static int makeByteSelected(boolean... bools) {
+        if (bools.length > 8) {
+            throw new IllegalArgumentException("Can't set more than 8 bits in a byte!");
+        }
+
+        int initial = 0;
+        int state = 1;
+        for (boolean b : bools) {
+            initial |= b ? state : 0;
+            state *= 2;
+        }
+        return initial;
+    }
+
+    // TODO: temp copy from Settings; reconcile these to be in one place
+    private static boolean restoreState(byte b, int index) {
+        if (index >= 8) {
+            throw new IllegalArgumentException("Can't read more than 8 bits from a byte!");
+        }
+
+        int value = b & 0xFF;
+        return ((value >> index) & 0x01) == 0x01;
+    }
+
 
     private static byte getRemappedByte(byte old, int[] oldIndexes) {
         int newValue = 0;
@@ -385,6 +597,32 @@ public class SettingsUpdater {
         }
         dataBlock[position] = value;
         actualDataLength++;
+    }
+
+    /**
+     * Remove a byte-field in the data block at the given position. Shift
+     * everything else down.
+     * @param position The offset of the field to remove
+     */
+    private void removeByte(int position) {
+        for (int j = position; j < actualDataLength - 1; j++) {
+            dataBlock[j] = dataBlock[j + 1];
+        }
+        dataBlock[actualDataLength - 1] = (byte) 0x00;
+        actualDataLength--;
+    }
+
+    /**
+     * Removes a byte-field in the data block, and then re-inserts it at
+     * another position. Bytes after it are shifted down when it is removed,
+     * and shifted up when it is re-inserted.
+     * @param positionBefore The offset of the field before it is moved
+     * @param positionAfter The offset of the field after it is moved
+     */
+    private void moveByte(int positionBefore, int positionAfter) {
+        byte value = dataBlock[positionBefore];
+        removeByte(positionBefore);
+        insertExtraByte(positionAfter, value);
     }
 
 }

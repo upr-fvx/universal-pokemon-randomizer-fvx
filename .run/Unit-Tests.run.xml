@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit-Tests" type="JUnit" factoryName="JUnit">
+    <module name="UPR-FVX" />
+    <option name="PACKAGE_NAME" value="test" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <dir value="$PROJECT_DIR$/test/test" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

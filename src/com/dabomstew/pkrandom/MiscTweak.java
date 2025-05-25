@@ -31,9 +31,11 @@ import java.util.ResourceBundle;
 
 public class MiscTweak implements Comparable<MiscTweak> {
 
+    // Note that Java ints are 32 bits, so with the current implementation
+    // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;
 
-    private static final ResourceBundle bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/newgui/Bundle");
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
 
     public static List<MiscTweak> allTweaks = new ArrayList<>();
 
@@ -47,7 +49,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     public static final MiscTweak RANDOMIZE_PC_POTION = new MiscTweak(1 << 5, "pcPotion", 0);
     public static final MiscTweak ALLOW_PIKACHU_EVOLUTION = new MiscTweak(1 << 6, "pikachuEvo", 0);
     public static final MiscTweak NATIONAL_DEX_AT_START = new MiscTweak(1 << 7, "nationalDex", 0);
-    public static final MiscTweak UPDATE_TYPE_EFFECTIVENESS = new MiscTweak(1 << 8, "typeEffectiveness", 0);
+    public static final MiscTweak UNUSED8 = new MiscTweak(1 << 8, "unused8", 0); // as the name suggests, unused. A new misc tweak can be fit in this slot to replace it.
     public static final MiscTweak FORCE_CHALLENGE_MODE = new MiscTweak(1 << 9, "forceChallengeMode", 0);
     public static final MiscTweak LOWER_CASE_POKEMON_NAMES = new MiscTweak(1 << 10, "lowerCaseNames", 0);
     public static final MiscTweak RANDOMIZE_CATCHING_TUTORIAL = new MiscTweak(1 << 11, "catchingTutorial", 0);
@@ -62,6 +64,11 @@ public class MiscTweak implements Comparable<MiscTweak> {
     public static final MiscTweak FAST_DISTORTION_WORLD = new MiscTweak(1 << 20, "fastDistortionWorld", 0);
     public static final MiscTweak UPDATE_ROTOM_FORME_TYPING = new MiscTweak(1 << 21, "updateRotomFormeTyping", 0);
     public static final MiscTweak DISABLE_LOW_HP_MUSIC = new MiscTweak(1 << 22, "disableLowHpMusic", 0);
+    public static final MiscTweak REUSABLE_TMS = new MiscTweak(1 << 23, "reusableTMs", 0);
+    public static final MiscTweak FORGETTABLE_HMS = new MiscTweak(1 << 24, "forgettableHMs", 0);
+
+    // alias to make SettingsUpdater code clearer
+    public static final MiscTweak OLD_UPDATE_TYPE_EFFECTIVENESS = UNUSED8;
     /* @formatter:on */
 
     private final int value;

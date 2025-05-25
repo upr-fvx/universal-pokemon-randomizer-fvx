@@ -1,0 +1,29 @@
+Colors used for type-based palette randomization in Gens 3-5.
+
+It is possible to add/remove colors, and even types, but each mentioned type 
+must have at least one assigned color.
+Types must also correspond to Type enumerator values found in game_data/Type.java.
+If you don't know what that means, don't worry about it.
+
+The standard color values for the vanilla types, not including fairy, 
+are taken from Artemis251's Emerald Randomizer, with permission, 
+and are therefore by Artemis251. 
+
+[NORMAL] 	(FF9DE7) (CB95FD) (C59A8B)
+[FIGHTING]	(A46A44) (C9656F) (EBA65A)
+[FLYING]	(77B7B7) (71A5FB) (8E5940)
+[BUG]		(9FF04F) (95AD3F) (EAEA00)
+[POISON]	(EC0DD7) (24FF24) (9787B8)
+[ROCK]		(92B685) (6C788C) (928167)
+[GROUND]	(D8AC7C) (A8A277) (D3A35A)
+[DARK]		(4A4A4A) (0000BB) (920303)
+[STEEL]		(C0C0C0) (E4871F) (E25221)
+[ICE]		(82FFE6) (C4D0D2) (7ABAFA)
+[WATER]		(4045FF) (00AAAA) (61D1A5)
+[FIRE]		(FF822F) (EE0B0B) (FFD52B)
+[GRASS]		(00B700) (4E9131) (D6C132)
+[PSYCHIC]	(C54DF2) (CE609F) (8230B8)
+[GHOST]		(8729FA) (42448A) (4D5F9D)
+[ELECTRIC]	(FBF259) (20FFFF) (FE1818)
+[DRAGON]	(D83D41) (8C3535) (3540BD)
+[FAIRY]		(F8E0F8) (F8C0A0) (70FFBE)

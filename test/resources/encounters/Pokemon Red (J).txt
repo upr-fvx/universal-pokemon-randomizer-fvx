@@ -1,0 +1,317 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Grass/Cave on 1ばんどうろ, Rate = 25, MapIndex = 12,
+		Encounters = [ポッポ Lv3, コラッタ Lv3, コラッタ Lv3, コラッタ Lv2, ポッポ Lv2, ポッポ Lv3, ポッポ Lv3, コラッタ Lv4, ポッポ Lv4, ポッポ Lv5]]
+	[Name = Grass/Cave on 2ばんどうろ, Rate = 25, MapIndex = 13,
+		Encounters = [コラッタ Lv3, ポッポ Lv3, ポッポ Lv4, コラッタ Lv4, ポッポ Lv5, ビードル Lv3, コラッタ Lv2, コラッタ Lv5, ビードル Lv4, ビードル Lv5]]
+	[Name = Grass/Cave on 3ばんどうろ, Rate = 20, MapIndex = 14,
+		Encounters = [ポッポ Lv6, オニスズメ Lv5, ポッポ Lv7, オニスズメ Lv6, オニスズメ Lv7, ポッポ Lv8, オニスズメ Lv8, プりン Lv3, プりン Lv5, プりン Lv7]]
+	[Name = Grass/Cave on 4ばんどうろ, Rate = 20, MapIndex = 15,
+		Encounters = [コラッタ Lv10, オニスズメ Lv10, コラッタ Lv8, アーボ Lv6, オニスズメ Lv8, アーボ Lv10, コラッタ Lv12, オニスズメ Lv12, アーボ Lv8, アーボ Lv12]]
+	[Name = Grass/Cave on 5ばんどうろ, Rate = 15, MapIndex = 16,
+		Encounters = [ナゾノクサ Lv13, ポッポ Lv13, ポッポ Lv15, マンキー Lv10, マンキー Lv12, ナゾノクサ Lv15, ナゾノクサ Lv16, ポッポ Lv16, マンキー Lv14, マンキー Lv16]]
+	[Name = Grass/Cave on 6ばんどうろ, Rate = 15, MapIndex = 17,
+		Encounters = [ナゾノクサ Lv13, ポッポ Lv13, ポッポ Lv15, マンキー Lv10, マンキー Lv12, ナゾノクサ Lv15, ナゾノクサ Lv16, ポッポ Lv16, マンキー Lv14, マンキー Lv16]]
+	[Name = Grass/Cave on 7ばんどうろ, Rate = 15, MapIndex = 18,
+		Encounters = [ポッポ Lv19, ナゾノクサ Lv19, マンキー Lv17, ナゾノクサ Lv22, ポッポ Lv22, マンキー Lv18, ガーディ Lv18, ガーディ Lv20, マンキー Lv19, マンキー Lv20]]
+	[Name = Grass/Cave on 8ばんどうろ, Rate = 15, MapIndex = 19,
+		Encounters = [ポッポ Lv18, マンキー Lv18, アーボ Lv17, ガーディ Lv16, ポッポ Lv20, マンキー Lv20, アーボ Lv19, ガーディ Lv17, ガーディ Lv15, ガーディ Lv18]]
+	[Name = Grass/Cave on 9ばんどうろ, Rate = 15, MapIndex = 20,
+		Encounters = [コラッタ Lv16, オニスズメ Lv16, コラッタ Lv14, アーボ Lv11, オニスズメ Lv13, アーボ Lv15, コラッタ Lv17, オニスズメ Lv17, アーボ Lv13, アーボ Lv17]]
+	[Name = Grass/Cave on 10ばんどうろ, Rate = 15, MapIndex = 21,
+		Encounters = [ビりりダマ Lv16, オニスズメ Lv16, ビりりダマ Lv14, アーボ Lv11, オニスズメ Lv13, アーボ Lv15, ビりりダマ Lv17, オニスズメ Lv17, アーボ Lv13, アーボ Lv17]]
+	[Name = Grass/Cave on 11ばんどうろ, Rate = 15, MapIndex = 22,
+		Encounters = [アーボ Lv14, オニスズメ Lv15, アーボ Lv12, スりープ Lv9, オニスズメ Lv13, スりープ Lv13, アーボ Lv15, オニスズメ Lv17, スりープ Lv11, スりープ Lv15]]
+	[Name = Grass/Cave on 12ばんどうろ, Rate = 15, MapIndex = 23,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv25, ポッポ Lv23, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, ポッポ Lv27, クサイハナ Lv28, クサイハナ Lv30]]
+	[Name = Grass/Cave on 13ばんどうろ, Rate = 20, MapIndex = 24,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv25, ポッポ Lv27, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, メタモン Lv25, クサイハナ Lv28, クサイハナ Lv30]]
+	[Name = Grass/Cave on 14ばんどうろ, Rate = 15, MapIndex = 25,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv26, メタモン Lv23, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, クサイハナ Lv30, ピジョン Lv28, ピジョン Lv30]]
+	[Name = Grass/Cave on 15ばんどうろ, Rate = 15, MapIndex = 26,
+		Encounters = [ナゾノクサ Lv24, メタモン Lv26, ポッポ Lv23, コンパン Lv26, ナゾノクサ Lv22, コンパン Lv28, ナゾノクサ Lv26, クサイハナ Lv30, ピジョン Lv28, ピジョン Lv30]]
+	[Name = Grass/Cave on 16ばんどうろ, Rate = 25, MapIndex = 27,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, コラッタ Lv18, ドードー Lv20, コラッタ Lv20, ドードー Lv18, ドードー Lv22, コラッタ Lv22, ラッタ Lv23, ラッタ Lv25]]
+	[Name = Grass/Cave on 17ばんどうろ, Rate = 25, MapIndex = 28,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, ラッタ Lv25, ドードー Lv24, ラッタ Lv27, ドードー Lv26, ドードー Lv28, ラッタ Lv29, オニドりル Lv25, オニドりル Lv27]]
+	[Name = Grass/Cave on 18ばんどうろ, Rate = 25, MapIndex = 29,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, ラッタ Lv25, ドードー Lv24, オニドりル Lv25, ドードー Lv26, ドードー Lv28, ラッタ Lv29, オニドりル Lv27, オニドりル Lv29]]
+	[Name = Surfing on 19ばんすいどう, 20ばんすいどう, Rate = 5, MapIndex = -30,
+		Encounters = [メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv20, メノクラゲ Lv30, メノクラゲ Lv35, メノクラゲ Lv40]]
+	[Name = Grass/Cave on 21ばんすいどう, Rate = 25, MapIndex = 32,
+		Encounters = [コラッタ Lv21, ポッポ Lv23, ラッタ Lv30, コラッタ Lv23, ポッポ Lv21, ピジョン Lv30, ピジョン Lv32, モンジャラ Lv28, モンジャラ Lv30, モンジャラ Lv32]]
+	[Name = Surfing on 21ばんすいどう, Rate = 5, MapIndex = 32,
+		Encounters = [メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv20, メノクラゲ Lv30, メノクラゲ Lv35, メノクラゲ Lv40]]
+	[Name = Grass/Cave on 22ばんどうろ, Rate = 25, MapIndex = 33,
+		Encounters = [コラッタ Lv3, ニドラン♂ Lv3, コラッタ Lv4, ニドラン♂ Lv4, コラッタ Lv2, ニドラン♂ Lv2, オニスズメ Lv3, オニスズメ Lv5, ニドラン♀ Lv3, ニドラン♀ Lv4]]
+	[Name = Grass/Cave on 23ばんどうろ, Rate = 10, MapIndex = 34,
+		Encounters = [アーボ Lv26, メタモン Lv33, オニスズメ Lv26, オニドりル Lv38, メタモン Lv38, オニドりル Lv38, アーボック Lv41, メタモン Lv43, オニドりル Lv41, オニドりル Lv43]]
+	[Name = Grass/Cave on 24ばんどうろ, Rate = 25, MapIndex = 35,
+		Encounters = [ビードル Lv7, コクーン Lv8, ポッポ Lv12, ナゾノクサ Lv12, ナゾノクサ Lv13, ケーシィ Lv10, ナゾノクサ Lv14, ポッポ Lv13, ケーシィ Lv8, ケーシィ Lv12]]
+	[Name = Grass/Cave on 25ばんどうろ, Rate = 15, MapIndex = 36,
+		Encounters = [ビードル Lv8, コクーン Lv9, ポッポ Lv13, ナゾノクサ Lv12, ナゾノクサ Lv13, ケーシィ Lv12, ナゾノクサ Lv14, ケーシィ Lv10, トランセル Lv7, キャタピー Lv8]]
+	[Name = Grass/Cave on トキワのもり (1), Rate = 8, MapIndex = 51,
+		Encounters = [ビードル Lv4, コクーン Lv5, ビードル Lv3, ビードル Lv5, コクーン Lv4, コクーン Lv6, トランセル Lv4, キャタピー Lv3, ピカチュウ Lv3, ピカチュウ Lv5]]
+	[Name = Grass/Cave on オツキミやま (1), Rate = 10, MapIndex = 59,
+		Encounters = [ズバット Lv8, ズバット Lv7, ズバット Lv9, イシツブテ Lv8, ズバット Lv6, ズバット Lv10, イシツブテ Lv10, パラス Lv8, ズバット Lv11, ピッピ Lv8]]
+	[Name = Grass/Cave on オツキミやま (2), Rate = 10, MapIndex = 60,
+		Encounters = [ズバット Lv8, ズバット Lv7, イシツブテ Lv7, イシツブテ Lv8, ズバット Lv9, パラス Lv10, ズバット Lv10, ズバット Lv11, ピッピ Lv9, イシツブテ Lv9]]
+	[Name = Grass/Cave on オツキミやま (3), Rate = 10, MapIndex = 61,
+		Encounters = [ズバット Lv9, イシツブテ Lv9, ズバット Lv10, イシツブテ Lv10, ズバット Lv11, パラス Lv10, パラス Lv12, ピッピ Lv10, ズバット Lv12, ピッピ Lv12]]
+	[Name = Grass/Cave on イワヤマトンネル (2), Rate = 15, MapIndex = 82,
+		Encounters = [ズバット Lv16, ズバット Lv17, イシツブテ Lv17, ワンりキー Lv15, イシツブテ Lv16, ズバット Lv18, ズバット Lv15, ワンりキー Lv17, イワーク Lv13, イワーク Lv15]]
+	[Name = Grass/Cave on むじんはつでんしょ (1), Rate = 10, MapIndex = 83,
+		Encounters = [ビりりダマ Lv21, コイル Lv21, ピカチュウ Lv20, ピカチュウ Lv24, コイル Lv23, ビりりダマ Lv23, レアコイル Lv32, レアコイル Lv35, エレブー Lv33, エレブー Lv36]]
+	[Name = Grass/Cave on チャンピオンロード (1), Rate = 15, MapIndex = 108,
+		Encounters = [ワンりキー Lv24, イシツブテ Lv26, ズバット Lv22, イワーク Lv36, イワーク Lv39, イワーク Lv42, ゴローン Lv41, ゴルバット Lv41, ゴーりキー Lv42, ガラガラ Lv43]]
+	[Name = Grass/Cave on ポケモンタワー (3), Rate = 10, MapIndex = 144,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴース Lv24, カラカラ Lv20, カラカラ Lv22, ゴースト Lv25]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (4), Rate = 10, MapIndex = 145,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴースト Lv25, カラカラ Lv20, カラカラ Lv22, ゴース Lv24]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (5), Rate = 10, MapIndex = 146,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴースト Lv25, カラカラ Lv20, カラカラ Lv22, ゴース Lv24]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (6), Rate = 15, MapIndex = 147,
+		Encounters = [ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv24, ゴース Lv20, ゴース Lv19, ゴースト Lv26, カラカラ Lv22, カラカラ Lv24, ゴースト Lv28]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (7), Rate = 15, MapIndex = 148,
+		Encounters = [ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv24, ゴース Lv20, ゴースト Lv28, カラカラ Lv22, カラカラ Lv24, ゴースト Lv28, ゴースト Lv30]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ふたごじま (1), Rate = 10, MapIndex = 159,
+		Encounters = [ヒトデマン Lv30, タッツー Lv30, シェルダー Lv32, タッツー Lv32, ヤドン Lv28, パウワウ Lv30, ヤドン Lv30, パウワウ Lv28, ジュゴン Lv38, シードラ Lv37]]
+	[Name = Grass/Cave on ふたごじま (2), Rate = 10, MapIndex = 160,
+		Encounters = [パウワウ Lv30, ヤドン Lv30, パウワウ Lv32, ヤドン Lv32, タッツー Lv28, ヒトデマン Lv30, タッツー Lv30, シェルダー Lv28, ゴルバット Lv30, ヤドラン Lv37]]
+	[Name = Grass/Cave on ふたごじま (3), Rate = 10, MapIndex = 161,
+		Encounters = [ヤドン Lv31, パウワウ Lv31, ヤドン Lv33, パウワウ Lv33, タッツー Lv29, シェルダー Lv31, タッツー Lv31, シェルダー Lv29, シードラ Lv39, ジュゴン Lv37]]
+	[Name = Grass/Cave on ふたごじま (4), Rate = 10, MapIndex = 162,
+		Encounters = [タッツー Lv31, シェルダー Lv31, タッツー Lv33, シェルダー Lv33, ヤドン Lv29, パウワウ Lv31, ヤドン Lv31, パウワウ Lv29, ヤドラン Lv39, ゴルバット Lv32]]
+	[Name = Grass/Cave on ポケモンやしき (1), Rate = 10, MapIndex = 165,
+		Encounters = [ドガース Lv32, ドガース Lv30, ポニータ Lv34, ポニータ Lv30, ガーディ Lv34, ポニータ Lv32, べトべター Lv30, ポニータ Lv28, マタドガス Lv37, べトべトン Lv39]]
+	[Name = Grass/Cave on ふたごじま (5), Rate = 15, MapIndex = 192,
+		Encounters = [パウワウ Lv30, ヤドン Lv30, シェルダー Lv30, タッツー Lv30, タッツー Lv28, ズバット Lv21, ゴルバット Lv29, コダック Lv28, シェルダー Lv28, ゴルダック Lv38]]
+	[Name = Grass/Cave on チャンピオンロード (2), Rate = 10, MapIndex = 194,
+		Encounters = [ワンりキー Lv22, イシツブテ Lv24, ズバット Lv26, イワーク Lv36, イワーク Lv39, イワーク Lv42, ゴーりキー Lv41, ゴルバット Lv40, ガラガラ Lv40, ゴローン Lv43]]
+	[Name = Grass/Cave on ディグダのあな (1), Rate = 20, MapIndex = 197,
+		Encounters = [ディグダ Lv18, ディグダ Lv19, ディグダ Lv17, ディグダ Lv20, ディグダ Lv16, ディグダ Lv15, ディグダ Lv21, ディグダ Lv22, ダグトりオ Lv29, ダグトりオ Lv31]]
+	[Name = Grass/Cave on チャンピオンロード (3), Rate = 15, MapIndex = 198,
+		Encounters = [ワンりキー Lv24, イシツブテ Lv26, ズバット Lv22, イワーク Lv42, モルフォン Lv40, イワーク Lv45, ゴローン Lv43, ゴルバット Lv41, ゴーりキー Lv42, ゴーりキー Lv45]]
+	[Name = Grass/Cave on ポケモンやしき (2), Rate = 10, MapIndex = 214,
+		Encounters = [ガーディ Lv32, ドガース Lv34, ドガース Lv34, ポニータ Lv30, ドガース Lv30, ポニータ Lv32, べトべター Lv30, ポニータ Lv28, マタドガス Lv39, べトべトン Lv37]]
+	[Name = Grass/Cave on ポケモンやしき (3), Rate = 10, MapIndex = 215,
+		Encounters = [ドガース Lv31, ガーディ Lv33, ドガース Lv35, ポニータ Lv32, ポニータ Lv34, マタドガス Lv40, べトべター Lv34, マタドガス Lv38, ポニータ Lv36, べトべトン Lv42]]
+	[Name = Grass/Cave on ポケモンやしき (4), Rate = 10, MapIndex = 216,
+		Encounters = [ドガース Lv33, ドガース Lv31, ガーディ Lv35, ポニータ Lv32, ドガース Lv31, マタドガス Lv40, ポニータ Lv34, べトべター Lv35, マタドガス Lv42, べトべトン Lv42]]
+	[Name = Grass/Cave on サファりゾーン (2), Rate = 30, MapIndex = 217,
+		Encounters = [ニドラン♂ Lv24, ドードー Lv26, パラス Lv22, タマタマ Lv25, ニドりーノ Lv33, タマタマ Lv23, ニドラン♀ Lv24, パラセクト Lv25, ガルーラ Lv25, ストライク Lv28]]
+	[Name = Grass/Cave on サファりゾーン (3), Rate = 30, MapIndex = 218,
+		Encounters = [ニドラン♂ Lv22, サイホーン Lv26, パラス Lv23, タマタマ Lv25, ニドりーノ Lv30, タマタマ Lv27, ニドりーナ Lv30, モルフォン Lv32, ラッキー Lv26, ケンタロス Lv28]]
+	[Name = Grass/Cave on サファりゾーン (4), Rate = 30, MapIndex = 219,
+		Encounters = [ニドラン♂ Lv25, ドードー Lv26, コンパン Lv23, タマタマ Lv24, ニドりーノ Lv33, タマタマ Lv26, ニドラン♀ Lv25, モルフォン Lv31, ケンタロス Lv26, ガルーラ Lv28]]
+	[Name = Grass/Cave on サファりゾーン (5), Rate = 30, MapIndex = 220,
+		Encounters = [ニドラン♂ Lv22, サイホーン Lv25, コンパン Lv22, タマタマ Lv24, ニドりーノ Lv31, タマタマ Lv25, ニドりーナ Lv31, パラセクト Lv30, ストライク Lv23, ラッキー Lv23]]
+	[Name = Grass/Cave on ななしのどうくつ (1), Rate = 15, MapIndex = 226,
+		Encounters = [ドードりオ Lv51, モルフォン Lv51, ユンゲラー Lv51, サイドン Lv52, ガラガラ Lv52, マルマイン Lv52, ラッキー Lv56, プクりン Lv54, メタモン Lv55, メタモン Lv60]]
+	[Name = Grass/Cave on ななしのどうくつ (2), Rate = 25, MapIndex = 227,
+		Encounters = [サイドン Lv55, ガラガラ Lv55, マルマイン Lv55, ラッキー Lv64, パラセクト Lv64, ライチュウ Lv64, アーボック Lv57, メタモン Lv65, メタモン Lv63, メタモン Lv67]]
+	[Name = Grass/Cave on ななしのどうくつ (3), Rate = 10, MapIndex = 228,
+		Encounters = [ゴルバット Lv46, スりーパー Lv46, レアコイル Lv46, ドードりオ Lv49, モルフォン Lv49, アーボック Lv52, ユンゲラー Lv49, パラセクト Lv52, ライチュウ Lv53, メタモン Lv53]]
+	[Name = Grass/Cave on イワヤマトンネル (3), Rate = 15, MapIndex = 232,
+		Encounters = [ズバット Lv16, ズバット Lv17, イシツブテ Lv17, ワンりキー Lv15, イシツブテ Lv16, ズバット Lv18, ワンりキー Lv17, イワーク Lv17, イワーク Lv13, イシツブテ Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv5]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [トサキント Lv10, ニョロモ Lv10]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on マサラ, トキワ, Rate = 0, MapIndex = 0,
+		Encounters = [メノクラゲ Lv15, ニョロモ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ハナダ, 4ばんどうろ, 24ばんどうろ, 25ばんどうろ, ハナダ (Building), Rate = 0, MapIndex = -3,
+		Encounters = [コダック Lv15, トサキント Lv15, クラブ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on クチバ, 6ばんどうろ, 11ばんどうろ, クチバ (Building), Rate = 0, MapIndex = -5,
+		Encounters = [クラブ Lv15, シェルダー Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on タマムシ, 10ばんどうろ, Rate = 0, MapIndex = -6,
+		Encounters = [ニョロゾ Lv23, ヤドン Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on セキチク, Rate = 0, MapIndex = 7,
+		Encounters = [アズマオウ Lv23, クラブ Lv15, トサキント Lv15, コイキング Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on グレン, 19ばんすいどう, 20ばんすいどう, 21ばんすいどう, ふたごじま (3), ふたごじま (4), Rate = 0, MapIndex = -8,
+		Encounters = [ヒトデマン Lv15, タッツー Lv15, シェルダー Lv15, トサキント Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 12ばんどうろ, 13ばんどうろ, 17ばんどうろ, 18ばんどうろ, Rate = 0, MapIndex = -23,
+		Encounters = [メノクラゲ Lv5, クラブ Lv15, トサキント Lv15, コイキング Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 22ばんどうろ, Rate = 0, MapIndex = 33,
+		Encounters = [トサキント Lv15, ニョロモ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 23ばんどうろ, ななしのどうくつ (1), ななしのどうくつ (2), ななしのどうくつ (3), Rate = 0, MapIndex = -34,
+		Encounters = [ヤドラン Lv23, アズマオウ Lv23, キングラー Lv23, シードラ Lv23]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on サファりゾーン (2), サファりゾーン (3), サファりゾーン (4), サファりゾーン (5), Rate = 0, MapIndex = -217,
+		Encounters = [ミニりュウ Lv15, クラブ Lv15, コダック Lv15, ヤドン Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Grass/Cave on 1ばんどうろ, Rate = 25, MapIndex = 12,
+		Encounters = [ポッポ Lv3, コラッタ Lv3, コラッタ Lv3, コラッタ Lv2, ポッポ Lv2, ポッポ Lv3, ポッポ Lv3, コラッタ Lv4, ポッポ Lv4, ポッポ Lv5]]
+	[Name = Grass/Cave on 2ばんどうろ, Rate = 25, MapIndex = 13,
+		Encounters = [コラッタ Lv3, ポッポ Lv3, ポッポ Lv4, コラッタ Lv4, ポッポ Lv5, ビードル Lv3, コラッタ Lv2, コラッタ Lv5, ビードル Lv4, ビードル Lv5]]
+	[Name = Grass/Cave on 3ばんどうろ, Rate = 20, MapIndex = 14,
+		Encounters = [ポッポ Lv6, オニスズメ Lv5, ポッポ Lv7, オニスズメ Lv6, オニスズメ Lv7, ポッポ Lv8, オニスズメ Lv8, プりン Lv3, プりン Lv5, プりン Lv7]]
+	[Name = Grass/Cave on 4ばんどうろ, Rate = 20, MapIndex = 15,
+		Encounters = [コラッタ Lv10, オニスズメ Lv10, コラッタ Lv8, アーボ Lv6, オニスズメ Lv8, アーボ Lv10, コラッタ Lv12, オニスズメ Lv12, アーボ Lv8, アーボ Lv12]]
+	[Name = Grass/Cave on 5ばんどうろ, Rate = 15, MapIndex = 16,
+		Encounters = [ナゾノクサ Lv13, ポッポ Lv13, ポッポ Lv15, マンキー Lv10, マンキー Lv12, ナゾノクサ Lv15, ナゾノクサ Lv16, ポッポ Lv16, マンキー Lv14, マンキー Lv16]]
+	[Name = Grass/Cave on 6ばんどうろ, Rate = 15, MapIndex = 17,
+		Encounters = [ナゾノクサ Lv13, ポッポ Lv13, ポッポ Lv15, マンキー Lv10, マンキー Lv12, ナゾノクサ Lv15, ナゾノクサ Lv16, ポッポ Lv16, マンキー Lv14, マンキー Lv16]]
+	[Name = Grass/Cave on 7ばんどうろ, Rate = 15, MapIndex = 18,
+		Encounters = [ポッポ Lv19, ナゾノクサ Lv19, マンキー Lv17, ナゾノクサ Lv22, ポッポ Lv22, マンキー Lv18, ガーディ Lv18, ガーディ Lv20, マンキー Lv19, マンキー Lv20]]
+	[Name = Grass/Cave on 8ばんどうろ, Rate = 15, MapIndex = 19,
+		Encounters = [ポッポ Lv18, マンキー Lv18, アーボ Lv17, ガーディ Lv16, ポッポ Lv20, マンキー Lv20, アーボ Lv19, ガーディ Lv17, ガーディ Lv15, ガーディ Lv18]]
+	[Name = Grass/Cave on 9ばんどうろ, Rate = 15, MapIndex = 20,
+		Encounters = [コラッタ Lv16, オニスズメ Lv16, コラッタ Lv14, アーボ Lv11, オニスズメ Lv13, アーボ Lv15, コラッタ Lv17, オニスズメ Lv17, アーボ Lv13, アーボ Lv17]]
+	[Name = Grass/Cave on 10ばんどうろ, Rate = 15, MapIndex = 21,
+		Encounters = [ビりりダマ Lv16, オニスズメ Lv16, ビりりダマ Lv14, アーボ Lv11, オニスズメ Lv13, アーボ Lv15, ビりりダマ Lv17, オニスズメ Lv17, アーボ Lv13, アーボ Lv17]]
+	[Name = Grass/Cave on 11ばんどうろ, Rate = 15, MapIndex = 22,
+		Encounters = [アーボ Lv14, オニスズメ Lv15, アーボ Lv12, スりープ Lv9, オニスズメ Lv13, スりープ Lv13, アーボ Lv15, オニスズメ Lv17, スりープ Lv11, スりープ Lv15]]
+	[Name = Grass/Cave on 12ばんどうろ, Rate = 15, MapIndex = 23,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv25, ポッポ Lv23, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, ポッポ Lv27, クサイハナ Lv28, クサイハナ Lv30]]
+	[Name = Grass/Cave on 13ばんどうろ, Rate = 20, MapIndex = 24,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv25, ポッポ Lv27, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, メタモン Lv25, クサイハナ Lv28, クサイハナ Lv30]]
+	[Name = Grass/Cave on 14ばんどうろ, Rate = 15, MapIndex = 25,
+		Encounters = [ナゾノクサ Lv24, ポッポ Lv26, メタモン Lv23, コンパン Lv24, ナゾノクサ Lv22, コンパン Lv26, ナゾノクサ Lv26, クサイハナ Lv30, ピジョン Lv28, ピジョン Lv30]]
+	[Name = Grass/Cave on 15ばんどうろ, Rate = 15, MapIndex = 26,
+		Encounters = [ナゾノクサ Lv24, メタモン Lv26, ポッポ Lv23, コンパン Lv26, ナゾノクサ Lv22, コンパン Lv28, ナゾノクサ Lv26, クサイハナ Lv30, ピジョン Lv28, ピジョン Lv30]]
+	[Name = Grass/Cave on 16ばんどうろ, Rate = 25, MapIndex = 27,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, コラッタ Lv18, ドードー Lv20, コラッタ Lv20, ドードー Lv18, ドードー Lv22, コラッタ Lv22, ラッタ Lv23, ラッタ Lv25]]
+	[Name = Grass/Cave on 17ばんどうろ, Rate = 25, MapIndex = 28,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, ラッタ Lv25, ドードー Lv24, ラッタ Lv27, ドードー Lv26, ドードー Lv28, ラッタ Lv29, オニドりル Lv25, オニドりル Lv27]]
+	[Name = Grass/Cave on 18ばんどうろ, Rate = 25, MapIndex = 29,
+		Encounters = [オニスズメ Lv20, オニスズメ Lv22, ラッタ Lv25, ドードー Lv24, オニドりル Lv25, ドードー Lv26, ドードー Lv28, ラッタ Lv29, オニドりル Lv27, オニドりル Lv29]]
+	[Name = Surfing on 19ばんすいどう, 20ばんすいどう, Rate = 5, MapIndex = -30,
+		Encounters = [メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv20, メノクラゲ Lv30, メノクラゲ Lv35, メノクラゲ Lv40]]
+	[Name = Grass/Cave on 21ばんすいどう, Rate = 25, MapIndex = 32,
+		Encounters = [コラッタ Lv21, ポッポ Lv23, ラッタ Lv30, コラッタ Lv23, ポッポ Lv21, ピジョン Lv30, ピジョン Lv32, モンジャラ Lv28, モンジャラ Lv30, モンジャラ Lv32]]
+	[Name = Surfing on 21ばんすいどう, Rate = 5, MapIndex = 32,
+		Encounters = [メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv5, メノクラゲ Lv10, メノクラゲ Lv15, メノクラゲ Lv20, メノクラゲ Lv30, メノクラゲ Lv35, メノクラゲ Lv40]]
+	[Name = Grass/Cave on 22ばんどうろ, Rate = 25, MapIndex = 33,
+		Encounters = [コラッタ Lv3, ニドラン♂ Lv3, コラッタ Lv4, ニドラン♂ Lv4, コラッタ Lv2, ニドラン♂ Lv2, オニスズメ Lv3, オニスズメ Lv5, ニドラン♀ Lv3, ニドラン♀ Lv4]]
+	[Name = Grass/Cave on 23ばんどうろ, Rate = 10, MapIndex = 34,
+		Encounters = [アーボ Lv26, メタモン Lv33, オニスズメ Lv26, オニドりル Lv38, メタモン Lv38, オニドりル Lv38, アーボック Lv41, メタモン Lv43, オニドりル Lv41, オニドりル Lv43]]
+	[Name = Grass/Cave on 24ばんどうろ, Rate = 25, MapIndex = 35,
+		Encounters = [ビードル Lv7, コクーン Lv8, ポッポ Lv12, ナゾノクサ Lv12, ナゾノクサ Lv13, ケーシィ Lv10, ナゾノクサ Lv14, ポッポ Lv13, ケーシィ Lv8, ケーシィ Lv12]]
+	[Name = Grass/Cave on 25ばんどうろ, Rate = 15, MapIndex = 36,
+		Encounters = [ビードル Lv8, コクーン Lv9, ポッポ Lv13, ナゾノクサ Lv12, ナゾノクサ Lv13, ケーシィ Lv12, ナゾノクサ Lv14, ケーシィ Lv10, トランセル Lv7, キャタピー Lv8]]
+	[Name = Grass/Cave on トキワのもり (1), Rate = 8, MapIndex = 51,
+		Encounters = [ビードル Lv4, コクーン Lv5, ビードル Lv3, ビードル Lv5, コクーン Lv4, コクーン Lv6, トランセル Lv4, キャタピー Lv3, ピカチュウ Lv3, ピカチュウ Lv5]]
+	[Name = Grass/Cave on オツキミやま (1), Rate = 10, MapIndex = 59,
+		Encounters = [ズバット Lv8, ズバット Lv7, ズバット Lv9, イシツブテ Lv8, ズバット Lv6, ズバット Lv10, イシツブテ Lv10, パラス Lv8, ズバット Lv11, ピッピ Lv8]]
+	[Name = Grass/Cave on オツキミやま (2), Rate = 10, MapIndex = 60,
+		Encounters = [ズバット Lv8, ズバット Lv7, イシツブテ Lv7, イシツブテ Lv8, ズバット Lv9, パラス Lv10, ズバット Lv10, ズバット Lv11, ピッピ Lv9, イシツブテ Lv9]]
+	[Name = Grass/Cave on オツキミやま (3), Rate = 10, MapIndex = 61,
+		Encounters = [ズバット Lv9, イシツブテ Lv9, ズバット Lv10, イシツブテ Lv10, ズバット Lv11, パラス Lv10, パラス Lv12, ピッピ Lv10, ズバット Lv12, ピッピ Lv12]]
+	[Name = Grass/Cave on イワヤマトンネル (2), Rate = 15, MapIndex = 82,
+		Encounters = [ズバット Lv16, ズバット Lv17, イシツブテ Lv17, ワンりキー Lv15, イシツブテ Lv16, ズバット Lv18, ズバット Lv15, ワンりキー Lv17, イワーク Lv13, イワーク Lv15]]
+	[Name = Grass/Cave on むじんはつでんしょ (1), Rate = 10, MapIndex = 83,
+		Encounters = [ビりりダマ Lv21, コイル Lv21, ピカチュウ Lv20, ピカチュウ Lv24, コイル Lv23, ビりりダマ Lv23, レアコイル Lv32, レアコイル Lv35, エレブー Lv33, エレブー Lv36]]
+	[Name = Grass/Cave on チャンピオンロード (1), Rate = 15, MapIndex = 108,
+		Encounters = [ワンりキー Lv24, イシツブテ Lv26, ズバット Lv22, イワーク Lv36, イワーク Lv39, イワーク Lv42, ゴローン Lv41, ゴルバット Lv41, ゴーりキー Lv42, ガラガラ Lv43]]
+	[Name = Grass/Cave on ポケモンタワー (3), Rate = 10, MapIndex = 144,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴース Lv24, カラカラ Lv20, カラカラ Lv22, ゴースト Lv25]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (4), Rate = 10, MapIndex = 145,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴースト Lv25, カラカラ Lv20, カラカラ Lv22, ゴース Lv24]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (5), Rate = 10, MapIndex = 146,
+		Encounters = [ゴース Lv20, ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv19, ゴース Lv18, ゴースト Lv25, カラカラ Lv20, カラカラ Lv22, ゴース Lv24]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (6), Rate = 15, MapIndex = 147,
+		Encounters = [ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv24, ゴース Lv20, ゴース Lv19, ゴースト Lv26, カラカラ Lv22, カラカラ Lv24, ゴースト Lv28]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ポケモンタワー (7), Rate = 15, MapIndex = 148,
+		Encounters = [ゴース Lv21, ゴース Lv22, ゴース Lv23, ゴース Lv24, ゴース Lv20, ゴースト Lv28, カラカラ Lv22, カラカラ Lv24, ゴースト Lv28, ゴースト Lv30]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ふたごじま (1), Rate = 10, MapIndex = 159,
+		Encounters = [ヒトデマン Lv30, タッツー Lv30, シェルダー Lv32, タッツー Lv32, ヤドン Lv28, パウワウ Lv30, ヤドン Lv30, パウワウ Lv28, ジュゴン Lv38, シードラ Lv37]]
+	[Name = Grass/Cave on ふたごじま (2), Rate = 10, MapIndex = 160,
+		Encounters = [パウワウ Lv30, ヤドン Lv30, パウワウ Lv32, ヤドン Lv32, タッツー Lv28, ヒトデマン Lv30, タッツー Lv30, シェルダー Lv28, ゴルバット Lv30, ヤドラン Lv37]]
+	[Name = Grass/Cave on ふたごじま (3), Rate = 10, MapIndex = 161,
+		Encounters = [ヤドン Lv31, パウワウ Lv31, ヤドン Lv33, パウワウ Lv33, タッツー Lv29, シェルダー Lv31, タッツー Lv31, シェルダー Lv29, シードラ Lv39, ジュゴン Lv37]]
+	[Name = Grass/Cave on ふたごじま (4), Rate = 10, MapIndex = 162,
+		Encounters = [タッツー Lv31, シェルダー Lv31, タッツー Lv33, シェルダー Lv33, ヤドン Lv29, パウワウ Lv31, ヤドン Lv31, パウワウ Lv29, ヤドラン Lv39, ゴルバット Lv32]]
+	[Name = Grass/Cave on ポケモンやしき (1), Rate = 10, MapIndex = 165,
+		Encounters = [ドガース Lv32, ドガース Lv30, ポニータ Lv34, ポニータ Lv30, ガーディ Lv34, ポニータ Lv32, べトべター Lv30, ポニータ Lv28, マタドガス Lv37, べトべトン Lv39]]
+	[Name = Grass/Cave on ふたごじま (5), Rate = 15, MapIndex = 192,
+		Encounters = [パウワウ Lv30, ヤドン Lv30, シェルダー Lv30, タッツー Lv30, タッツー Lv28, ズバット Lv21, ゴルバット Lv29, コダック Lv28, シェルダー Lv28, ゴルダック Lv38]]
+	[Name = Grass/Cave on チャンピオンロード (2), Rate = 10, MapIndex = 194,
+		Encounters = [ワンりキー Lv22, イシツブテ Lv24, ズバット Lv26, イワーク Lv36, イワーク Lv39, イワーク Lv42, ゴーりキー Lv41, ゴルバット Lv40, ガラガラ Lv40, ゴローン Lv43]]
+	[Name = Grass/Cave on ディグダのあな (1), Rate = 20, MapIndex = 197,
+		Encounters = [ディグダ Lv18, ディグダ Lv19, ディグダ Lv17, ディグダ Lv20, ディグダ Lv16, ディグダ Lv15, ディグダ Lv21, ディグダ Lv22, ダグトりオ Lv29, ダグトりオ Lv31]]
+	[Name = Grass/Cave on チャンピオンロード (3), Rate = 15, MapIndex = 198,
+		Encounters = [ワンりキー Lv24, イシツブテ Lv26, ズバット Lv22, イワーク Lv42, モルフォン Lv40, イワーク Lv45, ゴローン Lv43, ゴルバット Lv41, ゴーりキー Lv42, ゴーりキー Lv45]]
+	[Name = Grass/Cave on ポケモンやしき (2), Rate = 10, MapIndex = 214,
+		Encounters = [ガーディ Lv32, ドガース Lv34, ドガース Lv34, ポニータ Lv30, ドガース Lv30, ポニータ Lv32, べトべター Lv30, ポニータ Lv28, マタドガス Lv39, べトべトン Lv37]]
+	[Name = Grass/Cave on ポケモンやしき (3), Rate = 10, MapIndex = 215,
+		Encounters = [ドガース Lv31, ガーディ Lv33, ドガース Lv35, ポニータ Lv32, ポニータ Lv34, マタドガス Lv40, べトべター Lv34, マタドガス Lv38, ポニータ Lv36, べトべトン Lv42]]
+	[Name = Grass/Cave on ポケモンやしき (4), Rate = 10, MapIndex = 216,
+		Encounters = [ドガース Lv33, ドガース Lv31, ガーディ Lv35, ポニータ Lv32, ドガース Lv31, マタドガス Lv40, ポニータ Lv34, べトべター Lv35, マタドガス Lv42, べトべトン Lv42]]
+	[Name = Grass/Cave on サファりゾーン (2), Rate = 30, MapIndex = 217,
+		Encounters = [ニドラン♂ Lv24, ドードー Lv26, パラス Lv22, タマタマ Lv25, ニドりーノ Lv33, タマタマ Lv23, ニドラン♀ Lv24, パラセクト Lv25, ガルーラ Lv25, ストライク Lv28]]
+	[Name = Grass/Cave on サファりゾーン (3), Rate = 30, MapIndex = 218,
+		Encounters = [ニドラン♂ Lv22, サイホーン Lv26, パラス Lv23, タマタマ Lv25, ニドりーノ Lv30, タマタマ Lv27, ニドりーナ Lv30, モルフォン Lv32, ラッキー Lv26, ケンタロス Lv28]]
+	[Name = Grass/Cave on サファりゾーン (4), Rate = 30, MapIndex = 219,
+		Encounters = [ニドラン♂ Lv25, ドードー Lv26, コンパン Lv23, タマタマ Lv24, ニドりーノ Lv33, タマタマ Lv26, ニドラン♀ Lv25, モルフォン Lv31, ケンタロス Lv26, ガルーラ Lv28]]
+	[Name = Grass/Cave on サファりゾーン (5), Rate = 30, MapIndex = 220,
+		Encounters = [ニドラン♂ Lv22, サイホーン Lv25, コンパン Lv22, タマタマ Lv24, ニドりーノ Lv31, タマタマ Lv25, ニドりーナ Lv31, パラセクト Lv30, ストライク Lv23, ラッキー Lv23]]
+	[Name = Grass/Cave on ななしのどうくつ (1), Rate = 15, MapIndex = 226,
+		Encounters = [ドードりオ Lv51, モルフォン Lv51, ユンゲラー Lv51, サイドン Lv52, ガラガラ Lv52, マルマイン Lv52, ラッキー Lv56, プクりン Lv54, メタモン Lv55, メタモン Lv60]]
+	[Name = Grass/Cave on ななしのどうくつ (2), Rate = 25, MapIndex = 227,
+		Encounters = [サイドン Lv55, ガラガラ Lv55, マルマイン Lv55, ラッキー Lv64, パラセクト Lv64, ライチュウ Lv64, アーボック Lv57, メタモン Lv65, メタモン Lv63, メタモン Lv67]]
+	[Name = Grass/Cave on ななしのどうくつ (3), Rate = 10, MapIndex = 228,
+		Encounters = [ゴルバット Lv46, スりーパー Lv46, レアコイル Lv46, ドードりオ Lv49, モルフォン Lv49, アーボック Lv52, ユンゲラー Lv49, パラセクト Lv52, ライチュウ Lv53, メタモン Lv53]]
+	[Name = Grass/Cave on イワヤマトンネル (3), Rate = 15, MapIndex = 232,
+		Encounters = [ズバット Lv16, ズバット Lv17, イシツブテ Lv17, ワンりキー Lv15, イシツブテ Lv16, ズバット Lv18, ワンりキー Lv17, イワーク Lv17, イワーク Lv13, イシツブテ Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [コイキング Lv5]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [トサキント Lv10, ニョロモ Lv10]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on マサラ, トキワ, Rate = 0, MapIndex = 0,
+		Encounters = [メノクラゲ Lv15, ニョロモ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ハナダ, 4ばんどうろ, 24ばんどうろ, 25ばんどうろ, ハナダ (Building), Rate = 0, MapIndex = -3,
+		Encounters = [コダック Lv15, トサキント Lv15, クラブ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on クチバ, 6ばんどうろ, 11ばんどうろ, クチバ (Building), Rate = 0, MapIndex = -5,
+		Encounters = [クラブ Lv15, シェルダー Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on タマムシ, 10ばんどうろ, Rate = 0, MapIndex = -6,
+		Encounters = [ニョロゾ Lv23, ヤドン Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on セキチク, Rate = 0, MapIndex = 7,
+		Encounters = [アズマオウ Lv23, クラブ Lv15, トサキント Lv15, コイキング Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on グレン, 19ばんすいどう, 20ばんすいどう, 21ばんすいどう, ふたごじま (3), ふたごじま (4), Rate = 0, MapIndex = -8,
+		Encounters = [ヒトデマン Lv15, タッツー Lv15, シェルダー Lv15, トサキント Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 12ばんどうろ, 13ばんどうろ, 17ばんどうろ, 18ばんどうろ, Rate = 0, MapIndex = -23,
+		Encounters = [メノクラゲ Lv5, クラブ Lv15, トサキント Lv15, コイキング Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 22ばんどうろ, Rate = 0, MapIndex = 33,
+		Encounters = [トサキント Lv15, ニョロモ Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on 23ばんどうろ, ななしのどうくつ (1), ななしのどうくつ (2), ななしのどうくつ (3), Rate = 0, MapIndex = -34,
+		Encounters = [ヤドラン Lv23, アズマオウ Lv23, キングラー Lv23, シードラ Lv23]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on サファりゾーン (2), サファりゾーン (3), サファりゾーン (4), サファりゾーン (5), Rate = 0, MapIndex = -217,
+		Encounters = [ミニりュウ Lv15, クラブ Lv15, コダック Lv15, ヤドン Lv15]
+		Banned = [Species [name=ガラガラ, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]

@@ -24,86 +24,20 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.gamedata.MoveLearnt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import com.dabomstew.pkrandom.pokemon.Evolution;
-import com.dabomstew.pkrandom.pokemon.MoveLearnt;
-import com.dabomstew.pkrandom.pokemon.Pokemon;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
 public class RomFunctions {
 
-    public static Set<Pokemon> getBasicPokemon(RomHandler baseRom) {
-        List<Pokemon> allPokes = baseRom.getPokemonInclFormes();
-        Set<Pokemon> basicPokes = new TreeSet<>();
-        for (Pokemon pkmn : allPokes) {
-            if (pkmn != null) {
-                if (pkmn.evolutionsTo.size() < 1) {
-                    basicPokes.add(pkmn);
-                }
-            }
-        }
-        return basicPokes;
-    }
-
-    public static Set<Pokemon> getSplitEvolutions(RomHandler baseRom) {
-        List<Pokemon> allPokes = baseRom.getPokemonInclFormes();
-        Set<Pokemon> splitEvos = new TreeSet<>();
-        for (Pokemon pkmn : allPokes) {
-            if (pkmn != null) {
-                if (pkmn.evolutionsTo.size() > 0) {
-                    Evolution onlyEvo = pkmn.evolutionsTo.get(0);
-                    if (!onlyEvo.carryStats) {
-                        splitEvos.add(pkmn);
-                    }
-                }
-            }
-        }
-        return splitEvos;
-    }
-
-    public static Set<Pokemon> getMiddleEvolutions(RomHandler baseRom, boolean includeSplitEvos) {
-        List<Pokemon> allPokes = baseRom.getPokemon();
-        Set<Pokemon> middleEvolutions = new TreeSet<>();
-        for (Pokemon pkmn : allPokes) {
-            if (pkmn != null) {
-                if (pkmn.evolutionsTo.size() == 1 && pkmn.evolutionsFrom.size() > 0) {
-                    Evolution onlyEvo = pkmn.evolutionsTo.get(0);
-                    if (onlyEvo.carryStats || includeSplitEvos) {
-                        middleEvolutions.add(pkmn);
-                    }
-                }
-            }
-        }
-        return middleEvolutions;
-    }
-
-    public static Set<Pokemon> getFinalEvolutions(RomHandler baseRom, boolean includeSplitEvos) {
-        List<Pokemon> allPokes = baseRom.getPokemon();
-        Set<Pokemon> finalEvolutions = new TreeSet<>();
-        for (Pokemon pkmn : allPokes) {
-            if (pkmn != null) {
-                if (pkmn.evolutionsTo.size() == 1 && pkmn.evolutionsFrom.size() == 0) {
-                    Evolution onlyEvo = pkmn.evolutionsTo.get(0);
-                    if (onlyEvo.carryStats || includeSplitEvos) {
-                        finalEvolutions.add(pkmn);
-                    }
-                }
-            }
-        }
-        return finalEvolutions;
-    }
-
     /**
-     * Get the 4 moves known by a Pokemon at a particular level.
+     * Get the 4 moves known by a Species at a particular level.
      * 
-     * @param pkmn Pokemon index to get moves for.
-     * @param movesets Map of Pokemon indices mapped to movesets.
+     * @param pkmn Species index to get moves for.
+     * @param movesets Map of Species indices mapped to movesets.
      * @param level Level to get at.
      * @return Array with move indices.
      */
@@ -167,12 +101,18 @@ public class RomFunctions {
         return new String(string);
     }
 
+    @Deprecated
     public static int freeSpaceFinder(byte[] rom, byte freeSpace, int amount, int offset) {
+        System.out.print("RomFunctions.freeSpaceFinder() is deprecated, " +
+                "use AbstractGBRomHandler.findAndUnfreeSpace() instead.");
         // by default align to 4 bytes to make sure things don't break
         return freeSpaceFinder(rom, freeSpace, amount, offset, true);
     }
 
+    @Deprecated
     public static int freeSpaceFinder(byte[] rom, byte freeSpace, int amount, int offset, boolean longAligned) {
+        System.out.print("RomFunctions.freeSpaceFinder() is deprecated, " +
+                "use AbstractGBRomHandler.findAndUnfreeSpace() instead.");
         if (!longAligned) {
             // Find 2 more than necessary and return 2 into it,
             // to preserve stuff like FF terminators for strings
@@ -242,7 +182,7 @@ public class RomFunctions {
         return results;
     }
 
-    private static int searchForFirst(byte[] haystack, int beginOffset, byte[] needle) {
+    public static int searchForFirst(byte[] haystack, int beginOffset, byte[] needle) {
         int currentMatchStart = beginOffset;
         int currentCharacterPosition = 0;
 
@@ -337,7 +277,7 @@ public class RomFunctions {
                     if (linesWritten > 0) {
                         fullDesc.append(newline);
                     }
-                    fullDesc.append(thisLine.toString());
+                    fullDesc.append(thisLine);
                     linesWritten++;
                     thisLine = new StringBuilder();
                 }
@@ -353,7 +293,7 @@ public class RomFunctions {
             if (linesWritten > 0) {
                 fullDesc.append(newline);
             }
-            fullDesc.append(thisLine.toString());
+            fullDesc.append(thisLine);
         }
 
         return fullDesc.toString();
@@ -402,7 +342,7 @@ public class RomFunctions {
                 }
                 if ((currLineCC + reqLength > maxLineLength)
                         || (currLineCC >= sentenceNewLineSize && (currLineLastChar == '.' || currLineLastChar == '?'
-                        || currLineLastChar == '!' || currLineLastChar == '…' || currLineLastChar == ','))) {
+                        || currLineLastChar == '!' || currLineLastChar == ','))) {
                     // new line
                     // Save current line, if applicable
                     if (currLineWC > 0) {
@@ -411,7 +351,7 @@ public class RomFunctions {
                         } else if (linesWritten == 1) {
                             fullPara.append(newline);
                         }
-                        fullPara.append(thisLine.toString());
+                        fullPara.append(thisLine);
                         linesWritten++;
                         thisLine = new StringBuilder();
                     }
@@ -447,12 +387,12 @@ public class RomFunctions {
                 } else if (linesWritten == 1) {
                     fullPara.append(newline);
                 }
-                fullPara.append(thisLine.toString());
+                fullPara.append(thisLine);
             }
             if (para > 0) {
                 finalResult.append(newpara);
             }
-            finalResult.append(fullPara.toString());
+            finalResult.append(fullPara);
         }
         if (endsWithPara) {
             finalResult.append(newpara);
@@ -471,6 +411,53 @@ public class RomFunctions {
             return encodedText.length();
         }
 
+    }
+
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+    public static void main(String[] args) {
+        System.out.println("    abc\tdef  \t\t ghi\r\njkl".replaceAll("\\s",""));
+    }
+
+    public static byte[] hexToBytes(String hex) {
+        hex = hex.replaceAll("\\s","");
+        int len = hex.length();
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("hex string is not of even length");
+        }
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            bytes[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i+1), 16));
+        }
+        return bytes;
+    }
+
+    /**
+     * A debugging tool
+     */
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 3];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 3] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 3 + 1] = HEX_ARRAY[v & 0x0F];
+            hexChars[j * 3 + 2] = ' ';
+        }
+        return new String(hexChars);
+    }
+
+    /**
+     * A debugging tool
+     */
+    public static String bytesToHexNoSeparator(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
 }

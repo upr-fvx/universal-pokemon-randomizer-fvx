@@ -1,8 +1,8 @@
 package compressors;
 
 /**
- * Pokemon Gen 1 sprite decompressor Source:
- * https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/pic.py 
+ * Pokémon Gen 1 image decompressor
+ * (<a href="https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/pic.py">source</a>).
  * (and gfx.py for flatten())
  * Ported to Java by Dabomstew
  *
@@ -19,11 +19,12 @@ public class Gen1Decmp {
         return r;
     }
 
-    private static int[] table1, table3;
-    private static int[][] table2 = { { 0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5, 0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa },
-            { 0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa, 0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5 },
-            { 0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa, 0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5 },
-            { 0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5, 0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa }, };
+    private static final int[] table1, table3;
+    private static final int[][] table2 = {
+            {0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5, 0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa},
+            {0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa, 0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5},
+            {0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa, 0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5},
+            {0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5, 0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa}};
 
     static {
         table1 = new int[16];
@@ -35,19 +36,20 @@ public class Gen1Decmp {
         }
     }
 
-    private static int tilesize = 8;
+    private static final int tilesize = 8;
 
-    private BitStream bs;
-    private boolean mirror, planar;
+    private final int baseOffset;
+    private final BitStream bs;
+    private final boolean mirror, planar;
     private byte[] data;
     private int sizex, sizey, size;
-    private int ramorder;
 
     public Gen1Decmp(byte[] input, int baseOffset) {
         this(input, baseOffset, false, true);
     }
 
     private Gen1Decmp(byte[] input, int baseOffset, boolean mirror, boolean planar) {
+        this.baseOffset = baseOffset;
         this.bs = new BitStream(input, baseOffset);
         this.mirror = mirror;
         this.planar = planar;
@@ -57,81 +59,56 @@ public class Gen1Decmp {
     public void decompress() {
         byte[][] rams = new byte[2][];
 
-        this.sizex = this.readint(4) * tilesize;
-        this.sizey = this.readint(4);
+        sizex = readint(4) * tilesize;
+        sizey = readint(4);
 
-        this.size = this.sizex * this.sizey;
+        size = sizex * sizey;
 
-        this.ramorder = this.readbit();
-
-        int r1 = this.ramorder;
-        int r2 = this.ramorder ^ 1;
+        int r1 = readbit();
+        int r2 = r1 ^ 1;
 
         fillram(rams, r1);
-        int mode = this.readbit();
+        int mode = readbit();
         if (mode == 1) {
-            mode += this.readbit();
+            mode += readbit();
         }
         fillram(rams, r2);
 
-        rams[0] = this.bitgroups_to_bytes(rams[0]);
-        rams[1] = this.bitgroups_to_bytes(rams[1]);
+        rams[0] = bitgroups_to_bytes(rams[0]);
+        rams[1] = bitgroups_to_bytes(rams[1]);
 
         if (mode == 0) {
-            this.decode(rams[0]);
-            this.decode(rams[1]);
+            decode(rams[0]);
+            decode(rams[1]);
         } else if (mode == 1) {
-            this.decode(rams[r1]);
-            this.xor(rams[r1], rams[r2]);
+            decode(rams[r1]);
+            xor(rams[r1], rams[r2]);
         } else if (mode == 2) {
-            this.decode(rams[r2], false);
-            this.decode(rams[r1]);
-            this.xor(rams[r1], rams[r2]);
+            decode(rams[r2], false);
+            decode(rams[r1]);
+            xor(rams[r1], rams[r2]);
         }
 
         if (this.planar) {
-            data = new byte[this.size * 2];
+            data = new byte[size * 2];
             for (int i = 0; i < rams[0].length; i++) {
                 data[i * 2] = rams[0][i];
                 data[i * 2 + 1] = rams[1][i];
             }
         } else {
-            byte[] tmpdata = new byte[this.size * 8];
+            byte[] tmpdata = new byte[size * 8];
             BitStream r0S = new BitStream(rams[0]);
             BitStream r1S = new BitStream(rams[1]);
             for (int i = 0; i < tmpdata.length; i++) {
                 tmpdata[i] = (byte) (r0S.next() | (r1S.next() << 1));
             }
-            data = this.bitgroups_to_bytes(tmpdata);
+            data = bitgroups_to_bytes(tmpdata);
         }
-
-    }
-
-    public void transpose() {
-        if (data == null) {
-            return;
-        }
-        int tiles = data.length / 16;
-        int width = this.sizex / tilesize;
-        int height = this.sizey;
-
-        byte[] newData = new byte[data.length];
-        for (int tile = 0; tile < tiles; tile++) {
-            int oldTileX = tile % width;
-            int oldTileY = tile / width;
-            int newTileNum = oldTileX * height + oldTileY;
-            System.arraycopy(data, tile * 16, newData, newTileNum * 16, 16);
-        }
-        data = newData;
 
     }
 
     public byte[] getData() {
         return data;
-    }
-
-    public byte[] getFlattenedData() {
-        return flatten(data);
     }
 
     public int getWidth() {
@@ -142,16 +119,23 @@ public class Gen1Decmp {
         return this.sizey * tilesize;
     }
 
+    public int getCompressedLength() {
+        if (bs == null) {
+            throw new IllegalStateException("Must decompress before getting compressed length.");
+        }
+        return bs.offset - baseOffset + 1;
+    }
+
     private void fillram(byte[][] rams, int rOffset) {
         int size = this.size * 4;
         rams[rOffset] = new byte[size];
-        boolean rleMode = this.readbit() == 0;
+        boolean rleMode = readbit() == 0;
         int written = 0;
         while (written < size) {
             if (rleMode) {
-                written += this.read_rle_chunk(rams[rOffset], written);
+                written += read_rle_chunk(rams[rOffset], written);
             } else {
-                written += this.read_data_chunk(rams[rOffset], written, size);
+                written += read_data_chunk(rams[rOffset], written, size);
             }
             rleMode = !rleMode;
         }
@@ -161,12 +145,12 @@ public class Gen1Decmp {
     private byte[] deinterlace_bitgroups(byte[] bits) {
         byte[] l = new byte[bits.length];
         int offs = 0;
-        for (int y = 0; y < this.sizey; y++) {
-            for (int x = 0; x < this.sizex; x++) {
-                int i = 4 * y * this.sizex + x;
+        for (int y = 0; y < sizey; y++) {
+            for (int x = 0; x < sizex; x++) {
+                int i = 4 * y * sizex + x;
                 for (int j = 0; j < 4; j++) {
                     l[offs++] = bits[i];
-                    i += this.sizex;
+                    i += sizex;
                 }
             }
         }
@@ -175,12 +159,12 @@ public class Gen1Decmp {
 
     private int read_rle_chunk(byte[] ram, int baseOffset) {
         int i = 0;
-        while (this.readbit() == 1) {
+        while (readbit() == 1) {
             i++;
         }
 
         int n = table1[i];
-        int a = this.readint(i + 1);
+        int a = readint(i + 1);
         n += a;
 
         for (i = 0; i < n; i++) {
@@ -192,7 +176,7 @@ public class Gen1Decmp {
     private int read_data_chunk(byte[] ram, int baseOffset, int size) {
         int written = 0;
         while (true) {
-            int bitgroup = this.readint(2);
+            int bitgroup = readint(2);
             if (bitgroup == 0) {
                 break;
             }
@@ -239,10 +223,10 @@ public class Gen1Decmp {
     }
 
     private void decode(byte[] ram, boolean mirror) {
-        for (int x = 0; x < this.sizex; x++) {
+        for (int x = 0; x < sizex; x++) {
             int bit = 0;
-            for (int y = 0; y < this.sizey; y++) {
-                int i = y * this.sizex + x;
+            for (int y = 0; y < sizey; y++) {
+                int i = y * sizex + x;
                 int a = ((ram[i] & 0xFF) >> 4) & 0x0F;
                 int b = ram[i] & 0x0F;
 
@@ -282,12 +266,12 @@ public class Gen1Decmp {
     }
 
     private static class BitStream {
-        private byte[] data;
+        private final byte[] data;
         private int offset;
         private int bitsLeft;
         private int bufVal;
 
-        private static final int bmask[] = { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff, 0x1ff, 0x3ff, 0x7ff,
+        private static final int[] bmask = { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff, 0x1ff, 0x3ff, 0x7ff,
                 0xfff, 0x1fff, 0x3fff, 0x7fff, 0xffff, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff,
                 0x7fffff, 0xffffff, 0x1ffffff, 0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
                 0xffffffff };
@@ -306,10 +290,10 @@ public class Gen1Decmp {
         public int next() {
             if (bitsLeft == 0) {
                 offset++;
-                bufVal = data[offset] & 0xFF;
                 if (offset >= data.length) {
                     return -1;
                 }
+                bufVal = data[offset] & 0xFF;
                 bitsLeft = 8;
             }
 
@@ -319,20 +303,6 @@ public class Gen1Decmp {
 
             return retval;
         }
-    }
-
-    private static byte[] flatten(byte[] planar) {
-        byte[] strips = new byte[planar.length * 4];
-        for (int j = 0; j < planar.length / 2; j++) {
-            int bottom = planar[j * 2] & 0xFF;
-            int top = planar[j * 2 + 1] & 0xFF;
-            byte[] strip = new byte[8];
-            for (int i = 7; i >= 0; i--) {
-                strip[7 - i] = (byte) (((bottom >>> i) & 1) + ((top * 2 >>> i) & 2));
-            }
-            System.arraycopy(strip, 0, strips, j * 8, 8);
-        }
-        return strips;
     }
 
 }

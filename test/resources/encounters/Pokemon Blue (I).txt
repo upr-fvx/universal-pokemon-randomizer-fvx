@@ -1,0 +1,317 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Grass/Cave on PERCORSO 1, Rate = 25, MapIndex = 12,
+		Encounters = [PIDGEY Lv3, RATTATA Lv3, RATTATA Lv3, RATTATA Lv2, PIDGEY Lv2, PIDGEY Lv3, PIDGEY Lv3, RATTATA Lv4, PIDGEY Lv4, PIDGEY Lv5]]
+	[Name = Grass/Cave on PERCORSO 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTATA Lv3, PIDGEY Lv3, PIDGEY Lv4, RATTATA Lv4, PIDGEY Lv5, CATERPIE Lv3, RATTATA Lv2, RATTATA Lv5, CATERPIE Lv4, CATERPIE Lv5]]
+	[Name = Grass/Cave on PERCORSO 3, Rate = 20, MapIndex = 14,
+		Encounters = [PIDGEY Lv6, SPEAROW Lv5, PIDGEY Lv7, SPEAROW Lv6, SPEAROW Lv7, PIDGEY Lv8, SPEAROW Lv8, JIGGLYPUFF Lv3, JIGGLYPUFF Lv5, JIGGLYPUFF Lv7]]
+	[Name = Grass/Cave on PERCORSO 4, Rate = 20, MapIndex = 15,
+		Encounters = [RATTATA Lv10, SPEAROW Lv10, RATTATA Lv8, SANDSHREW Lv6, SPEAROW Lv8, SANDSHREW Lv10, RATTATA Lv12, SPEAROW Lv12, SANDSHREW Lv8, SANDSHREW Lv12]]
+	[Name = Grass/Cave on PERCORSO 5, Rate = 15, MapIndex = 16,
+		Encounters = [BELLSPROUT Lv13, PIDGEY Lv13, PIDGEY Lv15, MEOWTH Lv10, MEOWTH Lv12, BELLSPROUT Lv15, BELLSPROUT Lv16, PIDGEY Lv16, MEOWTH Lv14, MEOWTH Lv16]]
+	[Name = Grass/Cave on PERCORSO 6, Rate = 15, MapIndex = 17,
+		Encounters = [BELLSPROUT Lv13, PIDGEY Lv13, PIDGEY Lv15, MEOWTH Lv10, MEOWTH Lv12, BELLSPROUT Lv15, BELLSPROUT Lv16, PIDGEY Lv16, MEOWTH Lv14, MEOWTH Lv16]]
+	[Name = Grass/Cave on PERCORSO 7, Rate = 15, MapIndex = 18,
+		Encounters = [PIDGEY Lv19, BELLSPROUT Lv19, MEOWTH Lv17, BELLSPROUT Lv22, PIDGEY Lv22, MEOWTH Lv18, VULPIX Lv18, VULPIX Lv20, MEOWTH Lv19, MEOWTH Lv20]]
+	[Name = Grass/Cave on PERCORSO 8, Rate = 15, MapIndex = 19,
+		Encounters = [PIDGEY Lv18, MEOWTH Lv18, SANDSHREW Lv17, VULPIX Lv16, PIDGEY Lv20, MEOWTH Lv20, SANDSHREW Lv19, VULPIX Lv17, VULPIX Lv15, VULPIX Lv18]]
+	[Name = Grass/Cave on PERCORSO 9, Rate = 15, MapIndex = 20,
+		Encounters = [RATTATA Lv16, SPEAROW Lv16, RATTATA Lv14, SANDSHREW Lv11, SPEAROW Lv13, SANDSHREW Lv15, RATTATA Lv17, SPEAROW Lv17, SANDSHREW Lv13, SANDSHREW Lv17]]
+	[Name = Grass/Cave on PERCORSO 10, Rate = 15, MapIndex = 21,
+		Encounters = [VOLTORB Lv16, SPEAROW Lv16, VOLTORB Lv14, SANDSHREW Lv11, SPEAROW Lv13, SANDSHREW Lv15, VOLTORB Lv17, SPEAROW Lv17, SANDSHREW Lv13, SANDSHREW Lv17]]
+	[Name = Grass/Cave on PERCORSO 11, Rate = 15, MapIndex = 22,
+		Encounters = [SANDSHREW Lv14, SPEAROW Lv15, SANDSHREW Lv12, DROWZEE Lv9, SPEAROW Lv13, DROWZEE Lv13, SANDSHREW Lv15, SPEAROW Lv17, DROWZEE Lv11, DROWZEE Lv15]]
+	[Name = Grass/Cave on PERCORSO 12, Rate = 15, MapIndex = 23,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv25, PIDGEY Lv23, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, PIDGEY Lv27, WEEPINBELL Lv28, WEEPINBELL Lv30]]
+	[Name = Grass/Cave on PERCORSO 13, Rate = 20, MapIndex = 24,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv25, PIDGEY Lv27, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, DITTO Lv25, WEEPINBELL Lv28, WEEPINBELL Lv30]]
+	[Name = Grass/Cave on PERCORSO 14, Rate = 15, MapIndex = 25,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv26, DITTO Lv23, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, WEEPINBELL Lv30, PIDGEOTTO Lv28, PIDGEOTTO Lv30]]
+	[Name = Grass/Cave on PERCORSO 15, Rate = 15, MapIndex = 26,
+		Encounters = [BELLSPROUT Lv24, DITTO Lv26, PIDGEY Lv23, VENONAT Lv26, BELLSPROUT Lv22, VENONAT Lv28, BELLSPROUT Lv26, WEEPINBELL Lv30, PIDGEOTTO Lv28, PIDGEOTTO Lv30]]
+	[Name = Grass/Cave on PERCORSO 16, Rate = 25, MapIndex = 27,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATTATA Lv18, DODUO Lv20, RATTATA Lv20, DODUO Lv18, DODUO Lv22, RATTATA Lv22, RATICATE Lv23, RATICATE Lv25]]
+	[Name = Grass/Cave on PERCORSO 17, Rate = 25, MapIndex = 28,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATICATE Lv25, DODUO Lv24, RATICATE Lv27, DODUO Lv26, DODUO Lv28, RATICATE Lv29, FEAROW Lv25, FEAROW Lv27]]
+	[Name = Grass/Cave on PERCORSO 18, Rate = 25, MapIndex = 29,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATICATE Lv25, DODUO Lv24, FEAROW Lv25, DODUO Lv26, DODUO Lv28, RATICATE Lv29, FEAROW Lv27, FEAROW Lv29]]
+	[Name = Surfing on PERCORSO 19, PERCORSO 20, Rate = 5, MapIndex = -30,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on PERCORSO 21, Rate = 25, MapIndex = 32,
+		Encounters = [RATTATA Lv21, PIDGEY Lv23, RATICATE Lv30, RATTATA Lv23, PIDGEY Lv21, PIDGEOTTO Lv30, PIDGEOTTO Lv32, TANGELA Lv28, TANGELA Lv30, TANGELA Lv32]]
+	[Name = Surfing on PERCORSO 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on PERCORSO 22, Rate = 25, MapIndex = 33,
+		Encounters = [RATTATA Lv3, NIDORAN♀ Lv3, RATTATA Lv4, NIDORAN♀ Lv4, RATTATA Lv2, NIDORAN♀ Lv2, SPEAROW Lv3, SPEAROW Lv5, NIDORAN♂ Lv3, NIDORAN♂ Lv4]]
+	[Name = Grass/Cave on PERCORSO 23, Rate = 10, MapIndex = 34,
+		Encounters = [SANDSHREW Lv26, DITTO Lv33, SPEAROW Lv26, FEAROW Lv38, DITTO Lv38, FEAROW Lv38, SANDSLASH Lv41, DITTO Lv43, FEAROW Lv41, FEAROW Lv43]]
+	[Name = Grass/Cave on PERCORSO 24, Rate = 25, MapIndex = 35,
+		Encounters = [CATERPIE Lv7, METAPOD Lv8, PIDGEY Lv12, BELLSPROUT Lv12, BELLSPROUT Lv13, ABRA Lv10, BELLSPROUT Lv14, PIDGEY Lv13, ABRA Lv8, ABRA Lv12]]
+	[Name = Grass/Cave on PERCORSO 25, Rate = 15, MapIndex = 36,
+		Encounters = [CATERPIE Lv8, METAPOD Lv9, PIDGEY Lv13, BELLSPROUT Lv12, BELLSPROUT Lv13, ABRA Lv12, BELLSPROUT Lv14, ABRA Lv10, KAKUNA Lv7, WEEDLE Lv8]]
+	[Name = Grass/Cave on BOSCOSMERALDO (1), Rate = 8, MapIndex = 51,
+		Encounters = [CATERPIE Lv4, METAPOD Lv5, CATERPIE Lv3, CATERPIE Lv5, METAPOD Lv4, METAPOD Lv6, KAKUNA Lv4, WEEDLE Lv3, PIKACHU Lv3, PIKACHU Lv5]]
+	[Name = Grass/Cave on MONTELUNA (1), Rate = 10, MapIndex = 59,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, ZUBAT Lv9, GEODUDE Lv8, ZUBAT Lv6, ZUBAT Lv10, GEODUDE Lv10, PARAS Lv8, ZUBAT Lv11, CLEFAIRY Lv8]]
+	[Name = Grass/Cave on MONTELUNA (2), Rate = 10, MapIndex = 60,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, GEODUDE Lv7, GEODUDE Lv8, ZUBAT Lv9, PARAS Lv10, ZUBAT Lv10, ZUBAT Lv11, CLEFAIRY Lv9, GEODUDE Lv9]]
+	[Name = Grass/Cave on MONTELUNA (3), Rate = 10, MapIndex = 61,
+		Encounters = [ZUBAT Lv9, GEODUDE Lv9, ZUBAT Lv10, GEODUDE Lv10, ZUBAT Lv11, PARAS Lv10, PARAS Lv12, CLEFAIRY Lv10, ZUBAT Lv12, CLEFAIRY Lv12]]
+	[Name = Grass/Cave on TUNNELROCCIOSO (2), Rate = 15, MapIndex = 82,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, GEODUDE Lv17, MACHOP Lv15, GEODUDE Lv16, ZUBAT Lv18, ZUBAT Lv15, MACHOP Lv17, ONIX Lv13, ONIX Lv15]]
+	[Name = Grass/Cave on CENTRALE ELETT. (1), Rate = 10, MapIndex = 83,
+		Encounters = [VOLTORB Lv21, MAGNEMITE Lv21, PIKACHU Lv20, PIKACHU Lv24, MAGNEMITE Lv23, VOLTORB Lv23, MAGNETON Lv32, MAGNETON Lv35, RAICHU Lv33, RAICHU Lv36]]
+	[Name = Grass/Cave on VIA VITTORIA (1), Rate = 15, MapIndex = 108,
+		Encounters = [MACHOP Lv24, GEODUDE Lv26, ZUBAT Lv22, ONIX Lv36, ONIX Lv39, ONIX Lv42, GRAVELER Lv41, GOLBAT Lv41, MACHOKE Lv42, MAROWAK Lv43]]
+	[Name = Grass/Cave on TORRE POKéMON (3), Rate = 10, MapIndex = 144,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, GASTLY Lv24, CUBONE Lv20, CUBONE Lv22, HAUNTER Lv25]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (4), Rate = 10, MapIndex = 145,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, HAUNTER Lv25, CUBONE Lv20, CUBONE Lv22, GASTLY Lv24]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (5), Rate = 10, MapIndex = 146,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, HAUNTER Lv25, CUBONE Lv20, CUBONE Lv22, GASTLY Lv24]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (6), Rate = 15, MapIndex = 147,
+		Encounters = [GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv24, GASTLY Lv20, GASTLY Lv19, HAUNTER Lv26, CUBONE Lv22, CUBONE Lv24, HAUNTER Lv28]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (7), Rate = 15, MapIndex = 148,
+		Encounters = [GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv24, GASTLY Lv20, HAUNTER Lv28, CUBONE Lv22, CUBONE Lv24, HAUNTER Lv28, HAUNTER Lv30]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (1), Rate = 10, MapIndex = 159,
+		Encounters = [SHELLDER Lv30, KRABBY Lv30, STARYU Lv32, KRABBY Lv32, PSYDUCK Lv28, SEEL Lv30, PSYDUCK Lv30, SEEL Lv28, DEWGONG Lv38, KINGLER Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (2), Rate = 10, MapIndex = 160,
+		Encounters = [SEEL Lv30, PSYDUCK Lv30, SEEL Lv32, PSYDUCK Lv32, KRABBY Lv28, SHELLDER Lv30, KRABBY Lv30, STARYU Lv28, GOLBAT Lv30, GOLDUCK Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (3), Rate = 10, MapIndex = 161,
+		Encounters = [PSYDUCK Lv31, SEEL Lv31, PSYDUCK Lv33, SEEL Lv33, KRABBY Lv29, STARYU Lv31, KRABBY Lv31, STARYU Lv29, KINGLER Lv39, DEWGONG Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (4), Rate = 10, MapIndex = 162,
+		Encounters = [KRABBY Lv31, STARYU Lv31, KRABBY Lv33, STARYU Lv33, PSYDUCK Lv29, SEEL Lv31, PSYDUCK Lv31, SEEL Lv29, GOLDUCK Lv39, GOLBAT Lv32]]
+	[Name = Grass/Cave on VILLA PKMN (1), Rate = 10, MapIndex = 165,
+		Encounters = [GRIMER Lv32, GRIMER Lv30, PONYTA Lv34, PONYTA Lv30, VULPIX Lv34, PONYTA Lv32, KOFFING Lv30, PONYTA Lv28, MUK Lv37, WEEZING Lv39]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (5), Rate = 15, MapIndex = 192,
+		Encounters = [SEEL Lv30, PSYDUCK Lv30, STARYU Lv30, KRABBY Lv30, KRABBY Lv28, ZUBAT Lv21, GOLBAT Lv29, SLOWPOKE Lv28, STARYU Lv28, SLOWBRO Lv38]]
+	[Name = Grass/Cave on VIA VITTORIA (2), Rate = 10, MapIndex = 194,
+		Encounters = [MACHOP Lv22, GEODUDE Lv24, ZUBAT Lv26, ONIX Lv36, ONIX Lv39, ONIX Lv42, MACHOKE Lv41, GOLBAT Lv40, MAROWAK Lv40, GRAVELER Lv43]]
+	[Name = Grass/Cave on GROTTA DIGLETT (1), Rate = 20, MapIndex = 197,
+		Encounters = [DIGLETT Lv18, DIGLETT Lv19, DIGLETT Lv17, DIGLETT Lv20, DIGLETT Lv16, DIGLETT Lv15, DIGLETT Lv21, DIGLETT Lv22, DUGTRIO Lv29, DUGTRIO Lv31]]
+	[Name = Grass/Cave on VIA VITTORIA (3), Rate = 15, MapIndex = 198,
+		Encounters = [MACHOP Lv24, GEODUDE Lv26, ZUBAT Lv22, ONIX Lv42, VENOMOTH Lv40, ONIX Lv45, GRAVELER Lv43, GOLBAT Lv41, MACHOKE Lv42, MACHOKE Lv45]]
+	[Name = Grass/Cave on VILLA PKMN (2), Rate = 10, MapIndex = 214,
+		Encounters = [VULPIX Lv32, GRIMER Lv34, GRIMER Lv34, PONYTA Lv30, GRIMER Lv30, PONYTA Lv32, KOFFING Lv30, PONYTA Lv28, MUK Lv39, WEEZING Lv37]]
+	[Name = Grass/Cave on VILLA PKMN (3), Rate = 10, MapIndex = 215,
+		Encounters = [GRIMER Lv31, VULPIX Lv33, GRIMER Lv35, PONYTA Lv32, MAGMAR Lv34, MUK Lv40, KOFFING Lv34, MUK Lv38, PONYTA Lv36, WEEZING Lv42]]
+	[Name = Grass/Cave on VILLA PKMN (4), Rate = 10, MapIndex = 216,
+		Encounters = [GRIMER Lv33, GRIMER Lv31, VULPIX Lv35, PONYTA Lv32, GRIMER Lv31, MUK Lv40, PONYTA Lv34, KOFFING Lv35, MAGMAR Lv38, WEEZING Lv42]]
+	[Name = Grass/Cave on ZONA SAFARI (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♀ Lv24, DODUO Lv26, PARAS Lv22, EXEGGCUTE Lv25, NIDORINA Lv33, EXEGGCUTE Lv23, NIDORAN♂ Lv24, PARASECT Lv25, KANGASKHAN Lv25, PINSIR Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♀ Lv22, RHYHORN Lv26, PARAS Lv23, EXEGGCUTE Lv25, NIDORINA Lv30, EXEGGCUTE Lv27, NIDORINO Lv30, VENOMOTH Lv32, CHANSEY Lv26, TAUROS Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♀ Lv25, DODUO Lv26, VENONAT Lv23, EXEGGCUTE Lv24, NIDORINA Lv33, EXEGGCUTE Lv26, NIDORAN♂ Lv25, VENOMOTH Lv31, TAUROS Lv26, KANGASKHAN Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♀ Lv22, RHYHORN Lv25, VENONAT Lv22, EXEGGCUTE Lv24, NIDORINA Lv31, EXEGGCUTE Lv25, NIDORINO Lv31, PARASECT Lv30, PINSIR Lv23, CHANSEY Lv23]]
+	[Name = Grass/Cave on GROTTA IGNOTA (1), Rate = 15, MapIndex = 226,
+		Encounters = [DODRIO Lv51, VENOMOTH Lv51, KADABRA Lv51, RHYDON Lv52, MAROWAK Lv52, ELECTRODE Lv52, CHANSEY Lv56, WIGGLYTUFF Lv54, DITTO Lv55, DITTO Lv60]]
+	[Name = Grass/Cave on GROTTA IGNOTA (2), Rate = 25, MapIndex = 227,
+		Encounters = [RHYDON Lv55, MAROWAK Lv55, ELECTRODE Lv55, CHANSEY Lv64, PARASECT Lv64, RAICHU Lv64, SANDSLASH Lv57, DITTO Lv65, DITTO Lv63, DITTO Lv67]]
+	[Name = Grass/Cave on GROTTA IGNOTA (3), Rate = 10, MapIndex = 228,
+		Encounters = [GOLBAT Lv46, HYPNO Lv46, MAGNETON Lv46, DODRIO Lv49, VENOMOTH Lv49, SANDSLASH Lv52, KADABRA Lv49, PARASECT Lv52, RAICHU Lv53, DITTO Lv53]]
+	[Name = Grass/Cave on TUNNELROCCIOSO (3), Rate = 15, MapIndex = 232,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, GEODUDE Lv17, MACHOP Lv15, GEODUDE Lv16, ZUBAT Lv18, MACHOP Lv17, ONIX Lv17, ONIX Lv13, GEODUDE Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [MAGIKARP Lv5]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [GOLDEEN Lv10, POLIWAG Lv10]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on BIANCAVILLA, SMERALDOPOLI, Rate = 0, MapIndex = 0,
+		Encounters = [TENTACOOL Lv15, POLIWAG Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CELESTOPOLI, PERCORSO 4, PERCORSO 24, PERCORSO 25, CELESTOPOLI (Building), Rate = 0, MapIndex = -3,
+		Encounters = [PSYDUCK Lv15, GOLDEEN Lv15, KRABBY Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ARANCIOPOLI, PERCORSO 6, PERCORSO 11, ARANCIOPOLI (Building), Rate = 0, MapIndex = -5,
+		Encounters = [KRABBY Lv15, SHELLDER Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZZURROPOLI, PERCORSO 10, Rate = 0, MapIndex = -6,
+		Encounters = [POLIWHIRL Lv23, SLOWPOKE Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on FUCSIAPOLI, Rate = 0, MapIndex = 7,
+		Encounters = [SEAKING Lv23, KRABBY Lv15, GOLDEEN Lv15, MAGIKARP Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ISOLA CANNELLA, PERCORSO 19, PERCORSO 20, PERCORSO 21, ISOLE SPUMARINE (3), ISOLE SPUMARINE (4), Rate = 0, MapIndex = -8,
+		Encounters = [STARYU Lv15, HORSEA Lv15, SHELLDER Lv15, GOLDEEN Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 12, PERCORSO 13, PERCORSO 17, PERCORSO 18, Rate = 0, MapIndex = -23,
+		Encounters = [TENTACOOL Lv5, KRABBY Lv15, GOLDEEN Lv15, MAGIKARP Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 22, Rate = 0, MapIndex = 33,
+		Encounters = [GOLDEEN Lv15, POLIWAG Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 23, GROTTA IGNOTA (1), GROTTA IGNOTA (2), GROTTA IGNOTA (3), Rate = 0, MapIndex = -34,
+		Encounters = [SLOWBRO Lv23, SEAKING Lv23, KINGLER Lv23, SEADRA Lv23]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ZONA SAFARI (2), ZONA SAFARI (3), ZONA SAFARI (4), ZONA SAFARI (5), Rate = 0, MapIndex = -217,
+		Encounters = [DRATINI Lv15, KRABBY Lv15, PSYDUCK Lv15, SLOWPOKE Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Grass/Cave on PERCORSO 1, Rate = 25, MapIndex = 12,
+		Encounters = [PIDGEY Lv3, RATTATA Lv3, RATTATA Lv3, RATTATA Lv2, PIDGEY Lv2, PIDGEY Lv3, PIDGEY Lv3, RATTATA Lv4, PIDGEY Lv4, PIDGEY Lv5]]
+	[Name = Grass/Cave on PERCORSO 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTATA Lv3, PIDGEY Lv3, PIDGEY Lv4, RATTATA Lv4, PIDGEY Lv5, CATERPIE Lv3, RATTATA Lv2, RATTATA Lv5, CATERPIE Lv4, CATERPIE Lv5]]
+	[Name = Grass/Cave on PERCORSO 3, Rate = 20, MapIndex = 14,
+		Encounters = [PIDGEY Lv6, SPEAROW Lv5, PIDGEY Lv7, SPEAROW Lv6, SPEAROW Lv7, PIDGEY Lv8, SPEAROW Lv8, JIGGLYPUFF Lv3, JIGGLYPUFF Lv5, JIGGLYPUFF Lv7]]
+	[Name = Grass/Cave on PERCORSO 4, Rate = 20, MapIndex = 15,
+		Encounters = [RATTATA Lv10, SPEAROW Lv10, RATTATA Lv8, SANDSHREW Lv6, SPEAROW Lv8, SANDSHREW Lv10, RATTATA Lv12, SPEAROW Lv12, SANDSHREW Lv8, SANDSHREW Lv12]]
+	[Name = Grass/Cave on PERCORSO 5, Rate = 15, MapIndex = 16,
+		Encounters = [BELLSPROUT Lv13, PIDGEY Lv13, PIDGEY Lv15, MEOWTH Lv10, MEOWTH Lv12, BELLSPROUT Lv15, BELLSPROUT Lv16, PIDGEY Lv16, MEOWTH Lv14, MEOWTH Lv16]]
+	[Name = Grass/Cave on PERCORSO 6, Rate = 15, MapIndex = 17,
+		Encounters = [BELLSPROUT Lv13, PIDGEY Lv13, PIDGEY Lv15, MEOWTH Lv10, MEOWTH Lv12, BELLSPROUT Lv15, BELLSPROUT Lv16, PIDGEY Lv16, MEOWTH Lv14, MEOWTH Lv16]]
+	[Name = Grass/Cave on PERCORSO 7, Rate = 15, MapIndex = 18,
+		Encounters = [PIDGEY Lv19, BELLSPROUT Lv19, MEOWTH Lv17, BELLSPROUT Lv22, PIDGEY Lv22, MEOWTH Lv18, VULPIX Lv18, VULPIX Lv20, MEOWTH Lv19, MEOWTH Lv20]]
+	[Name = Grass/Cave on PERCORSO 8, Rate = 15, MapIndex = 19,
+		Encounters = [PIDGEY Lv18, MEOWTH Lv18, SANDSHREW Lv17, VULPIX Lv16, PIDGEY Lv20, MEOWTH Lv20, SANDSHREW Lv19, VULPIX Lv17, VULPIX Lv15, VULPIX Lv18]]
+	[Name = Grass/Cave on PERCORSO 9, Rate = 15, MapIndex = 20,
+		Encounters = [RATTATA Lv16, SPEAROW Lv16, RATTATA Lv14, SANDSHREW Lv11, SPEAROW Lv13, SANDSHREW Lv15, RATTATA Lv17, SPEAROW Lv17, SANDSHREW Lv13, SANDSHREW Lv17]]
+	[Name = Grass/Cave on PERCORSO 10, Rate = 15, MapIndex = 21,
+		Encounters = [VOLTORB Lv16, SPEAROW Lv16, VOLTORB Lv14, SANDSHREW Lv11, SPEAROW Lv13, SANDSHREW Lv15, VOLTORB Lv17, SPEAROW Lv17, SANDSHREW Lv13, SANDSHREW Lv17]]
+	[Name = Grass/Cave on PERCORSO 11, Rate = 15, MapIndex = 22,
+		Encounters = [SANDSHREW Lv14, SPEAROW Lv15, SANDSHREW Lv12, DROWZEE Lv9, SPEAROW Lv13, DROWZEE Lv13, SANDSHREW Lv15, SPEAROW Lv17, DROWZEE Lv11, DROWZEE Lv15]]
+	[Name = Grass/Cave on PERCORSO 12, Rate = 15, MapIndex = 23,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv25, PIDGEY Lv23, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, PIDGEY Lv27, WEEPINBELL Lv28, WEEPINBELL Lv30]]
+	[Name = Grass/Cave on PERCORSO 13, Rate = 20, MapIndex = 24,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv25, PIDGEY Lv27, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, DITTO Lv25, WEEPINBELL Lv28, WEEPINBELL Lv30]]
+	[Name = Grass/Cave on PERCORSO 14, Rate = 15, MapIndex = 25,
+		Encounters = [BELLSPROUT Lv24, PIDGEY Lv26, DITTO Lv23, VENONAT Lv24, BELLSPROUT Lv22, VENONAT Lv26, BELLSPROUT Lv26, WEEPINBELL Lv30, PIDGEOTTO Lv28, PIDGEOTTO Lv30]]
+	[Name = Grass/Cave on PERCORSO 15, Rate = 15, MapIndex = 26,
+		Encounters = [BELLSPROUT Lv24, DITTO Lv26, PIDGEY Lv23, VENONAT Lv26, BELLSPROUT Lv22, VENONAT Lv28, BELLSPROUT Lv26, WEEPINBELL Lv30, PIDGEOTTO Lv28, PIDGEOTTO Lv30]]
+	[Name = Grass/Cave on PERCORSO 16, Rate = 25, MapIndex = 27,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATTATA Lv18, DODUO Lv20, RATTATA Lv20, DODUO Lv18, DODUO Lv22, RATTATA Lv22, RATICATE Lv23, RATICATE Lv25]]
+	[Name = Grass/Cave on PERCORSO 17, Rate = 25, MapIndex = 28,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATICATE Lv25, DODUO Lv24, RATICATE Lv27, DODUO Lv26, DODUO Lv28, RATICATE Lv29, FEAROW Lv25, FEAROW Lv27]]
+	[Name = Grass/Cave on PERCORSO 18, Rate = 25, MapIndex = 29,
+		Encounters = [SPEAROW Lv20, SPEAROW Lv22, RATICATE Lv25, DODUO Lv24, FEAROW Lv25, DODUO Lv26, DODUO Lv28, RATICATE Lv29, FEAROW Lv27, FEAROW Lv29]]
+	[Name = Surfing on PERCORSO 19, PERCORSO 20, Rate = 5, MapIndex = -30,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on PERCORSO 21, Rate = 25, MapIndex = 32,
+		Encounters = [RATTATA Lv21, PIDGEY Lv23, RATICATE Lv30, RATTATA Lv23, PIDGEY Lv21, PIDGEOTTO Lv30, PIDGEOTTO Lv32, TANGELA Lv28, TANGELA Lv30, TANGELA Lv32]]
+	[Name = Surfing on PERCORSO 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv5, TENTACOOL Lv10, TENTACOOL Lv15, TENTACOOL Lv20, TENTACOOL Lv30, TENTACOOL Lv35, TENTACOOL Lv40]]
+	[Name = Grass/Cave on PERCORSO 22, Rate = 25, MapIndex = 33,
+		Encounters = [RATTATA Lv3, NIDORAN♀ Lv3, RATTATA Lv4, NIDORAN♀ Lv4, RATTATA Lv2, NIDORAN♀ Lv2, SPEAROW Lv3, SPEAROW Lv5, NIDORAN♂ Lv3, NIDORAN♂ Lv4]]
+	[Name = Grass/Cave on PERCORSO 23, Rate = 10, MapIndex = 34,
+		Encounters = [SANDSHREW Lv26, DITTO Lv33, SPEAROW Lv26, FEAROW Lv38, DITTO Lv38, FEAROW Lv38, SANDSLASH Lv41, DITTO Lv43, FEAROW Lv41, FEAROW Lv43]]
+	[Name = Grass/Cave on PERCORSO 24, Rate = 25, MapIndex = 35,
+		Encounters = [CATERPIE Lv7, METAPOD Lv8, PIDGEY Lv12, BELLSPROUT Lv12, BELLSPROUT Lv13, ABRA Lv10, BELLSPROUT Lv14, PIDGEY Lv13, ABRA Lv8, ABRA Lv12]]
+	[Name = Grass/Cave on PERCORSO 25, Rate = 15, MapIndex = 36,
+		Encounters = [CATERPIE Lv8, METAPOD Lv9, PIDGEY Lv13, BELLSPROUT Lv12, BELLSPROUT Lv13, ABRA Lv12, BELLSPROUT Lv14, ABRA Lv10, KAKUNA Lv7, WEEDLE Lv8]]
+	[Name = Grass/Cave on BOSCOSMERALDO (1), Rate = 8, MapIndex = 51,
+		Encounters = [CATERPIE Lv4, METAPOD Lv5, CATERPIE Lv3, CATERPIE Lv5, METAPOD Lv4, METAPOD Lv6, KAKUNA Lv4, WEEDLE Lv3, PIKACHU Lv3, PIKACHU Lv5]]
+	[Name = Grass/Cave on MONTELUNA (1), Rate = 10, MapIndex = 59,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, ZUBAT Lv9, GEODUDE Lv8, ZUBAT Lv6, ZUBAT Lv10, GEODUDE Lv10, PARAS Lv8, ZUBAT Lv11, CLEFAIRY Lv8]]
+	[Name = Grass/Cave on MONTELUNA (2), Rate = 10, MapIndex = 60,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, GEODUDE Lv7, GEODUDE Lv8, ZUBAT Lv9, PARAS Lv10, ZUBAT Lv10, ZUBAT Lv11, CLEFAIRY Lv9, GEODUDE Lv9]]
+	[Name = Grass/Cave on MONTELUNA (3), Rate = 10, MapIndex = 61,
+		Encounters = [ZUBAT Lv9, GEODUDE Lv9, ZUBAT Lv10, GEODUDE Lv10, ZUBAT Lv11, PARAS Lv10, PARAS Lv12, CLEFAIRY Lv10, ZUBAT Lv12, CLEFAIRY Lv12]]
+	[Name = Grass/Cave on TUNNELROCCIOSO (2), Rate = 15, MapIndex = 82,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, GEODUDE Lv17, MACHOP Lv15, GEODUDE Lv16, ZUBAT Lv18, ZUBAT Lv15, MACHOP Lv17, ONIX Lv13, ONIX Lv15]]
+	[Name = Grass/Cave on CENTRALE ELETT. (1), Rate = 10, MapIndex = 83,
+		Encounters = [VOLTORB Lv21, MAGNEMITE Lv21, PIKACHU Lv20, PIKACHU Lv24, MAGNEMITE Lv23, VOLTORB Lv23, MAGNETON Lv32, MAGNETON Lv35, RAICHU Lv33, RAICHU Lv36]]
+	[Name = Grass/Cave on VIA VITTORIA (1), Rate = 15, MapIndex = 108,
+		Encounters = [MACHOP Lv24, GEODUDE Lv26, ZUBAT Lv22, ONIX Lv36, ONIX Lv39, ONIX Lv42, GRAVELER Lv41, GOLBAT Lv41, MACHOKE Lv42, MAROWAK Lv43]]
+	[Name = Grass/Cave on TORRE POKéMON (3), Rate = 10, MapIndex = 144,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, GASTLY Lv24, CUBONE Lv20, CUBONE Lv22, HAUNTER Lv25]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (4), Rate = 10, MapIndex = 145,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, HAUNTER Lv25, CUBONE Lv20, CUBONE Lv22, GASTLY Lv24]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (5), Rate = 10, MapIndex = 146,
+		Encounters = [GASTLY Lv20, GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv19, GASTLY Lv18, HAUNTER Lv25, CUBONE Lv20, CUBONE Lv22, GASTLY Lv24]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (6), Rate = 15, MapIndex = 147,
+		Encounters = [GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv24, GASTLY Lv20, GASTLY Lv19, HAUNTER Lv26, CUBONE Lv22, CUBONE Lv24, HAUNTER Lv28]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on TORRE POKéMON (7), Rate = 15, MapIndex = 148,
+		Encounters = [GASTLY Lv21, GASTLY Lv22, GASTLY Lv23, GASTLY Lv24, GASTLY Lv20, HAUNTER Lv28, CUBONE Lv22, CUBONE Lv24, HAUNTER Lv28, HAUNTER Lv30]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (1), Rate = 10, MapIndex = 159,
+		Encounters = [SHELLDER Lv30, KRABBY Lv30, STARYU Lv32, KRABBY Lv32, PSYDUCK Lv28, SEEL Lv30, PSYDUCK Lv30, SEEL Lv28, DEWGONG Lv38, KINGLER Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (2), Rate = 10, MapIndex = 160,
+		Encounters = [SEEL Lv30, PSYDUCK Lv30, SEEL Lv32, PSYDUCK Lv32, KRABBY Lv28, SHELLDER Lv30, KRABBY Lv30, STARYU Lv28, GOLBAT Lv30, GOLDUCK Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (3), Rate = 10, MapIndex = 161,
+		Encounters = [PSYDUCK Lv31, SEEL Lv31, PSYDUCK Lv33, SEEL Lv33, KRABBY Lv29, STARYU Lv31, KRABBY Lv31, STARYU Lv29, KINGLER Lv39, DEWGONG Lv37]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (4), Rate = 10, MapIndex = 162,
+		Encounters = [KRABBY Lv31, STARYU Lv31, KRABBY Lv33, STARYU Lv33, PSYDUCK Lv29, SEEL Lv31, PSYDUCK Lv31, SEEL Lv29, GOLDUCK Lv39, GOLBAT Lv32]]
+	[Name = Grass/Cave on VILLA PKMN (1), Rate = 10, MapIndex = 165,
+		Encounters = [GRIMER Lv32, GRIMER Lv30, PONYTA Lv34, PONYTA Lv30, VULPIX Lv34, PONYTA Lv32, KOFFING Lv30, PONYTA Lv28, MUK Lv37, WEEZING Lv39]]
+	[Name = Grass/Cave on ISOLE SPUMARINE (5), Rate = 15, MapIndex = 192,
+		Encounters = [SEEL Lv30, PSYDUCK Lv30, STARYU Lv30, KRABBY Lv30, KRABBY Lv28, ZUBAT Lv21, GOLBAT Lv29, SLOWPOKE Lv28, STARYU Lv28, SLOWBRO Lv38]]
+	[Name = Grass/Cave on VIA VITTORIA (2), Rate = 10, MapIndex = 194,
+		Encounters = [MACHOP Lv22, GEODUDE Lv24, ZUBAT Lv26, ONIX Lv36, ONIX Lv39, ONIX Lv42, MACHOKE Lv41, GOLBAT Lv40, MAROWAK Lv40, GRAVELER Lv43]]
+	[Name = Grass/Cave on GROTTA DIGLETT (1), Rate = 20, MapIndex = 197,
+		Encounters = [DIGLETT Lv18, DIGLETT Lv19, DIGLETT Lv17, DIGLETT Lv20, DIGLETT Lv16, DIGLETT Lv15, DIGLETT Lv21, DIGLETT Lv22, DUGTRIO Lv29, DUGTRIO Lv31]]
+	[Name = Grass/Cave on VIA VITTORIA (3), Rate = 15, MapIndex = 198,
+		Encounters = [MACHOP Lv24, GEODUDE Lv26, ZUBAT Lv22, ONIX Lv42, VENOMOTH Lv40, ONIX Lv45, GRAVELER Lv43, GOLBAT Lv41, MACHOKE Lv42, MACHOKE Lv45]]
+	[Name = Grass/Cave on VILLA PKMN (2), Rate = 10, MapIndex = 214,
+		Encounters = [VULPIX Lv32, GRIMER Lv34, GRIMER Lv34, PONYTA Lv30, GRIMER Lv30, PONYTA Lv32, KOFFING Lv30, PONYTA Lv28, MUK Lv39, WEEZING Lv37]]
+	[Name = Grass/Cave on VILLA PKMN (3), Rate = 10, MapIndex = 215,
+		Encounters = [GRIMER Lv31, VULPIX Lv33, GRIMER Lv35, PONYTA Lv32, MAGMAR Lv34, MUK Lv40, KOFFING Lv34, MUK Lv38, PONYTA Lv36, WEEZING Lv42]]
+	[Name = Grass/Cave on VILLA PKMN (4), Rate = 10, MapIndex = 216,
+		Encounters = [GRIMER Lv33, GRIMER Lv31, VULPIX Lv35, PONYTA Lv32, GRIMER Lv31, MUK Lv40, PONYTA Lv34, KOFFING Lv35, MAGMAR Lv38, WEEZING Lv42]]
+	[Name = Grass/Cave on ZONA SAFARI (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♀ Lv24, DODUO Lv26, PARAS Lv22, EXEGGCUTE Lv25, NIDORINA Lv33, EXEGGCUTE Lv23, NIDORAN♂ Lv24, PARASECT Lv25, KANGASKHAN Lv25, PINSIR Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♀ Lv22, RHYHORN Lv26, PARAS Lv23, EXEGGCUTE Lv25, NIDORINA Lv30, EXEGGCUTE Lv27, NIDORINO Lv30, VENOMOTH Lv32, CHANSEY Lv26, TAUROS Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♀ Lv25, DODUO Lv26, VENONAT Lv23, EXEGGCUTE Lv24, NIDORINA Lv33, EXEGGCUTE Lv26, NIDORAN♂ Lv25, VENOMOTH Lv31, TAUROS Lv26, KANGASKHAN Lv28]]
+	[Name = Grass/Cave on ZONA SAFARI (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♀ Lv22, RHYHORN Lv25, VENONAT Lv22, EXEGGCUTE Lv24, NIDORINA Lv31, EXEGGCUTE Lv25, NIDORINO Lv31, PARASECT Lv30, PINSIR Lv23, CHANSEY Lv23]]
+	[Name = Grass/Cave on GROTTA IGNOTA (1), Rate = 15, MapIndex = 226,
+		Encounters = [DODRIO Lv51, VENOMOTH Lv51, KADABRA Lv51, RHYDON Lv52, MAROWAK Lv52, ELECTRODE Lv52, CHANSEY Lv56, WIGGLYTUFF Lv54, DITTO Lv55, DITTO Lv60]]
+	[Name = Grass/Cave on GROTTA IGNOTA (2), Rate = 25, MapIndex = 227,
+		Encounters = [RHYDON Lv55, MAROWAK Lv55, ELECTRODE Lv55, CHANSEY Lv64, PARASECT Lv64, RAICHU Lv64, SANDSLASH Lv57, DITTO Lv65, DITTO Lv63, DITTO Lv67]]
+	[Name = Grass/Cave on GROTTA IGNOTA (3), Rate = 10, MapIndex = 228,
+		Encounters = [GOLBAT Lv46, HYPNO Lv46, MAGNETON Lv46, DODRIO Lv49, VENOMOTH Lv49, SANDSLASH Lv52, KADABRA Lv49, PARASECT Lv52, RAICHU Lv53, DITTO Lv53]]
+	[Name = Grass/Cave on TUNNELROCCIOSO (3), Rate = 15, MapIndex = 232,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, GEODUDE Lv17, MACHOP Lv15, GEODUDE Lv16, ZUBAT Lv18, MACHOP Lv17, ONIX Lv17, ONIX Lv13, GEODUDE Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [MAGIKARP Lv5]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [GOLDEEN Lv10, POLIWAG Lv10]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on BIANCAVILLA, SMERALDOPOLI, Rate = 0, MapIndex = 0,
+		Encounters = [TENTACOOL Lv15, POLIWAG Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on CELESTOPOLI, PERCORSO 4, PERCORSO 24, PERCORSO 25, CELESTOPOLI (Building), Rate = 0, MapIndex = -3,
+		Encounters = [PSYDUCK Lv15, GOLDEEN Lv15, KRABBY Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ARANCIOPOLI, PERCORSO 6, PERCORSO 11, ARANCIOPOLI (Building), Rate = 0, MapIndex = -5,
+		Encounters = [KRABBY Lv15, SHELLDER Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZZURROPOLI, PERCORSO 10, Rate = 0, MapIndex = -6,
+		Encounters = [POLIWHIRL Lv23, SLOWPOKE Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on FUCSIAPOLI, Rate = 0, MapIndex = 7,
+		Encounters = [SEAKING Lv23, KRABBY Lv15, GOLDEEN Lv15, MAGIKARP Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ISOLA CANNELLA, PERCORSO 19, PERCORSO 20, PERCORSO 21, ISOLE SPUMARINE (3), ISOLE SPUMARINE (4), Rate = 0, MapIndex = -8,
+		Encounters = [STARYU Lv15, HORSEA Lv15, SHELLDER Lv15, GOLDEEN Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 12, PERCORSO 13, PERCORSO 17, PERCORSO 18, Rate = 0, MapIndex = -23,
+		Encounters = [TENTACOOL Lv5, KRABBY Lv15, GOLDEEN Lv15, MAGIKARP Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 22, Rate = 0, MapIndex = 33,
+		Encounters = [GOLDEEN Lv15, POLIWAG Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PERCORSO 23, GROTTA IGNOTA (1), GROTTA IGNOTA (2), GROTTA IGNOTA (3), Rate = 0, MapIndex = -34,
+		Encounters = [SLOWBRO Lv23, SEAKING Lv23, KINGLER Lv23, SEADRA Lv23]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ZONA SAFARI (2), ZONA SAFARI (3), ZONA SAFARI (4), ZONA SAFARI (5), Rate = 0, MapIndex = -217,
+		Encounters = [DRATINI Lv15, KRABBY Lv15, PSYDUCK Lv15, SLOWPOKE Lv15]
+		Banned = [Species [name=MAROWAK, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]

@@ -1,9 +1,6 @@
 package com.dabomstew.pkrandom.romhandlers;
 
 /*----------------------------------------------------------------------------*/
-/*--  RomHandler.java - defines the functionality that each randomization   --*/
-/*--                    handler must implement.                             --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -25,25 +22,44 @@ package com.dabomstew.pkrandom.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkrandom.MiscTweak;
+import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
+import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
+import com.dabomstew.pkrandom.services.TypeService;
+
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.pokemon.*;
-
+/**
+ * Responsible for direct handling a Rom/game file, and the data therein.
+ * <br><br>
+ * After a Rom has been loaded with {@link #loadRom(String)}, a number of data types reflecting the contents of the
+ * Rom can be acquired through getters (e.g. {@link #getSpecies()}, {@link #getStarters()}, {@link #getTrainers()}).
+ * Most of the corresponding data also have setters which update the contents of the Rom (e.g.
+ * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Species} data from
+ * {@link #getSpecies()}) are instead updated simply by editing the object returned by the setter.
+ * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
+ * <br><br>
+ * Some methods giving extra context to the main data are also provided (e.g. {@link #hasRivalFinalBattle()},
+ * {@link #hasPhysicalSpecialSplit()}, {@link #abilitiesPerSpecies()}).
+ * <br><br>
+ * Though given a Rom, the RomHandler might not be able to get/set all kinds of data. Either because the Rom itself
+ * does not support the data type (there are no Starter held items in Red), or because the RomHandler itself does not
+ * implement it. For these non-universal data types, boolean methods are provided to report which ones are supported
+ * (e.g. {@link #supportsStarterHeldItems()}, {@link #hasShopSupport()}, {@link #canChangeStaticPokemon()}).
+ * <br><br>
+ * Finally, the RomHandler is responsible for giving general info about the Rom (e.g. {@link #getROMName()},
+ * {@link #getROMType()}, {@link #printRomDiagnostics(PrintStream)}), and the loading process (e.g.
+ * {@link #loadedFilename()}, {@link #hasGameUpdateLoaded()}).
+ */
 public interface RomHandler {
 
     abstract class Factory {
-        public RomHandler create(Random random) {
-            return create(random, null);
-        }
-
-        public abstract RomHandler create(Random random, PrintStream log);
+        public abstract RomHandler create();
 
         public abstract boolean isLoadable(String filename);
     }
@@ -53,10 +69,8 @@ public interface RomHandler {
     // =======================
 
     boolean loadRom(String filename);
-
-    boolean saveRomFile(String filename, long seed);
-
-    boolean saveRomDirectory(String filename);
+    
+    boolean saveRom(String filename, long seed, boolean saveAsDirectory);
 
     String loadedFilename();
 
@@ -76,130 +90,105 @@ public interface RomHandler {
     // Log methods
     // ===========
 
-    void setLog(PrintStream logStream);
-
     void printRomDiagnostics(PrintStream logStream);
 
-    boolean isRomValid();
+    /**
+     * Returns whether the Rom is valid/has correct checksums, and logs relevant information.
+     * If logStream is null, nothing is logged.
+     */
+    boolean isRomValid(PrintStream logStream);
 
     // ======================================================
-    // Methods for retrieving a list of Pokemon objects.
+    // Methods for retrieving a list of Species objects.
     // Note that for many of these lists, index 0 is null.
     // Instead, you use index on the species' National Dex ID
     // ======================================================
 
-    List<Pokemon> getPokemon();
+    List<Species> getSpecies();
 
-    List<Pokemon> getPokemonInclFormes();
+    List<Species> getSpeciesInclFormes();
 
-    List<Pokemon> getAltFormes();
+    SpeciesSet getAltFormes();
+    
+    SpeciesSet getSpeciesSet();
+    
+    SpeciesSet getSpeciesSetInclFormes();
 
     List<MegaEvolution> getMegaEvolutions();
 
-    Pokemon getAltFormeOfPokemon(Pokemon pk, int forme);
+    Species getAltFormeOfSpecies(Species base, int forme);
+    //TODO: move this to Species
 
-    List<Pokemon> getIrregularFormes();
+    SpeciesSet getIrregularFormes();
+
+    RestrictedSpeciesService getRestrictedSpeciesService();
 
     // ==================================
     // Methods to set up Gen Restrictions
     // ==================================
 
-    void setPokemonPool(Settings settings);
-
+    /**
+     * When using {@link RestrictedSpeciesService} to restrict which Pokémon
+     * may appear, we want to prevent allowed Pokémon from evolving (or breeding)
+     * into ones that are not. This does that.
+     */
     void removeEvosForPokemonPool();
 
     // ===============
     // Starter Pokemon
     // ===============
 
-    List<Pokemon> getStarters();
+    List<Species> getStarters();
 
-    boolean setStarters(List<Pokemon> newStarters);
+    boolean setStarters(List<Species> newStarters);
 
     boolean hasStarterAltFormes();
 
     int starterCount();
 
-    void customStarters(Settings settings);
-
-    void randomizeStarters(Settings settings);
-
-    void randomizeBasicTwoEvosStarters(Settings settings);
-
-    List<Pokemon> getPickedStarters();
+    boolean hasStarterTypeTriangleSupport();
 
     boolean supportsStarterHeldItems();
 
-    List<Integer> getStarterHeldItems();
+    List<Item> getStarterHeldItems();
 
-    void setStarterHeldItems(List<Integer> items);
+    void setStarterHeldItems(List<Item> items);
 
-    void randomizeStarterHeldItems(Settings settings);
+    /**
+     * If the assigned starters have been chosen according to a new type triangle,
+     * sets the types of this triangle so that other aspects of the game can be changed to match.
+     * @param triangle The three types chosen, in the same order as the starters.
+     */
+    void setStarterTypeTriangle(List<Type> triangle);
 
-    // =======================
-    // Pokemon Base Statistics
-    // =======================
+    /**
+     * Gets an unmodifiable copy of the starter type triangle in use.
+     * If no type triangle has been set, returns FIRE_WATER_GRASS,
+     * even if the starters have been changed from those types.
+     * @return The three types chosen, in the same order as the starters.
+     */
+    List<Type> getStarterTypeTriangle();
 
-    // Run the stats shuffler on each Pokemon.
-    void shufflePokemonStats(Settings settings);
+    /**
+     * Returns true if a custom type triangle has been set, false otherwise.
+     */
+    boolean isTypeTriangleChanged();
 
-    // Randomize stats following evolutions for proportions or not (see
-    // tooltips)
-    void randomizePokemonStats(Settings settings);
-
-    // Update base stats to specified generation
-    void updatePokemonStats(Settings settings);
-
-    Map<Integer,StatChange> getUpdatedPokemonStats(int generation);
-
-    void standardizeEXPCurves(Settings settings);
-
-    // ====================================
-    // Methods for selecting random Pokemon
-    // ====================================
-
-    // Give a random Pokemon who's in this game
-    Pokemon randomPokemon();
-
-    Pokemon randomPokemonInclFormes();
-
-    // Give a random non-legendary Pokemon who's in this game
-    // Business rules for who's legendary are in Pokemon class
-    Pokemon randomNonLegendaryPokemon();
-
-    // Give a random legendary Pokemon who's in this game
-    // Business rules for who's legendary are in Pokemon class
-    Pokemon randomLegendaryPokemon();
-
-    // Give a random Pokemon who has 2 evolution stages
-    // Should make a good starter Pokemon
-    Pokemon random2EvosPokemon(boolean allowAltFormes);
-
-    // =============
-    // Pokemon Types
-    // =============
-
-    // return a random type valid in this game.
-    Type randomType();
-
-    boolean typeInGame(Type type);
-
-    // randomize Pokemon types, with a switch on whether evolutions
-    // should follow the same types or not.
-    // some evolutions dont anyway, e.g. Eeveelutions, Hitmons
-    void randomizePokemonTypes(Settings settings);
+    /**
+     * Returns the standard type triangle (Fire, Water, Grass) in the order used by this game.
+     * @return The standard type triangle in the correct order.
+     */
+    List<Type> getStandardTypeTriangle();
 
     // =================
     // Pokemon Abilities
     // =================
 
-    int abilitiesPerPokemon();
+    int abilitiesPerSpecies();
 
     int highestAbilityIndex();
 
     String abilityName(int number);
-
-    void randomizeAbilities(Settings settings);
 
     Map<Integer,List<Integer>> getAbilityVariations();
 
@@ -207,35 +196,67 @@ public interface RomHandler {
 
     int getAbilityForTrainerPokemon(TrainerPokemon tp);
 
+    /**
+     * Returns true if {@link TrainerPokemon} in this game always use ability 1.
+     */
+    boolean isTrainerPokemonAlwaysUseAbility1();
+
+    /**
+     * In some games, when alt formes are used as {@link TrainerPokemon},
+     * they don't use their own abilities but those of their base forme.<br>
+     * Returns true if that is the case for this game.
+     */
+    boolean isTrainerPokemonUseBaseFormeAbilities();
+
     boolean hasMegaEvolutions();
 
     // ============
     // Wild Pokemon
     // ============
 
-    List<EncounterSet> getEncounters(boolean useTimeOfDay);
+    List<EncounterArea> getEncounters(boolean useTimeOfDay);
 
-    void setEncounters(boolean useTimeOfDay, List<EncounterSet> encounters);
+    /**
+     * Returns a list identical to {@link #getEncounters(boolean)}, except it is sorted according to when in the game
+     * the player is expected to go to the location of each {@link EncounterArea}.<br>
+     * E.g. {@link EncounterArea}s at early routes come early, and victory road and post-game locations ones are at
+     * the end.<br>
+     * (if the order has been implemented; the default implementation does not sort)
+     */
+    List<EncounterArea> getSortedEncounters(boolean useTimeOfDay);
 
-    void randomEncounters(Settings settings);
+    /**
+     *
+     * @param useTimeOfDay
+     * @return A new SpeciesSet containing all wild Species found in the main game.
+     */
+    SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay);
 
-    void area1to1Encounters(Settings settings);
+    void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 
-    void game1to1Encounters(Settings settings);
+    default boolean hasEncounterLocations() {
+        return false;
+    }
 
-    void onlyChangeWildLevels(Settings settings);
+    default boolean hasMapIndices() {
+        return false;
+    }
 
     boolean hasTimeBasedEncounters();
 
     boolean hasWildAltFormes();
 
-    List<Pokemon> bannedForWildEncounters();
+    SpeciesSet getBannedForWildEncounters();
 
-    void randomizeWildHeldItems(Settings settings);
+    /**
+     * Returns whether the game supports wild encounters having guaranteed held items.
+     */
+    boolean hasGuaranteedWildHeldItems();
 
-    void changeCatchRates(Settings settings);
-
-    void minimumCatchRate(int rateNonLegendary, int rateLegendary);
+    /**
+     * Returns whether the game supports wild encounters having (rare) held items in dark grass only.
+     */
+    boolean hasDarkGrassHeldItems();
 
     void enableGuaranteedPokemonCatching();
 
@@ -247,61 +268,53 @@ public interface RomHandler {
 
     List<Integer> getMainPlaythroughTrainers();
 
+    /**
+     * Returns a list of the indices (in the main trainer list via {@link #getTrainers()}) of the trainers
+     * consisting of the non-rematch Elite 4 challenge, including the Champion (or Ghetsis in BW1). <br>
+     * If isChallengeMode is true, it returns the indexes for the Challenge Mode e4+champion (only in BW2).
+     */
     List<Integer> getEliteFourTrainers(boolean isChallengeMode);
 
-    void setTrainers(List<Trainer> trainerData, boolean doubleBattleMode);
+    Map<String, Type> getGymAndEliteTypeThemes();
 
-    void randomizeTrainerPokes(Settings settings);
+    void setTrainers(List<Trainer> trainerData);
 
-    void randomizeTrainerHeldItems(Settings settings);
+    boolean canAddPokemonToBossTrainers();
 
-    List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
+    boolean canAddPokemonToImportantTrainers();
 
-    List<Integer> getAllConsumableHeldItems();
+    boolean canAddPokemonToRegularTrainers();
 
-    List<Integer> getAllHeldItems();
+    boolean canAddHeldItemsToBossTrainers();
 
-    void rivalCarriesStarter();
+    boolean canAddHeldItemsToImportantTrainers();
+
+    boolean canAddHeldItemsToRegularTrainers();
+
+    /**
+     * Returns a {@link List} of {@link Item}s that would be sensible/good for a {@link TrainerPokemon} to hold.
+     * The List allows duplication of Items to make them more likely when chosen at random.
+     */
+    List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves);
+
+    Set<Item> getAllConsumableHeldItems();
+
+    Set<Item> getAllHeldItems();
 
     boolean hasRivalFinalBattle();
 
-    void forceFullyEvolvedTrainerPokes(Settings settings);
-
-    void onlyChangeTrainerLevels(Settings settings);
-
-    void addTrainerPokemon(Settings settings);
-
-    void doubleBattleMode();
-
-    List<Move> getMoveSelectionPoolAtLevel(TrainerPokemon tp, boolean cyclicEvolutions);
-
-    void pickTrainerMovesets(Settings settings);
+    void makeDoubleBattleModePossible();
 
     // =========
     // Move Data
     // =========
 
-    void randomizeMovePowers();
-
-    void randomizeMovePPs();
-
-    void randomizeMoveAccuracies();
-
-    void randomizeMoveTypes();
-
     boolean hasPhysicalSpecialSplit();
-
-    void randomizeMoveCategory();
-
-    void updateMoves(Settings settings);
-
-    // stuff for printing move changes
-    void initMoveUpdates();
-
-    Map<Integer, boolean[]> getMoveUpdates();
 
     // return all the moves valid in this game.
     List<Move> getMoves();
+
+    int getPerfectAccuracy();
 
     // ================
     // Pokemon Movesets
@@ -317,14 +330,6 @@ public interface RomHandler {
 
     void setEggMoves(Map<Integer, List<Integer>> eggMoves);
 
-    void randomizeMovesLearnt(Settings settings);
-
-    void randomizeEggMoves(Settings settings);
-
-    void orderDamagingMovesByDamage();
-
-    void metronomeOnlyMode();
-
     boolean supportsFourStartingMoves();
 
     // ==============
@@ -335,17 +340,13 @@ public interface RomHandler {
 
     boolean setStaticPokemon(List<StaticEncounter> staticPokemon);
 
-    void randomizeStaticPokemon(Settings settings);
-
     boolean canChangeStaticPokemon();
 
     boolean hasStaticAltFormes();
 
-    List<Pokemon> bannedForStaticPokemon();
+    SpeciesSet getBannedForStaticPokemon();
 
     boolean forceSwapStaticMegaEvos();
-
-    void onlyChangeStaticLevels(Settings settings);
 
     boolean hasMainGameLegendaries();
 
@@ -361,11 +362,11 @@ public interface RomHandler {
     // Totem Pokemon
     // =============
 
+    boolean hasTotemPokemon();
+
     List<TotemPokemon> getTotemPokemon();
 
     void setTotemPokemon(List<TotemPokemon> totemPokemon);
-
-    void randomizeTotemPokemon(Settings settings);
 
     // =========
     // TMs & HMs
@@ -377,41 +378,30 @@ public interface RomHandler {
 
     void setTMMoves(List<Integer> moveIndexes);
 
-    void randomizeTMMoves(Settings settings);
-
     int getTMCount();
 
     int getHMCount();
 
+    boolean isTMsReusable();
+
+    boolean canTMsBeHeld();
+
     /**
      * Get TM/HM compatibility data from this rom. The result should contain a
-     * boolean array for each Pokemon indexed as such:
-     * 
+     * boolean array for each Species indexed as such:
+     * <br>
      * 0: blank (false) / 1 - (getTMCount()) : TM compatibility /
      * (getTMCount()+1) - (getTMCount()+getHMCount()) - HM compatibility
      * 
      * @return Map of TM/HM compatibility
      */
+    Map<Species, boolean[]> getTMHMCompatibility();
 
-    Map<Pokemon, boolean[]> getTMHMCompatibility();
-
-    void setTMHMCompatibility(Map<Pokemon, boolean[]> compatData);
-
-    void randomizeTMHMCompatibility(Settings settings);
-
-    void fullTMHMCompatibility();
-
-    void ensureTMCompatSanity();
-
-    void ensureTMEvolutionSanity();
-
-    void fullHMCompatibility();
+    void setTMHMCompatibility(Map<Species, boolean[]> compatData);
 
     // ===========
     // Move Tutors
     // ===========
-
-    void copyTMCompatibilityToCosmeticFormes();
 
     boolean hasMoveTutors();
 
@@ -419,25 +409,17 @@ public interface RomHandler {
 
     void setMoveTutorMoves(List<Integer> moves);
 
-    void randomizeMoveTutorMoves(Settings settings);
+    /**
+     * Gets the Move Tutor compatibility for this game. 
+     * If {@link #hasMoveTutors()}==false, there is no guarantee this method will work.
+     */
+    Map<Species, boolean[]> getMoveTutorCompatibility();
 
-    Map<Pokemon, boolean[]> getMoveTutorCompatibility();
-
-    void setMoveTutorCompatibility(Map<Pokemon, boolean[]> compatData);
-
-    void randomizeMoveTutorCompatibility(Settings settings);
-
-    void fullMoveTutorCompatibility();
-
-    void ensureMoveTutorCompatSanity();
-
-    void ensureMoveTutorEvolutionSanity();
+    void setMoveTutorCompatibility(Map<Species, boolean[]> compatData);
 
     // =============
     // Trainer Names
     // =============
-
-    void copyMoveTutorCompatibilityToCosmeticFormes();
 
     boolean canChangeTrainerText();
 
@@ -461,8 +443,6 @@ public interface RomHandler {
     // Only needed if above mode is "MAX LENGTH WITH CLASS"
     List<Integer> getTCNameLengthsByTrainer();
 
-    void randomizeTrainerNames(Settings settings);
-
     // ===============
     // Trainer Classes
     // ===============
@@ -475,69 +455,61 @@ public interface RomHandler {
 
     int maxTrainerClassNameLength();
 
-    void randomizeTrainerClassNames(Settings settings);
-
     List<Integer> getDoublesTrainerClasses();
 
     // =====
     // Items
     // =====
 
-    ItemList getAllowedItems();
+    /**
+     * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
+     * The first element is always null, both to offset the other elements and to represent the "nothing" item.
+     */
+    List<Item> getItems();
 
-    ItemList getNonBadItems();
+    Set<Item> getAllowedItems();
 
-    List<Integer> getEvolutionItems();
+    Set<Item> getNonBadItems();
 
-    List<Integer> getXItems();
+    Set<Item> getEvolutionItems();
 
-    List<Integer> getUniqueNoSellItems();
+    Set<Item> getXItems();
 
-    List<Integer> getRegularShopItems();
+    Set<Item> getMegaStones();
 
-    List<Integer> getOPShopItems();
+    Set<Item> getRegularShopItems();
 
-    String[] getItemNames();
+    Set<Item> getOPShopItems();
 
     // ===========
     // Field Items
     // ===========
 
-    // TMs on the field
+    // "Required" seems to mean that you can only get the TM as a field item in vanilla.
+    // Thus, when randomizing field items they must be included, or otherwise become unavailable.
+    Set<Item> getRequiredFieldTMs();
 
-    List<Integer> getRequiredFieldTMs();
+    List<Item> getFieldItems();
 
-    List<Integer> getCurrentFieldTMs();
-
-    void setFieldTMs(List<Integer> fieldTMs);
-
-    // Everything else
-
-    List<Integer> getRegularFieldItems();
-
-    void setRegularFieldItems(List<Integer> items);
-
-    // Randomizer methods
-
-    void shuffleFieldItems();
-
-    void randomizeFieldItems(Settings settings);
+    /**
+     * Sets field items. Due to an old requirement from the Randomizer (unclear where it comes from, might be a design
+     * decision, might be necessary for some Gens to work), TMs must be replaced by TMs, and non-TMs by non-TMs.
+     * This means the TM-ness at each given index, must be the same as in the returned value of {@link #getFieldItems()}.
+     * If not followed, this will throw an {@link IllegalArgumentException}.
+     */
+    void setFieldItems(List<Item> items);
 
     // ============
     // Special Shops
     // =============
 
-    boolean hasShopRandomization();
-
-    void shuffleShopItems();
-
-    void randomizeShopItems(Settings settings);
+    boolean hasShopSupport();
 
     Map<Integer, Shop> getShopItems();
 
     void setShopItems(Map<Integer, Shop> shopItems);
 
-    void setShopPrices();
+    void setBalancedShopPrices();
 
     // ============
     // Pickup Items
@@ -547,17 +519,13 @@ public interface RomHandler {
 
     void setPickupItems(List<PickupItem> pickupItems);
 
-    void randomizePickupItems(Settings settings);
-
     // ==============
     // In-Game Trades
     // ==============
 
-    List<IngameTrade> getIngameTrades();
+    List<InGameTrade> getInGameTrades();
 
-    void setIngameTrades(List<IngameTrade> trades);
-
-    void randomizeIngameTrades(Settings settings);
+    void setInGameTrades(List<InGameTrade> trades);
 
     boolean hasDVs();
 
@@ -569,28 +537,41 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
-    void removeImpossibleEvolutions(Settings settings);
+    void removeImpossibleEvolutions(boolean changeMoveEvos);
 
     void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
 
-    void makeEvolutionsEasier(Settings settings);
+    void makeEvolutionsEasier(boolean changeWithOtherEvos);
+
+    boolean hasTimeBasedEvolutions();
 
     void removeTimeBasedEvolutions();
 
-    Set<EvolutionUpdate> getImpossibleEvoUpdates();
+    /**
+     * Some {@link EvolutionType}s only allow evolution in specific locations.
+     * This method gets the name of said location(s), given an EvolutionType.
+     */
+    List<String> getLocationNamesForEvolution(EvolutionType et);
 
-    Set<EvolutionUpdate> getEasierEvoUpdates();
-
-    Set<EvolutionUpdate> getTimeBasedEvoUpdates();
-
-    void randomizeEvolutions(Settings settings);
-
-    void randomizeEvolutionsEveryLevel(Settings settings);
+    /**
+     * Returns a {@link Map} containing all Species whose
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean)},
+     * {@link #makeEvolutionsEasier(boolean)}, or {@link #removeTimeBasedEvolutions()},
+     * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
+     * If those methods have not been called, this Set is empty.
+     */
+    Map<Species, List<Evolution>> getPreImprovedEvolutions();
 
     // In the earlier games, alt formes use the same evolutions as the base forme.
     // In later games, this was changed so that alt formes can have unique evolutions
     // compared to the base forme.
     boolean altFormesCanHaveDifferentEvolutions();
+
+    /**
+     * Returns whether it is possible to give every {@link Species} <i>exactly</i>
+     * one {@link Evolution} each, and successfully save the ROM.
+     */
+    boolean canGiveEverySpeciesOneEvolutionEach();
 
     // ==================================
     // (Mostly) unchanging lists of moves
@@ -608,16 +589,25 @@ public interface RomHandler {
     // (excluding Gameshark codes or early drink in RBY)
     List<Integer> getEarlyRequiredHMMoves();
 
-
     // ====
     // Misc
     // ====
 
+    ExpCurve[] getExpCurves();
+
     boolean isYellow();
+
+    boolean isORAS();
+
+    boolean isUSUM();
+
+    boolean hasMultiplePlayerCharacters();
 
     String getROMName();
 
     String getROMCode();
+
+    int getROMType();
 
     String getSupportLevel();
 
@@ -625,13 +615,15 @@ public interface RomHandler {
 
     int internalStringLength(String string);
 
-    void randomizeIntroPokemon();
+    boolean canSetIntroPokemon();
 
-    BufferedImage getMascotImage();
+    /**
+     * Sets the {@link Species} shown in the intro. Returns false if pk is not a valid intro Species.
+     * Throws {@link UnsupportedOperationException} if {@link #canSetIntroPokemon()} is not true.
+     */
+    boolean setIntroPokemon(Species pk);
 
     int generationOfPokemon();
-
-    void writeCheckValueToROM(int value);
 
     // ===========
     // code tweaks
@@ -639,13 +631,14 @@ public interface RomHandler {
 
     int miscTweaksAvailable();
 
-    void applyMiscTweaks(Settings settings);
-
     void applyMiscTweak(MiscTweak tweak);
 
-    boolean isEffectivenessUpdated();
+    /**
+     * Sets the Species shown in the catching tutorial. Returns false if the Species are not valid catching tutorial Species.
+     */
+    boolean setCatchingTutorial(Species opponent, Species player);
 
-    void renderPlacementHistory();
+    void setPCPotionItem(Item item);
 
     // ==========================
     // Misc forme-related methods
@@ -653,9 +646,48 @@ public interface RomHandler {
 
     boolean hasFunctionalFormes();
 
-    List<Pokemon> getAbilityDependentFormes();
+    SpeciesSet getBannedFormesForTrainerPokemon();
+    
+    // ========
+    // Graphics
+    // ========
 
-    List<Pokemon> getBannedFormesForPlayerPokemon();
+    boolean hasPokemonPaletteSupport();
 
-    List<Pokemon> getBannedFormesForTrainerPokemon();
+    boolean pokemonPaletteSupportIsPartial();
+
+    boolean hasCustomPlayerGraphicsSupport();
+
+    void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace);
+
+    /**
+     * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.
+     */
+    boolean hasPokemonImageGetter();
+
+    PokemonImageGetter createPokemonImageGetter(Species pk);
+
+    // Kind of strange this is a responsibility for the romHandler, when the resources are so specific to the
+    // randomizer parts, and the goal is to keep those separate. Still, it works for now.
+    /**
+     * Returns an identifier for resource files related to this ROM, used when randomizing palettes.
+     */
+    String getPaletteFilesID();
+
+    void dumpAllPokemonImages();
+
+    List<BufferedImage> getAllPokemonImages();
+
+    // ======
+    // Types
+    // ======
+
+    TypeService getTypeService();
+
+    TypeTable getTypeTable();
+
+    void setTypeTable(TypeTable typeTable);
+
+    boolean hasTypeEffectivenessSupport();
+
 }

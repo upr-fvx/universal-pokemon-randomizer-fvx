@@ -1,0 +1,317 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = Grass/Cave on ROUTE 1, Rate = 25, MapIndex = 12,
+		Encounters = [TAUBSI Lv3, RATTFRATZ Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, TAUBSI Lv2, TAUBSI Lv3, TAUBSI Lv3, RATTFRATZ Lv4, TAUBSI Lv4, TAUBSI Lv5]]
+	[Name = Grass/Cave on ROUTE 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTFRATZ Lv3, TAUBSI Lv3, TAUBSI Lv4, RATTFRATZ Lv4, TAUBSI Lv5, RAUPY Lv3, RATTFRATZ Lv2, RATTFRATZ Lv5, RAUPY Lv4, RAUPY Lv5]]
+	[Name = Grass/Cave on ROUTE 3, Rate = 20, MapIndex = 14,
+		Encounters = [TAUBSI Lv6, HABITAK Lv5, TAUBSI Lv7, HABITAK Lv6, HABITAK Lv7, TAUBSI Lv8, HABITAK Lv8, PUMMELUFF Lv3, PUMMELUFF Lv5, PUMMELUFF Lv7]]
+	[Name = Grass/Cave on ROUTE 4, Rate = 20, MapIndex = 15,
+		Encounters = [RATTFRATZ Lv10, HABITAK Lv10, RATTFRATZ Lv8, SANDAN Lv6, HABITAK Lv8, SANDAN Lv10, RATTFRATZ Lv12, HABITAK Lv12, SANDAN Lv8, SANDAN Lv12]]
+	[Name = Grass/Cave on ROUTE 5, Rate = 15, MapIndex = 16,
+		Encounters = [KNOFENSA Lv13, TAUBSI Lv13, TAUBSI Lv15, MAUZI Lv10, MAUZI Lv12, KNOFENSA Lv15, KNOFENSA Lv16, TAUBSI Lv16, MAUZI Lv14, MAUZI Lv16]]
+	[Name = Grass/Cave on ROUTE 6, Rate = 15, MapIndex = 17,
+		Encounters = [KNOFENSA Lv13, TAUBSI Lv13, TAUBSI Lv15, MAUZI Lv10, MAUZI Lv12, KNOFENSA Lv15, KNOFENSA Lv16, TAUBSI Lv16, MAUZI Lv14, MAUZI Lv16]]
+	[Name = Grass/Cave on ROUTE 7, Rate = 15, MapIndex = 18,
+		Encounters = [TAUBSI Lv19, KNOFENSA Lv19, MAUZI Lv17, KNOFENSA Lv22, TAUBSI Lv22, MAUZI Lv18, VULPIX Lv18, VULPIX Lv20, MAUZI Lv19, MAUZI Lv20]]
+	[Name = Grass/Cave on ROUTE 8, Rate = 15, MapIndex = 19,
+		Encounters = [TAUBSI Lv18, MAUZI Lv18, SANDAN Lv17, VULPIX Lv16, TAUBSI Lv20, MAUZI Lv20, SANDAN Lv19, VULPIX Lv17, VULPIX Lv15, VULPIX Lv18]]
+	[Name = Grass/Cave on ROUTE 9, Rate = 15, MapIndex = 20,
+		Encounters = [RATTFRATZ Lv16, HABITAK Lv16, RATTFRATZ Lv14, SANDAN Lv11, HABITAK Lv13, SANDAN Lv15, RATTFRATZ Lv17, HABITAK Lv17, SANDAN Lv13, SANDAN Lv17]]
+	[Name = Grass/Cave on ROUTE 10, Rate = 15, MapIndex = 21,
+		Encounters = [VOLTOBAL Lv16, HABITAK Lv16, VOLTOBAL Lv14, SANDAN Lv11, HABITAK Lv13, SANDAN Lv15, VOLTOBAL Lv17, HABITAK Lv17, SANDAN Lv13, SANDAN Lv17]]
+	[Name = Grass/Cave on ROUTE 11, Rate = 15, MapIndex = 22,
+		Encounters = [SANDAN Lv14, HABITAK Lv15, SANDAN Lv12, TRAUMATO Lv9, HABITAK Lv13, TRAUMATO Lv13, SANDAN Lv15, HABITAK Lv17, TRAUMATO Lv11, TRAUMATO Lv15]]
+	[Name = Grass/Cave on ROUTE 12, Rate = 15, MapIndex = 23,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv25, TAUBSI Lv23, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, TAUBSI Lv27, ULTRIGARIA Lv28, ULTRIGARIA Lv30]]
+	[Name = Grass/Cave on ROUTE 13, Rate = 20, MapIndex = 24,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv25, TAUBSI Lv27, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, DITTO Lv25, ULTRIGARIA Lv28, ULTRIGARIA Lv30]]
+	[Name = Grass/Cave on ROUTE 14, Rate = 15, MapIndex = 25,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv26, DITTO Lv23, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, ULTRIGARIA Lv30, TAUBOGA Lv28, TAUBOGA Lv30]]
+	[Name = Grass/Cave on ROUTE 15, Rate = 15, MapIndex = 26,
+		Encounters = [KNOFENSA Lv24, DITTO Lv26, TAUBSI Lv23, BLUZUK Lv26, KNOFENSA Lv22, BLUZUK Lv28, KNOFENSA Lv26, ULTRIGARIA Lv30, TAUBOGA Lv28, TAUBOGA Lv30]]
+	[Name = Grass/Cave on ROUTE 16, Rate = 25, MapIndex = 27,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTFRATZ Lv18, DODU Lv20, RATTFRATZ Lv20, DODU Lv18, DODU Lv22, RATTFRATZ Lv22, RATTIKARL Lv23, RATTIKARL Lv25]]
+	[Name = Grass/Cave on ROUTE 17, Rate = 25, MapIndex = 28,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTIKARL Lv25, DODU Lv24, RATTIKARL Lv27, DODU Lv26, DODU Lv28, RATTIKARL Lv29, IBITAK Lv25, IBITAK Lv27]]
+	[Name = Grass/Cave on ROUTE 18, Rate = 25, MapIndex = 29,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTIKARL Lv25, DODU Lv24, IBITAK Lv25, DODU Lv26, DODU Lv28, RATTIKARL Lv29, IBITAK Lv27, IBITAK Lv29]]
+	[Name = Surfing on ROUTE 19, ROUTE 20, Rate = 5, MapIndex = -30,
+		Encounters = [TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv20, TENTACHA Lv30, TENTACHA Lv35, TENTACHA Lv40]]
+	[Name = Grass/Cave on ROUTE 21, Rate = 25, MapIndex = 32,
+		Encounters = [RATTFRATZ Lv21, TAUBSI Lv23, RATTIKARL Lv30, RATTFRATZ Lv23, TAUBSI Lv21, TAUBOGA Lv30, TAUBOGA Lv32, TANGELA Lv28, TANGELA Lv30, TANGELA Lv32]]
+	[Name = Surfing on ROUTE 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv20, TENTACHA Lv30, TENTACHA Lv35, TENTACHA Lv40]]
+	[Name = Grass/Cave on ROUTE 22, Rate = 25, MapIndex = 33,
+		Encounters = [RATTFRATZ Lv3, NIDORAN♀ Lv3, RATTFRATZ Lv4, NIDORAN♀ Lv4, RATTFRATZ Lv2, NIDORAN♀ Lv2, HABITAK Lv3, HABITAK Lv5, NIDORAN♂ Lv3, NIDORAN♂ Lv4]]
+	[Name = Grass/Cave on ROUTE 23, Rate = 10, MapIndex = 34,
+		Encounters = [SANDAN Lv26, DITTO Lv33, HABITAK Lv26, IBITAK Lv38, DITTO Lv38, IBITAK Lv38, SANDAMER Lv41, DITTO Lv43, IBITAK Lv41, IBITAK Lv43]]
+	[Name = Grass/Cave on ROUTE 24, Rate = 25, MapIndex = 35,
+		Encounters = [RAUPY Lv7, SAFCON Lv8, TAUBSI Lv12, KNOFENSA Lv12, KNOFENSA Lv13, ABRA Lv10, KNOFENSA Lv14, TAUBSI Lv13, ABRA Lv8, ABRA Lv12]]
+	[Name = Grass/Cave on ROUTE 25, Rate = 15, MapIndex = 36,
+		Encounters = [RAUPY Lv8, SAFCON Lv9, TAUBSI Lv13, KNOFENSA Lv12, KNOFENSA Lv13, ABRA Lv12, KNOFENSA Lv14, ABRA Lv10, KOKUNA Lv7, HORNLIU Lv8]]
+	[Name = Grass/Cave on VERTANIA-WALD (1), Rate = 8, MapIndex = 51,
+		Encounters = [RAUPY Lv4, SAFCON Lv5, RAUPY Lv3, RAUPY Lv5, SAFCON Lv4, SAFCON Lv6, KOKUNA Lv4, HORNLIU Lv3, PIKACHU Lv3, PIKACHU Lv5]]
+	[Name = Grass/Cave on MONDBERG (1), Rate = 10, MapIndex = 59,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, ZUBAT Lv9, KLEINSTEIN Lv8, ZUBAT Lv6, ZUBAT Lv10, KLEINSTEIN Lv10, PARAS Lv8, ZUBAT Lv11, PIEPI Lv8]]
+	[Name = Grass/Cave on MONDBERG (2), Rate = 10, MapIndex = 60,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, KLEINSTEIN Lv7, KLEINSTEIN Lv8, ZUBAT Lv9, PARAS Lv10, ZUBAT Lv10, ZUBAT Lv11, PIEPI Lv9, KLEINSTEIN Lv9]]
+	[Name = Grass/Cave on MONDBERG (3), Rate = 10, MapIndex = 61,
+		Encounters = [ZUBAT Lv9, KLEINSTEIN Lv9, ZUBAT Lv10, KLEINSTEIN Lv10, ZUBAT Lv11, PARAS Lv10, PARAS Lv12, PIEPI Lv10, ZUBAT Lv12, PIEPI Lv12]]
+	[Name = Grass/Cave on FELSTUNNEL (2), Rate = 15, MapIndex = 82,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, KLEINSTEIN Lv17, MACHOLLO Lv15, KLEINSTEIN Lv16, ZUBAT Lv18, ZUBAT Lv15, MACHOLLO Lv17, ONIX Lv13, ONIX Lv15]]
+	[Name = Grass/Cave on KRAFTWERK (1), Rate = 10, MapIndex = 83,
+		Encounters = [VOLTOBAL Lv21, MAGNETILO Lv21, PIKACHU Lv20, PIKACHU Lv24, MAGNETILO Lv23, VOLTOBAL Lv23, MAGNETON Lv32, MAGNETON Lv35, RAICHU Lv33, RAICHU Lv36]]
+	[Name = Grass/Cave on SIEGESSTRASSE (1), Rate = 15, MapIndex = 108,
+		Encounters = [MACHOLLO Lv24, KLEINSTEIN Lv26, ZUBAT Lv22, ONIX Lv36, ONIX Lv39, ONIX Lv42, GEOROK Lv41, GOLBAT Lv41, MASCHOCK Lv42, KNOGGA Lv43]]
+	[Name = Grass/Cave on [POKé]MON TURM (3), Rate = 10, MapIndex = 144,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, NEBULAK Lv24, TRAGOSSO Lv20, TRAGOSSO Lv22, ALPOLLO Lv25]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (4), Rate = 10, MapIndex = 145,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, ALPOLLO Lv25, TRAGOSSO Lv20, TRAGOSSO Lv22, NEBULAK Lv24]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (5), Rate = 10, MapIndex = 146,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, ALPOLLO Lv25, TRAGOSSO Lv20, TRAGOSSO Lv22, NEBULAK Lv24]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (6), Rate = 15, MapIndex = 147,
+		Encounters = [NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv24, NEBULAK Lv20, NEBULAK Lv19, ALPOLLO Lv26, TRAGOSSO Lv22, TRAGOSSO Lv24, ALPOLLO Lv28]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (7), Rate = 15, MapIndex = 148,
+		Encounters = [NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv24, NEBULAK Lv20, ALPOLLO Lv28, TRAGOSSO Lv22, TRAGOSSO Lv24, ALPOLLO Lv28, ALPOLLO Lv30]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (1), Rate = 10, MapIndex = 159,
+		Encounters = [MUSCHAS Lv30, KRABBY Lv30, STERNDU Lv32, KRABBY Lv32, ENTON Lv28, JUROB Lv30, ENTON Lv30, JUROB Lv28, JUGONG Lv38, KINGLER Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (2), Rate = 10, MapIndex = 160,
+		Encounters = [JUROB Lv30, ENTON Lv30, JUROB Lv32, ENTON Lv32, KRABBY Lv28, MUSCHAS Lv30, KRABBY Lv30, STERNDU Lv28, GOLBAT Lv30, ENTORON Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (3), Rate = 10, MapIndex = 161,
+		Encounters = [ENTON Lv31, JUROB Lv31, ENTON Lv33, JUROB Lv33, KRABBY Lv29, STERNDU Lv31, KRABBY Lv31, STERNDU Lv29, KINGLER Lv39, JUGONG Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (4), Rate = 10, MapIndex = 162,
+		Encounters = [KRABBY Lv31, STERNDU Lv31, KRABBY Lv33, STERNDU Lv33, ENTON Lv29, JUROB Lv31, ENTON Lv31, JUROB Lv29, ENTORON Lv39, GOLBAT Lv32]]
+	[Name = Grass/Cave on [pk]-HAUS (1), Rate = 10, MapIndex = 165,
+		Encounters = [SLEIMA Lv32, SLEIMA Lv30, PONITA Lv34, PONITA Lv30, VULPIX Lv34, PONITA Lv32, SMOGON Lv30, PONITA Lv28, SLEIMOK Lv37, SMOGMOG Lv39]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (5), Rate = 15, MapIndex = 192,
+		Encounters = [JUROB Lv30, ENTON Lv30, STERNDU Lv30, KRABBY Lv30, KRABBY Lv28, ZUBAT Lv21, GOLBAT Lv29, FLEGMON Lv28, STERNDU Lv28, LAHMUS Lv38]]
+	[Name = Grass/Cave on SIEGESSTRASSE (2), Rate = 10, MapIndex = 194,
+		Encounters = [MACHOLLO Lv22, KLEINSTEIN Lv24, ZUBAT Lv26, ONIX Lv36, ONIX Lv39, ONIX Lv42, MASCHOCK Lv41, GOLBAT Lv40, KNOGGA Lv40, GEOROK Lv43]]
+	[Name = Grass/Cave on DIGDAS HÖHLE (1), Rate = 20, MapIndex = 197,
+		Encounters = [DIGDA Lv18, DIGDA Lv19, DIGDA Lv17, DIGDA Lv20, DIGDA Lv16, DIGDA Lv15, DIGDA Lv21, DIGDA Lv22, DIGDRI Lv29, DIGDRI Lv31]]
+	[Name = Grass/Cave on SIEGESSTRASSE (3), Rate = 15, MapIndex = 198,
+		Encounters = [MACHOLLO Lv24, KLEINSTEIN Lv26, ZUBAT Lv22, ONIX Lv42, OMOT Lv40, ONIX Lv45, GEOROK Lv43, GOLBAT Lv41, MASCHOCK Lv42, MASCHOCK Lv45]]
+	[Name = Grass/Cave on [pk]-HAUS (2), Rate = 10, MapIndex = 214,
+		Encounters = [VULPIX Lv32, SLEIMA Lv34, SLEIMA Lv34, PONITA Lv30, SLEIMA Lv30, PONITA Lv32, SMOGON Lv30, PONITA Lv28, SLEIMOK Lv39, SMOGMOG Lv37]]
+	[Name = Grass/Cave on [pk]-HAUS (3), Rate = 10, MapIndex = 215,
+		Encounters = [SLEIMA Lv31, VULPIX Lv33, SLEIMA Lv35, PONITA Lv32, MAGMAR Lv34, SLEIMOK Lv40, SMOGON Lv34, SLEIMOK Lv38, PONITA Lv36, SMOGMOG Lv42]]
+	[Name = Grass/Cave on [pk]-HAUS (4), Rate = 10, MapIndex = 216,
+		Encounters = [SLEIMA Lv33, SLEIMA Lv31, VULPIX Lv35, PONITA Lv32, SLEIMA Lv31, SLEIMOK Lv40, PONITA Lv34, SMOGON Lv35, MAGMAR Lv38, SMOGMOG Lv42]]
+	[Name = Grass/Cave on SAFARI-ZONE (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♀ Lv24, DODU Lv26, PARAS Lv22, OWEI Lv25, NIDORINA Lv33, OWEI Lv23, NIDORAN♂ Lv24, PARASEK Lv25, KANGAMA Lv25, PINSIR Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♀ Lv22, RIHORN Lv26, PARAS Lv23, OWEI Lv25, NIDORINA Lv30, OWEI Lv27, NIDORINO Lv30, OMOT Lv32, CHANEIRA Lv26, TAUROS Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♀ Lv25, DODU Lv26, BLUZUK Lv23, OWEI Lv24, NIDORINA Lv33, OWEI Lv26, NIDORAN♂ Lv25, OMOT Lv31, TAUROS Lv26, KANGAMA Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♀ Lv22, RIHORN Lv25, BLUZUK Lv22, OWEI Lv24, NIDORINA Lv31, OWEI Lv25, NIDORINO Lv31, PARASEK Lv30, PINSIR Lv23, CHANEIRA Lv23]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (1), Rate = 15, MapIndex = 226,
+		Encounters = [DODRI Lv51, OMOT Lv51, KADABRA Lv51, RIZEROS Lv52, KNOGGA Lv52, LEKTROBAL Lv52, CHANEIRA Lv56, KNUDDELUFF Lv54, DITTO Lv55, DITTO Lv60]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (2), Rate = 25, MapIndex = 227,
+		Encounters = [RIZEROS Lv55, KNOGGA Lv55, LEKTROBAL Lv55, CHANEIRA Lv64, PARASEK Lv64, RAICHU Lv64, SANDAMER Lv57, DITTO Lv65, DITTO Lv63, DITTO Lv67]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (3), Rate = 10, MapIndex = 228,
+		Encounters = [GOLBAT Lv46, HYPNO Lv46, MAGNETON Lv46, DODRI Lv49, OMOT Lv49, SANDAMER Lv52, KADABRA Lv49, PARASEK Lv52, RAICHU Lv53, DITTO Lv53]]
+	[Name = Grass/Cave on FELSTUNNEL (3), Rate = 15, MapIndex = 232,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, KLEINSTEIN Lv17, MACHOLLO Lv15, KLEINSTEIN Lv16, ZUBAT Lv18, MACHOLLO Lv17, ONIX Lv17, ONIX Lv13, KLEINSTEIN Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv5]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, QUAPSEL Lv10]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ALABASTIA, VERTANIA CITY, Rate = 0, MapIndex = 0,
+		Encounters = [TENTACHA Lv15, QUAPSEL Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZURIA CITY, ROUTE 4, ROUTE 24, ROUTE 25, AZURIA CITY (Building), Rate = 0, MapIndex = -3,
+		Encounters = [ENTON Lv15, GOLDINI Lv15, KRABBY Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ORANIA CITY, ROUTE 6, ROUTE 11, ORANIA CITY (Building), Rate = 0, MapIndex = -5,
+		Encounters = [KRABBY Lv15, MUSCHAS Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PRISMANIA CITY, ROUTE 10, Rate = 0, MapIndex = -6,
+		Encounters = [QUAPUTZI Lv23, FLEGMON Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on FUCHSANIA CITY, Rate = 0, MapIndex = 7,
+		Encounters = [GOLKING Lv23, KRABBY Lv15, GOLDINI Lv15, KARPADOR Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ZINNOBERINSEL, ROUTE 19, ROUTE 20, ROUTE 21, SEESCHAUMINSELN (3), SEESCHAUMINSELN (4), Rate = 0, MapIndex = -8,
+		Encounters = [STERNDU Lv15, SEEPER Lv15, MUSCHAS Lv15, GOLDINI Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 12, ROUTE 13, ROUTE 17, ROUTE 18, Rate = 0, MapIndex = -23,
+		Encounters = [TENTACHA Lv5, KRABBY Lv15, GOLDINI Lv15, KARPADOR Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 22, Rate = 0, MapIndex = 33,
+		Encounters = [GOLDINI Lv15, QUAPSEL Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 23, GEHEIMDUNGEON (1), GEHEIMDUNGEON (2), GEHEIMDUNGEON (3), Rate = 0, MapIndex = -34,
+		Encounters = [LAHMUS Lv23, GOLKING Lv23, KINGLER Lv23, SEEMON Lv23]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on SAFARI-ZONE (2), SAFARI-ZONE (3), SAFARI-ZONE (4), SAFARI-ZONE (5), Rate = 0, MapIndex = -217,
+		Encounters = [DRATINI Lv15, KRABBY Lv15, ENTON Lv15, FLEGMON Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = Grass/Cave on ROUTE 1, Rate = 25, MapIndex = 12,
+		Encounters = [TAUBSI Lv3, RATTFRATZ Lv3, RATTFRATZ Lv3, RATTFRATZ Lv2, TAUBSI Lv2, TAUBSI Lv3, TAUBSI Lv3, RATTFRATZ Lv4, TAUBSI Lv4, TAUBSI Lv5]]
+	[Name = Grass/Cave on ROUTE 2, Rate = 25, MapIndex = 13,
+		Encounters = [RATTFRATZ Lv3, TAUBSI Lv3, TAUBSI Lv4, RATTFRATZ Lv4, TAUBSI Lv5, RAUPY Lv3, RATTFRATZ Lv2, RATTFRATZ Lv5, RAUPY Lv4, RAUPY Lv5]]
+	[Name = Grass/Cave on ROUTE 3, Rate = 20, MapIndex = 14,
+		Encounters = [TAUBSI Lv6, HABITAK Lv5, TAUBSI Lv7, HABITAK Lv6, HABITAK Lv7, TAUBSI Lv8, HABITAK Lv8, PUMMELUFF Lv3, PUMMELUFF Lv5, PUMMELUFF Lv7]]
+	[Name = Grass/Cave on ROUTE 4, Rate = 20, MapIndex = 15,
+		Encounters = [RATTFRATZ Lv10, HABITAK Lv10, RATTFRATZ Lv8, SANDAN Lv6, HABITAK Lv8, SANDAN Lv10, RATTFRATZ Lv12, HABITAK Lv12, SANDAN Lv8, SANDAN Lv12]]
+	[Name = Grass/Cave on ROUTE 5, Rate = 15, MapIndex = 16,
+		Encounters = [KNOFENSA Lv13, TAUBSI Lv13, TAUBSI Lv15, MAUZI Lv10, MAUZI Lv12, KNOFENSA Lv15, KNOFENSA Lv16, TAUBSI Lv16, MAUZI Lv14, MAUZI Lv16]]
+	[Name = Grass/Cave on ROUTE 6, Rate = 15, MapIndex = 17,
+		Encounters = [KNOFENSA Lv13, TAUBSI Lv13, TAUBSI Lv15, MAUZI Lv10, MAUZI Lv12, KNOFENSA Lv15, KNOFENSA Lv16, TAUBSI Lv16, MAUZI Lv14, MAUZI Lv16]]
+	[Name = Grass/Cave on ROUTE 7, Rate = 15, MapIndex = 18,
+		Encounters = [TAUBSI Lv19, KNOFENSA Lv19, MAUZI Lv17, KNOFENSA Lv22, TAUBSI Lv22, MAUZI Lv18, VULPIX Lv18, VULPIX Lv20, MAUZI Lv19, MAUZI Lv20]]
+	[Name = Grass/Cave on ROUTE 8, Rate = 15, MapIndex = 19,
+		Encounters = [TAUBSI Lv18, MAUZI Lv18, SANDAN Lv17, VULPIX Lv16, TAUBSI Lv20, MAUZI Lv20, SANDAN Lv19, VULPIX Lv17, VULPIX Lv15, VULPIX Lv18]]
+	[Name = Grass/Cave on ROUTE 9, Rate = 15, MapIndex = 20,
+		Encounters = [RATTFRATZ Lv16, HABITAK Lv16, RATTFRATZ Lv14, SANDAN Lv11, HABITAK Lv13, SANDAN Lv15, RATTFRATZ Lv17, HABITAK Lv17, SANDAN Lv13, SANDAN Lv17]]
+	[Name = Grass/Cave on ROUTE 10, Rate = 15, MapIndex = 21,
+		Encounters = [VOLTOBAL Lv16, HABITAK Lv16, VOLTOBAL Lv14, SANDAN Lv11, HABITAK Lv13, SANDAN Lv15, VOLTOBAL Lv17, HABITAK Lv17, SANDAN Lv13, SANDAN Lv17]]
+	[Name = Grass/Cave on ROUTE 11, Rate = 15, MapIndex = 22,
+		Encounters = [SANDAN Lv14, HABITAK Lv15, SANDAN Lv12, TRAUMATO Lv9, HABITAK Lv13, TRAUMATO Lv13, SANDAN Lv15, HABITAK Lv17, TRAUMATO Lv11, TRAUMATO Lv15]]
+	[Name = Grass/Cave on ROUTE 12, Rate = 15, MapIndex = 23,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv25, TAUBSI Lv23, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, TAUBSI Lv27, ULTRIGARIA Lv28, ULTRIGARIA Lv30]]
+	[Name = Grass/Cave on ROUTE 13, Rate = 20, MapIndex = 24,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv25, TAUBSI Lv27, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, DITTO Lv25, ULTRIGARIA Lv28, ULTRIGARIA Lv30]]
+	[Name = Grass/Cave on ROUTE 14, Rate = 15, MapIndex = 25,
+		Encounters = [KNOFENSA Lv24, TAUBSI Lv26, DITTO Lv23, BLUZUK Lv24, KNOFENSA Lv22, BLUZUK Lv26, KNOFENSA Lv26, ULTRIGARIA Lv30, TAUBOGA Lv28, TAUBOGA Lv30]]
+	[Name = Grass/Cave on ROUTE 15, Rate = 15, MapIndex = 26,
+		Encounters = [KNOFENSA Lv24, DITTO Lv26, TAUBSI Lv23, BLUZUK Lv26, KNOFENSA Lv22, BLUZUK Lv28, KNOFENSA Lv26, ULTRIGARIA Lv30, TAUBOGA Lv28, TAUBOGA Lv30]]
+	[Name = Grass/Cave on ROUTE 16, Rate = 25, MapIndex = 27,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTFRATZ Lv18, DODU Lv20, RATTFRATZ Lv20, DODU Lv18, DODU Lv22, RATTFRATZ Lv22, RATTIKARL Lv23, RATTIKARL Lv25]]
+	[Name = Grass/Cave on ROUTE 17, Rate = 25, MapIndex = 28,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTIKARL Lv25, DODU Lv24, RATTIKARL Lv27, DODU Lv26, DODU Lv28, RATTIKARL Lv29, IBITAK Lv25, IBITAK Lv27]]
+	[Name = Grass/Cave on ROUTE 18, Rate = 25, MapIndex = 29,
+		Encounters = [HABITAK Lv20, HABITAK Lv22, RATTIKARL Lv25, DODU Lv24, IBITAK Lv25, DODU Lv26, DODU Lv28, RATTIKARL Lv29, IBITAK Lv27, IBITAK Lv29]]
+	[Name = Surfing on ROUTE 19, ROUTE 20, Rate = 5, MapIndex = -30,
+		Encounters = [TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv20, TENTACHA Lv30, TENTACHA Lv35, TENTACHA Lv40]]
+	[Name = Grass/Cave on ROUTE 21, Rate = 25, MapIndex = 32,
+		Encounters = [RATTFRATZ Lv21, TAUBSI Lv23, RATTIKARL Lv30, RATTFRATZ Lv23, TAUBSI Lv21, TAUBOGA Lv30, TAUBOGA Lv32, TANGELA Lv28, TANGELA Lv30, TANGELA Lv32]]
+	[Name = Surfing on ROUTE 21, Rate = 5, MapIndex = 32,
+		Encounters = [TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv5, TENTACHA Lv10, TENTACHA Lv15, TENTACHA Lv20, TENTACHA Lv30, TENTACHA Lv35, TENTACHA Lv40]]
+	[Name = Grass/Cave on ROUTE 22, Rate = 25, MapIndex = 33,
+		Encounters = [RATTFRATZ Lv3, NIDORAN♀ Lv3, RATTFRATZ Lv4, NIDORAN♀ Lv4, RATTFRATZ Lv2, NIDORAN♀ Lv2, HABITAK Lv3, HABITAK Lv5, NIDORAN♂ Lv3, NIDORAN♂ Lv4]]
+	[Name = Grass/Cave on ROUTE 23, Rate = 10, MapIndex = 34,
+		Encounters = [SANDAN Lv26, DITTO Lv33, HABITAK Lv26, IBITAK Lv38, DITTO Lv38, IBITAK Lv38, SANDAMER Lv41, DITTO Lv43, IBITAK Lv41, IBITAK Lv43]]
+	[Name = Grass/Cave on ROUTE 24, Rate = 25, MapIndex = 35,
+		Encounters = [RAUPY Lv7, SAFCON Lv8, TAUBSI Lv12, KNOFENSA Lv12, KNOFENSA Lv13, ABRA Lv10, KNOFENSA Lv14, TAUBSI Lv13, ABRA Lv8, ABRA Lv12]]
+	[Name = Grass/Cave on ROUTE 25, Rate = 15, MapIndex = 36,
+		Encounters = [RAUPY Lv8, SAFCON Lv9, TAUBSI Lv13, KNOFENSA Lv12, KNOFENSA Lv13, ABRA Lv12, KNOFENSA Lv14, ABRA Lv10, KOKUNA Lv7, HORNLIU Lv8]]
+	[Name = Grass/Cave on VERTANIA-WALD (1), Rate = 8, MapIndex = 51,
+		Encounters = [RAUPY Lv4, SAFCON Lv5, RAUPY Lv3, RAUPY Lv5, SAFCON Lv4, SAFCON Lv6, KOKUNA Lv4, HORNLIU Lv3, PIKACHU Lv3, PIKACHU Lv5]]
+	[Name = Grass/Cave on MONDBERG (1), Rate = 10, MapIndex = 59,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, ZUBAT Lv9, KLEINSTEIN Lv8, ZUBAT Lv6, ZUBAT Lv10, KLEINSTEIN Lv10, PARAS Lv8, ZUBAT Lv11, PIEPI Lv8]]
+	[Name = Grass/Cave on MONDBERG (2), Rate = 10, MapIndex = 60,
+		Encounters = [ZUBAT Lv8, ZUBAT Lv7, KLEINSTEIN Lv7, KLEINSTEIN Lv8, ZUBAT Lv9, PARAS Lv10, ZUBAT Lv10, ZUBAT Lv11, PIEPI Lv9, KLEINSTEIN Lv9]]
+	[Name = Grass/Cave on MONDBERG (3), Rate = 10, MapIndex = 61,
+		Encounters = [ZUBAT Lv9, KLEINSTEIN Lv9, ZUBAT Lv10, KLEINSTEIN Lv10, ZUBAT Lv11, PARAS Lv10, PARAS Lv12, PIEPI Lv10, ZUBAT Lv12, PIEPI Lv12]]
+	[Name = Grass/Cave on FELSTUNNEL (2), Rate = 15, MapIndex = 82,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, KLEINSTEIN Lv17, MACHOLLO Lv15, KLEINSTEIN Lv16, ZUBAT Lv18, ZUBAT Lv15, MACHOLLO Lv17, ONIX Lv13, ONIX Lv15]]
+	[Name = Grass/Cave on KRAFTWERK (1), Rate = 10, MapIndex = 83,
+		Encounters = [VOLTOBAL Lv21, MAGNETILO Lv21, PIKACHU Lv20, PIKACHU Lv24, MAGNETILO Lv23, VOLTOBAL Lv23, MAGNETON Lv32, MAGNETON Lv35, RAICHU Lv33, RAICHU Lv36]]
+	[Name = Grass/Cave on SIEGESSTRASSE (1), Rate = 15, MapIndex = 108,
+		Encounters = [MACHOLLO Lv24, KLEINSTEIN Lv26, ZUBAT Lv22, ONIX Lv36, ONIX Lv39, ONIX Lv42, GEOROK Lv41, GOLBAT Lv41, MASCHOCK Lv42, KNOGGA Lv43]]
+	[Name = Grass/Cave on [POKé]MON TURM (3), Rate = 10, MapIndex = 144,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, NEBULAK Lv24, TRAGOSSO Lv20, TRAGOSSO Lv22, ALPOLLO Lv25]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (4), Rate = 10, MapIndex = 145,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, ALPOLLO Lv25, TRAGOSSO Lv20, TRAGOSSO Lv22, NEBULAK Lv24]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (5), Rate = 10, MapIndex = 146,
+		Encounters = [NEBULAK Lv20, NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv19, NEBULAK Lv18, ALPOLLO Lv25, TRAGOSSO Lv20, TRAGOSSO Lv22, NEBULAK Lv24]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (6), Rate = 15, MapIndex = 147,
+		Encounters = [NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv24, NEBULAK Lv20, NEBULAK Lv19, ALPOLLO Lv26, TRAGOSSO Lv22, TRAGOSSO Lv24, ALPOLLO Lv28]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on [POKé]MON TURM (7), Rate = 15, MapIndex = 148,
+		Encounters = [NEBULAK Lv21, NEBULAK Lv22, NEBULAK Lv23, NEBULAK Lv24, NEBULAK Lv20, ALPOLLO Lv28, TRAGOSSO Lv22, TRAGOSSO Lv24, ALPOLLO Lv28, ALPOLLO Lv30]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (1), Rate = 10, MapIndex = 159,
+		Encounters = [MUSCHAS Lv30, KRABBY Lv30, STERNDU Lv32, KRABBY Lv32, ENTON Lv28, JUROB Lv30, ENTON Lv30, JUROB Lv28, JUGONG Lv38, KINGLER Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (2), Rate = 10, MapIndex = 160,
+		Encounters = [JUROB Lv30, ENTON Lv30, JUROB Lv32, ENTON Lv32, KRABBY Lv28, MUSCHAS Lv30, KRABBY Lv30, STERNDU Lv28, GOLBAT Lv30, ENTORON Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (3), Rate = 10, MapIndex = 161,
+		Encounters = [ENTON Lv31, JUROB Lv31, ENTON Lv33, JUROB Lv33, KRABBY Lv29, STERNDU Lv31, KRABBY Lv31, STERNDU Lv29, KINGLER Lv39, JUGONG Lv37]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (4), Rate = 10, MapIndex = 162,
+		Encounters = [KRABBY Lv31, STERNDU Lv31, KRABBY Lv33, STERNDU Lv33, ENTON Lv29, JUROB Lv31, ENTON Lv31, JUROB Lv29, ENTORON Lv39, GOLBAT Lv32]]
+	[Name = Grass/Cave on [pk]-HAUS (1), Rate = 10, MapIndex = 165,
+		Encounters = [SLEIMA Lv32, SLEIMA Lv30, PONITA Lv34, PONITA Lv30, VULPIX Lv34, PONITA Lv32, SMOGON Lv30, PONITA Lv28, SLEIMOK Lv37, SMOGMOG Lv39]]
+	[Name = Grass/Cave on SEESCHAUMINSELN (5), Rate = 15, MapIndex = 192,
+		Encounters = [JUROB Lv30, ENTON Lv30, STERNDU Lv30, KRABBY Lv30, KRABBY Lv28, ZUBAT Lv21, GOLBAT Lv29, FLEGMON Lv28, STERNDU Lv28, LAHMUS Lv38]]
+	[Name = Grass/Cave on SIEGESSTRASSE (2), Rate = 10, MapIndex = 194,
+		Encounters = [MACHOLLO Lv22, KLEINSTEIN Lv24, ZUBAT Lv26, ONIX Lv36, ONIX Lv39, ONIX Lv42, MASCHOCK Lv41, GOLBAT Lv40, KNOGGA Lv40, GEOROK Lv43]]
+	[Name = Grass/Cave on DIGDAS HÖHLE (1), Rate = 20, MapIndex = 197,
+		Encounters = [DIGDA Lv18, DIGDA Lv19, DIGDA Lv17, DIGDA Lv20, DIGDA Lv16, DIGDA Lv15, DIGDA Lv21, DIGDA Lv22, DIGDRI Lv29, DIGDRI Lv31]]
+	[Name = Grass/Cave on SIEGESSTRASSE (3), Rate = 15, MapIndex = 198,
+		Encounters = [MACHOLLO Lv24, KLEINSTEIN Lv26, ZUBAT Lv22, ONIX Lv42, OMOT Lv40, ONIX Lv45, GEOROK Lv43, GOLBAT Lv41, MASCHOCK Lv42, MASCHOCK Lv45]]
+	[Name = Grass/Cave on [pk]-HAUS (2), Rate = 10, MapIndex = 214,
+		Encounters = [VULPIX Lv32, SLEIMA Lv34, SLEIMA Lv34, PONITA Lv30, SLEIMA Lv30, PONITA Lv32, SMOGON Lv30, PONITA Lv28, SLEIMOK Lv39, SMOGMOG Lv37]]
+	[Name = Grass/Cave on [pk]-HAUS (3), Rate = 10, MapIndex = 215,
+		Encounters = [SLEIMA Lv31, VULPIX Lv33, SLEIMA Lv35, PONITA Lv32, MAGMAR Lv34, SLEIMOK Lv40, SMOGON Lv34, SLEIMOK Lv38, PONITA Lv36, SMOGMOG Lv42]]
+	[Name = Grass/Cave on [pk]-HAUS (4), Rate = 10, MapIndex = 216,
+		Encounters = [SLEIMA Lv33, SLEIMA Lv31, VULPIX Lv35, PONITA Lv32, SLEIMA Lv31, SLEIMOK Lv40, PONITA Lv34, SMOGON Lv35, MAGMAR Lv38, SMOGMOG Lv42]]
+	[Name = Grass/Cave on SAFARI-ZONE (2), Rate = 30, MapIndex = 217,
+		Encounters = [NIDORAN♀ Lv24, DODU Lv26, PARAS Lv22, OWEI Lv25, NIDORINA Lv33, OWEI Lv23, NIDORAN♂ Lv24, PARASEK Lv25, KANGAMA Lv25, PINSIR Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (3), Rate = 30, MapIndex = 218,
+		Encounters = [NIDORAN♀ Lv22, RIHORN Lv26, PARAS Lv23, OWEI Lv25, NIDORINA Lv30, OWEI Lv27, NIDORINO Lv30, OMOT Lv32, CHANEIRA Lv26, TAUROS Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (4), Rate = 30, MapIndex = 219,
+		Encounters = [NIDORAN♀ Lv25, DODU Lv26, BLUZUK Lv23, OWEI Lv24, NIDORINA Lv33, OWEI Lv26, NIDORAN♂ Lv25, OMOT Lv31, TAUROS Lv26, KANGAMA Lv28]]
+	[Name = Grass/Cave on SAFARI-ZONE (5), Rate = 30, MapIndex = 220,
+		Encounters = [NIDORAN♀ Lv22, RIHORN Lv25, BLUZUK Lv22, OWEI Lv24, NIDORINA Lv31, OWEI Lv25, NIDORINO Lv31, PARASEK Lv30, PINSIR Lv23, CHANEIRA Lv23]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (1), Rate = 15, MapIndex = 226,
+		Encounters = [DODRI Lv51, OMOT Lv51, KADABRA Lv51, RIZEROS Lv52, KNOGGA Lv52, LEKTROBAL Lv52, CHANEIRA Lv56, KNUDDELUFF Lv54, DITTO Lv55, DITTO Lv60]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (2), Rate = 25, MapIndex = 227,
+		Encounters = [RIZEROS Lv55, KNOGGA Lv55, LEKTROBAL Lv55, CHANEIRA Lv64, PARASEK Lv64, RAICHU Lv64, SANDAMER Lv57, DITTO Lv65, DITTO Lv63, DITTO Lv67]]
+	[Name = Grass/Cave on GEHEIMDUNGEON (3), Rate = 10, MapIndex = 228,
+		Encounters = [GOLBAT Lv46, HYPNO Lv46, MAGNETON Lv46, DODRI Lv49, OMOT Lv49, SANDAMER Lv52, KADABRA Lv49, PARASEK Lv52, RAICHU Lv53, DITTO Lv53]]
+	[Name = Grass/Cave on FELSTUNNEL (3), Rate = 15, MapIndex = 232,
+		Encounters = [ZUBAT Lv16, ZUBAT Lv17, KLEINSTEIN Lv17, MACHOLLO Lv15, KLEINSTEIN Lv16, ZUBAT Lv18, MACHOLLO Lv17, ONIX Lv17, ONIX Lv13, KLEINSTEIN Lv18]]
+	[Name = Old Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [KARPADOR Lv5]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Good Rod Fishing, Rate = 0, MapIndex = -1,
+		Encounters = [GOLDINI Lv10, QUAPSEL Lv10]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ALABASTIA, VERTANIA CITY, Rate = 0, MapIndex = 0,
+		Encounters = [TENTACHA Lv15, QUAPSEL Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on AZURIA CITY, ROUTE 4, ROUTE 24, ROUTE 25, AZURIA CITY (Building), Rate = 0, MapIndex = -3,
+		Encounters = [ENTON Lv15, GOLDINI Lv15, KRABBY Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ORANIA CITY, ROUTE 6, ROUTE 11, ORANIA CITY (Building), Rate = 0, MapIndex = -5,
+		Encounters = [KRABBY Lv15, MUSCHAS Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on PRISMANIA CITY, ROUTE 10, Rate = 0, MapIndex = -6,
+		Encounters = [QUAPUTZI Lv23, FLEGMON Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on FUCHSANIA CITY, Rate = 0, MapIndex = 7,
+		Encounters = [GOLKING Lv23, KRABBY Lv15, GOLDINI Lv15, KARPADOR Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ZINNOBERINSEL, ROUTE 19, ROUTE 20, ROUTE 21, SEESCHAUMINSELN (3), SEESCHAUMINSELN (4), Rate = 0, MapIndex = -8,
+		Encounters = [STERNDU Lv15, SEEPER Lv15, MUSCHAS Lv15, GOLDINI Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 12, ROUTE 13, ROUTE 17, ROUTE 18, Rate = 0, MapIndex = -23,
+		Encounters = [TENTACHA Lv5, KRABBY Lv15, GOLDINI Lv15, KARPADOR Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 22, Rate = 0, MapIndex = 33,
+		Encounters = [GOLDINI Lv15, QUAPSEL Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on ROUTE 23, GEHEIMDUNGEON (1), GEHEIMDUNGEON (2), GEHEIMDUNGEON (3), Rate = 0, MapIndex = -34,
+		Encounters = [LAHMUS Lv23, GOLKING Lv23, KINGLER Lv23, SEEMON Lv23]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+	[Name = Super Rod Fishing on SAFARI-ZONE (2), SAFARI-ZONE (3), SAFARI-ZONE (4), SAFARI-ZONE (5), Rate = 0, MapIndex = -217,
+		Encounters = [DRATINI Lv15, KRABBY Lv15, ENTON Lv15, FLEGMON Lv15]
+		Banned = [Species [name=KNOGGA, number=105, primaryType=GROUND, secondaryType=null, hp=60, attack=80, defense=110, special=50, speed=45]]]
+]

@@ -6,6 +6,8 @@
 *.gbc
 *.GBA
 *.gba
+*.3DS
+*.3ds
 *.RNDP
 *.rndp
 tmp_*

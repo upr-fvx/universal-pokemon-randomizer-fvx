@@ -1,8 +1,7 @@
 package com.dabomstew.pkrandom.cli;
 
 import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.RandomSource;
-import com.dabomstew.pkrandom.Randomizer;
+import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.romhandlers.*;
 
@@ -14,12 +13,12 @@ import java.util.ResourceBundle;
 
 public class CliRandomizer {
 
-    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/newgui/Bundle");
+    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
 
     private static boolean performDirectRandomization(String settingsFilePath, String sourceRomFilePath,
                                                       String destinationRomFilePath, boolean saveAsDirectory,
                                                       String updateFilePath, boolean saveLog) {
-        // borrowed directly from NewRandomizerGUI()
+        // borrowed directly from RandomizerGUI()
         RomHandler.Factory[] checkHandlers = new RomHandler.Factory[] {
                 new Gen1RomHandler.Factory(),
                 new Gen2RomHandler.Factory(),
@@ -35,7 +34,7 @@ public class CliRandomizer {
             File fh = new File(settingsFilePath);
             FileInputStream fis = new FileInputStream(fh);
             settings = Settings.read(fis);
-            // taken from com.dabomstew.pkrandom.newgui.NewRandomizerGUI.saveROM, set distinctly from all other settings
+            // taken from com.dabomstew.pkrandom.newgui.RandomizerGUI.saveROM, set distinctly from all other settings
             settings.setCustomNames(FileFunctions.getCustomNames());
             fis.close();
         } catch (UnsupportedOperationException | IllegalArgumentException | IOException ex) {
@@ -59,7 +58,7 @@ public class CliRandomizer {
 
             for (RomHandler.Factory rhf : checkHandlers) {
                 if (rhf.isLoadable(romFileHandler.getAbsolutePath())) {
-                    romHandler = rhf.create(RandomSource.instance());
+                    romHandler = rhf.create();
                     romHandler.loadRom(romFileHandler.getAbsolutePath());
                     if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
                         romHandler.loadGameUpdate(updateFilePath);
@@ -92,7 +91,7 @@ public class CliRandomizer {
 
                     String filename = fh.getAbsolutePath();
 
-                    Randomizer randomizer = new Randomizer(settings, romHandler, bundle, saveAsDirectory);
+                    GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
                     randomizer.randomize(filename, verboseLog);
                     verboseLog.close();
                     byte[] out = baos.toByteArray();
@@ -223,7 +222,7 @@ public class CliRandomizer {
     }
 
     private static void printUsage() {
-        System.err.println("Usage: java [-Xmx4096M] -jar PokeRandoZX.jar cli -s <path to settings file> " +
+        System.err.println("Usage: java [-Xmx4096M] -jar PokeRandoFVX.jar cli -s <path to settings file> " +
                 "-i <path to source ROM> -o <path for new ROM> [-d][-u <path to 3DS game update>][-l]");
         System.err.println("-d: Save 3DS game as directory (LayeredFS)");
     }

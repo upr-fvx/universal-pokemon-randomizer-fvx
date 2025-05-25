@@ -1,0 +1,925 @@
+useTimeOfDay=false
+[EncounterAreas:
+	[Name = EINAMON-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = PEZWULP-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = DREICKE-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = VIERZISSE-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = FÜNIBISKU-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = LILECHS-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = SIEBORBIA-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = VERTANIA-WALD Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [RAUPY Lvs 4-4, HORNLIU Lvs 4-4, RAUPY Lvs 5-5, HORNLIU Lvs 5-5, RAUPY Lvs 3-3, HORNLIU Lvs 3-3, SAFCON Lvs 5-5, KOKUNA Lvs 5-5, KOKUNA Lvs 4-4, PIKACHU Lvs 3-3, KOKUNA Lvs 6-6, PIKACHU Lvs 5-5]]
+	[Name = MONDBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 7-7, ZUBAT Lvs 8-8, KLEINSTEIN Lvs 7-7, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, KLEINSTEIN Lvs 8-8, KLEINSTEIN Lvs 9-9, PARAS Lvs 8-8, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, PIEPI Lvs 8-8]]
+	[Name = MONDBERG Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10, PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10]]
+	[Name = MONDBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 8-8, KLEINSTEIN Lvs 9-9, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, KLEINSTEIN Lvs 10-10, PARAS Lvs 10-10, PARAS Lvs 12-12, PIEPI Lvs 10-10, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, PIEPI Lvs 12-12]]
+	[Name = M.S. ANNE Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = M.S. ANNE Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = DIGDAs HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DIGDA Lvs 18-18, DIGDA Lvs 19-19, DIGDA Lvs 17-17, DIGDA Lvs 15-15, DIGDA Lvs 16-16, DIGDA Lvs 20-20, DIGDA Lvs 21-21, DIGDA Lvs 22-22, DIGDA Lvs 17-17, DIGDRI Lvs 29-29, DIGDA Lvs 17-17, DIGDRI Lvs 31-31]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 32-32, KLEINSTEIN Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, ARBOK Lvs 44-44, GOLBAT Lvs 44-44, KNOGGA Lvs 44-44, MASCHOCK Lvs 44-44, MASCHOCK Lvs 46-46, KNOGGA Lvs 46-46]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 34-34, KLEINSTEIN Lvs 34-34, RASAFF Lvs 42-42, ONIX Lvs 45-45, ONIX Lvs 48-48, ZUBAT Lvs 34-34, ARBOK Lvs 46-46, GOLBAT Lvs 46-46, KNOGGA Lvs 46-46, MASCHOCK Lvs 46-46, MASCHOCK Lvs 48-48, KNOGGA Lvs 48-48]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 32-32, KLEINSTEIN Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, ARBOK Lvs 44-44, GOLBAT Lvs 44-44, KNOGGA Lvs 44-44, MASCHOCK Lvs 44-44, MASCHOCK Lvs 46-46, KNOGGA Lvs 46-46]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 34-34, SMOGON Lvs 30-30, DITTO Lvs 30-30, FUKANO Lvs 30-30, RATTIKARL Lvs 38-38, SLEIMA Lvs 28-28, SMOGMOG Lvs 34-34, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RIHORN Lvs 25-25, NIDORAN♂ Lvs 22-22, OWEI Lvs 24-24, OWEI Lvs 25-25, BLUZUK Lvs 22-22, NIDORINO Lvs 31-31, NIDORINA Lvs 31-31, PARASEK Lvs 30-30, BLUZUK Lvs 22-22, SICHLOR Lvs 23-23, BLUZUK Lvs 22-22, CHANEIRA Lvs 23-23]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lvs 24-24, DODU Lvs 26-26, OWEI Lvs 23-23, OWEI Lvs 25-25, PARAS Lvs 22-22, NIDORINO Lvs 33-33, NIDORAN♀ Lvs 24-24, PARASEK Lvs 25-25, PARAS Lvs 22-22, KANGAMA Lvs 25-25, PARAS Lvs 22-22, SICHLOR Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RIHORN Lvs 26-26, NIDORAN♂ Lvs 30-30, OWEI Lvs 25-25, OWEI Lvs 27-27, PARAS Lvs 23-23, NIDORINO Lvs 30-30, NIDORINA Lvs 30-30, OMOT Lvs 32-32, PARAS Lvs 23-23, CHANEIRA Lvs 26-26, PARAS Lvs 23-23, TAUROS Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [DODU Lvs 26-26, NIDORAN♂ Lvs 22-22, OWEI Lvs 25-25, OWEI Lvs 27-27, BLUZUK Lvs 23-23, NIDORINO Lvs 30-30, NIDORAN♀ Lvs 30-30, OMOT Lvs 32-32, BLUZUK Lvs 23-23, TAUROS Lvs 25-25, BLUZUK Lvs 23-23, KANGAMA Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAGNETON Lvs 49-49, PARASEK Lvs 49-49, GOLBAT Lvs 46-46, MASCHOCK Lvs 46-46, RASAFF Lvs 52-52, DITTO Lvs 52-52, LEKTROBAL Lvs 58-58, PARASEK Lvs 58-58, GOLBAT Lvs 55-55, WOINGENAU Lvs 55-55, RASAFF Lvs 61-61, DITTO Lvs 61-61]]
+	[Name = AZURIA-HÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 30-40, ENTORON Lvs 40-50, ENTORON Lvs 45-55, ENTON Lvs 40-50, ENTON Lvs 40-50]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 30-40, GEOROK Lvs 40-50, GEOROK Lvs 45-55, KLEINSTEIN Lvs 40-50, KLEINSTEIN Lvs 40-50]]
+	[Name = AZURIA-HÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GOLBAT Lvs 49-49, MASCHOCK Lvs 49-49, MAGNETON Lvs 52-52, PARASEK Lvs 52-52, KADABRA Lvs 55-55, DITTO Lvs 55-55, GOLBAT Lvs 58-58, WOINGENAU Lvs 58-58, LEKTROBAL Lvs 61-61, PARASEK Lvs 61-61, KADABRA Lvs 64-64, DITTO Lvs 64-64]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 35-45, GEOROK Lvs 45-55, GEOROK Lvs 50-60, KLEINSTEIN Lvs 45-55, KLEINSTEIN Lvs 45-55]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KADABRA Lvs 58-58, DITTO Lvs 58-58, MAGNETON Lvs 55-55, PARASEK Lvs 55-55, GOLBAT Lvs 52-52, MASCHOCK Lvs 52-52, KADABRA Lvs 67-67, DITTO Lvs 67-67, LEKTROBAL Lvs 64-64, PARASEK Lvs 64-64, GOLBAT Lvs 61-61, WOINGENAU Lvs 61-61]]
+	[Name = AZURIA-HÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 40-50, ENTORON Lvs 50-60, ENTORON Lvs 55-65, ENTON Lvs 50-60, ENTON Lvs 50-60]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-50, GEOROK Lvs 50-60, GEOROK Lvs 55-65, KLEINSTEIN Lvs 50-60, KLEINSTEIN Lvs 50-60]]
+	[Name = AZURIA-HÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 15-15, KLEINSTEIN Lvs 16-16, MENKI Lvs 16-16, KLEINSTEIN Lvs 17-17, ZUBAT Lvs 16-16, MACHOLLO Lvs 16-16, MENKI Lvs 17-17, MACHOLLO Lvs 17-17, KLEINSTEIN Lvs 15-15, ONIX Lvs 13-13, KLEINSTEIN Lvs 15-15, ONIX Lvs 15-15]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 16-16, KLEINSTEIN Lvs 17-17, MENKI Lvs 17-17, KLEINSTEIN Lvs 16-16, ZUBAT Lvs 15-15, MACHOLLO Lvs 17-17, MENKI Lvs 16-16, ONIX Lvs 13-13, KLEINSTEIN Lvs 15-15, ONIX Lvs 15-15, KLEINSTEIN Lvs 15-15, ONIX Lvs 17-17]]
+	[Name = FELSTUNNEL Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 27-27, ENTON Lvs 29-29, ENTON Lvs 31-31, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, ENTON Lvs 33-33, ZUBAT Lvs 26-26, ENTON Lvs 26-26, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 29-29, ENTON Lvs 31-31, JUROB Lvs 28-28, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, ENTORON Lvs 33-33, ZUBAT Lvs 26-26, ENTORON Lvs 35-35, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 30-30, ENTON Lvs 32-32, JUROB Lvs 30-30, JUROB Lvs 32-32, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, ENTORON Lvs 34-34, ENTORON Lvs 32-32, GOLBAT Lvs 28-28, ENTORON Lvs 32-32, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 30-30, JUROB Lvs 32-32, ENTON Lvs 32-32, ENTON Lvs 30-30, ENTORON Lvs 32-32, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, ENTORON Lvs 34-34, JUGONG Lvs 32-32, GOLBAT Lvs 28-28, JUGONG Lvs 34-34, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 25-35, SEEPER Lvs 25-30, JUGONG Lvs 35-40, ENTON Lvs 30-40, ENTORON Lvs 35-40]]
+	[Name = SEESCHAUMINSELN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 30-30, JUROB Lvs 32-32, ENTON Lvs 32-32, JUROB Lvs 34-34, ENTORON Lvs 32-32, GOLBAT Lvs 26-26, JUGONG Lvs 34-34, ENTORON Lvs 34-34, JUGONG Lvs 36-36, GOLBAT Lvs 28-28, JUGONG Lvs 36-36, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 25-35, SEEPER Lvs 25-30, JUGONG Lvs 35-40, ENTON Lvs 30-40, ENTORON Lvs 35-40]]
+	[Name = SEESCHAUMINSELN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, NEBULAK Lvs 19-19, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, ALPOLLO Lvs 20-20]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, ALPOLLO Lvs 20-20, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, NEBULAK Lvs 19-19]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, ALPOLLO Lvs 20-20, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, NEBULAK Lvs 19-19]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 18-18, NEBULAK Lvs 14-14, NEBULAK Lvs 15-15, NEBULAK Lvs 19-19, ALPOLLO Lvs 21-21, TRAGOSSO Lvs 17-17, NEBULAK Lvs 18-18, TRAGOSSO Lvs 19-19, NEBULAK Lvs 18-18, ALPOLLO Lvs 23-23]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 18-18, NEBULAK Lvs 15-15, NEBULAK Lvs 19-19, ALPOLLO Lvs 23-23, TRAGOSSO Lvs 17-17, TRAGOSSO Lvs 19-19, NEBULAK Lvs 18-18, ALPOLLO Lvs 23-23, NEBULAK Lvs 18-18, ALPOLLO Lvs 25-25]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = KRAFTWERK Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [VOLTOBAL Lvs 22-22, MAGNETILO Lvs 22-22, VOLTOBAL Lvs 25-25, MAGNETILO Lvs 25-25, PIKACHU Lvs 22-22, PIKACHU Lvs 24-24, MAGNETON Lvs 31-31, MAGNETON Lvs 34-34, PIKACHU Lvs 26-26, ELEKTEK Lvs 32-32, PIKACHU Lvs 26-26, ELEKTEK Lvs 35-35]]
+	[Name = GLUTBERG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PONITA Lvs 30-30, IBITAK Lvs 38-38, PONITA Lvs 33-33, HABITAK Lvs 32-32, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 33-33, PONITA Lvs 36-36, IBITAK Lvs 40-40, HABITAK Lvs 30-30, GALLOPA Lvs 39-39, HABITAK Lvs 30-30, GALLOPA Lvs 42-42]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 33-33, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 29-29, KLEINSTEIN Lvs 31-31, MACHOLLO Lvs 31-31, MACHOLLO Lvs 33-33, KLEINSTEIN Lvs 35-35, MACHOLLO Lvs 37-37, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 34-34, MACHOLLO Lvs 36-36, KLEINSTEIN Lvs 30-30, KLEINSTEIN Lvs 32-32, MACHOLLO Lvs 32-32, MACHOLLO Lvs 34-34, MASCHOCK Lvs 38-38, MASCHOCK Lvs 38-38, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 33-33, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 29-29, KLEINSTEIN Lvs 31-31, MACHOLLO Lvs 31-31, MACHOLLO Lvs 33-33, KLEINSTEIN Lvs 35-35, MACHOLLO Lvs 37-37, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 36-36, MACHOLLO Lvs 38-38, KLEINSTEIN Lvs 32-32, KLEINSTEIN Lvs 34-34, MACHOLLO Lvs 34-34, MACHOLLO Lvs 36-36, KLEINSTEIN Lvs 38-38, MASCHOCK Lvs 40-40, KLEINSTEIN Lvs 40-40, MASCHOCK Lvs 42-42, KLEINSTEIN Lvs 40-40, MASCHOCK Lvs 42-42]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 38-38, KLEINSTEIN Lvs 36-36, KLEINSTEIN Lvs 34-34, KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 28-28, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 32-32, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SCHNECKMAG Lvs 26-26, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, SCHNECKMAG Lvs 32-32, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 22-22, SCHNECKMAG Lvs 20-20, SCHNECKMAG Lvs 34-34, SCHNECKMAG Lvs 36-36, SCHNECKMAG Lvs 18-18, SCHNECKMAG Lvs 36-36, SCHNECKMAG Lvs 18-18]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [SCHNECKMAG Lvs 15-25, SCHNECKMAG Lvs 25-35, MAGCARGO Lvs 40-45, MAGCARGO Lvs 35-45, MAGCARGO Lvs 25-35]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 32-32, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 38-38, KLEINSTEIN Lvs 36-36, KLEINSTEIN Lvs 34-34, KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 28-28, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = BEERENFORST Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBOGA Lvs 37-37, DUFLOR Lvs 35-35, TAUBSI Lvs 32-32, MYRAPLA Lvs 30-30, BLUZUK Lvs 34-34, TRAUMATO Lvs 34-34, OWEI Lvs 35-35, ENTON Lvs 31-31, OMOT Lvs 37-37, HYPNO Lvs 37-37, OMOT Lvs 40-40, HYPNO Lvs 40-40]]
+	[Name = BEERENFORST Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-20, ENTON Lvs 20-35, ENTON Lvs 35-40, ENTORON Lvs 35-40, ENTORON Lvs 35-40]]
+	[Name = BEERENFORST Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 43-43, GOLBAT Lvs 45-45, JUROB Lvs 45-45, JUROB Lvs 47-47, ZUBAT Lvs 40-40, JUGONG Lvs 49-49, JUGONG Lvs 51-51, ENTON Lvs 41-41, GOLBAT Lvs 48-48, JUGONG Lvs 53-53, GOLBAT Lvs 48-48, JUGONG Lvs 53-53]]
+	[Name = EISKASKADENHÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 5-35, ENTON Lvs 5-35, JUGONG Lvs 35-40, FELINO Lvs 5-15, FELINO Lvs 5-15]]
+	[Name = EISKASKADENHÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [QUIEKEL Lvs 25-25, GOLBAT Lvs 45-45, JUROB Lvs 45-45, QUIEKEL Lvs 27-27, ZUBAT Lvs 40-40, QUIEKEL Lvs 29-29, BOTOGEL Lvs 30-30, QUIEKEL Lvs 31-31, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [QUIEKEL Lvs 25-25, GOLBAT Lvs 45-45, JUROB Lvs 45-45, QUIEKEL Lvs 27-27, ZUBAT Lvs 40-40, QUIEKEL Lvs 29-29, BOTOGEL Lvs 30-30, QUIEKEL Lvs 31-31, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 43-43, GOLBAT Lvs 45-45, JUROB Lvs 45-45, JUROB Lvs 47-47, ZUBAT Lvs 40-40, JUGONG Lvs 49-49, JUGONG Lvs 51-51, ENTON Lvs 41-41, GOLBAT Lvs 48-48, JUGONG Lvs 53-53, GOLBAT Lvs 48-48, JUGONG Lvs 53-53]]
+	[Name = EISKASKADENHÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-45, TENTOXA Lvs 35-45, LAPRAS Lvs 30-45]]
+	[Name = EISKASKADENHÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = MUSTERBUSCHWALD Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEBARAK Lvs 9-9, KOKUNA Lvs 9-9, WEBARAK Lvs 14-14, RAUPY Lvs 6-6, HORNLIU Lvs 6-6, SKARABORN Lvs 15-15, SAFCON Lvs 9-9, SKARABORN Lvs 20-20, LEDYBA Lvs 9-9, SKARABORN Lvs 25-25, LEDYBA Lvs 14-14, SKARABORN Lvs 30-30]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 3, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 9, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = GLÜHWEG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 32-32, PONITA Lvs 34-34, IBITAK Lvs 36-36, PONITA Lvs 31-31, KLEINSTEIN Lvs 31-31, MAUZI Lvs 31-31, HABITAK Lvs 30-30, ENTON Lvs 34-34, GALLOPA Lvs 37-37, SNOBILIKAT Lvs 37-37, GALLOPA Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = GLÜHWEG Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GLÜHWEG Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLÜHWEG Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = SCHATZGESTADE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 32-32, TANGELA Lvs 33-33, HABITAK Lvs 31-31, TANGELA Lvs 35-35, IBITAK Lvs 36-36, MAUZI Lvs 31-31, IBITAK Lvs 38-38, ENTON Lvs 31-31, IBITAK Lvs 40-40, SNOBILIKAT Lvs 37-37, IBITAK Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = SCHATZGESTADE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = SCHATZGESTADE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = KAP KANTE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 31-31, MYRAPLA Lvs 30-30, MYRAPLA Lvs 32-32, DUFLOR Lvs 36-36, IBITAK Lvs 36-36, MAUZI Lvs 31-31, DUFLOR Lvs 38-38, ENTON Lvs 31-31, ENTORON Lvs 37-37, SNOBILIKAT Lvs 37-37, ENTORON Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = KAP KANTE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-20, ENTON Lvs 20-35, ENTON Lvs 35-40, ENTORON Lvs 35-40, ENTORON Lvs 35-40]]
+	[Name = KAP KANTE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = BUNDBRÜCKE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 32-32, MYRAPLA Lvs 31-31, TAUBSI Lvs 29-29, DUFLOR Lvs 36-36, TAUBOGA Lvs 34-34, MAUZI Lvs 31-31, BLUZUK Lvs 34-34, ENTON Lvs 31-31, TAUBOGA Lvs 37-37, SNOBILIKAT Lvs 37-37, TAUBOGA Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = BUNDBRÜCKE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = BUNDBRÜCKE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = TRI-EILAND HAFEN Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [DUMMISEL Lvs 15-15, DUMMISEL Lvs 15-15, DUMMISEL Lvs 10-10, DUMMISEL Lvs 10-10, DUMMISEL Lvs 20-20, DUMMISEL Lvs 20-20, DUMMISEL Lvs 25-25, DUMMISEL Lvs 30-30, DUMMISEL Lvs 25-25, DUMMISEL Lvs 30-30, DUMMISEL Lvs 5-5, DUMMISEL Lvs 35-35]]
+	[Name = FERIENPARADIES Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = FERIENPARADIES Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WASSERIRRGARTEN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = WASSERIRRGARTEN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND 5-WEIDE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 44-44, WIESOR Lvs 10-10, TAUBOGA Lvs 48-48, HOPPSPROSS Lvs 10-10, WIESOR Lvs 15-15, MAUZI Lvs 41-41, HOPPSPROSS Lvs 15-15, ENTON Lvs 41-41, TAUBOGA Lvs 50-50, SNOBILIKAT Lvs 47-47, TAUBOGA Lvs 50-50, SNOBILIKAT Lvs 50-50]]
+	[Name = EILAND 5-WEIDE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND 5-WEIDE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = GEDENKSÄULE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HOPPSPROSS Lvs 10-10, HOPPSPROSS Lvs 12-12, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14, HOPPSPROSS Lvs 10-10, HOPPSPROSS Lvs 12-12, HOPPSPROSS Lvs 16-16, HOPPSPROSS Lvs 6-6, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14]]
+	[Name = GEDENKSÄULE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GEDENKSÄULE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = FERN-EILAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = FERN-EILAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = GRÜNER PFAD Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GRÜNER PFAD Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WASSERWEG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 44-44, WIESOR Lvs 10-10, MYRAPLA Lvs 44-44, IBITAK Lvs 48-48, WIESOR Lvs 15-15, MAUZI Lvs 41-41, DUFLOR Lvs 48-48, ENTON Lvs 41-41, IBITAK Lvs 50-50, SNOBILIKAT Lvs 47-47, IBITAK Lvs 50-50, SNOBILIKAT Lvs 50-50]]
+	[Name = WASSERWEG Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = WASSERWEG Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = RUINENTAL Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NATU Lvs 15-15, HABITAK Lvs 44-44, YANMA Lvs 18-18, FELINO Lvs 15-15, IBITAK Lvs 49-49, MAUZI Lvs 43-43, WOINGENAU Lvs 25-25, ENTON Lvs 41-41, NATU Lvs 20-20, SNOBILIKAT Lvs 49-49, NATU Lvs 20-20, SNOBILIKAT Lvs 52-52]]
+	[Name = RUINENTAL Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [FELINO Lvs 5-20, FELINO Lvs 10-20, FELINO Lvs 15-25, FELINO Lvs 20-25, FELINO Lvs 20-25]]
+	[Name = RUINENTAL Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = TRAINERTURM Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = TRAINERTURM Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = SCHLUCHTEINGANG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 44-44, WIESOR Lvs 10-10, PHANPY Lvs 10-10, IBITAK Lvs 48-48, WIESOR Lvs 15-15, MAUZI Lvs 41-41, IBITAK Lvs 50-50, ENTON Lvs 41-41, PHANPY Lvs 15-15, SNOBILIKAT Lvs 47-47, PHANPY Lvs 15-15, SNOBILIKAT Lvs 50-50]]
+	[Name = 7-SCHATZSCHLUCHT Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 46-46, PHANPY Lvs 15-15, TRAGOSSO Lvs 46-46, IBITAK Lvs 50-50, KNOGGA Lvs 52-52, MAUZI Lvs 43-43, ONIX Lvs 54-54, PANZAERON Lvs 30-30, LARVITAR Lvs 15-15, SNOBILIKAT Lvs 49-49, LARVITAR Lvs 20-20, SNOBILIKAT Lvs 52-52]]
+	[Name = 7-SCHATZSCHLUCHT Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = TANIBO-RUINEN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = TANIBO-RUINEN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 1 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 2-2, RATTFRATZ Lvs 2-2, TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 4-4, RATTFRATZ Lvs 4-4, TAUBSI Lvs 5-5, RATTFRATZ Lvs 4-4]]
+	[Name = ROUTE 2 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTFRATZ Lvs 3-3, TAUBSI Lvs 3-3, RATTFRATZ Lvs 4-4, TAUBSI Lvs 4-4, RATTFRATZ Lvs 2-2, TAUBSI Lvs 2-2, RATTFRATZ Lvs 5-5, TAUBSI Lvs 5-5, RAUPY Lvs 4-4, HORNLIU Lvs 4-4, RAUPY Lvs 5-5, HORNLIU Lvs 5-5]]
+	[Name = ROUTE 3 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 6-6, TAUBSI Lvs 6-6, HABITAK Lvs 7-7, MENKI Lvs 7-7, NIDORAN♂ Lvs 6-6, TAUBSI Lvs 7-7, HABITAK Lvs 8-8, PUMMELUFF Lvs 3-3, NIDORAN♂ Lvs 7-7, PUMMELUFF Lvs 5-5, NIDORAN♀ Lvs 6-6, PUMMELUFF Lvs 7-7]]
+	[Name = ROUTE 4 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 10-10, RATTFRATZ Lvs 10-10, RETTAN Lvs 6-6, RETTAN Lvs 10-10, HABITAK Lvs 8-8, RATTFRATZ Lvs 8-8, HABITAK Lvs 12-12, RATTFRATZ Lvs 12-12, MENKI Lvs 10-10, RETTAN Lvs 8-8, MENKI Lvs 12-12, RETTAN Lvs 12-12]]
+	[Name = ROUTE 4 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 4 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 5 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MAUZI Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 13-13, MAUZI Lvs 12-12, MYRAPLA Lvs 15-15, TAUBSI Lvs 15-15, MYRAPLA Lvs 16-16, TAUBSI Lvs 16-16, TAUBSI Lvs 15-15, MAUZI Lvs 14-14, TAUBSI Lvs 15-15, MAUZI Lvs 16-16]]
+	[Name = ROUTE 6 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MAUZI Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 13-13, MAUZI Lvs 12-12, MYRAPLA Lvs 15-15, TAUBSI Lvs 15-15, MYRAPLA Lvs 16-16, TAUBSI Lvs 16-16, TAUBSI Lvs 15-15, MAUZI Lvs 14-14, TAUBSI Lvs 15-15, MAUZI Lvs 16-16]]
+	[Name = ROUTE 6 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 6 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 7 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 19-19, MAUZI Lvs 17-17, MYRAPLA Lvs 19-19, MAUZI Lvs 18-18, TAUBSI Lvs 22-22, MYRAPLA Lvs 22-22, FUKANO Lvs 18-18, FUKANO Lvs 20-20, MAUZI Lvs 17-17, MAUZI Lvs 19-19, MAUZI Lvs 17-17, MAUZI Lvs 20-20]]
+	[Name = ROUTE 8 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 18-18, MAUZI Lvs 18-18, FUKANO Lvs 16-16, TAUBSI Lvs 20-20, MAUZI Lvs 20-20, RETTAN Lvs 17-17, FUKANO Lvs 17-17, RETTAN Lvs 19-19, RETTAN Lvs 17-17, FUKANO Lvs 15-15, RETTAN Lvs 17-17, FUKANO Lvs 18-18]]
+	[Name = ROUTE 9 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 16-16, RATTFRATZ Lvs 16-16, RETTAN Lvs 11-11, RETTAN Lvs 15-15, HABITAK Lvs 13-13, RATTFRATZ Lvs 14-14, HABITAK Lvs 17-17, RATTFRATZ Lvs 17-17, RATTFRATZ Lvs 14-14, RETTAN Lvs 13-13, RATTFRATZ Lvs 14-14, RETTAN Lvs 17-17]]
+	[Name = ROUTE 10 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 16-16, VOLTOBAL Lvs 16-16, RETTAN Lvs 11-11, RETTAN Lvs 15-15, HABITAK Lvs 13-13, VOLTOBAL Lvs 14-14, HABITAK Lvs 17-17, VOLTOBAL Lvs 17-17, VOLTOBAL Lvs 14-14, RETTAN Lvs 13-13, VOLTOBAL Lvs 14-14, RETTAN Lvs 17-17]]
+	[Name = ROUTE 10 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 10 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 11 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RETTAN Lvs 14-14, HABITAK Lvs 15-15, RETTAN Lvs 12-12, HABITAK Lvs 13-13, TRAUMATO Lvs 11-11, TRAUMATO Lvs 13-13, RETTAN Lvs 15-15, HABITAK Lvs 17-17, RETTAN Lvs 12-12, TRAUMATO Lvs 15-15, RETTAN Lvs 12-12, TRAUMATO Lvs 15-15]]
+	[Name = ROUTE 11 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 11 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 12 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 23-23, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, TAUBSI Lvs 27-27, TAUBSI Lvs 23-23, DUFLOR Lvs 28-28, TAUBSI Lvs 23-23, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 12 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 12 Fishing, Rate = 60, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 13 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 27-27, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DITTO Lvs 25-25, TAUBOGA Lvs 29-29, DUFLOR Lvs 28-28, TAUBOGA Lvs 29-29, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 13 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 13 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 14 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, DITTO Lvs 23-23, TAUBSI Lvs 27-27, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DUFLOR Lvs 30-30, DITTO Lvs 23-23, TAUBOGA Lvs 29-29, DITTO Lvs 23-23, TAUBOGA Lvs 29-29]]
+	[Name = ROUTE 15 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 27-27, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DITTO Lvs 25-25, TAUBOGA Lvs 29-29, DUFLOR Lvs 28-28, TAUBOGA Lvs 29-29, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 16 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 18-18, RATTFRATZ Lvs 18-18, RATTFRATZ Lvs 20-20, HABITAK Lvs 22-22, DODU Lvs 20-20, RATTFRATZ Lvs 22-22, DODU Lvs 22-22, RATTFRATZ Lvs 18-18, RATTIKARL Lvs 23-23, RATTFRATZ Lvs 18-18, RATTIKARL Lvs 25-25]]
+	[Name = ROUTE 17 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 24-24, HABITAK Lvs 22-22, DODU Lvs 26-26, RATTIKARL Lvs 25-25, RATTIKARL Lvs 27-27, DODU Lvs 28-28, RATTIKARL Lvs 29-29, RATTFRATZ Lvs 22-22, IBITAK Lvs 25-25, RATTFRATZ Lvs 22-22, IBITAK Lvs 27-27]]
+	[Name = ROUTE 18 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 24-24, HABITAK Lvs 22-22, DODU Lvs 26-26, RATTIKARL Lvs 25-25, IBITAK Lvs 25-25, DODU Lvs 28-28, RATTIKARL Lvs 29-29, RATTFRATZ Lvs 22-22, IBITAK Lvs 27-27, RATTFRATZ Lvs 22-22, IBITAK Lvs 29-29]]
+	[Name = ROUTE 19 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 19 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 20 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 20 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 22 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTFRATZ Lvs 3-3, MENKI Lvs 3-3, RATTFRATZ Lvs 4-4, MENKI Lvs 4-4, RATTFRATZ Lvs 2-2, MENKI Lvs 2-2, HABITAK Lvs 3-3, HABITAK Lvs 5-5, RATTFRATZ Lvs 5-5, MENKI Lvs 5-5, RATTFRATZ Lvs 5-5, MENKI Lvs 5-5]]
+	[Name = ROUTE 22 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 22 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 23 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MENKI Lvs 32-32, IBITAK Lvs 40-40, MENKI Lvs 34-34, HABITAK Lvs 34-34, RETTAN Lvs 32-32, RETTAN Lvs 34-34, RASAFF Lvs 42-42, ARBOK Lvs 44-44, HABITAK Lvs 32-32, IBITAK Lvs 42-42, HABITAK Lvs 32-32, IBITAK Lvs 44-44]]
+	[Name = ROUTE 23 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 23 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 24 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HORNLIU Lvs 7-7, RAUPY Lvs 7-7, TAUBSI Lvs 11-11, MYRAPLA Lvs 12-12, MYRAPLA Lvs 13-13, ABRA Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 14-14, KOKUNA Lvs 8-8, ABRA Lvs 8-8, SAFCON Lvs 8-8, ABRA Lvs 12-12]]
+	[Name = ROUTE 24 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 24 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 25 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HORNLIU Lvs 8-8, RAUPY Lvs 8-8, TAUBSI Lvs 13-13, MYRAPLA Lvs 14-14, MYRAPLA Lvs 13-13, ABRA Lvs 11-11, TAUBSI Lvs 11-11, MYRAPLA Lvs 12-12, KOKUNA Lvs 9-9, ABRA Lvs 9-9, SAFCON Lvs 9-9, ABRA Lvs 13-13]]
+	[Name = ROUTE 25 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 25 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ALABASTIA Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ALABASTIA Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-10, KARPADOR Lvs 5-10, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = VERTANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = VERTANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = AZURIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = AZURIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ORANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ORANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = PRISMANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-10, ENTON Lvs 10-20, ENTON Lvs 20-30, ENTON Lvs 30-40, SMOGON Lvs 30-40]]
+	[Name = PRISMANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, KARPADOR Lvs 5-15, KARPADOR Lvs 5-15, KARPADOR Lvs 5-15, KARPADOR Lvs 15-25, KARPADOR Lvs 15-25, KARPADOR Lvs 15-25, KARPADOR Lvs 25-35, SLEIMA Lvs 30-40]]
+	[Name = FUCHSANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = FUCHSANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ZINNOBERINSEL Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ZINNOBERINSEL Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND EINS Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND EINS Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND VIER Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [FELINO Lvs 5-15, ENTON Lvs 5-35, FELINO Lvs 15-25, FELINO Lvs 15-25, FELINO Lvs 15-25]]
+	[Name = EILAND VIER Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EILAND FÜNF Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND FÜNF Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 16-16, ZUBAT Lvs 6-6, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [VOLTILAMM Lvs 7-7, VOLTILAMM Lvs 9-9, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11, VOLTILAMM Lvs 7-7, VOLTILAMM Lvs 9-9, VOLTILAMM Lvs 13-13, VOLTILAMM Lvs 3-3, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [TANNZA Lvs 23-23, TANNZA Lvs 25-25, TANNZA Lvs 22-22, TANNZA Lvs 27-27, TANNZA Lvs 23-23, TANNZA Lvs 25-25, TANNZA Lvs 29-29, TANNZA Lvs 19-19, TANNZA Lvs 21-21, TANNZA Lvs 27-27, TANNZA Lvs 21-21, TANNZA Lvs 27-27]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [HUNDUSTER Lvs 16-16, HUNDUSTER Lvs 18-18, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20, HUNDUSTER Lvs 16-16, HUNDUSTER Lvs 18-18, HUNDUSTER Lvs 22-22, HUNDUSTER Lvs 12-12, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 28-28, TEDDIURSA Lvs 18-18, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GRIFFEL Lvs 22-22, GRIFFEL Lvs 24-24, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26, GRIFFEL Lvs 22-22, GRIFFEL Lvs 24-24, GRIFFEL Lvs 28-28, GRIFFEL Lvs 18-18, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [POTTROTT Lvs 22-22, POTTROTT Lvs 24-24, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26, POTTROTT Lvs 22-22, POTTROTT Lvs 24-24, POTTROTT Lvs 28-28, POTTROTT Lvs 18-18, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DAMHIRPLEX Lvs 22-22, DAMHIRPLEX Lvs 24-24, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26, DAMHIRPLEX Lvs 22-22, DAMHIRPLEX Lvs 24-24, DAMHIRPLEX Lvs 28-28, DAMHIRPLEX Lvs 18-18, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [FARBEAGLE Lvs 22-22, FARBEAGLE Lvs 24-24, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26, FARBEAGLE Lvs 22-22, FARBEAGLE Lvs 24-24, FARBEAGLE Lvs 28-28, FARBEAGLE Lvs 18-18, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26]]
+]
+
+useTimeOfDay=true
+[EncounterAreas:
+	[Name = EINAMON-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = PEZWULP-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = DREICKE-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = VIERZISSE-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = FÜNIBISKU-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = LILECHS-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = SIEBORBIA-KAMMER Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25, ICOGNITO Lvs 25-25]]
+	[Name = VERTANIA-WALD Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [RAUPY Lvs 4-4, HORNLIU Lvs 4-4, RAUPY Lvs 5-5, HORNLIU Lvs 5-5, RAUPY Lvs 3-3, HORNLIU Lvs 3-3, SAFCON Lvs 5-5, KOKUNA Lvs 5-5, KOKUNA Lvs 4-4, PIKACHU Lvs 3-3, KOKUNA Lvs 6-6, PIKACHU Lvs 5-5]]
+	[Name = MONDBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 7-7, ZUBAT Lvs 8-8, KLEINSTEIN Lvs 7-7, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, KLEINSTEIN Lvs 8-8, KLEINSTEIN Lvs 9-9, PARAS Lvs 8-8, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, ZUBAT Lvs 7-7, PIEPI Lvs 8-8]]
+	[Name = MONDBERG Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10, PARAS Lvs 7-7, PARAS Lvs 8-8, PARAS Lvs 5-5, PARAS Lvs 6-6, PARAS Lvs 9-9, PARAS Lvs 10-10]]
+	[Name = MONDBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 8-8, KLEINSTEIN Lvs 9-9, ZUBAT Lvs 9-9, ZUBAT Lvs 10-10, KLEINSTEIN Lvs 10-10, PARAS Lvs 10-10, PARAS Lvs 12-12, PIEPI Lvs 10-10, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, ZUBAT Lvs 11-11, PIEPI Lvs 12-12]]
+	[Name = M.S. ANNE Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = M.S. ANNE Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = DIGDAs HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DIGDA Lvs 18-18, DIGDA Lvs 19-19, DIGDA Lvs 17-17, DIGDA Lvs 15-15, DIGDA Lvs 16-16, DIGDA Lvs 20-20, DIGDA Lvs 21-21, DIGDA Lvs 22-22, DIGDA Lvs 17-17, DIGDRI Lvs 29-29, DIGDA Lvs 17-17, DIGDRI Lvs 31-31]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 32-32, KLEINSTEIN Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, ARBOK Lvs 44-44, GOLBAT Lvs 44-44, KNOGGA Lvs 44-44, MASCHOCK Lvs 44-44, MASCHOCK Lvs 46-46, KNOGGA Lvs 46-46]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 34-34, KLEINSTEIN Lvs 34-34, RASAFF Lvs 42-42, ONIX Lvs 45-45, ONIX Lvs 48-48, ZUBAT Lvs 34-34, ARBOK Lvs 46-46, GOLBAT Lvs 46-46, KNOGGA Lvs 46-46, MASCHOCK Lvs 46-46, MASCHOCK Lvs 48-48, KNOGGA Lvs 48-48]]
+	[Name = SIEGESSTRASSE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MACHOLLO Lvs 32-32, KLEINSTEIN Lvs 32-32, ONIX Lvs 40-40, ONIX Lvs 43-43, ONIX Lvs 46-46, ZUBAT Lvs 32-32, ARBOK Lvs 44-44, GOLBAT Lvs 44-44, KNOGGA Lvs 44-44, MASCHOCK Lvs 44-44, MASCHOCK Lvs 46-46, KNOGGA Lvs 46-46]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 32-32, SMOGON Lvs 30-30, RATTIKARL Lvs 36-36, FUKANO Lvs 30-30, RATTFRATZ Lvs 28-28, SLEIMA Lvs 28-28, SMOGMOG Lvs 32-32, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = POKéMON-HAUS Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [SMOGON Lvs 28-28, RATTIKARL Lvs 34-34, SMOGON Lvs 30-30, DITTO Lvs 30-30, FUKANO Lvs 30-30, RATTIKARL Lvs 38-38, SLEIMA Lvs 28-28, SMOGMOG Lvs 34-34, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26, FUKANO Lvs 32-32, RATTFRATZ Lvs 26-26]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RIHORN Lvs 25-25, NIDORAN♂ Lvs 22-22, OWEI Lvs 24-24, OWEI Lvs 25-25, BLUZUK Lvs 22-22, NIDORINO Lvs 31-31, NIDORINA Lvs 31-31, PARASEK Lvs 30-30, BLUZUK Lvs 22-22, SICHLOR Lvs 23-23, BLUZUK Lvs 22-22, CHANEIRA Lvs 23-23]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NIDORAN♂ Lvs 24-24, DODU Lvs 26-26, OWEI Lvs 23-23, OWEI Lvs 25-25, PARAS Lvs 22-22, NIDORINO Lvs 33-33, NIDORAN♀ Lvs 24-24, PARASEK Lvs 25-25, PARAS Lvs 22-22, KANGAMA Lvs 25-25, PARAS Lvs 22-22, SICHLOR Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RIHORN Lvs 26-26, NIDORAN♂ Lvs 30-30, OWEI Lvs 25-25, OWEI Lvs 27-27, PARAS Lvs 23-23, NIDORINO Lvs 30-30, NIDORINA Lvs 30-30, OMOT Lvs 32-32, PARAS Lvs 23-23, CHANEIRA Lvs 26-26, PARAS Lvs 23-23, TAUROS Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = SAFARI-ZONE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [DODU Lvs 26-26, NIDORAN♂ Lvs 22-22, OWEI Lvs 25-25, OWEI Lvs 27-27, BLUZUK Lvs 23-23, NIDORINO Lvs 30-30, NIDORAN♀ Lvs 30-30, OMOT Lvs 32-32, BLUZUK Lvs 23-23, TAUROS Lvs 25-25, BLUZUK Lvs 23-23, KANGAMA Lvs 28-28]]
+	[Name = SAFARI-ZONE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = SAFARI-ZONE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, DRATINI Lvs 15-25, ENTON Lvs 15-35, DRAGONIR Lvs 25-35]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [MAGNETON Lvs 49-49, PARASEK Lvs 49-49, GOLBAT Lvs 46-46, MASCHOCK Lvs 46-46, RASAFF Lvs 52-52, DITTO Lvs 52-52, LEKTROBAL Lvs 58-58, PARASEK Lvs 58-58, GOLBAT Lvs 55-55, WOINGENAU Lvs 55-55, RASAFF Lvs 61-61, DITTO Lvs 61-61]]
+	[Name = AZURIA-HÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 30-40, ENTORON Lvs 40-50, ENTORON Lvs 45-55, ENTON Lvs 40-50, ENTON Lvs 40-50]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 30-40, GEOROK Lvs 40-50, GEOROK Lvs 45-55, KLEINSTEIN Lvs 40-50, KLEINSTEIN Lvs 40-50]]
+	[Name = AZURIA-HÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [GOLBAT Lvs 49-49, MASCHOCK Lvs 49-49, MAGNETON Lvs 52-52, PARASEK Lvs 52-52, KADABRA Lvs 55-55, DITTO Lvs 55-55, GOLBAT Lvs 58-58, WOINGENAU Lvs 58-58, LEKTROBAL Lvs 61-61, PARASEK Lvs 61-61, KADABRA Lvs 64-64, DITTO Lvs 64-64]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 35-45, GEOROK Lvs 45-55, GEOROK Lvs 50-60, KLEINSTEIN Lvs 45-55, KLEINSTEIN Lvs 45-55]]
+	[Name = AZURIA-HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KADABRA Lvs 58-58, DITTO Lvs 58-58, MAGNETON Lvs 55-55, PARASEK Lvs 55-55, GOLBAT Lvs 52-52, MASCHOCK Lvs 52-52, KADABRA Lvs 67-67, DITTO Lvs 67-67, LEKTROBAL Lvs 64-64, PARASEK Lvs 64-64, GOLBAT Lvs 61-61, WOINGENAU Lvs 61-61]]
+	[Name = AZURIA-HÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 40-50, ENTORON Lvs 50-60, ENTORON Lvs 55-65, ENTON Lvs 50-60, ENTON Lvs 50-60]]
+	[Name = AZURIA-HÖHLE Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-50, GEOROK Lvs 50-60, GEOROK Lvs 55-65, KLEINSTEIN Lvs 50-60, KLEINSTEIN Lvs 50-60]]
+	[Name = AZURIA-HÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 15-15, KLEINSTEIN Lvs 16-16, MENKI Lvs 16-16, KLEINSTEIN Lvs 17-17, ZUBAT Lvs 16-16, MACHOLLO Lvs 16-16, MENKI Lvs 17-17, MACHOLLO Lvs 17-17, KLEINSTEIN Lvs 15-15, ONIX Lvs 13-13, KLEINSTEIN Lvs 15-15, ONIX Lvs 15-15]]
+	[Name = FELSTUNNEL Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 16-16, KLEINSTEIN Lvs 17-17, MENKI Lvs 17-17, KLEINSTEIN Lvs 16-16, ZUBAT Lvs 15-15, MACHOLLO Lvs 17-17, MENKI Lvs 16-16, ONIX Lvs 13-13, KLEINSTEIN Lvs 15-15, ONIX Lvs 15-15, KLEINSTEIN Lvs 15-15, ONIX Lvs 17-17]]
+	[Name = FELSTUNNEL Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 27-27, ENTON Lvs 29-29, ENTON Lvs 31-31, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, ENTON Lvs 33-33, ZUBAT Lvs 26-26, ENTON Lvs 26-26, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 29-29, ENTON Lvs 31-31, JUROB Lvs 28-28, ZUBAT Lvs 22-22, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, GOLBAT Lvs 28-28, ENTORON Lvs 33-33, ZUBAT Lvs 26-26, ENTORON Lvs 35-35, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [ENTON Lvs 30-30, ENTON Lvs 32-32, JUROB Lvs 30-30, JUROB Lvs 32-32, ZUBAT Lvs 22-22, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, ENTORON Lvs 34-34, ENTORON Lvs 32-32, GOLBAT Lvs 28-28, ENTORON Lvs 32-32, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 30-30, JUROB Lvs 32-32, ENTON Lvs 32-32, ENTON Lvs 30-30, ENTORON Lvs 32-32, ZUBAT Lvs 24-24, GOLBAT Lvs 26-26, ENTORON Lvs 34-34, JUGONG Lvs 32-32, GOLBAT Lvs 28-28, JUGONG Lvs 34-34, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 25-35, SEEPER Lvs 25-30, JUGONG Lvs 35-40, ENTON Lvs 30-40, ENTORON Lvs 35-40]]
+	[Name = SEESCHAUMINSELN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = SEESCHAUMINSELN Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 30-30, JUROB Lvs 32-32, ENTON Lvs 32-32, JUROB Lvs 34-34, ENTORON Lvs 32-32, GOLBAT Lvs 26-26, JUGONG Lvs 34-34, ENTORON Lvs 34-34, JUGONG Lvs 36-36, GOLBAT Lvs 28-28, JUGONG Lvs 36-36, GOLBAT Lvs 30-30]]
+	[Name = SEESCHAUMINSELN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 25-35, SEEPER Lvs 25-30, JUGONG Lvs 35-40, ENTON Lvs 30-40, ENTORON Lvs 35-40]]
+	[Name = SEESCHAUMINSELN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, GARADOS Lvs 25-35]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, NEBULAK Lvs 19-19, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, ALPOLLO Lvs 20-20]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, ALPOLLO Lvs 20-20, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, NEBULAK Lvs 19-19]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 15-15, NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 13-13, NEBULAK Lvs 14-14, NEBULAK Lvs 18-18, ALPOLLO Lvs 20-20, TRAGOSSO Lvs 15-15, NEBULAK Lvs 17-17, TRAGOSSO Lvs 17-17, NEBULAK Lvs 17-17, NEBULAK Lvs 19-19]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 18-18, NEBULAK Lvs 14-14, NEBULAK Lvs 15-15, NEBULAK Lvs 19-19, ALPOLLO Lvs 21-21, TRAGOSSO Lvs 17-17, NEBULAK Lvs 18-18, TRAGOSSO Lvs 19-19, NEBULAK Lvs 18-18, ALPOLLO Lvs 23-23]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = POKéMON TURM Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 16-16, NEBULAK Lvs 17-17, NEBULAK Lvs 18-18, NEBULAK Lvs 15-15, NEBULAK Lvs 19-19, ALPOLLO Lvs 23-23, TRAGOSSO Lvs 17-17, TRAGOSSO Lvs 19-19, NEBULAK Lvs 18-18, ALPOLLO Lvs 23-23, NEBULAK Lvs 18-18, ALPOLLO Lvs 25-25]
+		Banned = [Species [name=MAGNETILO, number=81, primaryType=ELECTRIC, secondaryType=STEEL, hp=25, attack=35, defense=70, spatk=95, spdef=55, speed=45], Species [name=DIGDA, number=50, primaryType=GROUND, secondaryType=null, hp=10, attack=55, defense=25, spatk=35, spdef=45, speed=95], Species [name=MAGNETON, number=82, primaryType=ELECTRIC, secondaryType=STEEL, hp=50, attack=60, defense=95, spatk=120, spdef=70, speed=70], Species [name=DIGDRI, number=51, primaryType=GROUND, secondaryType=null, hp=35, attack=80, defense=50, spatk=50, spdef=70, speed=120], Species [name=KNACKLION, number=328, primaryType=GROUND, secondaryType=null, hp=45, attack=100, defense=45, spatk=45, spdef=45, speed=10], Species [name=ISSO, number=360, primaryType=PSYCHIC, secondaryType=null, hp=95, attack=23, defense=48, spatk=23, spdef=48, speed=23], Species [name=WOINGENAU, number=202, primaryType=PSYCHIC, secondaryType=null, hp=190, attack=33, defense=58, spatk=33, spdef=58, speed=33], Species [name=NASGNET, number=299, primaryType=ROCK, secondaryType=null, hp=30, attack=45, defense=135, spatk=45, spdef=90, speed=30]]]
+	[Name = KRAFTWERK Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [VOLTOBAL Lvs 22-22, MAGNETILO Lvs 22-22, VOLTOBAL Lvs 25-25, MAGNETILO Lvs 25-25, PIKACHU Lvs 22-22, PIKACHU Lvs 24-24, MAGNETON Lvs 31-31, MAGNETON Lvs 34-34, PIKACHU Lvs 26-26, ELEKTEK Lvs 32-32, PIKACHU Lvs 26-26, ELEKTEK Lvs 35-35]]
+	[Name = GLUTBERG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [PONITA Lvs 30-30, IBITAK Lvs 38-38, PONITA Lvs 33-33, HABITAK Lvs 32-32, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 33-33, PONITA Lvs 36-36, IBITAK Lvs 40-40, HABITAK Lvs 30-30, GALLOPA Lvs 39-39, HABITAK Lvs 30-30, GALLOPA Lvs 42-42]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 33-33, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 29-29, KLEINSTEIN Lvs 31-31, MACHOLLO Lvs 31-31, MACHOLLO Lvs 33-33, KLEINSTEIN Lvs 35-35, MACHOLLO Lvs 37-37, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 34-34, MACHOLLO Lvs 36-36, KLEINSTEIN Lvs 30-30, KLEINSTEIN Lvs 32-32, MACHOLLO Lvs 32-32, MACHOLLO Lvs 34-34, MASCHOCK Lvs 38-38, MASCHOCK Lvs 38-38, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40, MASCHOCK Lvs 40-40]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 33-33, MACHOLLO Lvs 35-35, KLEINSTEIN Lvs 29-29, KLEINSTEIN Lvs 31-31, MACHOLLO Lvs 31-31, MACHOLLO Lvs 33-33, KLEINSTEIN Lvs 35-35, MACHOLLO Lvs 37-37, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39, KLEINSTEIN Lvs 37-37, MACHOLLO Lvs 39-39]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 36-36, MACHOLLO Lvs 38-38, KLEINSTEIN Lvs 32-32, KLEINSTEIN Lvs 34-34, MACHOLLO Lvs 34-34, MACHOLLO Lvs 36-36, KLEINSTEIN Lvs 38-38, MASCHOCK Lvs 40-40, KLEINSTEIN Lvs 40-40, MASCHOCK Lvs 42-42, KLEINSTEIN Lvs 40-40, MASCHOCK Lvs 42-42]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 38-38, KLEINSTEIN Lvs 36-36, KLEINSTEIN Lvs 34-34, KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 28-28, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 32-32, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [SCHNECKMAG Lvs 26-26, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, SCHNECKMAG Lvs 32-32, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 22-22, SCHNECKMAG Lvs 20-20, SCHNECKMAG Lvs 34-34, SCHNECKMAG Lvs 36-36, SCHNECKMAG Lvs 18-18, SCHNECKMAG Lvs 36-36, SCHNECKMAG Lvs 18-18]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [SCHNECKMAG Lvs 15-25, SCHNECKMAG Lvs 25-35, MAGCARGO Lvs 40-45, MAGCARGO Lvs 35-45, MAGCARGO Lvs 25-35]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 28-28, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 32-32, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22, KLEINSTEIN Lvs 44-44, SCHNECKMAG Lvs 22-22]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = GLUTBERG Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 38-38, KLEINSTEIN Lvs 36-36, KLEINSTEIN Lvs 34-34, KLEINSTEIN Lvs 40-40, SCHNECKMAG Lvs 24-24, SCHNECKMAG Lvs 26-26, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 28-28, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30, KLEINSTEIN Lvs 42-42, SCHNECKMAG Lvs 30-30]]
+	[Name = GLUTBERG Rock Smash, Rate = 50, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = BEERENFORST Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBOGA Lvs 37-37, DUFLOR Lvs 35-35, TAUBSI Lvs 32-32, MYRAPLA Lvs 30-30, BLUZUK Lvs 34-34, TRAUMATO Lvs 34-34, OWEI Lvs 35-35, ENTON Lvs 31-31, OMOT Lvs 37-37, HYPNO Lvs 37-37, OMOT Lvs 40-40, HYPNO Lvs 40-40]]
+	[Name = BEERENFORST Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-20, ENTON Lvs 20-35, ENTON Lvs 35-40, ENTORON Lvs 35-40, ENTORON Lvs 35-40]]
+	[Name = BEERENFORST Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 43-43, GOLBAT Lvs 45-45, JUROB Lvs 45-45, JUROB Lvs 47-47, ZUBAT Lvs 40-40, JUGONG Lvs 49-49, JUGONG Lvs 51-51, ENTON Lvs 41-41, GOLBAT Lvs 48-48, JUGONG Lvs 53-53, GOLBAT Lvs 48-48, JUGONG Lvs 53-53]]
+	[Name = EISKASKADENHÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [JUROB Lvs 5-35, ENTON Lvs 5-35, JUGONG Lvs 35-40, FELINO Lvs 5-15, FELINO Lvs 5-15]]
+	[Name = EISKASKADENHÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [QUIEKEL Lvs 25-25, GOLBAT Lvs 45-45, JUROB Lvs 45-45, QUIEKEL Lvs 27-27, ZUBAT Lvs 40-40, QUIEKEL Lvs 29-29, BOTOGEL Lvs 30-30, QUIEKEL Lvs 31-31, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [QUIEKEL Lvs 25-25, GOLBAT Lvs 45-45, JUROB Lvs 45-45, QUIEKEL Lvs 27-27, ZUBAT Lvs 40-40, QUIEKEL Lvs 29-29, BOTOGEL Lvs 30-30, QUIEKEL Lvs 31-31, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23, GOLBAT Lvs 48-48, QUIEKEL Lvs 23-23]]
+	[Name = EISKASKADENHÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [JUROB Lvs 43-43, GOLBAT Lvs 45-45, JUROB Lvs 45-45, JUROB Lvs 47-47, ZUBAT Lvs 40-40, JUGONG Lvs 49-49, JUGONG Lvs 51-51, ENTON Lvs 41-41, GOLBAT Lvs 48-48, JUGONG Lvs 53-53, GOLBAT Lvs 48-48, JUGONG Lvs 53-53]]
+	[Name = EISKASKADENHÖHLE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-45, TENTOXA Lvs 35-45, LAPRAS Lvs 30-45]]
+	[Name = EISKASKADENHÖHLE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = MUSTERBUSCHWALD Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [WEBARAK Lvs 9-9, KOKUNA Lvs 9-9, WEBARAK Lvs 14-14, RAUPY Lvs 6-6, HORNLIU Lvs 6-6, SKARABORN Lvs 15-15, SAFCON Lvs 9-9, SKARABORN Lvs 20-20, LEDYBA Lvs 9-9, SKARABORN Lvs 25-25, LEDYBA Lvs 14-14, SKARABORN Lvs 30-30]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 2, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 3, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 4, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 6, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 7, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 8, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 9, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 10, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, GOLBAT Lvs 43-43, NEBULAK Lvs 38-38, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = VERLORENE HÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [NEBULAK Lvs 40-40, ZUBAT Lvs 37-37, ALPOLLO Lvs 44-44, ALPOLLO Lvs 46-46, GOLBAT Lvs 41-41, KRAMURX Lvs 15-15, KRAMURX Lvs 20-20, ALPOLLO Lvs 48-48, ALPOLLO Lvs 50-50, KRAMURX Lvs 22-22, ALPOLLO Lvs 52-52, KRAMURX Lvs 22-22]]
+	[Name = GLÜHWEG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 32-32, PONITA Lvs 34-34, IBITAK Lvs 36-36, PONITA Lvs 31-31, KLEINSTEIN Lvs 31-31, MAUZI Lvs 31-31, HABITAK Lvs 30-30, ENTON Lvs 34-34, GALLOPA Lvs 37-37, SNOBILIKAT Lvs 37-37, GALLOPA Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = GLÜHWEG Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GLÜHWEG Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 5-20, KLEINSTEIN Lvs 10-20, KLEINSTEIN Lvs 15-30, GEOROK Lvs 25-40, GEOROK Lvs 30-40]]
+	[Name = GLÜHWEG Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = SCHATZGESTADE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 32-32, TANGELA Lvs 33-33, HABITAK Lvs 31-31, TANGELA Lvs 35-35, IBITAK Lvs 36-36, MAUZI Lvs 31-31, IBITAK Lvs 38-38, ENTON Lvs 31-31, IBITAK Lvs 40-40, SNOBILIKAT Lvs 37-37, IBITAK Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = SCHATZGESTADE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = SCHATZGESTADE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = KAP KANTE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 31-31, MYRAPLA Lvs 30-30, MYRAPLA Lvs 32-32, DUFLOR Lvs 36-36, IBITAK Lvs 36-36, MAUZI Lvs 31-31, DUFLOR Lvs 38-38, ENTON Lvs 31-31, ENTORON Lvs 37-37, SNOBILIKAT Lvs 37-37, ENTORON Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = KAP KANTE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-20, ENTON Lvs 20-35, ENTON Lvs 35-40, ENTORON Lvs 35-40, ENTORON Lvs 35-40]]
+	[Name = KAP KANTE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = BUNDBRÜCKE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 32-32, MYRAPLA Lvs 31-31, TAUBSI Lvs 29-29, DUFLOR Lvs 36-36, TAUBOGA Lvs 34-34, MAUZI Lvs 31-31, BLUZUK Lvs 34-34, ENTON Lvs 31-31, TAUBOGA Lvs 37-37, SNOBILIKAT Lvs 37-37, TAUBOGA Lvs 40-40, SNOBILIKAT Lvs 40-40]]
+	[Name = BUNDBRÜCKE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = BUNDBRÜCKE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = TRI-EILAND HAFEN Grass/Cave, Rate = 1, MapIndex = -1,
+		Encounters = [DUMMISEL Lvs 15-15, DUMMISEL Lvs 15-15, DUMMISEL Lvs 10-10, DUMMISEL Lvs 10-10, DUMMISEL Lvs 20-20, DUMMISEL Lvs 20-20, DUMMISEL Lvs 25-25, DUMMISEL Lvs 30-30, DUMMISEL Lvs 25-25, DUMMISEL Lvs 30-30, DUMMISEL Lvs 5-5, DUMMISEL Lvs 35-35]]
+	[Name = FERIENPARADIES Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = FERIENPARADIES Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WASSERIRRGARTEN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = WASSERIRRGARTEN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND 5-WEIDE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 44-44, WIESOR Lvs 10-10, TAUBOGA Lvs 48-48, HOPPSPROSS Lvs 10-10, WIESOR Lvs 15-15, MAUZI Lvs 41-41, HOPPSPROSS Lvs 15-15, ENTON Lvs 41-41, TAUBOGA Lvs 50-50, SNOBILIKAT Lvs 47-47, TAUBOGA Lvs 50-50, SNOBILIKAT Lvs 50-50]]
+	[Name = EILAND 5-WEIDE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND 5-WEIDE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = GEDENKSÄULE Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HOPPSPROSS Lvs 10-10, HOPPSPROSS Lvs 12-12, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14, HOPPSPROSS Lvs 10-10, HOPPSPROSS Lvs 12-12, HOPPSPROSS Lvs 16-16, HOPPSPROSS Lvs 6-6, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14, HOPPSPROSS Lvs 8-8, HOPPSPROSS Lvs 14-14]]
+	[Name = GEDENKSÄULE Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GEDENKSÄULE Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = FERN-EILAND Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = FERN-EILAND Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = GRÜNER PFAD Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = GRÜNER PFAD Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WASSERWEG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 44-44, WIESOR Lvs 10-10, MYRAPLA Lvs 44-44, IBITAK Lvs 48-48, WIESOR Lvs 15-15, MAUZI Lvs 41-41, DUFLOR Lvs 48-48, ENTON Lvs 41-41, IBITAK Lvs 50-50, SNOBILIKAT Lvs 47-47, IBITAK Lvs 50-50, SNOBILIKAT Lvs 50-50]]
+	[Name = WASSERWEG Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = WASSERWEG Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = RUINENTAL Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [NATU Lvs 15-15, HABITAK Lvs 44-44, YANMA Lvs 18-18, FELINO Lvs 15-15, IBITAK Lvs 49-49, MAUZI Lvs 43-43, WOINGENAU Lvs 25-25, ENTON Lvs 41-41, NATU Lvs 20-20, SNOBILIKAT Lvs 49-49, NATU Lvs 20-20, SNOBILIKAT Lvs 52-52]]
+	[Name = RUINENTAL Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [FELINO Lvs 5-20, FELINO Lvs 10-20, FELINO Lvs 15-25, FELINO Lvs 20-25, FELINO Lvs 20-25]]
+	[Name = RUINENTAL Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = TRAINERTURM Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = TRAINERTURM Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = SCHLUCHTEINGANG Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 44-44, WIESOR Lvs 10-10, PHANPY Lvs 10-10, IBITAK Lvs 48-48, WIESOR Lvs 15-15, MAUZI Lvs 41-41, IBITAK Lvs 50-50, ENTON Lvs 41-41, PHANPY Lvs 15-15, SNOBILIKAT Lvs 47-47, PHANPY Lvs 15-15, SNOBILIKAT Lvs 50-50]]
+	[Name = 7-SCHATZSCHLUCHT Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 46-46, PHANPY Lvs 15-15, TRAGOSSO Lvs 46-46, IBITAK Lvs 50-50, KNOGGA Lvs 52-52, MAUZI Lvs 43-43, ONIX Lvs 54-54, PANZAERON Lvs 30-30, LARVITAR Lvs 15-15, SNOBILIKAT Lvs 49-49, LARVITAR Lvs 20-20, SNOBILIKAT Lvs 52-52]]
+	[Name = 7-SCHATZSCHLUCHT Rock Smash, Rate = 25, MapIndex = -1,
+		Encounters = [KLEINSTEIN Lvs 25-35, GEOROK Lvs 30-45, GEOROK Lvs 35-50, KLEINSTEIN Lvs 30-40, KLEINSTEIN Lvs 30-40]]
+	[Name = TANIBO-RUINEN Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = TANIBO-RUINEN Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, BALDORFISH Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 1 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 2-2, RATTFRATZ Lvs 2-2, TAUBSI Lvs 3-3, RATTFRATZ Lvs 3-3, TAUBSI Lvs 4-4, RATTFRATZ Lvs 4-4, TAUBSI Lvs 5-5, RATTFRATZ Lvs 4-4]]
+	[Name = ROUTE 2 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTFRATZ Lvs 3-3, TAUBSI Lvs 3-3, RATTFRATZ Lvs 4-4, TAUBSI Lvs 4-4, RATTFRATZ Lvs 2-2, TAUBSI Lvs 2-2, RATTFRATZ Lvs 5-5, TAUBSI Lvs 5-5, RAUPY Lvs 4-4, HORNLIU Lvs 4-4, RAUPY Lvs 5-5, HORNLIU Lvs 5-5]]
+	[Name = ROUTE 3 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 6-6, TAUBSI Lvs 6-6, HABITAK Lvs 7-7, MENKI Lvs 7-7, NIDORAN♂ Lvs 6-6, TAUBSI Lvs 7-7, HABITAK Lvs 8-8, PUMMELUFF Lvs 3-3, NIDORAN♂ Lvs 7-7, PUMMELUFF Lvs 5-5, NIDORAN♀ Lvs 6-6, PUMMELUFF Lvs 7-7]]
+	[Name = ROUTE 4 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 10-10, RATTFRATZ Lvs 10-10, RETTAN Lvs 6-6, RETTAN Lvs 10-10, HABITAK Lvs 8-8, RATTFRATZ Lvs 8-8, HABITAK Lvs 12-12, RATTFRATZ Lvs 12-12, MENKI Lvs 10-10, RETTAN Lvs 8-8, MENKI Lvs 12-12, RETTAN Lvs 12-12]]
+	[Name = ROUTE 4 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 4 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 5 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MAUZI Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 13-13, MAUZI Lvs 12-12, MYRAPLA Lvs 15-15, TAUBSI Lvs 15-15, MYRAPLA Lvs 16-16, TAUBSI Lvs 16-16, TAUBSI Lvs 15-15, MAUZI Lvs 14-14, TAUBSI Lvs 15-15, MAUZI Lvs 16-16]]
+	[Name = ROUTE 6 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MAUZI Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 13-13, MAUZI Lvs 12-12, MYRAPLA Lvs 15-15, TAUBSI Lvs 15-15, MYRAPLA Lvs 16-16, TAUBSI Lvs 16-16, TAUBSI Lvs 15-15, MAUZI Lvs 14-14, TAUBSI Lvs 15-15, MAUZI Lvs 16-16]]
+	[Name = ROUTE 6 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 6 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 7 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 19-19, MAUZI Lvs 17-17, MYRAPLA Lvs 19-19, MAUZI Lvs 18-18, TAUBSI Lvs 22-22, MYRAPLA Lvs 22-22, FUKANO Lvs 18-18, FUKANO Lvs 20-20, MAUZI Lvs 17-17, MAUZI Lvs 19-19, MAUZI Lvs 17-17, MAUZI Lvs 20-20]]
+	[Name = ROUTE 8 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [TAUBSI Lvs 18-18, MAUZI Lvs 18-18, FUKANO Lvs 16-16, TAUBSI Lvs 20-20, MAUZI Lvs 20-20, RETTAN Lvs 17-17, FUKANO Lvs 17-17, RETTAN Lvs 19-19, RETTAN Lvs 17-17, FUKANO Lvs 15-15, RETTAN Lvs 17-17, FUKANO Lvs 18-18]]
+	[Name = ROUTE 9 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 16-16, RATTFRATZ Lvs 16-16, RETTAN Lvs 11-11, RETTAN Lvs 15-15, HABITAK Lvs 13-13, RATTFRATZ Lvs 14-14, HABITAK Lvs 17-17, RATTFRATZ Lvs 17-17, RATTFRATZ Lvs 14-14, RETTAN Lvs 13-13, RATTFRATZ Lvs 14-14, RETTAN Lvs 17-17]]
+	[Name = ROUTE 10 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 16-16, VOLTOBAL Lvs 16-16, RETTAN Lvs 11-11, RETTAN Lvs 15-15, HABITAK Lvs 13-13, VOLTOBAL Lvs 14-14, HABITAK Lvs 17-17, VOLTOBAL Lvs 17-17, VOLTOBAL Lvs 14-14, RETTAN Lvs 13-13, VOLTOBAL Lvs 14-14, RETTAN Lvs 17-17]]
+	[Name = ROUTE 10 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 10 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 11 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RETTAN Lvs 14-14, HABITAK Lvs 15-15, RETTAN Lvs 12-12, HABITAK Lvs 13-13, TRAUMATO Lvs 11-11, TRAUMATO Lvs 13-13, RETTAN Lvs 15-15, HABITAK Lvs 17-17, RETTAN Lvs 12-12, TRAUMATO Lvs 15-15, RETTAN Lvs 12-12, TRAUMATO Lvs 15-15]]
+	[Name = ROUTE 11 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 11 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 12 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 23-23, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, TAUBSI Lvs 27-27, TAUBSI Lvs 23-23, DUFLOR Lvs 28-28, TAUBSI Lvs 23-23, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 12 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 12 Fishing, Rate = 60, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 13 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 27-27, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DITTO Lvs 25-25, TAUBOGA Lvs 29-29, DUFLOR Lvs 28-28, TAUBOGA Lvs 29-29, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 13 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 13 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 14 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, DITTO Lvs 23-23, TAUBSI Lvs 27-27, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DUFLOR Lvs 30-30, DITTO Lvs 23-23, TAUBOGA Lvs 29-29, DITTO Lvs 23-23, TAUBOGA Lvs 29-29]]
+	[Name = ROUTE 15 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MYRAPLA Lvs 24-24, BLUZUK Lvs 24-24, MYRAPLA Lvs 22-22, TAUBSI Lvs 27-27, TAUBSI Lvs 25-25, BLUZUK Lvs 26-26, MYRAPLA Lvs 26-26, DITTO Lvs 25-25, TAUBOGA Lvs 29-29, DUFLOR Lvs 28-28, TAUBOGA Lvs 29-29, DUFLOR Lvs 30-30]]
+	[Name = ROUTE 16 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 18-18, RATTFRATZ Lvs 18-18, RATTFRATZ Lvs 20-20, HABITAK Lvs 22-22, DODU Lvs 20-20, RATTFRATZ Lvs 22-22, DODU Lvs 22-22, RATTFRATZ Lvs 18-18, RATTIKARL Lvs 23-23, RATTFRATZ Lvs 18-18, RATTIKARL Lvs 25-25]]
+	[Name = ROUTE 17 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 24-24, HABITAK Lvs 22-22, DODU Lvs 26-26, RATTIKARL Lvs 25-25, RATTIKARL Lvs 27-27, DODU Lvs 28-28, RATTIKARL Lvs 29-29, RATTFRATZ Lvs 22-22, IBITAK Lvs 25-25, RATTFRATZ Lvs 22-22, IBITAK Lvs 27-27]]
+	[Name = ROUTE 18 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HABITAK Lvs 20-20, DODU Lvs 24-24, HABITAK Lvs 22-22, DODU Lvs 26-26, RATTIKARL Lvs 25-25, IBITAK Lvs 25-25, DODU Lvs 28-28, RATTIKARL Lvs 29-29, RATTFRATZ Lvs 22-22, IBITAK Lvs 27-27, RATTFRATZ Lvs 22-22, IBITAK Lvs 29-29]]
+	[Name = ROUTE 19 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 19 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 20 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 20 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 21 Grass/Cave, Rate = 14, MapIndex = -1,
+		Encounters = [TANGELA Lvs 22-22, TANGELA Lvs 23-23, TANGELA Lvs 24-24, TANGELA Lvs 21-21, TANGELA Lvs 25-25, TANGELA Lvs 20-20, TANGELA Lvs 19-19, TANGELA Lvs 26-26, TANGELA Lvs 18-18, TANGELA Lvs 27-27, TANGELA Lvs 17-17, TANGELA Lvs 28-28]]
+	[Name = ROUTE 21 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 21 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 22 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [RATTFRATZ Lvs 3-3, MENKI Lvs 3-3, RATTFRATZ Lvs 4-4, MENKI Lvs 4-4, RATTFRATZ Lvs 2-2, MENKI Lvs 2-2, HABITAK Lvs 3-3, HABITAK Lvs 5-5, RATTFRATZ Lvs 5-5, MENKI Lvs 5-5, RATTFRATZ Lvs 5-5, MENKI Lvs 5-5]]
+	[Name = ROUTE 22 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 22 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 23 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [MENKI Lvs 32-32, IBITAK Lvs 40-40, MENKI Lvs 34-34, HABITAK Lvs 34-34, RETTAN Lvs 32-32, RETTAN Lvs 34-34, RASAFF Lvs 42-42, ARBOK Lvs 44-44, HABITAK Lvs 32-32, IBITAK Lvs 42-42, HABITAK Lvs 32-32, IBITAK Lvs 44-44]]
+	[Name = ROUTE 23 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 23 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ROUTE 24 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HORNLIU Lvs 7-7, RAUPY Lvs 7-7, TAUBSI Lvs 11-11, MYRAPLA Lvs 12-12, MYRAPLA Lvs 13-13, ABRA Lvs 10-10, TAUBSI Lvs 13-13, MYRAPLA Lvs 14-14, KOKUNA Lvs 8-8, ABRA Lvs 8-8, SAFCON Lvs 8-8, ABRA Lvs 12-12]]
+	[Name = ROUTE 24 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ROUTE 24 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ROUTE 25 Grass/Cave, Rate = 21, MapIndex = -1,
+		Encounters = [HORNLIU Lvs 8-8, RAUPY Lvs 8-8, TAUBSI Lvs 13-13, MYRAPLA Lvs 14-14, MYRAPLA Lvs 13-13, ABRA Lvs 11-11, TAUBSI Lvs 11-11, MYRAPLA Lvs 12-12, KOKUNA Lvs 9-9, ABRA Lvs 9-9, SAFCON Lvs 9-9, ABRA Lvs 13-13]]
+	[Name = ROUTE 25 Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = ROUTE 25 Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ALABASTIA Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ALABASTIA Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-10, KARPADOR Lvs 5-10, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = VERTANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = VERTANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = AZURIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = AZURIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, SEEPER Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = ORANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ORANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEPER Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = PRISMANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 5-10, ENTON Lvs 10-20, ENTON Lvs 20-30, ENTON Lvs 30-40, SMOGON Lvs 30-40]]
+	[Name = PRISMANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, KARPADOR Lvs 5-15, KARPADOR Lvs 5-15, KARPADOR Lvs 5-15, KARPADOR Lvs 15-25, KARPADOR Lvs 15-25, KARPADOR Lvs 15-25, KARPADOR Lvs 25-35, SLEIMA Lvs 30-40]]
+	[Name = FUCHSANIA CITY Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [ENTON Lvs 20-25, ENTON Lvs 20-25, ENTON Lvs 25-30, ENTON Lvs 30-35, ENTON Lvs 35-40]]
+	[Name = FUCHSANIA CITY Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, GOLDINI Lvs 5-15, KARPADOR Lvs 5-15, QUAPSEL Lvs 5-15, GOLDINI Lvs 15-25, GOLKING Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = ZINNOBERINSEL Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-10, TENTACHA Lvs 10-20, TENTACHA Lvs 20-30, TENTACHA Lvs 30-35, TENTACHA Lvs 35-40]]
+	[Name = ZINNOBERINSEL Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, KRABBY Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND EINS Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-20, TENTACHA Lvs 20-35, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND EINS Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = EILAND VIER Surfing, Rate = 2, MapIndex = -1,
+		Encounters = [FELINO Lvs 5-15, ENTON Lvs 5-35, FELINO Lvs 15-25, FELINO Lvs 15-25, FELINO Lvs 15-25]]
+	[Name = EILAND VIER Fishing, Rate = 20, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, QUAPSEL Lvs 5-15, KARPADOR Lvs 5-15, GOLDINI Lvs 5-15, QUAPSEL Lvs 15-25, QUAPUTZI Lvs 20-30, GARADOS Lvs 15-25, ENTON Lvs 15-25, ENTON Lvs 25-35]]
+	[Name = EILAND FÜNF Surfing, Rate = 1, MapIndex = -1,
+		Encounters = [TENTACHA Lvs 5-35, HOPPSPROSS Lvs 5-15, TENTACHA Lvs 35-40, TENTOXA Lvs 35-40, TENTOXA Lvs 35-40]]
+	[Name = EILAND FÜNF Fishing, Rate = 10, MapIndex = -1,
+		Encounters = [KARPADOR Lvs 5-5, KARPADOR Lvs 5-5, SEEPER Lvs 5-15, KARPADOR Lvs 5-15, SEEPER Lvs 5-15, SEEPER Lvs 15-25, MUSCHAS Lvs 15-25, GARADOS Lvs 15-25, SEEMON Lvs 25-35, ENTON Lvs 25-35]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 10-10, ZUBAT Lvs 12-12, ZUBAT Lvs 16-16, ZUBAT Lvs 6-6, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14, ZUBAT Lvs 8-8, ZUBAT Lvs 14-14]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [VOLTILAMM Lvs 7-7, VOLTILAMM Lvs 9-9, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11, VOLTILAMM Lvs 7-7, VOLTILAMM Lvs 9-9, VOLTILAMM Lvs 13-13, VOLTILAMM Lvs 3-3, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11, VOLTILAMM Lvs 5-5, VOLTILAMM Lvs 11-11]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [TANNZA Lvs 23-23, TANNZA Lvs 25-25, TANNZA Lvs 22-22, TANNZA Lvs 27-27, TANNZA Lvs 23-23, TANNZA Lvs 25-25, TANNZA Lvs 29-29, TANNZA Lvs 19-19, TANNZA Lvs 21-21, TANNZA Lvs 27-27, TANNZA Lvs 21-21, TANNZA Lvs 27-27]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [HUNDUSTER Lvs 16-16, HUNDUSTER Lvs 18-18, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20, HUNDUSTER Lvs 16-16, HUNDUSTER Lvs 18-18, HUNDUSTER Lvs 22-22, HUNDUSTER Lvs 12-12, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20, HUNDUSTER Lvs 14-14, HUNDUSTER Lvs 20-20]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 22-22, TEDDIURSA Lvs 24-24, TEDDIURSA Lvs 28-28, TEDDIURSA Lvs 18-18, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26, TEDDIURSA Lvs 20-20, TEDDIURSA Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [GRIFFEL Lvs 22-22, GRIFFEL Lvs 24-24, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26, GRIFFEL Lvs 22-22, GRIFFEL Lvs 24-24, GRIFFEL Lvs 28-28, GRIFFEL Lvs 18-18, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26, GRIFFEL Lvs 20-20, GRIFFEL Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [POTTROTT Lvs 22-22, POTTROTT Lvs 24-24, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26, POTTROTT Lvs 22-22, POTTROTT Lvs 24-24, POTTROTT Lvs 28-28, POTTROTT Lvs 18-18, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26, POTTROTT Lvs 20-20, POTTROTT Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [DAMHIRPLEX Lvs 22-22, DAMHIRPLEX Lvs 24-24, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26, DAMHIRPLEX Lvs 22-22, DAMHIRPLEX Lvs 24-24, DAMHIRPLEX Lvs 28-28, DAMHIRPLEX Lvs 18-18, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26, DAMHIRPLEX Lvs 20-20, DAMHIRPLEX Lvs 26-26]]
+	[Name = WANDELHÖHLE Grass/Cave, Rate = 5, MapIndex = -1,
+		Encounters = [FARBEAGLE Lvs 22-22, FARBEAGLE Lvs 24-24, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26, FARBEAGLE Lvs 22-22, FARBEAGLE Lvs 24-24, FARBEAGLE Lvs 28-28, FARBEAGLE Lvs 18-18, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26, FARBEAGLE Lvs 20-20, FARBEAGLE Lvs 26-26]]
+]

@@ -25,7 +25,7 @@ package com.dabomstew.pkrandom.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.pokemon.Type;
+import com.dabomstew.pkrandom.gamedata.Type;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,18 +36,26 @@ public class GBConstants {
 
     public static final int minRomSize = 0x80000, maxRomSize = 0x200000;
 
+    public static final int longSize = 4; // at least for GBA, probably for GB and GBC as well
+
     public static final int jpFlagOffset = 0x14A, versionOffset = 0x14C, crcOffset = 0x14E, romSigOffset = 0x134,
             isGBCOffset = 0x143, romCodeOffset = 0x13F;
 
-    public static final int stringTerminator = 0x50, stringPrintedTextEnd = 0x57, stringPrintedTextPromptEnd = 0x58;
+    public static final byte stringTerminator = 0x50, stringPrintedTextEnd = 0x57, stringPrintedTextPromptEnd = 0x58;
 
     public static final int bankSize = 0x4000;
 
     public static final byte gbZ80Jump = (byte) 0xC3, gbZ80Nop = 0x00, gbZ80XorA = (byte) 0xAF, gbZ80LdA = 0x3E,
-            gbZ80LdAToFar = (byte) 0xEA, gbZ80Ret = (byte) 0xC9, gbZ80JumpRelative = (byte) 0x18;
+            gbZ80LdAToFar = (byte) 0xEA, gbZ80Ret = (byte) 0xC9, gbZ80JumpRelative = (byte) 0x18,
+            gbZ80JumpRelativeC = (byte) 0x38, gbZ80Call = (byte) 0xCD, gbZ80RetC = (byte) 0xD8;
+
+    public static final int gbZ80CallSize = 3;
 
     public static final Set<Type> physicalTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             Type.NORMAL, Type.FIGHTING, Type.POISON, Type.GROUND, Type.FLYING, Type.BUG,
             Type.ROCK, Type.GHOST, Type.STEEL)));
 
+    public static final byte typeTableTerminator = (byte) 0xFF, typeTableForesightTerminator = (byte) 0xFE;
+
+    public static final byte evosAndMovesTerminator = 0x00;
 }

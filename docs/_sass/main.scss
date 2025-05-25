@@ -1,0 +1,106 @@
+:root {
+	--color1: #D0F0D0;
+	--color2: #F8F8D8;
+	--color3: #D8D0B0;
+	--color4: #EDE4C2;
+}
+
+body {
+	color: #000000;
+	background: var(--color1);
+	background-image: url("../images/background.png");
+	font-family: calibri, sans-serif;
+}
+
+header {
+  text-align: center;
+  font-size: 200%;
+  font-weight: bold;
+  font-family: verdana, sans-serif;
+  margin: 20px;
+}
+
+nav {
+  text-align: center;
+  font-size: 130%;
+  list-style: none;
+}
+nav ul {
+  padding: 0px;
+  margin: 5px 5px 0px;
+}
+nav li {
+  display: inline-block;
+  padding: 5px 10px;
+  
+  background: var(--color2);
+  border-width: 4px;
+  border-style: ridge ridge none;
+  border-color: var(--color3);
+}
+nav a {
+  text-decoration: none;
+}
+
+main {
+	background: var(--color2);
+	max-width: 900px;
+	padding: 40px;
+	margin: auto;  
+	border: 4px ridge;
+	border-color: var(--color3);
+}
+
+.wikipagelist {
+	border: 4px ridge;
+	padding: 10px;
+	border-color: var(--color3);
+}
+
+table, th, td {
+	border: 2px solid;
+	border-color: var(--color3);
+	border-collapse: collapse;
+}
+
+th {
+  background-color: var(--color4);
+}
+
+th, td {
+	padding: 5px;
+}
+
+li {
+	margin-top: 4px;
+}
+ul { 
+	padding-left: 20px;
+}
+
+code, div.highlight {
+  background-color: var(--color4);
+}
+div.highlight {
+  padding: 5px;
+  overflow: auto;
+}
+pre.highlight {
+  margin: 0px;
+}
+
+img {
+  max-width: 100%;
+}
+
+footer {
+  margin-top: 0px;
+  text-align: center;
+}
+footer img {
+  vertical-align: middle;
+}
+
+.current {
+  color: green;
+}

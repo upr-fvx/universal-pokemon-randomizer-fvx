@@ -1,7 +1,7 @@
 ---
 name: Need Help
 about: If you need help with something other than launching the randomizer. For help
-  with the launcher, please see the pinned issue on the issues page.
+  with the launcher, please see https://github.com/Ajarmar/universal-pokemon-randomizer-zx/issues/221.
 title: "[Help] "
 labels: ''
 assignees: ''

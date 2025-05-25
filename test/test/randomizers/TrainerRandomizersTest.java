@@ -25,13 +25,80 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void trainersHaveAtLeastTwoPokemonAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
             if (trainer.forcedDoubleBattle) {
                 assertTrue(trainer.pokemon.size() >= 2);
             } else {
                 System.out.println("Not a forced double battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveAtLeastThreePokemonAfterSettingTripleBattleMode(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.TRIPLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                assertTrue(trainer.pokemon.size() >= 3);
+            } else {
+                System.out.println("Not a forced triple battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveAtLeastThreePokemonAfterSettingRotationBattleMode(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.ROTATION_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                assertTrue(trainer.pokemon.size() >= 3);
+            } else {
+                System.out.println("Not a forced rotation battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveEnoughPokemonForBattleStyle(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.RANDOM, BattleStyle.Style.SINGLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                switch (trainer.currBattleStyle.getStyle()) {
+                    case SINGLE_BATTLE:
+                        assertFalse(trainer.pokemon.isEmpty());
+                        break;
+                    case DOUBLE_BATTLE:
+                        assertTrue(trainer.pokemon.size() >= 2);
+                        break;
+                    case TRIPLE_BATTLE:
+                    case ROTATION_BATTLE:
+                        assertTrue(trainer.pokemon.size() >= 3);
+                        break;
+                }
+            } else {
+                System.out.println("Not a forced rotation battle.");
             }
         }
     }
@@ -271,7 +338,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
-                        .buildFullFamilies(false);
+                .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);

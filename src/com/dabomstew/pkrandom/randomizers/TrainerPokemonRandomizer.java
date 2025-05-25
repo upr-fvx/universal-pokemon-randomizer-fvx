@@ -220,13 +220,20 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
 
                 Species newSp;
+                boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
+                boolean forceMiddleEvolution = !forceFinalEvolution // no need to force middle stage if Pokemon already has to fully evolve
+                        && forceMiddleStage && tp.getLevel() >= forceMiddleStageLevel;
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
                 } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()){
                     // We do not want to randomize Pkmn that were not added to the team
-                    if (forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel) {
+                    if (forceFinalEvolution) {
                         createFullyEvolvedPokemon(tp);
+                        newSp = tp.getSpecies();
+                    }
+                    else if (forceMiddleEvolution) {
+                        createMiddleStagePokemon(tp);
                         newSp = tp.getSpecies();
                     }
                     else {
@@ -234,7 +241,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     }
                 } else {
                     SpeciesSet cacheReplacement = null;
-                    boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
                     boolean wgAllowed = (!noEarlyWonderGuard) || tp.getLevel() >= 20;
 
                     SpeciesSet bannedForReplacement = new SpeciesSet(usedAsUnique);
@@ -253,6 +259,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index)),
                             swapThisMegaEvo,
                             cacheReplacement,
+                            forceMiddleEvolution,
                             forceFinalEvolution,
                             usedTypes,
                             bannedForReplacement);
@@ -465,7 +472,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private Species pickTrainerPokeReplacement(Species current, boolean usePowerLevels, Type type,
                                                boolean usePlacementHistory, boolean swapMegaEvos,
-                                               SpeciesSet useInsteadOfCached, boolean finalFormOnly,
+                                               SpeciesSet useInsteadOfCached,
+                                               boolean noBasicPokemonWithTwoEvos, boolean finalFormOnly,
                                                Set<Type> bannedTypes, SpeciesSet bannedPokemon) {
         SpeciesSet cacheOrReplacement;
         if(useInsteadOfCached == null) {
@@ -520,10 +528,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         if(finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
-        } else if (finalFormOnly) { //middleFormOnly
-            // TODO will this ONLY keep middle evos? Figure this out and change it accordingly
-            // Maybe just put it in new SpeciesSet variable and append it when everything else is done
-            pickFrom = pickFrom.filterMiddleEvos(false);
+        } else if (noBasicPokemonWithTwoEvos) {
+            pickFrom = pickFrom.removeBasicPokemonWithTwoEvos(false);
         }
 
         if (usePlacementHistory) {
@@ -539,7 +545,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //the cache replacement has no valid Pokemon
             //recurse using the cache
             return pickTrainerPokeReplacement(current, usePowerLevels, type, usePlacementHistory,
-                    swapMegaEvos, null, finalFormOnly, bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, noBasicPokemonWithTwoEvos, finalFormOnly, bannedTypes, bannedPokemon);
         }
 
         withoutBannedPokemon = pickFrom.filter(pk -> !bannedPokemon.contains(pk));
@@ -549,7 +555,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //rather than using banned pokemon from the provided set,
             //see if we can get a non-banned pokemon from the cache
             Species cachePick = pickTrainerPokeReplacement(current, usePowerLevels, type, usePlacementHistory,
-                    swapMegaEvos, null, finalFormOnly, bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, noBasicPokemonWithTwoEvos, finalFormOnly, bannedTypes, bannedPokemon);
             if(withoutBannedPokemon.contains(cachePick)) {
                 return cachePick;
             }
@@ -922,16 +928,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void createMiddleStagePokemon(TrainerPokemon tp) {
-        Species species = tp.getSpecies();
-        if (species.getEvolutionsTo().isEmpty()) {
-            // We have a basic Pokemon (no pre-evolutions)
+        if (tp.getSpecies().isBasicPokemonWithTwoEvos(false)) {
             Species newSpecies = evolveOnce(tp.getSpecies());
-            if (newSpecies != tp.getSpecies() && !newSpecies.getEvolutionsFrom().isEmpty()) {
-                // Pokemon evolved once and its evolution has an evolution of its own, i.e., newSpecies is middle stage
-                tp.setSpecies(newSpecies);
-                setFormeForTrainerPokemon(tp, newSpecies);
-                tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-            }
+            tp.setSpecies(newSpecies);
+            setFormeForTrainerPokemon(tp, newSpecies);
+            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
         }
     }
 

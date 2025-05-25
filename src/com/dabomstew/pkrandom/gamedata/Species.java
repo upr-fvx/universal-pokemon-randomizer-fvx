@@ -257,6 +257,25 @@ public class Species implements Comparable<Species> {
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return A {@link SpeciesSet} containing all possible evolved forms of this {@link Species}.
      */
+    public boolean isBasicPokemonWithTwoEvos(boolean useOriginal) {
+        if (this.getPreEvolvedSpecies(useOriginal).isEmpty()) {
+            // We have a basic Pokemon (no pre-evolutions)
+            for (Species evolvedSpecies : this.getEvolvedSpecies(useOriginal)) {
+                if (evolvedSpecies != this && !evolvedSpecies.getEvolvedSpecies(useOriginal).isEmpty()) {
+                    // Pokemon has one evolution that has an evolution of its own, i.e., has two evolution stages
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gets all {@link Species} that this {@link Species} can evolve directly into.
+     * Does not include Mega Evolution.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A {@link SpeciesSet} containing all possible evolved forms of this {@link Species}.
+     */
     public SpeciesSet getEvolvedSpecies(boolean useOriginal) {
         SpeciesSet evolvedSpecies;
         if(useOriginal) {

@@ -868,43 +868,48 @@ public class RandomizerGUI {
                 romHandler = results.getRomHandler();
                 romLoaded();
             } else {
-                switch (results.getFailType()) {
-                    case UNREADABLE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.unreadableRom"), f.getName()));
-                        break;
-                    case INVALID_TOO_SHORT:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.tooShortToBeARom"), f.getName()));
-                        break;
-                    case INVALID_ZIP_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedZIPfile"), f.getName()));
-                        break;
-                    case INVALID_RAR_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedRARfile"), f.getName()));
-                        break;
-                    case INVALID_IPS_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedIPSfile"), f.getName()));
-                        break;
-                    case EXTRA_MEMORY_NOT_AVAILABLE:
-                        JOptionPane.showMessageDialog(frame,
-                                bundle.getString("GUI.pleaseUseTheLauncher"));
-                        break;
-                    case ENCRYPTED_ROM:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.encryptedRom"), f.getName()));
-                        break;
-                    case UNSUPPORTED_ROM:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.unsupportedRom"), f.getName()));
-                        break;
-                }
+                reportOpenRomFailure(f, results);
             }
         } catch (Exception e) {
             attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+        }
+    }
+
+    // This being public is not very pretty, but it works to get this code to PresetLoadDialog without copy-pasting
+    public void reportOpenRomFailure(File f, RomOpener.Results results) {
+        switch (results.getFailType()) {
+            case UNREADABLE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unreadableRom"), f.getName()));
+                break;
+            case INVALID_TOO_SHORT:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.tooShortToBeARom"), f.getName()));
+                break;
+            case INVALID_ZIP_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedZIPfile"), f.getName()));
+                break;
+            case INVALID_RAR_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedRARfile"), f.getName()));
+                break;
+            case INVALID_IPS_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedIPSfile"), f.getName()));
+                break;
+            case EXTRA_MEMORY_NOT_AVAILABLE:
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.pleaseUseTheLauncher"));
+                break;
+            case ENCRYPTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.encryptedRom"), f.getName()));
+                break;
+            case UNSUPPORTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unsupportedRom"), f.getName()));
+                break;
         }
     }
 

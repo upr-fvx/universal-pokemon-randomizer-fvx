@@ -36,6 +36,7 @@ import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.ROMFilter;
+import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -273,53 +274,30 @@ public class PresetLoadDialog extends JDialog {
     }// GEN-LAST:event_presetFileButtonActionPerformed
 
     private void romFileButtonActionPerformed() {// GEN-FIRST:event_romFileButtonActionPerformed
-        // TODO: use RomOpener here too!!
-
         romFileChooser.setSelectedFile(null);
         int returnVal = romFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File fh = romFileChooser.getSelectedFile();
-            for (RomHandler.Factory rhf : parentGUI.checkHandlers) {
-                if (rhf.isLoadable(fh.getAbsolutePath())) {
-                    final RomHandler checkHandler = rhf.create();
-                    if (!RandomizerGUI.usedLauncher && checkHandler instanceof Abstract3DSRomHandler) {
-                        String message = bundle.getString("GUI.pleaseUseTheLauncher");
-                        Object[] messages = {message};
-                        JOptionPane.showMessageDialog(this, messages);
-                        return;
-                    }
-                    final JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), this,
-                            true);
-                    Thread t = new Thread(() -> {
-                        SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
-                        try {
-                            checkHandler.loadRom(fh.getAbsolutePath());
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(PresetLoadDialog.this,
-                                    bundle.getString("GUI.loadFailedNoLog"));
-                        }
-                        SwingUtilities.invokeLater(() -> {
-                            opDialog.setVisible(false);
-                            if (checkHandler.getROMName().equals(requiredName)) {
-                                // Got it
-                                romFileField.setText(fh.getAbsolutePath());
-                                currentROM = checkHandler;
-                                acceptButton.setEnabled(true);
-                                return;
-                            } else {
-                                JOptionPane.showMessageDialog(PresetLoadDialog.this, String.format(
-                                        bundle.getString("PresetLoadDialog.notRequiredROM"), requiredName,
-                                        checkHandler.getROMName()));
-                                return;
-                            }
-                        });
-                    });
-                    t.start();
-                    return;
+            File f = romFileChooser.getSelectedFile();
+
+            // TODO: spinny loading thing
+            // TODO: should this RomOpener be the same as in RandomizerGUI/parentGUI?
+            RomOpener.Results results = new RomOpener().openRomFile(f);
+
+            if (results.wasOpeningSuccessful()) {
+                RomHandler checkHandler = results.getRomHandler();
+                if (checkHandler.getROMName().equals(requiredName)) {
+                    // Got it
+                    romFileField.setText(f.getAbsolutePath());
+                    currentROM = checkHandler;
+                    acceptButton.setEnabled(true);
+                } else {
+                    JOptionPane.showMessageDialog(PresetLoadDialog.this, String.format(
+                            bundle.getString("PresetLoadDialog.notRequiredROM"), requiredName,
+                            checkHandler.getROMName()));
                 }
+            } else {
+                parentGUI.reportOpenRomFailure(f, results);
             }
-            JOptionPane.showMessageDialog(this,
-                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
         }
     }// GEN-LAST:event_romFileButtonActionPerformed
 

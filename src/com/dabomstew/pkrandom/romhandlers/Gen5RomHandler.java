@@ -99,7 +99,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private long actualArm9CRC32;
     private Map<Integer, Long> actualOverlayCRC32s;
     private Map<String, Long> actualFileCRC32s;
-    
+
     private NARCArchive pokeNarc, moveNarc, stringsNarc, storyTextNarc, scriptNarc, shopNarc;
 
     @Override
@@ -165,7 +165,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
             shopNames = Gen5Constants.bw2ShopNames;
         }
-        
+
         loadedWildMapNames = false;
 
         try {
@@ -563,12 +563,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return speciesListInclFormes;
     }
 
-	@Override
-	public SpeciesSet getAltFormes() {
-		int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(Gen5Constants.pokemonCount + 1,
-				Gen5Constants.pokemonCount + formeCount + 1));
-	}
+    @Override
+    public SpeciesSet getAltFormes() {
+        int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
+        return new SpeciesSet(speciesListInclFormes.subList(Gen5Constants.pokemonCount + 1,
+                Gen5Constants.pokemonCount + formeCount + 1));
+    }
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
@@ -581,12 +581,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return pokeNum != 0 ? pokes[pokeNum] : base;
     }
 
-	@Override
-	public SpeciesSet getIrregularFormes() {
-		return Gen5Constants.getIrregularFormes(romEntry.getRomType())
-				.stream().map(i -> pokes[i])
-				.collect(Collectors.toCollection(SpeciesSet::new));
-	}
+    @Override
+    public SpeciesSet getIrregularFormes() {
+        return Gen5Constants.getIrregularFormes(romEntry.getRomType())
+                .stream().map(i -> pokes[i])
+                .collect(Collectors.toCollection(SpeciesSet::new));
+    }
 
     @Override
     public boolean hasFunctionalFormes() {
@@ -747,7 +747,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void replaceStarterFiles(NARCArchive starterNARC, NARCArchive pokespritesNARC, int starterIndex,
-            int pokeNumber) {
+                                     int pokeNumber) {
         starterNARC.files.set(starterIndex * 2, pokespritesNARC.files.get(pokeNumber * 20 + 18));
         // Get the picture...
         byte[] compressedPic = pokespritesNARC.files.get(pokeNumber * 20);
@@ -1144,8 +1144,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
                 tr.fullDisplayName = tclasses.get(tr.trainerclass) + " " + tnames.get(i - 1);
-                if (trainer[2] == 1) {
-                    originalDoubleTrainers.add(i);
+                int battleType = trainer[2] & 0xFF;
+                switch (battleType) {
+                    case 0:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        break;
+                    case 1:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        originalDoubleTrainers.add(i);
+                        break;
+                    case 2:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.TRIPLE_BATTLE);
+                        break;
+                    case 3:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.ROTATION_BATTLE);
+                        break;
                 }
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
@@ -1305,9 +1318,31 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 trainer[3] = (byte) numPokes;
 
                 if (tr.forcedDoubleBattle) {
-                    if (trainer[2] == 0) {
-                        trainer[2] = 1;
-                        trainer[12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                    switch (tr.currBattleStyle.getStyle()) {
+                        case SINGLE_BATTLE:
+                            if (trainer[2] != 0) {
+                                trainer[2] = 0;
+                                trainer[12] &= 0x7F; // convert AI back to single battles
+                            }
+                            break;
+                        case DOUBLE_BATTLE:
+                            if (trainer[2] != 1) {
+                                trainer[2] = 1;
+                                trainer[12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                            }
+                            break;
+                        case TRIPLE_BATTLE:
+                            if (trainer[2] != 2) {
+                                trainer[2] = 2;
+                                trainer[12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                            }
+                            break;
+                        case ROTATION_BATTLE:
+                            if (trainer[2] != 3) {
+                                trainer[2] = 3;
+                                trainer[12] |= 0x7F; // Rotation Battles use Single Battle Logic
+                            }
+                            break;
                     }
                 }
 
@@ -2428,7 +2463,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-                                                               // a prefix
+            // a prefix
             List<Integer> tms = new ArrayList<>();
             for (int i = 0; i < Gen5Constants.tmBlockOneCount; i++) {
                 tms.add(readWord(arm9, offset + i * 2));
@@ -2450,7 +2485,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-                                                               // a prefix
+            // a prefix
             offset += Gen5Constants.tmBlockOneCount * 2; // TM data
             List<Integer> hms = new ArrayList<>();
             for (int i = 0; i < Gen5Constants.hmCount; i++) {
@@ -2468,7 +2503,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-                                                               // a prefix
+            // a prefix
             for (int i = 0; i < Gen5Constants.tmBlockOneCount; i++) {
                 writeWord(arm9, offset + i * 2, moveIndexes.get(i));
             }
@@ -4046,7 +4081,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             return imageData.length != 0;
         }
     }
-    
+
     public String getPaletteFilesID() {
         switch (romEntry.getRomType()) {
             case Gen5Constants.Type_BW:
@@ -4063,5 +4098,5 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     public Gen5RomEntry getRomEntry() {
         return romEntry;
     }
-    
+
 }

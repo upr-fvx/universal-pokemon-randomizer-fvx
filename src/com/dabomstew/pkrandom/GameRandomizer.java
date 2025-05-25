@@ -531,8 +531,8 @@ public class GameRandomizer {
             trainerPokeRandomizer.addTrainerPokemon();
         }
 
-        if (settings.isDoubleBattleMode()) {
-            trainerPokeRandomizer.setDoubleBattleMode();
+        if (settings.getBattleStyle().isBattleStyleChanged()) {
+            trainerPokeRandomizer.modifyBattleStyle();
         }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED

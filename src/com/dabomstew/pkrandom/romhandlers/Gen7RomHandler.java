@@ -61,7 +61,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return detect3DSRomInner(getProductCodeFromFile(filename), getTitleIdFromFile(filename));
         }
     }
-    
+
     private static List<Gen7RomEntry> roms;
 
     static {
@@ -1009,12 +1009,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return speciesListInclFormes;
     }
 
-	@Override
-	public SpeciesSet getAltFormes() {
-		int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
-		int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(pokemonCount + 1, pokemonCount + formeCount + 1));
-	}
+    @Override
+    public SpeciesSet getAltFormes() {
+        int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
+        int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
+        return new SpeciesSet(speciesListInclFormes.subList(pokemonCount + 1, pokemonCount + formeCount + 1));
+    }
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
@@ -1027,12 +1027,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return pokeNum != 0 ? (!pokes[pokeNum].isCosmeticReplacement() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme()) : base;
     }
 
-	@Override
-	public SpeciesSet getIrregularFormes() {
-		return Gen7Constants.getIrregularFormes(romEntry.getRomType())
-				.stream().map(i -> pokes[i])
-				.collect(Collectors.toCollection(SpeciesSet::new));
-	}
+    @Override
+    public SpeciesSet getIrregularFormes() {
+        return Gen7Constants.getIrregularFormes(romEntry.getRomType())
+                .stream().map(i -> pokes[i])
+                .collect(Collectors.toCollection(SpeciesSet::new));
+    }
 
     @Override
     public boolean hasFunctionalFormes() {
@@ -1549,6 +1549,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 tr.index = i;
                 tr.trainerclass = trainer[0] & 0xFF;
                 int battleType = trainer[2] & 0xFF;
+                switch (battleType) {
+                    case 0:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        break;
+                    case 1:
+                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        break;
+                }
                 int numPokes = trainer[3] & 0xFF;
                 int trainerAILevel = trainer[12] & 0xFF;
                 boolean healer = trainer[15] != 0;
@@ -1661,9 +1669,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 trainer[offset+3] = (byte) numPokes;
 
                 if (tr.forcedDoubleBattle) {
-                    if (trainer[offset+2] == 0) {
-                        trainer[offset+2] = 1;
-                        trainer[offset+12] |= 0x8; // Flag that needs to be set for trainers not to attack their own pokes
+                    if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+                        if (trainer[offset + 2] == 0) {
+                            trainer[offset + 2] = 1;
+                            trainer[offset + 12] |= 0x8; // Flag that needs to be set for trainers not to attack their own pokes
+                        }
+                    } else if (trainer[offset + 2] == 1) {
+                        trainer[offset + 2] = 0;
+                        trainer[offset + 12] &= 0x7F; // Convert double battle trainer's AI back to single battles
                     }
                 }
 

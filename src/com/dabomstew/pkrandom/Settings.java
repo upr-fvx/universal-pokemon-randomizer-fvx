@@ -41,7 +41,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public static final int LENGTH_OF_SETTINGS_DATA = 63;
 
     private CustomNamesSet customNames;
 
@@ -197,7 +197,7 @@ public class Settings {
     private boolean diverseTypesForBossTrainers;
     private boolean diverseTypesForImportantTrainers;
     private boolean diverseTypesForRegularTrainers;
-    private boolean doubleBattleMode;
+    private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
@@ -206,7 +206,7 @@ public class Settings {
     }
     private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
     private boolean splitWildZoneByEncounterTypes;
-    
+
     public enum WildPokemonTypeMod {
         NONE, RANDOM_THEMES, KEEP_PRIMARY
     }
@@ -457,7 +457,7 @@ public class Settings {
                 trainersMod == TrainersMod.TYPE_THEMED_ELITE4_GYMS,
                 trainersMod == TrainersMod.KEEP_THEMED,
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
-        
+
         // 14 trainer pokemon force evolutions
         out.write((trainersForceFullyEvolved ? 0x80 : 0) | trainersForceFullyEvolvedLevel);
 
@@ -543,9 +543,9 @@ public class Settings {
         out.write(makeByteSelected(evolutionsMod == EvolutionsMod.UNCHANGED, evolutionsMod == EvolutionsMod.RANDOM,
                 evosSimilarStrength, evosSameTyping, evosMaxThreeStages, evosForceChange, evosAllowAltFormes,
                 evolutionsMod == EvolutionsMod.RANDOM_EVERY_LEVEL));
-        
+
         // 29 pokemon trainer misc
-        out.write(makeByteSelected(trainersUsePokemonOfSimilarStrength, 
+        out.write(makeByteSelected(trainersUsePokemonOfSimilarStrength,
                 rivalCarriesStarterThroughout,
                 trainersMatchTypingDistribution,
                 trainersBlockLegendaries,
@@ -594,8 +594,8 @@ public class Settings {
                 allowTrainerAlternateFormes,
                 allowWildAltFormes));
 
-        // 42 Double Battle Mode, Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
-        out.write((doubleBattleMode ? 0x1 : 0) |
+        // 42 (Legacy Double Battle Mode), Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
+        out.write((0) |
                 (additionalBossTrainerPokemon << 1) |
                 (additionalImportantTrainerPokemon << 4) |
                 (weighDuplicateAbilitiesTogether ? 0x80 : 0));
@@ -662,7 +662,7 @@ public class Settings {
         } else {
             out.write(0);
         }
-        
+
         // 55 Pokémon palette randomization
         out.write(makeByteSelected(pokemonPalettesMod == PokemonPalettesMod.UNCHANGED,
                 pokemonPalettesMod == PokemonPalettesMod.RANDOM,
@@ -691,6 +691,15 @@ public class Settings {
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
                 diverseTypesForRegularTrainers,
                 false, false, false, false, false));
+
+        // 62 setting battle style: modification (3bits) + style (4bits)
+        out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
+                settingBattleStyle.getModification() == BattleStyle.Modification.RANDOM,
+                settingBattleStyle.getModification() == BattleStyle.Modification.SINGLE_STYLE) |
+                (makeByteSelected(settingBattleStyle.getStyle() == BattleStyle.Style.SINGLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -787,7 +796,7 @@ public class Settings {
         settings.setTrainersMod(restoreEnum(TrainersMod.class, data[13], 0, // UNCHANGED
                 1, // RANDOM
                 2, // DISTRIBUTED
-                3, // MAINPLAYTHROUGH 
+                3, // MAINPLAYTHROUGH
                 4, // TYPE_THEMED
                 5, // TYPE_THEMED_ELITE4_GYMS
                 6, // KEEP_THEMED
@@ -821,7 +830,7 @@ public class Settings {
                 5, //BASIC_ONLY
                 6 //KEEP_STAGE
         ));
-        
+
         settings.setUseTimeBasedEncounters(restoreState(data[18], 0));
         settings.setUseMinimumCatchRate(restoreState(data[18], 1));
         settings.setBlockWildLegendaries(restoreState(data[18], 2));
@@ -832,14 +841,14 @@ public class Settings {
         settings.setStaticPokemonMod(restoreEnum(StaticPokemonMod.class, data[19], 0, // UNCHANGED
                 1, // RANDOM_MATCHING
                 2, // COMPLETELY_RANDOM
-                3  // SIMILAR_STRENGTH 
+                3  // SIMILAR_STRENGTH
         ));
-        
+
         settings.setLimitMainGameLegendaries(restoreState(data[19], 4));
         settings.setLimit600(restoreState(data[19], 5));
         settings.setAllowStaticAltFormes(restoreState(data[19], 6));
         settings.setSwapStaticMegaEvos(restoreState(data[19], 7));
-        
+
         settings.setTmsMod(restoreEnum(TMsMod.class, data[20], 4, // UNCHANGED
                 3 // RANDOM
         ));
@@ -847,7 +856,7 @@ public class Settings {
                 1, // RANDOM_PREFER_TYPE
                 0, // COMPLETELY_RANDOM
                 7 // FULL
-        )); 
+        ));
         settings.setTmLevelUpMoveSanity(restoreState(data[20], 5));
         settings.setKeepFieldMoveTMs(restoreState(data[20], 6));
 
@@ -952,7 +961,7 @@ public class Settings {
         settings.setAllowTrainerAlternateFormes(restoreState(data[41],6));
         settings.setAllowWildAltFormes(restoreState(data[41],7));
 
-        settings.setDoubleBattleMode(restoreState(data[42], 0));
+        // restoreState(data[42], 0))  Legacy setting. This bit used to be used for "Double Battle Only Mode"
         settings.setAdditionalBossTrainerPokemon((data[42] & 0xE) >> 1);
         settings.setAdditionalImportantTrainerPokemon((data[42] & 0x70) >> 4);
         settings.setWeighDuplicateAbilitiesTogether(restoreState(data[42], 7));
@@ -1001,7 +1010,7 @@ public class Settings {
                 2, //TRIANGLE
                 3, //UNIQUE
                 4  //SINGLE_TYPE
-            ));
+        ));
 
         settings.setStartersNoLegendaries(restoreState(data[53], 6));
         settings.setStartersNoDualTypes(restoreState(data[53], 7));
@@ -1037,6 +1046,9 @@ public class Settings {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+
+        settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
+        settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1571,7 +1583,7 @@ public class Settings {
     public void setStartersBSTMaximum(int startersBSTMaximum) {
         this.startersBSTMaximum = startersBSTMaximum;
     }
-    
+
     public SpeciesTypesMod getSpeciesTypesMod() {
         return speciesTypesMod;
     }
@@ -1828,7 +1840,7 @@ public class Settings {
         this.trainersEnforceDistribution = trainersEnforceDistribution;
         return this;
     }
-    
+
     public boolean isTrainersEnforceMainPlaythrough() {
         return trainersEnforceMainPlaythrough;
     }
@@ -1838,7 +1850,7 @@ public class Settings {
         return this;
     }
 
-    
+
     public boolean isTrainersBlockEarlyWonderGuard() {
         return trainersBlockEarlyWonderGuard;
     }
@@ -2016,12 +2028,20 @@ public class Settings {
         this.diverseTypesForRegularTrainers = isRegularDiverse;
     }
 
-    public boolean isDoubleBattleMode() {
-        return doubleBattleMode;
+    public BattleStyle getBattleStyle() {
+        return settingBattleStyle;
     }
 
-    public void setDoubleBattleMode(boolean doubleBattleMode) {
-        this.doubleBattleMode = doubleBattleMode;
+    public void setBattleStyle(BattleStyle style) {
+        settingBattleStyle = style;
+    }
+
+    public void setBattleStyleMod(boolean... bools) {
+        settingBattleStyle.setModification(getEnum(BattleStyle.Modification.class, bools));
+    }
+
+    public void setSingleStyleSelection(boolean... bools) {
+        settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
     public boolean isShinyChance() {
@@ -2601,7 +2621,7 @@ public class Settings {
     public void setBalanceShopPrices(boolean balanceShopPrices) {
         this.balanceShopPrices = balanceShopPrices;
     }
-   
+
     public boolean isGuaranteeEvolutionItems() {
         return guaranteeEvolutionItems;
     }
@@ -2667,40 +2687,40 @@ public class Settings {
     }
 
     public PokemonPalettesMod getPokemonPalettesMod() {
-    	return pokemonPalettesMod;
+        return pokemonPalettesMod;
     }
 
     public void setPokemonPalettesMod(boolean... bools) {
         setPokemonPalettesMod(getEnum(PokemonPalettesMod.class, bools));
     }
-    
+
     public void setPokemonPalettesMod(PokemonPalettesMod pokemonPalettesMod) {
-    	this.pokemonPalettesMod = pokemonPalettesMod;
+        this.pokemonPalettesMod = pokemonPalettesMod;
     }
 
     public boolean isPokemonPalettesFollowTypes() {
-		return pokemonPalettesFollowTypes;
-	}
+        return pokemonPalettesFollowTypes;
+    }
 
-	public void setPokemonPalettesFollowTypes(boolean pokemonPalettesFollowTypes) {
-		this.pokemonPalettesFollowTypes = pokemonPalettesFollowTypes;
-	}
+    public void setPokemonPalettesFollowTypes(boolean pokemonPalettesFollowTypes) {
+        this.pokemonPalettesFollowTypes = pokemonPalettesFollowTypes;
+    }
 
-	public boolean isPokemonPalettesFollowEvolutions() {
-		return pokemonPalettesFollowEvolutions;
-	}
+    public boolean isPokemonPalettesFollowEvolutions() {
+        return pokemonPalettesFollowEvolutions;
+    }
 
-	public void setPokemonPalettesFollowEvolutions(boolean pokemonPalettesFollowEvolutions) {
-		this.pokemonPalettesFollowEvolutions = pokemonPalettesFollowEvolutions;
-	}
+    public void setPokemonPalettesFollowEvolutions(boolean pokemonPalettesFollowEvolutions) {
+        this.pokemonPalettesFollowEvolutions = pokemonPalettesFollowEvolutions;
+    }
 
-	public boolean isPokemonPalettesShinyFromNormal() {
-		return pokemonPalettesShinyFromNormal;
-	}
+    public boolean isPokemonPalettesShinyFromNormal() {
+        return pokemonPalettesShinyFromNormal;
+    }
 
-	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
-		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
-	}
+    public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
+        this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
+    }
 
     public CustomPlayerGraphicsMod getCustomPlayerGraphicsMod() {
         return customPlayerGraphicsMod;
@@ -2734,7 +2754,7 @@ public class Settings {
         this.customPlayerGraphicsCharacterMod = playerCharacterMod;
     }
 
-	private static int makeByteSelected(boolean... bools) {
+    private static int makeByteSelected(boolean... bools) {
         if (bools.length > 8) {
             throw new IllegalArgumentException("Can't set more than 8 bits in a byte!");
         }

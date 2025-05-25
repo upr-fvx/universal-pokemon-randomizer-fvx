@@ -88,7 +88,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (useLocalPokemon) {
             SpeciesSet localWithRelatives =
                     romHandler.getMainGameWildPokemonSpecies(settings.isUseTimeBasedEncounters())
-                    .buildFullFamilies(false);
+                            .buildFullFamilies(false);
 
             cachedAll.retainAll(localWithRelatives);
         }
@@ -988,11 +988,28 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    public void setDoubleBattleMode() {
+    private BattleStyle createTrainerStyle(BattleStyle style) {
+        // Unchanged: passes style through
+        // Randomize: Select a random Style to use
+        // Single Style: passes style through, as the selected style is already picked.
+        BattleStyle trainerStyle = new BattleStyle(style.getModification(), style.getStyle());
+        if (trainerStyle.getModification() == BattleStyle.Modification.RANDOM) {
+            int styleCount = BattleStyle.Style.values().length;
+            if (romHandler.generationOfPokemon() < 5 || romHandler.generationOfPokemon() > 6)
+                styleCount = 2; // Remove triple & rotation as options
+            trainerStyle.setStyle(BattleStyle.Style.values()[random.nextInt(styleCount)]);
+        }
+        return trainerStyle;
+    }
+
+    public void modifyBattleStyle() {
+        if (settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED)
+            return;
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
             if (!(tr.multiBattleStatus == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                if (tr.pokemon.size() == 1) {
+                tr.currBattleStyle = createTrainerStyle(settings.getBattleStyle());
+                while (tr.pokemon.size() < tr.currBattleStyle.getRequiredPokemonCount()) {
                     tr.pokemon.add(tr.pokemon.get(0).copy());
                 }
                 tr.forcedDoubleBattle = true;

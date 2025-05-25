@@ -150,16 +150,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		roamerRandomizationEnabled = (romEntry.getRomType() == Gen4Constants.Type_DP && !romEntry.getRoamingPokemon().isEmpty())
 				|| (romEntry.getRomType() == Gen4Constants.Type_Plat
-						&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"))
+				&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"))
 				|| (romEntry.getRomType() == Gen4Constants.Type_HGSS
-						&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"));
+				&& romEntry.hasTweakFile("NewRoamerSubroutineTweak"));
 
 		try {
 			computeCRC32sForRom();
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
-		
+
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new
 		// Pokemon. We also
 		// want to allow the option of randomizing the enemy Pokemon too. Unfortunately,
@@ -252,66 +252,66 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void loadStatChangesFromEffect(Move move, int secondaryEffectChance) {
 		switch (move.effectIndex) {
-		case Gen4Constants.noDamageAtkPlusOneEffect:
-		case Gen4Constants.noDamageDefPlusOneEffect:
-		case Gen4Constants.noDamageSpAtkPlusOneEffect:
-		case Gen4Constants.noDamageEvasionPlusOneEffect:
-		case Gen4Constants.noDamageAtkMinusOneEffect:
-		case Gen4Constants.noDamageDefMinusOneEffect:
-		case Gen4Constants.noDamageSpeMinusOneEffect:
-		case Gen4Constants.noDamageAccuracyMinusOneEffect:
-		case Gen4Constants.noDamageEvasionMinusOneEffect:
-		case Gen4Constants.noDamageAtkPlusTwoEffect:
-		case Gen4Constants.noDamageDefPlusTwoEffect:
-		case Gen4Constants.noDamageSpePlusTwoEffect:
-		case Gen4Constants.noDamageSpAtkPlusTwoEffect:
-		case Gen4Constants.noDamageSpDefPlusTwoEffect:
-		case Gen4Constants.noDamageAtkMinusTwoEffect:
-		case Gen4Constants.noDamageDefMinusTwoEffect:
-		case Gen4Constants.noDamageSpeMinusTwoEffect:
-		case Gen4Constants.noDamageSpDefMinusTwoEffect:
-		case Gen4Constants.minimizeEffect:
-		case Gen4Constants.swaggerEffect:
-		case Gen4Constants.defenseCurlEffect:
-		case Gen4Constants.flatterEffect:
-		case Gen4Constants.chargeEffect:
-		case Gen4Constants.noDamageAtkAndDefMinusOneEffect:
-		case Gen4Constants.noDamageDefAndSpDefPlusOneEffect:
-		case Gen4Constants.noDamageAtkAndDefPlusOneEffect:
-		case Gen4Constants.noDamageSpAtkAndSpDefPlusOneEffect:
-		case Gen4Constants.noDamageAtkAndSpePlusOneEffect:
-		case Gen4Constants.noDamageSpAtkMinusTwoEffect:
-			if (move.target == 16) {
-				move.statChangeMoveType = StatChangeMoveType.NO_DAMAGE_USER;
-			} else {
-				move.statChangeMoveType = StatChangeMoveType.NO_DAMAGE_TARGET;
-			}
-			break;
+			case Gen4Constants.noDamageAtkPlusOneEffect:
+			case Gen4Constants.noDamageDefPlusOneEffect:
+			case Gen4Constants.noDamageSpAtkPlusOneEffect:
+			case Gen4Constants.noDamageEvasionPlusOneEffect:
+			case Gen4Constants.noDamageAtkMinusOneEffect:
+			case Gen4Constants.noDamageDefMinusOneEffect:
+			case Gen4Constants.noDamageSpeMinusOneEffect:
+			case Gen4Constants.noDamageAccuracyMinusOneEffect:
+			case Gen4Constants.noDamageEvasionMinusOneEffect:
+			case Gen4Constants.noDamageAtkPlusTwoEffect:
+			case Gen4Constants.noDamageDefPlusTwoEffect:
+			case Gen4Constants.noDamageSpePlusTwoEffect:
+			case Gen4Constants.noDamageSpAtkPlusTwoEffect:
+			case Gen4Constants.noDamageSpDefPlusTwoEffect:
+			case Gen4Constants.noDamageAtkMinusTwoEffect:
+			case Gen4Constants.noDamageDefMinusTwoEffect:
+			case Gen4Constants.noDamageSpeMinusTwoEffect:
+			case Gen4Constants.noDamageSpDefMinusTwoEffect:
+			case Gen4Constants.minimizeEffect:
+			case Gen4Constants.swaggerEffect:
+			case Gen4Constants.defenseCurlEffect:
+			case Gen4Constants.flatterEffect:
+			case Gen4Constants.chargeEffect:
+			case Gen4Constants.noDamageAtkAndDefMinusOneEffect:
+			case Gen4Constants.noDamageDefAndSpDefPlusOneEffect:
+			case Gen4Constants.noDamageAtkAndDefPlusOneEffect:
+			case Gen4Constants.noDamageSpAtkAndSpDefPlusOneEffect:
+			case Gen4Constants.noDamageAtkAndSpePlusOneEffect:
+			case Gen4Constants.noDamageSpAtkMinusTwoEffect:
+				if (move.target == 16) {
+					move.statChangeMoveType = StatChangeMoveType.NO_DAMAGE_USER;
+				} else {
+					move.statChangeMoveType = StatChangeMoveType.NO_DAMAGE_TARGET;
+				}
+				break;
 
-		case Gen4Constants.damageAtkMinusOneEffect:
-		case Gen4Constants.damageDefMinusOneEffect:
-		case Gen4Constants.damageSpeMinusOneEffect:
-		case Gen4Constants.damageSpAtkMinusOneEffect:
-		case Gen4Constants.damageSpDefMinusOneEffect:
-		case Gen4Constants.damageAccuracyMinusOneEffect:
-		case Gen4Constants.damageSpDefMinusTwoEffect:
-			move.statChangeMoveType = StatChangeMoveType.DAMAGE_TARGET;
-			break;
+			case Gen4Constants.damageAtkMinusOneEffect:
+			case Gen4Constants.damageDefMinusOneEffect:
+			case Gen4Constants.damageSpeMinusOneEffect:
+			case Gen4Constants.damageSpAtkMinusOneEffect:
+			case Gen4Constants.damageSpDefMinusOneEffect:
+			case Gen4Constants.damageAccuracyMinusOneEffect:
+			case Gen4Constants.damageSpDefMinusTwoEffect:
+				move.statChangeMoveType = StatChangeMoveType.DAMAGE_TARGET;
+				break;
 
-		case Gen4Constants.damageUserDefPlusOneEffect:
-		case Gen4Constants.damageUserAtkPlusOneEffect:
-		case Gen4Constants.damageUserAllPlusOneEffect:
-		case Gen4Constants.damageUserAtkAndDefMinusOneEffect:
-		case Gen4Constants.damageUserSpAtkMinusTwoEffect:
-		case Gen4Constants.damageUserSpeMinusOneEffect:
-		case Gen4Constants.damageUserDefAndSpDefMinusOneEffect:
-		case Gen4Constants.damageUserSpAtkPlusOneEffect:
-			move.statChangeMoveType = StatChangeMoveType.DAMAGE_USER;
-			break;
+			case Gen4Constants.damageUserDefPlusOneEffect:
+			case Gen4Constants.damageUserAtkPlusOneEffect:
+			case Gen4Constants.damageUserAllPlusOneEffect:
+			case Gen4Constants.damageUserAtkAndDefMinusOneEffect:
+			case Gen4Constants.damageUserSpAtkMinusTwoEffect:
+			case Gen4Constants.damageUserSpeMinusOneEffect:
+			case Gen4Constants.damageUserDefAndSpDefMinusOneEffect:
+			case Gen4Constants.damageUserSpAtkPlusOneEffect:
+				move.statChangeMoveType = StatChangeMoveType.DAMAGE_USER;
+				break;
 
-		default:
-			// Move does not have a stat-changing effect
-			return;
+			default:
+				// Move does not have a stat-changing effect
+				return;
 		}
 
 		switch (move.effectIndex) {
@@ -504,88 +504,88 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void loadStatusFromEffect(Move move, int secondaryEffectChance) {
 		switch (move.effectIndex) {
-		case Gen4Constants.noDamageSleepEffect:
-		case Gen4Constants.toxicEffect:
-		case Gen4Constants.noDamageConfusionEffect:
-		case Gen4Constants.noDamagePoisonEffect:
-		case Gen4Constants.noDamageParalyzeEffect:
-		case Gen4Constants.noDamageBurnEffect:
-		case Gen4Constants.swaggerEffect:
-		case Gen4Constants.flatterEffect:
-		case Gen4Constants.teeterDanceEffect:
-			move.statusMoveType = StatusMoveType.NO_DAMAGE;
-			break;
+			case Gen4Constants.noDamageSleepEffect:
+			case Gen4Constants.toxicEffect:
+			case Gen4Constants.noDamageConfusionEffect:
+			case Gen4Constants.noDamagePoisonEffect:
+			case Gen4Constants.noDamageParalyzeEffect:
+			case Gen4Constants.noDamageBurnEffect:
+			case Gen4Constants.swaggerEffect:
+			case Gen4Constants.flatterEffect:
+			case Gen4Constants.teeterDanceEffect:
+				move.statusMoveType = StatusMoveType.NO_DAMAGE;
+				break;
 
-		case Gen4Constants.damagePoisonEffect:
-		case Gen4Constants.damageBurnEffect:
-		case Gen4Constants.damageFreezeEffect:
-		case Gen4Constants.damageParalyzeEffect:
-		case Gen4Constants.damageConfusionEffect:
-		case Gen4Constants.twineedleEffect:
-		case Gen4Constants.damageBurnAndThawUserEffect:
-		case Gen4Constants.thunderEffect:
-		case Gen4Constants.blazeKickEffect:
-		case Gen4Constants.poisonFangEffect:
-		case Gen4Constants.damagePoisonWithIncreasedCritEffect:
-		case Gen4Constants.flareBlitzEffect:
-		case Gen4Constants.blizzardEffect:
-		case Gen4Constants.voltTackleEffect:
-		case Gen4Constants.bounceEffect:
-		case Gen4Constants.chatterEffect:
-		case Gen4Constants.fireFangEffect:
-		case Gen4Constants.iceFangEffect:
-		case Gen4Constants.thunderFangEffect:
-			move.statusMoveType = StatusMoveType.DAMAGE;
-			break;
+			case Gen4Constants.damagePoisonEffect:
+			case Gen4Constants.damageBurnEffect:
+			case Gen4Constants.damageFreezeEffect:
+			case Gen4Constants.damageParalyzeEffect:
+			case Gen4Constants.damageConfusionEffect:
+			case Gen4Constants.twineedleEffect:
+			case Gen4Constants.damageBurnAndThawUserEffect:
+			case Gen4Constants.thunderEffect:
+			case Gen4Constants.blazeKickEffect:
+			case Gen4Constants.poisonFangEffect:
+			case Gen4Constants.damagePoisonWithIncreasedCritEffect:
+			case Gen4Constants.flareBlitzEffect:
+			case Gen4Constants.blizzardEffect:
+			case Gen4Constants.voltTackleEffect:
+			case Gen4Constants.bounceEffect:
+			case Gen4Constants.chatterEffect:
+			case Gen4Constants.fireFangEffect:
+			case Gen4Constants.iceFangEffect:
+			case Gen4Constants.thunderFangEffect:
+				move.statusMoveType = StatusMoveType.DAMAGE;
+				break;
 
-		default:
-			// Move does not have a status effect
-			return;
+			default:
+				// Move does not have a status effect
+				return;
 		}
 
 		switch (move.effectIndex) {
-		case Gen4Constants.noDamageSleepEffect:
-			move.statusType = StatusType.SLEEP;
-			break;
-		case Gen4Constants.damagePoisonEffect:
-		case Gen4Constants.noDamagePoisonEffect:
-		case Gen4Constants.twineedleEffect:
-		case Gen4Constants.damagePoisonWithIncreasedCritEffect:
-			move.statusType = StatusType.POISON;
-			break;
-		case Gen4Constants.damageBurnEffect:
-		case Gen4Constants.damageBurnAndThawUserEffect:
-		case Gen4Constants.noDamageBurnEffect:
-		case Gen4Constants.blazeKickEffect:
-		case Gen4Constants.flareBlitzEffect:
-		case Gen4Constants.fireFangEffect:
-			move.statusType = StatusType.BURN;
-			break;
-		case Gen4Constants.damageFreezeEffect:
-		case Gen4Constants.blizzardEffect:
-		case Gen4Constants.iceFangEffect:
-			move.statusType = StatusType.FREEZE;
-			break;
-		case Gen4Constants.damageParalyzeEffect:
-		case Gen4Constants.noDamageParalyzeEffect:
-		case Gen4Constants.thunderEffect:
-		case Gen4Constants.voltTackleEffect:
-		case Gen4Constants.bounceEffect:
-		case Gen4Constants.thunderFangEffect:
-			move.statusType = StatusType.PARALYZE;
-			break;
-		case Gen4Constants.toxicEffect:
-		case Gen4Constants.poisonFangEffect:
-			move.statusType = StatusType.TOXIC_POISON;
-			break;
-		case Gen4Constants.noDamageConfusionEffect:
-		case Gen4Constants.damageConfusionEffect:
-		case Gen4Constants.swaggerEffect:
-		case Gen4Constants.flatterEffect:
-		case Gen4Constants.teeterDanceEffect:
-		case Gen4Constants.chatterEffect:
-			move.statusType = StatusType.CONFUSION;
-			break;
+			case Gen4Constants.noDamageSleepEffect:
+				move.statusType = StatusType.SLEEP;
+				break;
+			case Gen4Constants.damagePoisonEffect:
+			case Gen4Constants.noDamagePoisonEffect:
+			case Gen4Constants.twineedleEffect:
+			case Gen4Constants.damagePoisonWithIncreasedCritEffect:
+				move.statusType = StatusType.POISON;
+				break;
+			case Gen4Constants.damageBurnEffect:
+			case Gen4Constants.damageBurnAndThawUserEffect:
+			case Gen4Constants.noDamageBurnEffect:
+			case Gen4Constants.blazeKickEffect:
+			case Gen4Constants.flareBlitzEffect:
+			case Gen4Constants.fireFangEffect:
+				move.statusType = StatusType.BURN;
+				break;
+			case Gen4Constants.damageFreezeEffect:
+			case Gen4Constants.blizzardEffect:
+			case Gen4Constants.iceFangEffect:
+				move.statusType = StatusType.FREEZE;
+				break;
+			case Gen4Constants.damageParalyzeEffect:
+			case Gen4Constants.noDamageParalyzeEffect:
+			case Gen4Constants.thunderEffect:
+			case Gen4Constants.voltTackleEffect:
+			case Gen4Constants.bounceEffect:
+			case Gen4Constants.thunderFangEffect:
+				move.statusType = StatusType.PARALYZE;
+				break;
+			case Gen4Constants.toxicEffect:
+			case Gen4Constants.poisonFangEffect:
+				move.statusType = StatusType.TOXIC_POISON;
+				break;
+			case Gen4Constants.noDamageConfusionEffect:
+			case Gen4Constants.damageConfusionEffect:
+			case Gen4Constants.swaggerEffect:
+			case Gen4Constants.flatterEffect:
+			case Gen4Constants.teeterDanceEffect:
+			case Gen4Constants.chatterEffect:
+				move.statusType = StatusType.CONFUSION;
+				break;
 		}
 
 		if (move.statusMoveType == StatusMoveType.DAMAGE) {
@@ -602,74 +602,74 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void loadMiscMoveInfoFromEffect(Move move, int secondaryEffectChance) {
 		switch (move.effectIndex) {
-		case Gen4Constants.increasedCritEffect:
-		case Gen4Constants.blazeKickEffect:
-		case Gen4Constants.damagePoisonWithIncreasedCritEffect:
-			move.criticalChance = CriticalChance.INCREASED;
-			break;
+			case Gen4Constants.increasedCritEffect:
+			case Gen4Constants.blazeKickEffect:
+			case Gen4Constants.damagePoisonWithIncreasedCritEffect:
+				move.criticalChance = CriticalChance.INCREASED;
+				break;
 
-		case Gen4Constants.futureSightAndDoomDesireEffect:
-			move.criticalChance = CriticalChance.NONE;
+			case Gen4Constants.futureSightAndDoomDesireEffect:
+				move.criticalChance = CriticalChance.NONE;
 
-		case Gen4Constants.flinchEffect:
-		case Gen4Constants.snoreEffect:
-		case Gen4Constants.twisterEffect:
-		case Gen4Constants.stompEffect:
-		case Gen4Constants.fakeOutEffect:
-		case Gen4Constants.fireFangEffect:
-		case Gen4Constants.iceFangEffect:
-		case Gen4Constants.thunderFangEffect:
-			move.flinchPercentChance = secondaryEffectChance;
-			break;
+			case Gen4Constants.flinchEffect:
+			case Gen4Constants.snoreEffect:
+			case Gen4Constants.twisterEffect:
+			case Gen4Constants.stompEffect:
+			case Gen4Constants.fakeOutEffect:
+			case Gen4Constants.fireFangEffect:
+			case Gen4Constants.iceFangEffect:
+			case Gen4Constants.thunderFangEffect:
+				move.flinchPercentChance = secondaryEffectChance;
+				break;
 
-		case Gen4Constants.damageAbsorbEffect:
-		case Gen4Constants.dreamEaterEffect:
-			move.absorbPercent = 50;
-			break;
+			case Gen4Constants.damageAbsorbEffect:
+			case Gen4Constants.dreamEaterEffect:
+				move.absorbPercent = 50;
+				break;
 
-		case Gen4Constants.damageRecoil25PercentEffect:
-			move.recoilPercent = 25;
-			break;
+			case Gen4Constants.damageRecoil25PercentEffect:
+				move.recoilPercent = 25;
+				break;
 
-		case Gen4Constants.damageRecoil33PercentEffect:
-		case Gen4Constants.flareBlitzEffect:
-		case Gen4Constants.voltTackleEffect:
-			move.recoilPercent = 33;
-			break;
+			case Gen4Constants.damageRecoil33PercentEffect:
+			case Gen4Constants.flareBlitzEffect:
+			case Gen4Constants.voltTackleEffect:
+				move.recoilPercent = 33;
+				break;
 
-		case Gen4Constants.damageRecoil50PercentEffect:
-			move.recoilPercent = 50;
-			break;
+			case Gen4Constants.damageRecoil50PercentEffect:
+				move.recoilPercent = 50;
+				break;
 
-		case Gen4Constants.bindingEffect:
-		case Gen4Constants.trappingEffect:
-			move.isTrapMove = true;
-			break;
+			case Gen4Constants.bindingEffect:
+			case Gen4Constants.trappingEffect:
+				move.isTrapMove = true;
+				break;
 
-		case Gen4Constants.skullBashEffect:
-		case Gen4Constants.solarbeamEffect:
-		case Gen4Constants.flyEffect:
-		case Gen4Constants.diveEffect:
-		case Gen4Constants.digEffect:
-		case Gen4Constants.bounceEffect:
-		case Gen4Constants.shadowForceEffect:
-			move.isChargeMove = true;
-			break;
+			case Gen4Constants.skullBashEffect:
+			case Gen4Constants.solarbeamEffect:
+			case Gen4Constants.flyEffect:
+			case Gen4Constants.diveEffect:
+			case Gen4Constants.digEffect:
+			case Gen4Constants.bounceEffect:
+			case Gen4Constants.shadowForceEffect:
+				move.isChargeMove = true;
+				break;
 
-		case Gen3Constants.rechargeEffect:
-			move.isRechargeMove = true;
-			break;
+			case Gen3Constants.rechargeEffect:
+				move.isRechargeMove = true;
+				break;
 
-		case Gen4Constants.razorWindEffect:
-			move.criticalChance = CriticalChance.INCREASED;
-			move.isChargeMove = true;
-			break;
+			case Gen4Constants.razorWindEffect:
+				move.criticalChance = CriticalChance.INCREASED;
+				move.isChargeMove = true;
+				break;
 
-		case Gen4Constants.skyAttackEffect:
-			move.criticalChance = CriticalChance.INCREASED;
-			move.flinchPercentChance = secondaryEffectChance;
-			move.isChargeMove = true;
-			break;
+			case Gen4Constants.skyAttackEffect:
+				move.criticalChance = CriticalChance.INCREASED;
+				move.flinchPercentChance = secondaryEffectChance;
+				move.isChargeMove = true;
+				break;
 		}
 	}
 
@@ -1182,7 +1182,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// them
 							if (readWord(file, jumpTo) != 0xE5 && readWord(file, jumpTo) != 0x28F
 									&& (readWord(file, jumpTo) != 0x125
-											|| romEntry.getRomType() != Gen4Constants.Type_Plat)) {
+									|| romEntry.getRomType() != Gen4Constants.Type_Plat)) {
 								continue; // not a rival script
 							}
 							// Replace the two starter-words 387 and 390
@@ -1279,25 +1279,25 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return romEntry.getRomType() == Gen4Constants.Type_DP || romEntry.getRomType() == Gen4Constants.Type_Plat;
 	}
 
-    @Override
-    public List<Item> getStarterHeldItems() {
-        int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
-        int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
-        byte[] file = scriptNarc.files.get(starterScriptNumber);
-        int id = FileFunctions.read2ByteInt(file, starterHeldItemOffset);
-        return Collections.singletonList(items.get(id));
-    }
+	@Override
+	public List<Item> getStarterHeldItems() {
+		int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
+		int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
+		byte[] file = scriptNarc.files.get(starterScriptNumber);
+		int id = FileFunctions.read2ByteInt(file, starterHeldItemOffset);
+		return Collections.singletonList(items.get(id));
+	}
 
-    @Override
-    public void setStarterHeldItems(List<Item> items) {
+	@Override
+	public void setStarterHeldItems(List<Item> items) {
 		if (items.size() != 1) {
 			throw new IllegalArgumentException("Incorrect amount of items given, must be 1");
 		}
-        int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
-        int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
-        byte[] file = scriptNarc.files.get(starterScriptNumber);
-        FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0).getId());
-    }
+		int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
+		int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
+		byte[] file = scriptNarc.files.get(starterScriptNumber);
+		FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0).getId());
+	}
 
 	@Override
 	public List<Move> getMoves() {
@@ -2686,6 +2686,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				tr.trainerclass = trainer[1] & 0xFF;
 				tr.index = i;
 				int numPokes = trainer[3] & 0xFF;
+				int battleStyle = trainer[16] & 0xFF;
+				if (battleStyle != 0)
+					tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
 				int pokeOffs = 0;
 				tr.fullDisplayName = tclasses.get(tr.trainerclass) + " " + tnames.get(i - 1);
 				for (int poke = 0; poke < numPokes; poke++) {
@@ -2763,7 +2766,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-    public Map<String, Type> getGymAndEliteTypeThemes() {
+	public Map<String, Type> getGymAndEliteTypeThemes() {
 		switch (romEntry.getRomType()) {
 			case Gen4Constants.Type_DP:
 				return Gen4Constants.gymAndEliteThemesDP;
@@ -2774,9 +2777,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			default:
 				return null;
 		}
-    }
+	}
 
-    @Override
+	@Override
 	public Set<Item> getEvolutionItems() {
 		return itemIdsToSet(Gen4Constants.evolutionItems);
 	}
@@ -2811,8 +2814,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// battles will turn into trainer battles with glitchy trainers.
 					boolean excludedPartnerTrainer = romEntry.getRomType() != Gen4Constants.Type_HGSS
 							&& Gen4Constants.partnerTrainerIndices.contains(tr.index);
-					if (trainer[16] == 0 && !excludedPartnerTrainer) {
-						trainer[16] |= 3;
+					if (!excludedPartnerTrainer) {
+						if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+							if (trainer[16] == 0) {
+								trainer[16] |= 3;
+							}
+						} else {
+							if (trainer[16] == 3) {
+								trainer[16] = 0;
+							}
+						}
 					}
 				}
 
@@ -2885,6 +2896,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// To fix this, the below code patches the executable to skip the case for the special
 		// double battle intro (by changing a beq to an unconditional branch); this slightly breaks
 		// battles that are double battles in the original game, but the trade-off is worth it.
+
+		// We'll do this if they've modified their battle style at all.
 
 		// Then, also patch various subroutines that control the "Trainer Eye" event and text boxes
 		// related to this in order to make double battles work on all trainers
@@ -2990,14 +3003,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 		}
 	}
-	
 
-    @Override
-    public SpeciesSet getBannedForWildEncounters() {
-        // Ban Unown in DPPt because you can't get certain letters outside of Solaceon Ruins.
-        // Ban Unown in HGSS because they don't show up unless you complete a puzzle in the Ruins of Alph.
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
-    }
+
+	@Override
+	public SpeciesSet getBannedForWildEncounters() {
+		// Ban Unown in DPPt because you can't get certain letters outside of Solaceon Ruins.
+		// Ban Unown in HGSS because they don't show up unless you complete a puzzle in the Ruins of Alph.
+		return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
+	}
 
 	@Override
 	public SpeciesSet getBannedFormesForTrainerPokemon() {
@@ -3506,8 +3519,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void improveMysteryEggCommand(byte[] ovOverlay) {
-        int offset = romEntry.getIntValue("MysteryEggCommandOffset");
-        byte[] bytesBefore = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandLength);
+		int offset = romEntry.getIntValue("MysteryEggCommandOffset");
+		byte[] bytesBefore = Arrays.copyOfRange(ovOverlay, offset, offset + Gen4Constants.mysteryEggCommandLength);
 
 		// The vanilla command looks slightly different between different localizations; it contains
 		// a number of relative branch instructions that differ only by a few bytes.
@@ -5126,53 +5139,53 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-    @Override
-    public int miscTweaksAvailable() {
-        int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-        available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
-        if (romEntry.hasTweakFile("FastestTextTweak")) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        if (romEntry.hasTweakFile("NationalDexAtStartTweak")) {
-            available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
-        }
-        available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
-        available |= MiscTweak.FASTER_HP_AND_EXP_BARS.getValue();
-        if (romEntry.hasTweakFile("FastDistortionWorldTweak")) {
-            available |= MiscTweak.FAST_DISTORTION_WORLD.getValue();
-        }
-        if (romEntry.getRomType() == Gen4Constants.Type_Plat || romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-            available |= MiscTweak.UPDATE_ROTOM_FORME_TYPING.getValue();
-        }
+	@Override
+	public int miscTweaksAvailable() {
+		int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
+		available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
+		if (romEntry.hasTweakFile("FastestTextTweak")) {
+			available |= MiscTweak.FASTEST_TEXT.getValue();
+		}
+		available |= MiscTweak.BAN_LUCKY_EGG.getValue();
+		if (romEntry.hasTweakFile("NationalDexAtStartTweak")) {
+			available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
+		}
+		available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
+		available |= MiscTweak.FASTER_HP_AND_EXP_BARS.getValue();
+		if (romEntry.hasTweakFile("FastDistortionWorldTweak")) {
+			available |= MiscTweak.FAST_DISTORTION_WORLD.getValue();
+		}
+		if (romEntry.getRomType() == Gen4Constants.Type_Plat || romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+			available |= MiscTweak.UPDATE_ROTOM_FORME_TYPING.getValue();
+		}
 		if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
 			available |= MiscTweak.REUSABLE_TMS.getValue();
 		}
-        return available;
-    }
+		return available;
+	}
 
-    @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
-            applyCamelCaseNames();
-        } else if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestText();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
+	@Override
+	public void applyMiscTweak(MiscTweak tweak) {
+		if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
+			applyCamelCaseNames();
+		} else if (tweak == MiscTweak.FASTEST_TEXT) {
+			applyFastestText();
+		} else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
 			items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
-            patchForNationalDex();
-        } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
-            applyRunWithoutRunningShoesPatch();
-        } else if (tweak == MiscTweak.FASTER_HP_AND_EXP_BARS) {
-            patchFasterBars();
-        } else if (tweak == MiscTweak.FAST_DISTORTION_WORLD) {
-            applyFastDistortionWorld();
-        } else if (tweak == MiscTweak.UPDATE_ROTOM_FORME_TYPING) {
-            updateRotomFormeTyping();
-        } else if (tweak == MiscTweak.REUSABLE_TMS) {
+		} else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
+			patchForNationalDex();
+		} else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
+			applyRunWithoutRunningShoesPatch();
+		} else if (tweak == MiscTweak.FASTER_HP_AND_EXP_BARS) {
+			patchFasterBars();
+		} else if (tweak == MiscTweak.FAST_DISTORTION_WORLD) {
+			applyFastDistortionWorld();
+		} else if (tweak == MiscTweak.UPDATE_ROTOM_FORME_TYPING) {
+			updateRotomFormeTyping();
+		} else if (tweak == MiscTweak.REUSABLE_TMS) {
 			applyReusableTMsPatch();
 		}
-    }
+	}
 
 	private void applyFastestText() {
 		genericIPSPatch(arm9, "FastestTextTweak");
@@ -5440,13 +5453,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		scriptNarc.files.set(Gen4Constants.ptSpearPillarPortalScriptFile, spearPillarPortalScript);
 	}
 
-    private void updateRotomFormeTyping() {
-        pokes[SpeciesIDs.Gen4Formes.rotomH].setSecondaryType(Type.FIRE);
-        pokes[SpeciesIDs.Gen4Formes.rotomW].setSecondaryType(Type.WATER);
-        pokes[SpeciesIDs.Gen4Formes.rotomFr].setSecondaryType(Type.ICE);
-        pokes[SpeciesIDs.Gen4Formes.rotomFa].setSecondaryType(Type.FLYING);
-        pokes[SpeciesIDs.Gen4Formes.rotomM].setSecondaryType(Type.GRASS);
-    }
+	private void updateRotomFormeTyping() {
+		pokes[SpeciesIDs.Gen4Formes.rotomH].setSecondaryType(Type.FIRE);
+		pokes[SpeciesIDs.Gen4Formes.rotomW].setSecondaryType(Type.WATER);
+		pokes[SpeciesIDs.Gen4Formes.rotomFr].setSecondaryType(Type.ICE);
+		pokes[SpeciesIDs.Gen4Formes.rotomFa].setSecondaryType(Type.FLYING);
+		pokes[SpeciesIDs.Gen4Formes.rotomM].setSecondaryType(Type.GRASS);
+	}
 
 	private void applyReusableTMsPatch() {
 		// don't know exactly how this works, but it does
@@ -5464,28 +5477,28 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-    public void enableGuaranteedPokemonCatching() {
-        try {
-            byte[] battleOverlay = readOverlay(romEntry.getIntValue("BattleOvlNumber"));
-            int offset = find(battleOverlay, Gen4Constants.perfectOddsBranchLocator);
-            if (offset > 0) {
-                // In Cmd_handleballthrow (name taken from pokeemerald decomp), the middle of the function checks
-                // if the odds of catching a Pokemon is greater than 254; if it is, then the Pokemon is automatically
-                // caught. In ASM, this is represented by:
-                // cmp r1, #0xFF
-                // bcc oddsLessThanOrEqualTo254
-                // The below code just nops these two instructions so that we *always* act like our odds are 255,
-                // and Pokemon are automatically caught no matter what.
-                battleOverlay[offset] = 0x00;
-                battleOverlay[offset + 1] = 0x00;
-                battleOverlay[offset + 2] = 0x00;
-                battleOverlay[offset + 3] = 0x00;
-                writeOverlay(romEntry.getIntValue("BattleOvlNumber"), battleOverlay);
-            }
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
-    }
+	public void enableGuaranteedPokemonCatching() {
+		try {
+			byte[] battleOverlay = readOverlay(romEntry.getIntValue("BattleOvlNumber"));
+			int offset = find(battleOverlay, Gen4Constants.perfectOddsBranchLocator);
+			if (offset > 0) {
+				// In Cmd_handleballthrow (name taken from pokeemerald decomp), the middle of the function checks
+				// if the odds of catching a Pokemon is greater than 254; if it is, then the Pokemon is automatically
+				// caught. In ASM, this is represented by:
+				// cmp r1, #0xFF
+				// bcc oddsLessThanOrEqualTo254
+				// The below code just nops these two instructions so that we *always* act like our odds are 255,
+				// and Pokemon are automatically caught no matter what.
+				battleOverlay[offset] = 0x00;
+				battleOverlay[offset + 1] = 0x00;
+				battleOverlay[offset + 2] = 0x00;
+				battleOverlay[offset + 3] = 0x00;
+				writeOverlay(romEntry.getIntValue("BattleOvlNumber"), battleOverlay);
+			}
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+	}
 	@Override
 	public void applyCorrectStaticMusic(Map<Integer, Integer> specialMusicStaticChanges) {
 		List<Integer> replaced = new ArrayList<>();
@@ -5620,7 +5633,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves,
-			int[] pokeMoves) {
+											  int[] pokeMoves) {
 		List<Integer> ids = new ArrayList<>(Gen4Constants.generalPurposeConsumableItems);
 		int frequencyBoostCount = 6; // Make some very good items more common, but not too common
 		if (!consumableOnly) {
@@ -5730,21 +5743,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-    protected Collection<Integer> getGraphicalFormePokes() {
-        return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
-    }
+	protected Collection<Integer> getGraphicalFormePokes() {
+		return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
+	}
 
-    protected void loadGraphicalFormePokemonPalettes(Species pk) throws IOException {
-        String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-        NARCArchive NARC = readNARC(NARCpath);
+	protected void loadGraphicalFormePokemonPalettes(Species pk) throws IOException {
+		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
+		NARCArchive NARC = readNARC(NARCpath);
 
 		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType())
 				.get(pk.getBaseForme().getNumber());
 		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
 		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
-    }
+	}
 
-    protected void saveGraphicalFormePokemonPalettes(Species pk) throws IOException {
+	protected void saveGraphicalFormePokemonPalettes(Species pk) throws IOException {
 		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
 		NARCArchive NARC = readNARC(NARCpath);
 
@@ -5752,7 +5765,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				.get(pk.getBaseForme().getNumber());
 		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
 		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
-    }
+	}
 
 	public Gen4PokemonImageGetter createPokemonImageGetter(Species pk) {
 		return new Gen4PokemonImageGetter(pk);

@@ -39,7 +39,7 @@ public class SettingsUpdater {
     /**
      * Given a quicksettings config string from an old randomizer version,
      * update it to be compatible with the currently running randomizer version.
-     * 
+     *
      * @param oldVersion
      *            The Version id used to generate the given string
      * @param configString
@@ -220,15 +220,15 @@ public class SettingsUpdater {
             insertExtraByte(20, (byte) 0);
             insertExtraByte(22, (byte) 0);
         }
-        
+
         if(oldVersion < Version.v1_7_2.id) {
             // v1.7.1 to v1.7.2: removed separate names files in favor of one unified file
             // so two of the trailing checksums are gone
             actualDataLength -= 8;
-            
+
             // fix wild legendaries
             dataBlock[16] = (byte) (dataBlock[16] ^ (1 << 1));
-            
+
             // add space for the trainer level modifier
             insertExtraByte(35, (byte) 50); // 50 in the settings file = +0% after adjustment
         }
@@ -342,6 +342,16 @@ public class SettingsUpdater {
         {
             //add byte for trainer type diversity
             insertExtraByte(61, (byte) 0);
+        }
+
+        if (oldVersion < Version.FVX_1_2_3.id) {
+            // Introduced Battle Style Randomization.
+            // Get the old "Double Battle Only" state to initialize the data to.
+            byte initialState = 0;
+            if (((dataBlock[42] & 1)) == 0x01) { // is set to double battle mode
+                initialState = 0x14;
+            }
+            insertExtraByte(62, initialState);
         }
 
         // fix checksum
@@ -558,7 +568,7 @@ public class SettingsUpdater {
      * Insert a 4-byte int field in the data block at the given position. Shift
      * everything else up. Do nothing if there's no room left (should never
      * happen)
-     * 
+     *
      * @param position
      *            The offset to add the field
      * @param value
@@ -581,7 +591,7 @@ public class SettingsUpdater {
      * Insert a byte-field in the data block at the given position. Shift
      * everything else up. Do nothing if there's no room left (should never
      * happen)
-     * 
+     *
      * @param position
      *            The offset to add the field
      * @param value

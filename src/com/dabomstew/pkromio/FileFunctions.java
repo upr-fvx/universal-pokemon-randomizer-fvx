@@ -39,37 +39,6 @@ public class FileFunctions {
 
     private static final String CONFIG_RESOURCE_PATH = "/com/dabomstew/pkromio/config/";
 
-    public static void validateRomFile(File fh) throws InvalidROMException {
-        // first, check for common filetypes that aren't ROMs
-        // read first 10 bytes of the file to do this
-        try {
-            FileInputStream fis = new FileInputStream(fh);
-            byte[] sig = new byte[10];
-            int sigLength = fis.read(sig);
-            fis.close();
-            if (sigLength < 10) {
-                throw new InvalidROMException(InvalidROMException.Type.LENGTH, String.format(
-                        "%s appears to be a blank or nearly blank file.", fh.getName()));
-            }
-            if (sig[0] == 0x50 && sig[1] == 0x4b && sig[2] == 0x03 && sig[3] == 0x04) {
-                throw new InvalidROMException(InvalidROMException.Type.ZIP_FILE, String.format(
-                        "%s is a ZIP archive, not a ROM.", fh.getName()));
-            }
-            if (sig[0] == 0x52 && sig[1] == 0x61 && sig[2] == 0x72 && sig[3] == 0x21 && sig[4] == 0x1A
-                    && sig[5] == 0x07) {
-                throw new InvalidROMException(InvalidROMException.Type.RAR_FILE, String.format(
-                        "%s is a RAR archive, not a ROM.", fh.getName()));
-            }
-            if (sig[0] == 'P' && sig[1] == 'A' && sig[2] == 'T' && sig[3] == 'C' && sig[4] == 'H') {
-                throw new InvalidROMException(InvalidROMException.Type.IPS_FILE, String.format(
-                        "%s is a IPS patch, not a ROM.", fh.getName()));
-            }
-        } catch (IOException ex) {
-            throw new InvalidROMException(InvalidROMException.Type.UNREADABLE, String.format(
-                    "Could not read %s from disk.", fh.getName()));
-        }
-    }
-
     public static File fixFilename(File original, String defaultExtension) {
         return fixFilename(original, defaultExtension, new ArrayList<>());
     }

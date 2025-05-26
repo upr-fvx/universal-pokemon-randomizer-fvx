@@ -26,7 +26,7 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.customNames.CustomNamesSet;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;

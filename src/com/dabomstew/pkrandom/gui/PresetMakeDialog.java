@@ -32,7 +32,7 @@ package com.dabomstew.pkrandom.gui;
 
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkrandom.Version;
-import com.dabomstew.pkrandom.customNames.CustomNamesSet;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

@@ -1,4 +1,4 @@
-package com.dabomstew.pkrandom.customNames;
+package com.dabomstew.pkrandom.customnames;
 
 /*----------------------------------------------------------------------------*/
 /*--  CustomNamesSet.java - handles functionality related to custom names.  --*/
@@ -37,7 +37,7 @@ import java.util.zip.CRC32;
 public class CustomNamesSet {
 
     private static final int CUSTOM_NAMES_VERSION = 1;
-    private static final String DEFAULT_FILE_PATH = "/com/dabomstew/pkromio/customnames/";
+    private static final String DEFAULT_FILE_PATH = "/com/dabomstew/pkrandom/customnames/";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
         InputStream is = openFile(SysConstants.customNamesFile);

@@ -3,7 +3,7 @@ package com.dabomstew.pkrandom.cli;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.customNames.CustomNamesSet;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.romio.RomOpener;
 import com.dabomstew.pkromio.romhandlers.*;
 

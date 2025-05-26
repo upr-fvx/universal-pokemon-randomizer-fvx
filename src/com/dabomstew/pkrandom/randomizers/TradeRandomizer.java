@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.customNames.CustomNamesSet;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkromio.gamedata.InGameTrade;
 import com.dabomstew.pkromio.gamedata.Item;

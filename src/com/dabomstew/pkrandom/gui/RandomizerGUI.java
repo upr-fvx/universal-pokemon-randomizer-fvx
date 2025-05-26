@@ -29,7 +29,7 @@ import com.dabomstew.pkromio.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
 import com.dabomstew.pkromio.constants.Gen3Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
-import com.dabomstew.pkrandom.customNames.CustomNamesSet;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.exceptions.*;
 import com.dabomstew.pkromio.gamedata.ExpCurve;
 import com.dabomstew.pkromio.gamedata.GenRestrictions;
@@ -1034,6 +1034,7 @@ public class RandomizerGUI {
             CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
             performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
         }
     }

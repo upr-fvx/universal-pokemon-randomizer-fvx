@@ -338,7 +338,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
-                .buildFullFamilies(false);
+                        .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
         nonLocal.removeAll(localWithRelatives);

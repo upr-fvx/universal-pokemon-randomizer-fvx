@@ -411,8 +411,8 @@ public class RandomizerGUI {
     private List<String> trainerSettings = new ArrayList<>();
     private List<String> trainerSettingToolTips = new ArrayList<>();
     private final int TRAINER_UNCHANGED = 0, TRAINER_RANDOM = 1, TRAINER_RANDOM_EVEN = 2, TRAINER_RANDOM_EVEN_MAIN = 3,
-            TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5, TRAINER_KEEP_THEMED = 6,
-            TRAINER_KEEP_THEME_OR_PRIMARY = 7;
+                        TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5, TRAINER_KEEP_THEMED = 6,
+                        TRAINER_KEEP_THEME_OR_PRIMARY = 7;
 
     private List<String> selectableBattleStyles = new ArrayList<>();
     private List<String> selectableBattleStylesTooltips = new ArrayList<>();
@@ -2344,14 +2344,14 @@ public class RandomizerGUI {
 		tpComboBox.setEnabled(false);
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
         setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpWeightTypesCheckBox,
-                tpUseLocalPokemonCheckBox,
-                tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
-                tpRandomizeTrainerClassNamesCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
-                tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
-                tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
-                tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
-                tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
-                tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
+				tpUseLocalPokemonCheckBox,
+				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
+				tpRandomizeTrainerClassNamesCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
+				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
+				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
+				tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
+				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
 		tpForceFullyEvolvedAtSlider.setVisible(true);
@@ -2371,9 +2371,9 @@ public class RandomizerGUI {
 		tpImportantTrainersSpinner.setValue(1);
 		tpRegularTrainersSpinner.setVisible(true);
 		tpRegularTrainersSpinner.setEnabled(false);
-        tpRegularTrainersSpinner.setValue(1);
-        tpAdditionalPokemonForLabel.setVisible(true);
-        tpHeldItemsLabel.setVisible(true);
+		tpRegularTrainersSpinner.setValue(1);
+		tpAdditionalPokemonForLabel.setVisible(true);
+		tpHeldItemsLabel.setVisible(true);
 
         tpUnchangedBattleStyleRadioButton.setVisible(true);
         tpUnchangedBattleStyleRadioButton.setEnabled(false);
@@ -2388,8 +2388,8 @@ public class RandomizerGUI {
         tpBattleStyleCombobox.setEnabled(false);
         tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "Single Battles" }));
 
-        totpPanel.setVisible(true);
-        totpAllyPanel.setVisible(true);
+		totpPanel.setVisible(true);
+		totpAllyPanel.setVisible(true);
 		totpAuraPanel.setVisible(true);
         setInitialButtonState(totpUnchangedRadioButton, totpRandomRadioButton, totpRandomSimilarStrengthRadioButton,
 				totpAllyUnchangedRadioButton, totpAllyRandomRadioButton, totpAllyRandomSimilarStrengthRadioButton,

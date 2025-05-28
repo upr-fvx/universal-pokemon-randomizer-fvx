@@ -88,7 +88,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (useLocalPokemon) {
             SpeciesSet localWithRelatives =
                     romHandler.getMainGameWildPokemonSpecies(settings.isUseTimeBasedEncounters())
-                            .buildFullFamilies(false);
+                    .buildFullFamilies(false);
 
             cachedAll.retainAll(localWithRelatives);
         }

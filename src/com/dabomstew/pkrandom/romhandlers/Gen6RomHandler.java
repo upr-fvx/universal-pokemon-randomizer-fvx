@@ -576,7 +576,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     protected void prepareSaveRom() {
-        super.prepareSaveRom();
+    	super.prepareSaveRom();
         try {
             writeCode(code);
             writeGARC(romEntry.getFile("TextStrings"), stringsGarc);
@@ -884,12 +884,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return speciesListInclFormes;
     }
 
-    @Override
-    public SpeciesSet getAltFormes() {
-        int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
-        return new SpeciesSet(speciesListInclFormes.subList(Gen6Constants.pokemonCount + 1,
-                Gen6Constants.pokemonCount + formeCount + 1));
-    }
+	@Override
+	public SpeciesSet getAltFormes() {
+		int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
+		return new SpeciesSet(speciesListInclFormes.subList(Gen6Constants.pokemonCount + 1,
+				Gen6Constants.pokemonCount + formeCount + 1));
+	}
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
@@ -902,12 +902,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return pokeNum != 0 ? pokes[pokeNum] : base;
     }
 
-    @Override
-    public SpeciesSet getIrregularFormes() {
-        return Gen6Constants.getIrregularFormes(romEntry.getRomType())
-                .stream().map(i -> pokes[i])
-                .collect(Collectors.toCollection(SpeciesSet::new));
-    }
+	@Override
+	public SpeciesSet getIrregularFormes() {
+		return Gen6Constants.getIrregularFormes(romEntry.getRomType())
+				.stream().map(i -> pokes[i])
+				.collect(Collectors.toCollection(SpeciesSet::new));
+	}
 
     @Override
     public boolean hasFunctionalFormes() {
@@ -1909,7 +1909,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                         tpk.setHasMegaStone(tpk.getHeldItem() != null &&
-                                Gen6Constants.megaStones.contains(tpk.getHeldItem().getId()));
+                                        Gen6Constants.megaStones.contains(tpk.getHeldItem().getId()));
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         for (int move = 0; move < 4; move++) {
@@ -1986,27 +1986,27 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (tr.forcedDoubleBattle) {
                     switch (tr.currBattleStyle.getStyle()) {
                         case SINGLE_BATTLE:
-                            if (trainer[offset+2] != 0) {
-                                trainer[offset+2] = 0;
-                                trainer[offset+12] &= 0x7F; // convert AI back to single battles
+                            if (trainer[offset + 2] != 0) {
+                                trainer[offset + 2] = 0;
+                                trainer[offset + 12] &= 0x7F; // convert AI back to single battles
                             }
                             break;
                         case DOUBLE_BATTLE:
-                            if (trainer[offset+2] != 1) {
-                                trainer[offset+2] = 1;
-                                trainer[offset+12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                            if (trainer[offset + 2] != 1) {
+                                trainer[offset + 2] = 1;
+                                trainer[offset + 12] |= (byte)0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case TRIPLE_BATTLE:
-                            if (trainer[offset+2] != 2) {
-                                trainer[offset+2] = 2;
-                                trainer[offset+12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                            if (trainer[offset + 2] != 2) {
+                                trainer[offset + 2] = 2;
+                                trainer[offset + 12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case ROTATION_BATTLE:
-                            if (trainer[offset+2] != 3) {
-                                trainer[offset+2] = 3;
-                                trainer[offset+12] |= 0x7F; // Rotation Battles use Single Battle Logic
+                            if (trainer[offset + 2] != 3) {
+                                trainer[offset + 2] = 3;
+                                trainer[offset + 12] |= 0x7F; // Rotation Battles use Single Battle Logic
                             }
                             break;
                     }
@@ -4001,7 +4001,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         return true;
     }
-
+    
     @Override
     public String getGARCPath(String fileName) {
         return romEntry.getFile(fileName);

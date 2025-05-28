@@ -61,7 +61,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return detect3DSRomInner(getProductCodeFromFile(filename), getTitleIdFromFile(filename));
         }
     }
-
+    
     private static List<Gen7RomEntry> roms;
 
     static {
@@ -1009,12 +1009,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return speciesListInclFormes;
     }
 
-    @Override
-    public SpeciesSet getAltFormes() {
-        int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
-        int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
-        return new SpeciesSet(speciesListInclFormes.subList(pokemonCount + 1, pokemonCount + formeCount + 1));
-    }
+	@Override
+	public SpeciesSet getAltFormes() {
+		int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
+		int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
+		return new SpeciesSet(speciesListInclFormes.subList(pokemonCount + 1, pokemonCount + formeCount + 1));
+	}
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
@@ -1027,12 +1027,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return pokeNum != 0 ? (!pokes[pokeNum].isCosmeticReplacement() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme()) : base;
     }
 
-    @Override
-    public SpeciesSet getIrregularFormes() {
-        return Gen7Constants.getIrregularFormes(romEntry.getRomType())
-                .stream().map(i -> pokes[i])
-                .collect(Collectors.toCollection(SpeciesSet::new));
-    }
+	@Override
+	public SpeciesSet getIrregularFormes() {
+		return Gen7Constants.getIrregularFormes(romEntry.getRomType())
+				.stream().map(i -> pokes[i])
+				.collect(Collectors.toCollection(SpeciesSet::new));
+	}
 
     @Override
     public boolean hasFunctionalFormes() {

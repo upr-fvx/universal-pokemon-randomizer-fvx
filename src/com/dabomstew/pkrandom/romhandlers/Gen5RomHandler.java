@@ -99,7 +99,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private long actualArm9CRC32;
     private Map<Integer, Long> actualOverlayCRC32s;
     private Map<String, Long> actualFileCRC32s;
-
+    
     private NARCArchive pokeNarc, moveNarc, stringsNarc, storyTextNarc, scriptNarc, shopNarc;
 
     @Override
@@ -165,7 +165,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
             shopNames = Gen5Constants.bw2ShopNames;
         }
-
+        
         loadedWildMapNames = false;
 
         try {
@@ -563,12 +563,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return speciesListInclFormes;
     }
 
-    @Override
-    public SpeciesSet getAltFormes() {
-        int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
-        return new SpeciesSet(speciesListInclFormes.subList(Gen5Constants.pokemonCount + 1,
-                Gen5Constants.pokemonCount + formeCount + 1));
-    }
+	@Override
+	public SpeciesSet getAltFormes() {
+		int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
+		return new SpeciesSet(speciesListInclFormes.subList(Gen5Constants.pokemonCount + 1,
+				Gen5Constants.pokemonCount + formeCount + 1));
+	}
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
@@ -581,12 +581,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return pokeNum != 0 ? pokes[pokeNum] : base;
     }
 
-    @Override
-    public SpeciesSet getIrregularFormes() {
-        return Gen5Constants.getIrregularFormes(romEntry.getRomType())
-                .stream().map(i -> pokes[i])
-                .collect(Collectors.toCollection(SpeciesSet::new));
-    }
+	@Override
+	public SpeciesSet getIrregularFormes() {
+		return Gen5Constants.getIrregularFormes(romEntry.getRomType())
+				.stream().map(i -> pokes[i])
+				.collect(Collectors.toCollection(SpeciesSet::new));
+	}
 
     @Override
     public boolean hasFunctionalFormes() {
@@ -747,7 +747,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void replaceStarterFiles(NARCArchive starterNARC, NARCArchive pokespritesNARC, int starterIndex,
-                                     int pokeNumber) {
+            int pokeNumber) {
         starterNARC.files.set(starterIndex * 2, pokespritesNARC.files.get(pokeNumber * 20 + 18));
         // Get the picture...
         byte[] compressedPic = pokespritesNARC.files.get(pokeNumber * 20);
@@ -2463,7 +2463,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-            // a prefix
+                                                               // a prefix
             List<Integer> tms = new ArrayList<>();
             for (int i = 0; i < Gen5Constants.tmBlockOneCount; i++) {
                 tms.add(readWord(arm9, offset + i * 2));
@@ -2485,7 +2485,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-            // a prefix
+                                                               // a prefix
             offset += Gen5Constants.tmBlockOneCount * 2; // TM data
             List<Integer> hms = new ArrayList<>();
             for (int i = 0; i < Gen5Constants.hmCount; i++) {
@@ -2503,7 +2503,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int offset = find(arm9, tmDataPrefix);
         if (offset > 0) {
             offset += Gen5Constants.tmDataPrefix.length() / 2; // because it was
-            // a prefix
+                                                               // a prefix
             for (int i = 0; i < Gen5Constants.tmBlockOneCount; i++) {
                 writeWord(arm9, offset + i * 2, moveIndexes.get(i));
             }
@@ -4081,7 +4081,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             return imageData.length != 0;
         }
     }
-
+    
     public String getPaletteFilesID() {
         switch (romEntry.getRomType()) {
             case Gen5Constants.Type_BW:
@@ -4098,5 +4098,5 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     public Gen5RomEntry getRomEntry() {
         return romEntry;
     }
-
+    
 }

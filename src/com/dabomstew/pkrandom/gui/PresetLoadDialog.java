@@ -5,10 +5,6 @@
 package com.dabomstew.pkrandom.gui;
 
 /*----------------------------------------------------------------------------*/
-/*--  PresetLoadDialog.java - a dialog to allow use of preset files or      --*/
-/*--                          random seed/config string pairs to produce    --*/
-/*--                          premade ROMs.                                 --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -30,9 +26,10 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.Version;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
+import com.dabomstew.pkromio.RootPath;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -49,8 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * @author Stewart
+ * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
 
@@ -58,7 +54,8 @@ public class PresetLoadDialog extends JDialog {
      *
      */
     private static final long serialVersionUID = -7898067118947765260L;
-    private RandomizerGUI parentGUI;
+    private final RandomizerGUI parentGUI;
+    private final RomOpener romOpener;
     private RomHandler currentROM;
     private boolean completed = false;
     private String requiredName = null;
@@ -69,13 +66,14 @@ public class PresetLoadDialog extends JDialog {
     /**
      * Creates new form PresetLoadDialog
      */
-    public PresetLoadDialog(RandomizerGUI parent, JFrame frame) {
+    public PresetLoadDialog(RandomizerGUI parent, JFrame frame, RomOpener romOpener) {
         super(frame, true);
         bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
         initComponents();
         this.parentGUI = parent;
-        this.presetFileChooser.setCurrentDirectory(new File("./"));
-        this.romFileChooser.setCurrentDirectory(new File("./"));
+        this.romOpener = romOpener;
+        this.presetFileChooser.setCurrentDirectory(new File(RootPath.path));
+        this.romFileChooser.setCurrentDirectory(new File(RootPath.path));
         initialState();
         setLocationRelativeTo(frame);
         setVisible(true);
@@ -283,8 +281,7 @@ public class PresetLoadDialog extends JDialog {
                 SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
 
                 try {
-                    // TODO: should this RomOpener be the same as in RandomizerGUI/parentGUI?
-                    RomOpener.Results results = new RomOpener().openRomFile(f);
+                    RomOpener.Results results = romOpener.openRomFile(f);
 
                     SwingUtilities.invokeLater(() -> {
                         opDialog.setVisible(false);

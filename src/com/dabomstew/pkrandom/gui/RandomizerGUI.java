@@ -854,25 +854,40 @@ public class RandomizerGUI {
         romOpenChooser.setSelectedFile(null);
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            openRom(romOpenChooser.getSelectedFile());
+            openRom(romOpenChooser.getSelectedFile(), false);
         }
     }
 
-    private void openRom(File f) {
+    /**
+     * Creates a blocking load dialog, and sets up a {@link Thread} which will:
+     * <ol>
+     *     <li>Open up the ROM file, to get a {@link RomHandler}.</li>
+     *     <li>Remove the blocking load dialog.</li>
+     *     <li>Tell the GUI to react to a ROM having been opened, or create an error dialog if the opening failed.</li>
+     * </ol>
+     * Returns the Thread.
+     * @param f The {@link File} to be opened as a ROM.
+     * @param reinitialize If true, the load dialog will not be shown, and the GUI will not react to a ROM being opened.
+     */
+    private Thread openRom(File f, boolean reinitialize) {
         // A rather simple method - make the romOpener open the file and react to its results -
         // complicated by the need of an animated loading dialog and thus multithreading...
         opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
         Thread t = new Thread(() -> {
-            SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+            SwingUtilities.invokeLater(() -> opDialog.setVisible(!reinitialize));
             try {
                 RomOpener.Results results = romOpener.openRomFile(f);
 
                 SwingUtilities.invokeLater(() -> {
                     opDialog.setVisible(false);
-                    initialState();
+                    if (!reinitialize) {
+                        initialState();
+                    }
                     if (results.wasOpeningSuccessful()) {
                         romHandler = results.getRomHandler();
-                        romLoaded();
+                        if (!reinitialize) {
+                            romLoaded();
+                        }
                     } else {
                         reportOpenRomFailure(f, results);
                     }
@@ -886,6 +901,7 @@ public class RandomizerGUI {
             }
         });
         t.start();
+        return t;
     }
 
     // This being public is not very pretty, but it works to get this code to PresetLoadDialog without copy-pasting
@@ -986,7 +1002,7 @@ public class RandomizerGUI {
             int endingIndex = startingIndex + numberOfRandomizedROMs;
             final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
-            SwingWorker swingWorker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                 int i;
 
                 @Override
@@ -1530,8 +1546,14 @@ public class RandomizerGUI {
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
     private void reinitializeRomHandler(boolean batchRandomization) {
-        // TODO: recreate whatever was going on with the multithreadedness and batchRandomization
-        openRom(new File(romHandler.loadedFilename()));
+        Thread t = openRom(new File(romHandler.loadedFilename()), true);
+        if (batchRandomization) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+            }
+        }
     }
 
     private void restoreStateFromSettings(Settings settings) {

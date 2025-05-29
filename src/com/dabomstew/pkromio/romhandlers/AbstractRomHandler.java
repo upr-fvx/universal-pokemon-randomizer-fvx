@@ -801,4 +801,8 @@ public abstract class AbstractRomHandler implements RomHandler {
         return getRomEntry().hasStaticPokemonSupport() ? "Complete" : "No Static Pokemon";
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "[" + getROMName() + " | " + getROMCode() + "]";
+    }
 }

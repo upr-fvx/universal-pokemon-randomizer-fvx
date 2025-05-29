@@ -859,20 +859,33 @@ public class RandomizerGUI {
     }
 
     private void openRom(File f) {
-        try {
-            // TODO: add spinning load icon
-            RomOpener.Results results = romOpener.openRomFile(f);
+        // A rather simple method - make the romOpener open the file and react to its results -
+        // complicated by the need of an animated loading dialog and thus multithreading...
+        opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
+        Thread t = new Thread(() -> {
+            SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+            try {
+                RomOpener.Results results = romOpener.openRomFile(f);
 
-            initialState();
-            if (results.wasOpeningSuccessful()) {
-                romHandler = results.getRomHandler();
-                romLoaded();
-            } else {
-                reportOpenRomFailure(f, results);
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    initialState();
+                    if (results.wasOpeningSuccessful()) {
+                        romHandler = results.getRomHandler();
+                        romLoaded();
+                    } else {
+                        reportOpenRomFailure(f, results);
+                    }
+                });
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    initialState();
+                    attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                });
             }
-        } catch (Exception e) {
-            attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-        }
+        });
+        t.start();
     }
 
     // This being public is not very pretty, but it works to get this code to PresetLoadDialog without copy-pasting

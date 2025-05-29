@@ -482,6 +482,15 @@ public class SpeciesSet extends HashSet<Species> {
     }
 
     /**
+     * Removes all {@link Species} from this set that are basic Pokemon with two evolution stages.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A {@link SpeciesSet} containing all {@link Species} in this set that are not basic Pokemon with two evolution stages.
+     */
+    public SpeciesSet removeBasicPokemonWithTwoEvos(boolean useOriginal) {
+        return this.filter(p -> !p.isBasicPokemonWithTwoEvos(useOriginal));
+    }
+
+    /**
      * Returns all {@link Species} in this set that are related to no other {@link Species} (in this set or otherwise).
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return A {@link SpeciesSet} containing all non-evolving {@link Species} in this set.

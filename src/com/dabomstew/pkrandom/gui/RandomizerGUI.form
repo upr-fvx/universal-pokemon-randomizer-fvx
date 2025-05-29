@@ -1851,9 +1851,50 @@
                       <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpRandomizeTrainerClassNamesCheckBox.toolTipText"/>
                     </properties>
                   </component>
-                  <component id="d6ea3" class="javax.swing.JCheckBox" binding="tpForceFullyEvolvedAtCheckBox">
+                  <vspacer id="2342b">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpForceMiddleStageAtCheckBox">
                     <constraints>
                       <grid row="4" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
+                  <component id="63824" class="javax.swing.JSlider" binding="tpForceMiddleStageAtSlider">
+                    <constraints>
+                      <grid row="5" column="6" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <majorTickSpacing value="5"/>
+                      <maximum value="45"/>
+                      <minimum value="10"/>
+                      <minorTickSpacing value="1"/>
+                      <paintLabels value="true"/>
+                      <paintTicks value="true"/>
+                      <snapToTicks value="true"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtSlider.toolTipText"/>
+                      <value value="10"/>
+                    </properties>
+                  </component>
+                  <vspacer id="2342c">
+                    <constraints>
+                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="d6ea3" class="javax.swing.JCheckBox" binding="tpForceFullyEvolvedAtCheckBox">
+                    <constraints>
+                      <grid row="8" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1864,7 +1905,7 @@
                   </component>
                   <component id="63823" class="javax.swing.JSlider" binding="tpForceFullyEvolvedAtSlider">
                     <constraints>
-                      <grid row="5" column="6" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="9" column="6" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1880,9 +1921,26 @@
                       <value value="30"/>
                     </properties>
                   </component>
+                  <vspacer id="2342d">
+                    <constraints>
+                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
+                    <constraints>
+                      <grid row="12" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.text"/>
+                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
+                    </properties>
+                  </component>
                   <component id="670de" class="javax.swing.JSlider" binding="tpPercentageLevelModifierSlider" default-binding="true">
                     <constraints>
-                      <grid row="8" column="6" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="13" column="6" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1896,17 +1954,6 @@
                       <snapToTicks value="true"/>
                       <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierSlider.toolTipText"/>
                       <value value="0"/>
-                    </properties>
-                  </component>
-                  <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
-                    <constraints>
-                      <grid row="7" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                      <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.text"/>
-                      <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
                     </properties>
                   </component>
                   <hspacer id="41124">
@@ -1926,15 +1973,9 @@
                       <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpWeightTypesCheckBox.toolTipText"/>
                     </properties>
                   </component>
-                  <vspacer id="2342a">
-                    <constraints>
-                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </vspacer>
                   <component id="28e4c" class="javax.swing.JCheckBox" binding="tpEliteFourUniquePokemonCheckBox">
                     <constraints>
-                      <grid row="10" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="12" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
@@ -1946,7 +1987,7 @@
                   </component>
                   <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
                     <constraints>
-                      <grid row="10" column="7" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="13" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>

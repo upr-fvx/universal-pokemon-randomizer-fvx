@@ -985,6 +985,7 @@ public class RandomizationLogger {
     private void logTrainers(List<String> originalTrainerNames) {
         printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
+        String[] battleStyleNames = getBS("Log.tp.battleStyleNames").split(",");
         for (Trainer t : trainers) {
             log.print("#" + t.index + " ");
             String originalTrainerName = originalTrainerNames.get(t.index);
@@ -1037,7 +1038,7 @@ public class RandomizationLogger {
                 }
             }
             if (settings.getBattleStyle().isBattleStyleChanged()) {
-                log.printf(" (Battle Style: %s)", t.currBattleStyle.getStyle().toString());
+                log.printf(" (Battle Style: %s)", battleStyleNames[t.currBattleStyle.getStyle().ordinal()]);
             }
             log.println();
         }

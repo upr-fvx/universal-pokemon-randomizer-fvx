@@ -1036,6 +1036,9 @@ public class RandomizationLogger {
                     first = false;
                 }
             }
+            if (settings.getBattleStyle().isBattleStyleChanged()) {
+                log.printf(" (Battle Style: %s)", t.currBattleStyle.getStyle().toString());
+            }
             log.println();
         }
         printSectionSeparator();

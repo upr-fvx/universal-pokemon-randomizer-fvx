@@ -42,6 +42,7 @@ public class Trainer implements Comparable<Trainer> {
     public int forceStarterPosition = -1;
     // Certain trainers (e.g., trainers in the PWT in BW2) require unique held items for all of their Pokemon to prevent a game crash.
     public boolean requiresUniqueHeldItems;
+    public BattleStyle currBattleStyle = new BattleStyle(); // Defaults to "Unchanged", but need this per-trainer for the Random style option.
 
     public Trainer() { }
 
@@ -73,6 +74,9 @@ public class Trainer implements Comparable<Trainer> {
         }
         if (trainerclass != 0) {
             sb.append("(").append(trainerclass).append(") - ");
+        }
+        if (currBattleStyle.isBattleStyleChanged()) {
+            sb.append("(").append(currBattleStyle.getStyle().toString()).append(") - ");
         }
         if (offset > 0) {
             sb.append(String.format("%x", offset));

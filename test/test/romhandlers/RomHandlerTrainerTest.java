@@ -1,6 +1,7 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.gamedata.BattleStyle;
 import com.dabomstew.pkrandom.gamedata.Trainer;
 import com.dabomstew.pkrandom.gamedata.TrainerPokemon;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
@@ -80,7 +81,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     public void trainersSaveAndLoadCorrectlyAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) == 3);
         loadROM(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
         List<Trainer> trainers = gbRomHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);

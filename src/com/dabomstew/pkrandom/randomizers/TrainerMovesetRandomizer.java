@@ -32,7 +32,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
     public void randomizeTrainerMovesets() {
         boolean isCyclicEvolutions = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
-        boolean doubleBattleMode = settings.isDoubleBattleMode();
+        boolean isOnlyMultiBattles = settings.getBattleStyle().isOnlyMultiBattles();
 
         List<Trainer> trainers = romHandler.getTrainers();
 
@@ -44,7 +44,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 List<Move> movesAtLevel = getMoveSelectionPoolAtLevel(tp, isCyclicEvolutions);
 
-                movesAtLevel = trimMoveList(tp, movesAtLevel, doubleBattleMode);
+                movesAtLevel = trimMoveList(tp, movesAtLevel, isOnlyMultiBattles);
 
                 if (movesAtLevel.isEmpty()) {
                     continue;
@@ -345,7 +345,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean doubleBattleMode) {
+    private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean isMultiBattlesOnly) {
         int movesLeft = movesAtLevel.size();
 
         if (movesLeft <= 4) {
@@ -362,7 +362,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         movesAtLevel = movesAtLevel
                 .stream()
                 .filter(mv -> !GlobalConstants.uselessMoves.contains(mv.number) &&
-                        (doubleBattleMode || !GlobalConstants.doubleBattleMoves.contains(mv.number)))
+                        (isMultiBattlesOnly || !GlobalConstants.doubleBattleMoves.contains(mv.number)))
                 .collect(Collectors.toList());
 
         movesLeft = movesAtLevel.size();

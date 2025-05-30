@@ -2686,6 +2686,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				tr.trainerclass = trainer[1] & 0xFF;
 				tr.index = i;
 				int numPokes = trainer[3] & 0xFF;
+				int battleStyle = trainer[16] & 0xFF;
+				if (battleStyle != 0)
+					tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
 				int pokeOffs = 0;
 				tr.fullDisplayName = tclasses.get(tr.trainerclass) + " " + tnames.get(i - 1);
 				for (int poke = 0; poke < numPokes; poke++) {
@@ -2811,8 +2814,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// battles will turn into trainer battles with glitchy trainers.
 					boolean excludedPartnerTrainer = romEntry.getRomType() != Gen4Constants.Type_HGSS
 							&& Gen4Constants.partnerTrainerIndices.contains(tr.index);
-					if (trainer[16] == 0 && !excludedPartnerTrainer) {
-						trainer[16] |= 3;
+					if (!excludedPartnerTrainer) {
+						if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+							if (trainer[16] == 0) {
+								trainer[16] |= 3;
+							}
+						} else {
+							if (trainer[16] == 3) {
+								trainer[16] = 0;
+							}
+						}
 					}
 				}
 
@@ -2885,6 +2896,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// To fix this, the below code patches the executable to skip the case for the special
 		// double battle intro (by changing a beq to an unconditional branch); this slightly breaks
 		// battles that are double battles in the original game, but the trade-off is worth it.
+
+		// We'll do this if they've modified their battle style at all.
 
 		// Then, also patch various subroutines that control the "Trainer Eye" event and text boxes
 		// related to this in order to make double battles work on all trainers

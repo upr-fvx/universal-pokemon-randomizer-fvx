@@ -41,7 +41,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public static final int LENGTH_OF_SETTINGS_DATA = 63;
 
     private CustomNamesSet customNames;
 
@@ -197,7 +197,7 @@ public class Settings {
     private boolean diverseTypesForBossTrainers;
     private boolean diverseTypesForImportantTrainers;
     private boolean diverseTypesForRegularTrainers;
-    private boolean doubleBattleMode;
+    private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
@@ -594,8 +594,8 @@ public class Settings {
                 allowTrainerAlternateFormes,
                 allowWildAltFormes));
 
-        // 42 Double Battle Mode, Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
-        out.write((doubleBattleMode ? 0x1 : 0) |
+        // 42 (Legacy Double Battle Mode), Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
+        out.write((0) |
                 (additionalBossTrainerPokemon << 1) |
                 (additionalImportantTrainerPokemon << 4) |
                 (weighDuplicateAbilitiesTogether ? 0x80 : 0));
@@ -691,6 +691,15 @@ public class Settings {
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
                 diverseTypesForRegularTrainers,
                 false, false, false, false, false));
+
+        // 62 setting battle style: modification (3bits) + style (4bits)
+        out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
+                settingBattleStyle.getModification() == BattleStyle.Modification.RANDOM,
+                settingBattleStyle.getModification() == BattleStyle.Modification.SINGLE_STYLE) |
+                (makeByteSelected(settingBattleStyle.getStyle() == BattleStyle.Style.SINGLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -952,7 +961,7 @@ public class Settings {
         settings.setAllowTrainerAlternateFormes(restoreState(data[41],6));
         settings.setAllowWildAltFormes(restoreState(data[41],7));
 
-        settings.setDoubleBattleMode(restoreState(data[42], 0));
+        // restoreState(data[42], 0))  Legacy setting. This bit used to be used for "Double Battle Only Mode"
         settings.setAdditionalBossTrainerPokemon((data[42] & 0xE) >> 1);
         settings.setAdditionalImportantTrainerPokemon((data[42] & 0x70) >> 4);
         settings.setWeighDuplicateAbilitiesTogether(restoreState(data[42], 7));
@@ -1037,6 +1046,9 @@ public class Settings {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+
+        settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
+        settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -2016,12 +2028,20 @@ public class Settings {
         this.diverseTypesForRegularTrainers = isRegularDiverse;
     }
 
-    public boolean isDoubleBattleMode() {
-        return doubleBattleMode;
+    public BattleStyle getBattleStyle() {
+        return settingBattleStyle;
     }
 
-    public void setDoubleBattleMode(boolean doubleBattleMode) {
-        this.doubleBattleMode = doubleBattleMode;
+    public void setBattleStyle(BattleStyle style) {
+        settingBattleStyle = style;
+    }
+
+    public void setBattleStyleMod(boolean... bools) {
+        settingBattleStyle.setModification(getEnum(BattleStyle.Modification.class, bools));
+    }
+
+    public void setSingleStyleSelection(boolean... bools) {
+        settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
     public boolean isShinyChance() {

@@ -1636,6 +1636,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             tr.trainerclass = (rom[trOffset + 2] & 0x80) > 0 ? 1 : 0;
 
             int pokeDataType = rom[trOffset] & 0xFF;
+            if (rom[trOffset + (entryLen - 16)] == 0x01) {
+                tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+            }
             int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
             int pointerToPokes = readPointer(trOffset + (entryLen - 4));
             tr.poketype = pokeDataType;
@@ -1812,7 +1815,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeFixedLengthString(tr.name, trOffset + 4, nameLen);
             writeByte(trOffset + (entryLen - 8), (byte) tr.pokemon.size());
             if (tr.forcedDoubleBattle) {
-                writeByte(trOffset + (entryLen - 16), (byte) 0x01);
+                if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE)
+                    writeByte(trOffset + (entryLen - 16), (byte) 0x01);
+                else
+                    writeByte(trOffset + (entryLen - 16), (byte) 0x00);
             }
         }
 

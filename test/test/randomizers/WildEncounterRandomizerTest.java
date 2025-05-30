@@ -77,7 +77,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println(area.getDisplayName() + ":");
             System.out.println(area);
             for (Encounter enc : area) {
-                assertNull(enc.getSpecies().getBaseForme());
+                assertTrue(enc.getSpecies().isBaseForme());
             }
         }
     }

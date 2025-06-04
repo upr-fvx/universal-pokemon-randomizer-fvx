@@ -703,6 +703,9 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
+        // 63 trainer pokemon force evolutions
+        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+        
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -721,9 +724,6 @@ public class Settings {
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
-
-        // 63 trainer pokemon force evolutions
-        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
 
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }

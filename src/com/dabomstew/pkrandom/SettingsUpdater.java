@@ -344,6 +344,16 @@ public class SettingsUpdater {
             insertExtraByte(61, (byte) 0);
         }
 
+        if (oldVersion < Version.FVX_1_2_3.id) {
+            // Introduced Battle Style Randomization.
+            // Get the old "Double Battle Only" state to initialize the data to.
+            byte initialState = 0;
+            if (((dataBlock[42] & 1)) == 0x01) { // is set to double battle mode
+                initialState = 0x14;
+            }
+            insertExtraByte(62, initialState);
+        }
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

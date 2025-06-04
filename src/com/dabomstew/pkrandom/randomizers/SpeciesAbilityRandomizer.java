@@ -27,7 +27,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isAbilitiesFollowMegaEvolutions();
         boolean weighDuplicatesTogether = settings.isWeighDuplicateAbilitiesTogether();
         boolean ensureTwoAbilities = settings.isEnsureTwoAbilities();
-        boolean doubleBattleMode = settings.isDoubleBattleMode();
+        boolean isMultiBattleOnly = settings.getBattleStyle().isOnlyMultiBattles();
 
         // Abilities don't exist in some games...
         if (romHandler.abilitiesPerSpecies() == 0) {
@@ -52,7 +52,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         if (banBadAbilities) {
             bannedAbilities.addAll(GlobalConstants.badAbilities);
-            if (!doubleBattleMode) {
+            if (!isMultiBattleOnly) {
                 bannedAbilities.addAll(GlobalConstants.doubleBattleAbilities);
             }
         }

@@ -72,14 +72,4 @@ public class RomHandlerTypeTest extends RomHandlerTest {
         romHandler.setTypeTable(before);
         assertEquals(before, romHandler.getTypeTable());
     }
-
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void foo(String romName) {
-        loadROM(romName);
-        romHandler.getTypeTable();
-        ((Abstract3DSRomHandler) romHandler).findTypeTable();
-    }
-
 }

@@ -529,7 +529,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if(finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
         } else if (noBasicPokemonWithTwoEvos) {
-            pickFrom = pickFrom.removeBasicPokemonWithTwoEvos(false);
+            pickFrom = pickFrom.filter(p -> !p.isBasicPokemonWithTwoEvos(false));
         }
 
         if (usePlacementHistory) {

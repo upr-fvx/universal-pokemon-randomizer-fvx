@@ -261,8 +261,8 @@ public class Species implements Comparable<Species> {
         if (this.getPreEvolvedSpecies(useOriginal).isEmpty()) {
             // We have a basic Pokemon (no pre-evolutions)
             for (Species evolvedSpecies : this.getEvolvedSpecies(useOriginal)) {
-                if (evolvedSpecies != this && !evolvedSpecies.getEvolvedSpecies(useOriginal).isEmpty()) {
-                    // Pokemon has one evolution that has an evolution of its own, i.e., has two evolution stages
+                if (!evolvedSpecies.getEvolvedSpecies(useOriginal).isEmpty()) {
+                    // Pokemon has one evolution that has an evolution of its own, i.e., has at least two evolution stages
                     return true;
                 }
             }

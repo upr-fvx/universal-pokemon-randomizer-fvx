@@ -732,7 +732,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
                 if (tp.getLevel()<20) {
                     // Everything below level 20 cannot be a basic Pokemon with two evolution stages
-                    assertFalse(tp.getSpecies().isBasicPokemonWithTwoEvos(false));
+                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
                 }
                 else {
                     // Everything over level 20 has to be fully evolved

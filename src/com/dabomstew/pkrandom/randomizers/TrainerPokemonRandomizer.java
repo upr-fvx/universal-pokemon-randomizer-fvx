@@ -529,7 +529,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if(finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
         } else if (noBasicPokemonWithTwoEvos) {
-            pickFrom = pickFrom.filter(p -> !p.isBasicPokemonWithTwoEvos(false));
+            pickFrom = pickFrom.filter(p -> !p.isBasicPokemonWithMoreThanTwoEvoStages(false));
         }
 
         if (usePlacementHistory) {
@@ -928,7 +928,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void createMiddleStagePokemon(TrainerPokemon tp) {
-        if (tp.getSpecies().isBasicPokemonWithTwoEvos(false)) {
+        if (tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false)) {
             Species newSpecies = evolveOnce(tp.getSpecies());
             tp.setSpecies(newSpecies);
             setFormeForTrainerPokemon(tp, newSpecies);

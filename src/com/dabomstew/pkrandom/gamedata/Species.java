@@ -252,12 +252,13 @@ public class Species implements Comparable<Species> {
     //Evolutionary Relatives functions
 
     /**
-     * Gets all {@link Species} that this {@link Species} can evolve directly into.
-     * Does not include Mega Evolution.
+     * Determines whether this {@link Species} is a basic Pokemon (has no pre-evolution) with an evolution
+     * that has an evolution of its own (without counting Mega Evolution).
      * @param useOriginal Whether to use the evolution data from before randomization.
-     * @return A {@link SpeciesSet} containing all possible evolved forms of this {@link Species}.
+     * @return A boolean, true if this {@link Species} is a basic Pokemon with an evolution that has
+     *         an evolution of its own
      */
-    public boolean isBasicPokemonWithTwoEvos(boolean useOriginal) {
+    public boolean isBasicPokemonWithMoreThanTwoEvoStages(boolean useOriginal) {
         if (this.getPreEvolvedSpecies(useOriginal).isEmpty()) {
             // We have a basic Pokemon (no pre-evolutions)
             for (Species evolvedSpecies : this.getEvolvedSpecies(useOriginal)) {

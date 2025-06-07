@@ -543,8 +543,13 @@ public class GameRandomizer {
 
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersForceFullyEvolved()) {
-            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        } else {
+            if (settings.isTrainersForceMiddleStage()) {
+                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
+            }
+            if (settings.isTrainersForceFullyEvolved()) {
+                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+            }
         }
     }
 

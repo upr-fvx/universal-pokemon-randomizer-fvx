@@ -1,11 +1,11 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.BattleStyle;
-import com.dabomstew.pkrandom.gamedata.Trainer;
-import com.dabomstew.pkrandom.gamedata.TrainerPokemon;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
+import com.dabomstew.pkromio.gamedata.BattleStyle;
+import com.dabomstew.pkromio.gamedata.Trainer;
+import com.dabomstew.pkromio.gamedata.TrainerPokemon;
+import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

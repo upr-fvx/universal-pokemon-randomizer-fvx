@@ -2,10 +2,10 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.PickupItem;
-import com.dabomstew.pkrandom.gamedata.Shop;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.PickupItem;
+import com.dabomstew.pkromio.gamedata.Shop;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;

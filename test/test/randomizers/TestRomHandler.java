@@ -1,14 +1,14 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
-import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
-import com.dabomstew.pkrandom.services.TypeService;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
+import com.dabomstew.pkromio.services.TypeService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;

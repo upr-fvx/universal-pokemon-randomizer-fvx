@@ -24,19 +24,28 @@ package com.dabomstew.pkrandom.gui;
 
 import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.exceptions.*;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
+import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.gamedata.BattleStyle;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.graphics.packs.*;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
-import com.dabomstew.pkrandom.romhandlers.*;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
+import com.dabomstew.pkromio.exceptions.EncryptedROMException;
+import com.dabomstew.pkromio.gamedata.ExpCurve;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.graphics.packs.*;
+import com.dabomstew.pkromio.romhandlers.*;
+import com.dabomstew.pkromio.romio.ROMFilter;
+import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -51,9 +60,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -391,6 +399,8 @@ public class RandomizerGUI {
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
 
+    private RomOpener romOpener = new RomOpener();
+
     private JFileChooser romOpenChooser = new JFileChooser();
     private JFileChooser romSaveChooser = new JFileChooser();
     private JFileChooser qsOpenChooser = new JFileChooser();
@@ -408,7 +418,7 @@ public class RandomizerGUI {
 
     private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkrandom/gui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
-    private Map<String, String> gameUpdates = new TreeMap<>();
+    private final Map<String, String> gameUpdates = new TreeMap<>();
 
     private List<String> trainerSettings = new ArrayList<>();
     private List<String> trainerSettingToolTips = new ArrayList<>();
@@ -426,10 +436,11 @@ public class RandomizerGUI {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
-        testForRequiredConfigs();
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };
+        romOpener.setGameUpdates(gameUpdates);
+        romOpener.setExtraMemoryAvailable(usedLauncher);
 
         haveCheckedCustomNames = false;
         attemptReadConfig();
@@ -486,7 +497,7 @@ public class RandomizerGUI {
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.VERSION_STRING));
 
-        openROMButton.addActionListener(e -> loadROM());
+        openROMButton.addActionListener(e -> selectAndOpenRom());
         pbsUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pbsShuffleRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pbsRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -748,16 +759,16 @@ public class RandomizerGUI {
     }
 
     private void initFileChooserDirectories() {
-        romOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        romSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        if (new File(SysConstants.ROOT_PATH + "settings/").exists()) {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
+        romOpenChooser.setCurrentDirectory(new File(RootPath.path));
+        romSaveChooser.setCurrentDirectory(new File(RootPath.path));
+        if (new File(RootPath.path + "settings/").exists()) {
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
         } else {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path));
         }
     }
 
@@ -861,80 +872,95 @@ public class RandomizerGUI {
         settingsMenu.add(batchRandomizationMenuItem);
     }
 
-    private void loadROM() {
+    private void selectAndOpenRom() {
         romOpenChooser.setSelectedFile(null);
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File fh = romOpenChooser.getSelectedFile();
+            openRom(romOpenChooser.getSelectedFile(), false);
+        }
+    }
+
+    /**
+     * Creates a blocking load dialog, and sets up a {@link Thread} which will:
+     * <ol>
+     *     <li>Open up the ROM file, to get a {@link RomHandler}.</li>
+     *     <li>Remove the blocking load dialog.</li>
+     *     <li>Tell the GUI to react to a ROM having been opened, or create an error dialog if the opening failed.</li>
+     * </ol>
+     * Returns the Thread.
+     * @param f The {@link File} to be opened as a ROM.
+     * @param reinitialize If true, the load dialog will not be shown, and the GUI will not react to a ROM being opened.
+     */
+    private Thread openRom(File f, boolean reinitialize) {
+        // A rather simple method - make the romOpener open the file and react to its results -
+        // complicated by the need of an animated loading dialog and thus multithreading...
+        opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
+        Thread t = new Thread(() -> {
+            SwingUtilities.invokeLater(() -> opDialog.setVisible(!reinitialize));
             try {
-                FileFunctions.validateRomFile(fh);
-            } catch (InvalidROMException e) {
-                switch (e.getType()) {
-                    case LENGTH:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.tooShortToBeARom"), fh.getName()));
-                        return;
-                    case ZIP_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedZIPfile"), fh.getName()));
-                        return;
-                    case RAR_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedRARfile"), fh.getName()));
-                        return;
-                    case IPS_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedIPSfile"), fh.getName()));
-                        return;
-                    case UNREADABLE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.unreadableRom"), fh.getName()));
-                        return;
-                }
-            }
+                RomOpener.Results results = romOpener.openRomFile(f);
 
-            for (RomHandler.Factory rhf : checkHandlers) {
-                if (rhf.isLoadable(fh.getAbsolutePath())) {
-                    this.romHandler = rhf.create();
-                    if (!usedLauncher && this.romHandler instanceof Abstract3DSRomHandler) {
-                        String message = bundle.getString("GUI.pleaseUseTheLauncher");
-                        Object[] messages = {message};
-                        JOptionPane.showMessageDialog(frame, messages);
-                        this.romHandler = null;
-                        return;
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    if (!reinitialize) {
+                        initialState();
                     }
-                    opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
-                    Thread t = new Thread(() -> {
-                        boolean romLoaded = false;
-                        SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
-                        try {
-                            this.romHandler.loadRom(fh.getAbsolutePath());
-                            if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                                this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-                            }
-                            romLoaded = true;
-                        } catch (EncryptedROMException ex) {
-                            JOptionPane.showMessageDialog(mainPanel,
-                                    String.format(bundle.getString("GUI.encryptedRom"), fh.getAbsolutePath()));
-                        } catch (Exception ex) {
-                            attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                    if (results.wasOpeningSuccessful()) {
+                        romHandler = results.getRomHandler();
+                        if (!reinitialize) {
+                            romLoaded();
                         }
-                        final boolean loadSuccess = romLoaded;
-                        SwingUtilities.invokeLater(() -> {
-                            this.opDialog.setVisible(false);
-                            this.initialState();
-                            if (loadSuccess) {
-                                this.romLoaded();
-                            }
-                        });
-                    });
-                    t.start();
-
-                    return;
-                }
+                    } else {
+                        reportOpenRomFailure(f, results);
+                    }
+                });
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    initialState();
+                    attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                });
             }
-            JOptionPane.showMessageDialog(mainPanel,
-                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
+        });
+        t.start();
+        return t;
+    }
+
+    // This being public is not very pretty, but it works to get this code to PresetLoadDialog without copy-pasting
+    public void reportOpenRomFailure(File f, RomOpener.Results results) {
+        switch (results.getFailType()) {
+            case UNREADABLE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unreadableRom"), f.getName()));
+                break;
+            case INVALID_TOO_SHORT:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.tooShortToBeARom"), f.getName()));
+                break;
+            case INVALID_ZIP_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedZIPfile"), f.getName()));
+                break;
+            case INVALID_RAR_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedRARfile"), f.getName()));
+                break;
+            case INVALID_IPS_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedIPSfile"), f.getName()));
+                break;
+            case EXTRA_MEMORY_NOT_AVAILABLE:
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.pleaseUseTheLauncher"));
+                break;
+            case ENCRYPTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.encryptedRom"), f.getName()));
+                break;
+            case UNSUPPORTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unsupportedRom"), f.getName()));
+                break;
         }
     }
 
@@ -998,7 +1024,7 @@ public class RandomizerGUI {
             int endingIndex = startingIndex + numberOfRandomizedROMs;
             final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
-            SwingWorker swingWorker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                 int i;
 
                 @Override
@@ -1056,9 +1082,10 @@ public class RandomizerGUI {
         presetMode = false;
 
         try {
-            CustomNamesSet cns = FileFunctions.getCustomNames();
+            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
             performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
         }
     }
@@ -1271,7 +1298,7 @@ public class RandomizerGUI {
     }
 
     private void presetLoader() {
-        PresetLoadDialog pld = new PresetLoadDialog(this,frame);
+        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpener);
         if (pld.isCompleted()) {
             // Apply it
             long seed = pld.getSeed();
@@ -1541,34 +1568,12 @@ public class RandomizerGUI {
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
     private void reinitializeRomHandler(boolean batchRandomization) {
-        String currentFN = this.romHandler.loadedFilename();
-        for (RomHandler.Factory rhf : checkHandlers) {
-            if (rhf.isLoadable(currentFN)) {
-                this.romHandler = rhf.create();
-                opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
-                Thread t = new Thread(() -> {
-                    SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-                    try {
-                        this.romHandler.loadRom(currentFN);
-                        if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                            this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-                        }
-                    } catch (Exception ex) {
-                        attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        this.opDialog.setVisible(false);
-                    });
-                });
-                t.start();
-                if (batchRandomization) {
-                    try {
-                        t.join();
-                    } catch(InterruptedException ex) {
-                        attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-                    }
-                }
-                return;
+        Thread t = openRom(new File(romHandler.loadedFilename()), true);
+        if (batchRandomization) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
             }
         }
     }
@@ -2135,7 +2140,7 @@ public class RandomizerGUI {
     }
 
     private Settings getCurrentSettings() throws IOException {
-        return createSettingsFromState(FileFunctions.getCustomNames());
+        return createSettingsFromState(CustomNamesSet.readNamesFromFile());
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
@@ -2242,9 +2247,9 @@ public class RandomizerGUI {
         }
 
         // Check the trainerclass & trainernames & nicknames crc
-        if (customNames == null && !FileFunctions.checkOtherCRC(data, 16, 4, SysConstants.customNamesFile, data.length - 4)) {
+        if (customNames == null && !CustomNamesSet.checkOtherCRC(data, 16, 4, data.length - 4)) {
             throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
-                    "Can't use this preset because you have a different set " + "of custom names to the creator.");
+                    "Can't use this preset because you have a different set of custom names to the creator.");
         }
     }
 
@@ -3837,7 +3842,7 @@ public class RandomizerGUI {
 
         boolean foundFile = false;
         for (int file = 0; file < 3; file++) {
-            File currentFile = new File(SysConstants.ROOT_PATH + cnamefiles[file]);
+            File currentFile = new File(RootPath.path + cnamefiles[file]);
             if (currentFile.exists()) {
                 foundFile = true;
                 break;
@@ -3868,7 +3873,7 @@ public class RandomizerGUI {
         // Things that should be true by default should be manually set here
         unloadGameOnSuccess = true;
         batchRandomizationSettings = new BatchRandomizationSettings();
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (!fh.exists() || !fh.canRead()) {
             return;
         }
@@ -3940,7 +3945,7 @@ public class RandomizerGUI {
     }
 
     private boolean attemptWriteConfig() {
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (fh.exists() && !fh.canWrite()) {
             return false;
         }
@@ -3971,16 +3976,6 @@ public class RandomizerGUI {
 
     }
 
-    private void testForRequiredConfigs() {
-        try {
-            FileFunctions.testForRequiredConfigs();
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                    String.format(bundle.getString("GUI.configFileMissing"), e.getMessage()));
-            System.exit(1);
-        }
-    }
-
     private String[] getTrainerSettingsForGeneration(int generation) {
         List<String> result = new ArrayList<>(trainerSettings);
         if (generation != 5) {
@@ -4007,6 +4002,8 @@ public class RandomizerGUI {
     }
 
     public static void main(String[] args) {
+        setRootPath();
+
         String firstCliArg = args.length > 0 ? args[0] : "";
         // invoke as CLI program
         if (firstCliArg.equals("cli")) {
@@ -4034,6 +4031,22 @@ public class RandomizerGUI {
                 frame.pack();
                 frame.setVisible(true);
             });
+        }
+    }
+
+    private static void setRootPath() {
+        // Honestly I don't know why the Randomizer needs a different RootPath from just "./",
+        // but it was written in earlier versions so it feels safer to just keep it.
+        // Feel free to investigate if you feel like it. Maybe it's entirely redundant.
+        // --voliol 2025-04-27
+        try {
+            URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
+            String file = location.getFile();
+            String plusEncoded = file.replaceAll("\\+", "%2b");
+            File f = new File(java.net.URLDecoder.decode(plusEncoded, "UTF-8"));
+            RootPath.path = f.getParentFile() + File.separator;
+        } catch (UnsupportedEncodingException ignored) {
+            RootPath.path = "./";
         }
     }
 }

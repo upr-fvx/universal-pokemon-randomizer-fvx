@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.constants.MoveIDs;
-import com.dabomstew.pkrandom.gamedata.Move;
-import com.dabomstew.pkrandom.gamedata.MoveCategory;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.MoveIDs;
+import com.dabomstew.pkromio.gamedata.Move;
+import com.dabomstew.pkromio.gamedata.MoveCategory;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Arrays;
 import java.util.List;

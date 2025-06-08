@@ -1,26 +1,21 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.constants.*;
-import com.dabomstew.pkrandom.gamedata.EncounterArea;
-import com.dabomstew.pkrandom.romhandlers.*;
-import org.junit.jupiter.api.Assumptions;
+import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.gamedata.EncounterArea;
+import com.dabomstew.pkromio.romhandlers.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEncounterTest extends RomHandlerTest {
 

@@ -1,8 +1,7 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;

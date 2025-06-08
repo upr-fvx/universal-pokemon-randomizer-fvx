@@ -1,15 +1,15 @@
 package com.dabomstew.pkrandom.log;
 
-import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.*;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.PrintStream;
 import java.util.*;

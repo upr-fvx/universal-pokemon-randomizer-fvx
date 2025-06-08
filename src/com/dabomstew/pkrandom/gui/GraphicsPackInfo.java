@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.gui;
 
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 
 import javax.swing.*;
 import java.awt.*;

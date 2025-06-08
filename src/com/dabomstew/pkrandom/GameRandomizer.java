@@ -26,9 +26,13 @@ import com.dabomstew.pkrandom.log.RandomizationLogger;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.updaters.*;
+import com.dabomstew.pkrandom.updaters.MoveUpdater;
+import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
+import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.Updater;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -123,7 +127,9 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.speciesBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.speciesBSRandomizer = romHandler.generationOfPokemon() == 1 ?
+                new Gen1SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic()) :
+                new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());

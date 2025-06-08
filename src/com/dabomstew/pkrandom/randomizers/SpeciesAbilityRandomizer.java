@@ -1,12 +1,12 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.gamedata.MegaEvolution;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.gamedata.MegaEvolution;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.List;
 import java.util.Map;

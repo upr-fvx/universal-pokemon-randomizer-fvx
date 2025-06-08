@@ -1,12 +1,12 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Gen7Constants;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
+import com.dabomstew.pkromio.RomFunctions;
+import com.dabomstew.pkromio.constants.Gen7Constants;
+import com.dabomstew.pkromio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

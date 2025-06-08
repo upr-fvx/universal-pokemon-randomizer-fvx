@@ -26,9 +26,11 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.*;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -720,7 +722,7 @@ public class Settings {
 
         try {
             writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, FileFunctions.getFileChecksum(SysConstants.customNamesFile));
+            writeFullInt(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }

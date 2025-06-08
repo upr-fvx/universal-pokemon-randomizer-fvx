@@ -121,7 +121,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void keepTypeThemedWorksWithForceFullyEvolved(String romName) {
+    public void keepTypeThemedWorksWithForcedEvolutions(String romName) {
         activateRomHandler(romName);
 
         Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
@@ -130,8 +130,10 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(1);
+        s.setTrainersForceFullyEvolvedLevel(20);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -236,6 +238,24 @@ public class TrainerRandomizersTest extends RandomizerTest {
         }
 
         return trainersWithPokemonTypes;
+    }
+
+    /**
+     * Records original species names of all trainer Pokemon for every trainer in the romHandler.
+     * @return A Map of every trainer to a list of their Pokemon's species.
+     */
+    private Map<Trainer, List<String>> recordTrainerPokemonSpeciesNames() {
+        Map<Trainer, List<String>> originalNames = new HashMap<>();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            List<String> namesBefore = new ArrayList<>();
+            originalNames.put(tr, namesBefore);
+            for (TrainerPokemon tp : tr.pokemon) {
+                namesBefore.add(tp.getSpecies().getName());
+            }
+        }
+
+        return originalNames;
     }
 
     @ParameterizedTest
@@ -690,24 +710,52 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void nonForcefullyEvolvedPokemonAreCorrect(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(20);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        // Test
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println("\n" + tr);
+            for (int k = 0; k<tr.pokemon.size(); k++) {
+                TrainerPokemon tp = tr.pokemon.get(k);
+                System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
+                if (tp.getLevel()<20) {
+                    // Everything below level 20 cannot be a basic Pokemon with two evolution stages
+                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
+                }
+                else {
+                    // Everything over level 20 has to be fully evolved
+                    assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void forcedEvolutionsDoNotResetMoves(String romName) {
         activateRomHandler(romName);
 
         // Record original species of all trainer Pokemon (for better console output only)
-        Map<Trainer, List<String>> originalNames = new HashMap<>();
-
-        for (Trainer tr : romHandler.getTrainers()) {
-            List<String> namesBefore = new ArrayList<>();
-            originalNames.put(tr, namesBefore);
-            for (TrainerPokemon tp : tr.pokemon) {
-                namesBefore.add(tp.getSpecies().getName());
-            }
-        }
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
 
         // Randomize
         Settings s = new Settings();
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(1);
+        s.setTrainersForceFullyEvolvedLevel(20);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test

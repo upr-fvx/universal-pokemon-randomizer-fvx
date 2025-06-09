@@ -3070,9 +3070,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
 
         List<Shop> shops = new ArrayList<>();
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        for (int i = 0; i < shopItemOffsets.length; i++) {
-            int offset = shopItemOffsets[i];
+        int[] shopPointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        for (int i = 0; i < shopPointerOffsets.length; i++) {
+            int offset = readPointer(shopPointerOffsets[i]);
             List<Item> shopItems = new ArrayList<>();
             int val = FileFunctions.read2ByteInt(rom, offset);
             while (val != 0x0000) {
@@ -3112,7 +3112,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         int i = 0;
         for (Shop shop : shops) {
-            System.out.println(shop);
+//            System.out.println(shop);
 
             // Finding the offset for each shop.
             // Did we need to do this? No. We already had the offsets lol.
@@ -3129,13 +3129,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             baos.write(0x02);
             byte[] data = baos.toByteArray();
 
-            System.out.println(RomFunctions.bytesToHex(data));
+//            System.out.println(RomFunctions.bytesToHex(data));
 
             int trueOffset = trueOffsets[i];
             List<Integer> foundOffsets = RomFunctions.search(rom, data);
-
-            System.out.println(foundOffsets.stream().map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
-            System.out.println("0x" + Integer.toHexString(trueOffset));
+//
+//            System.out.println(foundOffsets.stream().map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
+//            System.out.println("0x" + Integer.toHexString(trueOffset));
 
             int foundOffset = getROMType() == Gen3Constants.RomType_FRLG && (i == 18 || i == 19) ?
                     foundOffsets.get(1) : foundOffsets.get(0);
@@ -3152,9 +3152,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             };
 
             // Find the pointer offsets
-            List<Integer> posOffsets = RomFunctions.search(rom, shopPointer);
-            System.out.println(posOffsets.stream().map(j -> j + 1)
-                    .map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
+            List<Integer> posOffsets = RomFunctions.search(rom, shopPointer)
+                    .stream().map(o -> o + 1).collect(Collectors.toList());
+//            System.out.println(posOffsets.stream().map(j -> j + 1)
+//                    .map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
             shopPointerOffsets[i] = posOffsets.get(0);
 
             i++;

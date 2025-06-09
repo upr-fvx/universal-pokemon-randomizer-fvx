@@ -1,6 +1,6 @@
 package compressors;
 
-import com.dabomstew.pkrandom.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.images.GBCImage;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

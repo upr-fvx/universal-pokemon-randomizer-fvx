@@ -1,10 +1,10 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.Gen5Constants;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.WildEncounterRandomizer;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.Gen5Constants;
+import com.dabomstew.pkromio.gamedata.*;
 import javafx.util.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -77,7 +77,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println(area.getDisplayName() + ":");
             System.out.println(area);
             for (Encounter enc : area) {
-                assertNull(enc.getSpecies().getBaseForme());
+                assertTrue(enc.getSpecies().isBaseForme());
             }
         }
     }

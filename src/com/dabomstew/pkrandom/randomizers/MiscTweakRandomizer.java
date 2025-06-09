@@ -1,10 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +65,7 @@ public class MiscTweakRandomizer extends Randomizer {
         Item item;
         do {
             item = possible.get(random.nextInt(possible.size()));
-        } while (!item.isTM()); // assumes there will always be >0 non-TMs, otherwise this will loop infinitely
+        } while (item.isTM()); // assumes there will always be >0 non-TMs, otherwise this will loop infinitely
         romHandler.setPCPotionItem(item);
     }
 

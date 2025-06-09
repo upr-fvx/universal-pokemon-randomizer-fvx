@@ -1,12 +1,12 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.Gen7Constants;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
+import com.dabomstew.pkromio.RomFunctions;
+import com.dabomstew.pkromio.constants.Gen7Constants;
+import com.dabomstew.pkromio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -25,13 +25,80 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void trainersHaveAtLeastTwoPokemonAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
             if (trainer.forcedDoubleBattle) {
                 assertTrue(trainer.pokemon.size() >= 2);
             } else {
                 System.out.println("Not a forced double battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveAtLeastThreePokemonAfterSettingTripleBattleMode(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.TRIPLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                assertTrue(trainer.pokemon.size() >= 3);
+            } else {
+                System.out.println("Not a forced triple battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveAtLeastThreePokemonAfterSettingRotationBattleMode(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.ROTATION_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                assertTrue(trainer.pokemon.size() >= 3);
+            } else {
+                System.out.println("Not a forced rotation battle.");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersHaveEnoughPokemonForBattleStyle(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        activateRomHandler(romName);
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.RANDOM, BattleStyle.Style.SINGLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        for (Trainer trainer : romHandler.getTrainers()) {
+            System.out.println(trainer);
+            if (trainer.forcedDoubleBattle) {
+                switch (trainer.currBattleStyle.getStyle()) {
+                    case SINGLE_BATTLE:
+                        assertFalse(trainer.pokemon.isEmpty());
+                        break;
+                    case DOUBLE_BATTLE:
+                        assertTrue(trainer.pokemon.size() >= 2);
+                        break;
+                    case TRIPLE_BATTLE:
+                    case ROTATION_BATTLE:
+                        assertTrue(trainer.pokemon.size() >= 3);
+                        break;
+                }
+            } else {
+                System.out.println("Not a forced rotation battle.");
             }
         }
     }
@@ -46,10 +113,30 @@ public class TrainerRandomizersTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         Settings s = new Settings();
-        s.setTrainersMod(false, false, false, false, false, false, true);
+        s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers);
+        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void keepTypeThemedWorksWithForcedEvolutions(String romName) {
+        activateRomHandler(romName);
+
+        Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
+        Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
+        recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
+
+        Settings s = new Settings();
+        s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(20);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
     }
 
     @ParameterizedTest
@@ -68,7 +155,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEME_OR_PRIMARY);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, nonTypeThemedTrainers);
+        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, nonTypeThemedTrainers, false);
     }
 
     /**
@@ -78,7 +165,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
      */
     private void keepTypeThemeOrPrimaryCheck(Map<Trainer, List<String>> beforeTrainerStrings,
                                              Map<Trainer, Type> typeThemedTrainers,
-                                             Map<Trainer, List<Species>> nonTypeThemedTrainers) {
+                                             Map<Trainer, List<Species>> nonTypeThemedTrainers,
+                                             boolean checkOnlyAdded) {
 
         for (Trainer tr : romHandler.getTrainers()) {
             List<String> beforeStrings = beforeTrainerStrings.get(tr);
@@ -94,7 +182,15 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 for (TrainerPokemon tp : tr.pokemon) {
                     Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
                     System.out.println("\t" + sp);
-                    assertTrue(sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme);
+                    boolean keepsTheme = sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme;
+                    if (!keepsTheme) {
+                        if (checkOnlyAdded && !tp.isAddedTeamMember()) {
+                            System.out.println("\t" + sp.getFullName() + " is not a " + theme + "-type, " +
+                                    "but it is fine since it is an original team member.");
+                        } else {
+                            fail(sp.getFullName() + " is not a " + theme + "-type.");
+                        }
+                    }
                 }
             } else {
                 System.out.println("Not Type Themed");
@@ -144,9 +240,27 @@ public class TrainerRandomizersTest extends RandomizerTest {
         return trainersWithPokemonTypes;
     }
 
+    /**
+     * Records original species names of all trainer Pokemon for every trainer in the romHandler.
+     * @return A Map of every trainer to a list of their Pokemon's species.
+     */
+    private Map<Trainer, List<String>> recordTrainerPokemonSpeciesNames() {
+        Map<Trainer, List<String>> originalNames = new HashMap<>();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            List<String> namesBefore = new ArrayList<>();
+            originalNames.put(tr, namesBefore);
+            for (TrainerPokemon tp : tr.pokemon) {
+                namesBefore.add(tp.getSpecies().getName());
+            }
+        }
+
+        return originalNames;
+    }
+
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void keepTypeThemedWorksWithRandomPokemonTypes(String romName) {
+    public void keepTypeThemedWorksWithRandomSpeciesTypes(String romName) {
         activateRomHandler(romName);
 
         Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
@@ -159,7 +273,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersMod(false, false, false, false, false, false, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers);
+        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
     }
 
     private void recordTypeThemeBefore(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers) {
@@ -228,8 +342,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     }
 
-    private void keepTypeThemedCheck(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers) {
-        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, null);
+    private void keepTypeThemedCheck(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers,
+                                     boolean checkOnlyAdded) {
+        keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, null, checkOnlyAdded);
     }
 
     @ParameterizedTest
@@ -490,6 +605,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
         settings.setDiverseTypesForRegularTrainers(true);
         settings.setDiverseTypesForImportantTrainers(true);
         settings.setDiverseTypesForBossTrainers(true);
@@ -527,6 +643,129 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     }
                     usedTypes.add(secondaryType);
                 }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void addedPokemonKeepTypeTheme(String romName) {
+        activateRomHandler(romName);
+        assumeTrue(romHandler.canAddPokemonToBossTrainers());
+
+        Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
+        Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
+        recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
+
+        addPossibleTrainerPokemon();
+
+        Settings s = new Settings(); //TrainersMod == UNCHANGED
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, true);
+    }
+
+    private void addPossibleTrainerPokemon() {
+        Settings s = new Settings();
+        if (romHandler.canAddPokemonToBossTrainers()) {
+            s.setAdditionalBossTrainerPokemon(6);
+        }
+        if (romHandler.canAddPokemonToImportantTrainers()) {
+            s.setAdditionalImportantTrainerPokemon(6);
+        }
+        if (romHandler.canAddPokemonToRegularTrainers()) {
+            s.setAdditionalRegularTrainerPokemon(6);
+        }
+        new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void addedPokemonDoNotExceedLevelOfAce(String romName) {
+        activateRomHandler(romName);
+        assumeTrue(romHandler.canAddPokemonToBossTrainers());
+
+        addPossibleTrainerPokemon();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+
+            boolean duplicateHighestLevel = false;
+            TrainerPokemon ace = new TrainerPokemon();
+            ace.setLevel(0);
+
+            for (TrainerPokemon tp : tr.pokemon) {
+                System.out.println(tp + " added=" + tp.isAddedTeamMember());
+                if (tp.getLevel() == ace.getLevel()) {
+                    duplicateHighestLevel = true;
+                } else if (tp.getLevel() > ace.getLevel()) {
+                    ace = tp;
+                    duplicateHighestLevel = false;
+                }
+            }
+
+            assertTrue(duplicateHighestLevel || !ace.isAddedTeamMember());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void nonForcefullyEvolvedPokemonAreCorrect(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(20);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        // Test
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println("\n" + tr);
+            for (int k = 0; k<tr.pokemon.size(); k++) {
+                TrainerPokemon tp = tr.pokemon.get(k);
+                System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
+                if (tp.getLevel()<20) {
+                    // Everything below level 20 cannot be a basic Pokemon with two evolution stages
+                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
+                }
+                else {
+                    // Everything over level 20 has to be fully evolved
+                    assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void forcedEvolutionsDoNotResetMoves(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersForceMiddleStage(true);
+        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersForceFullyEvolved(true);
+        s.setTrainersForceFullyEvolvedLevel(20);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        // Test
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println("\n" + tr);
+            for (int k = 0; k<tr.pokemon.size(); k++) {
+                TrainerPokemon tp = tr.pokemon.get(k);
+                System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName() +
+                        ": resetMoves = " + tp.isResetMoves());
+                assertFalse(tp.isResetMoves());
             }
         }
     }

@@ -1,6 +1,6 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.gbspace.BankDividedFreedSpace;
+import com.dabomstew.pkromio.gbspace.BankDividedFreedSpace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

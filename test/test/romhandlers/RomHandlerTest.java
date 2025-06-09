@@ -1,7 +1,7 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.IOException;
 import java.nio.file.Files;

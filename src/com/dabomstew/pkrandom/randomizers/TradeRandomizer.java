@@ -1,11 +1,11 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.CustomNamesSet;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.InGameTrade;
-import com.dabomstew.pkrandom.gamedata.Item;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.gamedata.InGameTrade;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -30,14 +30,18 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 /**
  * 
@@ -185,12 +189,12 @@ public class PresetMakeDialog extends javax.swing.JDialog {
             // Fix extension?
             fh = FileFunctions.fixFilename(fh, "rndp");
             try {
-                DataOutputStream dos = new DataOutputStream(new FileOutputStream(fh));
+                DataOutputStream dos = new DataOutputStream(Files.newOutputStream(fh.toPath()));
                 dos.writeInt(Version.VERSION);
                 dos.writeLong(seed);
                 dos.writeUTF(configString);
-                byte[] customnames = readFile(FileFunctions.openConfig(SysConstants.customNamesFile));
-                dos.write(customnames);
+                byte[] customNameData = CustomNamesSet.readNamesFromFile().getBytes();
+                dos.write(customNameData);
                 dos.close();
                 JOptionPane.showMessageDialog(this, "Preset file saved to\n" + fh.getAbsolutePath());
             } catch (IOException ex) {

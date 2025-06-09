@@ -1,15 +1,15 @@
 package com.dabomstew.pkrandom.log;
 
-import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.*;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.PrintStream;
 import java.util.*;
@@ -688,16 +688,16 @@ public class RandomizationLogger {
         List<Item> heldItems = romHandler.getStarterHeldItems();
 
         for (int i = 0; i < starters.size(); i++) {
-            if (heldItems.isEmpty()) {
-                log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
-            } else if (heldItems.size() == 1) {
+            if (heldItems.size() == 1 && heldItems.get(0) != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
                         heldItems.get(0).getName());
-            } else if (heldItems.size() == starters.size()) {
+            } else if (heldItems.size() == starters.size() && heldItems.get(i) != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
                         heldItems.get(i).getName());
             } else {
                 log.printf(getBS("Log.sp.setNoItem"), i + 1, starters.get(i).getFullName());
+            }
+            if (!heldItems.isEmpty() && heldItems.size() != 1 && heldItems.size() != starters.size()) {
                 log.println("Something went weird with the held items. Please report this as a GitHub issue.");
             }
         }
@@ -983,6 +983,7 @@ public class RandomizationLogger {
     private void logTrainers(List<String> originalTrainerNames) {
         printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
+        String[] battleStyleNames = getBS("Log.tp.battleStyleNames").split(",");
         for (Trainer t : trainers) {
             log.print("#" + t.index + " ");
             String originalTrainerName = originalTrainerNames.get(t.index);
@@ -1007,7 +1008,7 @@ public class RandomizationLogger {
                 log.println();
                 for (TrainerPokemon tpk : t.pokemon) {
                     List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     log.print(", " + getBS("Log.tp.ability") + ": "
                             + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
                     log.print(" - ");
@@ -1030,9 +1031,12 @@ public class RandomizationLogger {
                     if (!first) {
                         log.print(", ");
                     }
-                    log.printf(tpk.toString(), tpk.getHeldItem().getName());
+                    log.print(tpk.toString());
                     first = false;
                 }
+            }
+            if (settings.getBattleStyle().isBattleStyleChanged()) {
+                log.printf(" (Battle Style: %s)", battleStyleNames[t.currBattleStyle.getStyle().ordinal()]);
             }
             log.println();
         }
@@ -1077,7 +1081,7 @@ public class RandomizationLogger {
             TotemPokemon oldP = oldTotems.get(i);
             TotemPokemon newP = newTotems.get(i);
             log.println(oldP.getSpecies().getFullName() + " =>");
-            log.printf(newP.toString(), newP.getHeldItem().getName());
+            log.print(newP.toString());
         }
         printSectionSeparator();
     }

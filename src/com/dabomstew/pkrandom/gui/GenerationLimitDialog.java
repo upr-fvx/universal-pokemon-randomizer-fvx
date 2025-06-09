@@ -22,7 +22,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
 
 import javax.swing.*;
 

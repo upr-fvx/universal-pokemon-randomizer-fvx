@@ -1,14 +1,14 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
-import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
-import com.dabomstew.pkrandom.services.TypeService;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
+import com.dabomstew.pkromio.services.TypeService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
@@ -133,6 +133,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private final Map<String, Type> gymAndEliteTypeThemes;
     private final boolean trainerPokemonAlwaysUseAbility1;
     private final boolean trainerPokemonUseBaseFormeAbilities;
+    private final boolean canAddPokemonToBossTrainers;
+    private final boolean canAddPokemonToImportantTrainers;
+    private final boolean canAddPokemonToRegularTrainers;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -214,6 +217,9 @@ public class TestRomHandler extends AbstractRomHandler {
         gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
         trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
         trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
+        canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
+        canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
+        canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
     }
@@ -835,17 +841,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean canAddPokemonToBossTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToBossTrainers;
     }
 
     @Override
     public boolean canAddPokemonToImportantTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToImportantTrainers;
     }
 
     @Override
     public boolean canAddPokemonToRegularTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToRegularTrainers;
     }
 
     @Override

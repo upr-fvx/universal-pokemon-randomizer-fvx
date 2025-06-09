@@ -1,8 +1,8 @@
 package test.game_data;
 
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
-import com.dabomstew.pkrandom.gamedata.Type;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
+import com.dabomstew.pkromio.gamedata.Type;
 import org.junit.jupiter.api.Test;
 
 import javax.print.attribute.UnmodifiableSetException;

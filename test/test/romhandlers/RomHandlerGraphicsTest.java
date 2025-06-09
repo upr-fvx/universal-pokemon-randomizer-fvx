@@ -1,9 +1,9 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.gamedata.PlayerCharacterType;
-import com.dabomstew.pkrandom.graphics.packs.*;
-import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.gamedata.PlayerCharacterType;
+import com.dabomstew.pkromio.graphics.packs.*;
+import com.dabomstew.pkromio.romhandlers.Gen3RomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

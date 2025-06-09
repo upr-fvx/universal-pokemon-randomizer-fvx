@@ -26,9 +26,13 @@ import com.dabomstew.pkrandom.log.RandomizationLogger;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.updaters.*;
+import com.dabomstew.pkrandom.updaters.MoveUpdater;
+import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
+import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.Updater;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -123,7 +127,9 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.speciesBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.speciesBSRandomizer = romHandler.generationOfPokemon() == 1 ?
+                new Gen1SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic()) :
+                new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -513,24 +519,26 @@ public class GameRandomizer {
 
     private void maybeRandomizeTrainerPokemon() {
         // Trainer Pokemon
-        // 1. Add extra Trainer Pokemon
-        // 2. Set trainers to be double battles and add extra Pokemon if necessary
-        // 3. Modify levels
+        // 1. Modify levels first to get larger level variety if additional Pokemon are added in the next step
+        // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
+        // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing)
+        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
-        if (settings.getAdditionalRegularTrainerPokemon() > 0
-                || settings.getAdditionalImportantTrainerPokemon() > 0
-                || settings.getAdditionalBossTrainerPokemon() > 0) {
-            trainerPokeRandomizer.addTrainerPokemon();
-        }
-
-        if (settings.isDoubleBattleMode()) {
-            trainerPokeRandomizer.setDoubleBattleMode();
-        }
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
+        }
+
+        boolean additionalPokemonAdded = settings.getAdditionalRegularTrainerPokemon() > 0
+                || settings.getAdditionalImportantTrainerPokemon() > 0
+                || settings.getAdditionalBossTrainerPokemon() > 0;
+        if (additionalPokemonAdded) {
+            trainerPokeRandomizer.addTrainerPokemon();
+        }
+
+        if (settings.getBattleStyle().isBattleStyleChanged()) {
+            trainerPokeRandomizer.modifyBattleStyle();
         }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
@@ -539,10 +547,15 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
+        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersForceFullyEvolved()) {
-            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        } else {
+            if (settings.isTrainersForceMiddleStage()) {
+                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
+            }
+            if (settings.isTrainersForceFullyEvolved()) {
+                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+            }
         }
     }
 

@@ -26,9 +26,11 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.*;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -41,7 +43,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 63;
+    public static final int LENGTH_OF_SETTINGS_DATA = 65;
 
     private CustomNamesSet customNames;
 
@@ -178,6 +180,8 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
+    private boolean trainersForceMiddleStage;
+    private int trainersForceMiddleStageLevel = 10;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -197,7 +201,7 @@ public class Settings {
     private boolean diverseTypesForBossTrainers;
     private boolean diverseTypesForImportantTrainers;
     private boolean diverseTypesForRegularTrainers;
-    private boolean doubleBattleMode;
+    private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
@@ -596,8 +600,8 @@ public class Settings {
                 allowTrainerAlternateFormes,
                 allowWildAltFormes));
 
-        // 42 Double Battle Mode, Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
-        out.write((doubleBattleMode ? 0x1 : 0) |
+        // 42 (Legacy Double Battle Mode), Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
+        out.write((0) |
                 (additionalBossTrainerPokemon << 1) |
                 (additionalImportantTrainerPokemon << 4) |
                 (weighDuplicateAbilitiesTogether ? 0x80 : 0));
@@ -694,7 +698,19 @@ public class Settings {
                 diverseTypesForRegularTrainers,
                 false, false, false, false, false));
 
-        // 62 shop items 2
+        // 62 setting battle style: modification (3bits) + style (4bits)
+        out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
+                settingBattleStyle.getModification() == BattleStyle.Modification.RANDOM,
+                settingBattleStyle.getModification() == BattleStyle.Modification.SINGLE_STYLE) |
+                (makeByteSelected(settingBattleStyle.getStyle() == BattleStyle.Style.SINGLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
+
+        // 63 trainer pokemon force evolutions
+        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+
+        // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
                 false, false, false, false, false, false));
 
@@ -712,7 +728,7 @@ public class Settings {
 
         try {
             writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, FileFunctions.getFileChecksum(SysConstants.customNamesFile));
+            writeFullInt(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -957,7 +973,7 @@ public class Settings {
         settings.setAllowTrainerAlternateFormes(restoreState(data[41],6));
         settings.setAllowWildAltFormes(restoreState(data[41],7));
 
-        settings.setDoubleBattleMode(restoreState(data[42], 0));
+        // restoreState(data[42], 0))  Legacy setting. This bit used to be used for "Double Battle Only Mode"
         settings.setAdditionalBossTrainerPokemon((data[42] & 0xE) >> 1);
         settings.setAdditionalImportantTrainerPokemon((data[42] & 0x70) >> 4);
         settings.setWeighDuplicateAbilitiesTogether(restoreState(data[42], 7));
@@ -1043,8 +1059,14 @@ public class Settings {
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
 
-        settings.setBalanceShopPrices(restoreState(data[62],0));
-        settings.setAddCheapRareCandiesToShops(restoreState(data[62], 1));
+        settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
+        settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
+
+        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
+        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+
+        settings.setBalanceShopPrices(restoreState(data[64],0));
+        settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1876,6 +1898,22 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
+    public boolean isTrainersForceMiddleStage() {
+        return trainersForceMiddleStage;
+    }
+
+    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
+        this.trainersForceMiddleStage = trainersForceMiddleStage;
+    }
+
+    public int getTrainersForceMiddleStageLevel() {
+        return trainersForceMiddleStageLevel;
+    }
+
+    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
+        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
+    }
+
     public boolean isTrainersForceFullyEvolved() {
         return trainersForceFullyEvolved;
     }
@@ -2029,12 +2067,20 @@ public class Settings {
         this.diverseTypesForRegularTrainers = isRegularDiverse;
     }
 
-    public boolean isDoubleBattleMode() {
-        return doubleBattleMode;
+    public BattleStyle getBattleStyle() {
+        return settingBattleStyle;
     }
 
-    public void setDoubleBattleMode(boolean doubleBattleMode) {
-        this.doubleBattleMode = doubleBattleMode;
+    public void setBattleStyle(BattleStyle style) {
+        settingBattleStyle = style;
+    }
+
+    public void setBattleStyleMod(boolean... bools) {
+        settingBattleStyle.setModification(getEnum(BattleStyle.Modification.class, bools));
+    }
+
+    public void setSingleStyleSelection(boolean... bools) {
+        settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
     public boolean isShinyChance() {

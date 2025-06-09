@@ -37,15 +37,10 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean loadRom(String filename) {
-        try {
-            loadRomFile(filename);
-            midLoadingSetUp();
-            loadGameData();
-            return true;
-        } catch (RomIOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        loadRomFile(filename);
+        midLoadingSetUp();
+        loadGameData();
+        return true;
     }
 
     protected void loadRomFile(String filename) {

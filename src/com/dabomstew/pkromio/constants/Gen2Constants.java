@@ -26,6 +26,7 @@ package com.dabomstew.pkromio.constants;
 
 import com.dabomstew.pkromio.gamedata.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -1218,10 +1219,10 @@ public class Gen2Constants {
             {Gen2ItemIDs.loveBall, 300},
 
             // pp related
-            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
-            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
+            {Gen2ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {Gen2ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {Gen2ItemIDs.elixer, 15000}, // same as in Gen3Constants
+            {Gen2ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
 
             // misc
             {Gen2ItemIDs.moonStone, 2100}, // same as other stones

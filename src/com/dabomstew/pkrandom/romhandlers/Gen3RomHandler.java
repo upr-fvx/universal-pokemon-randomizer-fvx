@@ -3092,6 +3092,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setShops(List<Shop> shops) {
+        findShopOffsets(shops);
+
         int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
         for (int i = 0; i < shopItemOffsets.length; i++) {
             Shop shop = shops.get(i);
@@ -3101,6 +3103,66 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 offset += 2;
             }
         }
+    }
+
+    private void findShopOffsets(List<Shop> shops) {
+        int[] trueOffsets = romEntry.getArrayValue("ShopItemOffsets");
+
+        int[] shopPointerOffsets = new int[trueOffsets.length];
+
+        int i = 0;
+        for (Shop shop : shops) {
+            System.out.println(shop);
+
+            // Finding the offset for each shop.
+            // Did we need to do this? No. We already had the offsets lol.
+            // But my brain was tired and am not deleting this code when it exists.
+            // Or like I am later, but it can survive until cleanup proper.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            for (Item item : shop.getItems()) {
+                baos.write(item.getId() & 0xFF);
+                baos.write((item.getId() >> 8) & 0xFF);
+            }
+            baos.write(0x00);
+            baos.write(0x00);
+            baos.write(0x6C);
+            baos.write(0x02);
+            byte[] data = baos.toByteArray();
+
+            System.out.println(RomFunctions.bytesToHex(data));
+
+            int trueOffset = trueOffsets[i];
+            List<Integer> foundOffsets = RomFunctions.search(rom, data);
+
+            System.out.println(foundOffsets.stream().map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
+            System.out.println("0x" + Integer.toHexString(trueOffset));
+
+            int foundOffset = getROMType() == Gen3Constants.RomType_FRLG && (i == 18 || i == 19) ?
+                    foundOffsets.get(1) : foundOffsets.get(0);
+            if (trueOffset != foundOffset) {
+                System.out.println("UH OH ERROR (i=" + i + ")");
+            }
+
+            // Turn the offsets into pointers (0x86 is the scripting command for starting up a shop)
+            byte[] shopPointer = new byte[] {
+                    (byte) 0x86, (byte) (foundOffset & 0xFF),
+                    (byte) ((foundOffset >> 8) & 0xFF),
+                    (byte) ((foundOffset >> 16) & 0xFF),
+                    0x08
+            };
+
+            // Find the pointer offsets
+            List<Integer> posOffsets = RomFunctions.search(rom, shopPointer);
+            System.out.println(posOffsets.stream().map(j -> j + 1)
+                    .map(j -> "0x" + Integer.toHexString(j)).collect(Collectors.toList()));
+            shopPointerOffsets[i] = posOffsets.get(0);
+
+            i++;
+        }
+
+        System.out.println("ShopPointerOffsets=[" + Arrays.stream(shopPointerOffsets)
+                .mapToObj(o -> "0x" + Integer.toHexString(o).toUpperCase())
+                .collect(Collectors.joining(", ")) + "]");
     }
 
     public List<Integer> getShopPrices() {

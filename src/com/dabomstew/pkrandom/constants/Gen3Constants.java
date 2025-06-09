@@ -286,6 +286,8 @@ public class Gen3Constants {
 
     public static final List<Integer> frlgEarlyRequiredHMMoves = Collections.singletonList(MoveIDs.cut);
 
+    public static final byte[] shopTerminator = new byte[] {0x00, 0x00, 0x6C, 0x02};
+
     private static final List<String> rsShopNames = Arrays.asList(
             "Slateport Vitamins",
             "Slateport TMs",

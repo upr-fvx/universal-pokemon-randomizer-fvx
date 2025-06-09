@@ -2,6 +2,7 @@ package com.dabomstew.pkrandom.romhandlers;
 
 import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.GFXFunctions;
+import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.constants.GBConstants;
 import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkrandom.exceptions.RomIOException;
@@ -319,6 +320,15 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
             length++;
         } while (terminatorCount < terminatorAmount);
         return length;
+    }
+
+    /**
+     * Returns the length of some data, which is ended by a multibyte terminator.
+     * Counts the terminator towards the length.
+     */
+    protected int lengthOfDataWithTerminatorAt(int offset, byte[] terminator) {
+        int startOfTerminatorOffset = RomFunctions.searchForFirst(rom, offset, terminator);
+        return startOfTerminatorOffset - offset + terminator.length;
     }
 
     protected abstract int readPointer(int offset);

@@ -3064,6 +3064,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
+    public boolean canChangeShopSizes() {
+        return true;
+    }
+
+    @Override
     public List<Shop> getShops() {
         List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
         List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
@@ -3092,17 +3097,28 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setShops(List<Shop> shops) {
-        findShopOffsets(shops);
-
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        for (int i = 0; i < shopItemOffsets.length; i++) {
-            Shop shop = shops.get(i);
-            int offset = shopItemOffsets[i];
-            for (Item item : shop.getItems()) {
-                FileFunctions.write2ByteInt(rom, offset, item.getId());
-                offset += 2;
-            }
+        int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        if (shops.size() != pointerOffsets.length) {
+            throw new RomIOException("Wrong amount of shops. Should be " + pointerOffsets.length
+                    + "; is " + shops.size());
         }
+
+        DataRewriter<Shop> dataRewriter = new DataRewriter<>();
+        for (int i = 0; i < shops.size(); i++) {
+            dataRewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+                    oldOffset -> lengthOfDataWithTerminatorAt(oldOffset, Gen3Constants.shopTerminator));
+        }
+    }
+
+    private byte[] shopToBytes(Shop shop) {
+        byte[] data = new byte[shop.getItems().size() * 2 + Gen3Constants.shopTerminator.length];
+        int offset = 0;
+        for (Item item : shop.getItems()) {
+            writeWord(data, offset, item.getId());
+            offset += 2;
+        }
+        writeBytes(data, offset, Gen3Constants.shopTerminator);
+        return data;
     }
 
     private void findShopOffsets(List<Shop> shops) {

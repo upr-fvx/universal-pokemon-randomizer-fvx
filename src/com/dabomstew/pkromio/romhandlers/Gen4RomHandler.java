@@ -4786,8 +4786,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				if (pk.getGenderRatio() == 0xFE) {
 					return false;
 				}
-				// Assume alt formes can't be used. I haven't actually tested this, but it seemed like the safer guess.
-				if (pk.isBaseForme()) {
+				// Alt formes can't be used.
+				if (!pk.isBaseForme()) {
 					return false;
 				}
 				byte[] introOverlay = readOverlay(romEntry.getIntValue("IntroOvlNumber"));

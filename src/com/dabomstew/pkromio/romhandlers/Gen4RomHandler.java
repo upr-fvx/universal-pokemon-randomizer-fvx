@@ -4477,12 +4477,23 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		writeSpecialShops(shops);
 	}
 
+	/**
+	 * Writes items to the "progressive shops", i.e., the main shops that
+	 * progress/gain more items as the players gets more badges.
+	 * Items that were originally part of the progressive shops will
+	 * keep this attribute of being gated behind a certain number of badges.
+	 * Other items will be available at any time.
+	 *
+	 * @param shops A {@link List} of {@link Shop}s. The items written will
+	 *              be taken from the first/0:th shop in this List.
+	 */
 	private void writeProgressiveShop(List<Shop> shops) {
 		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
 		int offset = readARM9Pointer(arm9, pointerOffset);
 		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
 		int size = arm9[sizeOffset] & 0xFF;
 
+		Map<Integer, Integer> progressiveShopValues = readProgressiveShopValues();
 		List<Item> shopItems = shops.get(0).getItems();
 		if (shopItems.size() != size) {
 			offset = repointProgressiveShop(offset, size, shopItems.size(), pointerOffset, sizeOffset);
@@ -4493,13 +4504,32 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				throw new RomIOException("Invalid item to write.");
 			}
 			writeWord(arm9, offset, itemID);
-			offset += 4;
+			offset += 2;
+			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 0));
+			offset += 2;
 		}
+	}
+
+	private Map<Integer, Integer> readProgressiveShopValues() {
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
+		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
+
+		Map<Integer, Integer> values = new HashMap<>(size);
+		for (int i = 0; i < size; i++) {
+			int itemID = readWord(arm9, offset + i * 4);
+			int value = readWord(arm9, offset + i * 4 + 2);
+			values.put(itemID, value);
+		}
+		return values;
 	}
 
 	private int repointProgressiveShop(int offset, int oldSize, int newSize, int pointerOffset, int sizeOffset) {
 		arm9FreedSpace.free(offset, oldSize * 4);
 		offset = arm9FreedSpace.findAndUnfree(newSize * 4);
+		// TODO: this points to a mirror of ITCM, but it is possible that the free space is *actually* in ARM9,
+		//  so we need to deal with that...
 		writeARM9Pointer(arm9, pointerOffset, offset);
 		arm9[sizeOffset] = (byte) newSize;
 		return offset;

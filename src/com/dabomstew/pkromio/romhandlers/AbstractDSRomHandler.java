@@ -308,6 +308,13 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     /**
      * Returns an extended version of the ARM9 file. The ARM9 can only be extended once,
      * subsequent times it throws an {@link IllegalStateException}.
+     * <br><br>
+     * This method works through extending the section of ARM9 which is copied to ITCM
+     * (Instruction Tightly Coupled Memory) and comes with a few caveats.<br>
+     * There is a limit to how much data may be copied to ITCM (<32 KiB). If {@code extendBy} exceeds this limit, this
+     * method throws an {@link IllegalArgumentException}.<br>
+     * Also, pointers to the extended parts of ARM9 must rather point to ITCM, since that is where the data ultimately
+     * ends up in RAM.
      *
      * @param arm9 The current ARM9.
      * @param extendBy The number of bytes to extend by.
@@ -358,6 +365,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
                 FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
         int itcmSizeOffset = oldDestPointersOffset + 4;
         int oldITCMSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        if (oldITCMSize + extendBy > 0x8000) {
+            throw new IllegalArgumentException("Can't extend the section which is copied to ITCM past 32 KiB.");
+        }
 
         int oldDTCMOffset = itcmSrcOffset + oldITCMSize;
 
@@ -385,7 +395,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     protected abstract int getARM9Offset();
 
     /**
-     * Reads a pointer located in ARM9.
+     * Reads a pointer located in ARM9, which points to somewhere in ARM9.
      */
     protected int readARM9Pointer(byte[] arm9, int offset) {
         return readLong(arm9, offset) - getARM9Offset();
@@ -395,6 +405,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * Writes a pointer to "offset" located in ARM9, pointing at "pointer".
      */
     protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
+        // TODO: Figure out if the pointer would be to the copied-to-ITCM section.
+        //  In which case, make it point to ITCM instead.
         writeLong(arm9, offset, pointer + getARM9Offset());
     }
 

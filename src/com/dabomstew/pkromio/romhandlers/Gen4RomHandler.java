@@ -4503,9 +4503,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			if (itemID == 0 || itemID >= items.size()) {
 				throw new RomIOException("Invalid item to write.");
 			}
+			// TODO: The added items still don't work; why?
 			writeWord(arm9, offset, itemID);
 			offset += 2;
-			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 0));
+			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 1));
 			offset += 2;
 		}
 	}
@@ -4528,8 +4529,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private int repointProgressiveShop(int offset, int oldSize, int newSize, int pointerOffset, int sizeOffset) {
 		arm9FreedSpace.free(offset, oldSize * 4);
 		offset = arm9FreedSpace.findAndUnfree(newSize * 4);
-		// TODO: this points to a mirror of ITCM, but it is possible that the free space is *actually* in ARM9,
-		//  so we need to deal with that...
 		writeARM9Pointer(arm9, pointerOffset, offset);
 		arm9[sizeOffset] = (byte) newSize;
 		return offset;

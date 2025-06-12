@@ -25,7 +25,11 @@ import java.util.List;
  * An abstract base class for DS {@link RomHandler}s, which standardises common DS functions.
  */
 public abstract class AbstractDSRomHandler extends AbstractRomHandler {
-	
+
+    // ITCM is mirrored from 0x0000000 to 0x2000000, but it seems in practice only some of these mirrors are allowed.
+    // Below is an arbitrary mirror which should work.
+    private static final int ITCM_RAM_ADDRESS = 0x1000000;
+
     private static final byte[] PALETTE_PREFIX_BYTES = { (byte) 0x52, (byte) 0x4C, (byte) 0x43, (byte) 0x4E,
             (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x01, (byte) 0x48, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x10, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x54, (byte) 0x54, (byte) 0x4C, (byte) 0x50,
@@ -36,6 +40,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     private NDSRom baseRom;
     private String loadedFN;
     private boolean arm9Extended = false;
+    private int tcmCopyingPointersOffset = -1;
 
     protected abstract boolean detectNDSRom(String ndsCode, byte version);
 
@@ -357,7 +362,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         int arm9Offset = getARM9Offset();
 
-        int tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
+        tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
         tcmCopyingPointersOffset += prefix.length; // because it was a prefix
 
         int oldDestPointersOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - arm9Offset;
@@ -392,12 +397,24 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         return newARM9;
     }
 
+    private boolean isInCopyToITCMSection(byte[] arm9, int offset) {
+        if (tcmCopyingPointersOffset == -1) {
+            throw new IllegalStateException("tcmCopyingPointersOffset has not been initialized");
+        }
+        int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
+        int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+        return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSizeOffset;
+    }
+
     protected abstract int getARM9Offset();
 
     /**
      * Reads a pointer located in ARM9, which points to somewhere in ARM9.
      */
     protected int readARM9Pointer(byte[] arm9, int offset) {
+        // TODO: something in here to mirror the ITCM handling in writeARM9Pointer
+        //  I.e. if it gets an offset situated in ITCM, it should convert it to the corresponding
+        //  "copy-to-ITCM" section offset, relative the start of ARM9.
         return readLong(arm9, offset) - getARM9Offset();
     }
 
@@ -405,9 +422,12 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * Writes a pointer to "offset" located in ARM9, pointing at "pointer".
      */
     protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
-        // TODO: Figure out if the pointer would be to the copied-to-ITCM section.
-        //  In which case, make it point to ITCM instead.
-        writeLong(arm9, offset, pointer + getARM9Offset());
+        if (isInCopyToITCMSection(arm9, pointer)) {
+            int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+            writeLong(arm9, offset, pointer - itcmSrcOffset + ITCM_RAM_ADDRESS);
+        } else {
+            writeLong(arm9, offset, pointer + getARM9Offset());
+        }
     }
 
     /**

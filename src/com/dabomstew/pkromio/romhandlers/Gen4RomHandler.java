@@ -170,13 +170,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		// Do all ARM9 extension here to keep it simple.
 		// Some of the extra space is ear-marked for patches, and some for repointing data.
-		int extendBy = romEntry.getIntValue("Arm9PatchExtensionSize")
-				+ romEntry.getIntValue("Arm9RepointExtensionSize");
+		int patchExtendBy = romEntry.getIntValue("Arm9PatchExtensionSize");
+		int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
+		int extendBy = patchExtendBy + repointExtendBy;
 		if (extendBy != 0) {
 			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
 			arm9 = extendARM9(arm9, extendBy, prefix);
-			int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
-			arm9FreedSpace.free(arm9.length - repointExtendBy, repointExtendBy);
+			int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+			arm9FreedSpace.free(itcmSrcOffset + patchExtendBy, repointExtendBy);
 		}
 
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.

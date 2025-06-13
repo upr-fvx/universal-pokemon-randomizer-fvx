@@ -176,8 +176,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (extendBy != 0) {
 			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
 			arm9 = extendARM9(arm9, extendBy, prefix);
+
+			int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
+			int itcmSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
 			int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
-			arm9FreedSpace.free(itcmSrcOffset + patchExtendBy, repointExtendBy);
+			arm9FreedSpace.free(itcmSrcOffset + itcmSize - repointExtendBy, repointExtendBy);
 		}
 
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
@@ -4510,6 +4513,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 1));
 			offset += 2;
 		}
+		System.out.println(RomFunctions.bytesToHexBlock(arm9, offset - shopItems.size() * 4, shopItems.size() * 4));
 	}
 
 	private Map<Integer, Integer> readProgressiveShopValues() {

@@ -372,6 +372,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
                 FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
         int itcmSizeOffset = oldDestPointersOffset + 4;
         int oldITCMSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        System.out.println("oldITCMSize=0x" + Integer.toHexString(oldITCMSize));
+        System.out.println("0x" + Integer.toHexString(itcmSrcOffset) + " - 0x" + Integer.toHexString(itcmSrcOffset + oldITCMSize));
+        System.out.println(RomFunctions.bytesToHexBlock(arm9, itcmSrcOffset, oldITCMSize));
         if (oldITCMSize + extendBy > ITCM_LENGTH) {
             throw new IllegalArgumentException("Can't extend the section which is copied to ITCM past 32 KiB.");
         }
@@ -406,8 +409,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
             throw new IllegalStateException("tcmCopyingPointersOffset has not been initialized");
         }
         int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
+        int itcmSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
         int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
-        return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSizeOffset;
+        return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSize;
     }
 
     protected abstract int getARM9Offset();

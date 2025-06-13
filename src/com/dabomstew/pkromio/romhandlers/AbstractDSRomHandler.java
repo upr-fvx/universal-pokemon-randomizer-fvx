@@ -406,7 +406,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         // And free some amount of the extended section
         if (repointExtendBy > 0) {
-            arm9FreedSpace.free(itcmSrcOffset + oldITCMSize - repointExtendBy, repointExtendBy);
+            arm9FreedSpace.free(itcmSrcOffset + oldITCMSize + extendBy - repointExtendBy, repointExtendBy);
         }
 
         arm9Extended = true;

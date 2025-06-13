@@ -88,7 +88,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private Move[] moves;
     private List<Item> items;
     private Gen5RomEntry romEntry;
-    private byte[] arm9;
     private List<String> abilityNames;
     private List<String> shopNames;
     private boolean loadedWildMapNames;
@@ -134,11 +133,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void loadedROM(String romCode, byte version) {
         this.romEntry = entryFor(romCode, version);
-        try {
-            arm9 = readARM9();
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
         try {
             stringsNarc = readNARC(romEntry.getFile("TextStrings"));
             storyTextNarc = readNARC(romEntry.getFile("TextStory"));
@@ -186,7 +180,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (shouldExtendARM9) {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
             byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-            arm9 = extendARM9(arm9, extendBy, 0, prefix);
+            extendARM9(extendBy, 0, prefix);
         }
     }
 
@@ -455,11 +449,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void prepareSaveRom() {
         super.prepareSaveRom();
-        try {
-            writeARM9(arm9);
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
         try {
             writeNARC(romEntry.getFile("TextStrings"), stringsNarc);
             writeNARC(romEntry.getFile("TextStory"), storyTextNarc);

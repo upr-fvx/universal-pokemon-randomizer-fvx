@@ -43,6 +43,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     private NDSRom baseRom;
     private String loadedFN;
 
+    protected byte[] arm9;
     private boolean arm9Extended = false;
     private int tcmCopyingPointersOffset = -1;
     protected final FreedSpace arm9FreedSpace = new FreedSpace();
@@ -57,6 +58,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         // Load inner rom
         try {
             baseRom = new NDSRom(filename);
+            arm9 = readARM9();
         } catch (IOException e) {
             throw new RomIOException(e);
         }
@@ -70,15 +72,16 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         return loadedFN;
     }
 
-    protected byte[] get3byte(int amount) {
-        byte[] ret = new byte[3];
-        ret[0] = (byte) (amount & 0xFF);
-        ret[1] = (byte) ((amount >> 8) & 0xFF);
-        ret[2] = (byte) ((amount >> 16) & 0xFF);
-        return ret;
-    }
-
     protected abstract void loadedROM(String romCode, byte version);
+
+    @Override
+    protected void prepareSaveRom() {
+        try {
+            writeARM9(arm9);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
 
     @Override
     public boolean saveRomFile(String filename, long seed) {
@@ -224,11 +227,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         baseRom.writeFile(location, data);
     }
 
-    protected byte[] readARM9() throws IOException {
+    private byte[] readARM9() throws IOException {
         return baseRom.getARM9();
     }
 
-    protected void writeARM9(byte[] data) throws IOException {
+    private void writeARM9(byte[] data) throws IOException {
         baseRom.writeARM9(data);
     }
 
@@ -316,7 +319,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     }
 
     /**
-     * Returns an extended version of the ARM9 file. The ARM9 can only be extended once,
+     * Extends the ARM9 file, allowing for extra data/code storage. The ARM9 can only be extended once,
      * subsequent times it throws an {@link IllegalStateException}.
      * <br><br>
      * This method works through extending the section of ARM9 which is copied to ITCM
@@ -326,13 +329,12 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * Also, pointers to the extended parts of ARM9 must rather point to ITCM, since that is where the data ultimately
      * ends up in RAM.
      *
-     * @param arm9 The current ARM9.
      * @param extendBy The number of bytes to extend by.
      * @param repointExtendBy The number of bytes, of the extended ones, which will be available for repointing data
      *                        via {@link #arm9FreedSpace}.
      * @param prefix Bytes that come right before the TCM pointer section. Used to find said section.
      */
-    protected byte[] extendARM9(byte[] arm9, int extendBy, int repointExtendBy, byte[] prefix) {
+    protected void extendARM9(int extendBy, int repointExtendBy, byte[] prefix) {
         /*
         Simply extending the ARM9 at the end doesn't work. Towards the end of the ARM9, the following sections exist:
         1. A section that is copied to ITCM (Instruction Tightly Coupled Memory)
@@ -409,7 +411,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
         arm9Extended = true;
 
-        return newARM9;
+        arm9 = newARM9;
     }
 
     private boolean isInCopyToITCMSection(byte[] arm9, int offset) {
@@ -429,33 +431,42 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * If the pointer points to the RAM locations of either ARM9 or ITCM,
      * returns the corresponding offset in the ARM9.bin file.<br>
      * If the pointer does not point to the RAM locations of ARM9 or ITCM,
-     * throws a {@link RuntimeException}.
+     * throws a {@link RomIOException}.
      */
     protected int readARM9Pointer(byte[] data, int offset) {
         int pointer = readLong(data, offset);
         if (pointer <= ITCM_END) {
             int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
             return pointer % ITCM_LENGTH + itcmSrcOffset;
-        } else {
+        } else if (pointer >= getARM9Offset() && pointer < getARM9Offset() + arm9.length) {
             return pointer - getARM9Offset();
+        } else {
+            throw new RuntimeException(String.format(
+                    "Invalid pointer! 0x%s is not a RAM location for either ARM9 (0x%s-0x%s) or ITCM (0x%s-0x%s)",
+                    Integer.toHexString(pointer),
+                    Integer.toHexString(getARM9Offset()), Integer.toHexString(getARM9Offset() + arm9.length - 1),
+                    Integer.toHexString(0), Integer.toHexString(ITCM_END)));
         }
-        // TODO: throw a RuntimeException
     }
 
     /**
      * Writes a pointer to {@code offset} in {@code data}, pointing at {@code pointer}.<br>
      * {@code pointer} is an offset in the ARM9.bin file, corresponding to a location of either ARM9 or ITCM in RAM.
      * The actual pointer written, corresponds to this RAM location.<br>
-     * If {@code pointer} does not correspond to an ARM9/ITCM RAM location, throws a {@link RuntimeException}.
+     * If {@code pointer} does not correspond to an ARM9/ITCM RAM location, throws a {@link RomIOException}.
      */
     protected void writeARM9Pointer(byte[] data, int offset, int pointer) {
         if (isInCopyToITCMSection(data, pointer)) {
             int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
             writeLong(data, offset, pointer - itcmSrcOffset + ITCM_RAM_ADDRESS);
-        } else {
+        } else if (pointer < arm9.length) {
+            // This is not a perfect check; a pointer to e.g., the DTCM section of ARM9.bin would give a false positive.
+            // At least it forbids pointers totally out of bounds.
             writeLong(data, offset, pointer + getARM9Offset());
+        } else {
+            throw new RomIOException("Invalid pointer! 0x" + Integer.toHexString(pointer) + " is not an offset in the " +
+                    "ARM9.bin file, which corresponds to an ARM9/ITCM RAM location.");
         }
-        // TODO: throw a RuntimeException
     }
 
     /**

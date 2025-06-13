@@ -85,7 +85,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private NARCArchive msgNarc;
 	private NARCArchive scriptNarc;
 	private NARCArchive eventNarc;
-	private byte[] arm9;
 	private List<String> abilityNames;
 	private boolean loadedWildMapNames;
 	private Map<Integer, String> wildMapNames, headbuttMapNames;
@@ -125,11 +124,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	protected void loadedROM(String romCode, byte version) {
 		this.romEntry = entryFor(romCode, version);
-		try {
-			arm9 = readARM9();
-		} catch (IOException e) {
-			throw new RomIOException(e);
-		}
 		try {
 			msgNarc = readNARC(romEntry.getFile("Text"));
 		} catch (IOException e) {
@@ -173,7 +167,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int extendBy = patchExtendBy + repointExtendBy;
 		if (extendBy != 0) {
 			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-			arm9 = extendARM9(arm9, extendBy, repointExtendBy, prefix);
+			extendARM9(extendBy, repointExtendBy, prefix);
 		}
 
 		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
@@ -788,11 +782,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	protected void prepareSaveRom() {
 		super.prepareSaveRom();
-		try {
-			writeARM9(arm9);
-		} catch (IOException e) {
-			throw new RomIOException(e);
-		}
 		try {
 			writeNARC(romEntry.getFile("Text"), msgNarc);
 		} catch (IOException e) {

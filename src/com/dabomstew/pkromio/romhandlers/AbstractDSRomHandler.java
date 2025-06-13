@@ -7,6 +7,7 @@ import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.newnds.NARCArchive;
 import com.dabomstew.pkromio.newnds.NDSRom;
@@ -41,8 +42,10 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     private NDSRom baseRom;
     private String loadedFN;
+
     private boolean arm9Extended = false;
-    protected int tcmCopyingPointersOffset = -1;
+    private int tcmCopyingPointersOffset = -1;
+    protected final FreedSpace arm9FreedSpace = new FreedSpace();
 
     protected abstract boolean detectNDSRom(String ndsCode, byte version);
 
@@ -325,9 +328,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      *
      * @param arm9 The current ARM9.
      * @param extendBy The number of bytes to extend by.
+     * @param repointExtendBy The number of bytes, of the extended ones, which will be available for repointing data
+     *                        via {@link #arm9FreedSpace}.
      * @param prefix Bytes that come right before the TCM pointer section. Used to find said section.
      */
-    protected byte[] extendARM9(byte[] arm9, int extendBy, byte[] prefix) {
+    protected byte[] extendARM9(byte[] arm9, int extendBy, int repointExtendBy, byte[] prefix) {
         /*
         Simply extending the ARM9 at the end doesn't work. Towards the end of the ARM9, the following sections exist:
         1. A section that is copied to ITCM (Instruction Tightly Coupled Memory)
@@ -358,6 +363,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         specified size for the ITCM area since we're enlarging it.
          */
 
+        if (repointExtendBy > extendBy) {
+            throw new IllegalArgumentException("repointExtendBy can't be larger than extendBy");
+        }
         if (arm9Extended) {
             throw new IllegalStateException("Don't try to extend the ARM9 more than once.");
         }
@@ -372,9 +380,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
                 FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
         int itcmSizeOffset = oldDestPointersOffset + 4;
         int oldITCMSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
-        System.out.println("oldITCMSize=0x" + Integer.toHexString(oldITCMSize));
-        System.out.println("0x" + Integer.toHexString(itcmSrcOffset) + " - 0x" + Integer.toHexString(itcmSrcOffset + oldITCMSize));
-        System.out.println(RomFunctions.bytesToHexBlock(arm9, itcmSrcOffset, oldITCMSize));
         if (oldITCMSize + extendBy > ITCM_LENGTH) {
             throw new IllegalArgumentException("Can't extend the section which is copied to ITCM past 32 KiB.");
         }
@@ -392,12 +397,15 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         FileFunctions.writeFullInt(newARM9, tcmCopyingPointersOffset + 4,
                 newARM9.length + arm9Offset);
         FileFunctions.writeFullInt(newARM9, itcmSizeOffset, oldITCMSize + extendBy);
-        System.out.println("old copy size: 0x" + Integer.toHexString(oldITCMSize));
-        System.out.println("new copy size: 0x" + Integer.toHexString(oldITCMSize + extendBy));
 
         // Finally, shift everything
         System.arraycopy(newARM9, oldDTCMOffset, newARM9, oldDTCMOffset + extendBy,
                 arm9.length - oldDTCMOffset);
+
+        // And free some amount of the extended section
+        if (repointExtendBy > 0) {
+            arm9FreedSpace.free(itcmSrcOffset + oldITCMSize - repointExtendBy, repointExtendBy);
+        }
 
         arm9Extended = true;
 
@@ -417,31 +425,37 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     protected abstract int getARM9Offset();
 
     /**
-     * Reads a pointer located in ARM9, which points to somewhere in ARM9.
+     * Reads a pointer at {@code offset} in {@code data}.<br>
+     * If the pointer points to the RAM locations of either ARM9 or ITCM,
+     * returns the corresponding offset in the ARM9.bin file.<br>
+     * If the pointer does not point to the RAM locations of ARM9 or ITCM,
+     * throws a {@link RuntimeException}.
      */
-    protected int readARM9Pointer(byte[] arm9, int offset) {
-        int pointer = readLong(arm9, offset);
-        System.out.println("0x" + Integer.toHexString(pointer));
+    protected int readARM9Pointer(byte[] data, int offset) {
+        int pointer = readLong(data, offset);
         if (pointer <= ITCM_END) {
-            int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+            int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
             return pointer % ITCM_LENGTH + itcmSrcOffset;
         } else {
             return pointer - getARM9Offset();
         }
+        // TODO: throw a RuntimeException
     }
 
     /**
-     * Writes a pointer to "offset" located in ARM9, pointing at "pointer".
+     * Writes a pointer to {@code offset} in {@code data}, pointing at {@code pointer}.<br>
+     * {@code pointer} is an offset in the ARM9.bin file, corresponding to a location of either ARM9 or ITCM in RAM.
+     * The actual pointer written, corresponds to this RAM location.<br>
+     * If {@code pointer} does not correspond to an ARM9/ITCM RAM location, throws a {@link RuntimeException}.
      */
-    protected void writeARM9Pointer(byte[] arm9, int offset, int pointer) {
-        if (isInCopyToITCMSection(arm9, pointer)) {
-            System.out.println("in copy-to-itcm-section");
-            int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
-            writeLong(arm9, offset, pointer - itcmSrcOffset + ITCM_RAM_ADDRESS);
+    protected void writeARM9Pointer(byte[] data, int offset, int pointer) {
+        if (isInCopyToITCMSection(data, pointer)) {
+            int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
+            writeLong(data, offset, pointer - itcmSrcOffset + ITCM_RAM_ADDRESS);
         } else {
-            System.out.println("not");
-            writeLong(arm9, offset, pointer + getARM9Offset());
+            writeLong(data, offset, pointer + getARM9Offset());
         }
+        // TODO: throw a RuntimeException
     }
 
     /**

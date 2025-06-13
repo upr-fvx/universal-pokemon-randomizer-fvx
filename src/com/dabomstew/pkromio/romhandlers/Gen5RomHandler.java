@@ -186,7 +186,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (shouldExtendARM9) {
             int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
             byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-            arm9 = extendARM9(arm9, extendBy, prefix);
+            arm9 = extendARM9(arm9, extendBy, 0, prefix);
         }
     }
 

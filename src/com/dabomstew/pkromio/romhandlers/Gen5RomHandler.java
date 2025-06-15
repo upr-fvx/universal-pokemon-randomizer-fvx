@@ -175,12 +175,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(e);
         }
 
-        // If there are tweaks for expanding the ARM9, do it here to keep it simple.
-        boolean shouldExtendARM9 = romEntry.hasTweakFile("ShedinjaEvolutionTweak") || romEntry.hasTweakFile("NewIndexToMusicTweak");
-        if (shouldExtendARM9) {
-            int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
+        // Do all ARM9 extension here to keep it simple.
+        // Some of the extra space is ear-marked for patches, and some for repointing data.
+        int patchExtendBy = romEntry.getIntValue("Arm9PatchExtensionSize");
+        int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
+        int extendBy = patchExtendBy + repointExtendBy;
+        if (extendBy != 0) {
             byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
-            extendARM9(extendBy, 0, prefix);
+            extendARM9(extendBy, repointExtendBy, prefix);
         }
     }
 
@@ -2976,7 +2978,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public boolean canChangeShopSizes() {
-        return romEntry.getRomType() == Gen5Constants.Type_BW2;
+        return true;
     }
 
     @Override
@@ -3608,10 +3610,23 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = new ArrayList<>();
 
-                int itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerTableOffset + i * 4);
                 int itemsSize = shopItemOverlay[sizeTableOffset + i];
+
+                // In vanilla, the shop items are always stored in shopItemOverlay.
+                // However, the RomHandler may repoint them to ARM9, in which case we need to read from there instead.
+                int pointerOffset = pointerTableOffset + i * 4;
+                int itemsOffset;
+                byte[] itemsSource;
+                if (isARM9Pointer(shopItemOverlay, pointerOffset)) {
+                    itemsOffset = readARM9Pointer(shopItemOverlay, pointerOffset);
+                    itemsSource = arm9;
+                } else {
+                    itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerOffset);
+                    itemsSource = shopItemOverlay;
+                }
+
                 for (int j = 0; j < itemsSize; j++) {
-                    int id = readWord(shopItemOverlay, itemsOffset + j * 2);
+                    int id = readWord(itemsSource, itemsOffset + j * 2);
                     shopItems.add(items.get(id));
                 }
 
@@ -3678,26 +3693,33 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         int sizeTableOffset = romEntry.getIntValue("ShopSizeTableOffset");
         int shopCount = romEntry.getIntValue("ShopCount");
         if (shops.size() != shopCount) {
-            throw new IllegalArgumentException("shops.size() must be: " + shopCount
-                + ", is: " + shops.size());
+            throw new IllegalArgumentException("shops.size() must be: " + shopCount + ", is: " + shops.size());
         }
 
         try {
-            // TODO: repoint the shops so we can have variable sizes, that's the whole point of this rewrite haha
             byte[] shopItemOverlay = readOverlay(overlayNum);
 
             for (int i = 0; i < shopCount; i++) {
                 List<Item> shopItems = shops.get(i).getItems();
 
-                int itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerTableOffset + i * 4);
-                int itemsSize = shopItemOverlay[sizeTableOffset + i];
-                if (shopItems.size() != itemsSize) {
-                    throw new IllegalArgumentException("Incorrect shop size.");
-                }
+                int oldItemsSize = shopItemOverlay[sizeTableOffset + i];
+                shopItemOverlay[sizeTableOffset + i] = (byte) shopItems.size();
 
-                for (int j = 0; j < itemsSize; j++) {
+                // We always repoint to ARM9/ITCM.
+                // This is wasteful memory-wise, since the overlay will keep the old (now unused) shop data.
+                // It's an easier implementation though. If you want to fix it, I recommend writing a proper
+                // data rewriting system, as the GameBoy RomHandler has. -- voliol 2025-06-15
+                int pointerOffset = pointerTableOffset + i * 4;
+                if (isARM9Pointer(shopItemOverlay, pointerOffset)) {
+                    int oldItemsOffset = readARM9Pointer(shopItemOverlay, pointerOffset);
+                    arm9FreedSpace.free(oldItemsOffset, oldItemsSize * 2);
+                }
+                int itemsOffset = arm9FreedSpace.findAndUnfree(shopItems.size() * 2);
+                writeARM9Pointer(shopItemOverlay, pointerOffset, itemsOffset);
+
+                for (int j = 0; j < shopItems.size(); j++) {
                     int id = shopItems.get(j).getId();
-                    writeWord(shopItemOverlay, itemsOffset + j * 2, id);
+                    writeWord(arm9, itemsOffset + j * 2, id);
                 }
             }
             writeOverlay(overlayNum, shopItemOverlay);

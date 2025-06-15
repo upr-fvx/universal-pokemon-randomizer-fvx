@@ -414,17 +414,28 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         arm9 = newARM9;
     }
 
-    private boolean isInCopyToITCMSection(byte[] arm9, int offset) {
+    private boolean isInCopyToITCMSection(int offset) {
         if (tcmCopyingPointersOffset == -1) {
             throw new IllegalStateException("tcmCopyingPointersOffset has not been initialized");
         }
         int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
         int itcmSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
-        int itcmSrcOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+        int itcmSrcOffset = getITCMSrcOffset();
         return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSize;
     }
 
     protected abstract int getARM9Offset();
+
+    /**
+     * Returns whether a pointer at {@code offset} in {@code data} points
+     * to the RAM locations of either ARM9 or ITCM - i.e.,
+     * whether the corresponding data belongs in the ARM9.bin file.<br>
+     * To be used in conjunction with {@link #readARM9Pointer(byte[], int)}.
+     */
+    protected boolean isARM9Pointer(byte[] data, int offset) {
+        int pointer = readLong(data, offset);
+        return pointer <= ITCM_END || (pointer >= getARM9Offset() && pointer < getARM9Offset() + arm9.length);
+    }
 
     /**
      * Reads a pointer at {@code offset} in {@code data}.<br>
@@ -436,8 +447,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     protected int readARM9Pointer(byte[] data, int offset) {
         int pointer = readLong(data, offset);
         if (pointer <= ITCM_END) {
-            int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
-            return pointer % ITCM_LENGTH + itcmSrcOffset;
+            return pointer % ITCM_LENGTH + getITCMSrcOffset();
         } else if (pointer >= getARM9Offset() && pointer < getARM9Offset() + arm9.length) {
             return pointer - getARM9Offset();
         } else {
@@ -449,6 +459,10 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
     }
 
+    private int getITCMSrcOffset() {
+        return FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+    }
+
     /**
      * Writes a pointer to {@code offset} in {@code data}, pointing at {@code pointer}.<br>
      * {@code pointer} is an offset in the ARM9.bin file, corresponding to a location of either ARM9 or ITCM in RAM.
@@ -456,9 +470,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
      * If {@code pointer} does not correspond to an ARM9/ITCM RAM location, throws a {@link RomIOException}.
      */
     protected void writeARM9Pointer(byte[] data, int offset, int pointer) {
-        if (isInCopyToITCMSection(data, pointer)) {
-            int itcmSrcOffset = FileFunctions.readFullInt(data, tcmCopyingPointersOffset + 8) - getARM9Offset();
-            writeLong(data, offset, pointer - itcmSrcOffset + ITCM_RAM_ADDRESS);
+        if (isInCopyToITCMSection(pointer)) {
+            writeLong(data, offset, pointer - getITCMSrcOffset() + ITCM_RAM_ADDRESS);
         } else if (pointer < arm9.length) {
             // This is not a perfect check; a pointer to e.g., the DTCM section of ARM9.bin would give a false positive.
             // At least it forbids pointers totally out of bounds.

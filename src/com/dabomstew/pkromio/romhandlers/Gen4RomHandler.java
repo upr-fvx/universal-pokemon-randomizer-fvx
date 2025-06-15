@@ -4489,7 +4489,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			if (itemID == 0 || itemID >= items.size()) {
 				throw new RomIOException("Invalid item to write.");
 			}
-			// TODO: The added items still don't work; why?
 			writeWord(arm9, offset, itemID);
 			offset += 2;
 			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 1));

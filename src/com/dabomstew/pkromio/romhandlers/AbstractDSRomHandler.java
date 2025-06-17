@@ -76,6 +76,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     @Override
     protected void prepareSaveRom() {
+        super.prepareSaveRom();
         try {
             writeARM9(arm9);
         } catch (IOException e) {

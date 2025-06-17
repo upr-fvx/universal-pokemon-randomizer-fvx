@@ -3634,15 +3634,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 shop.setItems(shopItems);
                 shop.setName(shopNames.get(i));
                 shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+                shop.setSpecialShop(true);
                 shops.add(shop);
             }
 
-            // TODO: re-mark which are the TM/regular shops
-//            int[] tmShops = romEntry.getArrayValue("TMShops");
-//            int[] regularShops = romEntry.getArrayValue("RegularShops");
-//
-//            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
-//            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+            int[] tmShops = romEntry.getArrayValue("TMShops");
+            int[] regularShops = romEntry.getArrayValue("RegularShops");
+
+            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
 
             return shops;
         } catch (IOException e) {
@@ -3666,6 +3666,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             shop.setItems(shopItems);
             shop.setName(shopNames.get(i));
             shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+            shop.setSpecialShop(true);
             shops.add(shop);
         }
 

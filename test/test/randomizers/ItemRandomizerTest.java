@@ -125,13 +125,13 @@ public class ItemRandomizerTest extends RandomizerTest{
                 .filter(et -> !uniqueItems.contains(et.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
-        int min = filteredValues.stream().min(Integer::compareTo).get();
+        int min = filteredValues.stream().min(Integer::compareTo).orElseThrow(RuntimeException::new);
         int max = filteredValues.stream().max(Integer::compareTo).get();
         System.out.println("min: " + min + ", max: " + max);
         assertTrue(max - min <= 1);
     }
 
-    // TODO: test uniqueNoSellItems / figure out what even they imply
+    // TODO: test uniqueNoSellItems (i.e. Mega Stones)
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -139,10 +139,12 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getShops());
+        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getShops()
+                .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsBefore);
         new ItemRandomizer(romHandler, new Settings(), RND).shuffleShopItems();
-        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getShops());
+        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getShops()
+                .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsAfter);
 
         assertEquals(itemCountsBefore, itemCountsAfter);
@@ -168,13 +170,13 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         List<Item> before = new ArrayList<>();
-        romHandler.getShops().forEach(shop -> before.addAll(shop.getItems()));
+        romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> before.addAll(shop.getItems()));
         System.out.println(before);
 
         new ItemRandomizer(romHandler, new Settings(), RND).shuffleShopItems();
 
         List<Item> after = new ArrayList<>();
-        romHandler.getShops().forEach(shop -> after.addAll(shop.getItems()));
+        romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> after.addAll(shop.getItems()));
         System.out.println(after);
         assertNotEquals(before, after);
     }
@@ -190,6 +192,9 @@ public class ItemRandomizerTest extends RandomizerTest{
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
         for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(item.isBad());
@@ -209,6 +214,9 @@ public class ItemRandomizerTest extends RandomizerTest{
 
         Set<Item> regularShop = romHandler.getRegularShopItems();
         for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(regularShop.contains(item));
@@ -228,6 +236,9 @@ public class ItemRandomizerTest extends RandomizerTest{
 
         Set<Item> opShop = romHandler.getOPShopItems();
         for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(opShop.contains(item));
@@ -258,6 +269,9 @@ public class ItemRandomizerTest extends RandomizerTest{
         }
 
         for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 if (evoItems.contains(item)) {

@@ -3731,9 +3731,37 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     private void setShopsBW2(List<Shop> shops) {
         int shopCount = romEntry.getIntValue("ShopCount");
+        if (shops.size() != shopCount) {
+            throw new IllegalArgumentException("shops.size() must be: " + shopCount + ", is: " + shops.size());
+        }
 
+        writeBW2ShopSizes(shops);
+        writeBW2ShopItems(shops);
+    }
+
+    private void writeBW2ShopSizes(List<Shop> shops) {
+        // Shop sizes are stored separately (and redundantly) from the shop items,
+        // in a file which also contains some other data of unknown purpose.
+        // The sizes for the extant/vanilla shops are followed by a bunch of 0x00,
+        // which could *possibly* be unused entries in the same table,
+        // meaning they could be overwritten to add sizes for new shops.
         try {
-            for (int i = 0; i < shopCount; i++) {
+            String fileName = romEntry.getFile("ShopSizes");
+            int offset = romEntry.getIntValue("ShopSizesOffset");
+
+            byte[] sizesFile = readFile(fileName);
+            for (int i = 0; i < shops.size(); i++) {
+                sizesFile[i + offset] = (byte) (shops.get(i).getItems().size());
+            }
+            writeFile(fileName, sizesFile);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    private void writeBW2ShopItems(List<Shop> shops) {
+        try {
+            for (int i = 0; i < shops.size(); i++) {
                 List<Item> shopContents = shops.get(i).getItems();
                 Iterator<Item> iterItems = shopContents.iterator();
                 byte[] shop = new byte[shopContents.size() * 2];

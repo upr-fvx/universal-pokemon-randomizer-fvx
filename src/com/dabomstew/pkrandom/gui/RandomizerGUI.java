@@ -2914,13 +2914,16 @@ public class RandomizerGUI {
             fiRandomRadioButton.setEnabled(true);
             fiRandomEvenDistributionRadioButton.setEnabled(true);
 
+            // Gen 1 doesn't really have any interesting special shops/items to put in them,
+            // so it might be worth hiding that panel.
             shopItemsPanel.setVisible(romHandler.hasShopSupport());
             shUnchangedRadioButton.setEnabled(true);
             shUnchangedRadioButton.setSelected(true);
             shShuffleRadioButton.setEnabled(true);
             shRandomRadioButton.setEnabled(true);
             shBalanceShopItemPricesCheckBox.setEnabled(true);
-            shAddRareCandyCheckBox.setEnabled(true);
+            shAddRareCandyCheckBox.setVisible(romHandler.canChangeShopSizes());
+            shAddRareCandyCheckBox.setEnabled(romHandler.canChangeShopSizes());
 
             pickupItemsPanel.setVisible(romHandler.abilitiesPerSpecies() > 0);
             puUnchangedRadioButton.setEnabled(true);

@@ -140,5 +140,4 @@ public class MoveDataRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    // TODO: might want to move romHandler.updateMoves() here as well
 }

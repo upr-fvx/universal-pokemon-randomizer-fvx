@@ -328,7 +328,7 @@ public class ItemRandomizer extends Randomizer {
 
     private void makeRareCandiesCheap(int rareCandyID) {
         List<Integer> prices = romHandler.getShopPrices();
-        prices.set(rareCandyID, 10); // TODO: does 10 work for all gens?
+        prices.set(rareCandyID, 10);
         romHandler.setShopPrices(prices);
     }
 

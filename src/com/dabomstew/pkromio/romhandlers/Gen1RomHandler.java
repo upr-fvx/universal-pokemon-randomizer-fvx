@@ -1843,11 +1843,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        // Gen 1 *does* have shop support, but since the only editable shops as-is are the special ones:
-        // three shops in the Celadon Department Store, and Gen 1 also doesn't have much in the way
-        // of interesting items beyond what those shops hold in Vanilla...
-        // Yeah, there's no reason to have the feature turned on.
-        return true; // TODO: temporary while we figure things out
+        return true;
     }
 
     @Override

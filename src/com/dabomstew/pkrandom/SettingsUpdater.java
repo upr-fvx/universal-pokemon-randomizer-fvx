@@ -341,8 +341,7 @@ public class SettingsUpdater {
             insertExtraByte(60, (byte) 0);
         }
 
-        if (oldVersion < Version.FVX_1_1_0.id)
-        {
+        if (oldVersion < Version.FVX_1_1_0.id) {
             //add byte for trainer type diversity
             insertExtraByte(61, (byte) 0);
         }
@@ -355,6 +354,11 @@ public class SettingsUpdater {
                 initialState = 0x14;
             }
             insertExtraByte(62, initialState);
+            // add byte for "force middle evolution"
+            insertExtraByte(63, (byte) 0);
+            // add byte for shop items, and move "balanceShopPrices" there
+            insertExtraByte(64, (byte) ((dataBlock[39] & 0x20) >> 5));
+            dataBlock[39] &= ~0x20;
         }
 
         // fix checksum

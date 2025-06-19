@@ -26,6 +26,7 @@ package com.dabomstew.pkromio.constants;
 
 import com.dabomstew.pkromio.gamedata.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -154,6 +155,8 @@ public class Gen2Constants {
 
     // probably the terminator for all move-lists, like TM/HM compatibility
     public static final byte eggMovesTerminator = (byte) 0xFF;
+
+    public static final byte farTextStart = 0x16;
 
     public static final byte shopItemsTerminator = (byte) 0xFF;
 
@@ -1153,7 +1156,7 @@ public class Gen2Constants {
             {Gen2ItemIDs.expShare, 6000}, // same as in Gen3Constants
             {Gen2ItemIDs.quickClaw, 4500}, // sane as in Gen3Constants
             {Gen2ItemIDs.kingsRock, 5000}, // same as in Gen3Constants
-            {Gen2ItemIDs.amuletCoin, 1500}, // same as in Gen3Constants, could be too low
+            {Gen2ItemIDs.amuletCoin, 15000}, // same as in Gen3Constants
             {Gen2ItemIDs.smokeBall, 1200}, // vanilla value of 200 felt too low
             {Gen2ItemIDs.everstone, 200}, // same as in Gen3Constants
             {Gen2ItemIDs.focusBand, 3000}, // same as in Gen3Constants
@@ -1214,6 +1217,12 @@ public class Gen2Constants {
             {Gen2ItemIDs.friendBall, 300},
             {Gen2ItemIDs.moonBall, 300},
             {Gen2ItemIDs.loveBall, 300},
+
+            // pp related
+            {Gen2ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {Gen2ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {Gen2ItemIDs.elixer, 15000}, // same as in Gen3Constants
+            {Gen2ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
 
             // misc
             {Gen2ItemIDs.moonStone, 2100}, // same as other stones

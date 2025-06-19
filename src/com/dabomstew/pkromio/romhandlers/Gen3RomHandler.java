@@ -3072,54 +3072,92 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
-        List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
-        List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
-        Map<Integer, Shop> shopItemsMap = new TreeMap<>();
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        for (int i = 0; i < shopItemOffsets.length; i++) {
-            if (!skipShops.contains(i)) {
-                int offset = shopItemOffsets[i];
-                List<Item> shopItems = new ArrayList<>();
-                int val = FileFunctions.read2ByteInt(rom, offset);
-                while (val != 0x0000) {
-                    shopItems.add(items.get(val));
-                    offset += 2;
-                    val = FileFunctions.read2ByteInt(rom, offset);
-                }
-                Shop shop = new Shop();
-                shop.setItems(shopItems);
-                shop.setName(shopNames.get(i));
-                shop.setMainGame(mainGameShops.contains(i));
-                shopItemsMap.put(i, shop);
-            }
-        }
-        return shopItemsMap;
+    public boolean canChangeShopSizes() {
+        return true;
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        for (int i = 0; i < shopItemOffsets.length; i++) {
-            Shop thisShop = shopItems.get(i);
-            if (thisShop != null && thisShop.getItems() != null) {
-                int offset = shopItemOffsets[i];
-                for (Item item : thisShop.getItems()) {
-                    FileFunctions.write2ByteInt(rom, offset, item.getId());
-                    offset += 2;
-                }
+    public List<Shop> getShops() {
+        List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
+        List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
+        List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
+
+        List<Shop> shops = new ArrayList<>();
+        int[] shopPointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        for (int i = 0; i < shopPointerOffsets.length; i++) {
+            int offset = readPointer(shopPointerOffsets[i]);
+            List<Item> shopItems = new ArrayList<>();
+            int val = FileFunctions.read2ByteInt(rom, offset);
+            while (val != 0x0000) {
+                shopItems.add(items.get(val));
+                offset += 2;
+                val = FileFunctions.read2ByteInt(rom, offset);
             }
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(shopNames.get(i));
+            shop.setMainGame(mainGameShops.contains(i));
+            shop.setSpecialShop(!skipShops.contains(i));
+            shops.add(shop);
         }
+        return shops;
+    }
+
+    @Override
+    public void setShops(List<Shop> shops) {
+        int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        if (shops.size() != pointerOffsets.length) {
+            throw new RomIOException("Wrong amount of shops. Should be " + pointerOffsets.length
+                    + "; is " + shops.size());
+        }
+
+        DataRewriter<Shop> dataRewriter = new DataRewriter<>();
+        for (int i = 0; i < shops.size(); i++) {
+            dataRewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+                    oldOffset -> lengthOfDataWithTerminatorAt(oldOffset, Gen3Constants.shopTerminator));
+        }
+    }
+
+    private byte[] shopToBytes(Shop shop) {
+        byte[] data = new byte[shop.getItems().size() * 2 + Gen3Constants.shopTerminator.length];
+        int offset = 0;
+        for (Item item : shop.getItems()) {
+            writeWord(data, offset, item.getId());
+            offset += 2;
+        }
+        writeBytes(data, offset, Gen3Constants.shopTerminator);
+        return data;
+    }
+
+    public List<Integer> getShopPrices() {
+        int itemDataOffset = romEntry.getIntValue("ItemData");
+        int entrySize = romEntry.getIntValue("ItemEntrySize");
+        int itemCount = romEntry.getIntValue("ItemCount");
+
+        List<Integer> prices = new ArrayList<>(itemCount);
+        prices.add(0);
+        for (int i = 1; i < itemCount; i++) {
+            int offset = itemDataOffset + (i * entrySize) + 16;
+            prices.add(readWord(offset));
+        }
+        return prices;
     }
 
     @Override
     public void setBalancedShopPrices() {
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen3Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
+    }
+
+    public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
         int itemCount = romEntry.getIntValue("ItemCount");
         for (int i = 1; i < itemCount; i++) {
-            int balancedPrice = Gen3Constants.balancedItemPrices.get(i) * 10;
+            int balancedPrice = prices.get(i);
             int offset = itemDataOffset + (i * entrySize) + 16;
             FileFunctions.write2ByteInt(rom, offset, balancedPrice);
         }

@@ -2,6 +2,10 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
+import com.dabomstew.pkromio.constants.Gen1ItemIDs;
+import com.dabomstew.pkromio.constants.Gen2ItemIDs;
+import com.dabomstew.pkromio.constants.Gen3ItemIDs;
+import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.PickupItem;
 import com.dabomstew.pkromio.gamedata.Shop;
@@ -153,18 +157,24 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void shuffleShopItems() {
-        Map<Integer, Shop> shops = romHandler.getShopItems();
+        List<Shop> shops = romHandler.getShops();
         if (shops == null) return;
 
         List<Item> allItems = new ArrayList<>();
-        for (Shop shop : shops.values()) {
+        for (Shop shop : shops) {
+            if (!shop.isSpecialShop()) {
+                continue; // temporary
+            }
             allItems.addAll(shop.getItems());
         }
         Collections.shuffle(allItems, random);
 
         Iterator<Item> allItemsIter = allItems.iterator();
 
-        for (Shop shop : shops.values()) {
+        for (Shop shop : shops) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             ListIterator<Item> shopIter = shop.getItems().listIterator();
             while (shopIter.hasNext()) {
                 shopIter.next();
@@ -172,7 +182,7 @@ public class ItemRandomizer extends Randomizer {
             }
         }
 
-        romHandler.setShopItems(shops);
+        romHandler.setShops(shops);
         shopChangesMade = true;
     }
 
@@ -180,13 +190,13 @@ public class ItemRandomizer extends Randomizer {
         Set<Item> possible = setupPossible();
         Set<Item> guaranteed = setupGuaranteed();
 
-        Map<Integer, Shop> shops = copyShops(romHandler.getShopItems());
+        List<Shop> shops = deepCopy(romHandler.getShops());
 
         List<Item> newItems = setupNewItems(possible, guaranteed, shops);
 
         placeNewItems(newItems, shops, guaranteed);
 
-        romHandler.setShopItems(shops);
+        romHandler.setShops(shops);
         shopChangesMade = true;
     }
 
@@ -215,18 +225,16 @@ public class ItemRandomizer extends Randomizer {
         return guaranteed;
     }
 
-    private Map<Integer, Shop> copyShops(Map<Integer, Shop> original) {
-        Map<Integer, Shop> copy = new HashMap<>(original.size());
-        for (Map.Entry<Integer, Shop> entry : original.entrySet()) {
-            copy.put(entry.getKey(), new Shop(entry.getValue()));
-        }
+    private List<Shop> deepCopy(List<Shop> original) {
+        List<Shop> copy = new ArrayList<>(original.size());
+        original.forEach(shop -> copy.add(new Shop(shop)));
         return copy;
     }
 
-    private List<Item> setupNewItems(Set<Item> possible, Set<Item> guaranteed, Map<Integer, Shop> shops) {
+    private List<Item> setupNewItems(Set<Item> possible, Set<Item> guaranteed, List<Shop> shops) {
         List<Item> newItems = new ArrayList<>(guaranteed);
 
-        int shopItemCount = shops.values().stream().mapToInt(s -> s.getItems().size()).sum();
+        int shopItemCount = shops.stream().filter(Shop::isSpecialShop).mapToInt(s -> s.getItems().size()).sum();
         shopItemCount -= guaranteed.size();
 
         possible.removeAll(guaranteed);
@@ -243,11 +251,14 @@ public class ItemRandomizer extends Randomizer {
         return newItems;
     }
 
-    private void placeNewItems(List<Item> newItems, Map<Integer, Shop> shops, Set<Item> guaranteed) {
+    private void placeNewItems(List<Item> newItems, List<Shop> shops, Set<Item> guaranteed) {
         // split shops into main-game and non-main-game
         List<Shop> mainGameShops = new ArrayList<>();
         List<Shop> nonMainGameShops = new ArrayList<>();
-        for (Shop shop : shops.values()) {
+        for (Shop shop : shops) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             (shop.isMainGame() ? mainGameShops : nonMainGameShops).add(shop);
         }
 
@@ -279,6 +290,46 @@ public class ItemRandomizer extends Randomizer {
         if (!newItems.isEmpty()) {
             throw new IllegalStateException("newItems has not been emptied");
         }
+    }
+
+    public void addCheapRareCandiesToShops() {
+        int rareCandyID = getRareCandyID();
+        addRareCandiesToShops(rareCandyID);
+        makeRareCandiesCheap(rareCandyID);
+    }
+
+    private int getRareCandyID() {
+        // Alas, the Randomizer is stuck on Java 8...
+        int rareCandyID;
+        switch (romHandler.generationOfPokemon()) {
+            case 1:
+                rareCandyID = Gen1ItemIDs.rareCandy;
+                break;
+            case 2:
+                rareCandyID = Gen2ItemIDs.rareCandy;
+                break;
+            case 3:
+                rareCandyID = Gen3ItemIDs.rareCandy;
+                break;
+            default:
+                rareCandyID = ItemIDs.rareCandy;
+        }
+        return rareCandyID;
+    }
+
+    private void addRareCandiesToShops(int rareCandyID) {
+        List<Item> allItems = romHandler.getItems();
+        List<Shop> shops = romHandler.getShops();
+        for (Shop sh : shops) {
+            sh.getItems().add(allItems.get(rareCandyID));
+        }
+        romHandler.setShops(shops);
+    }
+
+    private void makeRareCandiesCheap(int rareCandyID) {
+        List<Integer> prices = romHandler.getShopPrices();
+        prices.set(rareCandyID, 10);
+        romHandler.setShopPrices(prices);
     }
 
     public void randomizePickupItems() {

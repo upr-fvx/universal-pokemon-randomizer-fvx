@@ -2,6 +2,7 @@ package com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.GFXFunctions;
+import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.GBConstants;
 import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.RomIOException;
@@ -36,15 +37,10 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean loadRom(String filename) {
-        try {
-            loadRomFile(filename);
-            midLoadingSetUp();
-            loadGameData();
-            return true;
-        } catch (RomIOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        loadRomFile(filename);
+        midLoadingSetUp();
+        loadGameData();
+        return true;
     }
 
     protected void loadRomFile(String filename) {
@@ -230,6 +226,31 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         return (byte) thisByte;
     }
 
+    /**
+     * Reads a nybble at <code>offset</code> in ROM. If high is true, reads the high nybble.
+     */
+    protected int readNybble(int offset, boolean high) {
+        int b = rom[offset] & 0xFF;
+        if (high) {
+            b >>= 4;
+        }
+        return b & 0xF;
+    }
+
+    /**
+     * Writes a nybble to <code>offset</code> in ROM. If high is true, writes the high nybble.
+     */
+    protected void writeNybble(int offset, boolean high, int value) {
+        value &= 0xF;
+        int mask = 0xF;
+        if (high) {
+            value <<= 4;
+        } else {
+            mask <<= 4;
+        }
+        rom[offset] = (byte) ((rom[offset] & mask) | value);
+    }
+
     protected int readWord(int offset) {
         return readWord(rom, offset);
     }
@@ -294,6 +315,15 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
             length++;
         } while (terminatorCount < terminatorAmount);
         return length;
+    }
+
+    /**
+     * Returns the length of some data, which is ended by a multibyte terminator.
+     * Counts the terminator towards the length.
+     */
+    protected int lengthOfDataWithTerminatorAt(int offset, byte[] terminator) {
+        int startOfTerminatorOffset = RomFunctions.searchForFirst(rom, offset, terminator);
+        return startOfTerminatorOffset - offset + terminator.length;
     }
 
     protected abstract int readPointer(int offset);

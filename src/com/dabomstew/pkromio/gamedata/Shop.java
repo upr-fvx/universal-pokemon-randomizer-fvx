@@ -32,6 +32,7 @@ public class Shop {
     private List<Item> items;
     private String name;
     private boolean isMainGame;
+    private boolean isSpecialShop; // the shops that have been randomizable up until now
 
     public Shop() {
         this.isMainGame = false;
@@ -41,6 +42,7 @@ public class Shop {
         this.items = new ArrayList<>(otherShop.items);
         this.name = otherShop.name;
         this.isMainGame = otherShop.isMainGame;
+        this.isSpecialShop = otherShop.isSpecialShop;
     }
 
     public List<Item> getItems() {
@@ -67,6 +69,14 @@ public class Shop {
         isMainGame = mainGame;
     }
 
+    public void setSpecialShop(boolean specialShop) {
+        isSpecialShop = specialShop;
+    }
+
+    public boolean isSpecialShop() {
+        return isSpecialShop;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(items, name, isMainGame);
@@ -83,6 +93,6 @@ public class Shop {
 
     @Override
     public String toString() {
-        return "Shop [name=" + name + ", isMainGame=" + isMainGame + ", items=" + items + "]";
+        return "Shop [name=" + name + ", isMainGame=" + isMainGame + ", isSpecialShop=" + isSpecialShop +", items=" + items + "]";
     }
 }

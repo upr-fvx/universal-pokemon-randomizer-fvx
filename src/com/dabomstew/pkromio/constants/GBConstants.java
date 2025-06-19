@@ -43,6 +43,8 @@ public class GBConstants {
 
     public static final byte stringTerminator = 0x50, stringPrintedTextEnd = 0x57, stringPrintedTextPromptEnd = 0x58;
 
+    public static final int farTextLength = 5;
+
     public static final int bankSize = 0x4000;
 
     public static final byte gbZ80Jump = (byte) 0xC3, gbZ80Nop = 0x00, gbZ80XorA = (byte) 0xAF, gbZ80LdA = 0x3E,

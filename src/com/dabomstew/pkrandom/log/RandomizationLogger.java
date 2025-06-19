@@ -278,8 +278,6 @@ public class RandomizationLogger {
                 romHandler.hasMoveTutors());
         // field items aren't logged properly, but still important to show *whether* they were randomized
         logOverviewLine(getBS("GUI.fiPanel.title"), itemRandomizer.isFieldChangesMade(), true);
-        // TODO: okay what should the naming be here? "Special Shops"? "Shop Items"? "Shops"?
-        //  Both here and in RandomizerGUI; they should be synced.
         logOverviewLine(getBS("GUI.shPanel.title"), itemRandomizer.isShopChangesMade(),
                 romHandler.hasShopSupport());
         logOverviewLine(getBS("GUI.puPanel.title"), itemRandomizer.isPickupChangesMade(),
@@ -1177,9 +1175,8 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        Map<Integer, Shop> shopsDict = romHandler.getShopItems();
-        for (int shopID : shopsDict.keySet()) {
-            Shop shop = shopsDict.get(shopID);
+        List<Shop> shops = romHandler.getShops();
+        for (Shop shop : shops) {
             log.printf("%s", shop.getName());
             log.println();
             List<Item> shopItems = shop.getItems();

@@ -46,7 +46,6 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * {@link RomHandler} for Black, White, Black 2, White 2.
@@ -89,7 +88,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private Move[] moves;
     private List<Item> items;
     private Gen5RomEntry romEntry;
-    private byte[] arm9;
     private List<String> abilityNames;
     private List<String> shopNames;
     private boolean loadedWildMapNames;
@@ -104,6 +102,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private Map<String, Long> actualFileCRC32s;
     
     private NARCArchive pokeNarc, moveNarc, stringsNarc, storyTextNarc, scriptNarc, shopNarc;
+
+    @Override
+    protected int getARM9Offset() {
+        return Gen5Constants.arm9Offset;
+    }
 
     @Override
     protected boolean detectNDSRom(String ndsCode, byte version) {
@@ -130,11 +133,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void loadedROM(String romCode, byte version) {
         this.romEntry = entryFor(romCode, version);
-        try {
-            arm9 = readARM9();
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
         try {
             stringsNarc = readNARC(romEntry.getFile("TextStrings"));
             storyTextNarc = readNARC(romEntry.getFile("TextStory"));
@@ -177,11 +175,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(e);
         }
 
-        // If there are tweaks for expanding the ARM9, do it here to keep it simple.
-        boolean shouldExtendARM9 = romEntry.hasTweakFile("ShedinjaEvolutionTweak") || romEntry.hasTweakFile("NewIndexToMusicTweak");
-        if (shouldExtendARM9) {
-            int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-            arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen5Constants.arm9Offset);
+        // Do all ARM9 extension here to keep it simple.
+        // Some of the extra space is ear-marked for patches, and some for repointing data.
+        int patchExtendBy = romEntry.getIntValue("Arm9PatchExtensionSize");
+        int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
+        int extendBy = patchExtendBy + repointExtendBy;
+        if (extendBy != 0) {
+            byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
+            extendARM9(extendBy, repointExtendBy, prefix);
         }
     }
 
@@ -450,11 +451,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void prepareSaveRom() {
         super.prepareSaveRom();
-        try {
-            writeARM9(arm9);
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
         try {
             writeNARC(romEntry.getFile("TextStrings"), stringsNarc);
             writeNARC(romEntry.getFile("TextStory"), storyTextNarc);
@@ -2732,24 +2728,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private int find(byte[] data, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
-        List<Integer> found = RomFunctions.search(data, searchFor);
-        if (found.isEmpty()) {
-            return -1; // not found
-        } else if (found.size() > 1) {
-            return -2; // not unique
-        } else {
-            return found.get(0);
-        }
-    }
-
     private List<String> getStrings(boolean isStoryText, int index) {
         NARCArchive baseNARC = isStoryText ? storyTextNarc : stringsNarc;
         byte[] rawFile = baseNARC.files.get(index);
@@ -2995,6 +2973,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public boolean hasShopSupport() {
+        return true;
+    }
+
+    @Override
+    public boolean canChangeShopSizes() {
         return true;
     }
 
@@ -3606,116 +3589,228 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
+    public List<Shop> getShops() {
+        if (romEntry.getRomType() == Gen5Constants.Type_BW) {
+            return getShopsBW();
+        } else {
+            return getShopsBW2();
+        }
+    }
+
+    private List<Shop> getShopsBW() {
+        int overlayNum = romEntry.getIntValue("ShopItemOvlNumber");
+        int pointerTableOffset = romEntry.getIntValue("ShopPointerTableOffset");
+        int sizeTableOffset = romEntry.getIntValue("ShopSizeTableOffset");
         int shopCount = romEntry.getIntValue("ShopCount");
-        Map<Integer, Shop> shopItemsMap = new TreeMap<>();
+        List<Shop> shops = new ArrayList<>();
 
         try {
-            byte[] shopItemOverlay = readOverlay(romEntry.getIntValue("ShopItemOvlNumber"));
-            IntStream.range(0, shopCount).forEachOrdered(i -> {
-                boolean badShop = false;
-                for (int tmShop : tmShops) {
-                    if (i == tmShop) {
-                        badShop = true;
-                        break;
-                    }
+            byte[] shopItemOverlay = readOverlay(overlayNum);
+
+            for (int i = 0; i < shopCount; i++) {
+                List<Item> shopItems = new ArrayList<>();
+
+                int itemsSize = shopItemOverlay[sizeTableOffset + i];
+
+                // In vanilla, the shop items are always stored in shopItemOverlay.
+                // However, the RomHandler may repoint them to ARM9, in which case we need to read from there instead.
+                int pointerOffset = pointerTableOffset + i * 4;
+                int itemsOffset;
+                byte[] itemsSource;
+                if (isARM9Pointer(shopItemOverlay, pointerOffset)) {
+                    itemsOffset = readARM9Pointer(shopItemOverlay, pointerOffset);
+                    itemsSource = arm9;
+                } else {
+                    itemsOffset = readOverlayPointer(shopItemOverlay, overlayNum, pointerOffset);
+                    itemsSource = shopItemOverlay;
                 }
-                for (int regularShop : regularShops) {
-                    if (badShop) break;
-                    if (i == regularShop) {
-                        badShop = true;
-                        break;
-                    }
+
+                for (int j = 0; j < itemsSize; j++) {
+                    int id = readWord(itemsSource, itemsOffset + j * 2);
+                    shopItems.add(items.get(id));
                 }
-                if (!badShop) {
-                    List<Item> shopItems = new ArrayList<>();
-                    if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-                        for (int j = 0; j < shopItemSizes[i]; j++) {
-                            int id = readWord(shopItemOverlay, shopItemOffsets[i] + j * 2);
-                            shopItems.add(items.get(id));
-                        }
-                    } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-                        byte[] shop = shopNarc.files.get(i);
-                        for (int j = 0; j < shop.length; j += 2) {
-                            int id = readWord(shop, j);
-                            shopItems.add(items.get(id));
-                        }
-                    }
-                    Shop shop = new Shop();
-                    shop.setItems(shopItems);
-                    shop.setName(shopNames.get(i));
-                    shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
-                    shopItemsMap.put(i, shop);
+
+                Shop shop = new Shop();
+                shop.setItems(shopItems);
+                shop.setName(shopNames.get(i));
+                shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+                shop.setSpecialShop(true);
+                shops.add(shop);
+            }
+
+            int[] tmShops = romEntry.getArrayValue("TMShops");
+            int[] regularShops = romEntry.getArrayValue("RegularShops");
+
+            Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+            Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+
+            return shops;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    private List<Shop> getShopsBW2() {
+        int shopCount = romEntry.getIntValue("ShopCount");
+        List<Shop> shops = new ArrayList<>();
+
+        for (int i = 0; i < shopCount; i++) {
+            List<Item> shopItems = new ArrayList<>();
+            byte[] shopData = shopNarc.files.get(i);
+            for (int j = 0; j < shopData.length; j += 2) {
+                int id = readWord(shopData, j);
+                shopItems.add(items.get(id));
+            }
+
+            Shop shop = new Shop();
+            shop.setItems(shopItems);
+            shop.setName(shopNames.get(i));
+            shop.setMainGame(Gen5Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+            shop.setSpecialShop(true);
+            shops.add(shop);
+        }
+
+        int[] tmShops = romEntry.getArrayValue("TMShops");
+        int[] regularShops = romEntry.getArrayValue("RegularShops");
+
+        Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
+        Arrays.stream(regularShops).forEach(i -> shops.get(i).setSpecialShop(false));
+
+        return shops;
+    }
+
+    @Override
+    public void setShops(List<Shop> shops) {
+        if (romEntry.getRomType() == Gen5Constants.Type_BW) {
+            setShopsBW(shops);
+        } else {
+            setShopsBW2(shops);
+        }
+    }
+
+    private void setShopsBW(List<Shop> shops) {
+        int overlayNum = romEntry.getIntValue("ShopItemOvlNumber");
+        int pointerTableOffset = romEntry.getIntValue("ShopPointerTableOffset");
+        int sizeTableOffset = romEntry.getIntValue("ShopSizeTableOffset");
+        int shopCount = romEntry.getIntValue("ShopCount");
+        if (shops.size() != shopCount) {
+            throw new IllegalArgumentException("shops.size() must be: " + shopCount + ", is: " + shops.size());
+        }
+
+        try {
+            byte[] shopItemOverlay = readOverlay(overlayNum);
+
+            for (int i = 0; i < shopCount; i++) {
+                List<Item> shopItems = shops.get(i).getItems();
+
+                int oldItemsSize = shopItemOverlay[sizeTableOffset + i];
+                shopItemOverlay[sizeTableOffset + i] = (byte) shopItems.size();
+
+                // We always repoint to ARM9/ITCM.
+                // This is wasteful memory-wise, since the overlay will keep the old (now unused) shop data.
+                // It's an easier implementation though. If you want to fix it, I recommend writing a proper
+                // data rewriting system, as the GameBoy RomHandler has. -- voliol 2025-06-15
+                int pointerOffset = pointerTableOffset + i * 4;
+                if (isARM9Pointer(shopItemOverlay, pointerOffset)) {
+                    int oldItemsOffset = readARM9Pointer(shopItemOverlay, pointerOffset);
+                    arm9FreedSpace.free(oldItemsOffset, oldItemsSize * 2);
                 }
-            });
-            return shopItemsMap;
+                int itemsOffset = arm9FreedSpace.findAndUnfree(shopItems.size() * 2);
+                writeARM9Pointer(shopItemOverlay, pointerOffset, itemsOffset);
+
+                for (int j = 0; j < shopItems.size(); j++) {
+                    int id = shopItems.get(j).getId();
+                    writeWord(arm9, itemsOffset + j * 2, id);
+                }
+            }
+            writeOverlay(overlayNum, shopItemOverlay);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    private void setShopsBW2(List<Shop> shops) {
+        int shopCount = romEntry.getIntValue("ShopCount");
+        if (shops.size() != shopCount) {
+            throw new IllegalArgumentException("shops.size() must be: " + shopCount + ", is: " + shops.size());
+        }
+
+        writeBW2ShopSizes(shops);
+        writeBW2ShopItems(shops);
+    }
+
+    private void writeBW2ShopSizes(List<Shop> shops) {
+        // Shop sizes are stored separately (and redundantly) from the shop items,
+        // in a file which also contains some other data of unknown purpose.
+        // The sizes for the extant/vanilla shops are followed by a bunch of 0x00,
+        // which could *possibly* be unused entries in the same table,
+        // meaning they could be overwritten to add sizes for new shops.
+        try {
+            String fileName = romEntry.getFile("ShopSizes");
+            int offset = romEntry.getIntValue("ShopSizesOffset");
+
+            byte[] sizesFile = readFile(fileName);
+            for (int i = 0; i < shops.size(); i++) {
+                sizesFile[i + offset] = (byte) (shops.get(i).getItems().size());
+            }
+            writeFile(fileName, sizesFile);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    private void writeBW2ShopItems(List<Shop> shops) {
+        try {
+            for (int i = 0; i < shops.size(); i++) {
+                List<Item> shopContents = shops.get(i).getItems();
+                Iterator<Item> iterItems = shopContents.iterator();
+                byte[] shop = new byte[shopContents.size() * 2];
+                for (int j = 0; j < shop.length; j += 2) {
+                    writeWord(shop, j, iterItems.next().getId());
+                }
+                shopNarc.files.set(i, shop);
+            }
+            writeNARC(romEntry.getFile("ShopItems"), shopNarc);
         } catch (IOException e) {
             throw new RomIOException(e);
         }
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        int[] shopItemOffsets = romEntry.getArrayValue("ShopItemOffsets");
-        int[] shopItemSizes = romEntry.getArrayValue("ShopItemSizes");
-        int[] tmShops = romEntry.getArrayValue("TMShops");
-        int[] regularShops = romEntry.getArrayValue("RegularShops");
-        int shopCount = romEntry.getIntValue("ShopCount");
-
+    public List<Integer> getShopPrices() {
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
         try {
-            byte[] shopItemOverlay = readOverlay(romEntry.getIntValue("ShopItemOvlNumber"));
-            IntStream.range(0, shopCount).forEachOrdered(i -> {
-                boolean badShop = false;
-                for (int tmShop : tmShops) {
-                    if (i == tmShop) {
-                        badShop = true;
-                        break;
-                    }
-                }
-                for (int regularShop : regularShops) {
-                    if (badShop) break;
-                    if (i == regularShop) {
-                        badShop = true;
-                        break;
-                    }
-                }
-                if (!badShop) {
-                    List<Item> shopContents = shopItems.get(i).getItems();
-                    Iterator<Item> iterItems = shopContents.iterator();
-                    if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-                        for (int j = 0; j < shopItemSizes[i]; j++) {
-                            writeWord(shopItemOverlay, shopItemOffsets[i] + j * 2, iterItems.next().getId());
-                        }
-                    } else if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-                        byte[] shop = shopNarc.files.get(i);
-                        for (int j = 0; j < shop.length; j += 2) {
-                            writeWord(shop, j, iterItems.next().getId());
-                        }
-                    }
-                }
-            });
-            if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-                writeNARC(romEntry.getFile("ShopItems"), shopNarc);
-            } else {
-                writeOverlay(romEntry.getIntValue("ShopItemOvlNumber"), shopItemOverlay);
+            NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
+            for (int i = 1; i < itemPriceNarc.files.size(); i++) {
+                prices.add(readWord(itemPriceNarc.files.get(i), 0) * 10);
             }
+            writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        return prices;
     }
 
     @Override
     public void setBalancedShopPrices() {
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen5Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
+    }
+
+    @Override
+    // Internally, item prices are stored as multiples of 10,
+    // so the last digit of each input price will be ignored.
+    public void setShopPrices(List<Integer> prices) {
         try {
             NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
             for (int i = 1; i < itemPriceNarc.files.size(); i++) {
-                writeWord(itemPriceNarc.files.get(i),0,Gen5Constants.balancedItemPrices.get(i));
+                writeWord(itemPriceNarc.files.get(i), 0, prices.get(i) / 10);
             }
-            writeNARC(romEntry.getFile("ItemData"),itemPriceNarc);
+            writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
         } catch (IOException e) {
             throw new RomIOException(e);
         }

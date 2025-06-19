@@ -30,6 +30,8 @@ import com.dabomstew.pkromio.gamedata.Trainer;
 import com.dabomstew.pkromio.gamedata.Type;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Gen1Constants {
 
@@ -173,13 +175,14 @@ public class Gen1Constants {
         }
     }
 
+    public static final byte farTextStart = (byte) 0x17;
+
     public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
 
     public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
             "Viridian Poké Mart",
             "Pewter Poké Mart",
             "Cerulean Poké Mart",
-            "Unused Bike Shop",
             "Vermilion Poké Mart",
             "Lavender Poké Mart",
             "Celadon Department Store 2F Left",
@@ -188,16 +191,14 @@ public class Gen1Constants {
             "Celadon Department Store 5F Left",
             "Celadon Department Store 5F Right",
             "Fuchsia Poké Mart",
-            "Unused Poké Mart",
             "Cinnabar Poké Mart",
             "Saffron Poké Mart",
             "Indigo Plateau Lobby"
     ));
 
-    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
-    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16)
-    );
+    public static final List<Integer> specialShops = Collections.unmodifiableList(Arrays.asList(
+            8, 9 // just the Celadon 5F ones
+    ));
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
             Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
@@ -207,15 +208,15 @@ public class Gen1Constants {
             Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
             Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
     ));
-    
+
     public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall, 
+            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall,
             Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
             Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
             Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
             Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
     ));
-    
+
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
             Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
     ));
@@ -581,5 +582,19 @@ public class Gen1Constants {
     public static void tagEncounterAreasYellow(List<EncounterArea> encounterAreas) {
         tagEncounterAreas(encounterAreas, locationTagsYellow, postGameEncounterAreasYellow);
     }
+
+    public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
+            {Gen1ItemIDs.masterBall, 3000},
+            {Gen1ItemIDs.safariBall, 1200}, // same as ultra ball
+
+            {Gen1ItemIDs.moonStone, 2100}, // same as other evo stones
+
+            {Gen1ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
+
+            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
+            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
+    }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
 }

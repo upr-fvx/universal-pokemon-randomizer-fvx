@@ -505,9 +505,22 @@ public interface RomHandler {
 
     boolean hasShopSupport();
 
-    Map<Integer, Shop> getShopItems();
+    /**
+     * Returns {@code true} if, relative to their contents gotten through {@link #getShops()},
+     * the number of {@link Item Items} in {@link Shop Shops} may be changed before setting them with
+     * {@link #setShops(List)}.<br>
+     * More precisely, returns {@code true} if any amount of Items may be removed,
+     * and up to 1 Item may be added per Shop.
+     */
+    boolean canChangeShopSizes();
 
-    void setShopItems(Map<Integer, Shop> shopItems);
+    List<Shop> getShops();
+
+    void setShops(List<Shop> shops);
+
+    List<Integer> getShopPrices();
+
+    void setShopPrices(List<Integer> prices);
 
     void setBalancedShopPrices();
 

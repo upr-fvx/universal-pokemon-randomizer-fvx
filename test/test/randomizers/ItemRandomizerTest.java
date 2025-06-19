@@ -25,16 +25,16 @@ public class ItemRandomizerTest extends RandomizerTest{
         Settings s = new Settings();
         s.setFieldItemsMod(Settings.FieldItemsMod.SHUFFLE);
 
-        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getFieldItems());
+        Map<Item, Integer> itemCountsBefore = countFieldItems(romHandler.getFieldItems());
         System.out.println(itemCountsBefore);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
-        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getFieldItems());
+        Map<Item, Integer> itemCountsAfter = countFieldItems(romHandler.getFieldItems());
         System.out.println(itemCountsAfter);
 
         assertEquals(itemCountsBefore, itemCountsAfter);
     }
 
-    private Map<Item, Integer> countItems(List<Item> fieldItems) {
+    private Map<Item, Integer> countFieldItems(List<Item> fieldItems) {
         Map<Item, Integer> counts = new HashMap<>();
         for (Item item : fieldItems) {
             if (!counts.containsKey(item)) {
@@ -117,7 +117,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         s.setFieldItemsMod(Settings.FieldItemsMod.RANDOM_EVEN);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
 
-        Map<Item, Integer> counts = countItems(romHandler.getFieldItems());
+        Map<Item, Integer> counts = countFieldItems(romHandler.getFieldItems());
         System.out.println(counts);
         Set<Item> uniqueItems = romHandler.getMegaStones();
         Set<Integer> filteredValues = counts.entrySet().stream()
@@ -125,13 +125,13 @@ public class ItemRandomizerTest extends RandomizerTest{
                 .filter(et -> !uniqueItems.contains(et.getKey()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
-        int min = filteredValues.stream().min(Integer::compareTo).get();
+        int min = filteredValues.stream().min(Integer::compareTo).orElseThrow(RuntimeException::new);
         int max = filteredValues.stream().max(Integer::compareTo).get();
         System.out.println("min: " + min + ", max: " + max);
         assertTrue(max - min <= 1);
     }
 
-    // TODO: test uniqueNoSellItems / figure out what even they imply
+    // TODO: test uniqueNoSellItems (i.e. Mega Stones)
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -139,18 +139,20 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getShopItems());
+        Map<Item, Integer> itemCountsBefore = countItems(romHandler.getShops()
+                .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsBefore);
         new ItemRandomizer(romHandler, new Settings(), RND).shuffleShopItems();
-        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getShopItems());
+        Map<Item, Integer> itemCountsAfter = countItems(romHandler.getShops()
+                .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsAfter);
 
         assertEquals(itemCountsBefore, itemCountsAfter);
     }
 
-    private Map<Item, Integer> countItems(Map<Integer, Shop> shops) {
+    private Map<Item, Integer> countItems(List<Shop> shops) {
         Map<Item, Integer> counts = new HashMap<>();
-        for (Shop shop : shops.values()) {
+        for (Shop shop : shops) {
             for (Item item : shop.getItems()) {
                 if (!counts.containsKey(item)) {
                     counts.put(item, 0);
@@ -168,13 +170,13 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         List<Item> before = new ArrayList<>();
-        romHandler.getShopItems().values().forEach(shop -> before.addAll(shop.getItems()));
+        romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> before.addAll(shop.getItems()));
         System.out.println(before);
 
         new ItemRandomizer(romHandler, new Settings(), RND).shuffleShopItems();
 
         List<Item> after = new ArrayList<>();
-        romHandler.getShopItems().values().forEach(shop -> after.addAll(shop.getItems()));
+        romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> after.addAll(shop.getItems()));
         System.out.println(after);
         assertNotEquals(before, after);
     }
@@ -189,8 +191,10 @@ public class ItemRandomizerTest extends RandomizerTest{
         s.setBanBadRandomShopItems(true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
+        for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(item.isBad());
@@ -209,8 +213,10 @@ public class ItemRandomizerTest extends RandomizerTest{
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
         Set<Item> regularShop = romHandler.getRegularShopItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
+        for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(regularShop.contains(item));
@@ -229,8 +235,10 @@ public class ItemRandomizerTest extends RandomizerTest{
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
         Set<Item> opShop = romHandler.getOPShopItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
+        for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 assertFalse(opShop.contains(item));
@@ -260,8 +268,10 @@ public class ItemRandomizerTest extends RandomizerTest{
             placedX.put(xItem, false);
         }
 
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
+        for (Shop shop : romHandler.getShops()) {
+            if (!shop.isSpecialShop()) {
+                continue;
+            }
             System.out.println(shop);
             for (Item item : shop.getItems()) {
                 if (evoItems.contains(item)) {

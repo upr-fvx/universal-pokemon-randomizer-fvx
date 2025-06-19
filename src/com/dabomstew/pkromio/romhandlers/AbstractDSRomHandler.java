@@ -7,6 +7,7 @@ import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.newnds.NARCArchive;
 import com.dabomstew.pkromio.newnds.NDSRom;
@@ -25,7 +26,13 @@ import java.util.List;
  * An abstract base class for DS {@link RomHandler}s, which standardises common DS functions.
  */
 public abstract class AbstractDSRomHandler extends AbstractRomHandler {
-	
+
+    // ITCM is mirrored from 0x0000000 to 0x2000000, but it seems in practice only some of these mirrors are allowed.
+    // Below is an arbitrary mirror which should work.
+    private static final int ITCM_RAM_ADDRESS = 0x1000000;
+    private static final int ITCM_END = 0x1FFFFFF;
+    private static final int ITCM_LENGTH = 0x8000;
+
     private static final byte[] PALETTE_PREFIX_BYTES = { (byte) 0x52, (byte) 0x4C, (byte) 0x43, (byte) 0x4E,
             (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x01, (byte) 0x48, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x10, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x54, (byte) 0x54, (byte) 0x4C, (byte) 0x50,
@@ -35,7 +42,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     private NDSRom baseRom;
     private String loadedFN;
+
+    protected byte[] arm9;
     private boolean arm9Extended = false;
+    private int tcmCopyingPointersOffset = -1;
+    protected final FreedSpace arm9FreedSpace = new FreedSpace();
 
     protected abstract boolean detectNDSRom(String ndsCode, byte version);
 
@@ -47,6 +58,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         // Load inner rom
         try {
             baseRom = new NDSRom(filename);
+            arm9 = readARM9();
         } catch (IOException e) {
             throw new RomIOException(e);
         }
@@ -60,15 +72,17 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         return loadedFN;
     }
 
-    protected byte[] get3byte(int amount) {
-        byte[] ret = new byte[3];
-        ret[0] = (byte) (amount & 0xFF);
-        ret[1] = (byte) ((amount >> 8) & 0xFF);
-        ret[2] = (byte) ((amount >> 16) & 0xFF);
-        return ret;
-    }
-
     protected abstract void loadedROM(String romCode, byte version);
+
+    @Override
+    protected void prepareSaveRom() {
+        super.prepareSaveRom();
+        try {
+            writeARM9(arm9);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
 
     @Override
     public boolean saveRomFile(String filename, long seed) {
@@ -214,11 +228,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         baseRom.writeFile(location, data);
     }
 
-    protected byte[] readARM9() throws IOException {
+    private byte[] readARM9() throws IOException {
         return baseRom.getARM9();
     }
 
-    protected void writeARM9(byte[] data) throws IOException {
+    private void writeARM9(byte[] data) throws IOException {
         baseRom.writeARM9(data);
     }
 
@@ -228,6 +242,10 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
 
     protected void writeOverlay(int number, byte[] data) throws IOException {
         baseRom.writeOverlay(number, data);
+    }
+
+    protected int overlayAddress(int number) {
+        return baseRom.getOverlayAddress(number);
     }
 
     protected void readByteIntoFlags(byte[] data, boolean[] flags, int offsetIntoFlags, int offsetIntoData) {
@@ -288,14 +306,9 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
     }
 
-    private int find(byte[] data, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
+    protected int find(byte[] data, String hexString) {
+        // TODO: merge all the "find" methods, move to RomFunctions maybe??
+        byte[] searchFor = RomFunctions.hexToBytes(hexString);
         List<Integer> found = RomFunctions.search(data, searchFor);
         if (found.isEmpty()) {
             return -1; // not found
@@ -306,7 +319,23 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
     }
 
-    protected byte[] extendARM9(byte[] arm9, int extendBy, String prefix, int arm9Offset) {
+    /**
+     * Extends the ARM9 file, allowing for extra data/code storage. The ARM9 can only be extended once,
+     * subsequent times it throws an {@link IllegalStateException}.
+     * <br><br>
+     * This method works through extending the section of ARM9 which is copied to ITCM
+     * (Instruction Tightly Coupled Memory) and comes with a few caveats.<br>
+     * There is a limit to how much data may be copied to ITCM (<32 KiB). If {@code extendBy} exceeds this limit, this
+     * method throws an {@link IllegalArgumentException}.<br>
+     * Also, pointers to the extended parts of ARM9 must rather point to ITCM, since that is where the data ultimately
+     * ends up in RAM.
+     *
+     * @param extendBy The number of bytes to extend by.
+     * @param repointExtendBy The number of bytes, of the extended ones, which will be available for repointing data
+     *                        via {@link #arm9FreedSpace}.
+     * @param prefix Bytes that come right before the TCM pointer section. Used to find said section.
+     */
+    protected void extendARM9(int extendBy, int repointExtendBy, byte[] prefix) {
         /*
         Simply extending the ARM9 at the end doesn't work. Towards the end of the ARM9, the following sections exist:
         1. A section that is copied to ITCM (Instruction Tightly Coupled Memory)
@@ -337,16 +366,26 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         specified size for the ITCM area since we're enlarging it.
          */
 
-        if (arm9Extended) return arm9;  // Don't try to extend the ARM9 more than once
+        if (repointExtendBy > extendBy) {
+            throw new IllegalArgumentException("repointExtendBy can't be larger than extendBy");
+        }
+        if (arm9Extended) {
+            throw new IllegalStateException("Don't try to extend the ARM9 more than once.");
+        }
 
-        int tcmCopyingPointersOffset = find(arm9, prefix);
-        tcmCopyingPointersOffset += prefix.length() / 2; // because it was a prefix
+        int arm9Offset = getARM9Offset();
+
+        tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
+        tcmCopyingPointersOffset += prefix.length; // because it was a prefix
 
         int oldDestPointersOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - arm9Offset;
         int itcmSrcOffset =
                 FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
         int itcmSizeOffset = oldDestPointersOffset + 4;
         int oldITCMSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        if (oldITCMSize + extendBy > ITCM_LENGTH) {
+            throw new IllegalArgumentException("Can't extend the section which is copied to ITCM past 32 KiB.");
+        }
 
         int oldDTCMOffset = itcmSrcOffset + oldITCMSize;
 
@@ -366,9 +405,98 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         System.arraycopy(newARM9, oldDTCMOffset, newARM9, oldDTCMOffset + extendBy,
                 arm9.length - oldDTCMOffset);
 
+        // And free some amount of the extended section
+        if (repointExtendBy > 0) {
+            arm9FreedSpace.free(itcmSrcOffset + oldITCMSize + extendBy - repointExtendBy, repointExtendBy);
+        }
+
         arm9Extended = true;
 
-        return newARM9;
+        arm9 = newARM9;
+    }
+
+    private boolean isInCopyToITCMSection(int offset) {
+        if (tcmCopyingPointersOffset == -1) {
+            throw new IllegalStateException("tcmCopyingPointersOffset has not been initialized");
+        }
+        int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
+        int itcmSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        int itcmSrcOffset = getITCMSrcOffset();
+        return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSize;
+    }
+
+    protected abstract int getARM9Offset();
+
+    /**
+     * Returns whether a pointer at {@code offset} in {@code data} points
+     * to the RAM locations of either ARM9 or ITCM - i.e.,
+     * whether the corresponding data belongs in the ARM9.bin file.<br>
+     * To be used in conjunction with {@link #readARM9Pointer(byte[], int)}.
+     */
+    protected boolean isARM9Pointer(byte[] data, int offset) {
+        int pointer = readLong(data, offset);
+        return pointer <= ITCM_END || (pointer >= getARM9Offset() && pointer < getARM9Offset() + arm9.length);
+    }
+
+    /**
+     * Reads a pointer at {@code offset} in {@code data}.<br>
+     * If the pointer points to the RAM locations of either ARM9 or ITCM,
+     * returns the corresponding offset in the ARM9.bin file.<br>
+     * If the pointer does not point to the RAM locations of ARM9 or ITCM,
+     * throws a {@link RomIOException}.
+     */
+    protected int readARM9Pointer(byte[] data, int offset) {
+        int pointer = readLong(data, offset);
+        if (pointer <= ITCM_END) {
+            return pointer % ITCM_LENGTH + getITCMSrcOffset();
+        } else if (pointer >= getARM9Offset() && pointer < getARM9Offset() + arm9.length) {
+            return pointer - getARM9Offset();
+        } else {
+            throw new RuntimeException(String.format(
+                    "Invalid pointer! 0x%s is not a RAM location for either ARM9 (0x%s-0x%s) or ITCM (0x%s-0x%s)",
+                    Integer.toHexString(pointer),
+                    Integer.toHexString(getARM9Offset()), Integer.toHexString(getARM9Offset() + arm9.length - 1),
+                    Integer.toHexString(0), Integer.toHexString(ITCM_END)));
+        }
+    }
+
+    private int getITCMSrcOffset() {
+        return FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+    }
+
+    /**
+     * Writes a pointer to {@code offset} in {@code data}, pointing at {@code pointer}.<br>
+     * {@code pointer} is an offset in the ARM9.bin file, corresponding to a location of either ARM9 or ITCM in RAM.
+     * The actual pointer written, corresponds to this RAM location.<br>
+     * If {@code pointer} does not correspond to an ARM9/ITCM RAM location, throws a {@link RomIOException}.
+     */
+    protected void writeARM9Pointer(byte[] data, int offset, int pointer) {
+        if (isInCopyToITCMSection(pointer)) {
+            writeLong(data, offset, pointer - getITCMSrcOffset() + ITCM_RAM_ADDRESS);
+        } else if (pointer < arm9.length) {
+            // This is not a perfect check; a pointer to e.g., the DTCM section of ARM9.bin would give a false positive.
+            // At least it forbids pointers totally out of bounds.
+            writeLong(data, offset, pointer + getARM9Offset());
+        } else {
+            throw new RomIOException("Invalid pointer! 0x" + Integer.toHexString(pointer) + " is not an offset in the " +
+                    "ARM9.bin file, which corresponds to an ARM9/ITCM RAM location.");
+        }
+    }
+
+    /**
+     * Reads a pointer located in an overlay.
+     * Assumes the pointer points to somewhere else in the overlay.
+     */
+    protected int readOverlayPointer(byte[] overlay, int overlayNum, int offset) {
+        return readLong(overlay, offset) - overlayAddress(overlayNum);
+    }
+
+    /**
+     * Writes a pointer to "offset" located in an overlay, pointing at "pointer".
+     * Assumes the pointer will point to somewhere else in the overlay.
+     */
+    protected void writeOverlayPointer(byte[] arm9, int overlayNum, int offset, int pointer) {
+        writeLong(arm9, offset, pointer + overlayAddress(overlayNum));
     }
     
 	private byte[] concatenate(byte[] a, byte[] b) {

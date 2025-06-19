@@ -26,6 +26,7 @@ import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.newnds.NARCArchive;
 import com.dabomstew.pkromio.romhandlers.romentries.DSStaticPokemon;
@@ -84,7 +85,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private NARCArchive msgNarc;
 	private NARCArchive scriptNarc;
 	private NARCArchive eventNarc;
-	private byte[] arm9;
 	private List<String> abilityNames;
 	private boolean loadedWildMapNames;
 	private Map<Integer, String> wildMapNames, headbuttMapNames;
@@ -97,6 +97,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private boolean tmsReusable;
 
 	private Gen4RomEntry romEntry;
+
+	@Override
+	protected int getARM9Offset() {
+		return Gen4Constants.arm9Offset;
+	}
 
 	@Override
 	protected boolean detectNDSRom(String ndsCode, byte version) {
@@ -119,11 +124,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	protected void loadedROM(String romCode, byte version) {
 		this.romEntry = entryFor(romCode, version);
-		try {
-			arm9 = readARM9();
-		} catch (IOException e) {
-			throw new RomIOException(e);
-		}
 		try {
 			msgNarc = readNARC(romEntry.getFile("Text"));
 		} catch (IOException e) {
@@ -159,19 +159,23 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
-		
-		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new
-		// Pokemon. We also
-		// want to allow the option of randomizing the enemy Pokemon too. Unfortunately,
-		// the latter can
-		// occur *before* the former, but there's no guarantee that it will even happen.
-		// Since we *know*
-		// we'll need to do this patch eventually, just expand the arm9 here to make
-		// things easy.
+
+		// Do all ARM9 extension here to keep it simple.
+		// Some of the extra space is ear-marked for patches, and some for repointing data.
+		int patchExtendBy = romEntry.getIntValue("Arm9PatchExtensionSize");
+		int repointExtendBy = romEntry.getIntValue("Arm9RepointExtensionSize");
+		int extendBy = patchExtendBy + repointExtendBy;
+		if (extendBy != 0) {
+			byte[] prefix = RomFunctions.hexToBytes(romEntry.getStringValue("TCMCopyingPrefix"));
+			extendARM9(extendBy, repointExtendBy, prefix);
+		}
+
+		// We want to guarantee that the catching tutorial in HGSS has Ethan/Lyra's new Pokemon.
+		// We also want to allow the option of randomizing the enemy Pokemon too. Unfortunately,
+		// the latter can occur *before* the former, but there's no guarantee that it will even happen.
+		// Since we *know* we'll need to do this patch eventually, just do it here.
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS
 				&& romEntry.hasTweakFile("NewCatchingTutorialSubroutineTweak")) {
-			int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-			arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen4Constants.arm9Offset);
 			genericIPSPatch(arm9, "NewCatchingTutorialSubroutineTweak");
 		}
 	}
@@ -779,11 +783,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	protected void prepareSaveRom() {
 		super.prepareSaveRom();
 		try {
-			writeARM9(arm9);
-		} catch (IOException e) {
-			throw new RomIOException(e);
-		}
-		try {
 			writeNARC(romEntry.getFile("Text"), msgNarc);
 		} catch (IOException e) {
 			throw new RomIOException(e);
@@ -1001,8 +1000,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						writeWord(file, baseOffset + 8, newStarters.get(0).getNumber());
 						int jumpAmount = readLong(file, baseOffset + 13);
 						int secondBase = jumpAmount + baseOffset + 17;
-						// TODO find out what this constant 0x11 is and remove
-						// it
+						// TODO: find out what this constant 0x11 is and remove it.
 						if (file[secondBase] != 0x11 || (file[secondBase + 4] & 0xFF) != SpeciesIDs.cyndaquil) {
 							// This isn't what we were expecting...
 						} else {
@@ -3627,19 +3625,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (romEntry.getRomType() == Gen4Constants.Type_DP) {
 			int offset = romEntry.getIntValue("RoamingPokemonFunctionStartOffset");
 			if (readWord(arm9, offset + 44) != 0) {
-				// In the original code, the code at this offset would be performing a shift to
-				// put
-				// Cresselia's constant in r7. After applying the patch, this is now a nop,
-				// since
+				// In the original code, the code at this offset would be performing a shift to put
+				// Cresselia's constant in r7. After applying the patch, this is now a nop, since
 				// we just pc-relative load it instead. So if a nop isn't here, apply the patch.
 				applyDiamondPearlRoamerPatch();
 			}
 		} else if (romEntry.getRomType() == Gen4Constants.Type_Plat || romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 			int firstSpeciesOffset = romEntry.getRoamingPokemon().get(0).speciesCodeOffsets[0];
 			if (arm9.length < firstSpeciesOffset || readWord(arm9, firstSpeciesOffset) == 0) {
-				// Either the arm9 hasn't been extended, or the patch hasn't been written
-				int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-				arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen4Constants.arm9Offset);
+				// Confirms the patch hasn't been written yet.
 				genericIPSPatch(arm9, "NewRoamerSubroutineTweak");
 			}
 		}
@@ -4058,24 +4052,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-	private int find(byte[] data, String hexString) {
-		if (hexString.length() % 2 != 0) {
-			return -3; // error
-		}
-		byte[] searchFor = new byte[hexString.length() / 2];
-		for (int i = 0; i < searchFor.length; i++) {
-			searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-		}
-		List<Integer> found = RomFunctions.search(data, searchFor);
-		if (found.isEmpty()) {
-			return -1; // not found
-		} else if (found.size() > 1) {
-			return -2; // not unique
-		} else {
-			return found.get(0);
-		}
-	}
-
 	private boolean lastStringsCompressed = false;
 
 	private List<String> getStrings(int index) {
@@ -4412,74 +4388,206 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public Map<Integer, Shop> getShopItems() {
-		List<String> shopNames = Gen4Constants.getShopNames(romEntry.getRomType());
-		List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
-		List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
-		int shopCount = romEntry.getIntValue("ShopCount");
-		Map<Integer, Shop> shopItemsMap = new TreeMap<>();
-		String shopDataPrefix = romEntry.getStringValue("ShopDataPrefix");
-		int offset = find(arm9, shopDataPrefix);
-		offset += shopDataPrefix.length() / 2;
-
-		for (int i = 0; i < shopCount; i++) {
-			if (!skipShops.contains(i)) {
-				List<Item> shopItems = new ArrayList<>();
-				int val = (FileFunctions.read2ByteInt(arm9, offset));
-				while ((val & 0xFFFF) != 0xFFFF) {
-					if (val != 0) {
-						shopItems.add(items.get(val));
-					}
-					offset += 2;
-					val = (FileFunctions.read2ByteInt(arm9, offset));
-				}
-				offset += 2;
-				Shop shop = new Shop();
-				shop.setItems(shopItems);
-				shop.setName(shopNames.get(i));
-				shop.setMainGame(mainGameShops.contains(i));
-				shopItemsMap.put(i, shop);
-			} else {
-				while ((FileFunctions.read2ByteInt(arm9, offset) & 0xFFFF) != 0xFFFF) {
-					offset += 2;
-				}
-				offset += 2;
-			}
-		}
-		return shopItemsMap;
+	public boolean canChangeShopSizes() {
+		return true;
 	}
 
 	@Override
-	public void setShopItems(Map<Integer, Shop> shopItems) {
-		int shopCount = romEntry.getIntValue("ShopCount");
-		String shopDataPrefix = romEntry.getStringValue("ShopDataPrefix");
-		int offset = find(arm9, shopDataPrefix);
-		offset += shopDataPrefix.length() / 2;
+	public List<Shop> getShops() {
+		List<Shop> shops = new ArrayList<>();
 
-		for (int i = 0; i < shopCount; i++) {
-			Shop thisShop = shopItems.get(i);
-			if (thisShop == null || thisShop.getItems() == null) {
-				while ((FileFunctions.read2ByteInt(arm9, offset) & 0xFFFF) != 0xFFFF) {
-					offset += 2;
-				}
-				offset += 2;
-				continue;
+		readProgressiveShop(shops);
+		readSpecialShops(shops);
+
+		return shops;
+	}
+
+	private void readProgressiveShop(List<Shop> shops) {
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
+		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
+
+		List<Item> shopItems = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			int itemID = readWord(arm9,offset + i * 4);
+			if (itemID == 0 || itemID >= items.size()) {
+				throw new RomIOException("Invalid item in shop.");
 			}
-			Iterator<Item> iterItems = thisShop.getItems().iterator();
-			int val = (FileFunctions.read2ByteInt(arm9, offset));
-			while ((val & 0xFFFF) != 0xFFFF) {
-				if (val != 0) {
-					FileFunctions.write2ByteInt(arm9, offset, iterItems.next().getId());
+			shopItems.add(items.get(itemID));
+		}
+
+		Shop shop = new Shop();
+		shop.setItems(shopItems);
+		shop.setName("Progressive");
+		shop.setMainGame(true);
+		shop.setSpecialShop(false);
+
+		shops.add(shop);
+	}
+
+	private void readSpecialShops(List<Shop> shops) {
+		List<String> shopNames = Gen4Constants.getSpecialShopNames(romEntry.getRomType());
+		List<Integer> mainGameShops = Gen4Constants.getMainGameShops(romEntry.getRomType());
+
+		int tablePointerOffset = romEntry.getIntValue("SpecialShopsPointerOffset");
+		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
+		int specialShopCount = romEntry.getIntValue("SpecialShopCount");
+
+		for (int i = 0; i < specialShopCount; i++) {
+			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
+
+			List<Item> shopItems = new ArrayList<>();
+			int itemID = readWord(arm9, offset);
+			while (itemID != 0xFFFF) {
+				if (itemID == 0 || itemID >= items.size()) {
+					throw new RomIOException("Invalid item in shop.");
 				}
+				shopItems.add(items.get(itemID));
 				offset += 2;
-				val = (FileFunctions.read2ByteInt(arm9, offset));
+				itemID = readWord(arm9, offset);
 			}
+
+			Shop shop = new Shop();
+			shop.setItems(shopItems);
+			shop.setName(shopNames.get(i));
+			shop.setMainGame(mainGameShops.contains(i));
+			shop.setSpecialShop(true);
+			shops.add(shop);
+		}
+	}
+
+	@Override
+	public void setShops(List<Shop> shops) {
+		writeProgressiveShop(shops);
+		writeSpecialShops(shops);
+	}
+
+	/**
+	 * Writes items to the "progressive shops", i.e., the main shops that
+	 * progress/gain more items as the players gets more badges.
+	 * Items that were originally part of the progressive shops will
+	 * keep this attribute of being gated behind a certain number of badges.
+	 * Other items will be available at any time.
+	 *
+	 * @param shops A {@link List} of {@link Shop}s. The items written will
+	 *              be taken from the first/0:th shop in this List.
+	 */
+	private void writeProgressiveShop(List<Shop> shops) {
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
+		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
+
+		Map<Integer, Integer> progressiveShopValues = readProgressiveShopValues();
+		List<Item> shopItems = shops.get(0).getItems();
+		if (shopItems.size() != size) {
+			offset = repointProgressiveShop(offset, size, shopItems.size(), pointerOffset, sizeOffset);
+		}
+		for (Item item : shopItems) {
+			int itemID = item.getId();
+			if (itemID == 0 || itemID >= items.size()) {
+				throw new RomIOException("Invalid item to write.");
+			}
+			writeWord(arm9, offset, itemID);
+			offset += 2;
+			writeWord(arm9, offset, progressiveShopValues.getOrDefault(itemID, 1));
 			offset += 2;
 		}
 	}
 
+	private Map<Integer, Integer> readProgressiveShopValues() {
+		int pointerOffset = romEntry.getIntValue("ProgressiveShopPointerOffset");
+		int offset = readARM9Pointer(arm9, pointerOffset);
+		int sizeOffset = romEntry.getIntValue("ProgressiveShopSizeOffset");
+		int size = arm9[sizeOffset] & 0xFF;
+
+		Map<Integer, Integer> values = new HashMap<>(size);
+		for (int i = 0; i < size; i++) {
+			int itemID = readWord(arm9, offset + i * 4);
+			int value = readWord(arm9, offset + i * 4 + 2);
+			values.put(itemID, value);
+		}
+		return values;
+	}
+
+	private int repointProgressiveShop(int offset, int oldSize, int newSize, int pointerOffset, int sizeOffset) {
+		arm9FreedSpace.free(offset, oldSize * 4);
+		offset = arm9FreedSpace.findAndUnfree(newSize * 4);
+		writeARM9Pointer(arm9, pointerOffset, offset);
+		arm9[sizeOffset] = (byte) newSize;
+		return offset;
+	}
+
+	private void writeSpecialShops(List<Shop> shops) {
+		int tablePointerOffset = romEntry.getIntValue("SpecialShopsPointerOffset");
+		int tableOffset = readARM9Pointer(arm9, tablePointerOffset);
+		int specialShopCount = romEntry.getIntValue("SpecialShopCount");
+
+		// Free all old at once
+		for (int i = 0; i < specialShopCount; i++) {
+			int offset = readARM9Pointer(arm9, tableOffset + 4 * i);
+			int size = 0;
+			while (readWord(arm9, offset + size * 2) != 0xFFFF) {
+				size++;
+			}
+			arm9FreedSpace.free(offset, (size + 1) * 2);
+		}
+
+		for (int i = 0; i < specialShopCount; i++) {
+			List<Item> shopItems = shops.get(i + 1).getItems();
+			int offset = arm9FreedSpace.findAndUnfree((shopItems.size() + 1) * 2);
+			writeARM9Pointer(arm9, tableOffset + 4 * i, offset);
+
+			for (Item item : shopItems) {
+				int itemID = item.getId();
+				if (itemID == 0 || itemID >= items.size()) {
+					throw new RomIOException("Invalid item to write.");
+				}
+				writeWord(arm9, offset, itemID);
+				offset += 2;
+			}
+			writeWord(arm9, offset, 0xFFFF);
+		}
+	}
+
+	@Override
+	public List<Integer> getShopPrices() {
+		List<Integer> prices = new ArrayList<>();
+		prices.add(0);
+		try {
+			// In Diamond and Pearl, item IDs 112 through 134 are unused. In Platinum and
+			// HGSS, item ID 112 is used for
+			// the Griseous Orb. So we need to skip through the unused IDs at different
+			// points depending on the game.
+			int startOfUnusedIDs = romEntry.getRomType() == Gen4Constants.Type_DP ? 112 : 113;
+			NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
+			for (int i = 1; i < itemPriceNarc.files.size(); i++) {
+				if (i == startOfUnusedIDs) {
+					for (int j = startOfUnusedIDs; j < ItemIDs.adamantOrb; j++) {
+						prices.add(0);
+					}
+				}
+				prices.add(readWord(itemPriceNarc.files.get(i), 0));
+			}
+			writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+		return prices;
+	}
+
 	@Override
 	public void setBalancedShopPrices() {
+		List<Integer> prices = getShopPrices();
+		for (Map.Entry<Integer, Integer> entry : Gen4Constants.balancedItemPrices.entrySet()) {
+			prices.set(entry.getKey(), entry.getValue());
+		}
+		setShopPrices(prices);
+	}
+
+	@Override
+	public void setShopPrices(List<Integer> prices) {
 		try {
 			// In Diamond and Pearl, item IDs 112 through 134 are unused. In Platinum and
 			// HGSS, item ID 112 is used for
@@ -4489,7 +4597,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
 			int itemID = 1;
 			for (int i = 1; i < itemPriceNarc.files.size(); i++) {
-				writeWord(itemPriceNarc.files.get(i), 0, Gen4Constants.balancedItemPrices.get(itemID) * 10);
+				writeWord(itemPriceNarc.files.get(i), 0, prices.get(itemID));
 				itemID++;
 				if (itemID == startOfUnusedIDs) {
 					itemID = 135;
@@ -5525,8 +5633,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 			}
 		} else {
-			int extendBy = romEntry.getIntValue("Arm9ExtensionSize");
-			arm9 = extendARM9(arm9, extendBy, romEntry.getStringValue("TCMCopyingPrefix"), Gen4Constants.arm9Offset);
 			genericIPSPatch(arm9, "NewIndexToMusicTweak");
 			newIndexToMusicPrefix = romEntry.getStringValue("NewIndexToMusicPrefix");
 			newIndexToMusicPoolOffset = find(arm9, newIndexToMusicPrefix);

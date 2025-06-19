@@ -1761,13 +1761,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private static int find(byte[] haystack, String hexString) {
-        if (hexString.length() % 2 != 0) {
-            return -3; // error
-        }
-        byte[] searchFor = new byte[hexString.length() / 2];
-        for (int i = 0; i < searchFor.length; i++) {
-            searchFor[i] = (byte) Integer.parseInt(hexString.substring(i * 2, i * 2 + 2), 16);
-        }
+        byte[] searchFor = RomFunctions.hexToBytes(hexString);
         List<Integer> found = RomFunctions.search(haystack, searchFor);
         if (found.isEmpty()) {
             return -1; // not found
@@ -1849,96 +1843,188 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public boolean hasShopSupport() {
-        // Gen 1 *does* have shop support, but since the only editable shops as-is are the special ones:
-        // three shops in the Celadon Department Store, and Gen 1 also doesn't have much in the way
-        // of interesting items beyond what those shops hold in Vanilla...
-        // Yeah, there's no reason to have the feature turned on.
-        return false;
+        return true;
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        List<Shop> shops = readShops();
-        System.out.println(shops);
+    public boolean canChangeShopSizes() {
+        // Yellow (J) does have all the offsets needed to repoint the shops,
+        // but finding free space to repoint bigger shop data is... tricky.
+        // Like all Japanese games, the ends of banks are filled with garbage
+        // data instead of 0xFF, but unlike other Japanese games there isn't
+        // a disassembly of Yellow (J) to tell us exactly where said garbage
+        // data starts.
+        // Feel free to give it a try if you want a Game Boy hacking challenge!
+        // -- voliol 2025-05-10
+        return !(isYellow() && !romEntry.isNonJapanese());
+    }
 
-        Map<Integer, Shop> shopMap = new TreeMap<>(); // important this is a TreeMap
-        for (int i = 0; i < shops.size(); i++) {
-            if (!Gen1Constants.skipShops.contains(i)) {
-                shopMap.put(i, shops.get(i));
-            }
-        }
-        System.out.println(shopMap);
-        return shopMap;
+    @Override
+    public List<Shop> getShops() {
+        List<Shop> shops = readShops();
+
+        Gen1Constants.specialShops.forEach(i -> shops.get(i).setSpecialShop(true));
+
+        return shops;
     }
 
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
+        int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
 
-        int offset = romEntry.getIntValue("ShopItemOffset");
-        int shopAmount = romEntry.getIntValue("ShopAmount");
-        int shopNum = 0;
-
-        while (shopNum < shopAmount) {
-            if (rom[offset++] != Gen1Constants.shopItemsScript) {
-                throw new RomIOException("Invalid start of shop data. Should be 0x"
-                        + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
-                        + Integer.toHexString(rom[--offset] & 0xFF) + ".");
-            }
-            int itemCount = rom[offset++] & 0xFF;
-            List<Item> shopItems = new ArrayList<>();
-            for (int i = 0; i < itemCount; i++) {
-                shopItems.add(items.get(rom[offset++] & 0xFF));
-            }
-            if (rom[offset++] != Gen1Constants.shopItemsTerminator) {
-                throw new RomIOException("Shop size mismatch/terminator missing.");
-            }
+        for (int i = 0; i < pointerOffsets.length; i++) {
+            int offset = readPointer(pointerOffsets[i]);
+            List<Item> shopItems = readShopItems(offset);
 
             Shop shop = new Shop();
             shop.setItems(shopItems);
-            shop.setName(Gen1Constants.shopNames.get(shopNum));
+            shop.setName(Gen1Constants.shopNames.get(i));
             shop.setMainGame(true);
+
             shops.add(shop);
-            shopNum++;
         }
         return shops;
     }
 
-    @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
-        for (Map.Entry<Integer, Shop> entry : shopItems.entrySet()) {
-            writeShop(entry.getKey(), entry.getValue());
-        }
-    }
-
-    private void writeShop(int shopNum, Shop shop) {
-        System.out.println("writing " + shop);
-        if (shopNum >= romEntry.getIntValue("ShopAmount")) {
-            throw new IndexOutOfBoundsException("shopNum too high");
-        }
-        int offset = romEntry.getIntValue("ShopItemOffset");
-        int currShopNum = 0;
-
-        while (currShopNum < shopNum) {
-            while (rom[offset++] != Gen1Constants.shopItemsTerminator); // intentional empty body while
-            currShopNum++;
+    private List<Item> readShopItems(int offset) {
+        if (rom[offset++] != Gen1Constants.shopItemsScript) {
+            throw new RomIOException("Invalid start of shop data. Should be 0x"
+                    + Integer.toHexString(Gen1Constants.shopItemsScript & 0xFF) + ", was 0x"
+                    + Integer.toHexString(rom[--offset] & 0xFF) + ".");
         }
 
-        offset++; // skip the initial script byte
-        if ((rom[offset++] & 0xFF) != shop.getItems().size()) {
-            throw new IllegalArgumentException("Wrong amount of items in shop.");
-        }
-        for (Item item : shop.getItems()) {
-            rom[offset++] = (byte) item.getId();
+        int itemCount = rom[offset++] & 0xFF;
+        List<Item> shopItems = new ArrayList<>();
+        for (int i = 0; i < itemCount; i++) {
+            shopItems.add(items.get(rom[offset++] & 0xFF));
         }
 
         if (rom[offset] != Gen1Constants.shopItemsTerminator) {
-            throw new RomIOException("Shop terminator not found.");
+            throw new RomIOException("Shop size mismatch/terminator missing.");
         }
+        return shopItems;
+    }
+
+    @Override
+    public void setShops(List<Shop> shops) {
+        int[] pointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
+        if (shops.size() != pointerOffsets.length) {
+            throw new IllegalArgumentException("shops.size() must be: " + pointerOffsets.length
+                    + ", is: " + shops.size());
+        }
+
+        DataRewriter<Shop> rewriter = new SameBankDataRewriter<>();
+        for (int i = 0; i < shops.size(); i++) {
+            rewriter.rewriteData(pointerOffsets[i], shops.get(i), this::shopToBytes,
+                    offset -> lengthOfDataWithTerminatorAt(offset, Gen1Constants.shopItemsTerminator));
+        }
+    }
+
+    private byte[] shopToBytes(Shop shop) {
+        List<Item> shopItems = shop.getItems();
+        byte[] data = new byte[2 + shop.getItems().size() + 1];
+        data[0] = Gen1Constants.shopItemsScript;
+        data[1] = (byte) shopItems.size();
+        for (int i = 0; i < shopItems.size(); i++) {
+            data[2 + i] = (byte) shopItems.get(i).getId();
+        }
+        data[data.length - 1] = Gen1Constants.shopItemsTerminator;
+        return data;
+    }
+
+    @Override
+    public List<Integer> getShopPrices() {
+        int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
+        int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
+
+        List<Integer> prices = new ArrayList<>();
+        prices.add(0);
+        // normal items
+        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+            int price = read3ByteDecimalHex(offset);
+            prices.add(price);
+        }
+        // unused items and HMs
+        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
+            prices.add(0);
+        }
+        // TMs
+        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+            int price = readNybble(offset, i % 2 == 1) * 1000;
+            prices.add(price);
+        }
+        // unused TMs
+        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
+            prices.add(0);
+        }
+
+        return prices;
     }
 
     @Override
     public void setBalancedShopPrices() {
-        // Not implemented
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : Gen2Constants.balancedItemPrices.entrySet()) {
+            prices.set(entry.getKey(), entry.getValue());
+        }
+        setShopPrices(prices);
+    }
+
+    /**
+     * Sets shop prices in a Gen 1 game.<br>
+     * TMs are stored as multiples of 1000, and will thus be rounded down,
+     * or set to 1000 for inputs >1000.
+     */
+    @Override
+    public void setShopPrices(List<Integer> prices) {
+        int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
+        int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
+
+        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+            write3ByteDecimalHex(offset, prices.get(i));
+        }
+        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+            int price = prices.get(i) / 1000;
+            if (price == 0) {
+                price = 1;
+            }
+            writeNybble(offset, i % 2 == 1, price);
+        }
+    }
+
+    /**
+     * Reads a "decimal hex" value which is 3 bytes long, starting at <code>offset</code> in ROM.<br>
+     * "Decimal hex" is when each nybble stores a decimal digit,
+     * so the hex strings look like the decimal number they represent.
+     * I.e. "0x198000" would represent 198000 in decimal.
+     */
+    private int read3ByteDecimalHex(int offset) {
+        int value = readNybble(offset, true) * 100000;
+        value += readNybble(offset, false) * 10000;
+        value += readNybble(offset + 1, true) * 1000;
+        value += readNybble(offset + 1, false) * 100;
+        value += readNybble(offset + 2, true) * 10;
+        value += readNybble(offset + 2, false);
+        return value;
+    }
+
+    /**
+     * Writes a "decimal hex" value which is 3 bytes long, starting at <code>offset</code> in ROM.<br>
+     * "Decimal hex" is when each nybble stores a decimal digit,
+     * so the hex strings look like the decimal number they represent.
+     * I.e. "0x198000" would represent 198000 in decimal.
+     */
+    private void write3ByteDecimalHex(int offset, int value) {
+        writeNybble(offset, true, (value % 1000000) / 100000);
+        writeNybble(offset, false, (value % 100000) / 10000);
+        writeNybble(offset + 1, true, (value % 10000) / 1000);
+        writeNybble(offset + 1, false, (value % 1000) / 100);
+        writeNybble(offset + 2, true, (value % 100) / 10);
+        writeNybble(offset + 2, false, value % 10);
     }
 
     /**
@@ -2995,6 +3081,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Gen1Decmp decmp = new Gen1Decmp(rom, offset);
         decmp.decompress();
         return decmp.getCompressedLength();
+    }
+
+    @Override
+    protected byte getFarTextStart() {
+        return Gen1Constants.farTextStart;
     }
 
     @Override

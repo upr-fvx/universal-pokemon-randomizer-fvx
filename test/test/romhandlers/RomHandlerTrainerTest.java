@@ -1,13 +1,18 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkrandom.romhandlers.AbstractGBRomHandler;
+import com.dabomstew.pkromio.gamedata.BattleStyle;
+import com.dabomstew.pkromio.gamedata.Trainer;
+import com.dabomstew.pkromio.gamedata.TrainerPokemon;
+import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -76,7 +81,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     public void trainersSaveAndLoadCorrectlyAfterSettingDoubleBattleMode(String romName) {
         assumeTrue(getGenerationNumberOf(romName) == 3);
         loadROM(romName);
-        new TrainerPokemonRandomizer(romHandler, new Settings(), RND).setDoubleBattleMode();
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
         List<Trainer> trainers = gbRomHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
@@ -316,7 +323,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             } else {
                 for (TrainerPokemon tp : tr.pokemon) {
                     System.out.println(tp);
-                    assertNotEquals(0, tp.heldItem);
+                    assertNotEquals(null, tp.getHeldItem());
                 }
             }
         }

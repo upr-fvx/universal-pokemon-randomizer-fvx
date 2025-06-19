@@ -1,24 +1,26 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.constants.MoveIDs;
-import com.dabomstew.pkrandom.gamedata.Move;
-import com.dabomstew.pkrandom.gamedata.MoveCategory;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.MoveIDs;
+import com.dabomstew.pkromio.gamedata.Move;
+import com.dabomstew.pkromio.gamedata.MoveCategory;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public class MoveUpdater extends Updater {
+public class MoveUpdater extends Updater<Move, MoveUpdateType, Object> {
 
-    private final Map<Integer, boolean[]> moveUpdates = new HashMap<>();
+    private final Map<Move, Map<MoveUpdateType, Update<Object>>> moveUpdates = new TreeMap<>();
 
     // starts with two null-consumers so the indexing can be nicer
     private final List<Consumer<List<Move>>> updates = Arrays.asList(
-            l -> {}, l -> {},
+            l -> {
+            }, l -> {
+            },
             this::gen2Updates, this::gen3Updates, this::gen4Updates, this::gen5Updates,
             this::gen6Updates, this::gen7Updates, this::gen8Updates, this::gen9Updates
     );
@@ -27,10 +29,7 @@ public class MoveUpdater extends Updater {
         super(romHandler);
     }
 
-    /**
-     * Returns the needed info to log Move updates.
-     */
-    public Map<Integer, boolean[]> getMoveUpdates() {
+    public Map<Move, Map<MoveUpdateType, Update<Object>>> getUpdates() {
         return moveUpdates;
     }
 
@@ -45,7 +44,6 @@ public class MoveUpdater extends Updater {
                 updates.get(i).accept(moves);
             }
         }
-        updated = true;
     }
 
     private void gen2Updates(List<Move> moves) {
@@ -301,6 +299,8 @@ public class MoveUpdater extends Updater {
         }
 
         if (romHandler.generationOfPokemon() >= 3) {
+            updateMovePower(moves, MoveIDs.lusterPurge, 95);
+            updateMovePower(moves, MoveIDs.mistBall, 95);
             updateMovePP(moves, MoveIDs.slackOff, 5);
         }
 
@@ -313,7 +313,7 @@ public class MoveUpdater extends Updater {
         }
 
         if (romHandler.generationOfPokemon() >= 8) {
-            updateMovePower(moves, MoveIDs.grassyGlide, 60);
+            updateMovePower(moves, MoveIDs.grassyGlide, 55);
             updateMovePower(moves, MoveIDs.wickedBlow, 75);
             updateMovePower(moves, MoveIDs.glacialLance, 120);
         }
@@ -322,51 +322,53 @@ public class MoveUpdater extends Updater {
     private void updateMovePower(List<Move> moves, int moveNum, int power) {
         Move mv = moves.get(moveNum);
         if (mv.power != power) {
+            int before = mv.power;
             mv.power = power;
-            addMoveUpdate(moveNum, 0);
+            addUpdate(mv, before, power, MoveUpdateType.POWER);
         }
     }
 
     private void updateMovePP(List<Move> moves, int moveNum, int pp) {
         Move mv = moves.get(moveNum);
         if (mv.pp != pp) {
+            int before = mv.pp;
             mv.pp = pp;
-            addMoveUpdate(moveNum, 1);
+            addUpdate(mv, before, pp, MoveUpdateType.PP);
         }
     }
 
-    private void updateMoveAccuracy(List<Move> moves, int moveNum, int accuracy) {
+    private void updateMoveAccuracy(List<Move> moves, int moveNum, double accuracy) {
         Move mv = moves.get(moveNum);
         if (Math.abs(mv.hitratio - accuracy) >= 1) {
+            double before = mv.hitratio;
             mv.hitratio = accuracy;
-            addMoveUpdate(moveNum, 2);
+            addUpdate(mv, before, accuracy, MoveUpdateType.ACCURACY);
         }
     }
 
     private void updateMoveType(List<Move> moves, int moveNum, Type type) {
         Move mv = moves.get(moveNum);
         if (mv.type != type) {
+            Type before = mv.type;
             mv.type = type;
-            addMoveUpdate(moveNum, 3);
+            addUpdate(mv, before, type, MoveUpdateType.TYPE);
         }
     }
 
     private void updateMoveCategory(List<Move> moves, int moveNum, MoveCategory category) {
         Move mv = moves.get(moveNum);
         if (mv.category != category) {
+            MoveCategory before = mv.category;
             mv.category = category;
-            addMoveUpdate(moveNum, 4);
+            addUpdate(mv, before, category, MoveUpdateType.CATEGORY);
         }
     }
 
-    private void addMoveUpdate(int moveNum, int updateType) {
-        if (!moveUpdates.containsKey(moveNum)) {
-            boolean[] updateField = new boolean[5];
-            updateField[updateType] = true;
-            moveUpdates.put(moveNum, updateField);
-        } else {
-            moveUpdates.get(moveNum)[updateType] = true;
+    private void addUpdate(Move move, Object before, Object after, MoveUpdateType type) {
+        if (!moveUpdates.containsKey(move)) {
+            moveUpdates.put(move, new TreeMap<>());
         }
+        moveUpdates.get(move).put(type, new Update<>(before, after));
     }
 
 }

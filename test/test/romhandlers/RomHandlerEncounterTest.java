@@ -1,9 +1,9 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.constants.*;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.*;
-import org.junit.jupiter.api.Assumptions;
+import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.gamedata.EncounterArea;
+import com.dabomstew.pkromio.romhandlers.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -16,10 +16,10 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEncounterTest extends RomHandlerTest {
+
+    private static final String EARLIER_OUTPUTS_PATH = "test/resources/encounters/";
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -51,16 +51,46 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         assertEquals(before, romHandler.getEncounters(true));
     }
 
+    /**
+     * This test checks whether you've accidentally broken the reading of encounters
+     * by comparing the current output with logged output in text files. <br>
+     * If you <b>intentionally</b> change something
+     * about how the encounters are read, like the EncounterArea names, you can expect this test to fail.
+     * In that case, check it only differs in the way you want, and then update the text files
+     * (using {@link #overwriteEarlierRandomizerCodeOutput(String)}).
+     */
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void encountersAreIdenticalToEarlierRandomizerCodeOutput(String romName) throws IOException {
-        // This test checks whether you've accidentally broken the reading of encounters
-        // by comparing the current output with logged output in text files. If you *intentionally* change something
-        // about how the encounters are read, like the EncounterArea names, you can expect this test to fail.
-        // In that case, check it only differs in the way you want, and then update the text files.
         loadROM(romName);
 
         StringWriter sw = new StringWriter();
+        printAllEncounters(sw);
+
+        String orig = readFile(EARLIER_OUTPUTS_PATH + romHandler.getROMName() + ".txt");
+        assertEquals(orig.replaceAll("\r\n", "\n"),
+                sw.toString().replaceAll("\r\n", "\n"));
+    }
+
+    /**
+     * For when changes have <b>intentionally</b> been made to how the encounters are read, and detected by
+     * {@link #encountersAreIdenticalToEarlierRandomizerCodeOutput(String)}.<br>
+     * Overwrites the earlier output with the current one.
+     */
+    @Disabled
+    @ParameterizedTest()
+    @MethodSource("getRomNames")
+    public void overwriteEarlierRandomizerCodeOutput(String romName) throws IOException {
+        loadROM(romName);
+
+        StringWriter sw = new StringWriter();
+        printAllEncounters(sw);
+
+        String path = EARLIER_OUTPUTS_PATH + romHandler.getROMName() + ".txt";
+        writeFile(path, sw.toString().replaceAll("\r\n", "\n"));
+    }
+
+    private void printAllEncounters(StringWriter sw) {
         PrintWriter pw = new PrintWriter(sw);
 
         List<EncounterArea> noTimeOfDay = romHandler.getEncounters(false);
@@ -72,24 +102,13 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         pw.println("useTimeOfDay=true");
         pw.println(encounterAreasToMultilineString(useTimeOfDay));
         pw.close();
-
-        String orig = readFile("test/resources/encounters/" + romHandler.getROMName() + ".txt");
-        assertEquals(orig.replaceAll("\r\n", "\n"),
-                sw.toString().replaceAll("\r\n", "\n"));
-    }
-
-    static String readFile(String path)
-            throws IOException
-    {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, StandardCharsets.UTF_8);
     }
 
     private String encounterAreasToMultilineString(List<EncounterArea> encounterAreas) {
         StringBuilder sb = new StringBuilder();
         sb.append("[EncounterAreas:");
         for (EncounterArea area : encounterAreas) {
-            sb.append(String.format("\n\t[Name = %s, Rate = %d, Offset = %d,",
+            sb.append(String.format("\n\t[Name = %s, Rate = %d, MapIndex = %d,",
                     area.getDisplayName(), area.getRate(), area.getMapIndex()));
             sb.append(String.format("\n\t\tEncounters = %s", new ArrayList<>(area)));
             if (!area.getBannedSpecies().isEmpty()) {
@@ -99,6 +118,15 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
         sb.append("\n]");
         return sb.toString();
+    }
+
+    private static String readFile(String path) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, StandardCharsets.UTF_8);
+    }
+
+    private static void writeFile(String path, String toWrite) throws IOException {
+        Files.write(Paths.get(path), toWrite.getBytes(StandardCharsets.UTF_8));
     }
 
     @ParameterizedTest
@@ -124,7 +152,6 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void allLocationTagsAreFoundInTraverseOrder(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) <= 6);
         loadROM(romName);
         Set<String> inOrder = new HashSet<>(getLocationTagsTraverseOrder());
         Set<String> used = new HashSet<>();
@@ -148,17 +175,15 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         } else if (romHandler instanceof Gen2RomHandler) {
             return Gen2Constants.locationTagsTraverseOrder;
         } else if (romHandler instanceof Gen3RomHandler) {
-            return (((Gen3RomHandler) romHandler).getRomEntry().getRomType() == Gen3Constants.RomType_FRLG ?
-                    Gen3Constants.locationTagsTraverseOrderFRLG : Gen3Constants.locationTagsTraverseOrderRSE);
+            return Gen3Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen4RomHandler) {
-            return (((Gen4RomHandler) romHandler).getRomEntry().getRomType() == Gen4Constants.Type_HGSS ?
-                    Gen4Constants.locationTagsTraverseOrderHGSS : Gen4Constants.locationTagsTraverseOrderDPPt);
+            return Gen4Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen5RomHandler) {
-            return (((Gen5RomHandler) romHandler).getRomEntry().getRomType() == Gen5Constants.Type_BW2 ?
-                    Gen5Constants.locationTagsTraverseOrderBW2 : Gen5Constants.locationTagsTraverseOrderBW);
+            return Gen5Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         } else if (romHandler instanceof Gen6RomHandler) {
-            return (((Gen6RomHandler) romHandler).getRomEntry().getRomType() == Gen6Constants.Type_ORAS ?
-                    Gen6Constants.locationTagsTraverseOrderORAS : Gen6Constants.locationTagsTraverseOrderXY);
+            return Gen6Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
+        } else if (romHandler instanceof  Gen7RomHandler) {
+            return Gen7Constants.getLocationTagsTraverseOrder(romHandler.getROMType());
         }
         return Collections.emptyList();
     }
@@ -273,7 +298,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         } else {
             assertEquals(areasByMapIndex.size(), 1,
                     "Map indices are present, but hasMapIndices is false!");
-            Assumptions.abort("Does not have map indices.");
+            //Assumptions.abort("Does not have map indices.");
         }
     }
 

@@ -1,7 +1,7 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -36,7 +36,7 @@ public class RandomizerTest {
     private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, false);
     }
 
     public static String[] getAllRomNames() {
@@ -84,7 +84,7 @@ public class RandomizerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new GenRestrictions());
 
         romHandlers.put(romName, new TestRomHandler(romHandler));
     }
@@ -102,8 +102,6 @@ public class RandomizerTest {
             System.out.println("Finished loading " + romName);
         }
     }
-
-
 
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));

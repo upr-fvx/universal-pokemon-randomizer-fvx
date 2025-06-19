@@ -1,10 +1,12 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.ItemList;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -22,100 +24,83 @@ public class EncounterHeldItemRandomizer extends Randomizer {
     public void randomizeWildHeldItems() {
         boolean banBadItems = settings.isBanBadRandomWildPokemonHeldItems();
 
-        ItemList possibleItems = banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems();
+        List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
-            if (pk.getGuaranteedHeldItem() == -1 && pk.getCommonHeldItem() == -1 && pk.getRareHeldItem() == -1
-                    && pk.getDarkGrassHeldItem() == -1) {
+            if (pk.getGuaranteedHeldItem() == null && pk.getCommonHeldItem() == null && pk.getRareHeldItem() == null
+                    && pk.getDarkGrassHeldItem() == null) {
                 // No held items at all, abort
                 return;
             }
-            boolean canHaveDarkGrass = pk.getDarkGrassHeldItem() != -1;
-            if (pk.getGuaranteedHeldItem() != -1) {
-                // Guaranteed held items are supported.
-                if (pk.getGuaranteedHeldItem() > 0) {
-                    // Currently have a guaranteed item
-                    double decision = this.random.nextDouble();
-                    if (decision < 0.9) {
-                        // Stay as guaranteed
-                        canHaveDarkGrass = false;
-                        pk.setGuaranteedHeldItem(possibleItems.randomItem(this.random));
-                    } else {
-                        // Change to 25% or 55% chance
-                        pk.setGuaranteedHeldItem(0);
-                        pk.setCommonHeldItem(possibleItems.randomItem(this.random));
-                        pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                        while (pk.getRareHeldItem() == pk.getCommonHeldItem()) {
-                            pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                        }
-                    }
+            
+            double decision = random.nextDouble();
+            if (pk.getGuaranteedHeldItem() != null) {
+                // Currently have a guaranteed item
+                if (decision < 0.9) {
+                    setRandomGuaranteedItem(pk, possible);
                 } else {
-                    // No guaranteed item atm
-                    double decision = this.random.nextDouble();
-                    if (decision < 0.5) {
-                        // No held item at all
-                        pk.setCommonHeldItem(0);
-                        pk.setRareHeldItem(0);
-                    } else if (decision < 0.65) {
-                        // Just a rare item
-                        pk.setCommonHeldItem(0);
-                        pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                    } else if (decision < 0.8) {
-                        // Just a common item
-                        pk.setCommonHeldItem(possibleItems.randomItem(this.random));
-                        pk.setRareHeldItem(0);
-                    } else if (decision < 0.95) {
-                        // Both a common and rare item
-                        pk.setCommonHeldItem(possibleItems.randomItem(this.random));
-                        pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                        while (pk.getRareHeldItem() == pk.getCommonHeldItem()) {
-                            pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                        }
-                    } else {
-                        // Guaranteed item
-                        canHaveDarkGrass = false;
-                        pk.setGuaranteedHeldItem(possibleItems.randomItem(this.random));
-                        pk.setCommonHeldItem(0);
-                        pk.setRareHeldItem(0);
-                    }
+                    setRandomCommonAndRareItems(pk, possible);
                 }
             } else {
-                // Code for no guaranteed items
-                double decision = this.random.nextDouble();
+                // No guaranteed item atm
                 if (decision < 0.5) {
-                    // No held item at all
-                    pk.setCommonHeldItem(0);
-                    pk.setRareHeldItem(0);
+                    setNoItem(pk);
                 } else if (decision < 0.65) {
-                    // Just a rare item
-                    pk.setCommonHeldItem(0);
-                    pk.setRareHeldItem(possibleItems.randomItem(this.random));
+                    setRandomOnlyRareItem(pk, possible);
                 } else if (decision < 0.8) {
-                    // Just a common item
-                    pk.setCommonHeldItem(possibleItems.randomItem(this.random));
-                    pk.setRareHeldItem(0);
+                    setRandomOnlyCommonItem(pk, possible);
+                } else if (decision < 0.95 || !romHandler.hasGuaranteedWildHeldItems()) {
+                    setRandomCommonAndRareItems(pk, possible);
                 } else {
-                    // Both a common and rare item
-                    pk.setCommonHeldItem(possibleItems.randomItem(this.random));
-                    pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                    while (pk.getRareHeldItem() == pk.getCommonHeldItem()) {
-                        pk.setRareHeldItem(possibleItems.randomItem(this.random));
-                    }
+                    setRandomGuaranteedItem(pk, possible);
                 }
             }
-
-            if (canHaveDarkGrass) {
-                double dgDecision = this.random.nextDouble();
+            
+            if (romHandler.hasDarkGrassHeldItems() && pk.getGuaranteedHeldItem() == null) {
+                double dgDecision = random.nextDouble();
                 if (dgDecision < 0.5) {
                     // Yes, dark grass item
-                    pk.setDarkGrassHeldItem(possibleItems.randomItem(this.random));
+                    pk.setDarkGrassHeldItem(possible.get(random.nextInt(possible.size())));
                 } else {
-                    pk.setDarkGrassHeldItem(0);
+                    pk.setDarkGrassHeldItem(null);
                 }
-            } else if (pk.getDarkGrassHeldItem() != -1) {
-                pk.setDarkGrassHeldItem(0);
-            }
+            } 
         }
 
         changesMade = true;
+    }
+
+    private void setNoItem(Species spec) {
+        spec.setGuaranteedHeldItem(null);
+        spec.setCommonHeldItem(null);
+        spec.setRareHeldItem(null);
+        spec.setDarkGrassHeldItem(null);
+    }
+
+    private void setRandomGuaranteedItem(Species pk, List<Item> possible) {
+        pk.setGuaranteedHeldItem(possible.get(random.nextInt(possible.size())));
+        pk.setCommonHeldItem(null);
+        pk.setRareHeldItem(null);
+        pk.setDarkGrassHeldItem(null);
+    }
+
+    private void setRandomOnlyCommonItem(Species pk, List<Item> possible) {
+        pk.setGuaranteedHeldItem(null);
+        pk.setCommonHeldItem(possible.get(random.nextInt(possible.size())));
+        pk.setRareHeldItem(null);
+    }
+
+    private void setRandomOnlyRareItem(Species pk, List<Item> possible) {
+        pk.setGuaranteedHeldItem(null);
+        pk.setCommonHeldItem(null);
+        pk.setRareHeldItem(possible.get(random.nextInt(possible.size())));
+    }
+
+    private void setRandomCommonAndRareItems(Species pk, List<Item> possible) {
+        pk.setGuaranteedHeldItem(null);
+        pk.setCommonHeldItem(possible.get(random.nextInt(possible.size())));
+        pk.setRareHeldItem(possible.get(random.nextInt(possible.size())));
+        while (pk.getRareHeldItem().equals(pk.getCommonHeldItem())) {
+            pk.setRareHeldItem(possible.get(random.nextInt(possible.size())));
+        }
     }
 }

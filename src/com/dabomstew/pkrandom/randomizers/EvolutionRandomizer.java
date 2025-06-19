@@ -1,13 +1,13 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.SpeciesIDs;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Evolution;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.gamedata.Evolution;
+import com.dabomstew.pkromio.gamedata.EvolutionType;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -40,7 +40,6 @@ public class EvolutionRandomizer extends Randomizer {
                                      boolean forceChange, boolean forceGrowth, boolean noConvergence,
                                      boolean banIrregularAltFormes, boolean abilitiesAreRandomized,
                                      boolean evolveEveryLevel) {
-        rSpecService.setRestrictions(settings);
 
         SpeciesSet pokemonPool = rSpecService.getSpecies(false,
                 romHandler.altFormesCanHaveDifferentEvolutions(), false);
@@ -110,7 +109,12 @@ public class EvolutionRandomizer extends Randomizer {
                 tries++;
             }
             if (tries == MAX_TRIES) {
-                throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
+                if (settings.isStandardizeEXPCurves()) {
+                    throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
+                } else {
+                    throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries." +
+                            " Try using the \"Standardize EXP Curves\" option.");
+                }
             }
         }
 
@@ -263,7 +267,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private int numPreEvolutions(Species pk, int depth, int maxInterested) {
-            if (pk.getEvolutionsTo().size() == 0) {
+            if (pk.getEvolutionsTo().isEmpty()) {
                 return 0;
             }
             if (depth == maxInterested - 1) {
@@ -281,7 +285,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private int numEvolutions(Species pk, int depth, int maxInterested) {
-            if (pk.getEvolutionsFrom().size() == 0) {
+            if (pk.getEvolutionsFrom().isEmpty()) {
                 // looks ahead to see if an evo MUST be given to this Pokemon in the future
                 return allOriginalEvos.get(pk).isEmpty() ? 0 : 1;
             }

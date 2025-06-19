@@ -2,8 +2,8 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 
@@ -54,22 +54,17 @@ public class WildEncounterRandomizer extends Randomizer {
                                     boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
                                     boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
                                     int levelModifier, boolean abilitiesAreRandomized) {
-        // - prep settings
-        // - get encounters
-        // - setup banned + allowed
-        // - randomize inner
-        // - apply level modifier
-        // - set encounters
 
-        rSpecService.setRestrictions(settings);
-
+        // get encounters
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
         List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
+        // setup banned + allowed
         SpeciesSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
         SpeciesSet allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
 
+        // randomize inner
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
                 basicPokemonOnly, sameEvoStage, keepEvolutions);
@@ -96,7 +91,9 @@ public class WildEncounterRandomizer extends Randomizer {
                 break;
         }
 
+        // apply level modifier
         applyLevelModifier(levelModifier, encounterAreas);
+        // set encounters
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }
 
@@ -992,11 +989,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 SpeciesSet speciesInArea = new SpeciesSet();
                 for (Species poke : area.getSpeciesInArea()) {
                     //Different formes of the same species do not contribute to load
-                    if(poke.isBaseForme()) {
-                        speciesInArea.add(poke);
-                    } else {
-                        speciesInArea.add(poke.getBaseForme());
-                    }
+                    speciesInArea.add(poke.getBaseForme());
                 }
 
                 load += speciesInArea.size();

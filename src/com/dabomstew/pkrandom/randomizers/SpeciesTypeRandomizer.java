@@ -1,12 +1,12 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.MegaEvolution;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
-import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.MegaEvolution;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
+import com.dabomstew.pkromio.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkromio.gamedata.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.List;
 import java.util.Random;
@@ -72,15 +72,15 @@ public class SpeciesTypeRandomizer extends Randomizer {
         if (megaEvolutionSanity) {
             List<MegaEvolution> allMegaEvos = romHandler.getMegaEvolutions();
             for (MegaEvolution megaEvo: allMegaEvos) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1) continue;
-                megaEvo.to.setPrimaryType(megaEvo.from.getPrimaryType(false));
-                megaEvo.to.setSecondaryType(megaEvo.from.getSecondaryType(false));
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1) continue;
+                megaEvo.getTo().setPrimaryType(megaEvo.getFrom().getPrimaryType(false));
+                megaEvo.getTo().setSecondaryType(megaEvo.getFrom().getSecondaryType(false));
 
-                if (megaEvo.to.getSecondaryType(false) == null) {
+                if (megaEvo.getTo().getSecondaryType(false) == null) {
                     if (random.nextDouble() < 0.25) {
-                        megaEvo.to.setSecondaryType(typeService.randomType(random));
-                        while (megaEvo.to.getSecondaryType(false) == megaEvo.to.getPrimaryType(false)) {
-                            megaEvo.to.setSecondaryType(typeService.randomType(random));
+                        megaEvo.getTo().setSecondaryType(typeService.randomType(random));
+                        while (megaEvo.getTo().getSecondaryType(false) == megaEvo.getTo().getPrimaryType(false)) {
+                            megaEvo.getTo().setSecondaryType(typeService.randomType(random));
                         }
                     }
                 }

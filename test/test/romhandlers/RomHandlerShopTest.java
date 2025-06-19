@@ -1,16 +1,14 @@
 package test.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.ItemList;
-import com.dabomstew.pkrandom.gamedata.Shop;
 import com.dabomstew.pkrandom.randomizers.ItemRandomizer;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Shop;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -22,7 +20,7 @@ public class RomHandlerShopTest extends RomHandlerTest {
     public void shopItemsAreNotEmpty(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
-        assertFalse(romHandler.getShopItems().isEmpty());
+        assertFalse(romHandler.getShops().isEmpty());
     }
 
     @ParameterizedTest
@@ -30,12 +28,16 @@ public class RomHandlerShopTest extends RomHandlerTest {
     public void shopItemsDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        System.out.println("Before: " + toStringWithNames(shopItems));
-        Map<Integer, Shop> before = new HashMap<>(shopItems);
-        romHandler.setShopItems(shopItems);
-        System.out.println("After: " + toStringWithNames(romHandler.getShopItems()));
-        assertEquals(before, romHandler.getShopItems());
+
+        List<Shop> before = new ArrayList<>();
+        for (Shop original : romHandler.getShops()) {
+            before.add(new Shop(original));
+        }
+        System.out.println("Before: " + toMultilineString(before));
+        romHandler.setShops(romHandler.getShops());
+
+        System.out.println("After: " + toMultilineString(romHandler.getShops()));
+        assertEquals(before, romHandler.getShops());
     }
 
     @ParameterizedTest
@@ -44,10 +46,16 @@ public class RomHandlerShopTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
         new ItemRandomizer(romHandler, new Settings(), RND).randomizeShopItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        Map<Integer, Shop> before = new HashMap<>(shopItems);
-        romHandler.setShopItems(shopItems);
-        assertEquals(before, romHandler.getShopItems());
+
+        List<Shop> before = new ArrayList<>();
+        for (Shop original : romHandler.getShops()) {
+            before.add(new Shop(original));
+        }
+        System.out.println("Before: " + toMultilineString(before));
+        romHandler.setShops(romHandler.getShops());
+
+        System.out.println("After: " + toMultilineString(romHandler.getShops()));
+        assertEquals(before, romHandler.getShops());
     }
 
     @ParameterizedTest
@@ -55,9 +63,8 @@ public class RomHandlerShopTest extends RomHandlerTest {
     public void shopsHaveNames(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            assertNotNull(shop.name);
+        for (Shop shop : romHandler.getShops()) {
+            assertNotNull(shop.getName());
         }
     }
 
@@ -67,14 +74,14 @@ public class RomHandlerShopTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
         boolean hasMainGameShops = false;
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            if (shop.isMainGame) {
+        List<Shop> shops = romHandler.getShops();
+        for (Shop shop : shops) {
+            if (shop.isMainGame()) {
                 hasMainGameShops = true;
                 break;
             }
         }
-        System.out.println(toStringWithNames(shopItems));
+        System.out.println(toMultilineString(shops));
         assertTrue(hasMainGameShops);
     }
 
@@ -96,217 +103,55 @@ public class RomHandlerShopTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void canBanBadItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
+    public void canAddOneItemToEveryShop(String romName) {
         loadROM(romName);
+        assumeTrue(romHandler.hasShopSupport());
+        assumeTrue(romHandler.canChangeShopSizes());
 
-        Settings s = new Settings();
-        s.setBanBadRandomShopItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
+        List<Item> allItems = romHandler.getItems();
 
-        ItemList nonBad = romHandler.getNonBadItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertTrue(nonBad.isAllowed(itemID));
-            }
-        }
+        List<Shop> shops = romHandler.getShops();
+        shops.forEach(s -> s.getItems().add(allItems.get(1)));
+        romHandler.setShops(deepCopy(shops));
+
+        assertEquals(shops, romHandler.getShops());
     }
 
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void canBadRegularShopItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
-        loadROM(romName);
-
-        Settings s = new Settings();
-        s.setBanRegularShopItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
-
-        List<Integer> regularShop = romHandler.getRegularShopItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertFalse(regularShop.contains(itemID));
-            }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void canBanOverpoweredShopItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
-        loadROM(romName);
-
-        Settings s = new Settings();
-        s.setBanOPShopItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
-
-        List<Integer> opShop = romHandler.getOPShopItems();
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                assertFalse(opShop.contains(itemID));
-            }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void canGuaranteeEvolutionItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
-        loadROM(romName);
-
-        Settings s = new Settings();
-        s.setGuaranteeEvolutionItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
-
-        List<Integer> evoItems = romHandler.getEvolutionItems();
-        Map<Integer, Boolean> placed = new HashMap<>();
-        for (int evoItem : evoItems) {
-            placed.put(evoItem, false);
-        }
-
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (evoItems.contains(itemID)) {
-                    placed.put(itemID, true);
-                }
-            }
-        }
-
-        System.out.println(placed);
-        int placedCount = (int) placed.values().stream().filter(b -> b).count();
-        assertEquals(evoItems.size(), placedCount);
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void canGuaranteeXItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
-        loadROM(romName);
-
-        Settings s = new Settings();
-        s.setGuaranteeXItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
-
-        List<Integer> xItems = romHandler.getXItems();
-        Map<Integer, Boolean> placed = new HashMap<>();
-        for (int xItem : xItems) {
-            placed.put(xItem, false);
-        }
-
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (xItems.contains(itemID)) {
-                    placed.put(itemID, true);
-                }
-            }
-        }
-
-        System.out.println(placed);
-        int placedCount = (int) placed.values().stream().filter(b -> b).count();
-        assertEquals(xItems.size(), placedCount);
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void canGuaranteeEvolutionAndXItems(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 2);
-        loadROM(romName);
-
-        Settings s = new Settings();
-        s.setGuaranteeEvolutionItems(true);
-        s.setGuaranteeXItems(true);
-        new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
-
-        List<Integer> evoItems = romHandler.getEvolutionItems();
-        Map<Integer, Boolean> placedEvo = new HashMap<>();
-        for (int evoItem : evoItems) {
-            placedEvo.put(evoItem, false);
-        }
-        List<Integer> xItems = romHandler.getXItems();
-        Map<Integer, Boolean> placedX = new HashMap<>();
-        for (int xItem : xItems) {
-            placedX.put(xItem, false);
-        }
-
-        Map<Integer, Shop> shopItems = romHandler.getShopItems();
-        for (Shop shop : shopItems.values()) {
-            System.out.println(toStringWithNames(shop));
-            for (int itemID : shop.items) {
-                if (evoItems.contains(itemID)) {
-                    placedEvo.put(itemID, true);
-                }
-                if (xItems.contains(itemID)) {
-                    placedX.put(itemID, true);
-                }
-            }
-        }
-
-        System.out.println("Evo: " + placedEvo);
-        System.out.println("X: " + placedX);
-        int placedEvoCount = (int) placedEvo.values().stream().filter(b -> b).count();
-        assertEquals(evoItems.size(), placedEvoCount);
-        int placedXCount = (int) placedX.values().stream().filter(b -> b).count();
-        assertEquals(xItems.size(), placedXCount);
-    }
-
-    private String toStringWithNames(Map<Integer, Shop> shops) {
+    private String toMultilineString(List<Shop> shops) {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
-        for (Map.Entry<Integer, Shop> entry : shops.entrySet()) {
-            sb.append(entry.getKey());
-            sb.append(" -> ");
-            sb.append(toStringWithNames(entry.getValue()));
+        for (int i = 0; i < shops.size(); i++) {
+            sb.append(i);
+            sb.append(":\t");
+            sb.append(shops.get(i));
             sb.append("\n");
         }
         sb.append("}\n");
         return sb.toString();
     }
 
-    private String toStringWithNames(Shop shop) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Shop [name=");
-        sb.append(shop.name);
-        sb.append(", isMainGame=");
-        sb.append(shop.isMainGame);
-        String[] itemNames = romHandler.getItemNames();
-        sb.append(", items=[");
-        for (int i = 0; i < shop.items.size(); i++) {
-            int itemID = shop.items.get(i);
-            sb.append(itemID);
-            sb.append("-");
-            sb.append(itemNames[itemID]);
-            if (i != shop.items.size() - 1) {
-                sb.append(", ");
-            }
+    private List<Shop> deepCopy(List<Shop> original) {
+        List<Shop> copy = new ArrayList<>(original.size());
+        for (Shop shop : original) {
+            copy.add(new Shop(shop));
         }
-        sb.append("]");
-        sb.append("]");
-        return sb.toString();
+        return copy;
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void canGetPricesWithoutThrowing(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) == 2);
+    public void shopPricesDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        List<Integer> prices = ((Gen2RomHandler) romHandler).getShopPrices();
-        String[] names = romHandler.getItemNames();
-        if (prices.size() != names.length) {
-            throw new IllegalStateException();
+        List<Integer> prices = romHandler.getShopPrices();
+        List<Item> items = romHandler.getItems();
+        for (int i = 1; i < prices.size(); i++) {
+            System.out.println(items.get(i).getName() + ": " + prices.get(i) + "¥");
         }
-        for (int i = 0; i < prices.size(); i++) {
-            System.out.println(names[i] + ": " + prices.get(i) + "¥");
-        }
+
+        romHandler.setShopPrices(prices);
+        List<Integer> after = romHandler.getShopPrices();
+
+        assertEquals(prices, after);
     }
 
 }

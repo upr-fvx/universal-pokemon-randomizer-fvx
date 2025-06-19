@@ -1,8 +1,11 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.gamedata.Evolution;
-import com.dabomstew.pkrandom.gamedata.EvolutionType;
-import com.dabomstew.pkrandom.gamedata.Species;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.gamedata.Evolution;
+import com.dabomstew.pkromio.gamedata.EvolutionType;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -10,6 +13,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEvolutionTest extends RomHandlerTest {
 
@@ -32,7 +36,9 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     public void noEvolutionUsesEvoTypeNone(String romName) {
         loadROM(romName);
         for (Species pk : romHandler.getSpeciesSet()) {
+            System.out.println(pk.getFullName());
             for (Evolution evo : pk.getEvolutionsFrom()) {
+                System.out.println(evo);
                 assertNotEquals(EvolutionType.NONE, evo.getType());
             }
         }
@@ -64,6 +70,56 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         System.out.println("------");
         withDuplicateEvos.forEach(pk -> System.out.println(pk.getEvolutionsFrom()));
         assertTrue(withDuplicateEvos.isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allSpeciesCanBeGivenExactlyOneEvolutionAndSaved(String romName) {
+        // for testing whether "Random Every Level" evolutions would work
+        loadROM(romName);
+        assumeTrue(romHandler.canGiveEverySpeciesOneEvolutionEach());
+        Species universalTo = romHandler.getSpecies().get(SpeciesIDs.krabby); // lol
+        universalTo.getEvolutionsTo().clear();
+        for (Species pk : romHandler.getSpecies()) {
+            if (pk == null || pk == universalTo) {
+                continue;
+            }
+            pk.getEvolutionsTo().clear();
+            pk.getEvolutionsFrom().clear();
+            // evolution type and extra should not matter
+            Evolution evo = new Evolution(pk, universalTo, EvolutionType.LEVEL, 1);
+            pk.getEvolutionsFrom().add(evo);
+            universalTo.getEvolutionsTo().add(evo);
+        }
+        ((AbstractRomHandler) romHandler).savePokemonStats();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void removeTimeEvosGivesSensibleEvoItems(String romName) {
+        loadROM(romName);
+
+        romHandler.removeTimeBasedEvolutions();
+
+        List<Item> allItems = romHandler.getItems();
+        Set<Item> evolutionItems = romHandler.getEvolutionItems();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                // In Gens 2+3, TRADE_ITEM items are not counted as evo items,
+                // as the player is not expected to trade.
+                // The player is not expected to trade in other games either,
+                // but as Gen 4 introduces LEVEL_ITEM, TRADE_ITEM items
+                // become relevant evo items within that context.
+                if (evo.getType().usesItem() &&
+                        !(romHandler.generationOfPokemon() < 4 && evo.getType() == EvolutionType.TRADE_ITEM)) {
+                    System.out.println(evo);
+                    Item evoItem = allItems.get(evo.getExtraInfo());
+                    System.out.println(evoItem.getName());
+                    assertTrue(evolutionItems.contains(evoItem));
+                }
+            }
+        }
     }
 
     @ParameterizedTest

@@ -22,38 +22,74 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.*;
-
-import com.dabomstew.pkrandom.gamedata.*;
+import com.dabomstew.pkrandom.log.RandomizationLogger;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
-import com.dabomstew.pkrandom.randomizers.Gen1PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.Gen2PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.Gen3to5PaletteRandomizer;
-import com.dabomstew.pkrandom.randomizers.PaletteRandomizer;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.MoveUpdater;
 import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.Updater;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.ResourceBundle;
 
 /**
- * Coordinates and logs the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s.
+ * Coordinates the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s,
+ * and {@link Updater}s.<br>
+ * Also passes the results to a {@link RandomizationLogger} and a {@link CheckValueCalculator} for
+ * logging/check value calculation.
+ * <br><br>
  * Output varies by seed.
  */
 public class GameRandomizer {
 
-    private static final String NEWLINE = System.getProperty("line.separator");
+    public static class Results {
+
+        private Exception e;
+        private Exception logE;
+        private int checkValue;
+
+        private Results() {}
+
+        public boolean wasSaveSuccessful() {
+            return e == null;
+        }
+
+        public Exception getException() {
+            if (wasSaveSuccessful()) {
+                throw new IllegalStateException("Randomization successful; no Exception to be gotten.");
+            }
+            return e;
+        }
+
+        public boolean wasLogSuccessful() {
+            return logE == null;
+        }
+
+        public Exception getLogException() {
+            if (wasLogSuccessful()) {
+                throw new IllegalStateException("Logging successful; no Exception to be gotten.");
+            }
+            return logE;
+        }
+
+        public int getCheckValue() {
+            return checkValue;
+        }
+    }
 
     private final RandomSource randomSource = new RandomSource();
 
     private final Settings settings;
     private final RomHandler romHandler;
-    private final ResourceBundle bundle;
     private final boolean saveAsDirectory;
+
+    private final RandomizationLogger logger;
 
     private final SpeciesBaseStatUpdater speciesBSUpdater;
     private final MoveUpdater moveUpdater;
@@ -84,7 +120,6 @@ public class GameRandomizer {
     public GameRandomizer(Settings settings, RomHandler romHandler, ResourceBundle bundle, boolean saveAsDirectory) {
         this.settings = settings;
         this.romHandler = romHandler;
-        this.bundle = bundle;
         this.saveAsDirectory = saveAsDirectory;
 
         this.speciesBSUpdater = new SpeciesBaseStatUpdater(romHandler);
@@ -92,7 +127,9 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.speciesBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.speciesBSRandomizer = romHandler.generationOfPokemon() == 1 ?
+                new Gen1SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic()) :
+                new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -103,7 +140,7 @@ public class GameRandomizer {
         this.speciesMovesetRandomizer = new SpeciesMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerPokeRandomizer = new TrainerPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.trainerNameRandomizer = new TrainerNameRandomizer(romHandler, settings,  randomSource.getCosmetic());
+        this.trainerNameRandomizer = new TrainerNameRandomizer(romHandler, settings, randomSource.getCosmetic());
         this.wildEncounterRandomizer = new WildEncounterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.encHeldItemRandomizer = new EncounterHeldItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tmtMoveRandomizer = new TMTutorMoveRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -126,9 +163,17 @@ public class GameRandomizer {
                 this.paletteRandomizer = null;
         }
         this.miscTweakRandomizer = new MiscTweakRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+
+        this.logger = new RandomizationLogger(randomSource, settings, romHandler, bundle,
+                speciesBSUpdater, moveUpdater, typeEffUpdater,
+                introPokeRandomizer, speciesBSRandomizer, speciesTypeRandomizer, speciesAbilityRandomizer,
+                evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer,
+                speciesMovesetRandomizer, trainerPokeRandomizer, trainerMovesetRandomizer, trainerNameRandomizer,
+                wildEncounterRandomizer, encHeldItemRandomizer, tmtMoveRandomizer, tmhmtCompRandomizer, itemRandomizer,
+                typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
     }
 
-    public int randomize(final String filename) {
+    public Results randomize(final String filename) {
         return randomize(filename, new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
@@ -136,39 +181,130 @@ public class GameRandomizer {
         }));
     }
 
-    public int randomize(final String filename, final PrintStream log) {
+    public Results randomize(final String filename, final PrintStream log) {
         long seed = SeedPicker.pickSeed();
         // long seed = 123456789;    // TESTING
         return randomize(filename, log, seed);
     }
 
-    public int randomize(final String filename, final PrintStream log, long seed) {
+    public Results randomize(final String filename, final PrintStream log, long seed) {
+        Results results = new Results();
+        try {
+            final long startTime = System.currentTimeMillis();
+            randomSource.seed(seed);
 
-        final long startTime = System.currentTimeMillis();
-        randomSource.seed(seed);
+            setupSpeciesRestrictions();
+            applyUpdaters();
+            applyRandomizers();
+            maybeSetCustomPlayerGraphics();
 
-        int checkValue = 0;
+            results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
 
-        log.println("Randomizer Version: " + Version.VERSION_STRING);
-        log.println("Random Seed: " + seed);
-        log.println("Settings String: " + Version.VERSION + settings.toString());
-        log.println();
+            romHandler.saveRom(filename, seed, saveAsDirectory);
 
-        // Limit Pokemon
-        // 1. Set Pokemon pool according to limits (or lack thereof)
-        // 2. If limited, remove evolutions that are outside of the pool
+            try {
+                logger.logResults(log, startTime);
+            } catch (Exception e) {
+                results.logE = e;
+            }
+        } catch (Exception e) {
+            results.e = e;
+        }
 
-        romHandler.getRestrictedSpeciesService().setRestrictions(settings);
+        return results;
+    }
 
+    private void setupSpeciesRestrictions() {
+        romHandler.getRestrictedSpeciesService().setRestrictions(settings.getCurrentRestrictions());
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();
         }
+    }
 
-        // Type effectiveness
-
+    private void applyUpdaters() {
         if (settings.isUpdateTypeEffectiveness()) {
             typeEffUpdater.updateTypeEffectiveness();
         }
+        if (settings.isUpdateMoves()) {
+            moveUpdater.updateMoves(settings.getUpdateMovesToGeneration());
+        }
+        if (settings.isUpdateBaseStats()) {
+            speciesBSUpdater.updateSpeciesStats(settings.getUpdateBaseStatsToGeneration());
+        }
+    }
+
+    private void maybeSetCustomPlayerGraphics() {
+        // this setting/feature sticks out for being atypical,
+        // versus the rest of the randomizer..... is this the right place for it to be?
+        if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
+            romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),
+                    settings.getCustomPlayerGraphicsCharacterMod());
+        }
+    }
+
+
+    private void applyRandomizers() {
+
+        maybeRandomizeTypeEffectiveness();
+
+        maybeRandomizeMoveData();
+
+        maybeApplyMiscTweaks();
+
+        maybeStandardizeEXPCurves();
+
+        // Applied before anything that can be carried up evolutions, so the new evos are used for that.
+        maybeRandomizeEvolutions();
+
+        maybeRandomizeSpeciesTypes();
+        maybeRandomizeWildHeldItems();
+        maybeRandomizeSpeciesBaseStats();
+        maybeRandomizeSpeciesAbilities();
+
+        maybeApplyEvolutionImprovements();
+
+        // Applied after species types both some settings and the in-game strings should depend on the new types.
+        maybeRandomizeStarters();
+
+        maybeRandomizeMovesets();
+
+        maybeRandomizeTMMoves();
+        maybeRandomizeTMHMCompatibility();
+
+        maybeRandomizeMoveTutorMoves();
+        maybeRandomizeMoveTutorCompatibility();
+
+        // Applied before trainer randomization so "trainers use local pokémon"
+        // may be based on new "local pokémon".
+        maybeRandomizeWildPokemon();
+
+        maybeRandomizeTrainerPokemon();
+        maybeRandomizeTrainerMovesets();
+        maybeFixTrainerZCrystals();
+
+        maybeRandomizeTrainerHeldItems();
+        maybeRandomizeTrainerNames();
+
+        // Apply metronome only mode now that trainers have been dealt with
+        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+            speciesMovesetRandomizer.metronomeOnlyMode();
+        }
+
+        maybeRandomizeStaticPokemon();
+        maybeRandomizeTotemPokemon();
+
+        maybeRandomizeInGameTrades();
+
+        maybeRandomizeFieldItems();
+        maybeRandomizeShops();
+        maybeRandomizePickupItems();
+
+        maybeRandomizePokemonPalettes();
+
+        maybeRandomizeIntroPokemon();
+    }
+
+    private void maybeRandomizeTypeEffectiveness() {
         if (settings.getTypeEffectivenessMod() != Settings.TypeEffectivenessMod.UNCHANGED) {
             switch (settings.getTypeEffectivenessMod()) {
                 case RANDOM:
@@ -184,23 +320,9 @@ public class GameRandomizer {
                     typeEffRandomizer.invertTypeEffectiveness(settings.isInverseTypesRandomImmunities());
             }
         }
-        if (typeEffUpdater.isUpdated() || typeEffRandomizer.isChangesMade()) {
-            log.println("--Type Effectiveness--");
-            log.println(romHandler.getTypeTable().toBigString() + NEWLINE);
-        }
+    }
 
-        // Move updates & data changes
-        // 1. Update moves to a future generation
-        // 2. Randomize move stats
-
-        if (settings.isUpdateMoves()) {
-            moveUpdater.updateMoves(settings.getUpdateMovesToGeneration());
-        }
-
-        if (moveUpdater.isUpdated()) {
-            logMoveUpdates(log);
-        }
-
+    private void maybeRandomizeMoveData() {
         if (settings.isRandomizeMovePowers()) {
             moveDataRandomizer.randomizeMovePowers();
         }
@@ -220,44 +342,39 @@ public class GameRandomizer {
         if (settings.isRandomizeMoveCategory() && romHandler.hasPhysicalSpecialSplit()) {
             moveDataRandomizer.randomizeMoveCategory();
         }
+    }
 
-        // Misc Tweaks
+    private void maybeApplyMiscTweaks() {
         if (settings.getCurrentMiscTweaks() != MiscTweak.NO_MISC_TWEAKS) {
             miscTweakRandomizer.applyMiscTweaks();
         }
+    }
 
-        // Update base stats to a future generation
-        if (settings.isUpdateBaseStats()) {
-            speciesBSUpdater.updateSpeciesStats(settings.getUpdateBaseStatsToGeneration());
-        }
-
-        // Standardize EXP curves
+    private void maybeStandardizeEXPCurves() {
         if (settings.isStandardizeEXPCurves()) {
             speciesBSRandomizer.standardizeEXPCurves();
         }
+    }
 
-        // Pokemon Types
+    private void maybeRandomizeSpeciesTypes() {
         if (settings.getSpeciesTypesMod() != Settings.SpeciesTypesMod.UNCHANGED) {
             speciesTypeRandomizer.randomizeSpeciesTypes();
         }
+    }
 
-        // Wild Held Items
+    private void maybeRandomizeWildHeldItems() {
         if (settings.isRandomizeWildPokemonHeldItems()) {
             encHeldItemRandomizer.randomizeWildHeldItems();
         }
+    }
 
-        // Random Evos
-        // Applied after type to pick new evos based on new types.
-
+    private void maybeRandomizeEvolutions() {
         if (settings.getEvolutionsMod() != Settings.EvolutionsMod.UNCHANGED) {
             evoRandomizer.randomizeEvolutions();
         }
+    }
 
-        if (evoRandomizer.isChangesMade()) {
-            logEvolutionChanges(log);
-        }
-
-        // Base stat randomization
+    private void maybeRandomizeSpeciesBaseStats() {
         switch (settings.getBaseStatisticsMod()) {
             case SHUFFLE:
                 speciesBSRandomizer.shuffleSpeciesStats();
@@ -265,83 +382,44 @@ public class GameRandomizer {
             case RANDOM:
                 speciesBSRandomizer.randomizeSpeciesStats();
         }
+    }
 
-        // Abilities
+    private void maybeRandomizeSpeciesAbilities() {
         if (settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE) {
             speciesAbilityRandomizer.randomizeAbilities();
         }
+    }
 
-        // Log Pokemon traits (stats, abilities, etc) if any have changed
-        if (speciesBSUpdater.isUpdated() || speciesBSRandomizer.isChangesMade() || speciesTypeRandomizer.isChangesMade() ||
-                speciesAbilityRandomizer.isChangesMade() || encHeldItemRandomizer.isChangesMade()) {
-            logPokemonTraitChanges(log);
-        } else {
-            log.println("Pokemon base stats & type: unchanged" + NEWLINE);
-        }
-
-        for (Species pkmn : romHandler.getSpecies()) {
-            if (pkmn != null) {
-                checkValue = addToCV(checkValue, pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpeed(), pkmn.getSpatk(),
-                        pkmn.getSpdef(), pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
-            }
-        }
-
+    private void maybeApplyEvolutionImprovements() {
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
-            romHandler.removeImpossibleEvolutions(settings);
+            boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
+            romHandler.removeImpossibleEvolutions(changeMoveEvos);
         }
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(40, 30);
-            romHandler.makeEvolutionsEasier(settings);
+            boolean wildsRandomizer = settings.isRandomizeWildPokemon();
+            romHandler.makeEvolutionsEasier(wildsRandomizer);
         }
 
         // Remove time-based evolutions
         if (settings.isRemoveTimeBasedEvolutions()) {
             romHandler.removeTimeBasedEvolutions();
         }
+    }
 
-        // Log everything afterwards, so that "impossible evolutions" can account for "easier evolutions"
-        if (settings.isChangeImpossibleEvolutions()) {
-            log.println("--Removing Impossible Evolutions--");
-            logUpdatedEvolutions(log, romHandler.getImpossibleEvoUpdates(), romHandler.getEasierEvoUpdates());
-        }
-
-        if (settings.isMakeEvolutionsEasier()) {
-            log.println("--Making Evolutions Easier--");
-            if (!(romHandler instanceof Gen1RomHandler)) {
-                log.println("Friendship evolutions now take 160 happiness (was 220).");
-            }
-            logUpdatedEvolutions(log, romHandler.getEasierEvoUpdates(), null);
-        }
-
-        if (settings.isRemoveTimeBasedEvolutions()) {
-            log.println("--Removing Timed-Based Evolutions--");
-            logUpdatedEvolutions(log, romHandler.getTimeBasedEvoUpdates(), null);
-        }
-
-        // Starter Pokemon
-        // Applied after type to update the strings correctly based on new types
-        if(settings.getStartersMod() != Settings.StartersMod.UNCHANGED) {
+    private void maybeRandomizeStarters() {
+        if (settings.getStartersMod() != Settings.StartersMod.UNCHANGED) {
             starterRandomizer.randomizeStarters();
         }
         if (settings.isRandomizeStartersHeldItems() && !(romHandler instanceof Gen1RomHandler)) {
             starterRandomizer.randomizeStarterHeldItems();
         }
+    }
 
-        if (starterRandomizer.isChangesMade()) {
-            logStarters(log);
-        }
-
-        // Move Data Log
-        // Placed here so it matches its position in the randomizer interface
-        if (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated()) {
-            logMoveChanges(log);
-        } else {
-            log.println("Move Data: Unchanged." + NEWLINE);
-        }
-
+    private void maybeRandomizeMovesets() {
         // Movesets
         // 1. Randomize movesets
         // 2. Reorder moves by damage
@@ -356,31 +434,16 @@ public class GameRandomizer {
         if (settings.isReorderDamagingMoves()) {
             speciesMovesetRandomizer.orderDamagingMovesByDamage();
         }
+    }
 
-        // Show the new movesets if applicable
-        if (speciesMovesetRandomizer.isChangesMade()) {
-            logMovesetChanges(log);
-        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("Pokemon Movesets: Metronome Only." + NEWLINE);
-        } else {
-            log.println("Pokemon Movesets: Unchanged." + NEWLINE);
-        }
-
-        // TMs
-
+    private void maybeRandomizeTMMoves() {
         if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
                 && settings.getTmsMod() == Settings.TMsMod.RANDOM) {
             tmtMoveRandomizer.randomizeTMMoves();
         }
+    }
 
-        if (tmtMoveRandomizer.isTMChangesMade()) {
-            checkValue = logTMMoves(log, checkValue);
-        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("TM Moves: Metronome Only." + NEWLINE);
-        } else {
-            log.println("TM Moves: Unchanged." + NEWLINE);
-        }
-
+    private void maybeRandomizeTMHMCompatibility() {
         // TM/HM compatibility
         // 1. Randomize TM/HM compatibility
         // 2. Ensure levelup move sanity
@@ -408,30 +471,23 @@ public class GameRandomizer {
             tmhmtCompRandomizer.fullHMCompatibility();
         }
 
-        // Copy TM/HM compatibility to cosmetic formes if it was changed at all, and log changes
+        // Copy TM/HM compatibility to cosmetic formes if it was changed at all
         if (tmhmtCompRandomizer.isTMHMChangesMade()) {
             tmhmtCompRandomizer.copyTMCompatibilityToCosmeticFormes();
-            logTMHMCompatibility(log);
         }
+    }
 
-        // Move Tutors
+    private void maybeRandomizeMoveTutorMoves() {
         if (romHandler.hasMoveTutors()) {
-
-            List<Integer> oldMtMoves = romHandler.getMoveTutorMoves();
-
             if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
                     && settings.getMoveTutorMovesMod() == Settings.MoveTutorMovesMod.RANDOM) {
                 tmtMoveRandomizer.randomizeMoveTutorMoves();
             }
+        }
+    }
 
-            if (tmtMoveRandomizer.isTutorChangesMade()) {
-                checkValue = logMoveTutorMoves(log, checkValue, oldMtMoves);
-            } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-                log.println("Move Tutor Moves: Metronome Only." + NEWLINE);
-            } else {
-                log.println("Move Tutor Moves: Unchanged." + NEWLINE);
-            }
-
+    private void maybeRandomizeMoveTutorCompatibility() {
+        if (romHandler.hasMoveTutors()) {
             // Move Tutor Compatibility
             // 1. Randomize MT compatibility
             // 2. Ensure levelup move sanity
@@ -457,36 +513,32 @@ public class GameRandomizer {
             // Copy move tutor compatibility to cosmetic formes if it was changed at all
             if (tmhmtCompRandomizer.isTutorChangesMade()) {
                 tmhmtCompRandomizer.copyMoveTutorCompatibilityToCosmeticFormes();
-                logTutorCompatibility(log);
             }
-
         }
+    }
 
-        // do part of wild Pokemon early if needed
-        if (settings.isTrainersUseLocalPokemon() &&
-                (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
-            wildEncounterRandomizer.randomizeEncounters();
-        }
-
+    private void maybeRandomizeTrainerPokemon() {
         // Trainer Pokemon
-        // 1. Add extra Trainer Pokemon
-        // 2. Set trainers to be double battles and add extra Pokemon if necessary
-        // 3. Modify levels
+        // 1. Modify levels first to get larger level variety if additional Pokemon are added in the next step
+        // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
+        // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing)
+        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
-        if (settings.getAdditionalRegularTrainerPokemon() > 0
-                || settings.getAdditionalImportantTrainerPokemon() > 0
-                || settings.getAdditionalBossTrainerPokemon() > 0) {
-            trainerPokeRandomizer.addTrainerPokemon();
-        }
-
-        if (settings.isDoubleBattleMode()) {
-            trainerPokeRandomizer.setDoubleBattleMode();
-        }
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
+        }
+
+        boolean additionalPokemonAdded = settings.getAdditionalRegularTrainerPokemon() > 0
+                || settings.getAdditionalImportantTrainerPokemon() > 0
+                || settings.getAdditionalBossTrainerPokemon() > 0;
+        if (additionalPokemonAdded) {
+            trainerPokeRandomizer.addTrainerPokemon();
+        }
+
+        if (settings.getBattleStyle().isBattleStyleChanged()) {
+            trainerPokeRandomizer.modifyBattleStyle();
         }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
@@ -495,31 +547,41 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if(settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
+        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersForceFullyEvolved()) {
-            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        } else {
+            if (settings.isTrainersForceMiddleStage()) {
+                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
+            }
+            if (settings.isTrainersForceFullyEvolved()) {
+                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+            }
         }
+    }
 
+    private void maybeRandomizeTrainerMovesets() {
         if (settings.isBetterTrainerMovesets()) {
             trainerMovesetRandomizer.randomizeTrainerMovesets();
         }
+    }
 
+    private void maybeFixTrainerZCrystals() {
+        // if earlier randomization could have led to unusable Z-crystals, fix them to something usable here
         if (speciesMovesetRandomizer.isChangesMade() || trainerPokeRandomizer.isChangesMade()
                 || trainerMovesetRandomizer.isChangesMade()) {
-            // if earlier randomization could have led to unusable Z-crystals, fix them to something usable here
             trainerPokeRandomizer.randomUsableZCrystals();
         }
+    }
 
+    private void maybeRandomizeTrainerHeldItems() {
         if (settings.isRandomizeHeldItemsForBossTrainerPokemon()
                 || settings.isRandomizeHeldItemsForImportantTrainerPokemon()
                 || settings.isRandomizeHeldItemsForRegularTrainerPokemon()) {
             trainerPokeRandomizer.randomizeTrainerHeldItems();
         }
+    }
 
-        List<String> originalTrainerNames = getTrainerNames();
-
-        // Trainer names & class names randomization
+    private void maybeRandomizeTrainerNames() {
         if (romHandler.canChangeTrainerText()) {
             if (settings.isRandomizeTrainerClassNames()) {
                 trainerNameRandomizer.randomizeTrainerClassNames();
@@ -529,46 +591,20 @@ public class GameRandomizer {
                 trainerNameRandomizer.randomizeTrainerNames();
             }
         }
+    }
 
-        if (trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
-                || trainerNameRandomizer.isChangesMade()) {
-            maybeLogTrainerChanges(log, originalTrainerNames, trainerNameRandomizer.isChangesMade(),
-                    trainerMovesetRandomizer.isChangesMade());
-        } else {
-            log.println("Trainers: Unchanged." + NEWLINE);
-        }
-
-        // Apply metronome only mode now that trainers have been dealt with
-        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            speciesMovesetRandomizer.metronomeOnlyMode();
-        }
-
-        List<Trainer> trainers = romHandler.getTrainers();
-        for (Trainer t : trainers) {
-            for (TrainerPokemon tpk : t.pokemon) {
-                checkValue = addToCV(checkValue, tpk.level, tpk.species.getNumber());
-            }
-        }
-
-        // Static Pokemon
+    private void maybeRandomizeStaticPokemon() {
         if (romHandler.canChangeStaticPokemon()) {
-            List<StaticEncounter> oldStatics = romHandler.getStaticPokemon();
             if (settings.getStaticPokemonMod() != Settings.StaticPokemonMod.UNCHANGED) { // Legendary for L
                 staticPokeRandomizer.randomizeStaticPokemon();
             } else if (settings.isStaticLevelModified()) {
                 staticPokeRandomizer.onlyChangeStaticLevels();
             }
-
-            if (staticPokeRandomizer.isStaticChangesMade()) {
-                checkValue = logStaticPokemon(log, checkValue, oldStatics);
-            } else {
-                log.println("Static Pokemon: Unchanged." + NEWLINE);
-            }
         }
+    }
 
-        // Totem Pokemon
+    private void maybeRandomizeTotemPokemon() {
         if (romHandler.hasTotemPokemon()) {
-            List<TotemPokemon> oldTotems = romHandler.getTotemPokemon();
             if (settings.getTotemPokemonMod() != Settings.TotemPokemonMod.UNCHANGED ||
                     settings.getAllyPokemonMod() != Settings.AllyPokemonMod.UNCHANGED ||
                     settings.getAuraMod() != Settings.AuraMod.UNCHANGED ||
@@ -577,66 +613,37 @@ public class GameRandomizer {
 
                 staticPokeRandomizer.randomizeTotemPokemon();
             }
-
-            if (staticPokeRandomizer.isTotemChangesMade()) {
-                checkValue = logTotemPokemon(log, checkValue, oldTotems);
-            } else {
-                log.println("Totem Pokemon: Unchanged." + NEWLINE);
-            }
         }
+    }
 
-        // Wild Pokemon
-
+    private void maybeRandomizeWildPokemon() {
         if (settings.isUseMinimumCatchRate()) {
             wildEncounterRandomizer.changeCatchRates();
         }
 
-        if (!settings.isTrainersUseLocalPokemon() &&
-                (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified())) {
+        if (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified()) {
             wildEncounterRandomizer.randomizeEncounters();
         }
+    }
 
-        if (wildEncounterRandomizer.isChangesMade()) {
-            logWildPokemonChanges(log);
-        } else {
-            log.println("Wild Pokemon: Unchanged." + NEWLINE);
-        }
-
-        boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeBasedEncounters);
-        for (EncounterArea area : encounterAreas) {
-            for (Encounter e : area) {
-                checkValue = addToCV(checkValue, e.getLevel(), e.getSpecies().getNumber());
-            }
-        }
-
-
-        // In-game trades
-
-        List<IngameTrade> oldTrades = romHandler.getIngameTrades();
+    private void maybeRandomizeInGameTrades() {
         switch (settings.getInGameTradesMod()) {
             case RANDOMIZE_GIVEN:
             case RANDOMIZE_GIVEN_AND_REQUESTED:
                 tradeRandomizer.randomizeIngameTrades();
         }
+    }
 
-        if (tradeRandomizer.isChangesMade()) {
-            logTrades(log, oldTrades);
-        }
-
-        // Field Items
+    private void maybeRandomizeFieldItems() {
         switch (settings.getFieldItemsMod()) {
             case SHUFFLE:
-                itemRandomizer.shuffleFieldItems();
-                break;
             case RANDOM:
             case RANDOM_EVEN:
                 itemRandomizer.randomizeFieldItems();
         }
+    }
 
-        // Shops
-
+    private void maybeRandomizeShops() {
         switch (settings.getShopItemsMod()) {
             case SHUFFLE:
                 itemRandomizer.shuffleShopItems();
@@ -644,696 +651,31 @@ public class GameRandomizer {
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
         }
-
-        if (itemRandomizer.isShopChangesMade()) {
-            logShops(log);
+        if (settings.isBalanceShopPrices()) {
+            romHandler.setBalancedShopPrices();
         }
+        if (settings.isAddCheapRareCandiesToShops()) {
+            itemRandomizer.addCheapRareCandiesToShops();
+        }
+    }
 
-        // Pickup Items
+    private void maybeRandomizePickupItems() {
         if (settings.getPickupItemsMod() == Settings.PickupItemsMod.RANDOM) {
             itemRandomizer.randomizePickupItems();
-            logPickupItems(log);
         }
+    }
 
-        // Test output for placement history
-        // romHandler.renderPlacementHistory();
-
+    private void maybeRandomizePokemonPalettes() {
         if (settings.getPokemonPalettesMod() == Settings.PokemonPalettesMod.RANDOM) {
             paletteRandomizer.randomizePokemonPalettes();
         }
-
-        if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
-            romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),
-                    settings.getCustomPlayerGraphicsCharacterMod());
-        }
-
-        // Intro Pokemon...
-        introPokeRandomizer.randomizeIntroPokemon();
-
-        // Record check value?
-        romHandler.writeCheckValueToROM(checkValue);
-
-        // Save
-        romHandler.saveRom(filename, seed, saveAsDirectory);
-
-        // Log tail
-        String gameName = romHandler.getROMName();
-        if (romHandler.hasGameUpdateLoaded()) {
-            gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
-        }
-        log.println("------------------------------------------------------------------");
-        log.println("Randomization of " + gameName + " completed.");
-        log.println("Time elapsed: " + (System.currentTimeMillis() - startTime) + "ms");
-        log.println("RNG Calls: " + randomSource.callsSinceSeed());
-        log.println("------------------------------------------------------------------");
-        log.println();
-
-        // Diagnostics
-        log.println("--ROM Diagnostics--");
-        if (!romHandler.isRomValid(null)) {
-            log.println(bundle.getString("Log.InvalidRomLoaded"));
-        }
-        romHandler.printRomDiagnostics(log);
-
-        return checkValue;
     }
 
-    private int logMoveTutorMoves(PrintStream log, int checkValue, List<Integer> oldMtMoves) {
-        log.println("--Move Tutor Moves--");
-        List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
-        List<Move> moves = romHandler.getMoves();
-        for (int i = 0; i < newMtMoves.size(); i++) {
-            log.printf("%-10s -> %-10s" + NEWLINE, moves.get(oldMtMoves.get(i)).name,
-                    moves.get(newMtMoves.get(i)).name);
-            checkValue = addToCV(checkValue, newMtMoves.get(i));
+    private void maybeRandomizeIntroPokemon() {
+        // Note: this is the only randomization that applies even if no setting is checked.
+        // Essentially, it works as confirmation that the Randomizer was applied at all.
+        if (romHandler.canSetIntroPokemon()) {
+            introPokeRandomizer.randomizeIntroPokemon();
         }
-        log.println();
-        return checkValue;
-    }
-
-    private int logTMMoves(PrintStream log, int checkValue) {
-        log.println("--TM Moves--");
-        List<Integer> tmMoves = romHandler.getTMMoves();
-        List<Move> moves = romHandler.getMoves();
-        for (int i = 0; i < tmMoves.size(); i++) {
-            log.printf("TM%02d %s" + NEWLINE, i + 1, moves.get(tmMoves.get(i)).name);
-            checkValue = addToCV(checkValue, tmMoves.get(i));
-        }
-        log.println();
-        return checkValue;
-    }
-
-    private void logTrades(PrintStream log, List<IngameTrade> oldTrades) {
-        log.println("--In-Game Trades--");
-        List<IngameTrade> newTrades = romHandler.getIngameTrades();
-        int size = oldTrades.size();
-        for (int i = 0; i < size; i++) {
-            IngameTrade oldT = oldTrades.get(i);
-            IngameTrade newT = newTrades.get(i);
-            log.printf("Trade %-11s -> %-11s the %-11s        ->      %-11s -> %-15s the %s" + NEWLINE,
-                    oldT.requestedSpecies != null ? oldT.requestedSpecies.getFullName() : "Any",
-                    oldT.nickname, oldT.givenSpecies.getFullName(),
-                    newT.requestedSpecies != null ? newT.requestedSpecies.getFullName() : "Any",
-                    newT.nickname, newT.givenSpecies.getFullName());
-        }
-        log.println();
-    }
-
-    private void logMovesetChanges(PrintStream log) {
-        log.println("--Pokemon Movesets--");
-        List<String> movesets = new ArrayList<>();
-        Map<Integer, List<MoveLearnt>> moveData = romHandler.getMovesLearnt();
-        Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
-        List<Move> moves = romHandler.getMoves();
-        List<Species> pkmnList = romHandler.getSpeciesInclFormes();
-        int i = 1;
-        for (Species pkmn : pkmnList) {
-            if (pkmn == null || pkmn.isActuallyCosmetic()) {
-                continue;
-            }
-            StringBuilder evoStr = new StringBuilder();
-            try {
-                evoStr.append(" -> ").append(pkmn.getEvolutionsFrom().get(0).getTo().getFullName());
-            } catch (Exception e) {
-                evoStr.append(" (no evolution)");
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            if (romHandler instanceof Gen1RomHandler) {
-                sb.append(String.format("%03d %s", i, pkmn.getFullName()))
-                        .append(evoStr).append(System.getProperty("line.separator"))
-                        .append(String.format("HP   %-3d", pkmn.getHp())).append(System.getProperty("line.separator"))
-                        .append(String.format("ATK  %-3d", pkmn.getAttack())).append(System.getProperty("line.separator"))
-                        .append(String.format("DEF  %-3d", pkmn.getDefense())).append(System.getProperty("line.separator"))
-                        .append(String.format("SPEC %-3d", pkmn.getSpecial())).append(System.getProperty("line.separator"))
-                        .append(String.format("SPE  %-3d", pkmn.getSpeed())).append(System.getProperty("line.separator"));
-            } else {
-                sb.append(String.format("%03d %s", i, pkmn.getFullName()))
-                        .append(evoStr).append(System.getProperty("line.separator"))
-                        .append(String.format("HP  %-3d", pkmn.getHp())).append(System.getProperty("line.separator"))
-                        .append(String.format("ATK %-3d", pkmn.getAttack())).append(System.getProperty("line.separator"))
-                        .append(String.format("DEF %-3d", pkmn.getDefense())).append(System.getProperty("line.separator"))
-                        .append(String.format("SPA %-3d", pkmn.getSpatk())).append(System.getProperty("line.separator"))
-                        .append(String.format("SPD %-3d", pkmn.getSpdef())).append(System.getProperty("line.separator"))
-                        .append(String.format("SPE %-3d", pkmn.getSpeed())).append(System.getProperty("line.separator"));
-            }
-
-            i++;
-
-            List<MoveLearnt> data = moveData.get(pkmn.getNumber());
-            for (MoveLearnt ml : data) {
-                try {
-                    if (ml.level == 0) {
-                        sb.append("Learned upon evolution: ")
-                                .append(moves.get(ml.move).name).append(System.getProperty("line.separator"));
-                    } else {
-                        sb.append("Level ")
-                                .append(String.format("%-2d", ml.level))
-                                .append(": ")
-                                .append(moves.get(ml.move).name).append(System.getProperty("line.separator"));
-                    }
-                } catch (NullPointerException ex) {
-                    sb.append("invalid move at level").append(ml.level);
-                }
-            }
-            List<Integer> eggMove = eggMoves.get(pkmn.getNumber());
-            if (eggMove != null && eggMove.size() != 0) {
-                sb.append("Egg Moves:").append(System.getProperty("line.separator"));
-                for (Integer move : eggMove) {
-                    sb.append(" - ").append(moves.get(move).name).append(System.getProperty("line.separator"));
-                }
-            }
-
-            movesets.add(sb.toString());
-        }
-        Collections.sort(movesets);
-        for (String moveset : movesets) {
-            log.println(moveset);
-        }
-        log.println();
-    }
-
-    private void logMoveUpdates(PrintStream log) {
-        log.println("--Move Updates--");
-        List<Move> moves = romHandler.getMoves();
-        Map<Integer, boolean[]> moveUpdates = moveUpdater.getMoveUpdates();
-        for (int moveID : moveUpdates.keySet()) {
-            boolean[] changes = moveUpdates.get(moveID);
-            Move mv = moves.get(moveID);
-            List<String> nonTypeChanges = new ArrayList<>();
-            if (changes[0]) {
-                nonTypeChanges.add(String.format("%d power", mv.power));
-            }
-            if (changes[1]) {
-                nonTypeChanges.add(String.format("%d PP", mv.pp));
-            }
-            if (changes[2]) {
-                nonTypeChanges.add(String.format("%.00f%% accuracy", mv.hitratio));
-            }
-            String logStr = "Made " + mv.name;
-            // type or not?
-            if (changes[3]) {
-                logStr += " be " + mv.type + "-type";
-                if (nonTypeChanges.size() > 0) {
-                    logStr += " and";
-                }
-            }
-            if (changes[4]) {
-                if (mv.category == MoveCategory.PHYSICAL) {
-                    logStr += " a Physical move";
-                } else if (mv.category == MoveCategory.SPECIAL) {
-                    logStr += " a Special move";
-                } else if (mv.category == MoveCategory.STATUS) {
-                    logStr += " a Status move";
-                }
-            }
-            if (nonTypeChanges.size() > 0) {
-                logStr += " have ";
-                if (nonTypeChanges.size() == 3) {
-                    logStr += nonTypeChanges.get(0) + ", " + nonTypeChanges.get(1) + " and " + nonTypeChanges.get(2);
-                } else if (nonTypeChanges.size() == 2) {
-                    logStr += nonTypeChanges.get(0) + " and " + nonTypeChanges.get(1);
-                } else {
-                    logStr += nonTypeChanges.get(0);
-                }
-            }
-            log.println(logStr);
-        }
-        log.println();
-    }
-
-    private void logEvolutionChanges(PrintStream log) {
-        log.println("--Randomized Evolutions--");
-        List<Species> allPokes = romHandler.getSpeciesInclFormes();
-        for (Species pk : allPokes) {
-            if (pk != null && !pk.isActuallyCosmetic()) {
-                int numEvos = pk.getEvolutionsFrom().size();
-                if (numEvos > 0) {
-                    StringBuilder evoStr = new StringBuilder(pk.getEvolutionsFrom().get(0).getTo().getFullName());
-                    for (int i = 1; i < numEvos; i++) {
-                        if (i == numEvos - 1) {
-                            evoStr.append(" and ").append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
-                        } else {
-                            evoStr.append(", ").append(pk.getEvolutionsFrom().get(i).getTo().getFullName());
-                        }
-                    }
-                    log.printf("%-15s -> %-15s" + NEWLINE, pk.getFullName(), evoStr);
-                }
-            }
-        }
-
-        log.println();
-    }
-
-    private void logPokemonTraitChanges(final PrintStream log) {
-        List<Species> allPokes = romHandler.getSpeciesInclFormes();
-        String[] itemNames = romHandler.getItemNames();
-        // Log base stats & types
-        log.println("--Pokemon Base Stats & Types--");
-        if (romHandler instanceof Gen1RomHandler) {
-            log.println("NUM|NAME      |TYPE             |  HP| ATK| DEF| SPE|SPEC");
-            for (Species pkmn : allPokes) {
-                if (pkmn != null) {
-                    String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
-                    if (pkmn.getSecondaryType(false) != null) {
-                        typeString += "/" + pkmn.getSecondaryType(false).toString();
-                    }
-                    log.printf("%3d|%-10s|%-17s|%4d|%4d|%4d|%4d|%4d" + NEWLINE, pkmn.getNumber(), pkmn.getFullName(), typeString,
-                            pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpeed(), pkmn.getSpecial());
-                }
-
-            }
-        } else {
-            String nameSp = "      ";
-            String nameSpFormat = "%-13s";
-            String abSp = "    ";
-            String abSpFormat = "%-12s";
-            if (romHandler.generationOfPokemon() == 5) {
-                nameSp = "         ";
-            } else if (romHandler.generationOfPokemon() == 6) {
-                nameSp = "            ";
-                nameSpFormat = "%-16s";
-                abSp = "      ";
-                abSpFormat = "%-14s";
-            } else if (romHandler.generationOfPokemon() >= 7) {
-                nameSp = "            ";
-                nameSpFormat = "%-16s";
-                abSp = "        ";
-                abSpFormat = "%-16s";
-            }
-
-            log.print("NUM|NAME" + nameSp + "|TYPE             |  HP| ATK| DEF|SATK|SDEF| SPD");
-            int abils = romHandler.abilitiesPerSpecies();
-            for (int i = 0; i < abils; i++) {
-                log.print("|ABILITY" + (i + 1) + abSp);
-            }
-            log.print("|ITEM");
-            log.println();
-            int i = 0;
-            for (Species pkmn : allPokes) {
-                if (pkmn != null && !pkmn.isActuallyCosmetic()) {
-                    i++;
-                    String typeString = pkmn.getPrimaryType(false) == null ? "???" : pkmn.getPrimaryType(false).toString();
-                    if (pkmn.getSecondaryType(false) != null) {
-                        typeString += "/" + pkmn.getSecondaryType(false).toString();
-                    }
-                    log.printf("%3d|" + nameSpFormat + "|%-17s|%4d|%4d|%4d|%4d|%4d|%4d", i, pkmn.getFullName(), typeString,
-                            pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpatk(), pkmn.getSpdef(), pkmn.getSpeed());
-                    if (abils > 0) {
-                        log.printf("|" + abSpFormat + "|" + abSpFormat, romHandler.abilityName(pkmn.getAbility1()),
-                                pkmn.getAbility1() == pkmn.getAbility2() ? "--" : romHandler.abilityName(pkmn.getAbility2()));
-                        if (abils > 2) {
-                            log.printf("|" + abSpFormat, romHandler.abilityName(pkmn.getAbility3()));
-                        }
-                    }
-                    log.print("|");
-                    if (pkmn.getGuaranteedHeldItem() > 0) {
-                        log.print(itemNames[pkmn.getGuaranteedHeldItem()] + " (100%)");
-                    } else {
-                        int itemCount = 0;
-                        if (pkmn.getCommonHeldItem() > 0) {
-                            itemCount++;
-                            log.print(itemNames[pkmn.getCommonHeldItem()] + " (common)");
-                        }
-                        if (pkmn.getRareHeldItem() > 0) {
-                            if (itemCount > 0) {
-                                log.print(", ");
-                            }
-                            itemCount++;
-                            log.print(itemNames[pkmn.getRareHeldItem()] + " (rare)");
-                        }
-                        if (pkmn.getDarkGrassHeldItem() > 0) {
-                            if (itemCount > 0) {
-                                log.print(", ");
-                            }
-                            log.print(itemNames[pkmn.getDarkGrassHeldItem()] + " (dark grass only)");
-                        }
-                    }
-                    log.println();
-                }
-
-            }
-        }
-        log.println();
-    }
-
-    private void logTMHMCompatibility(final PrintStream log) {
-        log.println("--TM Compatibility--");
-        Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
-        List<Integer> tmHMs = new ArrayList<>(romHandler.getTMMoves());
-        tmHMs.addAll(romHandler.getHMMoves());
-        List<Move> moveData = romHandler.getMoves();
-
-        logCompatibility(log, compat, tmHMs, moveData, true);
-    }
-
-    private void logTutorCompatibility(final PrintStream log) {
-        log.println("--Move Tutor Compatibility--");
-        Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
-        List<Integer> tutorMoves = romHandler.getMoveTutorMoves();
-        List<Move> moveData = romHandler.getMoves();
-
-        logCompatibility(log, compat, tutorMoves, moveData, false);
-    }
-
-    private void logCompatibility(final PrintStream log, Map<Species, boolean[]> compat, List<Integer> moveList,
-                                  List<Move> moveData, boolean includeTMNumber) {
-        int tmCount = romHandler.getTMCount();
-        for (Map.Entry<Species, boolean[]> entry : compat.entrySet()) {
-            Species pkmn = entry.getKey();
-            if (pkmn.isActuallyCosmetic()) continue;
-            boolean[] flags = entry.getValue();
-
-            String nameSpFormat = "%-14s";
-            if (romHandler.generationOfPokemon() >= 6) {
-                nameSpFormat = "%-17s";
-            }
-            log.printf("%3d " + nameSpFormat, pkmn.getNumber(), pkmn.getFullName() + " ");
-
-            for (int i = 1; i < flags.length; i++) {
-                String moveName = moveData.get(moveList.get(i - 1)).name;
-                if (moveName.length() == 0) {
-                    moveName = "(BLANK)";
-                }
-                int moveNameLength = moveName.length();
-                if (flags[i]) {
-                    if (includeTMNumber) {
-                        if (i <= tmCount) {
-                            log.printf("|TM%02d %" + moveNameLength + "s ", i, moveName);
-                        } else {
-                            log.printf("|HM%02d %" + moveNameLength + "s ", i - tmCount, moveName);
-                        }
-                    } else {
-                        log.printf("|%" + moveNameLength + "s ", moveName);
-                    }
-                } else {
-                    if (includeTMNumber) {
-                        log.printf("| %" + (moveNameLength + 4) + "s ", "-");
-                    } else {
-                        log.printf("| %" + (moveNameLength - 1) + "s ", "-");
-                    }
-                }
-            }
-            log.println("|");
-        }
-        log.println();
-    }
-
-    private void logUpdatedEvolutions(final PrintStream log, Set<EvolutionUpdate> updatedEvolutions,
-                                      Set<EvolutionUpdate> otherUpdatedEvolutions) {
-        for (EvolutionUpdate evo : updatedEvolutions) {
-            if (otherUpdatedEvolutions != null && otherUpdatedEvolutions.contains(evo)) {
-                log.println(evo.toString() + " (Overwritten by \"Make Evolutions Easier\", see below)");
-            } else {
-                log.println(evo.toString());
-            }
-        }
-        log.println();
-    }
-
-    private void logStarters(final PrintStream log) {
-
-        // TODO: log starter held items
-
-        switch (settings.getStartersMod()) {
-            case CUSTOM:
-                log.println("--Custom Starters--");
-                break;
-            case COMPLETELY_RANDOM:
-                log.println("--Random Starters--");
-                break;
-            case RANDOM_BASIC:
-                log.println("--Random Basic Starters--");
-                break;
-            case RANDOM_WITH_TWO_EVOLUTIONS:
-                log.println("--Random 2-Evolution Starters--");
-        }
-
-        List<Species> starters = romHandler.getStarters();
-        int i = 1;
-        for (Species starter : starters) {
-            log.println("Set starter " + i + " to " + starter.getFullName());
-            i++;
-        }
-        log.println();
-    }
-
-    private void logWildPokemonChanges(final PrintStream log) {
-
-        log.println("--Wild Pokemon--");
-        boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
-        List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
-        int idx = 0;
-        for (EncounterArea area : encounterAreas) {
-            idx++;
-            log.print("Set #" + idx + " ");
-            if (area.getDisplayName() != null) {
-                log.print("- " + area.getDisplayName() + " ");
-            }
-            log.print("(rate=" + area.getRate() + ")");
-            log.println();
-            for (Encounter e : area) {
-                StringBuilder sb = new StringBuilder();
-                if (e.isSOS()) {
-                    String stringToAppend;
-                    switch (e.getSosType()) {
-                        case RAIN:
-                            stringToAppend = "Rain SOS: ";
-                            break;
-                        case HAIL:
-                            stringToAppend = "Hail SOS: ";
-                            break;
-                        case SAND:
-                            stringToAppend = "Sand SOS: ";
-                            break;
-                        default:
-                            stringToAppend = "  SOS: ";
-                    }
-                    sb.append(stringToAppend);
-                }
-                sb.append(e.getSpecies().getFullName()).append(" Lv");
-                if (e.getMaxLevel() > 0 && e.getMaxLevel() != e.getLevel()) {
-                    sb.append("s ").append(e.getLevel()).append("-").append(e.getMaxLevel());
-                } else {
-                    sb.append(e.getLevel());
-                }
-                String whitespaceFormat = romHandler.generationOfPokemon() == 7 ? "%-31s" : "%-25s";
-                log.printf(whitespaceFormat, sb);
-                StringBuilder sb2 = new StringBuilder();
-                if (romHandler instanceof Gen1RomHandler) {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPECIAL %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpecial(), e.getSpecies().getSpeed()));
-                } else {
-                    sb2.append(String.format("HP %-3d ATK %-3d DEF %-3d SPATK %-3d SPDEF %-3d SPEED %-3d", e.getSpecies().getHp(), e.getSpecies().getAttack(), e.getSpecies().getDefense(), e.getSpecies().getSpatk(), e.getSpecies().getSpdef(), e.getSpecies().getSpeed()));
-                }
-                log.print(sb2);
-                log.println();
-            }
-            log.println();
-        }
-        log.println();
-    }
-
-    private void maybeLogTrainerChanges(final PrintStream log, List<String> originalTrainerNames, boolean trainerNamesChanged, boolean logTrainerMovesets) {
-        log.println("--Trainers Pokemon--");
-        List<Trainer> trainers = romHandler.getTrainers();
-        for (Trainer t : trainers) {
-            log.print("#" + t.index + " ");
-            String originalTrainerName = originalTrainerNames.get(t.index);
-            String currentTrainerName = "";
-            if (t.fullDisplayName != null) {
-                currentTrainerName = t.fullDisplayName;
-            } else if (t.name != null) {
-                currentTrainerName = t.name;
-            }
-            if (!currentTrainerName.isEmpty()) {
-                if (trainerNamesChanged) {
-                    log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
-                } else {
-                    log.printf("(%s)", currentTrainerName);
-                }
-            }
-            if (t.offset != 0) {
-                log.printf("@%X", t.offset);
-            }
-
-            String[] itemNames = romHandler.getItemNames();
-            if (logTrainerMovesets) {
-                log.println();
-                for (TrainerPokemon tpk : t.pokemon) {
-                    List<Move> moves = romHandler.getMoves();
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
-                    log.print(", Ability: " + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
-                    log.print(" - ");
-                    boolean first = true;
-                    for (int move : tpk.moves) {
-                        if (move != 0) {
-                            if (!first) {
-                                log.print(", ");
-                            }
-                            log.print(moves.get(move).name);
-                            first = false;
-                        }
-                    }
-                    log.println();
-                }
-            } else {
-                log.print(" - ");
-                boolean first = true;
-                for (TrainerPokemon tpk : t.pokemon) {
-                    if (!first) {
-                        log.print(", ");
-                    }
-                    log.printf(tpk.toString(), itemNames[tpk.heldItem]);
-                    first = false;
-                }
-            }
-            log.println();
-        }
-        log.println();
-    }
-
-    private int logStaticPokemon(final PrintStream log, int checkValue, List<StaticEncounter> oldStatics) {
-
-        List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
-
-        log.println("--Static Pokemon--");
-        Map<String, Integer> seenPokemon = new TreeMap<>();
-        for (int i = 0; i < oldStatics.size(); i++) {
-            StaticEncounter oldP = oldStatics.get(i);
-            StaticEncounter newP = newStatics.get(i);
-            checkValue = addToCV(checkValue, newP.spec.getNumber());
-            String oldStaticString = oldP.toString(settings.isStaticLevelModified());
-            log.print(oldStaticString);
-            if (seenPokemon.containsKey(oldStaticString)) {
-                int amount = seenPokemon.get(oldStaticString);
-                log.print("(" + (++amount) + ")");
-                seenPokemon.put(oldStaticString, amount);
-            } else {
-                seenPokemon.put(oldStaticString, 1);
-            }
-            log.println(" => " + newP.toString(settings.isStaticLevelModified()));
-        }
-        log.println();
-
-        return checkValue;
-    }
-
-    private int logTotemPokemon(final PrintStream log, int checkValue, List<TotemPokemon> oldTotems) {
-
-        List<TotemPokemon> newTotems = romHandler.getTotemPokemon();
-
-        String[] itemNames = romHandler.getItemNames();
-        log.println("--Totem Pokemon--");
-        for (int i = 0; i < oldTotems.size(); i++) {
-            TotemPokemon oldP = oldTotems.get(i);
-            TotemPokemon newP = newTotems.get(i);
-            checkValue = addToCV(checkValue, newP.spec.getNumber());
-            log.println(oldP.spec.getFullName() + " =>");
-            log.printf(newP.toString(), itemNames[newP.heldItem]);
-        }
-        log.println();
-
-        return checkValue;
-    }
-
-    private void logMoveChanges(final PrintStream log) {
-
-        log.println("--Move Data--");
-        log.print("NUM|NAME           |TYPE    |POWER|ACC.|PP");
-        if (romHandler.hasPhysicalSpecialSplit()) {
-            log.print(" |CATEGORY");
-        }
-        log.println();
-        List<Move> allMoves = romHandler.getMoves();
-        for (Move mv : allMoves) {
-            if (mv != null) {
-                String mvType = (mv.type == null) ? "???" : mv.type.toString();
-                log.printf("%3d|%-15s|%-8s|%5d|%4d|%3d", mv.internalId, mv.name, mvType, mv.power,
-                        (int) mv.hitratio, mv.pp);
-                if (romHandler.hasPhysicalSpecialSplit()) {
-                    log.printf("| %s", mv.category.toString());
-                }
-                log.println();
-            }
-        }
-        log.println();
-    }
-
-    private void logShops(final PrintStream log) {
-        String[] itemNames = romHandler.getItemNames();
-        log.println("--Shops--");
-        Map<Integer, Shop> shopsDict = romHandler.getShopItems();
-        for (int shopID : shopsDict.keySet()) {
-            Shop shop = shopsDict.get(shopID);
-            log.printf("%s", shop.name);
-            log.println();
-            List<Integer> shopItems = shop.items;
-            for (int shopItemID : shopItems) {
-                log.printf("- %5s", itemNames[shopItemID]);
-                log.println();
-            }
-
-            log.println();
-        }
-        log.println();
-    }
-
-    private void logPickupItems(final PrintStream log) {
-        List<PickupItem> pickupItems = romHandler.getPickupItems();
-        String[] itemNames = romHandler.getItemNames();
-        log.println("--Pickup Items--");
-        for (int levelRange = 0; levelRange < 10; levelRange++) {
-            int startingLevel = (levelRange * 10) + 1;
-            int endingLevel = (levelRange + 1) * 10;
-            log.printf("Level %s-%s", startingLevel, endingLevel);
-            log.println();
-            TreeMap<Integer, List<String>> itemListPerProbability = new TreeMap<>();
-            for (PickupItem pickupItem : pickupItems) {
-                int probability = pickupItem.probabilities[levelRange];
-                if (itemListPerProbability.containsKey(probability)) {
-                    itemListPerProbability.get(probability).add(itemNames[pickupItem.item]);
-                } else if (probability > 0) {
-                    List<String> itemList = new ArrayList<>();
-                    itemList.add(itemNames[pickupItem.item]);
-                    itemListPerProbability.put(probability, itemList);
-                }
-            }
-            for (Map.Entry<Integer, List<String>> itemListPerProbabilityEntry : itemListPerProbability.descendingMap().entrySet()) {
-                int probability = itemListPerProbabilityEntry.getKey();
-                List<String> itemList = itemListPerProbabilityEntry.getValue();
-                String itemsString = String.join(", ", itemList);
-                log.printf("%d%%: %s", probability, itemsString);
-                log.println();
-            }
-            log.println();
-        }
-        log.println();
-    }
-
-    private List<String> getTrainerNames() {
-        List<String> trainerNames = new ArrayList<>();
-        trainerNames.add(""); // for index 0
-        List<Trainer> trainers = romHandler.getTrainers();
-        for (Trainer t : trainers) {
-            if (t.fullDisplayName != null) {
-                trainerNames.add(t.fullDisplayName);
-            } else if (t.name != null) {
-                trainerNames.add(t.name);
-            } else {
-                trainerNames.add("");
-            }
-        }
-        return trainerNames;
-    }
-
-
-    private static int addToCV(int checkValue, int... values) {
-        for (int value : values) {
-            checkValue = Integer.rotateLeft(checkValue, 3);
-            checkValue ^= value;
-        }
-        return checkValue;
     }
 }

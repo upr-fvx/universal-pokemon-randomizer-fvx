@@ -1,13 +1,13 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.SpeciesSet;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpeciesTraitRandomizersTest extends RandomizerTest {
 

@@ -7,6 +7,7 @@ import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -28,6 +29,7 @@ public class ShopEditor {
     private final JFrame frame;
     private final JComboBox<String> shopComboBox;
     private final JTable shopTable;
+    private final JComboBox<Item> itemsCombobox = new JComboBox<>();
     private final JButton removeItemButton;
     private final JButton addItemButton;
 
@@ -56,7 +58,7 @@ public class ShopEditor {
         shopComboBox = new JComboBox<>(new String[]{"No Shops Loaded - Open a ROM file!"});
         shopComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                int index = ((JComboBox<String>) e.getSource()).getSelectedIndex();
+                int index = shopComboBox.getSelectedIndex();
                 updateTable(shops.get(index));
             }
         });
@@ -65,8 +67,16 @@ public class ShopEditor {
         shopTable = new JTable(new DefaultTableModel(
                 new Object[][]{}, new String[]{"Item", "Price"}
         ));
+        shopTable.getModel().addTableModelListener(e -> {
+            if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 0) {
+                int itemIndex = e.getFirstRow();
+                Item newItem = (Item) shopTable.getModel().getValueAt(itemIndex, 0);
+                Shop currShop = shops.get(shopComboBox.getSelectedIndex());
+                currShop.getItems().set(itemIndex, newItem);
+                System.out.println(currShop);
+            }
+        });
         JScrollPane tableScrollPane = new JScrollPane(shopTable);
-        // TODO: editing the entries in the table
 
         removeItemButton = new JButton("-- Remove Item");
         removeItemButton.addActionListener(e -> removeItem());
@@ -74,7 +84,7 @@ public class ShopEditor {
         addItemButton = new JButton("++ Add Item");
         addItemButton.addActionListener(e -> addItem());
         addItemButton.setEnabled(false);
-An exception was thrown
+
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(removeItemButton);
         buttonPanel.add(addItemButton);
@@ -124,10 +134,15 @@ An exception was thrown
         for (Shop shop : shops) {
             shopComboBox.addItem(shop.getName());
         }
+        itemsCombobox.removeAllItems();
+        for (Item item : romHandler.getItems()) {
+            if (item == null) continue;
+            itemsCombobox.addItem(item);
+        }
         shopComboBox.setSelectedIndex(0);
         shopComboBox.setEnabled(true);
-        removeItemButton.setEnabled(true);
-        addItemButton.setEnabled(true);
+        removeItemButton.setEnabled(romHandler.canChangeShopSizes());
+        addItemButton.setEnabled(romHandler.canChangeShopSizes());
     }
 
     private void saveROM() {
@@ -139,15 +154,22 @@ An exception was thrown
         DefaultTableModel model = (DefaultTableModel) shopTable.getModel();
         model.setRowCount(0);
         for (Item item : shop.getItems()) {
-            model.insertRow(0, new Object[]{item, prices.get(item.getId())});
+            model.insertRow(model.getRowCount(), new Object[]{item, prices.get(item.getId())});
         }
+        shopTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(itemsCombobox));
     }
 
     private void removeItem() {
         Shop shop = shops.get(shopComboBox.getSelectedIndex());
         List<Item> shopItems = shop.getItems();
-        shopItems.remove(shopItems.size() - 1);
-        updateTable(shop);
+        if (shopItems.size() == 1) {
+            JOptionPane.showMessageDialog(frame,
+                    "Item could not be removed, as it is the last item in the shop.",
+                    "Can not remove item", JOptionPane.WARNING_MESSAGE);
+        } else {
+            shopItems.remove(shopItems.size() - 1);
+            updateTable(shop);
+        }
     }
 
     private void addItem() {

@@ -1,7 +1,10 @@
 package com.dabomstew.pkdevtools;
 
+import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Shop;
+import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
+import com.dabomstew.pkromio.romhandlers.AbstractDSRomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -13,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ShopEditor {
@@ -151,6 +156,7 @@ public class ShopEditor {
     private void saveROM() {
         try {
             romHandler.setShops(shops);
+            romHandler.setShopPrices(prices);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame,
                     "The shops could not be written to ROM.\n " +
@@ -162,8 +168,44 @@ public class ShopEditor {
                     "Could not write shops.", JOptionPane.ERROR_MESSAGE);
             loadROM(romFile, true);
         }
-        // TODO
-        System.out.println("saving ROM (not yet implemented)");
+
+        // The saving section is copy-pasted (with some edits) from pkrandom.gui.RandomizerGUI.
+        // It isn't very pretty, and copy-pasting is obvious code smell... but at least it works.
+        // TODO: factor out ROM saving somehow
+
+        JFileChooser romSaveChooser = new JFileChooser();
+        romSaveChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        romSaveChooser.setFileFilter(new ROMFilter());
+
+        romSaveChooser.setSelectedFile(romFile);
+        boolean allowed = false;
+        File fh = null;
+
+        romSaveChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int returnVal = romSaveChooser.showSaveDialog(frame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            fh = romSaveChooser.getSelectedFile();
+            // Fix or add extension
+            List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
+            extensions.remove(this.romHandler.getDefaultExtension());
+            fh = FileFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
+            allowed = true;
+            if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
+                String currentFN = this.romHandler.loadedFilename();
+                if (currentFN.equals(fh.getAbsolutePath())) {
+                    JOptionPane.showMessageDialog(frame, "DS ROM files can't be overwritten.",
+                            "Can't overwrite file", JOptionPane.WARNING_MESSAGE);
+                    allowed = false;
+                }
+            }
+        }
+
+        if (allowed) {
+            romHandler.saveRom(fh.getAbsolutePath(), 0, false);
+            romFile = fh;
+            JOptionPane.showMessageDialog(frame, "ROM successfully saved, to " + romFile.getName(),
+                    "ROM saved", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void updateTable(Shop shop) {

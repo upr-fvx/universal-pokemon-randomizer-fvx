@@ -8,6 +8,7 @@ import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -70,18 +71,7 @@ public class ShopEditor {
         shopTable = new JTable(new DefaultTableModel(
                 new Object[][]{}, new String[]{"Item", "Price"}
         ));
-        shopTable.getModel().addTableModelListener(e -> {
-            if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 0) {
-                int itemIndex = e.getFirstRow();
-                Item newItem = (Item) shopTable.getModel().getValueAt(itemIndex, 0);
-
-                Shop currShop = shops.get(shopComboBox.getSelectedIndex());
-                currShop.getItems().set(itemIndex, newItem);
-                System.out.println(currShop);
-
-                shopTable.getModel().setValueAt(prices.get(newItem.getId()), itemIndex, 1);
-            }
-        });
+        shopTable.getModel().addTableModelListener(new ShopTableListener());
         JScrollPane tableScrollPane = new JScrollPane(shopTable);
 
         removeItemButton = new JButton("-- Remove Item");
@@ -223,6 +213,28 @@ public class ShopEditor {
         hasAddedItems = true;
     }
 
+    private class ShopTableListener implements TableModelListener {
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                Shop currShop = shops.get(shopComboBox.getSelectedIndex());
+                int itemIndex = e.getFirstRow();
+                if (e.getColumn() == 0) {
+                    Item newItem = (Item) shopTable.getModel().getValueAt(itemIndex, 0);
+
+                    currShop.getItems().set(itemIndex, newItem);
+
+                    shopTable.getModel().setValueAt(prices.get(newItem.getId()), itemIndex, 1);
+                } else { // column 1
+                    int newPrice = (Integer) shopTable.getModel().getValueAt(itemIndex, 1);
+
+                    Item currItem = currShop.getItems().get(itemIndex);
+                    prices.set(currItem.getId(), newPrice);
+                }
+            }
+        }
+    }
+
     private class PriceCellEditor extends DefaultCellEditor {
 
         public PriceCellEditor() {
@@ -243,6 +255,11 @@ public class ShopEditor {
 
         private boolean isPriceValid() {
             return ((JTextField) editorComponent).getText().matches("0|[1-9]\\d*");
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return Integer.parseInt((String) super.getCellEditorValue());
         }
     }
 }

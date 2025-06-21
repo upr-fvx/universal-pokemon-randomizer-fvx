@@ -74,9 +74,12 @@ public class ShopEditor {
             if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 0) {
                 int itemIndex = e.getFirstRow();
                 Item newItem = (Item) shopTable.getModel().getValueAt(itemIndex, 0);
+
                 Shop currShop = shops.get(shopComboBox.getSelectedIndex());
                 currShop.getItems().set(itemIndex, newItem);
                 System.out.println(currShop);
+
+                shopTable.getModel().setValueAt(prices.get(newItem.getId()), itemIndex, 1);
             }
         });
         JScrollPane tableScrollPane = new JScrollPane(shopTable);
@@ -180,6 +183,7 @@ public class ShopEditor {
             model.insertRow(model.getRowCount(), new Object[]{item, prices.get(item.getId())});
         }
         shopTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(itemsCombobox));
+        shopTable.getColumnModel().getColumn(1).setCellEditor(new PriceCellEditor());
     }
 
     private void removeItem() {
@@ -198,12 +202,12 @@ public class ShopEditor {
     private void addItem() {
         if (!hasAddedItems) {
             int answer = JOptionPane.showConfirmDialog(frame,
-                            "All ROMs have limited space for storing shop items.\n" +
-                                    "This program was made to support adding one (1) item\n" +
-                                    "to every shop in the game; adding any more is done at own risk.\n" +
-                                    "If too many items are added, the ROM will not be able to be saved.\n\n" +
-                                    "Will you add an item? (this dialog will only be shown once)",
-                                "Will you add an item?", JOptionPane.YES_NO_OPTION);
+                    "All ROMs have limited space for storing shop items.\n" +
+                            "This program was made to support adding one (1) item\n" +
+                            "to every shop in the game; adding any more is done at own risk.\n" +
+                            "If too many items are added, the ROM will not be able to be saved.\n\n" +
+                            "Will you add an item? (this dialog will only be shown once)",
+                    "Will you add an item?", JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.NO_OPTION) {
                 return;
             }
@@ -214,8 +218,31 @@ public class ShopEditor {
         currShop.getItems().add(defaultItem);
 
         DefaultTableModel tableModel = (DefaultTableModel) shopTable.getModel();
-        tableModel.insertRow(tableModel.getRowCount(), new Object[] {defaultItem, prices.get(defaultItem.getId())});
+        tableModel.insertRow(tableModel.getRowCount(), new Object[]{defaultItem, prices.get(defaultItem.getId())});
 
         hasAddedItems = true;
+    }
+
+    private class PriceCellEditor extends DefaultCellEditor {
+
+        public PriceCellEditor() {
+            super(new JTextField());
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            if (isPriceValid()) {
+                super.stopCellEditing();
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please insert a positive integer or zero.",
+                        "Invalid price", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+
+        private boolean isPriceValid() {
+            return ((JTextField) editorComponent).getText().matches("0|[1-9]\\d*");
+        }
     }
 }

@@ -26,7 +26,6 @@ import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.newnds.NARCArchive;
 import com.dabomstew.pkromio.romhandlers.romentries.DSStaticPokemon;
@@ -5600,9 +5599,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
   //      }
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 			try {
-				// TODO: test
-				// Currently level-up moves can replace HMs, but not TMs
-				// (do tutors need to be tested separately??)
 				// TODO: generalize
 				// In-battle:
 				// Overlay 8
@@ -5615,12 +5611,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// ARM9
 				// EE F7 BC FF 01 28 -> C0 46 00 20 01 28
 				// EE F7 53 FF 01 28 -> C0 46 00 20 01 28
-				byte[] arm = readARM9();
-				int armOffset1 = find(arm, "EE F7 BC FF 01 28");
-				writeBytes(arm, armOffset1, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-				int armOffset2 = find(arm, "EE F7 53 FF 01 28");
-				writeBytes(arm, armOffset2, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-				writeARM9(arm);
+				int armOffset1 = find(arm9, "EE F7 BC FF 01 28");
+				writeBytes(arm9, armOffset1, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				int armOffset2 = find(arm9, "EE F7 53 FF 01 28");
+				writeBytes(arm9, armOffset2, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
 			} catch (IOException e) {
 				throw new RomIOException(e);
 			}
@@ -5638,10 +5632,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// Overworld:
 				// ARM9
 				// F0 F7 5B FA 01 28 -> C0 46 00 20 01 28
-				byte[] arm = readARM9();
-				int armOffset = find(arm, "F0 F7 5B FA 01 28");
-				writeBytes(arm, armOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-				writeARM9(arm);
+				int armOffset = find(arm9, "F0 F7 5B FA 01 28");
+				writeBytes(arm9, armOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
 			} catch (IOException e) {
 				throw new RomIOException(e);
 			}

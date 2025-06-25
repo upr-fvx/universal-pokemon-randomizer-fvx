@@ -5591,52 +5591,53 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
     private void applyForgettableHMsPatch() {
-        int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
-        int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
-  //      if (offsets.length != expectedOffsetsLength) {
-   //         throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
-   //                 + expectedOffsetsLength + ", was " + offsets.length + ".");
-  //      }
-		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-			try {
-				// TODO: generalize
-				// In-battle:
-				// Overlay 8
-				// 01 F0 FB F9 01 28 -> C0 46 00 20 01 28
-				byte[] ol = readOverlay(8);
-				int olOffset = find(ol, "01 F0 FB F9 01 28");
-				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-				writeOverlay(8, ol);
-				// Overworld:
-				// ARM9
-				// EE F7 BC FF 01 28 -> C0 46 00 20 01 28
-				// EE F7 53 FF 01 28 -> C0 46 00 20 01 28
-				int armOffset1 = find(arm9, "EE F7 BC FF 01 28");
-				writeBytes(arm9, armOffset1, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-				int armOffset2 = find(arm9, "EE F7 53 FF 01 28");
-				writeBytes(arm9, armOffset2, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-			} catch (IOException e) {
-				throw new RomIOException(e);
-			}
-		} else {
-			try {
+		// To see whether a move is a HM, a method is called which puts 0 (false) or 1 (true) into r0.
+		// This method call is followed by a comparison; with special handling if r0==1.
+		// This special handling is what makes HMs unforgettable, so we want to disable this.
+		// We do this by replacing the method call with "C0 46 00 20".
+		// "00 20" sets r0 to 0, and "C0 46" does nothing; it's there only to match the length
+		// of the 4-byte method call.
+
+		byte[] r0FalseOps = RomFunctions.hexToBytes("C0 46 00 20");
+		int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+		int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
+		//      if (offsets.length != expectedOffsetsLength) {
+		//         throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
+		//                 + expectedOffsetsLength + ", was " + offsets.length + ".");
+		//      }
+
+		try {
+			if (romEntry.getRomType() == Gen4Constants.Type_DP) {
+				// TODO
+			} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
 				// TODO: test
 				// TODO: generalize
-				// In-battle:
-				// Overlay 13
-				// 01 F0 35 FA 01 28 -> C0 46 00 20 01 28
+				// In-battle / Overlay 13
 				byte[] ol = readOverlay(13);
 				int olOffset = find(ol, "01 F0 35 FA 01 28");
-				writeBytes(ol, olOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
+				writeBytes(ol, olOffset, r0FalseOps);
 				writeOverlay(13, ol);
-				// Overworld:
-				// ARM9
-				// F0 F7 5B FA 01 28 -> C0 46 00 20 01 28
+				// Overworld / ARM9
 				int armOffset = find(arm9, "F0 F7 5B FA 01 28");
-				writeBytes(arm9, armOffset, RomFunctions.hexToBytes("C0 46 00 20 01 28"));
-			} catch (IOException e) {
-				throw new RomIOException(e);
+				writeBytes(arm9, armOffset, r0FalseOps);
+			} else { // HGSS
+				// TODO: generalize
+				// In-battle / Overlay 8
+				byte[] ol = readOverlay(8);
+				int olOffset = find(ol, "01 F0 FB F9 01 28");
+				System.out.print("Foobar: 0x" + Integer.toHexString(olOffset));
+				writeBytes(ol, olOffset, r0FalseOps);
+				writeOverlay(8, ol);
+				// Overworld / ARM9
+				int armOffset1 = find(arm9, "EE F7 BC FF 01 28");
+				System.out.print(", 0x" + Integer.toHexString(armOffset1));
+				writeBytes(arm9, armOffset1, r0FalseOps);
+				int armOffset2 = find(arm9, "EE F7 53 FF 01 28");
+				System.out.print(", 0x" + Integer.toHexString(armOffset2) + romEntry.getName() + "\n");
+				writeBytes(arm9, armOffset2, r0FalseOps);
 			}
+		} catch (IOException e) {
+			throw new RomIOException(e);
 		}
     }
 

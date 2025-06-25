@@ -5608,7 +5608,37 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		try {
 			if (romEntry.getRomType() == Gen4Constants.Type_DP) {
-				// TODO
+				// TODO: test
+				// In-battle / Overlay 75
+				try {
+					for (int i = 0; i < 400; i++) {
+
+						byte[] ol = readOverlay(i);
+						int a = find(ol, "05 1c 46 20 80 00 20 58 00 21 2a 1c");
+						if (a > 0) {
+							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(a + 18));
+						}
+
+						int b = find(ol, "89 f6 12 f8");
+						if (b > 0) {
+							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(b));
+						}
+					}
+				} catch (Exception ignored) {}
+				int a = find(arm9, "40 00 21 18 a1 20 80 00 08 5a");
+				if (a > 0) {
+					System.out.println("Arm9 - 0x" + Integer.toHexString(a + 10));
+				}
+				int b = find(arm9, "40 00 21 18 1f 48 08 5a");
+				if (b > 0) {
+					System.out.println("Arm9 - 0x" + Integer.toHexString(b + 8));
+				}
+				
+				byte[] ol = readOverlay(75);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
+				writeOverlay(75, ol);
+				// Overworld / ARM9
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
 			} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
 				// TODO: test
 				// In-battle / Overlay 13

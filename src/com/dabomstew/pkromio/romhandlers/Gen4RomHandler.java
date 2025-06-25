@@ -5611,7 +5611,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// TODO
 			} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
 				// TODO: test
-				// TODO: generalize
 				// In-battle / Overlay 13
 				byte[] ol = readOverlay(13);
 				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
@@ -5619,7 +5618,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// Overworld / ARM9
 				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
 			} else { // HGSS
-				// TODO: generalize
 				// In-battle / Overlay 8
 				byte[] ol = readOverlay(8);
 				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);

@@ -5614,32 +5614,33 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// TODO: generalize
 				// In-battle / Overlay 13
 				byte[] ol = readOverlay(13);
-				int olOffset = find(ol, "01 F0 35 FA 01 28");
-				writeBytes(ol, olOffset, r0FalseOps);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
 				writeOverlay(13, ol);
 				// Overworld / ARM9
-				int armOffset = find(arm9, "F0 F7 5B FA 01 28");
-				writeBytes(arm9, armOffset, r0FalseOps);
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
 			} else { // HGSS
 				// TODO: generalize
 				// In-battle / Overlay 8
 				byte[] ol = readOverlay(8);
-				int olOffset = find(ol, "01 F0 FB F9 01 28");
-				System.out.print("Foobar: 0x" + Integer.toHexString(olOffset));
-				writeBytes(ol, olOffset, r0FalseOps);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
 				writeOverlay(8, ol);
 				// Overworld / ARM9
-				int armOffset1 = find(arm9, "EE F7 BC FF 01 28");
-				System.out.print(", 0x" + Integer.toHexString(armOffset1));
-				writeBytes(arm9, armOffset1, r0FalseOps);
-				int armOffset2 = find(arm9, "EE F7 53 FF 01 28");
-				System.out.print(", 0x" + Integer.toHexString(armOffset2) + romEntry.getName() + "\n");
-				writeBytes(arm9, armOffset2, r0FalseOps);
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
+				writeHMForgettablePatch(arm9, offsets[2], r0FalseOps);
 			}
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
     }
+
+	private void writeHMForgettablePatch(byte[] data, int offset, byte[] r0FalseOps) {
+		if (data[offset + 4] != 0x01 || data[offset + 5] != 0x28) {
+			throw new RuntimeException("Expected 01 28, was " +
+					RomFunctions.bytesToHexBlock(data, offset + 4, 2) + " ." +
+					"Likely HMMovesForgettableFunctionOffsets is faulty.");
+		}
+		writeBytes(data, offset, r0FalseOps);
+	}
 
 	@Override
     public void enableGuaranteedPokemonCatching() {

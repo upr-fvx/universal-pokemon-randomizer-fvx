@@ -5601,10 +5601,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		byte[] r0FalseOps = RomFunctions.hexToBytes("C0 46 00 20");
 		int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
 		int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
-		//      if (offsets.length != expectedOffsetsLength) {
-		//         throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
-		//                 + expectedOffsetsLength + ", was " + offsets.length + ".");
-		//      }
+		if (offsets.length != expectedOffsetsLength) {
+			throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
+					+ expectedOffsetsLength + ", was " + offsets.length + ".");
+		}
 
 		try {
 			if (romEntry.getRomType() == Gen4Constants.Type_DP) {
@@ -5619,9 +5619,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(a + 18));
 						}
 
-						int b = find(ol, "89 f6 12 f8");
+						int b = find(ol, "01 28 13 d1 28 1c");
 						if (b > 0) {
-							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(b));
+							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(b - 4));
+						}
+
+						int c = find(ol, "27 48 28 5c 00 07 00 0f 03 d1 28 1c");
+						if (c > 0) {
+							System.out.println("Overlay #" + i + " - 0x" + Integer.toHexString(c - 14));
 						}
 					}
 				} catch (Exception ignored) {}
@@ -5634,9 +5639,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					System.out.println("Arm9 - 0x" + Integer.toHexString(b + 8));
 				}
 				
-				byte[] ol = readOverlay(75);
+				byte[] ol = readOverlay(9);
 				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
-				writeOverlay(75, ol);
+				writeOverlay(9, ol);
 				// Overworld / ARM9
 				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
 			} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {

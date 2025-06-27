@@ -46,7 +46,7 @@ public class Evolution implements Comparable<Evolution> {
         this.from = original.from;
         this.to = original.to;
         this.type = original.type;
-        this.extraInfo = original.extraInfo;;
+        this.extraInfo = original.extraInfo;
         this.forme = original.forme;
     }
 
@@ -117,7 +117,7 @@ public class Evolution implements Comparable<Evolution> {
         if (getClass() != obj.getClass())
             return false;
         Evolution other = (Evolution) obj;
-        return from == other.from && to == other.to && type == other.type && extraInfo == other.extraInfo;
+        return type == other.type && extraInfo == other.extraInfo && from.equals(other.from) && to.equals(other.to);
     }
 
     @Override

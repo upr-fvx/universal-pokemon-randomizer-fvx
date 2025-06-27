@@ -2364,7 +2364,7 @@ public class Gen7Constants {
             {ItemIDs.manectite, 5000},
             {ItemIDs.garchompite, 20000},
             {ItemIDs.latiosite, 20000},
-            {ItemIDs.latiosite, 20000},
+            {ItemIDs.latiasite, 20000},
             {ItemIDs.roseliBerry, 1000},
             {ItemIDs.keeBerry, 1000},
             {ItemIDs.marangaBerry, 1000},

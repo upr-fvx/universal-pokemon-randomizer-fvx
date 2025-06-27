@@ -26,7 +26,6 @@ import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.newnds.NARCArchive;
 import com.dabomstew.pkromio.romhandlers.romentries.DSStaticPokemon;
@@ -1430,6 +1429,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void readFeebasTileEncounters(List<EncounterArea> encounterAreas, NARCArchive extraEncounterData, byte[] encounterOverlay) {
 		byte[] feebasData = extraEncounterData.files.get(0);
 		EncounterArea area = readExtraEncounterAreaDPPt(feebasData, 0, 1);
+		// TODO: make feebas tile encounters work in Japanese DP
 		int offset = find(encounterOverlay, Gen4Constants.feebasLevelPrefixDPPt);
 		if (offset > 0) {
 			offset += Gen4Constants.feebasLevelPrefixDPPt.length() / 2; // because it was a prefix
@@ -1449,6 +1449,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < honeyTreeOffsets.length; i++) {
 			byte[] honeyTreeData = extraEncounterData.files.get(honeyTreeOffsets[i]);
 			EncounterArea area = readExtraEncounterAreaDPPt(honeyTreeData, 0, 6);
+			// TODO: make honey tree encounters work in Japanese DP
 			offset = find(encounterOverlay, Gen4Constants.honeyTreeLevelPrefixDPPt);
 			if (offset > 0) {
 				offset += Gen4Constants.honeyTreeLevelPrefixDPPt.length() / 2; // because it was a prefix
@@ -5269,6 +5270,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
 			available |= MiscTweak.REUSABLE_TMS.getValue();
 		}
+       // if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
+            available |= MiscTweak.FORGETTABLE_HMS.getValue();
+        //}
         return available;
     }
 
@@ -5292,7 +5296,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             updateRotomFormeTyping();
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
 			applyReusableTMsPatch();
-		}
+		} else if (tweak == MiscTweak.FORGETTABLE_HMS) {
+            applyForgettableHMsPatch();
+        }
     }
 
 	private void applyFastestText() {
@@ -5582,6 +5588,62 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		arm9[offset] = Gen4Constants.tmsReusableByteAfter;
 		tmsReusable = true;
+	}
+
+    private void applyForgettableHMsPatch() {
+		// To see whether a move is a HM, a method is called which puts 0 (false) or 1 (true) into r0.
+		// This method call is followed by a comparison; with special handling if r0==1.
+		// This special handling is what makes HMs unforgettable, so we want to disable this.
+		// We do this by replacing the method call with "C0 46 00 20".
+		// "00 20" sets r0 to 0, and "C0 46" does nothing; it's there only to match the length
+		// of the 4-byte method call.
+		// Thanks to AdAstra for discovering this method,
+		// and the offsets needed for Platinum (U) and HeartGold (U).
+
+		byte[] r0FalseOps = RomFunctions.hexToBytes("C0 46 00 20");
+		int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+		int expectedOffsetsLength = new int[]{2, 2, 3}[romEntry.getRomType()];
+		if (offsets.length != expectedOffsetsLength) {
+			throw new RuntimeException("Unexpected length of HMMovesForgettableFunctionOffsets array. Expected "
+					+ expectedOffsetsLength + ", was " + offsets.length + ".");
+		}
+
+		try {
+			if (romEntry.getRomType() == Gen4Constants.Type_DP) {
+				// In-battle / Overlay 9
+				byte[] ol = readOverlay(9);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
+				writeOverlay(9, ol);
+				// Overworld / ARM9
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
+			} else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
+				// In-battle / Overlay 13
+				byte[] ol = readOverlay(13);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
+				writeOverlay(13, ol);
+				// Overworld / ARM9
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
+			} else { // HGSS
+				// In-battle / Overlay 8
+				byte[] ol = readOverlay(8);
+				writeHMForgettablePatch(ol, offsets[0], r0FalseOps);
+				writeOverlay(8, ol);
+				// Overworld / ARM9
+				writeHMForgettablePatch(arm9, offsets[1], r0FalseOps);
+				writeHMForgettablePatch(arm9, offsets[2], r0FalseOps);
+			}
+		} catch (IOException e) {
+			throw new RomIOException(e);
+		}
+    }
+
+	private void writeHMForgettablePatch(byte[] data, int offset, byte[] r0FalseOps) {
+		if (data[offset + 4] != 0x01 || data[offset + 5] != 0x28) {
+			throw new RuntimeException("Expected 01 28, was " +
+					RomFunctions.bytesToHexBlock(data, offset + 4, 2) + " ." +
+					"Likely HMMovesForgettableFunctionOffsets is faulty.");
+		}
+		writeBytes(data, offset, r0FalseOps);
 	}
 
 	@Override

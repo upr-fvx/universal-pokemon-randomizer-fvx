@@ -726,13 +726,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pk.getEvolutionsFrom()) {
                     Species toPK = evo.getTo();
                     writeWord(evoEntry, evosWritten * 8, Gen7Constants.evolutionTypeToIndex(evo.getType()));
-                    byte extraInfo;
+                    int extraInfo;
                     if (evo.getType().isGameSpecific()) {
                         extraInfo = getGameSpecificExtraInfo(evo.getType());
                     } else if (evo.getType().usesLevel()) {
                         extraInfo = 0;
                     } else {
-                        extraInfo = (byte) evo.getExtraInfo();
+                        extraInfo = evo.getExtraInfo();
                     }
                     writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());

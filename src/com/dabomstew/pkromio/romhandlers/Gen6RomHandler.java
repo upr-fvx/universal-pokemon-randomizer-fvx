@@ -700,7 +700,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeShedinjaEvolution() throws IOException {
-        System.out.println("writing shedinja evolution");
         Species nincada = pokes[SpeciesIDs.nincada];
 
         // When the "Limit Pokemon" setting is enabled and Gen 3 is disabled, or when

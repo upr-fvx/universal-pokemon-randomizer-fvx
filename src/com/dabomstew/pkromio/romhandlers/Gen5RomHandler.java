@@ -83,8 +83,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private final Map<Integer, FormeInfo> formeMappings = new TreeMap<>();
     private final Map<Species, Integer> formeGraphicsIndices = new HashMap<>();
     private final Map<Species, Integer> graphicalFormeCounts = new TreeMap<>(); // temporary until the form rewrite
-    private List<Species> speciesList;
-    private List<Species> speciesListInclFormes;
     private Move[] moves;
     private List<Item> items;
     private Gen5RomEntry romEntry;
@@ -154,8 +152,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
         loadItems();
         loadPokemonStats();
-        speciesListInclFormes = Arrays.asList(pokes);
-        speciesList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen5Constants.pokemonCount + 1));
         loadMoves();
         loadPokemonPalettes();
 
@@ -554,18 +550,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        return speciesList;
+        return Arrays.asList(pokes).subList(0, Gen5Constants.pokemonCount + 1);
     }
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        return speciesListInclFormes;
+        return Arrays.asList(pokes);
     }
 
 	@Override
 	public SpeciesSet getAltFormes() {
 		int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(Gen5Constants.pokemonCount + 1,
+		return new SpeciesSet(Arrays.asList(pokes).subList(Gen5Constants.pokemonCount + 1,
 				Gen5Constants.pokemonCount + formeCount + 1));
 	}
 

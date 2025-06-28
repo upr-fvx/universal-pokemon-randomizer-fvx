@@ -78,8 +78,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
     private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private Map<Integer,Integer> dummyAbsolutePokeNums;
-    private List<Species> speciesList;
-    private List<Species> speciesListInclFormes;
     private List<MegaEvolution> megaEvolutions;
     private List<Item> items;
     private List<AreaData> areaDataList;
@@ -137,9 +135,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         loadPokemonStats();
         loadMoves();
-
-        speciesListInclFormes = Arrays.asList(pokes);
-        speciesList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen7Constants.getPokemonCount(romEntry.getRomType()) + 1));
 
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen7Constants.getShopNames(romEntry.getRomType());
@@ -998,20 +993,21 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        return speciesList;
+        int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
+        return Arrays.asList(pokes).subList(0, pokemonCount + 1);
     }
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        return speciesListInclFormes;
+        return Arrays.asList(pokes);
     }
 
-	@Override
-	public SpeciesSet getAltFormes() {
-		int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
-		int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(pokemonCount + 1, pokemonCount + formeCount + 1));
-	}
+    @Override
+    public SpeciesSet getAltFormes() {
+        int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
+        int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
+        return new SpeciesSet(Arrays.asList(pokes).subList(pokemonCount + 1, pokemonCount + formeCount + 1));
+    }
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {

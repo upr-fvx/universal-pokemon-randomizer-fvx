@@ -76,8 +76,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	// This rom
 	private Species[] pokes;
-	private List<Species> speciesListInclFormes;
-	private List<Species> speciesList;
 	private Move[] moves;
 	private List<Item> items;
 	private NARCArchive pokeNarc, moveNarc;
@@ -140,8 +138,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		loadItems();
 		loadPokemonStats();
-		speciesListInclFormes = Arrays.asList(pokes);
-		speciesList = Arrays.asList(Arrays.copyOfRange(pokes, 0, Gen4Constants.pokemonCount + 1));
 		loadMoves();
 		loadPokemonPalettes();
 		abilityNames = getStrings(romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -899,18 +895,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public List<Species> getSpecies() {
-		return speciesList;
+		return Arrays.asList(pokes).subList(0, Gen4Constants.pokemonCount + 1);
 	}
 
 	@Override
 	public List<Species> getSpeciesInclFormes() {
-		return speciesListInclFormes; // No formes for now
+		return Arrays.asList(pokes);
 	}
 
 	@Override
 	public SpeciesSet getAltFormes() {
 		int formeCount = Gen4Constants.getFormeCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(Gen4Constants.pokemonCount + 1,
+		return new SpeciesSet(Arrays.asList(pokes).subList(Gen4Constants.pokemonCount + 1,
 				Gen4Constants.pokemonCount + formeCount + 1));
 	}
 

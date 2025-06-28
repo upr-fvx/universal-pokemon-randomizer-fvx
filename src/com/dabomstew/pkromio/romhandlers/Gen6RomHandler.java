@@ -81,8 +81,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
     private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private Map<Integer,Integer> dummyAbsolutePokeNums;
-    private List<Species> speciesList;
-    private List<Species> speciesListInclFormes;
     private List<MegaEvolution> megaEvolutions;
     private List<Item> items;
     private Move[] moves;
@@ -144,10 +142,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         loadPokemonStats();
         loadMoves();
-
-        speciesListInclFormes = Arrays.asList(pokes);
-        speciesList = Arrays.asList(Arrays.copyOfRange(pokes,0,Gen6Constants.pokemonCount + 1));
-
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen6Constants.getShopNames(romEntry.getRomType());
 
@@ -706,6 +700,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void writeShedinjaEvolution() throws IOException {
+        System.out.println("writing shedinja evolution");
         Species nincada = pokes[SpeciesIDs.nincada];
 
         // When the "Limit Pokemon" setting is enabled and Gen 3 is disabled, or when
@@ -879,20 +874,20 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        return speciesList;
+        return Arrays.asList(pokes).subList(0, Gen6Constants.pokemonCount + 1);
     }
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        return speciesListInclFormes;
+        return Arrays.asList(pokes);
     }
 
-	@Override
-	public SpeciesSet getAltFormes() {
-		int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
-		return new SpeciesSet(speciesListInclFormes.subList(Gen6Constants.pokemonCount + 1,
-				Gen6Constants.pokemonCount + formeCount + 1));
-	}
+    @Override
+    public SpeciesSet getAltFormes() {
+        int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
+        return new SpeciesSet(Arrays.asList(pokes).subList(Gen6Constants.pokemonCount + 1,
+                Gen6Constants.pokemonCount + formeCount + 1));
+    }
 
     @Override
     public List<MegaEvolution> getMegaEvolutions() {

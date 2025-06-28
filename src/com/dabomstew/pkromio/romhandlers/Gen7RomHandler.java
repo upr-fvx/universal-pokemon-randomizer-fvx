@@ -462,7 +462,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int evo) {
         // For cosmoem and rockruff
         int method = readWord(evoEntry, evo * 8);
-        boolean wantsSunny = evoEntry[evo * 8 + 2] == 0x1E;
+        boolean wantsSunny = evoEntry[evo * 8 + 2] == Gen7Constants.getSunnyEvolutionExtraInfo(romEntry.getRomType());
         boolean matchesGame = wantsSunny == romEntry.isSunny();
         if (method == Gen7Constants.evolutionMethodLevelGame) {
             return matchesGame ? EvolutionType.LEVEL_GAME_THIS : EvolutionType.LEVEL_GAME_OTHER;
@@ -770,8 +770,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         boolean thisGame = (type == EvolutionType.LEVEL_GAME_THIS || type == EvolutionType.LEVEL_GAME_THIS_DAY ||
                 type == EvolutionType.LEVEL_GAME_THIS_NIGHT);
         return thisGame ^ romEntry.isSunny() ?
-                Gen7Constants.sunnyEvolutionExtraInfo :
-                Gen7Constants.moonyEvolutionExtraInfo;
+                Gen7Constants.getMoonyEvolutionExtraInfo(romEntry.getRomType()) :
+                Gen7Constants.getSunnyEvolutionExtraInfo(romEntry.getRomType());
     }
 
     public Map<Evolution, Byte> getEvolutionsWithLevelsInternally() {

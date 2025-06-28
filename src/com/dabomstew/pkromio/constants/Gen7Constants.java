@@ -837,7 +837,13 @@ public class Gen7Constants {
         }
     }
 
-    public static final byte sunnyEvolutionExtraInfo = 0x1E, moonyEvolutionExtraInfo = 0x1F;
+    public static byte getSunnyEvolutionExtraInfo(int romType) {
+        return (byte) (romType == Type_SM ? 0x1E : 0x20);
+    }
+
+    public static byte getMoonyEvolutionExtraInfo(int romType) {
+        return (byte) (romType == Type_SM ? 0x1F : 0x21);
+    }
 
     public static final int evolutionMethodLevelGame = 0x24,
             evolutionMethodLevelGameDay = 0x25, evolutionMethodLevelGameNight = 0x26;

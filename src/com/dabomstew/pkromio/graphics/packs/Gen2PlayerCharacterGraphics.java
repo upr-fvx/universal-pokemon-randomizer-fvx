@@ -47,7 +47,7 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
         GBCImage trainerCard = new GBCImage.Builder(base).columnMode(true).build();
         if (trainerCard.getWidthInTiles() != TRAINER_CARD_IMAGE_WIDTH ||
                 trainerCard.getHeightInTiles() != TRAINER_CARD_IMAGE_HEIGHT) {
-            System.out.println("Invalid trainer card image dimensions");
+            System.out.println(getName() + ": Invalid trainer card image dimensions");
             return null;
         }
         return trainerCard;
@@ -71,7 +71,7 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
             return new Palette(new Color[]{fourColors.get(1), fourColors.get(2)});
         }
         if (palette.size() != 2) {
-            System.out.println("Invalid ImagePalette; wrong amount of colors. Expected 2, was " + palette.size());
+            System.out.println(getName() + ": Invalid ImagePalette; wrong amount of colors. Expected 2, was " + palette.size());
             return null;
         }
         return palette;

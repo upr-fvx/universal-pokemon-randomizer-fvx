@@ -34,7 +34,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         }
         GBCImage front = new GBCImage.Builder(base).columnMode(true).build();
         if (front.getWidthInTiles() != FRONT_IMAGE_DIMENSIONS || front.getHeightInTiles() != FRONT_IMAGE_DIMENSIONS) {
-            System.out.println("Invalid front image dimensions");
+            System.out.println(getName() + ": Invalid front image dimensions");
             return null;
         }
         return front;
@@ -47,7 +47,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         }
         GBCImage back = new GBCImage.Builder(base).columnMode(true).build();
         if (back.getWidthInTiles() != getBackImageDimensions() || back.getHeightInTiles() != getBackImageDimensions()) {
-            System.out.println("Invalid back image dimensions");
+            System.out.println(getName() + ": Invalid back image dimensions");
             return null;
         }
         return back;
@@ -62,7 +62,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         }
         GBCImage walk = new GBCImage.Builder(base).build();
         if (walk.getWidthInTiles() * walk.getHeightInTiles() != OVERWORLD_SPRITE_TILE_AMOUNT) {
-            System.out.println("Invalid walk sprite dimensions");
+            System.out.println(getName() + ": Invalid walk sprite dimensions");
             return null;
         }
         return walk;
@@ -75,7 +75,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         }
         GBCImage bike = new GBCImage.Builder(base).build();
         if (bike.getWidthInTiles() * bike.getHeightInTiles() != OVERWORLD_SPRITE_TILE_AMOUNT) {
-            System.out.println("Invalid bike sprite dimensions");
+            System.out.println(getName() + ": Invalid bike sprite dimensions");
             return null;
         }
         return bike;
@@ -89,7 +89,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         } else if (fishSpriteMode.equalsIgnoreCase("separate")) {
             fish = initFishFromSeparate();
         } else {
-            System.out.println("Invalid fish sprite mode");
+            System.out.println(getName() + ": Invalid fish sprite mode");
         }
 
         if (fish == null && hasWalkSprite()) {
@@ -105,7 +105,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         }
         GBCImage fish = new GBCImage.Builder(base).build();
         if (fish.getWidthInTiles() * fish.getHeightInTiles() != (OVERWORLD_SPRITE_TILE_AMOUNT) / 4) {
-            System.out.println("Invalid fish sprite dimensions");
+            System.out.println(getName() + ": Invalid fish sprite dimensions");
             return null;
         }
         return fish;
@@ -119,7 +119,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         BufferedImage stitched = GFXFunctions.stitchToGrid(new BufferedImage[][]{{front, back, side}});
         GBCImage fish = new GBCImage.Builder(stitched).build();
         if (fish.getWidthInTiles() * fish.getHeightInTiles() != (OVERWORLD_SPRITE_TILE_AMOUNT) / 4) {
-            System.out.println("Invalid fish sprite dimensions");
+            System.out.println(getName() + ": Invalid fish sprite dimensions");
             return null;
         }
         return fish;

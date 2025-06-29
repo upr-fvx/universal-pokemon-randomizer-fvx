@@ -74,14 +74,7 @@ public class Roms {
         for (int gen : generations) {
             List<String> ofGen = ALL_ROMS_BY_GENERATION.get(gen - 1);
             if (gen < 6) {
-                ofGen.removeIf(s -> {
-                    for (Region region : regions) {
-                        if (s.contains("(" + region.id)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                });
+                ofGen.removeIf(s -> !isOfRegion(s, regions));
             }
             roms.addAll(ofGen);
         }
@@ -90,6 +83,18 @@ public class Roms {
         }
 
         return roms.toArray(new String[0]);
+    }
+
+    public static boolean isOfRegion(String romName, Region... regions) {
+        if (ALL_GEN_6_ROMS.contains(romName) || ALL_GEN_7_ROMS.contains(romName)) {
+            return true;
+        }
+        for (Region region : regions) {
+            if (romName.contains("(" + region.id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

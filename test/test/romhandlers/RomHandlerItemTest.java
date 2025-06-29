@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerItemTest extends RomHandlerTest {
 
@@ -75,6 +76,7 @@ public class RomHandlerItemTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void allTMsHaveTMNames(String romName) {
         // Obviously fails for non-English ROMs
+        assumeTrue(Roms.isOfRegion(romName, Roms.Region.USA, Roms.Region.EUROPE_ENGLISH));
         loadROM(romName);
         for (Item item : romHandler.getItems()) {
             if (item == null) continue;

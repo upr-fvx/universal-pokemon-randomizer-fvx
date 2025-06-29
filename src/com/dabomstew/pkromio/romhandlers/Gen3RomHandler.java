@@ -3877,7 +3877,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public int miscTweaksAvailable() {
         int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-        available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
+        if (romEntry.getIntValue("NationalDexTweakPossible") != 0) {
+            available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
+        }
         if (romEntry.getIntValue("RunIndoorsTweakOffset") > 0) {
             available |= MiscTweak.RUNNING_SHOES_INDOORS.getValue();
         }

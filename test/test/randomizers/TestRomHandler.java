@@ -1,20 +1,20 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.AbstractRomHandler;
-import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.romhandlers.romentries.RomEntry;
-import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
-import com.dabomstew.pkrandom.services.TypeService;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
+import com.dabomstew.pkromio.services.TypeService;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A special "dummy" romHandler which copies data from an existing romHandler.
@@ -32,13 +32,53 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet testIrregularFormes = null;
     Map<Species, Map<Integer, Species>> testAltFormesMap = null;
     private RestrictedSpeciesService testRSS = null;
+    private List<Species> testSpeciesInOrder = null;
 
-    //Encounters
+    //Abilities
+    private final int abilitiesPerSpecies;
+
+    //Moves
+    private final List<Move> originalMoves;
+    private List<Move> testMoves;
+    private final Map<Integer, List<MoveLearnt>> originalMovesLearnt;
+    private Map<Integer, List<MoveLearnt>> testMovesLearnt;
+    private final Map<Integer, List<Integer>> originalEggMoves;
+    private Map<Integer, List<Integer>> testEggMoves;
+
+    // TMs/HMs/Tutors
+    private final List<Integer> originalTMMoves;
+    private List<Integer> testTMMoves;
+    private final List<Integer> hmMoves;
+    private final List<Integer> originalMoveTutorMoves;
+    private List<Integer> testMoveTutorMoves;
+    private final Map<Species, boolean[]> originalTMHMCompatibility;
+    private Map<Species, boolean[]> testTMHMCompatibility;
+    private final Map<Species, boolean[]> originalMoveTutorCompatibility;
+    private Map<Species, boolean[]> testMoveTutorCompatibility;
+
+    //Evolutions
+    private final boolean altFormesCanHaveDifferentEvolutions;
+
+    //Encounters (wild)
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
     private final boolean hasTimeBasedEncounters;
     private final boolean hasWildAltFormes;
     private final SpeciesSet originalBannedForWild;
+
+    //Statics
+    private final List<StaticEncounter> originalStatics;
+    private List<StaticEncounter> testStatics = null;
+    private final boolean canChangeStaticPokemon;
+    private final boolean hasStaticAltFormes;
+    private final SpeciesSet originalBannedForStatics;
+    private final boolean forceSwapStaticMegaEvos;
+    private final List<Integer> mainGameLegendaries;
+
+    //TMs/HMs
+    private final boolean originalIsTMsReusable;
+    private boolean testIsTMsReusable;
+    private final boolean canTMsBeHeld;
 
     //Types
     private final TypeTable originalTypeTable;
@@ -52,10 +92,50 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean isUSUM;
     private final int romType;
 
+    //Misc tweaks
+    private final int miscTweaksAvailable;
+
     //Starters
     private final List<Species> originalStarters;
     private List<Species> testStarters = null;
     private final boolean hasStarterAltFormes;
+
+    //Items
+    private final List<Item> items;
+    private final Set<Item> originalAllowedItems;
+    private final Set<Item> evolutionItems;
+    private final Set<Item> xItems;
+    private final Set<Item> regularShopItems;
+    private final Set<Item> opShopItems;
+    private final Set<Item> uniqueNoSellItems;
+
+    //Field Items
+    private final Set<Item> requiredFieldTMs;
+    private final List<Item> originalFieldItems;
+    private List<Item> testFieldItems;
+
+    //Pickup Items
+    private final List<PickupItem> originalPickupItems;
+    private List<PickupItem> testPickupItems;
+
+    //Shops
+    private final List<Shop> originalShops;
+    private List<Shop> testShops;
+
+    //Trainers
+    private final SpeciesSet originalBannedForTrainers;
+    private SpeciesSet testBannedForTrainers = null;
+    private final List<Trainer> originalTrainers;
+    private List<Trainer> testTrainers = null;
+    private final List<Integer> mainPlaythroughTrainers;
+    private final List<Integer> eliteFourTrainers;
+    private final List<Integer> challengeModeEliteFourTrainers;
+    private final Map<String, Type> gymAndEliteTypeThemes;
+    private final boolean trainerPokemonAlwaysUseAbility1;
+    private final boolean trainerPokemonUseBaseFormeAbilities;
+    private final boolean canAddPokemonToBossTrainers;
+    private final boolean canAddPokemonToImportantTrainers;
+    private final boolean canAddPokemonToRegularTrainers;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -64,27 +144,90 @@ public class TestRomHandler extends AbstractRomHandler {
     public TestRomHandler(RomHandler mockupOf) {
         originalTypeTable = new TypeTable(mockupOf.getTypeTable());
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
-        originalEncounters = mockupOf.getEncounters(true);
-        generation = mockupOf.generationOfPokemon();
+        originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters(true));
+        originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
+
+        abilitiesPerSpecies = mockupOf.abilitiesPerSpecies();
+
+        originalMoves = Collections.unmodifiableList(mockupOf.getMoves());
+        originalMovesLearnt = Collections.unmodifiableMap(mockupOf.getMovesLearnt());
+        originalEggMoves = Collections.unmodifiableMap(mockupOf.getEggMoves());
+
+        originalTMMoves = Collections.unmodifiableList(mockupOf.getTMMoves());
+        hmMoves = Collections.unmodifiableList(mockupOf.getHMMoves());
+        originalMoveTutorMoves = Collections.unmodifiableList(mockupOf.getMoveTutorMoves());
+        originalTMHMCompatibility = Collections.unmodifiableMap(mockupOf.getTMHMCompatibility());
+        originalMoveTutorCompatibility = mockupOf.hasMoveTutors() ?
+                Collections.unmodifiableMap(mockupOf.getMoveTutorCompatibility()) :
+                Collections.emptyMap();
+
+        altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
+
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
-        originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
+        originalStatics = Collections.unmodifiableList(mockupOf.getStaticPokemon());
+        canChangeStaticPokemon = mockupOf.canChangeStaticPokemon();
+        hasStaticAltFormes = mockupOf.hasStaticAltFormes();
+        originalBannedForStatics = SpeciesSet.unmodifiable(mockupOf.getBannedForStaticPokemon());
+        forceSwapStaticMegaEvos = mockupOf.forceSwapStaticMegaEvos();
+        if(mockupOf.hasMainGameLegendaries()) {
+            mainGameLegendaries = Collections.unmodifiableList(mockupOf.getMainGameLegendaries());
+        } else {
+            mainGameLegendaries = Collections.unmodifiableList(new ArrayList<>());
+        }
+
+        originalIsTMsReusable = mockupOf.isTMsReusable();
+        canTMsBeHeld = mockupOf.canTMsBeHeld();
+
+        hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
+
+        generation = mockupOf.generationOfPokemon();
         romType = mockupOf.getROMType();
         isYellow = mockupOf.isYellow();
         isORAS = mockupOf.isORAS();
         isUSUM = mockupOf.isUSUM();
 
-        hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
+        miscTweaksAvailable = mockupOf.miscTweaksAvailable();
 
         originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
+
+        items = Collections.unmodifiableList(mockupOf.getItems());
+        originalAllowedItems = items.stream().filter(Objects::nonNull).filter(Item::isAllowed).collect(Collectors.toSet());
+        evolutionItems = Collections.unmodifiableSet(mockupOf.getEvolutionItems());
+        xItems = Collections.unmodifiableSet(mockupOf.getXItems());
+        regularShopItems = Collections.unmodifiableSet(mockupOf.getRegularShopItems());
+        opShopItems = Collections.unmodifiableSet(mockupOf.getOPShopItems());
+        uniqueNoSellItems = Collections.unmodifiableSet(mockupOf.getMegaStones());
+
+        requiredFieldTMs = Collections.unmodifiableSet(mockupOf.getRequiredFieldTMs());
+        originalFieldItems = Collections.unmodifiableList(mockupOf.getFieldItems());
+
+        originalPickupItems = Collections.unmodifiableList(mockupOf.getPickupItems());
+
+        originalShops = Collections.unmodifiableList(mockupOf.getShops());
+
+        originalBannedForTrainers = SpeciesSet.unmodifiable(mockupOf.getBannedFormesForTrainerPokemon());
+        originalTrainers = Collections.unmodifiableList(mockupOf.getTrainers());
+        mainPlaythroughTrainers = Collections.unmodifiableList(mockupOf.getMainPlaythroughTrainers());
+        eliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(false));
+        challengeModeEliteFourTrainers = Collections.unmodifiableList(mockupOf.getEliteFourTrainers(true));
+        gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
+        trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
+        trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
+        canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
+        canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
+        canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
+
+        perfectAccuracy = mockupOf.getPerfectAccuracy();
     }
 
     /**
      * Prepares for testing by making a deep copy of all Species,
-     * which are passed by reference and therefore cannot otherwise be reset.
+     * which are passed by reference and therefore cannot otherwise be reset. <br>
+     * Other test data is copied as needed.
      */
     public void prepare() {
         testSpeciesInclFormes = deepCopySpeciesSet(originalSpeciesInclFormes);
@@ -92,7 +235,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     /**
-     * Drops all test data.
+     * Resets all test data, mostly by simply dropping it.
      */
     public void reset() {
         testSpeciesInclFormes = null;
@@ -103,12 +246,39 @@ public class TestRomHandler extends AbstractRomHandler {
         testIrregularFormes = null;
         testAltFormesMap = null;
         testRSS = null;
+        testSpeciesInOrder = null;
+
+        testMoves = null;
+        testMovesLearnt = null;
+        testEggMoves = null;
+
+        testTMMoves = null;
+        testMoveTutorMoves = null;
+        testTMHMCompatibility = null;
+        testMoveTutorCompatibility = null;
 
         testEncounters = null;
+
+        testStatics = null;
+
+        testIsTMsReusable = originalIsTMsReusable;
 
         testTypeTable = null;
 
         testStarters = null;
+
+        // Items are passed around by reference a lot, but as we only expect their "allowed" attribute
+        // to change, we can (and do) just reset that.
+        for (int i = 1; i < items.size(); i++) {
+            items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+        }
+
+        testFieldItems = null;
+
+        testShops = null;
+
+        testBannedForTrainers = null;
+        testTrainers = null;
     }
 
     /**
@@ -158,7 +328,8 @@ public class TestRomHandler extends AbstractRomHandler {
         copy.setFormeSuffix(original.getFormeSuffix());
         copy.setFormeNumber(original.getFormeNumber());
         copy.setCosmeticForms(original.getCosmeticForms());
-        copy.setFormeSpriteIndex(original.getFormeSpriteIndex());
+        copy.setActuallyCosmetic(original.isActuallyCosmetic());
+
         copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
         //I don't know if that copy is necessary, but it shouldn't hurt?
 
@@ -233,17 +404,15 @@ public class TestRomHandler extends AbstractRomHandler {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
                     evolution.getType(), evolution.getExtraInfo());
             evoCopy.setForme(evolution.getForme());
-            evoCopy.setLevel(evolution.getLevel());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
         }
 
         for(MegaEvolution evolution : original.getMegaEvolutionsFrom()) {
-            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.to),
-                    evolution.method, evolution.argument);
-            evoCopy.carryStats = evolution.carryStats;
+            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.getTo()),
+                    evolution.isNeedsItem(), evolution.getItem());
             copy.getMegaEvolutionsFrom().add(evoCopy);
-            evoCopy.to.getMegaEvolutionsTo().add(evoCopy);
+            evoCopy.getTo().getMegaEvolutionsTo().add(evoCopy);
 
             testMegaEvolutions.add(evoCopy);
         }
@@ -298,9 +467,73 @@ public class TestRomHandler extends AbstractRomHandler {
         return copiedEncounters;
     }
 
+    /**
+     * Given a List of {@link StaticEncounter}s, copies them such that each Species in the original
+     * is replaced by its copied test version.
+     * @param originalStatics The List of StaticEncounters to copy.
+     * @return A new List of new StaticEncounters which are copies of the given ones.
+     */
+    private List<StaticEncounter> deepCopyStatics(List<StaticEncounter> originalStatics) {
+        List<StaticEncounter> copiedStatics = new ArrayList<>();
+        for(StaticEncounter orig : originalStatics) {
+            StaticEncounter copy = new StaticEncounter(orig);
+            Species spec = originalToTest.get(orig.getSpecies());
+            copy.setSpecies(spec);
+            for(StaticEncounter linked : copy.getLinkedEncounters()) {
+                linked.setSpecies(spec);
+            }
+            copiedStatics.add(copy);
+        }
+        return copiedStatics;
+    }
+
+    /**
+     * Given a List of {@link Trainer}s, copies them such that each Species in the original
+     * is replaced by its copied test version.
+     * @param originalTrainers The List of Trainers to copy.
+     * @return A new List of Trainers which are copies of the given one.
+     */
+    private List<Trainer> deepCopyTrainers(List<Trainer> originalTrainers) {
+        List<Trainer> copiedTrainers = new ArrayList<>();
+        for(Trainer original : originalTrainers) {
+            Trainer copy = new Trainer(original);
+            for(TrainerPokemon tp : copy.pokemon) {
+                tp.setSpecies(originalToTest.get(tp.getSpecies()));
+            }
+            copiedTrainers.add(copy);
+        }
+
+        return copiedTrainers;
+    }
+
+    /**
+     * Given a {@link List} of {@link Move}s, copies each.
+     * @param originalMoves The List of Moves to copy.
+     * @return A new List of Moves containing a copy of each move.
+     */
+    private List<Move> deepCopyMoves(List<Move> originalMoves) {
+        List<Move> copiedMoves = new ArrayList<>();
+        for(Move original : originalMoves) {
+            if(original == null) {
+                copiedMoves.add(null);
+                //some games start the list with a null move so they start at 1 instead of zero
+                //(weirdly, it's not all games)
+            } else {
+                Move copy = new Move(original);
+                copiedMoves.add(copy);
+            }
+        }
+        return copiedMoves;
+    }
+
     @Override
     public boolean loadRom(String filename) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
+    }
+
+    @Override
+    public void loadPokemonStats() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -370,7 +603,11 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Species> getSpecies() {
-        throw new NotImplementedException();
+        if(testSpeciesInOrder == null) {
+            testSpeciesInOrder = new ArrayList<>(getSpeciesSet());
+            testSpeciesInOrder.sort(Comparator.comparingInt(Species::getNumber)); //ok that's some sleek syntax. gj java.
+        }
+        return testSpeciesInOrder;
     }
 
     @Override
@@ -422,7 +659,7 @@ public class TestRomHandler extends AbstractRomHandler {
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         if(testRSS == null) {
             testRSS = new RestrictedSpeciesService(this);
-            testRSS.setRestrictions(new Settings());
+            testRSS.setRestrictions(new GenRestrictions());
         }
         return testRSS;
     }
@@ -476,18 +713,18 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getStarterHeldItems() {
+    public List<Item> getStarterHeldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public void setStarterHeldItems(List<Integer> items) {
+    public void setStarterHeldItems(List<Item> items) {
         throw new NotImplementedException();
     }
 
     @Override
     public int abilitiesPerSpecies() {
-        throw new NotImplementedException();
+        return abilitiesPerSpecies;
     }
 
     @Override
@@ -511,8 +748,13 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public int getAbilityForTrainerPokemon(TrainerPokemon tp) {
-        throw new NotImplementedException();
+    public boolean isTrainerPokemonAlwaysUseAbility1() {
+        return trainerPokemonAlwaysUseAbility1;
+    }
+
+    @Override
+    public boolean isTrainerPokemonUseBaseFormeAbilities() {
+        return trainerPokemonUseBaseFormeAbilities;
     }
 
     @Override
@@ -527,6 +769,7 @@ public class TestRomHandler extends AbstractRomHandler {
         }
 
         if(testEncounters == null) {
+            testEncounters = deepCopyEncounters(originalEncounters);
             testEncounters = deepCopyEncounters(originalEncounters);
         }
 
@@ -566,42 +809,49 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Trainer> getTrainers() {
-        throw new NotImplementedException();
+        if(testTrainers == null) {
+            testTrainers = deepCopyTrainers(originalTrainers);
+        }
+        return testTrainers;
     }
 
     @Override
     public List<Integer> getMainPlaythroughTrainers() {
-        throw new NotImplementedException();
+        return mainPlaythroughTrainers;
     }
 
     @Override
     public List<Integer> getEliteFourTrainers(boolean isChallengeMode) {
-        throw new NotImplementedException();
+        if(isChallengeMode) {
+            return challengeModeEliteFourTrainers;
+        } else {
+            return eliteFourTrainers;
+        }
     }
 
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
-        throw new NotImplementedException();
+        return gymAndEliteTypeThemes;
     }
 
     @Override
     public void setTrainers(List<Trainer> trainerData) {
-        throw new NotImplementedException();
+        testTrainers = trainerData;
     }
 
     @Override
     public boolean canAddPokemonToBossTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToBossTrainers;
     }
 
     @Override
     public boolean canAddPokemonToImportantTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToImportantTrainers;
     }
 
     @Override
     public boolean canAddPokemonToRegularTrainers() {
-        throw new NotImplementedException();
+        return canAddPokemonToRegularTrainers;
     }
 
     @Override
@@ -620,17 +870,17 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
+    public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getAllConsumableHeldItems() {
+    public Set<Item> getAllConsumableHeldItems() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<Integer> getAllHeldItems() {
+    public Set<Item> getAllHeldItems() {
         throw new NotImplementedException();
     }
 
@@ -641,7 +891,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public void makeDoubleBattleModePossible() {
-        throw new NotImplementedException();
+        //do nothing
     }
 
     @Override
@@ -651,22 +901,32 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Move> getMoves() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public int getPerfectAccuracy() {
-        throw new NotImplementedException();
+        if(testMoves == null) {
+            testMoves = deepCopyMoves(originalMoves);
+        }
+        return testMoves;
     }
 
     @Override
     public Map<Integer, List<MoveLearnt>> getMovesLearnt() {
-        throw new NotImplementedException();
+        if (testMovesLearnt == null) {
+            testMovesLearnt = new HashMap<>();
+            for (Integer pkNum : originalMovesLearnt.keySet()) {
+
+                List<MoveLearnt> moveLearntsCopy = new ArrayList<>();
+                for (MoveLearnt ml : originalMovesLearnt.get(pkNum)) {
+                    moveLearntsCopy.add(new MoveLearnt(ml));
+                }
+                testMovesLearnt.put(pkNum, moveLearntsCopy);
+            }
+        }
+
+        return testMovesLearnt;
     }
 
     @Override
     public void setMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
-        throw new NotImplementedException();
+        testMovesLearnt = movesets;
     }
 
     @Override
@@ -676,12 +936,19 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Map<Integer, List<Integer>> getEggMoves() {
-        throw new NotImplementedException();
+        if (testEggMoves == null) {
+            testEggMoves = new HashMap<>();
+            for (Map.Entry<Integer, List<Integer>> entry : originalEggMoves.entrySet()) {
+                testEggMoves.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+        }
+
+        return testEggMoves;
     }
 
     @Override
     public void setEggMoves(Map<Integer, List<Integer>> eggMoves) {
-        throw new NotImplementedException();
+        testEggMoves = eggMoves;
     }
 
     @Override
@@ -691,42 +958,56 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<StaticEncounter> getStaticPokemon() {
-        throw new NotImplementedException();
+        if(!canChangeStaticPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support changing statics!");
+        }
+
+        if(testStatics == null) {
+            testStatics = deepCopyStatics(originalStatics);
+        }
+        return testStatics;
     }
 
     @Override
     public boolean setStaticPokemon(List<StaticEncounter> staticPokemon) {
-        throw new NotImplementedException();
+        if(!canChangeStaticPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support changing statics!");
+        }
+
+        testStatics = staticPokemon;
+        return true;
     }
 
     @Override
     public boolean canChangeStaticPokemon() {
-        throw new NotImplementedException();
+        return canChangeStaticPokemon;
     }
 
     @Override
     public boolean hasStaticAltFormes() {
-        throw new NotImplementedException();
+        return hasStaticAltFormes;
     }
 
     @Override
     public SpeciesSet getBannedForStaticPokemon() {
-        throw new NotImplementedException();
+        return originalBannedForStatics;
+        //TODO: verify this works
     }
 
     @Override
     public boolean forceSwapStaticMegaEvos() {
-        throw new NotImplementedException();
+        //what... does this mean
+        return forceSwapStaticMegaEvos;
     }
 
     @Override
     public boolean hasMainGameLegendaries() {
-        throw new NotImplementedException();
+        return !mainGameLegendaries.isEmpty();
     }
 
     @Override
     public List<Integer> getMainGameLegendaries() {
-        throw new NotImplementedException();
+        return mainGameLegendaries;
     }
 
     @Override
@@ -761,62 +1042,93 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getTMMoves() {
-        throw new NotImplementedException();
+        if (testTMMoves == null) {
+            testTMMoves = new ArrayList<>(originalTMMoves);
+        }
+
+        return testTMMoves;
     }
 
     @Override
     public List<Integer> getHMMoves() {
-        throw new NotImplementedException();
+        return hmMoves;
     }
 
     @Override
     public void setTMMoves(List<Integer> moveIndexes) {
-        throw new NotImplementedException();
+        testTMMoves = moveIndexes;
     }
 
     @Override
     public int getTMCount() {
-        throw new NotImplementedException();
+        return originalTMMoves.size();
     }
 
     @Override
     public int getHMCount() {
-        throw new NotImplementedException();
+        return hmMoves.size();
     }
 
     @Override
     public Map<Species, boolean[]> getTMHMCompatibility() {
-        throw new NotImplementedException();
+        if (testTMHMCompatibility == null) {
+            testTMHMCompatibility = new HashMap<>();
+            for (Map.Entry<Species, boolean[]> entry : originalTMHMCompatibility.entrySet()) {
+                testTMHMCompatibility.put(entry.getKey(), Arrays.copyOf(entry.getValue(), entry.getValue().length));
+            }
+        }
+
+        return testTMHMCompatibility;
     }
 
     @Override
     public void setTMHMCompatibility(Map<Species, boolean[]> compatData) {
-        throw new NotImplementedException();
+        testTMHMCompatibility = compatData;
+    }
+
+    @Override
+    public boolean isTMsReusable() {
+        return testIsTMsReusable;
+    }
+
+    @Override
+    public boolean canTMsBeHeld() {
+        return canTMsBeHeld;
     }
 
     @Override
     public boolean hasMoveTutors() {
-        throw new NotImplementedException();
+        return !originalMoveTutorMoves.isEmpty();
     }
 
     @Override
     public List<Integer> getMoveTutorMoves() {
-        throw new NotImplementedException();
+        if (testMoveTutorMoves == null) {
+            testMoveTutorMoves = new ArrayList<>(originalMoveTutorMoves);
+        }
+        return testMoveTutorMoves;
     }
 
     @Override
     public void setMoveTutorMoves(List<Integer> moves) {
-        throw new NotImplementedException();
+        testMoveTutorMoves = moves;
     }
 
     @Override
     public Map<Species, boolean[]> getMoveTutorCompatibility() {
-        throw new NotImplementedException();
+        if (testMoveTutorCompatibility == null) {
+            testMoveTutorCompatibility = new HashMap<>();
+            for (Map.Entry<Species, boolean[]> entry : originalMoveTutorCompatibility.entrySet()) {
+                testMoveTutorCompatibility.put(entry.getKey(), Arrays.copyOf(entry.getValue(), entry.getValue().length));
+            }
+        }
+
+        return testMoveTutorCompatibility;
     }
 
     @Override
     public void setMoveTutorCompatibility(Map<Species, boolean[]> compatData) {
-        throw new NotImplementedException();
+        testMoveTutorCompatibility = compatData;
     }
 
     @Override
@@ -880,82 +1192,80 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public ItemList getAllowedItems() {
-        throw new NotImplementedException();
+    public Set<Item> getEvolutionItems() {
+        return evolutionItems;
     }
 
     @Override
-    public ItemList getNonBadItems() {
-        throw new NotImplementedException();
+    public Set<Item> getXItems() {
+        return xItems;
     }
 
     @Override
-    public List<Integer> getEvolutionItems() {
-        throw new NotImplementedException();
+    public Set<Item> getMegaStones() {
+        return uniqueNoSellItems;
     }
 
     @Override
-    public List<Integer> getXItems() {
-        throw new NotImplementedException();
+    public Set<Item> getRegularShopItems() {
+        return regularShopItems;
     }
 
     @Override
-    public List<Integer> getUniqueNoSellItems() {
-        throw new NotImplementedException();
+    public Set<Item> getOPShopItems() {
+        return opShopItems;
     }
 
     @Override
-    public List<Integer> getRegularShopItems() {
-        throw new NotImplementedException();
+    public List<Item> getItems() {
+        return items;
     }
 
     @Override
-    public List<Integer> getOPShopItems() {
-        throw new NotImplementedException();
+    public Set<Item> getRequiredFieldTMs() {
+        return requiredFieldTMs;
     }
 
     @Override
-    public String[] getItemNames() {
-        throw new NotImplementedException();
+    public List<Item> getFieldItems() {
+        if (testFieldItems == null) {
+            testFieldItems = new ArrayList<>(originalFieldItems);
+        }
+        return testFieldItems;
     }
 
     @Override
-    public List<Integer> getRequiredFieldTMs() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Integer> getCurrentFieldTMs() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setFieldTMs(List<Integer> fieldTMs) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Integer> getRegularFieldItems() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setRegularFieldItems(List<Integer> items) {
-        throw new NotImplementedException();
+    public void setFieldItems(List<Item> items) {
+        for (int i = 0; i < originalFieldItems.size(); i++) {
+            if (items.get(i).isTM() != originalFieldItems.get(i).isTM())
+                throw new IllegalArgumentException("TM must replace TM and vice versa.");
+        }
+        testFieldItems = items;
     }
 
     @Override
     public boolean hasShopSupport() {
-        throw new NotImplementedException();
+        return !originalShops.isEmpty();
     }
 
     @Override
-    public Map<Integer, Shop> getShopItems() {
-        throw new NotImplementedException();
+    public List<Shop> getShops() {
+        if (testShops == null) {
+            testShops = new ArrayList<>();
+            for (Shop shop : originalShops) {
+                testShops.add(new Shop(shop));
+            }
+        }
+        return testShops;
     }
 
     @Override
-    public void setShopItems(Map<Integer, Shop> shopItems) {
+    public void setShops(List<Shop> shops) {
+        testShops = shops;
+    }
+
+    @Override
+    public List<Integer> getShopPrices() {
         throw new NotImplementedException();
     }
 
@@ -965,22 +1275,33 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<PickupItem> getPickupItems() {
+    public void setShopPrices(List<Integer> prices) {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public List<PickupItem> getPickupItems() {
+        if (testPickupItems == null) {
+            testPickupItems = new ArrayList<>(originalPickupItems.size());
+            for (PickupItem pi : originalPickupItems) {
+                testPickupItems.add(new PickupItem(pi));
+            }
+        }
+        return testPickupItems;
     }
 
     @Override
     public void setPickupItems(List<PickupItem> pickupItems) {
+        testPickupItems = pickupItems;
+    }
+
+    @Override
+    public List<InGameTrade> getInGameTrades() {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<IngameTrade> getIngameTrades() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setIngameTrades(List<IngameTrade> trades) {
+    public void setInGameTrades(List<InGameTrade> trades) {
         throw new NotImplementedException();
     }
 
@@ -1000,7 +1321,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(Settings settings) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
         throw new NotImplementedException();
     }
 
@@ -1010,33 +1331,18 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(Settings settings) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void removeTimeBasedEvolutions() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getImpossibleEvoUpdates() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getEasierEvoUpdates() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<EvolutionUpdate> getTimeBasedEvoUpdates() {
+    public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
         throw new NotImplementedException();
     }
 
     @Override
     public boolean altFormesCanHaveDifferentEvolutions() {
-        throw new NotImplementedException();
+        return altFormesCanHaveDifferentEvolutions;
     }
 
     @Override
@@ -1121,18 +1427,19 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void writeCheckValueToROM(int value) {
-        throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
-    }
-
-    @Override
     public int miscTweaksAvailable() {
-        throw new NotImplementedException();
+        return miscTweaksAvailable;
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        throw new NotImplementedException();
+        if ((miscTweaksAvailable & tweak.getValue()) > 0) {
+            if (tweak == MiscTweak.REUSABLE_TMS) {
+                testIsTMsReusable = true;
+            } else {
+                throw new UnsupportedOperationException("unimplemented");
+            }
+        }
     }
 
     @Override
@@ -1141,7 +1448,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setPCPotionItem(int itemID) {
+    public void setPCPotionItem(Item item) {
         throw new NotImplementedException();
     }
 
@@ -1152,7 +1459,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public SpeciesSet getBannedFormesForTrainerPokemon() {
-        throw new NotImplementedException();
+        if(testBannedForTrainers == null) {
+            testBannedForTrainers = SpeciesSet.unmodifiable(copySpeciesSet(originalBannedForTrainers));
+        }
+        return testBannedForTrainers;
     }
 
     @Override
@@ -1171,7 +1481,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, Settings.PlayerCharacterMod toReplace) {
+    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
         throw new NotImplementedException();
     }
 

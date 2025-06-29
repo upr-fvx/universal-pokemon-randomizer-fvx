@@ -5,10 +5,6 @@
 package com.dabomstew.pkrandom.gui;
 
 /*----------------------------------------------------------------------------*/
-/*--  PresetLoadDialog.java - a dialog to allow use of preset files or      --*/
-/*--                          random seed/config string pairs to produce    --*/
-/*--                          premade ROMs.                                 --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -30,10 +26,13 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.*;
+import com.dabomstew.pkrandom.Version;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
-import com.dabomstew.pkrandom.romhandlers.Abstract3DSRomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romio.ROMFilter;
+import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -47,8 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * @author Stewart
+ * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
 
@@ -56,7 +54,8 @@ public class PresetLoadDialog extends JDialog {
      *
      */
     private static final long serialVersionUID = -7898067118947765260L;
-    private RandomizerGUI parentGUI;
+    private final RandomizerGUI parentGUI;
+    private final RomOpener romOpener;
     private RomHandler currentROM;
     private boolean completed = false;
     private String requiredName = null;
@@ -67,13 +66,14 @@ public class PresetLoadDialog extends JDialog {
     /**
      * Creates new form PresetLoadDialog
      */
-    public PresetLoadDialog(RandomizerGUI parent, JFrame frame) {
+    public PresetLoadDialog(RandomizerGUI parent, JFrame frame, RomOpener romOpener) {
         super(frame, true);
         bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
         initComponents();
         this.parentGUI = parent;
-        this.presetFileChooser.setCurrentDirectory(new File("./"));
-        this.romFileChooser.setCurrentDirectory(new File("./"));
+        this.romOpener = romOpener;
+        this.presetFileChooser.setCurrentDirectory(new File(RootPath.path));
+        this.romFileChooser.setCurrentDirectory(new File(RootPath.path));
         initialState();
         setLocationRelativeTo(frame);
         setVisible(true);
@@ -274,55 +274,49 @@ public class PresetLoadDialog extends JDialog {
         romFileChooser.setSelectedFile(null);
         int returnVal = romFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File fh = romFileChooser.getSelectedFile();
-            for (RomHandler.Factory rhf : parentGUI.checkHandlers) {
-                if (rhf.isLoadable(fh.getAbsolutePath())) {
-                    final RomHandler checkHandler = rhf.create();
-                    if (!RandomizerGUI.usedLauncher && checkHandler instanceof Abstract3DSRomHandler) {
-                        String message = bundle.getString("GUI.pleaseUseTheLauncher");
-                        Object[] messages = {message};
-                        JOptionPane.showMessageDialog(this, messages);
-                        return;
-                    }
-                    final JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), this,
-                            true);
-                    Thread t = new Thread(() -> {
-                        SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
-                        try {
-                            checkHandler.loadRom(fh.getAbsolutePath());
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(PresetLoadDialog.this,
-                                    bundle.getString("GUI.loadFailedNoLog"));
-                        }
-                        SwingUtilities.invokeLater(() -> {
-                            opDialog.setVisible(false);
+            File f = romFileChooser.getSelectedFile();
+
+            JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), this, true);
+            Thread t = new Thread(() -> {
+                SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+
+                try {
+                    RomOpener.Results results = romOpener.openRomFile(f);
+
+                    SwingUtilities.invokeLater(() -> {
+                        opDialog.setVisible(false);
+                        if (results.wasOpeningSuccessful()) {
+                            RomHandler checkHandler = results.getRomHandler();
                             if (checkHandler.getROMName().equals(requiredName)) {
                                 // Got it
-                                romFileField.setText(fh.getAbsolutePath());
+                                romFileField.setText(f.getAbsolutePath());
                                 currentROM = checkHandler;
                                 acceptButton.setEnabled(true);
-                                return;
                             } else {
                                 JOptionPane.showMessageDialog(PresetLoadDialog.this, String.format(
                                         bundle.getString("PresetLoadDialog.notRequiredROM"), requiredName,
                                         checkHandler.getROMName()));
-                                return;
                             }
-                        });
+                        } else {
+                            parentGUI.reportOpenRomFailure(f, results);
+                        }
                     });
-                    t.start();
-                    return;
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() -> {
+                        opDialog.setVisible(false);
+                        JOptionPane.showMessageDialog(PresetLoadDialog.this,
+                                bundle.getString("GUI.loadFailedNoLog"));
+                    });
                 }
-            }
-            JOptionPane.showMessageDialog(this,
-                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
+            });
+            t.start();
         }
     }// GEN-LAST:event_romFileButtonActionPerformed
 
     private void acceptButtonActionPerformed() {// GEN-FIRST:event_acceptButtonActionPerformed
         if (customNames == null) {
             try {
-                customNames = FileFunctions.getCustomNames();
+                customNames = CustomNamesSet.readNamesFromFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

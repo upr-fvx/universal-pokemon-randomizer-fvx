@@ -1,9 +1,10 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.gamedata.Item;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class MiscTweakRandomizer extends Randomizer {
             if (mt == MiscTweak.RANDOMIZE_CATCHING_TUTORIAL) {
                 randomizeCatchingTutorial();
             } else if (mt == MiscTweak.RANDOMIZE_PC_POTION) {
-                romHandler.setPCPotionItem(romHandler.getNonBadItems().randomNonTM(random));
+                randomizePCPotion();
             } else {
                 romHandler.applyMiscTweak(mt);
             }
@@ -57,6 +58,15 @@ public class MiscTweakRandomizer extends Randomizer {
         if (tries == MAX_CATCHING_TUTORIAL_TRIES) {
             throw new RandomizationException("Could not randomize catching tutorial in " + tries + " tries.");
         }
+    }
+
+    private void randomizePCPotion() {
+        List<Item> possible = new ArrayList<>(romHandler.getNonBadItems());
+        Item item;
+        do {
+            item = possible.get(random.nextInt(possible.size()));
+        } while (item.isTM()); // assumes there will always be >0 non-TMs, otherwise this will loop infinitely
+        romHandler.setPCPotionItem(item);
     }
 
 }

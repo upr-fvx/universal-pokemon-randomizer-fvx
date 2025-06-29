@@ -26,39 +26,30 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.*;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
 
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen5RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-
 public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 61;
+    public static final int LENGTH_OF_SETTINGS_DATA = 65;
 
     private CustomNamesSet customNames;
 
     private String romName;
     private boolean updatedFromOldVersion = false;
-    private GenRestrictions currentRestrictions;
+    private GenRestrictions currentRestrictions = new GenRestrictions();
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
@@ -128,11 +119,11 @@ public class Settings {
 
     private int startersBSTMinimum, startersBSTMaximum;
 
-    public enum TypesMod {
+    public enum SpeciesTypesMod {
         UNCHANGED, RANDOM_FOLLOW_EVOLUTIONS, COMPLETELY_RANDOM
     }
 
-    private TypesMod typesMod = TypesMod.UNCHANGED;
+    private SpeciesTypesMod speciesTypesMod = SpeciesTypesMod.UNCHANGED;
 
     private boolean typesFollowMegaEvolutions;
 
@@ -189,6 +180,8 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
+    private boolean trainersForceMiddleStage;
+    private int trainersForceMiddleStageLevel = 10;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -205,25 +198,33 @@ public class Settings {
     private boolean consumableItemsOnlyForTrainerPokemon;
     private boolean sensibleItemsOnlyForTrainerPokemon;
     private boolean highestLevelOnlyGetsItemsForTrainerPokemon;
-    private boolean doubleBattleMode;
+    private boolean diverseTypesForBossTrainers;
+    private boolean diverseTypesForImportantTrainers;
+    private boolean diverseTypesForRegularTrainers;
+    private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
     public enum WildPokemonZoneMod {
         NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
     }
+    private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
+    private boolean splitWildZoneByEncounterTypes;
     
     public enum WildPokemonTypeMod {
         NONE, RANDOM_THEMES, KEEP_PRIMARY
     }
-
-    private WildPokemonZoneMod wildPokemonZoneMod = WildPokemonZoneMod.GAME;
-    private boolean splitWildZoneByEncounterTypes;
-    private boolean keepWildEvolutionFamilies;
+    private WildPokemonTypeMod wildPokemonTypeMod = WildPokemonTypeMod.NONE;
     private boolean keepWildTypeThemes;
+
+    public enum WildPokemonEvolutionMod {
+        NONE, BASIC_ONLY, KEEP_STAGE
+    }
+    private WildPokemonEvolutionMod wildPokemonEvolutionMod = WildPokemonEvolutionMod.NONE;
+    private boolean keepWildEvolutionFamilies;
+
     private boolean similarStrengthEncounters;
     private boolean catchEmAllEncounters;
-    private WildPokemonTypeMod wildPokemonTypeMod = WildPokemonTypeMod.NONE;
     private boolean useTimeBasedEncounters;
     private boolean blockWildLegendaries = true;
     private boolean useMinimumCatchRate;
@@ -329,9 +330,11 @@ public class Settings {
     private boolean banBadRandomShopItems;
     private boolean banRegularShopItems;
     private boolean banOPShopItems;
-    private boolean balanceShopPrices;
     private boolean guaranteeEvolutionItems;
     private boolean guaranteeXItems;
+
+    private boolean balanceShopPrices;
+    private boolean addCheapRareCandiesToShops;
 
     public enum PickupItemsMod {
         UNCHANGED, RANDOM
@@ -361,13 +364,9 @@ public class Settings {
         UNCHANGED, RANDOM
     }
 
-    public enum PlayerCharacterMod {
-        PC1, PC2
-    }
-
     private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
     private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterMod customPlayerGraphicsCharacterMod;
+    private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
     // to and from strings etc
     public void write(FileOutputStream out) throws IOException {
@@ -426,8 +425,8 @@ public class Settings {
                 standardizeEXPCurves, updateBaseStats, baseStatsFollowMegaEvolutions, assignEvoStatsRandomly));
 
         // 2: pokemon types & more general options
-        out.write(makeByteSelected(typesMod == TypesMod.RANDOM_FOLLOW_EVOLUTIONS,
-                typesMod == TypesMod.COMPLETELY_RANDOM, typesMod == TypesMod.UNCHANGED, raceMode, blockBrokenMoves,
+        out.write(makeByteSelected(speciesTypesMod == SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS,
+                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED, raceMode, blockBrokenMoves,
                 limitPokemon, typesFollowMegaEvolutions, dualTypeOnly));
 
         // 3: v171: changed to the abilities byte
@@ -484,12 +483,15 @@ public class Settings {
                 catchEmAllEncounters,
                 false, false, false, false, false));
 
-        // 17 wild pokemon (types)
+        // 17 wild pokemon (types/evolutions)
         out.write(makeByteSelected(wildPokemonTypeMod == WildPokemonTypeMod.NONE,
                 wildPokemonTypeMod == WildPokemonTypeMod.KEEP_PRIMARY,
                 wildPokemonTypeMod == WildPokemonTypeMod.RANDOM_THEMES,
                 keepWildTypeThemes,
-                false, false, false, false));
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.NONE,
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.BASIC_ONLY,
+                wildPokemonEvolutionMod == WildPokemonEvolutionMod.KEEP_STAGE,
+                false));
 
         // 18 wild pokemon (various)
         out.write(makeByteSelected(useTimeBasedEncounters, useMinimumCatchRate,
@@ -579,10 +581,10 @@ public class Settings {
         // 38 trainer pokemon level modifier
         out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
 
-        // 39 shop items
+        // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
                 shopItemsMod == ShopItemsMod.UNCHANGED, banBadRandomShopItems, banRegularShopItems, banOPShopItems,
-                balanceShopPrices, guaranteeEvolutionItems));
+                false, guaranteeEvolutionItems));
 
         // 40 wild level modifier
         out.write((wildLevelsModified ? 0x80 : 0) | (wildLevelModifier+50));
@@ -598,8 +600,8 @@ public class Settings {
                 allowTrainerAlternateFormes,
                 allowWildAltFormes));
 
-        // 42 Double Battle Mode, Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
-        out.write((doubleBattleMode ? 0x1 : 0) |
+        // 42 (Legacy Double Battle Mode), Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
+        out.write((0) |
                 (additionalBossTrainerPokemon << 1) |
                 (additionalImportantTrainerPokemon << 4) |
                 (weighDuplicateAbilitiesTogether ? 0x80 : 0));
@@ -691,6 +693,27 @@ public class Settings {
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);
 
+        // 61 trainer type diversity
+        out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
+                diverseTypesForRegularTrainers,
+                false, false, false, false, false));
+
+        // 62 setting battle style: modification (3bits) + style (4bits)
+        out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
+                settingBattleStyle.getModification() == BattleStyle.Modification.RANDOM,
+                settingBattleStyle.getModification() == BattleStyle.Modification.SINGLE_STYLE) |
+                (makeByteSelected(settingBattleStyle.getStyle() == BattleStyle.Style.SINGLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
+
+        // 63 trainer pokemon force evolutions
+        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+
+        // 64 shop items 2
+        out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
+                false, false, false, false, false, false));
+
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -705,7 +728,7 @@ public class Settings {
 
         try {
             writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, FileFunctions.getFileChecksum(SysConstants.customNamesFile));
+            writeFullInt(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -738,7 +761,7 @@ public class Settings {
         settings.setBaseStatsFollowMegaEvolutions(restoreState(data[1],6));
         settings.setAssignEvoStatsRandomly(restoreState(data[1],7));
 
-        settings.setTypesMod(restoreEnum(TypesMod.class, data[2], 2, // UNCHANGED
+        settings.setSpeciesTypesMod(restoreEnum(SpeciesTypesMod.class, data[2], 2, // UNCHANGED
                 0, // RANDOM_FOLLOW_EVOLUTIONS
                 1 // COMPLETELY_RANDOM
         ));
@@ -815,6 +838,11 @@ public class Settings {
                 1 // KEEP_PRIMARY
         ));
         settings.setKeepWildTypeThemes(restoreState(data[17], 3));
+        settings.setWildPokemonEvolutionMod(restoreEnum(WildPokemonEvolutionMod.class, data[17],
+                4, //NONE
+                5, //BASIC_ONLY
+                6 //KEEP_STAGE
+        ));
         
         settings.setUseTimeBasedEncounters(restoreState(data[18], 0));
         settings.setUseMinimumCatchRate(restoreState(data[18], 1));
@@ -914,10 +942,7 @@ public class Settings {
 
         // gen restrictions
         int genLimit = FileFunctions.readFullIntBigEndian(data, 30);
-        GenRestrictions restrictions = null;
-        if (genLimit != 0) {
-            restrictions = new GenRestrictions(genLimit);
-        }
+        GenRestrictions restrictions = new GenRestrictions(genLimit);
         settings.setCurrentRestrictions(restrictions);
 
         int codeTweaks = FileFunctions.readFullIntBigEndian(data, 34);
@@ -934,7 +959,6 @@ public class Settings {
         settings.setBanBadRandomShopItems(restoreState(data[39],3));
         settings.setBanRegularShopItems(restoreState(data[39],4));
         settings.setBanOPShopItems(restoreState(data[39],5));
-        settings.setBalanceShopPrices(restoreState(data[39],6));
         settings.setGuaranteeEvolutionItems(restoreState(data[39],7));
 
         settings.setWildLevelsModified(restoreState(data[40],7));
@@ -949,7 +973,7 @@ public class Settings {
         settings.setAllowTrainerAlternateFormes(restoreState(data[41],6));
         settings.setAllowWildAltFormes(restoreState(data[41],7));
 
-        settings.setDoubleBattleMode(restoreState(data[42], 0));
+        // restoreState(data[42], 0))  Legacy setting. This bit used to be used for "Double Battle Only Mode"
         settings.setAdditionalBossTrainerPokemon((data[42] & 0xE) >> 1);
         settings.setAdditionalImportantTrainerPokemon((data[42] & 0x70) >> 4);
         settings.setWeighDuplicateAbilitiesTogether(restoreState(data[42], 7));
@@ -1031,6 +1055,19 @@ public class Settings {
         settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
         settings.setStartersBSTMaximum(((Byte.toUnsignedInt(data[58]) & 0xF0) << 4) + Byte.toUnsignedInt(data[60]));
 
+        settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
+        settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
+        settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+
+        settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
+        settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
+
+        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
+        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+
+        settings.setBalanceShopPrices(restoreState(data[64],0));
+        settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
+
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
         settings.setRomName(romName);
@@ -1096,7 +1133,7 @@ public class Settings {
         if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;
             this.setLimitPokemon(false);
-        } else if (this.currentRestrictions != null) {
+        } else {
             this.currentRestrictions.limitToGen(rh.generationOfPokemon());
         }
 
@@ -1167,6 +1204,11 @@ public class Settings {
 
         if (!rh.hasShopSupport()) {
             this.setShopItemsMod(ShopItemsMod.UNCHANGED);
+            this.setBalanceShopPrices(false);
+        }
+
+        if (!rh.canChangeShopSizes()) {
+            this.setAddCheapRareCandiesToShops(false);
         }
 
         // done
@@ -1565,16 +1607,16 @@ public class Settings {
         this.startersBSTMaximum = startersBSTMaximum;
     }
     
-    public TypesMod getTypesMod() {
-        return typesMod;
+    public SpeciesTypesMod getSpeciesTypesMod() {
+        return speciesTypesMod;
     }
 
-    public void setTypesMod(boolean... bools) {
-        setTypesMod(getEnum(TypesMod.class, bools));
+    public void setSpeciesTypesMod(boolean... bools) {
+        setSpeciesTypesMod(getEnum(SpeciesTypesMod.class, bools));
     }
 
-    public void setTypesMod(TypesMod typesMod) {
-        this.typesMod = typesMod;
+    public void setSpeciesTypesMod(SpeciesTypesMod speciesTypesMod) {
+        this.speciesTypesMod = speciesTypesMod;
     }
 
     public boolean isTypesFollowMegaEvolutions() {
@@ -1856,6 +1898,22 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
+    public boolean isTrainersForceMiddleStage() {
+        return trainersForceMiddleStage;
+    }
+
+    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
+        this.trainersForceMiddleStage = trainersForceMiddleStage;
+    }
+
+    public int getTrainersForceMiddleStageLevel() {
+        return trainersForceMiddleStageLevel;
+    }
+
+    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
+        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
+    }
+
     public boolean isTrainersForceFullyEvolved() {
         return trainersForceFullyEvolved;
     }
@@ -1985,12 +2043,44 @@ public class Settings {
         this.highestLevelOnlyGetsItemsForTrainerPokemon = highestOnly;
     }
 
-    public boolean isDoubleBattleMode() {
-        return doubleBattleMode;
+    public boolean isDiverseTypesForBossTrainers() {
+        return diverseTypesForBossTrainers;
     }
 
-    public void setDoubleBattleMode(boolean doubleBattleMode) {
-        this.doubleBattleMode = doubleBattleMode;
+    public void setDiverseTypesForBossTrainers(boolean isBossDiverse) {
+        this.diverseTypesForBossTrainers = isBossDiverse;
+    }
+
+    public boolean isDiverseTypesForImportantTrainers() {
+        return diverseTypesForImportantTrainers;
+    }
+
+    public void setDiverseTypesForImportantTrainers(boolean isImportantDiverse) {
+        this.diverseTypesForImportantTrainers = isImportantDiverse;
+    }
+
+    public boolean isDiverseTypesForRegularTrainers() {
+        return diverseTypesForRegularTrainers;
+    }
+
+    public void setDiverseTypesForRegularTrainers(boolean isRegularDiverse) {
+        this.diverseTypesForRegularTrainers = isRegularDiverse;
+    }
+
+    public BattleStyle getBattleStyle() {
+        return settingBattleStyle;
+    }
+
+    public void setBattleStyle(BattleStyle style) {
+        settingBattleStyle = style;
+    }
+
+    public void setBattleStyleMod(boolean... bools) {
+        settingBattleStyle.setModification(getEnum(BattleStyle.Modification.class, bools));
+    }
+
+    public void setSingleStyleSelection(boolean... bools) {
+        settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
     public boolean isShinyChance() {
@@ -2079,6 +2169,18 @@ public class Settings {
 
     public void setWildPokemonTypeMod(WildPokemonTypeMod wildPokemonTypeMod) {
         this.wildPokemonTypeMod = wildPokemonTypeMod;
+    }
+
+    public WildPokemonEvolutionMod getWildPokemonEvolutionMod() {
+        return wildPokemonEvolutionMod;
+    }
+
+    public void setWildPokemonEvolutionMod(boolean... bools) {
+        setWildPokemonEvolutionMod(getEnum(WildPokemonEvolutionMod.class, bools));
+    }
+
+    public void setWildPokemonEvolutionMod(WildPokemonEvolutionMod wildPokemonEvolutionMod) {
+        this.wildPokemonEvolutionMod = wildPokemonEvolutionMod;
     }
 
     public boolean isUseTimeBasedEncounters() {
@@ -2551,14 +2653,6 @@ public class Settings {
         this.banOPShopItems = banOPShopItems;
     }
 
-    public boolean isBalanceShopPrices() {
-        return balanceShopPrices;
-    }
-
-    public void setBalanceShopPrices(boolean balanceShopPrices) {
-        this.balanceShopPrices = balanceShopPrices;
-    }
-   
     public boolean isGuaranteeEvolutionItems() {
         return guaranteeEvolutionItems;
     }
@@ -2573,6 +2667,22 @@ public class Settings {
 
     public void setGuaranteeXItems(boolean guaranteeXItems) {
         this.guaranteeXItems = guaranteeXItems;
+    }
+
+    public boolean isBalanceShopPrices() {
+        return balanceShopPrices;
+    }
+
+    public void setBalanceShopPrices(boolean balanceShopPrices) {
+        this.balanceShopPrices = balanceShopPrices;
+    }
+
+    public boolean isAddCheapRareCandiesToShops() {
+        return addCheapRareCandiesToShops;
+    }
+
+    public void setAddCheapRareCandiesToShops(boolean addCheapRareCandiesToShops) {
+        this.addCheapRareCandiesToShops = addCheapRareCandiesToShops;
     }
 
     public PickupItemsMod getPickupItemsMod() {
@@ -2679,15 +2789,15 @@ public class Settings {
         this.customPlayerGraphics = customPlayerGraphics;
     }
 
-    public PlayerCharacterMod getCustomPlayerGraphicsCharacterMod() {
+    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
         return customPlayerGraphicsCharacterMod;
     }
 
     public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterMod.class, bools));
+        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
     }
 
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterMod playerCharacterMod) {
+    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
         this.customPlayerGraphicsCharacterMod = playerCharacterMod;
     }
 

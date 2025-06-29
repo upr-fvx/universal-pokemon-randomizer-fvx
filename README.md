@@ -1,9 +1,15 @@
 # Universal Pokemon Randomizer FVX
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/upr-fvx/universal-pokemon-randomizer-fvx/total)
+![GitHub Release](https://img.shields.io/github/v/release/upr-fvx/universal-pokemon-randomizer-fvx)
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/upr-fvx/universal-pokemon-randomizer-fvx)
+
+
+[Website](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/)
 
 The **Universal Pokemon Randomizer FVX** (**F**ox + **V**oliol + z**X**) is a continuation of the [Universal Pokemon Randomizer](https://github.com/Dabomstew/universal-pokemon-randomizer) by Dabomstew. It was born of a merge of branches by [foxoftheasterisk](https://github.com/foxoftheasterisk/UPR-ZX-closer-to-vanilla) and [voliol](https://github.com/voliol/universal-pokemon-randomizer), both based on Ajarmar's [UPR ZX](https://github.com/Ajarmar/universal-pokemon-randomizer-zx). 
 
 Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. 
-For a full list of new features, see [this wiki page](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/New-Feature-Summary).
+For a full list of new features, see [this wiki page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/new_feature_summary.html).
 
 True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
 
@@ -34,4 +40,4 @@ If you encounter something that seems to be a bug, submit an issue using the `Bu
 
 # Other problems
 
-If you have problems using the randomizer, it could be because of some problem with Java or your operating system. **If you have problems with starting the randomizer specifically, [read this page first before creating an issue.](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/About-Java)** If that page does not solve your problem, submit an issue using the `Need Help` issue template.
+If you have problems using the randomizer, it could be because of some problem with Java or your operating system. **If you have problems with starting the randomizer specifically, [read this page first before creating an issue.](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/about_java.html)** If that page does not solve your problem, submit an issue using the `Need Help` issue template.

@@ -1,8 +1,8 @@
 package test.graphics;
 
-import com.dabomstew.pkrandom.graphics.packs.Gen2PlayerCharacterGraphics;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPackEntry;
-import com.dabomstew.pkrandom.graphics.palettes.Gen2SpritePaletteID;
+import com.dabomstew.pkromio.graphics.packs.Gen2PlayerCharacterGraphics;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPackEntry;
+import com.dabomstew.pkromio.graphics.palettes.Gen2SpritePaletteID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

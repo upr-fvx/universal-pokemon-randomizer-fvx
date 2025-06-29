@@ -1,6 +1,6 @@
 package test.compressors;
 
-import com.dabomstew.pkrandom.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.images.GBCImage;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,16 +14,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static test.compressors.CmpTestConstants.*;
 
 public class Gen1CmpTest {
-
-    private static final String IN_ADRESS = "test/test_images/compresstest/in";
-    private static final String OUT_ADRESS = "test/test_images/compresstest/out";
-    private static final String[] TEST_FILE_NAMES = new String[]{"testab", "testamogus", "test", "testbig", "testwhite",
-            "testblack", "testgrays", "testrect", "abra", "aerodactyl", "alakazam", "arcanine",
-            "articuno", "beedrill", "bellsprout", "blastoise", "bulbasaur", "butterfree", "caterpie", "chansey",
-            "charizard", "charmander", "charmeleon", "clefable", "clefairy", "cloyster", "cubone", "diglett", "ditto",
-            "dodrio", "doduo", "dragonair", "dragonite", "dratini", "drowzee", "dugtrio", "blackmage"};
 
     public static String[] getImageNames() {
         return TEST_FILE_NAMES;

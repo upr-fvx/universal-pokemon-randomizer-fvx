@@ -1,15 +1,13 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.MiscTweak;
-import com.dabomstew.pkrandom.RomFunctions;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.Gen7Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.services.TypeService;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.RomFunctions;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.Gen7Constants;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +16,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private Map<Type, SpeciesSet> cachedByType;
     private SpeciesSet cachedAll;
-    private SpeciesSet banned = new SpeciesSet();
     private final SpeciesSet usedAsUnique = new SpeciesSet();
 
     private Map<Type, Integer> typeWeightings;
@@ -26,7 +23,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private final Map<Species, Integer> placementHistory = new HashMap<>();
 
-    private int fullyEvolvedRandomSeed = -1;
     private Set<Type> usedUberTypes = EnumSet.noneOf(Type.class);
     private Map<Trainer, Type> trainerTypes = new HashMap<>();
 
@@ -34,7 +30,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         super(romHandler, settings, random);
     }
 
-    public void onlyChangeTrainerLevels() {
+    public void applyTrainerLevelModifier() {
         int levelModifier = settings.getTrainersLevelModifier();
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
@@ -52,13 +48,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
         boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
-        int levelModifier = settings.isTrainersLevelModified() ? settings.getTrainersLevelModifier() : 0;
+        boolean isUnchanged = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
+        boolean skipOriginalTeamMembers = false;
         boolean isTypeThemed = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED;
         boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
         boolean keepTypeThemes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEMED;
         boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEME_OR_PRIMARY;
-        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
-                || keepThemeOrPrimaryTypes;
         boolean distributionSetting = settings.getTrainersMod() == Settings.TrainersMod.DISTRIBUTED;
         boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
@@ -67,10 +62,26 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean shinyChance = settings.isShinyChance();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
+        boolean forceMiddleStage = settings.isTrainersForceMiddleStage();
+        int forceMiddleStageLevel = settings.getTrainersForceMiddleStageLevel();
         boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
         int forceFullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
         boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
         boolean rivalCarriesStarter = settings.isRivalCarriesStarterThroughout();
+        boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
+        boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
+        boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
+
+        // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
+        // added that are supposed to be randomized according to the following settings
+        if (isUnchanged) {
+            keepTypeThemes = true;
+            banIrregularAltFormes = true;
+            skipOriginalTeamMembers = true;
+        }
+
+        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
+                || keepThemeOrPrimaryTypes;
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();
@@ -84,7 +95,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             cachedAll.retainAll(localWithRelatives);
         }
 
-        banned = romHandler.getBannedFormesForTrainerPokemon();
+        SpeciesSet banned = new SpeciesSet(romHandler.getBannedFormesForTrainerPokemon());
         if (!abilitiesAreRandomized) {
             SpeciesSet abilityDependentFormes = rSpecService.getAbilityDependentFormes();
             banned.addAll(abilityDependentFormes);
@@ -121,43 +132,30 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Elite Four Unique Pokemon related
         boolean eliteFourUniquePokemon = eliteFourUniquePokemonNumber > 0;
-        SpeciesSet illegalIfEvolved = new SpeciesSet();
         SpeciesSet bannedFromUnique = new SpeciesSet();
-        boolean illegalEvoChains = false;
         List<Integer> eliteFourIndices = romHandler.getEliteFourTrainers(forceChallengeMode);
         SpeciesSet eliteFourExceptions = null;
         if (eliteFourUniquePokemon) {
             // Sort Elite Four Trainers to the start of the list
             scrambledTrainers.sort((t1, t2) ->
                     Boolean.compare(eliteFourIndices.contains(currentTrainers.indexOf(t2) + 1), eliteFourIndices.contains(currentTrainers.indexOf(t1) + 1)));
-            illegalEvoChains = forceFullyEvolved;
             if (rivalCarriesStarter) {
                 List<Species> starterList = romHandler.getStarters().subList(0, 3);
                 for (Species starter : starterList) {
                     // If rival/friend carries starter, the starters cannot be set as unique
-                    bannedFromUnique.add(starter);
-                    setEvoChainAsIllegal(starter, bannedFromUnique, true);
-
-                    // If the final boss is a rival/friend, the fully evolved starters will be unique
-                    if (romHandler.hasRivalFinalBattle()) {
-                        usedAsUnique.addAll(getFinalEvos(starter));
-                        if (illegalEvoChains) {
-                            illegalIfEvolved.add(starter);
-                            setEvoChainAsIllegal(starter, illegalIfEvolved, true);
-                        }
-                    }
+                    // (Excepting the final evolution, which is done later.)
+                    bannedFromUnique.addFamily(starter, false);
                 }
             }
             if (useLocalPokemon) {
-                //elite four unique pokemon are excepted from local requirement
-                //and in fact, non-local pokemon should be chosen first
+                //elite four unique Pokemon are excepted from local requirement
+                //and in fact, non-local species should be chosen first
                 eliteFourExceptions = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
                 eliteFourExceptions.removeAll(banned);
                 eliteFourExceptions.removeAll(cachedAll); // i.e. retains only non-local pokes
             }
         }
-        //TODO: choose all Elite 4 Unique Pokemon before other Elite 4 Pokemon
-        //Wait, hold on... that's already supposed to be covered? ...
+        //TODO: figure out what's causing that bug with Elite 4 Unique in RBY
 
         List<Integer> mainPlaythroughTrainers = romHandler.getMainPlaythroughTrainers();
 
@@ -165,149 +163,144 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // The result after this is done will not be final if "Force Fully Evolved" or "Rival Carries Starter"
         // are used, as they are applied later
         for (Trainer t : scrambledTrainers) {
-            applyLevelModifierToTrainerPokemon(t, levelModifier);
             if (t.tag != null && t.tag.equals("IRIVAL")) {
                 // This is the first rival in Yellow. His Pokemon is used to determine the non-player
                 // starter, so we can't change it here. Just skip it.
                 continue;
+
+                //TODO: i've probably messed that up, so fix it
             }
 
-            // If type themed, give a type to each unassigned trainer
-            Type typeForTrainer = trainerTypes.get(t);
-            if (typeForTrainer == null && isTypeThemed) {
-                typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
-                // Ubers: can't have the same type as each other
-                if (t.tag != null && t.tag.equals("UBER")) {
-                    while (usedUberTypes.contains(typeForTrainer)) {
-                        typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
-                    }
-                    usedUberTypes.add(typeForTrainer);
-                }
-            }
+            //Get what type this trainer's theme should be, or null for no theme.
+            Type typeForTrainer = getTypeForTrainer(t, isTypeThemed, weightByFrequency, noLegendaries,
+                    includeFormes, keepTypeThemes, keepThemeOrPrimaryTypes);
 
-            if ((keepTypeThemes || keepThemeOrPrimaryTypes) && typeForTrainer == null ) {
-                SpeciesSet trainerPokemonSpecies = t.pokemon.stream().map(tp -> tp.species)
-                        .collect(Collectors.toCollection(SpeciesSet::new));
-                typeForTrainer = trainerPokemonSpecies.getSharedType(true);
-            }
-
-            SpeciesSet evolvesIntoTheWrongType = null;
-            if (typeForTrainer != null) {
-                SpeciesSet pokemonOfType = cachedAll.filterByType(typeForTrainer, false);
-                evolvesIntoTheWrongType = pokemonOfType.filter(pk ->
-                        !pokemonOfType.contains(fullyEvolve(pk, t.index)));
-            }
-
+            //Copy the list of trainer Pokemon so we can arrange it as we like
+            //without changing the order in game
             List<TrainerPokemon> trainerPokemonList = new ArrayList<>(t.pokemon);
 
-            // Elite Four Unique Pokemon related
-            boolean eliteFourTrackPokemon = false;
-            boolean eliteFourRival = false;
-            if (eliteFourUniquePokemon && eliteFourIndices.contains(t.index)) {
-                eliteFourTrackPokemon = true;
+            //Rival/Friend starters have already been set, we don't want to change them
+            boolean skipStarter = rivalCarriesStarter && t.tag != null &&
+                    (t.tag.contains("RIVAL") || t.tag.contains("FRIEND"));
+            // Preprocessing for the Elite Four (for Unique Pokemon only)
+            boolean eliteFourTrackPokemon = eliteFourUniquePokemon && eliteFourIndices.contains(t.index);
 
+            if (t.forceStarterPosition != -1 && skipStarter) {
+                //Remove the starter
+                TrainerPokemon starter = trainerPokemonList.remove(t.forceStarterPosition);
+                if(eliteFourTrackPokemon) {
+                    //Reverse & sort the other Pokemon
+                    Collections.reverse(trainerPokemonList);
+                    trainerPokemonList.sort((tp1, tp2) -> Integer.compare(tp2.getLevel(), tp1.getLevel()));
+                }
+                //Put starter back, in front
+                trainerPokemonList.add(0, starter);
+
+            } else if (eliteFourTrackPokemon || skipStarter) {
                 // Sort Pokemon list back to front, and then put highest level Pokemon first
                 // (Only while randomizing, does not affect order in game)
                 Collections.reverse(trainerPokemonList);
-                trainerPokemonList.sort((tp1, tp2) -> Integer.compare(tp2.level, tp1.level));
-                if (rivalCarriesStarter && (t.tag.contains("RIVAL") || t.tag.contains("FRIEND"))) {
-                    eliteFourRival = true;
-                }
+                trainerPokemonList.sort((tp1, tp2) -> Integer.compare(tp2.getLevel(), tp1.getLevel()));
             }
 
+            final boolean forceTypeDiverse = (t.isBoss() && bossDiversity) ||
+                    (t.isImportant() && importantDiversity) ||
+                    (!t.isBoss() && !t.isImportant() && regularDiversity);
+            Set<Type> usedTypes = EnumSet.noneOf(Type.class);
+
             for (TrainerPokemon tp : trainerPokemonList) {
-                boolean swapThisMegaEvo = swapMegaEvos && tp.canMegaEvolve();
-                boolean wgAllowed = (!noEarlyWonderGuard) || tp.level >= 20;
+
                 boolean eliteFourSetUniquePokemon =
                         eliteFourTrackPokemon && eliteFourUniquePokemonNumber > trainerPokemonList.indexOf(tp);
-                boolean willForceEvolve = forceFullyEvolved && tp.level >= forceFullyEvolvedLevel;
-                SpeciesSet cacheReplacement = null;
+                boolean swapThisMegaEvo = swapMegaEvos && tp.canMegaEvolve();
 
-                Species oldPK = tp.species;
-                if (tp.forme > 0) {
-                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, tp.forme);
+                Species oldSp = tp.getSpecies();
+                if (tp.getForme() > 0) {
+                    oldSp = romHandler.getAltFormeOfSpecies(oldSp, tp.getForme());
                 }
 
-                banned = new SpeciesSet(usedAsUnique);
-                if (illegalEvoChains && willForceEvolve) {
-                    banned.addAll(illegalIfEvolved);
-                }
-                if (eliteFourSetUniquePokemon) {
-                    banned.addAll(bannedFromUnique);
-                    cacheReplacement = eliteFourExceptions;
-                }
-                if (willForceEvolve) {
-                    if (keepThemeOrPrimaryTypes && typeForTrainer == null) {
-                        SpeciesSet pokemonOfType =
-                                cachedByType.get(oldPK.getPrimaryType(true));
-                        evolvesIntoTheWrongType = pokemonOfType.filter(pk ->
-                                !pokemonOfType.contains(fullyEvolve(pk, t.index)));
+                Species newSp;
+                boolean forceFinalEvolution = forceFullyEvolved && tp.getLevel() >= forceFullyEvolvedLevel;
+                boolean forceMiddleEvolution = !forceFinalEvolution // no need to force middle stage if Pokemon already has to fully evolve
+                        && forceMiddleStage && tp.getLevel() >= forceMiddleStageLevel;
+                if(skipStarter) {
+                    newSp = oldSp; //We've already set this to what we want it to be
+                    skipStarter = false; //We don't want to skip the rival's other Pokemon
+                } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()){
+                    // We do not want to randomize Pkmn that were not added to the team
+                    if (forceFinalEvolution) {
+                        createFullyEvolvedPokemon(tp);
+                        newSp = tp.getSpecies();
                     }
-                    if(evolvesIntoTheWrongType != null) {
-                        banned.addAll(evolvesIntoTheWrongType);
+                    else if (forceMiddleEvolution) {
+                        createMiddleStagePokemon(tp);
+                        newSp = tp.getSpecies();
                     }
-                }
-                if(!wgAllowed) {
-                    banned.addAll(wonderGuardPokemon);
-                }
-
-                Species newPK = pickTrainerPokeReplacement(
-                        oldPK,
-                        usePowerLevels,
-                        (keepThemeOrPrimaryTypes && typeForTrainer == null ? oldPK.getPrimaryType(true) : typeForTrainer),
-                        distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index)),
-                        swapThisMegaEvo,
-                        cacheReplacement
-                );
-
-                // Chosen Pokemon is locked in past here
-                if (distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index))) {
-                    setPlacementHistory(newPK);
-                }
-                tp.species = newPK;
-                setFormeForTrainerPokemon(tp, newPK);
-                tp.abilitySlot = getRandomAbilitySlot(newPK);
-                tp.resetMoves = true;
-
-                if (!eliteFourRival) {
-                    if (eliteFourSetUniquePokemon) {
-                        SpeciesSet actualPKList;
-                        if (willForceEvolve) {
-                            actualPKList = getFinalEvos(newPK);
-                        } else {
-                            actualPKList = new SpeciesSet();
-                            actualPKList.add(newPK);
-                        }
-                        // If the unique Pokemon will evolve, we have to set all its potential evolutions as unique
-                        for (Species actualPK : actualPKList) {
-                            usedAsUnique.add(actualPK);
-                            if (illegalEvoChains) {
-                                setEvoChainAsIllegal(actualPK, illegalIfEvolved, willForceEvolve);
-                            }
-                        }
-                    }
-                    if (eliteFourTrackPokemon) {
-                        bannedFromUnique.add(newPK);
-                        if (illegalEvoChains) {
-                            setEvoChainAsIllegal(newPK, bannedFromUnique, willForceEvolve);
-                        }
+                    else {
+                        newSp = oldSp;
                     }
                 } else {
-                    // If the champion is a rival, the first Pokemon will be skipped - it's already
-                    // set as unique since it's a starter
-                    eliteFourRival = false;
+                    SpeciesSet cacheReplacement = null;
+                    boolean wgAllowed = (!noEarlyWonderGuard) || tp.getLevel() >= 20;
+
+                    SpeciesSet bannedForReplacement = new SpeciesSet(usedAsUnique);
+                    if (eliteFourSetUniquePokemon) {
+                        bannedForReplacement.addAll(bannedFromUnique);
+                        cacheReplacement = eliteFourExceptions;
+                    }
+                    if(!wgAllowed) {
+                        bannedForReplacement.addAll(wonderGuardPokemon);
+                    }
+
+                    newSp = pickTrainerPokeReplacement(
+                            oldSp,
+                            usePowerLevels,
+                            (keepThemeOrPrimaryTypes && typeForTrainer == null ? oldSp.getPrimaryType(true) : typeForTrainer),
+                            distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index)),
+                            swapThisMegaEvo,
+                            cacheReplacement,
+                            forceMiddleEvolution,
+                            forceFinalEvolution,
+                            usedTypes,
+                            bannedForReplacement);
+
+                    //We've chosen! Now to set it.
+                    tp.setSpecies(newSp);
+                    setFormeForTrainerPokemon(tp, newSp);
+                    tp.setAbilitySlot(getRandomAbilitySlot(newSp));
+                    tp.setResetMoves(true);
+                }
+
+                // Now, do all the bookkeeping we need for later choices
+
+                if (distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index))) {
+                    setPlacementHistory(newSp);
+                }
+
+                if (eliteFourSetUniquePokemon) {
+                    usedAsUnique.add(newSp);
+                }
+                if (eliteFourTrackPokemon) {
+                    bannedFromUnique.add(newSp);
+                }
+
+                if(forceTypeDiverse && typeForTrainer == null) {
+                    usedTypes.add(newSp.getPrimaryType(false));
+                    if(newSp.hasSecondaryType(false)) {
+                        usedTypes.add(newSp.getSecondaryType(false));
+                    }
                 }
 
                 if (swapThisMegaEvo) {
-                    tp.heldItem = newPK
+                    tp.setHeldItem(newSp
                             .getMegaEvolutionsFrom()
-                            .get(random.nextInt(newPK.getMegaEvolutionsFrom().size()))
-                            .argument;
+                            .get(random.nextInt(newSp.getMegaEvolutionsFrom().size()))
+                            .getItem());
                 }
 
                 if (shinyChance) {
                     if (random.nextInt(256) == 0) {
-                        tp.IVs |= (1 << 30);
+                        tp.setIVs(tp.getIVs() | (1 << 30));
                     }
                 }
             }
@@ -316,6 +309,28 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // Save it all up
         romHandler.setTrainers(currentTrainers);
         changesMade = true;
+    }
+
+    private Type getTypeForTrainer(Trainer t, boolean isTypeThemed, boolean weightByFrequency, boolean noLegendaries, boolean includeFormes, boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes) {
+        Type typeForTrainer = trainerTypes.get(t);
+        if (typeForTrainer == null && isTypeThemed) {
+            typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
+
+            // Ubers: can't have the same type as each other
+            if (t.tag != null && t.tag.equals("UBER")) {
+                while (usedUberTypes.contains(typeForTrainer)) {
+                    typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
+                }
+                usedUberTypes.add(typeForTrainer);
+            }
+        }
+
+        if ((keepTypeThemes || keepThemeOrPrimaryTypes) && typeForTrainer == null ) {
+            SpeciesSet trainerPokemonSpecies = t.pokemon.stream().map(TrainerPokemon::getSpecies)
+                    .collect(Collectors.toCollection(SpeciesSet::new));
+            typeForTrainer = trainerPokemonSpecies.getSharedType(true);
+        }
+        return typeForTrainer;
     }
 
     /**
@@ -430,6 +445,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // This is the first rival in Yellow. His Pokemon is used to determine the non-player
                 // starter, so we can't change it here. Just skip it.
                 continue;
+                //TODO: confirm if this is still needed
             }
             String group = t.tag == null ? "" : t.tag;
             if (group.contains("-")) {
@@ -456,7 +472,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private Species pickTrainerPokeReplacement(Species current, boolean usePowerLevels, Type type,
                                                boolean usePlacementHistory, boolean swapMegaEvos,
-                                               SpeciesSet useInsteadOfCached) {
+                                               SpeciesSet useInsteadOfCached,
+                                               boolean noBasicPokemonWithTwoEvos, boolean finalFormOnly,
+                                               Set<Type> bannedTypes, SpeciesSet bannedPokemon) {
         SpeciesSet cacheOrReplacement;
         if(useInsteadOfCached == null) {
             cacheOrReplacement = cachedAll;
@@ -470,21 +488,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (swapMegaEvos) {
             pickFrom = rSpecService.getMegaEvolutions()
                     .stream()
-                    .filter(mega -> mega.method == 1)
-                    .map(mega -> mega.from)
+                    .filter(MegaEvolution::isNeedsItem)
+                    .map(MegaEvolution::getFrom)
                     .collect(Collectors.toCollection(SpeciesSet::new));
         } else {
             pickFrom = cacheOrReplacement;
         }
 
-        if (usePlacementHistory) {
-            // "Distributed" settings
-            double placementAverage = getPlacementAverage();
-            SpeciesSet belowAverage = pickFrom.filter(pk -> getPlacementHistory(pk) < placementAverage * 2);
-            if (!belowAverage.isEmpty()) {
-                pickFrom = belowAverage;
-            }
-        }
         if (type != null && cachedByType != null) {
             // "Type Themed" settings
             SpeciesSet pokemonOfType;
@@ -510,21 +520,42 @@ public class TrainerPokemonRandomizer extends Randomizer {
             }
         }
 
+        if(!bannedTypes.isEmpty()) {
+            pickFrom = pickFrom.filter(sp -> !bannedTypes.contains(sp.getPrimaryType(false)) &&
+                    (!sp.hasSecondaryType(false) ||
+                            !bannedTypes.contains(sp.getSecondaryType(false))));
+        }
+
+        if(finalFormOnly) {
+            pickFrom = pickFrom.filterFinalEvos(false);
+        } else if (noBasicPokemonWithTwoEvos) {
+            pickFrom = pickFrom.filter(p -> !p.isBasicPokemonWithMoreThanTwoEvoStages(false));
+        }
+
+        if (usePlacementHistory) {
+            // "Distributed" settings
+            double placementAverage = getPlacementAverage();
+            SpeciesSet belowAverage = pickFrom.filter(pk -> getPlacementHistory(pk) < placementAverage * 2);
+            if (!belowAverage.isEmpty()) {
+                pickFrom = belowAverage;
+            }
+        }
+
         if(pickFrom.isEmpty() && useInsteadOfCached != null) {
             //the cache replacement has no valid Pokemon
             //recurse using the cache
-            return pickTrainerPokeReplacement(current, usePowerLevels, type,
-                    usePlacementHistory, swapMegaEvos, null);
+            return pickTrainerPokeReplacement(current, usePowerLevels, type, usePlacementHistory,
+                    swapMegaEvos, null, noBasicPokemonWithTwoEvos, finalFormOnly, bannedTypes, bannedPokemon);
         }
 
-        withoutBannedPokemon = pickFrom.filter(pk -> !banned.contains(pk));
+        withoutBannedPokemon = pickFrom.filter(pk -> !bannedPokemon.contains(pk));
         if (!withoutBannedPokemon.isEmpty()) {
             pickFrom = withoutBannedPokemon;
         } else if(useInsteadOfCached != null) {
             //rather than using banned pokemon from the provided set,
             //see if we can get a non-banned pokemon from the cache
-            Species cachePick = pickTrainerPokeReplacement(current, usePowerLevels, type,
-                    usePlacementHistory, swapMegaEvos, null);
+            Species cachePick = pickTrainerPokeReplacement(current, usePowerLevels, type, usePlacementHistory,
+                    swapMegaEvos, null, noBasicPokemonWithTwoEvos, finalFormOnly, bannedTypes, bannedPokemon);
             if(withoutBannedPokemon.contains(cachePick)) {
                 return cachePick;
             }
@@ -605,24 +636,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return originalAbilitySlot;
     }
 
-    private Species pickRandomEvolutionOf(Species base, boolean mustEvolveItself) {
-        // Used for "rival carries starter"
-        // Pick a random evolution of base Pokemon, subject to
-        // "must evolve itself" if appropriate.
-        SpeciesSet candidates = new SpeciesSet();
-        for (Evolution ev : base.getEvolutionsFrom()) {
-            if (!mustEvolveItself || ev.getTo().getEvolutionsFrom().size() > 0) {
-                candidates.add(ev.getTo());
-            }
-        }
-
-        if (candidates.size() == 0) {
-            throw new RandomizationException("Random evolution called on a Pokemon without any usable evolutions.");
-        }
-
-        return candidates.getRandomSpecies(random);
-    }
-
     private int getLevelOfStarter(List<Trainer> currentTrainers, String tag) {
         for (Trainer t : currentTrainers) {
             if (t.tag != null && t.tag.equals(tag)) {
@@ -632,12 +645,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // If it's tagged the same we can assume it's the same team
                 // just the opposite gender or something like that...
                 // So no need to check other trainers with same tag.
-                int highestLevel = t.pokemon.get(0).level;
+                int highestLevel = t.pokemon.get(0).getLevel();
                 int trainerPkmnCount = t.pokemon.size();
                 for (int i = 1; i < trainerPkmnCount; i++) {
                     int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
-                    if (t.pokemon.get(i).level + levelBonus > highestLevel) {
-                        highestLevel = t.pokemon.get(i).level;
+                    if (t.pokemon.get(i).getLevel() + levelBonus > highestLevel) {
+                        highestLevel = t.pokemon.get(i).getLevel();
                     }
                 }
                 return highestLevel;
@@ -645,12 +658,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
         return 0;
     }
-
-    private void changeStarterWithTag(List<Trainer> currentTrainers, String tag, Species starter, int abilitySlot) {
+    /**
+     * Searches through the list of trainers given until it finds one with the given tag,
+     * then assigns that trainer's strongest Pokemon the starter indicated.
+     * @param currentTrainers The List of Trainers to search through.
+     * @param tag The tag to find.
+     * @param startersByLevel A map of levels to evolutions of the starter (including the base).
+     * @param abilitySlot Which ability slot should be used for the starter.
+     */
+    private void changeStarterWithTag(List<Trainer> currentTrainers, String tag,
+                                      NavigableMap<Integer, Species> startersByLevel, int abilitySlot) {
         for (Trainer t : currentTrainers) {
             if (t.tag != null && t.tag.equals(tag)) {
 
-                // Bingo
                 TrainerPokemon bestPoke = t.pokemon.get(0);
 
                 if (t.forceStarterPosition >= 0) {
@@ -662,51 +682,38 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     int trainerPkmnCount = t.pokemon.size();
                     for (int i = 1; i < trainerPkmnCount; i++) {
                         int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
-                        if (t.pokemon.get(i).level + levelBonus > bestPoke.level) {
+                        if (t.pokemon.get(i).getLevel() + levelBonus > bestPoke.getLevel()) {
                             bestPoke = t.pokemon.get(i);
                         }
                     }
                 }
-                bestPoke.species = starter;
+                Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
+
+                bestPoke.setSpecies(starter);
                 setFormeForTrainerPokemon(bestPoke, starter);
-                bestPoke.resetMoves = true;
-                bestPoke.abilitySlot = abilitySlot;
+                bestPoke.setResetMoves(true);
+                bestPoke.setAbilitySlot(abilitySlot);
             }
         }
 
     }
 
-    private int numEvolutions(Species pk, int maxInterested) {
-        return numEvolutions(pk, 0, maxInterested);
+    private Species evolveOnce(Species species) {
+        if (!species.getEvolutionsFrom().isEmpty()) {
+            // not already fully evolved
+            List<Evolution> evolutions = species.getEvolutionsFrom();
+            int evolutionIndex = random.nextInt(species.getEvolutionsFrom().size());
+            species = species.getEvolutionsFrom().get(evolutionIndex).getTo();
+        }
+        return species;
     }
 
-    private int numEvolutions(Species pk, int depth, int maxInterested) {
-        if (pk.getEvolutionsFrom().size() == 0) {
-            return 0;
-        } else {
-            if (depth == maxInterested - 1) {
-                return 1;
-            } else {
-                int maxEvos = 0;
-                for (Evolution ev : pk.getEvolutionsFrom()) {
-                    maxEvos = Math.max(maxEvos, numEvolutions(ev.getTo(), depth + 1, maxInterested) + 1);
-                }
-                return maxEvos;
-            }
-        }
-    }
-
-    private Species fullyEvolve(Species species, int trainerIndex) {
-        // If the fullyEvolvedRandomSeed hasn't been set yet, set it here.
-        if (this.fullyEvolvedRandomSeed == -1) {
-            this.fullyEvolvedRandomSeed = random.nextInt(GlobalConstants.LARGEST_NUMBER_OF_SPLIT_EVOS);
-        }
-
+    private Species fullyEvolve(Species species) {
         Set<Species> seenMons = new HashSet<>();
         seenMons.add(species);
 
         while (true) {
-            if (species.getEvolutionsFrom().size() == 0) {
+            if (species.getEvolutionsFrom().isEmpty()) {
                 // fully evolved
                 break;
             }
@@ -725,10 +732,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 break;
             }
 
-            // We want to make split evolutions deterministic, but still random on a seed-to-seed basis.
-            // Therefore, we take a random value (which is generated once per seed) and add it to the trainer's
-            // index to get a pseudorandom number that can be used to decide which split to take.
-            int evolutionIndex = (this.fullyEvolvedRandomSeed + trainerIndex) % species.getEvolutionsFrom().size();
+            // No longer needs trainerIndex to be deterministic,
+            // as this method is no longer run multiple times on the same TrainerPokemon!
+            int evolutionIndex = random.nextInt(species.getEvolutionsFrom().size());
             species = species.getEvolutionsFrom().get(evolutionIndex).getTo();
             seenMons.add(species);
         }
@@ -736,62 +742,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return species;
     }
 
-    private void setEvoChainAsIllegal(Species newPK, SpeciesSet illegalList, boolean willForceEvolve) {
-        // set pre-evos as illegal
-        setIllegalPreEvos(newPK, illegalList);
-
-        // if the placed Pokemon will be forced fully evolved, set its evolutions as illegal
-        if (willForceEvolve) {
-            setIllegalEvos(newPK, illegalList);
-        }
-    }
-
-    private void setIllegalPreEvos(Species pk, SpeciesSet illegalList) {
-        for (Evolution evo : pk.getEvolutionsTo()) {
-            pk = evo.getFrom();
-            illegalList.add(pk);
-            setIllegalPreEvos(pk, illegalList);
-        }
-    }
-
-    private void setIllegalEvos(Species pk, SpeciesSet illegalList) {
-        for (Evolution evo : pk.getEvolutionsFrom()) {
-            pk = evo.getTo();
-            illegalList.add(pk);
-            setIllegalEvos(pk, illegalList);
-        }
-    }
-
-    private SpeciesSet getFinalEvos(Species pk) {
-        SpeciesSet finalEvos = new SpeciesSet();
-        traverseEvolutions(pk, finalEvos);
-        return finalEvos;
-    }
-
-    private void traverseEvolutions(Species pk, SpeciesSet finalEvos) {
-        if (!pk.getEvolutionsFrom().isEmpty()) {
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                pk = evo.getTo();
-                traverseEvolutions(pk, finalEvos);
-            }
-        } else {
-            finalEvos.add(pk);
-        }
-    }
-
     private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
-        tp.forme = sp.getRandomCosmeticFormeNumber(random);
-        tp.species = sp;
-        while(!tp.species.isBaseForme()) {
-            tp.species = tp.species.getBaseForme();
+        tp.setForme(sp.getRandomCosmeticFormeNumber(random));
+        tp.setSpecies(sp);
+        while (!tp.getSpecies().isBaseForme()) {
+            tp.setSpecies(tp.getSpecies().getBaseForme());
         }
-        tp.formeSuffix = romHandler.getAltFormeOfSpecies(tp.species, tp.forme).getFormeSuffix();
+        tp.setFormeSuffix(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getFormeSuffix());
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
         if (levelModifier != 0) {
             for (TrainerPokemon tp : trainer.pokemon) {
-                tp.level = Math.min(100, (int) Math.round(tp.level * (1 + levelModifier / 100.0)));
+                tp.setLevel(Math.min(100, (int) Math.round(tp.getLevel() * (1 + levelModifier / 100.0))));
             }
         }
     }
@@ -840,102 +803,137 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (romHandler.isYellow()) {
             // The rival's starter is index 1
             Species rivalStarter = starters.get(1);
-            int timesEvolves = numEvolutions(rivalStarter, 2);
+
+            int highestPreBranchLevel = getLevelOfStarter(currentTrainers, prefix + "3-0");
+
+            NavigableMap<Integer, Species> startersByLevel =
+                    getEvolutionsByLevel(rivalStarter, 1, highestPreBranchLevel);
             // Yellow does not have abilities
             int abilitySlot = 0;
-            // Apply evolutions as appropriate
-            if (timesEvolves == 0) {
-                for (int j = 1; j <= 3; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-0", rivalStarter, abilitySlot);
-                }
-                for (int j = 4; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
-                }
-            } else if (timesEvolves == 1) {
-                for (int j = 1; j <= 3; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-0", rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, false);
-                for (int j = 4; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
-                }
-            } else if (timesEvolves == 2) {
-                for (int j = 1; j <= 2; j++) {
-                    changeStarterWithTag(currentTrainers, prefix + j + "-" + 0, rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, true);
-                changeStarterWithTag(currentTrainers, prefix + "3-0", rivalStarter, abilitySlot);
-                for (int i = 0; i < 3; i++) {
-                    changeStarterWithTag(currentTrainers, prefix + "4-" + i, rivalStarter, abilitySlot);
-                }
-                rivalStarter = pickRandomEvolutionOf(rivalStarter, false);
-                for (int j = 5; j <= 7; j++) {
-                    for (int i = 0; i < 3; i++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, rivalStarter, abilitySlot);
-                    }
+
+            for (int encounter = 0; encounter <= 3; encounter++) {
+                changeStarterWithTag(currentTrainers, prefix + encounter + "-0", startersByLevel, abilitySlot);
+            }
+            Map.Entry<Integer, Species> lastPreBranchEvolution = startersByLevel.floorEntry(highestPreBranchLevel);
+            int lastEvoLevel = lastPreBranchEvolution.getKey();
+            Species lastEvoSpecies = lastPreBranchEvolution.getValue();
+
+            for (int variant = 0; variant < 3; variant++) {
+                //determine further evolutions per-variant
+                //so that if he's using Eevee, it has a chance to branch
+                startersByLevel = getEvolutionsByLevel(lastEvoSpecies, lastEvoLevel, 100);
+
+                for (int encounter = 4; encounter <= 7; encounter++) {
+                    changeStarterWithTag(currentTrainers, prefix + encounter + "-" + variant,
+                            startersByLevel, abilitySlot);
                 }
             }
+
         } else {
             // Replace each starter as appropriate
-            // Use level to determine when to evolve, not number anymore
-            for (int i = 0; i < 3; i++) {
+            for (int variant = 0; variant < 3; variant++) {
                 // Rival's starters are pokemonOffset over from each of ours
-                int starterToUse = (i + pokemonOffset) % 3;
+                int starterToUse = (variant + pokemonOffset) % 3;
                 Species thisStarter = starters.get(starterToUse);
-                int timesEvolves = numEvolutions(thisStarter, 2);
+
+                NavigableMap<Integer, Species> startersByLevel =
+                        getEvolutionsByLevel(thisStarter, 1, 100);
+                //This could (rarely) result in a starter evolving before the first battle,
+                //but that's better than the alternative option of crashing if the level is lowered.
+
                 int abilitySlot = getRandomAbilitySlot(thisStarter);
                 while (abilitySlot == 3) {
                     // Since starters never have hidden abilities, the rival's starter shouldn't either
                     abilitySlot = getRandomAbilitySlot(thisStarter);
                 }
-                // If a fully evolved pokemon, use throughout
-                // Otherwise split by evolutions as appropriate
-                if (timesEvolves == 0) {
-                    for (int j = 1; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                } else if (timesEvolves == 1) {
-                    int j = 1;
-                    for (; j <= highestRivalNum / 2; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 30) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, false);
-                    int evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
-                } else if (timesEvolves == 2) {
-                    int j = 1;
-                    for (; j <= highestRivalNum; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 16) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, abilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, true);
-                    int evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        if (getLevelOfStarter(currentTrainers, prefix + j + "-" + i) >= 36) {
-                            break;
-                        }
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
-                    thisStarter = pickRandomEvolutionOf(thisStarter, false);
-                    evolvedAbilitySlot = getValidAbilitySlotFromOriginal(thisStarter, abilitySlot);
-                    for (; j <= highestRivalNum; j++) {
-                        changeStarterWithTag(currentTrainers, prefix + j + "-" + i, thisStarter, evolvedAbilitySlot);
-                    }
+
+                for (int encounter = 0; encounter <= highestRivalNum; encounter++) {
+                    changeStarterWithTag(currentTrainers, prefix + encounter + "-" + variant,
+                            startersByLevel, abilitySlot);
                 }
             }
         }
 
+    }
+
+    /**
+     * Given a base Species, returns a NavigableMap containing it and its evolutions,
+     * with each evolution's key being the lowest level it should appear at.
+     * Used for rematches with the same trainer.
+     * When reading, floorEntry(level) should be used.
+     *
+     * @param base         The base Species to start from.
+     * @param initialLevel The level of the Pokemon in the first battle with this trainer.
+     * @param maxLevel     The highest level interested in (typically the level of the Pokemon in the last
+     *                     battle with the trainer, or 100 if not known).
+     * @return A NavigableMap containing the Pokemon's evolutions by level.
+     */
+    private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
+        boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
+        int fullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
+
+        NavigableMap<Integer, Species> evolutions = new TreeMap<>();
+        evolutions.put(initialLevel, base);
+        int currentLevel = initialLevel;
+        Species currentSpecies = base;
+
+        if(forceFullyEvolved && maxLevel < fullyEvolvedLevel) {
+            maxLevel = fullyEvolvedLevel;
+        }
+
+        while(currentLevel < maxLevel && !currentSpecies.getEvolutionsFrom().isEmpty()) {
+            List<Evolution> possibleEvolutions = currentSpecies.getEvolutionsFrom();
+            int chosenEvoIndex = random.nextInt(possibleEvolutions.size());
+            Evolution chosenEvo = possibleEvolutions.get(chosenEvoIndex);
+
+            int level;
+            if(chosenEvo.getType().usesLevel()) {
+                level = chosenEvo.getExtraInfo();
+                if (level <= currentLevel) {
+                    level = currentLevel + 1;
+                }
+            } else {
+                //arbitrary amount of levels later
+                level = currentLevel + 20;
+            }
+
+            if(level >= maxLevel) {
+                break;
+            }
+            currentLevel = level;
+            currentSpecies = chosenEvo.getTo();
+            evolutions.put(currentLevel, currentSpecies);
+        }
+
+        if(forceFullyEvolved) {
+            evolutions.put(fullyEvolvedLevel, fullyEvolve(currentSpecies));
+        }
+
+        return evolutions;
+    }
+
+    public void forceMiddleStageTrainerPokes() {
+        int minLevel = settings.getTrainersForceMiddleStageLevel();
+
+        List<Trainer> currentTrainers = romHandler.getTrainers();
+        for (Trainer t : currentTrainers) {
+            for (TrainerPokemon tp : t.pokemon) {
+                if (tp.getLevel() >= minLevel) {
+                    createMiddleStagePokemon(tp);
+                }
+            }
+        }
+        romHandler.setTrainers(currentTrainers);
+        changesMade = true;
+    }
+
+    public void createMiddleStagePokemon(TrainerPokemon tp) {
+        if (tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false)) {
+            Species newSpecies = evolveOnce(tp.getSpecies());
+            tp.setSpecies(newSpecies);
+            setFormeForTrainerPokemon(tp, newSpecies);
+            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
+        }
     }
 
     public void forceFullyEvolvedTrainerPokes() {
@@ -944,19 +942,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.pokemon) {
-                if (tp.level >= minLevel) {
-                    Species newSpecies = fullyEvolve(tp.species, t.index);
-                    if (newSpecies != tp.species) {
-                        tp.species = newSpecies;
-                        setFormeForTrainerPokemon(tp, newSpecies);
-                        tp.abilitySlot = getValidAbilitySlotFromOriginal(newSpecies, tp.abilitySlot);
-                        tp.resetMoves = true;
-                    }
+                if (tp.getLevel() >= minLevel) {
+                    createFullyEvolvedPokemon(tp);
                 }
             }
         }
         romHandler.setTrainers(currentTrainers);
         changesMade = true;
+    }
+
+    public void createFullyEvolvedPokemon(TrainerPokemon tp) {
+        Species newSpecies = fullyEvolve(tp.getSpecies());
+        if (newSpecies != tp.getSpecies()) {
+            tp.setSpecies(newSpecies);
+            setFormeForTrainerPokemon(tp, newSpecies);
+            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
+        }
     }
 
     public void addTrainerPokemon() {
@@ -980,38 +981,52 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 continue;
             }
 
+            List<TrainerPokemon> originalPokes = new ArrayList<>();
             int lowest = 100;
-            List<TrainerPokemon> potentialPokes = new ArrayList<>();
+            int highest = 0;
+            boolean duplicateHighest = false;
 
-            // First pass: find lowest level
+            // First pass: find lowest and highest level while copying the original Pokemon
+            // and checking if more than one Pokemon has the highest level in the team
             for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.level < lowest) {
-                    lowest = tpk.level;
+                int curLevel= tpk.getLevel();
+                if (curLevel == highest) {
+                    duplicateHighest = true; // Seen this highest level more than once
                 }
-            }
-
-            // Second pass: find all Pokemon at lowest level
-            for (TrainerPokemon tpk : t.pokemon) {
-                if (tpk.level == lowest) {
-                    potentialPokes.add(tpk);
+                if (curLevel < lowest) {
+                    lowest = curLevel;
                 }
+                if (curLevel > highest) {
+                    highest = curLevel;
+                    duplicateHighest = false; // Seen this highest level for the first time
+                }
+                originalPokes.add(tpk);
             }
 
             // If a trainer can appear in a Multi Battle (i.e., a Double Battle where the enemy consists
             // of two independent trainers), we want to be aware of that so we don't give them a team of
             // six Pokemon and have a 6v12 battle
             int maxPokemon = t.multiBattleStatus != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
+            int originalSize = originalPokes.size();
+            // Determine max level of additional Pokemon, either
+            // 1. the highest level in the original team if there is more than one Pokemon with that level
+            // 2. the highest level in the original team - 1 if there is only one Pokemon of that level (keep the Ace of the trainer)
+            int upperLevelBound = duplicateHighest ? highest : highest - 1;
             for (int i = 0; i < additional; i++) {
                 if (t.pokemon.size() >= maxPokemon) break;
 
                 // We want to preserve the original last Pokemon because the order is sometimes used to
                 // determine the rival's starter
                 int secondToLastIndex = t.pokemon.size() - 1;
-                TrainerPokemon newPokemon = potentialPokes.get(i % potentialPokes.size()).copy();
+                // Insert a random original Pokemon as placeholder and give it a random level
+                // between the lowest and upperLevelBound
+                TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
+                newPokemon.setLevel(random.nextInt(Math.max(upperLevelBound, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
                 // swapping mega evolvables
-                newPokemon.heldItem = 0;
+                newPokemon.setHeldItem(null);
+                newPokemon.setIsAddedTeamMember(true);
                 t.pokemon.add(secondToLastIndex, newPokemon);
             }
         }
@@ -1019,11 +1034,28 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    public void setDoubleBattleMode() {
+    private BattleStyle createTrainerStyle(BattleStyle style) {
+        // Unchanged: passes style through
+        // Randomize: Select a random Style to use
+        // Single Style: passes style through, as the selected style is already picked.
+        BattleStyle trainerStyle = new BattleStyle(style.getModification(), style.getStyle());
+        if (trainerStyle.getModification() == BattleStyle.Modification.RANDOM) {
+            int styleCount = BattleStyle.Style.values().length;
+            if (romHandler.generationOfPokemon() < 5 || romHandler.generationOfPokemon() > 6)
+                styleCount = 2; // Remove triple & rotation as options
+            trainerStyle.setStyle(BattleStyle.Style.values()[random.nextInt(styleCount)]);
+        }
+        return trainerStyle;
+    }
+
+    public void modifyBattleStyle() {
+        if (settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED)
+            return;
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
             if (!(tr.multiBattleStatus == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                if (tr.pokemon.size() == 1) {
+                tr.currBattleStyle = createTrainerStyle(settings.getBattleStyle());
+                while (tr.pokemon.size() < tr.currBattleStyle.getRequiredPokemonCount()) {
                     tr.pokemon.add(tr.pokemon.get(0).copy());
                 }
                 tr.forcedDoubleBattle = true;
@@ -1061,29 +1093,29 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 int maxLevel = -1;
                 TrainerPokemon highestLevelPoke = null;
                 for (TrainerPokemon tp : t.pokemon) {
-                    if (tp.level > maxLevel) {
+                    if (tp.getLevel() > maxLevel) {
                         highestLevelPoke = tp;
-                        maxLevel = tp.level;
+                        maxLevel = tp.getLevel();
                     }
                 }
                 if (highestLevelPoke == null) {
                     continue; // should never happen - trainer had zero pokes
                 }
-                int[] moveset = highestLevelPoke.resetMoves ?
+                int[] moveset = highestLevelPoke.isResetMoves() ?
                         RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                        highestLevelPoke.species, highestLevelPoke.forme).getNumber(),
+                                        highestLevelPoke.getSpecies(), highestLevelPoke.getForme()).getNumber(),
                                 movesets,
-                                highestLevelPoke.level) :
-                        highestLevelPoke.moves;
+                                highestLevelPoke.getLevel()) :
+                        highestLevelPoke.getMoves();
                 randomizeHeldItem(highestLevelPoke, settings, moves, moveset);
             } else {
                 for (TrainerPokemon tp : t.pokemon) {
-                    int[] moveset = tp.resetMoves ?
+                    int[] moveset = tp.isResetMoves() ?
                             RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                            tp.species, tp.forme).getNumber(),
+                                            tp.getSpecies(), tp.getForme()).getNumber(),
                                     movesets,
-                                    tp.level) :
-                            tp.moves;
+                                    tp.getLevel()) :
+                            tp.getMoves();
                     randomizeHeldItem(tp, settings, moves, moveset);
                     if (t.requiresUniqueHeldItems) {
                         while (!t.pokemonHaveUniqueHeldItems()) {
@@ -1101,21 +1133,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean sensibleItemsOnly = settings.isSensibleItemsOnlyForTrainers();
         boolean consumableItemsOnly = settings.isConsumableItemsOnlyForTrainers();
         boolean swapMegaEvolutions = settings.isSwapTrainerMegaEvos();
-        if (tp.hasZCrystal) {
+        if (tp.hasZCrystal()) {
             return; // Don't overwrite existing Z Crystals.
         }
-        if (tp.hasMegaStone && swapMegaEvolutions) {
+        if (tp.hasMegaStone() && swapMegaEvolutions) {
             return; // Don't overwrite mega stones if another setting handled that.
         }
-        List<Integer> toChooseFrom;
+
+        List<Item> toChooseFrom;
         if (sensibleItemsOnly) {
             toChooseFrom = romHandler.getSensibleHeldItemsFor(tp, consumableItemsOnly, moves, moveset);
         } else if (consumableItemsOnly) {
-            toChooseFrom = romHandler.getAllConsumableHeldItems();
+            toChooseFrom = new ArrayList<>(romHandler.getAllConsumableHeldItems());
         } else {
-            toChooseFrom = romHandler.getAllHeldItems();
+            toChooseFrom = new ArrayList<>(romHandler.getAllHeldItems());
         }
-        tp.heldItem = toChooseFrom.get(random.nextInt(toChooseFrom.size()));
+        tp.setHeldItem(toChooseFrom.get(random.nextInt(toChooseFrom.size())));
     }
 
     /**
@@ -1123,19 +1156,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * based on the types of its moves.
      */
     public void randomUsableZCrystals() {
+        List<Item> items = romHandler.getItems();
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
             for (TrainerPokemon tp : tr.pokemon) {
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.heldItem)) {
-                    int[] pokeMoves = tp.resetMoves ?
-                            RomFunctions.getMovesAtLevel(
-                                    romHandler.getAltFormeOfSpecies(tp.species, tp.forme).getNumber(),
-                                    romHandler.getMovesLearnt(), tp.level) :
-                            tp.moves;
-                    pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();
-                    int chosenMove = pokeMoves[random.nextInt(pokeMoves.length)];
-                    Type chosenMoveType = romHandler.getMoves().get(chosenMove).type;
-                    tp.heldItem = Gen7Constants.heldZCrystalsByType.get(chosenMoveType);
+                if (tp.getHeldItem() != null) {
+                    if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
+                        int[] pokeMoves = tp.isResetMoves() ?
+                                RomFunctions.getMovesAtLevel(
+                                        romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(),
+                                        romHandler.getMovesLearnt(), tp.getLevel()) :
+                                tp.getMoves();
+                        pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();
+                        int chosenMove = pokeMoves[random.nextInt(pokeMoves.length)];
+                        Type chosenMoveType = romHandler.getMoves().get(chosenMove).type;
+                        tp.setHeldItem(items.get(Gen7Constants.heldZCrystalsByType.get(chosenMoveType)));
+                    }
                 }
             }
         }

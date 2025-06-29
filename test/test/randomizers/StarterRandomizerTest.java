@@ -1,10 +1,10 @@
 package test.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.Type;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -32,6 +32,29 @@ public class StarterRandomizerTest extends RandomizerTest {
         System.out.println("Before: " + before);
         System.out.println("After: " + romHandler.getStarters());
         assertNotEquals(before, romHandler.getStarters());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void completelyRandomDoesNotAlwaysGiveBasics(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setStartersMod(Settings.StartersMod.COMPLETELY_RANDOM);
+        StarterRandomizer sr = new StarterRandomizer(romHandler, s, RND);
+
+        boolean allBasic = true;
+        for (int i = 0; i < 100; i++) {
+            sr.randomizeStarters();
+            System.out.println("Set #" + (i + 1) + ": " + romHandler.getStarters().stream().map(Species::getName)
+                    .collect(Collectors.toList()));
+            if (romHandler.getStarters().stream().anyMatch(sp -> !sp.getEvolutionsTo().isEmpty())) {
+                allBasic = false;
+                break;
+            }
+        }
+
+        assertFalse(allBasic);
     }
 
     @ParameterizedTest
@@ -315,6 +338,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         //So it makes a reasonable proxy to check this is working
         activateRomHandler(romName);
         assumeFalse(romHandler.isORAS());
+        //Because ORAS demands 12 starters, there aren't enough 3-stage Grass types to go around
         Settings s = new Settings();
         s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         s.setStartersTypeMod(Settings.StartersTypeMod.SINGLE_TYPE);
@@ -393,7 +417,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void noDualTypesWorksWithRandomTypes(String romName) {
         activateRomHandler(romName);
         Settings s = new Settings();
-        s.setTypesMod(Settings.TypesMod.COMPLETELY_RANDOM);
+        s.setSpeciesTypesMod(Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         s.setStartersMod(false, false, false, false, false);
         s.setStartersTypeMod(false, false, false, false, false);
         s.setStartersNoDualTypes(true);

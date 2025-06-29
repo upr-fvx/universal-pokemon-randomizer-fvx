@@ -26,18 +26,15 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.File;
-
 public class SysConstants {
 
     public static final String RELEASES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases";
     public static final String RELEASES_API_URL = "https://api.github.com/repos/upr-fvx/universal-pokemon-randomizer-fvx/releases/latest";
-    public static final String WIKI_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki";
-    public static final String WIKI_IMPORTANT_INFO_URL = WIKI_URL + "/Important-Information";
-    public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/Randomizing-the-3DS-games";
-
-    public static final String ROOT_PATH = getRootPath();
-    public static final String LINE_SEP = System.getProperty("line.separator");
+    public static final String WIKI_URL = "https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages";
+    public static final String WIKI_HOME_URL = WIKI_URL + "/home.html";
+    public static final String WIKI_IMPORTANT_INFO_URL = WIKI_URL + "/important_info.html";
+    public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/3ds_games.html";
+    public static final String ISSUES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues";
 
     public static final String customNamesFile = "customnames.rncn";
     public static final String customPCGDirectory = "data/players";
@@ -46,14 +43,5 @@ public class SysConstants {
     public static final String tnamesFile = "trainernames.txt";
     public static final String tclassesFile = "trainerclasses.txt";
     public static final String nnamesFile = "nicknames.txt";
-
-    private static String getRootPath() {
-        try {
-            File fh = Utils.getExecutionLocation().getParentFile();
-            return fh.getAbsolutePath() + File.separator;
-        } catch (Exception e) {
-            return "./";
-        }
-    }
 
 }

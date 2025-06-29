@@ -1,15 +1,25 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TrainerMovesetRandomizer extends Randomizer {
+
+    /**
+     * Returns whether a TrainerMovesetRandomizer can be used on games of the given generation.
+     */
+    public static boolean hasSupport(int generation) {
+        // This is because MoveSynergy is dependent on move IDs,
+        // which are only unified starting in Gen 3.
+        // TODO: give Gen1+2 support, and remove this method
+        return generation >= 3;
+    }
 
     private Map<Integer, List<MoveLearnt>> allLevelUpMoves;
     private Map<Integer, List<Integer>> allEggMoves;
@@ -22,7 +32,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
     public void randomizeTrainerMovesets() {
         boolean isCyclicEvolutions = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
-        boolean doubleBattleMode = settings.isDoubleBattleMode();
+        boolean isOnlyMultiBattles = settings.getBattleStyle().isOnlyMultiBattles();
 
         List<Trainer> trainers = romHandler.getTrainers();
 
@@ -30,11 +40,11 @@ public class TrainerMovesetRandomizer extends Randomizer {
             t.setPokemonHaveCustomMoves(true);
 
             for (TrainerPokemon tp : t.pokemon) {
-                tp.resetMoves = false;
+                tp.setResetMoves(false);
 
                 List<Move> movesAtLevel = getMoveSelectionPoolAtLevel(tp, isCyclicEvolutions);
 
-                movesAtLevel = trimMoveList(tp, movesAtLevel, doubleBattleMode);
+                movesAtLevel = trimMoveList(tp, movesAtLevel, isOnlyMultiBattles);
 
                 if (movesAtLevel.isEmpty()) {
                     continue;
@@ -60,7 +70,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 // Add bias for STAB
 
-                Species pk = romHandler.getAltFormeOfSpecies(tp.species, tp.forme);
+                Species pk = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
 
                 List<Move> stabMoves = new ArrayList<>(movesAtLevel)
                         .stream()
@@ -123,7 +133,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 for (Move mv : softAbilityMoveAntiSynergyList) {
                     withoutSoftAntiSynergy.remove(mv);
                 }
-                if (withoutSoftAntiSynergy.size() > 0) {
+                if (!withoutSoftAntiSynergy.isEmpty()) {
                     movesAtLevel = withoutSoftAntiSynergy;
                 }
 
@@ -134,9 +144,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                     for (int i = 0; i < 4; i++) {
                         if (i < movesLeft) {
-                            tp.moves[i] = distinctMoveList.get(i).number;
+                            tp.getMoves()[i] = distinctMoveList.get(i).number;
                         } else {
-                            tp.moves[i] = 0;
+                            tp.getMoves()[i] = 0;
                         }
                     }
                     continue;
@@ -158,7 +168,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 for (Move mv : statAntiSynergyList) {
                     withoutStatAntiSynergy.remove(mv);
                 }
-                if (withoutStatAntiSynergy.size() > 0) {
+                if (!withoutStatAntiSynergy.isEmpty()) {
                     movesAtLevel = withoutStatAntiSynergy;
                 }
 
@@ -169,9 +179,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                     for (int i = 0; i < 4; i++) {
                         if (i < movesLeft) {
-                            tp.moves[i] = distinctMoveList.get(i).number;
+                            tp.getMoves()[i] = distinctMoveList.get(i).number;
                         } else {
-                            tp.moves[i] = 0;
+                            tp.getMoves()[i] = 0;
                         }
                     }
                     continue;
@@ -204,7 +214,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                         .stream()
                         .filter(mv -> mv.category == MoveCategory.SPECIAL).collect(Collectors.toList());
 
-                if (atkSpatkRatio < 1 && specialMoves.size() > 0) {
+                if (atkSpatkRatio < 1 && !specialMoves.isEmpty()) {
                     atkSpatkRatio = 1 / atkSpatkRatio;
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int) (physicalMoves.size() * acceptedRatio) - specialMoves.size();
@@ -212,7 +222,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                         Move mv = specialMoves.get(random.nextInt(specialMoves.size()));
                         movesAtLevel.add(mv);
                     }
-                } else if (physicalMoves.size() > 0) {
+                } else if (!physicalMoves.isEmpty()) {
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int) (specialMoves.size() * acceptedRatio) - physicalMoves.size();
                     for (int i = 0; i < additionalMoves; i++) {
@@ -324,9 +334,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 for (int i = 0; i < 4; i++) {
                     if (i < movesPicked) {
-                        tp.moves[i] = pickedMoves.get(i).number;
+                        tp.getMoves()[i] = pickedMoves.get(i).number;
                     } else {
-                        tp.moves[i] = 0;
+                        tp.getMoves()[i] = 0;
                     }
                 }
             }
@@ -335,15 +345,15 @@ public class TrainerMovesetRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean doubleBattleMode) {
+    private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean isMultiBattlesOnly) {
         int movesLeft = movesAtLevel.size();
 
         if (movesLeft <= 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < movesLeft) {
-                    tp.moves[i] = movesAtLevel.get(i).number;
+                    tp.getMoves()[i] = movesAtLevel.get(i).number;
                 } else {
-                    tp.moves[i] = 0;
+                    tp.getMoves()[i] = 0;
                 }
             }
             return new ArrayList<>();
@@ -352,7 +362,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         movesAtLevel = movesAtLevel
                 .stream()
                 .filter(mv -> !GlobalConstants.uselessMoves.contains(mv.number) &&
-                        (doubleBattleMode || !GlobalConstants.doubleBattleMoves.contains(mv.number)))
+                        (isMultiBattlesOnly || !GlobalConstants.doubleBattleMoves.contains(mv.number)))
                 .collect(Collectors.toList());
 
         movesLeft = movesAtLevel.size();
@@ -360,9 +370,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (movesLeft <= 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < movesLeft) {
-                    tp.moves[i] = movesAtLevel.get(i).number;
+                    tp.getMoves()[i] = movesAtLevel.get(i).number;
                 } else {
-                    tp.moves[i] = 0;
+                    tp.getMoves()[i] = 0;
                 }
             }
             return new ArrayList<>();
@@ -379,9 +389,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (movesLeft <= 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < movesLeft) {
-                    tp.moves[i] = movesAtLevel.get(i).number;
+                    tp.getMoves()[i] = movesAtLevel.get(i).number;
                 } else {
-                    tp.moves[i] = 0;
+                    tp.getMoves()[i] = 0;
                 }
             }
             return new ArrayList<>();
@@ -402,9 +412,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (movesLeft <= 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < movesLeft) {
-                    tp.moves[i] = movesAtLevel.get(i).number;
+                    tp.getMoves()[i] = movesAtLevel.get(i).number;
                 } else {
-                    tp.moves[i] = 0;
+                    tp.getMoves()[i] = 0;
                 }
             }
             return new ArrayList<>();
@@ -417,7 +427,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 romHandler.getAbilityForTrainerPokemon(tp),
                 movesAtLevel));
 
-        if (withoutHardAntiSynergy.size() > 0) {
+        if (!withoutHardAntiSynergy.isEmpty()) {
             movesAtLevel = withoutHardAntiSynergy;
         }
 
@@ -426,9 +436,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (movesLeft <= 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < movesLeft) {
-                    tp.moves[i] = movesAtLevel.get(i).number;
+                    tp.getMoves()[i] = movesAtLevel.get(i).number;
                 } else {
-                    tp.moves[i] = 0;
+                    tp.getMoves()[i] = 0;
                 }
             }
             return new ArrayList<>();
@@ -570,9 +580,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
 
         // Level-up Moves
-        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(romHandler.getAltFormeOfSpecies(tp.species, tp.forme).getNumber())
+        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber())
                 .stream()
-                .filter(ml -> (ml.level <= tp.level && ml.level != 0) || (ml.level == 0 && tp.level >= 30))
+                .filter(ml -> (ml.level <= tp.getLevel() && ml.level != 0) || (ml.level == 0 && tp.getLevel() >= 30))
                 .map(ml -> moves.get(ml.move))
                 .distinct()
                 .collect(Collectors.toList());
@@ -581,15 +591,15 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (!cyclicEvolutions) {
             Species preEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                preEvo = romHandler.getAltFormeOfSpecies(tp.species, tp.forme);
+                preEvo = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
             } else {
-                preEvo = tp.species;
+                preEvo = tp.getSpecies();
             }
             while (!preEvo.getEvolutionsTo().isEmpty()) {
                 preEvo = preEvo.getEvolutionsTo().get(0).getFrom();
                 moveSelectionPoolAtLevel.addAll(allLevelUpMoves.get(preEvo.getNumber())
                         .stream()
-                        .filter(ml -> ml.level <= tp.level)
+                        .filter(ml -> ml.level <= tp.getLevel())
                         .filter(ml -> this.random.nextDouble() < preEvoMoveProbability)
                         .map(ml -> moves.get(ml.move))
                         .distinct().collect(Collectors.toList()));
@@ -597,15 +607,15 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
 
         // TM Moves
-        boolean[] tmCompat = allTMCompat.get(romHandler.getAltFormeOfSpecies(tp.species, tp.forme));
+        boolean[] tmCompat = allTMCompat.get(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()));
         for (int tmMove: allTMMoves) {
             if (tmCompat[allTMMoves.indexOf(tmMove) + 1]) {
                 Move thisMove = moves.get(tmMove);
-                if (thisMove.power > 1 && tp.level * 3 > thisMove.power * thisMove.hitCount &&
+                if (thisMove.power > 1 && tp.getLevel() * 3 > thisMove.power * thisMove.hitCount &&
                         this.random.nextDouble() < tmMoveProbability) {
                     moveSelectionPoolAtLevel.add(thisMove);
-                } else if ((thisMove.power <= 1 && this.random.nextInt(100) < tp.level) ||
-                        this.random.nextInt(200) < tp.level) {
+                } else if ((thisMove.power <= 1 && this.random.nextInt(100) < tp.getLevel()) ||
+                        this.random.nextInt(200) < tp.getLevel()) {
                     moveSelectionPoolAtLevel.add(thisMove);
                 }
             }
@@ -613,15 +623,15 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         // Move Tutor Moves
         if (romHandler.hasMoveTutors()) {
-            boolean[] tutorCompat = allTutorCompat.get(romHandler.getAltFormeOfSpecies(tp.species, tp.forme));
+            boolean[] tutorCompat = allTutorCompat.get(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()));
             for (int tutorMove: allTutorMoves) {
                 if (tutorCompat[allTutorMoves.indexOf(tutorMove) + 1]) {
                     Move thisMove = moves.get(tutorMove);
-                    if (thisMove.power > 1 && tp.level * 3 > thisMove.power * thisMove.hitCount &&
+                    if (thisMove.power > 1 && tp.getLevel() * 3 > thisMove.power * thisMove.hitCount &&
                             this.random.nextDouble() < tutorMoveProbability) {
                         moveSelectionPoolAtLevel.add(thisMove);
-                    } else if ((thisMove.power <= 1 && this.random.nextInt(100) < tp.level) ||
-                            this.random.nextInt(200) < tp.level) {
+                    } else if ((thisMove.power <= 1 && this.random.nextInt(100) < tp.getLevel()) ||
+                            this.random.nextInt(200) < tp.getLevel()) {
                         moveSelectionPoolAtLevel.add(thisMove);
                     }
                 }
@@ -632,9 +642,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (!cyclicEvolutions) {
             Species firstEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                firstEvo = romHandler.getAltFormeOfSpecies(tp.species, tp.forme);
+                firstEvo = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
             } else {
-                firstEvo = tp.species;
+                firstEvo = tp.getSpecies();
             }
             while (!firstEvo.getEvolutionsTo().isEmpty()) {
                 firstEvo = firstEvo.getEvolutionsTo().get(0).getFrom();

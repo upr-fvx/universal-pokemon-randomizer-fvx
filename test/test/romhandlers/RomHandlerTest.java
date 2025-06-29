@@ -1,7 +1,7 @@
 package test.romhandlers;
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,8 +13,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.
+ * Unit tests for the RomHandler classes. Just the base functionality here, the tests themselves are in subclasses.<br>
+ * <b>NOTE:</b> to change which ROMs are tested, modify {@link #getRomNames()}.
  */
+//TODO: when feature is implemented, make child class LoadOnlyRomHandlerTest which is parameterized container
+// (Not doing it now bc I'm afraid it would overtax memory to load all romHandlers at once.)
 public class RomHandlerTest {
 
     // update if the amount of supported generation increases,
@@ -65,7 +68,7 @@ public class RomHandlerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new GenRestrictions());
     }
 
     protected static Generation getGenerationOf(String romName) {

@@ -1,7 +1,7 @@
 package test.updaters;
 
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.updaters.PokemonBaseStatUpdater;
+import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
+import com.dabomstew.pkromio.gamedata.Species;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -66,7 +66,7 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         int updateToGen = Integer.parseInt(split[1]);
 
         loadROM(romName);
-        new PokemonBaseStatUpdater(romHandler).updatePokemonStats(updateToGen);
+        new SpeciesBaseStatUpdater(romHandler).updateSpeciesStats(updateToGen);
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
 
         loadROM(romName);
         List<BaseStatRecord> before = toRecords(romHandler.getSpeciesInclFormes());
-        new PokemonBaseStatUpdater(romHandler).updatePokemonStats(updateToGen);
+        new SpeciesBaseStatUpdater(romHandler).updateSpeciesStats(updateToGen);
         List<BaseStatRecord> after = toRecords(romHandler.getSpeciesInclFormes());
         printDiff(before, after);
         assertNotEquals(before, after);
@@ -91,12 +91,12 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
     public void updatingToAllGensInOrderIsTheSameAsJustUpdatingToLast(String romName) {
         loadROM(romName);
 
-        PokemonBaseStatUpdater bsu = new PokemonBaseStatUpdater(romHandler);
+        SpeciesBaseStatUpdater bsu = new SpeciesBaseStatUpdater(romHandler);
         for (int gen = getGenerationNumberOf(romName) + 1; gen <= MAX_UPDATE_GEN; gen++) {
-            bsu.updatePokemonStats(gen);
+            bsu.updateSpeciesStats(gen);
         }
         List<BaseStatRecord> afterAllInOrder = toRecords(romHandler.getSpeciesInclFormes());
-        new PokemonBaseStatUpdater(romHandler).updatePokemonStats(MAX_UPDATE_GEN);
+        new SpeciesBaseStatUpdater(romHandler).updateSpeciesStats(MAX_UPDATE_GEN);
         assertEquals(afterAllInOrder, toRecords(romHandler.getSpeciesInclFormes()));
     }
 

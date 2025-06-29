@@ -2,8 +2,8 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,14 +76,14 @@ public class StarterRandomizer extends Randomizer {
             //also assuming that the triangle restrictions (typeTriangle, fireWaterGrass)
             //are not used with custom starters
             if (typeTriangle) {
-                pickedStarters = chooseTypeTriangleStarters(choosableByType);
+                pickedStarters = chooseTypeTriangleStarters(choosableByType, true);
                 while (pickedStarters.size() < starterCount) {
                     //remove the ones we already picked
                     choosable.removeAll(pickedStarters);
                     choosableByType = choosable.sortByType(false);
 
                     //and do it again
-                    pickedStarters.addAll(chooseTypeTriangleStarters(choosableByType));
+                    pickedStarters.addAll(chooseTypeTriangleStarters(choosableByType, false));
                 }
             } else if (typeFwg) {
                 pickedStarters = chooseStartersFireWaterGrass(choosableByType);
@@ -135,16 +135,7 @@ public class StarterRandomizer extends Randomizer {
      * @return A new List containing a trio of starters of Fire, Water, and Grass types in the appropriate order.
      */
     private List<Species> chooseStartersFireWaterGrass(Map<Type, SpeciesSet> choosableByType) {
-        List<Type> typesInOrder;
-        if(romHandler.generationOfPokemon() <= 2) {
-            //the order is Fire, Water, Grass
-            typesInOrder = Arrays.asList(Type.FIRE, Type.WATER, Type.GRASS);
-        } else {
-            //the order is Grass, Fire, Water
-            typesInOrder = Arrays.asList(Type.GRASS, Type.FIRE, Type.WATER);
-        }
-
-        return chooseStartersOfTypes(choosableByType, typesInOrder);
+        return chooseStartersOfTypes(choosableByType, romHandler.getStandardTypeTriangle());
     }
 
     /**
@@ -154,7 +145,7 @@ public class StarterRandomizer extends Randomizer {
      * @return A new List containing a trio of Pokemon such that each is super-effective
      * against the previous (wrapping around).
      */
-    private List<Species> chooseTypeTriangleStarters(Map<Type, SpeciesSet> availablePokemonByType) {
+    private List<Species> chooseTypeTriangleStarters(Map<Type, SpeciesSet> availablePokemonByType, boolean firstTrio) {
         Set<List<Type>> typeTriangles = findTypeTriangles();
         if (typeTriangles.isEmpty()) {
             throw new RandomizationException("Could not find any type triangles");
@@ -177,7 +168,10 @@ public class StarterRandomizer extends Randomizer {
                 picks = null; //this is theoretically unnecessary, but here for clarity
             }
 
-            //TODO: special case for Trio gym? (This would be where to put it.)
+            //we've succeeded. If this is the first trio of starters, set starter type triangle.
+            if(firstTrio) {
+                romHandler.setStarterTypeTriangle(triangle);
+            }
         }
 
         if (picks == null) {
@@ -397,11 +391,11 @@ public class StarterRandomizer extends Randomizer {
     public void randomizeStarterHeldItems() {
         boolean banBadItems = settings.isBanBadRandomStarterHeldItems();
 
-        List<Integer> oldHeldItems = romHandler.getStarterHeldItems();
-        List<Integer> newHeldItems = new ArrayList<>();
-        ItemList possibleItems = banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems();
+        List<Item> oldHeldItems = romHandler.getStarterHeldItems();
+        List<Item> newHeldItems = new ArrayList<>();
+        List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         for (int i = 0; i < oldHeldItems.size(); i++) {
-            newHeldItems.add(possibleItems.randomItem(this.random));
+            newHeldItems.add(possibleItems.get(random.nextInt(possibleItems.size())));
         }
         romHandler.setStarterHeldItems(newHeldItems);
         changesMade = true;

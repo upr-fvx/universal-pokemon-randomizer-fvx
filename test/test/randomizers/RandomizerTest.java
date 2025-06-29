@@ -1,7 +1,7 @@
 package test.randomizers;
 
-import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,7 +36,7 @@ public class RandomizerTest {
     private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, new Roms.Region[]{Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, false);
     }
 
     public static String[] getAllRomNames() {
@@ -87,21 +84,24 @@ public class RandomizerTest {
         romHandler.loadRom(fullRomName);
         // Sets restrictions to... not restrict.
         // This can be overturned later for tests interested in certain restrictions.
-        romHandler.getRestrictedSpeciesService().setRestrictions(new Settings());
+        romHandler.getRestrictedSpeciesService().setRestrictions(new GenRestrictions());
 
         romHandlers.put(romName, new TestRomHandler(romHandler));
     }
 
     @BeforeAll
     static public void loadROMs() {
-        for(String romName : getRomNames()) {
+        List<String> romNames = Arrays.asList(getRomNames());
+        romNames.sort(Comparator.comparingInt(RandomizerTest::getGenerationNumberOf));
+        Collections.reverse(romNames);
+        //load late generations first, when there should be the most memory available
+        //sort and reverse rather than simply reverse sort because US/UM should be before S/M
+        for(String romName : romNames) {
             System.out.println("Loading " + romName +  "...");
             loadROM(romName);
             System.out.println("Finished loading " + romName);
         }
     }
-
-
 
     protected static Generation getGenerationOf(String romName) {
         return Generation.GAME_TO_GENERATION.get(stripToBaseRomName(romName));

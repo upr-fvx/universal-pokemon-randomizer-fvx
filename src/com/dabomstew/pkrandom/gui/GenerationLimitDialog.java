@@ -22,7 +22,7 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
+import com.dabomstew.pkromio.gamedata.GenRestrictions;
 
 import javax.swing.*;
 
@@ -68,14 +68,14 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
 
     public GenRestrictions getChoice() {
         GenRestrictions gr = new GenRestrictions();
-        gr.allow_gen1 = gen1CheckBox.isSelected();
-        gr.allow_gen2 = gen2CheckBox.isSelected();
-        gr.allow_gen3 = gen3CheckBox.isSelected();
-        gr.allow_gen4 = gen4CheckBox.isSelected();
-        gr.allow_gen5 = gen5CheckBox.isSelected();
-        gr.allow_gen6 = gen6CheckBox.isSelected();
-        gr.allow_gen7 = gen7CheckBox.isSelected();
-        gr.allow_evolutionary_relatives = allowEvolutionaryRelativesCheckBox.isSelected();
+        gr.setGenAllowed(1, gen1CheckBox.isSelected());
+        gr.setGenAllowed(2, gen2CheckBox.isSelected());
+        gr.setGenAllowed(3, gen3CheckBox.isSelected());
+        gr.setGenAllowed(4, gen4CheckBox.isSelected());
+        gr.setGenAllowed(5, gen5CheckBox.isSelected());
+        gr.setGenAllowed(6, gen6CheckBox.isSelected());
+        gr.setGenAllowed(7, gen7CheckBox.isSelected());
+        gr.setAllowEvolutionaryRelatives(allowEvolutionaryRelativesCheckBox.isSelected());
         return gr;
     }
 
@@ -104,14 +104,14 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
     }
 
     private void restoreFrom(GenRestrictions restrict) {
-        gen1CheckBox.setSelected(restrict.allow_gen1);
-        gen2CheckBox.setSelected(restrict.allow_gen2);
-        gen3CheckBox.setSelected(restrict.allow_gen3);
-        gen4CheckBox.setSelected(restrict.allow_gen4);
-        gen5CheckBox.setSelected(restrict.allow_gen5);
-        gen6CheckBox.setSelected(restrict.allow_gen6);
-        gen7CheckBox.setSelected(restrict.allow_gen7);
-        allowEvolutionaryRelativesCheckBox.setSelected(restrict.allow_evolutionary_relatives);
+        gen1CheckBox.setSelected(restrict.isGenAllowed(1));
+        gen2CheckBox.setSelected(restrict.isGenAllowed(2));
+        gen3CheckBox.setSelected(restrict.isGenAllowed(3));
+        gen4CheckBox.setSelected(restrict.isGenAllowed(4));
+        gen5CheckBox.setSelected(restrict.isGenAllowed(5));
+        gen6CheckBox.setSelected(restrict.isGenAllowed(6));
+        gen7CheckBox.setSelected(restrict.isGenAllowed(7));
+        allowEvolutionaryRelativesCheckBox.setSelected(restrict.isAllowEvolutionaryRelatives());
     }
 
     private void initComponents() {

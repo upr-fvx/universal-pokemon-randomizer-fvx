@@ -1598,9 +1598,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen7Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 20;
-                    tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
-                    tpk.setHasMegaStone(Gen6Constants.megaStones.contains(tpk.getHeldItem().getId()));
-                    tpk.setHasZCrystal(Gen7Constants.heldZCrystals.contains(tpk.getHeldItem().getId()));
+                    int heldItemID = readWord(trpoke, pokeOffs);
+                    tpk.setHeldItem(items.get(heldItemID));
+                    tpk.setHasMegaStone(Gen6Constants.megaStones.contains(heldItemID));
+                    tpk.setHasZCrystal(Gen7Constants.heldZCrystals.contains(heldItemID));
                     pokeOffs += 4;
                     for (int move = 0; move < 4; move++) {
                         tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));

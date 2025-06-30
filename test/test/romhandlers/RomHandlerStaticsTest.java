@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerStaticsTest extends RomHandlerTest {
 
@@ -19,6 +20,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void staticPokemonIsNotEmpty(String romName) {
         loadROM(romName);
+        assumeTrue(romHandler.canChangeStaticPokemon());
         System.out.println(romHandler.getStaticPokemon());
         assertFalse(romHandler.getStaticPokemon().isEmpty());
     }

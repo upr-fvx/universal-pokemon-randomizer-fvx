@@ -49,6 +49,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final List<Integer> originalTMMoves;
     private List<Integer> testTMMoves;
     private final List<Integer> hmMoves;
+    private final boolean hasMoveTutors;
     private final List<Integer> originalMoveTutorMoves;
     private List<Integer> testMoveTutorMoves;
     private final Map<Species, boolean[]> originalTMHMCompatibility;
@@ -155,9 +156,12 @@ public class TestRomHandler extends AbstractRomHandler {
 
         originalTMMoves = Collections.unmodifiableList(mockupOf.getTMMoves());
         hmMoves = Collections.unmodifiableList(mockupOf.getHMMoves());
-        originalMoveTutorMoves = Collections.unmodifiableList(mockupOf.getMoveTutorMoves());
+        hasMoveTutors = mockupOf.hasMoveTutors();
+        originalMoveTutorMoves = hasMoveTutors() ?
+                Collections.unmodifiableList(mockupOf.getMoveTutorMoves()) :
+                Collections.emptyList();
         originalTMHMCompatibility = Collections.unmodifiableMap(mockupOf.getTMHMCompatibility());
-        originalMoveTutorCompatibility = mockupOf.hasMoveTutors() ?
+        originalMoveTutorCompatibility = hasMoveTutors ?
                 Collections.unmodifiableMap(mockupOf.getMoveTutorCompatibility()) :
                 Collections.emptyMap();
 
@@ -1098,7 +1102,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasMoveTutors() {
-        return !originalMoveTutorMoves.isEmpty();
+        return hasMoveTutors;
     }
 
     @Override

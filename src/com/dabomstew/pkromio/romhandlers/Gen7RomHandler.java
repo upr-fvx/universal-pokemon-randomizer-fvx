@@ -3309,6 +3309,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 shop.setItems(shopItems);
                 shop.setName(shopNames.get(i));
                 shop.setMainGame(Gen7Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+                shop.setSpecialShop(true);
                 shops.add(shop);
             }
 

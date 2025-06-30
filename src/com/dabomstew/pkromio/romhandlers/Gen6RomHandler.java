@@ -3805,6 +3805,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             shop.setItems(shopItems);
             shop.setName(shopNames.get(i));
             shop.setMainGame(Gen6Constants.getMainGameShops(romEntry.getRomType()).contains(i));
+            shop.setSpecialShop(true);
             shops.add(shop);
         }
 

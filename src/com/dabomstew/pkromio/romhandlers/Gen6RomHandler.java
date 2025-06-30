@@ -3481,8 +3481,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         for (int i = 0; i < fieldItemIds.size(); i++) {
             Item current = items.get(fieldItemIds.get(i));
-            // TODO: why exclude master ball here?
-            if (current.isAllowed() && current.getId() != ItemIDs.masterBall) {
+            if (current.isAllowed()) {
                 fieldItemIds.set(i, iterItems.next().getId());
             }
         }

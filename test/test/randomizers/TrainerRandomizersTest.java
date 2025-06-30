@@ -552,7 +552,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
             for (int pkNum = 0; pkNum < tr.pokemon.size(); pkNum++) {
                 TrainerPokemon tp = tr.pokemon.get(pkNum);
                 System.out.println(tp.getHeldItem());
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
+                if (tp.getHeldItem() != null && Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
                     zCrystals[pkNum] = true;
                     anyHasZCrystal = true;
                 }
@@ -574,7 +574,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
             for (TrainerPokemon tp : tr.pokemon) {
-                if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
+                if (tp.getHeldItem() != null && Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
                     System.out.println(tp.getSpecies().getName() + " holds " + tp.getHeldItem());
 
                     int[] pkMoves = tp.isResetMoves() ?

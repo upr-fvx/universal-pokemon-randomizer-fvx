@@ -610,6 +610,7 @@ public class TestRomHandler extends AbstractRomHandler {
         if(testSpeciesInOrder == null) {
             testSpeciesInOrder = new ArrayList<>(getSpeciesSet());
             testSpeciesInOrder.sort(Comparator.comparingInt(Species::getNumber)); //ok that's some sleek syntax. gj java.
+            testSpeciesInOrder.add(0, null); // and this is less sleek haha, O(#numPokemon)
         }
         return testSpeciesInOrder;
     }

@@ -250,19 +250,14 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-//        s.setSelectedEXPCurve(ExpCurve.MEDIUM_FAST);
-//        s.setStandardizeEXPCurves(true);
-//        romHandler.standardizeEXPCurves(s);
         s.setEvolutionsMod(false, true, false);
-        s.setEvosSimilarStrength(true); // just to increase the likelihood of a failure
-        s.setEvosSameTyping(true); // just to increase the likelihood of a failure
         s.setEvosForceChange(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         Species cosmoem = romHandler.getSpecies().get(SpeciesIDs.cosmoem);
         System.out.println(cosmoem.getName());
         for (Evolution evo : cosmoem.getEvolutionsFrom()) {
-            System.out.println(evo.getTo().getName());
+            System.out.println(evo);
             assertNotEquals(SpeciesIDs.solgaleo, evo.getTo().getNumber());
             assertNotEquals(SpeciesIDs.lunala, evo.getTo().getNumber());
         }
@@ -468,7 +463,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-        s.setEvolutionsMod(false, false, true);
+        s.setEvolutionsMod(Settings.EvolutionsMod.RANDOM_EVERY_LEVEL);
         s.setEvosNoConvergence(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 

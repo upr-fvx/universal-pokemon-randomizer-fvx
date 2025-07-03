@@ -33,13 +33,14 @@ public class GenRestrictions {
     public static final int MAX_GENERATION = 7;
     private final boolean[] gensAllowed = new boolean[MAX_GENERATION];
 
-    private boolean allowEvolutionaryRelatives = true;
+    private boolean allowEvolutionaryRelatives;
 
     /**
      * Creates a GenRestrictions that allows everything.
      */
     public GenRestrictions() {
         Arrays.fill(gensAllowed, true);
+        allowEvolutionaryRelatives = true;
     }
 
     public GenRestrictions(int state) {

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static test.compressors.CmpTestConstants.IN_ADRESS;
+import static test.compressors.CmpTestConstants.IN_ADDRESS;
 import static test.compressors.CmpTestConstants.TEST_FILE_NAMES;
 
 public class Gen2CmpTest {
@@ -27,7 +27,7 @@ public class Gen2CmpTest {
     @MethodSource("getImageNames")
     public void testAllCompressorsWorkOnImage(String name) throws IOException {
         System.out.println(name);
-        GBCImage bim = new GBCImage.Builder(new File(IN_ADRESS + "/" + name + ".png")).columnMode(true).build();
+        GBCImage bim = new GBCImage.Builder(new File(IN_ADDRESS + "/" + name + ".png")).columnMode(true).build();
 
         List<Gen2Compressor> compressors = Gen2Cmp.COMPRESSORS;
 
@@ -73,7 +73,7 @@ public class Gen2CmpTest {
     @MethodSource("getImageNames")
     public void testCompressionRateOnImage(String name) throws IOException {
         System.out.println(name);
-        GBCImage bim = new GBCImage.Builder(new File(IN_ADRESS + "/" + name + ".png")).columnMode(true).build();
+        GBCImage bim = new GBCImage.Builder(new File(IN_ADDRESS + "/" + name + ".png")).columnMode(true).build();
 
         byte[] uncompressed = bim.toBytes();
         byte[] compressed = Gen2Cmp.compress(uncompressed);

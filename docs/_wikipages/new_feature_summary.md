@@ -3,6 +3,8 @@ name: New Feature Summary
 ---
 This page summarizes all new features added in this fork (compared to UPR-ZX).
 
+**This page is currently outdated. It will be updated soon, to be in line with FVX 1.3.0. In the meanwhile, look to [the release notes](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases) for a truly full list of new features.** 
+
 # Evolutions
 
 ## Force Growth

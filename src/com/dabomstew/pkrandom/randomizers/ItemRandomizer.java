@@ -296,6 +296,7 @@ public class ItemRandomizer extends Randomizer {
         int rareCandyID = getRareCandyID();
         addRareCandiesToShops(rareCandyID);
         makeRareCandiesCheap(rareCandyID);
+        shopChangesMade = true;
     }
 
     private int getRareCandyID() {

@@ -1175,17 +1175,26 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        List<Shop> shops = romHandler.getShops();
-        for (Shop shop : shops) {
-            log.printf("%s", shop.getName());
-            log.println();
-            List<Item> shopItems = shop.getItems();
-            for (Item shopItem : shopItems) {
-                log.printf("- %5s", shopItem.getName());
+        if (settings.isAddCheapRareCandiesToShops()) {
+            log.printf(getBS("Log.sh.addedRareCandies"));
+        }
+        if (settings.getShopItemsMod() != Settings.ShopItemsMod.UNCHANGED) {
+            log.printf(getBS("Log.sh.specialShops"));
+            List<Shop> shops = romHandler.getShops();
+            for (Shop shop : shops) {
+                if (!shop.isSpecialShop()) {
+                    continue;
+                }
+                log.printf("%s", shop.getName());
+                log.println();
+                List<Item> shopItems = shop.getItems();
+                for (Item shopItem : shopItems) {
+                    log.printf("- %5s", shopItem.getName());
+                    log.println();
+                }
+
                 log.println();
             }
-
-            log.println();
         }
         printSectionSeparator();
     }

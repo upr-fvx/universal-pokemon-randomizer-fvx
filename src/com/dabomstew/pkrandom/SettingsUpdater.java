@@ -346,7 +346,7 @@ public class SettingsUpdater {
             insertExtraByte(61, (byte) 0);
         }
 
-        if (oldVersion < Version.FVX_1_2_3.id) {
+        if (oldVersion < Version.FVX_1_3_0.id) {
             // Introduced Battle Style Randomization.
             // Get the old "Double Battle Only" state to initialize the data to.
             byte initialState = 0;

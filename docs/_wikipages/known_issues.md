@@ -79,6 +79,7 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 
 * When the "Rival Carries Starter Through Game" and "Random Shiny Trainer Pokemon" settings are used simultaneously, the rival's starter can occasionally become shiny when it wasn't shiny before or vice versa.
 * When evolutions are randomized, it is possible, under very rare circumstances, for a Pokemon other than Nincada to create an "extra" Pokemon in your party if you have an empty party spot and a Poke Ball in your inventory. Specifically, this can happen if Nincada's "Ninjask evolution" is a Pokemon that was also used for another evolution, or a Pokemon whose alternate forme was used for another evolution. For example, if Sandile evolves into Alolan Dugtrio, and Nincada evolves into Dugtrio and Anorith, then evolving Sandile under the right conditions will add an Anorith to your party.
+* Using the evolution options "Random Every Level" and "No Convergence" together always causes the randomization to fail.
 
 ## Sun/Moon
 

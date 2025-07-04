@@ -1,8 +1,6 @@
 package com.dabomstew.pkromio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  GenRestrictions.java - stores what generations the user has limited.  --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,10 +22,15 @@ package com.dabomstew.pkromio.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a set of Generations whose {@link Species} are "allowed".
+ * To be used with {@link RestrictedSpeciesService}.
+ */
 public class GenRestrictions {
 
     public static final int MAX_GENERATION = 7;
@@ -39,19 +42,15 @@ public class GenRestrictions {
      * Creates a GenRestrictions that allows everything.
      */
     public GenRestrictions() {
-        Arrays.fill(gensAllowed, true);
         allowEvolutionaryRelatives = true;
+        Arrays.fill(gensAllowed, true);
     }
 
     public GenRestrictions(int state) {
-        setGenAllowed(1, (state & 1) > 0);
-        setGenAllowed(2, (state & 2) > 0);
-        setGenAllowed(3, (state & 4) > 0);
-        setGenAllowed(4, (state & 8) > 0);
-        setGenAllowed(5, (state & 16) > 0);
-        setGenAllowed(6, (state & 32) > 0);
-        setGenAllowed(7, (state & 64) > 0);
-        allowEvolutionaryRelatives = (state & 128) > 0;
+        allowEvolutionaryRelatives = (state & 1) > 0;
+        for (int gen = 1; gen <= MAX_GENERATION; gen++) {
+            setGenAllowed(gen, (state & (1 << gen)) > 0);
+        }
     }
 
     public boolean nothingSelected() {
@@ -65,9 +64,9 @@ public class GenRestrictions {
 
     public int toInt() {
         return makeIntSelected(
+                allowEvolutionaryRelatives,
                 isGenAllowed(1), isGenAllowed(2), isGenAllowed(3), isGenAllowed(4),
-                isGenAllowed(5), isGenAllowed(6), isGenAllowed(7),
-                allowEvolutionaryRelatives
+                isGenAllowed(5), isGenAllowed(6), isGenAllowed(7)
         );
     }
 
@@ -164,6 +163,9 @@ public class GenRestrictions {
     public String toString() {
         StringBuilder sb = new StringBuilder("GenRestrictions[");
         sb.append("gens allowed:");
+        if (nothingSelected()) {
+            sb.append("none ");
+        }
         for (int gen = 1; gen <= MAX_GENERATION; gen++) {
             if (isGenAllowed(gen)) {
                 sb.append(gen).append(" ");

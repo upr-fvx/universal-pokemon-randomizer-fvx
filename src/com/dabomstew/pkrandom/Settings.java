@@ -441,9 +441,9 @@ public class Settings {
                 startersMod == StartersMod.RANDOM_BASIC));
 
         // 5 - 10: dropdowns
-        write2ByteInt(out, customStarters[0]);
-        write2ByteInt(out, customStarters[1]);
-        write2ByteInt(out, customStarters[2]);
+        write2ByteIntBigEndian(out, customStarters[0]);
+        write2ByteIntBigEndian(out, customStarters[1]);
+        write2ByteIntBigEndian(out, customStarters[2]);
 
         // 11 movesets
         out.write(makeByteSelected(movesetsMod == MovesetsMod.COMPLETELY_RANDOM,
@@ -562,10 +562,10 @@ public class Settings {
 
         // 30 - 33: pokemon restrictions
         try {
-            if (currentRestrictions != null) {
-                writeFullInt(out, currentRestrictions.toInt());
+            if (currentRestrictions == null) {
+                writeFullInt(out, -1);
             } else {
-                writeFullInt(out, 0);
+                writeFullInt(out, currentRestrictions.toInt());
             }
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
@@ -573,7 +573,8 @@ public class Settings {
 
         // 34 - 37: misc tweaks
         try {
-            writeFullInt(out, currentMiscTweaks);
+            // TODO: make misc tweaks little endian. No one likes big endian.
+            writeFullIntBigEndian(out, currentMiscTweaks);
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -727,8 +728,8 @@ public class Settings {
         checksum.update(current);
 
         try {
-            writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, CustomNamesSet.getFileChecksum());
+            writeFullIntBigEndian(out, (int) checksum.getValue());
+            writeFullIntBigEndian(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -941,7 +942,7 @@ public class Settings {
         settings.setBetterTrainerMovesets(restoreState(data[29], 7));
 
         // gen restrictions
-        int genLimit = FileFunctions.readFullIntBigEndian(data, 30);
+        int genLimit = FileFunctions.readFullInt(data, 30);
         GenRestrictions restrictions = new GenRestrictions(genLimit);
         settings.setCurrentRestrictions(restrictions);
 
@@ -2825,11 +2826,17 @@ public class Settings {
     }
 
     private static void writeFullInt(ByteArrayOutputStream out, int value) throws IOException {
+        byte[] crc = new byte[4];
+        FileFunctions.writeFullInt(crc, 0, value);
+        out.write(crc);
+    }
+
+    private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) throws IOException {
         byte[] crc = ByteBuffer.allocate(4).putInt(value).array();
         out.write(crc);
     }
 
-    private static void write2ByteInt(ByteArrayOutputStream out, int value) {
+    private static void write2ByteIntBigEndian(ByteArrayOutputStream out, int value) {
         out.write(value & 0xFF);
         out.write((value >> 8) & 0xFF);
     }

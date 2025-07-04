@@ -359,6 +359,19 @@ public class SettingsUpdater {
             // add byte for shop items, and move "balanceShopPrices" there
             insertExtraByte(64, (byte) ((dataBlock[39] & 0x20) >> 5));
             dataBlock[39] &= ~0x20;
+            // Change GenRestrictions format, to have "allow evolutionary relatives" be the lowest bit,
+            // instead of the 8th.
+            // Also, 0 was previously used to denote "all generations allowed".
+            // Make it use -1 (I.e., all bits 1) instead.
+            // Finally, make it little endian.
+            int restrictions = FileFunctions.readFullIntBigEndian(dataBlock, 30);
+            int allowEvoRelatives = (restrictions & 0x80) >> 7;
+            restrictions <<= 1;
+            restrictions |= allowEvoRelatives;
+            if (restrictions == 0) {
+                restrictions = -1;
+            }
+            FileFunctions.writeFullInt(dataBlock, 30, restrictions);
         }
 
         // fix checksum

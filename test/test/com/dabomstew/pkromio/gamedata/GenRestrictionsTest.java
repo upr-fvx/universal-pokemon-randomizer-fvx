@@ -36,8 +36,8 @@ public class GenRestrictionsTest {
     }
 
     @Test
-    public void initWithIntArg_StateIsOne_AllowsOnlyGen1() {
-        GenRestrictions gr = new GenRestrictions(1);
+    public void initWithIntArg_StateIsTwo_AllowsOnlyGen1() {
+        GenRestrictions gr = new GenRestrictions(2);
         assertTrue(gr.isGenAllowed(1));
         for (int gen = 2; gen <= GenRestrictions.MAX_GENERATION; gen++) {
             assertFalse(gr.isGenAllowed(gen));
@@ -63,25 +63,25 @@ public class GenRestrictionsTest {
     }
 
     @Test
-    public void toInt_Gen1Allowed_ReturnsOne() {
+    public void toInt_Gen1Allowed_ReturnsTwo() {
         GenRestrictions gr = new GenRestrictions(0);
         gr.setGenAllowed(1, true);
-        assertEquals(0b1, gr.toInt());
+        assertEquals(0b10, gr.toInt());
     }
 
     @Test
-    public void toInt_Gen3Allowed_ReturnsFour() {
+    public void toInt_Gen3Allowed_ReturnsEight() {
         GenRestrictions gr = new GenRestrictions(0);
         gr.setGenAllowed(3, true);
-        assertEquals(0b100, gr.toInt());
+        assertEquals(0b1000, gr.toInt());
     }
 
     @Test
-    public void toInt_Gen13Allowed_ReturnsFive() {
+    public void toInt_Gen13Allowed_ReturnsTen() {
         GenRestrictions gr = new GenRestrictions(0);
         gr.setGenAllowed(1, true);
         gr.setGenAllowed(3, true);
-        assertEquals(0b101, gr.toInt());
+        assertEquals(0b1010, gr.toInt());
     }
 
     @Test

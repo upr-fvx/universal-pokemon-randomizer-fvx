@@ -6,7 +6,7 @@
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum user name should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to [Every person who submitted a merged pull request] for your code contributions, [Every person who submitted a solved issue] for reporting Issues, [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did], [Every person who made a new CPG] for the CPG sprites, and [Community members who helped with some feature] for help with [feature] [Etc.]!
+Thanks to [Every person who submitted a merged pull request] @bergmaen for your code contributions, [Every person who submitted a solved issue] for reporting Issues, [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did], [Every person who made a new CPG] for the CPG sprites, and [Community members who helped with some feature] for help with [feature] [Etc.]!
 
 # How to use
 
@@ -36,5 +36,4 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- (Gen 1+3) Fixed randomization failure when using "Randomize PC Potion" Misc. Tweak (Issue #43).

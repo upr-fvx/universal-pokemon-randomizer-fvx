@@ -4063,7 +4063,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public void setPCPotionItem(Item item) {
         if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (item.isAllowed()) {
+            if (!item.isAllowed()) {
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
             writeWord(romEntry.getIntValue("PCPotionOffset"), item.getId());

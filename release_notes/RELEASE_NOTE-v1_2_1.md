@@ -1,0 +1,25 @@
+Here comes a new minor release, largely consisting of bug fixes. Thanks to @AxelElric8, @Psychocrysma, and @king2gj for reporting Issues!
+
+# How to use
+
+Download the Randomizer below by clicking on `UPR_FVX-v1.2.1.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the Randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# Changelog
+## New and Changed Features
+### Wild Pokémon
+
+- (Gen 7) Wild encounter areas are now sorted in the log, according to location, and the expected order for the player to visit said locations. Encounters for Route 1 are listed first, then Hau'oli City, Route 2, etc...
+
+### Misc.
+
+- Failure to log the randomization results, no longer causes a full crash/inability to save the randomized game.
+
+## Bugfixes
+
+- (Gen 3) Fix minor FireRed ROM hacks not being able to load. (Randomizing ROM hacks is still done at own risk, but binary hacks that e.g. just swap out a few sprites, have been supported by previous Randomizer versions, and FVX should not break that tradition).
+- (Gen 6) Fix crash due to logger not accounting for InGameTrade.requestedSpecies == null
+- (Gen 7) Fix crash when logging Totem Pokémon

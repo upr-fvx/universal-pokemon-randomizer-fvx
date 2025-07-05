@@ -1,0 +1,18 @@
+Two bug fixes and a few new Custom Player Graphics in this release. Thanks to @ultimatetemper , [Responsible-Rich-202 on Reddit](https://www.reddit.com/r/PokemonROMhacks/comments/1dhv88b/comment/lnztj1m/), and [MollyChan on Spriter's Resource](https://www.spriters-resource.com/submitter/MollyChan/)!
+
+# How to use
+
+Download the randomizer below by clicking on `UPR_FVX-v1.0.3.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# Changelog
+## New and Changed Features
+### Graphics
+- New Custom Player Graphics for Gen 2: Hilbert, Stadium PCs, and Capsule Monster PC. All these are based on sprites by Molly/MollyChan on Spriter's Resource.
+
+## Bugfixes
+- Fixed in-game trades crashing the game in Gen 2.
+- Fixed random starter held items not working in Spanish and Italian Emerald, and the graphical bug in the Pokédex that was caused by the same source.

@@ -5,8 +5,14 @@
 <!-- Any category below can be skipped if there are no people in it. -->
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
-     For people from all other forums, their forum user name should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to [Every person who submitted a merged pull request] @bergmaen and @samualtnorman for your code contributions, [Every person who submitted a solved issue] for reporting Issues, [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did], [Every person who made a new CPG] for the CPG sprites, and [Community members who helped with some feature] for help with [feature] [Etc.]!
+     For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
+Thanks to 
+[Every person who submitted a merged pull request] @bergmaen and @samualtnorman for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
+[Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
+[Every person who made a new CPG] for the CPG sprites, and 
+[Community members who helped with some feature] for help with [feature]
+[Etc.]!
 
 # How to use
 

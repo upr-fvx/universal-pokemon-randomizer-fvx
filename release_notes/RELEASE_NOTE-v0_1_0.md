@@ -1,0 +1,130 @@
+This is the first release of the **Universal Pokemon Randomizer FVX**.
+
+The Universal Pokemon Randomizer FVX (**F**ox + **V**oliol + z**X**) is a continuation of the [Universal Pokemon Randomizer](https://github.com/Dabomstew/universal-pokemon-randomizer) by Dabomstew. It was born of a merge of branches by [foxoftheasterisk](https://github.com/foxoftheasterisk/UPR-ZX-closer-to-vanilla) and [voliol](https://github.com/voliol/universal-pokemon-randomizer), both based on Ajarmar's [UPR ZX](https://github.com/Ajarmar/universal-pokemon-randomizer-zx). 
+
+Compared to ZX, FVX adds a number of features; from upgrades to Trainer and wild Pokémon randomization, to Pokémon Palette randomization and Custom Player Graphics. 
+For a full list of new features in this first release, see below. [This wiki page](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/New-Feature-Summary) should also be updated to reflect features in future releases.
+
+True to its ancestry in ZX, it supports all vanilla core series Pokémon games from Generation 1-7 except Let's Go, Pikachu!/Eevee!; in other words, it supports all core series games for the GameBoy, GameBoy Color, GameBoy Advance, Nintendo DS, and Nintendo 3DS.
+
+For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a PokemonSet class with many helper functions, and automated tests for most features.
+
+# How to use
+
+Download the randomizer below by clicking on `PokeRandoFVX-v0.1.0.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# New features (compared to ZX)
+
+# Evolutions
+
+## Force Growth
+Ensures that random evolutions will always be to a Pokemon with a higher base stat total. (No guarantee on individual stats.)
+
+## No Convergence
+Ensures that each Pokemon has only one Pokemon that evolves (directly) into it.
+
+# Starter Pokemon
+
+## "Any basic Pokemon"
+Allows you to choose as starters any Pokemon which is not an evolved form, regardless of how many times it evolves (0-2).
+
+## Starter Type Restrictions
+A set of type restrictions for starter Pokemon, including:
+* None : Any type may be chosen
+* Fire, Water, Grass : One pokemon of each of the three classic starter types. The new starters are placed in their original corresponding slots, so any other game features that depend on your starter choice (e.g. the Trio gym) should follow the element of the starter you chose.
+* Any type triangle : Chooses any three types that form a triangle such that each is super-effective to the next. (Does not allow "triangles" of all the same type, such as Ghost or Dragon.) Assigns the triangle in order, so if you have "Rival keeps starter" checked in Trainer Pokemon, your rival should correctly have a type that is super-effective against yours.
+* Unique : Ensures no starter shares a type with any other starter. Also works if you custom-choose some starters and assign the others randomly (excepting that it does not prevent your custom chosen starters from sharing types with each other.)
+* All one type : Ensures every starter chosen shares a type. This type can be chosen randomly, or you may choose manually. Can be used with random pokemon in custom sets.
+* No dual types : Can be selected along with any other type restriction, including "None". Ensures that all starters are single-type Pokemon. (This ensures that type triangles are not broken or confused by a second type.) Makes no guarantees about their evolutions.
+
+## Base Stat Total limits
+Allows setting a maximum and/or minimum base stat total for starters.
+
+# Trainer Pokemon
+
+## Use Local Pokemon
+Ensures that all Pokemon used by trainers are those that can be found in the wild during the main game (pre-Elite Four), or evolutionary relatives of those Pokemon.  
+If "Pokemon League has Unique Pokemon" is checked, the unique Pokemon will be _non_-local Pokemon if possible.
+
+## Preserve Type Themes
+If a trainer had a type theme in the original game (a type that _all_ their Pokemon share), this setting ensures that they will have that same type theme after randomization.  
+If the trainer did not have a type theme, they will have random Pokemon of any types.  
+If the trainer has two type themes, they will follow only the theme established by their first Pokemon's primary type—unless it's Normal, in which case they will use the secondary type. (I call this the "Bird Override", since it mainly ensures that Bird Keepers use _Flying_ rather than Normal.)  
+If the trainer is a Gym Leader, gym trainer, Elite Four, or themed Champion, they will be forced to their theme/their Gym's theme even if they did not strictly follow it in the original game.  
+
+## Preserve Themes Or Primary
+The same as Preserve Type Themes, except if the trainer does not have a type theme, each of their Pokemon will share the primary type of the Pokemon the trainer originally had.  
+For example, if the trainer originally had an Oddish (Grass-Poison), after randomization it might be a Tangela (pure Grass), an Exeggcute (Grass-Psychic), or a Paras (Bug-Grass). However, it could not become a Zubat (Poison-Flying) or a Gastly (Ghost-Poison) as Poison is the _secondary_ type.  
+
+# Wild Pokemon
+
+* Catch-Em-All and Similar Strength have been moved to checkboxes, allowing them to be used at the same time.
+
+## Location 1-to-1
+
+Replaces each Pokemon in a conceptual "location" with exactly one other Pokemon.
+A location is, more or less, a named area. It may span multiple maps.
+When using this mode, random themes and keep themes are run on the whole location.
+
+## Global Family-to-Family
+
+Replaces each Pokemon, everywhere it is found, with exactly one other Pokemon; also replaces each of its evolutions and pre-evolutions with the evolutions and pre-evolutions of the replacement Pokemon.
+
+## Preserve Primary Types
+
+This setting ensures that every wild Pokemon will be replaced by a Pokemon (or several Pokemon) that shares its primary type.
+For example, if the encounter originally was an Oddish (Grass-Poison), after randomization it might be a Tangela (pure Grass), an Exeggcute (Grass-Psychic), or a Paras (Bug-Grass). However, it could not become a Zubat (Poison-Flying) or a Gastly (Ghost-Poison) as Poison is the _secondary_ type.
+This setting usually keeps most type theming, including "soft" type theming like forests having both Bug and Grass types.  However, sometimes it has odd results, such as flying ambush encounters becoming Normal types.
+This option can be used along with global 1-to-1 and family-to-family.
+
+## Preserve Type Themes
+
+If an area had a type theme in the original game (a type that _all_ Pokemon found in the area share), this option ensures that type theme will be present after randomizing.  
+For the purposes of this setting, an "Area" is a specific set of encounters that can all be found by performing the same action.  
+For example, on Route 32 in Johto, the tall grass, Headbutt trees, fishing, and surfing are all _different_ areas. (Depending which game, fishing might also be separated into different areas by rod.)  
+This option therefore generally keeps water areas full of Water Pokemon, and doesn't have any effect in most other areas, with rare exceptions.  
+This option is a checkbox, and overrides other type restrictions.
+This option can be used along with global 1-to-1 and family-to-family.
+
+# Items
+* Added support for Gen 2 Shops.
+
+# Graphics
+## Pokemon Palette Randomization
+
+Allows randomizing the color schemes for Pokemon.
+The new color schemes may be logically chosen based on types or evolutions, or completely random.
+Support varies by generation: 
+- Gens 1-3 have full support.
+- Gen 4 has partial support, all base form Pokémon have randomizable palettes, but alt forms do not.
+- Gen 5 has partial support, not all base form Pokémon have randomizable palettes.
+- Gens 6 & 7 do not support this feature. 
+
+## Custom Player Graphics
+
+In Gen 1-3 games, allows replacing the player's sprites with new sprite sets.
+Several preset possibilities are included.
+Not supported for Gen 4 and up.
+
+# Types
+* Moved "Update type effectiveness" to the new Types tab.
+
+## Type Effectiveness randomization
+Allows changing the effectiveness of types against each other in various ways:
+### Random
+Shuffles all weaknesses, resistances, and immunities to random type pairs. The end result has the same amount of total weaknesses, resistances, and immunities as the base game, but different amounts per type.
+### Random (Balanced)
+Same as the above, but puts limits on how many of each can be associated with each type offensively or defensively; the limit is the highest number of these any type in the vanilla game has.
+### Keep Type Identities
+Each type will have the same number each of weaknesses, resistances, and immunities as in the base game, but these will be to different types.
+### Inverse
+Every weakness will become a resistance and every resistance or immunity will become a weakness. Optionally, some of the weaknesses may become immunities instead of resistances.
+
+# Misc. Tweaks
+
+## Reusable TMs
+For generations earlier than 5, changes TMs so they don't disappear after use.

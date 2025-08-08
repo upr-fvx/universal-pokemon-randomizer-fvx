@@ -28,8 +28,9 @@ public class EncounterHeldItemRandomizer extends Randomizer {
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.getGuaranteedHeldItem() == null && pk.getCommonHeldItem() == null && pk.getRareHeldItem() == null
                     && pk.getDarkGrassHeldItem() == null) {
-                // No held items at all, abort
-                return;
+                // No held items at all, skip
+                // TODO: does this make sense? do we want pokes to never get held items if they didn't already?
+                continue;
             }
             
             double decision = random.nextDouble();

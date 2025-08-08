@@ -4452,6 +4452,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			shop.setSpecialShop(true);
 			shops.add(shop);
 		}
+
+		int[] tmShops = romEntry.getArrayValue("TMShops");
+		Arrays.stream(tmShops).forEach(i -> shops.get(i).setSpecialShop(false));
 	}
 
 	@Override

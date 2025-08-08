@@ -87,6 +87,21 @@ public class RomHandlerShopTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void noSpecialShopContainsTMs(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.hasShopSupport());
+        for (Shop shop : romHandler.getShops()) {
+            System.out.println(shop);
+            if (shop.isSpecialShop()) {
+                for (Item item : shop.getItems()) {
+                    assertFalse(item.isTM());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void regularShopItemsIsNotEmpty(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());

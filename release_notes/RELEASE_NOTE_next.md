@@ -34,6 +34,12 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- (GUI) Improved spacing of GUI elements.
+
+### Wild Pokemon
+- (GUI) Description of "Similar Strength" now mentions "Catch 'Em All" as a confounding setting.
+
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
@@ -44,3 +50,4 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 ## Bugfixes
 - (Gen 1+3) Fixed randomization failure when using "Randomize PC Potion" Misc. Tweak (Issue #43).
 - (Gen 4+5) Fixed TM Shops being counted as Special Shops in all Gen 4 games + Black/White (Issue #73). 
+- Fixed "Same Evo Stage" causing randomization failures in certain contexts including "Catch 'Em All" or mapping (Issue #67).

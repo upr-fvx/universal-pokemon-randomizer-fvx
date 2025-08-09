@@ -44,3 +44,4 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 ## Bugfixes
 - (Gen 1+3) Fixed randomization failure when using "Randomize PC Potion" Misc. Tweak (Issue #43).
 - (Gen 4+5) Fixed TM Shops being counted as Special Shops in all Gen 4 games + Black/White (Issue #73). 
+- Fixed bug causing wild encounter randomizing failures when using Same Evo Stage with Catch 'Em All or mapping in certain contexts.

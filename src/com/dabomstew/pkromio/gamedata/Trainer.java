@@ -22,6 +22,8 @@ package com.dabomstew.pkromio.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +73,21 @@ import java.util.List;
  *     <li><b><code>NOTSTRONG</code></b><br>
  *     Used to denote this trainer should not get any buffs (e.g. added Pokémon, held items).
  *     E.g. "<code>NOTSTRONG</code>" is used by Successor Korrina in Y.
+ *     </li>
+ *     <li><b><code>RIVAL[x]-[y]</code></b><br>
+ *     Used by trainers that carry the starter <i>strong</i> against the player's chosen starter.
+ *     <code>[x]</code> and <code>[y]</code> are both integers.<br>
+ *     <code>[x]</code> denotes which battle this is. <code>[x]</code>==1 is for
+ *     the first battle, where the trainer only has 1 Pokémon: the corresponding starter.
+ *     <code>[x]</code>==1 also denotes that the trainer should not get any buffs
+ *     (like <code>NOTSTRONG</code>).<br>
+ *     <code>[y]</code> denotes the "variant": which starter the player chose.
+ *     This corresponds to the indices in {@link RomHandler#getStarters()}.<br>
+ *     E.g. "<code>CHAMPION</code>" is used by Red in HeartGold.
+ *     </li>
+ *     <li><b><code>FRIEND[x]-[y]</code></b><br>
+ *     Like <code>RIVAL[x]-[y]</code> for trainers that carry the starter
+ *     <i>weak</i> against the player's chosen starter.
  *     </li>
  * </ul>
  */

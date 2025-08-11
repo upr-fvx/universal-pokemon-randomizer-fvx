@@ -2,9 +2,7 @@ package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkromio.gamedata.BattleStyle;
-import com.dabomstew.pkromio.gamedata.Trainer;
-import com.dabomstew.pkromio.gamedata.TrainerPokemon;
+import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,8 +11,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerTrainerTest extends RomHandlerTest {
@@ -325,6 +325,57 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                     System.out.println(tp);
                     assertNotEquals(null, tp.getHeldItem());
                 }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersTaggedRival1OrFriend1OnlyHaveCorrectStarters(String romName) {
+        loadROM(romName);
+        assumeFalse(romHandler.isYellow());
+
+        List<Species> starters = romHandler.getStarters();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.tag != null && (tr.tag.contains("RIVAL1-") || tr.tag.contains("FRIEND1-"))) {
+                System.out.println(tr);
+
+                int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                Species expected = starters.get((variant + offset) % 3);
+                Species actual = tr.pokemon.get(0).getSpecies();
+
+                assertEquals(expected, actual);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainersTaggedRivalOrFriendCarryStarter(String romName) {
+        loadROM(romName);
+        assumeFalse(romHandler.isYellow());
+
+        List<SpeciesSet> starterFamilies = romHandler.getStarters()
+                .stream().map(sp -> sp.getFamily(false))
+                .collect(Collectors.toList());
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.tag != null && (tr.tag.contains("RIVAL") || tr.tag.contains("FRIEND"))) {
+                System.out.println(tr);
+                int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                SpeciesSet expectedFamily = starterFamilies.get((variant + offset) % 3);
+
+                boolean carriesStarter = false;
+                for (TrainerPokemon tp : tr.pokemon) {
+                    if (expectedFamily.contains(tp.getSpecies())) {
+                        carriesStarter = true;
+                        break;
+                    }
+                }
+
+                assertTrue(carriesStarter);
             }
         }
     }

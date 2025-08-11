@@ -1,8 +1,6 @@
 package com.dabomstew.pkromio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  Trainer.java - represents a Trainer's pokemon set/other details.      --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -27,7 +25,64 @@ package com.dabomstew.pkromio.gamedata;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a Trainer as seen in battle; contains a list of their {@link TrainerPokemon},
+ * their name, trainerclass, and other details.<br>
+ * Most Trainer objects represent opponents, but some represent your ally in tag battles.<br>
+ * Multiple Trainer objects may be used to represent a single in-game character
+ * (such as the Rival, or Youngster Joey), in case they have multiple battles to their name.
+ * <br><br>
+ * The Trainer class uses a tagging system. The following tags are used:
+ * <ul>
+ *     <li><b><code>GYM[n]</code></b><br>
+ *     Used by gym trainers. <code>[n]</code> is an integer denoting which
+ *     specific gym this trainer belongs to.<br>
+ *     E.g. "<code>GYM1</code>" is used by Bird Keeper Abe in Crystal.
+ *     </li>
+ *     <li><b><code>THEMED:[s]</code></b><br>
+ *     Used by non-gym trainers who should share a type theme. <code>[s]</code> is
+ *     an arbitrary string to group these trainers.<br>
+ *     E.g. "<code>THEMED:SPROUTTOWER</code>" is used by Sage Neal in Gold.
+ *     </li>
+ *     <li><b><code>STRONG</code></b><br>
+ *     Used by evil team admins and other important "mini-boss" trainers.
+ *     Should typically be used with the <code>THEMED:[s]</code> tag.<br>
+ *     E.g. "<code>THEMED:WALLY-STRONG</code>" is used by Wally in Alpha Sapphire.
+ *     </li>
+ *     <li><b><code>LEADER</code></b><br>
+ *     Used by gym leaders and evil team leaders, following the
+ *     <code>GYM[n]</code> and <code>THEMED:[s]</code> tags, respectively.<br>
+ *     E.g. "<code>GYM2-LEADER</code>" is used by Brawly in Emerald,
+ *     "<code>THEMED:LYSANDRE-LEADER</code>" is used by Lysandre in X.
+ *     </li>
+ *     <li><b><code>ELITE[n]</code></b><br>
+ *     Used by Elite 4 members. <code>[n]</code> is an integer denoting which
+ *     member it is.<br>
+ *     E.g. "<code>ELITE3</code>" is used by Agatha in Yellow.
+ *     </li>
+ *     <li><b><code>CHAMPION</code></b><br>
+ *     Used by the Champion.<br>
+ *     E.g. "<code>CHAMPION</code>" is used by Iris in Black 2.
+ *     </li>
+ *     <li><b><code>UBER</code></b><br>
+ *     Used by extra-strong trainers, the post-game super-bosses.<br>
+ *     E.g. "<code>CHAMPION</code>" is used by Red in HeartGold.
+ *     </li>
+ *     <li><b><code>NOTSTRONG</code></b><br>
+ *     Used to denote this trainer should not get any buffs (e.g. added Pokémon, held items).
+ *     E.g. "<code>NOTSTRONG</code>" is used by Successor Korrina in Y.
+ *     </li>
+ * </ul>
+ */
 public class Trainer implements Comparable<Trainer> {
+    // TODO: the tagging of Trainers is inconsistent between games. Some sub-issues:
+    //  - Gen 1+FRLG uses the GIO tag for earlier Giovanni battles, seemingly identical to GYM8 in function.
+    //  - Gen 1+2 never uses the -STRONG tag.
+    //  - HGSS tags the (presumably) kimono girls as KIMONO[n], but this is never used.
+    //  - BW1 uses UBER for the final N + Ghetsis battles.
+    //  - XY does not use THEMED:[s]-STRONG for team admins and non-RIVAL/FRIEND-applicable rivals (Tierno & Trevor).
+    //  - Gen 7 uses ELITE[n] for the kahunas.
+
     public int offset;
     public int index;
     public List<TrainerPokemon> pokemon = new ArrayList<>();

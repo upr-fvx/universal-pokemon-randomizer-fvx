@@ -1626,8 +1626,8 @@ public class Gen5Constants {
         tagRivalBW(trs, "RIVAL10", 0x2b8); // Driftveil Post-Undella-Battle
 
         // Tag Battle with Opposite Gender Hero
-        tagRivalBW(trs, "FRIEND1", 0x168);
-        tagRivalBW(trs, "FRIEND1", 0x16b);
+        tagRivalBW(trs, "FRIEND2", 0x168);
+        tagRivalBW(trs, "FRIEND2", 0x16b);
 
         // Tag/PWT Battles with Cheren
         tag(trs, "GYM1", 0x173, 0x278, 0x32E);

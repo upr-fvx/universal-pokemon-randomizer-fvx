@@ -944,28 +944,28 @@ public class Gen6Constants {
         tag(trs,"STRONG", 327, 328); // Sycamore
 
         // Rival - Serena
-        tagRivalXY(trs, "RIVAL1", 596);
-        tagRivalXY(trs, "RIVAL2", 575);
-        tagRivalXY(trs, "RIVAL3", 581);
-        tagRivalXY(trs, "RIVAL4", 578);
-        tagRivalXY(trs, "RIVAL5", 584);
-        tagRivalXY(trs, "RIVAL6", 607);
-        tagRivalXY(trs, "RIVAL7", 587);
-        tagRivalXY(trs, "RIVAL8", 590);
-        tagRivalXY(trs, "RIVAL9", 593);
-        tagRivalXY(trs, "RIVAL10", 599);
+        tagRivalXY(trs, "RIVAL2", 596);
+        tagRivalXY(trs, "RIVAL3", 575);
+        tagRivalXY(trs, "RIVAL4", 581);
+        tagRivalXY(trs, "RIVAL5", 578);
+        tagRivalXY(trs, "RIVAL6", 584);
+        tagRivalXY(trs, "RIVAL7", 607);
+        tagRivalXY(trs, "RIVAL8", 587);
+        tagRivalXY(trs, "RIVAL9", 590);
+        tagRivalXY(trs, "RIVAL10", 593);
+        tagRivalXY(trs, "RIVAL11", 599);
 
         // Rival - Calem
-        tagRivalXY(trs, "RIVAL1", 435);
-        tagRivalXY(trs, "RIVAL2", 130);
-        tagRivalXY(trs, "RIVAL3", 329);
-        tagRivalXY(trs, "RIVAL4", 184);
-        tagRivalXY(trs, "RIVAL5", 332);
-        tagRivalXY(trs, "RIVAL6", 604);
-        tagRivalXY(trs, "RIVAL7", 335);
-        tagRivalXY(trs, "RIVAL8", 338);
-        tagRivalXY(trs, "RIVAL9", 341);
-        tagRivalXY(trs, "RIVAL10", 519);
+        tagRivalXY(trs, "RIVAL2", 435);
+        tagRivalXY(trs, "RIVAL3", 130);
+        tagRivalXY(trs, "RIVAL4", 329);
+        tagRivalXY(trs, "RIVAL5", 184);
+        tagRivalXY(trs, "RIVAL6", 332);
+        tagRivalXY(trs, "RIVAL7", 604);
+        tagRivalXY(trs, "RIVAL8", 335);
+        tagRivalXY(trs, "RIVAL9", 338);
+        tagRivalXY(trs, "RIVAL10", 341);
+        tagRivalXY(trs, "RIVAL11", 519);
 
         // Rival - Shauna
         tagRivalXY(trs, "FRIEND1", 137);

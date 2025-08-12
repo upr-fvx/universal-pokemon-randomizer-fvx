@@ -1643,18 +1643,18 @@ public class Gen4Constants {
         tag(trs, 0x10b, "CHAMPION");
 
         // Rival battles (8)
-        tagRivalConsecutive(trs, "RIVAL1", 0xf8);
-        tagRivalConsecutive(trs, "RIVAL2", 0x1d7);
-        tagRivalConsecutive(trs, "RIVAL3", 0x1da);
-        tagRivalConsecutive(trs, "RIVAL4", 0x1dd);
+        tagRivalConsecutive(trs, "RIVAL2", 0xf8);
+        tagRivalConsecutive(trs, "RIVAL3", 0x1d7);
+        tagRivalConsecutive(trs, "RIVAL4", 0x1da);
+        tagRivalConsecutive(trs, "RIVAL5", 0x1dd);
         // Tag battle is not following ze usual format
-        tag(trs, 0x26b, "RIVAL5-0");
-        tag(trs, 0x26c, "RIVAL5-1");
-        tag(trs, 0x25f, "RIVAL5-2");
+        tag(trs, 0x26b, "RIVAL6-0");
+        tag(trs, 0x26c, "RIVAL6-1");
+        tag(trs, 0x25f, "RIVAL6-2");
         // Back to normal
-        tagRivalConsecutive(trs, "RIVAL6", 0x1e0);
-        tagRivalConsecutive(trs, "RIVAL7", 0x346);
-        tagRivalConsecutive(trs, "RIVAL8", 0x349);
+        tagRivalConsecutive(trs, "RIVAL7", 0x1e0);
+        tagRivalConsecutive(trs, "RIVAL8", 0x346);
+        tagRivalConsecutive(trs, "RIVAL9", 0x349);
 
         // Themed
         tag(trs, "THEMED:CYRUS-LEADER", 0x193, 0x194);

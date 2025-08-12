@@ -51,3 +51,4 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 - (Gen 1+3) Fixed randomization failure when using "Randomize PC Potion" Misc. Tweak (Issue #43).
 - (Gen 4+5) Fixed TM Shops being counted as Special Shops in all Gen 4 games + Black/White (Issue #73). 
 - Fixed "Same Evo Stage" causing randomization failures in certain contexts including "Catch 'Em All" or mapping (Issue #67).
+- (Gen 1) Fixed "Rival Carries Starter Through Game" not working in Red/Blue/Green, when trainers were randomized (Issue #78).

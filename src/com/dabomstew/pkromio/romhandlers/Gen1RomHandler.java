@@ -1195,6 +1195,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             Gen1Constants.tagTrainersYellow(trainers);
         } else {
             Gen1Constants.tagTrainersRB(trainers);
+            Gen1Constants.setForcedRivalStarterPositionsRB(trainers);
         }
     }
 

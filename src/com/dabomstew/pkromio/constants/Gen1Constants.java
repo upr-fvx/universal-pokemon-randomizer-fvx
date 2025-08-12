@@ -460,17 +460,40 @@ public class Gen1Constants {
     }
 
     private static void tbc(List<Trainer> allTrainers, int classNum, int number, String tag) {
-        int currnum = -1;
+        getTrainer(allTrainers, classNum, number).tag = tag;
+    }
+
+
+    public static void setForcedRivalStarterPositionsRB(List<Trainer> trs) {
+        // RIVAL2
+        fsp(trs, 25, 3, 1);
+        fsp(trs, 25, 4, 1);
+        fsp(trs, 25, 5, 1);
+        // RIVAL3
+        fsp(trs, 25, 6, 3);
+        fsp(trs, 25, 7, 3);
+        fsp(trs, 25, 8, 3);
+        // RIVAL5
+        fsp(trs, 42, 3, 4);
+        fsp(trs, 42, 4, 4);
+        fsp(trs, 42, 5, 4);
+    }
+
+    private static void fsp(List<Trainer> allTrainers, int classNum, int number, int position) {
+        getTrainer(allTrainers, classNum, number).forceStarterPosition = position;
+    }
+
+    private static Trainer getTrainer(List<Trainer> allTrainers, int classNum, int number) {
+        int i = 0;
         for (Trainer t : allTrainers) {
-            // adjusted to not change the above but use 0-indexing properly
             if (t.trainerclass == classNum - 1) {
-                currnum++;
-                if (currnum == number) {
-                    t.tag = tag;
-                    return;
+                if (i == number) {
+                    return t;
                 }
+                i++;
             }
         }
+        throw new IndexOutOfBoundsException("No trainer with classNum=" + classNum + ", number=" + number);
     }
 
     private static final int[] postGameEncounterAreasRBG = new int[] {

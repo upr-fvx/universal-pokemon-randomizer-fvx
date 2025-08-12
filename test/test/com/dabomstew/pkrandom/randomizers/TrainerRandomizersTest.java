@@ -2,6 +2,7 @@ package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
+import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
 import com.dabomstew.pkromio.RomFunctions;
@@ -773,6 +774,22 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 assertEquals(expected, actual);
             }
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void unchangedTrainerPokemonRandomStarters_TrainersTaggedRivalAndFriendCanCarryStarter(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setStartersMod(Settings.StartersMod.RANDOM_BASIC);
+        s.setRivalCarriesStarterThroughout(true);
+
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+        TrainerPokemonRandomizer tpr = new TrainerPokemonRandomizer(romHandler, s, RND);
+        tpr.makeRivalCarryStarter();
+
+        carryStarterFamiliesCheck();
     }
 
     @ParameterizedTest

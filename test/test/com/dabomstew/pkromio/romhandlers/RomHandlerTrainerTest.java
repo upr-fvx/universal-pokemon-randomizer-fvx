@@ -333,7 +333,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void trainersTaggedRival1OrFriend1OnlyHaveCorrectStarters(String romName) {
         loadROM(romName);
-        assumeFalse(romHandler.isYellow());
 
         List<Species> starters = romHandler.getStarters();
         for (Trainer tr : romHandler.getTrainers()) {
@@ -354,7 +353,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void trainersTaggedRivalOrFriendCarryStarter(String romName) {
         loadROM(romName);
-        assumeFalse(romHandler.isYellow());
 
         List<SpeciesSet> starterFamilies = romHandler.getStarters()
                 .stream().map(sp -> sp.getFamily(false))
@@ -364,6 +362,13 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
             if (tr.tag != null && (tr.tag.contains("RIVAL") || tr.tag.contains("FRIEND"))) {
                 System.out.println(tr);
                 int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                if (romHandler.isYellow()) {
+                    // Yellow uses the variant syntax, to instead refer to alternate battles,
+                    // with different evos of the original starter.
+                    // Here it doesn't matter though, so clear out variant.
+                    variant = 0;
+                }
+
                 int offset = tr.tag.contains("RIVAL") ? 1 : 2;
                 SpeciesSet expectedFamily = starterFamilies.get((variant + offset) % 3);
 

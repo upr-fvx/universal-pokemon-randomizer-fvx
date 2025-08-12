@@ -944,32 +944,32 @@ public class Gen6Constants {
         tag(trs,"STRONG", 327, 328); // Sycamore
 
         // Rival - Serena
-        tagRival(trs, "RIVAL1", 596);
-        tagRival(trs, "RIVAL2", 575);
-        tagRival(trs, "RIVAL3", 581);
-        tagRival(trs, "RIVAL4", 578);
-        tagRival(trs, "RIVAL5", 584);
-        tagRival(trs, "RIVAL6", 607);
-        tagRival(trs, "RIVAL7", 587);
-        tagRival(trs, "RIVAL8", 590);
-        tagRival(trs, "RIVAL9", 593);
-        tagRival(trs, "RIVAL10", 599);
+        tagRivalXY(trs, "RIVAL1", 596);
+        tagRivalXY(trs, "RIVAL2", 575);
+        tagRivalXY(trs, "RIVAL3", 581);
+        tagRivalXY(trs, "RIVAL4", 578);
+        tagRivalXY(trs, "RIVAL5", 584);
+        tagRivalXY(trs, "RIVAL6", 607);
+        tagRivalXY(trs, "RIVAL7", 587);
+        tagRivalXY(trs, "RIVAL8", 590);
+        tagRivalXY(trs, "RIVAL9", 593);
+        tagRivalXY(trs, "RIVAL10", 599);
 
         // Rival - Calem
-        tagRival(trs, "RIVAL1", 435);
-        tagRival(trs, "RIVAL2", 130);
-        tagRival(trs, "RIVAL3", 329);
-        tagRival(trs, "RIVAL4", 184);
-        tagRival(trs, "RIVAL5", 332);
-        tagRival(trs, "RIVAL6", 604);
-        tagRival(trs, "RIVAL7", 335);
-        tagRival(trs, "RIVAL8", 338);
-        tagRival(trs, "RIVAL9", 341);
-        tagRival(trs, "RIVAL10", 519);
+        tagRivalXY(trs, "RIVAL1", 435);
+        tagRivalXY(trs, "RIVAL2", 130);
+        tagRivalXY(trs, "RIVAL3", 329);
+        tagRivalXY(trs, "RIVAL4", 184);
+        tagRivalXY(trs, "RIVAL5", 332);
+        tagRivalXY(trs, "RIVAL6", 604);
+        tagRivalXY(trs, "RIVAL7", 335);
+        tagRivalXY(trs, "RIVAL8", 338);
+        tagRivalXY(trs, "RIVAL9", 341);
+        tagRivalXY(trs, "RIVAL10", 519);
 
         // Rival - Shauna
-        tagRival(trs, "FRIEND1", 137);
-        tagRival(trs, "FRIEND2", 321);
+        tagRivalXY(trs, "FRIEND1", 137);
+        tagRivalXY(trs, "FRIEND2", 321);
     }
 
     public static void tagTrainersORAS(List<Trainer> trs) {
@@ -1010,27 +1010,32 @@ public class Gen6Constants {
         tag(trs, "THEMED:WALLY-STRONG", 518, 583, 944, 946);
 
         // Rival - Brendan
-        tagRival(trs, "RIVAL1", 1);
-        tagRival(trs, "RIVAL2", 289);
-        tagRival(trs, "RIVAL3", 674);
-        tagRival(trs, "RIVAL4", 292);
-        tagRival(trs, "RIVAL5", 527);
-        tagRival(trs, "RIVAL6", 699);
+        tagRivalORAS(trs, "RIVAL1", 1);
+        tagRivalORAS(trs, "RIVAL2", 289);
+        tagRivalORAS(trs, "RIVAL3", 674);
+        tagRivalORAS(trs, "RIVAL4", 292);
+        tagRivalORAS(trs, "RIVAL5", 527);
+        tagRivalORAS(trs, "RIVAL6", 699);
 
         // Rival - May
-        tagRival(trs, "RIVAL1", 4);
-        tagRival(trs, "RIVAL2", 295);
-        tagRival(trs, "RIVAL3", 677);
-        tagRival(trs, "RIVAL4", 298);
-        tagRival(trs, "RIVAL5", 530);
-        tagRival(trs, "RIVAL6", 906);
+        tagRivalORAS(trs, "RIVAL1", 4);
+        tagRivalORAS(trs, "RIVAL2", 295);
+        tagRivalORAS(trs, "RIVAL3", 677);
+        tagRivalORAS(trs, "RIVAL4", 298);
+        tagRivalORAS(trs, "RIVAL5", 530);
+        tagRivalORAS(trs, "RIVAL6", 906);
     }
 
-    private static void tagRival(List<Trainer> allTrainers, String tag, int offset) {
+    private static void tagRivalXY(List<Trainer> allTrainers, String tag, int offset) {
         allTrainers.get(offset - 1).tag = tag + "-0";
         allTrainers.get(offset).tag = tag + "-1";
         allTrainers.get(offset + 1).tag = tag + "-2";
+    }
 
+    private static void tagRivalORAS(List<Trainer> allTrainers, String tag, int offset) {
+        allTrainers.get(offset - 1).tag = tag + "-2";
+        allTrainers.get(offset).tag = tag + "-0";
+        allTrainers.get(offset + 1).tag = tag + "-1";
     }
 
     private static void tag(List<Trainer> allTrainers, int number, String tag) {

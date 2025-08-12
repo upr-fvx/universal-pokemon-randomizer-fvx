@@ -774,7 +774,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     public void makeRivalCarryStarter() {
         List<Trainer> currentTrainers = romHandler.getTrainers();
-        rivalCarriesStarterUpdate(currentTrainers, "RIVAL", romHandler.isORAS() ? 0 : 1);
+        rivalCarriesStarterUpdate(currentTrainers, "RIVAL", 1);
         rivalCarriesStarterUpdate(currentTrainers, "FRIEND", 2);
         romHandler.setTrainers(currentTrainers);
         changesMade = true;

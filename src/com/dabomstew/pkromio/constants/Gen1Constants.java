@@ -250,6 +250,15 @@ public class Gen1Constants {
         }
     }
 
+    public static void tagTrainers(List<Trainer> trs, int romType) {
+        tagTrainersUniversal(trs);
+        if (romType == Type_Yellow) {
+            tagTrainersYellow(trs);
+        } else {
+            tagTrainersRB(trs);
+        }
+    }
+
     public static void tagTrainersUniversal(List<Trainer> trs) {
         // Gym Leaders
         tbc(trs, 34, 0, "GYM1-LEADER");
@@ -463,8 +472,15 @@ public class Gen1Constants {
         getTrainer(allTrainers, classNum, number).tag = tag;
     }
 
+    public static void setForcedRivalStarterPositions(List<Trainer> trs, int romType) {
+        if (romType == Type_Yellow) {
+            setForcedRivalStarterPositionsYellow(trs);
+        } else {
+            setForcedRivalStarterPositionsRB(trs);
+        }
+    }
 
-    public static void setForcedRivalStarterPositionsRB(List<Trainer> trs) {
+    private static void setForcedRivalStarterPositionsRB(List<Trainer> trs) {
         // RIVAL2
         fsp(trs, 25, 3, 1);
         fsp(trs, 25, 4, 1);
@@ -477,6 +493,17 @@ public class Gen1Constants {
         fsp(trs, 42, 3, 4);
         fsp(trs, 42, 4, 4);
         fsp(trs, 42, 5, 4);
+    }
+
+    private static void setForcedRivalStarterPositionsYellow(List<Trainer> trs) {
+        // RIVAL2
+        fsp(trs, 25, 1, 1);
+        // RIVAL3
+        fsp(trs, 25, 2, 3);
+        // RIVAL5
+        fsp(trs, 42, 1, 4);
+        fsp(trs, 42, 2, 4);
+        fsp(trs, 42, 3, 4);
     }
 
     private static void fsp(List<Trainer> allTrainers, int classNum, int number, int position) {

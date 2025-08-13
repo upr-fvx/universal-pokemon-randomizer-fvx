@@ -1179,17 +1179,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             }
         }
 
-        tagTrainers();
-    }
-
-    private void tagTrainers() {
-        Gen1Constants.tagTrainersUniversal(trainers);
-        if (romEntry.isYellow()) {
-            Gen1Constants.tagTrainersYellow(trainers);
-        } else {
-            Gen1Constants.tagTrainersRB(trainers);
-            Gen1Constants.setForcedRivalStarterPositionsRB(trainers);
-        }
+        Gen1Constants.tagTrainers(trainers, romEntry.getRomType());
+        Gen1Constants.setForcedRivalStarterPositions(trainers, romEntry.getRomType());
     }
 
     private Trainer readTrainer(int offset) {

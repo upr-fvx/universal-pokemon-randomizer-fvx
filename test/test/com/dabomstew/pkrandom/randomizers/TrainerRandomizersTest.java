@@ -454,6 +454,15 @@ public class TrainerRandomizersTest extends RandomizerTest {
     }
 
     private void elite4UniquePokemonCheck() {
+        // This sometimes fails for Gen 1, since the final rival battle(s)
+        // are included in RomHandler.getEliteFourTrainers(), but are not tagged
+        // as CHAMPION.
+        // Just tagging them as such would be an easy fix, but causes other issues,
+        // that require design choices. Related to the champion/rival being forced
+        // to have a Type theme, and there being 3 whole champion trainers
+        // (all other games only have 1).
+        // TODO: make sense of these design choices, and fix this bug.
+
         List<Trainer> trainers = romHandler.getTrainers();
         int[] pokeCount = new int[romHandler.getSpecies().size()];
         for (Trainer tr : trainers) {

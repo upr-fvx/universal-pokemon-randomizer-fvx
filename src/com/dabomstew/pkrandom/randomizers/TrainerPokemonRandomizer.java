@@ -163,13 +163,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // The result after this is done will not be final if "Force Fully Evolved" or "Rival Carries Starter"
         // are used, as they are applied later
         for (Trainer t : scrambledTrainers) {
-            if (t.tag != null && t.tag.equals("IRIVAL")) {
-                // This is the first rival in Yellow. His Pokemon is used to determine the non-player
-                // starter, so we can't change it here. Just skip it.
-                continue;
-
-                //TODO: i've probably messed that up, so fix it
-            }
 
             //Get what type this trainer's theme should be, or null for no theme.
             Type typeForTrainer = getTypeForTrainer(t, isTypeThemed, weightByFrequency, noLegendaries,
@@ -441,12 +434,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // Anything starting with GYM or ELITE or CHAMPION is a group
 
         for (Trainer t : currentTrainers) {
-            if (t.tag != null && t.tag.equals("IRIVAL")) {
-                // This is the first rival in Yellow. His Pokemon is used to determine the non-player
-                // starter, so we can't change it here. Just skip it.
-                continue;
-                //TODO: confirm if this is still needed
-            }
             String group = t.tag == null ? "" : t.tag;
             if (group.contains("-")) {
                 group = group.substring(0, group.indexOf('-'));
@@ -811,7 +798,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // Yellow does not have abilities
             int abilitySlot = 0;
 
-            for (int encounter = 0; encounter <= 3; encounter++) {
+            for (int encounter = 1; encounter <= 4; encounter++) {
                 changeStarterWithTag(currentTrainers, prefix + encounter + "-0", startersByLevel, abilitySlot);
             }
             Map.Entry<Integer, Species> lastPreBranchEvolution = startersByLevel.floorEntry(highestPreBranchLevel);
@@ -823,7 +810,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 //so that if he's using Eevee, it has a chance to branch
                 startersByLevel = getEvolutionsByLevel(lastEvoSpecies, lastEvoLevel, 100);
 
-                for (int encounter = 4; encounter <= 7; encounter++) {
+                for (int encounter = 5; encounter <= 8; encounter++) {
                     changeStarterWithTag(currentTrainers, prefix + encounter + "-" + variant,
                             startersByLevel, abilitySlot);
                 }

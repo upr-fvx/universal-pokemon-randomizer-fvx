@@ -650,7 +650,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public boolean setStarters(List<Species> newStarters) {
         // Amount?
-        int starterAmount = isYellow() ? 2 : 3;
+        int starterAmount = starterCount();
 
         // Basic checks
         if (newStarters.size() != starterAmount) {
@@ -768,13 +768,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         return true;
     }
-
-    /*
-    @Override
-    public boolean hasStarterTypeTriangleSupport() {
-        return !isYellow();
-    }
-     */
 
     @Override
     public boolean hasStarterAltFormes() {
@@ -1239,9 +1232,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Trainer> allTrainers = getTrainers();
         for (int i = 0; i < allTrainers.size(); i++) {
             Trainer tr = allTrainers.get(i);
-            if (tr.tag != null &&
-                    (tr.tag.contains("ELITE") ||
-                    (!isYellow() && tr.tag.contains("RIVAL8")) || (isYellow() && tr.tag.contains("RIVAL7")))) {
+            if (tr.tag != null && (tr.tag.contains("ELITE") || tr.tag.contains("RIVAL8"))) {
                 eliteFourIndices.add(i + 1);
             }
         }

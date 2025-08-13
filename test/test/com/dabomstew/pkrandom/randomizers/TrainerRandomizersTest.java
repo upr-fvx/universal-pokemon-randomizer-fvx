@@ -288,9 +288,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 beforeStrings.add(tp.getSpecies().toString());
             }
 
-            // the rival in yellow is forced to always have eevee, which causes a mess if eevee's type is randomized
-            if (tr.tag != null && tr.tag.contains("RIVAL") && romHandler.isYellow()) continue;
-
             String gymTag = tr.tag;
             if(gymTag != null) {
                 gymTag = gymTag.split("-")[0];
@@ -366,11 +363,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
-
-            // ignore the yellow rival and his forced eevee
-            if (tr.tag != null && tr.tag.contains("RIVAL") && romHandler.isYellow()) {
-                continue;
-            }
 
             for (TrainerPokemon tp : tr.pokemon) {
                 System.out.println(tp.getSpecies());

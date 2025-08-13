@@ -359,29 +359,29 @@ public class Gen1Constants {
 
     public static void tagTrainersYellow(List<Trainer> trs) {
         // Rival Battles
-        tbc(trs, 25, 0, "IRIVAL");
+        tbc(trs, 25, 0, "RIVAL1-0");
 
-        tbc(trs, 25, 1, "RIVAL1-0");
+        tbc(trs, 25, 1, "RIVAL2-0");
 
-        tbc(trs, 25, 2, "RIVAL2-0");
+        tbc(trs, 25, 2, "RIVAL3-0");
 
-        tbc(trs, 42, 0, "RIVAL3-0");
+        tbc(trs, 42, 0, "RIVAL4-0");
 
-        tbc(trs, 42, 1, "RIVAL4-0");
-        tbc(trs, 42, 2, "RIVAL4-1");
-        tbc(trs, 42, 3, "RIVAL4-2");
+        tbc(trs, 42, 1, "RIVAL5-0");
+        tbc(trs, 42, 2, "RIVAL5-1");
+        tbc(trs, 42, 3, "RIVAL5-2");
 
-        tbc(trs, 42, 4, "RIVAL5-0");
-        tbc(trs, 42, 5, "RIVAL5-1");
-        tbc(trs, 42, 6, "RIVAL5-2");
+        tbc(trs, 42, 4, "RIVAL6-0");
+        tbc(trs, 42, 5, "RIVAL6-1");
+        tbc(trs, 42, 6, "RIVAL6-2");
 
-        tbc(trs, 42, 7, "RIVAL6-0");
-        tbc(trs, 42, 8, "RIVAL6-1");
-        tbc(trs, 42, 9, "RIVAL6-2");
+        tbc(trs, 42, 7, "RIVAL7-0");
+        tbc(trs, 42, 8, "RIVAL7-1");
+        tbc(trs, 42, 9, "RIVAL7-2");
 
-        tbc(trs, 43, 0, "RIVAL7-0");
-        tbc(trs, 43, 1, "RIVAL7-1");
-        tbc(trs, 43, 2, "RIVAL7-2");
+        tbc(trs, 43, 0, "RIVAL8-0");
+        tbc(trs, 43, 1, "RIVAL8-1");
+        tbc(trs, 43, 2, "RIVAL8-2");
 
         // Rocket Jessie & James
         tbc(trs, 30, 41, "THEMED:JESSIE&JAMES");

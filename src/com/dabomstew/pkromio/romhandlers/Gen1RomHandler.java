@@ -102,6 +102,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private String[] mapNames;
     private SubMap[] maps;
     private boolean xAccNerfed;
+    private Species yellowRivalStarter;
 
     @Override
     public boolean detectRom(byte[] rom) {
@@ -637,14 +638,19 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<Species> getStarters() {
-        // Get the starters
         List<Species> starters = new ArrayList<>();
-        starters.add(pokes[pokeRBYToNumTable[rom[romEntry.getArrayValue("StarterOffsets1")[0]] & 0xFF]]);
-        starters.add(pokes[pokeRBYToNumTable[rom[romEntry.getArrayValue("StarterOffsets2")[0]] & 0xFF]]);
-        if (!romEntry.isYellow()) {
-            starters.add(pokes[pokeRBYToNumTable[rom[romEntry.getArrayValue("StarterOffsets3")[0]] & 0xFF]]);
+        starters.add(readStarterSpecies(0));
+        if (romEntry.isYellow()) {
+            starters.add(yellowRivalStarter == null ? readStarterSpecies(1) : yellowRivalStarter);
+        } else {
+            starters.add(readStarterSpecies(1));
+            starters.add(readStarterSpecies(2));
         }
         return starters;
+    }
+
+    private Species readStarterSpecies(int num) {
+        return pokes[pokeRBYToNumTable[rom[romEntry.getArrayValue("StarterOffsets" + (num + 1))[0]] & 0xFF]];
     }
 
     @Override
@@ -667,9 +673,23 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             }
         }
 
-        // Special stuff for non-Yellow only
+        if (romEntry.isYellow()) {
+            // Yellow's second starter, the Eevee your rival carries,
+            // is not really a starter in the usual sense.
+            // After all, you can't choose it at the start.
+            // Because of this, it lacks the references to it that
+            // a normal starter would have. The only byte saying
+            // "this is an Eevee" is within the Rival's Trainer data.
+            // To prevent it getting overwritten when the RomHandler
+            // saves Trainer data, we cache it in yellowRivalStarter.
 
-        if (!romEntry.isYellow()) {
+            // ... Of course, since the fact it is an Eevee is never
+            // otherwise referenced, caching it here doesn't _do_
+            // much, except making the RomHandler remember
+            // "Hey I set this to [insert-mon-here] before!".
+            yellowRivalStarter = newStarters.get(1);
+        } else {
+            // Special stuff for non-Yellow only
 
             // Starter text
             if (romEntry.getIntValue("CanChangeStarterText") > 0) {

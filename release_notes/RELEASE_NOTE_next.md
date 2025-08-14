@@ -52,6 +52,7 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 - (Gen 4+5) Fixed TM Shops being counted as Special Shops in all Gen 4 games + Black/White (Issue #73). 
 - Fixed "Same Evo Stage" causing randomization failures in certain contexts including "Catch 'Em All" or mapping (Issue #67).
 - (Gen 1) Fixed "Rival Carries Starter Through Game" not working, when trainers were randomized (Issue #78).
-- (Gen 1) Fixed Yellow Rival Starter always being Eevee.
+- (Gen 1) Fixed Yellow Rival's Starter always being Eevee.
 - Fixed randomization failure in several games when using "Balance Shop Prices" (Issue #70).
 - (Gen 1) Fixed "Balance Shop Prices" setting incorrect prices.
+- (Gen 7) Fixed "Rival Carries Starter Through Game" not giving Kukui the final non-chosen starter in his Title Defense battle, in USUM.

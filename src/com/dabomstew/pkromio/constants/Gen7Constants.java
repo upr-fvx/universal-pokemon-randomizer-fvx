@@ -1323,14 +1323,19 @@ public class Gen7Constants {
     public static void setForcedRivalStarterPositionsUSUM(List<Trainer> allTrainers) {
 
         // Hau 3
-        allTrainers.get(12 - 1).forceStarterPosition = 0;
-        allTrainers.get(13 - 1).forceStarterPosition = 0;
-        allTrainers.get(14 - 1).forceStarterPosition = 0;
+        allTrainers.get(11).forceStarterPosition = 0;
+        allTrainers.get(12).forceStarterPosition = 0;
+        allTrainers.get(13).forceStarterPosition = 0;
 
         // Hau 6
-        allTrainers.get(217 - 1).forceStarterPosition = 0;
-        allTrainers.get(218 - 1).forceStarterPosition = 0;
-        allTrainers.get(219 - 1).forceStarterPosition = 0;
+        allTrainers.get(216).forceStarterPosition = 0;
+        allTrainers.get(217).forceStarterPosition = 0;
+        allTrainers.get(218).forceStarterPosition = 0;
+
+        // Kukui
+        allTrainers.get(476).forceStarterPosition = 5;
+        allTrainers.get(477).forceStarterPosition = 5;
+        allTrainers.get(478).forceStarterPosition = 5;
     }
 
     public static int[] smPostGameEncounterAreasTOD = new int[] {

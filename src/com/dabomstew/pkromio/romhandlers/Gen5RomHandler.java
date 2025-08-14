@@ -3789,12 +3789,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
-        List<Integer> prices = getShopPrices();
-        for (Map.Entry<Integer, Integer> entry : Gen5Constants.balancedItemPrices.entrySet()) {
-            prices.set(entry.getKey(), entry.getValue());
-        }
-        setShopPrices(prices);
+    protected Map<Integer, Integer> getBalancedShopPrices() {
+        return Gen5Constants.balancedItemPrices;
     }
 
     @Override

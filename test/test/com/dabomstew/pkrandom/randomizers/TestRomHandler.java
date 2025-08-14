@@ -1,6 +1,7 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
@@ -1275,7 +1276,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
+    protected Map<Integer, Integer> getBalancedShopPrices() {
         throw new NotImplementedException();
     }
 

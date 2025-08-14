@@ -169,4 +169,11 @@ public class RomHandlerShopTest extends RomHandlerTest {
         assertEquals(prices, after);
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void balanceShopPricesDoesNotCauseFailure(String romName) {
+        loadROM(romName);
+        romHandler.setBalancedShopPrices();
+    }
+
 }

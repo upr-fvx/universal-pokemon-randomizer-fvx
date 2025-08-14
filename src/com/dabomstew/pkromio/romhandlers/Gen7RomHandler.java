@@ -3364,12 +3364,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
-        List<Integer> prices = getShopPrices();
-        for (Map.Entry<Integer, Integer> entry : Gen7Constants.balancedItemPrices.entrySet()) {
-            prices.set(entry.getKey(), entry.getValue());
-        }
-        setShopPrices(prices);
+    protected Map<Integer, Integer> getBalancedShopPrices() {
+        return Gen7Constants.balancedItemPrices;
     }
 
     @Override

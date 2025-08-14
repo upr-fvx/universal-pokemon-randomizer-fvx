@@ -31,6 +31,7 @@ package com.dabomstew.pkromio.romhandlers;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.exceptions.RomIOException;
@@ -316,6 +317,19 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
         }
     }
+
+    @Override
+    public void setBalancedShopPrices() {
+        List<Integer> prices = getShopPrices();
+        for (Map.Entry<Integer, Integer> entry : getBalancedShopPrices().entrySet()) {
+            if (entry.getKey() < prices.size()) {
+                prices.set(entry.getKey(), entry.getValue());
+            }
+        }
+        setShopPrices(prices);
+    }
+
+    protected abstract Map<Integer, Integer> getBalancedShopPrices();
 
     /* Helper methods used by subclasses and/or this class */
 

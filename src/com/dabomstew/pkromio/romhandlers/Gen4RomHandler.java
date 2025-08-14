@@ -4578,12 +4578,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void setBalancedShopPrices() {
-		List<Integer> prices = getShopPrices();
-		for (Map.Entry<Integer, Integer> entry : Gen4Constants.balancedItemPrices.entrySet()) {
-			prices.set(entry.getKey(), entry.getValue());
-		}
-		setShopPrices(prices);
+	protected Map<Integer, Integer> getBalancedShopPrices() {
+		return Gen4Constants.balancedItemPrices;
 	}
 
 	@Override

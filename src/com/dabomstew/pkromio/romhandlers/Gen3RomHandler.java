@@ -3144,12 +3144,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setBalancedShopPrices() {
-        List<Integer> prices = getShopPrices();
-        for (Map.Entry<Integer, Integer> entry : Gen3Constants.balancedItemPrices.entrySet()) {
-            prices.set(entry.getKey(), entry.getValue());
-        }
-        setShopPrices(prices);
+    protected Map<Integer, Integer> getBalancedShopPrices() {
+        return Gen3Constants.balancedItemPrices;
     }
 
     public void setShopPrices(List<Integer> prices) {

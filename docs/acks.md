@@ -86,6 +86,8 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - jojobear13 (Violet)
 - Pokeli (Red)
 - DelyBulacha (Frisk, Chara)
+- SharkGuy (Boyfriend)
+- bepis (Shantae)
 
 ## Direct code contributors
 

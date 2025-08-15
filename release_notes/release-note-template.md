@@ -16,7 +16,8 @@ Thanks to
 
 # How to use
 
-Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the Randomizer by double clicking the appropriate launcher script:
+Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the 
+zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
 
 - Windows: Use `launcher_WINDOWS.bat`
 - Mac: Use `launcher_MAC.command`

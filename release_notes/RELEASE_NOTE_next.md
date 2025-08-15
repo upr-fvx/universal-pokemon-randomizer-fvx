@@ -6,17 +6,18 @@
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to 
-[Every person who submitted a merged pull request] @bergmaen and @samualtnorman for your code contributions,
+Thanks to
+[Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and 
+[Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
 # How to use
 
-Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the Randomizer by double clicking the appropriate launcher script:
+Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the
+zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
 
 - Windows: Use `launcher_WINDOWS.bat`
 - Mac: Use `launcher_MAC.command`
@@ -34,25 +35,13 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After dow
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Trainer Pokemon
-- (GUI) Improved spacing of GUI elements.
-
-### Wild Pokemon
-- (GUI) Description of "Similar Strength" now mentions "Catch 'Em All" as a confounding setting.
-
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- Improved Linux launcher compatibility, with distros that do not use `/bin/bash` (PR #79).
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen 1+3) Fixed randomization failure when using "Randomize PC Potion" Misc. Tweak (Issue #43).
-- (Gen 4+5) Fixed TM Shops being counted as Special Shops in all Gen 4 games + Black/White (Issue #73). 
-- Fixed "Same Evo Stage" causing randomization failures in certain contexts including "Catch 'Em All" or mapping (Issue #67).
-- (Gen 1) Fixed "Rival Carries Starter Through Game" not working, when trainers were randomized (Issue #78).
-- (Gen 1) Fixed Yellow Rival's Starter always being Eevee.
-- Fixed randomization failure in several games when using "Balance Shop Prices" (Issue #70).
-- (Gen 1) Fixed "Balance Shop Prices" setting incorrect prices.
-- (Gen 7) Fixed "Rival Carries Starter Through Game" not giving Kukui the final non-chosen starter in his Title Defense battle, in USUM.
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

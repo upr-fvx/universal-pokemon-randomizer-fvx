@@ -1,11 +1,15 @@
 ---
 name: New Feature Summary
 ---
-This page summarizes all new features added in this fork (compared to UPR-ZX).
+This page summarizes all new features added in this fork (compared to UPR ZX).
 
-**This page is currently outdated. It will be updated soon, to be in line with FVX 1.3.0. In the meanwhile, look to [the release notes](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases) for a truly full list of new features.** 
+UPR FVX also tweaks a number of features that already exist in ZX, and fixes numerous bugs. 
+To keep this page relatively short, those changes have been left out.
 
 # Evolutions
+
+## Random Every Level
+"Random Every Level" is now supported in Gen 1 and Gen 2.
 
 ## Force Growth
 Ensures that random evolutions will always be to a Pokemon with a higher base stat total. (No guarantee on individual stats.)
@@ -46,6 +50,15 @@ If the trainer is a Gym Leader, gym trainer, Elite Four, or themed Champion, the
 The same as Preserve Type Themes, except if the trainer does not have a type theme, each of their Pokemon will share the primary type of the Pokemon the trainer originally had.  
 For example, if the trainer originally had an Oddish (Grass-Poison), after randomization it might be a Tangela (pure Grass), an Exeggcute (Grass-Psychic), or a Paras (Bug-Grass). However, it could not become a Zubat (Poison-Flying) or a Gastly (Ghost-Poison) as Poison is the _secondary_ type.  
 
+## Add Pokémon
+"Add Pokémon" was a feature in ZX as well, but FVX makes it possible to add Pokémon to trainers without randomizing the rest of their teams. Added Pokémon are random, but follow their trainer's Type theme (if they have one), and can be restricted using the usual randomization options.
+
+## Battle Style Randomization
+"Battle Style Randomization" replaces "Double Battle Mode". Setting all Trainers to be double battles is still possible, but it also allows setting all trainers to triple or rotation battles (in Gen 5+6), and setting each Trainer to use a random battle style of the ones available in the game. It is also possible to randomize the Battle Styles without randomizing the trainer teams. If a trainer has fewer Pokémon that their assigned Battle Style requires (e.g. a trainer with 1 mon turned into a Double Battle), their existing Pokémon are duplicated.
+
+## Force Middle Stage
+Works similar to "Force Fully Evolved"; a level is chosen in the GUI, and any Trainer Pokémon at that level or higher will be forcibly evolved, if they have a middle stage to evolve into. **E.g.**, if the level is set to 20, lv24 Bellsprout and lv40 Dratini, will instead become lv24 Weepinbell and lv40 Dragonair. Lv19 Charmander and lv21 Rattata will be untouched.
+
 # Wild Pokemon
 
 * Catch-Em-All and Similar Strength have been moved to checkboxes, allowing them to be used at the same time.
@@ -77,7 +90,10 @@ This option is a checkbox, and overrides other type restrictions.
 This option can be used along with global 1-to-1 and family-to-family.
 
 # Items
-* Added support for Gen 2 Shops.
+Added support for Gen 1 and Gen 2 Shops.
+
+## Add Cheap Rare Candies
+Adds Rare Candies for 10¥ to most shops. Can be used without randomizing shop items.
 
 # Graphics
 ## Pokemon Palette Randomization
@@ -114,3 +130,11 @@ Every weakness will become a resistance and every resistance or immunity will be
 
 ## Reusable TMs
 For generations earlier than 5, changes TMs so they don't disappear after use.
+
+## Forgettable HMs
+For generations 1-5, lets HMs be forgotten like any other move, and not just at the Move Forgetter.
+
+# Misc.
+
+## Improved Logging
+The log file output after randomizing a game, has been entirely revamped. New info has been added in places, and it is now more structured. The strings composing the log file have also been separated from the code, to make translations of the Randomizer into other languages easier.

@@ -7,9 +7,22 @@ import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
+
+    private static final List<SheetImageDescription> SHEET_IMAGE_DESCRIPTIONS = Arrays.asList(
+            new SheetImageDescription("FrontImage", 9, 3, 56, 56),
+            new SheetImageDescription("BackImage", 68, 11, 48, 48),
+            new SheetImageDescription("WalkSprite", 12, 62, 16, 16,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {0, 1}, {1, 1}, {2, 1}}),
+            new SheetImageDescription("BikeSprite", 63, 62, 16, 16,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {0, 1}, {1, 1}, {2, 1}}),
+            new SheetImageDescription("FishFrontSprite", 12, 104, 16, 8),
+            new SheetImageDescription("FishBackSprite", 29, 112, 16, 8),
+            new SheetImageDescription("FishSideSprite", 54, 112, 16, 8)
+    );
 
     private static final int BACK_IMAGE_DIMENSIONS = 6;
     private static final int TRAINER_CARD_IMAGE_WIDTH = 5;
@@ -113,6 +126,11 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
         List<BufferedImage> sampleImages = new ArrayList<>(super.getSampleImages());
         sampleImages.add(getTrainerCardImage());
         return sampleImages;
+    }
+
+    @Override
+    protected List<SheetImageDescription> getSheetImageDescriptions() {
+        return SHEET_IMAGE_DESCRIPTIONS;
     }
 
 }

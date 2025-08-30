@@ -20,6 +20,9 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
 
     public GBCPlayerCharacterGraphics(GraphicsPackEntry entry) {
         super(entry);
+        if (usesSheet()) {
+            entry.putStringValue("BikeSpriteMode", "separate");
+        }
         this.front = initFront();
         this.back = initBack();
         this.walk = initWalk();

@@ -80,6 +80,7 @@ public class Gen2ItemIDs {
             {49, ItemIDs.xAttack},
             {51, ItemIDs.xDefense},
             {52, ItemIDs.xSpeed},
+            {57, ItemIDs.expShare},
             {62, ItemIDs.ppUp},
             {63, ItemIDs.ether},
             {64, ItemIDs.maxEther},

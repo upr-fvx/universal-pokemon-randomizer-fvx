@@ -1,9 +1,6 @@
 package com.dabomstew.pkromio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  ItemIDs.java - defines an index number constant for every item in the --*/
-/*--               game from Diamond/Pearl to Sword/Shield.                 --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -24,16 +21,31 @@ package com.dabomstew.pkromio.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+
+/**
+ * Defines an index number constant for every item in the game.
+ * GameFreak has been <i>mostly</i> consistent with the item IDs
+ * starting with Generation 4. Places where they were not consistent
+ * are specifically called out in comments.<br>
+ * List of IDs:
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_IV)>Gen 4</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_V)>Gen 5</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)>Gen 6</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)>Gen 7</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Let%27s_Go,_Pikachu!_and_Let%27s_Go,_Eevee!)>LGPE</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VIII)>Gen 8</a>
+ * <br>
+ * {@link RomHandler}s are expected to use these IDs, even if they
+ * internally use some other item order, mapping them to the IDs
+ * of the corresponding item. In cases where no corresponding item
+ * exists (E.g. Gen 2's Gorgeous Box), negative values should be used,
+ * to not conflict with any of the IDs below. These IDs, for Gen 1-3,
+ * are found under the {@link #Gen1}, {@link #Gen2}, {@link #Gen3}
+ * internal classes.
+ */
 @SuppressWarnings("unused")
 public class ItemIDs {
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_IV)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_V)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Let%27s_Go,_Pikachu!_and_Let%27s_Go,_Eevee!)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VIII)
-    // Unlike in previous generations, GameFreak was *mostly* consistent with this item list starting with Diamond and
-    // Pearl. Places where they were not consistent are specifically called out in comments.
 
     // These items are generally available in Diamond/Pearl and onwards.
     public static final int none = 0;
@@ -1668,4 +1680,356 @@ public class ItemIDs {
     public static final int carrotSeeds = 1605;
     public static final int abilityPatch = 1606;
     public static final int reinsofUnity = 1607;
+
+    public static class Gen1 {
+        // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_I)
+        public static final int townMap = -1005;
+        public static final int bicycle = -1006;
+        public static final int questionMark7 = -1007;
+        public static final int pokedex = -1009;
+        public static final int boulderBadge = -1021;
+        public static final int cascadeBadge = -1022;
+        public static final int thunderBadge = -1023;
+        public static final int rainbowBadge = -1024;
+        public static final int soulBadge = -1025;
+        public static final int marshBadge = -1026;
+        public static final int volcanoBadge = -1027;
+        public static final int earthBadge = -1028;
+        public static final int oldAmber = -1031;
+        public static final int domeFossil = -1041;
+        public static final int helixFossil = -1042;
+        public static final int secretKey = -1043;
+        public static final int questionMark44 = -1044;
+        public static final int bikeVoucher = -1045;
+        public static final int cardKey = -1048;
+        public static final int ppUpGlitch = -1050;
+        public static final int coin = -1059;
+        public static final int ssTicket = -1063;
+        public static final int goldTeeth = -1064;
+        public static final int coinCase = -1069;
+        public static final int oaksParcel = -1070;
+        public static final int itemfinder = -1071;
+        public static final int silphScope = -1072;
+        public static final int pokeFlute = -1073;
+        public static final int liftKey = -1074;
+        public static final int expAll = -1075;
+        public static final int oldRod = -1076;
+        public static final int goodRod = -1077;
+        public static final int superRod = -1078;
+        public static final int unused84 = -1084;
+        public static final int unused85 = -1085;
+        public static final int unused86 = -1086;
+        public static final int unused87 = -1087;
+        public static final int unused88 = -1088;
+        public static final int unused89 = -1089;
+        public static final int unused90 = -1090;
+        public static final int unused91 = -1091;
+        public static final int unused92 = -1092;
+        public static final int unused93 = -1093;
+        public static final int unused94 = -1094;
+        public static final int unused95 = -1095;
+        public static final int unused96 = -1096;
+        public static final int unused97 = -1097;
+        public static final int unused98 = -1098;
+        public static final int unused99 = -1099;
+        public static final int unused100 = -1100;
+        public static final int unused101 = -1101;
+        public static final int unused102 = -1102;
+        public static final int unused103 = -1103;
+        public static final int unused104 = -1104;
+        public static final int unused105 = -1105;
+        public static final int unused106 = -1106;
+        public static final int unused107 = -1107;
+        public static final int unused108 = -1108;
+        public static final int unused109 = -1109;
+        public static final int unused110 = -1110;
+        public static final int unused111 = -1111;
+        public static final int unused112 = -1112;
+        public static final int unused113 = -1113;
+        public static final int unused114 = -1114;
+        public static final int unused115 = -1115;
+        public static final int unused116 = -1116;
+        public static final int unused117 = -1117;
+        public static final int unused118 = -1118;
+        public static final int unused119 = -1119;
+        public static final int unused120 = -1120;
+        public static final int unused121 = -1121;
+        public static final int unused122 = -1122;
+        public static final int unused123 = -1123;
+        public static final int unused124 = -1124;
+        public static final int unused125 = -1125;
+        public static final int unused126 = -1126;
+        public static final int unused127 = -1127;
+        public static final int unused128 = -1128;
+        public static final int unused129 = -1129;
+        public static final int unused130 = -1130;
+        public static final int unused131 = -1131;
+        public static final int unused132 = -1132;
+        public static final int unused133 = -1133;
+        public static final int unused134 = -1134;
+        public static final int unused135 = -1135;
+        public static final int unused136 = -1136;
+        public static final int unused137 = -1137;
+        public static final int unused138 = -1138;
+        public static final int unused139 = -1139;
+        public static final int unused140 = -1140;
+        public static final int unused141 = -1141;
+        public static final int unused142 = -1142;
+        public static final int unused143 = -1143;
+        public static final int unused144 = -1144;
+        public static final int unused145 = -1145;
+        public static final int unused146 = -1146;
+        public static final int unused147 = -1147;
+        public static final int unused148 = -1148;
+        public static final int unused149 = -1149;
+        public static final int unused150 = -1150;
+        public static final int unused151 = -1151;
+        public static final int unused152 = -1152;
+        public static final int unused153 = -1153;
+        public static final int unused154 = -1154;
+        public static final int unused155 = -1155;
+        public static final int unused156 = -1156;
+        public static final int unused157 = -1157;
+        public static final int unused158 = -1158;
+        public static final int unused159 = -1159;
+        public static final int unused160 = -1160;
+        public static final int unused161 = -1161;
+        public static final int unused162 = -1162;
+        public static final int unused163 = -1163;
+        public static final int unused164 = -1164;
+        public static final int unused165 = -1165;
+        public static final int unused166 = -1166;
+        public static final int unused167 = -1167;
+        public static final int unused168 = -1168;
+        public static final int unused169 = -1169;
+        public static final int unused170 = -1170;
+        public static final int unused171 = -1171;
+        public static final int unused172 = -1172;
+        public static final int unused173 = -1173;
+        public static final int unused174 = -1174;
+        public static final int unused175 = -1175;
+        public static final int unused176 = -1176;
+        public static final int unused177 = -1177;
+        public static final int unused178 = -1178;
+        public static final int unused179 = -1179;
+        public static final int unused180 = -1180;
+        public static final int unused181 = -1181;
+        public static final int unused182 = -1182;
+        public static final int unused183 = -1183;
+        public static final int unused184 = -1184;
+        public static final int unused185 = -1185;
+        public static final int unused186 = -1186;
+        public static final int unused187 = -1187;
+        public static final int unused188 = -1188;
+        public static final int unused189 = -1189;
+        public static final int unused190 = -1190;
+        public static final int unused191 = -1191;
+        public static final int unused192 = -1192;
+        public static final int unused193 = -1193;
+        public static final int unused194 = -1194;
+        public static final int unused195 = -1195;
+        public static final int tm51Unused = -1251;
+        public static final int tm52Unused = -1252;
+        public static final int tm53Unused = -1253;
+        public static final int tm54Unused = -1254;
+        public static final int tm55Unused = -1255;
+    }
+
+    public static class Gen2 {
+        // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_II)
+        public static final int terusama6 = -2006;
+        public static final int bicycle = -2007;
+        public static final int terusama25 = -2025;
+        public static final int terusama45 = -2045;
+        public static final int terusama50 = -2050;
+        public static final int coinCase = -2054;
+        public static final int itemfinder = -2055;
+        public static final int terusama56 = -2056;
+        public static final int oldRod = -2058;
+        public static final int goodRod = -2059;
+        public static final int silverLeaf = -2060;
+        public static final int superRod = -2061;
+        public static final int redScale = -2066;
+        public static final int secretPotion = -2067;
+        public static final int ssTicket = -2068;
+        public static final int mysteryEgg = -2069;
+        public static final int clearBell = -2070; // exclusive to Crystal
+        public static final int silverWing = -2071;
+        public static final int terusama90 = -2090;
+        public static final int terusama100 = -2100;
+        public static final int pinkBow = -2104;
+        public static final int gsBall = -2115; // exclusive to Crystal
+        public static final int blueCard = -2116; // exclusive to Crystal
+        public static final int terusama120 = -2120;
+        public static final int cardKey = -2127;
+        public static final int machinePart = -2128;
+        public static final int eggTicket = -2129; // exclusive to Crystal
+        public static final int lostItem = -2130;
+        public static final int basementKey = -2133;
+        public static final int pass = -2134;
+        public static final int terusama135 = -2135;
+        public static final int terusama136 = -2136;
+        public static final int terusama137 = -2137;
+        public static final int terusama141 = -2141;
+        public static final int terusama142 = -2142;
+        public static final int terusama145 = -2145;
+        public static final int terusama147 = -2147;
+        public static final int terusama148 = -2148;
+        public static final int terusama149 = -2149;
+        public static final int berserkGene = -2152;
+        public static final int terusama153 = -2153;
+        public static final int terusama154 = -2154;
+        public static final int terusama155 = -2155;
+        public static final int terusama162 = -2162;
+        public static final int normalBox = -2167;
+        public static final int gorgeousBox = -2168;
+        public static final int polkadotBow = -2170;
+        public static final int terusama171 = -2171;
+        public static final int squirtBottle = -2175;
+        public static final int terusama176 = -2176;
+        public static final int rainbowWing = -2178;
+        public static final int terusama179 = -2179;
+        public static final int brickPiece = -2180;
+        public static final int terusama190 = -2190;
+        public static final int tm04Unused = -2195;
+        public static final int tm28Unused = -2220;
+        public static final int hm08Unused = -2250;
+        public static final int hm09Unused = -2251;
+        public static final int hm10Unused = -2252;
+        public static final int hm11Unused = -2253;
+        public static final int hm12Unused = -2254;
+        public static final int cancel = -2255;
+    }
+
+    public static class Gen3 {
+        // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_III)
+        public static final int unknown52 = -3052;
+        public static final int unknown53 = -3053;
+        public static final int unknown54 = -3054;
+        public static final int unknown55 = -3055;
+        public static final int unknown56 = -3056;
+        public static final int unknown57 = -3057;
+        public static final int unknown58 = -3058;
+        public static final int unknown59 = -3059;
+        public static final int unknown60 = -3060;
+        public static final int unknown61 = -3061;
+        public static final int unknown62 = -3062;
+        public static final int unknown72 = -3072;
+        public static final int unknown82 = -3082;
+        public static final int unknown87 = -3087;
+        public static final int unknown88 = -3088;
+        public static final int unknown89 = -3089;
+        public static final int unknown90 = -3090;
+        public static final int unknown91 = -3091;
+        public static final int unknown92 = -3092;
+        public static final int unknown99 = -3099;
+        public static final int unknown100 = -3100;
+        public static final int unknown101 = -3101;
+        public static final int unknown102 = -3102;
+        public static final int unknown105 = -3105;
+        public static final int unknown112 = -3112;
+        public static final int unknown113 = -3113;
+        public static final int unknown114 = -3114;
+        public static final int unknown115 = -3115;
+        public static final int unknown116 = -3116;
+        public static final int unknown117 = -3117;
+        public static final int unknown118 = -3118;
+        public static final int unknown119 = -3119;
+        public static final int unknown120 = -3120;
+        public static final int unknown176 = -3176;
+        public static final int unknown177 = -3177;
+        public static final int unknown178 = -3178;
+        public static final int unknown226 = -3226;
+        public static final int unknown227 = -3227;
+        public static final int unknown228 = -3228;
+        public static final int unknown229 = -3229;
+        public static final int unknown230 = -3230;
+        public static final int unknown231 = -3231;
+        public static final int unknown232 = -3232;
+        public static final int unknown233 = -3233;
+        public static final int unknown234 = -3234;
+        public static final int unknown235 = -3235;
+        public static final int unknown236 = -3236;
+        public static final int unknown237 = -3237;
+        public static final int unknown238 = -3238;
+        public static final int unknown239 = -3239;
+        public static final int unknown240 = -3240;
+        public static final int unknown241 = -3241;
+        public static final int unknown242 = -3242;
+        public static final int unknown243 = -3243;
+        public static final int unknown244 = -3244;
+        public static final int unknown245 = -3245;
+        public static final int unknown246 = -3246;
+        public static final int unknown247 = -3247;
+        public static final int unknown248 = -3248;
+        public static final int unknown249 = -3249;
+        public static final int unknown250 = -3250;
+        public static final int unknown251 = -3251;
+        public static final int unknown252 = -3252;
+        public static final int unknown253 = -3253;
+        public static final int machBike = -3259;
+        public static final int coinCase = -3260;
+        public static final int itemfinder = -3261;
+        public static final int oldRod = -3262;
+        public static final int goodRod = -3263;
+        public static final int superRod = -3264;
+        public static final int ssTicket = -3265;
+        public static final int contestPass = -3266;
+        public static final int unknown267 = -3267;
+        public static final int wailmerPail = -3268;
+        public static final int devonGoods = -3269;
+        public static final int sootSack = -3270;
+        public static final int basementKey = -3271;
+        public static final int acroBike = -3272;
+        public static final int pokeblockCase = -3273;
+        public static final int letter = -3274;
+        public static final int eonTicket = -3275;
+        public static final int redOrb = -3276;
+        public static final int blueOrb = -3277;
+        public static final int scanner = -3278;
+        public static final int goGoggles = -3279;
+        public static final int meteorite = -3280;
+        public static final int rm1Key = -3281;
+        public static final int rm2Key = -3282;
+        public static final int rm4Key = -3283;
+        public static final int rm6Key = -3284;
+        public static final int storageKey = -3285;
+        public static final int rootFossil = -3286;
+        public static final int clawFossil = -3287;
+        public static final int devonScope = -3288;
+        public static final int unknown347 = -3347;
+        public static final int unknown348 = -3348;
+
+        /* Exclusive to FRLG and Emerald */
+        public static final int oaksParcel = -3349;
+        public static final int pokeFlute = -3350;
+        public static final int secretKey = -3351;
+        public static final int bikeVoucher = -3352;
+        public static final int goldTeeth = -3353;
+        public static final int oldAmber = -3354;
+        public static final int cardKey = -3355;
+        public static final int liftKey = -3356;
+        public static final int helixFossil = -3357;
+        public static final int domeFossil = -3358;
+        public static final int silphScope = -3359;
+        public static final int bicycle = -3360;
+        public static final int townMap = -3361;
+        public static final int vsSeeker = -3362;
+        public static final int fameChecker = -3363;
+        public static final int tmCase = -3364;
+        public static final int berryPouch = -3365;
+        public static final int teachyTV = -3366;
+        public static final int triPass = -3367;
+        public static final int rainbowPass = -3368;
+        public static final int tea = -3369;
+        public static final int mysticTicket = -3370;
+        public static final int auroraTicket = -3371;
+        public static final int powderJar = -3372;
+        public static final int ruby = -3373;
+        public static final int sapphire = -3374;
+
+        /* Exclusive to Emerald */
+        public static final int magmaEmblem = -3375;
+        public static final int oldSeaMap = -3376;
+    }
 }

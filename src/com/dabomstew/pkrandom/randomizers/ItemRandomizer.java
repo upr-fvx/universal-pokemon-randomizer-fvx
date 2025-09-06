@@ -2,9 +2,6 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkromio.constants.Gen1ItemIDs;
-import com.dabomstew.pkromio.constants.Gen2ItemIDs;
-import com.dabomstew.pkromio.constants.Gen3ItemIDs;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.PickupItem;

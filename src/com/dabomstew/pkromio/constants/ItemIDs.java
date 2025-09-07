@@ -2051,6 +2051,8 @@ public class ItemIDs {
         public static final int magmaEmblem = UNIQUE_OFFSET + 375;
         public static final int oldSeaMap = UNIQUE_OFFSET + 376;
 
-        public static final int first = unknown52, lastRS = unknown348, lastFRLG = sapphire, lastEm = oldSeaMap;
+        public static final int first = unknown52;
+        public static final int lastRS = unknown348, lastFRLG = sapphire, lastEm = oldSeaMap;
+        public static final int last = lastEm;
     }
 }

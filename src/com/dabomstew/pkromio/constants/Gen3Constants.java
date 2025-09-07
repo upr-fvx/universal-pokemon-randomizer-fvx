@@ -1813,10 +1813,29 @@ public class Gen3Constants {
             .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     public static int itemIDToStandard(int id) {
-        return itemIDToStandardMap.get(id);
+        Integer standard = itemIDToStandardMap.get(id);
+        if (standard == null) {
+            standard = ItemIDs.UNIQUE_OFFSET + id;
+        }
+        return standard;
     }
 
     public static int itemIDToInternal(int id) {
+        if (id >= ItemIDs.UNIQUE_OFFSET) {
+            return id - ItemIDs.UNIQUE_OFFSET;
+        }
         return itemIDToInternalMap.get(id);
+    }
+
+    public static int getLastItemID(int romType) {
+        if (romType == RomType_Ruby || romType == RomType_Sapp) {
+            return ItemIDs.Gen3.lastRS;
+        } else if (romType == RomType_FRLG) {
+            return ItemIDs.Gen3.lastFRLG;
+        } else if (romType == RomType_Em) {
+            return ItemIDs.Gen3.lastEm;
+        } else {
+            throw new IllegalArgumentException("Invalid RomType");
+        }
     }
 }

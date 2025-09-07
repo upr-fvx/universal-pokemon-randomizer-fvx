@@ -2407,11 +2407,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void loadItems() {
-        String[] names = readItemNames();
-        items = new ArrayList<>(names.length);
-        items.add(null);
-        for (int i = 1; i < names.length; i++) {
-            items.add(new Item(i, names[i]));
+        items = new ArrayList<>(Collections.nCopies(ItemIDs.Gen1.last + 1, null));
+
+        String[] namesByInternal = readItemNames();
+        for (int internal = 1; internal < namesByInternal.length; internal++) {
+            int id = Gen1Constants.itemIDToStandard(internal);
+            items.set(id, new Item(id, namesByInternal[internal]));
         }
 
         Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));

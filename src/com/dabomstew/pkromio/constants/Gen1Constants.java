@@ -756,10 +756,17 @@ public class Gen1Constants {
             .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     public static int itemIDToStandard(int id) {
-        return itemIDToStandardMap.get(id);
+        Integer standard = itemIDToStandardMap.get(id);
+        if (standard == null) {
+            standard = ItemIDs.UNIQUE_OFFSET + id;
+        }
+        return standard;
     }
 
     public static int itemIDToInternal(int id) {
+        if (id >= ItemIDs.UNIQUE_OFFSET) {
+            return id - ItemIDs.UNIQUE_OFFSET;
+        }
         return itemIDToInternalMap.get(id);
     }
 }

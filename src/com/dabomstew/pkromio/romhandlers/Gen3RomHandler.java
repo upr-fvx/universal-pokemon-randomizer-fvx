@@ -3638,15 +3638,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void loadItems() {
-        int nameoffs = romEntry.getIntValue("ItemData");
-        int structlen = romEntry.getIntValue("ItemEntrySize");
-        int maxcount = romEntry.getIntValue("ItemCount");
+        int nameOffs = romEntry.getIntValue("ItemData");
+        int structLen = romEntry.getIntValue("ItemEntrySize");
+        int internalCount = romEntry.getIntValue("ItemCount");
 
-        items = new ArrayList<>(maxcount);
+        int lastItemID = Gen3Constants.getLastItemID(romEntry.getRomType());
+        items = new ArrayList<>(Collections.nCopies(lastItemID + 1, null));
 
-        items.add(null);
-        for (int i = 1; i <= maxcount; i++) {
-            items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
+        for (int internal = 1; internal <= internalCount; internal++) {
+            int id = Gen3Constants.itemIDToStandard(internal);
+            String name = readVariableLengthString(nameOffs + structLen * internal);
+            items.set(id, new Item(id, name));
         }
 
         for (int id : Gen3Constants.bannedItems) {

@@ -188,7 +188,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				items.get(id).setAllowed(false);
 			}
 		}
-		for (int i = Gen4Constants.tmsStartIndex; i < Gen4Constants.tmsStartIndex + Gen4Constants.tmCount; i++) {
+		for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen4Constants.tmCount; i++) {
 			items.get(i).setTM(true);
 		}
 		for (int id : Gen4Constants.badItems) {

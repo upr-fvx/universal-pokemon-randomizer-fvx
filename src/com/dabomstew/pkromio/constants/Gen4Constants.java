@@ -711,8 +711,6 @@ public class Gen4Constants {
             MoveIDs.machPunch, MoveIDs.focusPunch, MoveIDs.dizzyPunch, MoveIDs.dynamicPunch, MoveIDs.hammerArm, MoveIDs.megaPunch,
             MoveIDs.cometPunch, MoveIDs.meteorMash, MoveIDs.shadowPunch, MoveIDs.drainPunch, MoveIDs.bulletPunch, MoveIDs.skyUppercut);
 
-    public static final int tmsStartIndex = ItemIDs.tm01;
-
     public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
             ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm19, ItemIDs.tm23, ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm39,
             ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62,

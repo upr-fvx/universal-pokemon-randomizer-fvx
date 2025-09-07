@@ -94,8 +94,6 @@ public class Gen1Constants {
 
     public static final List<Integer> earlyRequiredHMs = Collections.singletonList(MoveIDs.cut);
 
-    public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
-
     public static final int hiddenObjectMapsTerminator = 0xFF, hiddenObjectsTerminator = 0xFF;
 
     public static final List<Integer> requiredFieldTMs = Arrays.asList(

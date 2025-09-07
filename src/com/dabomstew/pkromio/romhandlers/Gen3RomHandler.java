@@ -2425,10 +2425,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int[] pals = romEntry.getArrayValue("TmPals");
 			// Update the item image palettes
 			// Gen3 TMs are 289-338
-			for (int i = 0; i < 50; i++) {
+			for (int i = 0; i < Gen3Constants.tmCount; i++) {
 				Move mv = moves[moveIndexes.get(i)];
 				int typeID = Gen3Constants.typeToByte(mv.type);
-				writePointer(iiOffset + (Gen3Constants.tmItemOffset + i) * 8 + 4, pals[typeID]);
+                int itemID = Gen3Constants.itemsStandardToInternal.get(ItemIDs.tm01 + i);
+				writePointer(iiOffset + itemID * 8 + 4, pals[typeID]);
 			}
 		}
 	}
@@ -2443,7 +2444,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int limitPerLine = (romEntry.getRomType() == Gen3Constants.RomType_FRLG) ? Gen3Constants.frlgItemDescCharsPerLine
 					: Gen3Constants.rseItemDescCharsPerLine;
 			for (int i = 0; i < Gen3Constants.tmCount; i++) {
-				int itemBaseOffset = idOffset + (i + Gen3Constants.tmItemOffset) * entrySize;
+                int tmID = Gen3Constants.itemsStandardToInternal.get(ItemIDs.tm01 + i);
+				int itemBaseOffset = idOffset + tmID * entrySize;
 				int moveBaseOffset = mdOffset + (moveIndexes.get(i) - 1) * 4;
 				int moveTextPointer = readPointer(moveBaseOffset);
 				String moveDesc = readVariableLengthString(moveTextPointer);
@@ -3653,7 +3655,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 items.get(id).setAllowed(false);
             }
         }
-        for (int i = Gen3Constants.tmsStartIndex; i < Gen3Constants.tmsStartIndex + Gen3Constants.tmCount; i++) {
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
         for (int id : Gen3Constants.getBadItems(getROMType())) {
@@ -3947,9 +3949,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // To make all TMs reusable, change this from HM01_Cut => 0.
         // FRLG has multiple comparisons like this to change, so we deal with offsets instead of singular offset.
         int[] offsets = romEntry.getArrayValue("TMMovesReusableFunctionOffsets");
+        byte hmCompareVal = (byte) (Gen3Constants.itemsStandardToInternal.get(ItemIDs.hm01) / 2);
         for (int offset : offsets) {
-            if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) {
-                throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
+            if (rom[offset] != hmCompareVal) {
+                throw new RuntimeException("Expected 0x" + Integer.toHexString(hmCompareVal) + ", was 0x"
                         + Integer.toHexString(rom[offset]) + ". Likely TMMovesReusableFunctionOffsets is faulty.");
             }
             writeByte(offset, (byte) 0);

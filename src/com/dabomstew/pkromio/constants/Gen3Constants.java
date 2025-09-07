@@ -113,8 +113,6 @@ public class Gen3Constants {
     public static final List<Integer> hmMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.rockSmash, MoveIDs.waterfall, MoveIDs.dive);
 
-    public static final int tmItemOffset = Gen3ItemIDs.tm01;
-
     public static final int rseItemDescCharsPerLine = 18, frlgItemDescCharsPerLine = 24;
 
     public static final int regularTextboxCharsPerLine = 36;
@@ -257,8 +255,6 @@ public class Gen3Constants {
     public static final List<Integer> soundMoves = Arrays.asList(MoveIDs.growl, MoveIDs.roar, MoveIDs.sing, MoveIDs.supersonic,
             MoveIDs.screech, MoveIDs.snore, MoveIDs.uproar, MoveIDs.metalSound, MoveIDs.grassWhistle, MoveIDs.hyperVoice,
             MoveIDs.perishSong, MoveIDs.healBell);
-
-    public static final int tmsStartIndex = Gen3ItemIDs.tm01;
 
     public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(
             ItemIDs.tm01, ItemIDs.tm02, ItemIDs.tm06, ItemIDs.tm07, ItemIDs.tm11, ItemIDs.tm18, ItemIDs.tm22,

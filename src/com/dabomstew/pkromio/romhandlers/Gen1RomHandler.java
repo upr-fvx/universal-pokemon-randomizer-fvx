@@ -1942,26 +1942,27 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         List<Integer> prices = new ArrayList<>();
         prices.add(0);
-        // normal items
-        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-            int price = read3ByteDecimalHex(offset);
-            prices.add(price);
-        }
-        // unused items and HMs
-        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
-            prices.add(0);
-        }
-        // TMs
-        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-            int price = readNybble(offset, i % 2 == 1) * 1000;
-            prices.add(price);
-        }
-        // unused TMs
-        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
-            prices.add(0);
-        }
+        // TODO: this obviously needs to be redone
+//        // normal items
+//        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+//            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+//            int price = read3ByteDecimalHex(offset);
+//            prices.add(price);
+//        }
+//        // unused items and HMs
+//        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
+//            prices.add(0);
+//        }
+//        // TMs
+//        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+//            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+//            int price = readNybble(offset, i % 2 == 1) * 1000;
+//            prices.add(price);
+//        }
+//        // unused TMs
+//        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
+//            prices.add(0);
+//        }
 
         return prices;
     }
@@ -1981,18 +1982,19 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-            write3ByteDecimalHex(offset, prices.get(i));
-        }
-        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-            int price = prices.get(i) / 1000;
-            if (price == 0) {
-                price = 1;
-            }
-            writeNybble(offset, i % 2 == 1, price);
-        }
+        // TODO
+//        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
+//            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
+//            write3ByteDecimalHex(offset, prices.get(i));
+//        }
+//        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
+//            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
+//            int price = prices.get(i) / 1000;
+//            if (price == 0) {
+//                price = 1;
+//            }
+//            writeNybble(offset, i % 2 == 1, price);
+//        }
     }
 
     /**
@@ -2413,13 +2415,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
 
         Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
-        for (int i = Gen1Constants.tmsStartIndex; i < Gen1Constants.tmsStartIndex + Gen1Constants.tmCount; i++) {
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
         // Gen 1 has no bad items Kappa, so we don't set any as such
     }
 
-    public String[] readItemNames() {
+    private String[] readItemNames() {
         String[] itemNames = new String[256];
         // trying to emulate pretty much what the game does here
         // normal items
@@ -2440,12 +2442,14 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             itemNames[index % 256] = readFixedLengthString(startOfText, 20);
         }
         // hms override
-        for (int index = Gen1Constants.hmsStartIndex; index < Gen1Constants.tmsStartIndex; index++) {
-            itemNames[index] = String.format("HM%02d", index - Gen1Constants.hmsStartIndex + 1);
+        for (int i = ItemIDs.hm01; i < ItemIDs.hm01 + Gen1Constants.hmCount; i++) {
+            int internal = Gen1Constants.itemsStandardToInternal.get(i);
+            itemNames[internal] = String.format("HM%02d", i - ItemIDs.hm01 + 1);
         }
         // tms override
-        for (int index = Gen1Constants.tmsStartIndex; index < 0x100; index++) {
-            itemNames[index] = String.format("TM%02d", index - Gen1Constants.tmsStartIndex + 1);
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
+            int internal = Gen1Constants.itemsStandardToInternal.get(i);
+            itemNames[internal] = String.format("TM%02d", i - ItemIDs.tm01 + 1);
         }
         return itemNames;
     }

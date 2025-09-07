@@ -124,8 +124,6 @@ public class Gen2Constants {
     public static final List<Integer> increasedCritMoves = Arrays.asList(MoveIDs.karateChop, MoveIDs.razorWind, MoveIDs.razorLeaf,
             MoveIDs.crabhammer, MoveIDs.slash, MoveIDs.aeroblast, MoveIDs.crossChop);
 
-    public static final int tmsStartIndex = Gen2ItemIDs.tm01;
-
     public static final List<Integer> requiredFieldTMs = Arrays.asList(
             ItemIDs.tm04, ItemIDs.tm20, ItemIDs.tm22, ItemIDs.tm26, ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm35,
             ItemIDs.tm39, ItemIDs.tm40, ItemIDs.tm43, ItemIDs.tm44, ItemIDs.tm46
@@ -146,10 +144,6 @@ public class Gen2Constants {
 
     public static final List<Integer> illegalVietCrystalMoves = Arrays.asList(
             MoveIDs.protect, MoveIDs.rest, MoveIDs.spikeCannon, MoveIDs.detect);
-
-    public static final int tmBlockOneIndex = Gen2ItemIDs.tm01, tmBlockOneSize = 4,
-            tmBlockTwoIndex = Gen2ItemIDs.tm05, tmBlockTwoSize = 24,
-            tmBlockThreeIndex = Gen2ItemIDs.tm29, tmBlockThreeSize = 22;
 
     public static final int priorityHitEffectIndex = 0x67, protectEffectIndex = 0x6F, endureEffectIndex = 0x74,
             forceSwitchEffectIndex = 0x1C,counterEffectIndex = 0x59, mirrorCoatEffectIndex = 0x90;
@@ -315,25 +309,14 @@ public class Gen2Constants {
     ));
 
     private static Set<Integer> setupBannedItems() {
-        // Assorted key items &
-        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.Gen2.bicycle, ItemIDs.Gen2.coinCase,
-                ItemIDs.Gen2.itemfinder, ItemIDs.Gen2.oldRod, ItemIDs.Gen2.goodRod, ItemIDs.Gen2.superRod,
-                ItemIDs.Gen2.gsBall, ItemIDs.Gen2.blueCard, ItemIDs.Gen2.basementKey, ItemIDs.Gen2.pass,
-                ItemIDs.Gen2.squirtBottle, ItemIDs.Gen2.rainbowWing));
-        addBetween(set, Gen2ItemIDs.redScale, Gen2ItemIDs.silverWing);
-        addBetween(set, Gen2ItemIDs.cardKey, Gen2ItemIDs.lostItem);
+        Set<Integer> set = new HashSet<>();
+        // Most of the Gen 2 unique items are either key items or unused.
+        addBetween(set, ItemIDs.Gen2.first, ItemIDs.Gen2.last);
+        Arrays.asList(ItemIDs.Gen2.silverLeaf, ItemIDs.Gen2.goldLeaf, ItemIDs.Gen2.brickPiece,
+                ItemIDs.Gen2.berserkGene, ItemIDs.Gen2.pinkBow, ItemIDs.Gen2.polkadotBow,
+                ItemIDs.Gen2.normalBox, ItemIDs.Gen2.gorgeousBox).forEach(set::remove);
         // HMs
-        addBetween(set, Gen2ItemIDs.hm01, Gen2ItemIDs.hm07);
-        // Unused items (Teru-Samas and dummy TMs)
-        set.addAll(Arrays.asList(ItemIDs.Gen2.terusama6, ItemIDs.Gen2.terusama25, ItemIDs.Gen2.terusama45,
-                ItemIDs.Gen2.terusama50, ItemIDs.Gen2.terusama56, ItemIDs.Gen2.terusama90, ItemIDs.Gen2.terusama100,
-                ItemIDs.Gen2.terusama120, ItemIDs.Gen2.terusama135, ItemIDs.Gen2.terusama136, ItemIDs.Gen2.terusama137,
-                ItemIDs.Gen2.terusama141, ItemIDs.Gen2.terusama142, ItemIDs.Gen2.terusama145, ItemIDs.Gen2.terusama147,
-                ItemIDs.Gen2.terusama148, ItemIDs.Gen2.terusama149, ItemIDs.Gen2.terusama153, ItemIDs.Gen2.terusama154,
-                ItemIDs.Gen2.terusama155, ItemIDs.Gen2.terusama162, ItemIDs.Gen2.terusama171, ItemIDs.Gen2.terusama176,
-                ItemIDs.Gen2.terusama179, ItemIDs.Gen2.terusama190, ItemIDs.Gen2.tm04Unused, ItemIDs.Gen2.tm28Unused));
-        // 250-255 are junk and cancel
-        addBetween(set, Gen2ItemIDs.hm08, Gen2ItemIDs.cancel);
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm07);
         return Collections.unmodifiableSet(set);
     }
 
@@ -341,17 +324,15 @@ public class Gen2Constants {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.luckyPunch, ItemIDs.metalPowder, ItemIDs.silverLeaf,
                 ItemIDs.goldLeaf, ItemIDs.redApricorn, ItemIDs.blueApricorn, ItemIDs.whiteApricorn,
                 ItemIDs.blackApricorn, ItemIDs.pinkApricorn, ItemIDs.yellowApricorn, ItemIDs.greenApricorn,
-                ItemIDs.leek, ItemIDs.thickClub, ItemIDs.lightBall,
-                ItemIDs.oranBerry, ItemIDs.Gen2.brickPiece, ItemIDs.Gen2.normalBox, ItemIDs.Gen2.gorgeousBox));
-        addBetween(set, Gen2ItemIDs.surfMail, Gen2ItemIDs.mirageMail);
+                ItemIDs.leek, ItemIDs.thickClub, ItemIDs.lightBall, ItemIDs.oranBerry,
+                ItemIDs.Gen2.brickPiece, ItemIDs.Gen2.normalBox, ItemIDs.Gen2.gorgeousBox));
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail10);
         return Collections.unmodifiableSet(set);
     }
 
     private static Set<Integer> setupTMItems() {
         Set<Integer> set = new HashSet<>();
-        addBetween(set, Gen2ItemIDs.tm01, Gen2ItemIDs.tm04);
-        addBetween(set, Gen2ItemIDs.tm05, Gen2ItemIDs.tm28);
-        addBetween(set, Gen2ItemIDs.tm29, Gen2ItemIDs.tm50);
+        addBetween(set, ItemIDs.tm01, ItemIDs.tm50);
         return set;
     }
 

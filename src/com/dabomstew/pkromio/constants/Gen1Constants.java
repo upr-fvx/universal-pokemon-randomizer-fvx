@@ -227,20 +227,15 @@ public class Gen1Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
 
     private static Set<Integer> setupBannedItems() {
-        // Assorted key items & junk
-        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.Gen1.townMap, ItemIDs.Gen1.bicycle,
-                ItemIDs.Gen1.questionMark7, ItemIDs.safariBall, ItemIDs.Gen1.pokedex, ItemIDs.Gen1.oldAmber,
-                ItemIDs.Gen1.cardKey, ItemIDs.Gen1.ppUpGlitch, ItemIDs.Gen1.coin, ItemIDs.Gen1.ssTicket,
-                ItemIDs.Gen1.goldTeeth));
-        addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
-        addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
-        addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
-        // Unused
-        addBetween(set, Gen1ItemIDs.unused84, Gen1ItemIDs.unused195);
+        Set<Integer> set = new HashSet<>();
+        // Every single Gen 1 unique item is either a key item or unused.
+        addBetween(set, ItemIDs.Gen1.first, ItemIDs.Gen1.last);
         // HMs
-        addBetween(set, Gen1ItemIDs.hm01, Gen1ItemIDs.hm05);
-        // Junk at end
-        addBetween(set, Gen1ItemIDs.tm51, Gen1ItemIDs.tm55); // 251-255 are junk TMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm05);
+        // TODO: Does the Safari Ball need to be banned?
+        //  It being banned is carry-over from old unexplained code.
+        //  Does it act weird in-game?
+        set.add(ItemIDs.safariBall);
         return Collections.unmodifiableSet(set);
     }
 

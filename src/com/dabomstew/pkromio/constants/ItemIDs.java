@@ -1841,6 +1841,8 @@ public class ItemIDs {
         public static final int tm53Unused = UNIQUE_OFFSET + 253;
         public static final int tm54Unused = UNIQUE_OFFSET + 254;
         public static final int tm55Unused = UNIQUE_OFFSET + 255;
+
+        public static final int first = townMap, last = tm55Unused;
     }
 
     /**
@@ -1911,6 +1913,8 @@ public class ItemIDs {
         public static final int hm11Unused = UNIQUE_OFFSET + 253;
         public static final int hm12Unused = UNIQUE_OFFSET + 254;
         public static final int cancel = UNIQUE_OFFSET + 255;
+
+        public static final int first = terusama6, last = cancel;
     }
 
     /**
@@ -2046,5 +2050,7 @@ public class ItemIDs {
         /* Exclusive to Emerald */
         public static final int magmaEmblem = UNIQUE_OFFSET + 375;
         public static final int oldSeaMap = UNIQUE_OFFSET + 376;
+
+        public static final int first = unknown52, lastRS = unknown348, lastFRLG = sapphire, lastEm = oldSeaMap;
     }
 }

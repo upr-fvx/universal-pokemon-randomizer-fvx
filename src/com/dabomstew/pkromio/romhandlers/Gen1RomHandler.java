@@ -1940,29 +1940,26 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        List<Integer> prices = new ArrayList<>();
-        prices.add(0);
-        // TODO: this obviously needs to be redone
-//        // normal items
-//        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-//            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-//            int price = read3ByteDecimalHex(offset);
-//            prices.add(price);
-//        }
-//        // unused items and HMs
-//        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
-//            prices.add(0);
-//        }
-//        // TMs
-//        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-//            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-//            int price = readNybble(offset, i % 2 == 1) * 1000;
-//            prices.add(price);
-//        }
-//        // unused TMs
-//        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
-//            prices.add(0);
-//        }
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(ItemIDs.Gen1.last + 1, 0));
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item == null) {
+                continue;
+            }
+
+            int internal = Gen1Constants.itemIDToInternal(item.getId());
+            // Prices only exist for items up to Max Elixir...
+            if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
+                int offset = normalPricesOffset + 3 * (internal - 1);
+                int price = read3ByteDecimalHex(offset);
+                prices.set(i, price);
+            // ...and for TMs, in a separate data structure.
+            } else if (item.isTM()) {
+                int offset = tmPricesOffset + (ItemIDs.tm01 - item.getId()) / 2;
+                int price = readNybble(offset, item.getId() % 2 == 1) * 1000;
+                prices.add(i, price);
+            }
+        }
 
         return prices;
     }
@@ -1982,19 +1979,27 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        // TODO
-//        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-//            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-//            write3ByteDecimalHex(offset, prices.get(i));
-//        }
-//        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-//            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-//            int price = prices.get(i) / 1000;
-//            if (price == 0) {
-//                price = 1;
-//            }
-//            writeNybble(offset, i % 2 == 1, price);
-//        }
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item == null) {
+                continue;
+            }
+
+            int internal = Gen1Constants.itemIDToInternal(item.getId());
+            // Prices only exist for items up to Max Elixir...
+            if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
+                int offset = normalPricesOffset + 3 * (internal - 1);
+                write3ByteDecimalHex(offset, prices.get(i));
+            // ...and for TMs, in a separate data structure.
+            } else if (item.isTM()) {
+                int offset = tmPricesOffset + (ItemIDs.tm01 - item.getId()) / 2;
+                int price = prices.get(i) / 1000;
+                if (price == 0) {
+                    price = 1;
+                }
+                writeNybble(offset, i % 2 == 1, price);
+            }
+        }
     }
 
     /**

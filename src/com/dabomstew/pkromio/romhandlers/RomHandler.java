@@ -23,6 +23,7 @@ package com.dabomstew.pkromio.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
@@ -462,8 +463,11 @@ public interface RomHandler {
     // =====
 
     /**
-     * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
-     * The first element is always null, both to offset the other elements and to represent the "nothing" item.
+     * Returns a {@link List} of all {@link Item}s in the game,
+     * ordered according to {@link ItemIDs}. Some of these may be
+     * unused/bug items. The first element is always null, to represent
+     * the "nothing" item. Other elements can also be null, for items
+     * that don't exist in the given game.
      */
     List<Item> getItems();
 

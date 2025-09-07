@@ -1797,6 +1797,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     EvolutionType type = Gen1Constants.evolutionTypeFromIndex(method);
                     int otherPoke = pokeRBYToNumTable[rom[pointer + 2 + (type == EvolutionType.STONE ? 1 : 0)] & 0xFF];
                     int extraInfo = rom[pointer + 1] & 0xFF;
+                    if (type == EvolutionType.STONE) {
+                        extraInfo = Gen1Constants.itemIDToStandard(extraInfo);
+                    }
                     Evolution evo = new Evolution(pkmn, pokes[otherPoke], type, extraInfo);
                     if (!pkmn.getEvolutionsFrom().contains(evo)) {
                         pkmn.getEvolutionsFrom().add(evo);
@@ -2880,7 +2883,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             case LEVEL:
                 return new byte[]{(byte) evo.getExtraInfo()};
             case STONE:
-                return new byte[]{(byte) evo.getExtraInfo(), 0x01}; // minimum level
+                return new byte[]{(byte) Gen1Constants.itemIDToInternal(evo.getExtraInfo()), 0x01}; // minimum level
             case TRADE:
                 return new byte[]{(byte) 0x01}; // minimum level
             default:

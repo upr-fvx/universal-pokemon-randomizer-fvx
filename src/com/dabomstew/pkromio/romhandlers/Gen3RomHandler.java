@@ -1670,7 +1670,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
                     thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
-                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 8 + 6)));
+                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
+                    thisPoke.setHeldItem(items.get(itemID));
                     thisPoke.setAbilitySlot(1);
                     tr.pokemon.add(thisPoke);
                 }
@@ -1694,7 +1695,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
                     thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
-                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 16 + 6)));
+                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 16 + 6));
+                    thisPoke.setHeldItem(items.get(itemID));
                     for (int move = 0; move < 4; move++) {
                         thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
@@ -1845,8 +1847,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
 				int movesStart;
 				if (trainer.pokemonHaveItems()) {
-                    int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
-                    writeWord(pokemonData, tpIndex * 16 + 6, itemId);
+                    int itemInternalID = tp.getHeldItem() == null ? 0 :
+                            Gen3Constants.itemIDToInternal(tp.getHeldItem().getId());
+                    writeWord(pokemonData, tpIndex * 16 + 6, itemInternalID);
 					movesStart = 8;
 				} else {
 					movesStart = 6;
@@ -1871,8 +1874,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
 				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
-                int itemId = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
-                writeWord(pokemonData, tpIndex * 8 + 6, itemId);
+                int itemInternalID = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0
+                        : Gen3Constants.itemIDToInternal(tp.getHeldItem().getId());
+                writeWord(pokemonData, tpIndex * 8 + 6, itemInternalID);
 			}
 		}
 
@@ -2902,8 +2906,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 int evolvingTo = readWord(evoOffset + j * 8 + 4);
                 if (method >= 1 && method <= Gen3Constants.evolutionMethodCount && evolvingTo >= 1
                         && evolvingTo <= numInternalPokes) {
-                    int extraInfo = readWord(evoOffset + j * 8 + 2);
                     EvolutionType et = Gen3Constants.evolutionTypeFromIndex(method);
+                    int extraInfo = readWord(evoOffset + j * 8 + 2);
+                    if (et.usesItem()) {
+                        extraInfo = Gen3Constants.itemIDToStandard(extraInfo);
+                    }
                     Evolution evo = new Evolution(pk, pokesInternal[evolvingTo], et, extraInfo);
                     if (!pk.getEvolutionsFrom().contains(evo)) {
                         pk.getEvolutionsFrom().add(evo);
@@ -2923,7 +2930,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int evosWritten = 0;
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 writeWord(evoOffset, Gen3Constants.evolutionTypeToIndex(evo.getType()));
-                writeWord(evoOffset + 2, evo.getExtraInfo());
+                int extraInfo = evo.getExtraInfo();
+                if (evo.getType().usesItem()) {
+                    extraInfo = Gen3Constants.itemIDToInternal(extraInfo);
+                }
+                writeWord(evoOffset + 2, extraInfo);
                 writeWord(evoOffset + 4, pokedexToInternal[evo.getTo().getNumber()]);
                 writeWord(evoOffset + 6, 0);
                 evoOffset += 8;
@@ -3063,7 +3074,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             List<Item> shopItems = new ArrayList<>();
             int val = FileFunctions.read2ByteInt(rom, offset);
             while (val != 0x0000) {
-                shopItems.add(items.get(val));
+                shopItems.add(items.get(Gen3Constants.itemIDToStandard(val)));
                 offset += 2;
                 val = FileFunctions.read2ByteInt(rom, offset);
             }
@@ -3096,7 +3107,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         byte[] data = new byte[shop.getItems().size() * 2 + Gen3Constants.shopTerminator.length];
         int offset = 0;
         for (Item item : shop.getItems()) {
-            writeWord(data, offset, item.getId());
+            writeWord(data, offset, Gen3Constants.itemIDToInternal(item.getId()));
             offset += 2;
         }
         writeBytes(data, offset, Gen3Constants.shopTerminator);
@@ -3207,8 +3218,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItems.size(); i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                int itemID = pickupItems.get(i).getItem().getId();
-                FileFunctions.write2ByteInt(rom, itemOffset, Gen3Constants.itemIDToInternal(itemID));
+                int itemInternalID = Gen3Constants.itemIDToInternal(pickupItems.get(i).getItem().getId());
+                FileFunctions.write2ByteInt(rom, itemOffset, itemInternalID);
             }
         }
     }
@@ -3693,7 +3704,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            Item item = items.get(readWord(offset));
+            Item item = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
             if (item.isAllowed()) {
                 fieldItems.add(item);
             }
@@ -3746,7 +3757,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
             }
             trade.setOtId(readWord(entryOffset + 24));
-            trade.setHeldItem(items.get(readWord(entryOffset + 40)));
+            int heldItemID = Gen3Constants.itemIDToStandard(readWord(entryOffset + 40));
+            trade.setHeldItem(items.get(heldItemID));
             trade.setOtName(readVariableLengthString(entryOffset + 43));
             trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
@@ -3779,7 +3791,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeByte(entryOffset + 14 + i, (byte) trade.getIVs()[i]);
             }
             writeWord(entryOffset + 24, trade.getOtId());
-            writeWord(entryOffset + 40, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
+            int heldItemInternalID = trade.getHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(trade.getHeldItem().getId());
+            writeWord(entryOffset + 40, heldItemInternalID);
             writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
             writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
         }
@@ -4038,7 +4052,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (!item.isAllowed()) {
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeWord(romEntry.getIntValue("PCPotionOffset"), item.getId());
+            writeWord(romEntry.getIntValue("PCPotionOffset"), Gen3Constants.itemIDToInternal(item.getId()));
         }
     }
 

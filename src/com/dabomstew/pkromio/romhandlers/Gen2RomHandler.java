@@ -1877,29 +1877,36 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 int otherPoke = rom[pointer + 2 + (method == 5 ? 1 : 0)] & 0xFF;
                 EvolutionType type = Gen2Constants.evolutionTypeFromIndex(method);
                 int extraInfo = 0;
-                if (type == EvolutionType.TRADE) {
-                    int itemNeeded = rom[pointer + 1] & 0xFF;
-                    if (itemNeeded != 0xFF) {
-                        type = EvolutionType.TRADE_ITEM;
-                        extraInfo = itemNeeded;
-                    }
-                } else if (type == EvolutionType.LEVEL_ATTACK_HIGHER) {
-                    int tyrogueCond = rom[pointer + 2] & 0xFF;
-                    if (tyrogueCond == 2) {
-                        type = EvolutionType.LEVEL_DEFENSE_HIGHER;
-                    } else if (tyrogueCond == 3) {
-                        type = EvolutionType.LEVEL_ATK_DEF_SAME;
-                    }
-                    extraInfo = rom[pointer + 1] & 0xFF;
-                } else if (type == EvolutionType.HAPPINESS) {
-                    int happCond = rom[pointer + 1] & 0xFF;
-                    if (happCond == 2) {
-                        type = EvolutionType.HAPPINESS_DAY;
-                    } else if (happCond == 3) {
-                        type = EvolutionType.HAPPINESS_NIGHT;
-                    }
-                } else {
-                    extraInfo = rom[pointer + 1] & 0xFF;
+                switch (type) {
+                    case TRADE:
+                        int itemNeeded = rom[pointer + 1] & 0xFF;
+                        if (itemNeeded != 0xFF) {
+                            type = EvolutionType.TRADE_ITEM;
+                            extraInfo = Gen2Constants.itemIDToStandard(itemNeeded);
+                        }
+                        break;
+                    case STONE:
+                        extraInfo = Gen2Constants.itemIDToStandard(rom[pointer + 1] & 0xFF);
+                        break;
+                    case LEVEL_ATTACK_HIGHER:
+                        int tyrogueCond = rom[pointer + 2] & 0xFF;
+                        if (tyrogueCond == 2) {
+                            type = EvolutionType.LEVEL_DEFENSE_HIGHER;
+                        } else if (tyrogueCond == 3) {
+                            type = EvolutionType.LEVEL_ATK_DEF_SAME;
+                        }
+                        extraInfo = rom[pointer + 1] & 0xFF;
+                        break;
+                    case HAPPINESS:
+                        int happCond = rom[pointer + 1] & 0xFF;
+                        if (happCond == 2) {
+                            type = EvolutionType.HAPPINESS_DAY;
+                        } else if (happCond == 3) {
+                            type = EvolutionType.HAPPINESS_NIGHT;
+                        }
+                        break;
+                    default:
+                        extraInfo = rom[pointer + 1] & 0xFF;
                 }
                 Evolution evo = new Evolution(pokes[i], pokes[otherPoke], type, extraInfo);
                 if (!pkmn.getEvolutionsFrom().contains(evo)) {
@@ -2461,7 +2468,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         Gen2Constants.bannedItems.stream().map(items::get).filter(Objects::nonNull)
                 .forEach(item -> item.setAllowed(false));
         Gen2Constants.tmItems.forEach(id -> items.get(id).setTM(true));
-        Gen2Constants.badItems.forEach(id -> {System.out.println(id); items.get(id).setBad(true);});
+        Gen2Constants.badItems.forEach(id -> items.get(id).setBad(true));
         if (isVietCrystal) {
             Gen2Constants.vietCrystalBannedItems.forEach(id -> items.get(id).setAllowed(false));
         }
@@ -2806,8 +2813,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     private byte[] evoTypeExtraInfoToBytes(Evolution evo) {
          switch (evo.getType()) {
-             case LEVEL: case STONE: case TRADE_ITEM:
+             case LEVEL:
                  return new byte[]{(byte) evo.getExtraInfo()};
+             case STONE: case TRADE_ITEM:
+                 return new byte[]{(byte) Gen2Constants.itemIDToInternal(evo.getExtraInfo())};
              case TRADE:
                  return new byte[]{(byte) 0xFF};
              case HAPPINESS:

@@ -3152,7 +3152,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItemCount; i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                int id = FileFunctions.read2ByteInt(rom, itemOffset);
+                int id = Gen3Constants.itemIDToStandard(FileFunctions.read2ByteInt(rom, itemOffset));
                 PickupItem pickupItem = new PickupItem(items.get(id));
                 pickupItems.add(pickupItem);
             }
@@ -3207,7 +3207,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItems.size(); i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                FileFunctions.write2ByteInt(rom, itemOffset, pickupItems.get(i).getItem().getId());
+                int itemID = pickupItems.get(i).getItem().getId();
+                FileFunctions.write2ByteInt(rom, itemOffset, Gen3Constants.itemIDToInternal(itemID));
             }
         }
     }
@@ -3651,11 +3652,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             items.set(id, new Item(id, name));
         }
 
-        for (int id : Gen3Constants.bannedItems) {
-            if (id < items.size()) {
-                items.get(id).setAllowed(false);
-            }
-        }
+        Gen3Constants.bannedItems.stream().filter(id -> id < items.size())
+                .map(items::get).filter(Objects::nonNull)
+                .forEach(item -> item.setAllowed(false));
         for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
@@ -3713,10 +3712,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffs) {
-            Item current = items.get(readWord(offset));
+            Item current = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
             if (current.isAllowed()) {
                 // Replace it
-                writeWord(offset, iterItems.next().getId());
+                writeWord(offset, Gen3Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 

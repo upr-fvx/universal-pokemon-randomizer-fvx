@@ -1899,7 +1899,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int itemCount = rom[offset++] & 0xFF;
         List<Item> shopItems = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
-            shopItems.add(items.get(rom[offset++] & 0xFF));
+            int itemID = Gen1Constants.itemIDToStandard(rom[offset++] & 0xFF);
+            shopItems.add(items.get(itemID));
         }
 
         if (rom[offset] != Gen1Constants.shopItemsTerminator) {
@@ -1929,7 +1930,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         data[0] = Gen1Constants.shopItemsScript;
         data[1] = (byte) shopItems.size();
         for (int i = 0; i < shopItems.size(); i++) {
-            data[2 + i] = (byte) shopItems.get(i).getId();
+            data[2 + i] = (byte) Gen1Constants.itemIDToInternal(shopItems.get(i).getId());
         }
         data[data.length - 1] = Gen1Constants.shopItemsTerminator;
         return data;
@@ -1947,7 +1948,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 continue;
             }
 
-            int internal = Gen1Constants.itemIDToInternal(item.getId());
+            int internal = Gen1Constants.itemIDToInternal(i);
             // Prices only exist for items up to Max Elixir...
             if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
                 int offset = normalPricesOffset + 3 * (internal - 1);
@@ -1955,8 +1956,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 prices.set(i, price);
             // ...and for TMs, in a separate data structure.
             } else if (item.isTM()) {
-                int offset = tmPricesOffset + (ItemIDs.tm01 - item.getId()) / 2;
-                int price = readNybble(offset, item.getId() % 2 == 1) * 1000;
+                int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
+                int price = readNybble(offset, i % 2 == 1) * 1000;
                 prices.add(i, price);
             }
         }
@@ -1985,14 +1986,14 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 continue;
             }
 
-            int internal = Gen1Constants.itemIDToInternal(item.getId());
+            int internal = Gen1Constants.itemIDToInternal(i);
             // Prices only exist for items up to Max Elixir...
             if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
                 int offset = normalPricesOffset + 3 * (internal - 1);
                 write3ByteDecimalHex(offset, prices.get(i));
             // ...and for TMs, in a separate data structure.
             } else if (item.isTM()) {
-                int offset = tmPricesOffset + (ItemIDs.tm01 - item.getId()) / 2;
+                int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
                 int price = prices.get(i) / 1000;
                 if (price == 0) {
                     price = 1;
@@ -2362,7 +2363,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             if (!item.isAllowed()) {
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeByte(romEntry.getIntValue("PCPotionOffset"), (byte) (item.getId() & 0xFF));
+            byte internalID = (byte) Gen1Constants.itemIDToInternal(item.getId() & 0xFF);
+            writeByte(romEntry.getIntValue("PCPotionOffset"), internalID);
         }
     }
 
@@ -2420,7 +2422,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             items.set(id, new Item(id, namesByInternal[internal]));
         }
 
-        Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        Gen1Constants.bannedItems.stream().map(items::get).filter(Objects::nonNull)
+                .forEach(item -> item.setAllowed(false));
         for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
@@ -2699,7 +2702,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
-            Item item = items.get(rom[offset] & 0xFF);
+            Item item = items.get(Gen1Constants.itemIDToStandard(rom[offset] & 0xFF));
             if (item.isAllowed()) {
                 fieldItems.add(item);
             }
@@ -2715,10 +2718,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffsets) {
-            Item item = items.get(rom[offset] & 0xFF);
-            if (item.isAllowed()) {
+            Item current = items.get(Gen1Constants.itemIDToStandard(rom[offset] & 0xFF));
+            if (current.isAllowed()) {
                 // Replace it
-                writeByte(offset, (byte) (iterItems.next().getId()));
+                writeByte(offset, (byte) Gen1Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 

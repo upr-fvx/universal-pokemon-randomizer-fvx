@@ -320,11 +320,11 @@ public class Gen2Constants {
     }
 
     private static Set<Integer> setupBadItems() {
-        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.luckyPunch, ItemIDs.metalPowder, ItemIDs.silverLeaf,
-                ItemIDs.goldLeaf, ItemIDs.redApricorn, ItemIDs.blueApricorn, ItemIDs.whiteApricorn,
-                ItemIDs.blackApricorn, ItemIDs.pinkApricorn, ItemIDs.yellowApricorn, ItemIDs.greenApricorn,
-                ItemIDs.leek, ItemIDs.thickClub, ItemIDs.lightBall, ItemIDs.oranBerry,
-                ItemIDs.Gen2.brickPiece, ItemIDs.Gen2.normalBox, ItemIDs.Gen2.gorgeousBox));
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.lightBall, ItemIDs.oranBerry,
+                ItemIDs.Gen2.silverLeaf, ItemIDs.Gen2.goldLeaf, ItemIDs.Gen2.brickPiece,
+                ItemIDs.Gen2.normalBox, ItemIDs.Gen2.gorgeousBox));
+        addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek);
+        addBetween(set, ItemIDs.redApricorn, ItemIDs.blackApricorn);
         addBetween(set, ItemIDs.mail1, ItemIDs.mail10);
         return Collections.unmodifiableSet(set);
     }

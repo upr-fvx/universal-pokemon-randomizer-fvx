@@ -1553,7 +1553,7 @@ public class Gen3Constants {
             {ItemIDs.tm50, 5500}
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
-    public static final Map<Integer, Integer> itemsInternalToStandard = Stream.of(new Integer[][]{
+    public static final Map<Integer, Integer> itemIDToStandardMap = Stream.of(new Integer[][]{
             {0, ItemIDs.none},
             {1, ItemIDs.masterBall},
             {2, ItemIDs.ultraBall},
@@ -1809,6 +1809,14 @@ public class Gen3Constants {
             {346, ItemIDs.hm08},
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
-    public static final Map<Integer, Integer> itemsStandardToInternal = itemsInternalToStandard.entrySet()
+    public static final Map<Integer, Integer> itemIDToInternalMap = itemIDToStandardMap.entrySet()
             .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
+    public static int itemIDToStandard(int id) {
+        return itemIDToStandardMap.get(id);
+    }
+
+    public static int itemIDToInternal(int id) {
+        return itemIDToInternalMap.get(id);
+    }
 }

@@ -2443,13 +2443,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
         // hms override
         for (int i = ItemIDs.hm01; i < ItemIDs.hm01 + Gen1Constants.hmCount; i++) {
-            int internal = Gen1Constants.itemsStandardToInternal.get(i);
-            itemNames[internal] = String.format("HM%02d", i - ItemIDs.hm01 + 1);
+            itemNames[Gen1Constants.itemIDToInternal(i)] = String.format("HM%02d", i - ItemIDs.hm01 + 1);
         }
         // tms override
         for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
-            int internal = Gen1Constants.itemsStandardToInternal.get(i);
-            itemNames[internal] = String.format("TM%02d", i - ItemIDs.tm01 + 1);
+            itemNames[Gen1Constants.itemIDToInternal(i)] = String.format("TM%02d", i - ItemIDs.tm01 + 1);
         }
         return itemNames;
     }

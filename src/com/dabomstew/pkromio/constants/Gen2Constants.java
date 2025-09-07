@@ -26,7 +26,6 @@ package com.dabomstew.pkromio.constants;
 
 import com.dabomstew.pkromio.gamedata.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -1243,7 +1242,7 @@ public class Gen2Constants {
         return themeMap;
     }
 
-    public static final Map<Integer, Integer> itemsInternalToStandard = Stream.of(new Integer[][]{
+    private static final Map<Integer, Integer> itemIDToStandardMap = Stream.of(new Integer[][]{
             {0, ItemIDs.none},
             {1, ItemIDs.masterBall},
             {2, ItemIDs.ultraBall},
@@ -1438,7 +1437,15 @@ public class Gen2Constants {
             {249, ItemIDs.hm07},
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
-    public static final Map<Integer, Integer> itemsStandardToInternal = itemsInternalToStandard.entrySet()
+    private static final Map<Integer, Integer> itemIDToInternalMap = itemIDToStandardMap.entrySet()
             .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
+    public static int itemIDToStandard(int id) {
+        return itemIDToStandardMap.get(id);
+    }
+
+    public static int itemIDToInternal(int id) {
+        return itemIDToInternalMap.get(id);
+    }
 
 }

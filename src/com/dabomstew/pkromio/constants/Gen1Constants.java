@@ -643,7 +643,7 @@ public class Gen1Constants {
             {ItemIDs.maxElixir, 18000}, // same as in Gen3Constants
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
-    public static final Map<Integer, Integer> itemsInternalToStandard = Stream.of(new Integer[][]{
+    private static final Map<Integer, Integer> itemIDToStandardMap = Stream.of(new Integer[][]{
             {0, ItemIDs.none},
             {1, ItemIDs.masterBall},
             {2, ItemIDs.ultraBall},
@@ -752,6 +752,14 @@ public class Gen1Constants {
             {250, ItemIDs.tm50},
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
-    public static final Map<Integer, Integer> itemsStandardToInternal = itemsInternalToStandard.entrySet()
+    private static final Map<Integer, Integer> itemIDToInternalMap = itemIDToStandardMap.entrySet()
             .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
+    public static int itemIDToStandard(int id) {
+        return itemIDToStandardMap.get(id);
+    }
+
+    public static int itemIDToInternal(int id) {
+        return itemIDToInternalMap.get(id);
+    }
 }

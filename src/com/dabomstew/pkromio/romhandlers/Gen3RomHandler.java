@@ -2428,7 +2428,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			for (int i = 0; i < Gen3Constants.tmCount; i++) {
 				Move mv = moves[moveIndexes.get(i)];
 				int typeID = Gen3Constants.typeToByte(mv.type);
-                int itemID = Gen3Constants.itemsStandardToInternal.get(ItemIDs.tm01 + i);
+                int itemID = Gen3Constants.itemIDToInternal(ItemIDs.tm01 + i);
 				writePointer(iiOffset + itemID * 8 + 4, pals[typeID]);
 			}
 		}
@@ -2444,8 +2444,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int limitPerLine = (romEntry.getRomType() == Gen3Constants.RomType_FRLG) ? Gen3Constants.frlgItemDescCharsPerLine
 					: Gen3Constants.rseItemDescCharsPerLine;
 			for (int i = 0; i < Gen3Constants.tmCount; i++) {
-                int tmID = Gen3Constants.itemsStandardToInternal.get(ItemIDs.tm01 + i);
-				int itemBaseOffset = idOffset + tmID * entrySize;
+				int itemBaseOffset = idOffset + Gen3Constants.itemIDToInternal(ItemIDs.tm01 + i) * entrySize;
 				int moveBaseOffset = mdOffset + (moveIndexes.get(i) - 1) * 4;
 				int moveTextPointer = readPointer(moveBaseOffset);
 				String moveDesc = readVariableLengthString(moveTextPointer);
@@ -3949,7 +3948,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // To make all TMs reusable, change this from HM01_Cut => 0.
         // FRLG has multiple comparisons like this to change, so we deal with offsets instead of singular offset.
         int[] offsets = romEntry.getArrayValue("TMMovesReusableFunctionOffsets");
-        byte hmCompareVal = (byte) (Gen3Constants.itemsStandardToInternal.get(ItemIDs.hm01) / 2);
+        byte hmCompareVal = (byte) (Gen3Constants.itemIDToInternal(ItemIDs.hm01) / 2);
         for (int offset : offsets) {
             if (rom[offset] != hmCompareVal) {
                 throw new RuntimeException("Expected 0x" + Integer.toHexString(hmCompareVal) + ", was 0x"

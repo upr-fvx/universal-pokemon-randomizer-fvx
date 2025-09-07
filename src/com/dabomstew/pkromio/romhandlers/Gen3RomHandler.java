@@ -2956,13 +2956,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             // happiness day change to Sun Stone
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.sunStone);
+                            evo.setExtraInfo(ItemIDs.sunStone);
                         }
                         if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
                             // happiness night change to Moon Stone
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.moonStone);
+                            evo.setExtraInfo(ItemIDs.moonStone);
                         }
                         if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
                             // beauty change to level 35
@@ -2989,21 +2989,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.waterStone);
+                            evo.setExtraInfo(ItemIDs.waterStone);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(40);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == Gen3ItemIDs.deepSeaTooth) {
+                                && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
                             // Clamperl -> Huntail: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == Gen3ItemIDs.deepSeaScale) {
+                                && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.waterStone);
+                            evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
                             // Onix, Scyther or Porygon: Lv30
                             evo.setType(EvolutionType.LEVEL);
@@ -3034,33 +3034,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 // Amount of required happiness for HAPPINESS_NIGHT evolutions.
                 if (rom[offset + 66] == (byte) (GlobalConstants.vanillaHappinessToEvolve - 1)) {
                     writeByte(offset + 66, (byte) (GlobalConstants.easierHappinessToEvolve - 1));
-                }
-            }
-        }
-    }
-
-    /**
-     * The same as {@link AbstractRomHandler#removeTimeBasedEvolutions()}
-     * except it uses {@link Gen3ItemIDs}.
-     */
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pk : getSpecies()) {
-            if (pk == null) {
-                continue;
-            }
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                EvolutionType et = evo.getType();
-
-                if (et.usesTime()) {
-                    markImprovedEvolutions(pk);
-                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
-                        evo.setType(EvolutionType.STONE);
-                        int item = et.isDayType() ? Gen3ItemIDs.sunStone : Gen3ItemIDs.moonStone;
-                        evo.setExtraInfo(item);
-                    } else {
-                        evo.setType(et.timeless());
-                    }
                 }
             }
         }
@@ -3914,7 +3887,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(Gen3ItemIDs.luckyEgg).setAllowed(false);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
             applyRunWithoutRunningShoesPatch();
         } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
@@ -4674,14 +4647,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 continue;
             }
             if (GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                ids.add(Gen3ItemIDs.liechiBerry);
+                ids.add(ItemIDs.liechiBerry);
                 if (!consumableOnly) {
                     ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
-                    ids.add(Gen3ItemIDs.choiceBand);
+                    ids.add(ItemIDs.choiceBand);
                 }
             }
             if (!GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                ids.add(Gen3ItemIDs.petayaBerry);
+                ids.add(ItemIDs.petayaBerry);
                 if (!consumableOnly) {
                     ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
                 }

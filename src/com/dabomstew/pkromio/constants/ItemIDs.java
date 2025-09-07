@@ -1866,6 +1866,7 @@ public class ItemIDs {
         public static final int mysteryEgg = UNIQUE_OFFSET + 69;
         public static final int clearBell = UNIQUE_OFFSET + 70; // exclusive to Crystal
         public static final int silverWing = UNIQUE_OFFSET + 71;
+        public static final int goldLeaf = UNIQUE_OFFSET + 75;
         public static final int terusama90 = UNIQUE_OFFSET + 90;
         public static final int terusama100 = UNIQUE_OFFSET + 100;
         public static final int pinkBow = UNIQUE_OFFSET + 104;

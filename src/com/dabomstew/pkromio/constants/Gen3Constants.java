@@ -260,19 +260,22 @@ public class Gen3Constants {
 
     public static final int tmsStartIndex = Gen3ItemIDs.tm01;
 
-    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
-            Gen3ItemIDs.tm06, Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23,
-            Gen3ItemIDs.tm26, Gen3ItemIDs.tm30, Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
+    public static final List<Integer> rsRequiredFieldTMs = Arrays.asList(
+            ItemIDs.tm01, ItemIDs.tm02, ItemIDs.tm06, ItemIDs.tm07, ItemIDs.tm11, ItemIDs.tm18, ItemIDs.tm22,
+            ItemIDs.tm23, ItemIDs.tm26, ItemIDs.tm30, ItemIDs.tm37, ItemIDs.tm48
+    );
 
-    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm02, Gen3ItemIDs.tm06,
-            Gen3ItemIDs.tm07, Gen3ItemIDs.tm11, Gen3ItemIDs.tm18, Gen3ItemIDs.tm22, Gen3ItemIDs.tm23, Gen3ItemIDs.tm30,
-            Gen3ItemIDs.tm37, Gen3ItemIDs.tm48);
+    public static final List<Integer> eRequiredFieldTMs = Arrays.asList(
+            ItemIDs.tm02, ItemIDs.tm06, ItemIDs.tm07, ItemIDs.tm11, ItemIDs.tm18, ItemIDs.tm22, ItemIDs.tm23,
+            ItemIDs.tm30, ItemIDs.tm37, ItemIDs.tm48
+    );
 
-    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(Gen3ItemIDs.tm01, Gen3ItemIDs.tm02,
-            Gen3ItemIDs.tm07, Gen3ItemIDs.tm08, Gen3ItemIDs.tm09, Gen3ItemIDs.tm11, Gen3ItemIDs.tm12, Gen3ItemIDs.tm14,
-            Gen3ItemIDs.tm17, Gen3ItemIDs.tm18, Gen3ItemIDs.tm21, Gen3ItemIDs.tm22, Gen3ItemIDs.tm25, Gen3ItemIDs.tm32,
-            Gen3ItemIDs.tm36, Gen3ItemIDs.tm37, Gen3ItemIDs.tm40, Gen3ItemIDs.tm41, Gen3ItemIDs.tm44, Gen3ItemIDs.tm46,
-            Gen3ItemIDs.tm47, Gen3ItemIDs.tm48, Gen3ItemIDs.tm49, Gen3ItemIDs.tm50);
+    public static final List<Integer> frlgRequiredFieldTMs = Arrays.asList(
+            ItemIDs.tm01, ItemIDs.tm02, ItemIDs.tm07, ItemIDs.tm08, ItemIDs.tm09, ItemIDs.tm11, ItemIDs.tm12,
+            ItemIDs.tm14, ItemIDs.tm17, ItemIDs.tm18, ItemIDs.tm21, ItemIDs.tm22, ItemIDs.tm25, ItemIDs.tm32,
+            ItemIDs.tm36, ItemIDs.tm37, ItemIDs.tm40, ItemIDs.tm41, ItemIDs.tm44, ItemIDs.tm46, ItemIDs.tm47,
+            ItemIDs.tm48, ItemIDs.tm49, ItemIDs.tm50
+    );
 
     public static final List<Integer> rseFieldMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.dig, MoveIDs.teleport,
@@ -383,71 +386,72 @@ public class Gen3Constants {
         }
     }
 
-    public static final List<Integer> evolutionItems = Arrays.asList(Gen3ItemIDs.sunStone, Gen3ItemIDs.moonStone,
-            Gen3ItemIDs.fireStone, Gen3ItemIDs.thunderstone, Gen3ItemIDs.waterStone, Gen3ItemIDs.leafStone);
+    public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone,
+            ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone);
 
-    public static final List<Integer> xItems = Arrays.asList(Gen3ItemIDs.guardSpec, Gen3ItemIDs.direHit, Gen3ItemIDs.xAttack,
-            Gen3ItemIDs.xDefend, Gen3ItemIDs.xSpeed, Gen3ItemIDs.xAccuracy, Gen3ItemIDs.xSpecial);
+    public static final List<Integer> xItems = Arrays.asList(ItemIDs.guardSpec, ItemIDs.direHit, ItemIDs.xAttack,
+            ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xAccuracy, ItemIDs.xSpAtk);
 
     public static final List<Integer> consumableHeldItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3ItemIDs.cheriBerry, Gen3ItemIDs.chestoBerry, Gen3ItemIDs.pechaBerry, Gen3ItemIDs.rawstBerry,
-            Gen3ItemIDs.aspearBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
-            Gen3ItemIDs.sitrusBerry, Gen3ItemIDs.figyBerry, Gen3ItemIDs.wikiBerry, Gen3ItemIDs.magoBerry, Gen3ItemIDs.aguavBerry,
-            Gen3ItemIDs.iapapaBerry, Gen3ItemIDs.liechiBerry, Gen3ItemIDs.ganlonBerry, Gen3ItemIDs.salacBerry,
-            Gen3ItemIDs.petayaBerry, Gen3ItemIDs.apicotBerry, Gen3ItemIDs.lansatBerry, Gen3ItemIDs.starfBerry,
-            Gen3ItemIDs.berryJuice, Gen3ItemIDs.whiteHerb, Gen3ItemIDs.mentalHerb));
+            ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry,
+            ItemIDs.aspearBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry,
+            ItemIDs.sitrusBerry, ItemIDs.figyBerry, ItemIDs.wikiBerry, ItemIDs.magoBerry, ItemIDs.aguavBerry,
+            ItemIDs.iapapaBerry, ItemIDs.liechiBerry, ItemIDs.ganlonBerry, ItemIDs.salacBerry,
+            ItemIDs.petayaBerry, ItemIDs.apicotBerry, ItemIDs.lansatBerry, ItemIDs.starfBerry,
+            ItemIDs.berryJuice, ItemIDs.whiteHerb, ItemIDs.mentalHerb
+    ));
 
     public static final List<Integer> allHeldItems = setupAllHeldItems();
 
     private static List<Integer> setupAllHeldItems() {
         List<Integer> list = new ArrayList<>();
-        list.addAll(Arrays.asList(Gen3ItemIDs.brightPowder, Gen3ItemIDs.quickClaw, Gen3ItemIDs.choiceBand,
-                Gen3ItemIDs.kingsRock, Gen3ItemIDs.silverPowder, Gen3ItemIDs.focusBand, Gen3ItemIDs.scopeLens,
-                Gen3ItemIDs.metalCoat, Gen3ItemIDs.leftovers, Gen3ItemIDs.softSand, Gen3ItemIDs.hardStone,
-                Gen3ItemIDs.miracleSeed, Gen3ItemIDs.blackGlasses, Gen3ItemIDs.blackBelt, Gen3ItemIDs.magnet,
-                Gen3ItemIDs.mysticWater, Gen3ItemIDs.sharpBeak, Gen3ItemIDs.poisonBarb, Gen3ItemIDs.neverMeltIce,
-                Gen3ItemIDs.spellTag, Gen3ItemIDs.twistedSpoon, Gen3ItemIDs.charcoal, Gen3ItemIDs.dragonFang,
-                Gen3ItemIDs.silkScarf, Gen3ItemIDs.shellBell, Gen3ItemIDs.seaIncense, Gen3ItemIDs.laxIncense));
+        list.addAll(Arrays.asList(ItemIDs.brightPowder, ItemIDs.quickClaw, ItemIDs.choiceBand,
+                ItemIDs.kingsRock, ItemIDs.silverPowder, ItemIDs.focusBand, ItemIDs.scopeLens,
+                ItemIDs.metalCoat, ItemIDs.leftovers, ItemIDs.softSand, ItemIDs.hardStone,
+                ItemIDs.miracleSeed, ItemIDs.blackGlasses, ItemIDs.blackBelt, ItemIDs.magnet,
+                ItemIDs.mysticWater, ItemIDs.sharpBeak, ItemIDs.poisonBarb, ItemIDs.neverMeltIce,
+                ItemIDs.spellTag, ItemIDs.twistedSpoon, ItemIDs.charcoal, ItemIDs.dragonFang,
+                ItemIDs.silkScarf, ItemIDs.shellBell, ItemIDs.seaIncense, ItemIDs.laxIncense));
         list.addAll(consumableHeldItems);
         return Collections.unmodifiableList(list);
     }
 
     public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3ItemIDs.cheriBerry, Gen3ItemIDs.chestoBerry, Gen3ItemIDs.pechaBerry, Gen3ItemIDs.rawstBerry,
-            Gen3ItemIDs.aspearBerry, Gen3ItemIDs.leppaBerry, Gen3ItemIDs.oranBerry, Gen3ItemIDs.persimBerry, Gen3ItemIDs.lumBerry,
-            Gen3ItemIDs.sitrusBerry, Gen3ItemIDs.ganlonBerry, Gen3ItemIDs.salacBerry,
+            ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry,
+            ItemIDs.aspearBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry,
+            ItemIDs.sitrusBerry, ItemIDs.ganlonBerry, ItemIDs.salacBerry,
             // An NPC pokemon's nature is generated randomly with IVs during gameplay. Therefore, we do not include
             // the flavor berries because, prior to Gen 7, they aren't worth the risk.
-            Gen3ItemIDs.apicotBerry, Gen3ItemIDs.lansatBerry, Gen3ItemIDs.starfBerry, Gen3ItemIDs.berryJuice,
-            Gen3ItemIDs.whiteHerb, Gen3ItemIDs.mentalHerb
+            ItemIDs.apicotBerry, ItemIDs.lansatBerry, ItemIDs.starfBerry, ItemIDs.berryJuice,
+            ItemIDs.whiteHerb, ItemIDs.mentalHerb
     ));
 
     public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
-            Gen3ItemIDs.brightPowder, Gen3ItemIDs.quickClaw, Gen3ItemIDs.kingsRock, Gen3ItemIDs.focusBand, Gen3ItemIDs.scopeLens,
-            Gen3ItemIDs.leftovers, Gen3ItemIDs.shellBell, Gen3ItemIDs.laxIncense
+            ItemIDs.brightPowder, ItemIDs.quickClaw, ItemIDs.kingsRock, ItemIDs.focusBand, ItemIDs.scopeLens,
+            ItemIDs.leftovers, ItemIDs.shellBell, ItemIDs.laxIncense
     ));
 
     public static final Map<Type, List<Integer>> typeBoostingItems = initializeTypeBoostingItems();
 
     private static Map<Type, List<Integer>> initializeTypeBoostingItems() {
         Map<Type, List<Integer>> map = new HashMap<>();
-        map.put(Type.BUG, Collections.singletonList(Gen3ItemIDs.silverPowder));
-        map.put(Type.DARK, Collections.singletonList(Gen3ItemIDs.blackGlasses));
-        map.put(Type.DRAGON, Collections.singletonList(Gen3ItemIDs.dragonFang));
-        map.put(Type.ELECTRIC, Collections.singletonList(Gen3ItemIDs.magnet));
-        map.put(Type.FIGHTING, Collections.singletonList(Gen3ItemIDs.blackBelt));
-        map.put(Type.FIRE, Collections.singletonList(Gen3ItemIDs.charcoal));
-        map.put(Type.FLYING, Collections.singletonList(Gen3ItemIDs.sharpBeak));
-        map.put(Type.GHOST, Collections.singletonList(Gen3ItemIDs.spellTag));
-        map.put(Type.GRASS, Collections.singletonList(Gen3ItemIDs.miracleSeed));
-        map.put(Type.GROUND, Collections.singletonList(Gen3ItemIDs.softSand));
-        map.put(Type.ICE, Collections.singletonList(Gen3ItemIDs.neverMeltIce));
-        map.put(Type.NORMAL, Collections.singletonList(Gen3ItemIDs.silkScarf));
-        map.put(Type.POISON, Collections.singletonList(Gen3ItemIDs.poisonBarb));
-        map.put(Type.PSYCHIC, Collections.singletonList(Gen3ItemIDs.twistedSpoon));
-        map.put(Type.ROCK, Collections.singletonList(Gen3ItemIDs.hardStone));
-        map.put(Type.STEEL, Collections.singletonList(Gen3ItemIDs.metalCoat));
-        map.put(Type.WATER, Arrays.asList(Gen3ItemIDs.mysticWater, Gen3ItemIDs.seaIncense));
+        map.put(Type.BUG, Collections.singletonList(ItemIDs.silverPowder));
+        map.put(Type.DARK, Collections.singletonList(ItemIDs.blackGlasses));
+        map.put(Type.DRAGON, Collections.singletonList(ItemIDs.dragonFang));
+        map.put(Type.ELECTRIC, Collections.singletonList(ItemIDs.magnet));
+        map.put(Type.FIGHTING, Collections.singletonList(ItemIDs.blackBelt));
+        map.put(Type.FIRE, Collections.singletonList(ItemIDs.charcoal));
+        map.put(Type.FLYING, Collections.singletonList(ItemIDs.sharpBeak));
+        map.put(Type.GHOST, Collections.singletonList(ItemIDs.spellTag));
+        map.put(Type.GRASS, Collections.singletonList(ItemIDs.miracleSeed));
+        map.put(Type.GROUND, Collections.singletonList(ItemIDs.softSand));
+        map.put(Type.ICE, Collections.singletonList(ItemIDs.neverMeltIce));
+        map.put(Type.NORMAL, Collections.singletonList(ItemIDs.silkScarf));
+        map.put(Type.POISON, Collections.singletonList(ItemIDs.poisonBarb));
+        map.put(Type.PSYCHIC, Collections.singletonList(ItemIDs.twistedSpoon));
+        map.put(Type.ROCK, Collections.singletonList(ItemIDs.hardStone));
+        map.put(Type.STEEL, Collections.singletonList(ItemIDs.metalCoat));
+        map.put(Type.WATER, Arrays.asList(ItemIDs.mysticWater, ItemIDs.seaIncense));
         map.put(null, Collections.emptyList()); // ??? type
         return Collections.unmodifiableMap(map);
     }
@@ -456,15 +460,15 @@ public class Gen3Constants {
 
     private static Map<Integer, List<Integer>> initializeSpeciesBoostingItems() {
         Map<Integer, List<Integer>> map = new HashMap<>();
-        map.put(SpeciesIDs.latias, Collections.singletonList(Gen3ItemIDs.soulDew));
-        map.put(SpeciesIDs.latios, Collections.singletonList(Gen3ItemIDs.soulDew));
-        map.put(SpeciesIDs.clamperl, Arrays.asList(Gen3ItemIDs.deepSeaTooth, Gen3ItemIDs.deepSeaScale));
-        map.put(SpeciesIDs.pikachu, Collections.singletonList(Gen3ItemIDs.lightBall));
-        map.put(SpeciesIDs.chansey, Collections.singletonList(Gen3ItemIDs.luckyPunch));
-        map.put(SpeciesIDs.ditto, Collections.singletonList(Gen3ItemIDs.metalPowder));
-        map.put(SpeciesIDs.cubone, Collections.singletonList(Gen3ItemIDs.thickClub));
-        map.put(SpeciesIDs.marowak, Collections.singletonList(Gen3ItemIDs.thickClub));
-        map.put(SpeciesIDs.farfetchd, Collections.singletonList(Gen3ItemIDs.stick));
+        map.put(SpeciesIDs.latias, Collections.singletonList(ItemIDs.soulDew));
+        map.put(SpeciesIDs.latios, Collections.singletonList(ItemIDs.soulDew));
+        map.put(SpeciesIDs.clamperl, Arrays.asList(ItemIDs.deepSeaTooth, ItemIDs.deepSeaScale));
+        map.put(SpeciesIDs.pikachu, Collections.singletonList(ItemIDs.lightBall));
+        map.put(SpeciesIDs.chansey, Collections.singletonList(ItemIDs.luckyPunch));
+        map.put(SpeciesIDs.ditto, Collections.singletonList(ItemIDs.metalPowder));
+        map.put(SpeciesIDs.cubone, Collections.singletonList(ItemIDs.thickClub));
+        map.put(SpeciesIDs.marowak, Collections.singletonList(ItemIDs.thickClub));
+        map.put(SpeciesIDs.farfetchd, Collections.singletonList(ItemIDs.stick));
         return Collections.unmodifiableMap(map);
     }
 
@@ -579,7 +583,7 @@ public class Gen3Constants {
 
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>();
-        set.add(Gen3ItemIDs.oldSeaMap);
+        set.add(ItemIDs.Gen3.oldSeaMap);
         // Key items (+1 unknown item)
         addBetween(set, Gen3ItemIDs.machBike, Gen3ItemIDs.devonScope);
         addBetween(set, Gen3ItemIDs.oaksParcel, Gen3ItemIDs.oldSeaMap);
@@ -590,8 +594,8 @@ public class Gen3Constants {
         addBetween(set, Gen3ItemIDs.unknown112, Gen3ItemIDs.unknown120);
         addBetween(set, Gen3ItemIDs.unknown176, Gen3ItemIDs.unknown178);
         addBetween(set, Gen3ItemIDs.unknown226, Gen3ItemIDs.unknown253);
-        set.addAll(Arrays.asList(Gen3ItemIDs.unknown72, Gen3ItemIDs.unknown82, Gen3ItemIDs.unknown105,
-                Gen3ItemIDs.unknown267, Gen3ItemIDs.unknown347, Gen3ItemIDs.unknown348));
+        set.addAll(Arrays.asList(ItemIDs.Gen3.unknown72, ItemIDs.Gen3.unknown82, ItemIDs.Gen3.unknown105,
+                ItemIDs.Gen3.unknown267, ItemIDs.Gen3.unknown347, ItemIDs.Gen3.unknown348));
         // HMs
         addBetween(set, Gen3ItemIDs.hm01, Gen3ItemIDs.hm08);
         return Collections.unmodifiableSet(set);
@@ -599,7 +603,7 @@ public class Gen3Constants {
 
     private static Set<Integer> setupBadItemsRSE() {
         // ban specific pokemon hold items, berries, apricorns, mail
-        Set<Integer> set = new HashSet<>(Arrays.asList(Gen3ItemIDs.lightBall, Gen3ItemIDs.oranBerry, Gen3ItemIDs.soulDew));
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.lightBall, ItemIDs.oranBerry, Gen3ItemIDs.soulDew));
         addBetween(set, Gen3ItemIDs.orangeMail, Gen3ItemIDs.retroMail); // mail
         addBetween(set, Gen3ItemIDs.figyBerry, Gen3ItemIDs.enigmaBerry); // berries
         addBetween(set, Gen3ItemIDs.luckyPunch, Gen3ItemIDs.stick); // pokemon specific
@@ -624,10 +628,10 @@ public class Gen3Constants {
 
     private static Set<Integer> setupOPShopItems() {
         Set<Integer> set = new HashSet<>();
-        set.add(Gen3ItemIDs.rareCandy);
+        set.add(ItemIDs.rareCandy);
         addBetween(set, Gen3ItemIDs.tinyMushroom, Gen3ItemIDs.bigMushroom);
         addBetween(set, Gen3ItemIDs.pearl, Gen3ItemIDs.nugget);
-        set.add(Gen3ItemIDs.luckyEgg);
+        set.add(ItemIDs.luckyEgg);
         return Collections.unmodifiableSet(set);
     }
 
@@ -1426,142 +1430,142 @@ public class Gen3Constants {
     }
 
     public static final Map<Integer,Integer> balancedItemPrices = Stream.of(new Integer[][] {
-            {Gen3ItemIDs.masterBall, 3000},
-            {Gen3ItemIDs.safariBall, 500},
-            {Gen3ItemIDs.freshWater, 400},
-            {Gen3ItemIDs.sodaPop, 600},
-            {Gen3ItemIDs.lemonade, 700},
-            {Gen3ItemIDs.moomooMilk, 800},
-            {Gen3ItemIDs.energyPowder, 400},
-            {Gen3ItemIDs.energyRoot, 1100},
-            {Gen3ItemIDs.ether, 3000},
-            {Gen3ItemIDs.maxEther, 4500},
-            {Gen3ItemIDs.elixir, 15000},
-            {Gen3ItemIDs.maxElixir, 18000},
-            {Gen3ItemIDs.lavaCookie, 450},
-            {Gen3ItemIDs.blueFlute, 20},
-            {Gen3ItemIDs.yellowFlute, 20},
-            {Gen3ItemIDs.redFlute, 20},
-            {Gen3ItemIDs.blackFlute, 20},
-            {Gen3ItemIDs.whiteFlute, 20},
-            {Gen3ItemIDs.sacredAsh, 10000},
-            {Gen3ItemIDs.redShard, 400},
-            {Gen3ItemIDs.blueShard, 400},
-            {Gen3ItemIDs.yellowShard, 400},
-            {Gen3ItemIDs.greenShard, 400},
-            {Gen3ItemIDs.rareCandy, 10000},
-            {Gen3ItemIDs.ppMax, 24900},
-            {Gen3ItemIDs.sunStone, 3000},
-            {Gen3ItemIDs.moonStone, 3000},
-            {Gen3ItemIDs.fireStone, 3000},
-            {Gen3ItemIDs.thunderstone, 3000},
-            {Gen3ItemIDs.waterStone, 3000},
-            {Gen3ItemIDs.leafStone, 3000},
-            {Gen3ItemIDs.heartScale, 5000},
-            {Gen3ItemIDs.retroMail, 50},
+            {ItemIDs.masterBall, 3000},
+            {ItemIDs.safariBall, 500},
+            {ItemIDs.freshWater, 400},
+            {ItemIDs.sodaPop, 600},
+            {ItemIDs.lemonade, 700},
+            {ItemIDs.moomooMilk, 800},
+            {ItemIDs.energyPowder, 400},
+            {ItemIDs.energyRoot, 1100},
+            {ItemIDs.ether, 3000},
+            {ItemIDs.maxEther, 4500},
+            {ItemIDs.elixir, 15000},
+            {ItemIDs.maxElixir, 18000},
+            {ItemIDs.lavaCookie, 450},
+            {ItemIDs.blueFlute, 20},
+            {ItemIDs.yellowFlute, 20},
+            {ItemIDs.redFlute, 20},
+            {ItemIDs.blackFlute, 20},
+            {ItemIDs.whiteFlute, 20},
+            {ItemIDs.sacredAsh, 10000},
+            {ItemIDs.redShard, 400},
+            {ItemIDs.blueShard, 400},
+            {ItemIDs.yellowShard, 400},
+            {ItemIDs.greenShard, 400},
+            {ItemIDs.rareCandy, 10000},
+            {ItemIDs.ppMax, 24900},
+            {ItemIDs.sunStone, 3000},
+            {ItemIDs.moonStone, 3000},
+            {ItemIDs.fireStone, 3000},
+            {ItemIDs.thunderstone, 3000},
+            {ItemIDs.waterStone, 3000},
+            {ItemIDs.leafStone, 3000},
+            {ItemIDs.heartScale, 5000},
+            {ItemIDs.retroMail, 50},
 
-            {Gen3ItemIDs.cheriBerry, 200},
-            {Gen3ItemIDs.chestoBerry, 250},
-            {Gen3ItemIDs.pechaBerry, 100},
-            {Gen3ItemIDs.rawstBerry, 250},
-            {Gen3ItemIDs.aspearBerry, 250},
-            {Gen3ItemIDs.leppaBerry, 3000},
-            {Gen3ItemIDs.oranBerry, 50},
-            {Gen3ItemIDs.persimBerry, 200},
-            {Gen3ItemIDs.lumBerry, 500},
-            {Gen3ItemIDs.sitrusBerry, 500},
-            {Gen3ItemIDs.figyBerry, 100},
-            {Gen3ItemIDs.wikiBerry, 100},
-            {Gen3ItemIDs.magoBerry, 100},
-            {Gen3ItemIDs.aguavBerry, 100},
-            {Gen3ItemIDs.iapapaBerry, 100},
-            {Gen3ItemIDs.razzBerry, 500},
-            {Gen3ItemIDs.blukBerry, 500},
-            {Gen3ItemIDs.nanabBerry, 500},
-            {Gen3ItemIDs.wepearBerry, 500},
-            {Gen3ItemIDs.pinapBerry, 500},
-            {Gen3ItemIDs.pomegBerry, 500},
-            {Gen3ItemIDs.kelpsyBerry, 500},
-            {Gen3ItemIDs.qualotBerry, 500},
-            {Gen3ItemIDs.hondewBerry, 500},
-            {Gen3ItemIDs.grepaBerry, 500},
-            {Gen3ItemIDs.tamatoBerry, 500},
-            {Gen3ItemIDs.cornnBerry, 500},
-            {Gen3ItemIDs.magostBerry, 500},
-            {Gen3ItemIDs.rabutaBerry, 500},
-            {Gen3ItemIDs.nomelBerry, 500},
-            {Gen3ItemIDs.spelonBerry, 500},
-            {Gen3ItemIDs.pamtreBerry, 500},
-            {Gen3ItemIDs.watmelBerry, 500},
-            {Gen3ItemIDs.durinBerry, 500},
-            {Gen3ItemIDs.belueBerry, 500},
-            {Gen3ItemIDs.liechiBerry, 1000},
-            {Gen3ItemIDs.ganlonBerry, 1000},
-            {Gen3ItemIDs.salacBerry, 1000},
-            {Gen3ItemIDs.petayaBerry, 1000},
-            {Gen3ItemIDs.apicotBerry, 1000},
-            {Gen3ItemIDs.lansatBerry, 1000},
-            {Gen3ItemIDs.starfBerry, 1000},
-            {Gen3ItemIDs.enigmaBerry, 1000},
-            {Gen3ItemIDs.brightPowder, 3000},
+            {ItemIDs.cheriBerry, 200},
+            {ItemIDs.chestoBerry, 250},
+            {ItemIDs.pechaBerry, 100},
+            {ItemIDs.rawstBerry, 250},
+            {ItemIDs.aspearBerry, 250},
+            {ItemIDs.leppaBerry, 3000},
+            {ItemIDs.oranBerry, 50},
+            {ItemIDs.persimBerry, 200},
+            {ItemIDs.lumBerry, 500},
+            {ItemIDs.sitrusBerry, 500},
+            {ItemIDs.figyBerry, 100},
+            {ItemIDs.wikiBerry, 100},
+            {ItemIDs.magoBerry, 100},
+            {ItemIDs.aguavBerry, 100},
+            {ItemIDs.iapapaBerry, 100},
+            {ItemIDs.razzBerry, 500},
+            {ItemIDs.blukBerry, 500},
+            {ItemIDs.nanabBerry, 500},
+            {ItemIDs.wepearBerry, 500},
+            {ItemIDs.pinapBerry, 500},
+            {ItemIDs.pomegBerry, 500},
+            {ItemIDs.kelpsyBerry, 500},
+            {ItemIDs.qualotBerry, 500},
+            {ItemIDs.hondewBerry, 500},
+            {ItemIDs.grepaBerry, 500},
+            {ItemIDs.tamatoBerry, 500},
+            {ItemIDs.cornnBerry, 500},
+            {ItemIDs.magostBerry, 500},
+            {ItemIDs.rabutaBerry, 500},
+            {ItemIDs.nomelBerry, 500},
+            {ItemIDs.spelonBerry, 500},
+            {ItemIDs.pamtreBerry, 500},
+            {ItemIDs.watmelBerry, 500},
+            {ItemIDs.durinBerry, 500},
+            {ItemIDs.belueBerry, 500},
+            {ItemIDs.liechiBerry, 1000},
+            {ItemIDs.ganlonBerry, 1000},
+            {ItemIDs.salacBerry, 1000},
+            {ItemIDs.petayaBerry, 1000},
+            {ItemIDs.apicotBerry, 1000},
+            {ItemIDs.lansatBerry, 1000},
+            {ItemIDs.starfBerry, 1000},
+            {ItemIDs.enigmaBerry, 1000},
+            {ItemIDs.brightPowder, 3000},
 
-            {Gen3ItemIDs.whiteHerb, 1000},
-            {Gen3ItemIDs.expShare, 6000},
-            {Gen3ItemIDs.quickClaw, 4500},
-            {Gen3ItemIDs.sootheBell, 1000},
-            {Gen3ItemIDs.mentalHerb, 1000},
-            {Gen3ItemIDs.choiceBand, 10000},
-            {Gen3ItemIDs.kingsRock, 5000},
-            {Gen3ItemIDs.silverPowder, 2000},
-            {Gen3ItemIDs.amuletCoin, 15000},
-            {Gen3ItemIDs.cleanseTag, 1000},
-            {Gen3ItemIDs.deepSeaTooth, 3000},
-            {Gen3ItemIDs.deepSeaScale, 3000},
-            {Gen3ItemIDs.focusBand, 3000},
-            {Gen3ItemIDs.luckyEgg, 10000},
-            {Gen3ItemIDs.scopeLens, 5000},
-            {Gen3ItemIDs.metalCoat, 3000},
-            {Gen3ItemIDs.leftovers, 10000},
-            {Gen3ItemIDs.dragonScale, 3000},
-            {Gen3ItemIDs.softSand, 2000},
-            {Gen3ItemIDs.hardStone, 2000},
-            {Gen3ItemIDs.miracleSeed, 2000},
-            {Gen3ItemIDs.blackGlasses, 2000},
-            {Gen3ItemIDs.blackBelt, 2000},
-            {Gen3ItemIDs.magnet, 2000},
-            {Gen3ItemIDs.mysticWater, 2000},
-            {Gen3ItemIDs.sharpBeak, 2000},
-            {Gen3ItemIDs.poisonBarb, 2000},
-            {Gen3ItemIDs.neverMeltIce, 2000},
-            {Gen3ItemIDs.spellTag, 2000},
-            {Gen3ItemIDs.twistedSpoon, 2000},
-            {Gen3ItemIDs.charcoal, 2000},
-            {Gen3ItemIDs.dragonFang, 2000},
-            {Gen3ItemIDs.silkScarf, 2000},
-            {Gen3ItemIDs.upGrade, 3000},
-            {Gen3ItemIDs.shellBell, 6000},
-            {Gen3ItemIDs.seaIncense, 2000},
-            {Gen3ItemIDs.laxIncense, 3000},
+            {ItemIDs.whiteHerb, 1000},
+            {ItemIDs.expShare, 6000},
+            {ItemIDs.quickClaw, 4500},
+            {ItemIDs.sootheBell, 1000},
+            {ItemIDs.mentalHerb, 1000},
+            {ItemIDs.choiceBand, 10000},
+            {ItemIDs.kingsRock, 5000},
+            {ItemIDs.silverPowder, 2000},
+            {ItemIDs.amuletCoin, 15000},
+            {ItemIDs.cleanseTag, 1000},
+            {ItemIDs.deepSeaTooth, 3000},
+            {ItemIDs.deepSeaScale, 3000},
+            {ItemIDs.focusBand, 3000},
+            {ItemIDs.luckyEgg, 10000},
+            {ItemIDs.scopeLens, 5000},
+            {ItemIDs.metalCoat, 3000},
+            {ItemIDs.leftovers, 10000},
+            {ItemIDs.dragonScale, 3000},
+            {ItemIDs.softSand, 2000},
+            {ItemIDs.hardStone, 2000},
+            {ItemIDs.miracleSeed, 2000},
+            {ItemIDs.blackGlasses, 2000},
+            {ItemIDs.blackBelt, 2000},
+            {ItemIDs.magnet, 2000},
+            {ItemIDs.mysticWater, 2000},
+            {ItemIDs.sharpBeak, 2000},
+            {ItemIDs.poisonBarb, 2000},
+            {ItemIDs.neverMeltIce, 2000},
+            {ItemIDs.spellTag, 2000},
+            {ItemIDs.twistedSpoon, 2000},
+            {ItemIDs.charcoal, 2000},
+            {ItemIDs.dragonFang, 2000},
+            {ItemIDs.silkScarf, 2000},
+            {ItemIDs.upGrade, 3000},
+            {ItemIDs.shellBell, 6000},
+            {ItemIDs.seaIncense, 2000},
+            {ItemIDs.laxIncense, 3000},
 
-            {Gen3ItemIDs.tm04, 1500},
-            {Gen3ItemIDs.tm07, 2000},
-            {Gen3ItemIDs.tm08, 1500},
-            {Gen3ItemIDs.tm09, 2000},
-            {Gen3ItemIDs.tm10, 2000},
-            {Gen3ItemIDs.tm12, 1500},
-            {Gen3ItemIDs.tm16, 2000},
-            {Gen3ItemIDs.tm17, 2000},
-            {Gen3ItemIDs.tm20, 2000},
-            {Gen3ItemIDs.tm29, 3000},
-            {Gen3ItemIDs.tm32, 1000},
-            {Gen3ItemIDs.tm33, 2000},
-            {Gen3ItemIDs.tm36, 3000},
-            {Gen3ItemIDs.tm39, 2000},
-            {Gen3ItemIDs.tm41, 1500},
-            {Gen3ItemIDs.tm43, 2000},
-            {Gen3ItemIDs.tm46, 2000},
-            {Gen3ItemIDs.tm49, 1500},
-            {Gen3ItemIDs.tm50, 5500}
+            {ItemIDs.tm04, 1500},
+            {ItemIDs.tm07, 2000},
+            {ItemIDs.tm08, 1500},
+            {ItemIDs.tm09, 2000},
+            {ItemIDs.tm10, 2000},
+            {ItemIDs.tm12, 1500},
+            {ItemIDs.tm16, 2000},
+            {ItemIDs.tm17, 2000},
+            {ItemIDs.tm20, 2000},
+            {ItemIDs.tm29, 3000},
+            {ItemIDs.tm32, 1000},
+            {ItemIDs.tm33, 2000},
+            {ItemIDs.tm36, 3000},
+            {ItemIDs.tm39, 2000},
+            {ItemIDs.tm41, 1500},
+            {ItemIDs.tm43, 2000},
+            {ItemIDs.tm46, 2000},
+            {ItemIDs.tm49, 1500},
+            {ItemIDs.tm50, 5500}
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
     public static final Map<Integer, Integer> itemsInternalToStandard = Stream.of(new Integer[][]{

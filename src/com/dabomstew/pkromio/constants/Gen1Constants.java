@@ -98,10 +98,11 @@ public class Gen1Constants {
 
     public static final int hiddenObjectMapsTerminator = 0xFF, hiddenObjectsTerminator = 0xFF;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen1ItemIDs.tm03, Gen1ItemIDs.tm04,
-            Gen1ItemIDs.tm08, Gen1ItemIDs.tm10, Gen1ItemIDs.tm12, Gen1ItemIDs.tm14, Gen1ItemIDs.tm16, Gen1ItemIDs.tm19,
-            Gen1ItemIDs.tm20, Gen1ItemIDs.tm22, Gen1ItemIDs.tm25, Gen1ItemIDs.tm26, Gen1ItemIDs.tm30, Gen1ItemIDs.tm40,
-            Gen1ItemIDs.tm43, Gen1ItemIDs.tm44, Gen1ItemIDs.tm45, Gen1ItemIDs.tm47);
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(
+            ItemIDs.tm03, ItemIDs.tm04, ItemIDs.tm08, ItemIDs.tm10, ItemIDs.tm12, ItemIDs.tm14, ItemIDs.tm16,
+            ItemIDs.tm19, ItemIDs.tm20, ItemIDs.tm22, ItemIDs.tm25, ItemIDs.tm26, ItemIDs.tm30, ItemIDs.tm40,
+            ItemIDs.tm43, ItemIDs.tm44, ItemIDs.tm45, ItemIDs.tm47
+    );
 
     public static final int towerMapsStartIndex = 0x90, towerMapsEndIndex = 0x94;
 
@@ -201,34 +202,36 @@ public class Gen1Constants {
     ));
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
+            ItemIDs.moonStone, ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone
     ));
 
+    // TODO: this could be put in GlobalConstants
     public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
-            Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
+            ItemIDs.xAccuracy, ItemIDs.xAttack, ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xSpAtk,
+            ItemIDs.guardSpec, ItemIDs.direHit
     ));
 
+    // TODO: this could be put in GlobalConstants
     public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall,
-            Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
-            Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
-            Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
-            Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
+            ItemIDs.pokeBall, ItemIDs.greatBall, ItemIDs.ultraBall,
+            ItemIDs.potion, ItemIDs.superPotion, ItemIDs.hyperPotion, ItemIDs.maxPotion,
+            ItemIDs.antidote, ItemIDs.burnHeal, ItemIDs.iceHeal, ItemIDs.awakening, ItemIDs.paralyzeHeal,
+            ItemIDs.fullHeal, ItemIDs.fullRestore, ItemIDs.revive, ItemIDs.repel, ItemIDs.superRepel,
+            ItemIDs.maxRepel, ItemIDs.escapeRope
     ));
 
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
+            ItemIDs.rareCandy, ItemIDs.nugget
     ));
 
     public static final Set<Integer> bannedItems = setupBannedItems();
 
     private static Set<Integer> setupBannedItems() {
         // Assorted key items & junk
-        Set<Integer> set = new HashSet<>(Arrays.asList(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle,
-                Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
-                Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
-                Gen1ItemIDs.goldTeeth));
+        Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.Gen1.townMap, ItemIDs.Gen1.bicycle,
+                ItemIDs.Gen1.questionMark7, ItemIDs.safariBall, ItemIDs.Gen1.pokedex, ItemIDs.Gen1.oldAmber,
+                ItemIDs.Gen1.cardKey, ItemIDs.Gen1.ppUpGlitch, ItemIDs.Gen1.coin, ItemIDs.Gen1.ssTicket,
+                ItemIDs.Gen1.goldTeeth));
         addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
         addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
         addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
@@ -634,17 +637,17 @@ public class Gen1Constants {
     }
 
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
-            {Gen1ItemIDs.masterBall, 3000},
-            {Gen1ItemIDs.safariBall, 1200}, // same as ultra ball
+            {ItemIDs.masterBall, 3000},
+            {ItemIDs.safariBall, 1200}, // same as ultra ball
 
-            {Gen1ItemIDs.moonStone, 2100}, // same as other evo stones
+            {ItemIDs.moonStone, 2100}, // same as other evo stones
 
-            {Gen1ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
+            {ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
 
-            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
-            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
+            {ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {ItemIDs.elixir, 15000}, // same as in Gen3Constants
+            {ItemIDs.maxElixir, 18000}, // same as in Gen3Constants
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
     public static final Map<Integer, Integer> itemsInternalToStandard = Stream.of(new Integer[][]{

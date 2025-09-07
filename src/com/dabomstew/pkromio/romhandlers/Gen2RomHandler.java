@@ -1918,7 +1918,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(Gen2ItemIDs.waterStone);
+                            evol.setExtraInfo(ItemIDs.waterStone);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
@@ -1953,33 +1953,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             // Amount of required happiness for all happiness evolutions.
             if (rom[offset] == (byte) GlobalConstants.vanillaHappinessToEvolve) {
                 writeByte(offset, (byte) GlobalConstants.easierHappinessToEvolve);
-            }
-        }
-    }
-
-    /**
-     * The same as {@link AbstractRomHandler#removeTimeBasedEvolutions()}
-     * except it uses {@link Gen2ItemIDs}.
-     */
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pk : getSpecies()) {
-            if (pk == null) {
-                continue;
-            }
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                EvolutionType et = evo.getType();
-
-                if (et.usesTime()) {
-                    markImprovedEvolutions(pk);
-                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
-                        evo.setType(EvolutionType.STONE);
-                        int item = et.isDayType() ? Gen2ItemIDs.sunStone : Gen2ItemIDs.moonStone;
-                        evo.setExtraInfo(item);
-                    } else {
-                        evo.setType(et.timeless());
-                    }
-                }
             }
         }
     }
@@ -2253,7 +2226,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
             applyCamelCaseNames();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(Gen2ItemIDs.luckyEgg).setAllowed(false);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {

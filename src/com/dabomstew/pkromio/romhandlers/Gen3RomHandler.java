@@ -1071,8 +1071,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         pkmn.setAbility2(rom[offset + Gen3Constants.bsAbility2Offset] & 0xFF);
 
         // Held Items?
-        Item item1 = items.get(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
-        Item item2 = items.get(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
+        int item1ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
+        Item item1 = items.get(item1ID);
+        int item2ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
+        Item item2 = items.get(item2ID);
 
         if (Objects.equals(item1, item2)) {
             // guaranteed
@@ -1106,14 +1108,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         // Held items
         if (pkmn.getGuaranteedHeldItem() != null) {
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+            int internalID = Gen3Constants.itemIDToInternal(pkmn.getGuaranteedHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, internalID);
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, internalID);
         } else {
             // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset,
-                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset,
-                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
+            int commonInternalID = pkmn.getCommonHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(pkmn.getCommonHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, commonInternalID);
+            int rareInternalID = pkmn.getRareHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(pkmn.getRareHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, rareInternalID);
         }
 
         writeByte(offset + Gen3Constants.bsGenderRatioOffset, (byte) pkmn.getGenderRatio());
@@ -1376,11 +1381,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int baseOffset = romEntry.getIntValue("StarterItems");
             int i1 = rom[baseOffset] & 0xFF;
             int i2 = rom[baseOffset + 2] & 0xFF;
-            if (i2 == 0) {
-                sHeldItems.add(items.get(i1));
-            } else {
-                sHeldItems.add(items.get(i2 + 0xFF));
-            }
+            int internalID = i2 == 0 ? i1 : i2 + 0xFF;
+            sHeldItems.add(items.get(Gen3Constants.itemIDToStandard(internalID)));
         }
         return sHeldItems;
     }
@@ -1397,12 +1399,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, item.getId());
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
+            int internalID = Gen3Constants.itemIDToInternal(item.getId());
             if (item.getId() <= 0xFF) {
-                rom[baseOffset] = (byte) (item.getId() & 0xFF);
+                rom[baseOffset] = (byte) (internalID & 0xFF);
                 rom[baseOffset + 2] = 0;
             } else {
                 rom[baseOffset] = (byte) 0xFF;
-                rom[baseOffset + 2] = (byte) ((item.getId() - 0xFF) & 0xFF);
+                rom[baseOffset + 2] = (byte) ((internalID - 0xFF) & 0xFF);
             }
             rom[baseOffset + 3] = Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR2;
         }

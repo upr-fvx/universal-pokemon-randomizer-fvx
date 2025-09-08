@@ -1944,7 +1944,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        List<Integer> prices = new ArrayList<>(Collections.nCopies(ItemIDs.Gen1.last + 1, 0));
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if (item == null) {
@@ -1961,7 +1961,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             } else if (item.isTM()) {
                 int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
                 int price = readNybble(offset, i % 2 == 1) * 1000;
-                prices.add(i, price);
+                prices.set(i, price);
             }
         }
 
@@ -1975,8 +1975,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     /**
      * Sets shop prices in a Gen 1 game.<br>
-     * TMs are stored as multiples of 1000, and will thus be rounded down,
-     * or set to 1000 for inputs >1000.
+     * TMs are stored as multiples of 1000, and will thus be rounded down.
      */
     @Override
     public void setShopPrices(List<Integer> prices) {
@@ -1998,9 +1997,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             } else if (item.isTM()) {
                 int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
                 int price = prices.get(i) / 1000;
-                if (price == 0) {
-                    price = 1;
-                }
                 writeNybble(offset, i % 2 == 1, price);
             }
         }

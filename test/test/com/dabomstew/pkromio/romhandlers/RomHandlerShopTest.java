@@ -7,8 +7,10 @@ import com.dabomstew.pkromio.gamedata.Shop;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import javax.print.attribute.IntegerSyntax;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -21,6 +23,19 @@ public class RomHandlerShopTest extends RomHandlerTest {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
         assertFalse(romHandler.getShops().isEmpty());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shopItemsContainNoNulls(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.hasShopSupport());
+        for (Shop shop : romHandler.getShops()) {
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                assertNotEquals(null, item);
+            }
+        }
     }
 
     @ParameterizedTest
@@ -153,20 +168,57 @@ public class RomHandlerShopTest extends RomHandlerTest {
         return copy;
     }
 
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shopPricesSizeEqualsItemsSize(String romName) {
+        loadROM(romName);
+        assertEquals(romHandler.getItems().size(), romHandler.getShopPrices().size());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shopPricesAreZeroForNullItems(String romName) {
+        loadROM(romName);
+        List<Item> items = romHandler.getItems();
+        List<Integer> prices = romHandler.getShopPrices();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) == null) {
+                System.out.println("null item #" + i);
+                assertEquals(0, prices.get(i));
+            }
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void shopPricesDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        List<Integer> prices = romHandler.getShopPrices();
+        List<Integer> before = romHandler.getShopPrices();
         List<Item> items = romHandler.getItems();
-        for (int i = 1; i < prices.size(); i++) {
-            System.out.println(items.get(i).getName() + ": " + prices.get(i) + "¥");
+        System.out.println("before.size()=" + before.size() + " items.size()=" + items.size());
+        for (int i = 0; i < before.size(); i++) {
+            if (items.get(i) == null) {
+                continue;
+            }
+            System.out.println(items.get(i).getName() + ": " + before.get(i) + "¥");
         }
 
-        romHandler.setShopPrices(prices);
+        romHandler.setShopPrices(before);
         List<Integer> after = romHandler.getShopPrices();
 
-        assertEquals(prices, after);
+        System.out.println("\nFaulty prices: ");
+        List<Integer> faulty = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) == null) {
+                continue;
+            }
+            if (!Objects.equals(before.get(i), after.get(i))) {
+                faulty.add(i);
+                System.out.println(items.get(i) + ": " + before.get(i) + "¥ -> " + after.get(i) + "¥");
+            }
+        }
+        assertTrue(faulty.isEmpty());
     }
 
     @ParameterizedTest

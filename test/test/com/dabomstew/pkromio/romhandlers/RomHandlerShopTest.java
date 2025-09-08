@@ -196,12 +196,11 @@ public class RomHandlerShopTest extends RomHandlerTest {
         loadROM(romName);
         List<Integer> before = romHandler.getShopPrices();
         List<Item> items = romHandler.getItems();
-        System.out.println("before.size()=" + before.size() + " items.size()=" + items.size());
         for (int i = 0; i < before.size(); i++) {
             if (items.get(i) == null) {
                 continue;
             }
-            System.out.println(items.get(i).getName() + ": " + before.get(i) + "¥");
+            System.out.println(items.get(i) + ": " + before.get(i) + "¥");
         }
 
         romHandler.setShopPrices(before);

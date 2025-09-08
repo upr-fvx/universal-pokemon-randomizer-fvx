@@ -3120,13 +3120,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public List<Integer> getShopPrices() {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
-        int itemCount = romEntry.getIntValue("ItemCount");
+        int internalItemCount = romEntry.getIntValue("ItemCount");
 
-        List<Integer> prices = new ArrayList<>(itemCount);
-        prices.add(0);
-        for (int i = 1; i < itemCount; i++) {
-            int offset = itemDataOffset + (i * entrySize) + 16;
-            prices.add(readWord(offset));
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
+
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal * entrySize) + 16;
+            int id = Gen3Constants.itemIDToStandard(internal);
+            prices.set(id, readWord(offset));
         }
         return prices;
     }
@@ -3139,11 +3140,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
-        int itemCount = romEntry.getIntValue("ItemCount");
-        for (int i = 1; i < itemCount; i++) {
-            int balancedPrice = prices.get(i);
-            int offset = itemDataOffset + (i * entrySize) + 16;
-            FileFunctions.write2ByteInt(rom, offset, balancedPrice);
+        int internalItemCount = romEntry.getIntValue("ItemCount");
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal * entrySize) + 16;
+            int id = Gen3Constants.itemIDToStandard(internal);
+            FileFunctions.write2ByteInt(rom, offset, prices.get(id));
         }
     }
 

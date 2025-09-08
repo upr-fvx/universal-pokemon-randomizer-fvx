@@ -1982,6 +1982,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
+        }
+
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             if (item == null) {

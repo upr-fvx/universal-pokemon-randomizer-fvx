@@ -2057,12 +2057,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public List<Integer> getShopPrices() {
         int itemAttributesOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;
-        int itemCount = Gen2Constants.itemCount;
-        List<Integer> prices = new ArrayList<>(itemCount);
-        prices.add(0);
-        for (int i = 1; i < itemCount; i++) {
-            int offset = itemAttributesOffset + (i - 1) * entrySize;
-            prices.add(readWord(offset));
+        int internalItemCount = Gen2Constants.itemCount;
+
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
+
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemAttributesOffset + (internal - 1) * entrySize;
+            int id = Gen2Constants.itemIDToStandard(internal);
+            prices.set(id, readWord(offset));
         }
         return prices;
     }
@@ -2076,14 +2078,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;
-        int itemCount = Gen2Constants.itemCount;
-        if (prices.size() != itemCount) {
-            throw new IllegalArgumentException("");
+        int internalItemCount = Gen2Constants.itemCount;
+
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
         }
-        for (int i = 1; i < itemCount; i++) {
-            int balancedPrice = prices.get(i);
-            int offset = itemDataOffset + (i - 1) * entrySize;
-            writeWord(offset, balancedPrice);
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal - 1) * entrySize;
+            int id = Gen2Constants.itemIDToStandard(internal);
+            writeWord(offset, prices.get(id));
         }
     }
 

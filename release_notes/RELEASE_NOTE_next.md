@@ -46,5 +46,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
+- (Gen3) Fixed one of the May battles in Emerald not getting requested buffs.
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].

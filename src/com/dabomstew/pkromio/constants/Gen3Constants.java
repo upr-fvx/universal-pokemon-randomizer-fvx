@@ -799,7 +799,7 @@ public class Gen3Constants {
 
         // Steven
         // TODO: make these share a theme
-        tag(trs, 854, "NOTSTRONG"); // Mossdeep tag battle
+        tag(trs, 855, "NOTSTRONG"); // Mossdeep tag battle
         tag(trs, emMeteorFallsStevenIndex, "UBER");
 
     }

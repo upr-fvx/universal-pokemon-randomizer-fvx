@@ -1375,8 +1375,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            int id = readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset);
-            sHeldItems.add(items.get(id));
+            int internalID = readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset);
+            sHeldItems.add(items.get(Gen3Constants.itemIDToStandard(internalID)));
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
             int i1 = rom[baseOffset] & 0xFF;
@@ -1396,11 +1396,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, item.getId());
+            int internalID = item == null ? 0 : Gen3Constants.itemIDToInternal(item.getId());
+            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, internalID);
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
-            int internalID = Gen3Constants.itemIDToInternal(item.getId());
-            if (item.getId() <= 0xFF) {
+            int internalID = item == null ? 0 : Gen3Constants.itemIDToInternal(item.getId());
+            if (internalID <= 0xFF) {
                 rom[baseOffset] = (byte) (internalID & 0xFF);
                 rom[baseOffset + 2] = 0;
             } else {
@@ -3141,6 +3142,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
         int internalItemCount = romEntry.getIntValue("ItemCount");
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
+        }
+
         for (int internal = 1; internal < internalItemCount; internal++) {
             int offset = itemDataOffset + (internal * entrySize) + 16;
             int id = Gen3Constants.itemIDToStandard(internal);

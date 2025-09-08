@@ -7,7 +7,6 @@ import com.dabomstew.pkromio.gamedata.Shop;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.print.attribute.IntegerSyntax;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

@@ -658,6 +658,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         return ids.stream()
                 .filter(id -> id < allItems.size())
                 .map(allItems::get)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 

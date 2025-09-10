@@ -385,9 +385,6 @@ public class Gen3Constants {
     public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone,
             ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone);
 
-    public static final List<Integer> xItems = Arrays.asList(ItemIDs.guardSpec, ItemIDs.direHit, ItemIDs.xAttack,
-            ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xAccuracy, ItemIDs.xSpAtk);
-
     public static final List<Integer> consumableHeldItems = Collections.unmodifiableList(Arrays.asList(
             ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry,
             ItemIDs.aspearBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry,

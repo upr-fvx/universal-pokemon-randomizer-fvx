@@ -822,11 +822,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen1Constants.xItems);
-    }
-
-    @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
         List<EncounterArea> encounterAreas = new ArrayList<>();
 

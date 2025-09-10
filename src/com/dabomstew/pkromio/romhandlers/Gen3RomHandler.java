@@ -1764,11 +1764,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen3Constants.xItems);
-    }
-
-    @Override
     public List<Integer> getMainPlaythroughTrainers() {
         return new ArrayList<>(); // TODO: Not implemented
     }

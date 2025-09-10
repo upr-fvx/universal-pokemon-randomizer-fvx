@@ -2148,11 +2148,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen2Constants.xItems);
-    }
-
-    @Override
     public void setTrainerClassNames(List<String> trainerClassNames) {
         if (romEntry.getIntValue("CanChangeTrainerText") != 0) {
             int amount = romEntry.getIntValue("TrainerClassAmount");

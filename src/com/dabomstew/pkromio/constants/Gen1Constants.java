@@ -204,12 +204,6 @@ public class Gen1Constants {
     ));
 
     // TODO: this could be put in GlobalConstants
-    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.xAccuracy, ItemIDs.xAttack, ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xSpAtk,
-            ItemIDs.guardSpec, ItemIDs.direHit
-    ));
-
-    // TODO: this could be put in GlobalConstants
     public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
             ItemIDs.pokeBall, ItemIDs.greatBall, ItemIDs.ultraBall,
             ItemIDs.potion, ItemIDs.superPotion, ItemIDs.hyperPotion, ItemIDs.maxPotion,

@@ -208,11 +208,6 @@ public class Gen2Constants {
             ItemIDs.leafStone
     ));
 
-    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.guardSpec, ItemIDs.direHit, ItemIDs.xAttack, ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xAccuracy,
-            ItemIDs.xSpAtk
-    ));
-
     public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
             ItemIDs.pechaBerry, ItemIDs.cheriBerry, ItemIDs.aspearBerry, ItemIDs.rawstBerry, ItemIDs.persimBerry,
             ItemIDs.chestoBerry, ItemIDs.lumBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.sitrusBerry,

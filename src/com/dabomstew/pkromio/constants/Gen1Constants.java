@@ -203,15 +203,6 @@ public class Gen1Constants {
             ItemIDs.moonStone, ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone
     ));
 
-    // TODO: this could be put in GlobalConstants
-    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.pokeBall, ItemIDs.greatBall, ItemIDs.ultraBall,
-            ItemIDs.potion, ItemIDs.superPotion, ItemIDs.hyperPotion, ItemIDs.maxPotion,
-            ItemIDs.antidote, ItemIDs.burnHeal, ItemIDs.iceHeal, ItemIDs.awakening, ItemIDs.paralyzeHeal,
-            ItemIDs.fullHeal, ItemIDs.fullRestore, ItemIDs.revive, ItemIDs.repel, ItemIDs.superRepel,
-            ItemIDs.maxRepel, ItemIDs.escapeRope
-    ));
-
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
             ItemIDs.rareCandy, ItemIDs.nugget
     ));

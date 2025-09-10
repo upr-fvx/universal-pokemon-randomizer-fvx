@@ -31,7 +31,6 @@ package com.dabomstew.pkromio.romhandlers;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.AbilityIDs;
-import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.exceptions.RomIOException;
@@ -675,6 +674,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public Set<Item> getXItems() {
         return itemIdsToSet(GlobalConstants.xItems);
+    }
+
+    @Override
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(GlobalConstants.regularShopItems);
     }
 
     @Override

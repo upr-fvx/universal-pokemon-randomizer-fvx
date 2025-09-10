@@ -4874,11 +4874,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public Set<Item> getRegularShopItems() {
-		return itemIdsToSet(Gen4Constants.regularShopItems);
-	}
-
-	@Override
 	public Set<Item> getOPShopItems() {
 		return itemIdsToSet(Gen4Constants.opShopItems);
 	}

@@ -2402,11 +2402,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen1Constants.regularShopItems);
-    }
-
-    @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen1Constants.opShopItems);
     }

@@ -279,14 +279,6 @@ public class Gen2Constants {
         return Collections.unmodifiableMap(map);
     }
 
-    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.pokeBall, ItemIDs.greatBall,
-            ItemIDs.ultraBall, ItemIDs.potion, ItemIDs.superPotion, ItemIDs.hyperPotion, ItemIDs.maxPotion,
-            ItemIDs.antidote, ItemIDs.burnHeal, ItemIDs.iceHeal, ItemIDs.awakening, ItemIDs.paralyzeHeal,
-            ItemIDs.fullHeal, ItemIDs.fullRestore, ItemIDs.revive, ItemIDs.repel, ItemIDs.superRepel,
-            ItemIDs.maxRepel, ItemIDs.escapeRope
-    ));
-
     // rare candy, lucky egg, and all the "valuable items"
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
             ItemIDs.rareCandy, ItemIDs.luckyEgg,
@@ -1286,6 +1278,7 @@ public class Gen2Constants {
             {49, ItemIDs.xAttack},
             {51, ItemIDs.xDefense},
             {52, ItemIDs.xSpeed},
+            {53, ItemIDs.xSpAtk}, // X Special
             {57, ItemIDs.expShare},
             {62, ItemIDs.ppUp},
             {63, ItemIDs.ether},

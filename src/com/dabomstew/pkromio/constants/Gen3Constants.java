@@ -571,7 +571,6 @@ public class Gen3Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
     private static final Set<Integer> badItemsRSE = setupBadItemsRSE();
     private static final Set<Integer> badItemsFRLG = setupBadItemsFRLG();
-    public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems = setupOPShopItems();
 
     private static Set<Integer> setupBannedItems() {
@@ -597,14 +596,6 @@ public class Gen3Constants {
         Set<Integer> set = new HashSet<>(badItemsRSE);
         // Ban Shoal items and Shards, since they don't do anything
         addBetween(set, ItemIDs.shoalSalt, ItemIDs.greenShard);
-        return Collections.unmodifiableSet(set);
-    }
-
-    private static Set<Integer> setupRegularShopItems() {
-        Set<Integer> set = new HashSet<>();
-        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
-        addBetween(set, ItemIDs.potion, ItemIDs.revive);
-        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
         return Collections.unmodifiableSet(set);
     }
 

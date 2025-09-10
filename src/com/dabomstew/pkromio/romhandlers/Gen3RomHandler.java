@@ -3644,11 +3644,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen3Constants.regularShopItems);
-    }
-
-    @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen3Constants.opShopItems);
     }

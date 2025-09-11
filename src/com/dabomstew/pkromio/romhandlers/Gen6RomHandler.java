@@ -2789,8 +2789,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             effectivenessInternal = 2;
                             break;
                         case ZERO:
-                            effectivenessInternal = 0;
-                            break;
                         default:
                             effectivenessInternal = 0;
                     }

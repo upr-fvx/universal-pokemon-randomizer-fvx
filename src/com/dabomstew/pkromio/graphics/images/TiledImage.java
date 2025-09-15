@@ -72,6 +72,9 @@ public abstract class TiledImage extends BufferedImage {
                 palette = preparePalette(bim);
             }
             IndexColorModel colorModel = GFXFunctions.indexColorModelFromPalette(palette, getBPP());
+            if (transparent) {
+                colorModel = makeFirstColorTransparent(colorModel);
+            }
             T t = init(width, height, colorModel, columnMode);
 
             if (data != null) {
@@ -81,6 +84,14 @@ public abstract class TiledImage extends BufferedImage {
             }
 
             return t;
+        }
+
+        private IndexColorModel makeFirstColorTransparent(IndexColorModel colorModel) {
+            int size = colorModel.getMapSize();
+            int[] colors = new int[size];
+            colorModel.getRGBs(colors);
+            colors[0] &= 0x00FFFFFF;
+            return GFXFunctions.indexColorModelFromPalette(colors, colorModel.getPixelSize());
         }
 
         protected abstract Palette preparePalette(BufferedImage image);

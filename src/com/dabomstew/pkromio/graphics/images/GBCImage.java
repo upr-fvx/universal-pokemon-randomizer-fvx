@@ -58,8 +58,9 @@ public class GBCImage extends TiledImage {
                 throw new IllegalArgumentException("palette.size()=" + palette.size() + " exceeds max palette size "
                         + PALETTE_SIZE + ".");
             }
-            List<Integer> colors = new ArrayList<>(Arrays.stream(palette.toARGB()).boxed().collect(Collectors.toList()));
-            colors.sort((c1, c2) -> compareColors(new Color(c1), new Color(c2)));
+            List<Integer> colors = Arrays.stream(palette.toARGB()).boxed()
+                    .sorted((c1, c2) -> compareColors(new Color(c1), new Color(c2)))
+                    .collect(Collectors.toList());
             Palette fixed = new Palette(DEFAULT_PALETTE);
             for (int i = 0; i < colors.size(); i++) {
                 Color color = new Color(colors.get(i));
@@ -200,10 +201,6 @@ public class GBCImage extends TiledImage {
         }
 
         bitplanesPrepared = true;
-    }
-
-    public Palette getPalette() {
-        return new Palette(colors);
     }
 
     @Override

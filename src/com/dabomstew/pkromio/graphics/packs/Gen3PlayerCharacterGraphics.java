@@ -262,9 +262,15 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         return walk == null ? null : walk.getSubimageFromFrame(0, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
     }
 
+    private GBAImage toSample(BufferedImage bim) {
+        return new GBAImage.Builder(bim).transparent(true).build();
+    }
+
     @Override
     public List<BufferedImage> getSampleImages() {
-        return Arrays.asList(getFrontImage(), getBackImageSpriteForSample(), getWalkSpriteForSample());
+        return Arrays.asList(toSample(getFrontImage()),
+                toSample(getBackImageSpriteForSample()),
+                toSample(getWalkSpriteForSample()));
     }
 
     @Override

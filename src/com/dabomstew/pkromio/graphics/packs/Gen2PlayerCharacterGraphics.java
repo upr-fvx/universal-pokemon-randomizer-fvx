@@ -122,6 +122,11 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
     }
 
     @Override
+    protected Palette getOverworldPalette() {
+        return getSpritePaletteID().getPalette();
+    }
+
+    @Override
     public List<BufferedImage> getSampleImages() {
         List<BufferedImage> sampleImages = new ArrayList<>(super.getSampleImages());
         sampleImages.add(getTrainerCardImage());

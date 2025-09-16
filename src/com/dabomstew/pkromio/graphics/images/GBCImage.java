@@ -9,7 +9,6 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

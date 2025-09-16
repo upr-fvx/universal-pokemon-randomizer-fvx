@@ -25,7 +25,8 @@ public abstract class TiledImage extends BufferedImage {
         private BufferedImage bim;
 
         private boolean columnMode;
-        private boolean transparent; // TODO: implement background/first palette index transparency
+        private Palette forcedPalette;
+        private boolean transparent;
 
         public Builder(int width, int height, Palette palette) {
             this.width = width;
@@ -62,6 +63,14 @@ public abstract class TiledImage extends BufferedImage {
             return this;
         }
 
+        /**
+         * Enforces a {@link Palette} to be used.
+         */
+        public Builder<T> forcedPalette(Palette forcedPalette) {
+            this.forcedPalette = forcedPalette;
+            return this;
+        }
+
         public Builder<T> transparent(boolean transparent) {
             this.transparent = transparent;
             return this;
@@ -81,6 +90,14 @@ public abstract class TiledImage extends BufferedImage {
                 t.drawTileData(data);
             } else if (bim != null) {
                 t.drawImage(bim);
+            }
+
+            if (forcedPalette != null) {
+                palette = forcedPalette;
+                data = t.toBytes();
+                bim = null;
+                forcedPalette = null;
+                t = build();
             }
 
             return t;

@@ -2,6 +2,7 @@ package com.dabomstew.pkromio.graphics.packs;
 
 import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
@@ -178,21 +179,34 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         return fish;
     }
 
-    private BufferedImage getFishSpriteForSample() {
-        GBCImage walk = getWalkSprite();
-        GBCImage fish = getFishSprite();
+    protected Palette getOverworldPalette() {
+        return GBCImage.DEFAULT_PALETTE;
+    }
+
+    protected GBCImage toOverworldSample(BufferedImage bim) {
+        return new GBCImage.Builder(bim)
+                .forcedPalette(getOverworldPalette()).transparent(true)
+                .build();
+    }
+
+    private GBCImage getFishSpriteForSample() {
+        GBCImage walk = toOverworldSample(getWalkSprite());
+        GBCImage fish = toOverworldSample(getFishSprite());
         GBCImage walkFront = walk.getSubimageFromTileRange(0, 2);
         GBCImage walkBack = walk.getSubimageFromTileRange(4, 6);
         GBCImage walkSide = walk.getSubimageFromTileRange(8, 10);
         GBCImage fishFront = fish.getSubimageFromTileRange(0, 2);
         GBCImage fishBack = fish.getSubimageFromTileRange(2, 4);
         GBCImage fishSide = fish.getSubimageFromTileRange(4, 6);
-        return GFXFunctions.stitchToGrid(new BufferedImage[][]{
+        BufferedImage stitched = GFXFunctions.stitchToGrid(new BufferedImage[][]{
                 {walkFront, fishFront, walkBack, fishBack, walkSide, fishSide}});
+        return toOverworldSample(stitched);
     }
 
     @Override
     public List<BufferedImage> getSampleImages() {
-        return Arrays.asList(getFrontImage(), getBackImage(), getWalkSprite(), getBikeSprite(), getFishSpriteForSample());
-    }
+        return Arrays.asList(getFrontImage(), getBackImage(),
+                toOverworldSample(getWalkSprite()), toOverworldSample(getBikeSprite()),
+                getFishSpriteForSample());
+      }
 }

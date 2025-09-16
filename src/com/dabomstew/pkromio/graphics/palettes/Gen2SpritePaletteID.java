@@ -7,14 +7,14 @@ package com.dabomstew.pkromio.graphics.palettes;
  * "PINK" is unused in the vanilla games.
  */
 public enum Gen2SpritePaletteID {
-    RED  (new Palette(new int[]{0x00000000, 0xFFF89850, 0xFFF83808, 0xFF000000})),
-    BLUE (new Palette(new int[]{0x00000000, 0xFFF89850, 0xFF5048F8, 0xFF000000})),
-    GREEN(new Palette(new int[]{0x00000000, 0xFFF89850, 0xFF35B721, 0xFF000000})),
-    BROWN(new Palette(new int[]{0x00000000, 0xFFF89850, 0xFF785018, 0xFF000000})),
-    PINK (new Palette(new int[]{0x00000000, 0xFFF89850, 0xFFF05030, 0xFF000000})),
-    EMOTE(new Palette(new int[]{0x00000000, 0xFFF8F8F8, 0xFF686868, 0xFF000000})),
-    TREE (new Palette(new int[]{0x00000000, 0xFF60C808, 0xFF287000, 0xFF383838})),
-    ROCK (new Palette(new int[]{0x00000000, 0xFFC09038, 0xFFA87830, 0xFF383838}));
+    RED  (new Palette(new int[]{0x00FFFFFF, 0xFFF89850, 0xFFF83808, 0xFF000000})),
+    BLUE (new Palette(new int[]{0x00FFFFFF, 0xFFF89850, 0xFF5048F8, 0xFF000000})),
+    GREEN(new Palette(new int[]{0x00FFFFFF, 0xFFF89850, 0xFF35B721, 0xFF000000})),
+    BROWN(new Palette(new int[]{0x00FFFFFF, 0xFFF89850, 0xFF785018, 0xFF000000})),
+    PINK (new Palette(new int[]{0x00FFFFFF, 0xFFF89850, 0xFFF05030, 0xFF000000})),
+    EMOTE(new Palette(new int[]{0x00FFFFFF, 0xFFF8F8F8, 0xFF686868, 0xFF000000})),
+    TREE (new Palette(new int[]{0x00FFFFFF, 0xFF60C808, 0xFF287000, 0xFF383838})),
+    ROCK (new Palette(new int[]{0x00FFFFFF, 0xFFC09038, 0xFFA87830, 0xFF383838}));
 
     /**
      * Returns the {@link Gen2SpritePaletteID} that matches "close enough",

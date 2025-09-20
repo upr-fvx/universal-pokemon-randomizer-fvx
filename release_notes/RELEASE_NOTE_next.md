@@ -47,5 +47,5 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 ## Bugfixes
 - (Gen3) Fixed one of the May battles in Emerald not getting requested buffs.
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- (GUI) Fixed the release page link wrapping after every word and taking up lots of vertical space, on non-Windows OSes.
+- (GUI) Fixed randomization option graphical oddities/crampedness, by adding scroll bars as needed.

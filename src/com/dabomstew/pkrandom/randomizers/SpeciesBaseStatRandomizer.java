@@ -7,6 +7,7 @@ import com.dabomstew.pkromio.gamedata.MegaEvolution;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.gamedata.SpeciesSet;
 import com.dabomstew.pkromio.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkromio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.dabomstew.pkromio.gamedata.cueh.EvolvedSpeciesAction;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
@@ -21,6 +22,68 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     public SpeciesBaseStatRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
+
+    public void shuffleBSTs(boolean evolutionSanity, boolean swapLegendaries) {
+
+        List<SpeciesSet> shuffleGroups = new ArrayList<>();
+        shuffleGroups.add(romHandler.getSpeciesSet());
+
+        if (evolutionSanity) {
+            shuffleGroups = splitByLineLength(shuffleGroups);
+        }
+        if (swapLegendaries) {
+            shuffleGroups = splitByLegendaryStatus(shuffleGroups);
+        }
+
+        for (SpeciesSet group : shuffleGroups) {
+            Map<Species, Species> donators = new HashMap<>(group.size());
+            List<Species> keys = new ArrayList<>(group);
+            List<Species> values = new ArrayList<>(keys);
+            Collections.shuffle(values);
+            for (int i = 0; i < keys.size(); i++) {
+                donators.put(keys.get(i), values.get(i));
+            }
+
+            CopyUpEvolutionsHelper<Species> cueh = new CopyUpEvolutionsHelper<>(group);
+            BasicSpeciesAction<Species> bpAction = (bp -> {
+                Species donator = donators.get(bp);
+                // bp.setBSTForPowerLevels(donator.getBSTForPowerLevels(true));
+            });
+            EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, toMonIsFinalEvo) -> {
+                Species fromDonator = donators.get(evFrom);
+                // assumes lines are even; Applin could break this
+                Species toDonator = fromDonator.getEvolutionsFrom().get(0).getTo();
+                donators.put(evTo, toDonator);
+                // evTo.setBSTForPowerLevels(toDonator.getBSTForPowerLevels(true));
+            });
+            cueh.apply(evolutionSanity, true, bpAction, epAction);
+        }
+
+    }
+
+    private List<SpeciesSet> splitByLineLength(List<SpeciesSet> shuffleGroups) {
+        List<SpeciesSet> newShuffleGroups = new ArrayList<>();
+        for (SpeciesSet group : shuffleGroups) {
+            Map<Integer, SpeciesSet> groupsByLineLength = new HashMap<>();
+            for (Species pk : group.filterBasic(true)) {
+                int lineLength = pk.getStagesAfter(true);
+                groupsByLineLength.putIfAbsent(lineLength, new SpeciesSet());
+                groupsByLineLength.get(lineLength).add(pk);
+            }
+            newShuffleGroups.addAll(groupsByLineLength.values());
+        }
+        return newShuffleGroups;
+    }
+
+    private List<SpeciesSet> splitByLegendaryStatus(List<SpeciesSet> shuffleGroups) {
+        List<SpeciesSet> newShuffleGroups = new ArrayList<>();
+        for (SpeciesSet group : shuffleGroups) {
+            newShuffleGroups.add(group.filter(Species::isLegendary));
+            newShuffleGroups.add(group.filter(species -> !species.isLegendary()));
+        }
+        return newShuffleGroups;
+    }
+
 
     Map<Species, List<Integer>> shuffledStatsOrders;
 

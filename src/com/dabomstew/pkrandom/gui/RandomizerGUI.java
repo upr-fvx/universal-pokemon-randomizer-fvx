@@ -375,6 +375,12 @@ public class RandomizerGUI {
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
+    private JRadioButton unchangedRadioButton;
+    private JRadioButton randomBuffNerfRadioButton;
+    private JRadioButton shuffleRadioButton;
+    private JRadioButton randomRadioButton;
+    private JCheckBox followEvolutionsCheckBox;
+    private JCheckBox followMegaEvolutionsCheckBox;
 
     private static final Random RND = new Random();
 

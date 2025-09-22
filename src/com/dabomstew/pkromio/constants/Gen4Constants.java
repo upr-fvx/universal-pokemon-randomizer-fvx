@@ -711,8 +711,6 @@ public class Gen4Constants {
             MoveIDs.machPunch, MoveIDs.focusPunch, MoveIDs.dizzyPunch, MoveIDs.dynamicPunch, MoveIDs.hammerArm, MoveIDs.megaPunch,
             MoveIDs.cometPunch, MoveIDs.meteorMash, MoveIDs.shadowPunch, MoveIDs.drainPunch, MoveIDs.bulletPunch, MoveIDs.skyUppercut);
 
-    public static final int tmsStartIndex = ItemIDs.tm01;
-
     public static final List<Integer> dpRequiredFieldTMs = Arrays.asList(ItemIDs.tm02, ItemIDs.tm03, ItemIDs.tm05,
             ItemIDs.tm09, ItemIDs.tm12, ItemIDs.tm19, ItemIDs.tm23, ItemIDs.tm28, ItemIDs.tm34, ItemIDs.tm39,
             ItemIDs.tm41, ItemIDs.tm43, ItemIDs.tm46, ItemIDs.tm47, ItemIDs.tm49, ItemIDs.tm50, ItemIDs.tm62,
@@ -874,7 +872,6 @@ public class Gen4Constants {
 
     public static final Set<Integer> bannedItems = setupBannedItems();
     public static final Set<Integer> badItems = setupBadItems();
-    public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems = setupOPShopItems();
 
     private static Set<Integer> setupBannedItems() {
@@ -898,14 +895,6 @@ public class Gen4Constants {
         addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects
         addBetween(set, ItemIDs.luckyPunch, ItemIDs.leek); // pokemon specific
         addBetween(set, ItemIDs.redScarf, ItemIDs.yellowScarf); // contest scarves
-        return Collections.unmodifiableSet(set);
-    }
-
-    private static Set<Integer> setupRegularShopItems() {
-        Set<Integer> set = new HashSet<>();
-        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
-        addBetween(set, ItemIDs.potion, ItemIDs.revive);
-        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
         return Collections.unmodifiableSet(set);
     }
 

@@ -1020,10 +1020,7 @@ public class Gen7Constants {
     }
 
     private static Set<Integer> setupRegularShopItemsSM() {
-        Set<Integer> set = new HashSet<>();
-        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
-        addBetween(set, ItemIDs.potion, ItemIDs.revive);
-        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
+        Set<Integer> set = new HashSet<>(GlobalConstants.regularShopItems);
         set.add(ItemIDs.honey);
         set.add(ItemIDs.adrenalineOrb);
         return Collections.unmodifiableSet(set);

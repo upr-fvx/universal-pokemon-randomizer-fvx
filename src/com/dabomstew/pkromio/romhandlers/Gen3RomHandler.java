@@ -1071,8 +1071,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         pkmn.setAbility2(rom[offset + Gen3Constants.bsAbility2Offset] & 0xFF);
 
         // Held Items?
-        Item item1 = items.get(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
-        Item item2 = items.get(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
+        int item1ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
+        Item item1 = items.get(item1ID);
+        int item2ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
+        Item item2 = items.get(item2ID);
 
         if (Objects.equals(item1, item2)) {
             // guaranteed
@@ -1106,14 +1108,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         // Held items
         if (pkmn.getGuaranteedHeldItem() != null) {
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, pkmn.getGuaranteedHeldItem().getId());
+            int internalID = Gen3Constants.itemIDToInternal(pkmn.getGuaranteedHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, internalID);
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, internalID);
         } else {
             // assumes common/rareHeldItem to be non-null, if guaranteedHeldItem is.
-            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset,
-                    pkmn.getCommonHeldItem() == null ? 0 : pkmn.getCommonHeldItem().getId());
-            writeWord(offset + Gen3Constants.bsRareHeldItemOffset,
-                    pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
+            int commonInternalID = pkmn.getCommonHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(pkmn.getCommonHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsCommonHeldItemOffset, commonInternalID);
+            int rareInternalID = pkmn.getRareHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(pkmn.getRareHeldItem().getId());
+            writeWord(offset + Gen3Constants.bsRareHeldItemOffset, rareInternalID);
         }
 
         writeByte(offset + Gen3Constants.bsGenderRatioOffset, (byte) pkmn.getGenderRatio());
@@ -1370,17 +1375,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            int id = readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset);
-            sHeldItems.add(items.get(id));
+            int internalID = readWord(baseOffset + Gen3Constants.frlgStarterItemsOffset);
+            sHeldItems.add(items.get(Gen3Constants.itemIDToStandard(internalID)));
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
             int i1 = rom[baseOffset] & 0xFF;
             int i2 = rom[baseOffset + 2] & 0xFF;
-            if (i2 == 0) {
-                sHeldItems.add(items.get(i1));
-            } else {
-                sHeldItems.add(items.get(i2 + 0xFF));
-            }
+            int internalID = i2 == 0 ? i1 : i2 + 0xFF;
+            sHeldItems.add(items.get(Gen3Constants.itemIDToStandard(internalID)));
         }
         return sHeldItems;
     }
@@ -1394,15 +1396,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
-            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, item.getId());
+            int internalID = item == null ? 0 : Gen3Constants.itemIDToInternal(item.getId());
+            writeWord(baseOffset + Gen3Constants.frlgStarterItemsOffset, internalID);
         } else {
             int baseOffset = romEntry.getIntValue("StarterItems");
-            if (item.getId() <= 0xFF) {
-                rom[baseOffset] = (byte) (item.getId() & 0xFF);
+            int internalID = item == null ? 0 : Gen3Constants.itemIDToInternal(item.getId());
+            if (internalID <= 0xFF) {
+                rom[baseOffset] = (byte) (internalID & 0xFF);
                 rom[baseOffset + 2] = 0;
             } else {
                 rom[baseOffset] = (byte) 0xFF;
-                rom[baseOffset + 2] = (byte) ((item.getId() - 0xFF) & 0xFF);
+                rom[baseOffset + 2] = (byte) ((internalID - 0xFF) & 0xFF);
             }
             rom[baseOffset + 3] = Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR2;
         }
@@ -1670,7 +1674,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
                     thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
-                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 8 + 6)));
+                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
+                    thisPoke.setHeldItem(items.get(itemID));
                     thisPoke.setAbilitySlot(1);
                     tr.pokemon.add(thisPoke);
                 }
@@ -1694,7 +1699,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
                     thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
-                    thisPoke.setHeldItem(items.get(readWord(pointerToPokes + poke * 16 + 6)));
+                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 16 + 6));
+                    thisPoke.setHeldItem(items.get(itemID));
                     for (int move = 0; move < 4; move++) {
                         thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
@@ -1755,11 +1761,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public Set<Item> getEvolutionItems() {
         return itemIdsToSet(Gen3Constants.evolutionItems);
-    }
-
-    @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen3Constants.xItems);
     }
 
     @Override
@@ -1845,8 +1846,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
 				int movesStart;
 				if (trainer.pokemonHaveItems()) {
-                    int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
-                    writeWord(pokemonData, tpIndex * 16 + 6, itemId);
+                    int itemInternalID = tp.getHeldItem() == null ? 0 :
+                            Gen3Constants.itemIDToInternal(tp.getHeldItem().getId());
+                    writeWord(pokemonData, tpIndex * 16 + 6, itemInternalID);
 					movesStart = 8;
 				} else {
 					movesStart = 6;
@@ -1871,8 +1873,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
 				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
-                int itemId = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
-                writeWord(pokemonData, tpIndex * 8 + 6, itemId);
+                int itemInternalID = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0
+                        : Gen3Constants.itemIDToInternal(tp.getHeldItem().getId());
+                writeWord(pokemonData, tpIndex * 8 + 6, itemInternalID);
 			}
 		}
 
@@ -2425,10 +2428,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int[] pals = romEntry.getArrayValue("TmPals");
 			// Update the item image palettes
 			// Gen3 TMs are 289-338
-			for (int i = 0; i < 50; i++) {
+			for (int i = 0; i < Gen3Constants.tmCount; i++) {
 				Move mv = moves[moveIndexes.get(i)];
 				int typeID = Gen3Constants.typeToByte(mv.type);
-				writePointer(iiOffset + (Gen3Constants.tmItemOffset + i) * 8 + 4, pals[typeID]);
+                int itemID = Gen3Constants.itemIDToInternal(ItemIDs.tm01 + i);
+				writePointer(iiOffset + itemID * 8 + 4, pals[typeID]);
 			}
 		}
 	}
@@ -2443,7 +2447,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int limitPerLine = (romEntry.getRomType() == Gen3Constants.RomType_FRLG) ? Gen3Constants.frlgItemDescCharsPerLine
 					: Gen3Constants.rseItemDescCharsPerLine;
 			for (int i = 0; i < Gen3Constants.tmCount; i++) {
-				int itemBaseOffset = idOffset + (i + Gen3Constants.tmItemOffset) * entrySize;
+				int itemBaseOffset = idOffset + Gen3Constants.itemIDToInternal(ItemIDs.tm01 + i) * entrySize;
 				int moveBaseOffset = mdOffset + (moveIndexes.get(i) - 1) * 4;
 				int moveTextPointer = readPointer(moveBaseOffset);
 				String moveDesc = readVariableLengthString(moveTextPointer);
@@ -2901,8 +2905,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 int evolvingTo = readWord(evoOffset + j * 8 + 4);
                 if (method >= 1 && method <= Gen3Constants.evolutionMethodCount && evolvingTo >= 1
                         && evolvingTo <= numInternalPokes) {
-                    int extraInfo = readWord(evoOffset + j * 8 + 2);
                     EvolutionType et = Gen3Constants.evolutionTypeFromIndex(method);
+                    int extraInfo = readWord(evoOffset + j * 8 + 2);
+                    if (et.usesItem()) {
+                        extraInfo = Gen3Constants.itemIDToStandard(extraInfo);
+                    }
                     Evolution evo = new Evolution(pk, pokesInternal[evolvingTo], et, extraInfo);
                     if (!pk.getEvolutionsFrom().contains(evo)) {
                         pk.getEvolutionsFrom().add(evo);
@@ -2922,7 +2929,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int evosWritten = 0;
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 writeWord(evoOffset, Gen3Constants.evolutionTypeToIndex(evo.getType()));
-                writeWord(evoOffset + 2, evo.getExtraInfo());
+                int extraInfo = evo.getExtraInfo();
+                if (evo.getType().usesItem()) {
+                    extraInfo = Gen3Constants.itemIDToInternal(extraInfo);
+                }
+                writeWord(evoOffset + 2, extraInfo);
                 writeWord(evoOffset + 4, pokedexToInternal[evo.getTo().getNumber()]);
                 writeWord(evoOffset + 6, 0);
                 evoOffset += 8;
@@ -2956,13 +2967,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             // happiness day change to Sun Stone
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.sunStone);
+                            evo.setExtraInfo(ItemIDs.sunStone);
                         }
                         if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
                             // happiness night change to Moon Stone
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.moonStone);
+                            evo.setExtraInfo(ItemIDs.moonStone);
                         }
                         if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
                             // beauty change to level 35
@@ -2989,21 +3000,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.waterStone);
+                            evo.setExtraInfo(ItemIDs.waterStone);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(40);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == Gen3ItemIDs.deepSeaTooth) {
+                                && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
                             // Clamperl -> Huntail: Lv30
                             evo.setType(EvolutionType.LEVEL);
                             evo.setExtraInfo(30);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == Gen3ItemIDs.deepSeaScale) {
+                                && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(Gen3ItemIDs.waterStone);
+                            evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
                             // Onix, Scyther or Porygon: Lv30
                             evo.setType(EvolutionType.LEVEL);
@@ -3039,33 +3050,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    /**
-     * The same as {@link AbstractRomHandler#removeTimeBasedEvolutions()}
-     * except it uses {@link Gen3ItemIDs}.
-     */
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pk : getSpecies()) {
-            if (pk == null) {
-                continue;
-            }
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                EvolutionType et = evo.getType();
-
-                if (et.usesTime()) {
-                    markImprovedEvolutions(pk);
-                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
-                        evo.setType(EvolutionType.STONE);
-                        int item = et.isDayType() ? Gen3ItemIDs.sunStone : Gen3ItemIDs.moonStone;
-                        evo.setExtraInfo(item);
-                    } else {
-                        evo.setType(et.timeless());
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public boolean hasShopSupport() {
         return true;
@@ -3089,7 +3073,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             List<Item> shopItems = new ArrayList<>();
             int val = FileFunctions.read2ByteInt(rom, offset);
             while (val != 0x0000) {
-                shopItems.add(items.get(val));
+                shopItems.add(items.get(Gen3Constants.itemIDToStandard(val)));
                 offset += 2;
                 val = FileFunctions.read2ByteInt(rom, offset);
             }
@@ -3122,7 +3106,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         byte[] data = new byte[shop.getItems().size() * 2 + Gen3Constants.shopTerminator.length];
         int offset = 0;
         for (Item item : shop.getItems()) {
-            writeWord(data, offset, item.getId());
+            writeWord(data, offset, Gen3Constants.itemIDToInternal(item.getId()));
             offset += 2;
         }
         writeBytes(data, offset, Gen3Constants.shopTerminator);
@@ -3132,13 +3116,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public List<Integer> getShopPrices() {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
-        int itemCount = romEntry.getIntValue("ItemCount");
+        int internalItemCount = romEntry.getIntValue("ItemCount");
 
-        List<Integer> prices = new ArrayList<>(itemCount);
-        prices.add(0);
-        for (int i = 1; i < itemCount; i++) {
-            int offset = itemDataOffset + (i * entrySize) + 16;
-            prices.add(readWord(offset));
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
+
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal * entrySize) + 16;
+            int id = Gen3Constants.itemIDToStandard(internal);
+            prices.set(id, readWord(offset));
         }
         return prices;
     }
@@ -3151,11 +3136,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemData");
         int entrySize = romEntry.getIntValue("ItemEntrySize");
-        int itemCount = romEntry.getIntValue("ItemCount");
-        for (int i = 1; i < itemCount; i++) {
-            int balancedPrice = prices.get(i);
-            int offset = itemDataOffset + (i * entrySize) + 16;
-            FileFunctions.write2ByteInt(rom, offset, balancedPrice);
+        int internalItemCount = romEntry.getIntValue("ItemCount");
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
+        }
+
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal * entrySize) + 16;
+            int id = Gen3Constants.itemIDToStandard(internal);
+            FileFunctions.write2ByteInt(rom, offset, prices.get(id));
         }
     }
 
@@ -3178,7 +3168,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItemCount; i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                int id = FileFunctions.read2ByteInt(rom, itemOffset);
+                int id = Gen3Constants.itemIDToStandard(FileFunctions.read2ByteInt(rom, itemOffset));
                 PickupItem pickupItem = new PickupItem(items.get(id));
                 pickupItems.add(pickupItem);
             }
@@ -3233,7 +3223,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItems.size(); i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                FileFunctions.write2ByteInt(rom, itemOffset, pickupItems.get(i).getItem().getId());
+                int itemInternalID = Gen3Constants.itemIDToInternal(pickupItems.get(i).getItem().getId());
+                FileFunctions.write2ByteInt(rom, itemOffset, itemInternalID);
             }
         }
     }
@@ -3653,34 +3644,29 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen3Constants.regularShopItems);
-    }
-
-    @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen3Constants.opShopItems);
     }
 
     @Override
     public void loadItems() {
-        int nameoffs = romEntry.getIntValue("ItemData");
-        int structlen = romEntry.getIntValue("ItemEntrySize");
-        int maxcount = romEntry.getIntValue("ItemCount");
+        int nameOffs = romEntry.getIntValue("ItemData");
+        int structLen = romEntry.getIntValue("ItemEntrySize");
+        int internalCount = romEntry.getIntValue("ItemCount");
 
-        items = new ArrayList<>(maxcount);
+        int lastItemID = Gen3Constants.getLastItemID(romEntry.getRomType());
+        items = new ArrayList<>(Collections.nCopies(lastItemID + 1, null));
 
-        items.add(null);
-        for (int i = 1; i <= maxcount; i++) {
-            items.add(new Item(i, readVariableLengthString(nameoffs + structlen * i)));
+        for (int internal = 1; internal <= internalCount; internal++) {
+            int id = Gen3Constants.itemIDToStandard(internal);
+            String name = readVariableLengthString(nameOffs + structLen * internal);
+            items.set(id, new Item(id, name));
         }
 
-        for (int id : Gen3Constants.bannedItems) {
-            if (id < items.size()) {
-                items.get(id).setAllowed(false);
-            }
-        }
-        for (int i = Gen3Constants.tmsStartIndex; i < Gen3Constants.tmsStartIndex + Gen3Constants.tmCount; i++) {
+        Gen3Constants.bannedItems.stream().filter(id -> id < items.size())
+                .map(items::get).filter(Objects::nonNull)
+                .forEach(item -> item.setAllowed(false));
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
         for (int id : Gen3Constants.getBadItems(getROMType())) {
@@ -3718,7 +3704,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            Item item = items.get(readWord(offset));
+            Item item = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
             if (item.isAllowed()) {
                 fieldItems.add(item);
             }
@@ -3737,10 +3723,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffs) {
-            Item current = items.get(readWord(offset));
+            Item current = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
             if (current.isAllowed()) {
                 // Replace it
-                writeWord(offset, iterItems.next().getId());
+                writeWord(offset, Gen3Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 
@@ -3771,7 +3757,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
             }
             trade.setOtId(readWord(entryOffset + 24));
-            trade.setHeldItem(items.get(readWord(entryOffset + 40)));
+            int heldItemID = Gen3Constants.itemIDToStandard(readWord(entryOffset + 40));
+            trade.setHeldItem(items.get(heldItemID));
             trade.setOtName(readVariableLengthString(entryOffset + 43));
             trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
@@ -3804,7 +3791,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeByte(entryOffset + 14 + i, (byte) trade.getIVs()[i]);
             }
             writeWord(entryOffset + 24, trade.getOtId());
-            writeWord(entryOffset + 40, trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
+            int heldItemInternalID = trade.getHeldItem() == null ? 0
+                    : Gen3Constants.itemIDToInternal(trade.getHeldItem().getId());
+            writeWord(entryOffset + 40, heldItemInternalID);
             writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
             writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
         }
@@ -3914,7 +3903,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(Gen3ItemIDs.luckyEgg).setAllowed(false);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
             applyRunWithoutRunningShoesPatch();
         } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
@@ -3974,9 +3963,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // To make all TMs reusable, change this from HM01_Cut => 0.
         // FRLG has multiple comparisons like this to change, so we deal with offsets instead of singular offset.
         int[] offsets = romEntry.getArrayValue("TMMovesReusableFunctionOffsets");
+        byte hmCompareVal = (byte) (Gen3Constants.itemIDToInternal(ItemIDs.hm01) / 2);
         for (int offset : offsets) {
-            if (rom[offset] != (byte) (Gen3ItemIDs.hm01 / 2)) {
-                throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen3ItemIDs.hm01 / 2) + ", was 0x"
+            if (rom[offset] != hmCompareVal) {
+                throw new RuntimeException("Expected 0x" + Integer.toHexString(hmCompareVal) + ", was 0x"
                         + Integer.toHexString(rom[offset]) + ". Likely TMMovesReusableFunctionOffsets is faulty.");
             }
             writeByte(offset, (byte) 0);
@@ -4062,7 +4052,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (!item.isAllowed()) {
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeWord(romEntry.getIntValue("PCPotionOffset"), item.getId());
+            writeWord(romEntry.getIntValue("PCPotionOffset"), Gen3Constants.itemIDToInternal(item.getId()));
         }
     }
 
@@ -4674,14 +4664,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 continue;
             }
             if (GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                ids.add(Gen3ItemIDs.liechiBerry);
+                ids.add(ItemIDs.liechiBerry);
                 if (!consumableOnly) {
                     ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
-                    ids.add(Gen3ItemIDs.choiceBand);
+                    ids.add(ItemIDs.choiceBand);
                 }
             }
             if (!GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
-                ids.add(Gen3ItemIDs.petayaBerry);
+                ids.add(ItemIDs.petayaBerry);
                 if (!consumableOnly) {
                     ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
                 }

@@ -94,14 +94,13 @@ public class Gen1Constants {
 
     public static final List<Integer> earlyRequiredHMs = Collections.singletonList(MoveIDs.cut);
 
-    public static final int hmsStartIndex = Gen1ItemIDs.hm01, tmsStartIndex = Gen1ItemIDs.tm01;
-
     public static final int hiddenObjectMapsTerminator = 0xFF, hiddenObjectsTerminator = 0xFF;
 
-    public static final List<Integer> requiredFieldTMs = Arrays.asList(Gen1ItemIDs.tm03, Gen1ItemIDs.tm04,
-            Gen1ItemIDs.tm08, Gen1ItemIDs.tm10, Gen1ItemIDs.tm12, Gen1ItemIDs.tm14, Gen1ItemIDs.tm16, Gen1ItemIDs.tm19,
-            Gen1ItemIDs.tm20, Gen1ItemIDs.tm22, Gen1ItemIDs.tm25, Gen1ItemIDs.tm26, Gen1ItemIDs.tm30, Gen1ItemIDs.tm40,
-            Gen1ItemIDs.tm43, Gen1ItemIDs.tm44, Gen1ItemIDs.tm45, Gen1ItemIDs.tm47);
+    public static final List<Integer> requiredFieldTMs = Arrays.asList(
+            ItemIDs.tm03, ItemIDs.tm04, ItemIDs.tm08, ItemIDs.tm10, ItemIDs.tm12, ItemIDs.tm14, ItemIDs.tm16,
+            ItemIDs.tm19, ItemIDs.tm20, ItemIDs.tm22, ItemIDs.tm25, ItemIDs.tm26, ItemIDs.tm30, ItemIDs.tm40,
+            ItemIDs.tm43, ItemIDs.tm44, ItemIDs.tm45, ItemIDs.tm47
+    );
 
     public static final int towerMapsStartIndex = 0x90, towerMapsEndIndex = 0x94;
 
@@ -201,43 +200,25 @@ public class Gen1Constants {
     ));
 
     public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.moonStone, Gen1ItemIDs.fireStone, Gen1ItemIDs.thunderstone, Gen1ItemIDs.waterStone, Gen1ItemIDs.leafStone
-    ));
-
-    public static final List<Integer> xItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.xAccuracy, Gen1ItemIDs.xAttack, Gen1ItemIDs.xDefend, Gen1ItemIDs.xSpeed, Gen1ItemIDs.xSpecial,
-            Gen1ItemIDs.guardSpec, Gen1ItemIDs.direHit
-    ));
-
-    public static final List<Integer> regularShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.pokeBall, Gen1ItemIDs.greatBall, Gen1ItemIDs.ultraBall,
-            Gen1ItemIDs.potion, Gen1ItemIDs.superPotion, Gen1ItemIDs.hyperPotion, Gen1ItemIDs.maxPotion,
-            Gen1ItemIDs.antidote, Gen1ItemIDs.burnHeal, Gen1ItemIDs.iceHeal, Gen1ItemIDs.awakening, Gen1ItemIDs.parlyzHeal,
-            Gen1ItemIDs.fullHeal, Gen1ItemIDs.fullRestore, Gen1ItemIDs.revive, Gen1ItemIDs.repel, Gen1ItemIDs.superRepel,
-            Gen1ItemIDs.maxRepel, Gen1ItemIDs.escapeRope
+            ItemIDs.moonStone, ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone
     ));
 
     public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
-            Gen1ItemIDs.rareCandy, Gen1ItemIDs.nugget
+            ItemIDs.rareCandy, ItemIDs.nugget
     ));
 
     public static final Set<Integer> bannedItems = setupBannedItems();
 
     private static Set<Integer> setupBannedItems() {
-        // Assorted key items & junk
-        Set<Integer> set = new HashSet<>(Arrays.asList(Gen1ItemIDs.townMap, Gen1ItemIDs.bicycle,
-                Gen1ItemIDs.questionMark7, Gen1ItemIDs.safariBall, Gen1ItemIDs.pokedex, Gen1ItemIDs.oldAmber,
-                Gen1ItemIDs.cardKey, Gen1ItemIDs.ppUpGlitch, Gen1ItemIDs.coin, Gen1ItemIDs.ssTicket,
-                Gen1ItemIDs.goldTeeth));
-        addBetween(set, Gen1ItemIDs.boulderBadge, Gen1ItemIDs.earthBadge);
-        addBetween(set, Gen1ItemIDs.domeFossil, Gen1ItemIDs.bikeVoucher);
-        addBetween(set, Gen1ItemIDs.coinCase, Gen1ItemIDs.superRod);
-        // Unused
-        addBetween(set, Gen1ItemIDs.unused84, Gen1ItemIDs.unused195);
+        Set<Integer> set = new HashSet<>();
+        // Every single Gen 1 unique item is either a key item or unused.
+        addBetween(set, ItemIDs.Gen1.first, ItemIDs.Gen1.last);
         // HMs
-        addBetween(set, Gen1ItemIDs.hm01, Gen1ItemIDs.hm05);
-        // Junk at end
-        addBetween(set, Gen1ItemIDs.tm51, Gen1ItemIDs.tm55); // 251-255 are junk TMs
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm05);
+        // TODO: Does the Safari Ball need to be banned?
+        //  It being banned is carry-over from old unexplained code.
+        //  Does it act weird in-game?
+        set.add(ItemIDs.safariBall);
         return Collections.unmodifiableSet(set);
     }
 
@@ -634,17 +615,143 @@ public class Gen1Constants {
     }
 
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
-            {Gen1ItemIDs.masterBall, 3000},
-            {Gen1ItemIDs.safariBall, 1200}, // same as ultra ball
+            {ItemIDs.masterBall, 3000},
+            {ItemIDs.safariBall, 1200}, // same as ultra ball
 
-            {Gen1ItemIDs.moonStone, 2100}, // same as other evo stones
+            {ItemIDs.moonStone, 2100}, // same as other evo stones
 
-            {Gen1ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
+            {ItemIDs.ppUp, 9800}, // same as vanilla Gen 2+
 
-            {Gen1ItemIDs.ether, 3000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxEther, 4500}, // same as in Gen3Constants
-            {Gen1ItemIDs.elixer, 15000}, // same as in Gen3Constants
-            {Gen1ItemIDs.maxElixer, 18000}, // same as in Gen3Constants
+            {ItemIDs.ether, 3000}, // same as in Gen3Constants
+            {ItemIDs.maxEther, 4500}, // same as in Gen3Constants
+            {ItemIDs.elixir, 15000}, // same as in Gen3Constants
+            {ItemIDs.maxElixir, 18000}, // same as in Gen3Constants
     }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
 
+    private static final Map<Integer, Integer> itemIDToStandardMap = Stream.of(new Integer[][]{
+            {0, ItemIDs.none},
+            {1, ItemIDs.masterBall},
+            {2, ItemIDs.ultraBall},
+            {3, ItemIDs.greatBall},
+            {4, ItemIDs.pokeBall},
+            {8, ItemIDs.safariBall},
+            {10, ItemIDs.moonStone},
+            {11, ItemIDs.antidote},
+            {12, ItemIDs.burnHeal},
+            {13, ItemIDs.iceHeal},
+            {14, ItemIDs.awakening},
+            {15, ItemIDs.paralyzeHeal},
+            {16, ItemIDs.fullRestore},
+            {17, ItemIDs.maxPotion},
+            {18, ItemIDs.hyperPotion},
+            {19, ItemIDs.superPotion},
+            {20, ItemIDs.potion},
+            {29, ItemIDs.escapeRope},
+            {30, ItemIDs.repel},
+            {32, ItemIDs.fireStone},
+            {33, ItemIDs.thunderStone},
+            {34, ItemIDs.waterStone},
+            {35, ItemIDs.hpUp},
+            {36, ItemIDs.protein},
+            {37, ItemIDs.iron},
+            {38, ItemIDs.carbos},
+            {39, ItemIDs.calcium},
+            {40, ItemIDs.rareCandy},
+            {46, ItemIDs.xAccuracy},
+            {47, ItemIDs.leafStone},
+            {49, ItemIDs.nugget},
+            {51, ItemIDs.pokeDoll},
+            {52, ItemIDs.fullHeal},
+            {53, ItemIDs.revive},
+            {54, ItemIDs.maxRevive},
+            {55, ItemIDs.guardSpec},
+            {56, ItemIDs.superRepel},
+            {57, ItemIDs.maxRepel},
+            {58, ItemIDs.direHit},
+            {60, ItemIDs.freshWater},
+            {61, ItemIDs.sodaPop},
+            {62, ItemIDs.lemonade},
+            {65, ItemIDs.xAttack},
+            {66, ItemIDs.xDefense},
+            {67, ItemIDs.xSpeed},
+            {68, ItemIDs.xSpAtk}, // xSpecial
+            {79, ItemIDs.ppUp},
+            {80, ItemIDs.ether},
+            {81, ItemIDs.maxEther},
+            {82, ItemIDs.elixir},
+            {83, ItemIDs.maxElixir},
+            {196, ItemIDs.hm01},
+            {197, ItemIDs.hm02},
+            {198, ItemIDs.hm03},
+            {199, ItemIDs.hm04},
+            {200, ItemIDs.hm05},
+            {201, ItemIDs.tm01},
+            {202, ItemIDs.tm02},
+            {203, ItemIDs.tm03},
+            {204, ItemIDs.tm04},
+            {205, ItemIDs.tm05},
+            {206, ItemIDs.tm06},
+            {207, ItemIDs.tm07},
+            {208, ItemIDs.tm08},
+            {209, ItemIDs.tm09},
+            {210, ItemIDs.tm10},
+            {211, ItemIDs.tm11},
+            {212, ItemIDs.tm12},
+            {213, ItemIDs.tm13},
+            {214, ItemIDs.tm14},
+            {215, ItemIDs.tm15},
+            {216, ItemIDs.tm16},
+            {217, ItemIDs.tm17},
+            {218, ItemIDs.tm18},
+            {219, ItemIDs.tm19},
+            {220, ItemIDs.tm20},
+            {221, ItemIDs.tm21},
+            {222, ItemIDs.tm22},
+            {223, ItemIDs.tm23},
+            {224, ItemIDs.tm24},
+            {225, ItemIDs.tm25},
+            {226, ItemIDs.tm26},
+            {227, ItemIDs.tm27},
+            {228, ItemIDs.tm28},
+            {229, ItemIDs.tm29},
+            {230, ItemIDs.tm30},
+            {231, ItemIDs.tm31},
+            {232, ItemIDs.tm32},
+            {233, ItemIDs.tm33},
+            {234, ItemIDs.tm34},
+            {235, ItemIDs.tm35},
+            {236, ItemIDs.tm36},
+            {237, ItemIDs.tm37},
+            {238, ItemIDs.tm38},
+            {239, ItemIDs.tm39},
+            {240, ItemIDs.tm40},
+            {241, ItemIDs.tm41},
+            {242, ItemIDs.tm42},
+            {243, ItemIDs.tm43},
+            {244, ItemIDs.tm44},
+            {245, ItemIDs.tm45},
+            {246, ItemIDs.tm46},
+            {247, ItemIDs.tm47},
+            {248, ItemIDs.tm48},
+            {249, ItemIDs.tm49},
+            {250, ItemIDs.tm50},
+    }).collect(Collectors.toMap(kv -> kv[0], kv -> kv[1]));
+
+    private static final Map<Integer, Integer> itemIDToInternalMap = itemIDToStandardMap.entrySet()
+            .stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
+    public static int itemIDToStandard(int id) {
+        Integer standard = itemIDToStandardMap.get(id);
+        if (standard == null) {
+            standard = ItemIDs.UNIQUE_OFFSET + id;
+        }
+        return standard;
+    }
+
+    public static int itemIDToInternal(int id) {
+        if (id >= ItemIDs.UNIQUE_OFFSET) {
+            return id - ItemIDs.UNIQUE_OFFSET;
+        }
+        return itemIDToInternalMap.get(id);
+    }
 }

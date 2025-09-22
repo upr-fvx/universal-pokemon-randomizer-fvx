@@ -576,8 +576,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             pkmn.setSecondaryType(null);
         }
         pkmn.setCatchRate(rom[offset + Gen2Constants.bsCatchRateOffset] & 0xFF);
-        pkmn.setCommonHeldItem(items.get(rom[offset + Gen2Constants.bsCommonHeldItemOffset] & 0xFF));
-        pkmn.setRareHeldItem(items.get(rom[offset + Gen2Constants.bsRareHeldItemOffset] & 0xFF));
+        int commonHeldItemID = Gen2Constants.itemIDToStandard(rom[offset + Gen2Constants.bsCommonHeldItemOffset] & 0xFF);
+        pkmn.setCommonHeldItem(items.get(commonHeldItemID));
+        int rareHeldItemID = Gen2Constants.itemIDToStandard(rom[offset + Gen2Constants.bsRareHeldItemOffset] & 0xFF);
+        pkmn.setRareHeldItem(items.get(rareHeldItemID));
         pkmn.setGrowthCurve(ExpCurve.fromByte(rom[offset + Gen2Constants.bsGrowthCurveOffset]));
         pkmn.setFrontImageDimensions(rom[offset + Gen2Constants.bsFrontImageDimensionsOffset] & 0xFF);
 
@@ -596,8 +598,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         writeByte(offset + Gen2Constants.bsSecondaryTypeOffset, secondaryTypeByte);
         writeByte(offset + Gen2Constants.bsCatchRateOffset, (byte) pkmn.getCatchRate());
 
-        writeByte(offset + Gen2Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem() == null ? 0 : (byte) pkmn.getCommonHeldItem().getId());
-        writeByte(offset + Gen2Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem() == null ? 0 : (byte) pkmn.getRareHeldItem().getId());
+        writeByte(offset + Gen2Constants.bsCommonHeldItemOffset, pkmn.getCommonHeldItem() == null ? 0
+                : (byte) Gen2Constants.itemIDToInternal(pkmn.getCommonHeldItem().getId()));
+        writeByte(offset + Gen2Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem() == null ? 0
+                : (byte) Gen2Constants.itemIDToInternal(pkmn.getRareHeldItem().getId()));
         writeByte(offset + Gen2Constants.bsGrowthCurveOffset, pkmn.getGrowthCurve().toByte());
     }
 
@@ -672,7 +676,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Item> sHeldItems = new ArrayList<>();
         int[] shiOffsets = romEntry.getArrayValue("StarterHeldItems");
         for (int offset : shiOffsets) {
-            sHeldItems.add(items.get(rom[offset] & 0xFF));
+            sHeldItems.add(items.get(Gen2Constants.itemIDToStandard(rom[offset] & 0xFF)));
         }
         return sHeldItems;
     }
@@ -685,7 +689,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         Iterator<Item> sHeldItems = items.iterator();
         for (int offset : shiOffsets) {
-            writeByte(offset, (byte) (sHeldItems.next().getId() & 0xFF));
+            writeByte(offset, (byte) Gen2Constants.itemIDToInternal(sHeldItems.next().getId() & 0xFF));
         }
     }
 
@@ -1068,7 +1072,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             tp.setSpecies(pokes[rom[offset + 1] & 0xFF]);
             offset += 2;
             if ((dataType & 2) == 2) {
-                tp.setHeldItem(items.get(rom[offset] & 0xFF));
+                int heldItemID = Gen2Constants.itemIDToStandard(rom[offset] & 0xFF);
+                tp.setHeldItem(items.get(heldItemID));
                 offset++;
             }
             if ((dataType & 1) == 1) {
@@ -1183,8 +1188,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         data[offset + 1] = (byte) tp.getSpecies().getNumber();
         offset += 2;
         if (trainer.pokemonHaveItems()) {
-            byte itemId = tp.getHeldItem() == null ? 0 : (byte) tp.getHeldItem().getId();
-            data[offset] = itemId;
+            byte internalItemID = tp.getHeldItem() == null ? 0
+                    : (byte) Gen2Constants.itemIDToInternal(tp.getHeldItem().getId());
+            data[offset] = internalItemID;
             offset++;
         }
         if (trainer.pokemonHaveCustomMoves()) {
@@ -1871,29 +1877,36 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 int otherPoke = rom[pointer + 2 + (method == 5 ? 1 : 0)] & 0xFF;
                 EvolutionType type = Gen2Constants.evolutionTypeFromIndex(method);
                 int extraInfo = 0;
-                if (type == EvolutionType.TRADE) {
-                    int itemNeeded = rom[pointer + 1] & 0xFF;
-                    if (itemNeeded != 0xFF) {
-                        type = EvolutionType.TRADE_ITEM;
-                        extraInfo = itemNeeded;
-                    }
-                } else if (type == EvolutionType.LEVEL_ATTACK_HIGHER) {
-                    int tyrogueCond = rom[pointer + 2] & 0xFF;
-                    if (tyrogueCond == 2) {
-                        type = EvolutionType.LEVEL_DEFENSE_HIGHER;
-                    } else if (tyrogueCond == 3) {
-                        type = EvolutionType.LEVEL_ATK_DEF_SAME;
-                    }
-                    extraInfo = rom[pointer + 1] & 0xFF;
-                } else if (type == EvolutionType.HAPPINESS) {
-                    int happCond = rom[pointer + 1] & 0xFF;
-                    if (happCond == 2) {
-                        type = EvolutionType.HAPPINESS_DAY;
-                    } else if (happCond == 3) {
-                        type = EvolutionType.HAPPINESS_NIGHT;
-                    }
-                } else {
-                    extraInfo = rom[pointer + 1] & 0xFF;
+                switch (type) {
+                    case TRADE:
+                        int itemNeeded = rom[pointer + 1] & 0xFF;
+                        if (itemNeeded != 0xFF) {
+                            type = EvolutionType.TRADE_ITEM;
+                            extraInfo = Gen2Constants.itemIDToStandard(itemNeeded);
+                        }
+                        break;
+                    case STONE:
+                        extraInfo = Gen2Constants.itemIDToStandard(rom[pointer + 1] & 0xFF);
+                        break;
+                    case LEVEL_ATTACK_HIGHER:
+                        int tyrogueCond = rom[pointer + 2] & 0xFF;
+                        if (tyrogueCond == 2) {
+                            type = EvolutionType.LEVEL_DEFENSE_HIGHER;
+                        } else if (tyrogueCond == 3) {
+                            type = EvolutionType.LEVEL_ATK_DEF_SAME;
+                        }
+                        extraInfo = rom[pointer + 1] & 0xFF;
+                        break;
+                    case HAPPINESS:
+                        int happCond = rom[pointer + 1] & 0xFF;
+                        if (happCond == 2) {
+                            type = EvolutionType.HAPPINESS_DAY;
+                        } else if (happCond == 3) {
+                            type = EvolutionType.HAPPINESS_NIGHT;
+                        }
+                        break;
+                    default:
+                        extraInfo = rom[pointer + 1] & 0xFF;
                 }
                 Evolution evo = new Evolution(pokes[i], pokes[otherPoke], type, extraInfo);
                 if (!pkmn.getEvolutionsFrom().contains(evo)) {
@@ -1918,7 +1931,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
                             evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(Gen2ItemIDs.waterStone);
+                            evol.setExtraInfo(ItemIDs.waterStone);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40
                             evol.setType(EvolutionType.LEVEL);
@@ -1953,33 +1966,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             // Amount of required happiness for all happiness evolutions.
             if (rom[offset] == (byte) GlobalConstants.vanillaHappinessToEvolve) {
                 writeByte(offset, (byte) GlobalConstants.easierHappinessToEvolve);
-            }
-        }
-    }
-
-    /**
-     * The same as {@link AbstractRomHandler#removeTimeBasedEvolutions()}
-     * except it uses {@link Gen2ItemIDs}.
-     */
-    @Override
-    public void removeTimeBasedEvolutions() {
-        for (Species pk : getSpecies()) {
-            if (pk == null) {
-                continue;
-            }
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                EvolutionType et = evo.getType();
-
-                if (et.usesTime()) {
-                    markImprovedEvolutions(pk);
-                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
-                        evo.setType(EvolutionType.STONE);
-                        int item = et.isDayType() ? Gen2ItemIDs.sunStone : Gen2ItemIDs.moonStone;
-                        evo.setExtraInfo(item);
-                    } else {
-                        evo.setType(et.timeless());
-                    }
-                }
             }
         }
     }
@@ -2034,7 +2020,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         shop.setItems(new ArrayList<>());
         int itemAmount = rom[offset++];
         for (int itemNum = 0; itemNum < itemAmount; itemNum++) {
-            shop.getItems().add(items.get((int) rom[offset++] & 0xFF));
+            int itemID = Gen2Constants.itemIDToStandard(rom[offset++] & 0xFF);
+            shop.getItems().add(items.get(itemID));
         }
         if (rom[offset] != Gen2Constants.shopItemsTerminator) {
             throw new RomIOException("Invalid shop data");
@@ -2056,7 +2043,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         byte[] data = new byte[shop.getItems().size() + 2];
         data[0] = (byte) shop.getItems().size();
         for (int i = 0; i < shop.getItems().size(); i++) {
-            data[i + 1] = (byte) (shop.getItems().get(i).getId() & 0xFF);
+            data[i + 1] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
         }
         data[data.length - 1] = (byte) 0xFF;
         return data;
@@ -2070,12 +2057,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public List<Integer> getShopPrices() {
         int itemAttributesOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;
-        int itemCount = Gen2Constants.itemCount;
-        List<Integer> prices = new ArrayList<>(itemCount);
-        prices.add(0);
-        for (int i = 1; i < itemCount; i++) {
-            int offset = itemAttributesOffset + (i - 1) * entrySize;
-            prices.add(readWord(offset));
+        int internalItemCount = Gen2Constants.itemCount;
+
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
+
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemAttributesOffset + (internal - 1) * entrySize;
+            int id = Gen2Constants.itemIDToStandard(internal);
+            prices.set(id, readWord(offset));
         }
         return prices;
     }
@@ -2089,14 +2078,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void setShopPrices(List<Integer> prices) {
         int itemDataOffset = romEntry.getIntValue("ItemAttributesOffset");
         int entrySize = Gen2Constants.itemAttributesEntrySize;
-        int itemCount = Gen2Constants.itemCount;
-        if (prices.size() != itemCount) {
-            throw new IllegalArgumentException("");
+        int internalItemCount = Gen2Constants.itemCount;
+
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
         }
-        for (int i = 1; i < itemCount; i++) {
-            int balancedPrice = prices.get(i);
-            int offset = itemDataOffset + (i - 1) * entrySize;
-            writeWord(offset, balancedPrice);
+        for (int internal = 1; internal < internalItemCount; internal++) {
+            int offset = itemDataOffset + (internal - 1) * entrySize;
+            int id = Gen2Constants.itemIDToStandard(internal);
+            writeWord(offset, prices.get(id));
         }
     }
 
@@ -2154,11 +2145,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public Set<Item> getEvolutionItems() {
         return itemIdsToSet(Gen2Constants.evolutionItems);
-    }
-
-    @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen2Constants.xItems);
     }
 
     @Override
@@ -2253,7 +2239,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
             applyCamelCaseNames();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(Gen2ItemIDs.luckyEgg).setAllowed(false);
+            items.get(ItemIDs.luckyEgg).setAllowed(false);
         } else if (tweak == MiscTweak.REUSABLE_TMS) {
             applyReusableTMsPatch();
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
@@ -2459,25 +2445,22 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen2Constants.regularShopItems);
-    }
-
-    @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen2Constants.opShopItems);
     }
 
     @Override
     public void loadItems() {
-        String[] names = readItemNames();
-        items = new ArrayList<>(names.length);
-        items.add(null);
-        for (int i = 1; i < names.length; i++) {
-            items.add(new Item(i, names[i]));
+        items = new ArrayList<>(Collections.nCopies(ItemIDs.Gen2.last + 1, null));
+
+        String[] namesByInternal = readItemNames();
+        for (int internal = 1; internal < namesByInternal.length; internal++) {
+            int id = Gen2Constants.itemIDToStandard(internal);
+            items.set(id, new Item(id, namesByInternal[internal]));
         }
 
-        Gen2Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
+        Gen2Constants.bannedItems.stream().map(items::get).filter(Objects::nonNull)
+                .forEach(item -> item.setAllowed(false));
         Gen2Constants.tmItems.forEach(id -> items.get(id).setTM(true));
         Gen2Constants.badItems.forEach(id -> items.get(id).setBad(true));
         if (isVietCrystal) {
@@ -2638,7 +2621,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffs) {
-            Item item = items.get(rom[offset] & 0xFF);
+            Item item = items.get(Gen2Constants.itemIDToStandard(rom[offset] & 0xFF));
             if (item.isAllowed()) {
                 fieldItems.add(item);
             }
@@ -2653,10 +2636,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffs) {
-            Item current = items.get(rom[offset] & 0xFF);
+            Item current = items.get(Gen2Constants.itemIDToStandard(rom[offset] & 0xFF));
             if (current.isAllowed()) {
                 // Replace it
-                writeByte(offset, (byte) iterItems.next().getId());
+                writeByte(offset, (byte) Gen2Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 
@@ -2692,7 +2675,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int atkdef = rom[entryOffset + 3 + nicknameLength] & 0xFF;
             int spdspc = rom[entryOffset + 4 + nicknameLength] & 0xFF;
             trade.setIVs(new int[]{(atkdef >> 4) & 0xF, atkdef & 0xF, (spdspc >> 4) & 0xF, spdspc & 0xF});
-            trade.setHeldItem(items.get(rom[entryOffset + 5 + nicknameLength] & 0xFF));
+            int heldItemID = Gen2Constants.itemIDToStandard(rom[entryOffset + 5 + nicknameLength] & 0xFF);
+            trade.setHeldItem(items.get(heldItemID));
             trade.setOtId(readWord(entryOffset + 6 + nicknameLength));
             trade.setOtName(readString(entryOffset + 8 + nicknameLength, otLength, false));
             trades.add(trade);
@@ -2736,7 +2720,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         rom[offset + 3 + nicknameLength] = (byte) (trade.getIVs()[0] << 4 | trade.getIVs()[1]);
         rom[offset + 4 + nicknameLength] = (byte) (trade.getIVs()[2] << 4 | trade.getIVs()[3]);
-        rom[offset + 5 + nicknameLength] = (byte) (trade.getHeldItem() == null ? 0 : trade.getHeldItem().getId());
+        byte heldItemInternalID = trade.getHeldItem() == null ? 0
+                : (byte) Gen2Constants.itemIDToInternal(trade.getHeldItem().getId());
+        rom[offset + 5 + nicknameLength] = heldItemInternalID;
         writeWord(offset + 6 + nicknameLength, trade.getOtId());
         if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
             writeFixedLengthString(trade.getOtName(), offset + 8 + nicknameLength, otLength);
@@ -2821,8 +2807,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     private byte[] evoTypeExtraInfoToBytes(Evolution evo) {
          switch (evo.getType()) {
-             case LEVEL: case STONE: case TRADE_ITEM:
+             case LEVEL:
                  return new byte[]{(byte) evo.getExtraInfo()};
+             case STONE: case TRADE_ITEM:
+                 return new byte[]{(byte) Gen2Constants.itemIDToInternal(evo.getExtraInfo())};
              case TRADE:
                  return new byte[]{(byte) 0xFF};
              case HAPPINESS:

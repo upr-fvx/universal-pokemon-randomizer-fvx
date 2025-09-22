@@ -780,7 +780,6 @@ public class Gen5Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
     private static final Set<Integer> badItemsBW2 = setupBadItemsBW2();
     private static final Set<Integer> badItemsBW1 = setupBadItemsBW1();
-    public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems = setupOPShopItems();
 
     private static Set<Integer> setupBannedItems() {
@@ -816,14 +815,6 @@ public class Gen5Constants {
         Set<Integer> set = new HashSet<>(badItemsBW2);
         // The shards are bad in BW1; even the maniac only gives you $200 for them, and they serve no other purpose.
         addBetween(set, ItemIDs.redShard, ItemIDs.greenShard);
-        return Collections.unmodifiableSet(set);
-    }
-
-    private static Set<Integer> setupRegularShopItems() {
-        Set<Integer> set = new HashSet<>();
-        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
-        addBetween(set, ItemIDs.potion, ItemIDs.revive);
-        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
         return Collections.unmodifiableSet(set);
     }
 

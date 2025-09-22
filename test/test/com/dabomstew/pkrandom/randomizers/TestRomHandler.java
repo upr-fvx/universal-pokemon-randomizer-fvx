@@ -274,8 +274,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
         // Items are passed around by reference a lot, but as we only expect their "allowed" attribute
         // to change, we can (and do) just reset that.
-        for (int i = 1; i < items.size(); i++) {
-            items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) != null) {
+                items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+            }
         }
 
         testFieldItems = null;

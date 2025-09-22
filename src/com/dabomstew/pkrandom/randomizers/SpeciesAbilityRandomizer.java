@@ -1,12 +1,12 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.constants.AbilityIDs;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.gamedata.MegaEvolution;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.AbilityIDs;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.gamedata.MegaEvolution;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isAbilitiesFollowMegaEvolutions();
         boolean weighDuplicatesTogether = settings.isWeighDuplicateAbilitiesTogether();
         boolean ensureTwoAbilities = settings.isEnsureTwoAbilities();
-        boolean doubleBattleMode = settings.isDoubleBattleMode();
+        boolean isMultiBattleOnly = settings.getBattleStyle().isOnlyMultiBattles();
 
         // Abilities don't exist in some games...
         if (romHandler.abilitiesPerSpecies() == 0) {
@@ -52,7 +52,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         if (banBadAbilities) {
             bannedAbilities.addAll(GlobalConstants.badAbilities);
-            if (!doubleBattleMode) {
+            if (!isMultiBattleOnly) {
                 bannedAbilities.addAll(GlobalConstants.doubleBattleAbilities);
             }
         }
@@ -105,11 +105,11 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.from.getMegaEvolutionsFrom().size() > 1)
+                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
                     continue;
-                megaEvo.to.setAbility1(megaEvo.from.getAbility1());
-                megaEvo.to.setAbility2(megaEvo.from.getAbility2());
-                megaEvo.to.setAbility3(megaEvo.from.getAbility3());
+                megaEvo.getTo().setAbility1(megaEvo.getFrom().getAbility1());
+                megaEvo.getTo().setAbility2(megaEvo.getFrom().getAbility2());
+                megaEvo.getTo().setAbility3(megaEvo.getFrom().getAbility3());
             }
         }
 

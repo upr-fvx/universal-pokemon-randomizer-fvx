@@ -27,8 +27,10 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.MiscTweak;
+
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.CRC32;
 
@@ -59,28 +61,28 @@ public class SettingsUpdater {
         // bit fields 1 2 3 4 5 6 7 8
         // are values 0x01 0x02 0x04 0x08 0x10 0x20 0x40 0x80
 
-        // versions prior to 120 didn't have quick settings file,
+        // versions prior to v1.2.0a didn't have quick settings file,
         // they're just included here for completeness' sake
 
-        // versions < 102: add abilities set to unchanged
-        if (oldVersion < 102) {
+        // versions < v1.0.2a: add abilities set to unchanged
+        if (oldVersion < Version.v1_0_2a.id) {
             dataBlock[1] |= 0x10;
         }
 
-        // versions < 110: add move tutor byte (set both to unchanged)
-        if (oldVersion < 110) {
+        // versions < v1.1.0: add move tutor byte (set both to unchanged)
+        if (oldVersion < Version.v1_1_0.id) {
             insertExtraByte(15, (byte) (0x04 | 0x10));
         }
 
-        // version 110-111 no change (only added trainer names/classes to preset
+        // v1.1.0-v1.1.1 no change (only added trainer names/classes to preset
         // files, and some checkboxes which it is safe to leave as off)
 
-        // 111-112 no change (another checkbox we leave as off)
+        // v1.1.1-v1.1.2 no change (another checkbox we leave as off)
 
-        // 112-120 no change (only another checkbox)
+        // v1.1.2-v1.2.0a no change (only another checkbox)
 
-        // 120-150 new features
-        if (oldVersion < 150) {
+        // v1.2.0a-v1.5.0 new features
+        if (oldVersion < Version.v1_5_0.id) {
             // trades and field items: both unchanged
             insertExtraByte(16, (byte) (0x40));
             insertExtraByte(17, (byte) (0x04));
@@ -89,8 +91,8 @@ public class SettingsUpdater {
             actualDataLength += 4;
         }
 
-        // 150-160 lots of re-org etc
-        if (oldVersion < 160) {
+        // v1.5.0-v1.6.0a lots of re-org etc
+        if (oldVersion < Version.v1_6_0a.id) {
             // byte 0:
             // copy "update moves" to "update legacy moves"
             // move the other 3 fields after it up one
@@ -150,22 +152,22 @@ public class SettingsUpdater {
             insertIntField(23, hasBWPatch);
         }
 
-        // 160 to 161: no change
+        // v1.6.0a to v1.6.1: no change
         // the only changes were in implementation, which broke presets, but
         // leaves settings files the same
 
-        // 161 to 162:
+        // v1.6.1 to v1.6.2:
         // some added fields to tm/move tutors that we can leave blank
         // more crucially: a new general options byte @ offset 3
         // set it to all off by default
-        if (oldVersion < 162) {
+        if (oldVersion < Version.v1_6_2.id) {
             insertExtraByte(3, (byte) 0);
         }
 
-        // no significant changes from 162 to 163
+        // no significant changes from v1.6.2 to v1.6.3b
 
-        if (oldVersion < 170) {
-            // 163 to 170: add move data/evolution randoms and 2nd TM byte
+        if (oldVersion < Version.v1_7_0b.id) {
+            // v1.6.3b to v1.7.0b: add move data/evolution randoms and 2nd TM byte
             insertExtraByte(17, (byte) 0);
             insertExtraByte(21, (byte) 0);
             insertExtraByte(22, (byte) 1);
@@ -191,8 +193,8 @@ public class SettingsUpdater {
             dataBlock[2] = getRemappedByte(dataBlock[2], new int[] { 0, 1, 2, 4, 6, 7 });
         }
 
-        if (oldVersion < 171) {
-            // 170 to 171: base stats follow evolutions is now a checkbox
+        if (oldVersion < Version.v1_7_1.id) {
+            // v1.7.0b to v1.7.1: base stats follow evolutions is now a checkbox
             // so if it's set in the settings file (byte 1 bit 0), turn on the
             // "random" radiobox (byte 1 bit 1)
             if ((dataBlock[1] & 1) != 0) {
@@ -222,8 +224,8 @@ public class SettingsUpdater {
             insertExtraByte(22, (byte) 0);
         }
         
-        if(oldVersion < 172) {
-            // 171 to 172: removed separate names files in favor of one unified file
+        if(oldVersion < Version.v1_7_2.id) {
+            // v1.7.1 to v1.7.2: removed separate names files in favor of one unified file
             // so two of the trailing checksums are gone
             actualDataLength -= 8;
             
@@ -234,7 +236,11 @@ public class SettingsUpdater {
             insertExtraByte(35, (byte) 50); // 50 in the settings file = +0% after adjustment
         }
 
-        if (oldVersion < 300) {
+        // TODO: There are seemingly more versions of ZX between Dabomstew's v1.7.2 and ZX v3.0.0,
+        //  and some of these (by the release logs https://github.com/Ajarmar/universal-Pokemon-randomizer-zx/releases)
+        //  add options. Do really old Settings not get updated properly, due to this?
+
+        if (oldVersion < Version.ZX_3_0_0.id) {
             // wild level modifier
             insertExtraByte(38, (byte) 50);
 
@@ -242,7 +248,7 @@ public class SettingsUpdater {
             insertExtraByte(39, (byte) 1);
         }
 
-        if (oldVersion < 311) {
+        if (oldVersion < Version.ZX_4_0_0.id) {
             // double battle mode + boss/important extra pokemon
             insertExtraByte(40, (byte) 0);
 
@@ -262,7 +268,7 @@ public class SettingsUpdater {
             insertExtraByte(45, (byte) 0);
         }
 
-        if (oldVersion < 314) {
+        if (oldVersion < Version.ZX_4_1_0.id) {
             // exp curve
             insertExtraByte(46, (byte) 0);
 
@@ -270,7 +276,7 @@ public class SettingsUpdater {
             insertExtraByte(47, (byte) 50);
         }
 
-        if (oldVersion < 315) {
+        if (oldVersion < Version.ZX_4_2_0.id) {
             // This tweak used to be "Randomize Hidden Hollows", which got moved to static Pokemon
             // randomization, so the misc tweak became unused in this version. It eventually *was*
             // used in a future version for something else, but don't get confused by the new name.
@@ -282,7 +288,7 @@ public class SettingsUpdater {
             insertExtraByte(48, (byte) 0);
         }
 
-        if (oldVersion < 317) {
+        if (oldVersion < Version.ZX_4_3_0.id) {
             // Pickup items
             insertExtraByte(49, (byte) 0);
 
@@ -292,7 +298,7 @@ public class SettingsUpdater {
             FileFunctions.writeFullIntBigEndian(dataBlock, 28, genRestrictions);
         }
 
-        if (oldVersion < 319) {
+        if (oldVersion < Version.ZX_4_5_0.id) {
             // 5-10 custom starters, offset by 1 because of new "Random" option
             int starter1 = FileFunctions.read2ByteInt(dataBlock, 5);
             int starter2 = FileFunctions.read2ByteInt(dataBlock, 7);
@@ -310,7 +316,7 @@ public class SettingsUpdater {
             insertExtraByte(50, (byte) 0);
         }
 
-        if (oldVersion < 321) {
+        if (oldVersion < Version.ZX_4_6_0.id) {
             // Minimum Catch Rate got moved around to give it more space for Guaranteed Catch.
             // Read the old one, clear it out, then write it to the new location.
             int oldMinimumCatchRate = ((dataBlock[16] & 0x60) >> 5) + 1;
@@ -335,10 +341,37 @@ public class SettingsUpdater {
             insertExtraByte(60, (byte) 0);
         }
 
-        if (oldVersion < Version.FVX_1_1_0.id)
-        {
+        if (oldVersion < Version.FVX_1_1_0.id) {
             //add byte for trainer type diversity
             insertExtraByte(61, (byte) 0);
+        }
+
+        if (oldVersion < Version.FVX_1_3_0.id) {
+            // Introduced Battle Style Randomization.
+            // Get the old "Double Battle Only" state to initialize the data to.
+            byte initialState = 0;
+            if (((dataBlock[42] & 1)) == 0x01) { // is set to double battle mode
+                initialState = 0x14;
+            }
+            insertExtraByte(62, initialState);
+            // add byte for "force middle evolution"
+            insertExtraByte(63, (byte) 0);
+            // add byte for shop items, and move "balanceShopPrices" there
+            insertExtraByte(64, (byte) ((dataBlock[39] & 0x20) >> 5));
+            dataBlock[39] &= ~0x20;
+            // Change GenRestrictions format, to have "allow evolutionary relatives" be the lowest bit,
+            // instead of the 8th.
+            // Also, 0 was previously used to denote "all generations allowed".
+            // Make it use -1 (I.e., all bits 1) instead.
+            // Finally, make it little endian.
+            int restrictions = FileFunctions.readFullIntBigEndian(dataBlock, 30);
+            int allowEvoRelatives = (restrictions & 0x80) >> 7;
+            restrictions <<= 1;
+            restrictions |= allowEvoRelatives;
+            if (restrictions == 0) {
+                restrictions = -1;
+            }
+            FileFunctions.writeFullInt(dataBlock, 30, restrictions);
         }
 
         // fix checksum

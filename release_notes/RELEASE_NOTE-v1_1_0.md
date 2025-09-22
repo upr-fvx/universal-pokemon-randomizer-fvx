@@ -1,0 +1,35 @@
+Here's a new Randomizer release! Much of the time since the last one was spent on setting up [a website for the Randomizer](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/), for holding [general info](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/about.html), [acknowledgements](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/acks.html), and [the more in-depth documentation](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/home.html) that was before in a wiki tab here on GitHub. And also [download links](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/downloads.html), but if you are here you probably don't need those :) .
+Still, that does not mean this release is entirely bereft of features or bug fixes. Thanks to @TendrilChicken, @joeylmaalouf, and @kzmc-loser for reporting bugs!
+
+# How to use
+
+Download the randomizer below by clicking on `UPR_FVX-v1.1.0.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# Changelog
+## New and Changed Features
+### Trainer Pokémon
+- New options to ensure that (non type-themed) trainers use Pokémon of all different types. Can be applied to boss, important, and regular trainers individually.
+- "Rival keeps starter" no longer uses set levels to decide when to use evolutions of the starter, instead the actual levels the starter would evolve are used. Pokémon species that do not evolve by level-up, are considered to evolve after 20 levels. 
+**E.g.:** If the rival's starter is Vulpix, it may be replaced by Ninetales at levels 21+. If the rival's starter is Poliwag, it may be replaced by Poliwhirl starting at level 25, and Poliwrath starting at level 45. (However, if the starter is Poliwhirl, it will be replaced by Poliwrath starting at level 21.)  
+The details of this feature are subject to change.
+- "Elite 4 Unique Pokemon" no longer bans pre-evos of the E4 member's "unique" Pokémon when using "Force Fully Evolved".
+- Internal changes have been made to "Force Fully Evolved". The results should be the same (except as mentioned above), but new bugs could have been introduced.
+
+### Wild Pokémon
+- A new "Evolution Restrictions" category, with new options "Basic Pokemon Only" and "Same Evolutionary Stage".
+- "Basic Pokemon Only" ensures that all Pokemon found in the wild are Pokemon that no other Pokemon evolves into.
+- "Same Evolutionary Stage" ensures that each Pokemon is the same evolutionary stage as the Pokemon it replaced.  
+Evolutionary stages are determined by the number of stages since a basic pokemon, so (for example) Tauros, Mankey, and Pichu are all considered the same stage.
+- "Keep Evolutions" has been renamed "Keep Relations" and moved into the Evolution Restrictions category. It can be used with both the other options.  
+If used with "Basic Pokemon Only", it ensures each family in the zone *starts* with a basic Pokemon. For example, if the zone had both Kakuna and Beedrill but not Weedle, it might replace them with Gastly and Haunter, but not Haunter and Gengar.
+
+## Bugfixes
+
+- Fixed Pikachu, Raichu, Wigglytuff not getting their stats updated correctly when updating stats to Gen 6+.
+- Fixed Aegislash getting its Gen 8 nerf, when updating stats to Gen 7.
+- Fixed Aspear Berry not appearing as a possible held item in Gen 3.
+- Fixed crash when picking up the Mystery (Togepi) Egg in non-English versions of Heart Gold/Soul Silver.

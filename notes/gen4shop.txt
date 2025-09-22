@@ -1,0 +1,124 @@
+This note was created when improving shop/mart support for the Gen 4 games.
+
+Below is a portion of the ARM9 file in Platinum (U), disassembled through
+https://armconverter.com/?disasm, and with notes added. 
+It corresponds to ScrCmd_PokeMartCommon in the pokeplatinum disassembly. 
+https://github.com/pret/pokeplatinum/blob/e041f3d6bc1e8e8716ee3c5acfb49502fb9c0b91/src/scrcmd_shop.c#L21
+
+The goal was to find the location of the pointer to the PokeMartCommonItems struct,
+and the line dictating the size of the struct. 
+This way, we can repoint the struct and change its size.
+
+=============================
+
+Offset:     Raw hex:	ARM Thumb code:
+--------------------------------------------
+2046AD4		F0B5		push {r4, r5, r6, r7, lr}
+2046AD6		A1B0		sub sp, #0x84
+2046AD8		071C		adds r7, r0, #0
+2046ADA		F7F7ADFE	bl UNKNOWN_FUNC_1 (#0x203e838)
+2046ADE		011C		adds r1, r0, #0
+2046AE0		381C		adds r0, r7, #0
+2046AE2		8030		adds r0, #0x80
+2046AE4		0068		ldr r0, [r0]
+2046AE6		F8F733FB	bl UNKNOWN_FUNC_2 (#0x203f150)
+2046AEA		0024		movs r4, #0
+2046AEC		261C		adds r6, r4, #0
+2046AEE		251C		adds r5, r4, #0
+
+LABEL_0:
+2046AF0		381C		adds r0, r7, #0
+2046AF2		8030		adds r0, #0x80
+2046AF4		0068		ldr r0, [r0]
+2046AF6		C068		ldr r0, [r0, #0xc]
+2046AF8		DFF79EF9	bl UNKNOWN_FUNC_3 (#0x2025e38)
+2046AFC		291C		adds r1, r5, #0
+2046AFE		DFF719FA	bl UNKNOWN_FUNC_4 (#0x2025f34)
+2046B02		0128		cmp r0, #1
+2046B04		02D1		bne LABEL_1 (#0x2046b0c)
+2046B06		701C		adds r0, r6, #1
+2046B08		0006		lsls r0, r0, #0x18
+2046B0A		060E		lsrs r6, r0, #0x18
+
+LABEL_1:
+2046B0C		681C		adds r0, r5, #1
+2046B0E		0006		lsls r0, r0, #0x18
+2046B10		050E		lsrs r5, r0, #0x18
+2046B12		082D		cmp r5, #8
+2046B14		ECD3		blo LABEL_0 (#0x2046af0)
+2046B16		082E		cmp r6, #8
+2046B18		1AD8		bhi LABEL_3 (#0x2046b50)
+2046B1A		B019		adds r0, r6, r6
+2046B1C		7844		add r0, pc
+2046B1E		C088		ldrh r0, [r0, #6]
+2046B20		0004		lsls r0, r0, #0x10
+2046B22		0014		asrs r0, r0, #0x10
+2046B24		8744		add pc, r0
+2046B26		1000		movs r0, r2
+2046B28		1400		movs r4, r2
+2046B2A		1400		movs r4, r2
+2046B2C		1800		movs r0, r3
+2046B2E		1800		movs r0, r3
+2046B30		1C00		movs r4, r3
+2046B32		1C00		movs r4, r3
+2046B34		2000		movs r0, r4
+2046B36		2400		movs r4, r4
+2046B38		0121		movs r1, #1
+2046B3A		0AE0		b LABEL_4 (#0x2046b52)
+2046B3C		0221		movs r1, #2
+2046B3E		08E0		b LABEL_4 (#0x2046b52)
+2046B40		0321		movs r1, #3
+2046B42		06E0		b LABEL_4 (#0x2046b52)
+2046B44		0421		movs r1, #4
+2046B46		04E0		b LABEL_4 (#0x2046b52)
+2046B48		0521		movs r1, #5
+2046B4A		02E0		b LABEL_4 (#0x2046b52)
+2046B4C		0621		movs r1, #6
+2046B4E		00E0		b LABEL_4 (#0x2046b52)
+
+LABEL_3:
+2046B50		0121		movs r1, #1
+
+LABEL_4:
+// Loads the offset of PokeMartCommonItems into r0.
+// The pointer/offset is located at (pc==0x2046B54)+0x40 = 0x2046B94
+2046B52		1048		ldr r0, [pc, #0x40]
+2046B54		0022		movs r2, #0
+2046B56		01AE		add r6, sp, #4
+
+ADD_ITEMS_LOOP:
+2046B58		9300		lsls r3, r2, #2
+2046B5A		C518		adds r5, r0, r3
+2046B5C		6B88		ldrh r3, [r5, #2]
+2046B5E		9942		cmp r1, r3
+2046B60		05DB		blt NEXT_ITEM (#0x2046b6e)
+2046B62		2D88		ldrh r5, [r5]
+2046B64		6300		lsls r3, r4, #1
+2046B66		F552		strh r5, [r6, r3]
+2046B68		631C		adds r3, r4, #1
+2046B6A		1B06		lsls r3, r3, #0x18
+2046B6C		1C0E		lsrs r4, r3, #0x18
+
+NEXT_ITEM:
+2046B6E		521C		adds r2, r2, #1
+2046B70		1206		lsls r2, r2, #0x18
+2046B72		120E		lsrs r2, r2, #0x18
+// 0x13 is the size of PokeMartCommonItems
+2046B74		132A		cmp r2, #0x13 
+2046B76		EFD3		blo ADD_ITEMS_LOOP (#0x2046b58)
+2046B78		0749		ldr r1, [pc, #0x1c]
+2046B7A		6000		lsls r0, r4, #1
+2046B7C		01AA		add r2, sp, #4
+2046B7E		1152		strh r1, [r2, r0]
+2046B80		0023		movs r3, #0
+2046B82		0093		str r3, [sp]
+2046B84		786F		ldr r0, [r7, #0x74]
+2046B86		8037		adds r7, #0x80
+2046B88		3968		ldr r1, [r7]
+2046B8A		06F20BF9	bl UNKNOWN_FUNC_5 (#0x224cda4)
+2046B8E		0120		movs r0, #1
+2046B90		21B0		add sp, #0x84
+2046B92		F0BD		pop {r4, r5, r6, r7, pc}
+
+// This is the pointer to/offset of PokeMartCommonItems, little endian
+2046B94		FCBA0E02 	

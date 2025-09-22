@@ -24,21 +24,24 @@ package com.dabomstew.pkrandom.gui;
 
 import com.dabomstew.pkrandom.*;
 import com.dabomstew.pkrandom.cli.CliRandomizer;
-import com.dabomstew.pkrandom.constants.Gen3Constants;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.exceptions.CannotWriteToLocationException;
-import com.dabomstew.pkrandom.exceptions.EncryptedROMException;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.packs.*;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Type;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
-import com.dabomstew.pkrandom.romhandlers.*;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.constants.Gen3Constants;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
+import com.dabomstew.pkromio.exceptions.EncryptedROMException;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.*;
+import com.dabomstew.pkromio.romhandlers.*;
+import com.dabomstew.pkromio.romio.ROMFilter;
+import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -49,13 +52,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.zip.CRC32;
 
 /**
  * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
@@ -146,6 +150,8 @@ public class RandomizerGUI {
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
+    private JCheckBox tpForceMiddleStageAtCheckBox;
+    private JSlider tpForceMiddleStageAtSlider;
     private JCheckBox tpForceFullyEvolvedAtCheckBox;
     private JSlider tpForceFullyEvolvedAtSlider;
     private JSlider tpPercentageLevelModifierSlider;
@@ -247,7 +253,11 @@ public class RandomizerGUI {
     private JCheckBox stpSwapMegaEvosCheckBox;
     private JCheckBox tpSwapMegaEvosCheckBox;
     private JCheckBox wpAllowAltFormesCheckBox;
-    private JCheckBox tpDoubleBattleModeCheckBox;
+    private JPanel tpBattleStylePanel;
+    private JRadioButton tpUnchangedBattleStyleRadioButton;
+    private JRadioButton tpRandomBattleStyleRadioButton;
+    private JRadioButton tpSingleStyleRadioButton;
+    private JComboBox tpBattleStyleCombobox;
     private JCheckBox tpBossTrainersCheckBox;
     private JCheckBox tpImportantTrainersCheckBox;
     private JCheckBox tpRegularTrainersCheckBox;
@@ -363,7 +373,8 @@ public class RandomizerGUI {
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
-    private JLabel cpgUnsupportedOSLabel;
+    private JPanel specialShopsPanel;
+    private JCheckBox shAddRareCandyCheckBox;
 
     private static final Random RND = new Random();
 
@@ -386,6 +397,8 @@ public class RandomizerGUI {
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
 
+    private RomOpener romOpener = new RomOpener();
+
     private JFileChooser romOpenChooser = new JFileChooser();
     private JFileChooser romSaveChooser = new JFileChooser();
     private JFileChooser qsOpenChooser = new JFileChooser();
@@ -403,7 +416,7 @@ public class RandomizerGUI {
 
     private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkrandom/gui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
-    private Map<String, String> gameUpdates = new TreeMap<>();
+    private final Map<String, String> gameUpdates = new TreeMap<>();
 
     private List<String> trainerSettings = new ArrayList<>();
     private List<String> trainerSettingToolTips = new ArrayList<>();
@@ -411,16 +424,21 @@ public class RandomizerGUI {
                         TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5, TRAINER_KEEP_THEMED = 6,
                         TRAINER_KEEP_THEME_OR_PRIMARY = 7;
 
+    private List<String> selectableBattleStyles = new ArrayList<>();
+    private List<String> selectableBattleStylesTooltips = new ArrayList<>();
+    private final int SINGLE_BATTLE = 0, DOUBLE_BATTLE = 1, TRIPLE_BATTLE = 2, ROTATION_BATTLE = 3;
+
     private BatchRandomizationSettings batchRandomizationSettings;
 
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         bundle = ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
-        testForRequiredConfigs();
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };
+        romOpener.setGameUpdates(gameUpdates);
+        romOpener.setExtraMemoryAvailable(usedLauncher);
 
         haveCheckedCustomNames = false;
         attemptReadConfig();
@@ -477,7 +495,7 @@ public class RandomizerGUI {
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.VERSION_STRING));
 
-        openROMButton.addActionListener(e -> loadROM());
+        openROMButton.addActionListener(e -> selectAndOpenRom());
         pbsUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pbsShuffleRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pbsRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -520,9 +538,13 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpForceMiddleStageAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        tpRandomBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        tpSingleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
 
         wpRandomizeWildPokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         wpZoneNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -735,16 +757,16 @@ public class RandomizerGUI {
     }
 
     private void initFileChooserDirectories() {
-        romOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        romSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-        if (new File(SysConstants.ROOT_PATH + "settings/").exists()) {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH + "settings/"));
+        romOpenChooser.setCurrentDirectory(new File(RootPath.path));
+        romSaveChooser.setCurrentDirectory(new File(RootPath.path));
+        if (new File(RootPath.path + "settings/").exists()) {
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
         } else {
-            qsOpenChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsSaveChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
-            qsUpdateChooser.setCurrentDirectory(new File(SysConstants.ROOT_PATH));
+            qsOpenChooser.setCurrentDirectory(new File(RootPath.path));
+            qsSaveChooser.setCurrentDirectory(new File(RootPath.path));
+            qsUpdateChooser.setCurrentDirectory(new File(RootPath.path));
         }
     }
 
@@ -808,6 +830,10 @@ public class RandomizerGUI {
                 trainerSettings.add(bundle.getString(k));
                 trainerSettingToolTips.add(k.replace("text","toolTipText"));
             }
+            if (k.matches("^GUI\\.tpBattleStyle.*\\.text$")) {
+                selectableBattleStyles.add(bundle.getString(k));
+                selectableBattleStylesTooltips.add(k.replace("text","toolTipText"));
+            }
         }
 
         tpBossTrainersSpinner.setModel(bossTrainerModel);
@@ -844,80 +870,95 @@ public class RandomizerGUI {
         settingsMenu.add(batchRandomizationMenuItem);
     }
 
-    private void loadROM() {
+    private void selectAndOpenRom() {
         romOpenChooser.setSelectedFile(null);
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File fh = romOpenChooser.getSelectedFile();
+            openRom(romOpenChooser.getSelectedFile(), false);
+        }
+    }
+
+    /**
+     * Creates a blocking load dialog, and sets up a {@link Thread} which will:
+     * <ol>
+     *     <li>Open up the ROM file, to get a {@link RomHandler}.</li>
+     *     <li>Remove the blocking load dialog.</li>
+     *     <li>Tell the GUI to react to a ROM having been opened, or create an error dialog if the opening failed.</li>
+     * </ol>
+     * Returns the Thread.
+     * @param f The {@link File} to be opened as a ROM.
+     * @param reinitialize If true, the load dialog will not be shown, and the GUI will not react to a ROM being opened.
+     */
+    private Thread openRom(File f, boolean reinitialize) {
+        // A rather simple method - make the romOpener open the file and react to its results -
+        // complicated by the need of an animated loading dialog and thus multithreading...
+        opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
+        Thread t = new Thread(() -> {
+            SwingUtilities.invokeLater(() -> opDialog.setVisible(!reinitialize));
             try {
-                Utils.validateRomFile(fh);
-            } catch (Utils.InvalidROMException e) {
-                switch (e.getType()) {
-                    case LENGTH:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.tooShortToBeARom"), fh.getName()));
-                        return;
-                    case ZIP_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedZIPfile"), fh.getName()));
-                        return;
-                    case RAR_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedRARfile"), fh.getName()));
-                        return;
-                    case IPS_FILE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.openedIPSfile"), fh.getName()));
-                        return;
-                    case UNREADABLE:
-                        JOptionPane.showMessageDialog(mainPanel,
-                                String.format(bundle.getString("GUI.unreadableRom"), fh.getName()));
-                        return;
-                }
-            }
+                RomOpener.Results results = romOpener.openRomFile(f);
 
-            for (RomHandler.Factory rhf : checkHandlers) {
-                if (rhf.isLoadable(fh.getAbsolutePath())) {
-                    this.romHandler = rhf.create();
-                    if (!usedLauncher && this.romHandler instanceof Abstract3DSRomHandler) {
-                        String message = bundle.getString("GUI.pleaseUseTheLauncher");
-                        Object[] messages = {message};
-                        JOptionPane.showMessageDialog(frame, messages);
-                        this.romHandler = null;
-                        return;
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    if (!reinitialize) {
+                        initialState();
                     }
-                    opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
-                    Thread t = new Thread(() -> {
-                        boolean romLoaded = false;
-                        SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
-                        try {
-                            this.romHandler.loadRom(fh.getAbsolutePath());
-                            if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                                this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-                            }
-                            romLoaded = true;
-                        } catch (EncryptedROMException ex) {
-                            JOptionPane.showMessageDialog(mainPanel,
-                                    String.format(bundle.getString("GUI.encryptedRom"), fh.getAbsolutePath()));
-                        } catch (Exception ex) {
-                            attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                    if (results.wasOpeningSuccessful()) {
+                        romHandler = results.getRomHandler();
+                        if (!reinitialize) {
+                            romLoaded();
                         }
-                        final boolean loadSuccess = romLoaded;
-                        SwingUtilities.invokeLater(() -> {
-                            this.opDialog.setVisible(false);
-                            this.initialState();
-                            if (loadSuccess) {
-                                this.romLoaded();
-                            }
-                        });
-                    });
-                    t.start();
-
-                    return;
-                }
+                    } else {
+                        reportOpenRomFailure(f, results);
+                    }
+                });
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> {
+                    opDialog.setVisible(false);
+                    initialState();
+                    attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                });
             }
-            JOptionPane.showMessageDialog(mainPanel,
-                    String.format(bundle.getString("GUI.unsupportedRom"), fh.getName()));
+        });
+        t.start();
+        return t;
+    }
+
+    // This being public is not very pretty, but it works to get this code to PresetLoadDialog without copy-pasting
+    public void reportOpenRomFailure(File f, RomOpener.Results results) {
+        switch (results.getFailType()) {
+            case UNREADABLE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unreadableRom"), f.getName()));
+                break;
+            case INVALID_TOO_SHORT:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.tooShortToBeARom"), f.getName()));
+                break;
+            case INVALID_ZIP_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedZIPfile"), f.getName()));
+                break;
+            case INVALID_RAR_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedRARfile"), f.getName()));
+                break;
+            case INVALID_IPS_FILE:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.openedIPSfile"), f.getName()));
+                break;
+            case EXTRA_MEMORY_NOT_AVAILABLE:
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.pleaseUseTheLauncher"));
+                break;
+            case ENCRYPTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.encryptedRom"), f.getName()));
+                break;
+            case UNSUPPORTED_ROM:
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.unsupportedRom"), f.getName()));
+                break;
         }
     }
 
@@ -981,7 +1022,7 @@ public class RandomizerGUI {
             int endingIndex = startingIndex + numberOfRandomizedROMs;
             final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
-            SwingWorker swingWorker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                 int i;
 
                 @Override
@@ -1039,9 +1080,10 @@ public class RandomizerGUI {
         presetMode = false;
 
         try {
-            CustomNamesSet cns = FileFunctions.getCustomNames();
+            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
             performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
         }
     }
@@ -1115,118 +1157,15 @@ public class RandomizerGUI {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
-        // Setup verbose log
+        // Setup log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream log;
-        try {
-            log = new PrintStream(baos, false, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log = new PrintStream(baos);
-        }
-
-        final PrintStream verboseLog = log;
+        final PrintStream log = getPrintStream(baos);
 
         try {
-            final AtomicInteger finishedCV = new AtomicInteger(0);
             opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
-            Thread t = new Thread(() -> {
-                SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-                boolean succeededSave = false;
-                try {
-                    finishedCV.set(new GameRandomizer(settings, romHandler, bundle, saveAsDirectory).randomize(filename,
-                            verboseLog, seed));
-                    succeededSave = true;
-                } catch (RandomizationException ex) {
-                    attemptToLogException(ex, "GUI.saveFailedMessage",
-                            "GUI.saveFailedMessageNoLog", true, settings.toString(), Long.toString(seed));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                } catch (CannotWriteToLocationException ex) {
-                    JOptionPane.showMessageDialog(mainPanel, String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                } catch (Exception ex) {
-                    attemptToLogException(ex, "GUI.saveFailedIO", "GUI.saveFailedIONoLog", settings.toString(), Long.toString(seed));
-                    if (verboseLog != null) {
-                        verboseLog.close();
-                    }
-                }
-                if (succeededSave) {
-                    SwingUtilities.invokeLater(() -> {
-                        opDialog.setVisible(false);
-                        // Log?
-                        verboseLog.close();
-                        byte[] out = baos.toByteArray();
-
-                        if (raceMode) {
-                            JOptionPane.showMessageDialog(frame,
-                                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"),
-                                            finishedCV.get()));
-                        } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
-                            try {
-                                saveLogFile(filename, out);
-                            } catch (IOException e) {
-                                JOptionPane.showMessageDialog(frame,
-                                        bundle.getString("GUI.logSaveFailed"));
-                                return;
-                            }
-                        } else if (!batchRandomization) {
-                            int response = JOptionPane.showConfirmDialog(frame,
-                                    bundle.getString("GUI.saveLogDialog.text"),
-                                    bundle.getString("GUI.saveLogDialog.title"),
-                                    JOptionPane.YES_NO_OPTION);
-                            if (response == JOptionPane.YES_OPTION) {
-                                try {
-                                    saveLogFile(filename, out);
-                                } catch (IOException e) {
-                                    JOptionPane.showMessageDialog(frame,
-                                            bundle.getString("GUI.logSaveFailed"));
-                                    return;
-                                }
-                                JOptionPane.showMessageDialog(frame,
-                                        String.format(bundle.getString("GUI.logSaved"), filename));
-                            }
-                        }
-                        if (presetMode) {
-                            JOptionPane.showMessageDialog(frame,
-                                    bundle.getString("GUI.randomizationDone"));
-                            // Done
-                            if (this.unloadGameOnSuccess) {
-                                romHandler = null;
-                                initialState();
-                            } else {
-                                reinitializeRomHandler(false);
-                            }
-                        } else if (!batchRandomization) {
-                            // Compile a config string
-                            try {
-                                String configString = getCurrentSettings().toString();
-                                // Show the preset maker
-                                new PresetMakeDialog(frame, seed, configString);
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(frame,
-                                        bundle.getString("GUI.cantLoadCustomNames"));
-                            }
-
-                            // Done
-                            if (this.unloadGameOnSuccess) {
-                                romHandler = null;
-                                initialState();
-                            } else {
-                                reinitializeRomHandler(false);
-                            }
-                        }
-                    });
-                } else {
-                    SwingUtilities.invokeLater(() -> {
-                        opDialog.setVisible(false);
-                        romHandler = null;
-                        initialState();
-                    });
-                }
-            });
+            Thread t = new Thread(() -> performRandomizationInner(
+                    filename, seed, settings, baos, log, raceMode, batchRandomization, saveAsDirectory
+            ));
             t.start();
             if (batchRandomization) {
                 t.join();
@@ -1234,10 +1173,117 @@ public class RandomizerGUI {
             }
         } catch (Exception ex) {
             attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
-            if (verboseLog != null) {
-                verboseLog.close();
+            log.close();
+        }
+    }
+
+    private PrintStream getPrintStream(ByteArrayOutputStream baos) {
+        PrintStream log;
+        try {
+            log = new PrintStream(baos, false, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log = new PrintStream(baos);
+        }
+        return log;
+    }
+
+    private void performRandomizationInner(String filename,
+                                           long seed, Settings settings,
+                                           ByteArrayOutputStream baos, PrintStream log,
+                                           boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
+        SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
+        GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+        GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
+
+        if (results.wasSaveSuccessful()) {
+            if (!results.wasLogSuccessful()) {
+                attemptToLogException(results.getLogException(), "GUI.logFailedMessage", "GUI.logFailedMessageNoLog",
+                        true, settings.toString(), Long.toString(seed));
+            }
+            SwingUtilities.invokeLater(() -> finishRandomization(
+                    filename, seed, baos, results.getCheckValue(), raceMode, batchRandomization
+            ));
+        } else {
+            Exception e = results.getException();
+            if (e instanceof RandomizationException) {
+                attemptToLogException(e, "GUI.saveFailedMessage", "GUI.saveFailedMessageNoLog", true,
+                        settings.toString(), Long.toString(seed));
+            } else if (e instanceof CannotWriteToLocationException) {
+                JOptionPane.showMessageDialog(mainPanel,
+                        String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
+            } else {
+                attemptToLogException(e, "GUI.saveFailedIO", "GUI.saveFailedIONoLog",
+                        settings.toString(), Long.toString(seed));
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                opDialog.setVisible(false);
+                romHandler = null;
+                initialState();
+            });
+        }
+    }
+
+    private void finishRandomization(String filename, long seed,
+                                     ByteArrayOutputStream baos,
+                                     int checkValue,
+                                     boolean raceMode, boolean batchRandomization) {
+        opDialog.setVisible(false);
+        byte[] out = baos.toByteArray();
+
+        if (raceMode) {
+            JOptionPane.showMessageDialog(frame,
+                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue));
+        } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
+            try {
+                saveLogFile(filename, out);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.logSaveFailed"));
+                return;
+            }
+        } else if (!batchRandomization) {
+            int response = JOptionPane.showConfirmDialog(frame,
+                    bundle.getString("GUI.saveLogDialog.text"),
+                    bundle.getString("GUI.saveLogDialog.title"),
+                    JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                try {
+                    saveLogFile(filename, out);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(frame,
+                            bundle.getString("GUI.logSaveFailed"));
+                    return;
+                }
+                JOptionPane.showMessageDialog(frame,
+                        String.format(bundle.getString("GUI.logSaved"), filename));
             }
         }
+
+        if (presetMode) {
+            JOptionPane.showMessageDialog(frame,
+                    bundle.getString("GUI.randomizationDone"));
+
+        } else if (!batchRandomization) {
+            // Compile a config string
+            try {
+                String configString = getCurrentSettings().toString();
+                // Show the preset maker
+                new PresetMakeDialog(frame, seed, configString);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.cantLoadCustomNames"));
+            }
+        }
+
+        // Done
+        if (this.unloadGameOnSuccess) {
+            romHandler = null;
+            initialState();
+        } else {
+            reinitializeRomHandler(false);
+        }
+
     }
 
     private void saveLogFile(String filename, byte[] out) throws IOException {
@@ -1250,7 +1296,7 @@ public class RandomizerGUI {
     }
 
     private void presetLoader() {
-        PresetLoadDialog pld = new PresetLoadDialog(this,frame);
+        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpener);
         if (pld.isCompleted()) {
             // Apply it
             long seed = pld.getSeed();
@@ -1520,34 +1566,12 @@ public class RandomizerGUI {
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
     private void reinitializeRomHandler(boolean batchRandomization) {
-        String currentFN = this.romHandler.loadedFilename();
-        for (RomHandler.Factory rhf : checkHandlers) {
-            if (rhf.isLoadable(currentFN)) {
-                this.romHandler = rhf.create();
-                opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
-                Thread t = new Thread(() -> {
-                    SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-                    try {
-                        this.romHandler.loadRom(currentFN);
-                        if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                            this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-                        }
-                    } catch (Exception ex) {
-                        attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        this.opDialog.setVisible(false);
-                    });
-                });
-                t.start();
-                if (batchRandomization) {
-                    try {
-                        t.join();
-                    } catch(InterruptedException ex) {
-                        attemptToLogException(ex, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
-                    }
-                }
-                return;
+        Thread t = openRom(new File(romHandler.loadedFilename()), true);
+        if (batchRandomization) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
             }
         }
     }
@@ -1579,7 +1603,7 @@ public class RandomizerGUI {
         pbsLegendariesSlowRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.LEGENDARIES);
         pbsStrongLegendariesSlowRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.STRONG_LEGENDARIES);
         pbsAllMediumFastRadioButton.setSelected(settings.getExpCurveMod() == Settings.ExpCurveMod.ALL);
-        ExpCurve[] expCurves = getEXPCurvesForGeneration(romHandler.generationOfPokemon());
+        ExpCurve[] expCurves = romHandler.getExpCurves();
         int index = 0;
         for (int i = 0; i < expCurves.length; i++) {
             if (expCurves[i] == settings.getSelectedEXPCurve()) {
@@ -1684,6 +1708,8 @@ public class RandomizerGUI {
         tpDontUseLegendariesCheckBox.setSelected(settings.isTrainersBlockLegendaries());
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
+        tpForceMiddleStageAtCheckBox.setSelected(settings.isTrainersForceMiddleStage());
+        tpForceMiddleStageAtSlider.setValue(settings.getTrainersForceMiddleStageLevel());
         tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
         tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
@@ -1692,7 +1718,10 @@ public class RandomizerGUI {
         tpEliteFourUniquePokemonSpinner.setValue(settings.getEliteFourUniquePokemonNumber() > 0 ? settings.getEliteFourUniquePokemonNumber() : 1);
         tpAllowAlternateFormesCheckBox.setSelected(settings.isAllowTrainerAlternateFormes());
         tpSwapMegaEvosCheckBox.setSelected(settings.isSwapTrainerMegaEvos());
-        tpDoubleBattleModeCheckBox.setSelected(settings.isDoubleBattleMode());
+        tpUnchangedBattleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED);
+        tpRandomBattleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.RANDOM);
+        tpSingleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.SINGLE_STYLE);
+        tpBattleStyleCombobox.setSelectedItem(selectableBattleStyles.get(settings.getBattleStyle().getStyle().ordinal()));
         tpBossTrainersCheckBox.setSelected(settings.getAdditionalBossTrainerPokemon() > 0);
         tpBossTrainersSpinner.setValue(settings.getAdditionalBossTrainerPokemon() > 0 ? settings.getAdditionalBossTrainerPokemon() : 1);
         tpImportantTrainersCheckBox.setSelected(settings.getAdditionalImportantTrainerPokemon() > 0);
@@ -1830,9 +1859,10 @@ public class RandomizerGUI {
         shBanBadItemsCheckBox.setSelected(settings.isBanBadRandomShopItems());
         shBanRegularShopItemsCheckBox.setSelected(settings.isBanRegularShopItems());
         shBanOverpoweredShopItemsCheckBox.setSelected(settings.isBanOPShopItems());
-        shBalanceShopItemPricesCheckBox.setSelected(settings.isBalanceShopPrices());
         shGuaranteeEvolutionItemsCheckBox.setSelected(settings.isGuaranteeEvolutionItems());
         shGuaranteeXItemsCheckBox.setSelected(settings.isGuaranteeXItems());
+        shBalanceShopItemPricesCheckBox.setSelected(settings.isBalanceShopPrices());
+        shAddRareCandyCheckBox.setSelected(settings.isAddCheapRareCandiesToShops());
 
         puUnchangedRadioButton.setSelected(settings.getPickupItemsMod() == Settings.PickupItemsMod.UNCHANGED);
         puRandomRadioButton.setSelected(settings.getPickupItemsMod() == Settings.PickupItemsMod.RANDOM);
@@ -1887,7 +1917,7 @@ public class RandomizerGUI {
         settings.setStandardizeEXPCurves(pbsStandardizeEXPCurvesCheckBox.isSelected());
         settings.setExpCurveMod(pbsLegendariesSlowRadioButton.isSelected(), pbsStrongLegendariesSlowRadioButton.isSelected(),
                 pbsAllMediumFastRadioButton.isSelected());
-        ExpCurve[] expCurves = getEXPCurvesForGeneration(romHandler.generationOfPokemon());
+        ExpCurve[] expCurves = romHandler.getExpCurves();
         settings.setSelectedEXPCurve(expCurves[pbsEXPCurveComboBox.getSelectedIndex()]);
         settings.setBaseStatsFollowMegaEvolutions(pbsFollowMegaEvosCheckBox.isSelected() && pbsFollowMegaEvosCheckBox.isVisible());
         settings.setAssignEvoStatsRandomly(pbsAssignEvoStatsRandomlyCheckBox.isSelected() && pbsAssignEvoStatsRandomlyCheckBox.isVisible());
@@ -1966,6 +1996,8 @@ public class RandomizerGUI {
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
+        settings.setTrainersForceMiddleStage(tpForceMiddleStageAtCheckBox.isSelected());
+        settings.setTrainersForceMiddleStageLevel(tpForceMiddleStageAtSlider.getValue());
         settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
         settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
@@ -1973,7 +2005,8 @@ public class RandomizerGUI {
         settings.setEliteFourUniquePokemonNumber(tpEliteFourUniquePokemonCheckBox.isVisible() && tpEliteFourUniquePokemonCheckBox.isSelected() ? (int)tpEliteFourUniquePokemonSpinner.getValue() : 0);
         settings.setAllowTrainerAlternateFormes(tpAllowAlternateFormesCheckBox.isSelected() && tpAllowAlternateFormesCheckBox.isVisible());
         settings.setSwapTrainerMegaEvos(tpSwapMegaEvosCheckBox.isSelected() && tpSwapMegaEvosCheckBox.isVisible());
-        settings.setDoubleBattleMode(tpDoubleBattleModeCheckBox.isVisible() && tpDoubleBattleModeCheckBox.isSelected());
+        settings.setBattleStyleMod(tpUnchangedBattleStyleRadioButton.isSelected(), tpRandomBattleStyleRadioButton.isSelected(), tpSingleStyleRadioButton.isSelected());
+        settings.setSingleStyleSelection(isBattleStyle(SINGLE_BATTLE), isBattleStyle(DOUBLE_BATTLE), isBattleStyle(TRIPLE_BATTLE), isBattleStyle(ROTATION_BATTLE));
         settings.setAdditionalBossTrainerPokemon(tpBossTrainersCheckBox.isVisible() && tpBossTrainersCheckBox.isSelected() ? (int)tpBossTrainersSpinner.getValue() : 0);
         settings.setAdditionalImportantTrainerPokemon(tpImportantTrainersCheckBox.isVisible() && tpImportantTrainersCheckBox.isSelected() ? (int)tpImportantTrainersSpinner.getValue() : 0);
         settings.setAdditionalRegularTrainerPokemon(tpRegularTrainersCheckBox.isVisible() && tpRegularTrainersCheckBox.isSelected() ? (int)tpRegularTrainersSpinner.getValue() : 0);
@@ -2066,9 +2099,10 @@ public class RandomizerGUI {
         settings.setBanBadRandomShopItems(shBanBadItemsCheckBox.isSelected());
         settings.setBanRegularShopItems(shBanRegularShopItemsCheckBox.isSelected());
         settings.setBanOPShopItems(shBanOverpoweredShopItemsCheckBox.isSelected());
-        settings.setBalanceShopPrices(shBalanceShopItemPricesCheckBox.isSelected());
         settings.setGuaranteeEvolutionItems(shGuaranteeEvolutionItemsCheckBox.isSelected());
         settings.setGuaranteeXItems(shGuaranteeXItemsCheckBox.isSelected());
+        settings.setBalanceShopPrices(shBalanceShopItemPricesCheckBox.isSelected());
+        settings.setAddCheapRareCandiesToShops(shAddRareCandyCheckBox.isSelected());
 
         settings.setPickupItemsMod(puUnchangedRadioButton.isSelected(), puRandomRadioButton.isSelected());
         settings.setBanBadRandomPickupItems(puBanBadItemsCheckBox.isSelected());
@@ -2106,7 +2140,7 @@ public class RandomizerGUI {
     }
 
     private Settings getCurrentSettings() throws IOException {
-        return createSettingsFromState(FileFunctions.getCustomNames());
+        return createSettingsFromState(CustomNamesSet.readNamesFromFile());
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
@@ -2171,9 +2205,9 @@ public class RandomizerGUI {
     }
 
     public String getValidRequiredROMName(String config, CustomNamesSet customNames)
-            throws UnsupportedEncodingException, InvalidSupplementFilesException {
+            throws InvalidSupplementFilesException {
         try {
-            Utils.validatePresetSupplementFiles(config, customNames);
+            validatePresetSupplementFiles(config, customNames);
         } catch (InvalidSupplementFilesException e) {
             switch (e.getType()) {
                 case CUSTOM_NAMES:
@@ -2190,6 +2224,33 @@ public class RandomizerGUI {
             return null; // not valid length
         }
         return new String(data, Settings.LENGTH_OF_SETTINGS_DATA + 1, nameLength, StandardCharsets.US_ASCII);
+    }
+
+    public void validatePresetSupplementFiles(String config, CustomNamesSet customNames)
+            throws InvalidSupplementFilesException {
+        byte[] data = Base64.getDecoder().decode(config);
+
+        if (data.length < Settings.LENGTH_OF_SETTINGS_DATA + 9) {
+            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.UNKNOWN,
+                    "The preset config is too short to be valid");
+        }
+
+        // Check the checksum
+        ByteBuffer buf = ByteBuffer.allocate(4).put(data, data.length - 8, 4);
+        buf.rewind();
+        int crc = buf.getInt();
+
+        CRC32 checksum = new CRC32();
+        checksum.update(data, 0, data.length - 8);
+        if ((int) checksum.getValue() != crc) {
+            throw new IllegalArgumentException("Checksum failure.");
+        }
+
+        // Check the trainerclass & trainernames & nicknames crc
+        if (customNames == null && !CustomNamesSet.checkOtherCRC(data, 16, 4, data.length - 4)) {
+            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
+                    "Can't use this preset because you have a different set of custom names to the creator.");
+        }
     }
 
     private void initialState() {
@@ -2295,16 +2356,20 @@ public class RandomizerGUI {
 		tpComboBox.setEnabled(false);
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
         setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpWeightTypesCheckBox,
-                tpUseLocalPokemonCheckBox,
+				tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
-				tpRandomizeTrainerClassNamesCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+				tpRandomizeTrainerClassNamesCheckBox,
+                tpForceMiddleStageAtCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
-				tpDoubleBattleModeCheckBox, tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
+				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
 				tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
 				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
+        tpForceMiddleStageAtSlider.setVisible(true);
+        tpForceMiddleStageAtSlider.setEnabled(false);
+        tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
 		tpForceFullyEvolvedAtSlider.setVisible(true);
 		tpForceFullyEvolvedAtSlider.setEnabled(false);
 		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -2325,6 +2390,19 @@ public class RandomizerGUI {
 		tpRegularTrainersSpinner.setValue(1);
 		tpAdditionalPokemonForLabel.setVisible(true);
 		tpHeldItemsLabel.setVisible(true);
+
+        tpUnchangedBattleStyleRadioButton.setVisible(true);
+        tpUnchangedBattleStyleRadioButton.setEnabled(false);
+        tpUnchangedBattleStyleRadioButton.setSelected(true);
+        tpRandomBattleStyleRadioButton.setVisible(true);
+        tpRandomBattleStyleRadioButton.setEnabled(false);
+        tpRandomBattleStyleRadioButton.setSelected(false);
+        tpSingleStyleRadioButton.setVisible(true);
+        tpSingleStyleRadioButton.setEnabled(false);
+        tpSingleStyleRadioButton.setSelected(false);
+        tpBattleStyleCombobox.setVisible(true);
+        tpBattleStyleCombobox.setEnabled(false);
+        tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "Single Battles" }));
 
 		totpPanel.setVisible(true);
 		totpAllyPanel.setVisible(true);
@@ -2374,7 +2452,8 @@ public class RandomizerGUI {
 				fiRandomEvenDistributionRadioButton, fiBanBadItemsCheckBox, shUnchangedRadioButton,
 				shShuffleRadioButton, shRandomRadioButton, shBanOverpoweredShopItemsCheckBox, shBanBadItemsCheckBox,
 				shBanRegularShopItemsCheckBox, shBalanceShopItemPricesCheckBox, shGuaranteeEvolutionItemsCheckBox,
-				shGuaranteeXItemsCheckBox, puUnchangedRadioButton, puRandomRadioButton, puBanBadItemsCheckBox);
+				shGuaranteeXItemsCheckBox, shAddRareCandyCheckBox, puUnchangedRadioButton, puRandomRadioButton,
+                puBanBadItemsCheckBox);
 
         setInitialButtonState(teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
                 teKeepTypeIdentitiesRadioButton, teInverseRadioButton, teAddRandomImmunitiesCheckBox,
@@ -2537,7 +2616,7 @@ public class RandomizerGUI {
             pbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
             pbsFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             pbsUpdateComboBox.setVisible(pokemonGeneration < 8);
-            ExpCurve[] expCurves = getEXPCurvesForGeneration(pokemonGeneration);
+            ExpCurve[] expCurves = romHandler.getExpCurves();
             String[] expCurveNames = new String[expCurves.length];
             for (int i = 0; i < expCurves.length; i++) {
                 expCurveNames[i] = expCurves[i].toString();
@@ -2683,11 +2762,27 @@ public class RandomizerGUI {
 
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
+            tpForceMiddleStageAtCheckBox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-            tpDoubleBattleModeCheckBox.setVisible(pokemonGeneration >= 3);
-            tpDoubleBattleModeCheckBox.setEnabled(pokemonGeneration >= 3);
+            tpBattleStylePanel.setVisible(pokemonGeneration >= 3);
+            if (tpBattleStylePanel.isVisible()) {
+                tpUnchangedBattleStyleRadioButton.setVisible(pokemonGeneration >= 3);
+                tpUnchangedBattleStyleRadioButton.setEnabled(true);
+                tpUnchangedBattleStyleRadioButton.setSelected(true);
+
+                tpRandomBattleStyleRadioButton.setVisible(pokemonGeneration >= 3);
+                tpRandomBattleStyleRadioButton.setEnabled(true);
+                tpRandomBattleStyleRadioButton.setSelected(false);
+
+                tpSingleStyleRadioButton.setVisible(pokemonGeneration >= 3);
+                tpSingleStyleRadioButton.setEnabled(true);
+                tpSingleStyleRadioButton.setSelected(false);
+
+                tpBattleStyleCombobox.setVisible(pokemonGeneration >= 3);
+                tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
+            }
 
             boolean canAddPokesToBoss = romHandler.canAddPokemonToBossTrainers();
             boolean canAddPokesToImportant = romHandler.canAddPokemonToImportantTrainers();
@@ -2696,13 +2791,13 @@ public class RandomizerGUI {
 
             tpAdditionalPokemonForLabel.setVisible(additionalPokemonAvailable);
             tpBossTrainersCheckBox.setVisible(canAddPokesToBoss);
-            tpBossTrainersCheckBox.setEnabled(false);
+            tpBossTrainersCheckBox.setEnabled(canAddPokesToBoss);
             tpBossTrainersSpinner.setVisible(canAddPokesToBoss);
             tpImportantTrainersCheckBox.setVisible(canAddPokesToImportant);
-            tpImportantTrainersCheckBox.setEnabled(false);
+            tpImportantTrainersCheckBox.setEnabled(canAddPokesToImportant);
             tpImportantTrainersSpinner.setVisible(canAddPokesToImportant);
             tpRegularTrainersCheckBox.setVisible(canAddPokesToRegular);
-            tpRegularTrainersCheckBox.setEnabled(false);
+            tpRegularTrainersCheckBox.setEnabled(canAddPokesToRegular);
             tpRegularTrainersSpinner.setVisible(canAddPokesToRegular);
 
             boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
@@ -2819,11 +2914,16 @@ public class RandomizerGUI {
             fiRandomRadioButton.setEnabled(true);
             fiRandomEvenDistributionRadioButton.setEnabled(true);
 
+            // Gen 1 doesn't really have any interesting special shops/items to put in them,
+            // so it might be worth hiding that panel.
             shopItemsPanel.setVisible(romHandler.hasShopSupport());
             shUnchangedRadioButton.setEnabled(true);
             shUnchangedRadioButton.setSelected(true);
             shShuffleRadioButton.setEnabled(true);
             shRandomRadioButton.setEnabled(true);
+            shBalanceShopItemPricesCheckBox.setEnabled(true);
+            shAddRareCandyCheckBox.setVisible(romHandler.canChangeShopSizes());
+            shAddRareCandyCheckBox.setEnabled(romHandler.canChangeShopSizes());
 
             pickupItemsPanel.setVisible(romHandler.abilitiesPerSpecies() > 0);
             puUnchangedRadioButton.setEnabled(true);
@@ -2865,9 +2965,7 @@ public class RandomizerGUI {
             ppalShinyFromNormalCheckBox.setEnabled(false);
 
             boolean cpgSupport = romHandler.hasCustomPlayerGraphicsSupport();
-            boolean cpgOSSupport = romHandler.customPlayerGraphicsSupportDependsOnOS();
-            cpgNotExistLabel.setVisible(!cpgSupport && !cpgOSSupport);
-            cpgUnsupportedOSLabel.setVisible(!cpgSupport && cpgOSSupport);
+            cpgNotExistLabel.setVisible(!cpgSupport);
             cpgUnchangedRadioButton.setVisible(cpgSupport);
             cpgUnchangedRadioButton.setEnabled(cpgSupport);
             cpgUnchangedRadioButton.setSelected(true);
@@ -3060,7 +3158,10 @@ public class RandomizerGUI {
             disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
                     peRemoveTimeBasedEvolutionsCheckBox);
 
-            // Disable "Force Fully Evolved" Trainer Pokemon
+            // Disable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
+            disableAndDeselectButtons(tpForceMiddleStageAtCheckBox);
+            tpForceMiddleStageAtSlider.setEnabled(false);
+            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
             disableAndDeselectButtons(tpForceFullyEvolvedAtCheckBox);
             tpForceFullyEvolvedAtSlider.setEnabled(false);
             tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -3077,7 +3178,8 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
 
-            // Re-enable "Force Fully Evolved" Trainer Pokemon
+            // Re-enable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
+            tpForceMiddleStageAtCheckBox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
@@ -3246,11 +3348,21 @@ public class RandomizerGUI {
             pmsForceGoodDamagingSlider.setValue(pmsForceGoodDamagingSlider.getMinimum());
         }
 
-        if (isTrainerSetting(TRAINER_UNCHANGED)) {
+        boolean pokemonAdded = tpBossTrainersCheckBox.isSelected() || tpImportantTrainersCheckBox.isSelected() ||
+                tpRegularTrainersCheckBox.isSelected();
+        if (isTrainerSetting(TRAINER_UNCHANGED) && pokemonAdded) {
+            disableAndDeselectButtons(tpSwapMegaEvosCheckBox,
+                    tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
+                    tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
+                    tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
+                    tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
+            enableButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
+                    tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
+                    tpRandomShinyTrainerPokemonCheckBox);
+        } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
             disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
-                    tpBossTrainersCheckBox, tpImportantTrainersCheckBox, tpRegularTrainersCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
                     tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
@@ -3280,6 +3392,15 @@ public class RandomizerGUI {
                 enableButtons(tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                         tpRegularTrainersTypeDiversityCheckBox);
             }
+        }
+
+        tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
+
+        if (tpForceMiddleStageAtCheckBox.isSelected()) {
+            tpForceMiddleStageAtSlider.setEnabled(true);
+        } else {
+            tpForceMiddleStageAtSlider.setEnabled(false);
+            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
         }
 
         if (tpForceFullyEvolvedAtCheckBox.isSelected()) {
@@ -3525,12 +3646,12 @@ public class RandomizerGUI {
 
         if (shRandomRadioButton.isSelected() && shRandomRadioButton.isVisible() && shRandomRadioButton.isEnabled()) {
             enableButtons(shBanBadItemsCheckBox, shBanRegularShopItemsCheckBox,
-                    shBanOverpoweredShopItemsCheckBox, shBalanceShopItemPricesCheckBox,
-                    shGuaranteeEvolutionItemsCheckBox, shGuaranteeXItemsCheckBox);
+                    shBanOverpoweredShopItemsCheckBox, shGuaranteeEvolutionItemsCheckBox,
+                    shGuaranteeXItemsCheckBox);
         } else {
             disableAndDeselectButtons(shBanBadItemsCheckBox, shBanRegularShopItemsCheckBox,
-                    shBanOverpoweredShopItemsCheckBox, shBalanceShopItemPricesCheckBox,
-                    shGuaranteeEvolutionItemsCheckBox, shGuaranteeXItemsCheckBox);
+                    shBanOverpoweredShopItemsCheckBox, shGuaranteeEvolutionItemsCheckBox,
+                    shGuaranteeXItemsCheckBox);
         }
 
         if (puRandomRadioButton.isSelected() && puRandomRadioButton.isVisible() && puRandomRadioButton.isEnabled()) {
@@ -3687,6 +3808,20 @@ public class RandomizerGUI {
                 return comp;
             }
         });
+
+        tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(getBattleStylesForGeneration(romHandler.generationOfPokemon())));
+        tpBattleStyleCombobox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JComponent comp = (JComponent) super.getListCellRendererComponent(list,
+                        value, index, isSelected, cellHasFocus);
+
+                if (index >= 0 && value != null) {
+                    list.setToolTipText(bundle.getString(selectableBattleStylesTooltips.get(selectableBattleStyles.indexOf(value))));
+                }
+                return comp;
+            }
+        });
     }
 
     private ImageIcon makeMascotIcon() {
@@ -3713,7 +3848,7 @@ public class RandomizerGUI {
 
         boolean foundFile = false;
         for (int file = 0; file < 3; file++) {
-            File currentFile = new File(SysConstants.ROOT_PATH + cnamefiles[file]);
+            File currentFile = new File(RootPath.path + cnamefiles[file]);
             if (currentFile.exists()) {
                 foundFile = true;
                 break;
@@ -3744,7 +3879,7 @@ public class RandomizerGUI {
         // Things that should be true by default should be manually set here
         unloadGameOnSuccess = true;
         batchRandomizationSettings = new BatchRandomizationSettings();
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (!fh.exists() || !fh.canRead()) {
             return;
         }
@@ -3816,7 +3951,7 @@ public class RandomizerGUI {
     }
 
     private boolean attemptWriteConfig() {
-        File fh = new File(SysConstants.ROOT_PATH + "config.ini");
+        File fh = new File(RootPath.path + "config.ini");
         if (fh.exists() && !fh.canWrite()) {
             return false;
         }
@@ -3847,26 +3982,6 @@ public class RandomizerGUI {
 
     }
 
-    private void testForRequiredConfigs() {
-        try {
-            Utils.testForRequiredConfigs();
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                    String.format(bundle.getString("GUI.configFileMissing"), e.getMessage()));
-            System.exit(1);
-        }
-    }
-
-    private ExpCurve[] getEXPCurvesForGeneration(int generation) {
-        ExpCurve[] result;
-        if (generation < 3) {
-            result = new ExpCurve[]{ ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW };
-        } else {
-            result = new ExpCurve[]{ ExpCurve.MEDIUM_FAST, ExpCurve.MEDIUM_SLOW, ExpCurve.FAST, ExpCurve.SLOW, ExpCurve.ERRATIC, ExpCurve.FLUCTUATING };
-        }
-        return result;
-    }
-
     private String[] getTrainerSettingsForGeneration(int generation) {
         List<String> result = new ArrayList<>(trainerSettings);
         if (generation != 5) {
@@ -3875,11 +3990,26 @@ public class RandomizerGUI {
         return result.toArray(new String[0]);
     }
 
+    private String[] getBattleStylesForGeneration(int generation) {
+        List<String> result = new ArrayList<>(selectableBattleStyles);
+        if (generation <= 4 || generation >= 7) {
+            result.remove(bundle.getString("GUI.tpBattleStyle3Triple.text"));
+            result.remove(bundle.getString("GUI.tpBattleStyle4Rotation.text"));
+        }
+        return result.toArray(new String[0]);
+    }
+
     private boolean isTrainerSetting(int setting) {
         return trainerSettings.indexOf(tpComboBox.getSelectedItem()) == setting;
     }
 
+    private boolean isBattleStyle(int setting) {
+        return selectableBattleStyles.indexOf(tpBattleStyleCombobox.getSelectedItem()) == setting;
+    }
+
     public static void main(String[] args) {
+        setRootPath();
+
         String firstCliArg = args.length > 0 ? args[0] : "";
         // invoke as CLI program
         if (firstCliArg.equals("cli")) {
@@ -3907,6 +4037,22 @@ public class RandomizerGUI {
                 frame.pack();
                 frame.setVisible(true);
             });
+        }
+    }
+
+    private static void setRootPath() {
+        // Honestly I don't know why the Randomizer needs a different RootPath from just "./",
+        // but it was written in earlier versions so it feels safer to just keep it.
+        // Feel free to investigate if you feel like it. Maybe it's entirely redundant.
+        // --voliol 2025-04-27
+        try {
+            URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
+            String file = location.getFile();
+            String plusEncoded = file.replaceAll("\\+", "%2b");
+            File f = new File(java.net.URLDecoder.decode(plusEncoded, "UTF-8"));
+            RootPath.path = f.getParentFile() + File.separator;
+        } catch (UnsupportedEncodingException ignored) {
+            RootPath.path = "./";
         }
     }
 }

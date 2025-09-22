@@ -1,0 +1,33 @@
+This is a new major release of the **Universal Pokemon Randomizer FVX.** Thanks to @MClarke93, @aodnightshade, and @macobra52 for the bug reports and feature suggestions.
+
+# How to use
+
+Download the randomizer below by clicking on `PokeRandoFVX-v0.1.1.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# Changelog
+## New and Changed Features
+### Wild Pokémon
+
+* The Wild Pokémon GUI has been overhauled and several features renamed to more clearly indicate what is being performed.
+* A new mode, "1 Replacement Per Map" (or, in older terms, "Map 1-to-1 Mapping") has been added. This mode replaces "1 Per Encounter Set"/"Area 1-to-1" in games for which it is available, allowing more consistent results between generations.
+   - At the current time, this feature is available in Generations 1, 4, 5, and Omega Ruby/Alpha Sapphire in Generation 6.
+* The modes "1 Replacement In Whole Game"/"Global 1-to-1", "1 Per Named Location"/"Location 1-to-1", and "1 Per Map"/"Map 1-to-1" can now be split by encounter types (such as walking, Surfing, and fishing).
+* "Global Family-to-Family" is now "Keep Evolutions" and can be applied to any replacement zone (game, location, map, encounter set).
+* "Balance Shaking Grass Encounters" is now "Balance Low Level Encounters" and can be applied to encounters in any game (though it has relatively little effect anywhere but Gen 5's shaking grass). It also can be applied to any replacement zone.
+
+### Trainer Pokémon
+
+* When using Random Type Themes, League trainers now check _all_ other League trainers' themes. This means that Elite 4 and themed Champions should no longer share themes with Gyms (excepting Kanto gyms in the Johto games).
+
+## Bugfixes
+* Fixed a null pointer exception occurring after saving a ROM. (This did not crash the application or prevent saving, but it did result in an error being printed to console.)
+* Fix bugs in "Keep Evolutions", including possible family reuse where not required.
+* Fixed bug where certain formes of Zygarde were not considered legendary.
+* Fixed bug in which single-type species' "original" types were considered to be two of that type (for example, Normal/Normal instead of just Normal).
+* Clarified difference between "cosmetic" replacements and cosmetic formes, and fixed bugs where the two were conflated.
+* Fixed bug in which any species with an evolution was considered to have two evolutions, for Starter Pokémon and other cases.
+* With "Keep Type Themed Trainers' Themes", fixed Platinum gyms being randomized with Diamond/Pearl traverse order (Fantina using Fighting, Maylene using Water, Wake using Ghost).

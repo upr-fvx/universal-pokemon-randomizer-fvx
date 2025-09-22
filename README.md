@@ -1,4 +1,8 @@
 # Universal Pokemon Randomizer FVX
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/upr-fvx/universal-pokemon-randomizer-fvx/total)
+![GitHub Release](https://img.shields.io/github/v/release/upr-fvx/universal-pokemon-randomizer-fvx)
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/upr-fvx/universal-pokemon-randomizer-fvx)
+
 
 [Website](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/)
 
@@ -36,4 +40,4 @@ If you encounter something that seems to be a bug, submit an issue using the `Bu
 
 # Other problems
 
-If you have problems using the randomizer, it could be because of some problem with Java or your operating system. **If you have problems with starting the randomizer specifically, [read this page first before creating an issue.](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/About-Java)** If that page does not solve your problem, submit an issue using the `Need Help` issue template.
+If you have problems using the randomizer, it could be because of some problem with Java or your operating system. **If you have problems with starting the randomizer specifically, [read this page first before creating an issue.](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/about_java.html)** If that page does not solve your problem, submit an issue using the `Need Help` issue template.

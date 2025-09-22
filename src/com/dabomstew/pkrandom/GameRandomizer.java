@@ -26,21 +26,62 @@ import com.dabomstew.pkrandom.log.RandomizationLogger;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.random.SeedPicker;
 import com.dabomstew.pkrandom.randomizers.*;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.dabomstew.pkrandom.updaters.MoveUpdater;
 import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
+import com.dabomstew.pkrandom.updaters.Updater;
+import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
 
 /**
- * Coordinates and logs the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s.
+ * Coordinates the randomization of a game, via a {@link RomHandler}, and various sub-{@link Randomizer}s,
+ * and {@link Updater}s.<br>
+ * Also passes the results to a {@link RandomizationLogger} and a {@link CheckValueCalculator} for
+ * logging/check value calculation.
+ * <br><br>
  * Output varies by seed.
  */
 public class GameRandomizer {
+
+    public static class Results {
+
+        private Exception e;
+        private Exception logE;
+        private int checkValue;
+
+        private Results() {}
+
+        public boolean wasSaveSuccessful() {
+            return e == null;
+        }
+
+        public Exception getException() {
+            if (wasSaveSuccessful()) {
+                throw new IllegalStateException("Randomization successful; no Exception to be gotten.");
+            }
+            return e;
+        }
+
+        public boolean wasLogSuccessful() {
+            return logE == null;
+        }
+
+        public Exception getLogException() {
+            if (wasLogSuccessful()) {
+                throw new IllegalStateException("Logging successful; no Exception to be gotten.");
+            }
+            return logE;
+        }
+
+        public int getCheckValue() {
+            return checkValue;
+        }
+    }
 
     private final RandomSource randomSource = new RandomSource();
 
@@ -86,7 +127,9 @@ public class GameRandomizer {
         this.typeEffUpdater = new TypeEffectivenessUpdater(romHandler);
 
         this.introPokeRandomizer = new IntroPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.speciesBSRandomizer = new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.speciesBSRandomizer = romHandler.generationOfPokemon() == 1 ?
+                new Gen1SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic()) :
+                new SpeciesBaseStatRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesTypeRandomizer = new SpeciesTypeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesAbilityRandomizer = new SpeciesAbilityRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.evoRandomizer = new EvolutionRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -130,7 +173,7 @@ public class GameRandomizer {
                 typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
     }
 
-    public int randomize(final String filename) {
+    public Results randomize(final String filename) {
         return randomize(filename, new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
@@ -138,31 +181,41 @@ public class GameRandomizer {
         }));
     }
 
-    public int randomize(final String filename, final PrintStream log) {
+    public Results randomize(final String filename, final PrintStream log) {
         long seed = SeedPicker.pickSeed();
         // long seed = 123456789;    // TESTING
         return randomize(filename, log, seed);
     }
 
-    public int randomize(final String filename, final PrintStream log, long seed) {
+    public Results randomize(final String filename, final PrintStream log, long seed) {
+        Results results = new Results();
+        try {
+            final long startTime = System.currentTimeMillis();
+            randomSource.seed(seed);
 
-        final long startTime = System.currentTimeMillis();
-        randomSource.seed(seed);
+            setupSpeciesRestrictions();
+            applyUpdaters();
+            applyRandomizers();
+            maybeSetCustomPlayerGraphics();
 
-        setupSpeciesRestrictions();
-        applyUpdaters();
-        applyRandomizers();
-        maybeSetCustomPlayerGraphics();
+            results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
 
-        romHandler.saveRom(filename, seed, saveAsDirectory);
+            romHandler.saveRom(filename, seed, saveAsDirectory);
 
-        logger.logResults(log, startTime);
+            try {
+                logger.logResults(log, startTime);
+            } catch (Exception e) {
+                results.logE = e;
+            }
+        } catch (Exception e) {
+            results.e = e;
+        }
 
-        return new CheckValueCalculator(romHandler, settings).calculate();
+        return results;
     }
 
     private void setupSpeciesRestrictions() {
-        romHandler.getRestrictedSpeciesService().setRestrictions(settings);
+        romHandler.getRestrictedSpeciesService().setRestrictions(settings.getCurrentRestrictions());
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();
         }
@@ -200,19 +253,17 @@ public class GameRandomizer {
 
         maybeStandardizeEXPCurves();
 
-        maybeRandomizeSpeciesTypes();
-
-        maybeRandomizeWildHeldItems();
-
-        // Applied after type to pick new evos based on new types.
+        // Applied before anything that can be carried up evolutions, so the new evos are used for that.
         maybeRandomizeEvolutions();
 
+        maybeRandomizeSpeciesTypes();
+        maybeRandomizeWildHeldItems();
         maybeRandomizeSpeciesBaseStats();
         maybeRandomizeSpeciesAbilities();
 
         maybeApplyEvolutionImprovements();
 
-        // Applied after type to update the strings correctly based on new types
+        // Applied after species types both some settings and the in-game strings should depend on the new types.
         maybeRandomizeStarters();
 
         maybeRandomizeMovesets();
@@ -342,13 +393,15 @@ public class GameRandomizer {
     private void maybeApplyEvolutionImprovements() {
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
-            romHandler.removeImpossibleEvolutions(settings);
+            boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
+            romHandler.removeImpossibleEvolutions(changeMoveEvos);
         }
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(40, 30);
-            romHandler.makeEvolutionsEasier(settings);
+            boolean wildsRandomizer = settings.isRandomizeWildPokemon();
+            romHandler.makeEvolutionsEasier(wildsRandomizer);
         }
 
         // Remove time-based evolutions
@@ -466,24 +519,26 @@ public class GameRandomizer {
 
     private void maybeRandomizeTrainerPokemon() {
         // Trainer Pokemon
-        // 1. Add extra Trainer Pokemon
-        // 2. Set trainers to be double battles and add extra Pokemon if necessary
-        // 3. Modify levels
+        // 1. Modify levels first to get larger level variety if additional Pokemon are added in the next step
+        // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
+        // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing)
+        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
-        if (settings.getAdditionalRegularTrainerPokemon() > 0
-                || settings.getAdditionalImportantTrainerPokemon() > 0
-                || settings.getAdditionalBossTrainerPokemon() > 0) {
-            trainerPokeRandomizer.addTrainerPokemon();
-        }
-
-        if (settings.isDoubleBattleMode()) {
-            trainerPokeRandomizer.setDoubleBattleMode();
-        }
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
+        }
+
+        boolean additionalPokemonAdded = settings.getAdditionalRegularTrainerPokemon() > 0
+                || settings.getAdditionalImportantTrainerPokemon() > 0
+                || settings.getAdditionalBossTrainerPokemon() > 0;
+        if (additionalPokemonAdded) {
+            trainerPokeRandomizer.addTrainerPokemon();
+        }
+
+        if (settings.getBattleStyle().isBattleStyleChanged()) {
+            trainerPokeRandomizer.modifyBattleStyle();
         }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
@@ -492,10 +547,15 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED) {
+        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersForceFullyEvolved()) {
-            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        } else {
+            if (settings.isTrainersForceMiddleStage()) {
+                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
+            }
+            if (settings.isTrainersForceFullyEvolved()) {
+                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+            }
         }
     }
 
@@ -577,8 +637,6 @@ public class GameRandomizer {
     private void maybeRandomizeFieldItems() {
         switch (settings.getFieldItemsMod()) {
             case SHUFFLE:
-                itemRandomizer.shuffleFieldItems();
-                break;
             case RANDOM:
             case RANDOM_EVEN:
                 itemRandomizer.randomizeFieldItems();
@@ -592,6 +650,12 @@ public class GameRandomizer {
                 break;
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
+        }
+        if (settings.isBalanceShopPrices()) {
+            romHandler.setBalancedShopPrices();
+        }
+        if (settings.isAddCheapRareCandiesToShops()) {
+            itemRandomizer.addCheapRareCandiesToShops();
         }
     }
 

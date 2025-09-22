@@ -1,12 +1,15 @@
 package com.dabomstew.pkrandom.cli;
 
-import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.GameRandomizer;
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.romhandlers.*;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
+import com.dabomstew.pkromio.romhandlers.AbstractDSRomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romio.RomOpener;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,29 +17,22 @@ import java.util.ResourceBundle;
 
 public class CliRandomizer {
 
+    // TODO: Why is this class fully static? It gives bad vibes since it's also in Java. Is it really fine like this?
+
     private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+
+    private final static RomOpener romOpener = new RomOpener();
 
     private static boolean performDirectRandomization(String settingsFilePath, String sourceRomFilePath,
                                                       String destinationRomFilePath, boolean saveAsDirectory,
                                                       String updateFilePath, boolean saveLog) {
-        // borrowed directly from RandomizerGUI()
-        RomHandler.Factory[] checkHandlers = new RomHandler.Factory[] {
-                new Gen1RomHandler.Factory(),
-                new Gen2RomHandler.Factory(),
-                new Gen3RomHandler.Factory(),
-                new Gen4RomHandler.Factory(),
-                new Gen5RomHandler.Factory(),
-                new Gen6RomHandler.Factory(),
-                new Gen7RomHandler.Factory()
-        };
-
         Settings settings;
         try {
             File fh = new File(settingsFilePath);
             FileInputStream fis = new FileInputStream(fh);
             settings = Settings.read(fis);
             // taken from com.dabomstew.pkrandom.newgui.RandomizerGUI.saveROM, set distinctly from all other settings
-            settings.setCustomNames(FileFunctions.getCustomNames());
+            settings.setCustomNames(CustomNamesSet.readNamesFromFile());
             fis.close();
         } catch (UnsupportedOperationException | IllegalArgumentException | IOException ex) {
             ex.printStackTrace();
@@ -54,67 +50,68 @@ public class CliRandomizer {
         final PrintStream verboseLog = log;
 
         try {
-            File romFileHandler = new File(sourceRomFilePath);
-            RomHandler romHandler;
+            File romFile = new File(sourceRomFilePath);
 
-            for (RomHandler.Factory rhf : checkHandlers) {
-                if (rhf.isLoadable(romFileHandler.getAbsolutePath())) {
-                    romHandler = rhf.create();
-                    romHandler.loadRom(romFileHandler.getAbsolutePath());
-                    if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
-                        romHandler.loadGameUpdate(updateFilePath);
-                        if (!saveAsDirectory) {
-                            printWarning("Forcing save as directory since a game update was supplied.");
-                        }
-                        saveAsDirectory = true;
-                    }
-                    if (saveAsDirectory && romHandler.generationOfPokemon() != 6 && romHandler.generationOfPokemon() != 7) {
-                        saveAsDirectory = false;
-                        printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
-                    }
+            RomOpener.Results results = romOpener.openRomFile(romFile);
+            if (results.wasOpeningSuccessful()) {
+                RomHandler romHandler = results.getRomHandler();
 
-                    CliRandomizer.displaySettingsWarnings(settings, romHandler);
-
-                    File fh = new File(destinationRomFilePath);
+                if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
+                    romHandler.loadGameUpdate(updateFilePath);
                     if (!saveAsDirectory) {
-                        List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
-                        extensions.remove(romHandler.getDefaultExtension());
-
-                        fh = FileFunctions.fixFilename(fh, romHandler.getDefaultExtension(), extensions);
-                        if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
-                            String currentFN = romHandler.loadedFilename();
-                            if (currentFN.equals(fh.getAbsolutePath())) {
-                                printError(bundle.getString("GUI.cantOverwriteDS"));
-                                return false;
-                            }
-                        }
+                        printWarning("Forcing save as directory since a game update was supplied.");
                     }
-
-                    String filename = fh.getAbsolutePath();
-
-                    GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
-                    randomizer.randomize(filename, verboseLog);
-                    verboseLog.close();
-                    byte[] out = baos.toByteArray();
-                    if (saveLog) {
-                        try {
-                            FileOutputStream fos = new FileOutputStream(filename + ".log");
-                            fos.write(0xEF);
-                            fos.write(0xBB);
-                            fos.write(0xBF);
-                            fos.write(out);
-                            fos.close();
-                        } catch (IOException e) {
-                            printWarning("Could not write log.");
-                        }
-                    }
-                    System.out.println("Randomized successfully!");
-                    // this is the only successful exit, everything else will return false at the end of the function
-                    return true;
+                    saveAsDirectory = true;
                 }
+                if (saveAsDirectory && romHandler.generationOfPokemon() != 6 && romHandler.generationOfPokemon() != 7) {
+                    saveAsDirectory = false;
+                    printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
+                }
+
+                CliRandomizer.displaySettingsWarnings(settings, romHandler);
+
+                File fh = new File(destinationRomFilePath);
+                if (!saveAsDirectory) {
+                    List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
+                    extensions.remove(romHandler.getDefaultExtension());
+
+                    fh = FileFunctions.fixFilename(fh, romHandler.getDefaultExtension(), extensions);
+                    if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
+                        String currentFN = romHandler.loadedFilename();
+                        if (currentFN.equals(fh.getAbsolutePath())) {
+                            printError(bundle.getString("GUI.cantOverwriteDS"));
+                            return false;
+                        }
+                    }
+                }
+
+                String filename = fh.getAbsolutePath();
+
+                GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+                randomizer.randomize(filename, verboseLog);
+                verboseLog.close();
+                byte[] out = baos.toByteArray();
+                if (saveLog) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(filename + ".log");
+                        fos.write(0xEF);
+                        fos.write(0xBB);
+                        fos.write(0xBF);
+                        fos.write(out);
+                        fos.close();
+                    } catch (IOException e) {
+                        printWarning("Could not write log.");
+                    }
+                }
+                System.out.println("Randomized successfully!");
+                // this is the only successful exit, everything else will return false at the end of the function
+                return true;
+
+            } else {
+                printError("Could not load " + romFile.getAbsolutePath() + "; " + results.getFailType());
+                return false;
             }
-            // if we get here it means no rom handlers matched the ROM file
-            System.err.printf(bundle.getString("GUI.unsupportedRom") + "%n", romFileHandler.getName());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

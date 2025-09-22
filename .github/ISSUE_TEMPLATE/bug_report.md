@@ -23,10 +23,16 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Settings String + Seed**
+If available, include the Settings String and Seed for the randomized ROM. These are shown during randomization and in any error+log files.
+ - Settings String:
+ - Seed:
+
 **System (please complete the following information):**
  - Operating System: 
  - Java Version:
  - Randomizer Version: 
+
 
 **Additional context**
 Add any other context about the problem here.

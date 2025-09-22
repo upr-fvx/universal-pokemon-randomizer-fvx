@@ -1,7 +1,7 @@
 package com.dabomstew.pkrandom;
 
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 public class CheckValueCalculator {
 
@@ -42,10 +42,9 @@ public class CheckValueCalculator {
     private void addTrainerInfo() {
         for (Trainer t : romHandler.getTrainers()) {
             for (TrainerPokemon tpk : t.pokemon) {
-                addToCV(tpk.level, tpk.species.getNumber());
+                addToCV(tpk.getLevel(), tpk.getSpecies().getNumber());
             }
         }
-
     }
 
     private void addEncounterInfo() {
@@ -75,13 +74,13 @@ public class CheckValueCalculator {
 
     private void addStaticEncounterInfo() {
         for (StaticEncounter se : romHandler.getStaticPokemon()) {
-            addToCV(se.spec.getNumber());
+            addToCV(se.getSpecies().getNumber());
         }
     }
 
     private void addTotemInfo() {
         for (TotemPokemon totem : romHandler.getTotemPokemon()) {
-            addToCV(totem.spec.getNumber());
+            addToCV(totem.getSpecies().getNumber());
         }
     }
 

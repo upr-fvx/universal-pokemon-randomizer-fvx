@@ -25,9 +25,10 @@ package com.dabomstew.pkrandom.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.CustomNamesSet;
-import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.SysConstants;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.RootPath;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -54,7 +55,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
 
         // load trainer names etc
         try {
-            CustomNamesSet cns = FileFunctions.getCustomNames();
+            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
             populateNames(trainerNamesText, cns.getTrainerNames());
             populateNames(trainerClassesText, cns.getTrainerClasses());
             populateNames(doublesTrainerNamesText, cns.getDoublesTrainerNames());
@@ -66,7 +67,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         }
 
         // dialog if there's no custom names file yet
-        if (!new File(SysConstants.ROOT_PATH + SysConstants.customNamesFile).exists()) {
+        if (!new File(RootPath.path + SysConstants.customNamesFile).exists()) {
             java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(
                     CustomNamesEditorDialog.this,
                     String.format(
@@ -125,7 +126,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         cns.setPokemonNicknames(getNameList(nicknamesText));
         try {
             byte[] data = cns.getBytes();
-            FileFunctions.writeBytesToFile(SysConstants.ROOT_PATH + SysConstants.customNamesFile, data);
+            FileFunctions.writeBytesToFile(RootPath.path + SysConstants.customNamesFile, data);
             pendingChanges = false;
             JOptionPane.showMessageDialog(this, "Custom names saved.");
             return true;

@@ -1,8 +1,8 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,15 +36,15 @@ public class StaticPokemonRandomizer extends Randomizer {
 
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
         for (StaticEncounter se : currentStaticPokemon) {
-            if (!se.isEgg) {
-                se.level = Math.min(100, (int) Math.round(se.level * (1 + levelModifier / 100.0)));
-                for (StaticEncounter linkedStatic : se.linkedEncounters) {
-                    if (!linkedStatic.isEgg) {
-                        linkedStatic.level = Math.min(100, (int) Math.round(linkedStatic.level * (1 + levelModifier / 100.0)));
+            if (!se.isEgg()) {
+                se.setLevel(Math.min(100, (int) Math.round(se.getLevel() * (1 + levelModifier / 100.0))));
+                for (StaticEncounter linkedStatic : se.getLinkedEncounters()) {
+                    if (!linkedStatic.isEgg()) {
+                        linkedStatic.setLevel(Math.min(100, (int) Math.round(linkedStatic.getLevel() * (1 + levelModifier / 100.0))));
                     }
                 }
             }
-            setSpeciesAndFormeForStaticAndLinkedEncounters(se, se.spec);
+            setSpeciesAndFormeForStaticAndLinkedEncounters(se, se.getSpecies());
         }
         romHandler.setStaticPokemon(currentStaticPokemon);
     }
@@ -104,11 +104,11 @@ public class StaticPokemonRandomizer extends Randomizer {
             for (StaticEncounter old : currentStaticPokemon) {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
-                if (old.spec.isLegendary()) {
+                if (old.getSpecies().isLegendary()) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         newPK = getMegaEvoPokemon(rSpecService.getLegendaries(false), legendariesLeft, newStatic);
                     } else {
-                        if (old.restrictedPool) {
+                        if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(legendariesPool, legendariesLeft, old);
                         } else {
                             newPK = legendariesLeft.getRandomSpecies(random);
@@ -121,8 +121,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                     if (legendariesLeft.isEmpty()) {
                         legendariesLeft.addAll(legendariesPool);
                     }
-                } else if (rSpecService.getUltrabeasts(false).contains(old.spec)) {
-                    if (old.restrictedPool) {
+                } else if (rSpecService.getUltrabeasts(false).contains(old.getSpecies())) {
+                    if (old.isRestrictedPool()) {
                         newPK = getRestrictedStaticPokemon(ultraBeastsPool, ultraBeastsLeft, old);
                     } else {
                         newPK = ultraBeastsLeft.getRandomSpecies(random);
@@ -138,7 +138,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         newPK = getMegaEvoPokemon(rSpecService.getNonLegendaries(false), nonlegsLeft, newStatic);
                     } else {
-                        if (old.restrictedPool) {
+                        if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(nonlegsPool, nonlegsLeft, old);
                         } else {
                             newPK = nonlegsLeft.getRandomSpecies(random);
@@ -152,8 +152,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                 }
                 replacements.add(newStatic);
-                if (changeMusicStatics.contains(old.spec.getNumber())) {
-                    specialMusicStaticChanges.put(old.spec.getNumber(), newPK.getNumber());
+                if (changeMusicStatics.contains(old.getSpecies().getNumber())) {
+                    specialMusicStaticChanges.put(old.getSpecies().getNumber(), newPK.getNumber());
                 }
             }
         } else if (similarStrength) {
@@ -169,16 +169,16 @@ public class StaticPokemonRandomizer extends Randomizer {
             for (StaticEncounter old : currentStaticPokemon) {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
-                Species oldPK = old.spec;
-                if (old.forme > 0) {
-                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.forme);
+                Species oldPK = old.getSpecies();
+                if (old.getForme() > 0) {
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
                 }
                 Integer oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         newPK = getMegaEvoPokemon(rSpecService.getAll(false), pokemonLeft, newStatic);
                     } else {
-                        if (old.restrictedPool) {
+                        if (old.isRestrictedPool()) {
                             newPK = getRestrictedStaticPokemon(pokemonPool, pokemonLeft, old);
                         } else {
                             newPK = pokemonLeft.getRandomSpecies(random);
@@ -187,21 +187,20 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                     setSpeciesAndFormeForStaticAndLinkedEncounters(newStatic, newPK);
                 } else {
-                    boolean limitBST = oldPK.getBaseForme() == null ?
-                            limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getNumber()) :
-                            limitMainGameLegendaries && mainGameLegendaries.contains(oldPK.getBaseForme().getNumber());
+                    boolean limitBST = limitMainGameLegendaries
+                            && mainGameLegendaries.contains(oldPK.getBaseForme().getNumber());
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         SpeciesSet megaEvoPokemonLeft = rSpecService.getMegaEvolutions()
                                 .stream()
-                                .filter(mega -> mega.method == 1)
-                                .map(mega -> mega.from)
+                                .filter(MegaEvolution::isNeedsItem)
+                                .map(mega -> mega.getFrom())
                                 .filter(pokemonLeft::contains)
                                 .collect(Collectors.toCollection(SpeciesSet::new));
                         if (megaEvoPokemonLeft.isEmpty()) {
                             megaEvoPokemonLeft = rSpecService.getMegaEvolutions()
                                     .stream()
-                                    .filter(mega -> mega.method == 1)
-                                    .map(mega -> mega.from)
+                                    .filter(MegaEvolution::isNeedsItem)
+                                    .map(mega -> mega.getFrom())
                                     .filter(rSpecService.getAll(false)::contains)
                                     .collect(Collectors.toCollection(SpeciesSet::new));
                         }
@@ -217,16 +216,16 @@ public class StaticPokemonRandomizer extends Randomizer {
                                 oldPK,
                                 true,
                                 limitBST);
-                        newStatic.heldItem = newPK
+                        newStatic.setHeldItem(newPK
                                 .getMegaEvolutionsFrom()
                                 .get(random.nextInt(newPK.getMegaEvolutionsFrom().size()))
-                                .argument;
+                                .getItem());
                     } else {
-                        if (old.restrictedPool) {
+                        if (old.isRestrictedPool()) {
                             SpeciesSet restrictedPool = pokemonLeft
-                                    .filter(pk -> old.restrictedList.contains(pk));
+                                    .filter(pk -> old.getRestrictedList().contains(pk));
                             if (restrictedPool.isEmpty()) {
-                                restrictedPool = pokemonPool.filter(pk -> old.restrictedList.contains(pk));
+                                restrictedPool = pokemonPool.filter(pk -> old.getRestrictedList().contains(pk));
                             }
                             newPK = pickStaticPowerLvlReplacement(
                                     restrictedPool,
@@ -249,8 +248,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                     pokemonLeft.addAll(pokemonPool);
                 }
                 replacements.add(newStatic);
-                if (changeMusicStatics.contains(old.spec.getNumber())) {
-                    specialMusicStaticChanges.put(old.spec.getNumber(), newPK.getNumber());
+                if (changeMusicStatics.contains(old.getSpecies().getNumber())) {
+                    specialMusicStaticChanges.put(old.getSpecies().getNumber(), newPK.getNumber());
                 }
             }
         } else { // Completely random
@@ -268,7 +267,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 if (reallySwapMegaEvos && old.canMegaEvolve()) {
                     newPK = getMegaEvoPokemon(rSpecService.getAll(false), pokemonLeft, newStatic);
                 } else {
-                    if (old.restrictedPool) {
+                    if (old.isRestrictedPool()) {
                         newPK = getRestrictedStaticPokemon(pokemonPool, pokemonLeft, old);
                     } else {
                         newPK = pokemonLeft.getRandomSpecies(random);
@@ -281,21 +280,21 @@ public class StaticPokemonRandomizer extends Randomizer {
                     pokemonLeft.addAll(pokemonPool);
                 }
                 replacements.add(newStatic);
-                if (changeMusicStatics.contains(old.spec.getNumber())) {
-                    specialMusicStaticChanges.put(old.spec.getNumber(), newPK.getNumber());
+                if (changeMusicStatics.contains(old.getSpecies().getNumber())) {
+                    specialMusicStaticChanges.put(old.getSpecies().getNumber(), newPK.getNumber());
                 }
             }
         }
 
         if (levelModifier != 0) {
             for (StaticEncounter se : replacements) {
-                if (!se.isEgg) {
-                    se.level = Math.min(100, (int) Math.round(se.level * (1 + levelModifier / 100.0)));
-                    se.maxLevel = Math.min(100, (int) Math.round(se.maxLevel * (1 + levelModifier / 100.0)));
-                    for (StaticEncounter linkedStatic : se.linkedEncounters) {
-                        if (!linkedStatic.isEgg) {
-                            linkedStatic.level = Math.min(100, (int) Math.round(linkedStatic.level * (1 + levelModifier / 100.0)));
-                            linkedStatic.maxLevel = Math.min(100, (int) Math.round(linkedStatic.maxLevel * (1 + levelModifier / 100.0)));
+                if (!se.isEgg()) {
+                    se.setLevel(Math.min(100, (int) Math.round(se.getLevel() * (1 + levelModifier / 100.0))));
+                    se.setMaxLevel(Math.min(100, (int) Math.round(se.getMaxLevel() * (1 + levelModifier / 100.0))));
+                    for (StaticEncounter linkedStatic : se.getLinkedEncounters()) {
+                        if (!linkedStatic.isEgg()) {
+                            linkedStatic.setLevel(Math.min(100, (int) Math.round(linkedStatic.getLevel() * (1 + levelModifier / 100.0))));
+                            linkedStatic.setMaxLevel(Math.min(100, (int) Math.round(linkedStatic.getMaxLevel() * (1 + levelModifier / 100.0))));
                         }
                     }
                 }
@@ -349,12 +348,12 @@ public class StaticPokemonRandomizer extends Randomizer {
 
         for (TotemPokemon old : currentTotemPokemon) {
             TotemPokemon newTotem = new TotemPokemon();
-            newTotem.heldItem = old.heldItem;
+            newTotem.setHeldItem(old.getHeldItem());
             if (randomizeTotem) {
                 Species newPK;
-                Species oldPK = old.spec;
-                if (old.forme > 0) {
-                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.forme);
+                Species oldPK = old.getSpecies();
+                if (old.getForme() > 0) {
+                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
                 }
 
                 if (similarStrengthTotem) {
@@ -369,35 +368,35 @@ public class StaticPokemonRandomizer extends Randomizer {
                 }
 
                 pokemonLeft.remove(newPK);
-                newTotem.spec = newPK;
+                newTotem.setSpecies(newPK);
                 setSpeciesAndFormeForStaticEncounter(newTotem, newPK);
-                newTotem.resetMoves = true;
-                newTotem.level = old.level;
+                newTotem.setResetMoves(true);
+                newTotem.setLevel(old.getLevel());
 
                 if (levelModifier != 0) {
-                    newTotem.level = Math.min(100, (int) Math.round(newTotem.level * (1 + levelModifier / 100.0)));
+                    newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
                 }
                 if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                     pokemonLeft.removeAll(banned);
                 }
             } else {
-                newTotem.spec = old.spec;
-                newTotem.level = old.level;
+                newTotem.setSpecies(old.getSpecies());
+                newTotem.setLevel(old.getLevel());
                 if (levelModifier != 0) {
-                    newTotem.level = Math.min(100, (int) Math.round(newTotem.level * (1 + levelModifier / 100.0)));
+                    newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
                 }
-                setSpeciesAndFormeForStaticEncounter(newTotem, newTotem.spec);
+                setSpeciesAndFormeForStaticEncounter(newTotem, newTotem.getSpecies());
             }
 
             if (randomizeAllies) {
-                for (Integer oldAllyIndex : old.allies.keySet()) {
-                    StaticEncounter oldAlly = old.allies.get(oldAllyIndex);
+                for (Integer oldAllyIndex : old.getAllies().keySet()) {
+                    StaticEncounter oldAlly = old.getAllies().get(oldAllyIndex);
                     StaticEncounter newAlly = new StaticEncounter();
                     Species newAllyPK;
-                    Species oldAllyPK = oldAlly.spec;
-                    if (oldAlly.forme > 0) {
-                        oldAllyPK = romHandler.getAltFormeOfSpecies(oldAllyPK, oldAlly.forme);
+                    Species oldAllyPK = oldAlly.getSpecies();
+                    if (oldAlly.getForme() > 0) {
+                        oldAllyPK = romHandler.getAltFormeOfSpecies(oldAllyPK, oldAlly.getForme());
                     }
                     if (similarStrengthAllies) {
                         newAllyPK = pickStaticPowerLvlReplacement(
@@ -411,44 +410,44 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
 
                     pokemonLeft.remove(newAllyPK);
-                    newAlly.spec = newAllyPK;
+                    newAlly.setSpecies(newAllyPK);
                     setSpeciesAndFormeForStaticEncounter(newAlly, newAllyPK);
-                    newAlly.resetMoves = true;
-                    newAlly.level = oldAlly.level;
+                    newAlly.setResetMoves(true);
+                    newAlly.setLevel(oldAlly.getLevel());
                     if (levelModifier != 0) {
-                        newAlly.level = Math.min(100, (int) Math.round(newAlly.level * (1 + levelModifier / 100.0)));
+                        newAlly.setLevel(Math.min(100, (int) Math.round(newAlly.getLevel() * (1 + levelModifier / 100.0))));
                     }
 
-                    newTotem.allies.put(oldAllyIndex, newAlly);
+                    newTotem.getAllies().put(oldAllyIndex, newAlly);
                     if (pokemonLeft.isEmpty()) {
                         pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
                         pokemonLeft.removeAll(banned);
                     }
                 }
             } else {
-                newTotem.allies = old.allies;
-                for (StaticEncounter ally : newTotem.allies.values()) {
+                newTotem.setAllies(old.getAllies());
+                for (StaticEncounter ally : newTotem.getAllies().values()) {
                     if (levelModifier != 0) {
-                        ally.level = Math.min(100, (int) Math.round(ally.level * (1 + levelModifier / 100.0)));
-                        setSpeciesAndFormeForStaticEncounter(ally, ally.spec);
+                        ally.setLevel(Math.min(100, (int) Math.round(ally.getLevel() * (1 + levelModifier / 100.0))));
+                        setSpeciesAndFormeForStaticEncounter(ally, ally.getSpecies());
                     }
                 }
             }
 
             if (randomizeAuras) {
                 if (similarStrengthAuras) {
-                    newTotem.aura = Aura.randomAuraSimilarStrength(random, old.aura);
+                    newTotem.setAura(Aura.randomAuraSimilarStrength(random, old.getAura()));
                 } else {
-                    newTotem.aura = Aura.randomAura(random);
+                    newTotem.setAura(Aura.randomAura(random));
                 }
             } else {
-                newTotem.aura = old.aura;
+                newTotem.setAura(old.getAura());
             }
 
             if (randomizeHeldItems) {
-                if (old.heldItem != 0) {
-                    List<Integer> consumableList = romHandler.getAllConsumableHeldItems();
-                    newTotem.heldItem = consumableList.get(random.nextInt(consumableList.size()));
+                if (old.getHeldItem() != null) {
+                    List<Item> consumableList = new ArrayList<>(romHandler.getAllConsumableHeldItems());
+                    newTotem.setHeldItem(consumableList.get(random.nextInt(consumableList.size())));
                 }
             }
 
@@ -462,9 +461,9 @@ public class StaticPokemonRandomizer extends Randomizer {
 
     private StaticEncounter cloneStaticEncounter(StaticEncounter old) {
         StaticEncounter newStatic = new StaticEncounter(old);
-        newStatic.resetMoves = true;
-        for (StaticEncounter linked : newStatic.linkedEncounters) {
-            linked.resetMoves = true;
+        newStatic.setResetMoves(true);
+        for (StaticEncounter linked : newStatic.getLinkedEncounters()) {
+            linked.setResetMoves(true);
         }
         return newStatic;
     }
@@ -472,20 +471,20 @@ public class StaticPokemonRandomizer extends Randomizer {
     private void setSpeciesAndFormeForStaticAndLinkedEncounters(StaticEncounter newStatic, Species sp) {
         setSpeciesAndFormeForStaticEncounter(newStatic, sp);
 
-        Species newSpec = newStatic.spec;
-        int newForme = newStatic.forme;
+        Species newSpec = newStatic.getSpecies();
+        int newForme = newStatic.getForme();
 
-        for (StaticEncounter linked : newStatic.linkedEncounters) {
-            linked.spec = newSpec;
-            linked.forme = newForme;
+        for (StaticEncounter linked : newStatic.getLinkedEncounters()) {
+            linked.setSpecies(newSpec);
+            linked.setForme(newForme);
         }
     }
 
     private Species getRestrictedStaticPokemon(SpeciesSet fullList, SpeciesSet pokemonLeft,
                                                StaticEncounter old) {
-        SpeciesSet restrictedPool = pokemonLeft.filter(pk -> old.restrictedList.contains(pk));
+        SpeciesSet restrictedPool = pokemonLeft.filter(pk -> old.getRestrictedList().contains(pk));
         if (restrictedPool.isEmpty()) {
-            restrictedPool = fullList.filter(pk -> old.restrictedList.contains(pk));
+            restrictedPool = fullList.filter(pk -> old.getRestrictedList().contains(pk));
         }
         Species newPK = restrictedPool.getRandomSpecies(random);
         pokemonLeft.remove(newPK);
@@ -497,8 +496,8 @@ public class StaticPokemonRandomizer extends Randomizer {
         Set<MegaEvolution> megaEvos = rSpecService.getMegaEvolutions();
         SpeciesSet megaEvoPokemon = megaEvos
                 .stream()
-                .filter(mega -> mega.method == 1)
-                .map(mega -> mega.from)
+                .filter(MegaEvolution::isNeedsItem)
+                .map(MegaEvolution::getFrom)
                 .collect(Collectors.toCollection(SpeciesSet::new));
         SpeciesSet megaEvoPokemonLeft = new SpeciesSet(megaEvoPokemon).filter(pokemonLeft::contains);
         if (megaEvoPokemonLeft.isEmpty()) {
@@ -507,10 +506,10 @@ public class StaticPokemonRandomizer extends Randomizer {
 
         Species newPK = megaEvoPokemonLeft.getRandomSpecies(random);
         pokemonLeft.remove(newPK);
-        newStatic.heldItem = newPK
+        newStatic.setHeldItem(newPK
                 .getMegaEvolutionsFrom()
                 .get(random.nextInt(newPK.getMegaEvolutionsFrom().size()))
-                .argument;
+                .getItem());
         return newPK;
     }
 
@@ -526,12 +525,12 @@ public class StaticPokemonRandomizer extends Randomizer {
     }
 
     private void setSpeciesAndFormeForStaticEncounter(StaticEncounter newStatic, Species sp) {
-        newStatic.forme = sp.getRandomCosmeticFormeNumber(random);
+        newStatic.setForme(sp.getRandomCosmeticFormeNumber(random));
         Species base = sp;
-        while(!base.isBaseForme()) {
+        while (!base.isBaseForme()) {
             base = base.getBaseForme();
         }
-        newStatic.spec = base;
+        newStatic.setSpecies(base);
     }
 
 }

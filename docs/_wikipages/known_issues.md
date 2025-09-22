@@ -15,7 +15,7 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 - [All Gen 6 Games](#all-gen-6-games)
 - [X/Y](#xy)
 - [All Gen 7 Games](#all-gen-7-games)
-- [Sun/Moon](#sun-moon) 
+- [Sun/Moon](#sunmoon) 
 
 ## All Games
 
@@ -24,10 +24,6 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 ## Red/Blue/Green
 
 * Evolving a Pokemon into Mew, will give it glitchy stats. If you are using "Random Evolutions Every Level", evolving the Pokemon again and healing at a Pokemon center will fix all issues. Otherwise, the Mew will continue having glitchy stats, but this should be mostly harmless.
-
-## All Gen 2 Games
-
-* The "Custom Player Graphics" setting, does not work on non-Windows computers. This is because it (in this Generation only) depends on a (Windows-only) DLL file.
 
 ## Gold/Silver
 
@@ -83,6 +79,7 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 
 * When the "Rival Carries Starter Through Game" and "Random Shiny Trainer Pokemon" settings are used simultaneously, the rival's starter can occasionally become shiny when it wasn't shiny before or vice versa.
 * When evolutions are randomized, it is possible, under very rare circumstances, for a Pokemon other than Nincada to create an "extra" Pokemon in your party if you have an empty party spot and a Poke Ball in your inventory. Specifically, this can happen if Nincada's "Ninjask evolution" is a Pokemon that was also used for another evolution, or a Pokemon whose alternate forme was used for another evolution. For example, if Sandile evolves into Alolan Dugtrio, and Nincada evolves into Dugtrio and Anorith, then evolving Sandile under the right conditions will add an Anorith to your party.
+* Using the evolution options "Random Every Level" and "No Convergence" together always causes the randomization to fail.
 
 ## Sun/Moon
 

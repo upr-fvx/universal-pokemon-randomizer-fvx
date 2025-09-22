@@ -23,11 +23,11 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.palettes.*;
-import com.dabomstew.pkrandom.gamedata.cueh.BasicSpeciesAction;
-import com.dabomstew.pkrandom.gamedata.cueh.EvolvedSpeciesAction;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.cueh.BasicSpeciesAction;
+import com.dabomstew.pkromio.gamedata.cueh.EvolvedSpeciesAction;
+import com.dabomstew.pkromio.graphics.palettes.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.io.*;
 import java.util.*;
@@ -203,11 +203,11 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	}
 
 	private String getResourceAddress(String fileKey) {
-		return "/com/dabomstew/pkrandom/graphics/resources/" + getFileName(fileKey);
+		return "/com/dabomstew/pkromio/graphics/resources/" + getFileName(fileKey);
 	}
 
 	private String getSourceFileAddress(String fileKey) {
-		return "src/com/dabomstew/pkrandom/graphics/resources/" + getFileName(fileKey);
+		return "src/com/dabomstew/pkromio/graphics/resources/" + getFileName(fileKey);
 	}
 
 	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {

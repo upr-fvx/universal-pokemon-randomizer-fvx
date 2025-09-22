@@ -1,7 +1,24 @@
 package com.dabomstew.pkrandom.gui;
 
+import com.dabomstew.pkrandom.Version;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
+import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romio.ROMFilter;
+import com.dabomstew.pkromio.romio.RomOpener;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class PresetLoadDialogNew extends JDialog {
     private JPanel contentPane;
@@ -10,60 +27,294 @@ public class PresetLoadDialogNew extends JDialog {
     private JButton presetFileButton;
     private JButton romButton;
     private JTextField presetFileField;
-    private JTextField configStringField;
+    private JTextField settingsStringField;
     private JTextField seedField;
     private JTextField romField;
     private JButton cpgChooseButton;
     private JCheckBox cpgUseLastCheckBox;
     private JLabel romRequiredLabel;
 
-    public PresetLoadDialogNew() {
+    private final RandomizerGUI parentGUI;
+    private final ResourceBundle bundle;
+    private final JFileChooser presetFileChooser;
+    private final JFileChooser romFileChooser;
+    private final RomOpener romOpener;
+
+    private boolean enforceFieldCheck;
+
+    private RomHandler currentROM;
+    private CustomNamesSet customNames;
+    private String requiredName;
+    private boolean completed;
+
+    public PresetLoadDialogNew(RandomizerGUI parentGUI, JFrame frame, RomOpener romOpener) {
+        super(frame, true);
+
+        this.parentGUI = parentGUI;
+
+        this.bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+
+        this.presetFileChooser = new JFileChooser();
+        this.romFileChooser = new JFileChooser();
+        presetFileChooser.setFileFilter(new PresetFileFilter());
+        romFileChooser.setFileFilter(new ROMFilter());
+        presetFileChooser.setCurrentDirectory(new File(RootPath.path));
+        romFileChooser.setCurrentDirectory(new File(RootPath.path));
+
+        this.romOpener = romOpener;
+
+        setTitle(bundle.getString("PresetLoadDialog.title"));
         setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(applyButton);
+       // setResizable(false);
+        setLocationRelativeTo(frame);
+        getRootPane().setDefaultButton(cancelButton);
 
-        applyButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        initListeners();
 
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        setVisible(true);
     }
 
-    private void onOK() {
-        // add your code here
+    private void initListeners() {
+        presetFileButton.addActionListener(e -> onPresetFileButton());
+        romButton.addActionListener(e -> onRomButton());
+
+        DocumentListener checkListener = new CheckDocumentListener();
+        seedField.getDocument().addDocumentListener(checkListener);
+        settingsStringField.getDocument().addDocumentListener(checkListener);
+
+        applyButton.addActionListener(e -> onApply());
+        cancelButton.addActionListener(e -> dispose());
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    private class CheckDocumentListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
+    }
+
+    private boolean checkValues() {
+        String name;
+        try {
+            Long.parseLong(seedField.getText());
+        } catch (NumberFormatException ex) {
+            invalidValues();
+            return false;
+        }
+
+        // 161 onwards: look for version number
+        String configString = settingsStringField.getText();
+        if (configString.length() < 3) {
+            invalidValues();
+            return false;
+        }
+
+        try {
+            int presetVersionNumber = Integer.parseInt(configString.substring(0, 3));
+            if (presetVersionNumber != Version.VERSION) {
+                promptForDifferentRandomizerVersion(presetVersionNumber);
+                safelyClearFields();
+                invalidValues();
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            invalidValues();
+            return false;
+        }
+
+        try {
+            name = parentGUI.getValidRequiredROMName(configString.substring(3), customNames);
+        } catch (InvalidSupplementFilesException ex) {
+            safelyClearFields();
+            invalidValues();
+            return false;
+        } catch (Exception ex) {
+            // other exception, just call it invalid for now
+            invalidValues();
+            return false;
+        }
+        if (name == null) {
+            invalidValues();
+            return false;
+        }
+        requiredName = name;
+        romRequiredLabel.setText(String.format(bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"),
+                name));
+        romButton.setEnabled(true);
+
+        if (currentROM != null && !currentROM.getROMName().equals(name)) {
+            currentROM = null;
+            applyButton.setEnabled(false);
+            romField.setText("");
+        }
+        return true;
+    }
+
+    private void promptForDifferentRandomizerVersion(int presetVN) {
+        // so what version number was it?
+        if (presetVN > Version.VERSION) {
+            // it's for a newer version
+            JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.newerVersionRequired"));
+        } else {
+            // Tell them which older version to use to load this preset.
+            // Occasionally it can't tell and gives you all the possible ones.
+            String versionWanted;
+            List<String> posVersions = new ArrayList<>();
+            for (Version v : Version.ALL_VERSIONS) {
+                if (v.id == presetVN) {
+                    posVersions.add(v.name + "(" + v.branchName + ")");
+                }
+            }
+            versionWanted = posVersions.isEmpty() ? "Unknown" : String.join(" OR ", posVersions);
+            JOptionPane.showMessageDialog(this,
+                    String.format(bundle.getString("PresetLoadDialog.olderVersionRequired"), versionWanted));
+        }
+    }
+
+
+    private void safelyClearFields() {
+        SwingUtilities.invokeLater(() -> {
+            enforceFieldCheck = false;
+            settingsStringField.setText("");
+            seedField.setText("");
+            enforceFieldCheck = true;
+        });
+    }
+
+    private void invalidValues() {
+        currentROM = null;
+        romField.setText("");
+        romRequiredLabel.setText(bundle.getString("PresetLoadDialog.romRequiredLabel.text"));
+        romButton.setEnabled(false);
+        applyButton.setEnabled(false);
+        requiredName = null;
+    }
+
+    private void onPresetFileButton() {
+        presetFileChooser.setSelectedFile(null);
+        int returnVal = presetFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File fh = presetFileChooser.getSelectedFile();
+            try {
+                DataInputStream dis = new DataInputStream(Files.newInputStream(fh.toPath()));
+                int checkInt = dis.readInt();
+                if (checkInt != Version.VERSION) {
+                    dis.close();
+                    promptForDifferentRandomizerVersion(checkInt);
+                    return;
+                }
+                long seed = dis.readLong();
+                String preset = dis.readUTF();
+                customNames = new CustomNamesSet(dis);
+                enforceFieldCheck = false;
+                seedField.setText(Long.toString(seed));
+                settingsStringField.setText(checkInt + "" + preset);
+                enforceFieldCheck = true;
+                if (checkValues()) {
+                    seedField.setEnabled(false);
+                    settingsStringField.setEnabled(false);
+                    presetFileField.setText(fh.getAbsolutePath());
+                } else {
+                    seedField.setText("");
+                    settingsStringField.setText("");
+                    seedField.setEnabled(true);
+                    settingsStringField.setEnabled(true);
+                    presetFileField.setText("");
+                    customNames = null;
+                    JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
+                }
+                dis.close();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));
+            }
+        }
+    }
+
+    private void onRomButton() {
+        romFileChooser.setSelectedFile(null);
+        int returnVal = romFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File f = romFileChooser.getSelectedFile();
+
+            JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), this, true);
+            Thread t = new Thread(() -> {
+                SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+
+                try {
+                    RomOpener.Results results = romOpener.openRomFile(f);
+
+                    SwingUtilities.invokeLater(() -> {
+                        opDialog.setVisible(false);
+                        if (results.wasOpeningSuccessful()) {
+                            RomHandler checkHandler = results.getRomHandler();
+                            if (checkHandler.getROMName().equals(requiredName)) {
+                                // Got it
+                                romField.setText(f.getAbsolutePath());
+                                currentROM = checkHandler;
+                                applyButton.setEnabled(true);
+                            } else {
+                                JOptionPane.showMessageDialog(this, String.format(
+                                        bundle.getString("PresetLoadDialog.notRequiredROM"), requiredName,
+                                        checkHandler.getROMName()));
+                            }
+                        } else {
+                            parentGUI.reportOpenRomFailure(f, results);
+                        }
+                    });
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() -> {
+                        opDialog.setVisible(false);
+                        JOptionPane.showMessageDialog(this,
+                                bundle.getString("GUI.loadFailedNoLog"));
+                    });
+                }
+            });
+            t.start();
+        }
+    }
+
+    private void onApply() {
+        if (customNames == null) {
+            try {
+                customNames = CustomNamesSet.readNamesFromFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        completed = true;
         dispose();
     }
 
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public static void main(String[] args) {
-        PresetLoadDialogNew dialog = new PresetLoadDialogNew();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    public RomHandler getROM() {
+        return currentROM;
+    }
+
+    public long getSeed() {
+        return Long.parseLong(seedField.getText());
+    }
+
+    public String getSettingsString() {
+        return settingsStringField.getText().substring(3);
+    }
+
+    public CustomNamesSet getCustomNames() {
+        return customNames;
     }
 }

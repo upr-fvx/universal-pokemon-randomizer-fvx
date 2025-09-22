@@ -1296,11 +1296,11 @@ public class RandomizerGUI {
     }
 
     private void presetLoader() {
-        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpener);
+        PresetLoadDialogNew pld = new PresetLoadDialogNew(this, frame, romOpener);
         if (pld.isCompleted()) {
             // Apply it
             long seed = pld.getSeed();
-            String config = pld.getConfigString();
+            String config = pld.getSettingsString();
             this.romHandler = pld.getROM();
             if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
                 this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));

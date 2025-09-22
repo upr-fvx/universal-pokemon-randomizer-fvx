@@ -2416,7 +2416,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private TypeTable readTypeTable() {
         TypeTable typeTable = new TypeTable(Type.getAllTypes(7));
-        int tableOffset = 0x4BB558;
+        int tableOffset = romEntry.getIntValue("TypeTableOffset");
         int tableWidth = typeTable.getTypes().size();
 
         for (Type attacker : typeTable.getTypes()) {

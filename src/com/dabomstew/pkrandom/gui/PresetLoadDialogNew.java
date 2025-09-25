@@ -11,7 +11,6 @@ import com.dabomstew.pkromio.romio.RomOpener;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class PresetLoadDialogNew extends JDialog {
     private final JFileChooser romFileChooser;
     private final RomOpener romOpener;
 
-    private boolean enforceFieldCheck;
+    private boolean enforceFieldCheck = true;
 
     private RomHandler currentROM;
     private CustomNamesSet customNames;
@@ -65,12 +64,13 @@ public class PresetLoadDialogNew extends JDialog {
 
         setTitle(bundle.getString("PresetLoadDialog.title"));
         setContentPane(contentPane);
-       // setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(frame);
         getRootPane().setDefaultButton(cancelButton);
 
         initListeners();
 
+        pack();
         setVisible(true);
     }
 

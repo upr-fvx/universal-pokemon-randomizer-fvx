@@ -150,7 +150,7 @@ public class RandomizationLogger {
         log.printf(getBS("Log.baseGame"), gameName);
         log.printf(getBS("Log.version"), Version.LATEST_VERSION.branchName, Version.VERSION_STRING);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
-        log.printf(getBS("Log.settings"), settings.toString());
+        log.printf(getBS("Log.settings"), Version.VERSION + settings.toString());
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();

@@ -33,12 +33,10 @@ import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RootPath;
-import com.dabomstew.pkromio.constants.Gen3Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.EncryptedROMException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.*;
 import com.dabomstew.pkromio.romhandlers.*;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -330,12 +328,7 @@ public class RandomizerGUI {
     private JLabel cpgNotExistLabel;
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
-    private JComboBox<GraphicsPack> cpgComboBox;
-    private JButton cpgRandomButton;
-    private GraphicsPackInfo cpgCustomInfo;
-    private JLabel cpgReplaceLabel;
-    private JRadioButton cpgReplaceRadioButton1;
-    private JRadioButton cpgReplaceRadioButton2;
+    private CPGSelection cpgSelection;
     private JCheckBox miscUpdateRotomFormeTypingCheckBox;
     private JCheckBox miscDisableLowHPMusicCheckBox;
     private JCheckBox tpUseLocalPokemonCheckBox;
@@ -683,11 +676,6 @@ public class RandomizerGUI {
         ppalRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
         cpgUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         cpgCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        cpgComboBox.addItemListener(e -> {
-            GraphicsPack cpg = (GraphicsPack) e.getItem();
-            cpgCustomInfo.setGraphicsPack(cpg);
-        });
-        cpgRandomButton.addActionListener(e -> cpgComboBox.setSelectedIndex(RND.nextInt(cpgComboBox.getItemCount())));
         tpComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 enableOrDisableSubControls();
@@ -2118,8 +2106,8 @@ public class RandomizerGUI {
         settings.setPokemonPalettesShinyFromNormal(ppalShinyFromNormalCheckBox.isSelected());
 
         settings.setCustomPlayerGraphicsMod(cpgUnchangedRadioButton.isSelected(), cpgCustomRadioButton.isSelected());
-        settings.setCustomPlayerGraphics((GraphicsPack) cpgComboBox.getSelectedItem());
-        settings.setCustomPlayerGraphicsCharacterMod(cpgReplaceRadioButton1.isSelected(), cpgReplaceRadioButton2.isSelected());
+        settings.setCustomPlayerGraphics(cpgSelection.getSelectedItem());
+        settings.setCustomPlayerGraphicsCharacterMod(cpgSelection.getTypeToReplace());
 
         int currentMiscTweaks = 0;
         int mtCount = MiscTweak.allTweaks.size();
@@ -2461,12 +2449,8 @@ public class RandomizerGUI {
 
         setInitialButtonState(ppalUnchangedRadioButton, ppalRandomRadioButton, ppalFollowTypesCheckBox,
                 ppalFollowEvolutionsCheckBox, ppalShinyFromNormalCheckBox,
-                        cpgUnchangedRadioButton, cpgCustomRadioButton, cpgRandomButton,
-                        cpgReplaceRadioButton1, cpgReplaceRadioButton2);
-        cpgComboBox.setVisible(true);
-        cpgComboBox.setEnabled(false);
-        cpgCustomInfo.setVisible(true);
-        cpgCustomInfo.setEnabled(false);
+                        cpgUnchangedRadioButton, cpgCustomRadioButton);
+        cpgSelection.setInitialState();
 
         // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
         //Well, this lets them be named variables, which helps for code readability if nothing else...
@@ -2971,23 +2955,12 @@ public class RandomizerGUI {
             cpgUnchangedRadioButton.setSelected(true);
             cpgCustomRadioButton.setVisible(cpgSupport);
             cpgCustomRadioButton.setEnabled(cpgSupport);
-            cpgComboBox.setVisible(cpgSupport);
-            cpgComboBox.setEnabled(false);
+            cpgSelection.setVisible(cpgSupport);
             if (cpgSupport) {
-                fillCustomPlayerGraphicsComboBox();
+                cpgSelection.fillComboBox(romHandler);
             }
-            cpgRandomButton.setVisible(cpgSupport);
-            cpgRandomButton.setEnabled(false);
-            cpgCustomInfo.setVisible(cpgSupport);
-            cpgCustomInfo.setEnabled(false);
             boolean cpgReplaceChoiceSupport = cpgSupport && romHandler.hasMultiplePlayerCharacters();
-            cpgReplaceLabel.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceLabel.setEnabled(false);
-            cpgReplaceRadioButton1.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton1.setEnabled(false);
-            cpgReplaceRadioButton1.setSelected(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton2.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton2.setEnabled(false);
+            cpgSelection.setReplaceChoiceVisible(cpgReplaceChoiceSupport);
 
             if (!(ppalSupport || cpgSupport)) {
                 tabbedPane1.setEnabledAt(8, false);
@@ -3046,41 +3019,6 @@ public class RandomizerGUI {
             attemptToLogException(e, "GUI.processFailed","GUI.processFailedNoLog", null, null);
             romHandler = null;
             initialState();
-        }
-    }
-
-    private void fillCustomPlayerGraphicsComboBox() {
-        DefaultComboBoxModel<GraphicsPack> comboBoxModel = new DefaultComboBoxModel<>();
-        cpgComboBox.setModel(comboBoxModel);
-        File players = new File(SysConstants.customPCGDirectory);
-        File[] playerDirectories = players.listFiles(File::isDirectory);
-        if (playerDirectories != null) {
-            for (File playerDir : playerDirectories) {
-                try {
-                    String path = playerDir.getCanonicalPath();
-                    List<GraphicsPackEntry> entries = GraphicsPackEntry.readAllFromFolder(path);
-                    entries.forEach(entry -> {
-                        if (entry.getStringValue("RomType").equalsIgnoreCase("Gen1") && romHandler.generationOfPokemon() == 1) {
-                            comboBoxModel.addElement(new Gen1PlayerCharacterGraphics(entry));
-                        } else if (entry.getStringValue("RomType").equalsIgnoreCase("Gen2") && romHandler.generationOfPokemon() == 2) {
-                            comboBoxModel.addElement(new Gen2PlayerCharacterGraphics(entry));
-                        } else if (romHandler.generationOfPokemon() == 3) {
-                            if ((romHandler.getROMType() == Gen3Constants.RomType_Ruby ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Sapp ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Em) &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("RSE")) {
-                                comboBoxModel.addElement(new RSEPlayerCharacterGraphics(entry));
-                            } else if (romHandler.getROMType() == Gen3Constants.RomType_FRLG &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("FRLG")) {
-                                comboBoxModel.addElement(new FRLGPlayerCharacterGraphics(entry));
-                            }
-                        }
-                    });
-                } catch (Exception ignored) {
-                    System.out.println("Could not read " + playerDir);
-                    ignored.printStackTrace();
-                }
-            }
         }
     }
 
@@ -3666,8 +3604,8 @@ public class RandomizerGUI {
             disableAndDeselectButtons(teAddRandomImmunitiesCheckBox);
         }
 
-        if (ppalRandomRadioButton.isSelected() && ppalRandomRadioButton.isVisible() &&
-                ppalRandomRadioButton.isEnabled()) {
+        if (ppalRandomRadioButton.isSelected() && ppalRandomRadioButton.isVisible()
+                && ppalRandomRadioButton.isEnabled()) {
             enableButtons(ppalFollowTypesCheckBox, ppalFollowEvolutionsCheckBox,
                     ppalShinyFromNormalCheckBox);
         } else {
@@ -3675,21 +3613,8 @@ public class RandomizerGUI {
                     ppalShinyFromNormalCheckBox);
         }
 
-        if (cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible() && cpgCustomRadioButton.isEnabled()) {
-            cpgComboBox.setEnabled(true);
-            cpgRandomButton.setEnabled(true);
-            cpgCustomInfo.setEnabled(true);
-            cpgReplaceLabel.setEnabled(true);
-            cpgReplaceRadioButton1.setEnabled(true);
-            cpgReplaceRadioButton2.setEnabled(true);
-        } else {
-            cpgComboBox.setEnabled(false);
-            cpgRandomButton.setEnabled(false);
-            cpgCustomInfo.setEnabled(false);
-            cpgReplaceLabel.setEnabled(false);
-            cpgReplaceRadioButton1.setEnabled(false);
-            cpgReplaceRadioButton2.setEnabled(false);
-        }
+        cpgSelection.setEnabled(cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible()
+                && cpgCustomRadioButton.isEnabled());
     }
 
     private void initTweaksPanel() {

@@ -91,12 +91,18 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
     }
 
     private Gen2SpritePaletteID initSpritePaletteID() {
+        Gen2SpritePaletteID palID;
         String paletteName = getEntry().getStringValue("SpritePalette");
-        try {
-            return Gen2SpritePaletteID.valueOf(paletteName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
+        if (paletteName.isEmpty()) {
+            palID = Gen2SpritePaletteID.getMatching(getWalkSprite().getPalette());
+        } else {
+            try {
+                palID = Gen2SpritePaletteID.valueOf(paletteName.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                palID = null;
+            }
         }
+        return palID == null ? Gen2SpritePaletteID.RED : palID; // default to RED
     }
 
     // no hasTrainerCardImage(); redundant with hasFrontImage()

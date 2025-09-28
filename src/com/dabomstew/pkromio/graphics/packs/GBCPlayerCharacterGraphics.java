@@ -22,7 +22,7 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
     public GBCPlayerCharacterGraphics(GraphicsPackEntry entry) {
         super(entry);
         if (usesSheet()) {
-            entry.putStringValue("BikeSpriteMode", "separate");
+            entry.putStringValue("FishSpriteMode", "separate");
         }
         this.front = initFront();
         this.back = initBack();

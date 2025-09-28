@@ -62,14 +62,14 @@ public abstract class GraphicsPack {
 
     public GraphicsPack(GraphicsPackEntry entry) {
         this.entry = entry;
-        if (!entry.getStringValue("sheet").isEmpty()) {
+        if (!entry.getStringValue("Sheet").isEmpty()) {
             prepareSheet();
         }
         // System.out.println("Initializing " + getName() + "...");
     }
 
     private void prepareSheet() {
-        BufferedImage sheet = readImage("sheet");
+        BufferedImage sheet = readImage("Sheet");
         if (sheet == null) {
             return;
         }
@@ -162,7 +162,7 @@ public abstract class GraphicsPack {
     }
 
     protected boolean usesSheet() {
-        return !sheetImages.isEmpty() && !sheetPalettes.isEmpty();
+        return !(sheetImages.isEmpty() && sheetPalettes.isEmpty());
     }
 
     public BufferedImage toSheet() {

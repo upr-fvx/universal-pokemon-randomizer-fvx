@@ -791,7 +791,6 @@ public class Gen6Constants {
     private static final Set<Integer> bannedItemsORAS = setupBannedItemsORAS();
     private static final Set<Integer> badItemsORAS = setupBadItemsORAS();
     private static final Set<Integer> badItemsXY = setupBadItemsXY();
-    public static final Set<Integer> regularShopItems = setupRegularShopItems();
     public static final Set<Integer> opShopItems =  setupOPShopItems();
     public static final Set<Integer> megaStones = setupMegaStones();
 
@@ -846,14 +845,6 @@ public class Gen6Constants {
     private static Set<Integer> setupBadItemsXY() {
         Set<Integer> set = new HashSet<>(badItemsORAS);
         addBetween(set,ItemIDs.shoalSalt, ItemIDs.greenShard); // Shoal items and Shards; they serve no purpose in XY
-        return Collections.unmodifiableSet(set);
-    }
-
-    private static Set<Integer> setupRegularShopItems() {
-        Set<Integer> set = new HashSet<>();
-        addBetween(set, ItemIDs.ultraBall, ItemIDs.pokeBall);
-        addBetween(set, ItemIDs.potion, ItemIDs.revive);
-        addBetween(set, ItemIDs.superRepel, ItemIDs.repel);
         return Collections.unmodifiableSet(set);
     }
 

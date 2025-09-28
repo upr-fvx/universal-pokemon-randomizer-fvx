@@ -299,7 +299,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void addHeldItemsToAllTrainersAndSaveAndLoadGivesThemHeldItems(String romName) {
-        // Fails in Emerald because it can't give held items to Mossdeep Steven
         assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
@@ -316,7 +315,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         gbRomHandler.saveTrainers();
         gbRomHandler.loadTrainers();
         for (Trainer tr : gbRomHandler.getTrainers()) {
-            // TODO: add clause to ignore mossdeep steven
             System.out.println(tr.fullDisplayName);
             if (tr.shouldNotGetBuffs()) {
                 System.out.println("skip");

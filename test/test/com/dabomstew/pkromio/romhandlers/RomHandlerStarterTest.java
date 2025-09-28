@@ -2,6 +2,7 @@ package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
+import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -79,5 +80,15 @@ public class RomHandlerStarterTest extends RomHandlerTest {
         for (int i = 0; i < customCount; i++) {
             assertEquals(starters.get(i), allPokes.get(custom[i]));
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void starterHeldItemsDoNotChangeWithGetAndSet(String romName) {
+        loadROM(romName);
+        List<Item> before = new ArrayList<>(romHandler.getStarterHeldItems());
+        System.out.println(before);
+        romHandler.setStarterHeldItems(before);
+        assertEquals(before, romHandler.getStarterHeldItems());
     }
 }

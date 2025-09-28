@@ -112,6 +112,14 @@ public class GlobalConstants {
     public static final List<Integer> xItems = Arrays.asList(ItemIDs.guardSpec, ItemIDs.direHit, ItemIDs.xAttack,
             ItemIDs.xDefense, ItemIDs.xSpeed, ItemIDs.xAccuracy, ItemIDs.xSpAtk, ItemIDs.xSpDef);
 
+    public static final List<Integer> regularShopItems = Arrays.asList(
+            ItemIDs.pokeBall, ItemIDs.greatBall, ItemIDs.ultraBall,
+            ItemIDs.potion, ItemIDs.superPotion,ItemIDs.hyperPotion,  ItemIDs.maxPotion,
+            ItemIDs.antidote, ItemIDs.burnHeal, ItemIDs.iceHeal, ItemIDs.awakening, ItemIDs.paralyzeHeal,
+            ItemIDs.fullHeal, ItemIDs.fullRestore, ItemIDs.revive,
+            ItemIDs.repel, ItemIDs.superRepel, ItemIDs.maxRepel, ItemIDs.escapeRope
+    );
+
     public static final List<Integer> battleTrappingAbilities = Arrays.asList(AbilityIDs.shadowTag, AbilityIDs.magnetPull,
             AbilityIDs.arenaTrap);
 

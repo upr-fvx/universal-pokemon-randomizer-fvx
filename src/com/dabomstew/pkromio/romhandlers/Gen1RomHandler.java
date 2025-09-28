@@ -822,11 +822,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getXItems() {
-        return itemIdsToSet(Gen1Constants.xItems);
-    }
-
-    @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
         List<EncounterArea> encounterAreas = new ArrayList<>();
 
@@ -1797,6 +1792,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     EvolutionType type = Gen1Constants.evolutionTypeFromIndex(method);
                     int otherPoke = pokeRBYToNumTable[rom[pointer + 2 + (type == EvolutionType.STONE ? 1 : 0)] & 0xFF];
                     int extraInfo = rom[pointer + 1] & 0xFF;
+                    if (type == EvolutionType.STONE) {
+                        extraInfo = Gen1Constants.itemIDToStandard(extraInfo);
+                    }
                     Evolution evo = new Evolution(pkmn, pokes[otherPoke], type, extraInfo);
                     if (!pkmn.getEvolutionsFrom().contains(evo)) {
                         pkmn.getEvolutionsFrom().add(evo);
@@ -1899,7 +1897,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int itemCount = rom[offset++] & 0xFF;
         List<Item> shopItems = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
-            shopItems.add(items.get(rom[offset++] & 0xFF));
+            int itemID = Gen1Constants.itemIDToStandard(rom[offset++] & 0xFF);
+            shopItems.add(items.get(itemID));
         }
 
         if (rom[offset] != Gen1Constants.shopItemsTerminator) {
@@ -1929,7 +1928,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         data[0] = Gen1Constants.shopItemsScript;
         data[1] = (byte) shopItems.size();
         for (int i = 0; i < shopItems.size(); i++) {
-            data[2 + i] = (byte) shopItems.get(i).getId();
+            data[2 + i] = (byte) Gen1Constants.itemIDToInternal(shopItems.get(i).getId());
         }
         data[data.length - 1] = Gen1Constants.shopItemsTerminator;
         return data;
@@ -1940,27 +1939,25 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        List<Integer> prices = new ArrayList<>();
-        prices.add(0);
-        // normal items
-        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-            int price = read3ByteDecimalHex(offset);
-            prices.add(price);
-        }
-        // unused items and HMs
-        for (int i = Gen1ItemIDs.unused84; i <= Gen1ItemIDs.hm05; i++) {
-            prices.add(0);
-        }
-        // TMs
-        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-            int price = readNybble(offset, i % 2 == 1) * 1000;
-            prices.add(price);
-        }
-        // unused TMs
-        for (int i = Gen1ItemIDs.tm51; i <= Gen1ItemIDs.tm55; i++) {
-            prices.add(0);
+        List<Integer> prices = new ArrayList<>(Collections.nCopies(items.size(), 0));
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item == null) {
+                continue;
+            }
+
+            int internal = Gen1Constants.itemIDToInternal(i);
+            // Prices only exist for items up to Max Elixir...
+            if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
+                int offset = normalPricesOffset + 3 * (internal - 1);
+                int price = read3ByteDecimalHex(offset);
+                prices.set(i, price);
+            // ...and for TMs, in a separate data structure.
+            } else if (item.isTM()) {
+                int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
+                int price = readNybble(offset, i % 2 == 1) * 1000;
+                prices.set(i, price);
+            }
         }
 
         return prices;
@@ -1973,25 +1970,35 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     /**
      * Sets shop prices in a Gen 1 game.<br>
-     * TMs are stored as multiples of 1000, and will thus be rounded down,
-     * or set to 1000 for inputs >1000.
+     * TMs are stored as multiples of 1000, and will thus be rounded down.
      */
     @Override
     public void setShopPrices(List<Integer> prices) {
         int normalPricesOffset = romEntry.getIntValue("ShopPricesOffset");
         int tmPricesOffset = romEntry.getIntValue("TMShopPricesOffset");
 
-        for (int i = Gen1ItemIDs.masterBall; i <= Gen1ItemIDs.maxElixer; i++) {
-            int offset = normalPricesOffset + 3 * (i - Gen1ItemIDs.masterBall);
-            write3ByteDecimalHex(offset, prices.get(i));
+        if (prices.size() != items.size()) {
+            throw new IllegalArgumentException("prices.size() must equals items.size(). " +
+                    "Was:" + prices.size() + ", expected:" + items.size());
         }
-        for (int i = Gen1ItemIDs.tm01; i <= Gen1ItemIDs.tm50; i++) {
-            int offset = tmPricesOffset + (i - Gen1ItemIDs.tm01) / 2;
-            int price = prices.get(i) / 1000;
-            if (price == 0) {
-                price = 1;
+
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            if (item == null) {
+                continue;
             }
-            writeNybble(offset, i % 2 == 1, price);
+
+            int internal = Gen1Constants.itemIDToInternal(i);
+            // Prices only exist for items up to Max Elixir...
+            if (internal <= Gen1Constants.itemIDToInternal(ItemIDs.maxElixir)) {
+                int offset = normalPricesOffset + 3 * (internal - 1);
+                write3ByteDecimalHex(offset, prices.get(i));
+            // ...and for TMs, in a separate data structure.
+            } else if (item.isTM()) {
+                int offset = tmPricesOffset + (ItemIDs.tm01 - i) / 2;
+                int price = prices.get(i) / 1000;
+                writeNybble(offset, i % 2 == 1, price);
+            }
         }
     }
 
@@ -2355,7 +2362,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             if (!item.isAllowed()) {
                 throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
             }
-            writeByte(romEntry.getIntValue("PCPotionOffset"), (byte) (item.getId() & 0xFF));
+            byte internalID = (byte) Gen1Constants.itemIDToInternal(item.getId() & 0xFF);
+            writeByte(romEntry.getIntValue("PCPotionOffset"), internalID);
         }
     }
 
@@ -2394,32 +2402,29 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen1Constants.regularShopItems);
-    }
-
-    @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen1Constants.opShopItems);
     }
 
     @Override
     public void loadItems() {
-        String[] names = readItemNames();
-        items = new ArrayList<>(names.length);
-        items.add(null);
-        for (int i = 1; i < names.length; i++) {
-            items.add(new Item(i, names[i]));
+        items = new ArrayList<>(Collections.nCopies(ItemIDs.Gen1.last + 1, null));
+
+        String[] namesByInternal = readItemNames();
+        for (int internal = 1; internal < namesByInternal.length; internal++) {
+            int id = Gen1Constants.itemIDToStandard(internal);
+            items.set(id, new Item(id, namesByInternal[internal]));
         }
 
-        Gen1Constants.bannedItems.forEach(id -> items.get(id).setAllowed(false));
-        for (int i = Gen1Constants.tmsStartIndex; i < Gen1Constants.tmsStartIndex + Gen1Constants.tmCount; i++) {
+        Gen1Constants.bannedItems.stream().map(items::get).filter(Objects::nonNull)
+                .forEach(item -> item.setAllowed(false));
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
         // Gen 1 has no bad items Kappa, so we don't set any as such
     }
 
-    public String[] readItemNames() {
+    private String[] readItemNames() {
         String[] itemNames = new String[256];
         // trying to emulate pretty much what the game does here
         // normal items
@@ -2440,12 +2445,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             itemNames[index % 256] = readFixedLengthString(startOfText, 20);
         }
         // hms override
-        for (int index = Gen1Constants.hmsStartIndex; index < Gen1Constants.tmsStartIndex; index++) {
-            itemNames[index] = String.format("HM%02d", index - Gen1Constants.hmsStartIndex + 1);
+        for (int i = ItemIDs.hm01; i < ItemIDs.hm01 + Gen1Constants.hmCount; i++) {
+            itemNames[Gen1Constants.itemIDToInternal(i)] = String.format("HM%02d", i - ItemIDs.hm01 + 1);
         }
         // tms override
-        for (int index = Gen1Constants.tmsStartIndex; index < 0x100; index++) {
-            itemNames[index] = String.format("TM%02d", index - Gen1Constants.tmsStartIndex + 1);
+        for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen1Constants.tmCount; i++) {
+            itemNames[Gen1Constants.itemIDToInternal(i)] = String.format("TM%02d", i - ItemIDs.tm01 + 1);
         }
         return itemNames;
     }
@@ -2691,7 +2696,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Item> fieldItems = new ArrayList<>();
 
         for (int offset : itemOffsets) {
-            Item item = items.get(rom[offset] & 0xFF);
+            Item item = items.get(Gen1Constants.itemIDToStandard(rom[offset] & 0xFF));
             if (item.isAllowed()) {
                 fieldItems.add(item);
             }
@@ -2707,10 +2712,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Iterator<Item> iterItems = fieldItems.iterator();
 
         for (int offset : itemOffsets) {
-            Item item = items.get(rom[offset] & 0xFF);
-            if (item.isAllowed()) {
+            Item current = items.get(Gen1Constants.itemIDToStandard(rom[offset] & 0xFF));
+            if (current.isAllowed()) {
                 // Replace it
-                writeByte(offset, (byte) (iterItems.next().getId()));
+                writeByte(offset, (byte) Gen1Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 
@@ -2869,7 +2874,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             case LEVEL:
                 return new byte[]{(byte) evo.getExtraInfo()};
             case STONE:
-                return new byte[]{(byte) evo.getExtraInfo(), 0x01}; // minimum level
+                return new byte[]{(byte) Gen1Constants.itemIDToInternal(evo.getExtraInfo()), 0x01}; // minimum level
             case TRADE:
                 return new byte[]{(byte) 0x01}; // minimum level
             default:

@@ -43,8 +43,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- [The description of some miscellaneous feature (new or changed) here.]
+- (GUI) The Randomizer now remembers the most recent folder for opening/saving ROMs, between sessions. 
 
 ## Bugfixes
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- (Gen 3) Fixed one of the May battles in Emerald not getting requested buffs.
+- (GUI) Fixed the release page link wrapping after every word and taking up lots of vertical space, on non-Windows OSes.
+- (GUI) Fixed randomization option graphical oddities/crampedness, by adding scroll bars as needed.

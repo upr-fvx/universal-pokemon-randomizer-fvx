@@ -5,8 +5,35 @@ import com.dabomstew.pkromio.graphics.images.GBAImage;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
 
 public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
+
+    private static final List<SheetImageDescription> SHEET_IMAGE_DESCRIPTIONS = Arrays.asList(
+            new SheetImageDescription("BackImage", 90, 53, 64, 64,
+                    1, new int[][]{{1, 0}, {2, 0}, {3, 0}, {0, 0}}),
+            new SheetImageDescription("SitSprite", 81, 360, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
+            new SheetImageDescription("SurfBlobSprite", 155, 360, 64, 64,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
+            new SheetImageDescription("BirdSprite", 192, 426, 64, 64),
+            new SheetImageDescription("SitJumpSprite", 118, 360, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
+            new SheetImageDescription("AcroBikeSprite", 11, 250, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2},
+                                          {0, 4}, {0, 5}, {0, 6}, {0, 7}, // wheelies
+                                          {1, 4}, {1, 5}, {1, 6}, {1, 7},
+                                          {2, 4}, {2, 5}, {2, 6}, {2, 7},
+                                          {0, 8}, {0, 9}, {1, 8}, {1, 9}, {2, 8}, {2, 9}}), // balancing
+            new SheetImageDescription("UnderwaterSprite", 239, 404, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
+            new SheetImageDescription("WateringCanSprite", 11, 360, 32, 32,
+                    1, new int[][]{{0, 0}, {1, 0}, {0, 1}, {1, 1}, {0, 2}, {1, 2}}),
+            new SheetImageDescription("DecorateSprite", 180, 470, 16, 32),
+            new SheetImageDescription("FieldMoveSprite", 11, 470, 32, 32 ,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}})
+    );
 
     private static final int BACK_IMAGE_WIDTH = 8;
     private static final int BACK_IMAGE_HEIGHT = 8 * 4;
@@ -151,5 +178,12 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
     public GBAImage getFieldMoveSprite() {
         return fieldMove;
+    }
+
+    @Override
+    protected List<SheetImageDescription> getSheetImageDescriptions() {
+        List<SheetImageDescription> sids = super.getSheetImageDescriptions();
+        sids.addAll(SHEET_IMAGE_DESCRIPTIONS);
+        return sids;
     }
 }

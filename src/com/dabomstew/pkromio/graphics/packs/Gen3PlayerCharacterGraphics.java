@@ -9,6 +9,22 @@ import java.util.List;
 
 public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
+    private static final List<SheetImageDescription> SHEET_IMAGE_DESCRIPTIONS = Arrays.asList(
+            new SheetImageDescription("FrontImage", 11, 53, 64, 64),
+            new SheetImageDescription("BackImage", 90, 53, 64, 64,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}}),
+            new SheetImageDescription("MapIcon", 11, 15, 16, 16),
+            new SheetImageDescription("WalkSprite", 11, 139, 16, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
+            new SheetImageDescription("RunSprite", 66, 139, 16, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
+            new SheetImageDescription("BikeSprite", 121, 139, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
+            new SheetImageDescription("FishSprite", 12, 104, 32, 32,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {0, 1}, {1, 1}, {2, 1}, {3, 1},
+                                          {0, 2}, {1, 2}, {2, 2}, {3, 2}})
+    );
+
     private final static int FRONT_IMAGE_DIMENSIONS = 8;
     private final static int MAP_ICON_DIMENSIONS = 2;
 
@@ -43,6 +59,9 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     public Gen3PlayerCharacterGraphics(GraphicsPackEntry entry) {
         super(entry);
+        if (usesSheet()) {
+            entry.putStringValue("RunSpriteMode", "rse");
+        }
         this.front = initImage("FrontImage", FRONT_IMAGE_DIMENSIONS, FRONT_IMAGE_DIMENSIONS);
         this.back = initImage("BackImage", getBackImageWidth(), getBackImageHeight());
         this.walk = initSprite("WalkSprite", WALK_SPRITE_FRAME_NUM, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
@@ -284,6 +303,11 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
             return null;
         }
         return palette;
+    }
+
+    @Override
+    protected List<SheetImageDescription> getSheetImageDescriptions() {
+        return SHEET_IMAGE_DESCRIPTIONS;
     }
 
 }

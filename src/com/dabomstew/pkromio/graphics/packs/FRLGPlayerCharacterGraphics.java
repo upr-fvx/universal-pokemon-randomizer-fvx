@@ -4,8 +4,25 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.graphics.images.GBAImage;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
 
 public class FRLGPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
+
+    private static final List<SheetImageDescription> SHEET_IMAGE_DESCRIPTIONS = Arrays.asList(
+            new SheetImageDescription("BackImage", 90, 53, 64, 64,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}}),
+            new SheetImageDescription("SitSprite", 11, 327, 16, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
+            new SheetImageDescription("SurfBlobSprite", 32, 327, 32, 32,
+                    1, new int[][]{{0, 0}, {1, 0}, {0, 1}, {1, 1}, {0, 2}, {1, 2}}),
+            new SheetImageDescription("BirdSprite", 102, 327, 64, 64,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}}),
+            new SheetImageDescription("ItemSprite", 11, 250, 16, 32,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 1}, {3, 1}, {4, 1}, {2, 0}, {3, 0}, {4, 0}, {5, 0}}),
+            new SheetImageDescription("ItemBikeSprite", 117, 250, 16, 32,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}})
+    );
 
     private static final int BACK_IMAGE_WIDTH = 8;
     private static final int BACK_IMAGE_HEIGHT = 8 * 5;
@@ -105,4 +122,10 @@ public class FRLGPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
     // TODO: the oak speech image and its 32-color palette
 
+    @Override
+    protected List<SheetImageDescription> getSheetImageDescriptions() {
+        List<SheetImageDescription> sids = super.getSheetImageDescriptions();
+        sids.addAll(SHEET_IMAGE_DESCRIPTIONS);
+        return sids;
+    }
 }

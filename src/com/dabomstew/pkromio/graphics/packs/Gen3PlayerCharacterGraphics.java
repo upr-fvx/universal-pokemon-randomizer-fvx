@@ -2,10 +2,12 @@ package com.dabomstew.pkromio.graphics.packs;
 
 import com.dabomstew.pkromio.graphics.images.GBAImage;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
+import javafx.beans.binding.ObjectExpression;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
@@ -308,6 +310,20 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     @Override
     protected List<SheetImageDescription> getSheetImageDescriptions() {
         return SHEET_IMAGE_DESCRIPTIONS;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Gen3PlayerCharacterGraphics) {
+            Gen3PlayerCharacterGraphics other = (Gen3PlayerCharacterGraphics) obj;
+            return Objects.equals(front, other.front) && Objects.equals(back, other.back)
+                    && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)
+                    && Objects.equals(fish, other.fish) && Objects.equals(sit, other.sit)
+                    && Objects.equals(surfBlob, other.surfBlob) && Objects.equals(bird, other.bird)
+                    && Objects.equals(normalSpritePalette, other.normalSpritePalette)
+                    && Objects.equals(reflectionSpritePalette, other.reflectionSpritePalette);
+        }
+        return false;
     }
 
 }

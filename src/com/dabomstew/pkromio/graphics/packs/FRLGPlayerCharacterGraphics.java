@@ -4,8 +4,10 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.graphics.images.GBAImage;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class FRLGPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
@@ -20,7 +22,7 @@ public class FRLGPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}}),
             new SheetImageDescription("ItemSprite", 11, 250, 16, 32,
                     1, new int[][]{{0, 0}, {1, 0}, {2, 1}, {3, 1}, {4, 1}, {2, 0}, {3, 0}, {4, 0}, {5, 0}}),
-            new SheetImageDescription("ItemBikeSprite", 117, 250, 16, 32,
+            new SheetImageDescription("ItemBikeSprite", 117, 250, 32, 32,
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}})
     );
 
@@ -124,8 +126,18 @@ public class FRLGPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
     @Override
     protected List<SheetImageDescription> getSheetImageDescriptions() {
-        List<SheetImageDescription> sids = super.getSheetImageDescriptions();
+        List<SheetImageDescription> sids = new ArrayList<>(super.getSheetImageDescriptions());
         sids.addAll(SHEET_IMAGE_DESCRIPTIONS);
         return sids;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (obj instanceof FRLGPlayerCharacterGraphics) {
+            FRLGPlayerCharacterGraphics other = (FRLGPlayerCharacterGraphics) obj;
+            return Objects.equals(item, other.item) && Objects.equals(itemBike, other.itemBike);
+        }
+        return false;
     }
 }

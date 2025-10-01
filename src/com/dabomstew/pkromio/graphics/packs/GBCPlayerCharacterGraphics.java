@@ -7,6 +7,7 @@ import com.dabomstew.pkromio.graphics.palettes.Palette;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
 
@@ -208,5 +209,17 @@ public abstract class GBCPlayerCharacterGraphics extends GraphicsPack {
         return Arrays.asList(getFrontImage(), getBackImage(),
                 toOverworldSample(getWalkSprite()), toOverworldSample(getBikeSprite()),
                 getFishSpriteForSample());
-      }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof GBCPlayerCharacterGraphics) {
+            GBCPlayerCharacterGraphics other = (GBCPlayerCharacterGraphics) obj;
+            return Objects.equals(front, other.front) && Objects.equals(back, other.back)
+                    && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)
+                    && Objects.equals(fish, other.fish);
+        }
+        return false;
+    }
+
 }

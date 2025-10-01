@@ -5,8 +5,10 @@ import com.dabomstew.pkromio.graphics.images.GBAImage;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
@@ -15,17 +17,17 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
                     1, new int[][]{{1, 0}, {2, 0}, {3, 0}, {0, 0}}),
             new SheetImageDescription("SitSprite", 81, 360, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
-            new SheetImageDescription("SurfBlobSprite", 155, 360, 64, 64,
+            new SheetImageDescription("SurfBlobSprite", 155, 360, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
-            new SheetImageDescription("BirdSprite", 192, 426, 64, 64),
+            new SheetImageDescription("BirdSprite", 192, 426, 32, 32),
             new SheetImageDescription("SitJumpSprite", 118, 360, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
             new SheetImageDescription("AcroBikeSprite", 11, 250, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2},
-                                          {0, 4}, {0, 5}, {0, 6}, {0, 7}, // wheelies
-                                          {1, 4}, {1, 5}, {1, 6}, {1, 7},
-                                          {2, 4}, {2, 5}, {2, 6}, {2, 7},
-                                          {0, 8}, {0, 9}, {1, 8}, {1, 9}, {2, 8}, {2, 9}}), // balancing
+                                          {4, 0}, {5, 0}, {6, 0}, {7, 0}, // wheelies
+                                          {4, 1}, {5, 1}, {6, 1}, {7, 1},
+                                          {4, 2}, {5, 2}, {6, 2}, {7, 2},
+                                          {8, 0}, {9, 0}, {8, 1}, {9, 1}, {8, 2}, {9, 2}}), // balancing
             new SheetImageDescription("UnderwaterSprite", 239, 404, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
             new SheetImageDescription("WateringCanSprite", 11, 360, 32, 32,
@@ -182,8 +184,22 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
     @Override
     protected List<SheetImageDescription> getSheetImageDescriptions() {
-        List<SheetImageDescription> sids = super.getSheetImageDescriptions();
+        List<SheetImageDescription> sids = new ArrayList<>(super.getSheetImageDescriptions());
         sids.addAll(SHEET_IMAGE_DESCRIPTIONS);
         return sids;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (obj instanceof RSEPlayerCharacterGraphics) {
+            RSEPlayerCharacterGraphics other = (RSEPlayerCharacterGraphics) obj;
+            return Objects.equals(sitJump, other.sitJump) && Objects.equals(acroBike, other.acroBike)
+                    && Objects.equals(underwater, other.underwater) && Objects.equals(wateringCan, other.wateringCan)
+                    && Objects.equals(decorate, other.decorate)
+                    && Objects.equals(getUnderwaterPalette(), other.getUnderwaterPalette());
+        }
+        return false;
+    }
+
 }

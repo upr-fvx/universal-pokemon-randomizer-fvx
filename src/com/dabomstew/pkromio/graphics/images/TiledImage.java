@@ -252,5 +252,4 @@ public abstract class TiledImage extends BufferedImage {
                 new int[raster.getWidth() * raster.getHeight()]);
     }
 
-
 }

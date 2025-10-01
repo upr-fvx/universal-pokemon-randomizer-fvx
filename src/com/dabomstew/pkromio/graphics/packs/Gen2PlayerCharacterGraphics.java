@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
 
@@ -142,6 +143,18 @@ public class Gen2PlayerCharacterGraphics extends GBCPlayerCharacterGraphics {
     @Override
     protected List<SheetImageDescription> getSheetImageDescriptions() {
         return SHEET_IMAGE_DESCRIPTIONS;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (obj instanceof Gen2PlayerCharacterGraphics) {
+            Gen2PlayerCharacterGraphics other = (Gen2PlayerCharacterGraphics) obj;
+            return Objects.equals(trainerCard, other.trainerCard)
+                    && imagePalette.equals(other.imagePalette)
+                    && spritePaletteID == other.spritePaletteID;
+        }
+        return false;
     }
 
 }

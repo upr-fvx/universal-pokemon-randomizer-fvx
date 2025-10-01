@@ -240,19 +240,4 @@ public class GBCImage extends TiledImage {
         return getSubimageFromTileRect(x, y, w, h);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof GBCImage) {
-            GBCImage otherImage = (GBCImage) other;
-            return Arrays.equals(getRasterData(), otherImage.getRasterData());
-        }
-        return false;
-    }
-
-    private int[] getRasterData() {
-        Raster raster = getRaster();
-        return raster.getPixels(0, 0, raster.getWidth(), raster.getHeight(),
-                new int[raster.getWidth() * raster.getHeight()]);
-    }
-
 }

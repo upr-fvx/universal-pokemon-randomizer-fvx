@@ -37,6 +37,9 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}})
     );
 
+    private static final SheetPaletteDescription UNDERWATER_PALETTE_DESCRIPTION =
+            new SheetPaletteDescription("SpriteUnderwaterPalette", 239, 385);
+
     private static final int BACK_IMAGE_WIDTH = 8;
     private static final int BACK_IMAGE_HEIGHT = 8 * 4;
 
@@ -58,6 +61,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
     private final GBAImage wateringCan;
     private final GBAImage decorate;
     private final GBAImage fieldMove;
+    private final Palette underwaterPalette;
 
     public RSEPlayerCharacterGraphics(GraphicsPackEntry entry) {
         super(entry);
@@ -67,6 +71,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         this.wateringCan = initSprite("WateringCanSprite", WATERING_CAN_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.decorate = initSprite("DecorateSprite", DECORATE_SPRITE_FRAME_NUM, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
         this.fieldMove = initSprite("FieldMoveSprite", FIELD_MOVE_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
+        this.underwaterPalette = initUnderwaterSpritePalette();
     }
 
     @Override
@@ -98,6 +103,14 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         }})).build();
         run.setFrameDimensions(MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
         return run;
+    }
+
+    private Palette initUnderwaterSpritePalette() {
+        Palette palette = readPalette("SpriteUnderwaterPalette");
+        if (palette == null && hasUnderwaterSprite()) {
+            palette = underwater.getPalette();
+        }
+        return palette;
     }
 
     @Override
@@ -155,7 +168,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
     }
 
     public Palette getUnderwaterPalette() {
-        return underwater.getPalette();
+        return underwaterPalette;
     }
 
     public boolean hasWateringCanSprite() {
@@ -184,9 +197,16 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
 
     @Override
     protected List<SheetImageDescription> getSheetImageDescriptions() {
-        List<SheetImageDescription> sids = new ArrayList<>(super.getSheetImageDescriptions());
-        sids.addAll(SHEET_IMAGE_DESCRIPTIONS);
-        return sids;
+        List<SheetImageDescription> descs = new ArrayList<>(super.getSheetImageDescriptions());
+        descs.addAll(SHEET_IMAGE_DESCRIPTIONS);
+        return descs;
+    }
+
+    @Override
+    protected List<SheetPaletteDescription> getSheetPaletteDescriptions() {
+        List<SheetPaletteDescription> descs = new ArrayList<>(super.getSheetPaletteDescriptions());
+        descs.add(UNDERWATER_PALETTE_DESCRIPTION);
+        return descs;
     }
 
     @Override
@@ -194,6 +214,10 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         if (!super.equals(obj)) return false;
         if (obj instanceof RSEPlayerCharacterGraphics) {
             RSEPlayerCharacterGraphics other = (RSEPlayerCharacterGraphics) obj;
+            System.out.println(" " + Objects.equals(sitJump, other.sitJump) + " " + Objects.equals(acroBike, other.acroBike)
+                    + " " + Objects.equals(underwater, other.underwater) + " " + Objects.equals(wateringCan, other.wateringCan)
+                    + " " + Objects.equals(decorate, other.decorate)
+                    + " " + Objects.equals(getUnderwaterPalette(), other.getUnderwaterPalette()));
             return Objects.equals(sitJump, other.sitJump) && Objects.equals(acroBike, other.acroBike)
                     && Objects.equals(underwater, other.underwater) && Objects.equals(wateringCan, other.wateringCan)
                     && Objects.equals(decorate, other.decorate)

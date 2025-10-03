@@ -41,8 +41,13 @@ public abstract class GraphicsPack {
         public final String key;
         public final int xOffset;
         public final int yOffset;
-        public final int width;
-        public final int height;
+        public int width;
+        public int height;
+
+        public SheetPaletteDescription(String key, int xOffset, int yOffset) {
+            // assuming 16 colors in a nice row, 2x2 color squares
+            this(key, xOffset, yOffset, 32, 2);
+        }
 
         public SheetPaletteDescription(String key, int xOffset, int yOffset, int width, int height) {
             this.key = key;
@@ -89,7 +94,8 @@ public abstract class GraphicsPack {
     }
 
     private Palette getPaletteFromSheet(BufferedImage sheet, SheetPaletteDescription desc) {
-        return null; // TODO
+        BufferedImage subImage = sheet.getSubimage(desc.xOffset, desc.yOffset, desc.width, desc.height);
+        return Palette.readImagePaletteFromPixels(subImage);
     }
 
     protected List<SheetImageDescription> getSheetImageDescriptions() {

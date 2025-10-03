@@ -2,10 +2,10 @@ package com.dabomstew.pkromio.graphics.packs;
 
 import com.dabomstew.pkromio.graphics.images.GBAImage;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
-import javafx.beans.binding.ObjectExpression;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +25,11 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
             new SheetImageDescription("FishSprite", 12, 104, 32, 32,
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {0, 1}, {1, 1}, {2, 1}, {3, 1},
                                           {0, 2}, {1, 2}, {2, 2}, {3, 2}})
+    );
+
+    private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Collections.singletonList(
+            new SheetPaletteDescription("SpriteNormalPalette", 323, 135)
+            // TODO: include reflection palette in sheet
     );
 
     private final static int FRONT_IMAGE_DIMENSIONS = 8;
@@ -313,9 +318,20 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     }
 
     @Override
+    protected List<SheetPaletteDescription> getSheetPaletteDescriptions() {
+        return SHEET_PALETTE_DESCRIPTIONS;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Gen3PlayerCharacterGraphics) {
             Gen3PlayerCharacterGraphics other = (Gen3PlayerCharacterGraphics) obj;
+            System.out.println(Objects.equals(front, other.front) + " " + Objects.equals(back, other.back)
+                    + " " + Objects.equals(walk, other.walk) + " " + Objects.equals(bike, other.bike)
+                    + " " + Objects.equals(fish, other.fish) + " " + Objects.equals(sit, other.sit)
+                    + " " + Objects.equals(surfBlob, other.surfBlob) + " " + Objects.equals(bird, other.bird)
+                    + " " + Objects.equals(normalSpritePalette, other.normalSpritePalette)
+                    + " " + Objects.equals(reflectionSpritePalette, other.reflectionSpritePalette));
             return Objects.equals(front, other.front) && Objects.equals(back, other.back)
                     && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)
                     && Objects.equals(fish, other.fish) && Objects.equals(sit, other.sit)

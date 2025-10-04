@@ -16,14 +16,14 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}}),
             new SheetImageDescription("MapIcon", 11, 15, 16, 16),
             new SheetImageDescription("WalkSprite", 11, 139, 16, 32,
-                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
             new SheetImageDescription("RunSprite", 66, 139, 16, 32,
-                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
             new SheetImageDescription("BikeSprite", 121, 139, 32, 32,
-                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2}}),
-            new SheetImageDescription("FishSprite", 12, 104, 32, 32,
-                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {0, 1}, {1, 1}, {2, 1}, {3, 1},
-                                          {0, 2}, {1, 2}, {2, 2}, {3, 2}})
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
+            new SheetImageDescription("FishSprite", 224, 139, 32, 32,
+                    1, new int[][]{{0, 2}, {1, 2}, {2, 2}, {3, 2}, {0, 1}, {1, 1}, {2, 1}, {3, 1},
+                                          {0, 0}, {1, 0}, {2, 0}, {3, 0}})
     );
 
     private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Arrays.asList(
@@ -327,12 +327,14 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         if (obj instanceof Gen3PlayerCharacterGraphics) {
             Gen3PlayerCharacterGraphics other = (Gen3PlayerCharacterGraphics) obj;
             System.out.println(Objects.equals(front, other.front) + " " + Objects.equals(back, other.back)
+                    + " " + Objects.equals(mapIcon, other.mapIcon)
                     + " " + Objects.equals(walk, other.walk) + " " + Objects.equals(bike, other.bike)
                     + " " + Objects.equals(fish, other.fish) + " " + Objects.equals(sit, other.sit)
                     + " " + Objects.equals(surfBlob, other.surfBlob) + " " + Objects.equals(bird, other.bird)
                     + " " + Objects.equals(normalSpritePalette, other.normalSpritePalette)
                     + " " + Objects.equals(reflectionSpritePalette, other.reflectionSpritePalette));
             return Objects.equals(front, other.front) && Objects.equals(back, other.back)
+                    && Objects.equals(mapIcon, other.mapIcon)
                     && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)
                     && Objects.equals(fish, other.fish) && Objects.equals(sit, other.sit)
                     && Objects.equals(surfBlob, other.surfBlob) && Objects.equals(bird, other.bird)

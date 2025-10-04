@@ -23,11 +23,11 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
             new SheetImageDescription("SitJumpSprite", 118, 360, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
             new SheetImageDescription("AcroBikeSprite", 11, 250, 32, 32,
-                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {2, 1}, {2, 2},
-                                          {4, 0}, {5, 0}, {6, 0}, {7, 0}, // wheelies
-                                          {4, 1}, {5, 1}, {6, 1}, {7, 1},
-                                          {4, 2}, {5, 2}, {6, 2}, {7, 2},
-                                          {8, 0}, {9, 0}, {8, 1}, {9, 1}, {8, 2}, {9, 2}}), // balancing
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2},
+                                          {3, 0}, {4, 0}, {5, 0}, {6, 0}, // wheelies
+                                          {3, 1}, {4, 1}, {5, 1}, {6, 1},
+                                          {3, 2}, {4, 2}, {5, 2}, {6, 2},
+                                          {7, 0}, {8, 0}, {7, 1}, {8, 1}, {7, 2}, {8, 2}}), // balancing
             new SheetImageDescription("UnderwaterSprite", 239, 404, 32, 32,
                     1, new int[][]{{0, 0}, {0, 1}, {0, 2}}),
             new SheetImageDescription("WateringCanSprite", 11, 360, 32, 32,
@@ -69,7 +69,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         super(entry);
         this.sitJump = initSprite("SitJumpSprite", SIT_JUMP_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.acroBike = initSprite("AcroBikeSprite", ACRO_BIKE_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
-        this.underwater = initSprite("UnderwaterSprite", UNDERWATER_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
+        this.underwater = initSprite("UnderwaterSprite", "SpriteUnderwaterPalette", UNDERWATER_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.wateringCan = initSprite("WateringCanSprite", WATERING_CAN_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.decorate = initSprite("DecorateSprite", DECORATE_SPRITE_FRAME_NUM, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
         this.fieldMove = initSprite("FieldMoveSprite", FIELD_MOVE_SPRITE_FRAME_NUM, BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
@@ -216,7 +216,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         if (!super.equals(obj)) return false;
         if (obj instanceof RSEPlayerCharacterGraphics) {
             RSEPlayerCharacterGraphics other = (RSEPlayerCharacterGraphics) obj;
-            System.out.println(" " + Objects.equals(sitJump, other.sitJump) + " " + Objects.equals(acroBike, other.acroBike)
+            System.out.println(Objects.equals(sitJump, other.sitJump) + " " + Objects.equals(acroBike, other.acroBike)
                     + " " + Objects.equals(underwater, other.underwater) + " " + Objects.equals(wateringCan, other.wateringCan)
                     + " " + Objects.equals(decorate, other.decorate)
                     + " " + Objects.equals(getUnderwaterPalette(), other.getUnderwaterPalette()));

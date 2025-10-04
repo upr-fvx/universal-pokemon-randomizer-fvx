@@ -162,19 +162,23 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     }
 
     protected GBAImage initSprite(String key, int frameAmount, int frameWidth, int frameHeight) {
-        GBAImage image = initSprite(key, frameAmount * frameHeight * frameWidth);
+        return initSprite(key, "NormalSpritePalette", frameAmount, frameWidth, frameHeight);
+    }
+
+    protected GBAImage initSprite(String key, String paletteKey, int frameAmount, int frameWidth, int frameHeight) {
+        GBAImage image = initSprite(key, paletteKey, frameAmount * frameHeight * frameWidth);
         if (image != null) {
             image.setFrameDimensions(frameWidth, frameHeight);
         }
         return image;
     }
 
-    protected GBAImage initSprite(String key, int tileAmount) {
+    protected GBAImage initSprite(String key, String paletteKey, int tileAmount) {
         BufferedImage base = readImage(key);
         if (base == null) {
             return null;
         }        
-        Palette palette = readPalette("NormalSpritePalette");
+        Palette palette = readPalette(paletteKey);
 
         GBAImage.Builder builder = new GBAImage.Builder(base);
         if (palette != null) {

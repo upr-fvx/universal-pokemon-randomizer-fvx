@@ -5,7 +5,6 @@ import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +26,9 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
                                           {0, 2}, {1, 2}, {2, 2}, {3, 2}})
     );
 
-    private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Collections.singletonList(
+    private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Arrays.asList(
+            new SheetPaletteDescription("FrontImagePalette", 43, 49),
+            new SheetPaletteDescription("MapIconPalette", 11, 11),
             new SheetPaletteDescription("SpriteNormalPalette", 323, 135)
             // TODO: include reflection palette in sheet
     );
@@ -78,7 +79,7 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         this.sit = initSprite("SitSprite", SIT_SPRITE_FRAME_NUM, getSitFrameWidth(), getSitFrameHeight());
         this.surfBlob = initSprite("SurfBlobSprite", getSurfBlobFrameNum(), BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.bird = initSprite("BirdSprite", getBirdFrameNum(), getBirdFrameWidth(), getBirdFrameHeight());
-        this.mapIcon = initMapIcon();
+        this.mapIcon = initImage("MapIcon", MAP_ICON_DIMENSIONS, MAP_ICON_DIMENSIONS);
         this.normalSpritePalette = initNormalSpritePalette();
         this.reflectionSpritePalette = initReflectionSpritePalette();
     }
@@ -86,7 +87,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     protected abstract int getBackImageWidth();
 
     protected abstract int getBackImageHeight();
-
 
     private GBAImage initRun() {
         String mode = getEntry().getStringValue("RunSpriteMode");
@@ -124,19 +124,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     protected abstract int getBirdFrameHeight();
 
-    private GBAImage initMapIcon() {
-        BufferedImage base = readImage("MapIcon");
-        if (base == null) {
-            return null;
-        }
-        GBAImage mapIcon = new GBAImage.Builder(base).build();
-        if (mapIcon.getWidthInTiles() != MAP_ICON_DIMENSIONS || mapIcon.getWidthInTiles() != MAP_ICON_DIMENSIONS) {
-            System.out.println("Invalid map icon dimensions");
-            return null;
-        }
-        return mapIcon;
-    }
-
     private Palette initNormalSpritePalette() {
         Palette palette = readPalette("SpriteNormalPalette");
         if (palette == null && hasWalkSprite()) {
@@ -158,7 +145,14 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         if (base == null) {
             return null;
         }
-        GBAImage image = new GBAImage.Builder(base).build();
+        Palette palette = readPalette(key + "Palette");
+
+        GBAImage.Builder builder = new GBAImage.Builder(base);
+        if (palette != null) {
+            builder.prepreparedPalette(palette);
+        }
+        GBAImage image = builder.build();
+
         if (image.getWidthInTiles() != width || image.getHeightInTiles() != height) {
             System.out.println("Invalid " + key + " dimensions. Expected " + width + "x" + height + ", was " +
                     image.getWidthInTiles() + "x" + image.getHeightInTiles());
@@ -179,8 +173,15 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         BufferedImage base = readImage(key);
         if (base == null) {
             return null;
+        }        
+        Palette palette = readPalette("NormalSpritePalette");
+
+        GBAImage.Builder builder = new GBAImage.Builder(base);
+        if (palette != null) {
+            builder.prepreparedPalette(palette);
         }
-        GBAImage sprite = new GBAImage.Builder(base).build();
+        GBAImage sprite = builder.build();
+
         if (sprite.getWidthInTiles() * sprite.getHeightInTiles() != tileAmount) {
             System.out.println("Invalid " + key + " dimensions");
             return null;
@@ -255,7 +256,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     public GBAImage getBirdSprite() {
         return bird;
     }
-
 
     public boolean hasMapIcon() {
         return mapIcon != null;

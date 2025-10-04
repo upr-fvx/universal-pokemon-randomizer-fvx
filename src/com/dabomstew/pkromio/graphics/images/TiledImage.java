@@ -237,6 +237,9 @@ public abstract class TiledImage extends BufferedImage {
      */
     public abstract TiledImage getSubimageFromFrame(int i, int w, int h);
 
+    /**
+     * Just checks whether the raster is the same, disregarding colors.
+     */
     @Override
     public boolean equals(Object other) {
         if (other instanceof TiledImage) {
@@ -246,7 +249,7 @@ public abstract class TiledImage extends BufferedImage {
         return false;
     }
 
-    private int[] getRasterData() {
+    protected int[] getRasterData() {
         Raster raster = getRaster();
         return raster.getPixels(0, 0, raster.getWidth(), raster.getHeight(),
                 new int[raster.getWidth() * raster.getHeight()]);

@@ -37,8 +37,10 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
                     1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}})
     );
 
-    private static final SheetPaletteDescription UNDERWATER_PALETTE_DESCRIPTION =
-            new SheetPaletteDescription("SpriteUnderwaterPalette", 239, 385);
+    private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Arrays.asList(
+            new SheetPaletteDescription("BackImagePalette", 317, 49),
+            new SheetPaletteDescription("SpriteUnderwaterPalette", 239, 385)
+    );
 
     private static final int BACK_IMAGE_WIDTH = 8;
     private static final int BACK_IMAGE_HEIGHT = 8 * 4;
@@ -205,7 +207,7 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
     @Override
     protected List<SheetPaletteDescription> getSheetPaletteDescriptions() {
         List<SheetPaletteDescription> descs = new ArrayList<>(super.getSheetPaletteDescriptions());
-        descs.add(UNDERWATER_PALETTE_DESCRIPTION);
+        descs.addAll(SHEET_PALETTE_DESCRIPTIONS);
         return descs;
     }
 

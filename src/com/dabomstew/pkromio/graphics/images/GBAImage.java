@@ -9,6 +9,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * An image for GBA games with 16-color palettes. The GBAImage itself is a {@link BufferedImage} with an
@@ -19,6 +20,8 @@ public class GBAImage extends TiledImage {
     private static final int BPP = 4;
 
     public static class Builder extends TiledImage.Builder<GBAImage> {
+
+        private Palette prepreparedPalette;
 
         public Builder(int width, int height, Palette palette) {
             super(width, height, palette);
@@ -36,9 +39,14 @@ public class GBAImage extends TiledImage {
             super(file);
         }
 
+        public Builder prepreparedPalette(Palette prepreparedPalette) {
+            this.prepreparedPalette = prepreparedPalette;
+            return this;
+        }
+
         @Override
         protected Palette preparePalette(BufferedImage bim) {
-            return Palette.readImagePalette(bim, 16);
+            return prepreparedPalette == null ? Palette.readImagePalette(bim, 16) : prepreparedPalette;
         }
 
         @Override
@@ -91,8 +99,11 @@ public class GBAImage extends TiledImage {
                 }
             }
         } else {
-            Graphics2D g = createGraphics();
-            g.drawImage(bim, 0, 0, null);
+            for (int x = 0; x < getWidth(); x++) {
+                for (int y = 0; y < getHeight(); y++) {
+                    setRGB(x, y, bim.getRGB(x, y));
+                }
+            }
         }
     }
 
@@ -156,6 +167,61 @@ public class GBAImage extends TiledImage {
         int x = (i * w) % getWidthInTiles();
         int y = ((i * w) / getWidthInTiles()) * h;
         return getSubimageFromTileRect(x, y, w, h);
+    }
+
+    /**
+     * Compared to {@link TiledImage#equals(Object) its super method},
+     * cares less about the raster and more about the colors.<br>
+     * Returns true if each pixel in other, has the same color as in this.
+     * Pixels with the 0-index color are the exception. Instead of checking
+     * for color-matching, it checks that 0-index colors are 0-index in the
+     * other image. I.e. that the same pixels are transparent.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof GBAImage) {
+            GBAImage otherImage = (GBAImage) other;
+            if (frameAmount != otherImage.frameAmount || frameWidth != otherImage.frameWidth
+                    || frameHeight != otherImage.frameHeight) {
+                return false;
+            }
+            for (int i = 0; i < frameAmount; i++) {
+                if (!frameEquals(getSubimageFromFrame(i), otherImage.getSubimageFromFrame(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean frameEquals(GBAImage a, GBAImage b) {
+        int[] rasterA = a.getRasterData();
+        int[] rasterB = b.getRasterData();
+        if (rasterA.length != rasterB.length) {
+            return false;
+        }
+
+        int[] map = new int[16];
+        Arrays.fill(map, -1);
+
+        for (int i = 0; i < rasterA.length; i++) {
+            int valA = rasterA[i];
+            int valB = rasterB[i];
+            if (valB == 0) {
+                if (valA != 0) {
+                    return false;
+                }
+            } else if (map[valB] == -1) {
+                if (a.colors[valA] != b.colors[valB] || valA == 0) {
+                    return false;
+                }
+                map[valB] = valB;
+            } else if (map[valB] != valB) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

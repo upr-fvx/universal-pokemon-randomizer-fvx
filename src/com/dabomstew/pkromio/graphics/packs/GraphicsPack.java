@@ -63,11 +63,11 @@ public abstract class GraphicsPack {
     private final Map<String, Palette> sheetPalettes = new HashMap<>();
 
     public GraphicsPack(GraphicsPackEntry entry) {
+        System.out.println("Initializing " + entry.getName() + "...");
         this.entry = entry;
         if (!entry.getStringValue("Sheet").isEmpty()) {
             prepareSheet();
         }
-        // System.out.println("Initializing " + getName() + "...");
     }
 
     private void prepareSheet() {

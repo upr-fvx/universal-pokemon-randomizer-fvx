@@ -29,8 +29,8 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Arrays.asList(
             new SheetPaletteDescription("FrontImagePalette", 43, 49),
             new SheetPaletteDescription("MapIconPalette", 11, 11),
-            new SheetPaletteDescription("SpriteNormalPalette", 323, 135)
-            // TODO: include reflection palette in sheet
+            new SheetPaletteDescription("SpriteNormalPalette", 323, 135),
+            new SheetPaletteDescription("SpriteReflectionPalette", 323, 130)
     );
 
     private final static int FRONT_IMAGE_DIMENSIONS = 8;
@@ -134,7 +134,9 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     private Palette initReflectionSpritePalette() {
         Palette palette = readPalette("SpriteReflectionPalette");
-        if (palette == null) {
+        // If palette[0]==palette[1], then assume that's the sheet background;
+        // there isn't any reflection palette there to be used.
+        if (palette == null || palette.get(0).equals(palette.get(1))) {
             palette = normalSpritePalette; // TODO: auto-soften the palette
         }
         return palette;

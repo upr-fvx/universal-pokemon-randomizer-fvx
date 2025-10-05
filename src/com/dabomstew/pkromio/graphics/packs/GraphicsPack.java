@@ -1,6 +1,7 @@
 package com.dabomstew.pkromio.graphics.packs;
 
 import com.dabomstew.pkromio.GFXFunctions;
+import com.dabomstew.pkromio.graphics.palettes.Color;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class GraphicsPack {
+
+    private static final int PALETTE_PIXEL_SIZE = 2;
 
     protected static class SheetImageDescription {
         // this would be a lovely Record, if Oracle let us use anything past Java 8
@@ -95,7 +98,17 @@ public abstract class GraphicsPack {
 
     private Palette getPaletteFromSheet(BufferedImage sheet, SheetPaletteDescription desc) {
         BufferedImage subImage = sheet.getSubimage(desc.xOffset, desc.yOffset, desc.width, desc.height);
-        return Palette.readImagePaletteFromPixels(subImage);
+        int palW = desc.width / PALETTE_PIXEL_SIZE;
+        int palH = desc.height / PALETTE_PIXEL_SIZE;
+        Palette palette = new Palette(palW * palH);
+        for (int x = 0; x < palW; x++) {
+            for (int y = 0; y < palH; y++) {
+                int i = x + y * palW;
+                Color c = new Color(subImage.getRGB(x * PALETTE_PIXEL_SIZE, y * PALETTE_PIXEL_SIZE));
+                palette.set(i, c);
+            }
+        }
+        return palette;
     }
 
     protected List<SheetImageDescription> getSheetImageDescriptions() {

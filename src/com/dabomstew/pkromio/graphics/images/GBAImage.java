@@ -179,23 +179,19 @@ public class GBAImage extends TiledImage {
      */
     @Override
     public boolean equals(Object other) {
-        System.out.println("==new comparison==");
         if (other instanceof GBAImage) {
             GBAImage otherImage = (GBAImage) other;
             if (frameAmount != otherImage.frameAmount || frameWidth != otherImage.frameWidth
                     || frameHeight != otherImage.frameHeight) {
                 return false;
             }
-            System.out.println("frameAmount=" + frameAmount);
             if (frameAmount == 0) {
                 return frameEquals(this, otherImage);
             }
             for (int i = 0; i < frameAmount; i++) {
                 if (!frameEquals(getSubimageFromFrame(i), otherImage.getSubimageFromFrame(i))) {
-                    System.out.println("frame " + i + " false");
                     return false;
                 }
-                System.out.println("frame " + i + " true");
             }
             return true;
         }
@@ -217,21 +213,17 @@ public class GBAImage extends TiledImage {
             int valB = rasterB[i];
             if (valB == 0) {
                 if (valA != 0) {
-                    System.out.println("err 0: transparent non-matching");
                     return false;
                 }
             } else if (map[valB] == -1) {
                 if (valA == 0) {
-                    System.out.println("err 1: transparent non-matching");
                     return false;
                 }
                 if (a.colors[valA] != b.colors[valB]) {
-                    System.out.println("err 2: wrong colors");
                     return false;
                 }
                 map[valB] = valB;
             } else if (map[valB] != valB) {
-                System.out.println("err 3: wrong mapping");
                 return false;
             }
         }

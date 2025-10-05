@@ -330,13 +330,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     public boolean equals(Object obj) {
         if (obj instanceof Gen3PlayerCharacterGraphics) {
             Gen3PlayerCharacterGraphics other = (Gen3PlayerCharacterGraphics) obj;
-            System.out.println(Objects.equals(front, other.front) + " " + Objects.equals(back, other.back)
-                    + " " + Objects.equals(mapIcon, other.mapIcon)
-                    + " " + Objects.equals(walk, other.walk) + " " + Objects.equals(bike, other.bike)
-                    + " " + Objects.equals(fish, other.fish) + " " + Objects.equals(sit, other.sit)
-                    + " " + Objects.equals(surfBlob, other.surfBlob) + " " + Objects.equals(bird, other.bird)
-                    + " " + Objects.equals(normalSpritePalette, other.normalSpritePalette)
-                    + " " + Objects.equals(reflectionSpritePalette, other.reflectionSpritePalette));
             return Objects.equals(front, other.front) && Objects.equals(back, other.back)
                     && Objects.equals(mapIcon, other.mapIcon)
                     && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)

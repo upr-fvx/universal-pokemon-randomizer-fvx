@@ -216,10 +216,6 @@ public class RSEPlayerCharacterGraphics extends Gen3PlayerCharacterGraphics {
         if (!super.equals(obj)) return false;
         if (obj instanceof RSEPlayerCharacterGraphics) {
             RSEPlayerCharacterGraphics other = (RSEPlayerCharacterGraphics) obj;
-            System.out.println(Objects.equals(sitJump, other.sitJump) + " " + Objects.equals(acroBike, other.acroBike)
-                    + " " + Objects.equals(underwater, other.underwater) + " " + Objects.equals(wateringCan, other.wateringCan)
-                    + " " + Objects.equals(decorate, other.decorate)
-                    + " " + Objects.equals(getUnderwaterPalette(), other.getUnderwaterPalette()));
             return Objects.equals(sitJump, other.sitJump) && Objects.equals(acroBike, other.acroBike)
                     && Objects.equals(underwater, other.underwater) && Objects.equals(wateringCan, other.wateringCan)
                     && Objects.equals(decorate, other.decorate)

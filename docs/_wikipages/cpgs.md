@@ -2,9 +2,9 @@
 name: Custom Player Graphics
 ---
 
-The FVX branch has support for custom player graphics in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
+The FVX branch has support for custom player graphics (CPG) in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
  
-This feature was inspired in part by a similar feature in [The ALttP Randomizer](https://alttpr.com/en), and in part by people on Reddit and Discords wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
+This feature was inspired in part by a similar feature in [The A Link to the Past Randomizer](https://alttpr.com/en), and in part by people on Reddit and Discord servers wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
 
 Below is a general guide for how CPGs work, followed by sections for specific games/Generations.
 
@@ -18,7 +18,10 @@ Below is a general guide for how CPGs work, followed by sections for specific ga
 ## In all games
 
 ### File structure
-To add a custom player graphics, create a new folder within `data/players/`. This folder should contain your image files (and palette files, if you need those), as well as a text file called `info.ini`.
+To add a CPG, create a new folder within `data/players/`, e.g. `data/players/my_cpg`. This folder should contain:
+
+- Image and/or palette file(s) containing the graphics. This can be a single sheet (recommended), or multiple images + palettes.
+- A text file called `info.ini`, containing some info about the custom player graphics, such as who made it, and also how to use the graphics file(s).
 
 ![the randomizer's root folder, with data/ highlighted]({{ site.baseurl }}/assets/images/wikipages/cpg/nav1.png)
 
@@ -28,13 +31,17 @@ To add a custom player graphics, create a new folder within `data/players/`. Thi
 
 ![the snorlax/ folder, showing image files and info.ini]({{ site.baseurl }}/assets/images/wikipages/cpg/nav4.png)
 
-The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites).
+The simplest way of making a CPG is using a sheet, since they encompass all graphics info needed, in a single image file. Each RomType (what game the CPG are meant for) has its own example/template sheet, presented in their own sections below. The only thing sheets can't do, but separate graphics files can, is Gen 3 reflection palette shenanigans. Sheets also have the advantage, of being easy to upload to websites such as [Spriter's Resource](https://www.spriters-resource.com/) or [DeviantArt](https://www.deviantart.com/).
 
-Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen 3 games. Normally the palettes are taken from the image files.
+The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, do not worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites, *if a sheet is not used*).
 
-`info.ini` contains some info about the custom player graphics, such as who made it, and also tells the UPR how to use the images. The "info.ini" file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
+Normally the palettes are taken from the image files, the exception being the reflection palette in Gen 3 games, *if a sheet is not used*. In that case, they should be ".pal" files in JASC-PAL format. 
 
-Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are.
+The `info.ini` file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
+
+Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are. 
+
+It *is* possible to use tags meant for separate graphics files, in addition to a sheet. In which case, the sheet is loaded first, and the other tags overwrite the contents of the sheet.
 
 <table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
 <tr><td>RomType</td>
@@ -53,6 +60,9 @@ Below is a table of common tags, what values they accept, and what they are used
 	<td>Any string</td> 
 	<td>Who adapted the images, into a format usable by the UPR/target game. Who made those extra images which were missing? This is (presumably) you, but can also be multiple people in case you didn't make all the extra images.<br><br> 
 	If you're also the creator, or the creator is Game Freak because it's the vanilla graphics for the same game (Red for Gen1, May for RSE),you don't need to include this.</td></tr>
+<tr><td>Sheet</td>
+	<td>Image file name</td> 
+	<td>The file name of the sheet.</td></tr>
 <tr><td>FrontImage</td>
 	<td>Image file name</td> 
 	<td>The file name of the front image.</td></tr>
@@ -96,12 +106,7 @@ From=Pokémon - Generation I
 Creator=Gamefreak
 Adapter=Voliol
 Category=POKEMON
-FrontImage=gbc_front.png
-BackImage=gbc_back.png
-WalkSprite=gb_walk.png
-BikeSprite=gb_bike.png
-FishSpriteMode=combined
-FishSprite=gb_fish.png
+Sheet=sheet.png
 ```
 
 ---

@@ -181,11 +181,6 @@ public abstract class GraphicsPack {
         return !(sheetImages.isEmpty() && sheetPalettes.isEmpty());
     }
 
-    public BufferedImage toSheet() {
-        // TODO
-        return null;
-    }
-
     @Override
     public String toString() {
         return getName();

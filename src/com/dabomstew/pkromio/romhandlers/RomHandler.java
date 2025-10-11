@@ -558,6 +558,8 @@ public interface RomHandler {
 
     void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
 
+    void estimateEvolutionLevels();
+
     void makeEvolutionsEasier(boolean changeWithOtherEvos);
 
     boolean hasTimeBasedEvolutions();

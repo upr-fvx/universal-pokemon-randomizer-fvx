@@ -31,6 +31,7 @@ public class Evolution implements Comparable<Evolution> {
     private Species to;
     private EvolutionType type;
     private int extraInfo;
+    private int estimatedEvoLvl;
 
     // only relevant for Gen 7
     private int forme;
@@ -90,6 +91,14 @@ public class Evolution implements Comparable<Evolution> {
         this.extraInfo = extraInfo;
     }
 
+    public int getEstimatedEvoLvl() {
+        return estimatedEvoLvl;
+    }
+
+    public void setEstimatedEvoLvl(int estimatedEvoLvl) {
+        this.estimatedEvoLvl = estimatedEvoLvl;
+    }
+
     public int getForme() {
         return forme;
     }
@@ -136,9 +145,9 @@ public class Evolution implements Comparable<Evolution> {
     @Override
     public String toString() {
         return forme == 0 ?
-                String.format("(%s->%s, %s, extraInfo:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo) :
-                String.format("(%s->%s, %s, extraInfo:%d, forme:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo, forme);
+                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d)", from.getFullName(), to.getFullName(),
+                        type, extraInfo, estimatedEvoLvl) :
+                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d, forme:%d)", from.getFullName(), to.getFullName(),
+                        type, extraInfo, estimatedEvoLvl, forme);
     }
 }

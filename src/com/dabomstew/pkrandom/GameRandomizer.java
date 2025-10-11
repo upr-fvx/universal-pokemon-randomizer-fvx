@@ -193,6 +193,8 @@ public class GameRandomizer {
             final long startTime = System.currentTimeMillis();
             randomSource.seed(seed);
 
+            // Estimate levels before altering any information read from the rom
+            estimateEvolutionLevels();
             setupSpeciesRestrictions();
             applyUpdaters();
             applyRandomizers();
@@ -212,6 +214,11 @@ public class GameRandomizer {
         }
 
         return results;
+    }
+
+    private void estimateEvolutionLevels() {
+        //TODO consider only do this if any setting is selected that uses it (save 1ms) - however, this estimation only takes 7ms even in Gen7, but making sure this is always taken care of is error prone and takes time
+        romHandler.estimateEvolutionLevels();
     }
 
     private void setupSpeciesRestrictions() {

@@ -33,11 +33,44 @@ To add a CPG, create a new folder within `data/players/`, e.g. `data/players/my_
 
 The simplest way of making a CPG is using a sheet, since they encompass all graphics info needed, in a single image file. Each RomType (what game the CPG are meant for) has its own example/template sheet, presented in their own sections below. The only thing sheets can't do, but separate graphics files can, is Gen 3 reflection palette shenanigans. Sheets also have the advantage, of being easy to upload to websites such as [Spriter's Resource](https://www.spriters-resource.com/) or [DeviantArt](https://www.deviantart.com/).
 
+![a Gen 1 sheet for Snorlax]({{ site.baseurl }}/assets/images/wikipages/cpg/example_sheet.png)
+
 The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, do not worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites, *if a sheet is not used*).
 
 Normally the palettes are taken from the image files, the exception being the reflection palette in Gen 3 games, *if a sheet is not used*. In that case, they should be ".pal" files in JASC-PAL format. 
 
 The `info.ini` file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
+
+### Example
+
+Below is an example of the contents of a info.ini file. Double slashes "//" can be used for comments.
+
+```
+[Snorlax]
+RomType=Gen1
+Description=The Pokémon known for blocking roads.
+From=Pokémon - Generation I
+Creator=Gamefreak
+Adapter=Voliol
+Category=POKEMON
+FrontImage=gb_front.png
+BackImage=gb_back.png
+WalkSprite=gb_walk.png
+BikeSprite=gb_bike.png
+FishSpriteMode=combined
+FishSprite=gb_fish.png
+
+[Snorlax]
+RomType=Gen2 // Note this is different from "RomType=Gen1" above. 
+Description=The Pokémon known for blocking roads.
+From=Pokémon - Generation I
+Creator=Gamefreak
+Adapter=Voliol
+Category=POKEMON
+Sheet=sheet.png
+```
+
+### List of tags
 
 Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are. 
 
@@ -79,35 +112,6 @@ It *is* possible to use tags meant for separate graphics files, in addition to a
 	<td>Image file name</td> 
 	<td>The file name of the fishing sprite image.</td></tr>
 </table>
-
-### Example:
-
-Below is an example of the contents of a info.ini file. Double slashes "//" can be used for comments.
-
-```
-[Snorlax]
-RomType=Gen1
-Description=The Pokémon known for blocking roads.
-From=Pokémon - Generation I
-Creator=Gamefreak
-Adapter=Voliol
-Category=POKEMON
-FrontImage=gb_front.png
-BackImage=gb_back.png
-WalkSprite=gb_walk.png
-BikeSprite=gb_bike.png
-FishSpriteMode=combined
-FishSprite=gb_fish.png
-
-[Snorlax]
-RomType=Gen2 // Note this is different from "RomType=Gen1" above. 
-Description=The Pokémon known for blocking roads.
-From=Pokémon - Generation I
-Creator=Gamefreak
-Adapter=Voliol
-Category=POKEMON
-Sheet=sheet.png
-```
 
 ---
 

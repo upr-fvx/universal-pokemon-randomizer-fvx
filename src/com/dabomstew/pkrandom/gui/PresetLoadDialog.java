@@ -19,7 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class PresetLoadDialogNew extends JDialog {
+/**
+ * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
+ */
+public class PresetLoadDialog extends JDialog {
     private JPanel contentPane;
     private JButton applyButton;
     private JButton cancelButton;
@@ -46,7 +49,7 @@ public class PresetLoadDialogNew extends JDialog {
     private String requiredName;
     private boolean completed;
 
-    public PresetLoadDialogNew(RandomizerGUI parentGUI, JFrame frame, RomOpener romOpener) {
+    public PresetLoadDialog(RandomizerGUI parentGUI, JFrame frame, RomOpener romOpener) {
         super(frame, true);
 
         this.parentGUI = parentGUI;

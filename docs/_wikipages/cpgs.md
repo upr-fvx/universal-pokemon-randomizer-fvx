@@ -133,7 +133,7 @@ The example below shows that both source images (colored and monochrome) give th
 
 Below are sheet examples for Gen 1, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 1 sheet.
 
-![a Gen 1 sheet for Professor Oak]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_oak.png)![a blank Gen 1 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_blank.png)
+![a Gen 1 sheet for Professor Oak]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_oak.png) ![a blank Gen 1 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_blank.png)
 
 Of note:
 
@@ -243,12 +243,13 @@ What colors are actually used for an image/sprite depends on the palette loaded 
 
 Below are sheet examples for Gen 2, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 2 sheet.
 
-![a Gen 2 sheet for Leaf, credit Molly]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_leaf.png)![a blank Gen 2 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_blank.png)
+![a Gen 2 sheet for Leaf, credit Molly]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_leaf.png) ![a blank Gen 2 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_blank.png)
 
 Of note:
 
-- Cyan represents transparency.
+- The front/back images should share four colors; two freely chosen ones, in addition to white and black.
 - The overworld sprites should use any of the eight given palettes. All overworld sprites must use the same palette.
+- In the overworld sprite palettes, cyan represents transparency.
 - Only the cyan-background parts of the fishing sprites are used. Read more about this in the graphics specifications below.
 - Credits can be included inside the sheet image, **below** the main parts of the sheet. Do **not** otherwise pad the image/change its dimensions.
 
@@ -331,15 +332,17 @@ There is no support for changing the fishing rod.
 
 All the customizable player graphics use indexed palettes of size 16. Since 1 color is always used for transparency, this in effect means each image can have up to <b>15</b> colors. 
 
-The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
+The transparent color is picked differently depending on whether your source image is a sheet or a separate image. If it is a sheet, see "sheet examples/info" below. 
+
+If it is a separate image, it depends on whether the image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
 
 ### Sheet examples/info
 
 Below are four sheet examples for Gen 3, two filled in and two blank, compatible with Ruby/Sapphire/Emerald, and FireRed/LeafGreen respectively. They should be mostly self-explanatory. It it recommended you use one of these, when making a RSE/FLRG sheet.
 
-![a RSE sheet for May]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_may.png)![a blank RSE sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_blank.png)
+![a RSE sheet for May]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_may.png) ![a blank RSE sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_blank.png)
 
-![a FRLG sheet for Leaf]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_leaf.png)![a blank FRLG sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_blank.png)
+![a FRLG sheet for Leaf]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_leaf.png) ![a blank FRLG sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_blank.png)
 
 Of note:
 

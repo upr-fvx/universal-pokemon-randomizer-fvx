@@ -333,6 +333,21 @@ All the customizable player graphics use indexed palettes of size 16. Since 1 co
 
 The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
 
+### Sheet examples/info
+
+Below are four sheet examples for Gen 3, two filled in and two blank, compatible with Ruby/Sapphire/Emerald, and FireRed/LeafGreen respectively. They should be mostly self-explanatory. It it recommended you use one of these, when making a RSE/FLRG sheet.
+
+![a RSE sheet for May]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_may.png)![a blank RSE sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_blank.png)
+
+![a FRLG sheet for Leaf]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_leaf.png)![a blank FRLG sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_blank.png)
+
+Of note:
+
+- Sprites in the same box use the same palette. This means that the sprites in each box, may only use up to 16 colors (15+"transparent"). The palette of each box, is found to the top, or top-right, as strips of color. These palette-strips are what the Randomizer primarily uses to determine the in-game palette, so **it is very important that the palette-strips match the sprites**.
+- The first/left-most color of a given palette, represents transparency.
+- The big overworld sprites box, may have a second palette above its normal one: this is the reflection palette. If it is erased/drawn over with the sheet's teal background color, the reflection palette will be set to equal the normal palette.
+- Credits can be included inside the sheet image, outside the boxes containing the graphics themselves. Do **not** pad the image/change its dimensions.
+
 ### Graphic specifications
 
 The player has a front image, a back image, a map icon image, and various sprites (walking, cycling, fishing etc.) used in the overworld.

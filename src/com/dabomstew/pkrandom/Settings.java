@@ -360,11 +360,6 @@ public class Settings {
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
 
-    public enum CustomPlayerGraphicsMod {
-        UNCHANGED, RANDOM
-    }
-
-    private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
     private GraphicsPack customPlayerGraphics;
     private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
@@ -2769,18 +2764,6 @@ public class Settings {
 	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
-
-    public CustomPlayerGraphicsMod getCustomPlayerGraphicsMod() {
-        return customPlayerGraphicsMod;
-    }
-
-    public void setCustomPlayerGraphicsMod(boolean... bools) {
-        setCustomPlayerGraphicsMod(getEnum(CustomPlayerGraphicsMod.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsMod(CustomPlayerGraphicsMod customPlayerGraphicsMod) {
-        this.customPlayerGraphicsMod = customPlayerGraphicsMod;
-    }
 
     public GraphicsPack getCustomPlayerGraphics() {
         return customPlayerGraphics;

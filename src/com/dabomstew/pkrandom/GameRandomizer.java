@@ -236,7 +236,7 @@ public class GameRandomizer {
     private void maybeSetCustomPlayerGraphics() {
         // this setting/feature sticks out for being atypical,
         // versus the rest of the randomizer..... is this the right place for it to be?
-        if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
+        if (settings.getCustomPlayerGraphics() != null) {
             romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),
                     settings.getCustomPlayerGraphicsCharacterMod());
         }

@@ -2896,6 +2896,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
+        System.out.println("toReplace=" + toReplace);
         if (toReplace != PlayerCharacterType.PC1) {
             throw new IllegalArgumentException("Invalid toReplace. Only one player character in Gen 1.");
         }

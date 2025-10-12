@@ -102,6 +102,7 @@ public class CPGSelection {
                 }
             }
         }
+        setReplaceChoiceVisible(romHandler.hasMultiplePlayerCharacters());
     }
 
     public GraphicsPack getSelectedItem() {
@@ -109,6 +110,7 @@ public class CPGSelection {
     }
 
     public PlayerCharacterType getTypeToReplace() {
+        System.out.println("replaceRadioButton1.isSelected()=" + replaceRadioButton1.isSelected());
         return replaceRadioButton1.isSelected() ? PlayerCharacterType.PC1 : PlayerCharacterType.PC2;
     }
 

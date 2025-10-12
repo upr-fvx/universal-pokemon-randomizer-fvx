@@ -37,6 +37,7 @@ import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.EncryptedROMException;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.*;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -1297,6 +1298,8 @@ public class RandomizerGUI {
             Settings settings;
             try {
                 settings = Settings.fromString(config);
+                settings.setCustomPlayerGraphics(pld.getCustomPlayerGraphics());
+                settings.setCustomPlayerGraphicsCharacterMod(pld.getCustomPlayerGraphicsMod());
                 settings.tweakForRom(this.romHandler);
                 this.restoreStateFromSettings(settings);
             } catch (UnsupportedEncodingException | IllegalArgumentException e) {
@@ -2105,7 +2108,6 @@ public class RandomizerGUI {
         settings.setPokemonPalettesFollowEvolutions(ppalFollowEvolutionsCheckBox.isSelected());
         settings.setPokemonPalettesShinyFromNormal(ppalShinyFromNormalCheckBox.isSelected());
 
-        settings.setCustomPlayerGraphicsMod(cpgUnchangedRadioButton.isSelected(), cpgCustomRadioButton.isSelected());
         settings.setCustomPlayerGraphics(cpgSelection.getSelectedItem());
         settings.setCustomPlayerGraphicsCharacterMod(cpgSelection.getTypeToReplace());
 

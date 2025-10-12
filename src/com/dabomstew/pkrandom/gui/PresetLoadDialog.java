@@ -4,6 +4,8 @@ import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.gamedata.PlayerCharacterType;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -32,9 +34,10 @@ public class PresetLoadDialog extends JDialog {
     private JTextField settingsStringField;
     private JTextField seedField;
     private JTextField romField;
-    private JButton cpgChooseButton;
+    private JToggleButton cpgChooseButton;
     private JCheckBox cpgUseLastCheckBox;
     private JLabel romRequiredLabel;
+    private CPGSelection cpgSelection;
 
     private final RandomizerGUI parentGUI;
     private final ResourceBundle bundle;
@@ -46,6 +49,8 @@ public class PresetLoadDialog extends JDialog {
 
     private RomHandler currentROM;
     private CustomNamesSet customNames;
+    private GraphicsPack customPlayerGraphics;
+    private PlayerCharacterType customPlayerGraphicsMod;
     private String requiredName;
     private boolean completed;
 
@@ -71,6 +76,8 @@ public class PresetLoadDialog extends JDialog {
         setLocationRelativeTo(frame);
         getRootPane().setDefaultButton(cancelButton);
 
+        cpgSelection.setVisible(false);
+
         initListeners();
 
         pack();
@@ -84,6 +91,8 @@ public class PresetLoadDialog extends JDialog {
         DocumentListener checkListener = new CheckDocumentListener();
         seedField.getDocument().addDocumentListener(checkListener);
         settingsStringField.getDocument().addDocumentListener(checkListener);
+
+        cpgChooseButton.addActionListener(e -> onCPGChooseButton());
 
         applyButton.addActionListener(e -> onApply());
         cancelButton.addActionListener(e -> dispose());
@@ -267,6 +276,7 @@ public class PresetLoadDialog extends JDialog {
                                 // Got it
                                 romField.setText(f.getAbsolutePath());
                                 currentROM = checkHandler;
+                                maybeEnableCPGSelection();
                                 applyButton.setEnabled(true);
                             } else {
                                 JOptionPane.showMessageDialog(this, String.format(
@@ -289,6 +299,23 @@ public class PresetLoadDialog extends JDialog {
         }
     }
 
+    private void maybeEnableCPGSelection() {
+        boolean cpgSupport = currentROM.hasCustomPlayerGraphicsSupport();
+        cpgChooseButton.setEnabled(cpgSupport);
+        // TODO: only enable use-last if there is something to use in the init file
+        cpgUseLastCheckBox.setEnabled(cpgSupport);
+
+        cpgSelection.fillComboBox(currentROM);
+        cpgSelection.setEnabled(true);
+    }
+
+    private void onCPGChooseButton() {
+        setResizable(true);
+        cpgSelection.setVisible(cpgChooseButton.isSelected());
+        pack();
+        setResizable(false);
+    }
+
     private void onApply() {
         if (customNames == null) {
             try {
@@ -296,6 +323,11 @@ public class PresetLoadDialog extends JDialog {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if (cpgChooseButton.isSelected()) {
+            customPlayerGraphics = cpgSelection.getSelectedItem();
+            customPlayerGraphicsMod = cpgSelection.getTypeToReplace();
+            System.out.println("customPlayerGraphicsMod=" + customPlayerGraphicsMod);
         }
         completed = true;
         dispose();
@@ -319,5 +351,13 @@ public class PresetLoadDialog extends JDialog {
 
     public CustomNamesSet getCustomNames() {
         return customNames;
+    }
+
+    public GraphicsPack getCustomPlayerGraphics() {
+        return customPlayerGraphics;
+    }
+
+    public PlayerCharacterType getCustomPlayerGraphicsMod() {
+        return customPlayerGraphicsMod;
     }
 }

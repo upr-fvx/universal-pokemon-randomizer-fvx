@@ -129,6 +129,19 @@ The example below shows that both source images (colored and monochrome) give th
 
 ![a colored source image]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_walk_colored.png) or ![a monochrome source image]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_walk.png) &rarr; ![a screenshot of the resulting sprite in-game]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_screenshot.png)
 
+### Sheet examples/info
+
+Below are sheet examples for Gen 1, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 1 sheet.
+
+![a Gen 1 sheet for Professor Oak]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_oak.png)![a blank Gen 1 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_blank.png)
+
+Of note:
+
+- Cyan represents transparency.
+- The provided palettes should be used; the top-right one for the front/back images, and the bottom-right one for the overworld sprites. This is so the Randomizer can properly parse the sheet. Depending on your emulator settings, the palettes may be different in-game.
+- Only the cyan-background parts of the fishing sprites are used. Read more about this in the graphics specifications below.
+- Credits can be included inside the sheet image, **below** the main parts of the sheet. Do **not** otherwise pad the image/change its dimensions.
+
 ### Graphic specifications
 
 The player has a front image, a back image, and sprites for walking, cycling, and fishing in the overworld.
@@ -225,6 +238,19 @@ The example below shows that both source images (colored and monochrome) give th
 ![a screenshot of the resulting sprite in-game]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/other_screenshot.png)
 
 What colors are actually used for an image/sprite depends on the palette loaded for it. The front and back images will use the palette of the given front image. The overworld sprites will use one of 8 predefined palettes, chosen in `ini.txt`.
+
+### Sheet examples/info
+
+Below are sheet examples for Gen 2, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 2 sheet.
+
+![a Gen 2 sheet for Leaf, credit Molly]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_leaf.png)![a blank Gen 2 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_blank.png)
+
+Of note:
+
+- Cyan represents transparency.
+- The overworld sprites should use any of the eight given palettes. All overworld sprites must use the same palette.
+- Only the cyan-background parts of the fishing sprites are used. Read more about this in the graphics specifications below.
+- Credits can be included inside the sheet image, **below** the main parts of the sheet. Do **not** otherwise pad the image/change its dimensions.
 
 ### Graphic specifications
 

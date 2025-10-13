@@ -4,9 +4,10 @@ import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.gamedata.PlayerCharacterType;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
-import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
@@ -14,11 +15,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /**
  * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
@@ -34,7 +37,7 @@ public class PresetLoadDialog extends JDialog {
     private JTextField seedField;
     private JTextField romField;
     private JToggleButton cpgChooseButton;
-    private JCheckBox cpgUseLastCheckBox;
+    private JButton cpgUseLastButton;
     private JLabel romRequiredLabel;
     private CPGSelection cpgSelection;
 
@@ -45,6 +48,7 @@ public class PresetLoadDialog extends JDialog {
     private final RomOpener romOpener;
 
     private boolean enforceFieldCheck = true;
+    private CustomPlayerGraphics lastUsedCPG;
 
     private RomHandler currentROM;
     private CustomNamesSet customNames;
@@ -89,6 +93,7 @@ public class PresetLoadDialog extends JDialog {
         settingsStringField.getDocument().addDocumentListener(checkListener);
 
         cpgChooseButton.addActionListener(e -> onCPGChooseButton());
+        cpgUseLastButton.addActionListener(e -> onCPGUseLastButton());
 
         applyButton.addActionListener(e -> onApply());
         cancelButton.addActionListener(e -> dispose());
@@ -298,18 +303,65 @@ public class PresetLoadDialog extends JDialog {
     private void maybeEnableCPGSelection() {
         boolean cpgSupport = currentROM.hasCustomPlayerGraphicsSupport();
         cpgChooseButton.setEnabled(cpgSupport);
-        // TODO: only enable use-last if there is something to use in the init file
-        cpgUseLastCheckBox.setEnabled(cpgSupport);
-
         cpgSelection.fillComboBox(currentROM);
         cpgSelection.setEnabled(true);
+
+        if (cpgSupport) {
+            lastUsedCPG = getLastUsedCPGFromConfig();
+            cpgUseLastButton.setEnabled(lastUsedCPG != null);
+        }
+    }
+
+    private CustomPlayerGraphics getLastUsedCPGFromConfig() {
+        String cpgName = null;
+        PlayerCharacterType typeToReplace = null;
+        File config = new File(RootPath.path + "config.ini");
+        try {
+            Scanner scanner = new Scanner(config, "UTF-8");
+            while (scanner.hasNext()) {
+                String q = scanner.nextLine().trim();
+                System.out.println(q);
+                if (q.contains("//")) {
+                    q = q.substring(0, q.indexOf("//")).trim();
+                }
+                String[] tokens = q.split("=", 2);
+                if (tokens.length == 2) {
+                    if (tokens[0].startsWith("lastusedcpg." + currentROM.getROMName() + ".pack")) {
+                        cpgName = tokens[1];
+                    } else if (tokens[0].startsWith("lastusedcpg." + currentROM.getROMName() + ".type")) {
+                        typeToReplace = PlayerCharacterType.valueOf(tokens[1]);
+                    }
+                }
+            }
+        } catch (FileNotFoundException ignored) {
+            return null;
+        }
+        if (cpgName == null || typeToReplace == null) {
+            return null;
+        }
+        GraphicsPack graphicsPack = null;
+        for (GraphicsPack gp : cpgSelection.getGraphicsPacks()) {
+            if (gp.getName().equals(cpgName)) {
+                graphicsPack = gp;
+                break;
+            }
+        }
+        if (graphicsPack == null) {
+            return null;
+        }
+        return new CustomPlayerGraphics(graphicsPack, typeToReplace);
     }
 
     private void onCPGChooseButton() {
-        setResizable(true);
         cpgSelection.setVisible(cpgChooseButton.isSelected());
         pack();
-        setResizable(false);
+    }
+
+    private void onCPGUseLastButton() {
+        cpgSelection.setCustomPlayerGraphics(lastUsedCPG);
+        if (!cpgChooseButton.isSelected()) {
+            cpgChooseButton.doClick();
+        }
     }
 
     private void onApply() {

@@ -8,6 +8,7 @@ import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -65,6 +66,10 @@ public class CPGSelection {
         replaceRadioButton2.setVisible(visible);
     }
 
+    public boolean isReplaceChoiceVisible() {
+        return replaceLabel.isVisible();
+    }
+
     public void setVisible(boolean visible) {
         form.setVisible(visible);
     }
@@ -103,6 +108,45 @@ public class CPGSelection {
             }
         }
         setReplaceChoiceVisible(romHandler.hasMultiplePlayerCharacters());
+    }
+
+    /**
+     * Returns the full list of {@link GraphicsPack}s, that the CPGSelection has available.
+     */
+    public List<GraphicsPack> getGraphicsPacks() {
+        List<GraphicsPack> graphicsPacks = new ArrayList<>(comboBox.getModel().getSize());
+        for (int i = 0; i < comboBox.getModel().getSize(); i++) {
+            graphicsPacks.add(comboBox.getItemAt(i));
+        }
+        return graphicsPacks;
+    }
+
+    public void setCustomPlayerGraphics(CustomPlayerGraphics cpg) {
+        if (!isReplaceChoiceVisible() && cpg.getTypeToReplace() != PlayerCharacterType.PC1) {
+            throw new IllegalArgumentException("PlayerCharacterType " + cpg.getTypeToReplace() + " is not allowed " +
+                    "for this CPGSelection.");
+        }
+        int setIndex = -1;
+        for (int i = 0; i < comboBox.getModel().getSize(); i++) {
+            if (cpg.getGraphicsPack() == comboBox.getItemAt(i)) {
+                setIndex = i;
+                break;
+            }
+        }
+        if (setIndex == -1) {
+            throw new IllegalArgumentException("The GraphicsPack of cpg (" + cpg.getGraphicsPack().getName() +
+                    ")is not a valid option for this CPGSelection.");
+        }
+        comboBox.setSelectedIndex(setIndex);
+        selectReplaceRadioButton(cpg.getTypeToReplace());
+    }
+
+    private void selectReplaceRadioButton(PlayerCharacterType typeToReplace) {
+        if (typeToReplace == PlayerCharacterType.PC1) {
+            replaceRadioButton1.setSelected(true);
+        } else {
+            replaceRadioButton2.setSelected(true);
+        }
     }
 
     public CustomPlayerGraphics getCustomPlayerGraphics() {

@@ -387,11 +387,13 @@ public class RandomizerGUI {
     private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;
+    private String openDirectory = RootPath.path;
+    private String saveDirectory = RootPath.path;
 
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
 
-    private RomOpener romOpener = new RomOpener();
+    private final RomOpener romOpener = new RomOpener();
 
     private JFileChooser romOpenChooser = new JFileChooser();
     private JFileChooser romSaveChooser = new JFileChooser();
@@ -746,8 +748,8 @@ public class RandomizerGUI {
     }
 
     private void initFileChooserDirectories() {
-        romOpenChooser.setCurrentDirectory(new File(RootPath.path));
-        romSaveChooser.setCurrentDirectory(new File(RootPath.path));
+        romOpenChooser.setCurrentDirectory(new File(openDirectory));
+        romSaveChooser.setCurrentDirectory(new File(saveDirectory));
         if (new File(RootPath.path + "settings/").exists()) {
             qsOpenChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
             qsSaveChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
@@ -863,6 +865,8 @@ public class RandomizerGUI {
         romOpenChooser.setSelectedFile(null);
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            openDirectory = romOpenChooser.getSelectedFile().getParentFile().getAbsolutePath();
+            attemptWriteConfig();
             openRom(romOpenChooser.getSelectedFile(), false);
         }
     }
@@ -1004,6 +1008,8 @@ public class RandomizerGUI {
         }
 
         if (allowed && fh != null) {
+            saveDirectory = fh.getParentFile().getAbsolutePath();
+            attemptWriteConfig();
             saveRandomizedRom(outputType, fh);
         } else if (allowed && batchRandomizationSettings.isBatchRandomizationEnabled()) {
             int numberOfRandomizedROMs = batchRandomizationSettings.getNumberOfRandomizedROMs();
@@ -3834,40 +3840,47 @@ public class RandomizerGUI {
                         if (isReadingUpdates) {
                             gameUpdates.put(key, tokens[1]);
                         }
-                        if (key.equalsIgnoreCase("checkedcustomnames172")) {
+
+                        if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("firststart")) {
+
+                        } else if (key.equals("firststart")) {
                             String val = tokens[1];
                             if (val.equals(Version.VERSION_STRING)) {
                                 initialPopup = false;
                             }
-                        }
-                        if (key.equals("unloadgameonsuccess")) {
+
+                        } else if (key.equals("unloadgameonsuccess")) {
                             unloadGameOnSuccess = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("showinvalidrompopup")) {
+
+                        } else if (key.equals("showinvalidrompopup")) {
                             showInvalidRomPopup = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("batchrandomization.enabled")) {
+
+                        } else if (key.equals("inputdirectory")) {
+                            openDirectory = tokens[1].trim();
+
+                        } else if (key.equals("outputdirectory")) {
+                            saveDirectory = tokens[1].trim();
+
+                        } else if (key.equals("batchrandomization.enabled")) {
                             batchRandomizationSettings.setBatchRandomizationEnabled(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.generatelogfiles")){
+
+                        } else if (key.equals("batchrandomization.generatelogfiles")) {
                             batchRandomizationSettings.setGenerateLogFile(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.autoadvanceindex")){
+
+                        } else if (key.equals("batchrandomization.autoadvanceindex")) {
                             batchRandomizationSettings.setAutoAdvanceStartingIndex(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.numberofrandomizedroms")){
+
+                        } else if (key.equals("batchrandomization.numberofrandomizedroms")) {
                             batchRandomizationSettings.setNumberOfRandomizedROMs(Integer.parseInt(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.startingindex")){
+
+                        } else if (key.equals("batchrandomization.startingindex")) {
                             batchRandomizationSettings.setStartingIndex(Integer.parseInt(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.filenameprefix")){
+
+                        } else if (key.equals("batchrandomization.filenameprefix")) {
                             batchRandomizationSettings.setFileNamePrefix(tokens[1].trim());
-                        }
-                        if (key.equals("batchrandomization.outputdirectory")){
+
+                        } else if (key.equals("batchrandomization.outputdirectory")) {
                             batchRandomizationSettings.setOutputDirectory(tokens[1].trim());
                         }
                     }
@@ -3893,6 +3906,8 @@ public class RandomizerGUI {
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
             ps.println("showinvalidrompopup=" + showInvalidRomPopup);
+            ps.println("inputdirectory=" + openDirectory);
+            ps.println("outputdirectory=" + saveDirectory);
             ps.println(batchRandomizationSettings.toString());
             if (!initialPopup) {
                 ps.println("firststart=" + Version.VERSION_STRING);

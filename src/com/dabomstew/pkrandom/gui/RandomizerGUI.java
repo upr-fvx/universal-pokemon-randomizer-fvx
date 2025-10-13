@@ -389,6 +389,7 @@ public class RandomizerGUI {
     private boolean showInvalidRomPopup = true;
     private String openDirectory = RootPath.path;
     private String saveDirectory = RootPath.path;
+    private final Map<String, String> lastUsedCPGConfigs = new TreeMap<>();
 
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
@@ -1203,7 +1204,7 @@ public class RandomizerGUI {
                         true, settings.toString(), Long.toString(seed));
             }
             SwingUtilities.invokeLater(() -> finishRandomization(
-                    filename, seed, baos, results.getCheckValue(), raceMode, batchRandomization
+                    filename, seed, cpg, baos, results.getCheckValue(), raceMode, batchRandomization
             ));
         } else {
             Exception e = results.getException();
@@ -1227,9 +1228,12 @@ public class RandomizerGUI {
     }
 
     private void finishRandomization(String filename, long seed,
+                                     CustomPlayerGraphics cpg,
                                      ByteArrayOutputStream baos,
                                      int checkValue,
                                      boolean raceMode, boolean batchRandomization) {
+        recordCPGAsLastUsed(cpg);
+
         opDialog.setVisible(false);
         byte[] out = baos.toByteArray();
 
@@ -1286,6 +1290,12 @@ public class RandomizerGUI {
             reinitializeRomHandler(false);
         }
 
+    }
+
+    private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".pack", cpg.getGraphicsPack().getName());
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".type", cpg.getTypeToReplace().toString());
+        attemptWriteConfig();
     }
 
     private void saveLogFile(String filename, byte[] out) throws IOException {
@@ -3882,6 +3892,10 @@ public class RandomizerGUI {
 
                         } else if (key.equals("batchrandomization.outputdirectory")) {
                             batchRandomizationSettings.setOutputDirectory(tokens[1].trim());
+
+                        } else if (key.startsWith("lastusedcpg.")) {
+                            String k = key.substring("lastusedcpg.".length());
+                            lastUsedCPGConfigs.put(k, tokens[1].trim());
                         }
                     }
                 } else if (isReadingUpdates) {
@@ -3919,6 +3933,9 @@ public class RandomizerGUI {
                     ps.format("%s=%s", update.getKey(), update.getValue());
                     ps.println();
                 }
+            }
+            for (Map.Entry<String, String> entry : lastUsedCPGConfigs.entrySet()) {
+                ps.println("lastusedcpg." + entry.getKey() + "=" + entry.getValue());
             }
             ps.close();
             return true;

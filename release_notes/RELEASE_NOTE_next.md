@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue] DetectiveAlice for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] SharkGuy and bepis for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -44,6 +44,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - (GUI) The Randomizer now remembers the most recent folder for opening/saving ROMs, between sessions. 
+- (Gen 1-3) When loading a premade seed, it is now possible to choose a Custom Player Graphics to apply. Play with your friends under equal randomization, but with different looks! (#100)
 
 ## Bugfixes
 - (Gen 3) Fixed one of the May battles in Emerald not getting requested buffs.

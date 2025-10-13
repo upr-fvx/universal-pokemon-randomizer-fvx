@@ -1232,7 +1232,9 @@ public class RandomizerGUI {
                                      ByteArrayOutputStream baos,
                                      int checkValue,
                                      boolean raceMode, boolean batchRandomization) {
-        recordCPGAsLastUsed(cpg);
+        if (cpg != null) {
+            recordCPGAsLastUsed(cpg);
+        }
 
         opDialog.setVisible(false);
         byte[] out = baos.toByteArray();

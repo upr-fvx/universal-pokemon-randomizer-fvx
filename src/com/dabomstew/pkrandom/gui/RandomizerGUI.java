@@ -1298,7 +1298,7 @@ public class RandomizerGUI {
     }
 
     private void presetLoader() {
-        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpener);
+        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpenChooser, romOpener);
         if (pld.isCompleted()) {
             // Apply it
             long seed = pld.getSeed();

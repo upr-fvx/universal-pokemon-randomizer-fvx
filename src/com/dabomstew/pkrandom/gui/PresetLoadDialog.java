@@ -52,19 +52,17 @@ public class PresetLoadDialog extends JDialog {
     private String requiredName;
     private boolean completed;
 
-    public PresetLoadDialog(RandomizerGUI parentGUI, JFrame frame, RomOpener romOpener) {
+    public PresetLoadDialog(RandomizerGUI parentGUI, JFrame frame, JFileChooser romFileChooser, RomOpener romOpener) {
         super(frame, true);
 
         this.parentGUI = parentGUI;
 
         this.bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
 
+        this.romFileChooser = romFileChooser;
         this.presetFileChooser = new JFileChooser();
-        this.romFileChooser = new JFileChooser();
         presetFileChooser.setFileFilter(new PresetFileFilter());
-        romFileChooser.setFileFilter(new ROMFilter());
         presetFileChooser.setCurrentDirectory(new File(RootPath.path));
-        romFileChooser.setCurrentDirectory(new File(RootPath.path));
 
         this.romOpener = romOpener;
 

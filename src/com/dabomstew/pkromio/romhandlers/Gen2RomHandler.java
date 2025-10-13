@@ -30,6 +30,7 @@ import com.dabomstew.pkromio.constants.*;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.Gen2PlayerCharacterGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.graphics.palettes.Color;
@@ -3017,7 +3018,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
+        GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
+        PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
+
         if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }

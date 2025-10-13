@@ -4,8 +4,7 @@ import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.RootPath;
-import com.dabomstew.pkromio.gamedata.PlayerCharacterType;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -49,8 +48,7 @@ public class PresetLoadDialog extends JDialog {
 
     private RomHandler currentROM;
     private CustomNamesSet customNames;
-    private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterType customPlayerGraphicsMod;
+    private CustomPlayerGraphics customPlayerGraphics;
     private String requiredName;
     private boolean completed;
 
@@ -325,9 +323,7 @@ public class PresetLoadDialog extends JDialog {
             }
         }
         if (cpgChooseButton.isSelected()) {
-            customPlayerGraphics = cpgSelection.getSelectedItem();
-            customPlayerGraphicsMod = cpgSelection.getTypeToReplace();
-            System.out.println("customPlayerGraphicsMod=" + customPlayerGraphicsMod);
+            customPlayerGraphics = cpgSelection.getCustomPlayerGraphics();
         }
         completed = true;
         dispose();
@@ -353,11 +349,8 @@ public class PresetLoadDialog extends JDialog {
         return customNames;
     }
 
-    public GraphicsPack getCustomPlayerGraphics() {
+    public CustomPlayerGraphics getCustomPlayerGraphics() {
         return customPlayerGraphics;
     }
 
-    public PlayerCharacterType getCustomPlayerGraphicsMod() {
-        return customPlayerGraphicsMod;
-    }
 }

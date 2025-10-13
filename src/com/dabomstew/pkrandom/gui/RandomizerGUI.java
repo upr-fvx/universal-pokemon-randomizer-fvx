@@ -37,7 +37,7 @@ import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.EncryptedROMException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.*;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -55,8 +55,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -1070,11 +1070,16 @@ public class RandomizerGUI {
 
         try {
             CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
+            CustomPlayerGraphics cpg = getCPGFromGUI();
+            performRandomization(fh.getAbsolutePath(), seed, cns, cpg, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
         }
+    }
+
+    private CustomPlayerGraphics getCPGFromGUI() {
+        return cpgCustomRadioButton.isSelected() ? cpgSelection.getCustomPlayerGraphics() : null;
     }
 
     private void loadQS() {
@@ -1142,7 +1147,9 @@ public class RandomizerGUI {
         }
     }
 
-    private void performRandomization(final String filename, final long seed, CustomNamesSet customNames, boolean saveAsDirectory) {
+    private void performRandomization(final String filename, final long seed,
+                                      CustomNamesSet customNames, CustomPlayerGraphics cpg,
+                                      boolean saveAsDirectory) {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
@@ -1153,7 +1160,7 @@ public class RandomizerGUI {
         try {
             opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
             Thread t = new Thread(() -> performRandomizationInner(
-                    filename, seed, settings, baos, log, raceMode, batchRandomization, saveAsDirectory
+                    filename, seed, settings, cpg, baos, log, raceMode, batchRandomization, saveAsDirectory
             ));
             t.start();
             if (batchRandomization) {
@@ -1177,11 +1184,11 @@ public class RandomizerGUI {
     }
 
     private void performRandomizationInner(String filename,
-                                           long seed, Settings settings,
+                                           long seed, Settings settings, CustomPlayerGraphics cpg,
                                            ByteArrayOutputStream baos, PrintStream log,
                                            boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
         SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-        GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+        GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
         GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
 
         if (results.wasSaveSuccessful()) {
@@ -1296,10 +1303,10 @@ public class RandomizerGUI {
             }
             this.romLoaded();
             Settings settings;
+            CustomPlayerGraphics customPlayerGraphics = null;
             try {
                 settings = Settings.fromString(config);
-                settings.setCustomPlayerGraphics(pld.getCustomPlayerGraphics());
-                settings.setCustomPlayerGraphicsCharacterMod(pld.getCustomPlayerGraphicsMod());
+                customPlayerGraphics = pld.getCustomPlayerGraphics();
                 settings.tweakForRom(this.romHandler);
                 this.restoreStateFromSettings(settings);
             } catch (UnsupportedEncodingException | IllegalArgumentException e) {
@@ -1348,7 +1355,7 @@ public class RandomizerGUI {
             if (allowed && fh != null) {
                 // Apply the seed we were given
                 presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), outputType == SaveType.DIRECTORY);
+                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), customPlayerGraphics, outputType == SaveType.DIRECTORY);
             }
         }
 
@@ -2107,9 +2114,6 @@ public class RandomizerGUI {
         settings.setPokemonPalettesFollowTypes(ppalFollowTypesCheckBox.isSelected());
         settings.setPokemonPalettesFollowEvolutions(ppalFollowEvolutionsCheckBox.isSelected());
         settings.setPokemonPalettesShinyFromNormal(ppalShinyFromNormalCheckBox.isSelected());
-
-        settings.setCustomPlayerGraphics(cpgSelection.getSelectedItem());
-        settings.setCustomPlayerGraphicsCharacterMod(cpgSelection.getTypeToReplace());
 
         int currentMiscTweaks = 0;
         int mtCount = MiscTweak.allTweaks.size();

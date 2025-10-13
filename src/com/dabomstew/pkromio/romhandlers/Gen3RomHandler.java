@@ -30,10 +30,7 @@ import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.images.GBAImage;
-import com.dabomstew.pkromio.graphics.packs.FRLGPlayerCharacterGraphics;
-import com.dabomstew.pkromio.graphics.packs.Gen3PlayerCharacterGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
-import com.dabomstew.pkromio.graphics.packs.RSEPlayerCharacterGraphics;
+import com.dabomstew.pkromio.graphics.packs.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.romhandlers.romentries.Gen3EventTextEntry;
 import com.dabomstew.pkromio.romhandlers.romentries.Gen3RomEntry;
@@ -4238,7 +4235,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
+        GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
+        PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
+
         if (!(unchecked instanceof Gen3PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }

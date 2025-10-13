@@ -36,8 +36,8 @@ public class PresetLoadDialog extends JDialog {
     private JTextField settingsStringField;
     private JTextField seedField;
     private JTextField romField;
-    private JToggleButton cpgChooseButton;
-    private JButton cpgUseLastButton;
+    private JCheckBox cpgUseCheckButton;
+    private JButton cpgSelectLastButton;
     private JLabel romRequiredLabel;
     private CPGSelection cpgSelection;
 
@@ -92,8 +92,8 @@ public class PresetLoadDialog extends JDialog {
         seedField.getDocument().addDocumentListener(checkListener);
         settingsStringField.getDocument().addDocumentListener(checkListener);
 
-        cpgChooseButton.addActionListener(e -> onCPGChooseButton());
-        cpgUseLastButton.addActionListener(e -> onCPGUseLastButton());
+        cpgUseCheckButton.addActionListener(e -> onCPGUseCheckButton());
+        cpgSelectLastButton.addActionListener(e -> onCPGSelectLastButton());
 
         applyButton.addActionListener(e -> onApply());
         cancelButton.addActionListener(e -> dispose());
@@ -172,6 +172,7 @@ public class PresetLoadDialog extends JDialog {
             currentROM = null;
             applyButton.setEnabled(false);
             romField.setText("");
+            disableCPGSelection();
         }
         return true;
     }
@@ -214,6 +215,7 @@ public class PresetLoadDialog extends JDialog {
         romButton.setEnabled(false);
         applyButton.setEnabled(false);
         requiredName = null;
+        disableCPGSelection();
     }
 
     private void onPresetFileButton() {
@@ -300,15 +302,23 @@ public class PresetLoadDialog extends JDialog {
         }
     }
 
+    private void disableCPGSelection() {
+        cpgUseCheckButton.setSelected(false);
+        cpgUseCheckButton.setEnabled(false);
+        cpgSelectLastButton.setEnabled(false);
+        cpgSelection.setVisible(false);
+        pack();
+    }
+
     private void maybeEnableCPGSelection() {
         boolean cpgSupport = currentROM.hasCustomPlayerGraphicsSupport();
-        cpgChooseButton.setEnabled(cpgSupport);
+        cpgUseCheckButton.setEnabled(cpgSupport);
         cpgSelection.fillComboBox(currentROM);
         cpgSelection.setEnabled(true);
 
         if (cpgSupport) {
             lastUsedCPG = getLastUsedCPGFromConfig();
-            cpgUseLastButton.setEnabled(lastUsedCPG != null);
+            cpgSelectLastButton.setEnabled(lastUsedCPG != null);
         }
     }
 
@@ -352,15 +362,15 @@ public class PresetLoadDialog extends JDialog {
         return new CustomPlayerGraphics(graphicsPack, typeToReplace);
     }
 
-    private void onCPGChooseButton() {
-        cpgSelection.setVisible(cpgChooseButton.isSelected());
+    private void onCPGUseCheckButton() {
+        cpgSelection.setVisible(cpgUseCheckButton.isSelected());
         pack();
     }
 
-    private void onCPGUseLastButton() {
+    private void onCPGSelectLastButton() {
         cpgSelection.setCustomPlayerGraphics(lastUsedCPG);
-        if (!cpgChooseButton.isSelected()) {
-            cpgChooseButton.doClick();
+        if (!cpgUseCheckButton.isSelected()) {
+            cpgUseCheckButton.doClick();
         }
     }
 
@@ -372,7 +382,7 @@ public class PresetLoadDialog extends JDialog {
                 e.printStackTrace();
             }
         }
-        if (cpgChooseButton.isSelected()) {
+        if (cpgUseCheckButton.isSelected()) {
             customPlayerGraphics = cpgSelection.getCustomPlayerGraphics();
         }
         completed = true;

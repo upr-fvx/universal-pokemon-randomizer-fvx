@@ -401,7 +401,8 @@ public class GameRandomizer {
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
             boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
-            romHandler.removeImpossibleEvolutions(changeMoveEvos);
+            boolean useEstimatedLevels = settings.useEstimatedLevelsForImpossibleEvolutions();
+            romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
         // Easier evolutions

@@ -2954,7 +2954,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         attemptObedienceEvolutionPatches();
 
         // no move evos, so no need to check for those
@@ -2976,49 +2976,49 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             evo.setExtraInfo(ItemIDs.moonStone);
                         }
                         if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
-                            // beauty change to level 35
+                            // beauty change to level 35 (or estimated level if useEstimatedLevels)
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
                         }
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Haunter, Machoke, Kadabra, Graveler
-                        // Make it into level 37, we're done.
+                        // Make it into level 37 (or estimated level if useEstimatedLevels), we're done.
                         markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                     }
                     // Trade w/ Held Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
                         markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
-                            // Poliwhirl: Lv 37
+                            // Poliwhirl: Lv 37 (or estimated level if useEstimatedLevels)
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(37);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
-                            // Seadra: Lv 40
+                            // Seadra: Lv 40 (or estimated level if useEstimatedLevels)
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(40);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 40);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
-                            // Clamperl -> Huntail: Lv30
+                            // Clamperl -> Huntail: Lv30 (or estimated level if useEstimatedLevels)
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(30);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 30);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
-                            // Onix, Scyther or Porygon: Lv30
+                            // Onix, Scyther or Porygon: Lv30 (or estimated level if useEstimatedLevels)
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(30);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 30);
                         }
                     }
                 }

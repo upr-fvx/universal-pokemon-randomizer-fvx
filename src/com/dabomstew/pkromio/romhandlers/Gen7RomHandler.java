@@ -2640,7 +2640,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species sp : pokes) {
             if (sp == null)
@@ -2665,7 +2665,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         }
                         if (levelLearntAt == 1) {
                             // override for piloswine
-                            levelLearntAt = 45;
+                            levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
                         // change to pure level evo
                         markImprovedEvolutions(sp);
@@ -2673,10 +2673,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         evo.setExtraInfo(levelLearntAt);
                         break;
                     case TRADE:
-                        // Replace w/ level 37
+                        // Replace w/ level 37 (or estimated level if useEstimatedLevels)
                         markImprovedEvolutions(sp);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                         break;
                     case TRADE_ITEM:
                         markImprovedEvolutions(sp);
@@ -2713,7 +2713,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         markImprovedEvolutions(sp);
                         evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
                         break;
-                    // And these are Rockruff's. We change the possible ones to for symmetry's sake.
+                    // And these are Rockruff's. We change the possible ones too for symmetry's sake.
                     case LEVEL_GAME_THIS_DAY:
                     case LEVEL_GAME_OTHER_DAY:
                         markImprovedEvolutions(sp);

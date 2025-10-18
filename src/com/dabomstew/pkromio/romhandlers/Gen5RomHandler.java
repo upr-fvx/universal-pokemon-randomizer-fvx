@@ -2859,7 +2859,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species pkmn : pokes) {
@@ -2877,7 +2877,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         }
                         if (levelLearntAt == 1) {
                             // override for piloswine
-                            levelLearntAt = 45;
+                            levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
                         // change to pure level evo
                         markImprovedEvolutions(pkmn);
@@ -2886,10 +2886,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
-                        // Replace w/ level 37
+                        // Replace w/ level 37 (or estimated level is useEstimatedLevels)
                         markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {

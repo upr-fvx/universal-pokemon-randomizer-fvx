@@ -1809,9 +1809,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         // Gen 1: only regular trade evos
-        // change them all to evolve at level 37
+        // change them all to evolve at level 37 (or to the estimated evo level, if useEstimatedLevels == true)
         for (Species pkmn : pokes) {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
@@ -1819,7 +1819,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         // change
                         markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                     }
                 }
             }

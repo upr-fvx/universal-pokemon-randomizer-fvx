@@ -6,17 +6,17 @@
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to
+Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] DetectiveAlice for reporting Issues,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] SharkGuy, bepis, MollyChan, and FourLeafSunny from Spriter's Resource for the CPG sprites, and
-[Community members who helped with some feature] MollyChan for help with CPG sheet design ... for help with [feature]
+[Every person who made a new CPG] for the CPG sprites, and
+[Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
 # How to use
 
-Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the
+Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the 
 zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
 
 - Windows: Use `launcher_WINDOWS.bat`
@@ -35,20 +35,13 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Graphics
-- (Gen 1) New Custom Player Graphics: Boyfriend by SharkGuy, Shantae by bepis
-- (Gen 2) New Custom Player Graphics: Gadabout by MollyChan, Freddy Fazbear by FourLeafSunny
-- Custom Player Graphics can now be made using a single sheet, instead of multiple separate images. [Read more on the wiki](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/cpgs.html). The Gen 1+2 sheet designs are based on sheets by MollyChan. 
-
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- (GUI) The Randomizer now remembers the most recent folder for opening/saving ROMs, between sessions. 
-- (Gen 1-3) When loading a premade seed, it is now possible to choose a Custom Player Graphics to apply. Play with your friends under equal randomization, but with different looks! (#100)
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen 3) Fixed one of the May battles in Emerald not getting requested buffs.
-- (GUI) Fixed the release page link wrapping after every word and taking up lots of vertical space, on non-Windows OSes.
-- (GUI) Fixed randomization option graphical oddities/crampedness, by adding scroll bars as needed.
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

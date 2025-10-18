@@ -25,6 +25,7 @@ package com.dabomstew.pkromio.romhandlers;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
@@ -675,7 +676,7 @@ public interface RomHandler {
 
     boolean hasCustomPlayerGraphicsSupport();
 
-    void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace);
+    void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics);
 
     /**
      * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.

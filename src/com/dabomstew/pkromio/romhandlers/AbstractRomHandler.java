@@ -35,6 +35,7 @@ import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
@@ -737,7 +738,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
         throw new UnsupportedOperationException("Custom player graphics not supported for this game.");
     }
 

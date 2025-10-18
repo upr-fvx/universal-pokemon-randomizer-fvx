@@ -3,6 +3,7 @@ package test.com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
@@ -1489,7 +1490,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
         throw new NotImplementedException();
     }
 

@@ -31,6 +31,7 @@ import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import com.dabomstew.pkrandom.updaters.Updater;
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
@@ -86,6 +87,7 @@ public class GameRandomizer {
     private final RandomSource randomSource = new RandomSource();
 
     private final Settings settings;
+    private final CustomPlayerGraphics customPlayerGraphics;
     private final RomHandler romHandler;
     private final boolean saveAsDirectory;
 
@@ -117,8 +119,10 @@ public class GameRandomizer {
     private final PaletteRandomizer paletteRandomizer;
     private final MiscTweakRandomizer miscTweakRandomizer;
 
-    public GameRandomizer(Settings settings, RomHandler romHandler, ResourceBundle bundle, boolean saveAsDirectory) {
+    public GameRandomizer(Settings settings, CustomPlayerGraphics customPlayerGraphics, RomHandler romHandler,
+                          ResourceBundle bundle, boolean saveAsDirectory) {
         this.settings = settings;
+        this.customPlayerGraphics = customPlayerGraphics;
         this.romHandler = romHandler;
         this.saveAsDirectory = saveAsDirectory;
 
@@ -234,11 +238,13 @@ public class GameRandomizer {
     }
 
     private void maybeSetCustomPlayerGraphics() {
-        // this setting/feature sticks out for being atypical,
-        // versus the rest of the randomizer..... is this the right place for it to be?
-        if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
-            romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),
-                    settings.getCustomPlayerGraphicsCharacterMod());
+        // This setting/feature sticks out for being atypical,
+        // versus the rest of the randomizer.....
+        // But if we consider the GameRandomizer to be
+        // "the thing that does all the changes to the ROM, chosen through the UI",
+        // then it makes sense that this should be here.
+        if (customPlayerGraphics != null) {
+            romHandler.setCustomPlayerGraphics(customPlayerGraphics);
         }
     }
 

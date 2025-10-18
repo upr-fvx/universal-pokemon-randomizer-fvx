@@ -6,8 +6,32 @@ import com.dabomstew.pkromio.graphics.palettes.Palette;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
+
+    private static final List<SheetImageDescription> SHEET_IMAGE_DESCRIPTIONS = Arrays.asList(
+            new SheetImageDescription("FrontImage", 11, 53, 64, 64),
+            new SheetImageDescription("BackImage", 90, 53, 64, 64,
+                    1, new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}}),
+            new SheetImageDescription("MapIcon", 11, 15, 16, 16),
+            new SheetImageDescription("WalkSprite", 11, 139, 16, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
+            new SheetImageDescription("RunSprite", 66, 139, 16, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
+            new SheetImageDescription("BikeSprite", 121, 139, 32, 32,
+                    1, new int[][]{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {2, 0}, {1, 1}, {2, 1}, {1, 2}, {2, 2}}),
+            new SheetImageDescription("FishSprite", 224, 139, 32, 32,
+                    1, new int[][]{{0, 2}, {1, 2}, {2, 2}, {3, 2}, {0, 1}, {1, 1}, {2, 1}, {3, 1},
+                                          {0, 0}, {1, 0}, {2, 0}, {3, 0}})
+    );
+
+    private static final List<SheetPaletteDescription> SHEET_PALETTE_DESCRIPTIONS = Arrays.asList(
+            new SheetPaletteDescription("FrontImagePalette", 43, 49),
+            new SheetPaletteDescription("MapIconPalette", 11, 11),
+            new SheetPaletteDescription("SpriteNormalPalette", 323, 135),
+            new SheetPaletteDescription("SpriteReflectionPalette", 323, 130)
+    );
 
     private final static int FRONT_IMAGE_DIMENSIONS = 8;
     private final static int MAP_ICON_DIMENSIONS = 2;
@@ -43,6 +67,9 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     public Gen3PlayerCharacterGraphics(GraphicsPackEntry entry) {
         super(entry);
+        if (usesSheet()) {
+            entry.putStringValue("RunSpriteMode", "rse");
+        }
         this.front = initImage("FrontImage", FRONT_IMAGE_DIMENSIONS, FRONT_IMAGE_DIMENSIONS);
         this.back = initImage("BackImage", getBackImageWidth(), getBackImageHeight());
         this.walk = initSprite("WalkSprite", WALK_SPRITE_FRAME_NUM, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
@@ -52,7 +79,7 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         this.sit = initSprite("SitSprite", SIT_SPRITE_FRAME_NUM, getSitFrameWidth(), getSitFrameHeight());
         this.surfBlob = initSprite("SurfBlobSprite", getSurfBlobFrameNum(), BIG_SPRITE_WIDTH, BIG_SPRITE_HEIGHT);
         this.bird = initSprite("BirdSprite", getBirdFrameNum(), getBirdFrameWidth(), getBirdFrameHeight());
-        this.mapIcon = initMapIcon();
+        this.mapIcon = initImage("MapIcon", MAP_ICON_DIMENSIONS, MAP_ICON_DIMENSIONS);
         this.normalSpritePalette = initNormalSpritePalette();
         this.reflectionSpritePalette = initReflectionSpritePalette();
     }
@@ -60,7 +87,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     protected abstract int getBackImageWidth();
 
     protected abstract int getBackImageHeight();
-
 
     private GBAImage initRun() {
         String mode = getEntry().getStringValue("RunSpriteMode");
@@ -98,19 +124,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     protected abstract int getBirdFrameHeight();
 
-    private GBAImage initMapIcon() {
-        BufferedImage base = readImage("MapIcon");
-        if (base == null) {
-            return null;
-        }
-        GBAImage mapIcon = new GBAImage.Builder(base).build();
-        if (mapIcon.getWidthInTiles() != MAP_ICON_DIMENSIONS || mapIcon.getWidthInTiles() != MAP_ICON_DIMENSIONS) {
-            System.out.println("Invalid map icon dimensions");
-            return null;
-        }
-        return mapIcon;
-    }
-
     private Palette initNormalSpritePalette() {
         Palette palette = readPalette("SpriteNormalPalette");
         if (palette == null && hasWalkSprite()) {
@@ -121,7 +134,9 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
 
     private Palette initReflectionSpritePalette() {
         Palette palette = readPalette("SpriteReflectionPalette");
-        if (palette == null) {
+        // If palette[0]==palette[1], then assume that's the sheet background;
+        // there isn't any reflection palette there to be used.
+        if (palette == null || palette.get(0).equals(palette.get(1))) {
             palette = normalSpritePalette; // TODO: auto-soften the palette
         }
         return palette;
@@ -132,7 +147,14 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         if (base == null) {
             return null;
         }
-        GBAImage image = new GBAImage.Builder(base).build();
+        Palette palette = readPalette(key + "Palette");
+
+        GBAImage.Builder builder = new GBAImage.Builder(base);
+        if (palette != null) {
+            builder.prepreparedPalette(palette);
+        }
+        GBAImage image = builder.build();
+
         if (image.getWidthInTiles() != width || image.getHeightInTiles() != height) {
             System.out.println("Invalid " + key + " dimensions. Expected " + width + "x" + height + ", was " +
                     image.getWidthInTiles() + "x" + image.getHeightInTiles());
@@ -142,19 +164,30 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     }
 
     protected GBAImage initSprite(String key, int frameAmount, int frameWidth, int frameHeight) {
-        GBAImage image = initSprite(key, frameAmount * frameHeight * frameWidth);
+        return initSprite(key, "NormalSpritePalette", frameAmount, frameWidth, frameHeight);
+    }
+
+    protected GBAImage initSprite(String key, String paletteKey, int frameAmount, int frameWidth, int frameHeight) {
+        GBAImage image = initSprite(key, paletteKey, frameAmount * frameHeight * frameWidth);
         if (image != null) {
             image.setFrameDimensions(frameWidth, frameHeight);
         }
         return image;
     }
 
-    protected GBAImage initSprite(String key, int tileAmount) {
+    protected GBAImage initSprite(String key, String paletteKey, int tileAmount) {
         BufferedImage base = readImage(key);
         if (base == null) {
             return null;
+        }        
+        Palette palette = readPalette(paletteKey);
+
+        GBAImage.Builder builder = new GBAImage.Builder(base);
+        if (palette != null) {
+            builder.prepreparedPalette(palette);
         }
-        GBAImage sprite = new GBAImage.Builder(base).build();
+        GBAImage sprite = builder.build();
+
         if (sprite.getWidthInTiles() * sprite.getHeightInTiles() != tileAmount) {
             System.out.println("Invalid " + key + " dimensions");
             return null;
@@ -230,7 +263,6 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         return bird;
     }
 
-
     public boolean hasMapIcon() {
         return mapIcon != null;
     }
@@ -262,9 +294,15 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
         return walk == null ? null : walk.getSubimageFromFrame(0, MEDIUM_SPRITE_WIDTH, MEDIUM_SPRITE_HEIGHT);
     }
 
+    private GBAImage toSample(BufferedImage bim) {
+        return new GBAImage.Builder(bim).transparent(true).build();
+    }
+
     @Override
     public List<BufferedImage> getSampleImages() {
-        return Arrays.asList(getFrontImage(), getBackImageSpriteForSample(), getWalkSpriteForSample());
+        return Arrays.asList(toSample(getFrontImage()),
+                toSample(getBackImageSpriteForSample()),
+                toSample(getWalkSpriteForSample()));
     }
 
     @Override
@@ -278,6 +316,31 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
             return null;
         }
         return palette;
+    }
+
+    @Override
+    protected List<SheetImageDescription> getSheetImageDescriptions() {
+        return SHEET_IMAGE_DESCRIPTIONS;
+    }
+
+    @Override
+    protected List<SheetPaletteDescription> getSheetPaletteDescriptions() {
+        return SHEET_PALETTE_DESCRIPTIONS;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Gen3PlayerCharacterGraphics) {
+            Gen3PlayerCharacterGraphics other = (Gen3PlayerCharacterGraphics) obj;
+            return Objects.equals(front, other.front) && Objects.equals(back, other.back)
+                    && Objects.equals(mapIcon, other.mapIcon)
+                    && Objects.equals(walk, other.walk) && Objects.equals(bike, other.bike)
+                    && Objects.equals(fish, other.fish) && Objects.equals(sit, other.sit)
+                    && Objects.equals(surfBlob, other.surfBlob) && Objects.equals(bird, other.bird)
+                    && Objects.equals(normalSpritePalette, other.normalSpritePalette)
+                    && Objects.equals(reflectionSpritePalette, other.reflectionSpritePalette);
+        }
+        return false;
     }
 
 }

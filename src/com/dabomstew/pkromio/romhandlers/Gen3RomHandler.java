@@ -4613,14 +4613,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 palette = new Palette(Arrays.copyOf(palette.toARGB(), 16));
             }
 
-            // TODO: make this work
-            int[] convPalette = palette.toARGB();
-            if (transparentBackground) {
-                convPalette[0] = 0;
-            }
-
             // Make image, 4bpp
-            GBAImage bim = new GBAImage.Builder(8, 8, palette, data).build();
+            GBAImage bim = new GBAImage.Builder(8, 8, palette, data)
+                    .transparent(transparentBackground)
+                    .build();
             if (includePalette) {
                 for (int i = 0; i < palette.size(); i++) {
                     bim.setColor(i, 0, i);

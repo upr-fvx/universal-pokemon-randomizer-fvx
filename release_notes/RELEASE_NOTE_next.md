@@ -10,8 +10,8 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] DetectiveAlice for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] SharkGuy and bepis for the CPG sprites, and
-[Community members who helped with some feature] for help with [feature]
+[Every person who made a new CPG] SharkGuy, bepis, MollyChan, and FourLeafSunny from Spriter's Resource for the CPG sprites, and
+[Community members who helped with some feature] MollyChan for help with CPG sheet design ... for help with [feature]
 [Etc.]!
 
 # How to use
@@ -37,6 +37,8 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 ### Graphics
 - (Gen 1) New Custom Player Graphics: Boyfriend by SharkGuy, Shantae by bepis
+- (Gen 2) New Custom Player Graphics: Gadabout by MollyChan, Freddy Fazbear by FourLeafSunny
+- Custom Player Graphics can now be made using a single sheet, instead of multiple separate images. [Read more on the wiki](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/cpgs.html). The Gen 1+2 sheet designs are based on sheets by MollyChan. 
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

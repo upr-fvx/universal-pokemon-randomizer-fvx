@@ -1,0 +1,3 @@
+ - Temporarily removed Unown from being able to be chosen for 3rd generation games in the wild due to crashes
+ - Fixed Blue's final rival battle being corrupted when you change the starters
+ - Fixed the internal config version to actually work properly

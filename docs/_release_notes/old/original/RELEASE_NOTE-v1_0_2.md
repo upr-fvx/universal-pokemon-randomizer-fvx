@@ -1,0 +1,5 @@
+ - You can now choose to have every Pokemon moved up to a minimum catch rate of 45, if you want them all to be catchable in a reasonable amount of time.
+ - Abilities can now be randomized in the games that have them, with DW abilities also supported. Wonder Guard can be enabled/disabled as you see fit.
+ - Moved generation 4 offsets/filenames to an ini file. Now all unmodified gen4 roms are almost supported, though random English text will still appear.
+ - Randomized Starter Pokemon in Red/Blue will now have their full Pokedex entry appear when you choose the ball, thanks to a little ASM hack.
+ - The extension "sgb" is now valid for loading/saving.

@@ -1,0 +1,9 @@
+ - An option to remove "game-breaking" moves from the randomizer's possibilities has been added. Using this will mean neither you nor the AI can get moves like Dragon Rage and Sonicboom, which break early game battles severely. In Generation 1 games, OHKO moves are also removed because they can be abused to always hit with X Accuracy/Speed.
+ - Hidden Hollow Pokemon randomization in BW2 now actually works properly.
+ - Fishing & Headbutt Pokemon are now randomized in Generation 2 (GSC) games.
+ - In Generation 1 (RBY) games, every time a NPC talks about a TM, the text is now updated for the new move. This will be coming to other games later.
+ - Static Pokemon support for HGSS has been updated to include Pokemon in the Rocket Hideout and the eggs that Primo gives out.
+ - Randomization of the storyline Giratina in Platinum has been removed because encountering any wild Pokemon other than Giratina in the Distortion World crashes the game.
+ - When Pokemon movesets are randomized, Pokemon that evolve by leveling up with a certain move learned will have that move requirement updated to the one they now learn at the level the original one was learned.
+ - Pokemon with Shadow Tag, Arena Trap or Magnet Pull can no longer appear in Pokemon Tower in FR/LG to prevent Ghosts that the player cannot flee from. Rules set like "Type Themed" or "Catch 'em All" will be ignored when necessary to ensure this.
+ - Game 1-to-1 Wild Pokemon randomization has been fixed to not replace Pokemon that don't crash the game with those that do.

@@ -1,0 +1,1 @@
+ - Fixed Generation 4 text handling.

@@ -1,0 +1,5 @@
+ - Fixed the National Dex patch for FR/LG: now the game can be played through fully through the 2nd round of the Elite 4 with the patch applied.
+ - Fixed corruption of Pokemon names in Gen4 Pokedex/Hall of Fame.
+ - Fixed stat & TM/HM compatibility changes for randomizations of Pokemon Platinum.
+ - Added code to auto-add extensions to saved files where appropriate.
+ - Added code to allow for releases with internal config folders.

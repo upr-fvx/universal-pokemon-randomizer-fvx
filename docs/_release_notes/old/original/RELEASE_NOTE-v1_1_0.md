@@ -1,0 +1,13 @@
+ - Move Tutor moves can now be randomised in Crystal, Emerald, FR/LG, Platinum, HG/SS and B/W2.
+ - There is now a Black/White-style EXP gain system patch available for R/B/Y/G/S/C English games.
+ - HG/SS surfing & fishing Pokemon should now be correctly randomised.
+ - The 2nd rival battle in Black2/White2 now obeys the "Rival Carries Starter" setting.
+ - Static Pokemon can now be randomised in the English versions of all Generation 4 games.
+ - A "Race Mode" has been added which tweaks the randomisation process a bit to be better for races:
+  * Log files cannot be saved
+  * A "check value" is displayed to make sure everyone has the same game.
+ - An option has been added to stop trainers having Shedinja under level 20 in games that he exists.
+ - A bug with randomizing certain Static Pokemon in Generation 1 games has been fixed.
+ - The framework for multiple languages in generation 1, 2 and 5 games has been put in. 
+ - All the release languages are now supported in generation 1, with 2, 3 and 5 to follow.
+ - Pokemon that crash the game when put in certain slots (wild Pokemon, static Pokemon, etc) can now be banned from these slots.

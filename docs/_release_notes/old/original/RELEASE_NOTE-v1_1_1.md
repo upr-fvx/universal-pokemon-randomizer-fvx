@@ -1,0 +1,5 @@
+ - Static Pokemon support has been added for English (US) Generation 5 releases.
+ - Hidden Hollow Pokemon can now be randomized in Black2/White2.
+ - The battles with Cheren and Colress at the PWT after badge 5 is obtained in Black2/White2 should now be randomized. The rest of the PWT is left unchanged.
+ - Trainer name/class lists are now included in saved preset files. This allows them to be used irrespective of people having differing lists. 
+ - The "B/W Exp Patch" and "Race Mode" checkboxes are now correctly included in presets.

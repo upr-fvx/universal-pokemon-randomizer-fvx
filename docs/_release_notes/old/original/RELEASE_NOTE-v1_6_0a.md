@@ -1,0 +1,8 @@
+ - "Wild Pokemon > Similar Strength" and "Wild Pokemon > Randomize Held Items" are now saved and loaded from preset files correctly.
+  * I have now looked over all the options carefully and hopefully all of the bugs of this kind are now gone in 1.6.0a.
+ - Overwriting the original ROM when randomizing a DS game has been blocked.
+  * This fixes a bug in 1.6.0 where doing so would corrupt the resulting game.
+  * All other overwrites are allowed, but will now be prompted first.
+ - Fixed a bug where the randomizer would always ask to copy old name files over on each startup even if you already chose to copy them earlier.
+ - Increased error reporting a bit more, to allow users to get more information to submit to enable bugs to be fixed faster.
+ - The update check function is now a little bit more efficient.

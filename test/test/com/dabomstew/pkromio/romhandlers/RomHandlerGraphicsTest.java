@@ -29,10 +29,10 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
     public void canSetCustomPlayerGraphicsWithoutThrowing(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasCustomPlayerGraphicsSupport());
-        GraphicsPack cpg = getCustomPlayerGraphics();
-        romHandler.setCustomPlayerGraphics(cpg, PlayerCharacterType.PC1);
+        GraphicsPack pack = getCustomPlayerGraphicsPack();
+        romHandler.setCustomPlayerGraphics(new CustomPlayerGraphics(pack, PlayerCharacterType.PC1));
         if (romHandler.hasMultiplePlayerCharacters()) {
-            romHandler.setCustomPlayerGraphics(cpg, PlayerCharacterType.PC2);
+            romHandler.setCustomPlayerGraphics(new CustomPlayerGraphics(pack, PlayerCharacterType.PC1));
         }
         assertTrue(true);
     }
@@ -47,7 +47,7 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
         }
     }
 
-    private GraphicsPack getCustomPlayerGraphics() {
+    private GraphicsPack getCustomPlayerGraphicsPack() {
         switch (romHandler.generationOfPokemon()) {
             case 1:
                 return new Gen1PlayerCharacterGraphics(cpgEntries.get(0));

@@ -1,0 +1,15 @@
+- Added a system to ban "bad"/useless items from the various item randomizers available.
+  - This means you can safely randomize items in later games without being buried under berries and mail.
+  - The definition of a useless item changes from game to game but generally includes stuff not useful for in-game battles.
+- Banned Thief from randomized movesets in Gen 2 specifically.
+  - This change is made to prevent Trainer/Wild Pokemon permanently stealing the player's held items.
+  - You can still find Thief to use yourself from a TM or Move Tutor.
+- Added another small hack to fix stone evolutions for National Dex mons in FR/LG.
+- Made a few changes to the gen3 handler to improve ROM hack compatibility.
+  - The randomizer now detects (and mostly ignores) circular evolutions seen in some ROM hacks.
+  - Support for ROM hacks that have had additional maps/banks added in AdvanceMap has been added.
+  - Improved detection of invalid pointers slightly.
+- Added a code tweak for gen3 games to use running shoes indoors.
+  - Full credit for this to http://www.pokecommunity.com/showthread.php?t=207026
+- Refactored some of the internal workings of the randomizer with a view to making it easier to make new interfaces etc.
+  - Full credit for this to scheibo on github - https://github.com/scheibo/universal-pokemon-randomizer/tree/gui

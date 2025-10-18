@@ -1,0 +1,15 @@
+- Changed how the randomizer handles custom names for trainers, their classes and traded pokemon nicknames.
+  - There is now a GUI available inside the randomizer where you can enter in your own custom names easily.
+  - To access this, click the Settings button and then choose "Custom Names Editor".
+  - The file format used to store the custom names has changed. You will be prompted to import your old custom names when you open the randomizer if you had any.
+  - To share your custom names with other people, share the file called "customnames.rncn", which should be placed in the same directory as the randomizer EXE/JAR.
+- Added a function to increase/decrease trainer Pokemon levels by a selectable percentage amount.
+  - Credit goes to sickoe on GitHub for programming this and submitting it as a pull request.
+- Fixed the major bug where "Reorder Damaging Moves" only worked on Java 8, while the rest of the program functions fine on Java 6 or higher.
+  - Credit goes to toddblove on GitHub for finding the root cause of this problem and fixing it in a pull request.
+- Fixed the method used by the randomizer to find "doubles" trainer classes to be more international friendly.
+  - This means that you can now use custom trainer class names ending in "s" for single trainer battles, among other examples.
+- Fixed a bug where the text shown when you selected a randomized starter in Gen 2 would be wrong if one of the selected starters was Chikorita, Cyndaquil or Totodile.
+- Fixed a bug where settings files inverted the value of the "Block Wild Legendaries" checkbox.
+- Fixed Metronome Only Mode to work with the new trainer moveset code properly.
+  - Trainers with custom moves/items will now be forced into Metronome Only when the option is selected like everyone else.

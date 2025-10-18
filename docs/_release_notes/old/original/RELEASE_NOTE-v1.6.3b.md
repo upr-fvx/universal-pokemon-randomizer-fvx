@@ -1,0 +1,2 @@
+- Fixed a bug where the randomizer was using incorrect move names for text in FireRed/Emerald randomizations.
+- Made the "B/W Exp" code tweak for gen1/gen2 games respect Exp.All/Exp.Share correctly for EXP calculations.

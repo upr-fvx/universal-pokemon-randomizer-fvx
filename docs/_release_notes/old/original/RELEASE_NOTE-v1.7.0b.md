@@ -1,0 +1,12 @@
+- Added a "Scrolling Display Mode" which packs all the options into one big scrolling area like old versions.
+  - This mode will be activated by default on non-Windows systems. For Windows the tabbed system will remain on to begin with.
+  - Regardless of OS, users can switch which mode they use by clicking on the "Settings" button and choosing the option to change display mode.
+  - Changing display mode will require a reboot of the randomizer program. (NOT the whole computer!)
+- Re-enabled resizing/maximizing the window and adjusted the way this affects the components inside.
+  - You can expand (NOT shrink) the tabbed UI by resizing the window. This is useful if some options are being cut off.
+  - If you need to shrink the options area due to having a small screen, use the Scrolling Mode instead. This CAN be shrunk.
+- Made tooltips last forever, as long as the user keeps the mouse over the option they are viewing the tip for.
+- Disabled setting Native Look and Feel (LaF) on non-Windows systems.
+  - This change has been made because the default Java Metal LaF is more similar to Windows than the other native LaFs.
+  - As the app GUI has been designed for the proportions of the Windows LaF, this change should make it look better on non-Windows systems.
+- Standardized font sizes for the main options window regardless of which OS/Look and Feel is being used.

@@ -1,0 +1,15 @@
+- Fossil Pokemon can now be randomized for Generation 4 and 5 games.
+  - This doesn't need you to do anything special, they are included under Static Pokemon just like they are for the Generation 1-3 games.
+- Added an option called "Make Evolutions Easier" which reduces the evolution level requirement for Pokemon which evolve at high levels.
+  - Specifically, every Pokemon will evolve to its final stage by level 40, and three-stage evolutions will reach their middle stage by no later than level 30.
+- A few small options have been added to TM and Move Tutor randomization:
+  - You can choose to ensure that Pokemon learn TM/Move Tutor moves which they also learn by levelup.
+  - You can choose to preserve TMs/Move Tutors for moves which can be used in the field through randomization.
+  - (obvious examples of these moves include Rock Smash and Flash)
+  - You can choose to grant full compatibility for TMs and Move Tutors to every Pokemon instead of making it random or unchanged.
+- Added a new Code Tweak for Generation 1/2 games (all languages) that lets you force the game to always use Fastest text speed.
+  - This will make all text boxes in the game show up with minimum delay, regardless of the text speed the player sets in Options.
+- TM givers & Move Tutors in Generation 3 English games now have their text updated for their randomized moves.
+- Fix a bug made notorious by TwitchPlaysPokemon where Type Themed trainers basically didn't work for Generation 4 games.
+- The "Similar Strength" option for Trainer/Wild Pokemon has been tweaked in certain scenarios.
+  - The searching pool will be expanded slightly if very few Pokemon are available to begin with, to hopefully decrease the number of teams with a lot of repeats.

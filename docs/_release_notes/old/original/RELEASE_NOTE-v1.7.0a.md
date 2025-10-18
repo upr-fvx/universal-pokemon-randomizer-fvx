@@ -1,0 +1,3 @@
+- Fixed all file loading routines to make sure they load the entire file in question.
+  - This lead to numerous undiagnosed problems in the past, such as Code/Misc Tweaks failing to work as intended.
+- Prevented the Ghost Marowak in Gen 1 from showing up as a randomized fishing encounter.

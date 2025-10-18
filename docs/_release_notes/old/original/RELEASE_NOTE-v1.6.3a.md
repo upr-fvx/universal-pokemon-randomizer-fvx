@@ -1,0 +1,1 @@
+- Fixed a bug where the randomizer was calculating every Pokemon to have 0 evolutions.

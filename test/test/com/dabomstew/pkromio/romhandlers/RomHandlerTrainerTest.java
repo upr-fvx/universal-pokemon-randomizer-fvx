@@ -185,10 +185,10 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         gbRomHandler.saveTrainers();
         gbRomHandler.loadTrainers();
         for (Trainer tr : gbRomHandler.getTrainers()) {
-            if (tr.multiBattleStatus == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()
+            if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()
                     && (tr.isBoss() || tr.isImportant())) {
                 System.out.println(tr);
-                assertEquals(6, tr.pokemon.size());
+                assertEquals(6, tr.getPokemon().size());
             }
         }
     }
@@ -211,9 +211,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         gbRomHandler.saveTrainers();
         gbRomHandler.loadTrainers();
         for (Trainer tr : gbRomHandler.getTrainers()) {
-            if (tr.multiBattleStatus == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()) {
+            if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()) {
                 System.out.println(tr);
-                assertEquals(6, tr.pokemon.size());
+                assertEquals(6, tr.getPokemon().size());
             }
         }
     }
@@ -315,11 +315,11 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         gbRomHandler.saveTrainers();
         gbRomHandler.loadTrainers();
         for (Trainer tr : gbRomHandler.getTrainers()) {
-            System.out.println(tr.fullDisplayName);
+            System.out.println(tr.getFullDisplayName());
             if (tr.shouldNotGetBuffs()) {
                 System.out.println("skip");
             } else {
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     System.out.println(tp);
                     assertNotEquals(null, tp.getHeldItem());
                 }
@@ -334,13 +334,13 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
         List<Species> starters = romHandler.getStarters();
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL1-") || tr.tag.contains("FRIEND1-"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL1-") || tr.getTag().contains("FRIEND1-"))) {
                 System.out.println(tr);
 
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 Species expected = starters.get((variant + offset) % 3);
-                Species actual = tr.pokemon.get(0).getSpecies();
+                Species actual = tr.getPokemon().get(0).getSpecies();
 
                 assertEquals(expected, actual);
             }
@@ -357,9 +357,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 .collect(Collectors.toList());
 
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL") || tr.tag.contains("FRIEND"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL") || tr.getTag().contains("FRIEND"))) {
                 System.out.println(tr);
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
                 if (romHandler.isYellow()) {
                     // Yellow uses the variant syntax, to instead refer to alternate battles,
                     // with different evos of the original starter.
@@ -367,11 +367,11 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                     variant = 0;
                 }
 
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 SpeciesSet expectedFamily = starterFamilies.get((variant + offset) % 3);
 
                 boolean carriesStarter = false;
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     if (expectedFamily.contains(tp.getSpecies())) {
                         carriesStarter = true;
                         break;

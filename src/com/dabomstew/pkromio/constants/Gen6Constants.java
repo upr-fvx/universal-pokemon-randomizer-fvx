@@ -1018,27 +1018,27 @@ public class Gen6Constants {
     }
 
     private static void tagRivalXY(List<Trainer> allTrainers, String tag, int offset) {
-        allTrainers.get(offset - 1).tag = tag + "-0";
-        allTrainers.get(offset).tag = tag + "-1";
-        allTrainers.get(offset + 1).tag = tag + "-2";
+        allTrainers.get(offset - 1).setTag(tag + "-0");
+        allTrainers.get(offset).setTag(tag + "-1");
+        allTrainers.get(offset + 1).setTag(tag + "-2");
     }
 
     private static void tagRivalORAS(List<Trainer> allTrainers, String tag, int offset) {
-        allTrainers.get(offset - 1).tag = tag + "-2";
-        allTrainers.get(offset).tag = tag + "-0";
-        allTrainers.get(offset + 1).tag = tag + "-1";
+        allTrainers.get(offset - 1).setTag(tag + "-2");
+        allTrainers.get(offset).setTag(tag + "-0");
+        allTrainers.get(offset + 1).setTag(tag + "-1");
     }
 
     private static void tag(List<Trainer> allTrainers, int number, String tag) {
         if (allTrainers.size() > (number - 1)) {
-            allTrainers.get(number - 1).tag = tag;
+            allTrainers.get(number - 1).setTag(tag);
         }
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {
         for (int num : numbers) {
             if (allTrainers.size() > (num - 1)) {
-                allTrainers.get(num - 1).tag = tag;
+                allTrainers.get(num - 1).setTag(tag);
             }
         }
     }
@@ -1105,7 +1105,7 @@ public class Gen6Constants {
     private static void setMultiBattleStatus(List<Trainer> allTrainers, int... numbers) {
         for (int num : numbers) {
             if (allTrainers.size() > (num - 1)) {
-                allTrainers.get(num - 1).multiBattleStatus = Trainer.MultiBattleStatus.ALWAYS;
+                allTrainers.get(num - 1).setMultiBattleStatus(Trainer.MultiBattleStatus.ALWAYS);
             }
         }
     }

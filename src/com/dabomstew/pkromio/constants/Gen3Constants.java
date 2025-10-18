@@ -869,12 +869,12 @@ public class Gen3Constants {
     }
 
     private static void tag(List<Trainer> trainers, int trainerNum, String tag) {
-        trainers.get(trainerNum - 1).tag = tag;
+        trainers.get(trainerNum - 1).setTag(tag);
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {
         for (int num : numbers) {
-            allTrainers.get(num - 1).tag = tag;
+            allTrainers.get(num - 1).setTag(tag);
         }
     }
 
@@ -1057,7 +1057,7 @@ public class Gen3Constants {
     private static void setMultiBattleStatus(List<Trainer> allTrainers, Trainer.MultiBattleStatus status, int... numbers) {
         for (int num : numbers) {
             if (allTrainers.size() > (num - 1)) {
-                allTrainers.get(num - 1).multiBattleStatus = status;
+                allTrainers.get(num - 1).setMultiBattleStatus(status);
             }
         }
     }

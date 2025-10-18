@@ -1186,9 +1186,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClass]; trainerNum++) {
                 index++;
                 Trainer tr = readTrainer(offset);
-                tr.index = index;
-                tr.trainerclass = trainerClass;
-                tr.fullDisplayName = tcnames.get(trainerClass);
+                tr.setIndex(index);
+                tr.setTrainerclass(trainerClass);
+                tr.setFullDisplayName(tcnames.get(trainerClass));
                 trainers.add(tr);
 
                 offset += trainerToBytes(tr).length;
@@ -1201,27 +1201,27 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private Trainer readTrainer(int offset) {
         Trainer tr = new Trainer();
-        tr.offset = offset;
+        tr.setOffset(offset);
         int dataType = rom[offset] & 0xFF;
         if (dataType == 0xFF) {
             // "Special" trainer
-            tr.poketype = 1;
+            tr.setPoketype(1);
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
                 tp.setLevel(rom[offset] & 0xFF);
                 tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
-                tr.pokemon.add(tp);
+                tr.getPokemon().add(tp);
                 offset += 2;
             }
         } else {
-            tr.poketype = 0;
+            tr.setPoketype(0);
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
                 tp.setLevel(dataType);
                 tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset] & 0xFF]]);
-                tr.pokemon.add(tp);
+                tr.getPokemon().add(tp);
                 offset++;
             }
         }
@@ -1239,7 +1239,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<Trainer> allTrainers = getTrainers();
         for (int i = 0; i < allTrainers.size(); i++) {
             Trainer tr = allTrainers.get(i);
-            if (tr.tag != null && (tr.tag.contains("ELITE") || tr.tag.contains("RIVAL8"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("ELITE") || tr.getTag().contains("RIVAL8"))) {
                 eliteFourIndices.add(i + 1);
             }
         }
@@ -1275,8 +1275,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
-                if (tr.trainerclass != trainerClassNum) {
-                    System.err.println("Trainer mismatch: " + tr.name);
+                if (tr.getTrainerclass() != trainerClassNum) {
+                    System.err.println("Trainer mismatch: " + tr.getName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
                 baos.write(trainerBytes, 0, trainerBytes.length);
@@ -1305,17 +1305,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private byte[] trainerToBytes(Trainer trainer) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (trainer.poketype == 0) {
+        if (trainer.getPoketype() == 0) {
             // Regular trainer
-            int fixedLevel = trainer.pokemon.get(0).getLevel();
+            int fixedLevel = trainer.getPokemon().get(0).getLevel();
             baos.write(fixedLevel);
-            for (TrainerPokemon tp : trainer.pokemon) {
+            for (TrainerPokemon tp : trainer.getPokemon()) {
                 baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }
         } else {
             // Special trainer
             baos.write(0xFF);
-            for (TrainerPokemon tp : trainer.pokemon) {
+            for (TrainerPokemon tp : trainer.getPokemon()) {
                 baos.write(tp.getLevel());
                 baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
             }

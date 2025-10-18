@@ -1,10 +1,8 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
-import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
@@ -505,7 +503,7 @@ public class TestRomHandler extends AbstractRomHandler {
         List<Trainer> copiedTrainers = new ArrayList<>();
         for(Trainer original : originalTrainers) {
             Trainer copy = new Trainer(original);
-            for(TrainerPokemon tp : copy.pokemon) {
+            for(TrainerPokemon tp : copy.getPokemon()) {
                 tp.setSpecies(originalToTest.get(tp.getSpecies()));
             }
             copiedTrainers.add(copy);

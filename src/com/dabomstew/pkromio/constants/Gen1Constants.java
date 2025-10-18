@@ -450,7 +450,7 @@ public class Gen1Constants {
     }
 
     private static void tbc(List<Trainer> allTrainers, int classNum, int number, String tag) {
-        getTrainer(allTrainers, classNum, number).tag = tag;
+        getTrainer(allTrainers, classNum, number).setTag(tag);
     }
 
     public static void setForcedRivalStarterPositions(List<Trainer> trs, int romType) {
@@ -488,13 +488,13 @@ public class Gen1Constants {
     }
 
     private static void fsp(List<Trainer> allTrainers, int classNum, int number, int position) {
-        getTrainer(allTrainers, classNum, number).forceStarterPosition = position;
+        getTrainer(allTrainers, classNum, number).setForceStarterPosition(position);
     }
 
     private static Trainer getTrainer(List<Trainer> allTrainers, int classNum, int number) {
         int i = 0;
         for (Trainer t : allTrainers) {
-            if (t.trainerclass == classNum - 1) {
+            if (t.getTrainerclass() == classNum - 1) {
                 if (i == number) {
                     return t;
                 }

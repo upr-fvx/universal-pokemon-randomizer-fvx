@@ -1,0 +1,17 @@
+# Changes
+
+---
+## General
+
+- Settings files
+
+Saving a new settings file and loading it will now work. As a side effect, old settings files will no longer work. They can be updated using a new option found under Settings -> "Update Pre-3.0.0 Settings File".
+
+---
+## Pokemon Traits
+
+### Pokemon Base Statistics
+
+- Setting: Standardize EXP Curves
+
+Now sets the EXP curves of Pokemon according to the chosen setting, instead of setting all EXP curves to Medium Fast.

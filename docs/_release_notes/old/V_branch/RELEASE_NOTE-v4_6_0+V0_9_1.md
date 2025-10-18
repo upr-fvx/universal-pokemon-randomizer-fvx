@@ -1,0 +1,11 @@
+Added support for custom player graphics in the Gen II games*, and made some UI improvements. 
+
+*Though only the English ones, yet. I.e. `Gold (U)`, `Silver (U)`, `Crystal (U) (1.0)`, and `Crystal (U) (1.1)`.
+
+----
+
+Download the randomizer below by clicking on `PokeRandoZX-v4_6_0+V0.9.1.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`

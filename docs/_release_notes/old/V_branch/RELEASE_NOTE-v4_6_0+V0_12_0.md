@@ -1,0 +1,98 @@
+It's been a while, but here's another update! Feature-wise it fixes a few bugs, old and new, but there have also been **major** restructurings of the code. I hope of course everything works as well as before, but realistically this release should be more unstable than average. Thanks to IronHideElvan, whose restructurings inspired this one, and AdAstra, for writing custom code for the HGSS Mystery Egg!
+
+As for the Gen IV form palette support, some leeway has been made, but they will sadly still been postponed until after I get to rewriting how forms are handled at large. And that will take a while, because [forms are complicated](https://voliol.neocities.org/articles/formscomplicated) (link to a writeup/rant I wrote about that).
+
+The immediate plan for this branch is to advertise it on Reddit/the internet at large, and then focus on fixing whatever bugs they find until summer's end. Then after summer, feature development will resume. Dunno what takes priority then, however.
+
+# Changes
+
+## Starters, Statics & Trades
+
+### Starter Pokemon
+
+- CHANGED: Cosmetic Forms
+    - Starters will no longer get a random cosmetic form. This is a temporary measure until cosmetic forms are better understood/handled.
+
+### Static Pokemon
+
+- CHANGED: HGSS Mystery (Togepi) Egg
+    - All Pokémon may be chosen for the Mystery Egg, instead of only the first 254.
+    - The hatched Pokémon will have an appropriate strong extra move, similar to Vanilla Togepi's Extrasensory.
+    - The feature will be less prone to other bugs.
+    - Thanks to **AdAstra** for making this possible!
+
+---
+## Foe Pokemon
+
+### Trainer Pokemon
+
+- **BUGFIX**: Fix "Sensible Items" and "Better Movesets"
+    - When using said options randomization would always fail. This should no longer be the case.
+
+---
+## Wild Pokemon
+
+- CHANGED: Mystery Grottoes (BW2)
+    - Pokémon in mystery grottoes have a 30% chance of being female, instead of the chance itself being random. Pokémon that are all-male, all-female, or genderless are unaffected.
+
+---
+## Items
+
+### Special Shops
+
+- **BUGFIX**: Fix Gen II shops
+    - Gen II shops were not being written to ROM properly, and the feature/support was thus broken.
+    
+---
+## Types
+
+- **BUGFIX**: Fix Random Type Effectiveness not working.
+    - In the last version this feature was not linked up correctly, so it literally did nothing.
+    
+---
+## Graphics
+
+### Custom Player Graphics
+
+- CHANGED: Give give Chris, Kris, Leaf PCGs colors.
+    - This way they aren't monochrome.
+
+- NEW: Professor Oak CPG.
+
+---
+## Misc Tweaks
+
+- CHANGED: Remove Lucky Egg
+    - The Lucky Egg in Gen V is always replaced by a Gooey Mulch, instead of a random Mulch.
+
+---
+## Refactoring
+
+- CHANGED: extracted all randomization from AbstractRomHandler into Randomizer classes.
+    - e.g. EncounterRandomizer contains all encounter randomization logic. 
+    - The RomHandler classes no longer contain any usage of randomness.
+ 
+- CHANGED: extracted all "update to later gen" functionality from AbstractRomHandler into Updater classes.
+    - e.g. MoveUpdater contains all the logic for updating moves.
+
+- CHANGED: extracted some advanced getting methods of AbstractRomHandler into Service classes.
+    - e.g. RestrictedPokemonService contains methods for getting Pokémon restricted by Generation. 
+
+- CHANGED: renamed Randomizer class "GameRandomizer"
+ 
+- CHANGED: removed "new" from GUI class names.
+    - e.g. NewRandomizerGUI.java -> RandomizerGUI.java
+
+- CHANGED: RandomSource class is no longer a static thing
+
+---
+
+# How to use
+
+Download the randomizer below by clicking on `PokeRandoZX-v4_6_0+V0.12.0.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+Make sure you have Java 18 or higher installed.

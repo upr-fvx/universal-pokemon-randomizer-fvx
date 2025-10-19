@@ -30,6 +30,7 @@ import com.dabomstew.pkromio.constants.*;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.Gen2PlayerCharacterGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.graphics.palettes.Color;
@@ -1045,9 +1046,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClass]; trainerNum++) {
                 index++;
                 Trainer tr = readTrainer(offset);
-                tr.index = index;
-                tr.trainerclass = trainerClass;
-                tr.fullDisplayName = tcnames.get(trainerClass) + " " + tr.name;
+                tr.setIndex(index);
+                tr.setTrainerclass(trainerClass);
+                tr.setFullDisplayName(tcnames.get(trainerClass) + " " + tr.getName());
                 trainers.add(tr);
 
                 offset += trainerToBytes(tr).length;
@@ -1059,11 +1060,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     private Trainer readTrainer(int offset) {
         Trainer tr = new Trainer();
-        tr.offset = offset;
-        tr.name = readVariableLengthString(offset, false);
+        tr.setOffset(offset);
+        tr.setName(readVariableLengthString(offset, false));
         offset += lengthOfStringAt(offset, false);
         int dataType = rom[offset] & 0xFF;
-        tr.poketype = dataType;
+        tr.setPoketype(dataType);
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);
@@ -1082,7 +1083,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 }
                 offset += 4;
             }
-            tr.pokemon.add(tp);
+            tr.getPokemon().add(tp);
         }
         return tr;
     }
@@ -1107,7 +1108,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Trainer> allTrainers = getTrainers();
         for (int i = 0; i < allTrainers.size(); i++) {
             Trainer tr = allTrainers.get(i);
-            if (tr.tag != null && ((tr.tag.contains("ELITE") || tr.tag.contains("CHAMPION")))) {
+            if (tr.getTag() != null && ((tr.getTag().contains("ELITE") || tr.getTag().contains("CHAMPION")))) {
                 eliteFourIndices.add(i + 1);
             }
 
@@ -1143,8 +1144,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
-                if (tr.trainerclass != trainerClassNum) {
-                    System.err.println("Trainer mismatch: " + tr.name);
+                if (tr.getTrainerclass() != trainerClassNum) {
+                    System.err.println("Trainer mismatch: " + tr.getName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
                 baos.write(trainerBytes, 0, trainerBytes.length);
@@ -1164,8 +1165,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         byte[] nameBytes = trainerNameToBytes(trainer);
         baos.write(nameBytes, 0, nameBytes.length);
-        baos.write(trainer.poketype);
-        for (TrainerPokemon tp : trainer.pokemon) {
+        baos.write(trainer.getPoketype());
+        for (TrainerPokemon tp : trainer.getPokemon()) {
             byte[] tpBytes = trainerPokemonToBytes(tp, trainer);
             baos.write(tpBytes, 0, tpBytes.length);
         }
@@ -1175,9 +1176,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] trainerNameToBytes(Trainer trainer) {
-        int trainerNameLength = internalStringLength(trainer.name) + 1;
+        int trainerNameLength = internalStringLength(trainer.getName()) + 1;
         byte[] trainerNameBytes = new byte[trainerNameLength];
-        writeFixedLengthString(trainerNameBytes, trainer.name, 0, trainerNameLength);
+        writeFixedLengthString(trainerNameBytes, trainer.getName(), 0, trainerNameLength);
         return trainerNameBytes;
     }
 
@@ -3017,7 +3018,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
+        GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
+        PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
+
         if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }

@@ -1538,25 +1538,25 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 byte[] trainer = trainers.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
-                tr.poketype = trainer[13] & 0xFF;
-                tr.index = i;
-                tr.trainerclass = trainer[0] & 0xFF;
+                tr.setPoketype(trainer[13] & 0xFF);
+                tr.setIndex(i);
+                tr.setTrainerclass(trainer[0] & 0xFF);
                 int battleType = trainer[2] & 0xFF;
                 switch (battleType) {
                     case 0:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
                         break;
                     case 1:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                         break;
                 }
                 int numPokes = trainer[3] & 0xFF;
                 int trainerAILevel = trainer[12] & 0xFF;
                 boolean healer = trainer[15] != 0;
                 int pokeOffs = 0;
-                String trainerClass = tclasses.get(tr.trainerclass);
+                String trainerClass = tclasses.get(tr.getTrainerclass());
                 String trainerName = tnamesMap.getOrDefault(i - 1, "UNKNOWN");
-                tr.fullDisplayName = trainerClass + " " + trainerName;
+                tr.setFullDisplayName(trainerClass + " " + trainerName);
 
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
@@ -1589,7 +1589,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     tpk.setLevel(level);
                     if (romEntry.getRomType() == Gen7Constants.Type_USUM) {
                         if (i == 78) {
-                            if (poke == 3 && tpk.getLevel() == 16 && tr.pokemon.get(0).getLevel() == 16) {
+                            if (poke == 3 && tpk.getLevel() == 16 && tr.getPokemon().get(0).getLevel() == 16) {
                                 tpk.setLevel(14);
                             }
                         }
@@ -1607,7 +1607,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                     }
                     pokeOffs += 8;
-                    tr.pokemon.add(tpk);
+                    tr.getPokemon().add(tpk);
                 }
                 allTrainers.add(tr);
             }
@@ -1658,12 +1658,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 byte[] trainer = trainers.files.get(i).get(0);
                 Trainer tr = allTrainers.next();
                 int offset = 0;
-                trainer[13] = (byte) tr.poketype;
-                int numPokes = tr.pokemon.size();
+                trainer[13] = (byte) tr.getPoketype();
+                int numPokes = tr.getPokemon().size();
                 trainer[offset+3] = (byte) numPokes;
 
-                if (tr.forcedDoubleBattle) {
-                    if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+                if (tr.isForcedDoubleBattle()) {
+                    if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
                         if (trainer[offset + 2] == 0) {
                             trainer[offset + 2] = 1;
                             trainer[offset + 12] |= 0x8; // Flag that needs to be set for trainers not to attack their own pokes
@@ -1677,7 +1677,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int bytesNeeded = 32 * numPokes;
                 byte[] trpoke = new byte[bytesNeeded];
                 int pokeOffs = 0;
-                Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
+                Iterator<TrainerPokemon> tpokes = tr.getPokemon().iterator();
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
                     byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
@@ -1736,9 +1736,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             // same boost entry. First, figure out all the unique Pokemon in her party. We avoid using a Set here
             // in order to preserve the original ordering; we want to make sure to boost the *first* five Pokemon
             List<Species> uniqueSpecies = new ArrayList<>();
-            for (int i = 0; i < beastLusamine.pokemon.size(); i++) {
-                if (!uniqueSpecies.contains(beastLusamine.pokemon.get(i).getSpecies())) {
-                    uniqueSpecies.add(beastLusamine.pokemon.get(i).getSpecies());
+            for (int i = 0; i < beastLusamine.getPokemon().size(); i++) {
+                if (!uniqueSpecies.contains(beastLusamine.getPokemon().get(i).getSpecies())) {
+                    uniqueSpecies.add(beastLusamine.getPokemon().get(i).getSpecies());
                 }
             }
             int numberOfBoostEntries = Math.min(uniqueSpecies.size(), 5);

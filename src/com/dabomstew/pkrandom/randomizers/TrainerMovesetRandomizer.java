@@ -39,7 +39,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         for (Trainer t : trainers) {
             t.setPokemonHaveCustomMoves(true);
 
-            for (TrainerPokemon tp : t.pokemon) {
+            for (TrainerPokemon tp : t.getPokemon()) {
                 tp.setResetMoves(false);
 
                 List<Move> movesAtLevel = getMoveSelectionPoolAtLevel(tp, isCyclicEvolutions);

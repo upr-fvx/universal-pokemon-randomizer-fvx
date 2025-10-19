@@ -1201,16 +1201,16 @@ public class Gen7Constants {
     }
 
     private static void tagRival(List<Trainer> allTrainers, String tag, int offset) {
-        allTrainers.get(offset - 1).tag = tag + "-0";
-        allTrainers.get(offset).tag = tag + "-1";
-        allTrainers.get(offset + 1).tag = tag + "-2";
+        allTrainers.get(offset - 1).setTag(tag + "-0");
+        allTrainers.get(offset).setTag(tag + "-1");
+        allTrainers.get(offset + 1).setTag(tag + "-2");
 
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {
         for (int num : numbers) {
             if (allTrainers.size() > (num - 1)) {
-                allTrainers.get(num - 1).tag = tag;
+                allTrainers.get(num - 1).setTag(tag);
             }
         }
     }
@@ -1312,7 +1312,7 @@ public class Gen7Constants {
     private static void setMultiBattleStatus(List<Trainer> allTrainers, int... numbers) {
         for (int num : numbers) {
             if (allTrainers.size() > (num - 1)) {
-                allTrainers.get(num - 1).multiBattleStatus = Trainer.MultiBattleStatus.ALWAYS;
+                allTrainers.get(num - 1).setMultiBattleStatus(Trainer.MultiBattleStatus.ALWAYS);
             }
         }
     }
@@ -1320,19 +1320,19 @@ public class Gen7Constants {
     public static void setForcedRivalStarterPositionsUSUM(List<Trainer> allTrainers) {
 
         // Hau 3
-        allTrainers.get(11).forceStarterPosition = 0;
-        allTrainers.get(12).forceStarterPosition = 0;
-        allTrainers.get(13).forceStarterPosition = 0;
+        allTrainers.get(11).setForceStarterPosition(0);
+        allTrainers.get(12).setForceStarterPosition(0);
+        allTrainers.get(13).setForceStarterPosition(0);
 
         // Hau 6
-        allTrainers.get(216).forceStarterPosition = 0;
-        allTrainers.get(217).forceStarterPosition = 0;
-        allTrainers.get(218).forceStarterPosition = 0;
+        allTrainers.get(216).setForceStarterPosition(0);
+        allTrainers.get(217).setForceStarterPosition(0);
+        allTrainers.get(218).setForceStarterPosition(0);
 
         // Kukui
-        allTrainers.get(476).forceStarterPosition = 5;
-        allTrainers.get(477).forceStarterPosition = 5;
-        allTrainers.get(478).forceStarterPosition = 5;
+        allTrainers.get(476).setForceStarterPosition(5);
+        allTrainers.get(477).setForceStarterPosition(5);
+        allTrainers.get(478).setForceStarterPosition(5);
     }
 
     public static int[] smPostGameEncounterAreasTOD = new int[] {

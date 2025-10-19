@@ -30,10 +30,7 @@ import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.gbspace.FreedSpace;
 import com.dabomstew.pkromio.graphics.images.GBAImage;
-import com.dabomstew.pkromio.graphics.packs.FRLGPlayerCharacterGraphics;
-import com.dabomstew.pkromio.graphics.packs.Gen3PlayerCharacterGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
-import com.dabomstew.pkromio.graphics.packs.RSEPlayerCharacterGraphics;
+import com.dabomstew.pkromio.graphics.packs.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.romhandlers.romentries.Gen3EventTextEntry;
 import com.dabomstew.pkromio.romhandlers.romentries.Gen3RomEntry;
@@ -1634,20 +1631,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // https://github.com/pret/pokefirered/blob/3dce3407d5f9bca69d61b1cf1b314fb1e921d572/include/battle.h#L111
             int trOffset = baseOffset + i * entryLen;
             Trainer tr = new Trainer();
-            tr.offset = trOffset;
-            tr.index = i;
+            tr.setOffset(trOffset);
+            tr.setIndex(i);
             int trainerclass = rom[trOffset + 1] & 0xFF;
-            tr.trainerclass = (rom[trOffset + 2] & 0x80) > 0 ? 1 : 0;
+            tr.setTrainerclass((rom[trOffset + 2] & 0x80) > 0 ? 1 : 0);
 
             int pokeDataType = rom[trOffset] & 0xFF;
             if (rom[trOffset + (entryLen - 16)] == 0x01) {
-                tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
             }
             int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
             int pointerToPokes = readPointer(trOffset + (entryLen - 4));
-            tr.poketype = pokeDataType;
-            tr.name = this.readVariableLengthString(trOffset + 4);
-            tr.fullDisplayName = tcnames.get(trainerclass) + " " + tr.name;
+            tr.setPoketype(pokeDataType);
+            tr.setName(this.readVariableLengthString(trOffset + 4));
+            tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
             // Pokemon structure data is like
             // IV IV LV SP SP
             // (HI HI)
@@ -1665,7 +1662,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
                     // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
                     thisPoke.setAbilitySlot(1);
-                    tr.pokemon.add(thisPoke);
+                    tr.getPokemon().add(thisPoke);
                 }
             } else if (pokeDataType == 2) {
                 // blocks of 8 bytes
@@ -1677,7 +1674,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
                     thisPoke.setHeldItem(items.get(itemID));
                     thisPoke.setAbilitySlot(1);
-                    tr.pokemon.add(thisPoke);
+                    tr.getPokemon().add(thisPoke);
                 }
             } else if (pokeDataType == 1) {
                 // blocks of 16 bytes
@@ -1690,7 +1687,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
                     }
                     thisPoke.setAbilitySlot(1);
-                    tr.pokemon.add(thisPoke);
+                    tr.getPokemon().add(thisPoke);
                 }
             } else if (pokeDataType == 3) {
                 // blocks of 16 bytes
@@ -1705,7 +1702,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
                     }
                     thisPoke.setAbilitySlot(1);
-                    tr.pokemon.add(thisPoke);
+                    tr.getPokemon().add(thisPoke);
                 }
             }
             trainers.add(tr);
@@ -1731,16 +1728,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 	private void readMossdeepStevenTrainer() {
 		int mossdeepStevenOffset = romEntry.getIntValue("MossdeepStevenTeamOffset");
 		Trainer mossdeepSteven = new Trainer();
-		mossdeepSteven.offset = mossdeepStevenOffset;
-		mossdeepSteven.index = trainers.size() + 1;
-		mossdeepSteven.poketype = 1; // Custom moves, but no held items
+		mossdeepSteven.setOffset(mossdeepStevenOffset);
+		mossdeepSteven.setIndex(trainers.size() + 1);
+		mossdeepSteven.setPoketype(1); // Custom moves, but no held items
 
 		// This is literally how the game does it too, lol. Have to subtract one because
 		// the trainers internally are one-indexed, but then trainers is zero-indexed.
 		Trainer meteorFallsSteven = trainers.get(Gen3Constants.emMeteorFallsStevenIndex - 1);
-		mossdeepSteven.trainerclass = meteorFallsSteven.trainerclass;
-		mossdeepSteven.name = meteorFallsSteven.name;
-		mossdeepSteven.fullDisplayName = meteorFallsSteven.fullDisplayName;
+		mossdeepSteven.setTrainerclass(meteorFallsSteven.getTrainerclass());
+		mossdeepSteven.setName(meteorFallsSteven.getName());
+		mossdeepSteven.setFullDisplayName(meteorFallsSteven.getFullDisplayName());
 
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
@@ -1752,7 +1749,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				tp.getMoves()[move] = readWord(currentOffset + 12 + (move * 2));
 			}
             tp.setAbilitySlot(1);
-			mossdeepSteven.pokemon.add(tp);
+			mossdeepSteven.getPokemon().add(tp);
 		}
 
 		trainers.add(mossdeepSteven);
@@ -1812,11 +1809,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             new DataRewriter<Trainer>().rewriteData(pokemonPointerOffset, tr, this::trainerPokemonToBytes,
                     (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
 
-            writeByte(trOffset, (byte) tr.poketype);
-            writeFixedLengthString(tr.name, trOffset + 4, nameLen);
-            writeByte(trOffset + (entryLen - 8), (byte) tr.pokemon.size());
-            if (tr.forcedDoubleBattle) {
-                if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE)
+            writeByte(trOffset, (byte) tr.getPoketype());
+            writeFixedLengthString(tr.getName(), trOffset + 4, nameLen);
+            writeByte(trOffset + (entryLen - 8), (byte) tr.getPokemon().size());
+            if (tr.isForcedDoubleBattle()) {
+                if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE)
                     writeByte(trOffset + (entryLen - 16), (byte) 0x01);
                 else
                     writeByte(trOffset + (entryLen - 16), (byte) 0x00);
@@ -1829,7 +1826,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
 	private byte[] trainerPokemonToBytes(Trainer trainer) {
-		int dataSize = trainer.pokemon.size() * (trainer.pokemonHaveCustomMoves() ? 16 : 8);
+		int dataSize = trainer.getPokemon().size() * (trainer.pokemonHaveCustomMoves() ? 16 : 8);
 		byte[] pokemonData = new byte[dataSize];
 
 		// Get current movesets in case we need to reset them for certain
@@ -1838,8 +1835,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
 		if (trainer.pokemonHaveCustomMoves()) {
 			// custom moves, blocks of 16 bytes
-			for (int tpIndex = 0; tpIndex < trainer.pokemon.size(); tpIndex++) {
-				TrainerPokemon tp = trainer.pokemon.get(tpIndex);
+			for (int tpIndex = 0; tpIndex < trainer.getPokemon().size(); tpIndex++) {
+				TrainerPokemon tp = trainer.getPokemon().get(tpIndex);
 				// Add 1 to offset integer division truncation
 				writeWord(pokemonData, tpIndex * 16, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 16 + 2, tp.getLevel());
@@ -1868,8 +1865,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			}
 		} else {
 			// no moves, blocks of 8 bytes
-			for (int tpIndex = 0; tpIndex < trainer.pokemon.size(); tpIndex++) {
-				TrainerPokemon tp = trainer.pokemon.get(tpIndex);
+			for (int tpIndex = 0; tpIndex < trainer.getPokemon().size(); tpIndex++) {
+				TrainerPokemon tp = trainer.getPokemon().get(tpIndex);
 				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
 				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
@@ -1906,7 +1903,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // ...thus the custom implementation below.
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
-			TrainerPokemon tp = mossdeepSteven.pokemon.get(i);
+			TrainerPokemon tp = mossdeepSteven.getPokemon().get(i);
 			writeWord(currentOffset, pokedexToInternal[tp.getSpecies().getNumber()]);
 			writeByte(currentOffset + 2, (byte) tp.getIVs());
 			writeByte(currentOffset + 3, (byte) tp.getLevel());
@@ -4238,7 +4235,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack unchecked, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
+        GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
+        PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
+
         if (!(unchecked instanceof Gen3PlayerCharacterGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
@@ -4613,14 +4613,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 palette = new Palette(Arrays.copyOf(palette.toARGB(), 16));
             }
 
-            // TODO: make this work
-            int[] convPalette = palette.toARGB();
-            if (transparentBackground) {
-                convPalette[0] = 0;
-            }
-
             // Make image, 4bpp
-            GBAImage bim = new GBAImage.Builder(8, 8, palette, data).build();
+            GBAImage bim = new GBAImage.Builder(8, 8, palette, data)
+                    .transparent(transparentBackground)
+                    .build();
             if (includePalette) {
                 for (int i = 0; i < palette.size(); i++) {
                     bim.setColor(i, 0, i);

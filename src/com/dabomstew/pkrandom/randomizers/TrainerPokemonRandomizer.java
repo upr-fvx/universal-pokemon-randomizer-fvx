@@ -170,17 +170,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
             //Copy the list of trainer Pokemon so we can arrange it as we like
             //without changing the order in game
-            List<TrainerPokemon> trainerPokemonList = new ArrayList<>(t.pokemon);
+            List<TrainerPokemon> trainerPokemonList = new ArrayList<>(t.getPokemon());
 
             //Rival/Friend starters have already been set, we don't want to change them
-            boolean skipStarter = rivalCarriesStarter && t.tag != null &&
-                    (t.tag.contains("RIVAL") || t.tag.contains("FRIEND"));
+            boolean skipStarter = rivalCarriesStarter && t.getTag() != null &&
+                    (t.getTag().contains("RIVAL") || t.getTag().contains("FRIEND"));
             // Preprocessing for the Elite Four (for Unique Pokemon only)
-            boolean eliteFourTrackPokemon = eliteFourUniquePokemon && eliteFourIndices.contains(t.index);
+            boolean eliteFourTrackPokemon = eliteFourUniquePokemon && eliteFourIndices.contains(t.getIndex());
 
-            if (t.forceStarterPosition != -1 && skipStarter) {
+            if (t.getForceStarterPosition() != -1 && skipStarter) {
                 //Remove the starter
-                TrainerPokemon starter = trainerPokemonList.remove(t.forceStarterPosition);
+                TrainerPokemon starter = trainerPokemonList.remove(t.getForceStarterPosition());
                 if(eliteFourTrackPokemon) {
                     //Reverse & sort the other Pokemon
                     Collections.reverse(trainerPokemonList);
@@ -249,7 +249,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             oldSp,
                             usePowerLevels,
                             (keepThemeOrPrimaryTypes && typeForTrainer == null ? oldSp.getPrimaryType(true) : typeForTrainer),
-                            distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index)),
+                            distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.getIndex())),
                             swapThisMegaEvo,
                             cacheReplacement,
                             forceMiddleEvolution,
@@ -266,7 +266,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 // Now, do all the bookkeeping we need for later choices
 
-                if (distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.index))) {
+                if (distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.getIndex()))) {
                     setPlacementHistory(newSp);
                 }
 
@@ -310,7 +310,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
 
             // Ubers: can't have the same type as each other
-            if (t.tag != null && t.tag.equals("UBER")) {
+            if (t.getTag() != null && t.getTag().equals("UBER")) {
                 while (usedUberTypes.contains(typeForTrainer)) {
                     typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
                 }
@@ -319,7 +319,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
 
         if ((keepTypeThemes || keepThemeOrPrimaryTypes) && typeForTrainer == null ) {
-            SpeciesSet trainerPokemonSpecies = t.pokemon.stream().map(TrainerPokemon::getSpecies)
+            SpeciesSet trainerPokemonSpecies = t.getPokemon().stream().map(TrainerPokemon::getSpecies)
                     .collect(Collectors.toCollection(SpeciesSet::new));
             typeForTrainer = trainerPokemonSpecies.getSharedType(true);
         }
@@ -434,7 +434,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // Anything starting with GYM or ELITE or CHAMPION is a group
 
         for (Trainer t : currentTrainers) {
-            String group = t.tag == null ? "" : t.tag;
+            String group = t.getTag() == null ? "" : t.getTag();
             if (group.contains("-")) {
                 group = group.substring(0, group.indexOf('-'));
             }
@@ -625,19 +625,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private int getLevelOfStarter(List<Trainer> currentTrainers, String tag) {
         for (Trainer t : currentTrainers) {
-            if (t.tag != null && t.tag.equals(tag)) {
+            if (t.getTag() != null && t.getTag().equals(tag)) {
                 // Bingo, get highest level
                 // last pokemon is given priority +2 but equal priority
                 // = first pokemon wins, so its effectively +1
                 // If it's tagged the same we can assume it's the same team
                 // just the opposite gender or something like that...
                 // So no need to check other trainers with same tag.
-                int highestLevel = t.pokemon.get(0).getLevel();
-                int trainerPkmnCount = t.pokemon.size();
+                int highestLevel = t.getPokemon().get(0).getLevel();
+                int trainerPkmnCount = t.getPokemon().size();
                 for (int i = 1; i < trainerPkmnCount; i++) {
                     int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
-                    if (t.pokemon.get(i).getLevel() + levelBonus > highestLevel) {
-                        highestLevel = t.pokemon.get(i).getLevel();
+                    if (t.getPokemon().get(i).getLevel() + levelBonus > highestLevel) {
+                        highestLevel = t.getPokemon().get(i).getLevel();
                     }
                 }
                 return highestLevel;
@@ -656,21 +656,21 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private void changeStarterWithTag(List<Trainer> currentTrainers, String tag,
                                       NavigableMap<Integer, Species> startersByLevel, int abilitySlot) {
         for (Trainer t : currentTrainers) {
-            if (t.tag != null && t.tag.equals(tag)) {
+            if (t.getTag() != null && t.getTag().equals(tag)) {
 
-                TrainerPokemon bestPoke = t.pokemon.get(0);
+                TrainerPokemon bestPoke = t.getPokemon().get(0);
 
-                if (t.forceStarterPosition >= 0) {
-                    bestPoke = t.pokemon.get(t.forceStarterPosition);
+                if (t.getForceStarterPosition() >= 0) {
+                    bestPoke = t.getPokemon().get(t.getForceStarterPosition());
                 } else {
                     // Change the highest level pokemon, not the last.
                     // BUT: last gets +2 lvl priority (effectively +1)
                     // same as above, equal priority = earlier wins
-                    int trainerPkmnCount = t.pokemon.size();
+                    int trainerPkmnCount = t.getPokemon().size();
                     for (int i = 1; i < trainerPkmnCount; i++) {
                         int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
-                        if (t.pokemon.get(i).getLevel() + levelBonus > bestPoke.getLevel()) {
-                            bestPoke = t.pokemon.get(i);
+                        if (t.getPokemon().get(i).getLevel() + levelBonus > bestPoke.getLevel()) {
+                            bestPoke = t.getPokemon().get(i);
                         }
                     }
                 }
@@ -740,7 +740,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
         if (levelModifier != 0) {
-            for (TrainerPokemon tp : trainer.pokemon) {
+            for (TrainerPokemon tp : trainer.getPokemon()) {
                 tp.setLevel(Math.min(100, (int) Math.round(tp.getLevel() * (1 + levelModifier / 100.0))));
             }
         }
@@ -771,9 +771,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
         // Find the highest rival battle #
         int highestRivalNum = 0;
         for (Trainer t : currentTrainers) {
-            if (t.tag != null && t.tag.startsWith(prefix)) {
+            if (t.getTag() != null && t.getTag().startsWith(prefix)) {
                 highestRivalNum = Math.max(highestRivalNum,
-                        Integer.parseInt(t.tag.substring(prefix.length(), t.tag.indexOf('-'))));
+                        Integer.parseInt(t.getTag().substring(prefix.length(), t.getTag().indexOf('-'))));
             }
         }
 
@@ -904,7 +904,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
-            for (TrainerPokemon tp : t.pokemon) {
+            for (TrainerPokemon tp : t.getPokemon()) {
                 if (tp.getLevel() >= minLevel) {
                     createMiddleStagePokemon(tp);
                 }
@@ -928,7 +928,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
-            for (TrainerPokemon tp : t.pokemon) {
+            for (TrainerPokemon tp : t.getPokemon()) {
                 if (tp.getLevel() >= minLevel) {
                     createFullyEvolvedPokemon(tp);
                 }
@@ -975,7 +975,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
             // First pass: find lowest and highest level while copying the original Pokemon
             // and checking if more than one Pokemon has the highest level in the team
-            for (TrainerPokemon tpk : t.pokemon) {
+            for (TrainerPokemon tpk : t.getPokemon()) {
                 int curLevel= tpk.getLevel();
                 if (curLevel == highest) {
                     duplicateHighest = true; // Seen this highest level more than once
@@ -993,18 +993,18 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // If a trainer can appear in a Multi Battle (i.e., a Double Battle where the enemy consists
             // of two independent trainers), we want to be aware of that so we don't give them a team of
             // six Pokemon and have a 6v12 battle
-            int maxPokemon = t.multiBattleStatus != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
+            int maxPokemon = t.getMultiBattleStatus() != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
             int originalSize = originalPokes.size();
             // Determine max level of additional Pokemon, either
             // 1. the highest level in the original team if there is more than one Pokemon with that level
             // 2. the highest level in the original team - 1 if there is only one Pokemon of that level (keep the Ace of the trainer)
             int upperLevelBound = duplicateHighest ? highest : highest - 1;
             for (int i = 0; i < additional; i++) {
-                if (t.pokemon.size() >= maxPokemon) break;
+                if (t.getPokemon().size() >= maxPokemon) break;
 
                 // We want to preserve the original last Pokemon because the order is sometimes used to
                 // determine the rival's starter
-                int secondToLastIndex = t.pokemon.size() - 1;
+                int secondToLastIndex = t.getPokemon().size() - 1;
                 // Insert a random original Pokemon as placeholder and give it a random level
                 // between the lowest and upperLevelBound
                 TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
@@ -1014,7 +1014,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 // swapping mega evolvables
                 newPokemon.setHeldItem(null);
                 newPokemon.setIsAddedTeamMember(true);
-                t.pokemon.add(secondToLastIndex, newPokemon);
+                t.getPokemon().add(secondToLastIndex, newPokemon);
             }
         }
         romHandler.setTrainers(currentTrainers);
@@ -1040,12 +1040,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
             return;
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
-            if (!(tr.multiBattleStatus == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                tr.currBattleStyle = createTrainerStyle(settings.getBattleStyle());
-                while (tr.pokemon.size() < tr.currBattleStyle.getRequiredPokemonCount()) {
-                    tr.pokemon.add(tr.pokemon.get(0).copy());
+            if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
+                tr.setCurrBattleStyle(createTrainerStyle(settings.getBattleStyle()));
+                while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
+                    tr.getPokemon().add(tr.getPokemon().get(0).copy());
                 }
-                tr.forcedDoubleBattle = true;
+                tr.setForcedDoubleBattle(true);
             }
         }
         romHandler.setTrainers(trainers);
@@ -1079,7 +1079,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (highestLevelOnly) {
                 int maxLevel = -1;
                 TrainerPokemon highestLevelPoke = null;
-                for (TrainerPokemon tp : t.pokemon) {
+                for (TrainerPokemon tp : t.getPokemon()) {
                     if (tp.getLevel() > maxLevel) {
                         highestLevelPoke = tp;
                         maxLevel = tp.getLevel();
@@ -1096,7 +1096,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                         highestLevelPoke.getMoves();
                 randomizeHeldItem(highestLevelPoke, settings, moves, moveset);
             } else {
-                for (TrainerPokemon tp : t.pokemon) {
+                for (TrainerPokemon tp : t.getPokemon()) {
                     int[] moveset = tp.isResetMoves() ?
                             RomFunctions.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
                                             tp.getSpecies(), tp.getForme()).getNumber(),
@@ -1104,7 +1104,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                                     tp.getLevel()) :
                             tp.getMoves();
                     randomizeHeldItem(tp, settings, moves, moveset);
-                    if (t.requiresUniqueHeldItems) {
+                    if (t.isRequiresUniqueHeldItems()) {
                         while (!t.pokemonHaveUniqueHeldItems()) {
                             randomizeHeldItem(tp, settings, moves, moveset);
                         }
@@ -1146,7 +1146,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Item> items = romHandler.getItems();
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 if (tp.getHeldItem() != null) {
                     if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
                         int[] pokeMoves = tp.isResetMoves() ?

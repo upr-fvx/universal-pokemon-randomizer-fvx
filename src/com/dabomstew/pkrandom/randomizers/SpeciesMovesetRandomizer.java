@@ -497,7 +497,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         List<Trainer> trainers = romHandler.getTrainers();
 
         for (Trainer t : trainers) {
-            for (TrainerPokemon tpk : t.pokemon) {
+            for (TrainerPokemon tpk : t.getPokemon()) {
                 tpk.setResetMoves(true);
             }
         }

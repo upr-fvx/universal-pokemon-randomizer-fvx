@@ -29,6 +29,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Below are some example features. They are not expansive, because it is annoying to remove a dozen categories that don't have any new/changed features this release. -->
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
+### Estimated evolution levels
+- Add option "Use Estimated Evolution Level" that can be selected if evolutions are not randomized and 'Change impossible evolutions' is
+  selected. If selected, evolution levels are estimated from all level-up evolutions of the loaded ROM instead
+  of using a preset evolution level in the 'Change impossible evolutions' option.
+
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 

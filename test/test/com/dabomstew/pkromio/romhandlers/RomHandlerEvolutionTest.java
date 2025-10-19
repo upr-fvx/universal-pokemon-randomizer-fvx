@@ -190,6 +190,25 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void changeImpossibleEvosWorksWithEstimatedLevels(String romName) {
+        loadROM(romName);
+
+        romHandler.estimateEvolutionLevels();
+        romHandler.removeImpossibleEvolutions(true, true);
+
+        for (Species pk : romHandler.getSpeciesSet()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                // Each level-up evolution should have the same evolution level as the estimated level
+                if (evo.getType().usesLevel()) {
+                    System.out.println(evo);
+                    assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void printAllEvoTypesByUsage(String romName) {
         // not really a test since it makes no assertions, but still useful when debugging
         loadROM(romName);

@@ -65,5 +65,10 @@ defaults:
       layout: "wikipage"
   - scope:
       path: ""
+      type: "release_notes"
+    values:
+      layout: "release_note"
+  - scope:
+      path: ""
     values:
       layout: "default"

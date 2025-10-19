@@ -13,7 +13,7 @@ old and new.
 {% for rn in site.release_notes reversed %}
 	{% if rn.url contains "old/" %} {% continue %} {% endif %}
 	<tr>
-		<td><a href="{{ rn.url }}">{{ rn.name }}</a></td>
+		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
 	</tr>
 {% endfor %}
@@ -26,7 +26,7 @@ old and new.
 {% for rn in site.release_notes reversed %}
 	{% unless rn.url contains "old/CTV/" %} {% continue %} {% endunless %}
 	<tr>
-		<td><a href="{{ rn.url }}">{{ rn.name }}</a></td>
+		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.rdate }}</td>
 	</tr>
 {% endfor %}
@@ -39,7 +39,7 @@ old and new.
 {% for rn in site.release_notes reversed %}
 	{% unless rn.url contains "old/V_branch/" %} {% continue %} {% endunless %}
 	<tr>
-		<td><a href="{{ rn.url }}">{{ rn.name }}</a></td>
+		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.rdate }}</td>
 	</tr>
 {% endfor %}
@@ -52,7 +52,7 @@ old and new.
 {% for rn in site.release_notes reversed %}
 	{% unless rn.url contains "old/ZX/" %} {% continue %} {% endunless %}
 	<tr>
-		<td><a href="{{ rn.url }}">{{ rn.name }}</a></td>
+		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.rdate }}</td>
 	</tr>
 {% endfor %}
@@ -65,7 +65,7 @@ old and new.
 {% for rn in site.release_notes reversed %}
 	{% unless rn.url contains "old/original/" %} {% continue %} {% endunless %}
 	<tr>
-		<td><a href="{{ rn.url }}">{{ rn.name }}</a></td>
+		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.rdate }}</td>
 	</tr>
 {% endfor %}

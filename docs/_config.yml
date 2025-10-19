@@ -54,6 +54,8 @@ plugins:
 collections:
     wikipages:
         output: true
+    release_notes:
+        output: true
         
 defaults:
   - scope:

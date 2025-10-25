@@ -213,8 +213,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
-    @Override
-    public void estimateEvolutionLevels() {
+    protected void estimateEvolutionLevels() {
         // Get a list of all level-up evolutions and a list of all non-level-up evolutions
         List<Evolution> levelUpEvos = new ArrayList<>();
         List<Evolution> nonLevelUpEvos = new ArrayList<>();
@@ -262,7 +261,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         return pk.getHp() + pk.getAttack() + pk.getDefense() + pk.getSpatk() + pk.getSpdef() + pk.getSpeed() + pk.getSpecial();
     }
 
-    public static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {
+    private static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {
 
         // ==== CONFIGURATION PARAMETERS ====
         double p = 1;                // distance weighting exponent: 1/d^p

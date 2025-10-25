@@ -64,6 +64,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         }
         loadedFN = filename;
         loadedROM(baseRom.getCode(), baseRom.getVersion());
+        estimateEvolutionLevels();
         return true;
     }
 

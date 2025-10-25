@@ -195,7 +195,6 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     public void changeImpossibleEvosWorksWithEstimatedLevels(String romName) {
         loadROM(romName);
 
-        romHandler.estimateEvolutionLevels();
         romHandler.removeImpossibleEvolutions(true, true);
 
         for (Species pk : romHandler.getSpeciesSet()) {
@@ -216,7 +215,6 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         try {
             loadROM(romName);
 
-            romHandler.estimateEvolutionLevels();
             romHandler.removeImpossibleEvolutions(true, true);
 
             String currentGen = "";

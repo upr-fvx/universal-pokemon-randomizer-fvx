@@ -88,7 +88,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - DelyBulacha (Frisk, Chara)
 - SharkGuy (Boyfriend)
 - bepis (Shantae)
-- FourLeafSunny (Freddy Fazbear)
+- FourLeafSunny (Freddy Fazbear, Kris)
 
 ## Direct code contributors
 

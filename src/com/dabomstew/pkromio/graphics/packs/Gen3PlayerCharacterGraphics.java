@@ -164,7 +164,7 @@ public abstract class Gen3PlayerCharacterGraphics extends GraphicsPack {
     }
 
     protected GBAImage initSprite(String key, int frameAmount, int frameWidth, int frameHeight) {
-        return initSprite(key, "NormalSpritePalette", frameAmount, frameWidth, frameHeight);
+        return initSprite(key, "SpriteNormalPalette", frameAmount, frameWidth, frameHeight);
     }
 
     protected GBAImage initSprite(String key, String paletteKey, int frameAmount, int frameWidth, int frameHeight) {

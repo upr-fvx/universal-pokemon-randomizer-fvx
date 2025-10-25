@@ -10,7 +10,7 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and
+[Every person who made a new CPG] FourLeafSunny for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -35,6 +35,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Graphics
+- (Gen 3) New FRLG Custom Player Graphics: Kris by FourLeafSunny
+
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
@@ -43,5 +46,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- (Gen 3) Fixed overworld sprites of Custom Player Graphics sometimes getting an invalid/glitchy palette.

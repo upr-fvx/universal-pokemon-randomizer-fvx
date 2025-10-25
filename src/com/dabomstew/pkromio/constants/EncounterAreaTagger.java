@@ -8,21 +8,58 @@ import java.util.*;
 public abstract class EncounterAreaTagger {
 
     private static class TagPack {
-        public final List<String> locationTags;
-        public List<EncounterType> encounterTypes;
-        public int[] postGameAreas = new int[0];
-        public int[] partialPostGameAreas = new int[0];
-        public int[] partialPostGameCutoffs = new int[0];
+        private final List<String> locationTags;
+        private List<EncounterType> encounterTypes;
+        private int[] postGameAreas = new int[0];
+        private int[] partialPostGameAreas = new int[0];
+        private int[] partialPostGameCutoffs = new int[0];
 
         public TagPack(List<String> locationTags) {
             this.locationTags = locationTags;
         }
+
+        public void setEncounterTypes(List<EncounterType> encounterTypes) {
+            if (encounterTypes.size() != locationTags.size()) {
+                throw new IllegalArgumentException("Location and encounter type lists do not match! (" +
+                        locationTags.size() + " vs " + encounterTypes.size() + ")");
+            }
+            this.encounterTypes = encounterTypes;
+        }
+
+        public void setPostGameAreas(int[] postGameAreas) {
+            for (int pgaIndex : postGameAreas) {
+                if (pgaIndex >= locationTags.size()) {
+                    throw new IllegalArgumentException("PostGameArea index out of bounds: " + pgaIndex
+                            + ". Must be less than the number of Encounter Areas=" + locationTags.size() + ".");
+                }
+            }
+            this.postGameAreas = postGameAreas;
+        }
+
+        public void setPartialPostGameAreas(int[] partialPostGameAreas) {
+            for (int ppgaIndex : partialPostGameAreas) {
+                if (ppgaIndex >= locationTags.size()) {
+                    throw new IllegalArgumentException("PartialPostGameArea index out of bounds: " + ppgaIndex
+                            + ". Must be less than the number of Encounter Areas=" + locationTags.size() + ".");
+                }
+            }
+            this.partialPostGameAreas = partialPostGameAreas;
+        }
+
+        public void setPartialPostGameCutoffs(int[] partialPostGameCutoffs) {
+            if (partialPostGameCutoffs.length != partialPostGameAreas.length) {
+                throw new IllegalArgumentException("Partial post-game areas and cutoff lengths do not match! (" +
+                        partialPostGameAreas.length + " vs " + partialPostGameCutoffs.length + ")");
+            }
+            this.partialPostGameCutoffs = partialPostGameAreas;
+        }
     }
 
-    protected static class TagPacks {
+    protected static class TagPackMap {
+        // Mostly just an alias for the looong type below
         private final Map<Boolean, Map<Integer, TagPack>> map;
 
-        private TagPacks(Map<Boolean, Map<Integer, TagPack>> map) {
+        private TagPackMap(Map<Boolean, Map<Integer, TagPack>> map) {
             this.map = map;
         }
 
@@ -31,7 +68,10 @@ public abstract class EncounterAreaTagger {
         }
     }
 
-    protected static class Factory {
+    /**
+     * Builds a {@link TagPackMap}.
+     */
+    protected static class Builder {
         private final Map<Boolean, Map<Integer, TagPack>> batch;
         private final Set<Integer> romTypes = new HashSet<>();
 
@@ -40,17 +80,17 @@ public abstract class EncounterAreaTagger {
         private TagPack currNoTOD;
         private TagPack currTOD;
 
-        public Factory() {
+        public Builder() {
             batch = new HashMap<>();
             batch.put(false, new HashMap<>());
             batch.put(true, new HashMap<>());
         }
 
-        public Factory newPack(int romType, List<String> locationTags) {
+        public Builder newPack(int romType, List<String> locationTags) {
             return newPack(romType, locationTags, locationTags);
         }
 
-        public Factory newPack(int romType, List<String> locationTagsNoTOD, List<String> locationTagsTOD) {
+        public Builder newPack(int romType, List<String> locationTagsNoTOD, List<String> locationTagsTOD) {
             if (started) {
                 finishPack();
             }
@@ -69,12 +109,52 @@ public abstract class EncounterAreaTagger {
             batch.get(false).put(currROMType, currTOD);
         }
 
-        public TagPacks build() {
+        public Builder encounterTypes(List<EncounterType> encounterTypes) {
+            return encounterTypes(encounterTypes, encounterTypes);
+        }
+
+        public Builder encounterTypes(List<EncounterType> encounterTypesNoTOD, List<EncounterType> encounterTypesTOD) {
+            currNoTOD.setEncounterTypes(encounterTypesNoTOD);
+            currTOD.setEncounterTypes(encounterTypesTOD);
+            return this;
+        }
+
+        public Builder postGameAreas(int[] postGameAreas) {
+            return postGameAreas(postGameAreas, postGameAreas);
+        }
+
+        public Builder postGameAreas(int[] postGameAreasNoTOD, int[] postGameAreasTOD) {
+            currNoTOD.setPostGameAreas(postGameAreasNoTOD);
+            currTOD.setPostGameAreas(postGameAreasTOD);
+            return this;
+        }
+
+        public Builder partialPostGameAreas(int[] partialPostGameAreas) {
+            return partialPostGameAreas(partialPostGameAreas, partialPostGameAreas);
+        }
+
+        public Builder partialPostGameAreas(int[] partialPostGameAreasNoTOD, int[] partialPostGameAreasTOD) {
+            currNoTOD.setPartialPostGameAreas(partialPostGameAreasNoTOD);
+            currTOD.setPartialPostGameAreas(partialPostGameAreasTOD);
+            return this;
+        }
+
+        public Builder partialPostGameCutoffs(int[] partialPostGameCutoffs) {
+            return partialPostGameCutoffs(partialPostGameCutoffs, partialPostGameCutoffs);
+        }
+
+        public Builder partialPostGameCutoffs(int[] partialPostGameCutoffsNoTOD, int[] partialPostGameCutoffsTOD) {
+            currNoTOD.setPartialPostGameCutoffs(partialPostGameCutoffsNoTOD);
+            currTOD.setPartialPostGameCutoffs(partialPostGameCutoffsTOD);
+            return this;
+        }
+
+        public TagPackMap build() {
             if (!started) {
                 throw new IllegalStateException("Can't build; no packs have been added.");
             }
             finishPack();
-            return new TagPacks(batch);
+            return new TagPackMap(batch);
         }
     }
 
@@ -86,7 +166,7 @@ public abstract class EncounterAreaTagger {
         tagEncounterAreas(encounterAreas, tagPack);
     }
 
-    protected abstract TagPacks getTagPacks();
+    protected abstract TagPackMap getTagPacks();
 
     private static void tagEncounterAreas(List<EncounterArea> encounterAreas, TagPack tagPack) {
         // TODO: some of these should not be used always
@@ -95,6 +175,11 @@ public abstract class EncounterAreaTagger {
         }
         for (int i = 0; i < encounterAreas.size(); i++) {
             encounterAreas.get(i).setLocationTag(tagPack.locationTags.get(i));
+        }
+        if (tagPack.encounterTypes != null) {
+            for (int i = 0; i < encounterAreas.size(); i++) {
+                encounterAreas.get(i).setEncounterType(tagPack.encounterTypes.get(i));
+            }
         }
         for (int areaIndex : tagPack.postGameAreas) {
             encounterAreas.get(areaIndex).setPostGame(true);

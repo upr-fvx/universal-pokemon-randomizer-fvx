@@ -24,7 +24,6 @@ package com.dabomstew.pkromio.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.gamedata.EncounterArea;
 import com.dabomstew.pkromio.gamedata.EvolutionType;
 import com.dabomstew.pkromio.gamedata.Trainer;
 import com.dabomstew.pkromio.gamedata.Type;
@@ -504,68 +503,6 @@ public class Gen1Constants {
         throw new IndexOutOfBoundsException("No trainer with classNum=" + classNum + ", number=" + number);
     }
 
-    private static final int[] postGameEncounterAreasRBG = new int[] {
-            53, 54, 55, 67, //CERULEAN CAVE
-    };
-
-    private static final int[] postGameEncounterAreasJapaneseBlue = new int[] {
-            54, 55, 56, 68, //CERULEAN CAVE
-    };
-
-    private static final int[] postGameEncounterAreasYellow = new int[] {
-            59, 60, 61, 94, 95, //CERULEAN CAVE
-    };
-
-    // the ones tagged "SUPER ROD N" are super rod encounters shared between several locations
-    private static final List<String> locationTagsRBG = Collections.unmodifiableList(Arrays.asList(
-            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 7", "ROUTE 8", "ROUTE 9",
-            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 13", "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
-            "ROUTE 19/20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
-            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
-            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
-            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "POKEMON MANSION", "SEAFOAM ISLANDS",
-            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
-            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
-            "CERULEAN CAVE", "ROCK TUNNEL",
-            "OLD ROD", "GOOD ROD", "SUPER ROD 1", "SUPER ROD 2", "SUPER ROD 3", "SUPER ROD 4", "SUPER ROD 5",
-            "SUPER ROD 6", "SUPER ROD 7", "SUPER ROD 8", "SUPER ROD 9", "SUPER ROD 10"));
-
-    // for whatever reason Japanese blue loads Route 19/20 as separate encounters,
-    // the only difference to locationTagsRBG.
-    private static final List<String> locationTagsJapaneseBlue = Collections.unmodifiableList(Arrays.asList(
-            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 7", "ROUTE 8", "ROUTE 9",
-            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 13", "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
-            "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
-            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
-            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
-            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "POKEMON MANSION", "SEAFOAM ISLANDS",
-            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
-            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
-            "CERULEAN CAVE", "ROCK TUNNEL",
-            "OLD ROD", "GOOD ROD", "SUPER ROD 1", "SUPER ROD 2", "SUPER ROD 3", "SUPER ROD 4", "SUPER ROD 5",
-            "SUPER ROD 6", "SUPER ROD 7", "SUPER ROD 8", "SUPER ROD 9", "SUPER ROD 10"));
-
-    // yellow has more specific super rod encounters
-    private static final List<String> locationTagsYellow = Collections.unmodifiableList(Arrays.asList(
-            "ROUTE 1", "ROUTE 2", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "ROUTE 6",
-            "ROUTE 7", "ROUTE 8", "ROUTE 9",
-            "ROUTE 10", "ROUTE 11", "ROUTE 12", "ROUTE 12", "ROUTE 13", "ROUTE 13",
-            "ROUTE 14", "ROUTE 15", "ROUTE 16", "ROUTE 17", "ROUTE 18",
-            "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 21", "ROUTE 22", "ROUTE 23", "ROUTE 24", "ROUTE 25",
-            "VIRIDIAN FOREST", "MT.MOON", "MT.MOON", "MT.MOON", "ROCK TUNNEL", "POWER PLANT", "VICTORY ROAD",
-            "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "POKEMON TOWER", "SEAFOAM ISLANDS",
-            "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS", "SEAFOAM ISLANDS",
-            "POKEMON MANSION", "SEAFOAM ISLANDS",
-            "VICTORY ROAD", "DIGLETT'S CAVE", "VICTORY ROAD", "POKEMON MANSION", "POKEMON MANSION", "POKEMON MANSION",
-            "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "CERULEAN CAVE", "CERULEAN CAVE",
-            "CERULEAN CAVE", "ROCK TUNNEL",
-            "OLD ROD", "GOOD ROD",
-            "PALLET TOWN", "VIRIDIAN CITY", "CERULEAN CITY", "VERMILION CITY", "CELADON CITY", "FUCHSIA CITY",
-            "CINNABAR ISLAND", "ROUTE 4", "ROUTE 6", "ROUTE 24", "ROUTE 25", "ROUTE 10", "ROUTE 11", "ROUTE 12",
-            "ROUTE 13", "ROUTE 17", "ROUTE 18", "ROUTE 19", "ROUTE 20", "ROUTE 21", "ROUTE 22", "ROUTE 23",
-            "VERMILION CITY", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SAFARI ZONE", "SEAFOAM ISLANDS",
-            "SEAFOAM ISLANDS", "CERULEAN CAVE", "CERULEAN CAVE"));
-
     /**
      * The order the player is "expected" to traverse locations. Taken from
      * <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Red_and_Blue/Walkthrough>this walkthrough</a>.
@@ -589,30 +526,6 @@ public class Gen1Constants {
             "SUPER ROD 8", // route 19, route 20, route 21, seafoam islands
             "SUPER ROD 9" // route 23, cerulean cave
     ));
-
-    private static void tagEncounterAreas(List<EncounterArea> encounterAreas, List<String> locationTags, int[] postGameAreas) {
-        if (encounterAreas.size() != locationTags.size()) {
-            throw new IllegalArgumentException("Unexpected amount of encounter areas");
-        }
-        for (int i = 0; i < encounterAreas.size(); i++) {
-            encounterAreas.get(i).setLocationTag(locationTags.get(i));
-        }
-        for (int areaIndex : postGameAreas) {
-            encounterAreas.get(areaIndex).setPostGame(true);
-        }
-    }
-
-    public static void tagEncounterAreasRBG(List<EncounterArea> encounterAreas) {
-        tagEncounterAreas(encounterAreas, locationTagsRBG, postGameEncounterAreasRBG);
-    }
-
-    public static void tagEncounterAreasJapaneseBlue(List<EncounterArea> encounterAreas) {
-        tagEncounterAreas(encounterAreas, locationTagsJapaneseBlue, postGameEncounterAreasJapaneseBlue);
-    }
-
-    public static void tagEncounterAreasYellow(List<EncounterArea> encounterAreas) {
-        tagEncounterAreas(encounterAreas, locationTagsYellow, postGameEncounterAreasYellow);
-    }
 
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
             {ItemIDs.masterBall, 3000},

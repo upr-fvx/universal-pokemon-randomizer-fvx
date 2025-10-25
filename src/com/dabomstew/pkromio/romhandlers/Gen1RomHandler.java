@@ -27,6 +27,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen1EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
@@ -829,19 +830,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         readNormalEncounters(encounterAreas);
         readFishingEncounters(encounterAreas);
 
-        tagEncounterAreas(encounterAreas);
+        // kind of ugly to refer to a specific ROM name
+        int encType = romEntry.getName().equals("Blue (J)") ?
+                Gen1EncounterAreaTagger.JapaneseBlueEncounterType : romEntry.getRomType();
+        new Gen1EncounterAreaTagger().tag(encounterAreas, encType, false);
 
         return encounterAreas;
-    }
-
-    private void tagEncounterAreas(List<EncounterArea> encounterAreas) {
-        if (romEntry.isYellow()) {
-            Gen1Constants.tagEncounterAreasYellow(encounterAreas);
-        } else if (romEntry.getName().equals("Blue (J)")) { // kind of ugly to refer to a specific ROM name
-            Gen1Constants.tagEncounterAreasJapaneseBlue(encounterAreas);
-        } else {
-            Gen1Constants.tagEncounterAreasRBG(encounterAreas);
-        }
     }
 
     private Species getGhostMarowakPoke() {

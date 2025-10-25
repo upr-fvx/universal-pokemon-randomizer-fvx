@@ -24,6 +24,7 @@ package com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen4EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
@@ -1314,7 +1315,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(ex);
 		}
 
-		Gen4Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+        new Gen4EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
 		return encounterAreas;
 	}
 

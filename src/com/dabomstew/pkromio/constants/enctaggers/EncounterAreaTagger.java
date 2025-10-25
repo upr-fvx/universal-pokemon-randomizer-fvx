@@ -150,6 +150,14 @@ public abstract class EncounterAreaTagger {
             return this;
         }
 
+        public Builder partialPostGameCutoff(int partialPostGameCutoff) {
+            int[] cutoffsNoTOD = new int[currNoTOD.partialPostGameAreas.length];
+            int[] cutoffsTOD = new int[currTOD.partialPostGameAreas.length];
+            Arrays.fill(cutoffsNoTOD, partialPostGameCutoff);
+            Arrays.fill(cutoffsTOD, partialPostGameCutoff);
+            return partialPostGameCutoffs(cutoffsNoTOD, cutoffsTOD);
+        }
+
         public TagPackMap build() {
             if (!started) {
                 throw new IllegalStateException("Can't build; no packs have been added.");

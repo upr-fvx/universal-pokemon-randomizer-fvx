@@ -26,6 +26,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen6EncounterAreaTagger;
 import com.dabomstew.pkromio.ctr.AMX;
 import com.dabomstew.pkromio.ctr.GARCArchive;
 import com.dabomstew.pkromio.ctr.Mini;
@@ -1101,7 +1102,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        Gen6Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType());
+        new Gen6EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
 
         return encounterAreas;
     }

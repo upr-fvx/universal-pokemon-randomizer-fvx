@@ -709,9 +709,20 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peChangeImpossibleEvosCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="4ad81" class="javax.swing.JCheckBox" binding="peMakeEvolutionsEasierCheckBox">
+                      <component id="9ae0g" class="javax.swing.JCheckBox" binding="peUseEstimatedInsteadOfHardcodedLevelsCheckBox">
                         <constraints>
                           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peUseEstimatedInsteadOfHardcodedLevelsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peUseEstimatedInsteadOfHardcodedLevelsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="4ad81" class="javax.swing.JCheckBox" binding="peMakeEvolutionsEasierCheckBox">
+                        <constraints>
+                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -733,7 +744,7 @@
                       </component>
                       <component id="b091c" class="javax.swing.JCheckBox" binding="peRemoveTimeBasedEvolutionsCheckBox">
                         <constraints>
-                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>

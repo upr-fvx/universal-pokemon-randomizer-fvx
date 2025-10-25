@@ -211,7 +211,93 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
         }
+    }
 
+    protected void estimateEvolutionLevels() {
+        // Get a list of all level-up evolutions and a list of all non-level-up evolutions
+        List<Evolution> levelUpEvos = new ArrayList<>();
+        List<Evolution> nonLevelUpEvos = new ArrayList<>();
+        for (Species pk : getSpeciesSet()) {
+            for (Evolution evoFrom : pk.getEvolutionsFrom()) {
+                if (evoFrom.getType().usesLevel()) {
+                    levelUpEvos.add(evoFrom);
+                    evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
+                } else {
+                    nonLevelUpEvos.add(evoFrom);
+                }
+            }
+        }
+
+        // For all level-up evolutions, get triplets (BSTfrom, BSTto, evoLevel)
+        List<int[]> levelUpTriplet = new ArrayList<>();
+        for (Evolution evo : levelUpEvos) {
+            int[] triplet = {getBST(evo.getFrom()), getBST(evo.getTo()), evo.getExtraInfo()};
+            levelUpTriplet.add(triplet);
+        }
+
+        for (Evolution evo : nonLevelUpEvos) {
+            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpTriplet, getBST(evo.getFrom()), getBST(evo.getTo())));
+        }
+
+        // Postprocess estimated level
+        for (Evolution evo : nonLevelUpEvos) {
+            if (!evo.getFrom().getEvolutionsTo().isEmpty()) { // getFrom Pkmn has a pre-evolution
+                // Make sure the estimatedlevel is at least 25% higher than the evo level of the previous evolution
+                Evolution previousEvo = evo.getFrom().getEvolutionsTo().get(0);
+                evo.setEstimatedEvoLvl(
+                        Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
+            }
+            if (!evo.getTo().getEvolutionsFrom().isEmpty()) { // getTo Pkmn has an evolution
+                // Make sure the evo level is at most 80% of the following evolutions evo level (i.e., the following evolution has a 25% higher level
+                for (Evolution nextEvo : evo.getTo().getEvolutionsFrom()) {
+                    evo.setEstimatedEvoLvl(
+                            Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));
+                }
+            }
+        }
+    }
+
+    private static int getBST(Species pk) {
+        return pk.getHp() + pk.getAttack() + pk.getDefense() + pk.getSpatk() + pk.getSpdef() + pk.getSpeed() + pk.getSpecial();
+    }
+
+    private static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {
+
+        // ==== CONFIGURATION PARAMETERS ====
+        double p = 1;                // distance weighting exponent: 1/d^p
+        double preFactor = 1.5;          // scaling factor for preBST
+        double postFactor = 3;         // scaling factor for postBST
+        double largeWeightForZero = 1; // weight to use if distance is zero
+        // ==================================
+
+        double weightedSum = 0.0;
+        double weightSum = 0.0;
+
+        for (int[] sample : samples) {
+            int samplePre = sample[0];
+            int samplePost = sample[1];
+            int sampleLevel = sample[2];
+
+            // Compute Euclidean distance
+            double dx = targetPreBST - samplePre;
+            double dy = targetPostBST - samplePost;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Weight = 1 / d^p, use largeWeightForZero if distance is zero
+            double weight = dist == 0 ? largeWeightForZero : 1.0 / Math.pow(dist, p);
+
+            // Pre/post scaling
+            double scaledPre = Math.pow((double) targetPreBST / samplePre, preFactor);
+            double scaledPost = Math.pow((double) targetPostBST / samplePost, postFactor);
+
+            double adjustedLevel = sampleLevel * (scaledPre + scaledPost) / 2.0;
+
+            weightedSum += adjustedLevel * weight;
+            weightSum += weight;
+        }
+
+        // Return weighted average
+        return (int) Math.round(weightedSum / weightSum);
     }
 
     @Override

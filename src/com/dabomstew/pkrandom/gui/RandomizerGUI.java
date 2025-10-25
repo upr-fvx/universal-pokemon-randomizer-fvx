@@ -100,6 +100,7 @@ public class RandomizerGUI {
     private JCheckBox peLimitEvolutionsToThreeCheckBox;
     private JCheckBox peForceChangeCheckBox;
     private JCheckBox peChangeImpossibleEvosCheckBox;
+    private JCheckBox peUseEstimatedInsteadOfHardcodedLevelsCheckBox;
     private JCheckBox peMakeEvolutionsEasierCheckBox;
     private JCheckBox peForceGrowthCheckBox;
     private JCheckBox peNoConvergenceCheckBox;
@@ -504,6 +505,7 @@ public class RandomizerGUI {
         peUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peRandomEveryLevelRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        peChangeImpossibleEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -1603,6 +1605,7 @@ public class RandomizerGUI {
         raceModeCheckBox.setSelected(settings.isRaceMode());
 
         peChangeImpossibleEvosCheckBox.setSelected(settings.isChangeImpossibleEvolutions());
+        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForImpossibleEvolutions());
         mdUpdateMovesCheckBox.setSelected(settings.isUpdateMoves());
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
         tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
@@ -1920,6 +1923,8 @@ public class RandomizerGUI {
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
         settings.setChangeImpossibleEvolutions(peChangeImpossibleEvosCheckBox.isSelected() && peChangeImpossibleEvosCheckBox.isVisible());
+        settings.setEstimateLevelForImpossibleEvolutions(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected()
+                && peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isVisible());
         settings.setUpdateMoves(mdUpdateMovesCheckBox.isSelected() && mdUpdateMovesCheckBox.isVisible());
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
@@ -2307,7 +2312,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
 				peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
+				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peUseEstimatedInsteadOfHardcodedLevelsCheckBox,
 				peRemoveTimeBasedEvolutionsCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox,
                 peNoConvergenceCheckBox);
 
@@ -3143,6 +3148,13 @@ public class RandomizerGUI {
             // Re-enable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
             tpForceMiddleStageAtCheckBox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
+        }
+
+        // Only use estimated levels if evolutions are not randomized
+        if (peUnchangedRadioButton.isSelected() && peChangeImpossibleEvosCheckBox.isSelected()) {
+            peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
+        } else {
+            disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {

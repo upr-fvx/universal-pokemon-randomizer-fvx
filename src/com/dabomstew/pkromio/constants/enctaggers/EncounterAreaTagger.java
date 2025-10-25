@@ -1,4 +1,4 @@
-package com.dabomstew.pkromio.constants;
+package com.dabomstew.pkromio.constants.enctaggers;
 
 import com.dabomstew.pkromio.gamedata.EncounterArea;
 import com.dabomstew.pkromio.gamedata.EncounterType;
@@ -101,12 +101,13 @@ public abstract class EncounterAreaTagger {
             currROMType = romType;
             currNoTOD = new TagPack(locationTagsNoTOD);
             currTOD = new TagPack(locationTagsTOD);
+            started = true;
             return this;
         }
 
         private void finishPack() {
             batch.get(false).put(currROMType, currNoTOD);
-            batch.get(false).put(currROMType, currTOD);
+            batch.get(true).put(currROMType, currTOD);
         }
 
         public Builder encounterTypes(List<EncounterType> encounterTypes) {
@@ -158,20 +159,20 @@ public abstract class EncounterAreaTagger {
         }
     }
 
-    public void tagEncounterAreas(List<EncounterArea> encounterAreas, int romType, boolean useTimeOfDay) {
+    public void tag(List<EncounterArea> encounterAreas, int romType, boolean useTimeOfDay) {
         TagPack tagPack = getTagPacks().get(romType, useTimeOfDay);
         if (tagPack == null) {
             throw new IllegalStateException("Unexpected value for romType: " + romType);
         }
-        tagEncounterAreas(encounterAreas, tagPack);
+        tag(encounterAreas, tagPack);
     }
 
     protected abstract TagPackMap getTagPacks();
 
-    private static void tagEncounterAreas(List<EncounterArea> encounterAreas, TagPack tagPack) {
-        // TODO: some of these should not be used always
+    private void tag(List<EncounterArea> encounterAreas, TagPack tagPack) {
         if (encounterAreas.size() != tagPack.locationTags.size()) {
-            throw new IllegalArgumentException("Unexpected amount of encounter areas");
+            throw new IllegalArgumentException("Unexpected amount of encounter areas. Expected: "
+                    + tagPack.locationTags.size() + ", was: " + encounterAreas.size());
         }
         for (int i = 0; i < encounterAreas.size(); i++) {
             encounterAreas.get(i).setLocationTag(tagPack.locationTags.get(i));

@@ -27,6 +27,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen2EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
@@ -703,7 +704,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         readHeadbuttEncounters(encounterAreas);
         readBugCatchingContestEncounters(encounterAreas);
 
-        Gen2Constants.tagEncounterAreas(encounterAreas, useTimeOfDay, romEntry.isCrystal());
+        new Gen2EncounterAreaTagger().tag(encounterAreas, getROMType(), useTimeOfDay);
 
         return encounterAreas;
     }

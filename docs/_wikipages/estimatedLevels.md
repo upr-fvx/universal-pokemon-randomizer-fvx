@@ -1,11 +1,107 @@
 ---
 name: EstimatedEolutionLevels
 ---
-## TODO find header and copy algorithm here (or maybe after the levels)
 
-TODO
+## Contents
+* [Description of how evolution levels are estimated](#algorithmic-estimation-of-evolution-levels)
+* [Tables with all estimated evolution levels by generation](#estimated-evolutions-levels)
 
-## Estimated Evolution Levels
+## Algorithmic estimation of evolution levels
+
+For any level-up evolution (evolution that always happens at a specific level), the estimated evolution level equals the evolution level.
+
+For any evolution that is **not** a level-up evolution, an evolution level is **estimated** from all level-up evolutions in the loaded ROM via the following algorithm.
+
+### Definitions
+
+For a given level-up evolution **"X → Y"** at level `lvl_XY`,
+where **X** has a Base Stat Total (BST) `X_bst` and **Y** has a BST `Y_bst`,
+the **level-up triplet** of this evolution is defined as:
+
+```
+(X_bst, Y_bst, lvl_XY)
+```
+
+For example, in Generation 1, the level-up triplet for **"Bulbasaur → Ivysaur"** would be:
+
+```
+(253, 325, 16)
+```
+
+The set of all level-up triplets for all level-up evolutions is called `samples`.
+
+For a **non-level-up** evolution, where the BST before the evolution is `targetPreBST` and the BST after the evolution is `targetPostBST`,
+an evolution level is estimated as follows:
+
+---
+
+### Initialization
+
+```java
+double p = 1;                  // distance weighting exponent: 1/d^p
+double preFactor = 1.5;        // scaling factor for pre-evolution BST difference
+double postFactor = 3;         // scaling factor for post-evolution BST difference
+double largeWeightForZero = 1; // weight to use if distance is zero
+```
+
+Furthermore, let `weightedSum = 0` and `weightSum = 0`.
+
+---
+
+### Algorithm
+
+For each level-up triplet `(samplePre, samplePost, sampleLevel)` in `samples`:
+
+1. **Compute the euclidian distance** between the sample’s `(samplePre, samplePost)` pair and the target’s `(targetPreBST, targetPostBST)` pair.
+   The smaller this distance, the more similar the evolution is to the target.
+   ```java
+   double dx = targetPreBST - samplePre;
+   double dy = targetPostBST - samplePost;
+   double dist = Math.sqrt(dx * dx + dy * dy);
+
+2. **Assign a weight** to the sample.
+
+    * If the distance is zero, use `largeWeightForZero`.
+    * Otherwise, use `1 / (distance ^ p)` so that closer samples have higher weight.
+
+3. **Compute scaling factors** `scaledPre` and `scaledPost` for how the target’s BSTs compare to the sample’s BSTs.
+
+    * The `preFactor` and `postFactor` values control how much influence these differences have.
+      `postFactor` is chosen larger than `preFactor` such that BST differences in the post-evolution species have a greater influence.
+    ```java
+   double scaledPre = Math.pow((double) targetPreBST / samplePre, preFactor);
+   double scaledPost = Math.pow((double) targetPostBST / samplePost, postFactor);
+   ```
+
+
+4. **Adjust the sample’s evolution level** by multiplying its level with the average of the two scaling factors.
+
+5. **Add the weighted contribution** of this adjusted level to the totals:
+
+    * Add `(adjustedLevel * weight)` to `weightedSum`.
+    * Add `weight` to `weightSum`.
+
+---
+
+### Final Computation
+
+After all samples are processed, compute the **estimated evolution level** as the weighted average:
+
+```
+estimatedLevel = round(weightedSum / weightSum);
+```
+
+---
+
+### Summary
+
+This algorithm performs a **distance-weighted interpolation or extrapolation** using all known level-up evolutions.
+It estimates the evolution level of non-level-up evolutions based on how their Base Stat Totals compare to those of known evolutions.
+
+* Evolutions with BST pairs closer to the target have **stronger influence**.
+* The post-evolution difference between the sample's and the target's BSTs has a **stronger influence** than the pre-evolution difference between the sample's and the target's BSTs.
+
+## Estimated Evolutions Levels
 
 Following are the estimated evolution levels for each evolution in the respective generation.
 * [Generation 1 (Red/Blue/Yellow)](#generation-1-redblueyellow)

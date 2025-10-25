@@ -32,6 +32,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- Add option "Use Estimated Evolution Level" that can be selected if evolutions are not randomized and "Change impossible evolutions" is
+  selected. If selected, evolution levels are estimated from all level-up evolutions of the loaded ROM instead
+  of using a preset evolution level in the "Change impossible evolutions" option.
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 

@@ -1920,7 +1920,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         // no move evos, so no need to check for those
         for (Species pkmn : pokes) {
             if (pkmn != null) {
@@ -1934,19 +1934,19 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                             evol.setType(EvolutionType.STONE);
                             evol.setExtraInfo(ItemIDs.waterStone);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
-                            // Seadra: level 40
+                            // Seadra: level 40 (or estimated level if useEstimatedLevels)
                             evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(40); // level
+                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 40); // level
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
-                            // Level 37
+                            // Level 37 (or estimated level if useEstimatedLevels)
                             evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(37); // level
+                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 37); // level
                         } else {
                             // A new trade evo of a single stage Pokemon
-                            // level 30
+                            // level 30 (or estimated level if useEstimatedLevels)
                             evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(30); // level
+                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 30); // level
                         }
                     }
                 }

@@ -1328,7 +1328,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 

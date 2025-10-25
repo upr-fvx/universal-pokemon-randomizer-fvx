@@ -7,9 +7,11 @@ import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import javafx.scene.chart.ScatterChart;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -185,6 +187,76 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                     assertTrue(evolutionItems.contains(evoItem));
                 }
             }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void changeImpossibleEvosWorksWithEstimatedLevels(String romName) {
+        loadROM(romName);
+
+        romHandler.removeImpossibleEvolutions(true, true);
+
+        for (Species pk : romHandler.getSpeciesSet()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                // Each level-up evolution should have the same evolution level as the estimated level
+                if (evo.getType().usesLevel()) {
+                    System.out.println(evo);
+                    assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAllRomNames")
+    public void printAllEstimatedLevelsPerGen(String romName) {
+        // not really a test (except testing that every evolution got an estimated level) but will produce markdown output copyable to the docs
+        try {
+            loadROM(romName);
+
+            romHandler.removeImpossibleEvolutions(true, true);
+
+            String currentGen = "";
+            switch (romHandler.getROMName()) {
+                case "Pokemon Yellow (U)":
+                    currentGen = "Generation 1 (Red/Blue/Yellow)";
+                    break;
+                case "Pokemon Crystal (U)":
+                    currentGen = "Generation 2 (Gold/Silver/Crystal)";
+                    break;
+                case "Pokemon Emerald (U)":
+                    currentGen = "Generation 3 (Ruby/Sapphire/Emerald/FireRed/LeafGreen)";
+                    break;
+                case "Pokemon Platinum (U)":
+                    currentGen = "Generation 4 (Diamond/Pearl/Platinum/HeartGold/SoulSilver)";
+                    break;
+                case "Pokemon Black 2 (U)":
+                    currentGen = "Generation 5 (Black/White/Black2/White2)";
+                    break;
+                case "Pokemon Omega Ruby":
+                    currentGen = "Generation 6 (X/Y/Omega Ruby/Alpha Sapphire)";
+                    break;
+                case "Pokemon Ultra Sun":
+                    currentGen = "Generation 7 (Sun/Moon/Ultra Sun/Ultra Moon)";
+                    break;
+            }
+            if (!currentGen.isEmpty()) { // Only print once per generation
+                System.out.println();
+                System.out.println("### " + currentGen);
+                System.out.println();
+                System.out.println("| Pokemon | Evolution | Estimated Level |");
+                System.out.println("|-----------|-----------|-----------------------|");
+                for (Species pk : romHandler.getSpeciesSet()) {
+                    for (Evolution evo : pk.getEvolutionsTo()) {
+                        // Each level-up evolution should have the same evolution level as the estimated level
+                        System.out.println("| " + evo.getFrom().getName() + " | " + pk.getName() + " | " +
+                                evo.getEstimatedEvoLvl() + " | ");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing if ROM not there
         }
     }
 

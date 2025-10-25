@@ -4245,7 +4245,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+	public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
 
 		Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
 		for (Species pkmn : pokes) {
@@ -4255,17 +4255,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 						// beauty milotic
 						if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
-							// Replace w/ level 35
+							// Replace w/ level 35 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
-							evo.setExtraInfo(35);
+							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
 						}
 						// mt.coronet (magnezone/probopass)
 						if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
-							// Replace w/ level 40
+							// Replace w/ level 40 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
-							evo.setExtraInfo(40);
+							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 40);
 						}
 						// moss rock (leafeon)
 						if (evo.getType() == EvolutionType.LEVEL_MOSS_ROCK) {
@@ -4294,7 +4294,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						}
 						if (levelLearntAt == 1) {
 							// override for piloswine
-							levelLearntAt = 45;
+							levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
 						}
 						// change to pure level evo
 						markImprovedEvolutions(pkmn);
@@ -4303,10 +4303,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					}
 					// Pure Trade
 					if (evo.getType() == EvolutionType.TRADE) {
-						// Replace w/ level 37
+						// Replace w/ level 37 (or estimatedLevel if useEstimatedLevels)
 						markImprovedEvolutions(pkmn);
 						evo.setType(EvolutionType.LEVEL);
-						evo.setExtraInfo(37);
+						evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
 					}
 					// Trade w/ Item
 					if (evo.getType() == EvolutionType.TRADE_ITEM) {

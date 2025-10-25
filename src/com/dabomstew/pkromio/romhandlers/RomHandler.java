@@ -555,7 +555,7 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
-    void removeImpossibleEvolutions(boolean changeMoveEvos);
+    void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
     void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
 
@@ -573,7 +573,7 @@ public interface RomHandler {
 
     /**
      * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean)},
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean, boolean)},
      * {@link #makeEvolutionsEasier(boolean)}, or {@link #removeTimeBasedEvolutions()},
      * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
      * If those methods have not been called, this Set is empty.

@@ -167,6 +167,10 @@ public abstract class EncounterAreaTagger {
         }
     }
 
+    protected static <T> void addCopies(List<T> list, int numCopies, T itemToInsert) {
+        list.addAll(Collections.nCopies(numCopies, itemToInsert));
+    }
+
     public void tag(List<EncounterArea> encounterAreas, int romType, boolean useTimeOfDay) {
         TagPack tagPack = getTagPacks().get(romType, useTimeOfDay);
         if (tagPack == null) {

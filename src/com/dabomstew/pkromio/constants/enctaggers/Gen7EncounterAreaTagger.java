@@ -698,10 +698,6 @@ public class Gen7EncounterAreaTagger extends EncounterAreaTagger {
         return Collections.unmodifiableList(tags);
     }
 
-    private static <T> void addCopies(List<T> list, int numCopies, T itemToInsert) {
-        list.addAll(Collections.nCopies(numCopies, itemToInsert));
-    }
-
     private static final TagPackMap Gen7TagPackMap = new Builder()
             .newPack(Gen7Constants.Type_SM, smLocationTagsNoTOD, smLocationTagsTOD)
                 .encounterTypes(smEncounterTypesNoTOD, smEncounterTypesNoTOD)

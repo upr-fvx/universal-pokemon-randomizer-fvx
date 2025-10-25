@@ -158,10 +158,6 @@ public class Gen6EncounterAreaTagger extends EncounterAreaTagger {
         return Collections.unmodifiableList(tags);
     }
 
-    private static void addCopies(List<String> list, int n, String s) {
-        list.addAll(Collections.nCopies(n, s));
-    }
-
     private static final TagPackMap Gen6TagPackMap = new Builder()
             .newPack(Gen6Constants.Type_XY, xyLocationTags) // not even any post-game encounter areas. RIP Pokémon Z.
             .newPack(Gen6Constants.Type_ORAS, orasLocationTags)

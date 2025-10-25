@@ -355,10 +355,6 @@ public class Gen5EncounterAreaTagger extends EncounterAreaTagger {
         return Collections.unmodifiableList(tags);
     }
 
-    private static void addCopies(List<String> list, int n, String s) {
-        list.addAll(Collections.nCopies(n, s));
-    }
-
     private static final TagPackMap Gen5TagPackMap = new Builder()
             .newPack(Gen5Constants.Type_BW, locationTagsNoTimeBW, locationTagsUseTimeBW)
                 .postGameAreas(bwPostGameEncounterAreasNoTOD, bwPostGameEncounterAreasTOD)

@@ -1,5 +1,5 @@
 ---
-name: EstimatedEolutionLevels
+name: Estimated Evolution Levels
 ---
 
 ## Contents
@@ -58,6 +58,7 @@ For each level-up triplet `(samplePre, samplePost, sampleLevel)` in `samples`:
    double dx = targetPreBST - samplePre;
    double dy = targetPostBST - samplePost;
    double dist = Math.sqrt(dx * dx + dy * dy);
+   ```
 
 2. **Assign a weight** to the sample.
 

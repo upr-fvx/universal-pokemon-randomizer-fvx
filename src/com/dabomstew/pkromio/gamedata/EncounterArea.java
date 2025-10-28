@@ -1,8 +1,6 @@
 package com.dabomstew.pkromio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  EncounterArea.java - contains a group of wild Pokemon                 --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -26,6 +24,24 @@ package com.dabomstew.pkromio.gamedata;
 
 import java.util.*;
 
+/**
+ * An EncounterArea is a {@link List} of {@link Encounter}s.
+ * It represents all Encounters that can be found under a certain circumstance,
+ * as well as info about that circumstance.<br><b>E.g.</b> "the encounters found on Route 1 when surfing",
+ * "the encounters found in the post-game bug catching contest on thursdays",
+ * "the encounters found in Mt. Moon on floor -1".
+ * <br><br>
+ * There are three types of EncounterAreas: base areas, replacement areas, and SOS areas.
+ * <ul>
+ *     <li>Base areas constitute a full list of Encounters found under a certain circumstance.</li>
+ *     <li>Replacement areas relate to a base area, and map each of their slots to slots
+ *     in the base area; to replace to form a different circumstance.
+ *     E.g. DPPt has replacement areas for the encounters found during swarms.</li>
+ *     <li>SOS areas are for the SOS mechanic in Gen 7. Like replacement areas, they relate
+ *     to a base area and certain slots in it, but instead of marking replacement of the
+ *     referenced slot, it is what base Encounter may call for each SOS Encounter.</li>
+ * </ul>
+ */
 public class EncounterArea extends ArrayList<Encounter> {
 
     private int rate;

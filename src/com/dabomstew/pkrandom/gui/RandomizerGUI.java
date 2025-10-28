@@ -150,8 +150,7 @@ public class RandomizerGUI {
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
-    private JCheckBox tpForceMiddleStageAtCheckBox;
-    private JSlider tpForceMiddleStageAtSlider;
+    private JCheckBox tpNotStoppedFromEvolvingCheckBox;
     private JCheckBox tpForceFullyEvolvedAtCheckBox;
     private JSlider tpForceFullyEvolvedAtSlider;
     private JSlider tpPercentageLevelModifierSlider;
@@ -537,7 +536,7 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpForceMiddleStageAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpNotStoppedFromEvolvingCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -1727,8 +1726,7 @@ public class RandomizerGUI {
         tpDontUseLegendariesCheckBox.setSelected(settings.isTrainersBlockLegendaries());
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
-        tpForceMiddleStageAtCheckBox.setSelected(settings.isTrainersForceMiddleStage());
-        tpForceMiddleStageAtSlider.setValue(settings.getTrainersForceMiddleStageLevel());
+        tpNotStoppedFromEvolvingCheckBox.setSelected(settings.isTrainersEvolveTheirPokemon());
         tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
         tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
@@ -2017,8 +2015,7 @@ public class RandomizerGUI {
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
-        settings.setTrainersForceMiddleStage(tpForceMiddleStageAtCheckBox.isSelected());
-        settings.setTrainersForceMiddleStageLevel(tpForceMiddleStageAtSlider.getValue());
+        settings.setTrainersEvolveTheirPokemon(tpNotStoppedFromEvolvingCheckBox.isSelected());
         settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
         settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
@@ -2376,7 +2373,7 @@ public class RandomizerGUI {
 				tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
-                tpForceMiddleStageAtCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+                tpNotStoppedFromEvolvingCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
@@ -2384,9 +2381,6 @@ public class RandomizerGUI {
 				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
-        tpForceMiddleStageAtSlider.setVisible(true);
-        tpForceMiddleStageAtSlider.setEnabled(false);
-        tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
 		tpForceFullyEvolvedAtSlider.setVisible(true);
 		tpForceFullyEvolvedAtSlider.setEnabled(false);
 		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -2775,7 +2769,7 @@ public class RandomizerGUI {
 
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
-            tpForceMiddleStageAtCheckBox.setEnabled(true);
+            tpNotStoppedFromEvolvingCheckBox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
@@ -3125,10 +3119,8 @@ public class RandomizerGUI {
             disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
                     peRemoveTimeBasedEvolutionsCheckBox);
 
-            // Disable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
-            disableAndDeselectButtons(tpForceMiddleStageAtCheckBox);
-            tpForceMiddleStageAtSlider.setEnabled(false);
-            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
+            // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            disableAndDeselectButtons(tpNotStoppedFromEvolvingCheckBox);
             disableAndDeselectButtons(tpForceFullyEvolvedAtCheckBox);
             tpForceFullyEvolvedAtSlider.setEnabled(false);
             tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -3145,8 +3137,8 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
 
-            // Re-enable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
-            tpForceMiddleStageAtCheckBox.setEnabled(true);
+            // Re-enable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            tpNotStoppedFromEvolvingCheckBox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
@@ -3369,13 +3361,6 @@ public class RandomizerGUI {
         }
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
-
-        if (tpForceMiddleStageAtCheckBox.isSelected()) {
-            tpForceMiddleStageAtSlider.setEnabled(true);
-        } else {
-            tpForceMiddleStageAtSlider.setEnabled(false);
-            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
-        }
 
         if (tpForceFullyEvolvedAtCheckBox.isSelected()) {
             tpForceFullyEvolvedAtSlider.setEnabled(true);

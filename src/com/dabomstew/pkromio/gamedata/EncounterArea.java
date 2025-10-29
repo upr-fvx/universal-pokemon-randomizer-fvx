@@ -189,8 +189,7 @@ public class EncounterArea extends ArrayList<Encounter> {
 
     @Override
     public String toString() {
-        return "Encounters [Name = " + displayName + ", Rate = " + rate + ", EncounterType = " + encounterType +
-                ", Encounters = " + super.toString() + "]";
+        return "[\"" + displayName + "\" Type=" + encounterType + ", " + super.toString() + "]";
     }
 
     //Helper functions

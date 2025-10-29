@@ -699,58 +699,42 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
         List<EncounterArea> encounterAreas = new ArrayList<>();
 
-        readNormalEncounters(encounterAreas, useTimeOfDay);
-        readFishingEncounters(encounterAreas, useTimeOfDay);
+        readNormalEncounters(encounterAreas);
+        readFishingEncounters(encounterAreas);
         readHeadbuttEncounters(encounterAreas);
         readBugCatchingContestEncounters(encounterAreas);
 
-        new Gen2EncounterAreaTagger().tag(encounterAreas, getROMType(), useTimeOfDay);
+//        new Gen2EncounterAreaTagger().tag(encounterAreas, getROMType(), false);
 
         return encounterAreas;
     }
 
-    private void readNormalEncounters(List<EncounterArea> encounterAreas, boolean useTimeOfDay) {
+    private void readNormalEncounters(List<EncounterArea> encounterAreas) {
         int offset = romEntry.getIntValue("WildPokemonOffset");
-        offset = readLandEncounters(offset, encounterAreas, useTimeOfDay); // Johto
+        offset = readLandEncounters(offset, encounterAreas); // Johto
         offset = readSeaEncounters(offset, encounterAreas); // Johto
-        offset = readLandEncounters(offset, encounterAreas, useTimeOfDay); // Kanto
+        offset = readLandEncounters(offset, encounterAreas); // Kanto
         offset = readSeaEncounters(offset, encounterAreas); // Kanto
-        offset = readLandEncounters(offset, encounterAreas, useTimeOfDay); // Specials
+        offset = readLandEncounters(offset, encounterAreas); // Specials
         readSeaEncounters(offset, encounterAreas); // Specials
     }
 
-    private int readLandEncounters(int offset, List<EncounterArea> areas, boolean useTimeOfDay) {
+    private int readLandEncounters(int offset, List<EncounterArea> areas) {
         String[] todNames = new String[]{"Morning", "Day", "Night"};
         while ((rom[offset] & 0xFF) != 0xFF) {
             int mapBank = rom[offset] & 0xFF;
             int mapNumber = rom[offset + 1] & 0xFF;
             String mapName = mapNames[mapBank][mapNumber];
-            if (useTimeOfDay) {
-                for (int i = 0; i < 3; i++) {
-                    EncounterArea area = new EncounterArea();
-                    area.setRate(rom[offset + 2 + i] & 0xFF);
-                    area.setDisplayName(mapName + " Grass/Cave (" + todNames[i] + ")");
-                    area.setEncounterType(EncounterType.WALKING);
-                    for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
-                        Encounter enc = new Encounter();
-                        enc.setLevel(rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] & 0xFF);
-                        enc.setMaxLevel(0);
-                        enc.setSpecies(pokes[rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] & 0xFF]);
-                        area.add(enc);
-                    }
-                    areas.add(area);
-                }
-            } else {
-                // Use Day only
+            for (int i = 0; i < todNames.length; i++) {
                 EncounterArea area = new EncounterArea();
-                area.setRate(rom[offset + 3] & 0xFF);
-                area.setDisplayName(mapName + " Grass/Cave");
+                area.setRate(rom[offset + 2 + i] & 0xFF);
+                area.setDisplayName(mapName + " Grass/Cave (" + todNames[i] + ")");
                 area.setEncounterType(EncounterType.WALKING);
                 for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
                     Encounter enc = new Encounter();
-                    enc.setLevel(rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2)] & 0xFF);
+                    enc.setLevel(rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] & 0xFF);
                     enc.setMaxLevel(0);
-                    enc.setSpecies(pokes[rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2) + 1] & 0xFF]);
+                    enc.setSpecies(pokes[rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] & 0xFF]);
                     area.add(enc);
                 }
                 areas.add(area);
@@ -782,54 +766,61 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         return offset + 1;
     }
 
-    private void readFishingEncounters(List<EncounterArea> encounterAreas, boolean useTimeOfDay) {
-        int offset = romEntry.getIntValue("FishingWildsOffset");
-        int rootOffset = offset;
-        for (int k = 0; k < Gen2Constants.fishingAreaCount; k++) {
-            EncounterArea area = new EncounterArea();
-            area.setDisplayName("Fishing " + Gen2Constants.fishingAreaNames[k]);
-            area.setEncounterType(romEntry.isCrystal() && Gen2Constants.crystalUnusedFishingAreas.contains(k)
-                    ? EncounterType.UNUSED : EncounterType.FISHING);
-            for (int i = 0; i < Gen2Constants.pokesPerFishingArea; i++) {
-                offset++;
-                int pokeNum = rom[offset++] & 0xFF;
-                int level = rom[offset++] & 0xFF;
-                if (pokeNum == 0) {
-                    if (!useTimeOfDay) {
-                        // read the encounter they put here for DAY
-                        int specialOffset = rootOffset + Gen2Constants.fishingAreaEntryLength
-                                * Gen2Constants.pokesPerFishingArea * Gen2Constants.fishingAreaCount + level * 4 + 2;
-                        Encounter enc = new Encounter();
-                        enc.setSpecies(pokes[rom[specialOffset] & 0xFF]);
-                        enc.setLevel(rom[specialOffset + 1] & 0xFF);
-                        area.add(enc);
-                    }
-                    // else will be handled by code below
-                } else {
-                    Encounter enc = new Encounter();
-                    enc.setSpecies(pokes[pokeNum]);
-                    enc.setLevel(level);
-                    area.add(enc);
-                }
-            }
-            encounterAreas.add(area);
+    private void readFishingEncounters(List<EncounterArea> encounterAreas) {
+//        int offset = romEntry.getIntValue("FishingWildsOffset");
+        int tableOffset = 0x92488; // TODO find for all games;
+        for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
+            String groupName = Gen2Constants.fishingAreaNames[group];
+            int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
+            readRodEncounters(encounterAreas, readPointer(groupOffset + 1), 3, "Old Rod " + groupName);
+            readRodEncounters(encounterAreas, readPointer(groupOffset + 3), 4, "Good Rod " + groupName);
+            readRodEncounters(encounterAreas, readPointer(groupOffset + 5), 4, "Super Rod " + groupName);
         }
-        if (useTimeOfDay) {
-            for (int k = 0; k < Gen2Constants.timeSpecificFishingAreaCount; k++) {
-                EncounterArea area = new EncounterArea();
-                area.setDisplayName("Time-Specific Fishing " + (k + 1));
-                area.setEncounterType(EncounterType.FISHING);
-                for (int i = 0; i < Gen2Constants.pokesPerTSFishingArea; i++) {
-                    int pokeNum = rom[offset++] & 0xFF;
-                    int level = rom[offset++] & 0xFF;
-                    Encounter enc = new Encounter();
-                    enc.setSpecies(pokes[pokeNum]);
-                    enc.setLevel(level);
-                    area.add(enc);
-                }
-                encounterAreas.add(area);
+        int timeGroupsOffset = 0x9266F;
+        for (int i = 0; i < 44; i++) {
+            int offset = timeGroupsOffset + i * 2;
+
+            String groupName = Gen2Constants.fishingAreaNames[i / 4];
+            String rodName = (i / 2) % 2 == 0 ? "Good Rod" : "Super Rod";
+            String timeName = i % 2 == 0 ? "Not Night" : "Night";
+            String displayName = String.format("%s %s (Extra, %s)", rodName, groupName, timeName);
+
+            readTimeFishingEncounters(encounterAreas, offset, displayName);
+        }
+    }
+
+    private void readRodEncounters(List<EncounterArea> encounterAreas, int offset, int numEncs, String displayName) {
+        EncounterArea area = new EncounterArea();
+        area.setDisplayName(displayName);
+        area.setEncounterType(EncounterType.FISHING);
+
+        for (int i = 0; i < numEncs; i++) {
+            offset++;
+            int pokeNum = rom[offset++] & 0xFF;
+            int level = rom[offset++] & 0xFF;
+            // pokenum == 0 is the time-based encounter.
+            // They are put in their own areas below.
+            if (pokeNum != 0) {
+                Encounter enc = new Encounter();
+                enc.setSpecies(pokes[pokeNum]);
+                enc.setLevel(level);
+                area.add(enc);
             }
         }
+        encounterAreas.add(area);
+    }
+
+    private void readTimeFishingEncounters(List<EncounterArea> encounterAreas, int offset, String displayName) {
+        EncounterArea area = new EncounterArea();
+        area.setDisplayName(displayName);
+        area.setEncounterType(EncounterType.FISHING);
+
+        Encounter enc = new Encounter();
+        enc.setSpecies(pokes[rom[offset++] & 0xFF]);
+        enc.setLevel(rom[offset] & 0xFF);
+        area.add(enc);
+
+        encounterAreas.add(area);
     }
 
     private void readHeadbuttEncounters(List<EncounterArea> encounterAreas) {
@@ -905,42 +896,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writeFishingEncounters(Iterator<EncounterArea> areaIterator, boolean useTimeOfDay) {
-        int offset;
         // Fishing Data
-        offset = romEntry.getIntValue("FishingWildsOffset");
-        for (int k = 0; k < Gen2Constants.fishingAreaCount; k++) {
-            EncounterArea area = areaIterator.next();
-            Iterator<Encounter> encounterIterator = area.iterator();
-            for (int i = 0; i < Gen2Constants.pokesPerFishingArea; i++) {
-                offset++;
-                if (rom[offset] == 0) {
-                    if (!useTimeOfDay) {
-                        // overwrite with a static encounter
-                        Encounter enc = encounterIterator.next();
-                        rom[offset++] = (byte) enc.getSpecies().getNumber();
-                        rom[offset++] = (byte) enc.getLevel();
-                    } else {
-                        // else handle below
-                        offset += 2;
-                    }
-                } else {
-                    Encounter enc = encounterIterator.next();
-                    rom[offset++] = (byte) enc.getSpecies().getNumber();
-                    rom[offset++] = (byte) enc.getLevel();
-                }
-            }
-        }
-        if (useTimeOfDay) {
-            for (int k = 0; k < Gen2Constants.timeSpecificFishingAreaCount; k++) {
-                EncounterArea area = areaIterator.next();
-                Iterator<Encounter> encounterIterator = area.iterator();
-                for (int i = 0; i < Gen2Constants.pokesPerTSFishingArea; i++) {
-                    Encounter enc = encounterIterator.next();
-                    rom[offset++] = (byte) enc.getSpecies().getNumber();
-                    rom[offset++] = (byte) enc.getLevel();
-                }
-            }
-        }
+        // TODO
     }
 
     private void writeHeadbuttEncounters(Iterator<EncounterArea> areaIterator) {

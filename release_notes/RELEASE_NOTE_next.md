@@ -35,10 +35,16 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Evolutions
 - Add option "Use Estimated Evolution Level" that can be selected if evolutions are not randomized and "Change impossible evolutions" is
   selected. If selected, evolution levels are estimated from all level-up evolutions of the loaded ROM instead
-  of using a preset evolution level in the "Change impossible evolutions" option.
+  of using a preset evolution level in the "Change impossible evolutions" option. (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/101)
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
+
+### Trainer Pokemon
+- Add option "Trainer Evolve their Pokemon" that can be selected if evolutions are not randomized.
+  If selected, any trainer Pokemon will be evolved as far as possible at its level. 
+  For any trainer Pokemon that does not evolve by level up, its estimated evolution level
+  is used. (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/107)
 
 ### Graphics
 - (Gen 3) New FRLG Custom Player Graphics: Kris by FourLeafSunny

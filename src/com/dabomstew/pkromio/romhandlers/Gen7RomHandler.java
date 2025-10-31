@@ -25,6 +25,7 @@ import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen7EncounterAreaTagger;
 import com.dabomstew.pkromio.ctr.AMX;
 import com.dabomstew.pkromio.ctr.BFLIM;
 import com.dabomstew.pkromio.ctr.GARCArchive;
@@ -1217,7 +1218,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
             }
         }
-        Gen7Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+
+        new Gen7EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+        for (EncounterArea area : encounterAreas) {
+            //The Gen 7 display names kinda suck, so let's enhance them with encounter types
+            String displayName = area.getDisplayName();
+            displayName = displayName.replaceFirst(", Table",
+                    " " + area.getEncounterType().name().toLowerCase() + ", Table");
+            area.setDisplayName(displayName);
+        }
         return encounterAreas;
     }
 

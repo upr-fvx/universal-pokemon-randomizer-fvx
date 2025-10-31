@@ -700,7 +700,7 @@ public class Gen7EncounterAreaTagger extends EncounterAreaTagger {
 
     private static final TagPackMap Gen7TagPackMap = new Builder()
             .newPack(Gen7Constants.Type_SM, smLocationTagsNoTOD, smLocationTagsTOD)
-                .encounterTypes(smEncounterTypesNoTOD, smEncounterTypesNoTOD)
+                .encounterTypes(smEncounterTypesNoTOD, smEncounterTypesTOD)
                 .postGameAreas(smPostGameEncounterAreasNoTOD, smPostGameEncounterAreasTOD)
             .newPack(Gen7Constants.Type_USUM, usumLocationTagsNoTOD, usumLocationTagsTOD)
                 .encounterTypes(usumEncounterTypesNoTOD, usumEncounterTypesTOD)

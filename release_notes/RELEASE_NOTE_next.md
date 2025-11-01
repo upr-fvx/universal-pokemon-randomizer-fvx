@@ -41,7 +41,8 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 3) [The description of a changed feature here.]
 
 ### Graphics
-- (Gen 3) New FRLG Custom Player Graphics: Kris by FourLeafSunny
+- (Gen 2) New Custom Player Graphics: Silver (from Pokémon), Susie (from Deltarune) by FourLeafSunny
+- (Gen 3) New FRLG Custom Player Graphics: Kris (from Pokémon) by FourLeafSunny
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

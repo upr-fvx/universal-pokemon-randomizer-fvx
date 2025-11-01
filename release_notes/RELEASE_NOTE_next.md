@@ -10,7 +10,7 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] FourLeafSunny for the CPG sprites, and
+[Every person who made a new CPG] FourLeafSunny and NachoPeñalva for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -42,7 +42,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Silver (from Pokémon), Susie (from Deltarune) by FourLeafSunny
-- (Gen 3) New FRLG Custom Player Graphics: Kris (from Pokémon) by FourLeafSunny
+- (Gen 3) New FRLG Custom Player Graphics: Kris (from Pokémon) by FourLeafSunny, Wally (from Pokémon) by NachoPeñalva
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

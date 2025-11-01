@@ -733,6 +733,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 if (tp.getLevel()>29) {
                     // Everything over level 20 has to be fully evolved
                     assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                } else {
+                    // Any evolution of the Pokemon must have an estimatedEvo level greater than the Pokemon's level,
+                    // otherwise it must be evolved because of 'Trainers evolve their Pokemon'
+                    for (Evolution evo : tp.getSpecies().getEvolutionsFrom()) {
+                        assertTrue(evo.getEstimatedEvoLvl()>tp.getLevel());
+                    }
                 }
             }
         }

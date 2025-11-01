@@ -134,7 +134,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         s.setTrainersForceFullyEvolvedLevel(20);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
     }
@@ -722,7 +724,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         s.setTrainersForceFullyEvolvedLevel(30);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         // Test
         for (Trainer tr : romHandler.getTrainers()) {
@@ -854,7 +858,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         s.setTrainersForceFullyEvolvedLevel(30);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         // Test
         for (Trainer tr : romHandler.getTrainers()) {

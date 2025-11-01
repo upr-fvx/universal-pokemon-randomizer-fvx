@@ -24,6 +24,16 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void foo(String romName) {
+        loadROM(romName);
+        List<EncounterArea> tod = romHandler.getEncounters(false);
+        for (int i = 0; i < tod.size(); i++) {
+            System.out.println(i + "\t" + tod.get(i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void encountersAreNotEmpty(String romName) {
         loadROM(romName);
         assertFalse(romHandler.getEncounters(false).isEmpty());
@@ -46,10 +56,18 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     public void encountersDoNotChangeWithGetAndSetUsingTimeOfDay(String romName) {
         loadROM(romName);
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
-        System.out.println(encounterAreas);
         List<EncounterArea> before = new ArrayList<>(encounterAreas);
         romHandler.setEncounters(true, encounterAreas);
-        assertEquals(before, romHandler.getEncounters(true));
+        List<EncounterArea> after = romHandler.getEncounters(true);
+        for (int i = 0; i < Math.max(before.size(), after.size()); i++) {
+            System.out.println(i);
+            System.out.println("before: " + (i < before.size() ? before.get(i) : "---"));
+            System.out.println("after:  " + (i < after.size() ? after.get(i) : "---"));
+            if (i >= before.size() || i >= after.size() || !before.get(i).equals(after.get(i))) {
+                System.out.println("DIFFERENT");
+            }
+        }
+        assertEquals(before, after);
     }
 
     /**

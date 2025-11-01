@@ -27,7 +27,6 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
-import com.dabomstew.pkromio.constants.enctaggers.Gen2EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
@@ -772,9 +771,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
             String groupName = Gen2Constants.fishingAreaNames[group];
             int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
-            readRodEncounters(encounterAreas, readPointer(groupOffset + 1), 3, "Old Rod " + groupName);
-            readRodEncounters(encounterAreas, readPointer(groupOffset + 3), 4, "Good Rod " + groupName);
-            readRodEncounters(encounterAreas, readPointer(groupOffset + 5), 4, "Super Rod " + groupName);
+            readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 1), "Old Rod " + groupName);
+            readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 3), "Good Rod " + groupName);
+            readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 5), "Super Rod " + groupName);
         }
         int timeGroupsOffset = 0x9266F;
         for (int i = 0; i < 44; i++) {
@@ -789,13 +788,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void readRodEncounters(List<EncounterArea> encounterAreas, int offset, int numEncs, String displayName) {
+    private void readNormalFishingEncounters(List<EncounterArea> encounterAreas, int offset, String displayName) {
         EncounterArea area = new EncounterArea();
         area.setDisplayName(displayName);
         area.setEncounterType(EncounterType.FISHING);
 
-        for (int i = 0; i < numEncs; i++) {
-            offset++;
+        int probability;
+        do {
+            probability = rom[offset++] & 0xFF;
             int pokeNum = rom[offset++] & 0xFF;
             int level = rom[offset++] & 0xFF;
             // pokenum == 0 is the time-based encounter.
@@ -806,7 +806,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 enc.setLevel(level);
                 area.add(enc);
             }
-        }
+        } while (probability != 0xFF);
+
         encounterAreas.add(area);
     }
 
@@ -878,26 +879,72 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         Iterator<EncounterArea> areaIterator = encounters.iterator();
 
-        writeNormalEncounters(areaIterator, useTimeOfDay);
-        writeFishingEncounters(areaIterator, useTimeOfDay);
+        writeNormalEncounters(areaIterator);
+        writeFishingEncounters(areaIterator);
         writeHeadbuttEncounters(areaIterator);
         writeBugCatchingContestEncounters(areaIterator);
 
     }
 
-    private void writeNormalEncounters(Iterator<EncounterArea> areaIterator, boolean useTimeOfDay) {
+    private void writeNormalEncounters(Iterator<EncounterArea> areaIterator) {
         int offset = romEntry.getIntValue("WildPokemonOffset");
-        offset = writeLandEncounters(offset, areaIterator, useTimeOfDay); // Johto
+        offset = writeLandEncounters(offset, areaIterator); // Johto
         offset = writeSeaEncounters(offset, areaIterator); // Johto
-        offset = writeLandEncounters(offset, areaIterator, useTimeOfDay); // Kanto
+        offset = writeLandEncounters(offset, areaIterator); // Kanto
         offset = writeSeaEncounters(offset, areaIterator); // Kanto
-        offset = writeLandEncounters(offset, areaIterator, useTimeOfDay); // Specials
+        offset = writeLandEncounters(offset, areaIterator); // Specials
         writeSeaEncounters(offset, areaIterator); // Specials
     }
 
-    private void writeFishingEncounters(Iterator<EncounterArea> areaIterator, boolean useTimeOfDay) {
-        // Fishing Data
-        // TODO
+    private void writeFishingEncounters(Iterator<EncounterArea> areaIterator) {
+        int tableOffset = 0x92488; // TODO find for all games;
+        for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
+            int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
+            writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 1));
+            writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 3));
+            writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 5));
+        }
+        int timeGroupsOffset = 0x9266F;
+        for (int i = 0; i < 44; i++) {
+            int offset = timeGroupsOffset + i * 2;
+            writeTimeFishingEncounters(areaIterator.next(), offset);
+        }
+    }
+
+    private void writeNormalFishingEncounters(EncounterArea area, int offset) {
+        int encCount = 0;
+        int probability;
+        do {
+            probability = rom[offset] & 0xFF;
+            if ((rom[offset + 1] & 0xFF) != 0) {
+                encCount++;
+            }
+            offset += 3;
+        } while (probability != 0xFF);
+
+        if (area.size() != encCount) {
+            throw new IllegalArgumentException("EncounterArea wrong size; is=" + area.size()
+                    + ", expected=" + encCount + ". area=" + area);
+        }
+        for (Encounter enc : area) {
+            // Skip time-based encounters
+            if (rom[offset + 1] == 0) {
+                offset += 3;
+            }
+            offset++;
+            rom[offset++] = (byte) enc.getSpecies().getNumber();
+            rom[offset++] = (byte) enc.getLevel();
+        }
+    }
+
+    private void writeTimeFishingEncounters(EncounterArea area, int offset) {
+        if (area.size() != 1) {
+            throw new IllegalArgumentException("EncounterArea wrong size; is=" + area.size()
+                    + ", expected=1. area=" + area);
+        }
+        Encounter enc = area.get(0);
+        rom[offset++] = (byte) enc.getSpecies().getNumber();
+        rom[offset] = (byte) enc.getLevel();
     }
 
     private void writeHeadbuttEncounters(Iterator<EncounterArea> areaIterator) {
@@ -933,28 +980,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private int writeLandEncounters(int offset, Iterator<EncounterArea> areaIterator, boolean useTimeOfDay) {
+    private int writeLandEncounters(int offset, Iterator<EncounterArea> areaIterator) {
         while ((rom[offset] & 0xFF) != 0xFF) {
-            if (useTimeOfDay) {
-                for (int i = 0; i < 3; i++) {
-                    EncounterArea area = areaIterator.next();
-                    Iterator<Encounter> encounterIterator = area.iterator();
-                    for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
-                        Encounter enc = encounterIterator.next();
-                        rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] = (byte) enc.getLevel();
-                        rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] = (byte) enc.getSpecies().getNumber();
-                    }
-                }
-            } else {
-                // Write the set to all 3 equally
+            for (int i = 0; i < 3; i++) {
                 EncounterArea area = areaIterator.next();
-                for (int i = 0; i < 3; i++) {
-                    Iterator<Encounter> encounterIterator = area.iterator();
-                    for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
-                        Encounter enc = encounterIterator.next();
-                        rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] = (byte) enc.getLevel();
-                        rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] = (byte) enc.getSpecies().getNumber();
-                    }
+                Iterator<Encounter> encounterIterator = area.iterator();
+                for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
+                    Encounter enc = encounterIterator.next();
+                    rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] = (byte) enc.getLevel();
+                    rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] = (byte) enc.getSpecies().getNumber();
                 }
             }
             offset += 5 + 6 * Gen2Constants.landEncounterSlots;

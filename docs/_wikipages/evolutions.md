@@ -32,8 +32,8 @@ Following are the evolutions that are changed by this setting, listed by game.
 | Machoke  | Machamp   | Trade      | Level 37\* |
 | Haunter  | Gengar    | Trade      | Level 37\* |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox 
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-1-redblueyellow).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox 
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-1-redblueyellow).</sub>
 
 ### Gold/Silver/Crystal
 
@@ -50,8 +50,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Scyther   | Scizor    | Trade w/ Metal Coat   | Level 30\*  |
 | Porygon   | Porygon2  | Trade w/ Up-Grade     | Level 30\*  |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-2-goldsilvercrystal).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-2-goldsilvercrystal).</sub>
 
 ### Ruby/Sapphire/Emerald
 
@@ -70,8 +70,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Clamperl  | Huntail   | Trade w/ DeepSeaTooth | Level 30\*  |
 | Clamperl  | Gorebyss  | Trade w/ DeepSeaScale | Water Stone |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-3-rubysapphireemeraldfireredleafgreen).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-3-rubysapphireemeraldfireredleafgreen).</sub>
 
 ### FireRed/LeafGreen
 
@@ -93,8 +93,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Clamperl  | Huntail   | Trade w/ DeepSeaTooth                | Level 30\*  |
 | Clamperl  | Gorebyss  | Trade w/ DeepSeaScale                | Water Stone |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-3-rubysapphireemeraldfireredleafgreen).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-3-rubysapphireemeraldfireredleafgreen).</sub>
 
 ### Diamond/Pearl/Platinum
 
@@ -120,8 +120,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Clamperl   | Huntail    | Trade w/ DeepSeaTooth | Level w/ DeepSeaTooth |
 | Clamperl   | Gorebyss   | Trade w/ DeepSeaScale | Level w/ DeepSeaScale |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
 
 **Only if movesets are randomized:**
 
@@ -135,8 +135,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Bonsly    | Sudowoodo  | Level w/ Mimic learnt        | Level 17   |
 | Mime Jr.  | Mr. Mime   | Level w/ Mimic learnt        | Level 18   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
 
 ### HeartGold/SoulSilver
 
@@ -167,8 +167,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Clamperl   | Huntail    | Trade w/ DeepSeaTooth | Level w/ DeepSeaTooth |
 | Clamperl   | Gorebyss   | Trade w/ DeepSeaScale | Level w/ DeepSeaScale |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
 
 **Only if movesets are randomized:**
 
@@ -182,8 +182,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Bonsly    | Sudowoodo  | Level w/ Mimic learnt        | Level 17   |
 | Mime Jr.  | Mr. Mime   | Level w/ Mimic learnt        | Level 18   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-4-diamondpearlplatinumheartgoldsoulsilver).</sub>
 
 ### Black/White/Black2/White2
 
@@ -214,8 +214,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Karrablast | Escavalier | Trade w/ Shelmet      | Level w/ Shelmet in Party    |
 | Shelmet    | Accelgor   | Trade w/ Karrablast   | Level w/ Karrablast in Party |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-5-blackwhiteblack2white2).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-5-blackwhiteblack2white2).</sub>
 
 **Only if movesets are randomized:**
 
@@ -229,8 +229,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Bonsly    | Sudowoodo  | Level w/ Mimic learnt        | Level 17 (BW) / Level 33 (BW2) |
 | Mime Jr.  | Mr. Mime   | Level w/ Mimic learnt        | Level 18 (BW) / Level 15 (BW2) |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-5-blackwhiteblack2white2).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-5-blackwhiteblack2white2).</sub>
 
 ### X/Y/Omega Ruby/Alpha Sapphire
 
@@ -265,8 +265,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Phantump   | Trevenant  | Trade                  | Level 37\*                   |
 | Pumpkaboo  | Gourgeist  | Trade                  | Level 37\*                   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-6-xyomega-rubyalpha-sapphire).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-6-xyomega-rubyalpha-sapphire).</sub>
 
 **Only if movesets are randomized:**
 
@@ -280,8 +280,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Bonsly    | Sudowoodo  | Level w/ Mimic learnt        | Level 15   |
 | Mime Jr.  | Mr. Mime   | Level w/ Mimic learnt        | Level 15   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-6-xyomega-rubyalpha-sapphire).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-6-xyomega-rubyalpha-sapphire).</sub>
 
 ### Sun/Moon/Ultra Sun/Ultra Moon
 
@@ -317,8 +317,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Pumpkaboo      | Gourgeist   | Trade                  | Level 37\*                   |
 | Graveler-Alola | Golem-Alola | Trade                  | Level 37\*                   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-7-sunmoonultra-sunultra-moon).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-7-sunmoonultra-sunultra-moon).</sub>
 
 **Only in Sun/Ultra Sun:**
 
@@ -350,8 +350,8 @@ is selected, the new evolution level can be found in [this table](./estimatedLev
 | Steenee             | Tsareena   | Level w/ Stomp learnt        | Level 29   |
 | Poipole (USUM only) | Naganadel  | Level w/ Dragon Pulse learnt | Level 45   |
 
-\*<sub>If the "Use [Estimated Evolution Level](./estimatedLevels.md#algorithmic-estimation-of-evolution-levels)" checkbox
-is selected, the new evolution level can be found in [this table](./estimatedLevels.md#generation-7-sunmoonultra-sunultra-moon).</sub>
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in [this table]({{ site.baseurl }}/wikipages/estimatedLevels.html#generation-7-sunmoonultra-sunultra-moon).</sub>
 
 ## Make Evolutions Easier
 

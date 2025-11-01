@@ -10,7 +10,7 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] FourLeafSunny for the CPG sprites, and
+[Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -32,11 +32,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
-### Pokemon Evolutions
-- Add option "Use Estimated Evolution Level" that can be selected if evolutions are not randomized and "Change impossible evolutions" is
-  selected. If selected, evolution levels are estimated from all level-up evolutions of the loaded ROM instead
-  of using a preset evolution level in the "Change impossible evolutions" option. (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/101)
-
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
@@ -46,9 +41,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   For any trainer Pokemon that does not evolve by level up, its estimated evolution level
   is used. (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/107)
 
-### Graphics
-- (Gen 3) New FRLG Custom Player Graphics: Kris by FourLeafSunny
-
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
@@ -57,4 +49,5 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen 3) Fixed overworld sprites of Custom Player Graphics sometimes getting an invalid/glitchy palette.
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

@@ -26,6 +26,7 @@ import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen3EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.gbspace.FreedSpace;
@@ -1478,7 +1479,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
         }
 
-        Gen3Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType());
+        new Gen3EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
 
         return encounterAreas;
     }

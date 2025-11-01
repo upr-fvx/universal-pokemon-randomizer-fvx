@@ -532,6 +532,7 @@ public class GameRandomizer {
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
         // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
+        // 6. If 'Trainers evolve their Pokemon' is selected, evolve every Trainer Pokemon as far as legal at the level
 
 
         if (settings.isTrainersLevelModified()) {
@@ -557,13 +558,12 @@ public class GameRandomizer {
 
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else {
-            if (settings.isTrainersForceMiddleStage()) {
-                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
-            }
-            if (settings.isTrainersForceFullyEvolved()) {
-                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
-            }
+        } else if (settings.isTrainersForceFullyEvolved()) {
+            trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+        }
+
+        if (settings.isTrainersEvolveTheirPokemon()) {
+            trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
     }
 

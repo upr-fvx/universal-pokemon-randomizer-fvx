@@ -410,6 +410,7 @@ public class TestRomHandler extends AbstractRomHandler {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
                     evolution.getType(), evolution.getExtraInfo());
             evoCopy.setForme(evolution.getForme());
+            evoCopy.setEstimatedEvoLvl(evolution.getEstimatedEvoLvl());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
         }

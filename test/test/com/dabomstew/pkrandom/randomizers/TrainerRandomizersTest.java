@@ -131,11 +131,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         s.setTrainersForceFullyEvolvedLevel(20);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
     }
@@ -720,11 +721,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        s.setTrainersForceFullyEvolvedLevel(30);
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         // Test
         for (Trainer tr : romHandler.getTrainers()) {
@@ -732,13 +734,15 @@ public class TrainerRandomizersTest extends RandomizerTest {
             for (int k = 0; k< tr.getPokemon().size(); k++) {
                 TrainerPokemon tp = tr.getPokemon().get(k);
                 System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
-                if (tp.getLevel()<20) {
-                    // Everything below level 20 cannot be a basic Pokemon with two evolution stages
-                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
-                }
-                else {
+                if (tp.getLevel()>29) {
                     // Everything over level 20 has to be fully evolved
                     assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                } else {
+                    // Any evolution of the Pokemon must have an estimatedEvo level greater than the Pokemon's level,
+                    // otherwise it must be evolved because of 'Trainers evolve their Pokemon'
+                    for (Evolution evo : tp.getSpecies().getEvolutionsFrom()) {
+                        assertTrue(evo.getEstimatedEvoLvl()>tp.getLevel());
+                    }
                 }
             }
         }
@@ -851,11 +855,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
-        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+        s.setTrainersForceFullyEvolvedLevel(30);
+        TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        trainerPkmnRando.randomizeTrainerPokes();
+        trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         // Test
         for (Trainer tr : romHandler.getTrainers()) {

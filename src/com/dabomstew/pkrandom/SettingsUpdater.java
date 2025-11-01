@@ -374,6 +374,12 @@ public class SettingsUpdater {
             FileFunctions.writeFullInt(dataBlock, 30, restrictions);
         }
 
+        if (oldVersion < Version.FVX_1_3_3.id) {
+            // Force middle stage was removed and first bit of byte was used for new setting.
+            // Do not select this since it is unrelated to the choice in the old version
+            dataBlock[63] = (byte) 0;
+         }
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

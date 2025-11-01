@@ -181,8 +181,7 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
-    private boolean trainersForceMiddleStage;
-    private int trainersForceMiddleStageLevel = 10;
+    private boolean trainersEvolveTheirPokemon;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -704,8 +703,8 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon force evolutions
-        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+        // 63 trainer pokemon evolve
+        out.write(makeByteSelected(trainersEvolveTheirPokemon));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1060,8 +1059,7 @@ public class Settings {
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
-        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
-        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+        settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
@@ -1904,20 +1902,12 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
-    public boolean isTrainersForceMiddleStage() {
-        return trainersForceMiddleStage;
+    public boolean isTrainersEvolveTheirPokemon() {
+        return trainersEvolveTheirPokemon;
     }
 
-    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
-        this.trainersForceMiddleStage = trainersForceMiddleStage;
-    }
-
-    public int getTrainersForceMiddleStageLevel() {
-        return trainersForceMiddleStageLevel;
-    }
-
-    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
-        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
+    public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
+        this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
     }
 
     public boolean isTrainersForceFullyEvolved() {

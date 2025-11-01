@@ -850,16 +850,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             int chosenEvoIndex = random.nextInt(possibleEvolutions.size());
             Evolution chosenEvo = possibleEvolutions.get(chosenEvoIndex);
 
-            int level;
-            if(chosenEvo.getType().usesLevel()) {
-                level = chosenEvo.getExtraInfo();
-                if (level <= currentLevel) {
-                    level = currentLevel + 1;
-                }
-            } else {
-                //arbitrary amount of levels later
-                level = currentLevel + 20;
-            }
+            // Either equals chosenEvo.getExtraInfo() if chosenEvo.getType().usesLevel(), otherwise uses the estimated evo level
+            int level = chosenEvo.getEstimatedEvoLvl();
 
             if(level >= maxLevel) {
                 break;

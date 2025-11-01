@@ -3119,8 +3119,7 @@ public class RandomizerGUI {
             disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
                     peRemoveTimeBasedEvolutionsCheckBox);
 
-            // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
-            disableAndDeselectButtons(tpNotStoppedFromEvolvingCheckBox);
+            // Disable "Force Fully Evolved" Trainer Pokemon
             disableAndDeselectButtons(tpForceFullyEvolvedAtCheckBox);
             tpForceFullyEvolvedAtSlider.setEnabled(false);
             tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -3137,8 +3136,7 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
 
-            // Re-enable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
-            tpNotStoppedFromEvolvingCheckBox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
+            // Re-enable "Force Fully Evolved" Trainer Pokemon
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
@@ -3147,6 +3145,13 @@ public class RandomizerGUI {
             peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
         } else {
             disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
+        }
+
+        // 'Trainers evolve their Pokemon' only supported for unchanged evolutions
+        if (peUnchangedRadioButton.isSelected()) {
+            tpNotStoppedFromEvolvingCheckBox.setEnabled(true);
+        } else {
+            disableAndDeselectButtons(tpNotStoppedFromEvolvingCheckBox);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {

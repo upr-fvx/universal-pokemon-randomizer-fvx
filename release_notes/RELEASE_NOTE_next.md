@@ -1,14 +1,22 @@
-Hello everybody! This release adds more Custom Player Graphics to choose from, and fixes a bug related to adding your own CPG. 
-There's also a new option for Pokemon Evolutions, a first view of a more robust system for when a mon ought to evolve, 
-which should make it into other parts of the Randomizer going forwards. :)
+<!-- This is a template for release notes. Everything in square brackets should be replaced. -->
 
+[Greeting, short description of the release. Mention if it's a minor or major release, highlight major features.]
+
+<!-- Any category below can be skipped if there are no people in it. -->
+<!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
+     For redditors, /u/namehere works for brevity. 
+     For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-@bergmaen for your code contributions, and
-FourLeafSunny and NachoPeñalva for the CPG sprites!
+[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
+[Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
+[Every person who made a new CPG] for the CPG sprites, and
+[Community members who helped with some feature] for help with [feature]
+[Etc.]!
 
 # How to use
 
-Download the Randomizer below by clicking on `UPR_FVX-v1.3.3.zip`. After downloading, extract the contents of the 
+Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the 
 zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
 
 - Windows: Use `launcher_WINDOWS.bat`
@@ -17,15 +25,23 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 # Changelog
 ## New and Changed Features
+<!-- Group features by the tabs by where they appear in the GUI. Namely, use the names of the boxed categories (not necessarily the same as the tab names) -->
+<!-- Below are some example features. They are not expansive, because it is annoying to remove a dozen categories that don't have any new/changed features this release. -->
+<!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
-### Pokemon Evolutions
-- Add option "Use Estimated Evolution Level" that can be selected if evolutions are not randomized and "Change impossible evolutions" is
-  selected. If selected, evolution levels are estimated from all level-up evolutions of the loaded ROM instead
-  of using a preset evolution level in the "Change impossible evolutions" option.
+### Pokemon Base Stats
+- [The description of a new feature here.]
 
-### Graphics
-- (Gen 2) New Custom Player Graphics: Silver (from Pokémon), Susie (from Deltarune) by FourLeafSunny.
-- (Gen 3) New FRLG Custom Player Graphics: Kris (from Pokémon) by FourLeafSunny, Wally (from Pokémon) by NachoPeñalva.
+### Static Pokemon
+- (Gen 3) [The description of a changed feature here.]
+
+### Misc. Tweaks
+- (Gen 4+5) [The description of a misc. tweak addition or change here.]
+
+<!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
+### Misc.
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen 3) Fixed overworld sprites of Custom Player Graphics sometimes getting an invalid/glitchy palette.
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

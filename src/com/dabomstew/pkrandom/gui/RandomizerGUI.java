@@ -150,7 +150,7 @@ public class RandomizerGUI {
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
-    private JCheckBox tpNotStoppedFromEvolvingCheckBox;
+    private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private JCheckBox tpForceFullyEvolvedAtCheckBox;
     private JSlider tpForceFullyEvolvedAtSlider;
     private JSlider tpPercentageLevelModifierSlider;
@@ -536,7 +536,7 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpNotStoppedFromEvolvingCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -1726,7 +1726,7 @@ public class RandomizerGUI {
         tpDontUseLegendariesCheckBox.setSelected(settings.isTrainersBlockLegendaries());
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
-        tpNotStoppedFromEvolvingCheckBox.setSelected(settings.isTrainersEvolveTheirPokemon());
+        tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
         tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
         tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
@@ -2015,7 +2015,7 @@ public class RandomizerGUI {
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
-        settings.setTrainersEvolveTheirPokemon(tpNotStoppedFromEvolvingCheckBox.isSelected());
+        settings.setTrainersEvolveTheirPokemon(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
         settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
@@ -2373,7 +2373,7 @@ public class RandomizerGUI {
 				tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
-                tpNotStoppedFromEvolvingCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+                tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
@@ -2769,7 +2769,7 @@ public class RandomizerGUI {
 
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
-            tpNotStoppedFromEvolvingCheckBox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
+            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
@@ -3149,9 +3149,9 @@ public class RandomizerGUI {
 
         // 'Trainers evolve their Pokemon' only supported for unchanged evolutions
         if (peUnchangedRadioButton.isSelected()) {
-            tpNotStoppedFromEvolvingCheckBox.setEnabled(true);
+            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
         } else {
-            disableAndDeselectButtons(tpNotStoppedFromEvolvingCheckBox);
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {

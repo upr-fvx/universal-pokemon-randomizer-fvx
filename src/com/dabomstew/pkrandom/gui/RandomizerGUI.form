@@ -1899,15 +1899,15 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpNotStoppedFromEvolvingCheckBox">
+                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpTrainersEvolveTheirPokemonCheckbox">
                         <constraints>
                           <grid row="4" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNotStoppedFromEvolvingCheckBox.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNotStoppedFromEvolvingCheckBox.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d6ea3" class="javax.swing.JCheckBox" binding="tpForceFullyEvolvedAtCheckBox">

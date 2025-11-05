@@ -48,7 +48,16 @@ public class Evolution implements Comparable<Evolution> {
         this.to = original.to;
         this.type = original.type;
         this.extraInfo = original.extraInfo;
+        this.estimatedEvoLvl = original.estimatedEvoLvl;
         this.forme = original.forme;
+    }
+
+    public Evolution(Species from, Species to, EvolutionType type, int extra, int estimatedEvoLvl) {
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.extraInfo = extra;
+        this.estimatedEvoLvl = estimatedEvoLvl;
     }
 
     /**

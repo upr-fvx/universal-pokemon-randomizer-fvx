@@ -536,7 +536,6 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -2769,7 +2768,7 @@ public class RandomizerGUI {
 
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
-            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(peUnchangedRadioButton.isSelected()); // Only supported for unchanged evolutions
+            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
@@ -3116,11 +3115,11 @@ public class RandomizerGUI {
 
             // Also disable/unselect all the settings that make evolutions easier/possible,
             // since they aren't relevant in this scenario at all.
-            disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
-                    peRemoveTimeBasedEvolutionsCheckBox);
+            disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peUseEstimatedInsteadOfHardcodedLevelsCheckBox,
+                    peMakeEvolutionsEasierCheckBox, peRemoveTimeBasedEvolutionsCheckBox);
 
-            // Disable "Force Fully Evolved" Trainer Pokemon
-            disableAndDeselectButtons(tpForceFullyEvolvedAtCheckBox);
+            // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox);
             tpForceFullyEvolvedAtSlider.setEnabled(false);
             tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
         } else {
@@ -3135,23 +3134,16 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
+            // Only enable 'Use estimated level' if change impossible Evos is selected, otherwise disable and deselect it
+            if (peChangeImpossibleEvosCheckBox.isSelected()) {
+                peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
+            } else {
+                disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
+            }
 
-            // Re-enable "Force Fully Evolved" Trainer Pokemon
-            tpForceFullyEvolvedAtCheckBox.setEnabled(true);
-        }
-
-        // Only use estimated levels if evolutions are not randomized
-        if (peUnchangedRadioButton.isSelected() && peChangeImpossibleEvosCheckBox.isSelected()) {
-            peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
-        } else {
-            disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
-        }
-
-        // 'Trainers evolve their Pokemon' only supported for unchanged evolutions
-        if (peUnchangedRadioButton.isSelected()) {
+            // Re-enable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-        } else {
-            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox);
+            tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {

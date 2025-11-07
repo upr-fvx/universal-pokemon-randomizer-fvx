@@ -32,6 +32,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- The option "Use Estimated Evolution Levels" is now also usable for "Random"
+  evolutions.
+  (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/pull/111)
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 

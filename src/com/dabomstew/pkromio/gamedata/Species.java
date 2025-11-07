@@ -135,6 +135,31 @@ public class Species implements Comparable<Species> {
     }
 
     //Evolutionary Relatives functions
+    /**
+     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not an early evolved Pokemon.
+     * @param level The level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} is a legal evolution at the level.
+     */
+    public boolean isLegalevolutionAtLevel(int level) {
+        boolean isLegalEvo = true;
+        for (Evolution evo : this.getEvolutionsTo()) {
+            isLegalEvo = evo.getEstimatedEvoLvl() <= level;
+        }
+        return isLegalEvo;
+    }
+
+    /**
+     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution levels of its evolutions.
+     * @param level The level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} has a legal evolution at this level.
+     */
+    public boolean doesHaveLegalEvolutionAtLevel(int level) {
+        boolean hasLegalEvoAtLevel = false;
+        for (Evolution evo : this.getEvolutionsFrom()) {
+            hasLegalEvoAtLevel = evo.getEstimatedEvoLvl() <= level;
+        }
+        return hasLegalEvoAtLevel;
+    }
 
     /**
      * Gets all {@link Species} that this {@link Species} can evolve directly into.

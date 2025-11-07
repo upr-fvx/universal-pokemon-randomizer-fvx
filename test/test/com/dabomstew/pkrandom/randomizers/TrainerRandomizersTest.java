@@ -136,6 +136,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersForceFullyEvolvedLevel(20);
         TrainerPokemonRandomizer trainerPkmnRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         trainerPkmnRando.randomizeTrainerPokes();
+        // This should not change the trainer Pokemon as they are already evolved as far as legal.
+        // Otherwise, the type theme check below will fail relatively reliably.
         trainerPkmnRando.evolveTrainerPokemonAsFarAsLegal();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);

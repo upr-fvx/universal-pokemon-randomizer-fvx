@@ -73,7 +73,7 @@ public class Evolution implements Comparable<Evolution> {
     }
 
     /**
-     * Returns the {@link Species} this Evolution is "from".<br>
+     * Returns the {@link Species} this Evolution is "to".<br>
      * E.g. for the Evolution "Bulbasaur->Ivysaur" this would return Ivysaur.
      */
     public Species getTo() {

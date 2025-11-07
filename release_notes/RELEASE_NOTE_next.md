@@ -41,7 +41,8 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 3) [The description of a changed feature here.]
 
 ### Trainer Pokemon
-- Add option "Trainer Evolve their Pokemon" that can be selected if evolutions are not randomized.
+- Add option "Trainer Evolve their Pokemon" that can be selected if "Random
+  Every Level" for Pokemon Evolutions is not selected.
   If selected, any trainer Pokemon will be evolved as far as possible at its level. 
   For any trainer Pokemon that does not evolve by level up, its estimated evolution level
   is used. (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/107)

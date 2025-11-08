@@ -231,12 +231,12 @@ public abstract class AbstractRomHandler implements RomHandler {
         // For all level-up evolutions, get triplets (BSTfrom, BSTto, evoLevel)
         List<int[]> levelUpTriplet = new ArrayList<>();
         for (Evolution evo : levelUpEvos) {
-            int[] triplet = {getBST(evo.getFrom()), getBST(evo.getTo()), evo.getExtraInfo()};
+            int[] triplet = {evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels(), evo.getExtraInfo()};
             levelUpTriplet.add(triplet);
         }
 
         for (Evolution evo : nonLevelUpEvos) {
-            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpTriplet, getBST(evo.getFrom()), getBST(evo.getTo())));
+            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpTriplet, evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels()));
         }
 
         // Postprocess estimated level
@@ -255,10 +255,6 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
         }
-    }
-
-    private static int getBST(Species pk) {
-        return pk.getHp() + pk.getAttack() + pk.getDefense() + pk.getSpatk() + pk.getSpdef() + pk.getSpeed() + pk.getSpecial();
     }
 
     private static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {

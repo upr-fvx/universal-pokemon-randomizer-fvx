@@ -359,7 +359,7 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | MANKEY | PRIMEAPE | 28 | 
 | GROWLITHE | ARCANINE | 42 | 
 | POLIWAG | POLIWHIRL | 25 | 
-| POLIWHIRL | POLIWRATH | 38 | 
+| POLIWHIRL | POLIWRATH | 37 | 
 | ABRA | KADABRA | 16 | 
 | KADABRA | ALAKAZAM | 38 | 
 | MACHOP | MACHOKE | 28 | 
@@ -375,7 +375,7 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | DODUO | DODRIO | 31 | 
 | SEEL | DEWGONG | 34 | 
 | GRIMER | MUK | 38 | 
-| SHELLDER | CLOYSTER | 36 | 
+| SHELLDER | CLOYSTER | 35 | 
 | GASTLY | HAUNTER | 25 | 
 | HAUNTER | GENGAR | 39 | 
 | DROWZEE | HYPNO | 26 | 
@@ -418,9 +418,9 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | MAREEP | FLAAFFY | 15 | 
 | FLAAFFY | AMPHAROS | 30 | 
 | GLOOM | BELLOSSOM | 36 | 
-| AZURILL | MARILL | 10 | 
+| AZURILL | MARILL | 9 | 
 | MARILL | AZUMARILL | 18 | 
-| POLIWHIRL | POLITOED | 38 | 
+| POLIWHIRL | POLITOED | 37 | 
 | HOPPIP | SKIPLOOM | 18 | 
 | SKIPLOOM | JUMPLUFF | 27 | 
 | SUNKERN | SUNFLORA | 18 | 
@@ -493,7 +493,7 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | BALTOY | CLAYDOL | 36 | 
 | LILEEP | CRADILY | 40 | 
 | ANORITH | ARMALDO | 40 | 
-| FEEBAS | MILOTIC | 26 | 
+| FEEBAS | MILOTIC | 25 | 
 | SHUPPET | BANETTE | 37 | 
 | DUSKULL | DUSCLOPS | 37 | 
 | SNORUNT | GLALIE | 42 | 
@@ -831,7 +831,7 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Horsea | Seadra | 32 | 
 | Goldeen | Seaking | 33 | 
 | Staryu | Starmie | 40 | 
-| Mime Jr. | Mr. Mime | 31 | 
+| Mime Jr. | Mr. Mime | 30 | 
 | Smoochum | Jynx | 30 | 
 | Elekid | Electabuzz | 30 | 
 | Magby | Magmar | 30 | 
@@ -1122,11 +1122,11 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Meowth | Persian | 28 | 
 | Psyduck | Golduck | 33 | 
 | Mankey | Primeape | 28 | 
-| Growlithe | Arcanine | 44 | 
+| Growlithe | Arcanine | 43 | 
 | Poliwag | Poliwhirl | 25 | 
 | Poliwhirl | Poliwrath | 39 | 
 | Abra | Kadabra | 16 | 
-| Kadabra | Alakazam | 40 | 
+| Kadabra | Alakazam | 39 | 
 | Machop | Machoke | 28 | 
 | Machoke | Machamp | 40 | 
 | Bellsprout | Weepinbell | 21 | 
@@ -1156,7 +1156,7 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Horsea | Seadra | 32 | 
 | Goldeen | Seaking | 33 | 
 | Staryu | Starmie | 39 | 
-| Mime Jr. | Mr. Mime | 31 | 
+| Mime Jr. | Mr. Mime | 30 | 
 | Smoochum | Jynx | 30 | 
 | Elekid | Electabuzz | 30 | 
 | Magby | Magmar | 30 | 
@@ -1314,18 +1314,18 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Croagunk | Toxicroak | 37 | 
 | Finneon | Lumineon | 31 | 
 | Snover | Abomasnow | 40 | 
-| Sneasel | Weavile | 43 | 
+| Sneasel | Weavile | 42 | 
 | Magneton | Magnezone | 49 | 
 | Lickitung | Lickilicky | 40 | 
 | Rhydon | Rhyperior | 53 | 
-| Tangela | Tangrowth | 46 | 
+| Tangela | Tangrowth | 45 | 
 | Electabuzz | Electivire | 52 | 
 | Magmar | Magmortar | 53 | 
-| Togetic | Togekiss | 44 | 
+| Togetic | Togekiss | 43 | 
 | Yanma | Yanmega | 40 | 
 | Eevee | Leafeon | 38 | 
 | Eevee | Glaceon | 38 | 
-| Gligar | Gliscor | 43 | 
+| Gligar | Gliscor | 42 | 
 | Piloswine | Mamoswine | 47 | 
 | Porygon2 | Porygon-Z | 54 | 
 | Kirlia | Gallade | 33 | 
@@ -1586,9 +1586,9 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Wurmple | Cascoon | 7 | 
 | Cascoon | Dustox | 10 | 
 | Lotad | Lombre | 14 | 
-| Lombre | Ludicolo | 33 | 
+| Lombre | Ludicolo | 32 | 
 | Seedot | Nuzleaf | 14 | 
-| Nuzleaf | Shiftry | 33 | 
+| Nuzleaf | Shiftry | 32 | 
 | Taillow | Swellow | 22 | 
 | Wingull | Pelipper | 25 | 
 | Ralts | Kirlia | 20 | 
@@ -1831,4 +1831,4 @@ Following are the estimated evolution levels for each evolution in the respectiv
 | Cosmog | Cosmoem | 43 | 
 | Cosmoem | Solgaleo | 53 | 
 | Cosmoem | Lunala | 53 | 
-| Poipole | Naganadel | 43 |
+| Poipole | Naganadel | 43 | 

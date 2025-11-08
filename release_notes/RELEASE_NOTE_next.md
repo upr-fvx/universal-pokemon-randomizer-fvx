@@ -35,7 +35,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Evolutions
 - The option "Use Estimated Evolution Levels" is now also usable for "Random"
   evolutions.
-  (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/pull/111)
+  (#111)
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
@@ -47,7 +47,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   level. For any trainer Pokemon that does not evolve by level up, its
   estimated evolution level is used. 
   This replaces "Force Middle Stage at Level:".
-  (https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues/107)
+  (#107)
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

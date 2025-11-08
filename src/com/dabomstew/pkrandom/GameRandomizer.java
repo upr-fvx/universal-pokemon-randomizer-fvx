@@ -197,7 +197,6 @@ public class GameRandomizer {
             final long startTime = System.currentTimeMillis();
             randomSource.seed(seed);
 
-            // Estimate levels before altering any information read from the rom
             setupSpeciesRestrictions();
             applyUpdaters();
             applyRandomizers();

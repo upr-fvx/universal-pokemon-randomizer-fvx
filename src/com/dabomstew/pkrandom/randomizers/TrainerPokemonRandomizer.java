@@ -512,7 +512,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
         } else if (evolveAsFarAsLegal) {
-            pickFrom = pickFrom.filterLegalEvosWithoutLegalEvosAtLevel(level);
+            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level) && !p.hasLegalEvolutionAtLevel(level));
         }
 
         if (usePlacementHistory) {
@@ -859,7 +859,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
             int chosenEvoIndex = random.nextInt(possibleEvolutions.size());
             Evolution chosenEvo = possibleEvolutions.get(chosenEvoIndex);
 
-            // Either equals chosenEvo.getExtraInfo() if chosenEvo.getType().usesLevel(), otherwise uses the estimated evo level
             int level = chosenEvo.getEstimatedEvoLvl();
 
             if(level >= maxLevel) {

@@ -480,15 +480,6 @@ public class SpeciesSet extends HashSet<Species> {
     }
 
     /**
-     * Returns all {@link Species} in this set that do not have a legal evolution at the given level but are legal themselves (i.e., base stage or not early evolved).
-     * @param level Assumed level of the {@link Species} in the set to check for legal evolutions.
-     * @return A {@link SpeciesSet} containing all {@link Species} in this set that cannot legally evolve at the given level and are legal evolutions themselves.
-     */
-    public SpeciesSet filterLegalEvosWithoutLegalEvosAtLevel(int level) {
-        return this.filter(p -> p.isLegalevolutionAtLevel(level) && !p.doesHaveLegalEvolutionAtLevel(level));
-    }
-
-    /**
      * Returns all {@link Species} in this set that are related to no other {@link Species} (in this set or otherwise).
      * @param useOriginal Whether to use the evolution data from before randomization.
      * @return A {@link SpeciesSet} containing all non-evolving {@link Species} in this set.

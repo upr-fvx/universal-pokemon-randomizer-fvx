@@ -140,12 +140,15 @@ public class Species implements Comparable<Species> {
      * @param level The level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} is a legal evolution at the level.
      */
-    public boolean isLegalevolutionAtLevel(int level) {
-        boolean isLegalEvo = true;
+    public boolean isLegalEvolutionAtLevel(int level) {
+        boolean isLegalEvo = true; // If this does not have any evolutions to, then it is a legal evolution.
         for (Evolution evo : this.getEvolutionsTo()) {
-            isLegalEvo = evo.getEstimatedEvoLvl() <= level;
+            if (evo.getEstimatedEvoLvl() <= level) {
+                return true; // One evolution to that is legal suffices
+            }
+            isLegalEvo = false;
         }
-        return isLegalEvo;
+        return isLegalEvo; // Only true if there was no evolution to, otherwise false
     }
 
     /**
@@ -153,12 +156,13 @@ public class Species implements Comparable<Species> {
      * @param level The level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} has a legal evolution at this level.
      */
-    public boolean doesHaveLegalEvolutionAtLevel(int level) {
-        boolean hasLegalEvoAtLevel = false;
+    public boolean hasLegalEvolutionAtLevel(int level) {
         for (Evolution evo : this.getEvolutionsFrom()) {
-            hasLegalEvoAtLevel = evo.getEstimatedEvoLvl() <= level;
+            if (evo.getEstimatedEvoLvl() <= level) {
+                return true; // One evolution from that is legal suffices
+            }
         }
-        return hasLegalEvoAtLevel;
+        return false; // Either no evolutions from or no legal evolution from. Either way, no legal evolution at level
     }
 
     /**

@@ -100,6 +100,13 @@ public class Evolution implements Comparable<Evolution> {
         this.extraInfo = extraInfo;
     }
 
+    /**
+     * Returns the estimated evolution level, which either equals chosenEvo.getExtraInfo() if
+     * chosenEvo.getType().usesLevel() == true, or was estimated from the evolution levels of all original level-up
+     * evolutions in the ROM.
+     *
+     * @return The estimated evolution level of the evolution.
+     */
     public int getEstimatedEvoLvl() {
         return estimatedEvoLvl;
     }

@@ -32,8 +32,22 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- The option "Use Estimated Evolution Levels" is now also usable for "Random"
+  evolutions.
+  (#111)
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
+
+### Trainer Pokemon
+- Add option "Trainer Evolve their Pokemon" that can be selected if "Random
+  Every Level" for Pokemon Evolutions is not selected.
+  If selected, any trainer Pokemon will be evolved as far as possible at its
+  level. For any trainer Pokemon that does not evolve by level up, its
+  estimated evolution level is used. 
+  This replaces "Force Middle Stage at Level:".
+  (#107)
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

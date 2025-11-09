@@ -48,7 +48,16 @@ public class Evolution implements Comparable<Evolution> {
         this.to = original.to;
         this.type = original.type;
         this.extraInfo = original.extraInfo;
+        this.estimatedEvoLvl = original.estimatedEvoLvl;
         this.forme = original.forme;
+    }
+
+    public Evolution(Species from, Species to, EvolutionType type, int extra, int estimatedEvoLvl) {
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.extraInfo = extra;
+        this.estimatedEvoLvl = estimatedEvoLvl;
     }
 
     /**
@@ -64,7 +73,7 @@ public class Evolution implements Comparable<Evolution> {
     }
 
     /**
-     * Returns the {@link Species} this Evolution is "from".<br>
+     * Returns the {@link Species} this Evolution is "to".<br>
      * E.g. for the Evolution "Bulbasaur->Ivysaur" this would return Ivysaur.
      */
     public Species getTo() {
@@ -91,6 +100,13 @@ public class Evolution implements Comparable<Evolution> {
         this.extraInfo = extraInfo;
     }
 
+    /**
+     * Returns the estimated evolution level, which either equals chosenEvo.getExtraInfo() if
+     * chosenEvo.getType().usesLevel() == true, or was estimated from the evolution levels of all original level-up
+     * evolutions in the ROM.
+     *
+     * @return The estimated evolution level of the evolution.
+     */
     public int getEstimatedEvoLvl() {
         return estimatedEvoLvl;
     }

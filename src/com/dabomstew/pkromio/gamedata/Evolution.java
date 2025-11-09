@@ -92,7 +92,7 @@ public class Evolution implements Comparable<Evolution> {
     }
 
     public int getEstimatedEvoLvl() {
-        return estimatedEvoLvl;
+        return this.type.usesLevelWithThreshold() ? this.extraInfo : estimatedEvoLvl;
     }
 
     public void setEstimatedEvoLvl(int estimatedEvoLvl) {

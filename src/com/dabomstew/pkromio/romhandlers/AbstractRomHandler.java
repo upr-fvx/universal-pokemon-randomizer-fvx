@@ -219,7 +219,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         List<Evolution> nonLevelUpEvos = new ArrayList<>();
         for (Species pk : getSpeciesSet()) {
             for (Evolution evoFrom : pk.getEvolutionsFrom()) {
-                if (evoFrom.getType().usesLevel()) {
+                if (evoFrom.getType().usesLevelWithThreshold()) {
                     levelUpEvos.add(evoFrom);
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
                 } else {

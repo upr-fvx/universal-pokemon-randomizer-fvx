@@ -80,6 +80,22 @@ public enum EvolutionType {
             LEVEL_SNOWY, LEVEL_DUSK, LEVEL_ULTRA
     );
 
+    private static final List<EvolutionType> USES_LEVEL_WITH_THRESHOLD = Arrays.asList(
+            LEVEL, // Various: Level > 0
+            LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME,  // Tyrogue: Level 20
+            LEVEL_LOW_PV, LEVEL_HIGH_PV, // Wurmple: Level 7
+            LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, // Nincada: Level 20
+            LEVEL_MALE_ONLY, LEVEL_FEMALE_ONLY, // Various: Level > 0
+            LEVEL_WITH_DARK, // Pancham: Level 32
+            LEVEL_UPSIDE_DOWN, // Inkay: Level 30
+            LEVEL_RAIN, // Sliggoo: Level 50
+            LEVEL_DAY, LEVEL_NIGHT, // Various: Level > 0
+            LEVEL_FEMALE_ESPURR, // Espurr: Level 25
+            LEVEL_GAME_THIS, LEVEL_GAME_OTHER, // Cosmoem: Level 53
+            LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT, LEVEL_DUSK, // Rockruff: Level 25
+            LEVEL_ULTRA // Cubone: Level 28
+    );
+
     private static final List<EvolutionType> USES_ITEM = Arrays.asList(
             STONE, TRADE_ITEM, STONE_MALE_ONLY, STONE_FEMALE_ONLY,
             LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, STONE_ULTRA, LEVEL_ITEM
@@ -135,6 +151,10 @@ public enum EvolutionType {
 
     public boolean usesLevel() {
         return USES_LEVEL.contains(this);
+    }
+
+    public boolean usesLevelWithThreshold() {
+        return USES_LEVEL_WITH_THRESHOLD.contains(this);
     }
 
     public boolean usesItem() {

@@ -197,7 +197,6 @@ public class GameRandomizer {
             final long startTime = System.currentTimeMillis();
             randomSource.seed(seed);
 
-            // Estimate levels before altering any information read from the rom
             setupSpeciesRestrictions();
             applyUpdaters();
             applyRandomizers();
@@ -531,8 +530,7 @@ public class GameRandomizer {
         // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
-
+        // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
@@ -558,11 +556,11 @@ public class GameRandomizer {
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else {
-            if (settings.isTrainersForceMiddleStage()) {
-                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
-            }
             if (settings.isTrainersForceFullyEvolved()) {
                 trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
+            }
+            if (settings.isTrainersEvolveTheirPokemon()) {
+                trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
             }
         }
     }

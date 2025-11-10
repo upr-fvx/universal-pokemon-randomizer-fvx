@@ -579,7 +579,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     System.out.println(tp.getSpecies().getName() + " holds " + tp.getHeldItem());
 
                     int[] pkMoves = tp.isResetMoves() ?
-                            RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
+                            romHandler.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
                             : Arrays.stream(tp.getMoves()).distinct().filter(mv -> mv != 0).toArray();
                     Set<Type> moveTypes = new HashSet<>();
                     for (int moveID : pkMoves) {

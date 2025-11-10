@@ -345,6 +345,42 @@ public abstract class AbstractRomHandler implements RomHandler {
         return preImprovedEvolutions;
     }
 
+    @Override
+    public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
+        int[] curMoves = new int[4];
+
+        int moveCount = 0;
+        List<MoveLearnt> movepool = movesets.get(pkmn);
+        for (MoveLearnt ml : movepool) {
+            if (ml.level > level) {
+                // we're done
+                break;
+            }
+
+            boolean alreadyKnownMove = false;
+            for (int i = 0; i < moveCount; i++) {
+                if (curMoves[i] == ml.move) {
+                    alreadyKnownMove = true;
+                    break;
+                }
+            }
+
+            if (!alreadyKnownMove) {
+                // add this move to the moveset
+                if (moveCount == 4) {
+                    // shift moves up and add to last slot
+                    System.arraycopy(curMoves, 1, curMoves, 0, 3);
+                    curMoves[3] = ml.move;
+                } else {
+                    // add to next available slot
+                    curMoves[moveCount++] = ml.move;
+                }
+            }
+        }
+
+        return curMoves;
+    }
+
     /* Private methods/structs used internally by the above methods */
 
     private final Map<Species, List<Evolution>> preImprovedEvolutions = new TreeMap<>();

@@ -1853,7 +1853,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 					writeWord(pokemonData, tpIndex * 16 + 14, 0);
 				}
 				if (tp.isResetMoves()) {
-					int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
+					int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
 					for (int m = 0; m < 4; m++) {
 						writeWord(pokemonData, tpIndex * 16 + movesStart + m * 2, pokeMoves[m]);
 					}

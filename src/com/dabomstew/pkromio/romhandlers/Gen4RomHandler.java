@@ -2857,7 +2857,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					}
 					if (tr.pokemonHaveCustomMoves()) {
 						if (tp.isResetMoves()) {
-							int[] pokeMoves = RomFunctions.getMovesAtLevel(
+							int[] pokeMoves = getMovesAtLevel(
 									getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
 							for (int m = 0; m < 4; m++) {
 								writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);

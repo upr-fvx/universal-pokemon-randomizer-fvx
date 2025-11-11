@@ -70,17 +70,6 @@ public enum EvolutionType {
     NONE;
 
     private static final List<EvolutionType> USES_LEVEL = Arrays.asList(
-            LEVEL, LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER,
-            LEVEL_ATK_DEF_SAME, LEVEL_LOW_PV, LEVEL_HIGH_PV,
-            LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, LEVEL_MALE_ONLY,
-            LEVEL_FEMALE_ONLY, LEVEL_WITH_DARK, LEVEL_UPSIDE_DOWN,
-            LEVEL_RAIN, LEVEL_DAY, LEVEL_NIGHT, LEVEL_FEMALE_ESPURR,
-            LEVEL_GAME_THIS, LEVEL_GAME_OTHER, LEVEL_GAME_THIS_DAY,
-            LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT,
-            LEVEL_SNOWY, LEVEL_DUSK, LEVEL_ULTRA
-    );
-
-    private static final List<EvolutionType> USES_LEVEL_WITH_THRESHOLD = Arrays.asList(
             LEVEL, // Various: Level > 0
             LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME,  // Tyrogue: Level 20
             LEVEL_LOW_PV, LEVEL_HIGH_PV, // Wurmple: Level 7
@@ -93,6 +82,7 @@ public enum EvolutionType {
             LEVEL_FEMALE_ESPURR, // Espurr: Level 25
             LEVEL_GAME_THIS, LEVEL_GAME_OTHER, // Cosmoem: Level 53
             LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT, LEVEL_DUSK, // Rockruff: Level 25
+            LEVEL_SNOWY, // Crabrawler: Level 0
             LEVEL_ULTRA // Cubone: Level 28
     );
 
@@ -153,8 +143,8 @@ public enum EvolutionType {
         return USES_LEVEL.contains(this);
     }
 
-    public boolean usesLevelWithThreshold() {
-        return USES_LEVEL_WITH_THRESHOLD.contains(this);
+    public boolean usesLevelGreaterThanZero() {
+        return (this != LEVEL_SNOWY) && USES_LEVEL.contains(this);
     }
 
     public boolean usesItem() {

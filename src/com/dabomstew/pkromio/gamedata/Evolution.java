@@ -102,7 +102,7 @@ public class Evolution implements Comparable<Evolution> {
 
     /**
      * Returns the estimated evolution level, which either equals chosenEvo.getExtraInfo() if
-     * chosenEvo.getType().usesLevelWithThreshold() == true, or was estimated from the evolution levels of all original
+     * chosenEvo.getType().usesLevelGreaterThanZero() == true, or was estimated from the evolution levels of all original
      * level-up evolutions in the ROM.
      *
      * @return The estimated evolution level of the evolution.

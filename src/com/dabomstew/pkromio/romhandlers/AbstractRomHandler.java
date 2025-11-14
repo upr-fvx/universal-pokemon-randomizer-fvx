@@ -199,17 +199,23 @@ public abstract class AbstractRomHandler implements RomHandler {
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
                             markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
-                            checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
                             markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
-                            checkEvo.setEstimatedEvoLvl(maxLevel);
                         }
+                    }
+                    // Regardless of the type of the evolution, the estimated evolution levels have to adhere to the condensed
+                    // levels the same way as the extraInfo for usesLevel evolution above
+                    if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                        markImprovedEvolutions(pk);
+                        checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
+                    } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
+                        markImprovedEvolutions(pk);
+                        checkEvo.setEstimatedEvoLvl(maxLevel);
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
                         markImprovedEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
-                        checkEvo.setEstimatedEvoLvl(checkEvo.getExtraInfo());
                     }
                 }
             }

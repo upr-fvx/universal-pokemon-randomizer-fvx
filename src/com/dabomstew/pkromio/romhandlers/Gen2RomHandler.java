@@ -766,8 +766,43 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void readFishingEncounters(List<EncounterArea> encounterAreas) {
-//        int offset = romEntry.getIntValue("FishingWildsOffset");
-        int tableOffset = 0x92488; // TODO find for all games;
+        System.out.println(RomFunctions.bytesToHexBlock(rom, readPointer(0x92488 + 1), 30));
+        int foo = find(rom, "B3810AD9810AFF620A598114B26214E66214FF0000666228B20001E66228");
+
+        byte[] table = new byte[7];
+        table[0] = (byte) 0x80;
+        writePointer(0x92401, foo);
+        table[1] = rom[0x92401];
+        table[2] = rom[0x92402];
+        writePointer(0x92403, foo + 9);
+        table[3] = rom[0x92403];
+        table[4] = rom[0x92404];
+        writePointer(0x92405, foo + 9 + 12);
+        table[5] = rom[0x92405];
+        table[6] = rom[0x92406];
+        for (int o : RomFunctions.search(rom, table)) {
+            System.out.println("Foobar = 0x" + Integer.toHexString(o));
+        }
+        System.out.println("table: " + RomFunctions.bytesToHex(table));
+
+        int toffset = find(rom, "B3810AD9810AFF620A598114B26214E66214FF0000666228B20001E66228");
+        if (toffset < 0) {
+            System.out.println(toffset);
+        } else {
+            toffset -= (0x924e3 - 0x92488);
+            System.out.println("FishingWildsTableOffset=0x" + Integer.toHexString(toffset).toUpperCase());
+        }
+
+        int foffset = find(rom, "DE147814DE2878285A145A145A285A2876147614");
+        if (foffset < 0) {
+            System.out.println(foffset);
+        } else {
+            System.out.println("FishingWildsTimeGroupsOffset=0x" + Integer.toHexString(foffset).toUpperCase()
+            );
+        }
+
+        int tableOffset = romEntry.getIntValue("FishingWildsTableOffset");
+        System.out.println(RomFunctions.bytesToHexBlock(rom, tableOffset, 14));
         for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
             String groupName = Gen2Constants.fishingAreaNames[group];
             int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
@@ -775,7 +810,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 3), "Good Rod " + groupName);
             readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 5), "Super Rod " + groupName);
         }
-        int timeGroupsOffset = 0x9266F;
+        int timeGroupsOffset = romEntry.getIntValue("FishingWildsTimeGroupsOffset");
         for (int i = 0; i < 44; i++) {
             int offset = timeGroupsOffset + i * 2;
 
@@ -809,6 +844,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         } while (probability != 0xFF);
 
         encounterAreas.add(area);
+        System.out.println(area);
     }
 
     private void readTimeFishingEncounters(List<EncounterArea> encounterAreas, int offset, String displayName) {
@@ -897,14 +933,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writeFishingEncounters(Iterator<EncounterArea> areaIterator) {
-        int tableOffset = 0x92488; // TODO find for all games;
+        int tableOffset = romEntry.getIntValue("FishingWildsTableOffset");
         for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
             int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
             writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 1));
             writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 3));
             writeNormalFishingEncounters(areaIterator.next(), readPointer(groupOffset + 5));
         }
-        int timeGroupsOffset = 0x9266F;
+        int timeGroupsOffset = romEntry.getIntValue("FishingWildsTimeGroupsOffset");
         for (int i = 0; i < 44; i++) {
             int offset = timeGroupsOffset + i * 2;
             writeTimeFishingEncounters(areaIterator.next(), offset);

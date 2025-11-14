@@ -3186,7 +3186,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen6Constants.friendshipValueForEvoLocator);
@@ -3210,10 +3210,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (pkmn != null) {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
-                            // Replace w/ level 35
+                            // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
                         }
                     }
                 }

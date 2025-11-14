@@ -2761,7 +2761,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);
@@ -2786,22 +2786,24 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (changeWithOtherEvos) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
-                            // Replace w/ level 35
+                            // Replace w/ level 35 or the estimated evo level is useEstimatedLevels
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.LEVEL_SNOWY) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL, 35);
+                                    EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
+                                    evo.getEstimatedEvoLvl());
                             extraEntry.setForme(evo.getForme());
                         } else if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL, 35);
+                                    EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
+                                    evo.getEstimatedEvoLvl());
                             extraEntry.setForme(evo.getForme());
                         }
                     }

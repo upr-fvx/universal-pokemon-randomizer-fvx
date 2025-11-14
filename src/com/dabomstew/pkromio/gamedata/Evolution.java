@@ -41,6 +41,10 @@ public class Evolution implements Comparable<Evolution> {
         this.to = to;
         this.type = type;
         this.extraInfo = extra;
+        // TODO change the following to usesLevelGreaterZero after merge of the Crabrawler bugfix
+        if (type.usesLevel()) {
+            this.estimatedEvoLvl = extra;
+        }
     }
 
     public Evolution(Evolution original) {

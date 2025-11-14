@@ -2921,7 +2921,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(arm9, Gen5Constants.friendshipValueForEvoLocator);
@@ -2945,10 +2945,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 if (pkmn != null) {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
-                            // Replace w/ level 35
+                            // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
                         }
                     }
                 }

@@ -912,6 +912,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writeNormalFishingEncounters(EncounterArea area, int offset) {
+        int origOffset = offset;
         int encCount = 0;
         int probability;
         do {
@@ -921,11 +922,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             }
             offset += 3;
         } while (probability != 0xFF);
-
         if (area.size() != encCount) {
             throw new IllegalArgumentException("EncounterArea wrong size; is=" + area.size()
                     + ", expected=" + encCount + ". area=" + area);
         }
+        offset = origOffset;
+
         for (Encounter enc : area) {
             // Skip time-based encounters
             if (rom[offset + 1] == 0) {

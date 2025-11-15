@@ -123,6 +123,30 @@ public class Evolution implements Comparable<Evolution> {
         return forme;
     }
 
+    public void updateEvolutionMethod(EvolutionType type, int extraInfo) {
+        EvolutionType oldType = this.type;
+        boolean oldTypeUsesLevelGreaterZero = oldType.usesLevel(); // TODO GreaterZero
+        boolean newTypeUsesLevelGreaterZero = type.usesLevel(); // TODO GreaterZero
+
+        this.type = type;
+        this.extraInfo = extraInfo;
+        // Keep estimatedEvoLevel if both old and new type does not use evo level > 0.
+        // Keep estimatedEvoLevel if old type used evo level > 0 but new method does not, i.e., continue to enable
+        // level up evolutions if needed, e.g. for trainers evolve their pokemon.
+        // Only update estimatedEvoLvl if type changes from to evo that uses level > 0 to continue guaranteeing that
+        // extraInfo and estimatedEvoLvl are equal for evos that use level > 0.
+        // Apart from that, make sure that in any of the above cases, estimatedEvoLvl and extraInfo are the same for
+        // evolutions that use a evo level > 0.
+        if (newTypeUsesLevelGreaterZero && (!oldTypeUsesLevelGreaterZero || (this.extraInfo != this.estimatedEvoLvl))) { // TODO do not use bools above if it's only one
+            this.estimatedEvoLvl = extraInfo;
+        }
+    }
+
+    public void updateEvolutionMethod(EvolutionType type, int extraInfo, boolean useEstimatedLevels) {
+        this.updateEvolutionMethod(type, (useEstimatedLevels && type.usesLevel())  // TODO ...GreaterZero()
+                ? this.estimatedEvoLvl : extraInfo);
+    }
+
     public void setForme(int forme) {
         this.forme = forme;
     }

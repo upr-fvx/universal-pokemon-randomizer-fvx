@@ -2964,20 +2964,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
                             // happiness day change to Sun Stone
                             markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.sunStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.sunStone);
                         }
                         if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
                             // happiness night change to Moon Stone
                             markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.moonStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone);
                         }
                         if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
                             // beauty change to level 35 (or estimated level if useEstimatedLevels)
                             markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
                         }
                     }
                     // Pure Trade
@@ -2985,38 +2982,31 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         // Haunter, Machoke, Kadabra, Graveler
                         // Make it into level 37 (or estimated level if useEstimatedLevels), we're done.
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                     }
                     // Trade w/ Held Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
                         markImprovedEvolutions(pkmn);
                         if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
                             // Poliwhirl: Lv 37 (or estimated level if useEstimatedLevels)
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40 (or estimated level if useEstimatedLevels)
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 40);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
                             // Clamperl -> Huntail: Lv30 (or estimated level if useEstimatedLevels)
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 30);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone);
                         } else {
                             // Onix, Scyther or Porygon: Lv30 (or estimated level if useEstimatedLevels)
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 30);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         }
                     }
                 }

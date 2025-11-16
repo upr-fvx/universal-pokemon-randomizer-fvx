@@ -87,6 +87,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     private byte[] code;
     private List<String> shopNames;
     private List<String> abilityNames;
+    private TypeTable typeTable;
     private long actualCodeCRC32;
     private Map<String, Long> actualFileCRC32s;
 
@@ -2406,6 +2407,87 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         } catch (IOException e) {
             throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public boolean hasTypeEffectivenessSupport() {
+        return true;
+    }
+
+    @Override
+    public TypeTable getTypeTable() {
+        if (typeTable == null) {
+            typeTable = readTypeTable();
+        }
+        return typeTable;
+    }
+
+    private TypeTable readTypeTable() {
+        TypeTable typeTable = new TypeTable(Type.getAllTypes(7));
+        int tableOffset = romEntry.getIntValue("TypeTableOffset");
+        int tableWidth = typeTable.getTypes().size();
+
+        for (Type attacker : typeTable.getTypes()) {
+            for (Type defender : typeTable.getTypes()) {
+                int offset = tableOffset + (Gen7Constants.typeToByte(attacker) * tableWidth) + Gen7Constants.typeToByte(defender);
+                int effectivenessInternal = code[offset];
+                Effectiveness effectiveness;
+                switch (effectivenessInternal) {
+                    case 8:
+                        effectiveness = Effectiveness.DOUBLE;
+                        break;
+                    case 4:
+                        effectiveness = Effectiveness.NEUTRAL;
+                        break;
+                    case 2:
+                        effectiveness = Effectiveness.HALF;
+                        break;
+                    case 0:
+                        effectiveness = Effectiveness.ZERO;
+                        break;
+                    default:
+                        effectiveness = null;
+                        break;
+                }
+                typeTable.setEffectiveness(attacker, defender, effectiveness);
+            }
+        }
+
+        return typeTable;
+    }
+
+    @Override
+    public void setTypeTable(TypeTable typeTable) {
+        this.typeTable = typeTable;
+        writeTypeTable(typeTable);
+    }
+
+    private void writeTypeTable(TypeTable typeTable) {
+        int tableOffset = romEntry.getIntValue("TypeTableOffset");
+        int tableWidth = typeTable.getTypes().size();
+
+        for (Type attacker : typeTable.getTypes()) {
+            for (Type defender : typeTable.getTypes()) {
+                int offset = tableOffset + (Gen7Constants.typeToByte(attacker) * tableWidth) + Gen7Constants.typeToByte(defender);
+                Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
+                byte effectivenessInternal;
+                switch (effectiveness) {
+                    case DOUBLE:
+                        effectivenessInternal = 8;
+                        break;
+                    case NEUTRAL:
+                        effectivenessInternal = 4;
+                        break;
+                    case HALF:
+                        effectivenessInternal = 2;
+                        break;
+                    case ZERO:
+                    default:
+                        effectivenessInternal = 0;
+                }
+                code[offset] = effectivenessInternal;
+            }
         }
     }
 

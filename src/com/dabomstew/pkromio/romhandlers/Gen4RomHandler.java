@@ -4255,7 +4255,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// new 160 other impossible evolutions:
 					if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 						// beauty milotic
-						if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
+						if (evo.getType() == EvolutionType.HIGH_BEAUTY) {
 							// Replace w/ level 35 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);

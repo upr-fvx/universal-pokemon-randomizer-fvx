@@ -193,7 +193,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         for (Species pk : getSpeciesSet()) {
             if (pk != null) {
                 for (Evolution checkEvo : pk.getEvolutionsFrom()) {
-                    if (checkEvo.getType().usesLevel()) {
+                    if (checkEvo.getType().usesLevelThreshold()) {
                         // If evo is intermediate and too high, bring it down
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
@@ -205,7 +205,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                         }
                     }
                     // Regardless of the type of the evolution, the estimated evolution levels have to adhere to the condensed
-                    // levels the same way as the extraInfo for usesLevel evolution above
+                    // levels the same way as the extraInfo for usesLevelThreshold evolution above
                     if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
                         markImprovedEvolutions(pk);
                         checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
@@ -228,7 +228,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         List<Evolution> nonLevelUpEvos = new ArrayList<>();
         for (Species pk : getSpeciesSet()) {
             for (Evolution evoFrom : pk.getEvolutionsFrom()) {
-                if (evoFrom.getType().usesLevelGreaterThanZero()) {
+                if (evoFrom.getType().usesLevelThreshold()) {
                     levelUpEvos.add(evoFrom);
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
                 } else {

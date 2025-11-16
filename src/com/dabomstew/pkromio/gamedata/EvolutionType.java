@@ -39,7 +39,7 @@ public enum EvolutionType {
     // Gen 3+
     LEVEL_LOW_PV, LEVEL_HIGH_PV, // used by Wurmple, should be used together
     LEVEL_CREATE_EXTRA, LEVEL_IS_EXTRA, // used by Nincada, should be used together
-    LEVEL_HIGH_BEAUTY, // used by Feebas
+    HIGH_BEAUTY, // used by Feebas
     // Gen 4+
     STONE_MALE_ONLY, STONE_FEMALE_ONLY,
     LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT,
@@ -61,7 +61,7 @@ public enum EvolutionType {
     LEVEL_GAME_THIS, LEVEL_GAME_OTHER,
     // used by Rockruff-base. Like Cosmoem's evo types, but for LEVEL_DAY and LEVEL_NIGHT.
     LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_OTHER_NIGHT,
-    LEVEL_SNOWY,
+    SNOWY, // used by Crabrawler
     LEVEL_DUSK, // used by Rockruff-OwnTempo
     LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
     STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
@@ -69,7 +69,7 @@ public enum EvolutionType {
     LEVEL_ITEM, // not in any game internally
     NONE;
 
-    private static final List<EvolutionType> USES_LEVEL = Arrays.asList(
+    private static final List<EvolutionType> USES_LEVEL_THRESHOLD = Arrays.asList(
             LEVEL, // Various: Level > 0
             LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME,  // Tyrogue: Level 20
             LEVEL_LOW_PV, LEVEL_HIGH_PV, // Wurmple: Level 7
@@ -82,7 +82,6 @@ public enum EvolutionType {
             LEVEL_FEMALE_ESPURR, // Espurr: Level 25
             LEVEL_GAME_THIS, LEVEL_GAME_OTHER, // Cosmoem: Level 53
             LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT, LEVEL_DUSK, // Rockruff: Level 25
-            LEVEL_SNOWY, // Crabrawler: Level 0
             LEVEL_ULTRA // Cubone: Level 28
     );
 
@@ -92,7 +91,7 @@ public enum EvolutionType {
     );
 
     private static final List<EvolutionType> USES_LOCATION = Arrays.asList(
-            LEVEL_MAGNETIC_FIELD, LEVEL_MOSS_ROCK, LEVEL_ICE_ROCK, LEVEL_SNOWY
+            LEVEL_MAGNETIC_FIELD, LEVEL_MOSS_ROCK, LEVEL_ICE_ROCK, SNOWY
     );
 
     private static final List<EvolutionType> DAY_TYPES = Arrays.asList(
@@ -139,12 +138,8 @@ public enum EvolutionType {
             LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT
     );
 
-    public boolean usesLevel() {
-        return USES_LEVEL.contains(this);
-    }
-
-    public boolean usesLevelGreaterThanZero() {
-        return (this != LEVEL_SNOWY) && USES_LEVEL.contains(this);
+    public boolean usesLevelThreshold() {
+        return USES_LEVEL_THRESHOLD.contains(this);
     }
 
     public boolean usesItem() {
@@ -196,6 +191,6 @@ public enum EvolutionType {
     }
 
     public boolean skipSplitEvo() {
-        return (this == LEVEL_HIGH_BEAUTY) || (this == LEVEL_ULTRA) || (this == STONE_ULTRA);
+        return (this == HIGH_BEAUTY) || (this == LEVEL_ULTRA) || (this == STONE_ULTRA);
     }
 }

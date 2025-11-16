@@ -421,7 +421,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         int level = evoEntry[evo * 8 + 7];
                         Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
-                        if (et.usesLevel()) {
+                        if (et.usesLevelThreshold()) {
                             evol.setExtraInfo(level);
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
@@ -730,7 +730,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int extraInfo;
                     if (evo.getType().isGameSpecific()) {
                         extraInfo = getGameSpecificExtraInfo(evo.getType());
-                    } else if (evo.getType().usesLevel()) {
+                    } else if (evo.getType().usesLevelThreshold()) {
                         extraInfo = 0;
                     } else {
                         extraInfo = evo.getExtraInfo();
@@ -739,7 +739,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
                     evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
                     byte level;
-                    if (evo.getType().usesLevel()) {
+                    if (evo.getType().usesLevelThreshold()) {
                         level = (byte) evo.getExtraInfo();
                     } else if (evosWithLevelsInternally.containsKey(evo)) {
                         level = evosWithLevelsInternally.get(evo);
@@ -792,9 +792,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         Map<Evolution, Byte> map = new HashMap<>();
         for (Species pk : getSpeciesSetInclFormes()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getType().usesLevel()) {
+                if (evo.getType().usesLevelThreshold()) {
                     for (Evolution evo2 : pk.getEvolutionsFrom()) {
-                        if (!evo2.getType().usesLevel()) {
+                        if (!evo2.getType().usesLevelThreshold()) {
                             map.put(evo2, (byte) evo.getExtraInfo());
                         }
                     }
@@ -2793,7 +2793,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
-                        if (evo.getType() == EvolutionType.LEVEL_SNOWY) {
+                        if (evo.getType() == EvolutionType.SNOWY) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, 35);

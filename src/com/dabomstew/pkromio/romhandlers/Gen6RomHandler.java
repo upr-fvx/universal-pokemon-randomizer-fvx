@@ -362,7 +362,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int species = readWord(evoEntry, evo * 6 + 4);
                     if (method >= 1 && method <= Gen6Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen6Constants.evolutionTypeFromIndex(method);
-                        if (et.equals(EvolutionType.LEVEL_HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
+                        if (et.equals(EvolutionType.HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
                         int extraInfo = readWord(evoEntry, evo * 6 + 2);
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
@@ -787,7 +787,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         Species feebasEvolution = prismScaleEvo.getTo();
         int beautyNeededToEvolve = 170;
         Evolution beautyEvolution = new Evolution(feebas, feebasEvolution,
-                EvolutionType.LEVEL_HIGH_BEAUTY, beautyNeededToEvolve);
+                EvolutionType.HIGH_BEAUTY, beautyNeededToEvolve);
         feebas.getEvolutionsFrom().add(beautyEvolution);
         feebasEvolution.getEvolutionsTo().add(beautyEvolution);
     }

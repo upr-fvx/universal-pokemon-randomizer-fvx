@@ -200,7 +200,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         for (Species pk : romHandler.getSpeciesSet()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 // Each level-up evolution should have the same evolution level as the estimated level
-                if (evo.getType().usesLevelGreaterThanZero()) {
+                if (evo.getType().usesLevelThreshold()) {
                     System.out.println(evo);
                     assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
                 }

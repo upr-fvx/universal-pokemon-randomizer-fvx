@@ -779,6 +779,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<Trainer> getTrainers() {
+        if (trainers == null) {
+            throw new IllegalStateException("Trainers have not been loaded.");
+        }
         return trainers;
     }
 

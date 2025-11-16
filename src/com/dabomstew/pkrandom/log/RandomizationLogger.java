@@ -537,8 +537,8 @@ public class RandomizationLogger {
         }
 
         sb.append(evoTypeStr);
-        if (evo.getType().usesLevel()) {
-            sb.append(String.format(getBS("Log.pe.usesLevel"), evo.getExtraInfo()));
+        if (evo.getType().usesLevelThreshold()) {
+            sb.append(String.format(getBS("Log.pe.usesLevelThreshold"), evo.getExtraInfo()));
         }
 
         return sb.toString();

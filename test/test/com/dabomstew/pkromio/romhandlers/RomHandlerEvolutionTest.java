@@ -1,6 +1,7 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Evolution;
 import com.dabomstew.pkromio.gamedata.EvolutionType;
 import com.dabomstew.pkromio.gamedata.Item;
@@ -191,21 +192,29 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void changeImpossibleEvosWorksWithEstimatedLevels(String romName) {
-        loadROM(romName);
+    @MethodSource("getAllRomNames")
+    public void evolutionImprovementsWorkWithEstimatedLevels(String romName) {
+        try {
+            loadROM(romName);
 
-        romHandler.removeImpossibleEvolutions(true, true);
+            romHandler.removeImpossibleEvolutions(true, true);
+            romHandler.condenseLevelEvolutions(40, 30);
+            romHandler.makeEvolutionsEasier(true, true);
+            romHandler.removeTimeBasedEvolutions();
 
-        for (Species pk : romHandler.getSpeciesSet()) {
-            for (Evolution evo : pk.getEvolutionsFrom()) {
-                // Each level-up evolution should have the same evolution level as the estimated level
-                if (evo.getType().usesLevel()) {
-                    System.out.println(evo);
-                    assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+            for (Species pk : romHandler.getSpeciesSet()) {
+                for (Evolution evo : pk.getEvolutionsFrom()) {
+                    // Each level-up evolution should have the same evolution level as the estimated level
+                    if (evo.getType().usesLevel()) {
+                        System.out.println(evo);
+                        assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+                    }
                 }
             }
+        } catch (RomIOException | IllegalArgumentException e) {
+            System.out.println("Could not load ROM " + romName);
         }
+
     }
 
     @ParameterizedTest

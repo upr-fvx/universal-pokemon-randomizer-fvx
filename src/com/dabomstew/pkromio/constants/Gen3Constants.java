@@ -538,7 +538,7 @@ public class Gen3Constants {
             EvolutionType.TRADE, EvolutionType.TRADE_ITEM, EvolutionType.STONE, EvolutionType.LEVEL_ATTACK_HIGHER,
             EvolutionType.LEVEL_ATK_DEF_SAME, EvolutionType.LEVEL_DEFENSE_HIGHER, EvolutionType.LEVEL_LOW_PV,
             EvolutionType.LEVEL_HIGH_PV, EvolutionType.LEVEL_CREATE_EXTRA, EvolutionType.LEVEL_IS_EXTRA,
-            EvolutionType.LEVEL_HIGH_BEAUTY
+            EvolutionType.HIGH_BEAUTY
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {

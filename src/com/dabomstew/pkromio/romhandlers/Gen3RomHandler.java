@@ -2973,7 +2973,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.moonStone);
                         }
-                        if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
+                        if (evo.getType() == EvolutionType.HIGH_BEAUTY) {
                             // beauty change to level 35 (or estimated level if useEstimatedLevels)
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);

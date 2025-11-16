@@ -149,7 +149,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                 // In Gens 2+3, TRADE_ITEM items are not counted as evo items,
                 // as the player is not expected to trade.
                 // The player is not expected to trade in other games either,
-                // but as Gen 4 introduces LEVEL_ITEM, TRADE_ITEM items
+                // but as Gen 4 introduces ITEM, TRADE_ITEM items
                 // become relevant evo items within that context.
                 if (evo.getType().usesItem() &&
                         !(romHandler.generationOfPokemon() < 4 && evo.getType() == EvolutionType.TRADE_ITEM)) {
@@ -177,7 +177,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                 // In Gens 2+3, TRADE_ITEM items are not counted as evo items,
                 // as the player is not expected to trade.
                 // The player is not expected to trade in other games either,
-                // but as Gen 4 introduces LEVEL_ITEM, TRADE_ITEM items
+                // but as Gen 4 introduces ITEM, TRADE_ITEM items
                 // become relevant evo items within that context.
                 if (evo.getType().usesItem() &&
                         !(romHandler.generationOfPokemon() < 4 && evo.getType() == EvolutionType.TRADE_ITEM)) {
@@ -200,7 +200,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         for (Species pk : romHandler.getSpeciesSet()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 // Each level-up evolution should have the same evolution level as the estimated level
-                if (evo.getType().usesLevel()) {
+                if (evo.getType().usesLevelThreshold()) {
                     System.out.println(evo);
                     assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
                 }

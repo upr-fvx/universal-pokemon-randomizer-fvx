@@ -4255,35 +4255,35 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// new 160 other impossible evolutions:
 					if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 						// beauty milotic
-						if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
+						if (evo.getType() == EvolutionType.HIGH_BEAUTY) {
 							// Replace w/ level 35 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
 							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
 						}
 						// mt.coronet (magnezone/probopass)
-						if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
+						if (evo.getType() == EvolutionType.MAGNETIC_FIELD) {
 							// Replace w/ level 40 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
 							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 40);
 						}
 						// moss rock (leafeon)
-						if (evo.getType() == EvolutionType.LEVEL_MOSS_ROCK) {
+						if (evo.getType() == EvolutionType.MOSS_ROCK) {
 							// Replace w/ leaf stone
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.leafStone);
 						}
 						// icy rock (glaceon)
-						if (evo.getType() == EvolutionType.LEVEL_ICE_ROCK) {
+						if (evo.getType() == EvolutionType.ICE_ROCK) {
 							// Replace w/ dawn stone
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.dawnStone);
 						}
 					}
-					if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
+					if (changeMoveEvos && evo.getType() == EvolutionType.WITH_MOVE) {
 						// read move
 						int move = evo.getExtraInfo();
 						int levelLearntAt = 1;
@@ -4319,7 +4319,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							evo.setType(EvolutionType.STONE);
 							evo.setExtraInfo(ItemIDs.waterStone);
 						} else {
-							evo.setType(EvolutionType.LEVEL_ITEM);
+							evo.setType(EvolutionType.ITEM);
 						}
 					}
 				}
@@ -4352,7 +4352,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			for (Species pkmn : pokes) {
 				if (pkmn != null) {
 					for (Evolution evo : pkmn.getEvolutionsFrom()) {
-						if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
+						if (evo.getType() == EvolutionType.WITH_OTHER) {
 							// Replace w/ level 35
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);

@@ -26,6 +26,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen6EncounterAreaTagger;
 import com.dabomstew.pkromio.ctr.AMX;
 import com.dabomstew.pkromio.ctr.GARCArchive;
 import com.dabomstew.pkromio.ctr.Mini;
@@ -1101,7 +1102,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        Gen6Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType());
+        new Gen6EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
 
         return encounterAreas;
     }
@@ -1840,31 +1841,31 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 byte[] trainer = trainers.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
-                tr.poketype = isORAS ? readWord(trainer,0) : trainer[0] & 0xFF;
-                tr.index = i;
-                tr.trainerclass = isORAS ? readWord(trainer,2) : trainer[1] & 0xFF;
+                tr.setPoketype(isORAS ? readWord(trainer,0) : trainer[0] & 0xFF);
+                tr.setIndex(i);
+                tr.setTrainerclass(isORAS ? readWord(trainer,2) : trainer[1] & 0xFF);
                 int offset = isORAS ? 6 : 2;
                 int battleType = trainer[offset] & 0xFF;
                 switch (battleType) {
                     case 0:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
                         break;
                     case 1:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                         break;
                     case 2:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.TRIPLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.TRIPLE_BATTLE);
                         break;
                     case 3:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.ROTATION_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.ROTATION_BATTLE);
                         break;
                 }
                 int numPokes = trainer[offset+1] & 0xFF;
                 boolean healer = trainer[offset+13] != 0;
                 int pokeOffs = 0;
-                String trainerClass = tclasses.get(tr.trainerclass);
+                String trainerClass = tclasses.get(tr.getTrainerclass());
                 String trainerName = tnamesMap.getOrDefault(i - 1, "UNKNOWN");
-                tr.fullDisplayName = trainerClass + " " + trainerName;
+                tr.setFullDisplayName(trainerClass + " " + trainerName);
 
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
@@ -1914,7 +1915,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         }
                         pokeOffs += 8;
                     }
-                    tr.pokemon.add(tpk);
+                    tr.getPokemon().add(tpk);
                 }
                 allTrainers.add(tr);
             }
@@ -1972,16 +1973,16 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 // preserve original poketype for held item & moves
                 int offset = 0;
                 if (isORAS) {
-                    writeWord(trainer,0,tr.poketype);
+                    writeWord(trainer,0, tr.getPoketype());
                     offset = 4;
                 } else {
-                    trainer[0] = (byte) tr.poketype;
+                    trainer[0] = (byte) tr.getPoketype();
                 }
-                int numPokes = tr.pokemon.size();
+                int numPokes = tr.getPokemon().size();
                 trainer[offset+3] = (byte) numPokes;
 
-                if (tr.forcedDoubleBattle) {
-                    switch (tr.currBattleStyle.getStyle()) {
+                if (tr.isForcedDoubleBattle()) {
+                    switch (tr.getCurrBattleStyle().getStyle()) {
                         case SINGLE_BATTLE:
                             if (trainer[offset + 2] != 0) {
                                 trainer[offset + 2] = 0;
@@ -2018,7 +2019,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 byte[] trpoke = new byte[bytesNeeded];
                 int pokeOffs = 0;
-                Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
+                Iterator<TrainerPokemon> tpokes = tr.getPokemon().iterator();
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
                     byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
@@ -2035,7 +2036,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -3123,7 +3124,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species pkmn : pokes) {
             if (pkmn != null) {
@@ -3140,7 +3141,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         }
                         if (levelLearntAt == 1) {
                             // override for piloswine
-                            levelLearntAt = 45;
+                            levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
                         // change to pure level evo
                         markImprovedEvolutions(pkmn);
@@ -3149,10 +3150,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
-                        // Replace w/ level 37
+                        // Replace w/ level 37 (or estimated level is useEstimatedLevels)
                         markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
@@ -3422,11 +3423,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             e.printStackTrace();
         }
         return true;
-    }
-
-    @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen6Constants.regularShopItems);
     }
 
     @Override

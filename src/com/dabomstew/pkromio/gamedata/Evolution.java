@@ -31,6 +31,7 @@ public class Evolution implements Comparable<Evolution> {
     private Species to;
     private EvolutionType type;
     private int extraInfo;
+    private int estimatedEvoLvl;
 
     // only relevant for Gen 7
     private int forme;
@@ -47,7 +48,16 @@ public class Evolution implements Comparable<Evolution> {
         this.to = original.to;
         this.type = original.type;
         this.extraInfo = original.extraInfo;
+        this.estimatedEvoLvl = original.estimatedEvoLvl;
         this.forme = original.forme;
+    }
+
+    public Evolution(Species from, Species to, EvolutionType type, int extra, int estimatedEvoLvl) {
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.extraInfo = extra;
+        this.estimatedEvoLvl = estimatedEvoLvl;
     }
 
     /**
@@ -63,7 +73,7 @@ public class Evolution implements Comparable<Evolution> {
     }
 
     /**
-     * Returns the {@link Species} this Evolution is "from".<br>
+     * Returns the {@link Species} this Evolution is "to".<br>
      * E.g. for the Evolution "Bulbasaur->Ivysaur" this would return Ivysaur.
      */
     public Species getTo() {
@@ -88,6 +98,21 @@ public class Evolution implements Comparable<Evolution> {
 
     public void setExtraInfo(int extraInfo) {
         this.extraInfo = extraInfo;
+    }
+
+    /**
+     * Returns the estimated evolution level, which either equals chosenEvo.getExtraInfo() if
+     * chosenEvo.getType().usesLevel() == true, or was estimated from the evolution levels of all original level-up
+     * evolutions in the ROM.
+     *
+     * @return The estimated evolution level of the evolution.
+     */
+    public int getEstimatedEvoLvl() {
+        return estimatedEvoLvl;
+    }
+
+    public void setEstimatedEvoLvl(int estimatedEvoLvl) {
+        this.estimatedEvoLvl = estimatedEvoLvl;
     }
 
     public int getForme() {
@@ -136,9 +161,9 @@ public class Evolution implements Comparable<Evolution> {
     @Override
     public String toString() {
         return forme == 0 ?
-                String.format("(%s->%s, %s, extraInfo:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo) :
-                String.format("(%s->%s, %s, extraInfo:%d, forme:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo, forme);
+                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d)", from.getFullName(), to.getFullName(),
+                        type, extraInfo, estimatedEvoLvl) :
+                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d, forme:%d)", from.getFullName(), to.getFullName(),
+                        type, extraInfo, estimatedEvoLvl, forme);
     }
 }

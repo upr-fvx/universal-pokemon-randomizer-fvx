@@ -6,17 +6,17 @@
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to
+Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] SharkGuy and bepis for the CPG sprites, and
+[Every person who made a new CPG] for the CPG sprites, and
 AZBZ from the 3DS Pokémon Modding Discord server for help with Gen 7 Type Effectiveness randomization
 [Etc.]!
 
 # How to use
 
-Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the
+Download the Randomizer below by clicking on `UPR_FVX-v[VERSION].zip`. After downloading, extract the contents of the 
 zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
 
 - Windows: Use `launcher_WINDOWS.bat`
@@ -32,11 +32,22 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- The option "Use Estimated Evolution Levels" is now also usable for "Random"
+  evolutions.
+  (#111)
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Graphics
-- (Gen 1) New Custom Player Graphics: Boyfriend by SharkGuy, Shantae by bepis
+### Trainer Pokemon
+- Add option "Trainer Evolve their Pokemon" that can be selected if "Random
+  Every Level" for Pokemon Evolutions is not selected.
+  If selected, any trainer Pokemon will be evolved as far as possible at its
+  level. For any trainer Pokemon that does not evolve by level up, its
+  estimated evolution level is used. 
+  This replaces "Force Middle Stage at Level:".
+  (#107)
 
 ### Types
 - (Gen 7) Added support for Type Effectiveness randomization.
@@ -49,6 +60,5 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen3) Fixed one of the May battles in Emerald not getting requested buffs.
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].

@@ -1,9 +1,8 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
-import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
@@ -274,8 +273,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
         // Items are passed around by reference a lot, but as we only expect their "allowed" attribute
         // to change, we can (and do) just reset that.
-        for (int i = 1; i < items.size(); i++) {
-            items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) != null) {
+                items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+            }
         }
 
         testFieldItems = null;
@@ -409,6 +410,7 @@ public class TestRomHandler extends AbstractRomHandler {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
                     evolution.getType(), evolution.getExtraInfo());
             evoCopy.setForme(evolution.getForme());
+            evoCopy.setEstimatedEvoLvl(evolution.getEstimatedEvoLvl());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
         }
@@ -502,7 +504,7 @@ public class TestRomHandler extends AbstractRomHandler {
         List<Trainer> copiedTrainers = new ArrayList<>();
         for(Trainer original : originalTrainers) {
             Trainer copy = new Trainer(original);
-            for(TrainerPokemon tp : copy.pokemon) {
+            for(TrainerPokemon tp : copy.getPokemon()) {
                 tp.setSpecies(originalToTest.get(tp.getSpecies()));
             }
             copiedTrainers.add(copy);
@@ -1327,7 +1329,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 
@@ -1487,7 +1489,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
         throw new NotImplementedException();
     }
 

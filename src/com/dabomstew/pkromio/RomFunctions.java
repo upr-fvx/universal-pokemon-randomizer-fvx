@@ -33,57 +33,6 @@ import java.util.Map;
 
 public class RomFunctions {
 
-    /**
-     * Get the 4 moves known by a Species at a particular level.
-     * 
-     * @param pkmn Species index to get moves for.
-     * @param movesets Map of Species indices mapped to movesets.
-     * @param level Level to get at.
-     * @return Array with move indices.
-     */
-    public static int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
-        return getMovesAtLevel(pkmn, movesets, level, 0);
-    }
-
-    public static int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level, int emptyValue) {
-        int[] curMoves = new int[4];
-
-        if (emptyValue != 0) {
-            Arrays.fill(curMoves, emptyValue);
-        }
-
-        int moveCount = 0;
-        List<MoveLearnt> movepool = movesets.get(pkmn);
-        for (MoveLearnt ml : movepool) {
-            if (ml.level > level) {
-                // we're done
-                break;
-            }
-
-            boolean alreadyKnownMove = false;
-            for (int i = 0; i < moveCount; i++) {
-                if (curMoves[i] == ml.move) {
-                    alreadyKnownMove = true;
-                    break;
-                }
-            }
-
-            if (!alreadyKnownMove) {
-                // add this move to the moveset
-                if (moveCount == 4) {
-                    // shift moves up and add to last slot
-                    System.arraycopy(curMoves, 1, curMoves, 0, 3);
-                    curMoves[3] = ml.move;
-                } else {
-                    // add to next available slot
-                    curMoves[moveCount++] = ml.move;
-                }
-            }
-        }
-
-        return curMoves;
-    }
-
     public static String camelCase(String original) {
         char[] string = original.toLowerCase().toCharArray();
         boolean docap = true;

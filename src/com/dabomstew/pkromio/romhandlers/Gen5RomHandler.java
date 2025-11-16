@@ -27,6 +27,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen5EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
@@ -776,7 +777,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
             }
 
-            Gen5Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+            new Gen5EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
             return encounterAreas;
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -1133,26 +1134,26 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trainer = trainers.files.get(i);
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
-                tr.poketype = trainer[0] & 0xFF;
-                tr.index = i;
-                tr.trainerclass = trainer[1] & 0xFF;
+                tr.setPoketype(trainer[0] & 0xFF);
+                tr.setIndex(i);
+                tr.setTrainerclass(trainer[1] & 0xFF);
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
-                tr.fullDisplayName = tclasses.get(tr.trainerclass) + " " + tnames.get(i - 1);
+                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
                 int battleType = trainer[2] & 0xFF;
                 switch (battleType) {
                     case 0:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
                         break;
                     case 1:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                         originalDoubleTrainers.add(i);
                         break;
                     case 2:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.TRIPLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.TRIPLE_BATTLE);
                         break;
                     case 3:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.ROTATION_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.ROTATION_BATTLE);
                         break;
                 }
                 for (int poke = 0; poke < numPokes; poke++) {
@@ -1195,7 +1196,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         }
                         pokeOffs += 8;
                     }
-                    tr.pokemon.add(tpk);
+                    tr.getPokemon().add(tpk);
                 }
                 allTrainers.add(tr);
             }
@@ -1209,11 +1210,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     int currentFile = 1;
                     for (int trno = 0; trno < 17; trno++) {
                         Trainer tr = new Trainer();
-                        tr.index = allTrainers.size() + 1;
-                        tr.poketype = 3; // have held items and custom moves
+                        tr.setIndex(allTrainers.size() + 1);
+                        tr.setPoketype(3); // have held items and custom moves
                         int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
-                        tr.fullDisplayName = tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex);
-                        tr.requiresUniqueHeldItems = true;
+                        tr.setFullDisplayName(tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
+                        tr.setRequiresUniqueHeldItems(true);
                         int pokemonNum = 6;
                         if (trno < 2) {
                             pokemonNum = 3;
@@ -1229,7 +1230,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             for (int move = 0; move < 4; move++) {
                                 tpk.getMoves()[move] = readWord(pkmndata, 2 + (move*2));
                             }
-                            tr.pokemon.add(tpk);
+                            tr.getPokemon().add(tpk);
                             currentFile++;
                         }
                         allTrainers.add(tr);
@@ -1308,12 +1309,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trainer = trainers.files.get(i);
                 Trainer tr = allTrainers.next();
                 // preserve original poketype for held item & moves
-                trainer[0] = (byte) tr.poketype;
-                int numPokes = tr.pokemon.size();
+                trainer[0] = (byte) tr.getPoketype();
+                int numPokes = tr.getPokemon().size();
                 trainer[3] = (byte) numPokes;
 
-                if (tr.forcedDoubleBattle) {
-                    switch (tr.currBattleStyle.getStyle()) {
+                if (tr.isForcedDoubleBattle()) {
+                    switch (tr.getCurrBattleStyle().getStyle()) {
                         case SINGLE_BATTLE:
                             if (trainer[2] != 0) {
                                 trainer[2] = 0;
@@ -1350,7 +1351,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
                 byte[] trpoke = new byte[bytesNeeded];
                 int pokeOffs = 0;
-                Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
+                Iterator<TrainerPokemon> tpokes = tr.getPokemon().iterator();
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
                     // Add 1 to offset integer division truncation
@@ -1369,7 +1370,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -1393,7 +1394,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 int currentFile = 1;
                 for (int trno = 0; trno < 17; trno++) {
                     Trainer tr = allTrainers.next();
-                    Iterator<TrainerPokemon> tpks = tr.pokemon.iterator();
+                    Iterator<TrainerPokemon> tpks = tr.getPokemon().iterator();
                     int pokemonNum = 6;
                     if (trno < 2) {
                         pokemonNum = 3;
@@ -1407,7 +1408,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         writeWord(pkmndata, 12, itemId);
                         // handle moves
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(pkmndata, 2 + m * 2, pokeMoves[m]);
                             }
@@ -2859,7 +2860,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
 
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species pkmn : pokes) {
@@ -2877,7 +2878,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         }
                         if (levelLearntAt == 1) {
                             // override for piloswine
-                            levelLearntAt = 45;
+                            levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
                         // change to pure level evo
                         markImprovedEvolutions(pkmn);
@@ -2886,10 +2887,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
-                        // Replace w/ level 37
+                        // Replace w/ level 37 (or estimated level is useEstimatedLevels)
                         markImprovedEvolutions(pkmn);
                         evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
@@ -3190,11 +3191,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(e);
         }
         return true;
-    }
-
-    @Override
-    public Set<Item> getRegularShopItems() {
-        return itemIdsToSet(Gen5Constants.regularShopItems);
     }
 
     @Override

@@ -66,6 +66,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		}
 		loadedFN = filename;
 		this.loadedROM(productCode, titleId);
+        estimateEvolutionLevels();
 		return true;
 	}
 

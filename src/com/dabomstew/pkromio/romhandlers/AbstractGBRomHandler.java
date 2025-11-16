@@ -40,6 +40,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         loadRomFile(filename);
         midLoadingSetUp();
         loadGameData();
+        estimateEvolutionLevels();
         return true;
     }
 

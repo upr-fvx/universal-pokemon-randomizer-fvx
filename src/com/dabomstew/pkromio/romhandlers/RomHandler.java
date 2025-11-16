@@ -23,7 +23,9 @@ package com.dabomstew.pkromio.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
@@ -332,7 +334,18 @@ public interface RomHandler {
 
     boolean supportsFourStartingMoves();
 
-    // ==============
+    /**
+     * Get the 4 moves known by a Species at a particular level.
+     *
+     * @param pkmn Species index to get moves for.
+     * @param movesets Map of Species indices mapped to movesets.
+     * @param level Level to get at.
+     * @return Array with move indices.
+     */
+    int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
+
+
+        // ==============
     // Static Pokemon
     // ==============
 
@@ -462,8 +475,11 @@ public interface RomHandler {
     // =====
 
     /**
-     * Returns a {@link List} of all {@link Item}s in the game, in order. Some of these may be unused/bug items.
-     * The first element is always null, both to offset the other elements and to represent the "nothing" item.
+     * Returns a {@link List} of all {@link Item}s in the game,
+     * ordered according to {@link ItemIDs}. Some of these may be
+     * unused/bug items. The first element is always null, to represent
+     * the "nothing" item. Other elements can also be null, for items
+     * that don't exist in the given game.
      */
     List<Item> getItems();
 
@@ -550,7 +566,7 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
-    void removeImpossibleEvolutions(boolean changeMoveEvos);
+    void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
     void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
 
@@ -568,7 +584,7 @@ public interface RomHandler {
 
     /**
      * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean)},
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean, boolean)},
      * {@link #makeEvolutionsEasier(boolean)}, or {@link #removeTimeBasedEvolutions()},
      * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
      * If those methods have not been called, this Set is empty.
@@ -671,7 +687,7 @@ public interface RomHandler {
 
     boolean hasCustomPlayerGraphicsSupport();
 
-    void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace);
+    void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics);
 
     /**
      * Returns whether {@link #createPokemonImageGetter(Species)} is implemented or not.

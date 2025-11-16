@@ -53,6 +53,7 @@ public class Settings {
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
+    private boolean estimateLevelForImpossibleEvolutions;
     private boolean makeEvolutionsEasier;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
@@ -180,8 +181,7 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
-    private boolean trainersForceMiddleStage;
-    private int trainersForceMiddleStageLevel = 10;
+    private boolean trainersEvolveTheirPokemon;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -360,11 +360,6 @@ public class Settings {
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
 
-    public enum CustomPlayerGraphicsMod {
-        UNCHANGED, RANDOM
-    }
-
-    private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
     private GraphicsPack customPlayerGraphics;
     private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
@@ -417,7 +412,7 @@ public class Settings {
 
         // 0: general options #1 + trainer/class names
         out.write(makeByteSelected(changeImpossibleEvolutions, updateMoves, updateMovesLegacy, randomizeTrainerNames,
-                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions));
+                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForImpossibleEvolutions));
 
         // 1: pokemon base stats & abilities
         out.write(makeByteSelected(baseStatsFollowEvolutions, baseStatisticsMod == BaseStatisticsMod.RANDOM,
@@ -708,8 +703,8 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon force evolutions
-        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+        // 63 trainer pokemon evolve
+        out.write(makeByteSelected(trainersEvolveTheirPokemon));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -751,6 +746,7 @@ public class Settings {
         settings.setRandomizeTrainerClassNames(restoreState(data[0], 4));
         settings.setMakeEvolutionsEasier(restoreState(data[0], 5));
         settings.setRemoveTimeBasedEvolutions(restoreState(data[0], 6));
+        settings.setEstimateLevelForImpossibleEvolutions(restoreState(data[0], 7));
 
         settings.setBaseStatisticsMod(restoreEnum(BaseStatisticsMod.class, data[1], 3, // UNCHANGED
                 2, // SHUFFLE
@@ -1063,8 +1059,7 @@ public class Settings {
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
-        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
-        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+        settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
@@ -1287,6 +1282,10 @@ public class Settings {
         return changeImpossibleEvolutions;
     }
 
+    public boolean useEstimatedLevelsForImpossibleEvolutions() {
+        return estimateLevelForImpossibleEvolutions;
+    }
+
     public boolean isDualTypeOnly(){
         return dualTypeOnly;
     }
@@ -1297,6 +1296,10 @@ public class Settings {
 
     public void setChangeImpossibleEvolutions(boolean changeImpossibleEvolutions) {
         this.changeImpossibleEvolutions = changeImpossibleEvolutions;
+    }
+
+    public void setEstimateLevelForImpossibleEvolutions(boolean estimateLevelForImpossibleEvolutions) {
+        this.estimateLevelForImpossibleEvolutions = estimateLevelForImpossibleEvolutions;
     }
 
     public boolean isMakeEvolutionsEasier() {
@@ -1899,20 +1902,12 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
-    public boolean isTrainersForceMiddleStage() {
-        return trainersForceMiddleStage;
+    public boolean isTrainersEvolveTheirPokemon() {
+        return trainersEvolveTheirPokemon;
     }
 
-    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
-        this.trainersForceMiddleStage = trainersForceMiddleStage;
-    }
-
-    public int getTrainersForceMiddleStageLevel() {
-        return trainersForceMiddleStageLevel;
-    }
-
-    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
-        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
+    public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
+        this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
     }
 
     public boolean isTrainersForceFullyEvolved() {
@@ -2769,18 +2764,6 @@ public class Settings {
 	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
-
-    public CustomPlayerGraphicsMod getCustomPlayerGraphicsMod() {
-        return customPlayerGraphicsMod;
-    }
-
-    public void setCustomPlayerGraphicsMod(boolean... bools) {
-        setCustomPlayerGraphicsMod(getEnum(CustomPlayerGraphicsMod.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsMod(CustomPlayerGraphicsMod customPlayerGraphicsMod) {
-        this.customPlayerGraphicsMod = customPlayerGraphicsMod;
-    }
 
     public GraphicsPack getCustomPlayerGraphics() {
         return customPlayerGraphics;

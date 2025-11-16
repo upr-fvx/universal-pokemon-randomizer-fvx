@@ -31,12 +31,11 @@ package com.dabomstew.pkromio.romhandlers;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.AbilityIDs;
-import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
@@ -200,19 +199,104 @@ public abstract class AbstractRomHandler implements RomHandler {
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
                             markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxIntermediateLevel);
+                            checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
                             markImprovedEvolutions(pk);
                             checkEvo.setExtraInfo(maxLevel);
+                            checkEvo.setEstimatedEvoLvl(maxLevel);
                         }
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
                         markImprovedEvolutions(pk);
                         checkEvo.setType(EvolutionType.LEVEL);
+                        checkEvo.setEstimatedEvoLvl(checkEvo.getExtraInfo());
                     }
                 }
             }
         }
+    }
 
+    protected void estimateEvolutionLevels() {
+        // Get a list of all level-up evolutions and a list of all non-level-up evolutions
+        List<Evolution> levelUpEvos = new ArrayList<>();
+        List<Evolution> nonLevelUpEvos = new ArrayList<>();
+        for (Species pk : getSpeciesSet()) {
+            for (Evolution evoFrom : pk.getEvolutionsFrom()) {
+                if (evoFrom.getType().usesLevel()) {
+                    levelUpEvos.add(evoFrom);
+                    evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
+                } else {
+                    nonLevelUpEvos.add(evoFrom);
+                }
+            }
+        }
+
+        // For all level-up evolutions, get triplets (BSTfrom, BSTto, evoLevel)
+        List<int[]> levelUpTriplet = new ArrayList<>();
+        for (Evolution evo : levelUpEvos) {
+            int[] triplet = {evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels(), evo.getExtraInfo()};
+            levelUpTriplet.add(triplet);
+        }
+
+        for (Evolution evo : nonLevelUpEvos) {
+            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpTriplet, evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels()));
+        }
+
+        // Postprocess estimated level
+        for (Evolution evo : nonLevelUpEvos) {
+            if (!evo.getFrom().getEvolutionsTo().isEmpty()) { // getFrom Pkmn has a pre-evolution
+                // Make sure the estimatedlevel is at least 25% higher than the evo level of the previous evolution
+                Evolution previousEvo = evo.getFrom().getEvolutionsTo().get(0);
+                evo.setEstimatedEvoLvl(
+                        Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
+            }
+            if (!evo.getTo().getEvolutionsFrom().isEmpty()) { // getTo Pkmn has an evolution
+                // Make sure the evo level is at most 80% of the following evolutions evo level (i.e., the following evolution has a 25% higher level
+                for (Evolution nextEvo : evo.getTo().getEvolutionsFrom()) {
+                    evo.setEstimatedEvoLvl(
+                            Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));
+                }
+            }
+        }
+    }
+
+    private static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {
+
+        // ==== CONFIGURATION PARAMETERS ====
+        double p = 1;                // distance weighting exponent: 1/d^p
+        double preFactor = 1.5;          // scaling factor for preBST
+        double postFactor = 3;         // scaling factor for postBST
+        double largeWeightForZero = 1; // weight to use if distance is zero
+        // ==================================
+
+        double weightedSum = 0.0;
+        double weightSum = 0.0;
+
+        for (int[] sample : samples) {
+            int samplePre = sample[0];
+            int samplePost = sample[1];
+            int sampleLevel = sample[2];
+
+            // Compute Euclidean distance
+            double dx = targetPreBST - samplePre;
+            double dy = targetPostBST - samplePost;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Weight = 1 / d^p, use largeWeightForZero if distance is zero
+            double weight = dist == 0 ? largeWeightForZero : 1.0 / Math.pow(dist, p);
+
+            // Pre/post scaling
+            double scaledPre = Math.pow((double) targetPreBST / samplePre, preFactor);
+            double scaledPost = Math.pow((double) targetPostBST / samplePost, postFactor);
+
+            double adjustedLevel = sampleLevel * (scaledPre + scaledPost) / 2.0;
+
+            weightedSum += adjustedLevel * weight;
+            weightSum += weight;
+        }
+
+        // Return weighted average
+        return (int) Math.round(weightedSum / weightSum);
     }
 
     @Override
@@ -259,6 +343,42 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
         return preImprovedEvolutions;
+    }
+
+    @Override
+    public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
+        int[] curMoves = new int[4];
+
+        int moveCount = 0;
+        List<MoveLearnt> movepool = movesets.get(pkmn);
+        for (MoveLearnt ml : movepool) {
+            if (ml.level > level) {
+                // we're done
+                break;
+            }
+
+            boolean alreadyKnownMove = false;
+            for (int i = 0; i < moveCount; i++) {
+                if (curMoves[i] == ml.move) {
+                    alreadyKnownMove = true;
+                    break;
+                }
+            }
+
+            if (!alreadyKnownMove) {
+                // add this move to the moveset
+                if (moveCount == 4) {
+                    // shift moves up and add to last slot
+                    System.arraycopy(curMoves, 1, curMoves, 0, 3);
+                    curMoves[3] = ml.move;
+                } else {
+                    // add to next available slot
+                    curMoves[moveCount++] = ml.move;
+                }
+            }
+        }
+
+        return curMoves;
     }
 
     /* Private methods/structs used internally by the above methods */
@@ -558,13 +678,13 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public List<String> getTrainerNames() {
-        return getTrainers().stream().map(tr -> tr.name).collect(Collectors.toList());
+        return getTrainers().stream().map(tr -> tr.getName()).collect(Collectors.toList());
     }
 
     @Override
     public void setTrainerNames(List<String> trainerNames) {
         for (int i = 0; i < trainerNames.size(); i++) {
-            getTrainers().get(i).name = trainerNames.get(i);
+            getTrainers().get(i).setName(trainerNames.get(i));
         }
     }
 
@@ -658,6 +778,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         return ids.stream()
                 .filter(id -> id < allItems.size())
                 .map(allItems::get)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
@@ -674,6 +795,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public Set<Item> getXItems() {
         return itemIdsToSet(GlobalConstants.xItems);
+    }
+
+    @Override
+    public Set<Item> getRegularShopItems() {
+        return itemIdsToSet(GlobalConstants.regularShopItems);
     }
 
     @Override
@@ -732,7 +858,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void setCustomPlayerGraphics(GraphicsPack playerGraphics, PlayerCharacterType toReplace) {
+    public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
         throw new UnsupportedOperationException("Custom player graphics not supported for this game.");
     }
 

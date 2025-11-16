@@ -88,6 +88,8 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - DelyBulacha (Frisk, Chara)
 - SharkGuy (Boyfriend)
 - bepis (Shantae)
+- FourLeafSunny (Various)
+- NachoPeñalva (Wally)
 
 ## Direct code contributors
 

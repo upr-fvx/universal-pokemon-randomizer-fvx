@@ -24,6 +24,7 @@ package com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen4EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
@@ -188,7 +189,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				items.get(id).setAllowed(false);
 			}
 		}
-		for (int i = Gen4Constants.tmsStartIndex; i < Gen4Constants.tmsStartIndex + Gen4Constants.tmCount; i++) {
+		for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen4Constants.tmCount; i++) {
 			items.get(i).setTM(true);
 		}
 		for (int id : Gen4Constants.badItems) {
@@ -1314,7 +1315,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(ex);
 		}
 
-		Gen4Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+        new Gen4EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
 		return encounterAreas;
 	}
 
@@ -2677,15 +2678,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				byte[] trainer = trainers.files.get(i);
 				byte[] trpoke = trpokes.files.get(i);
 				Trainer tr = new Trainer();
-				tr.poketype = trainer[0] & 0xFF;
-				tr.trainerclass = trainer[1] & 0xFF;
-				tr.index = i;
+				tr.setPoketype(trainer[0] & 0xFF);
+				tr.setTrainerclass(trainer[1] & 0xFF);
+				tr.setIndex(i);
 				int numPokes = trainer[3] & 0xFF;
 				int battleStyle = trainer[16] & 0xFF;
 				if (battleStyle != 0)
-					tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+					tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
 				int pokeOffs = 0;
-				tr.fullDisplayName = tclasses.get(tr.trainerclass) + " " + tnames.get(i - 1);
+				tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
 				for (int poke = 0; poke < numPokes; poke++) {
 					// Structure is
 					// IV SB LV LV SP SP FRM FRM
@@ -2730,7 +2731,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if (romEntry.getRomType() != Gen4Constants.Type_DP) {
 						pokeOffs += 2;
 					}
-					tr.pokemon.add(tpk);
+					tr.getPokemon().add(tpk);
 				}
 				allTrainers.add(tr);
 			}
@@ -2800,17 +2801,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				byte[] trainer = trainers.files.get(i);
 				Trainer tr = allTrainers.next();
 				// preserve original poketype
-				trainer[0] = (byte) tr.poketype;
-				int numPokes = tr.pokemon.size();
+				trainer[0] = (byte) tr.getPoketype();
+				int numPokes = tr.getPokemon().size();
 				trainer[3] = (byte) numPokes;
 
-				if (tr.forcedDoubleBattle) {
+				if (tr.isForcedDoubleBattle()) {
 					// If we set this flag for partner trainers (e.g., Cheryl), then the double wild
 					// battles will turn into trainer battles with glitchy trainers.
 					boolean excludedPartnerTrainer = romEntry.getRomType() != Gen4Constants.Type_HGSS
-							&& Gen4Constants.partnerTrainerIndices.contains(tr.index);
+							&& Gen4Constants.partnerTrainerIndices.contains(tr.getIndex());
 					if (!excludedPartnerTrainer) {
-						if (tr.currBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+						if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
 							if (trainer[16] == 0) {
 								trainer[16] |= 3;
 							}
@@ -2834,7 +2835,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 				byte[] trpoke = new byte[bytesNeeded];
 				int pokeOffs = 0;
-				Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
+				Iterator<TrainerPokemon> tpokes = tr.getPokemon().iterator();
 				for (int poke = 0; poke < numPokes; poke++) {
 					TrainerPokemon tp = tpokes.next();
 					int ability = tp.getAbilitySlot() << 4;
@@ -2856,7 +2857,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					}
 					if (tr.pokemonHaveCustomMoves()) {
 						if (tp.isResetMoves()) {
-							int[] pokeMoves = RomFunctions.getMovesAtLevel(
+							int[] pokeMoves = getMovesAtLevel(
 									getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
 							for (int m = 0; m < 4; m++) {
 								writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
@@ -2980,10 +2981,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	// the moment; if that changes, then this should be moved there instead.
 	private void fixAbilitySlotValuesForHGSS(List<Trainer> trainers) {
 		for (Trainer tr : trainers) {
-			if (!tr.pokemon.isEmpty()) {
-				TrainerPokemon lastPokemon = tr.pokemon.get(tr.pokemon.size() - 1);
+			if (!tr.getPokemon().isEmpty()) {
+				TrainerPokemon lastPokemon = tr.getPokemon().get(tr.getPokemon().size() - 1);
 				int lastAbilitySlot = lastPokemon.getAbilitySlot();
-				for (int i = 0; i < tr.pokemon.size(); i++) {
+				for (int i = 0; i < tr.getPokemon().size(); i++) {
 					// HGSS has a nasty bug where if a single Pokemon with an abilitySlot of 2
 					// appears on the trainer's team, then all Pokemon that appear after it in
 					// the trpoke data will *also* use their second ability in-game, regardless
@@ -2993,7 +2994,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// Trainer's team uses the same abilitySlot. The choice to copy the last
 					// Pokemon's abilitySlot is arbitrary, but allows us to avoid any special-
 					// casing involving the rival's starter, since it always appears last.
-					tr.pokemon.get(i).setAbilitySlot(lastAbilitySlot);
+					tr.getPokemon().get(i).setAbilitySlot(lastAbilitySlot);
 				}
 			}
 		}
@@ -4245,7 +4246,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+	public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
 
 		Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
 		for (Species pkmn : pokes) {
@@ -4255,17 +4256,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 						// beauty milotic
 						if (evo.getType() == EvolutionType.LEVEL_HIGH_BEAUTY) {
-							// Replace w/ level 35
+							// Replace w/ level 35 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
-							evo.setExtraInfo(35);
+							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35);
 						}
 						// mt.coronet (magnezone/probopass)
 						if (evo.getType() == EvolutionType.LEVEL_MAGNETIC_FIELD) {
-							// Replace w/ level 40
+							// Replace w/ level 40 (or estimatedLevel if useEstimatedLevels)
 							markImprovedEvolutions(pkmn);
 							evo.setType(EvolutionType.LEVEL);
-							evo.setExtraInfo(40);
+							evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 40);
 						}
 						// moss rock (leafeon)
 						if (evo.getType() == EvolutionType.LEVEL_MOSS_ROCK) {
@@ -4294,7 +4295,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						}
 						if (levelLearntAt == 1) {
 							// override for piloswine
-							levelLearntAt = 45;
+							levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
 						}
 						// change to pure level evo
 						markImprovedEvolutions(pkmn);
@@ -4303,10 +4304,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					}
 					// Pure Trade
 					if (evo.getType() == EvolutionType.TRADE) {
-						// Replace w/ level 37
+						// Replace w/ level 37 (or estimatedLevel if useEstimatedLevels)
 						markImprovedEvolutions(pkmn);
 						evo.setType(EvolutionType.LEVEL);
-						evo.setExtraInfo(37);
+						evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
 					}
 					// Trade w/ Item
 					if (evo.getType() == EvolutionType.TRADE_ITEM) {
@@ -4871,11 +4872,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(e);
 		}
 		return true;
-	}
-
-	@Override
-	public Set<Item> getRegularShopItems() {
-		return itemIdsToSet(Gen4Constants.regularShopItems);
 	}
 
 	@Override

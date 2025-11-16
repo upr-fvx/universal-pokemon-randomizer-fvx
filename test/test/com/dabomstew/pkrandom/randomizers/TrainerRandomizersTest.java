@@ -31,8 +31,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
-            if (trainer.forcedDoubleBattle) {
-                assertTrue(trainer.pokemon.size() >= 2);
+            if (trainer.isForcedDoubleBattle()) {
+                assertTrue(trainer.getPokemon().size() >= 2);
             } else {
                 System.out.println("Not a forced double battle.");
             }
@@ -49,8 +49,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
-            if (trainer.forcedDoubleBattle) {
-                assertTrue(trainer.pokemon.size() >= 3);
+            if (trainer.isForcedDoubleBattle()) {
+                assertTrue(trainer.getPokemon().size() >= 3);
             } else {
                 System.out.println("Not a forced triple battle.");
             }
@@ -67,8 +67,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
-            if (trainer.forcedDoubleBattle) {
-                assertTrue(trainer.pokemon.size() >= 3);
+            if (trainer.isForcedDoubleBattle()) {
+                assertTrue(trainer.getPokemon().size() >= 3);
             } else {
                 System.out.println("Not a forced rotation battle.");
             }
@@ -85,17 +85,17 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
         for (Trainer trainer : romHandler.getTrainers()) {
             System.out.println(trainer);
-            if (trainer.forcedDoubleBattle) {
-                switch (trainer.currBattleStyle.getStyle()) {
+            if (trainer.isForcedDoubleBattle()) {
+                switch (trainer.getCurrBattleStyle().getStyle()) {
                     case SINGLE_BATTLE:
-                        assertFalse(trainer.pokemon.isEmpty());
+                        assertFalse(trainer.getPokemon().isEmpty());
                         break;
                     case DOUBLE_BATTLE:
-                        assertTrue(trainer.pokemon.size() >= 2);
+                        assertTrue(trainer.getPokemon().size() >= 2);
                         break;
                     case TRIPLE_BATTLE:
                     case ROTATION_BATTLE:
-                        assertTrue(trainer.pokemon.size() >= 3);
+                        assertTrue(trainer.getPokemon().size() >= 3);
                         break;
                 }
             } else {
@@ -131,8 +131,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         s.setTrainersForceFullyEvolvedLevel(20);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -180,7 +179,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 Type theme = typeThemedTrainers.get(tr);
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + tr);
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
                     System.out.println("\t" + sp);
                     boolean keepsTheme = sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme;
@@ -199,7 +198,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     System.out.println("After: " + tr);
 
                     List<Species> before = nonTypeThemedTrainers.get(tr);
-                    List<TrainerPokemon> after = tr.pokemon;
+                    List<TrainerPokemon> after = tr.getPokemon();
 
                     if (before.size() < after.size()) {
                         throw new IllegalStateException("Trainer removed Pokemon!");
@@ -232,7 +231,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, List<Species>> trainersWithPokemonTypes = new HashMap<>();
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
-            for (TrainerPokemon tp : trainer.pokemon) {
+            for (TrainerPokemon tp : trainer.getPokemon()) {
                 speciesPrimaryTypes.add(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()));
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
@@ -251,7 +250,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             List<String> namesBefore = new ArrayList<>();
             originalNames.put(tr, namesBefore);
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 namesBefore.add(tp.getSpecies().getName());
             }
         }
@@ -284,11 +283,11 @@ public class TrainerRandomizersTest extends RandomizerTest {
             List<String> beforeStrings = new ArrayList<>();
             beforeTrainerStrings.put(tr, beforeStrings);
             beforeStrings.add(tr.toString());
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 beforeStrings.add(tp.getSpecies().toString());
             }
 
-            String gymTag = tr.tag;
+            String gymTag = tr.getTag();
             if(gymTag != null) {
                 gymTag = gymTag.split("-")[0];
 
@@ -310,11 +309,11 @@ public class TrainerRandomizersTest extends RandomizerTest {
     }
 
     private Type getThemedTrainerType(Trainer tr) {
-        Species first = tr.pokemon.get(0).getSpecies();
+        Species first = tr.getPokemon().get(0).getSpecies();
         Type primary = first.getPrimaryType(true);
         Type secondary = first.getSecondaryType(true);
-        for (int i = 1; i < tr.pokemon.size(); i++) {
-            Species pk = tr.pokemon.get(i).getSpecies();
+        for (int i = 1; i < tr.getPokemon().size(); i++) {
+            Species pk = tr.getPokemon().get(i).getSpecies();
             if (secondary != null) {
                 if (secondary != pk.getPrimaryType(true) && secondary != pk.getSecondaryType(true)) {
                     secondary = null;
@@ -364,7 +363,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
 
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 System.out.println(tp.getSpecies());
                 assertTrue(localWithRelatives.contains(tp.getSpecies()));
             }
@@ -395,18 +394,18 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
 
-            if (eliteFourIndices.contains(tr.index)) {
+            if (eliteFourIndices.contains(tr.getIndex())) {
                 System.out.println("-E4 Member-");
                 System.out.println("Non-local: " + nonLocal.stream().map(Species::getName).collect(Collectors.toList()));
                 System.out.println("Local: " + localWithRelatives.stream().map(Species::getName).collect(Collectors.toList()));
                 int nonLocalCount = 0;
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     if (nonLocal.contains(tp.getSpecies())) {
                         nonLocalCount++;
                         System.out.println(tp.getSpecies().getName() + " is non-local");
                     }
                 }
-                assertTrue(nonLocalCount == wantedNonLocal || nonLocalCount == tr.pokemon.size());
+                assertTrue(nonLocalCount == wantedNonLocal || nonLocalCount == tr.getPokemon().size());
             }
         }
     }
@@ -467,7 +466,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         int[] pokeCount = new int[romHandler.getSpecies().size()];
         for (Trainer tr : trainers) {
             System.out.println(tr);
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 Species pk = tp.getSpecies();
                 pokeCount[pk.getNumber()]++;
             }
@@ -481,10 +480,10 @@ public class TrainerRandomizersTest extends RandomizerTest {
         List<Integer> eliteFourIndices = romHandler.getEliteFourTrainers(false);
         assumeTrue(!eliteFourIndices.isEmpty());
         for (Trainer tr : romHandler.getTrainers()) {
-            if (eliteFourIndices.contains(tr.index)) {
+            if (eliteFourIndices.contains(tr.getIndex())) {
                 System.out.println(tr);
                 int minCount = Integer.MAX_VALUE;
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     Species pk = tp.getSpecies();
                     System.out.println(pk.getName() + ":" + pokeCount[pk.getNumber()]);
                     minCount = Math.min(minCount, pokeCount[pk.getNumber()]);
@@ -506,8 +505,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Map<String, List<Type>> e4Types = new HashMap<>();
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && tr.tag.contains("ELITE")) {
-                String memberTag = tr.tag.split("-")[0];
+            if (tr.getTag() != null && tr.getTag().contains("ELITE")) {
+                String memberTag = tr.getTag().split("-")[0];
                 if (!e4Types.containsKey(memberTag)) {
                     e4Types.put(memberTag, new ArrayList<>());
                 }
@@ -549,10 +548,10 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for (int i = 0; i < trainersBefore.size(); i++) {
             Trainer tr = trainersBefore.get(i);
             System.out.println(tr);
-            boolean[] zCrystals = new boolean[tr.pokemon.size()];
+            boolean[] zCrystals = new boolean[tr.getPokemon().size()];
             boolean anyHasZCrystal = false;
-            for (int pkNum = 0; pkNum < tr.pokemon.size(); pkNum++) {
-                TrainerPokemon tp = tr.pokemon.get(pkNum);
+            for (int pkNum = 0; pkNum < tr.getPokemon().size(); pkNum++) {
+                TrainerPokemon tp = tr.getPokemon().get(pkNum);
                 System.out.println(tp.getHeldItem());
                 if (tp.getHeldItem() != null && Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
                     zCrystals[pkNum] = true;
@@ -575,12 +574,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
         new TrainerPokemonRandomizer(romHandler, new Settings(), RND).randomUsableZCrystals();
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 if (tp.getHeldItem() != null && Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) {
                     System.out.println(tp.getSpecies().getName() + " holds " + tp.getHeldItem());
 
                     int[] pkMoves = tp.isResetMoves() ?
-                            RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
+                            romHandler.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
                             : Arrays.stream(tp.getMoves()).distinct().filter(mv -> mv != 0).toArray();
                     Set<Type> moveTypes = new HashSet<>();
                     for (int moveID : pkMoves) {
@@ -620,9 +619,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
     private void checkTrainerTypesAreDiverse(List<Trainer> trainers) {
         for(Trainer trainer : trainers) {
             Set<Type> usedTypes = EnumSet.noneOf(Type.class);
-            System.out.println(trainer.fullDisplayName);
+            System.out.println(trainer.getFullDisplayName());
 
-            for(TrainerPokemon tp : trainer.pokemon) {
+            for(TrainerPokemon tp : trainer.getPokemon()) {
                 Species sp = tp.getSpecies();
                 if(tp.getForme() != 0) {
                     sp = romHandler.getAltFormeOfSpecies(sp, tp.getForme());
@@ -696,7 +695,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
             TrainerPokemon ace = new TrainerPokemon();
             ace.setLevel(0);
 
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 System.out.println(tp + " added=" + tp.isAddedTeamMember());
                 if (tp.getLevel() == ace.getLevel()) {
                     duplicateHighestLevel = true;
@@ -712,7 +711,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void nonForcefullyEvolvedPokemonAreCorrect(String romName) {
+    public void nonForcefullyEvolvedPokemonAreCorrectViaRandomizeTrainerPokes(String romName) {
         activateRomHandler(romName);
 
         // Record original species of all trainer Pokemon (for better console output only)
@@ -720,25 +719,53 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        int trainersFullyEvolvedLevel = 30;
+        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void nonForcefullyEvolvedPokemonAreCorrectViaDirectMethodCall(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersEvolveTheirPokemon(true);
+        s.setTrainersForceFullyEvolved(true);
+        int trainersFullyEvolvedLevel = 30;
+        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
+        TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        tpRando.evolveTrainerPokemonAsFarAsLegal();
+        tpRando.forceFullyEvolvedTrainerPokes();
+
+        // Test
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+    }
+
+    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersFullyEvolvedLevel) {
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
-            for (int k = 0; k<tr.pokemon.size(); k++) {
-                TrainerPokemon tp = tr.pokemon.get(k);
+            for (int k = 0; k < tr.getPokemon().size(); k++) {
+                TrainerPokemon tp = tr.getPokemon().get(k);
                 System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
-                if (tp.getLevel()<20) {
-                    // Everything below level 20 cannot be a basic Pokemon with two evolution stages
-                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
-                }
-                else {
-                    // Everything over level 20 has to be fully evolved
+                if (tp.getLevel() >= trainersFullyEvolvedLevel) {
+                    // Everything >= trainersFullyEvolvedLevel has to be fully evolved
                     assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                } else {
+                    // Any evolution of the Pokemon must have an estimatedEvo level greater than the Pokemon's level,
+                    // otherwise it must be evolved because of 'Trainers evolve their Pokemon'
+                    for (Evolution evo : tp.getSpecies().getEvolutionsFrom()) {
+                        assertTrue(evo.getEstimatedEvoLvl() > tp.getLevel());
+                    }
                 }
             }
         }
@@ -763,15 +790,15 @@ public class TrainerRandomizersTest extends RandomizerTest {
     private void carryStarterCheck() {
         List<Species> starters = romHandler.getStarters();
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL1-") || tr.tag.contains("FRIEND1-"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL1-") || tr.getTag().contains("FRIEND1-"))) {
                 System.out.println(tr);
 
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 Species expected = starters.get((variant + offset) % 3);
-                Species actual = tr.pokemon.get(0).getSpecies();
+                Species actual = tr.getPokemon().get(0).getSpecies();
 
-                assertEquals(1, tr.pokemon.size());
+                assertEquals(1, tr.getPokemon().size());
                 assertEquals(expected, actual);
             }
         }
@@ -815,9 +842,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 .collect(Collectors.toList());
 
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL") || tr.tag.contains("FRIEND"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL") || tr.getTag().contains("FRIEND"))) {
                 System.out.println(tr);
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
                 if (romHandler.isYellow()) {
                     // Yellow uses the variant syntax, to instead refer to alternate battles,
                     // with different evos of the original starter.
@@ -825,11 +852,11 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     variant = 0;
                 }
 
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 SpeciesSet expectedFamily = starterFamilies.get((variant + offset) % 3);
 
                 boolean carriesStarter = false;
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     if (expectedFamily.contains(tp.getSpecies())) {
                         carriesStarter = true;
                         break;
@@ -851,17 +878,16 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
+        s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersForceFullyEvolvedLevel(30);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
-            for (int k = 0; k<tr.pokemon.size(); k++) {
-                TrainerPokemon tp = tr.pokemon.get(k);
+            for (int k = 0; k< tr.getPokemon().size(); k++) {
+                TrainerPokemon tp = tr.getPokemon().get(k);
                 System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName() +
                         ": resetMoves = " + tp.isResetMoves());
                 assertFalse(tp.isResetMoves());
@@ -882,7 +908,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Integer, Integer> moveCounts = new TreeMap<>();
         int tpCount = 0;
         for (Trainer tr : romHandler.getTrainers()) {
-            for (TrainerPokemon tp : tr.pokemon) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
                 tpCount++;
                 for (int moveID : tp.getMoves()) {
                     if (moveID != 0) {

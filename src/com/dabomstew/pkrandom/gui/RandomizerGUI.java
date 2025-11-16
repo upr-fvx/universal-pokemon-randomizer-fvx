@@ -33,12 +33,11 @@ import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RootPath;
-import com.dabomstew.pkromio.constants.Gen3Constants;
 import com.dabomstew.pkromio.constants.GlobalConstants;
 import com.dabomstew.pkromio.exceptions.CannotWriteToLocationException;
 import com.dabomstew.pkromio.exceptions.EncryptedROMException;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.*;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.*;
 import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
@@ -56,8 +55,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -101,6 +100,7 @@ public class RandomizerGUI {
     private JCheckBox peLimitEvolutionsToThreeCheckBox;
     private JCheckBox peForceChangeCheckBox;
     private JCheckBox peChangeImpossibleEvosCheckBox;
+    private JCheckBox peUseEstimatedInsteadOfHardcodedLevelsCheckBox;
     private JCheckBox peMakeEvolutionsEasierCheckBox;
     private JCheckBox peForceGrowthCheckBox;
     private JCheckBox peNoConvergenceCheckBox;
@@ -150,8 +150,7 @@ public class RandomizerGUI {
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
-    private JCheckBox tpForceMiddleStageAtCheckBox;
-    private JSlider tpForceMiddleStageAtSlider;
+    private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private JCheckBox tpForceFullyEvolvedAtCheckBox;
     private JSlider tpForceFullyEvolvedAtSlider;
     private JSlider tpPercentageLevelModifierSlider;
@@ -330,12 +329,7 @@ public class RandomizerGUI {
     private JLabel cpgNotExistLabel;
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
-    private JComboBox<GraphicsPack> cpgComboBox;
-    private JButton cpgRandomButton;
-    private GraphicsPackInfo cpgCustomInfo;
-    private JLabel cpgReplaceLabel;
-    private JRadioButton cpgReplaceRadioButton1;
-    private JRadioButton cpgReplaceRadioButton2;
+    private CPGSelection cpgSelection;
     private JCheckBox miscUpdateRotomFormeTypingCheckBox;
     private JCheckBox miscDisableLowHPMusicCheckBox;
     private JCheckBox tpUseLocalPokemonCheckBox;
@@ -393,11 +387,14 @@ public class RandomizerGUI {
     private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;
+    private String openDirectory = RootPath.path;
+    private String saveDirectory = RootPath.path;
+    private final Map<String, String> lastUsedCPGConfigs = new TreeMap<>();
 
     private List<JCheckBox> tweakCheckBoxes;
     private JPanel liveTweaksPanel = new JPanel();
 
-    private RomOpener romOpener = new RomOpener();
+    private final RomOpener romOpener = new RomOpener();
 
     private JFileChooser romOpenChooser = new JFileChooser();
     private JFileChooser romSaveChooser = new JFileChooser();
@@ -507,6 +504,7 @@ public class RandomizerGUI {
         peUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peRandomEveryLevelRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        peChangeImpossibleEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -538,7 +536,6 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpForceMiddleStageAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -683,11 +680,6 @@ public class RandomizerGUI {
         ppalRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
         cpgUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         cpgCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        cpgComboBox.addItemListener(e -> {
-            GraphicsPack cpg = (GraphicsPack) e.getItem();
-            cpgCustomInfo.setGraphicsPack(cpg);
-        });
-        cpgRandomButton.addActionListener(e -> cpgComboBox.setSelectedIndex(RND.nextInt(cpgComboBox.getItemCount())));
         tpComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 enableOrDisableSubControls();
@@ -757,8 +749,8 @@ public class RandomizerGUI {
     }
 
     private void initFileChooserDirectories() {
-        romOpenChooser.setCurrentDirectory(new File(RootPath.path));
-        romSaveChooser.setCurrentDirectory(new File(RootPath.path));
+        romOpenChooser.setCurrentDirectory(new File(openDirectory));
+        romSaveChooser.setCurrentDirectory(new File(saveDirectory));
         if (new File(RootPath.path + "settings/").exists()) {
             qsOpenChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
             qsSaveChooser.setCurrentDirectory(new File(RootPath.path + "settings/"));
@@ -874,6 +866,8 @@ public class RandomizerGUI {
         romOpenChooser.setSelectedFile(null);
         int returnVal = romOpenChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            openDirectory = romOpenChooser.getSelectedFile().getParentFile().getAbsolutePath();
+            attemptWriteConfig();
             openRom(romOpenChooser.getSelectedFile(), false);
         }
     }
@@ -1015,6 +1009,8 @@ public class RandomizerGUI {
         }
 
         if (allowed && fh != null) {
+            saveDirectory = fh.getParentFile().getAbsolutePath();
+            attemptWriteConfig();
             saveRandomizedRom(outputType, fh);
         } else if (allowed && batchRandomizationSettings.isBatchRandomizationEnabled()) {
             int numberOfRandomizedROMs = batchRandomizationSettings.getNumberOfRandomizedROMs();
@@ -1081,11 +1077,16 @@ public class RandomizerGUI {
 
         try {
             CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
+            CustomPlayerGraphics cpg = getCPGFromGUI();
+            performRandomization(fh.getAbsolutePath(), seed, cns, cpg, outputType == SaveType.DIRECTORY);
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
         }
+    }
+
+    private CustomPlayerGraphics getCPGFromGUI() {
+        return cpgCustomRadioButton.isSelected() ? cpgSelection.getCustomPlayerGraphics() : null;
     }
 
     private void loadQS() {
@@ -1153,7 +1154,9 @@ public class RandomizerGUI {
         }
     }
 
-    private void performRandomization(final String filename, final long seed, CustomNamesSet customNames, boolean saveAsDirectory) {
+    private void performRandomization(final String filename, final long seed,
+                                      CustomNamesSet customNames, CustomPlayerGraphics cpg,
+                                      boolean saveAsDirectory) {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
@@ -1164,7 +1167,7 @@ public class RandomizerGUI {
         try {
             opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
             Thread t = new Thread(() -> performRandomizationInner(
-                    filename, seed, settings, baos, log, raceMode, batchRandomization, saveAsDirectory
+                    filename, seed, settings, cpg, baos, log, raceMode, batchRandomization, saveAsDirectory
             ));
             t.start();
             if (batchRandomization) {
@@ -1188,11 +1191,11 @@ public class RandomizerGUI {
     }
 
     private void performRandomizationInner(String filename,
-                                           long seed, Settings settings,
+                                           long seed, Settings settings, CustomPlayerGraphics cpg,
                                            ByteArrayOutputStream baos, PrintStream log,
                                            boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
         SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-        GameRandomizer randomizer = new GameRandomizer(settings, romHandler, bundle, saveAsDirectory);
+        GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
         GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
 
         if (results.wasSaveSuccessful()) {
@@ -1201,7 +1204,7 @@ public class RandomizerGUI {
                         true, settings.toString(), Long.toString(seed));
             }
             SwingUtilities.invokeLater(() -> finishRandomization(
-                    filename, seed, baos, results.getCheckValue(), raceMode, batchRandomization
+                    filename, seed, cpg, baos, results.getCheckValue(), raceMode, batchRandomization
             ));
         } else {
             Exception e = results.getException();
@@ -1225,9 +1228,14 @@ public class RandomizerGUI {
     }
 
     private void finishRandomization(String filename, long seed,
+                                     CustomPlayerGraphics cpg,
                                      ByteArrayOutputStream baos,
                                      int checkValue,
                                      boolean raceMode, boolean batchRandomization) {
+        if (cpg != null) {
+            recordCPGAsLastUsed(cpg);
+        }
+
         opDialog.setVisible(false);
         byte[] out = baos.toByteArray();
 
@@ -1286,6 +1294,12 @@ public class RandomizerGUI {
 
     }
 
+    private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".pack", cpg.getGraphicsPack().getName());
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".type", cpg.getTypeToReplace().toString());
+        attemptWriteConfig();
+    }
+
     private void saveLogFile(String filename, byte[] out) throws IOException {
         FileOutputStream fos = new FileOutputStream(filename + ".log");
         fos.write(0xEF);
@@ -1296,19 +1310,21 @@ public class RandomizerGUI {
     }
 
     private void presetLoader() {
-        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpener);
+        PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpenChooser, romOpener);
         if (pld.isCompleted()) {
             // Apply it
             long seed = pld.getSeed();
-            String config = pld.getConfigString();
+            String config = pld.getSettingsString();
             this.romHandler = pld.getROM();
             if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
                 this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
             }
             this.romLoaded();
             Settings settings;
+            CustomPlayerGraphics customPlayerGraphics = null;
             try {
                 settings = Settings.fromString(config);
+                customPlayerGraphics = pld.getCustomPlayerGraphics();
                 settings.tweakForRom(this.romHandler);
                 this.restoreStateFromSettings(settings);
             } catch (UnsupportedEncodingException | IllegalArgumentException e) {
@@ -1357,7 +1373,7 @@ public class RandomizerGUI {
             if (allowed && fh != null) {
                 // Apply the seed we were given
                 presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), outputType == SaveType.DIRECTORY);
+                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), customPlayerGraphics, outputType == SaveType.DIRECTORY);
             }
         }
 
@@ -1587,6 +1603,7 @@ public class RandomizerGUI {
         raceModeCheckBox.setSelected(settings.isRaceMode());
 
         peChangeImpossibleEvosCheckBox.setSelected(settings.isChangeImpossibleEvolutions());
+        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForImpossibleEvolutions());
         mdUpdateMovesCheckBox.setSelected(settings.isUpdateMoves());
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
         tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
@@ -1708,8 +1725,7 @@ public class RandomizerGUI {
         tpDontUseLegendariesCheckBox.setSelected(settings.isTrainersBlockLegendaries());
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
-        tpForceMiddleStageAtCheckBox.setSelected(settings.isTrainersForceMiddleStage());
-        tpForceMiddleStageAtSlider.setValue(settings.getTrainersForceMiddleStageLevel());
+        tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
         tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
         tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
@@ -1904,6 +1920,8 @@ public class RandomizerGUI {
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
         settings.setChangeImpossibleEvolutions(peChangeImpossibleEvosCheckBox.isSelected() && peChangeImpossibleEvosCheckBox.isVisible());
+        settings.setEstimateLevelForImpossibleEvolutions(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected()
+                && peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isVisible());
         settings.setUpdateMoves(mdUpdateMovesCheckBox.isSelected() && mdUpdateMovesCheckBox.isVisible());
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
@@ -1996,8 +2014,7 @@ public class RandomizerGUI {
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
-        settings.setTrainersForceMiddleStage(tpForceMiddleStageAtCheckBox.isSelected());
-        settings.setTrainersForceMiddleStageLevel(tpForceMiddleStageAtSlider.getValue());
+        settings.setTrainersEvolveTheirPokemon(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
         settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
@@ -2116,10 +2133,6 @@ public class RandomizerGUI {
         settings.setPokemonPalettesFollowTypes(ppalFollowTypesCheckBox.isSelected());
         settings.setPokemonPalettesFollowEvolutions(ppalFollowEvolutionsCheckBox.isSelected());
         settings.setPokemonPalettesShinyFromNormal(ppalShinyFromNormalCheckBox.isSelected());
-
-        settings.setCustomPlayerGraphicsMod(cpgUnchangedRadioButton.isSelected(), cpgCustomRadioButton.isSelected());
-        settings.setCustomPlayerGraphics((GraphicsPack) cpgComboBox.getSelectedItem());
-        settings.setCustomPlayerGraphicsCharacterMod(cpgReplaceRadioButton1.isSelected(), cpgReplaceRadioButton2.isSelected());
 
         int currentMiscTweaks = 0;
         int mtCount = MiscTweak.allTweaks.size();
@@ -2295,7 +2308,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
 				peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
+				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peUseEstimatedInsteadOfHardcodedLevelsCheckBox,
 				peRemoveTimeBasedEvolutionsCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox,
                 peNoConvergenceCheckBox);
 
@@ -2359,7 +2372,7 @@ public class RandomizerGUI {
 				tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
-                tpForceMiddleStageAtCheckBox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+                tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
@@ -2367,9 +2380,6 @@ public class RandomizerGUI {
 				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
-        tpForceMiddleStageAtSlider.setVisible(true);
-        tpForceMiddleStageAtSlider.setEnabled(false);
-        tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
 		tpForceFullyEvolvedAtSlider.setVisible(true);
 		tpForceFullyEvolvedAtSlider.setEnabled(false);
 		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
@@ -2461,12 +2471,8 @@ public class RandomizerGUI {
 
         setInitialButtonState(ppalUnchangedRadioButton, ppalRandomRadioButton, ppalFollowTypesCheckBox,
                 ppalFollowEvolutionsCheckBox, ppalShinyFromNormalCheckBox,
-                        cpgUnchangedRadioButton, cpgCustomRadioButton, cpgRandomButton,
-                        cpgReplaceRadioButton1, cpgReplaceRadioButton2);
-        cpgComboBox.setVisible(true);
-        cpgComboBox.setEnabled(false);
-        cpgCustomInfo.setVisible(true);
-        cpgCustomInfo.setEnabled(false);
+                        cpgUnchangedRadioButton, cpgCustomRadioButton);
+        cpgSelection.setInitialState();
 
         // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
         //Well, this lets them be named variables, which helps for code readability if nothing else...
@@ -2762,7 +2768,7 @@ public class RandomizerGUI {
 
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
-            tpForceMiddleStageAtCheckBox.setEnabled(true);
+            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
@@ -2971,23 +2977,12 @@ public class RandomizerGUI {
             cpgUnchangedRadioButton.setSelected(true);
             cpgCustomRadioButton.setVisible(cpgSupport);
             cpgCustomRadioButton.setEnabled(cpgSupport);
-            cpgComboBox.setVisible(cpgSupport);
-            cpgComboBox.setEnabled(false);
+            cpgSelection.setVisible(cpgSupport);
             if (cpgSupport) {
-                fillCustomPlayerGraphicsComboBox();
+                cpgSelection.fillComboBox(romHandler);
             }
-            cpgRandomButton.setVisible(cpgSupport);
-            cpgRandomButton.setEnabled(false);
-            cpgCustomInfo.setVisible(cpgSupport);
-            cpgCustomInfo.setEnabled(false);
             boolean cpgReplaceChoiceSupport = cpgSupport && romHandler.hasMultiplePlayerCharacters();
-            cpgReplaceLabel.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceLabel.setEnabled(false);
-            cpgReplaceRadioButton1.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton1.setEnabled(false);
-            cpgReplaceRadioButton1.setSelected(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton2.setVisible(cpgReplaceChoiceSupport);
-            cpgReplaceRadioButton2.setEnabled(false);
+            cpgSelection.setReplaceChoiceVisible(cpgReplaceChoiceSupport);
 
             if (!(ppalSupport || cpgSupport)) {
                 tabbedPane1.setEnabledAt(8, false);
@@ -3046,41 +3041,6 @@ public class RandomizerGUI {
             attemptToLogException(e, "GUI.processFailed","GUI.processFailedNoLog", null, null);
             romHandler = null;
             initialState();
-        }
-    }
-
-    private void fillCustomPlayerGraphicsComboBox() {
-        DefaultComboBoxModel<GraphicsPack> comboBoxModel = new DefaultComboBoxModel<>();
-        cpgComboBox.setModel(comboBoxModel);
-        File players = new File(SysConstants.customPCGDirectory);
-        File[] playerDirectories = players.listFiles(File::isDirectory);
-        if (playerDirectories != null) {
-            for (File playerDir : playerDirectories) {
-                try {
-                    String path = playerDir.getCanonicalPath();
-                    List<GraphicsPackEntry> entries = GraphicsPackEntry.readAllFromFolder(path);
-                    entries.forEach(entry -> {
-                        if (entry.getStringValue("RomType").equalsIgnoreCase("Gen1") && romHandler.generationOfPokemon() == 1) {
-                            comboBoxModel.addElement(new Gen1PlayerCharacterGraphics(entry));
-                        } else if (entry.getStringValue("RomType").equalsIgnoreCase("Gen2") && romHandler.generationOfPokemon() == 2) {
-                            comboBoxModel.addElement(new Gen2PlayerCharacterGraphics(entry));
-                        } else if (romHandler.generationOfPokemon() == 3) {
-                            if ((romHandler.getROMType() == Gen3Constants.RomType_Ruby ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Sapp ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Em) &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("RSE")) {
-                                comboBoxModel.addElement(new RSEPlayerCharacterGraphics(entry));
-                            } else if (romHandler.getROMType() == Gen3Constants.RomType_FRLG &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("FRLG")) {
-                                comboBoxModel.addElement(new FRLGPlayerCharacterGraphics(entry));
-                            }
-                        }
-                    });
-                } catch (Exception ignored) {
-                    System.out.println("Could not read " + playerDir);
-                    ignored.printStackTrace();
-                }
-            }
         }
     }
 
@@ -3155,14 +3115,11 @@ public class RandomizerGUI {
 
             // Also disable/unselect all the settings that make evolutions easier/possible,
             // since they aren't relevant in this scenario at all.
-            disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
-                    peRemoveTimeBasedEvolutionsCheckBox);
+            disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peUseEstimatedInsteadOfHardcodedLevelsCheckBox,
+                    peMakeEvolutionsEasierCheckBox, peRemoveTimeBasedEvolutionsCheckBox);
 
-            // Disable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
-            disableAndDeselectButtons(tpForceMiddleStageAtCheckBox);
-            tpForceMiddleStageAtSlider.setEnabled(false);
-            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
-            disableAndDeselectButtons(tpForceFullyEvolvedAtCheckBox);
+            // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox);
             tpForceFullyEvolvedAtSlider.setEnabled(false);
             tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
         } else {
@@ -3177,9 +3134,15 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
+            // Only enable 'Use estimated level' if change impossible Evos is selected, otherwise disable and deselect it
+            if (peChangeImpossibleEvosCheckBox.isSelected()) {
+                peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
+            } else {
+                disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
+            }
 
-            // Re-enable "Force Middle Stage" and "Force Fully Evolved" Trainer Pokemon
-            tpForceMiddleStageAtCheckBox.setEnabled(true);
+            // Re-enable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
             tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
@@ -3395,13 +3358,6 @@ public class RandomizerGUI {
         }
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
-
-        if (tpForceMiddleStageAtCheckBox.isSelected()) {
-            tpForceMiddleStageAtSlider.setEnabled(true);
-        } else {
-            tpForceMiddleStageAtSlider.setEnabled(false);
-            tpForceMiddleStageAtSlider.setValue(tpForceMiddleStageAtSlider.getMinimum());
-        }
 
         if (tpForceFullyEvolvedAtCheckBox.isSelected()) {
             tpForceFullyEvolvedAtSlider.setEnabled(true);
@@ -3666,8 +3622,8 @@ public class RandomizerGUI {
             disableAndDeselectButtons(teAddRandomImmunitiesCheckBox);
         }
 
-        if (ppalRandomRadioButton.isSelected() && ppalRandomRadioButton.isVisible() &&
-                ppalRandomRadioButton.isEnabled()) {
+        if (ppalRandomRadioButton.isSelected() && ppalRandomRadioButton.isVisible()
+                && ppalRandomRadioButton.isEnabled()) {
             enableButtons(ppalFollowTypesCheckBox, ppalFollowEvolutionsCheckBox,
                     ppalShinyFromNormalCheckBox);
         } else {
@@ -3675,21 +3631,8 @@ public class RandomizerGUI {
                     ppalShinyFromNormalCheckBox);
         }
 
-        if (cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible() && cpgCustomRadioButton.isEnabled()) {
-            cpgComboBox.setEnabled(true);
-            cpgRandomButton.setEnabled(true);
-            cpgCustomInfo.setEnabled(true);
-            cpgReplaceLabel.setEnabled(true);
-            cpgReplaceRadioButton1.setEnabled(true);
-            cpgReplaceRadioButton2.setEnabled(true);
-        } else {
-            cpgComboBox.setEnabled(false);
-            cpgRandomButton.setEnabled(false);
-            cpgCustomInfo.setEnabled(false);
-            cpgReplaceLabel.setEnabled(false);
-            cpgReplaceRadioButton1.setEnabled(false);
-            cpgReplaceRadioButton2.setEnabled(false);
-        }
+        cpgSelection.setEnabled(cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible()
+                && cpgCustomRadioButton.isEnabled());
     }
 
     private void initTweaksPanel() {
@@ -3903,41 +3846,52 @@ public class RandomizerGUI {
                         if (isReadingUpdates) {
                             gameUpdates.put(key, tokens[1]);
                         }
-                        if (key.equalsIgnoreCase("checkedcustomnames172")) {
+
+                        if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("firststart")) {
+
+                        } else if (key.equals("firststart")) {
                             String val = tokens[1];
                             if (val.equals(Version.VERSION_STRING)) {
                                 initialPopup = false;
                             }
-                        }
-                        if (key.equals("unloadgameonsuccess")) {
+
+                        } else if (key.equals("unloadgameonsuccess")) {
                             unloadGameOnSuccess = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("showinvalidrompopup")) {
+
+                        } else if (key.equals("showinvalidrompopup")) {
                             showInvalidRomPopup = Boolean.parseBoolean(tokens[1].trim());
-                        }
-                        if (key.equals("batchrandomization.enabled")) {
+
+                        } else if (key.equals("inputdirectory")) {
+                            openDirectory = tokens[1].trim();
+
+                        } else if (key.equals("outputdirectory")) {
+                            saveDirectory = tokens[1].trim();
+
+                        } else if (key.equals("batchrandomization.enabled")) {
                             batchRandomizationSettings.setBatchRandomizationEnabled(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.generatelogfiles")){
+
+                        } else if (key.equals("batchrandomization.generatelogfiles")) {
                             batchRandomizationSettings.setGenerateLogFile(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.autoadvanceindex")){
+
+                        } else if (key.equals("batchrandomization.autoadvanceindex")) {
                             batchRandomizationSettings.setAutoAdvanceStartingIndex(Boolean.parseBoolean(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.numberofrandomizedroms")){
+
+                        } else if (key.equals("batchrandomization.numberofrandomizedroms")) {
                             batchRandomizationSettings.setNumberOfRandomizedROMs(Integer.parseInt(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.startingindex")){
+
+                        } else if (key.equals("batchrandomization.startingindex")) {
                             batchRandomizationSettings.setStartingIndex(Integer.parseInt(tokens[1].trim()));
-                        }
-                        if (key.equals("batchrandomization.filenameprefix")){
+
+                        } else if (key.equals("batchrandomization.filenameprefix")) {
                             batchRandomizationSettings.setFileNamePrefix(tokens[1].trim());
-                        }
-                        if (key.equals("batchrandomization.outputdirectory")){
+
+                        } else if (key.equals("batchrandomization.outputdirectory")) {
                             batchRandomizationSettings.setOutputDirectory(tokens[1].trim());
+
+                        } else if (key.startsWith("lastusedcpg.")) {
+                            String k = key.substring("lastusedcpg.".length());
+                            lastUsedCPGConfigs.put(k, tokens[1].trim());
                         }
                     }
                 } else if (isReadingUpdates) {
@@ -3962,6 +3916,8 @@ public class RandomizerGUI {
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
             ps.println("showinvalidrompopup=" + showInvalidRomPopup);
+            ps.println("inputdirectory=" + openDirectory);
+            ps.println("outputdirectory=" + saveDirectory);
             ps.println(batchRandomizationSettings.toString());
             if (!initialPopup) {
                 ps.println("firststart=" + Version.VERSION_STRING);
@@ -3973,6 +3929,9 @@ public class RandomizerGUI {
                     ps.format("%s=%s", update.getKey(), update.getValue());
                     ps.println();
                 }
+            }
+            for (Map.Entry<String, String> entry : lastUsedCPGConfigs.entrySet()) {
+                ps.println("lastusedcpg." + entry.getKey() + "=" + entry.getValue());
             }
             ps.close();
             return true;

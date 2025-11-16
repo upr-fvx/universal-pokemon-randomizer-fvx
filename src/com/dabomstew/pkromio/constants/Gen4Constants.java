@@ -1459,9 +1459,9 @@ public class Gen4Constants {
             EvolutionType.LEVEL_ATK_DEF_SAME, EvolutionType.LEVEL_DEFENSE_HIGHER, EvolutionType.LEVEL_LOW_PV,
             EvolutionType.LEVEL_HIGH_PV, EvolutionType.LEVEL_CREATE_EXTRA, EvolutionType.LEVEL_IS_EXTRA,
             EvolutionType.HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY, EvolutionType.STONE_FEMALE_ONLY,
-            EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT, EvolutionType.LEVEL_WITH_MOVE,
-            EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY, EvolutionType.LEVEL_FEMALE_ONLY,
-            EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK, EvolutionType.LEVEL_ICE_ROCK
+            EvolutionType.ITEM_DAY, EvolutionType.ITEM_NIGHT, EvolutionType.WITH_MOVE,
+            EvolutionType.WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY, EvolutionType.LEVEL_FEMALE_ONLY,
+            EvolutionType.MAGNETIC_FIELD, EvolutionType.MOSS_ROCK, EvolutionType.ICE_ROCK
     };
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
@@ -1483,11 +1483,11 @@ public class Gen4Constants {
     public static int getMapIndexForLocationEvolution(EvolutionType et) {
         // assumes this is for DPPt
         switch (et) {
-            case LEVEL_MAGNETIC_FIELD:
+            case MAGNETIC_FIELD:
                 return 10; // Mt. Coronet
-            case LEVEL_MOSS_ROCK:
+            case MOSS_ROCK:
                 return 8; // Eterna Forest
-            case LEVEL_ICE_ROCK:
+            case ICE_ROCK:
                 return 166; // Route 217
             default:
                 throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");

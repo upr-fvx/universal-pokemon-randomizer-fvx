@@ -424,10 +424,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     /* Helper methods used by subclasses and/or this class */
 
     /**
-     * Splits occurrences of {@link EvolutionType#LEVEL_ITEM} into
-     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.<br>
-     * Since LEVEL_ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
-     * Assumes each Species has at most one LEVEL_ITEM Evolution.
+     * Splits occurrences of {@link EvolutionType#ITEM} into
+     * a {@link EvolutionType#ITEM_DAY} and a {@link EvolutionType#ITEM_NIGHT} part.<br>
+     * Since ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
+     * Assumes each Species has at most one ITEM Evolution.
      */
     protected void splitLevelItemEvolutions() {
         for (Species pk : getSpecies()) {
@@ -436,15 +436,15 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
             List<Evolution> levelItemEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getType() == EvolutionType.LEVEL_ITEM) {
+                if (evo.getType() == EvolutionType.ITEM) {
                     levelItemEvos.add(evo);
                 }
             }
             if (!levelItemEvos.isEmpty()) {
                 for (Evolution levelItemEvo : levelItemEvos) {
-                    levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                    levelItemEvo.setType(EvolutionType.ITEM_DAY);
                     Evolution nightEvo = new Evolution(levelItemEvo);
-                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                    nightEvo.setType(EvolutionType.ITEM_NIGHT);
                     nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
                     nightEvo.getTo().getEvolutionsTo().add(nightEvo);
                 }
@@ -453,10 +453,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     /**
-     * Merge occurrences of otherwise identical {@link EvolutionType#LEVEL_ITEM_DAY} and
-     * {@link EvolutionType#LEVEL_ITEM_NIGHT} {@link Evolution}s into a single one
-     * using {@link EvolutionType#LEVEL_ITEM}.<br>
-     * Assumes each Species has at most one pair of LEVEL_ITEM_DAY/NIGHT Evolutions.
+     * Merge occurrences of otherwise identical {@link EvolutionType#ITEM_DAY} and
+     * {@link EvolutionType#ITEM_NIGHT} {@link Evolution}s into a single one
+     * using {@link EvolutionType#ITEM}.<br>
+     * Assumes each Species has at most one pair of ITEM_DAY/NIGHT Evolutions.
      */
     protected void mergeLevelItemEvolutions() {
         for (Species pk : getSpecies()) {
@@ -466,9 +466,9 @@ public abstract class AbstractRomHandler implements RomHandler {
             List<Evolution> dayEvos = new ArrayList<>();
             List<Evolution> nightEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
+                if (evo.getType() == EvolutionType.ITEM_DAY) {
                     dayEvos.add(evo);
-                } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
+                } else if (evo.getType() == EvolutionType.ITEM_NIGHT) {
                     nightEvos.add(evo);
                 }
             }
@@ -476,10 +476,10 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution dayEvo : dayEvos) {
                 boolean merged = false;
 
-                dayEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                dayEvo.setType(EvolutionType.ITEM_NIGHT);
                 for (Evolution nightEvo : nightEvos) {
                     if (dayEvo.equals(nightEvo)) {
-                        dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                        dayEvo.setType(EvolutionType.ITEM);
                         nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
                         nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
                         merged = true;
@@ -487,7 +487,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
                 if (!merged) {
                     // The dayEvo didn't have an identical nightEvo, so turn it back
-                    dayEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                    dayEvo.setType(EvolutionType.ITEM_DAY);
                 }
             }
         }

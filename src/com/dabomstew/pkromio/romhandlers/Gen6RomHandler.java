@@ -3131,7 +3131,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (Species pkmn : pokes) {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
+                    if (changeMoveEvos && evo.getType() == EvolutionType.WITH_MOVE) {
                         // read move
                         int move = evo.getExtraInfo();
                         int levelLearntAt = 1;
@@ -3167,7 +3167,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             evo.setType(EvolutionType.STONE);
                             evo.setExtraInfo(ItemIDs.waterStone);
                         } else {
-                            evo.setType(EvolutionType.LEVEL_ITEM);
+                            evo.setType(EvolutionType.ITEM);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
@@ -3176,7 +3176,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // (22)
                         // Based on what species we're currently dealing with
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL_WITH_OTHER);
+                        evo.setType(EvolutionType.WITH_OTHER);
                         evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
@@ -3209,7 +3209,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (Species pkmn : pokes) {
                 if (pkmn != null) {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                        if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
+                        if (evo.getType() == EvolutionType.WITH_OTHER) {
                             // Replace w/ level 35
                             markImprovedEvolutions(pkmn);
                             evo.setType(EvolutionType.LEVEL);

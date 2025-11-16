@@ -858,10 +858,10 @@ public class Gen7Constants {
             EvolutionType.LEVEL_ATTACK_HIGHER, EvolutionType.LEVEL_ATK_DEF_SAME, EvolutionType.LEVEL_DEFENSE_HIGHER,
             EvolutionType.LEVEL_LOW_PV, EvolutionType.LEVEL_HIGH_PV, EvolutionType.LEVEL_CREATE_EXTRA,
             EvolutionType.LEVEL_IS_EXTRA, EvolutionType.HIGH_BEAUTY, EvolutionType.STONE_MALE_ONLY,
-            EvolutionType.STONE_FEMALE_ONLY, EvolutionType.LEVEL_ITEM_DAY, EvolutionType.LEVEL_ITEM_NIGHT,
-            EvolutionType.LEVEL_WITH_MOVE, EvolutionType.LEVEL_WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY,
-            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.LEVEL_MAGNETIC_FIELD, EvolutionType.LEVEL_MOSS_ROCK,
-            EvolutionType.LEVEL_ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
+            EvolutionType.STONE_FEMALE_ONLY, EvolutionType.ITEM_DAY, EvolutionType.ITEM_NIGHT,
+            EvolutionType.WITH_MOVE, EvolutionType.WITH_OTHER, EvolutionType.LEVEL_MALE_ONLY,
+            EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.MAGNETIC_FIELD, EvolutionType.MOSS_ROCK,
+            EvolutionType.ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
             EvolutionType.LEVEL_FEMALE_ESPURR, EvolutionType.NONE, EvolutionType.NONE,
             EvolutionType.NONE, EvolutionType.NONE, EvolutionType.SNOWY,
@@ -893,12 +893,12 @@ public class Gen7Constants {
 
     public static List<Integer> getAreaIndicesForLocationEvolution(EvolutionType et, int romType) {
         switch (et) {
-            case LEVEL_MAGNETIC_FIELD:
+            case MAGNETIC_FIELD:
                 // {Vast Poni Canyon} : {Blush Mountain, Vast Poni Canyon}
                 return romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
-            case LEVEL_MOSS_ROCK:
+            case MOSS_ROCK:
                 return Collections.singletonList(74); // {Lush Jungle}
-            case LEVEL_ICE_ROCK:
+            case ICE_ROCK:
             case SNOWY:
                 return Collections.singletonList(138); // {Mount Lanakila}
             default:

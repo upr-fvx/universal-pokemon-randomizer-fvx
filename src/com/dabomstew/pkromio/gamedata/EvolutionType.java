@@ -42,11 +42,11 @@ public enum EvolutionType {
     HIGH_BEAUTY, // used by Feebas
     // Gen 4+
     STONE_MALE_ONLY, STONE_FEMALE_ONLY,
-    LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT,
-    LEVEL_WITH_MOVE,
-    LEVEL_WITH_OTHER, // used by Mantyke
+    ITEM_DAY, ITEM_NIGHT,
+    WITH_MOVE,
+    WITH_OTHER, // used by Mantyke
     LEVEL_MALE_ONLY, LEVEL_FEMALE_ONLY,
-    LEVEL_MAGNETIC_FIELD, LEVEL_MOSS_ROCK, LEVEL_ICE_ROCK,
+    MAGNETIC_FIELD, MOSS_ROCK, ICE_ROCK,
     // Gen 5+
     TRADE_SPECIAL, // used by Karrablast and Shelmet. The mon to trade with is likely hard-coded. // TODO: confirm
     // Gen 6+
@@ -66,7 +66,7 @@ public enum EvolutionType {
     LEVEL_ULTRA, // used by Cubone -> Marowak-K; in Ultra Space.
     STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
     // Other
-    LEVEL_ITEM, // not in any game internally
+    ITEM, // not in any game internally
     NONE;
 
     private static final List<EvolutionType> USES_LEVEL_THRESHOLD = Arrays.asList(
@@ -87,15 +87,15 @@ public enum EvolutionType {
 
     private static final List<EvolutionType> USES_ITEM = Arrays.asList(
             STONE, TRADE_ITEM, STONE_MALE_ONLY, STONE_FEMALE_ONLY,
-            LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT, STONE_ULTRA, LEVEL_ITEM
+            ITEM_DAY, ITEM_NIGHT, STONE_ULTRA, ITEM
     );
 
     private static final List<EvolutionType> USES_LOCATION = Arrays.asList(
-            LEVEL_MAGNETIC_FIELD, LEVEL_MOSS_ROCK, LEVEL_ICE_ROCK, SNOWY
+            MAGNETIC_FIELD, MOSS_ROCK, ICE_ROCK, SNOWY
     );
 
     private static final List<EvolutionType> DAY_TYPES = Arrays.asList(
-            HAPPINESS_DAY, LEVEL_ITEM_DAY, LEVEL_DAY, LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY
+            HAPPINESS_DAY, ITEM_DAY, LEVEL_DAY, LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY
     );
 
     private static final Map<EvolutionType, EvolutionType> TIME_PAIRS = initTimePairs();
@@ -104,8 +104,8 @@ public enum EvolutionType {
         Map<EvolutionType, EvolutionType> map = new HashMap<>();
         map.put(HAPPINESS_DAY, HAPPINESS_NIGHT);
         map.put(HAPPINESS_NIGHT, HAPPINESS_DAY);
-        map.put(LEVEL_ITEM_DAY, LEVEL_ITEM_NIGHT);
-        map.put(LEVEL_ITEM_NIGHT, LEVEL_ITEM_DAY);
+        map.put(ITEM_DAY, ITEM_NIGHT);
+        map.put(ITEM_NIGHT, ITEM_DAY);
         map.put(LEVEL_DAY, LEVEL_NIGHT);
         map.put(LEVEL_NIGHT, LEVEL_DAY);
         map.put(LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS_NIGHT);
@@ -121,8 +121,8 @@ public enum EvolutionType {
         Map<EvolutionType, EvolutionType> map = new HashMap<>();
         map.put(HAPPINESS_DAY, HAPPINESS);
         map.put(HAPPINESS_NIGHT, HAPPINESS);
-        map.put(LEVEL_ITEM_DAY, LEVEL_ITEM);
-        map.put(LEVEL_ITEM_NIGHT, LEVEL_ITEM);
+        map.put(ITEM_DAY, ITEM);
+        map.put(ITEM_NIGHT, ITEM);
         map.put(LEVEL_DAY, LEVEL);
         map.put(LEVEL_NIGHT, LEVEL);
         map.put(LEVEL_GAME_THIS_DAY, LEVEL_GAME_THIS);
@@ -147,11 +147,11 @@ public enum EvolutionType {
     }
 
     public boolean usesMove() {
-        return this == LEVEL_WITH_MOVE;
+        return this == WITH_MOVE;
     }
 
     public boolean usesSpecies() {
-        return this == LEVEL_WITH_OTHER;
+        return this == WITH_OTHER;
     }
 
     public boolean usesLocation() {

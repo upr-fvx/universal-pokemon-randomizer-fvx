@@ -65,3 +65,5 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].
+- (Gen 4-7) Fixed additional trainer pokemon of unrandomized trainers always
+  being duplicates of original trainer pokemon. (Issue #116)

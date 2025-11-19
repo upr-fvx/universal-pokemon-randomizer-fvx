@@ -645,7 +645,11 @@ public class Gen4Constants {
     public static final int[] dpptAlternateSlots = new int[] { 0, 1, 2, 3, 2, 3, 4, 5, 10, 11, 8, 9, 8, 9, 8, 9, 8, 9,
             8, 9 };
 
-    public static final String[] dpptWaterSlotSetNames = new String[] { "Surfing", "Filler", "Old Rod", "Good Rod",
+    public static final String[] dpptWalkingAreaNames = new String[] { "Always", "Morning", "Day", "Night",
+            "No Swarm", "Swarm", "No Radar", "Radar", "No Dual Slot", "Dual Slot Ruby", "Dual Slot Sapphire",
+            "Dual Slot Emerald", "Dual Slot FireRed", "Dual Slot LeafGreen" };
+
+    public static final String[] dpptWaterSlotAreaNames = new String[] { "Surfing", "Filler", "Old Rod", "Good Rod",
             "Super Rod" };
 
     public static final String[] hgssTimeOfDayNames = new String[] { "Morning", "Day", "Night" };

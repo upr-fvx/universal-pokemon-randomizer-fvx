@@ -24,7 +24,6 @@ package com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.*;
 import com.dabomstew.pkromio.constants.*;
-import com.dabomstew.pkromio.constants.enctaggers.Gen4EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
@@ -1309,26 +1308,26 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 				encounterAreas = getEncountersHGSS(useTimeOfDay);
 			} else {
-				encounterAreas = getEncountersDPPt(useTimeOfDay);
+				encounterAreas = getEncountersDPPt();
 			}
 		} catch (IOException ex) {
 			throw new RomIOException(ex);
 		}
 
-        new Gen4EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+//        new Gen4EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
 		return encounterAreas;
 	}
 
-	private List<EncounterArea> getEncountersDPPt(boolean useTimeOfDay) throws IOException {
+	private List<EncounterArea> getEncountersDPPt() throws IOException {
 		List<EncounterArea> encounterAreas = new ArrayList<>();
 
-		readMainEncountersDPPt(encounterAreas, useTimeOfDay);
+		readMainEncountersDPPt(encounterAreas);
 		readExtraEncountersDPPt(encounterAreas);
 
 		return encounterAreas;
 	}
 
-	private void readMainEncountersDPPt(List<EncounterArea> encounterAreas, boolean useTimeOfDay) throws IOException {
+	private void readMainEncountersDPPt(List<EncounterArea> encounterAreas) throws IOException {
 		String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
 		// Credit for
@@ -1343,54 +1342,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			String mapName = wildMapNames.get(c);
 			int walkingRate = readLong(b, 0);
 			if (walkingRate != 0) {
-				// up to 4
-				EncounterArea walkingArea = new EncounterArea(readEncountersDPPt(b, 4, 12));
-				walkingArea.setDisplayName(mapName + " Grass/Cave");
-				walkingArea.setEncounterType(EncounterType.WALKING);
-				walkingArea.setRate(walkingRate);
-				walkingArea.setMapIndex(c);
-				encounterAreas.add(walkingArea);
-
-				// Time of day replacements?
-				if (useTimeOfDay) {
-					for (int i = 0; i < 4; i++) {
-						int pknum = readLong(b, 108 + 4 * i);
-						if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-							Species pk = pokes[pknum];
-							Encounter enc = new Encounter();
-							enc.setLevel(walkingArea.get(Gen4Constants.dpptAlternateSlots[i + 2]).getLevel());
-							enc.setSpecies(pk);
-							walkingArea.add(enc);
-						}
-					}
-				}
-				// (if useTimeOfDay is off, just override them later)
-
-				// Other conditional replacements (swarm, radar, GBA)
-				EncounterArea condsArea = new EncounterArea();
-				condsArea.setDisplayName(mapName + " Swarm/Radar/GBA");
-				condsArea.setEncounterType(EncounterType.SPECIAL);
-				condsArea.setRate(walkingRate);
-				condsArea.setMapIndex(c);
-				for (int i = 0; i < 20; i++) {
-					if (i >= 2 && i <= 5) {
-						// Time of day slot, handled already
-						continue;
-					}
-					int offs = 100 + i * 4 + (i >= 10 ? 24 : 0);
-					int pknum = readLong(b, offs);
-					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-						Species pk = pokes[pknum];
-						Encounter enc = new Encounter();
-						enc.setLevel(walkingArea.get(Gen4Constants.dpptAlternateSlots[i]).getLevel());
-						enc.setSpecies(pk);
-						condsArea.add(enc);
-					}
-				}
-				if (!condsArea.isEmpty()) {
-					encounterAreas.add(condsArea);
-				}
-			}
+                readWalkingEncountersDPPt(encounterAreas, b, mapName, c, walkingRate);
+            }
 
 			// up to 204, 5 sets of "sea" encounters to go
 			int offset = 204;
@@ -1403,7 +1356,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					continue;
 				}
 				EncounterArea seaArea = new EncounterArea(seaEncounters);
-				seaArea.setDisplayName(mapName + " " + Gen4Constants.dpptWaterSlotSetNames[i]);
+				seaArea.setDisplayName(mapName + " " + Gen4Constants.dpptWaterSlotAreaNames[i]);
 				seaArea.setEncounterType(i == 0 ? EncounterType.SURFING : EncounterType.FISHING);
 				seaArea.setMapIndex(c);
 				seaArea.setRate(rate);
@@ -1412,6 +1365,59 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
+    private void readWalkingEncountersDPPt(List<EncounterArea> encounterAreas, byte[] b,
+                                           String mapName, int mapID, int walkingRate) {
+        EncounterArea combined = new EncounterArea(readEncountersDPPt(b, 4, 12));
+
+        EncounterArea always = new EncounterArea(combined.subList(6, 8));
+        EncounterArea morning = new EncounterArea(combined.subList(2, 4));
+        EncounterArea noSwarm = new EncounterArea(combined.subList(0, 2));
+        EncounterArea noRadar = new EncounterArea(combined.subList(4, 6));
+        noRadar.addAll(combined.subList(10, 12));
+        EncounterArea noDualSlot = new EncounterArea(combined.subList(8, 10));
+
+        EncounterArea swarm = readReplacementEncountersDPPt(b, 0, noSwarm);
+        EncounterArea day = readReplacementEncountersDPPt(b, 2, morning);
+        EncounterArea night = readReplacementEncountersDPPt(b, 4, morning);
+        EncounterArea radar = readReplacementEncountersDPPt(b, 6, noRadar);
+        EncounterArea dualSlotRuby = readReplacementEncountersDPPt(b, 16, noDualSlot);
+        EncounterArea dualSlotSapphire = readReplacementEncountersDPPt(b, 18, noDualSlot);
+        EncounterArea dualSlotEmerald = readReplacementEncountersDPPt(b, 20, noDualSlot);
+        EncounterArea dualSlotFireRed = readReplacementEncountersDPPt(b, 22, noDualSlot);
+        EncounterArea dualSlotLeafGreen = readReplacementEncountersDPPt(b, 24, noDualSlot);
+
+        List<EncounterArea> walkingAreas = Arrays.asList(
+                always, morning, day, night, noSwarm, swarm, noRadar, radar,
+                noDualSlot, dualSlotRuby, dualSlotSapphire, dualSlotEmerald, dualSlotFireRed, dualSlotLeafGreen
+        );
+        for (int i = 0; i < walkingAreas.size(); i++) {
+            String areaName = Gen4Constants.dpptWalkingAreaNames[i];
+            String displayName = String.format("%s Grass/Cave (%s)", mapName, areaName);
+            walkingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.WALKING);
+        }
+        walkingAreas.forEach(area -> area.setRate(walkingRate));
+        encounterAreas.addAll(walkingAreas);
+
+        // TODO: There was some notion in the old code some notion of replacements "not being there".
+        //  What does this mean?
+    }
+
+    private EncounterArea readReplacementEncountersDPPt(byte[] b, int start, EncounterArea replacementOf) {
+        EncounterArea area = new EncounterArea();
+        for (int i = 0; i < replacementOf.size(); i++) {
+            int offset = 100 + (i + start) * 4;
+            int pknum = readLong(b, offset);
+            if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
+                Species pk = pokes[pknum];
+                Encounter enc = new Encounter();
+                enc.setLevel(replacementOf.get(i).getLevel());
+                enc.setSpecies(pk);
+                area.add(enc);
+            }
+        }
+        return area;
+    }
+
 	private void readExtraEncountersDPPt(List<EncounterArea> encounterAreas) throws IOException {
 		String extraEncountersFile = romEntry.getFile("ExtraEncounters");
 		NARCArchive extraEncounterData = readNARC(extraEncountersFile);
@@ -1419,8 +1425,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		readFeebasTileEncounters(encounterAreas, extraEncounterData, encounterOverlay);
 		readHoneyTreeEncounters(encounterAreas, extraEncounterData, encounterOverlay);
-		readTrophyGardenRotatingEncounters(encounterAreas, extraEncounterData);
-		readGreatMarshRotatingEncounters(encounterAreas, extraEncounterData);
+//		readTrophyGardenRotatingEncounters(encounterAreas, extraEncounterData);
+//		readGreatMarshRotatingEncounters(encounterAreas, extraEncounterData);
 	}
 
 	private void readFeebasTileEncounters(List<EncounterArea> encounterAreas, NARCArchive extraEncounterData, byte[] encounterOverlay) {
@@ -1895,8 +1901,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				setEncountersHGSS(useTimeOfDay, encounterAreas);
 				updatePokedexAreaDataHGSS(encounterAreas);
 			} else {
-				setEncountersDPPt(useTimeOfDay, encounterAreas);
-				updatePokedexAreaDataDPPt(encounterAreas);
+                System.out.println("Encounter setting is not functional atm in DPPt. Wait for the next commit or so.");
+//				setEncountersDPPt(useTimeOfDay, encounterAreas);
+//				updatePokedexAreaDataDPPt(encounterAreas);
 			}
 		} catch (IOException ex) {
 			throw new RomIOException(ex);

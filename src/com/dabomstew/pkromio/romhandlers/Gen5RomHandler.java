@@ -449,7 +449,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void prepareSaveRom() {
         super.prepareSaveRom();
-        saveTrainers(); // TODO move up
         try {
             writeNARC(romEntry.getFile("TextStrings"), stringsNarc);
             writeNARC(romEntry.getFile("TextStory"), storyTextNarc);

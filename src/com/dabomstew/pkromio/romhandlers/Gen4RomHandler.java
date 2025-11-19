@@ -779,7 +779,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	protected void prepareSaveRom() {
 		super.prepareSaveRom();
-        saveTrainers(); // TODO once every Rom Handler has this, this can move to prepareSaveRom in AbstractRomHandler
 		try {
 			writeNARC(romEntry.getFile("Text"), msgNarc);
 		} catch (IOException e) {

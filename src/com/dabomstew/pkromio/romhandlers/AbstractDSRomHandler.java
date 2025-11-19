@@ -78,12 +78,19 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     @Override
     protected void prepareSaveRom() {
         super.prepareSaveRom();
+        saveTrainers(); // TODO once every Rom Handler has this, this can move to prepareSaveRom in AbstractRomHandler
         try {
             writeARM9(arm9);
         } catch (IOException e) {
             throw new RomIOException(e);
         }
     }
+
+    @Override
+    public abstract void loadTrainers();
+
+    @Override
+    public abstract void saveTrainers();
 
     @Override
     public boolean saveRomFile(String filename, long seed) {

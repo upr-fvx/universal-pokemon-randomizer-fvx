@@ -768,7 +768,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private void readFishingEncounters(List<EncounterArea> encounterAreas) {
         int tableOffset = romEntry.getIntValue("FishingWildsTableOffset");
         for (int group = 0; group < Gen2Constants.fishingGroupCount; group++) {
-            String groupName = Gen2Constants.fishingAreaNames[group];
+            String groupName = Gen2Constants.fishingGroupNames[group];
             int groupOffset = tableOffset + group * Gen2Constants.fishingGroupLength;
             readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 1), "Old Rod " + groupName);
             readNormalFishingEncounters(encounterAreas, readPointer(groupOffset + 3), "Good Rod " + groupName);
@@ -778,7 +778,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         for (int i = 0; i < 44; i++) {
             int offset = timeGroupsOffset + i * 2;
 
-            String groupName = Gen2Constants.fishingAreaNames[i / 4];
+            String groupName = Gen2Constants.fishingGroupNames[i / 4];
             String rodName = (i / 2) % 2 == 0 ? "Good Rod" : "Super Rod";
             String timeName = i % 2 == 0 ? "Not Night" : "Night";
             String displayName = String.format("%s %s (Extra, %s)", rodName, groupName, timeName);

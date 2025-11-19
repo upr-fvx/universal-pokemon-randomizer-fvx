@@ -1457,13 +1457,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             if (fishingOffset != -1 && rom[fishingOffset] != 0
                     && !seenOffsets.contains(readPointer(fishingOffset + 4))) {
-                encounterAreas.add(readEncounterArea(fishingOffset, Gen3Constants.fishingSlots,
-                        mapName + " Fishing", EncounterType.FISHING));
+                addFishingEncounterAreas(fishingOffset, mapName, encounterAreas);
                 seenOffsets.add(readPointer(fishingOffset + 4));
             }
 
             offs += 20;
         }
+
+        // TODO: remember to change these to respect the new area count
         int[] battleTrappersBannedAreas = romEntry.getArrayValue("BattleTrappersBanned");
         if (battleTrappersBannedAreas.length > 0) {
             // Some encounter areas aren't allowed to have Pokemon
@@ -1479,9 +1480,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
         }
 
-        new Gen3EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
+//        new Gen3EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
 
         return encounterAreas;
+    }
+
+    private void addFishingEncounterAreas(int fishingOffset, String mapName, List<EncounterArea> encounterAreas) {
+        EncounterArea combined = readEncounterArea(fishingOffset, Gen3Constants.fishingSlots,
+                "", EncounterType.FISHING);
+        EncounterArea oldRodArea = new EncounterArea(combined.subList(0, 2));
+        EncounterArea goodRodArea = new EncounterArea(combined.subList(2, 5));
+        EncounterArea superRodArea = new EncounterArea(combined.subList(5, 10));
+        oldRodArea.setIdentifiers(mapName + " Old Rod", 0, EncounterType.FISHING);
+        goodRodArea.setIdentifiers(mapName + " Good Rod", 0, EncounterType.FISHING);
+        superRodArea.setIdentifiers(mapName + " Super Rod", 0, EncounterType.FISHING);
+        encounterAreas.addAll(Arrays.asList(oldRodArea, goodRodArea, superRodArea));
     }
 
     private boolean hasBattleTrappingAbility(Species species) {
@@ -1557,12 +1570,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             if (fishingOffsets != -1 && rom[fishingOffsets] != 0
                     && !seenOffsets.contains(readPointer(fishingOffsets + 4))) {
-                writeEncounterArea(fishingOffsets, Gen3Constants.fishingSlots, areaIterator.next());
+                writeFishingEncounterAreas(areaIterator, fishingOffsets);
                 seenOffsets.add(readPointer(fishingOffsets + 4));
             }
 
             offs += 20;
         }
+    }
+
+    private void writeFishingEncounterAreas(Iterator<EncounterArea> areaIterator, int fishingOffsets) {
+        EncounterArea combined = new EncounterArea();
+        // Old Rod + Good Rod + Super Rod
+        for (int i = 0; i < Gen3Constants.fishingRodTypeCount; i++) {
+            combined.addAll(areaIterator.next());
+        }
+        writeEncounterArea(fishingOffsets, Gen3Constants.fishingSlots, combined);
     }
 
     private void writeEncounterArea(int offset, int numOfEntries, EncounterArea area) {

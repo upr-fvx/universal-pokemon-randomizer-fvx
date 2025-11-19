@@ -117,6 +117,12 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
 
     protected abstract void loadMovesLearnt();
 
+    @Override
+    public abstract void loadTrainers();
+
+    @Override
+    public abstract void saveTrainers();
+
     protected void clearTextTables() {
         tb = new String[256];
         if (d != null) {

@@ -268,6 +268,8 @@ public interface RomHandler {
 
     List<Trainer> getTrainers();
 
+    void loadTrainers();
+
     List<Integer> getMainPlaythroughTrainers();
 
     /**
@@ -280,6 +282,8 @@ public interface RomHandler {
     Map<String, Type> getGymAndEliteTypeThemes();
 
     void setTrainers(List<Trainer> trainerData);
+
+    void saveTrainers();
 
     boolean canAddPokemonToBossTrainers();
 

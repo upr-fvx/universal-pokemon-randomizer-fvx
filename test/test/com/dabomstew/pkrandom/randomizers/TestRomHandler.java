@@ -549,6 +549,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadTrainers() {
+
+    }
+
+    @Override
+    public void saveTrainers() {
+
+    }
+
+    @Override
     public void saveMoves() {
 
     }

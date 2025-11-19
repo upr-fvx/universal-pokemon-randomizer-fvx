@@ -776,100 +776,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return pokeNames;
 	}
 
-    public void loadTrainers() {
-        trainers = new ArrayList<>();
-        try {
-            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
-            NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
-            List<String> tclasses = this.getTrainerClassNames();
-            List<String> tnames = this.getTrainerNames();
-            int trainernum = trs.files.size();
-            for (int i = 1; i < trainernum; i++) {
-                // Trainer entries are 20 bytes
-                // Team flags; 1 byte; 0x01 = custom moves, 0x02 = held item
-                // Class; 1 byte
-                // 1 byte not used
-                // Number of pokemon in team; 1 byte
-                // Items; 2 bytes each, 4 item slots
-                // AI Flags; 2 byte
-                // 2 bytes not used
-                // Battle Mode; 1 byte; 0 means single, 1 means double.
-                // 3 bytes not used
-                byte[] trainer = trs.files.get(i);
-                byte[] trpoke = trpokes.files.get(i);
-                Trainer tr = new Trainer();
-                tr.setPoketype(trainer[0] & 0xFF);
-                tr.setTrainerclass(trainer[1] & 0xFF);
-                tr.setIndex(i);
-                int numPokes = trainer[3] & 0xFF;
-                int battleStyle = trainer[16] & 0xFF;
-                if (battleStyle != 0)
-                    tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
-                int pokeOffs = 0;
-                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
-                for (int poke = 0; poke < numPokes; poke++) {
-                    // Structure is
-                    // IV SB LV LV SP SP FRM FRM
-                    // (HI HI)
-                    // (M1 M1 M2 M2 M3 M3 M4 M4)
-                    // where SB = 0 0 Ab Ab 0 0 G G
-                    // IV is a "difficulty" level between 0 and 255 to represent 0 to 31 IVs.
-                    // These IVs affect all attributes. For the vanilla games, the
-                    // vast majority of trainers have 0 IVs; Elite Four members will
-                    // have 30 IVs.
-                    // Ab Ab = ability number, 0 for first ability, 2 for second [HGSS only]
-                    // G G affect the gender somehow. 0 appears to mean "most common
-                    // gender for the species".
-                    int difficulty = trpoke[pokeOffs] & 0xFF;
-                    int level = trpoke[pokeOffs + 2] & 0xFF;
-                    int species = (trpoke[pokeOffs + 4] & 0xFF) + ((trpoke[pokeOffs + 5] & 0x01) << 8);
-                    int formnum = (trpoke[pokeOffs + 5] >> 2);
-                    TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.setLevel(level);
-                    tpk.setSpecies(pokes[species]);
-                    tpk.setIVs((difficulty * 31) / 255);
-                    int abilitySlot = (trpoke[pokeOffs + 1] >>> 4) & 0xF;
-                    if (abilitySlot == 0) {
-                        // All Gen 4 games represent the first ability as ability 0.
-                        abilitySlot = 1;
-                    }
-                    tpk.setAbilitySlot(abilitySlot);
-                    tpk.setForme(formnum);
-                    tpk.setFormeSuffix(Gen4Constants.getFormeSuffixByBaseForme(species, formnum));
-                    pokeOffs += 6;
-                    if (tr.pokemonHaveItems()) {
-                        tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
-                        pokeOffs += 2;
-                    }
-                    if (tr.pokemonHaveCustomMoves()) {
-                        for (int move = 0; move < 4; move++) {
-                            tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move * 2));
-                        }
-                        pokeOffs += 8;
-                    }
-                    // Plat/HGSS have another random pokeOffs +=2 here.
-                    if (romEntry.getRomType() != Gen4Constants.Type_DP) {
-                        pokeOffs += 2;
-                    }
-                    tr.getPokemon().add(tpk);
-                }
-                trainers.add(tr);
-            }
-            if (romEntry.getRomType() == Gen4Constants.Type_DP) {
-                Gen4Constants.tagTrainersDP(trainers);
-                Gen4Constants.setMultiBattleStatusDP(trainers);
-            } else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
-                Gen4Constants.tagTrainersPt(trainers);
-                Gen4Constants.setMultiBattleStatusPt(trainers);
-            } else {
-                Gen4Constants.tagTrainersHGSS(trainers);
-                Gen4Constants.setMultiBattleStatusHGSS(trainers);
-            }
-        } catch (IOException ex) {
-            throw new RomIOException(ex);
-        }
-    }
-
 	@Override
 	protected void prepareSaveRom() {
 		super.prepareSaveRom();
@@ -2751,6 +2657,101 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return output;
 	}
 
+    @Override
+    public void loadTrainers() {
+        trainers = new ArrayList<>();
+        try {
+            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
+            NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
+            List<String> tclasses = this.getTrainerClassNames();
+            List<String> tnames = this.getTrainerNames();
+            int trainernum = trs.files.size();
+            for (int i = 1; i < trainernum; i++) {
+                // Trainer entries are 20 bytes
+                // Team flags; 1 byte; 0x01 = custom moves, 0x02 = held item
+                // Class; 1 byte
+                // 1 byte not used
+                // Number of pokemon in team; 1 byte
+                // Items; 2 bytes each, 4 item slots
+                // AI Flags; 2 byte
+                // 2 bytes not used
+                // Battle Mode; 1 byte; 0 means single, 1 means double.
+                // 3 bytes not used
+                byte[] trainer = trs.files.get(i);
+                byte[] trpoke = trpokes.files.get(i);
+                Trainer tr = new Trainer();
+                tr.setPoketype(trainer[0] & 0xFF);
+                tr.setTrainerclass(trainer[1] & 0xFF);
+                tr.setIndex(i);
+                int numPokes = trainer[3] & 0xFF;
+                int battleStyle = trainer[16] & 0xFF;
+                if (battleStyle != 0)
+                    tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                int pokeOffs = 0;
+                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
+                for (int poke = 0; poke < numPokes; poke++) {
+                    // Structure is
+                    // IV SB LV LV SP SP FRM FRM
+                    // (HI HI)
+                    // (M1 M1 M2 M2 M3 M3 M4 M4)
+                    // where SB = 0 0 Ab Ab 0 0 G G
+                    // IV is a "difficulty" level between 0 and 255 to represent 0 to 31 IVs.
+                    // These IVs affect all attributes. For the vanilla games, the
+                    // vast majority of trainers have 0 IVs; Elite Four members will
+                    // have 30 IVs.
+                    // Ab Ab = ability number, 0 for first ability, 2 for second [HGSS only]
+                    // G G affect the gender somehow. 0 appears to mean "most common
+                    // gender for the species".
+                    int difficulty = trpoke[pokeOffs] & 0xFF;
+                    int level = trpoke[pokeOffs + 2] & 0xFF;
+                    int species = (trpoke[pokeOffs + 4] & 0xFF) + ((trpoke[pokeOffs + 5] & 0x01) << 8);
+                    int formnum = (trpoke[pokeOffs + 5] >> 2);
+                    TrainerPokemon tpk = new TrainerPokemon();
+                    tpk.setLevel(level);
+                    tpk.setSpecies(pokes[species]);
+                    tpk.setIVs((difficulty * 31) / 255);
+                    int abilitySlot = (trpoke[pokeOffs + 1] >>> 4) & 0xF;
+                    if (abilitySlot == 0) {
+                        // All Gen 4 games represent the first ability as ability 0.
+                        abilitySlot = 1;
+                    }
+                    tpk.setAbilitySlot(abilitySlot);
+                    tpk.setForme(formnum);
+                    tpk.setFormeSuffix(Gen4Constants.getFormeSuffixByBaseForme(species, formnum));
+                    pokeOffs += 6;
+                    if (tr.pokemonHaveItems()) {
+                        tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
+                        pokeOffs += 2;
+                    }
+                    if (tr.pokemonHaveCustomMoves()) {
+                        for (int move = 0; move < 4; move++) {
+                            tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move * 2));
+                        }
+                        pokeOffs += 8;
+                    }
+                    // Plat/HGSS have another random pokeOffs +=2 here.
+                    if (romEntry.getRomType() != Gen4Constants.Type_DP) {
+                        pokeOffs += 2;
+                    }
+                    tr.getPokemon().add(tpk);
+                }
+                trainers.add(tr);
+            }
+            if (romEntry.getRomType() == Gen4Constants.Type_DP) {
+                Gen4Constants.tagTrainersDP(trainers);
+                Gen4Constants.setMultiBattleStatusDP(trainers);
+            } else if (romEntry.getRomType() == Gen4Constants.Type_Plat) {
+                Gen4Constants.tagTrainersPt(trainers);
+                Gen4Constants.setMultiBattleStatusPt(trainers);
+            } else {
+                Gen4Constants.tagTrainersHGSS(trainers);
+                Gen4Constants.setMultiBattleStatusHGSS(trainers);
+            }
+        } catch (IOException ex) {
+            throw new RomIOException(ex);
+        }
+    }
+
 	@Override
 	public List<Integer> getMainPlaythroughTrainers() {
 		return new ArrayList<>(); // Not implemented
@@ -2780,6 +2781,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return itemIdsToSet(Gen4Constants.evolutionItems);
 	}
 
+    @Override
     public void saveTrainers() {
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
 			fixAbilitySlotValuesForHGSS(trainers);

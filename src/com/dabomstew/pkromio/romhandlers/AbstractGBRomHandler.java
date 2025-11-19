@@ -101,6 +101,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract void loadItems();
 
+    @Override
     public abstract void loadTrainers();
 
     @Override
@@ -168,6 +169,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         saveTrainers();
     }
 
+    @Override
     abstract public void saveTrainers();
 
     @Override

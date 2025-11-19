@@ -154,6 +154,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         loadItems();
         loadPokemonStats();
         loadMoves();
+        loadTrainers();
         loadPokemonPalettes();
 
         abilityNames = getStrings(false, romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -448,6 +449,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     protected void prepareSaveRom() {
         super.prepareSaveRom();
+        saveTrainers(); // TODO move up
         try {
             writeNARC(romEntry.getFile("TextStrings"), stringsNarc);
             writeNARC(romEntry.getFile("TextStory"), storyTextNarc);
@@ -1110,12 +1112,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        List<Trainer> allTrainers = new ArrayList<>();
+    public void loadTrainers() {
+        trainers = new ArrayList<>();
         try {
-            NARCArchive trainers = this.readNARC(romEntry.getFile("TrainerData"));
+            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
             NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             for (int i = 1; i < trainernum; i++) {
@@ -1131,7 +1133,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 // Victory Money; 1 byte; The money given out after defeat =
                 //         4 * this value * highest level poke in party
                 // Victory Item; 2 bytes; The item given out after defeat (e.g. berries)
-                byte[] trainer = trainers.files.get(i);
+                byte[] trainer = trs.files.get(i);
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
                 tr.setPoketype(trainer[0] & 0xFF);
@@ -1198,19 +1200,19 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     tr.getPokemon().add(tpk);
                 }
-                allTrainers.add(tr);
+                trainers.add(tr);
             }
             if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-                Gen5Constants.tagTrainersBW(allTrainers);
-                Gen5Constants.setMultiBattleStatusBW(allTrainers);
-                Gen5Constants.setForcedRivalStarterPositionsBW(allTrainers);
+                Gen5Constants.tagTrainersBW(trainers);
+                Gen5Constants.setMultiBattleStatusBW(trainers);
+                Gen5Constants.setForcedRivalStarterPositionsBW(trainers);
             } else {
                 if (!romEntry.getFile("DriftveilPokemon").isEmpty()) {
                     NARCArchive driftveil = this.readNARC(romEntry.getFile("DriftveilPokemon"));
                     int currentFile = 1;
                     for (int trno = 0; trno < 17; trno++) {
                         Trainer tr = new Trainer();
-                        tr.setIndex(allTrainers.size() + 1);
+                        tr.setIndex(trainers.size() + 1);
                         tr.setPoketype(3); // have held items and custom moves
                         int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
                         tr.setFullDisplayName(tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
@@ -1233,18 +1235,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             tr.getPokemon().add(tpk);
                             currentFile++;
                         }
-                        allTrainers.add(tr);
+                        trainers.add(tr);
                     }
                 }
                 boolean isBlack2 = romEntry.getRomCode().startsWith("IRE");
-                Gen5Constants.tagTrainersBW2(allTrainers);
-                Gen5Constants.setMultiBattleStatusBW2(allTrainers, isBlack2);
-                Gen5Constants.setForcedRivalStarterPositionsBW2(allTrainers);
+                Gen5Constants.tagTrainersBW2(trainers);
+                Gen5Constants.setMultiBattleStatusBW2(trainers, isBlack2);
+                Gen5Constants.setForcedRivalStarterPositionsBW2(trainers);
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
-        return allTrainers;
     }
 
     @Override
@@ -1294,19 +1295,19 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        Iterator<Trainer> allTrainers = trainerData.iterator();
+    public void saveTrainers() {
+        Iterator<Trainer> allTrainers = trainers.iterator();
         try {
-            NARCArchive trainers = this.readNARC(romEntry.getFile("TrainerData"));
+            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
             NARCArchive trpokes = new NARCArchive();
             // Get current movesets in case we need to reset them for certain
             // trainer mons.
             Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
             // empty entry
             trpokes.files.add(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trainers.files.get(i);
+                byte[] trainer = trs.files.get(i);
                 Trainer tr = allTrainers.next();
                 // preserve original poketype for held item & moves
                 trainer[0] = (byte) tr.getPoketype();
@@ -1385,7 +1386,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
                 trpokes.files.add(trpoke);
             }
-            this.writeNARC(romEntry.getFile("TrainerData"), trainers);
+            this.writeNARC(romEntry.getFile("TrainerData"), trs);
             this.writeNARC(romEntry.getFile("TrainerPokemon"), trpokes);
 
             // Deal with PWT

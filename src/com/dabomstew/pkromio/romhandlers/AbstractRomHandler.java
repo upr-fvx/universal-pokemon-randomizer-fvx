@@ -117,9 +117,15 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public abstract void loadTrainers();
+
+    @Override
     public void setTrainers(List<Trainer> trainers) {
         this.trainers = trainers;
     }
+
+    @Override
+    public abstract void saveTrainers();
 
     public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();

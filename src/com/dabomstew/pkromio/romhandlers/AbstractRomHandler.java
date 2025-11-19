@@ -59,6 +59,8 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     private List<Type> starterTypeTriangle = null;
 
+    protected List<Trainer> trainers;
+
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
@@ -106,6 +108,18 @@ public abstract class AbstractRomHandler implements RomHandler {
         return true;
     }
 
+    @Override
+    public List<Trainer> getTrainers() {
+        if (trainers == null) {
+            throw new IllegalStateException("Trainers have not been loaded.");
+        }
+        return trainers;
+    }
+
+    @Override
+    public void setTrainers(List<Trainer> trainers) {
+        this.trainers = trainers;
+    }
 
     public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();

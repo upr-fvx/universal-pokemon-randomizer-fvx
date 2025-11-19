@@ -90,7 +90,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Gen2RomEntry romEntry;
     private Species[] pokes;
     private List<Species> speciesList;
-    private List<Trainer> trainers;
     private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
@@ -1020,14 +1019,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
-
-    @Override
     // This is very similar to the implementation in Gen1RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
@@ -1120,11 +1111,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return Gen2Constants.gymAndEliteThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
     }
 
     @Override

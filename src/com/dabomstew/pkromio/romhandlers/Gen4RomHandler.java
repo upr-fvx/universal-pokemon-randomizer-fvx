@@ -79,7 +79,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private Species[] pokes;
 	private Move[] moves;
 	private List<Item> items;
-    private List<Trainer> trainers;
 	private NARCArchive pokeNarc, moveNarc;
 	private NARCArchive msgNarc;
 	private NARCArchive scriptNarc;
@@ -776,14 +775,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		return pokeNames;
 	}
-
-    @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
 
     public void loadTrainers() {
         trainers = new ArrayList<>();
@@ -2788,11 +2779,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	public Set<Item> getEvolutionItems() {
 		return itemIdsToSet(Gen4Constants.evolutionItems);
 	}
-
-	@Override
-	public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
-    }
 
     public void saveTrainers() {
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {

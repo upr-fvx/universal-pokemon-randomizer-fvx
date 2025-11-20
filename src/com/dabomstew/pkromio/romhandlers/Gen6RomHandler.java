@@ -143,6 +143,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         loadPokemonStats();
         loadMoves();
+        loadTrainers();
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen6Constants.getShopNames(romEntry.getRomType());
 
@@ -1808,13 +1809,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        List<Trainer> allTrainers = new ArrayList<>();
+    public void loadTrainers() {
+        trainers = new ArrayList<>();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
@@ -1838,7 +1839,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 // Victory Item; 2 bytes; The item given out after defeat.
                 //         In X/Y, these are berries, nuggets, pearls (e.g. Battle Chateau)
                 //         In ORAS, none of these are set.
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
                 tr.setPoketype(isORAS ? readWord(trainer,0) : trainer[0] & 0xFF);
@@ -1917,19 +1918,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     tr.getPokemon().add(tpk);
                 }
-                allTrainers.add(tr);
+                trainers.add(tr);
             }
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
-                Gen6Constants.tagTrainersXY(allTrainers);
-                Gen6Constants.setMultiBattleStatusXY(allTrainers);
+                Gen6Constants.tagTrainersXY(trainers);
+                Gen6Constants.setMultiBattleStatusXY(trainers);
             } else {
-                Gen6Constants.tagTrainersORAS(allTrainers);
-                Gen6Constants.setMultiBattleStatusORAS(allTrainers);
+                Gen6Constants.tagTrainersORAS(trainers);
+                Gen6Constants.setMultiBattleStatusORAS(trainers);
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
-        return allTrainers;
     }
 
     @Override
@@ -1957,18 +1957,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        Iterator<Trainer> allTrainers = trainerData.iterator();
+    public void saveTrainers() {
+        Iterator<Trainer> allTrainers = trainers.iterator();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
             // Get current movesets in case we need to reset them for certain
             // trainer mons.
             Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 Trainer tr = allTrainers.next();
                 // preserve original poketype for held item & moves
                 int offset = 0;
@@ -2051,7 +2051,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 trpokes.setFile(i,trpoke);
             }
-            this.writeGARC(romEntry.getFile("TrainerData"), trainers);
+            this.writeGARC(romEntry.getFile("TrainerData"), trs);
             this.writeGARC(romEntry.getFile("TrainerPokemon"), trpokes);
         } catch (IOException ex) {
             throw new RomIOException(ex);

@@ -940,6 +940,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected void prepareSaveRom() {
         savePokemonStats();
         saveMoves();
+        saveTrainers();
         savePokemonPalettes();
     }
 

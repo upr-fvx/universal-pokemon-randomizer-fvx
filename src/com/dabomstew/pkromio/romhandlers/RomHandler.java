@@ -42,7 +42,7 @@ import java.util.Set;
  * After a Rom has been loaded with {@link #loadRom(String)}, a number of data types reflecting the contents of the
  * Rom can be acquired through getters (e.g. {@link #getSpecies()}, {@link #getStarters()}, {@link #getTrainers()}).
  * Most of the corresponding data also have setters which update the contents of the Rom (e.g.
- * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Species} data from
+ * {@link #setStarters(List)}), but some (most notably the {@link Species} data from
  * {@link #getSpecies()}) are instead updated simply by editing the object returned by the setter.
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
@@ -280,8 +280,6 @@ public interface RomHandler {
     List<Integer> getEliteFourTrainers(boolean isChallengeMode);
 
     Map<String, Type> getGymAndEliteTypeThemes();
-
-    void setTrainers(List<Trainer> trainerData);
 
     void saveTrainers();
 

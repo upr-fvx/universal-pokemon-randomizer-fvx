@@ -1161,8 +1161,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
         List<String> tcnames = getTrainerClassesForText();
 
-        trainers = new ArrayList<>();
-
         int index = 0;
         for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
 

@@ -59,7 +59,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     private List<Type> starterTypeTriangle = null;
 
-    protected List<Trainer> trainers;
+    protected final List<Trainer> trainers = new ArrayList<>();
 
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
@@ -113,16 +113,11 @@ public abstract class AbstractRomHandler implements RomHandler {
         if (trainers == null) {
             throw new IllegalStateException("Trainers have not been loaded.");
         }
-        return trainers;
+        return Collections.unmodifiableList(trainers);
     }
 
     @Override
     public abstract void loadTrainers();
-
-    @Override
-    public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
-    }
 
     @Override
     public abstract void saveTrainers();

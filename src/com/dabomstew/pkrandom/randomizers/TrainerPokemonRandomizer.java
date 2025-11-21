@@ -37,7 +37,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         for (Trainer t : currentTrainers) {
             applyLevelModifierToTrainerPokemon(t, levelModifier);
         }
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -297,7 +296,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
 
         // Save it all up
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -749,7 +747,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Trainer> currentTrainers = romHandler.getTrainers();
         rivalCarriesStarterUpdate(currentTrainers, "RIVAL", 1);
         rivalCarriesStarterUpdate(currentTrainers, "FRIEND", 2);
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -888,7 +885,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
             }
         }
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -920,7 +916,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
             }
         }
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -1003,7 +998,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 t.getPokemon().add(secondToLastIndex, newPokemon);
             }
         }
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -1034,7 +1028,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 tr.setForcedDoubleBattle(true);
             }
         }
-        romHandler.setTrainers(trainers);
         romHandler.makeDoubleBattleModePossible();
         changesMade = true;
     }
@@ -1098,7 +1091,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
             }
         }
-        romHandler.setTrainers(currentTrainers);
         changesMade = true;
     }
 
@@ -1148,7 +1140,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
             }
         }
-        romHandler.setTrainers(trainers);
         // TODO: should this could as "changes made"?
     }
 }

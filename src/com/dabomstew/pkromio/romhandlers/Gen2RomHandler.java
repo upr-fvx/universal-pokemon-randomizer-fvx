@@ -1028,8 +1028,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");
         List<String> tcnames = this.getTrainerClassNames();
 
-        trainers = new ArrayList<>();
-
         int index = 0;
         for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
 

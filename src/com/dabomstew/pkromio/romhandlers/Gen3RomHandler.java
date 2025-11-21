@@ -1600,7 +1600,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void loadTrainers() {
-        trainers = new ArrayList<>();
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
         int entryLen = romEntry.getIntValue("TrainerEntrySize");

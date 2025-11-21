@@ -2964,12 +2964,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
                             // happiness day change to Sun Stone
                             markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.sunStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.sunStone, useEstimatedLevels);
                         }
                         if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
                             // happiness night change to Moon Stone
                             markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone, useEstimatedLevels);
                         }
                         if (evo.getType() == EvolutionType.HIGH_BEAUTY) {
                             // beauty change to level 35 (or estimated level if useEstimatedLevels)
@@ -2992,7 +2992,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Water Stone
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: Lv 40 (or estimated level if useEstimatedLevels)
                             evo.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
@@ -3003,7 +3003,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
                                 && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
                             // Clamperl -> Gorebyss: Water Stone
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
                             // Onix, Scyther or Porygon: Lv30 (or estimated level if useEstimatedLevels)
                             evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);

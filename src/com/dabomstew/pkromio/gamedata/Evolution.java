@@ -92,6 +92,7 @@ public class Evolution implements Comparable<Evolution> {
         return type;
     }
 
+    // TODO write javadoc recommending against usage (except during inital writing)
     public void setType(EvolutionType type) {
         this.type = type;
     }
@@ -100,6 +101,7 @@ public class Evolution implements Comparable<Evolution> {
         return extraInfo;
     }
 
+    // TODO write javadoc recommending against usage (except during inital writing)
     public void setExtraInfo(int extraInfo) {
         this.extraInfo = extraInfo;
     }
@@ -115,6 +117,7 @@ public class Evolution implements Comparable<Evolution> {
         return estimatedEvoLvl;
     }
 
+    // TODO write javadoc recommending against usage (except during inital writing)
     public void setEstimatedEvoLvl(int estimatedEvoLvl) {
         this.estimatedEvoLvl = estimatedEvoLvl;
     }
@@ -123,27 +126,31 @@ public class Evolution implements Comparable<Evolution> {
         return forme;
     }
 
+    // TODO write javadoc recommending this for updating evo method
     public void updateEvolutionMethod(EvolutionType type, int extraInfo) {
-        EvolutionType oldType = this.type;
-        boolean oldTypeUsesLevelGreaterZero = oldType.usesLevel(); // TODO GreaterZero
-        boolean newTypeUsesLevelGreaterZero = type.usesLevel(); // TODO GreaterZero
+        EvolutionType oldEvoType = this.type;
 
+        // Update type and extraInfo
         this.type = type;
         this.extraInfo = extraInfo;
-        // Keep estimatedEvoLevel if both old and new type does not use evo level > 0.
-        // Keep estimatedEvoLevel if old type used evo level > 0 but new method does not, i.e., continue to enable
-        // level up evolutions if needed, e.g. for trainers evolve their pokemon.
-        // Only update estimatedEvoLvl if type changes from to evo that uses level > 0 to continue guaranteeing that
-        // extraInfo and estimatedEvoLvl are equal for evos that use level > 0.
-        // Apart from that, make sure that in any of the above cases, estimatedEvoLvl and extraInfo are the same for
-        // evolutions that use a evo level > 0.
-        if (newTypeUsesLevelGreaterZero && (!oldTypeUsesLevelGreaterZero || (this.extraInfo != this.estimatedEvoLvl))) { // TODO do not use bools above if it's only one
+
+        // Do not update estimatedEvoLevel if
+        // * both old and new evolution type do not use evo level threshold OR
+        // * old evolution type used evo level threshold but new evolution type does not, i.e., continue to enable
+        //   level up evolutions if needed using what was previously extraInfo, e.g. for trainers evolve their Pokemon.
+        // Update estimatedEvoLvl if
+        // * evolution type changes from not using level threshold to using level threshold OR
+        // * both old and new evolution type use level threshold but extraInfo does not equal the estimatedEvoLvl.
+        // In particular, the above guarantees that estimatedEvoLvl and extraInfo are the same for evolutions that a
+        // level threshold.
+        if (type.usesLevelThreshold() && (!oldEvoType.usesLevelThreshold() || (this.extraInfo != this.estimatedEvoLvl))) {
             this.estimatedEvoLvl = extraInfo;
         }
     }
 
+    // TODO write javadoc recommending this for updating evo method
     public void updateEvolutionMethod(EvolutionType type, int extraInfo, boolean useEstimatedLevels) {
-        this.updateEvolutionMethod(type, (useEstimatedLevels && type.usesLevel())  // TODO ...GreaterZero()
+        this.updateEvolutionMethod(type, (useEstimatedLevels && type.usesLevelThreshold())
                 ? this.estimatedEvoLvl : extraInfo);
     }
 

@@ -1932,7 +1932,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
-                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone);
+                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40 (or estimated level if useEstimatedLevels)
                             evol.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);

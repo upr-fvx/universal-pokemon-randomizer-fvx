@@ -341,7 +341,6 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 }
             }
         }
-        romHandler.setTrainers(trainers);
         changesMade = true;
     }
 

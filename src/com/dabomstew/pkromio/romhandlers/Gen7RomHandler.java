@@ -137,6 +137,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         loadPokemonStats();
         loadMoves();
+        loadTrainers();
 
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen7Constants.getShopNames(romEntry.getRomType());
@@ -1532,12 +1533,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        List<Trainer> allTrainers = new ArrayList<>();
+    public void loadTrainers() {
+        trainers.clear();
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
@@ -1545,7 +1546,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 tnamesMap.put(i,tnames.get(i));
             }
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
                 tr.setPoketype(trainer[13] & 0xFF);
@@ -1619,20 +1620,19 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     pokeOffs += 8;
                     tr.getPokemon().add(tpk);
                 }
-                allTrainers.add(tr);
+                trainers.add(tr);
             }
             if (romEntry.getRomType() == Gen7Constants.Type_SM) {
-                Gen7Constants.tagTrainersSM(allTrainers);
-                Gen7Constants.setMultiBattleStatusSM(allTrainers);
+                Gen7Constants.tagTrainersSM(trainers);
+                Gen7Constants.setMultiBattleStatusSM(trainers);
             } else {
-                Gen7Constants.tagTrainersUSUM(allTrainers);
-                Gen7Constants.setMultiBattleStatusUSUM(allTrainers);
-                Gen7Constants.setForcedRivalStarterPositionsUSUM(allTrainers);
+                Gen7Constants.tagTrainersUSUM(trainers);
+                Gen7Constants.setMultiBattleStatusUSUM(trainers);
+                Gen7Constants.setForcedRivalStarterPositionsUSUM(trainers);
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
-        return allTrainers;
     }
 
     @Override
@@ -1655,17 +1655,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        Iterator<Trainer> allTrainers = trainerData.iterator();
+    public void saveTrainers() {
+        Iterator<Trainer> allTrainers = trainers.iterator();
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
             // Get current movesets in case we need to reset them for certain
             // trainer mons.
             Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 Trainer tr = allTrainers.next();
                 int offset = 0;
                 trainer[13] = (byte) tr.getPoketype();
@@ -1722,12 +1722,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 trpokes.setFile(i,trpoke);
             }
-            this.writeGARC(romEntry.getFile("TrainerData"), trainers);
+            this.writeGARC(romEntry.getFile("TrainerData"), trs);
             this.writeGARC(romEntry.getFile("TrainerPokemon"), trpokes);
 
             // In Sun/Moon, Beast Lusamine's Pokemon have aura boosts that are hardcoded.
             if (romEntry.getRomType() == Gen7Constants.Type_SM) {
-                Trainer beastLusamine = trainerData.get(Gen7Constants.beastLusamineTrainerIndex);
+                Trainer beastLusamine = trainers.get(Gen7Constants.beastLusamineTrainerIndex);
                 setBeastLusaminePokemonBuffs(beastLusamine);
             }
         } catch (IOException ex) {

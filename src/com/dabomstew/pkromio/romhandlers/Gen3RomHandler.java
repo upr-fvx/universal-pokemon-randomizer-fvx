@@ -113,7 +113,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private Species[] pokes, pokesInternal;
     private List<Species> speciesList;
     private int numRealPokemon;
-    private List<Trainer> trainers;
     private List<Item> items;
     private Move[] moves;
     private boolean jamboMovesetHack;
@@ -1600,16 +1599,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
-
-    @Override
     public void loadTrainers() {
-        trainers = new ArrayList<>();
+        trainers.clear();
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
         int entryLen = romEntry.getIntValue("TrainerEntrySize");
@@ -1770,11 +1761,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public List<Integer> getEliteFourTrainers(boolean isChallengeMode) {
         return Arrays.stream(romEntry.getArrayValue("EliteFourIndices")).boxed().collect(Collectors.toList());
     }
-
-	@Override
-	public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
-	}
 
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {

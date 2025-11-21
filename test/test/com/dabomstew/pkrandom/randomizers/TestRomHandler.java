@@ -549,6 +549,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadTrainers() {
+
+    }
+
+    @Override
+    public void saveTrainers() {
+
+    }
+
+    @Override
     public void saveMoves() {
 
     }
@@ -840,11 +850,6 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return gymAndEliteTypeThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        testTrainers = trainerData;
     }
 
     @Override

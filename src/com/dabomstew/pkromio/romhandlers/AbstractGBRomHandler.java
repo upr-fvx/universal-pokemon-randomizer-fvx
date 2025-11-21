@@ -101,6 +101,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract void loadItems();
 
+    @Override
     public abstract void loadTrainers();
 
     @Override
@@ -160,14 +161,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    protected void prepareSaveRom() {
-        super.prepareSaveRom();
-        // because most other gens write the trainers to ROM each time setTrainers is used,
-        // instead of having a saveTrainers. (obviously those other gens shouldn't do that either,
-        // but code's never perfect)
-        saveTrainers();
-    }
-
     abstract public void saveTrainers();
 
     @Override

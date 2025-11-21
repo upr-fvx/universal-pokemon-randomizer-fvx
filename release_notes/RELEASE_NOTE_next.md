@@ -10,8 +10,8 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and
-[Community members who helped with some feature] for help with [feature]
+[Every person who made a new CPG] Nachopeñalva for the CPG sprites, and
+AZBZ from the 3DS Pokémon Modding Discord server for help with Gen 7 Type Effectiveness randomization
 [Etc.]!
 
 # How to use
@@ -49,6 +49,12 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   estimated evolution level is used. 
   This replaces "Force Middle Stage at Level:".
   (#107)
+
+### Types
+- (Gen 7) Added support for Type Effectiveness randomization.
+
+### Graphics
+- (Gen 3) New RSE Custom Player Graphics: Cynthia (from Pokémon) by NachoPeñalva.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

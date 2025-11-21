@@ -1112,6 +1112,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void loadTrainers() {
+        trainers.clear();
         try {
             NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
             NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));

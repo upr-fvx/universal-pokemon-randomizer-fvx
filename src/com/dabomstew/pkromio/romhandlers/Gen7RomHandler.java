@@ -1534,6 +1534,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void loadTrainers() {
+        trainers.clear();
         try {
             GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);

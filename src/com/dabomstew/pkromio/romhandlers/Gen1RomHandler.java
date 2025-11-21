@@ -1153,6 +1153,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
     public void loadTrainers() {
+        trainers.clear();
         int trainerClassTableOffset = romEntry.getIntValue("TrainerDataTableOffset");
         int trainerClassAmount = Gen1Constants.trainerClassCount;
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");

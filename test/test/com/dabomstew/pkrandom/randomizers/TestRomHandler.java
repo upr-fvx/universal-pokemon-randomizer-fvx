@@ -852,7 +852,6 @@ public class TestRomHandler extends AbstractRomHandler {
         return gymAndEliteTypeThemes;
     }
 
-    @Override
     public void setTrainers(List<Trainer> trainerData) {
         testTrainers = trainerData;
     }

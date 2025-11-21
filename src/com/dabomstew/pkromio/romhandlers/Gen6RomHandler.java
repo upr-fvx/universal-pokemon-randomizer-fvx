@@ -1810,6 +1810,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void loadTrainers() {
+        trainers.clear();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
             GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);

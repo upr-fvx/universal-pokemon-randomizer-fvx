@@ -110,9 +110,6 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
         return Collections.unmodifiableList(trainers);
     }
 

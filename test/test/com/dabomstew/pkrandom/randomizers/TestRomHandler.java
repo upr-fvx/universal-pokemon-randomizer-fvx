@@ -852,10 +852,6 @@ public class TestRomHandler extends AbstractRomHandler {
         return gymAndEliteTypeThemes;
     }
 
-    public void setTrainers(List<Trainer> trainerData) {
-        testTrainers = trainerData;
-    }
-
     @Override
     public boolean canAddPokemonToBossTrainers() {
         return canAddPokemonToBossTrainers;

@@ -768,7 +768,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             int idx = -1;
             for (byte[] entry : encounterNARC.files) {
                 idx++;
-                if (entry.length > Gen5Constants.perSeasonEncounterDataLength && useTimeOfDay) {
+                if (entry.length > Gen5Constants.perSeasonEncounterDataLength) {
                     for (int i = 0; i < 4; i++) {
                         processEncounterEntry(encounterAreas, entry, i * Gen5Constants.perSeasonEncounterDataLength, idx);
                     }
@@ -777,7 +777,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
             }
 
-            new Gen5EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+//            new Gen5EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
             return encounterAreas;
         } catch (IOException e) {
             throw new RomIOException(e);

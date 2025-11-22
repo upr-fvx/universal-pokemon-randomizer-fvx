@@ -215,6 +215,27 @@ public interface RomHandler {
     // Wild Pokemon
     // ============
 
+    /**
+     * Gets all {@link Encounter}s in the game, stored inside a {@link List} of {@link EncounterArea}s.
+     * The structure of these EncounterAreas follows two principles:
+     * <ol>
+     *     <li><b>Each EncounterArea represents "the Encounters found in the same place under the same conditions".</b>
+     *     E.g. "the Encounters on Route 1 in the tall grass", or "the Encounters found when fishing in rippling water
+     *     in Challenger's Cave". If it is worth tagging or describing as "separate", it should be a separate
+     *     EncounterArea.</li>
+     *     <li><b>The EncounterAreas mirror the internal structure of the game.</b><br>
+     *     If a dungeon has the same species/levels/rates on each floor, but internally the game allows those floors
+     *     to have different encounters - it should be represented as multiple EncounterAreas.
+     *     Routes might have the same Pokemon appear regardless of time, but if the game has multiple tables
+     *     internally, EncounterAreas for each should exist. Etc. Etc.<br>
+     *     Conversely, sometimes encounter data is used for multiple places or multiple conditions.
+     *     In Gen 1, the Old Rod uses the same encounter data, no matter where you fish.
+     *     Thus, it can only make a single EncounterArea. And most games that <i>do</i> differentiate time of day,
+     *     does not do it for the surfing encounters, so those can't be split up on that condition.<br>
+     *     Mirroring the internal structure like this, is important to let the user of the RomHandler change as much
+     *     about the encounters as possible, while also not lying to them about how much that is.</li>
+     * </ol>
+     */
     List<EncounterArea> getEncounters();
 
     /**
@@ -231,6 +252,10 @@ public interface RomHandler {
      */
     SpeciesSet getMainGameWildPokemonSpecies();
 
+    /**
+     * Sets encounters/writes them to the game. Takes the same {@link List} of {@link EncounterArea}s,
+     * as previously given by {@link #getEncounters}.
+     */
     void setEncounters(List<EncounterArea> encounters);
 
     default boolean hasEncounterLocations() {

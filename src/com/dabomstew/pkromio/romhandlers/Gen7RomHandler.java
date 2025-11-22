@@ -1193,7 +1193,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getEncounters() {
         // We've removed the usage of "useTimeOfDay", but Gen 7 encounters are still a mess.
         // TODO: Clean them up and give better display names, what's with the tables?
         // TODO: Separate the SOS encounters!! And figure out how those work, even.

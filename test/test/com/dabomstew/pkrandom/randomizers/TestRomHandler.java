@@ -770,16 +770,13 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
-        if(!useTimeOfDay) {
-            throw new NotImplementedException();
-        }
-
+    public List<EncounterArea> getEncounters() {
         if(testEncounters == null) {
+            // TODO: Why is this duplicated?
+            //  Figure out why, and either remove one of these lines or add explanatory comment.
             testEncounters = deepCopyEncounters(originalEncounters);
             testEncounters = deepCopyEncounters(originalEncounters);
         }
-
         return testEncounters;
     }
 

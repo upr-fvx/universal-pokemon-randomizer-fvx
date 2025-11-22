@@ -758,7 +758,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getEncounters() {
         if (!loadedWildMapNames) {
             loadWildMapNames();
         }

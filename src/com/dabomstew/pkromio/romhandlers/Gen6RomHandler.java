@@ -1086,7 +1086,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getEncounters() {
         if (!loadedWildMapNames) {
             loadWildMapNames();
         }

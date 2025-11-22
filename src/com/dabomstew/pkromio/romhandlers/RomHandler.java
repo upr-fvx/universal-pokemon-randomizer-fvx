@@ -26,7 +26,6 @@ import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
 
@@ -71,7 +70,7 @@ public interface RomHandler {
     // =======================
 
     boolean loadRom(String filename);
-    
+
     boolean saveRom(String filename, long seed, boolean saveAsDirectory);
 
     String loadedFilename();
@@ -111,9 +110,9 @@ public interface RomHandler {
     List<Species> getSpeciesInclFormes();
 
     SpeciesSet getAltFormes();
-    
+
     SpeciesSet getSpeciesSet();
-    
+
     SpeciesSet getSpeciesSetInclFormes();
 
     List<MegaEvolution> getMegaEvolutions();
@@ -216,7 +215,11 @@ public interface RomHandler {
     // Wild Pokemon
     // ============
 
-    List<EncounterArea> getEncounters(boolean useTimeOfDay);
+    List<EncounterArea> getEncounters();
+
+    // Temporary; TODO: remove
+    @Deprecated
+    default List<EncounterArea> getEncounters(boolean useTimeOfDay) {return getEncounters();}
 
     /**
      * Returns a list identical to {@link #getEncounters(boolean)}, except it is sorted according to when in the game
@@ -394,7 +397,7 @@ public interface RomHandler {
      * <br>
      * 0: blank (false) / 1 - (getTMCount()) : TM compatibility /
      * (getTMCount()+1) - (getTMCount()+getHMCount()) - HM compatibility
-     * 
+     *
      * @return Map of TM/HM compatibility
      */
     Map<Species, boolean[]> getTMHMCompatibility();
@@ -412,7 +415,7 @@ public interface RomHandler {
     void setMoveTutorMoves(List<Integer> moves);
 
     /**
-     * Gets the Move Tutor compatibility for this game. 
+     * Gets the Move Tutor compatibility for this game.
      * If {@link #hasMoveTutors()}==false, there is no guarantee this method will work.
      */
     Map<Species, boolean[]> getMoveTutorCompatibility();
@@ -665,7 +668,7 @@ public interface RomHandler {
     boolean hasFunctionalFormes();
 
     SpeciesSet getBannedFormesForTrainerPokemon();
-    
+
     // ========
     // Graphics
     // ========

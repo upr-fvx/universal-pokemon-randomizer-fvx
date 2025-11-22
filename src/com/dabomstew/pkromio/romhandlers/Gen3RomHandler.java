@@ -1411,7 +1411,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getEncounters() {
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;

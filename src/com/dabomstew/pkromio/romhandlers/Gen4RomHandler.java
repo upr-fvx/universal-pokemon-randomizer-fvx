@@ -1298,7 +1298,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+	public List<EncounterArea> getEncounters() {
 		if (!loadedWildMapNames) {
 			loadWildMapNames();
 		}
@@ -1306,7 +1306,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		List<EncounterArea> encounterAreas;
 		try {
 			if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-				encounterAreas = getEncountersHGSS(useTimeOfDay);
+				encounterAreas = getEncountersHGSS();
 			} else {
 				encounterAreas = getEncountersDPPt();
 			}
@@ -1583,17 +1583,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return area;
 	}
 
-	private List<EncounterArea> getEncountersHGSS(boolean useTimeOfDay) throws IOException {
+	private List<EncounterArea> getEncountersHGSS() throws IOException {
 		List<EncounterArea> encounterAreas = new ArrayList<>();
 
-		readMainEncountersHGSS(encounterAreas, useTimeOfDay);
+		readMainEncountersHGSS(encounterAreas);
 		readExtraEncountersHGSS(encounterAreas);
 
 		return encounterAreas;
 	}
 
-	private void readMainEncountersHGSS(List<EncounterArea> encounterAreas, boolean useTimeOfDay) throws IOException {
-		String encountersFile = romEntry.getFile("WildPokemon");
+	private void readMainEncountersHGSS(List<EncounterArea> encounterAreas) throws IOException {
+        String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
 		// Credit for
 		// https://github.com/magical/pokemon-encounters/blob/master/nds/encounters-gen4-johto.py
@@ -1632,24 +1632,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			walkingPokes[2] = readPokemonHGSS(b, 68, 12);
 			// Up to 92 now (12*2*3 for pokemon)
 			if (rates[0] != 0) {
-				if (!useTimeOfDay) {
-					// Just write "day" encounters
-					EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[1], walkingLevels));
-					walkingArea.setRate(rates[0]);
-					walkingArea.setIdentifiers(mapName + " Grass/Cave", mapIndex, EncounterType.WALKING);
-					encounterAreas.add(walkingArea);
-				} else {
-					for (int i = 0; i < 3; i++) {
-						EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
-						walkingArea.setRate(rates[0]);
-						walkingArea.setIdentifiers(
-								mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
-								mapIndex, EncounterType.WALKING);
-						encounterAreas.add(walkingArea);
-					}
-				}
+                for (int i = 0; i < 3; i++) {
+                    EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
+                    walkingArea.setRate(rates[0]);
+                    walkingArea.setIdentifiers(
+                            mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
+                            mapIndex, EncounterType.WALKING);
+                    encounterAreas.add(walkingArea);
+                }
 			}
 
+            // TODO: Are these "replacements"? In which case we need to deal with them like in DPPt.
 			// TODO: these are time dependent (only on wednesdays/thursdays),
 			//  should they not be excluded when useTimeOfDay == false ?
 			// Hoenn/Sinnoh Radio

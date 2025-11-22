@@ -94,7 +94,7 @@ public class WildEncounterRandomizer extends Randomizer {
         // apply level modifier
         applyLevelModifier(levelModifier, encounterAreas);
         // set encounters
-        romHandler.setEncounters(useTimeOfDay, encounterAreas);
+        romHandler.setEncounters(encounterAreas);
     }
 
     /**
@@ -103,7 +103,7 @@ public class WildEncounterRandomizer extends Randomizer {
     private void modifyLevelsOnly(boolean useTimeOfDay, int levelModifier) {
         List<EncounterArea> encounterAreas = romHandler.getEncounters();
         applyLevelModifier(levelModifier, encounterAreas);
-        romHandler.setEncounters(useTimeOfDay, encounterAreas);
+        romHandler.setEncounters(encounterAreas);
     }
 
     private SpeciesSet getBannedForWildEncounters(boolean banIrregularAltFormes,

@@ -45,7 +45,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         List<EncounterArea> encounterAreas = romHandler.getEncounters();
         List<EncounterArea> before = new ArrayList<>(encounterAreas);
-        romHandler.setEncounters(true, encounterAreas);
+        romHandler.setEncounters(encounterAreas);
         List<EncounterArea> after = romHandler.getEncounters();
         for (int i = 0; i < Math.max(before.size(), after.size()); i++) {
             System.out.println(i);

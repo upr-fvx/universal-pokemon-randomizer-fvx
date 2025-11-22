@@ -50,7 +50,7 @@ public class CheckValueCalculator {
     private void addEncounterInfo() {
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
-        for (EncounterArea area : romHandler.getEncounters(useTimeBasedEncounters)) {
+        for (EncounterArea area : romHandler.getEncounters()) {
             for (Encounter e : area) {
                 addToCV(e.getLevel(), e.getSpecies().getNumber());
             }

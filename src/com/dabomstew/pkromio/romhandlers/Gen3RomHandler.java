@@ -1523,9 +1523,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getSortedEncounters() {
         List<String> locationTagsTraverseOrder = Gen3Constants.getLocationTagsTraverseOrder(getROMType());
-        return getEncounters(useTimeOfDay).stream()
+        return getEncounters().stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());
     }

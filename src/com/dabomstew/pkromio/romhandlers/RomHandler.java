@@ -217,25 +217,19 @@ public interface RomHandler {
 
     List<EncounterArea> getEncounters();
 
-    // Temporary; TODO: remove
-    @Deprecated
-    default List<EncounterArea> getEncounters(boolean useTimeOfDay) {return getEncounters();}
-
     /**
-     * Returns a list identical to {@link #getEncounters(boolean)}, except it is sorted according to when in the game
+     * Returns a list identical to {@link #getEncounters()}, except it is sorted according to when in the game
      * the player is expected to go to the location of each {@link EncounterArea}.<br>
      * E.g. {@link EncounterArea}s at early routes come early, and victory road and post-game locations ones are at
      * the end.<br>
      * (if the order has been implemented; the default implementation does not sort)
      */
-    List<EncounterArea> getSortedEncounters(boolean useTimeOfDay);
+    List<EncounterArea> getSortedEncounters();
 
     /**
-     *
-     * @param useTimeOfDay
      * @return A new SpeciesSet containing all wild Species found in the main game.
      */
-    SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay);
+    SpeciesSet getMainGameWildPokemonSpecies();
 
     void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
 

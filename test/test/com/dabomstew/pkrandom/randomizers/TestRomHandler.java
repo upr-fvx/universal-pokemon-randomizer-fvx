@@ -145,7 +145,7 @@ public class TestRomHandler extends AbstractRomHandler {
     public TestRomHandler(RomHandler mockupOf) {
         originalTypeTable = new TypeTable(mockupOf.getTypeTable());
         originalSpeciesInclFormes = SpeciesSet.unmodifiable(mockupOf.getSpeciesInclFormes());
-        originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters(true));
+        originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters());
         originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
         abilitiesPerSpecies = mockupOf.abilitiesPerSpecies();
@@ -781,7 +781,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
+    public List<EncounterArea> getSortedEncounters() {
         throw new NotImplementedException();
     }
 

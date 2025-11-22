@@ -990,8 +990,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        return getEncounters(useTimeOfDay).stream()
+    public List<EncounterArea> getSortedEncounters() {
+        return getEncounters().stream()
                 .sorted(Comparator.comparingInt(a -> Gen1Constants.locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());
     }

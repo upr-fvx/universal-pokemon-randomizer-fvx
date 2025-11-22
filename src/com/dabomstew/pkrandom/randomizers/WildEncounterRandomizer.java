@@ -56,7 +56,7 @@ public class WildEncounterRandomizer extends Randomizer {
                                     int levelModifier, boolean abilitiesAreRandomized) {
 
         // get encounters
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
         List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
         // setup banned + allowed
@@ -101,7 +101,7 @@ public class WildEncounterRandomizer extends Randomizer {
      * Changes the levels of wild Pokemon encounters without randomizing them.
      */
     private void modifyLevelsOnly(boolean useTimeOfDay, int levelModifier) {
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
         applyLevelModifier(levelModifier, encounterAreas);
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }

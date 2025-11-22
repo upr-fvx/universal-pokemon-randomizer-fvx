@@ -26,7 +26,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void foo(String romName) {
         loadROM(romName);
-        List<EncounterArea> tod = romHandler.getEncounters(false);
+        List<EncounterArea> tod = romHandler.getEncounters();
         for (int i = 0; i < tod.size(); i++) {
             System.out.println(i + "\t" + tod.get(i));
         }
@@ -36,29 +36,17 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void encountersAreNotEmpty(String romName) {
         loadROM(romName);
-        assertFalse(romHandler.getEncounters(false).isEmpty());
-        assertFalse(romHandler.getEncounters(true).isEmpty());
+        assertFalse(romHandler.getEncounters().isEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void encountersDoNotChangeWithGetAndSetNotUsingTimeOfDay(String romName) {
+    public void encountersDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(false);
-        System.out.println(encounterAreas);
-        List<EncounterArea> before = new ArrayList<>(encounterAreas);
-        romHandler.setEncounters(false, encounterAreas);
-        assertEquals(before, romHandler.getEncounters(false));
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void encountersDoNotChangeWithGetAndSetUsingTimeOfDay(String romName) {
-        loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
         List<EncounterArea> before = new ArrayList<>(encounterAreas);
         romHandler.setEncounters(true, encounterAreas);
-        List<EncounterArea> after = romHandler.getEncounters(true);
+        List<EncounterArea> after = romHandler.getEncounters();
         for (int i = 0; i < Math.max(before.size(), after.size()); i++) {
             System.out.println(i);
             System.out.println("before: " + (i < before.size() ? before.get(i) : "---"));
@@ -111,15 +99,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     private void printAllEncounters(StringWriter sw) {
         PrintWriter pw = new PrintWriter(sw);
-
-        List<EncounterArea> noTimeOfDay = romHandler.getEncounters(false);
-        List<EncounterArea> useTimeOfDay = romHandler.getEncounters(true);
-
-        pw.println("useTimeOfDay=false");
-        pw.println(encounterAreasToMultilineString(noTimeOfDay));
-        pw.println("");
-        pw.println("useTimeOfDay=true");
-        pw.println(encounterAreasToMultilineString(useTimeOfDay));
+        pw.println(encounterAreasToMultilineString(romHandler.getEncounters()));
         pw.close();
     }
 
@@ -150,19 +130,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void allEncounterAreasHaveALocationTagNoTimeOfDay(String romName) {
+    public void allEncounterAreasHaveALocationTag(String romName) {
         loadROM(romName);
-        for (EncounterArea area : romHandler.getEncounters(false)) {
-            assertNotNull(area.getLocationTag());
-            assertNotEquals("", area.getLocationTag());
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void allEncounterAreasHaveALocationTagUseTimeOfDay(String romName) {
-        loadROM(romName);
-        for (EncounterArea area : romHandler.getEncounters(true)) {
+        for (EncounterArea area : romHandler.getEncounters()) {
             assertNotNull(area.getLocationTag());
             assertNotEquals("", area.getLocationTag());
         }
@@ -174,10 +144,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         loadROM(romName);
         Set<String> inOrder = new HashSet<>(getLocationTagsTraverseOrder());
         Set<String> used = new HashSet<>();
-        for (EncounterArea area : romHandler.getEncounters(false)) {
-            used.add(area.getLocationTag());
-        }
-        for (EncounterArea area : romHandler.getEncounters(true)) {
+        for (EncounterArea area : romHandler.getEncounters()) {
             used.add(area.getLocationTag());
         }
         System.out.println("In traverse order:\n" + inOrder);
@@ -241,7 +208,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         //  Should the test change, or the underlying systems?
         assumeTrue(Roms.isOfRegion(romName, Roms.Region.USA, Roms.Region.EUROPE_ENGLISH));
         loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
 
         String lastTag = "NOT A LOCATION TAG";
         int count = 0;
@@ -297,7 +264,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void hasMapIndicesIsCorrect(String romName) {
         loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
 
         Map<Integer, List<EncounterArea>> areasByMapIndex = EncounterArea.groupAreasByMapIndex(encounterAreas);
 
@@ -328,7 +295,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void hasEncounterTypes(String romName) {
         loadROM(romName);
-        List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
 
         String lastLocation = "NOT A LOCATION";
         for(EncounterArea area : encounterAreas) {

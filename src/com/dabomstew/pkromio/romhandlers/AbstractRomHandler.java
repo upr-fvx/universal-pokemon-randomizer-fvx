@@ -82,8 +82,8 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        return getEncounters(useTimeOfDay);
+    public List<EncounterArea> getSortedEncounters() {
+        return getEncounters();
     }
 
     @Override
@@ -107,9 +107,9 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
 
-    public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
+    public SpeciesSet getMainGameWildPokemonSpecies() {
         SpeciesSet wildPokemon = new SpeciesSet();
-        List<EncounterArea> areas = this.getEncounters(useTimeOfDay);
+        List<EncounterArea> areas = getEncounters();
 
         for (EncounterArea area : areas) {
             if (area.isPartiallyPostGame()) {

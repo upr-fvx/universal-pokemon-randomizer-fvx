@@ -997,7 +997,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+    public void setEncounters(List<EncounterArea> encounterAreas) {
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
 
         writeNormalEncounters(areaIterator);

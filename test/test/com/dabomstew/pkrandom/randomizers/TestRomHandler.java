@@ -786,7 +786,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
+    public void setEncounters(List<EncounterArea> encounters) {
         testEncounters = encounters;
     }
 

@@ -843,22 +843,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+    public void setEncounters(List<EncounterArea> encounterAreas) {
         try {
             NARCArchive encounterNARC = readNARC(romEntry.getFile("WildPokemon"));
             Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
             for (byte[] entry : encounterNARC.files) {
                 writeEncounterEntry(areaIterator, entry, 0);
                 if (entry.length > 232) {
-                    if (useTimeOfDay) {
-                        for (int i = 1; i < 4; i++) {
-                            writeEncounterEntry(areaIterator, entry, i * 232);
-                        }
-                    } else {
-                        // copy for other 3 seasons
-                        System.arraycopy(entry, 0, entry, 232, 232);
-                        System.arraycopy(entry, 0, entry, 464, 232);
-                        System.arraycopy(entry, 0, entry, 696, 232);
+                    for (int i = 1; i < 4; i++) {
+                        writeEncounterEntry(areaIterator, entry, i * 232);
                     }
                 }
             }

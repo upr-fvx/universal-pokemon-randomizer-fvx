@@ -1429,7 +1429,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+    public void setEncounters(List<EncounterArea> encounterAreas) {
         try {
             if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                 setEncountersORAS(encounterAreas);

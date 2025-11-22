@@ -1888,10 +1888,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+	public void setEncounters(List<EncounterArea> encounterAreas) {
 		try {
 			if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-				setEncountersHGSS(useTimeOfDay, encounterAreas);
+				setEncountersHGSS(encounterAreas);
 				updatePokedexAreaDataHGSS(encounterAreas);
 			} else {
                 System.out.println("Encounter setting is not functional atm in DPPt. Wait for the next commit or so.");
@@ -2095,14 +2095,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-	private void setEncountersHGSS(boolean useTimeOfDay, List<EncounterArea> encounterAreas) throws IOException {
+	private void setEncountersHGSS(List<EncounterArea> encounterAreas) throws IOException {
 		Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
 
-		writeMainEncountersHGSS(useTimeOfDay, areaIterator);
+		writeMainEncountersHGSS(areaIterator);
 		writeExtraEncountersHGSS(areaIterator);
 	}
 
-	private void writeMainEncountersHGSS(boolean useTimeOfDay, Iterator<EncounterArea> areaIterator) throws IOException {
+	private void writeMainEncountersHGSS(Iterator<EncounterArea> areaIterator) throws IOException {
 		String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
 		// Credit for
@@ -2121,19 +2121,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Walking has to be handled on its own because the levels
 			// are reused for every time of day
 			if (rates[0] != 0) {
-				EncounterArea walkingArea = areaIterator.next();
-				writeWalkingEncounterLevelsHGSS(b, 8, walkingArea);
-				writePokemonHGSS(b, 20, walkingArea);
-				// either use the same area x3 for day, morning, night or get new ones for the latter 2
-				if (!useTimeOfDay) {
-					writePokemonHGSS(b, 44, walkingArea);
-					writePokemonHGSS(b, 68, walkingArea);
-				} else {
-					for (int i = 1; i < 3; i++) {
-						walkingArea = areaIterator.next();
-						writePokemonHGSS(b, 20 + i * 24, walkingArea);
-					}
-				}
+                for (int i = 0; i < 3; i++) {
+                    EncounterArea walkingArea = areaIterator.next();
+                    writePokemonHGSS(b, 20 + i * 24, walkingArea);
+                    // easiest to just write the levels three times over
+                    writeWalkingEncounterLevelsHGSS(b, 8, walkingArea);
+                }
 			}
 
 			// Write radio pokemon

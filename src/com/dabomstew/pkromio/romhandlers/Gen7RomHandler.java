@@ -1215,7 +1215,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         }
 
-        new Gen7EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+//        new Gen7EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
         for (EncounterArea area : encounterAreas) {
             //The Gen 7 display names kinda suck, so let's enhance them with encounter types
             String displayName = area.getDisplayName();
@@ -1313,7 +1313,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+    public void setEncounters(List<EncounterArea> encounterAreas) {
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
         for (AreaData areaData : areaDataList) {
             if (!areaData.hasTables) {
@@ -1324,7 +1324,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 byte[] encounterTable = areaData.encounterTables.get(i);
                 EncounterArea dayArea = areaIterator.next();
                 writeEncounterTable(encounterTable, 0, dayArea);
-                EncounterArea nightArea = useTimeOfDay ? areaIterator.next() : dayArea;
+                EncounterArea nightArea = areaIterator.next();
                 writeEncounterTable(encounterTable, 0x164, nightArea);
             }
         }

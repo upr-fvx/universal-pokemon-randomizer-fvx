@@ -871,7 +871,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
+    public void setEncounters(List<EncounterArea> encounters) {
         if (!havePatchedFleeing) {
             patchFleeing();
         }

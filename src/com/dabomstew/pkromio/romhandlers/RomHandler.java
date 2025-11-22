@@ -231,7 +231,11 @@ public interface RomHandler {
      */
     SpeciesSet getMainGameWildPokemonSpecies();
 
-    void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters);
+    void setEncounters(List<EncounterArea> encounters);
+
+    // TODO: temp; remove
+    @Deprecated
+    default void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {setEncounters(encounters);}
 
     default boolean hasEncounterLocations() {
         return false;

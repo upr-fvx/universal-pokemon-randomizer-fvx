@@ -1194,6 +1194,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+        // We've removed the usage of "useTimeOfDay", but Gen 7 encounters are still a mess.
+        // TODO: Clean them up and give better display names, what's with the tables?
+        // TODO: Separate the SOS encounters!! And figure out how those work, even.
         List<EncounterArea> encounterAreas = new ArrayList<>();
         for (AreaData areaData : areaDataList) {
             if (!areaData.hasTables) {
@@ -1201,21 +1204,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
             for (int i = 0; i < areaData.encounterTables.size(); i++) {
                 byte[] encounterTable = areaData.encounterTables.get(i);
-                byte[] dayTable = new byte[0x164];
-                System.arraycopy(encounterTable, 0, dayTable, 0, 0x164);
-                EncounterArea dayArea = readEncounterTable(dayTable);
-                if (!useTimeOfDay) {
-                    dayArea.setDisplayName(areaData.name + ", Table " + (i + 1));
-                    encounterAreas.add(dayArea);
-                } else {
-                    dayArea.setDisplayName(areaData.name + ", Table " + (i + 1) + " (Day)");
-                    encounterAreas.add(dayArea);
-                    byte[] nightTable = new byte[0x164];
-                    System.arraycopy(encounterTable, 0x164, nightTable, 0, 0x164);
-                    EncounterArea nightArea = readEncounterTable(nightTable);
-                    nightArea.setDisplayName(areaData.name + ", Table " + (i + 1) + " (Night)");
-                    encounterAreas.add(nightArea);
-                }
+
+                EncounterArea dayArea = readEncounterTable(encounterTable, 0);
+                dayArea.setDisplayName(areaData.name + ", Table " + (i + 1) + " (Day)");
+                encounterAreas.add(dayArea);
+
+                EncounterArea nightArea = readEncounterTable(encounterTable, 0x164);
+                nightArea.setDisplayName(areaData.name + ", Table " + (i + 1) + " (Night)");
+                encounterAreas.add(nightArea);
             }
         }
 
@@ -1230,13 +1226,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return encounterAreas;
     }
 
-    private EncounterArea readEncounterTable(byte[] encounterTable) {
+    private EncounterArea readEncounterTable(byte[] encounterTable, int startOffset) {
         int minLevel = encounterTable[0];
         int maxLevel = encounterTable[1];
         EncounterArea area = new EncounterArea();
         area.setRate(1);
         for (int i = 0; i < 10; i++) {
-            int offset = 0xC + (i * 4);
+            int offset = startOffset + 0xC + (i * 4);
             int speciesAndFormeData = readWord(encounterTable, offset);
             int species = speciesAndFormeData & 0x7FF;
             int forme = speciesAndFormeData >> 11;
@@ -1266,7 +1262,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         // Get the weather SOS encounters for this area
         for (int i = 0; i < 6; i++) {
-            int offset = 0x14C + (i * 4);
+            int offset = startOffset + 0x14C + (i * 4);
             int species = readWord(encounterTable, offset) & 0x7FF;
             int forme = readWord(encounterTable, offset) >> 11;
             if (species != 0) {

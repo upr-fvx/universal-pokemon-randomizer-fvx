@@ -4293,7 +4293,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// override for piloswine: Set to level 45 (or estimatedLevel if useEstimatedLevels)
 							levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
 						}
-						// change to pure level evo (use leverLearntAt over the estimatedEvoLvl)
+						// change to pure level evo (use levelLearntAt over the estimatedEvoLvl)
 						markImprovedEvolutions(pkmn);
 						evo.updateEvolutionMethod(EvolutionType.LEVEL, levelLearntAt);
 					}

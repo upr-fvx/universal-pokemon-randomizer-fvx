@@ -2758,7 +2758,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             // override for piloswine: Set to level 45 (or estimatedLevel if useEstimatedLevels)
                             levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
-                        // change to pure level evo (use leverLearntAt over the estimatedEvoLvl)
+                        // change to pure level evo (use levelLearntAt over the estimatedEvoLvl)
                         markImprovedEvolutions(sp);
                         evo.updateEvolutionMethod(EvolutionType.LEVEL, levelLearntAt);
                         break;

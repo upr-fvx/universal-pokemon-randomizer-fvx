@@ -36,7 +36,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - The option "Use Estimated Evolution Levels" is now also usable for "Random"
   evolutions. (#111)
 - The option "Use Estimated Evolution Levels" is now also usable if "Make
-  Evolutions Easier" is seleced. (#114)
+  Evolutions Easier" is selected. (#114)
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]

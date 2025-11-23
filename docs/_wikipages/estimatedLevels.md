@@ -8,7 +8,7 @@ name: Estimated Evolution Levels
 
 ## Algorithmic estimation of evolution levels
 
-For any level-up evolution (evolution that always happens at a specific level), the estimated evolution level equals the evolution level.
+For any level-up evolution (evolution that uses a specific level threshold), the estimated evolution level equals the evolution level.
 
 For any evolution that is **not** a level-up evolution, an evolution level is **estimated** from all level-up evolutions in the loaded ROM via the following algorithm.
 
@@ -102,7 +102,7 @@ It estimates the evolution level of non-level-up evolutions based on how their B
 * Evolutions with BST pairs closer to the target have **stronger influence**.
 * The post-evolution difference between the sample's and the target's BSTs has a **stronger influence** than the pre-evolution difference between the sample's and the target's BSTs.
 
-## Estimated Evolutions Levels
+## Estimated Evolution Levels
 
 Following are the estimated evolution levels for each evolution in the respective generation.
 * [Generation 1 (Red/Blue/Yellow)](#generation-1-redblueyellow)

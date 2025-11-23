@@ -355,7 +355,9 @@ is selected, the new evolution level can be found in [this table]({{ site.baseur
 
 ## Make Evolutions Easier
 
-In addition to lowering level evolutions, this setting also affects the following Pokemon:
+In addition to lowering level evolutions 
+(as well as [Estimated Evolution Levels]({{ site.baseurl}}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)),
+this setting also affects the following Pokemon:
 
 **Always changed:**
 
@@ -363,8 +365,8 @@ In addition to lowering level evolutions, this setting also affects the followin
 
 **Only in Sun/Moon:**
 
-* All Pokemon that normally evolve by levelling up in Vast Poni Canyon also evolve at level 35, in addition to their regular evolution method. This affects Magneton, Nosepass and Charjabug.
-* Crabrawler also evolves at level 35, in addition to its regular evolution method.
+* All Pokemon that normally evolve by levelling up in Vast Poni Canyon also evolve at level 35\*, in addition to their regular evolution method. This affects Magneton, Nosepass and Charjabug.
+* Crabrawler also evolves at level 35\*, in addition to its regular evolution method.
 
 **Only in Ultra Sun/Ultra Moon:**
 
@@ -372,7 +374,10 @@ In addition to lowering level evolutions, this setting also affects the followin
 
 **Only if Wild Pokemon are randomized:**
 
-* Pokemon that evolve by having another specific Pokemon in the party now evolve at level 35 instead. This affects Mantyke, and if "Change Impossible Evolutions" is used, Shelmet and Karrablast.
+* Pokemon that evolve by having another specific Pokemon in the party now evolve at level 35\* instead. This affects Mantyke, and if "Change Impossible Evolutions" is used, Shelmet and Karrablast.
+
+\*<sub>If the "Use [Estimated Evolution Level]({{ site.baseurl }}/wikipages/estimatedLevels.html#algorithmic-estimation-of-evolution-levels)" checkbox
+is selected, the new evolution level can be found in the corresponding table [here]({{ site.baseurl }}/wikipages/estimatedLevels.html#estimated-evolution-levels).</sub>
 
 ## Remove Time-Based Evolutions
 

@@ -26,6 +26,8 @@ If you are implementing a new setting, make sure you have added it
 * [ ] implement the actual effect
 ### GameRandomizer.java:
 * [ ] If adding a top-level setting, add method call.
+### RandomizationLogger.java
+* [ ] Add appropriate logging, if needed.
 ### Tests:
 * [ ] Make at least one new unit test to verify the new setting works consistently.
 ### If a new property was added to a class:

@@ -142,24 +142,6 @@ public class Evolution implements Comparable<Evolution> {
     }
 
     /**
-     * Sets the {@link EvolutionType} of this {@link Evolution}.
-     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
-     * @param type New EvolutionType to be used for this evolution.
-     */
-    public void updateEvolutionMethod(EvolutionType type) {
-        this.updateEvolutionMethod(type, this.extraInfo);
-    }
-
-    /**
-     * Sets the extraInfo of this {@link Evolution}.
-     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
-     * @param extraInfo New extraInfo to be used for this evolution.
-     */
-    public void updateEvolutionMethod(int extraInfo) {
-        this.updateEvolutionMethod(this.type, extraInfo);
-    }
-
-    /**
      * Sets the {@link EvolutionType} and the extraInfo of this {@link Evolution}.
      * If applicable, extraInfo of this evolution will be set to the estimatedEvoLvl if useEstimatedLevels == true.
      * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
@@ -170,28 +152,6 @@ public class Evolution implements Comparable<Evolution> {
     public void updateEvolutionMethod(EvolutionType type, int extraInfo, boolean useEstimatedLevels) {
         this.updateEvolutionMethod(type, (useEstimatedLevels && type.usesLevelThreshold())
                 ? this.estimatedEvoLvl : extraInfo);
-    }
-
-    /**
-     * Sets the {@link EvolutionType} of this {@link Evolution}.
-     * If applicable, extraInfo of this evolution will be set to the estimatedEvoLvl if useEstimatedLevels == true.
-     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
-     * @param type New EvolutionType to be used for this evolution.
-     * @param useEstimatedLevels If true and if applicable, use the estimatedEvoLvl to set the extraInfo of this evolution.
-     */
-    public void updateEvolutionMethod(EvolutionType type, boolean useEstimatedLevels) {
-        this.updateEvolutionMethod(type, this.extraInfo, useEstimatedLevels);
-    }
-
-    /**
-     * Sets the extraInfo of this {@link Evolution}.
-     * If applicable, extraInfo of this evolution will be set to the estimatedEvoLvl if useEstimatedLevels == true.
-     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
-     * @param extraInfo New extraInfo to be used for this evolution unless useEstimatedLevel == true and this evoluton uses a level threshold.
-     * @param useEstimatedLevels If true and if applicable, use the estimatedEvoLvl to set the extraInfo of this evolution.
-     */
-    public void updateEvolutionMethod(int extraInfo, boolean useEstimatedLevels) {
-        this.updateEvolutionMethod(this.type, extraInfo, useEstimatedLevels);
     }
 
     public void setForme(int forme) {

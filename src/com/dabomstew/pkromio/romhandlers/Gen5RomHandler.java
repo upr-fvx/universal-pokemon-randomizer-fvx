@@ -2899,7 +2899,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             // Put Water Stone instead
                             evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
-                            evo.updateEvolutionMethod(EvolutionType.ITEM, useEstimatedLevels);
+                            evo.updateEvolutionMethod(EvolutionType.ITEM, evo.getExtraInfo(), useEstimatedLevels);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {

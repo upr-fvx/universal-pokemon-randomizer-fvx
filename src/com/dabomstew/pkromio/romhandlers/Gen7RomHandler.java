@@ -423,7 +423,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
                         if (et.usesLevelThreshold()) {
-                            evol.updateEvolutionMethod(level);
+                            evol.updateEvolutionMethod(evol.getType(), level);
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
@@ -2775,7 +2775,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             // Put Water Stone instead
                             evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
-                            evo.updateEvolutionMethod(EvolutionType.ITEM, useEstimatedLevels);
+                            evo.updateEvolutionMethod(EvolutionType.ITEM, evo.getExtraInfo(), useEstimatedLevels);
                         }
                         break;
                     case TRADE_SPECIAL:
@@ -2795,25 +2795,25 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // Instead, we change both to time-based evolutions.
                         markImprovedEvolutions(sp);
                         evo.updateEvolutionMethod(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT,
-                                useEstimatedLevels);
+                                evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     case LEVEL_GAME_OTHER:
                         // This is Cosmoem's impossible evolution,
                         // its time-based evo is the other way around.
                         markImprovedEvolutions(sp);
                         evo.updateEvolutionMethod(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY,
-                                useEstimatedLevels);
+                                evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     // And these are Rockruff's. We change the possible ones too for symmetry's sake.
                     case LEVEL_GAME_THIS_DAY:
                     case LEVEL_GAME_OTHER_DAY:
                         markImprovedEvolutions(sp);
-                        evo.updateEvolutionMethod(EvolutionType.LEVEL_DAY, useEstimatedLevels);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL_DAY, evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     case LEVEL_GAME_THIS_NIGHT:
                     case LEVEL_GAME_OTHER_NIGHT:
                         markImprovedEvolutions(sp);
-                        evo.updateEvolutionMethod(EvolutionType.LEVEL_NIGHT, useEstimatedLevels);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL_NIGHT, evo.getExtraInfo(), useEstimatedLevels);
                         break;
                 }
 

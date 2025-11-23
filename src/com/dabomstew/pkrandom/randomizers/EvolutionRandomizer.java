@@ -174,7 +174,7 @@ public class EvolutionRandomizer extends Randomizer {
                 newEvo = new Evolution(from, picked, evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
             }
             if (newEvo.getType() == EvolutionType.LEVEL_FEMALE_ESPURR) {
-                newEvo.updateEvolutionMethod(EvolutionType.LEVEL_FEMALE_ONLY);
+                newEvo.updateEvolutionMethod(EvolutionType.LEVEL_FEMALE_ONLY, newEvo.getExtraInfo());
             }
             newEvo.setForme(picked.getRandomCosmeticFormeNumber(random));
             return newEvo;

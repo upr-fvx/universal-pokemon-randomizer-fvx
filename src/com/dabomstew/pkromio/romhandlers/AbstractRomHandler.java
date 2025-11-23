@@ -198,10 +198,10 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // Else if it's just too high, bring it down
                         if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
                             markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(maxIntermediateLevel);
+                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
                         } else if (checkEvo.getExtraInfo() > maxLevel) {
                             markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(maxLevel);
+                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
                         }
                     } else {
                         // For all other evolutions, the estimated evolution levels have to be condensed if necessary
@@ -215,7 +215,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                     }
                     if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
                         markImprovedEvolutions(pk);
-                        checkEvo.updateEvolutionMethod(EvolutionType.LEVEL);
+                        checkEvo.updateEvolutionMethod(EvolutionType.LEVEL, checkEvo.getExtraInfo());
                     }
                 }
             }
@@ -329,7 +329,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                         int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
                         evo.updateEvolutionMethod(EvolutionType.STONE, item);
                     } else {
-                        evo.updateEvolutionMethod(et.timeless());
+                        evo.updateEvolutionMethod(et.timeless(), evo.getExtraInfo());
                     }
                 }
             }
@@ -476,9 +476,9 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
             if (!levelItemEvos.isEmpty()) {
                 for (Evolution levelItemEvo : levelItemEvos) {
-                    levelItemEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY);
+                    levelItemEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY, levelItemEvo.getExtraInfo());
                     Evolution nightEvo = new Evolution(levelItemEvo);
-                    nightEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT);
+                    nightEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT, levelItemEvo.getExtraInfo());
                     nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
                     nightEvo.getTo().getEvolutionsTo().add(nightEvo);
                 }
@@ -510,10 +510,10 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution dayEvo : dayEvos) {
                 boolean merged = false;
 
-                dayEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT);
+                dayEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT, dayEvo.getExtraInfo());
                 for (Evolution nightEvo : nightEvos) {
                     if (dayEvo.equals(nightEvo)) {
-                        dayEvo.updateEvolutionMethod(EvolutionType.ITEM);
+                        dayEvo.updateEvolutionMethod(EvolutionType.ITEM, dayEvo.getExtraInfo());
                         nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
                         nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
                         merged = true;
@@ -521,7 +521,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
                 if (!merged) {
                     // The dayEvo didn't have an identical nightEvo, so turn it back
-                    dayEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY);
+                    dayEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY, dayEvo.getExtraInfo());
                 }
             }
         }

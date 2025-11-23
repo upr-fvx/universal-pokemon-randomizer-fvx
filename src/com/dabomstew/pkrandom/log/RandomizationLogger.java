@@ -539,10 +539,8 @@ public class RandomizationLogger {
         sb.append(evoTypeStr);
         if (evo.getType().usesLevelThreshold()) {
             sb.append(String.format(getBS("Log.pe.usesLevelThreshold"), evo.getExtraInfo()));
-        } else if (settings.isTrainersEvolveTheirPokemon() || settings.useEstimatedLevelsForEvolutionImprovements()){
+        } else {
             // For usesLevelThreshold, extraInfo == estimatedEvoLvl, hence only print this info when it is supplementary
-            // and actually used in the game (i.e., 'Use Estimated Evolution Levels' selected OR 'Trainers Evolve their
-            // Pokemon' selected.
             sb.append(String.format(getBS("Log.pe.useEstimatedEvoLvl"), evo.getEstimatedEvoLvl()));
         }
 

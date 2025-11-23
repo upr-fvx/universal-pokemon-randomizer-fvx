@@ -195,7 +195,14 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void evolutionImprovementsWorkWithEstimatedLevels(String romName) {
+    public void levelThresholdEvosHaveEqualExtraInfoAndEstimatedEvoLvl(String romName) {
+        loadROM(romName);
+        test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void levelThresholdEvosHaveEqualExtraInfoAndEstimatedEvoLvlAfterEvolutionImprovements(String romName) {
         loadROM(romName);
 
         romHandler.removeImpossibleEvolutions(true, true);
@@ -203,6 +210,10 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         romHandler.makeEvolutionsEasier(true, true);
         romHandler.removeTimeBasedEvolutions();
 
+        test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl();
+    }
+
+    private void test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl() {
         for (Species pk : romHandler.getSpeciesSet()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 // Each level-up evolution should have the same evolution level as the estimated level

@@ -397,7 +397,7 @@ public class GameRandomizer {
     }
 
     private void maybeApplyEvolutionImprovements() {
-        boolean useEstimatedLevels = settings.useEstimatedLevelsForImpossibleEvolutions();
+        boolean useEstimatedLevels = settings.useEstimatedLevelsForEvolutionImprovements();
 
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {

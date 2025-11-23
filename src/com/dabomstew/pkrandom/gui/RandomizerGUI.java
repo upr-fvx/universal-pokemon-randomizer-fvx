@@ -1604,7 +1604,7 @@ public class RandomizerGUI {
         raceModeCheckBox.setSelected(settings.isRaceMode());
 
         peChangeImpossibleEvosCheckBox.setSelected(settings.isChangeImpossibleEvolutions());
-        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForImpossibleEvolutions());
+        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForEvolutionImprovements());
         mdUpdateMovesCheckBox.setSelected(settings.isUpdateMoves());
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
         tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
@@ -1921,7 +1921,7 @@ public class RandomizerGUI {
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
         settings.setChangeImpossibleEvolutions(peChangeImpossibleEvosCheckBox.isSelected() && peChangeImpossibleEvosCheckBox.isVisible());
-        settings.setEstimateLevelForImpossibleEvolutions(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected());
+        settings.setEstimateLevelForEvolutionImprovements(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected());
         settings.setUpdateMoves(mdUpdateMovesCheckBox.isSelected() && mdUpdateMovesCheckBox.isVisible());
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());

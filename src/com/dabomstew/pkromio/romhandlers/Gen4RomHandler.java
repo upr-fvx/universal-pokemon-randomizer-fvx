@@ -1369,12 +1369,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                                            String mapName, int mapID, int walkingRate) {
         EncounterArea combined = new EncounterArea(readEncountersDPPt(b, 4, 12));
 
-        EncounterArea always = new EncounterArea(combined.subList(6, 8));
-        EncounterArea morning = new EncounterArea(combined.subList(2, 4));
         EncounterArea noSwarm = new EncounterArea(combined.subList(0, 2));
+        EncounterArea morning = new EncounterArea(combined.subList(2, 4));
         EncounterArea noRadar = new EncounterArea(combined.subList(4, 6));
-        noRadar.addAll(combined.subList(10, 12));
+        EncounterArea always = new EncounterArea(combined.subList(6, 8));
         EncounterArea noDualSlot = new EncounterArea(combined.subList(8, 10));
+        noRadar.addAll(combined.subList(10, 12));
 
         EncounterArea swarm = readReplacementEncountersDPPt(b, 0, noSwarm);
         EncounterArea day = readReplacementEncountersDPPt(b, 2, morning);
@@ -1407,13 +1407,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         for (int i = 0; i < replacementOf.size(); i++) {
             int offset = 100 + (i + start) * 4;
             int pknum = readLong(b, offset);
-            if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-                Species pk = pokes[pknum];
-                Encounter enc = new Encounter();
-                enc.setLevel(replacementOf.get(i).getLevel());
-                enc.setSpecies(pk);
-                area.add(enc);
-            }
+            Species pk = pokes[pknum];
+            Encounter enc = new Encounter();
+            enc.setLevel(replacementOf.get(i).getLevel());
+            enc.setSpecies(pk);
+            area.add(enc);
         }
         return area;
     }
@@ -1894,23 +1892,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				setEncountersHGSS(encounterAreas);
 				updatePokedexAreaDataHGSS(encounterAreas);
 			} else {
-                System.out.println("Encounter setting is not functional atm in DPPt. Wait for the next commit or so.");
-//				setEncountersDPPt(useTimeOfDay, encounterAreas);
-//				updatePokedexAreaDataDPPt(encounterAreas);
+				setEncountersDPPt(encounterAreas);
+				updatePokedexAreaDataDPPt(encounterAreas);
 			}
 		} catch (IOException ex) {
 			throw new RomIOException(ex);
 		}
 	}
 
-	private void setEncountersDPPt(boolean useTimeOfDay, List<EncounterArea> encounterAreas) throws IOException {
+	private void setEncountersDPPt(List<EncounterArea> encounterAreas) throws IOException {
 		Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
 
-		writeMainEncountersDPPt(areaIterator, useTimeOfDay);
+		writeMainEncountersDPPt(areaIterator);
 		writeExtraEncountersDPPt(areaIterator);
 	}
 
-	private void writeMainEncountersDPPt(Iterator<EncounterArea> areaIterator, boolean useTimeOfDay) throws IOException {
+	private void writeMainEncountersDPPt(Iterator<EncounterArea> areaIterator) throws IOException {
 		String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
 		// Credit for
@@ -1919,49 +1916,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (byte[] b : encounterData.files) {
 			int walkingRate = readLong(b, 0);
 			if (walkingRate != 0) {
-				// walking encounters are a-go
-				EncounterArea walkingArea = areaIterator.next();
-				writeEncountersDPPt(b, 4, walkingArea, 12);
-
-				// Time of day encounters?
-				int todEncounterSlot = 12;
-				for (int i = 0; i < 4; i++) {
-					int pknum = readLong(b, 108 + 4 * i);
-					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-						// Valid time of day slot
-						if (useTimeOfDay) {
-							// Get custom randomized encounter
-							Species pk = walkingArea.get(todEncounterSlot++).getSpecies();
-							writeLong(b, 108 + 4 * i, pk.getNumber());
-						} else {
-							// Copy the original slot's randomized encounter
-							Species pk = walkingArea.get(Gen4Constants.dpptAlternateSlots[i + 2]).getSpecies();
-							writeLong(b, 108 + 4 * i, pk.getNumber());
-						}
-					}
-				}
-
-				// Other conditional encounters?
-				Iterator<Encounter> condEncounterIterator = null;
-				for (int i = 0; i < 20; i++) {
-					if (i >= 2 && i <= 5) {
-						// Time of day slot, handled already
-						continue;
-					}
-					int offs = 100 + i * 4 + (i >= 10 ? 24 : 0);
-					int pknum = readLong(b, offs);
-					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
-						// This slot is used, grab a replacement.
-						if (condEncounterIterator == null) {
-							// Fetch the set of conditional encounters for this
-							// area now that we know it's necessary and exists.
-							condEncounterIterator = areaIterator.next().iterator();
-						}
-						Species pk = condEncounterIterator.next().getSpecies();
-						writeLong(b, offs, pk.getNumber());
-					}
-				}
-			}
+                writeWalkingEncountersDPPt(areaIterator, b);
+            }
 			// up to 204, 5 special ones to go
 			// This is for surf, filler, old rod, good rod, super rod
 			// so we skip index 1 (filler)
@@ -1983,15 +1939,61 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		writeNARC(encountersFile, encounterData);
 	}
 
-	private void writeExtraEncountersDPPt(Iterator<EncounterArea> areaIterator) throws IOException {
+    private void writeWalkingEncountersDPPt(Iterator<EncounterArea> areaIterator, byte[] b) {
+        // This block is not pretty, but Java 8 does not offer any better options
+        EncounterArea always = areaIterator.next();
+        EncounterArea morning = areaIterator.next();
+        EncounterArea day = areaIterator.next();
+        EncounterArea night = areaIterator.next();
+        EncounterArea noSwarm = areaIterator.next();
+        EncounterArea swarm = areaIterator.next();
+        EncounterArea noRadar = areaIterator.next();
+        EncounterArea radar = areaIterator.next();
+        EncounterArea noDualSlot = areaIterator.next();
+        EncounterArea dualSlotRuby = areaIterator.next();
+        EncounterArea dualSlotSapphire = areaIterator.next();
+        EncounterArea dualSlotEmerald = areaIterator.next();
+        EncounterArea dualSlotFireRed = areaIterator.next();
+        EncounterArea dualSlotLeafGreen = areaIterator.next();
+
+        EncounterArea combined = new EncounterArea(noSwarm);
+        combined.addAll(morning);
+        combined.addAll(noRadar.subList(0, 2));
+        combined.addAll(always);
+        combined.addAll(noDualSlot);
+        combined.addAll(noRadar.subList(2, 4));
+
+        writeEncountersDPPt(b, 4, combined, 12);
+
+        writeReplacementEncountersDPPt(b, 0, swarm);
+        writeReplacementEncountersDPPt(b, 2, day);
+        writeReplacementEncountersDPPt(b, 4, night);
+        writeReplacementEncountersDPPt(b, 6, radar);
+        writeReplacementEncountersDPPt(b, 16, dualSlotRuby);
+        writeReplacementEncountersDPPt(b, 18, dualSlotSapphire);
+        writeReplacementEncountersDPPt(b, 20, dualSlotEmerald);
+        writeReplacementEncountersDPPt(b, 22, dualSlotFireRed);
+        writeReplacementEncountersDPPt(b, 24, dualSlotLeafGreen);
+    }
+
+    private void writeReplacementEncountersDPPt(byte[] b, int start, EncounterArea area) {
+        for (int i = 0; i < area.size(); i++) {
+            int offset = 100 + (i + start) * 4;
+            // This discretely turns alt forms into their base forms.
+            int pknum = area.get(i).getSpecies().getBaseNumber();
+            writeLong(b, offset, pknum);
+        }
+    }
+
+    private void writeExtraEncountersDPPt(Iterator<EncounterArea> areaIterator) throws IOException {
 		String extraEncountersFile = romEntry.getFile("ExtraEncounters");
 		NARCArchive extraEncounterData = readNARC(extraEncountersFile);
 		byte[] encounterOverlay = readOverlay(romEntry.getIntValue("EncounterOvlNumber"));
 
 		writeFeebasEncounters(areaIterator, extraEncounterData, encounterOverlay);
 		writeHoneyTreeEncounters(areaIterator, extraEncounterData, encounterOverlay);
-		writeTrophyGardenRotatingEncounters(areaIterator, extraEncounterData);
-		writeGreatMarshRotatingEncounters(areaIterator, extraEncounterData);
+//		writeTrophyGardenRotatingEncounters(areaIterator, extraEncounterData);
+//		writeGreatMarshRotatingEncounters(areaIterator, extraEncounterData);
 
 		// Save
 		writeOverlay(romEntry.getIntValue("EncounterOvlNumber"), encounterOverlay);

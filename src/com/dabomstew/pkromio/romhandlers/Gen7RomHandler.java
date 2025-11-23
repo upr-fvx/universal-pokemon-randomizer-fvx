@@ -1219,8 +1219,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (EncounterArea area : encounterAreas) {
             //The Gen 7 display names kinda suck, so let's enhance them with encounter types
             String displayName = area.getDisplayName();
+            System.out.println(area);
+            System.out.println(displayName);
             displayName = displayName.replaceFirst(", Table",
-                    " " + area.getEncounterType().name().toLowerCase() + ", Table");
+                    (" " + area.getEncounterType()).toLowerCase() + ", Table");
             area.setDisplayName(displayName);
         }
         return encounterAreas;

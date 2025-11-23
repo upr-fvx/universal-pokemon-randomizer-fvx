@@ -1,7 +1,10 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.gamedata.Encounter;
 import com.dabomstew.pkromio.gamedata.EncounterArea;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
 import com.dabomstew.pkromio.romhandlers.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,6 +59,31 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
             }
         }
         assertEquals(before, after);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allEncountersCanBeChangedWithSet(String romName) {
+        loadROM(romName);
+        // Mewtwo is used because we don't expect it in the wild
+        Species mewtwo = romHandler.getSpecies().get(SpeciesIDs.mewtwo);
+        List<EncounterArea> encounterAreas = romHandler.getEncounters();
+        for (EncounterArea area : encounterAreas) {
+            for (Encounter enc : area) {
+                enc.setSpecies(mewtwo);
+                enc.setFormeNumber(0);
+            }
+        }
+        romHandler.setEncounters(encounterAreas);
+        List<EncounterArea> unchanged = new ArrayList<>();
+        for (EncounterArea area : romHandler.getEncounters()) {
+            System.out.println(area);
+            if (!area.getSpeciesInArea().stream().allMatch(pk -> pk.equals(mewtwo))) {
+                System.out.println("UNCHANGED");
+                unchanged.add(area);
+            }
+        }
+        assertTrue(unchanged.isEmpty());
     }
 
     /**

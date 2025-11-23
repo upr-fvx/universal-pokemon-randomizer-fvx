@@ -1095,7 +1095,7 @@ public class RandomizationLogger {
 
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
-        List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
+        List<EncounterArea> encounterAreas = romHandler.getSortedEncounters();
 
         int i = 0;
         for (EncounterArea area : encounterAreas) {

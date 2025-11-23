@@ -102,9 +102,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     public abstract void loadItems();
 
     @Override
-    public abstract void loadTrainers();
-
-    @Override
     public String loadedFilename() {
         return loadedFileName;
     }
@@ -159,9 +156,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         long crc = FileFunctions.getCRC32(originalRom);
         logStream.println("Original ROM CRC32: " + String.format("%08X", crc));
     }
-
-    @Override
-    abstract public void saveTrainers();
 
     @Override
     public boolean hasPhysicalSpecialSplit() {

@@ -113,12 +113,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         return Collections.unmodifiableList(trainers);
     }
 
-    @Override
-    public abstract void loadTrainers();
-
-    @Override
-    public abstract void saveTrainers();
-
     public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
         List<EncounterArea> areas = this.getEncounters(useTimeOfDay);

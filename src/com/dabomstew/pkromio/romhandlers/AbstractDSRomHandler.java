@@ -86,12 +86,6 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public abstract void loadTrainers();
-
-    @Override
-    public abstract void saveTrainers();
-
-    @Override
     public boolean saveRomFile(String filename, long seed) {
         try {
             baseRom.saveTo(filename);

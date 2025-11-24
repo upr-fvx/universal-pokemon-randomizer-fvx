@@ -60,7 +60,11 @@ Most screenshots below were borrowed (with permission) from Dabomstew's original
 ![a horde battle with three Natu, one Emboar, and one Spritzee. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde2.jpeg "Odd fellows"){:.screenshot}
 ![a horde battle with four Spinda, and one one Emboar, and one Carnivine. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde1.jpeg "Spinda party in Petalburg forest, with one extra carnivorous plant."){:.screenshot}
 
-
 ### Generation 7 (S/M/US/UM)
 
-// TODO
+![the SM starters are Pansage, Dodrio, and Armaldo. They are named as grass, normal, and rock-type, respectively.]({{ site.baseurl }}/assets/images/screenshots/g7_starter.png "Not the usual type triangle."){:.screenshot}
+![A battle against Hau. Hau has a level 5 Dodrio. The player has a level 5 Armaldo. The armaldo knows slash, sky drop, brave bird, and frenzy plant.]({{ site.baseurl }}/assets/images/screenshots/g7_rival.png "And Hau picked the Dodrio!"){:.screenshot}
+![a level 8 Reshiram]({{ site.baseurl }}/assets/images/screenshots/g7_reshiram.png "A legendary in every grass!"){:.screenshot}
+![a shop with Griseous Orb, and other odd items. The Griseous orb costs 0¥.]({{ site.baseurl }}/assets/images/screenshots/g7_shop.png "What a bargain! (the Randomizer also has an option to balance shop prizes)"){:.screenshot}
+![battle versus totem floatzel]({{ site.baseurl }}/assets/images/screenshots/g7_totem2.png "Expected another mustelid to be here"){:.screenshot}
+![battle versus two masquerains, at level 7 and 8]({{ site.baseurl }}/assets/images/screenshots/g7_sos.png "SOS! SOS! Please help me, other Masquerain!!"){:.screenshot}

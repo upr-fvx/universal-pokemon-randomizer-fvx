@@ -59,6 +59,8 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     private List<Type> starterTypeTriangle = null;
 
+    protected final List<Trainer> trainers = new ArrayList<>();
+
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
@@ -106,6 +108,10 @@ public abstract class AbstractRomHandler implements RomHandler {
         return true;
     }
 
+    @Override
+    public List<Trainer> getTrainers() {
+        return Collections.unmodifiableList(trainers);
+    }
 
     public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
@@ -920,6 +926,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected void prepareSaveRom() {
         savePokemonStats();
         saveMoves();
+        saveTrainers();
         savePokemonPalettes();
     }
 

@@ -502,8 +502,6 @@ public class SpeciesMovesetRandomizer extends Randomizer {
             }
         }
 
-        romHandler.setTrainers(trainers);
-
         // tms
         List<Integer> tmMoves = romHandler.getTMMoves();
 

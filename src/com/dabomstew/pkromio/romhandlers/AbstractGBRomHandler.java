@@ -101,8 +101,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
     public abstract void loadItems();
 
-    public abstract void loadTrainers();
-
     @Override
     public String loadedFilename() {
         return loadedFileName;
@@ -158,17 +156,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         long crc = FileFunctions.getCRC32(originalRom);
         logStream.println("Original ROM CRC32: " + String.format("%08X", crc));
     }
-
-    @Override
-    protected void prepareSaveRom() {
-        super.prepareSaveRom();
-        // because most other gens write the trainers to ROM each time setTrainers is used,
-        // instead of having a saveTrainers. (obviously those other gens shouldn't do that either,
-        // but code's never perfect)
-        saveTrainers();
-    }
-
-    abstract public void saveTrainers();
 
     @Override
     public boolean hasPhysicalSpecialSplit() {

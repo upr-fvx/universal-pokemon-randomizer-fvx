@@ -43,7 +43,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 65;
+    public static final int LENGTH_OF_SETTINGS_DATA = 66;
 
     private CustomNamesSet customNames;
 
@@ -57,6 +57,7 @@ public class Settings {
     private boolean makeEvolutionsEasier;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
+    private boolean randomizeIntroMon;
     private boolean blockBrokenMoves;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
@@ -710,6 +711,9 @@ public class Settings {
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
                 false, false, false, false, false, false));
 
+        // 65 general options #2
+        out.write(makeByteSelected(randomizeIntroMon, false, false, false, false, false, false, false));
+
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -1332,6 +1336,14 @@ public class Settings {
 
     public void setBanIrregularAltFormes(boolean banIrregularAltFormes) {
         this.banIrregularAltFormes = banIrregularAltFormes;
+    }
+
+    public boolean isRandomizeIntroMon() {
+        return randomizeIntroMon;
+    }
+
+    public void setRandomizeIntroMon(boolean randomizeIntroMon) {
+        this.randomizeIntroMon = randomizeIntroMon;
     }
 
     public boolean doBlockBrokenMoves() {

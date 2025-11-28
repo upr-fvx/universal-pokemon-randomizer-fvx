@@ -378,7 +378,14 @@ public class SettingsUpdater {
             // Force middle stage was removed and first bit of byte was used for new setting.
             // Do not select this since it is unrelated to the choice in the old version
             dataBlock[63] = (byte) 0;
-         }
+        }
+
+        if (oldVersion < Version.FVX_1_3_4.id) {
+            // new "general options" byte
+            // "randomizeIntroMon" was always true in prior versions, so it starts at 1
+            // TODO: move more "general options" here
+            insertExtraByte(65, (byte) 0x1);
+        }
 
         // fix checksum
         CRC32 checksum = new CRC32();

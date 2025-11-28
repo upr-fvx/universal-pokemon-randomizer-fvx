@@ -678,9 +678,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeIntroPokemon() {
-        // Note: this is the only randomization that applies even if no setting is checked.
-        // Essentially, it works as confirmation that the Randomizer was applied at all.
-        if (romHandler.canSetIntroPokemon()) {
+        if (settings.isRandomizeIntroMon()) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

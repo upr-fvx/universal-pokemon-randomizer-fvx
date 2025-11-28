@@ -123,6 +123,8 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
+    int getHighestOriginalEvoLvl();
+
     RestrictedSpeciesService getRestrictedSpeciesService();
 
     // ==================================

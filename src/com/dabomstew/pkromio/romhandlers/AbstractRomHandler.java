@@ -57,11 +57,17 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected int perfectAccuracy = 100; // default
 
+    private int highestOriginalEvoLvl = 0;
+
     private List<Type> starterTypeTriangle = null;
 
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
+
+    public int getHighestOriginalEvoLvl() {
+        return highestOriginalEvoLvl;
+    }
 
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
@@ -230,7 +236,11 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution evoFrom : pk.getEvolutionsFrom()) {
                 if (evoFrom.getType().usesLevelThreshold()) {
                     levelUpEvos.add(evoFrom);
+                    // Set estimated evolution level and update highest evolution level in ROM
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
+                    if (evoFrom.getExtraInfo() > highestOriginalEvoLvl) {
+                        highestOriginalEvoLvl = evoFrom.getExtraInfo();
+                    }
                 } else {
                     nonLevelUpEvos.add(evoFrom);
                 }
@@ -262,6 +272,10 @@ public abstract class AbstractRomHandler implements RomHandler {
                     evo.setEstimatedEvoLvl(
                             Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));
                 }
+            }
+            // Update highest evolution level in ROM if necessary
+            if (evo.getEstimatedEvoLvl() > highestOriginalEvoLvl) {
+                highestOriginalEvoLvl = evo.getEstimatedEvoLvl();
             }
         }
     }

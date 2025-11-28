@@ -55,6 +55,7 @@ public class Settings {
     private boolean changeImpossibleEvolutions;
     private boolean estimateLevelForImpossibleEvolutions;
     private boolean makeEvolutionsEasier;
+    private int makeEvolutionsEasierLvl = 40;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
     private boolean blockBrokenMoves;
@@ -1308,6 +1309,14 @@ public class Settings {
 
     public void setMakeEvolutionsEasier(boolean makeEvolutionsEasier) {
         this.makeEvolutionsEasier = makeEvolutionsEasier;
+    }
+
+    public int getMakeEvolutionsEasierLvl() {
+        return makeEvolutionsEasierLvl;
+    }
+
+    public void setMakeEvolutionsEasierLvl(int makeEvolutionsEasierLvl) {
+        this.makeEvolutionsEasierLvl = makeEvolutionsEasierLvl;
     }
 
     public boolean isRemoveTimeBasedEvolutions() {

@@ -10,7 +10,7 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Nachopeñalva for the CPG sprites, and
+[Every person who made a new CPG] Nachopeñalva and Ploxel for the CPG sprites, and
 AZBZ from the 3DS Pokémon Modding Discord server for help with Gen 7 Type Effectiveness randomization
 [Etc.]!
 
@@ -54,6 +54,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 ### Graphics
 - (Gen 3) New RSE Custom Player Graphics: Cynthia (from Pokémon) by NachoPeñalva.
+- (Gen 1) New Custom Player Graphics: Kind Dedede, Meta Knight (both from Kirby), by Ploxel.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

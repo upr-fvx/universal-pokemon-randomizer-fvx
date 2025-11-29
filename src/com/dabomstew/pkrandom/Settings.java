@@ -1106,6 +1106,10 @@ public class Settings {
 
         TweakForROMFeedback feedback = new TweakForROMFeedback();
 
+        if (!rh.canSetIntroPokemon()) {
+            this.setRandomizeIntroMon(false);
+        }
+
         // move update check
         if (this.isUpdateMovesLegacy() && rh instanceof Gen5RomHandler) {
             // don't actually update moves

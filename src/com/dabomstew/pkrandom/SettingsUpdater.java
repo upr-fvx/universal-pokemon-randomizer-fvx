@@ -382,9 +382,13 @@ public class SettingsUpdater {
 
         if (oldVersion < Version.FVX_1_3_4.id) {
             // new "general options" byte
-            // "randomizeIntroMon" was always true in prior versions, so it starts at 1
-            // TODO: move more "general options" here
-            insertExtraByte(65, (byte) 0x1);
+            insertExtraByte(65, (byte) makeByteSelected(
+                    true, // randomizeIntroMon, always true in prior versions
+                    restoreState(dataBlock[2], 3), // raceMode
+                    restoreState(dataBlock[2], 4), // blockBrokenMoves
+                    restoreState(dataBlock[2], 5)  // limitPokemon
+            ));
+            dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
         // fix checksum
@@ -585,6 +589,15 @@ public class SettingsUpdater {
         return ((value >> index) & 0x01) == 0x01;
     }
 
+    /**
+     * Returns b, with the given bits set to 0.
+     */
+    private static byte clearBits(byte b, int... bits) {
+        for (int bit : bits) {
+            b &= (byte) ~(1 << bit);
+        }
+        return b;
+    }
 
     private static byte getRemappedByte(byte old, int[] oldIndexes) {
         int newValue = 0;

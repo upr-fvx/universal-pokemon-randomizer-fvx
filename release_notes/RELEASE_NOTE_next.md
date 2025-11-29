@@ -7,8 +7,8 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+@bergmaen for your code contributions,
+@slingshotocelot and @callomello for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Nachopeñalva and Ploxel for the CPG sprites, and
 AZBZ from the 3DS Pokémon Modding Discord server for help with Gen 7 Type Effectiveness randomization
@@ -59,12 +59,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
-<!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- [The description of some miscellaneous feature (new or changed) here.]
+- Add option "No Random Intro Mon". If you want the Pokemon that the professor sends out in the intro (or Ethan's/Lyra's Marill in HGSS) to NOT be randomized, check this box. (#121)
 
 ## Bugfixes
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].
-- (Gen 4-7) Fixed additional trainer pokemon of unrandomized trainers always
-  being duplicates of original trainer pokemon. (Issue #116)
+- (Gen 4-7) Fixed additional trainer Pokemon of unrandomized trainers always
+  being duplicates of original trainer Pokemon. (#116)

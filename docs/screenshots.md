@@ -8,7 +8,10 @@ Most screenshots below were borrowed (with permission) from Dabomstew's original
 
 ### The Program
 
-// TODO
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_main.png "Randomize games from Gen 1-7"){:.screenshot}
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_starter.png "With plenty of options to choose from"){:.screenshot}
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_preset.png "It is fun to share a seed/settings with friends..."){:.screenshot}
+![a log file]({{ site.baseurl }}/assets/images/screenshots/program_log.png "...and to read through a detailed log of your randomized game."){:.screenshot}
 
 ### Generation 1 (R/B/Y/G)
 

@@ -1917,22 +1917,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
-                            evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(ItemIDs.waterStone);
+                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 40); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
                             // Level 37 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 37); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else {
                             // A new trade evo of a single stage Pokemon
                             // level 30 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 30); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         }
                     }
                 }
@@ -1942,7 +1938,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         // Reduce the amount of happiness required to evolve.
         int offset = find(rom, Gen2Constants.friendshipValueForEvoLocator);
         if (offset > 0) {

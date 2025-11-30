@@ -53,7 +53,7 @@ public class Settings {
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
-    private boolean estimateLevelForImpossibleEvolutions;
+    private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
@@ -413,7 +413,7 @@ public class Settings {
 
         // 0: general options #1 + trainer/class names
         out.write(makeByteSelected(changeImpossibleEvolutions, updateMoves, updateMovesLegacy, randomizeTrainerNames,
-                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForImpossibleEvolutions));
+                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForEvolutionImprovements));
 
         // 1: pokemon base stats
         out.write(makeByteSelected(baseStatsFollowEvolutions, baseStatisticsMod == BaseStatisticsMod.RANDOM,
@@ -751,7 +751,7 @@ public class Settings {
         settings.setRandomizeTrainerClassNames(restoreState(data[0], 4));
         settings.setMakeEvolutionsEasier(restoreState(data[0], 5));
         settings.setRemoveTimeBasedEvolutions(restoreState(data[0], 6));
-        settings.setEstimateLevelForImpossibleEvolutions(restoreState(data[0], 7));
+        settings.setEstimateLevelForEvolutionImprovements(restoreState(data[0], 7));
 
         settings.setBaseStatisticsMod(restoreEnum(BaseStatisticsMod.class, data[1], 3, // UNCHANGED
                 2, // SHUFFLE
@@ -1294,8 +1294,8 @@ public class Settings {
         return changeImpossibleEvolutions;
     }
 
-    public boolean useEstimatedLevelsForImpossibleEvolutions() {
-        return estimateLevelForImpossibleEvolutions;
+    public boolean useEstimatedLevelsForEvolutionImprovements() {
+        return estimateLevelForEvolutionImprovements;
     }
 
     public boolean isDualTypeOnly(){
@@ -1310,8 +1310,8 @@ public class Settings {
         this.changeImpossibleEvolutions = changeImpossibleEvolutions;
     }
 
-    public void setEstimateLevelForImpossibleEvolutions(boolean estimateLevelForImpossibleEvolutions) {
-        this.estimateLevelForImpossibleEvolutions = estimateLevelForImpossibleEvolutions;
+    public void setEstimateLevelForEvolutionImprovements(boolean estimateLevelForEvolutionImprovements) {
+        this.estimateLevelForEvolutionImprovements = estimateLevelForEvolutionImprovements;
     }
 
     public boolean isMakeEvolutionsEasier() {

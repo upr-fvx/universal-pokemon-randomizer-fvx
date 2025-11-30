@@ -3140,20 +3140,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             }
                         }
                         if (levelLearntAt == 1) {
-                            // override for piloswine
+                            // override for piloswine: Set to level 45 (or estimatedLevel if useEstimatedLevels)
                             levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
-                        // change to pure level evo
+                        // change to pure level evo (use levelLearntAt over the estimatedEvoLvl)
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(levelLearntAt);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, levelLearntAt);
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
                         // Replace w/ level 37 (or estimated level is useEstimatedLevels)
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
@@ -3162,10 +3160,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             // Slowpoke is awkward - it already has a level evo
                             // So we can't do Level up w/ Held Item
                             // Put Water Stone instead
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
-                            evo.setType(EvolutionType.ITEM);
+                            evo.updateEvolutionMethod(EvolutionType.ITEM, evo.getExtraInfo(), useEstimatedLevels);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
@@ -3174,8 +3171,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // (22)
                         // Based on what species we're currently dealing with
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.WITH_OTHER);
-                        evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
+                        evo.updateEvolutionMethod(EvolutionType.WITH_OTHER,
+                                (evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast),
+                                useEstimatedLevels);
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }
@@ -3184,7 +3182,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen6Constants.friendshipValueForEvoLocator);
@@ -3208,10 +3206,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (pkmn != null) {
                     for (Evolution evo : pkmn.getEvolutionsFrom()) {
                         if (evo.getType() == EvolutionType.WITH_OTHER) {
-                            // Replace w/ level 35
+                            // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
                             markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
                         }
                     }
                 }

@@ -1,13 +1,16 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Evolution;
 import com.dabomstew.pkromio.gamedata.EvolutionType;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import javafx.scene.chart.ScatterChart;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -192,11 +195,25 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void changeImpossibleEvosWorksWithEstimatedLevels(String romName) {
+    public void levelThresholdEvosHaveEqualExtraInfoAndEstimatedEvoLvl(String romName) {
+        loadROM(romName);
+        test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void levelThresholdEvosHaveEqualExtraInfoAndEstimatedEvoLvlAfterEvolutionImprovements(String romName) {
         loadROM(romName);
 
         romHandler.removeImpossibleEvolutions(true, true);
+        romHandler.condenseLevelEvolutions(40, 30);
+        romHandler.makeEvolutionsEasier(true, true);
+        romHandler.removeTimeBasedEvolutions();
 
+        test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl();
+    }
+
+    private void test_allEvolutionThatUseLevelThresholdHaveSameExtraInfoAndEstimatedEvoLvl() {
         for (Species pk : romHandler.getSpeciesSet()) {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 // Each level-up evolution should have the same evolution level as the estimated level
@@ -208,14 +225,19 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         }
     }
 
+    /**
+     * Not really a test (except testing that every evolution got an estimated level) but will produce markdown output
+     * copyable to the docs.
+     * <br>
+     * Since running this may open Gen 6+ ROMs (if you have any), which are very slow to handle,
+     * it is disabled by default.
+     */
+    @Disabled
     @ParameterizedTest
     @MethodSource("getAllRomNames")
     public void printAllEstimatedLevelsPerGen(String romName) {
-        // not really a test (except testing that every evolution got an estimated level) but will produce markdown output copyable to the docs
         try {
             loadROM(romName);
-
-            romHandler.removeImpossibleEvolutions(true, true);
 
             String currentGen = "";
             switch (romHandler.getROMName()) {

@@ -424,7 +424,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
                         if (et.usesLevelThreshold()) {
-                            evol.setExtraInfo(level);
+                            evol.updateEvolutionMethod(evol.getType(), level);
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
@@ -2755,19 +2755,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             }
                         }
                         if (levelLearntAt == 1) {
-                            // override for piloswine
+                            // override for piloswine: Set to level 45 (or estimatedLevel if useEstimatedLevels)
                             levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
-                        // change to pure level evo
+                        // change to pure level evo (use levelLearntAt over the estimatedEvoLvl)
                         markImprovedEvolutions(sp);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(levelLearntAt);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, levelLearntAt);
                         break;
                     case TRADE:
                         // Replace w/ level 37 (or estimated level if useEstimatedLevels)
                         markImprovedEvolutions(sp);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(useEstimatedLevels ? evo.getEstimatedEvoLvl() : 37);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         break;
                     case TRADE_ITEM:
                         markImprovedEvolutions(sp);
@@ -2775,10 +2773,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             // Slowpoke is awkward - he already has a level evo
                             // So we can't do Level up w/ Held Item for him
                             // Put Water Stone instead
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
-                            evo.setType(EvolutionType.ITEM);
+                            evo.updateEvolutionMethod(EvolutionType.ITEM, evo.getExtraInfo(), useEstimatedLevels);
                         }
                         break;
                     case TRADE_SPECIAL:
@@ -2786,8 +2783,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // Replace it with Level up w/ Other Species in Party
                         // Based on what species we're currently dealing with
                         markImprovedEvolutions(sp);
-                        evo.setType(EvolutionType.WITH_OTHER);
-                        evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
+                        evo.updateEvolutionMethod(EvolutionType.WITH_OTHER,
+                                (evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast),
+                                useEstimatedLevels);
                         break;
                     case LEVEL_GAME_THIS:
                         // This is Cosmoem's *possible* evolution,
@@ -2796,24 +2794,26 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // And worse, which would be the level-evo would vary between versions!
                         // Instead, we change both to time-based evolutions.
                         markImprovedEvolutions(sp);
-                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT);
+                        evo.updateEvolutionMethod(romEntry.isSunny() ? EvolutionType.LEVEL_DAY : EvolutionType.LEVEL_NIGHT,
+                                evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     case LEVEL_GAME_OTHER:
                         // This is Cosmoem's impossible evolution,
                         // its time-based evo is the other way around.
                         markImprovedEvolutions(sp);
-                        evo.setType(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY);
+                        evo.updateEvolutionMethod(romEntry.isSunny() ? EvolutionType.LEVEL_NIGHT : EvolutionType.LEVEL_DAY,
+                                evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     // And these are Rockruff's. We change the possible ones too for symmetry's sake.
                     case LEVEL_GAME_THIS_DAY:
                     case LEVEL_GAME_OTHER_DAY:
                         markImprovedEvolutions(sp);
-                        evo.setType(EvolutionType.LEVEL_DAY);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL_DAY, evo.getExtraInfo(), useEstimatedLevels);
                         break;
                     case LEVEL_GAME_THIS_NIGHT:
                     case LEVEL_GAME_OTHER_NIGHT:
                         markImprovedEvolutions(sp);
-                        evo.setType(EvolutionType.LEVEL_NIGHT);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL_NIGHT, evo.getExtraInfo(), useEstimatedLevels);
                         break;
                 }
 
@@ -2829,7 +2829,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             // since it might have been randomized...
                             Species kantoForm = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
                             Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
-                                    EvolutionType.STONE, ItemIDs.moonStone);
+                                    EvolutionType.STONE, ItemIDs.moonStone, evo.getEstimatedEvoLvl());
                             extraEvolutions.add(extraEvo);
                     }
                 }
@@ -2843,7 +2843,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen7Constants.friendshipValueForEvoLocator);
@@ -2868,22 +2868,23 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
                     if (changeWithOtherEvos) {
                         if (evo.getType() == EvolutionType.WITH_OTHER) {
-                            // Replace w/ level 35
+                            // Replace w/ level 35 or the estimated evo level is useEstimatedLevels
                             markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
+                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
                         }
                     }
                     if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.SNOWY) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL, 35);
+                                    EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
+                                    evo.getEstimatedEvoLvl());
                             extraEntry.setForme(evo.getForme());
                         } else if (evo.getType() == EvolutionType.MAGNETIC_FIELD) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
-                                    EvolutionType.LEVEL, 35);
+                                    EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
+                                    evo.getEstimatedEvoLvl());
                             extraEntry.setForme(evo.getForme());
                         }
                     }

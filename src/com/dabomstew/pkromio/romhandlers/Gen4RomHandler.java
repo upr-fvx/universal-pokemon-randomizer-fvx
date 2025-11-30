@@ -1291,7 +1291,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
-        FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0).getId());
+        Item item = items.get(0);
+        FileFunctions.write2ByteInt(file, starterHeldItemOffset, item == null ? 0 : item.getId());
     }
 
 	@Override

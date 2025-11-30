@@ -1,6 +1,6 @@
 package compressors;
 
-import com.dabomstew.pkrandom.FileFunctions;
+import com.dabomstew.pkromio.FileFunctions;
 
 //MODIFIED DSDECMP-JAVA SOURCE FOR RANDOMIZER'S NEEDS
 //License is below

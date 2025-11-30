@@ -3,7 +3,7 @@ name: Static Pokemon
 ---
 ## Limit Main-Game Legendaries
 
-Under normal circumstances, "Similar Strength" settings start looking for replacements within a 10% BST range up and down (more information can be found [here]({{ site.baseurl }}/wikipages/pokemon-base-statistics.html#similar-strength)). When this setting is activated, the following changes are made when randomizing the affected Pokemon:
+Under normal circumstances, "Similar Strength" settings start looking for replacements within a 10% BST range up and down (more information can be found [here]({{ site.baseurl }}/wikipages/pokemon_base_statistics.html#similar-strength)). When this setting is activated, the following changes are made when randomizing the affected Pokemon:
 
 - The BST range expands only downwards, setting the upper BST limit to the BST of the original Pokemon.
 - The starting range is 20% instead of 10%.

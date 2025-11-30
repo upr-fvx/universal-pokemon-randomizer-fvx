@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.gui;
 
-import com.dabomstew.pkrandom.romhandlers.Abstract3DSRomHandler;
-import com.dabomstew.pkrandom.romhandlers.AbstractDSRomHandler;
-import com.dabomstew.pkrandom.romhandlers.PokemonImageGetter;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.Abstract3DSRomHandler;
+import com.dabomstew.pkromio.romhandlers.AbstractDSRomHandler;
+import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.awt.image.BufferedImage;
 import java.util.Random;

@@ -1,11 +1,11 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
-import com.dabomstew.pkrandom.gamedata.cueh.CopyUpEvolutionsHelper;
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-import com.dabomstew.pkrandom.services.RestrictedSpeciesService;
-import com.dabomstew.pkrandom.services.TypeService;
+import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.services.RestrictedSpeciesService;
+import com.dabomstew.pkromio.services.TypeService;
 
 import java.util.Random;
 

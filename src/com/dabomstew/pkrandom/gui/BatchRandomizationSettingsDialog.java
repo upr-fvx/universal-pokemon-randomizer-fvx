@@ -28,7 +28,9 @@ package com.dabomstew.pkrandom.gui;
 import com.dabomstew.pkrandom.BatchRandomizationSettings;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 public class BatchRandomizationSettingsDialog extends JDialog {

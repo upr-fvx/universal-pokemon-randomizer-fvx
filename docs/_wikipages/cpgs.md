@@ -2,9 +2,9 @@
 name: Custom Player Graphics
 ---
 
-The FVX branch has support for custom player graphics in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
+The FVX branch has support for custom player graphics (CPG) in the Gen 1-3 games. Basically, this means that you can take a pack of images, and replace the ones in the game with them. The UPR comes pre-packed with some custom player graphics to try out, but you can also make your own quite easily. 
  
-This feature was inspired in part by a similar feature in [The ALttP Randomizer](https://alttpr.com/en), and in part by people on Reddit and Discords wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
+This feature was inspired in part by a similar feature in [The A Link to the Past Randomizer](https://alttpr.com/en), and in part by people on Reddit and Discord servers wanting to easily change the player character, and only it. The UPR already had some customizer features like setting specific starters, and disabling trade evolutions, so it seemed a natural fit.
 
 Below is a general guide for how CPGs work, followed by sections for specific games/Generations.
 
@@ -18,7 +18,10 @@ Below is a general guide for how CPGs work, followed by sections for specific ga
 ## In all games
 
 ### File structure
-To add a custom player graphics, create a new folder within `data/players/`. This folder should contain your image files (and palette files, if you need those), as well as a text file called `info.ini`.
+To add a CPG, create a new folder within `data/players/`, e.g. `data/players/my_cpg`. This folder should contain:
+
+- Image and/or palette file(s) containing the graphics. This can be a single sheet (recommended), or multiple images + palettes.
+- A text file called `info.ini`, containing some info about the custom player graphics, such as who made it, and also how to use the graphics file(s).
 
 ![the randomizer's root folder, with data/ highlighted]({{ site.baseurl }}/assets/images/wikipages/cpg/nav1.png)
 
@@ -28,49 +31,17 @@ To add a custom player graphics, create a new folder within `data/players/`. Thi
 
 ![the snorlax/ folder, showing image files and info.ini]({{ site.baseurl }}/assets/images/wikipages/cpg/nav4.png)
 
-The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, you generally do not need to worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites).
+The simplest way of making a CPG is using a sheet, since they encompass all graphics info needed, in a single image file. Each RomType (what game the CPG are meant for) has its own example/template sheet, presented in their own sections below. The only thing sheets can't do, but separate graphics files can, is Gen 3 reflection palette shenanigans. Sheets also have the advantage, of being easy to upload to websites such as [Spriter's Resource](https://www.spriters-resource.com/) or [DeviantArt](https://www.deviantart.com/).
 
-Palettes should be ".pal" files in JASC-PAL format. Palette files are only used in special cases, such as for the reflection palette in Gen 3 games. Normally the palettes are taken from the image files.
+![a Gen 1 sheet for Snorlax]({{ site.baseurl }}/assets/images/wikipages/cpg/example_sheet.png)
 
-`info.ini` contains some info about the custom player graphics, such as who made it, and also tells the UPR how to use the images. The "info.ini" file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
+The UPR accepts images in many formats, but ".png" and ".bmp" are strongly recommended. Don't use ".jpg" files. If you know what "indexing" images is, do not worry about that. Unindexed images work just fine, as long as they don't have too many colors. This means you can use pretty much any image editing tool to create the images, like MS Paint or [Paint.net](https://www.getpaint.net/) (the exception where indexing is needed, is Gen 3 overworld sprites, *if a sheet is not used*).
 
-Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are.
+Normally the palettes are taken from the image files, the exception being the reflection palette in Gen 3 games, *if a sheet is not used*. In that case, they should be ".pal" files in JASC-PAL format. 
 
-<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
-<tr><td>RomType</td>
-	<td>Gen1, Gen2, RSE, FRLG</td> 
-	<td>What game the custom player graphics are meant for. Gen1 is for any Generation I game, Gen2 for any Generation II game, RSE for Ruby/Sapphire/Emerald, and FRLG for FireRed/LeafGreen.<br><br>The kinds of images needed depends on the RomType. Read more on the generation-specific pages.</td></tr>
-<tr><td>Description</td>
-	<td>Any string</td> 
-	<td>An arbitrary description of the character the custom player graphics are based on.</td></tr>
-<tr><td>From</td>
-	<td>Any string</td> 
-	<td>Where is the character from? If you are basing your custom player graphics on existing images (like a video game), where are those from, specifically?</td></tr>
-<tr><td>Creator</td>
-	<td>Any string</td> 
-	<td>Who made the the original images? If you are basing your custom player graphics on existing images, who made those? If you made the images from scratch, this is you. Can be multiple people.</td></tr>
-<tr><td>Adapter</td>
-	<td>Any string</td> 
-	<td>Who adapted the images, into a format usable by the UPR/target game. Who made those extra images which were missing? This is (presumably) you, but can also be multiple people in case you didn't make all the extra images.<br><br> 
-	If you're also the creator, or the creator is Game Freak because it's the vanilla graphics for the same game (Red for Gen1, May for RSE),you don't need to include this.</td></tr>
-<tr><td>FrontImage</td>
-	<td>Image file name</td> 
-	<td>The file name of the front image.</td></tr>
-<tr><td>BackImage</td>
-	<td>Image file name</td> 
-	<td>The file name of the back image.</td></tr>
-<tr><td>WalkSprite</td>
-	<td>Image file name</td> 
-	<td>The file name of the walk sprite image.</td></tr>
-<tr><td>BikeSprite</td>
-	<td>Image file name</td> 
-	<td>The file name of the bike sprite image.</td></tr>
-<tr><td>FishSprite</td>
-	<td>Image file name</td> 
-	<td>The file name of the fishing sprite image.</td></tr>
-</table>
+The `info.ini` file can contain one or more custom player graphics entries. Each of these entries has a name in square brackets, followed by a number of tags. Each tag has a key, followed by "=", and a value. For example, if you have "RomType=Gen1", that means the custom player graphics are meant for inserting into a Gen 1 game. 
 
-### Example:
+### Example
 
 Below is an example of the contents of a info.ini file. Double slashes "//" can be used for comments.
 
@@ -96,13 +67,51 @@ From=Pokémon - Generation I
 Creator=Gamefreak
 Adapter=Voliol
 Category=POKEMON
-FrontImage=gbc_front.png
-BackImage=gbc_back.png
-WalkSprite=gb_walk.png
-BikeSprite=gb_bike.png
-FishSpriteMode=combined
-FishSprite=gb_fish.png
+Sheet=sheet.png
 ```
+
+### List of tags
+
+Below is a table of common tags, what values they accept, and what they are used for. Depending on the RomType/what game the custom player graphics are meant for, there are also additional tags, like "UnderwaterSprite" or "FishSpriteMode". The generation-specific pages explain what these tags are. 
+
+It *is* possible to use tags meant for separate graphics files, in addition to a sheet. In which case, the sheet is loaded first, and the other tags overwrite the contents of the sheet.
+
+<table><tr> <th>Key</th> <th>Accepted values</th> <th>Usage</th> </tr>
+<tr><td>RomType</td>
+	<td>Gen1, Gen2, RSE, FRLG</td> 
+	<td>What game the custom player graphics are meant for. Gen1 is for any Generation I game, Gen2 for any Generation II game, RSE for Ruby/Sapphire/Emerald, and FRLG for FireRed/LeafGreen.<br><br>The kinds of images needed depends on the RomType. Read more on the generation-specific pages.</td></tr>
+<tr><td>Description</td>
+	<td>Any string</td> 
+	<td>An arbitrary description of the character the custom player graphics are based on.</td></tr>
+<tr><td>From</td>
+	<td>Any string</td> 
+	<td>Where is the character from? If you are basing your custom player graphics on existing images (like a video game), where are those from, specifically?</td></tr>
+<tr><td>Creator</td>
+	<td>Any string</td> 
+	<td>Who made the the original images? If you are basing your custom player graphics on existing images, who made those? If you made the images from scratch, this is you. Can be multiple people.</td></tr>
+<tr><td>Adapter</td>
+	<td>Any string</td> 
+	<td>Who adapted the images, into a format usable by the UPR/target game. Who made those extra images which were missing? This is (presumably) you, but can also be multiple people in case you didn't make all the extra images.<br><br> 
+	If you're also the creator, or the creator is Game Freak because it's the vanilla graphics for the same game (Red for Gen1, May for RSE),you don't need to include this.</td></tr>
+<tr><td>Sheet</td>
+	<td>Image file name</td> 
+	<td>The file name of the sheet.</td></tr>
+<tr><td>FrontImage</td>
+	<td>Image file name</td> 
+	<td>The file name of the front image.</td></tr>
+<tr><td>BackImage</td>
+	<td>Image file name</td> 
+	<td>The file name of the back image.</td></tr>
+<tr><td>WalkSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the walk sprite image.</td></tr>
+<tr><td>BikeSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the bike sprite image.</td></tr>
+<tr><td>FishSprite</td>
+	<td>Image file name</td> 
+	<td>The file name of the fishing sprite image.</td></tr>
+</table>
 
 ---
 
@@ -119,6 +128,19 @@ For overworld sprites, the lightest color in the source image is used for "trans
 The example below shows that both source images (colored and monochrome) give the same result when inserted into the game.
 
 ![a colored source image]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_walk_colored.png) or ![a monochrome source image]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_walk.png) &rarr; ![a screenshot of the resulting sprite in-game]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/mario_screenshot.png)
+
+### Sheet examples/info
+
+Below are sheet examples for Gen 1, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 1 sheet.
+
+![a Gen 1 sheet for Professor Oak]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_oak.png) ![a blank Gen 1 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen1/sheet_example_blank.png)
+
+Of note:
+
+- Cyan represents transparency.
+- The provided palettes should be used; the top-right one for the front/back images, and the bottom-right one for the overworld sprites. This is so the Randomizer can properly parse the sheet. Depending on your emulator settings, the palettes may be different in-game.
+- Only the cyan-background parts of the fishing sprites are used. Read more about this in the graphics specifications below.
+- Credits can be included inside the sheet image, **below** the main parts of the sheet. Do **not** otherwise pad the image/change its dimensions.
 
 ### Graphic specifications
 
@@ -217,6 +239,20 @@ The example below shows that both source images (colored and monochrome) give th
 
 What colors are actually used for an image/sprite depends on the palette loaded for it. The front and back images will use the palette of the given front image. The overworld sprites will use one of 8 predefined palettes, chosen in `ini.txt`.
 
+### Sheet examples/info
+
+Below are sheet examples for Gen 2, one filled in and one blank. They should be mostly self-explanatory. It it recommended you use one of them, when making a Gen 2 sheet.
+
+![a Gen 2 sheet for Leaf, credit Molly]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_leaf.png) ![a blank Gen 2 sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/gen2/sheet_example_blank.png)
+
+Of note:
+
+- The front/back images should share four colors; two freely chosen ones, in addition to white and black.
+- The overworld sprites should use any of the eight given palettes. All overworld sprites must use the same palette.
+- In the overworld sprite palettes, cyan represents transparency.
+- Only the cyan-background parts of the fishing sprites are used. Read more about this in the graphics specifications below.
+- Credits can be included inside the sheet image, **below** the main parts of the sheet. Do **not** otherwise pad the image/change its dimensions.
+
 ### Graphic specifications
 
 The player has a front image, a back image, a trainer card image, and sprites for walking, cycling, and fishing in the overworld.
@@ -296,7 +332,24 @@ There is no support for changing the fishing rod.
 
 All the customizable player graphics use indexed palettes of size 16. Since 1 color is always used for transparency, this in effect means each image can have up to <b>15</b> colors. 
 
-The transparent color is picked differently depending on whether your source image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
+The transparent color is picked differently depending on whether your source image is a sheet or a separate image. If it is a sheet, see "sheet examples/info" below. 
+
+If it is a separate image, it depends on whether the image is indexed or not. If it is, the color at index 0 will be picked. If it isn't, then the color of pixel in the top right corner will be picked. Generally, this means you don't have to worry about indexing the source image correctly, since the UPR takes care of transparency. However, the overworld sprites mostly use the same palette, so you want to keep track of the palette indexing when working on them.
+
+### Sheet examples/info
+
+Below are four sheet examples for Gen 3, two filled in and two blank, compatible with Ruby/Sapphire/Emerald, and FireRed/LeafGreen respectively. They should be mostly self-explanatory. It it recommended you use one of these, when making a RSE/FLRG sheet.
+
+![a RSE sheet for May]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_may.png) ![a blank RSE sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/sheet_example_blank.png)
+
+![a FRLG sheet for Leaf]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_leaf.png) ![a blank FRLG sheet]({{ site.baseurl }}/assets/images/wikipages/cpg/frlg/sheet_example_blank.png)
+
+Of note:
+
+- Sprites in the same box use the same palette. This means that the sprites in each box, may only use up to 16 colors (15+"transparent"). The palette of each box, is found to the top, or top-right, as strips of color. These palette-strips are what the Randomizer primarily uses to determine the in-game palette, so **it is very important that the palette-strips match the sprites**.
+- The first/left-most color of a given palette, represents transparency.
+- The big overworld sprites box, may have a second palette above its normal one: this is the reflection palette. If it is erased/drawn over with the sheet's teal background color, the reflection palette will be set to equal the normal palette.
+- Credits can be included inside the sheet image, outside the boxes containing the graphics themselves. Do **not** pad the image/change its dimensions.
 
 ### Graphic specifications
 
@@ -438,12 +491,12 @@ And finally, the field move sprite is 160x32 pixels, split into 5 frames of 32x3
 
 During the intro movie, the player is shown riding a bike. In Emerald, this is also shown during the credits. This bike is split into two images, for the player and for the bike. The UPR does not support changing either.
 
-![intro brendan (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_RS.png)
-![intro may (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_RS.png)
-![intro brendan (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_E.png) 
-![intro may (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_E.png)
-![the bike itself (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_RS.png)
-![the bike itself (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_E.png)
+![intro brendan (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_rs.png)
+![intro may (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_rs.png)
+![intro brendan (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/brendan_introbike_e.png) 
+![intro may (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/may_introbike_e.png)
+![the bike itself (ruby/sapphire)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_rs.png)
+![the bike itself (emerald)]({{ site.baseurl }}/assets/images/wikipages/cpg/rse/introbike_e.png)
 
 ---
 

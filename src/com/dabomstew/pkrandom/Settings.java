@@ -26,45 +26,38 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
+import com.dabomstew.pkromio.FileFunctions;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
+import com.dabomstew.pkromio.romhandlers.*;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
 
-import com.dabomstew.pkrandom.gamedata.Species;
-import com.dabomstew.pkrandom.graphics.packs.GraphicsPack;
-import com.dabomstew.pkrandom.gamedata.ExpCurve;
-import com.dabomstew.pkrandom.gamedata.GenRestrictions;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.romhandlers.Gen1RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen2RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen3RomHandler;
-import com.dabomstew.pkrandom.romhandlers.Gen5RomHandler;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
-
 public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 62;
+    public static final int LENGTH_OF_SETTINGS_DATA = 66;
 
     private CustomNamesSet customNames;
 
     private String romName;
     private boolean updatedFromOldVersion = false;
-    private GenRestrictions currentRestrictions;
+    private GenRestrictions currentRestrictions = new GenRestrictions();
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
+    private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
+    private boolean randomizeIntroMon;
     private boolean blockBrokenMoves;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
@@ -189,6 +182,7 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
+    private boolean trainersEvolveTheirPokemon;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -208,7 +202,7 @@ public class Settings {
     private boolean diverseTypesForBossTrainers;
     private boolean diverseTypesForImportantTrainers;
     private boolean diverseTypesForRegularTrainers;
-    private boolean doubleBattleMode;
+    private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
     private boolean betterTrainerMovesets;
     private boolean randomizeWildPokemon;
@@ -337,9 +331,11 @@ public class Settings {
     private boolean banBadRandomShopItems;
     private boolean banRegularShopItems;
     private boolean banOPShopItems;
-    private boolean balanceShopPrices;
     private boolean guaranteeEvolutionItems;
     private boolean guaranteeXItems;
+
+    private boolean balanceShopPrices;
+    private boolean addCheapRareCandiesToShops;
 
     public enum PickupItemsMod {
         UNCHANGED, RANDOM
@@ -365,17 +361,8 @@ public class Settings {
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
 
-    public enum CustomPlayerGraphicsMod {
-        UNCHANGED, RANDOM
-    }
-
-    public enum PlayerCharacterMod {
-        PC1, PC2
-    }
-
-    private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
     private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterMod customPlayerGraphicsCharacterMod;
+    private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
     // to and from strings etc
     public void write(FileOutputStream out) throws IOException {
@@ -426,19 +413,19 @@ public class Settings {
 
         // 0: general options #1 + trainer/class names
         out.write(makeByteSelected(changeImpossibleEvolutions, updateMoves, updateMovesLegacy, randomizeTrainerNames,
-                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions));
+                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForEvolutionImprovements));
 
-        // 1: pokemon base stats & abilities
+        // 1: pokemon base stats
         out.write(makeByteSelected(baseStatsFollowEvolutions, baseStatisticsMod == BaseStatisticsMod.RANDOM,
                 baseStatisticsMod == BaseStatisticsMod.SHUFFLE, baseStatisticsMod == BaseStatisticsMod.UNCHANGED,
                 standardizeEXPCurves, updateBaseStats, baseStatsFollowMegaEvolutions, assignEvoStatsRandomly));
 
-        // 2: pokemon types & more general options
+        // 2: pokemon types
         out.write(makeByteSelected(speciesTypesMod == SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS,
-                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED, raceMode, blockBrokenMoves,
-                limitPokemon, typesFollowMegaEvolutions, dualTypeOnly));
+                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED,
+                false, false, false, typesFollowMegaEvolutions, dualTypeOnly));
 
-        // 3: v171: changed to the abilities byte
+        // 3: abilities
         out.write(makeByteSelected(abilitiesMod == AbilitiesMod.UNCHANGED, abilitiesMod == AbilitiesMod.RANDOMIZE,
                 allowWonderGuard, abilitiesFollowEvolutions, banTrappingAbilities, banNegativeAbilities, banBadAbilities,
                 abilitiesFollowMegaEvolutions));
@@ -450,9 +437,9 @@ public class Settings {
                 startersMod == StartersMod.RANDOM_BASIC));
 
         // 5 - 10: dropdowns
-        write2ByteInt(out, customStarters[0]);
-        write2ByteInt(out, customStarters[1]);
-        write2ByteInt(out, customStarters[2]);
+        write2ByteIntBigEndian(out, customStarters[0]);
+        write2ByteIntBigEndian(out, customStarters[1]);
+        write2ByteIntBigEndian(out, customStarters[2]);
 
         // 11 movesets
         out.write(makeByteSelected(movesetsMod == MovesetsMod.COMPLETELY_RANDOM,
@@ -571,10 +558,10 @@ public class Settings {
 
         // 30 - 33: pokemon restrictions
         try {
-            if (currentRestrictions != null) {
-                writeFullInt(out, currentRestrictions.toInt());
+            if (currentRestrictions == null) {
+                writeFullInt(out, -1);
             } else {
-                writeFullInt(out, 0);
+                writeFullInt(out, currentRestrictions.toInt());
             }
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
@@ -582,7 +569,8 @@ public class Settings {
 
         // 34 - 37: misc tweaks
         try {
-            writeFullInt(out, currentMiscTweaks);
+            // TODO: make misc tweaks little endian. No one likes big endian.
+            writeFullIntBigEndian(out, currentMiscTweaks);
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -590,10 +578,10 @@ public class Settings {
         // 38 trainer pokemon level modifier
         out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
 
-        // 39 shop items
+        // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
                 shopItemsMod == ShopItemsMod.UNCHANGED, banBadRandomShopItems, banRegularShopItems, banOPShopItems,
-                balanceShopPrices, guaranteeEvolutionItems));
+                false, guaranteeEvolutionItems));
 
         // 40 wild level modifier
         out.write((wildLevelsModified ? 0x80 : 0) | (wildLevelModifier+50));
@@ -609,8 +597,8 @@ public class Settings {
                 allowTrainerAlternateFormes,
                 allowWildAltFormes));
 
-        // 42 Double Battle Mode, Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
-        out.write((doubleBattleMode ? 0x1 : 0) |
+        // 42 (Legacy Double Battle Mode), Additional Boss/Important Trainer Pokemon, Weigh Duplicate Abilities
+        out.write((0) |
                 (additionalBossTrainerPokemon << 1) |
                 (additionalImportantTrainerPokemon << 4) |
                 (weighDuplicateAbilitiesTogether ? 0x80 : 0));
@@ -707,6 +695,26 @@ public class Settings {
                 diverseTypesForRegularTrainers,
                 false, false, false, false, false));
 
+        // 62 setting battle style: modification (3bits) + style (4bits)
+        out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
+                settingBattleStyle.getModification() == BattleStyle.Modification.RANDOM,
+                settingBattleStyle.getModification() == BattleStyle.Modification.SINGLE_STYLE) |
+                (makeByteSelected(settingBattleStyle.getStyle() == BattleStyle.Style.SINGLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.DOUBLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
+                        settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
+
+        // 63 trainer pokemon evolve
+        out.write(makeByteSelected(trainersEvolveTheirPokemon));
+
+        // 64 shop items 2
+        out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
+                false, false, false, false, false, false));
+
+        // 65 general options #2
+        out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
+                false, false, false, false));
+
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -720,8 +728,8 @@ public class Settings {
         checksum.update(current);
 
         try {
-            writeFullInt(out, (int) checksum.getValue());
-            writeFullInt(out, FileFunctions.getFileChecksum(SysConstants.customNamesFile));
+            writeFullIntBigEndian(out, (int) checksum.getValue());
+            writeFullIntBigEndian(out, CustomNamesSet.getFileChecksum());
         } catch (IOException e) {
             e.printStackTrace(); // better than nothing
         }
@@ -743,6 +751,7 @@ public class Settings {
         settings.setRandomizeTrainerClassNames(restoreState(data[0], 4));
         settings.setMakeEvolutionsEasier(restoreState(data[0], 5));
         settings.setRemoveTimeBasedEvolutions(restoreState(data[0], 6));
+        settings.setEstimateLevelForEvolutionImprovements(restoreState(data[0], 7));
 
         settings.setBaseStatisticsMod(restoreEnum(BaseStatisticsMod.class, data[1], 3, // UNCHANGED
                 2, // SHUFFLE
@@ -758,11 +767,9 @@ public class Settings {
                 0, // RANDOM_FOLLOW_EVOLUTIONS
                 1 // COMPLETELY_RANDOM
         ));
-        settings.setRaceMode(restoreState(data[2], 3));
-        settings.setBlockBrokenMoves(restoreState(data[2], 4));
-        settings.setLimitPokemon(restoreState(data[2], 5));
         settings.setTypesFollowMegaEvolutions(restoreState(data[2],6));
         settings.setDualTypeOnly(restoreState(data[2], 7));
+
         settings.setAbilitiesMod(restoreEnum(AbilitiesMod.class, data[3], 0, // UNCHANGED
                 1 // RANDOMIZE
         ));
@@ -934,11 +941,8 @@ public class Settings {
         settings.setBetterTrainerMovesets(restoreState(data[29], 7));
 
         // gen restrictions
-        int genLimit = FileFunctions.readFullIntBigEndian(data, 30);
-        GenRestrictions restrictions = null;
-        if (genLimit != 0) {
-            restrictions = new GenRestrictions(genLimit);
-        }
+        int genLimit = FileFunctions.readFullInt(data, 30);
+        GenRestrictions restrictions = new GenRestrictions(genLimit);
         settings.setCurrentRestrictions(restrictions);
 
         int codeTweaks = FileFunctions.readFullIntBigEndian(data, 34);
@@ -955,7 +959,6 @@ public class Settings {
         settings.setBanBadRandomShopItems(restoreState(data[39],3));
         settings.setBanRegularShopItems(restoreState(data[39],4));
         settings.setBanOPShopItems(restoreState(data[39],5));
-        settings.setBalanceShopPrices(restoreState(data[39],6));
         settings.setGuaranteeEvolutionItems(restoreState(data[39],7));
 
         settings.setWildLevelsModified(restoreState(data[40],7));
@@ -970,7 +973,7 @@ public class Settings {
         settings.setAllowTrainerAlternateFormes(restoreState(data[41],6));
         settings.setAllowWildAltFormes(restoreState(data[41],7));
 
-        settings.setDoubleBattleMode(restoreState(data[42], 0));
+        // restoreState(data[42], 0))  Legacy setting. This bit used to be used for "Double Battle Only Mode"
         settings.setAdditionalBossTrainerPokemon((data[42] & 0xE) >> 1);
         settings.setAdditionalImportantTrainerPokemon((data[42] & 0x70) >> 4);
         settings.setWeighDuplicateAbilitiesTogether(restoreState(data[42], 7));
@@ -1056,6 +1059,19 @@ public class Settings {
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
 
+        settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
+        settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
+
+        settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
+
+        settings.setBalanceShopPrices(restoreState(data[64],0));
+        settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
+
+        settings.setRandomizeIntroMon(restoreState(data[65], 0));
+        settings.setRaceMode(restoreState(data[65], 1));
+        settings.setBlockBrokenMoves(restoreState(data[65], 2));
+        settings.setLimitPokemon(restoreState(data[65], 3));
+
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
         settings.setRomName(romName);
@@ -1090,6 +1106,10 @@ public class Settings {
 
         TweakForROMFeedback feedback = new TweakForROMFeedback();
 
+        if (!rh.canSetIntroPokemon()) {
+            this.setRandomizeIntroMon(false);
+        }
+
         // move update check
         if (this.isUpdateMovesLegacy() && rh instanceof Gen5RomHandler) {
             // don't actually update moves
@@ -1121,7 +1141,7 @@ public class Settings {
         if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;
             this.setLimitPokemon(false);
-        } else if (this.currentRestrictions != null) {
+        } else {
             this.currentRestrictions.limitToGen(rh.generationOfPokemon());
         }
 
@@ -1192,6 +1212,11 @@ public class Settings {
 
         if (!rh.hasShopSupport()) {
             this.setShopItemsMod(ShopItemsMod.UNCHANGED);
+            this.setBalanceShopPrices(false);
+        }
+
+        if (!rh.canChangeShopSizes()) {
+            this.setAddCheapRareCandiesToShops(false);
         }
 
         // done
@@ -1269,6 +1294,10 @@ public class Settings {
         return changeImpossibleEvolutions;
     }
 
+    public boolean useEstimatedLevelsForEvolutionImprovements() {
+        return estimateLevelForEvolutionImprovements;
+    }
+
     public boolean isDualTypeOnly(){
         return dualTypeOnly;
     }
@@ -1279,6 +1308,10 @@ public class Settings {
 
     public void setChangeImpossibleEvolutions(boolean changeImpossibleEvolutions) {
         this.changeImpossibleEvolutions = changeImpossibleEvolutions;
+    }
+
+    public void setEstimateLevelForEvolutionImprovements(boolean estimateLevelForEvolutionImprovements) {
+        this.estimateLevelForEvolutionImprovements = estimateLevelForEvolutionImprovements;
     }
 
     public boolean isMakeEvolutionsEasier() {
@@ -1311,6 +1344,14 @@ public class Settings {
 
     public void setBanIrregularAltFormes(boolean banIrregularAltFormes) {
         this.banIrregularAltFormes = banIrregularAltFormes;
+    }
+
+    public boolean isRandomizeIntroMon() {
+        return randomizeIntroMon;
+    }
+
+    public void setRandomizeIntroMon(boolean randomizeIntroMon) {
+        this.randomizeIntroMon = randomizeIntroMon;
     }
 
     public boolean doBlockBrokenMoves() {
@@ -1881,6 +1922,14 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
+    public boolean isTrainersEvolveTheirPokemon() {
+        return trainersEvolveTheirPokemon;
+    }
+
+    public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
+        this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
+    }
+
     public boolean isTrainersForceFullyEvolved() {
         return trainersForceFullyEvolved;
     }
@@ -2034,12 +2083,20 @@ public class Settings {
         this.diverseTypesForRegularTrainers = isRegularDiverse;
     }
 
-    public boolean isDoubleBattleMode() {
-        return doubleBattleMode;
+    public BattleStyle getBattleStyle() {
+        return settingBattleStyle;
     }
 
-    public void setDoubleBattleMode(boolean doubleBattleMode) {
-        this.doubleBattleMode = doubleBattleMode;
+    public void setBattleStyle(BattleStyle style) {
+        settingBattleStyle = style;
+    }
+
+    public void setBattleStyleMod(boolean... bools) {
+        settingBattleStyle.setModification(getEnum(BattleStyle.Modification.class, bools));
+    }
+
+    public void setSingleStyleSelection(boolean... bools) {
+        settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
     public boolean isShinyChance() {
@@ -2612,14 +2669,6 @@ public class Settings {
         this.banOPShopItems = banOPShopItems;
     }
 
-    public boolean isBalanceShopPrices() {
-        return balanceShopPrices;
-    }
-
-    public void setBalanceShopPrices(boolean balanceShopPrices) {
-        this.balanceShopPrices = balanceShopPrices;
-    }
-   
     public boolean isGuaranteeEvolutionItems() {
         return guaranteeEvolutionItems;
     }
@@ -2634,6 +2683,22 @@ public class Settings {
 
     public void setGuaranteeXItems(boolean guaranteeXItems) {
         this.guaranteeXItems = guaranteeXItems;
+    }
+
+    public boolean isBalanceShopPrices() {
+        return balanceShopPrices;
+    }
+
+    public void setBalanceShopPrices(boolean balanceShopPrices) {
+        this.balanceShopPrices = balanceShopPrices;
+    }
+
+    public boolean isAddCheapRareCandiesToShops() {
+        return addCheapRareCandiesToShops;
+    }
+
+    public void setAddCheapRareCandiesToShops(boolean addCheapRareCandiesToShops) {
+        this.addCheapRareCandiesToShops = addCheapRareCandiesToShops;
     }
 
     public PickupItemsMod getPickupItemsMod() {
@@ -2720,18 +2785,6 @@ public class Settings {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
 
-    public CustomPlayerGraphicsMod getCustomPlayerGraphicsMod() {
-        return customPlayerGraphicsMod;
-    }
-
-    public void setCustomPlayerGraphicsMod(boolean... bools) {
-        setCustomPlayerGraphicsMod(getEnum(CustomPlayerGraphicsMod.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsMod(CustomPlayerGraphicsMod customPlayerGraphicsMod) {
-        this.customPlayerGraphicsMod = customPlayerGraphicsMod;
-    }
-
     public GraphicsPack getCustomPlayerGraphics() {
         return customPlayerGraphics;
     }
@@ -2740,15 +2793,15 @@ public class Settings {
         this.customPlayerGraphics = customPlayerGraphics;
     }
 
-    public PlayerCharacterMod getCustomPlayerGraphicsCharacterMod() {
+    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
         return customPlayerGraphicsCharacterMod;
     }
 
     public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterMod.class, bools));
+        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
     }
 
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterMod playerCharacterMod) {
+    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
         this.customPlayerGraphicsCharacterMod = playerCharacterMod;
     }
 
@@ -2776,11 +2829,17 @@ public class Settings {
     }
 
     private static void writeFullInt(ByteArrayOutputStream out, int value) throws IOException {
+        byte[] crc = new byte[4];
+        FileFunctions.writeFullInt(crc, 0, value);
+        out.write(crc);
+    }
+
+    private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) throws IOException {
         byte[] crc = ByteBuffer.allocate(4).putInt(value).array();
         out.write(crc);
     }
 
-    private static void write2ByteInt(ByteArrayOutputStream out, int value) {
+    private static void write2ByteIntBigEndian(ByteArrayOutputStream out, int value) {
         out.write(value & 0xFF);
         out.write((value >> 8) & 0xFF);
     }

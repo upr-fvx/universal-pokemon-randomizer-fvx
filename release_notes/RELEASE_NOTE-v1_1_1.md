@@ -1,0 +1,23 @@
+A new minor release arrives, UPR FVX v1.1.1! Thanks to Pokeli for the Red backsprite, and the several individuals who pointed out mega's abilities were not getting randomized.
+
+# How to use
+
+Download the Randomizer below by clicking on `UPR_FVX-v1.1.1.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the Randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+
+# Changelog
+## New and Changed Features
+### Evolutions
+- (Gen 7) Rockruff and Cosmoem no longer have their evolutions changed always, instead these changes are tied to "Change Impossible Evolutions"/"Make Evolutions Easier"/"Remove Time-based Evolutions" like with other Pokémon. [More info here](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/evolutions.html).
+
+### Graphics
+- (Gen 2) Custom Player Graphics of Red, by Pokeli. 
+
+## Bugfixes
+
+- Fixed crash when attempting to assign weakness-reducing berry for the Normal type, as a consequence of changed type effectiveness creating a weakness to the Normal type.
+- Fixed alternate formes being ignored by parts of the Randomizer. When base stats/types/abilities/TM compability are randomized, alt formes will have those attributes randomized as well. Since Mega Evolutions count as alt formes,  this is what caused them to not get random abilities.

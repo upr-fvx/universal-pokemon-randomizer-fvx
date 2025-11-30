@@ -1,0 +1,22 @@
+A minor update with feature tweaks, Gen 2 CPGs, and a bug fix. Thanks to @MClarke93, [MollyChan on Spriter's Resource](https://www.spriters-resource.com/submitter/MollyChan/), [ReadingNo4755 on Reddit](https://www.reddit.com/r/PokemonROMhacks/comments/1dhv88b/comment/ljwc0sr), and everyone else continuing to give suggestions and point out issues (multiple people have pointed towards enabling Double Battle Mode always, so it is difficult to give credit for the idea here)!
+
+# How to use
+
+Download the randomizer below by clicking on `UPR_FVX-v1.0.1.zip`. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the randomizer by double clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+# Changelog
+## New and Changed Features
+### Starters
+- In games with multiple sets of starters (e.g. X/Y, ORAS), "Unique Types" now only applies to each trio/set of starters. 
+### Trainers
+- "Double Battle Mode" may now be used without randomizing trainer Pokémon. Trainers with only one Pokémon in Vanilla will have that Pokémon duplicated.
+- "Better Movesets": Snore and Sleep Talk now only show up in movesets that also contain Rest.
+### Graphics
+- New Custom Player Graphics for Gen 2: Lyra, May, Michael, Prof. Oak, and Rosa. All these are based on sprites by Molly/MollyChan on Spriter's Resource.
+
+## Bugfixes
+- Fixed Gen 4 games being misidentified as unofficial.

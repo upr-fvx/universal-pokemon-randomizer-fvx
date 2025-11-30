@@ -1,6 +1,6 @@
 package test.compressors;
 
-import com.dabomstew.pkrandom.graphics.images.GBCImage;
+import com.dabomstew.pkromio.graphics.images.GBCImage;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,16 +14,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static test.compressors.CmpTestConstants.*;
 
 public class Gen1CmpTest {
-
-    private static final String IN_ADRESS = "test/test_images/compresstest/in";
-    private static final String OUT_ADRESS = "test/test_images/compresstest/out";
-    private static final String[] TEST_FILE_NAMES = new String[]{"testab", "testamogus", "test", "testbig", "testwhite",
-            "testblack", "testgrays", "testrect", "abra", "aerodactyl", "alakazam", "arcanine",
-            "articuno", "beedrill", "bellsprout", "blastoise", "bulbasaur", "butterfree", "caterpie", "chansey",
-            "charizard", "charmander", "charmeleon", "clefable", "clefairy", "cloyster", "cubone", "diglett", "ditto",
-            "dodrio", "doduo", "dragonair", "dragonite", "dratini", "drowzee", "dugtrio", "blackmage"};
 
     public static String[] getImageNames() {
         return TEST_FILE_NAMES;
@@ -35,7 +28,7 @@ public class Gen1CmpTest {
         System.out.println(name);
         GBCImage bim = null;
         try {
-            bim = new GBCImage.Builder(new File(IN_ADRESS + "/" + name + ".png")).columnMode(true).build();
+            bim = new GBCImage.Builder(new File(IN_ADDRESS + "/" + name + ".png")).columnMode(true).build();
         } catch (IOException ignored) {
         }
 
@@ -58,7 +51,7 @@ public class Gen1CmpTest {
                     GBCImage bim2 = new GBCImage.Builder(sprite.getWidth() / 8, sprite.getHeight() / 8,
                             GBCImage.DEFAULT_PALETTE, sprite.getData()).columnMode(true).build();
                     try {
-                        ImageIO.write(bim2, "png", new File(OUT_ADRESS + "/" + name + "_m" + mode + "o" + order + ".png"));
+                        ImageIO.write(bim2, "png", new File(OUT_ADDRESS + "/" + name + "_m" + mode + "o" + order + ".png"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -88,8 +81,8 @@ public class Gen1CmpTest {
     private static void writeBitplaneImages(BufferedImage bim, String name) {
         GBCImage image = new GBCImage.Builder(bim).build();
         try {
-            ImageIO.write(image.getBitplane1Image(), "png", new File(OUT_ADRESS + "/" + name + "_bp1.png"));
-            ImageIO.write(image.getBitplane2Image(), "png", new File(OUT_ADRESS + "/" + name + "_bp2.png"));
+            ImageIO.write(image.getBitplane1Image(), "png", new File(OUT_ADDRESS + "/" + name + "_bp1.png"));
+            ImageIO.write(image.getBitplane2Image(), "png", new File(OUT_ADDRESS + "/" + name + "_bp2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,8 +94,9 @@ public class Gen1CmpTest {
         byte[] rom = new byte[1000];
         int offset = 23;
         GBCImage image = null;
+        System.out.println(IN_ADDRESS + "/" + name + ".png");
         try {
-            image = new GBCImage.Builder(ImageIO.read(new File(IN_ADRESS + "/" + name + ".png")))
+            image = new GBCImage.Builder(ImageIO.read(new File(IN_ADDRESS + "/" + name + ".png")))
                     .columnMode(true).build();
         } catch (IOException ignored) {
         }

@@ -90,7 +90,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Gen2RomEntry romEntry;
     private Species[] pokes;
     private List<Species> speciesList;
-    private List<Trainer> trainers;
     private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
@@ -1020,24 +1019,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
-
-    @Override
     // This is very similar to the implementation in Gen1RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
     public void loadTrainers() {
+        trainers.clear();
         int trainerClassTableOffset = romEntry.getIntValue("TrainerDataTableOffset");
         int trainerClassAmount = romEntry.getIntValue("TrainerClassAmount");
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");
         List<String> tcnames = this.getTrainerClassNames();
-
-        trainers = new ArrayList<>();
 
         int index = 0;
         for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
@@ -1120,11 +1110,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return Gen2Constants.gymAndEliteThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
     }
 
     @Override
@@ -1932,22 +1917,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
-                            evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(ItemIDs.waterStone);
+                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
                             // Seadra: level 40 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 40); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
                             // Level 37 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 37); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else {
                             // A new trade evo of a single stage Pokemon
                             // level 30 (or estimated level if useEstimatedLevels)
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(useEstimatedLevels ? evol.getEstimatedEvoLvl() : 30); // level
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         }
                     }
                 }
@@ -1957,7 +1938,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         // Reduce the amount of happiness required to evolve.
         int offset = find(rom, Gen2Constants.friendshipValueForEvoLocator);
         if (offset > 0) {

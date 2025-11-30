@@ -378,7 +378,18 @@ public class SettingsUpdater {
             // Force middle stage was removed and first bit of byte was used for new setting.
             // Do not select this since it is unrelated to the choice in the old version
             dataBlock[63] = (byte) 0;
-         }
+        }
+
+        if (oldVersion < Version.FVX_1_3_4.id) {
+            // new "general options" byte
+            insertExtraByte(65, (byte) makeByteSelected(
+                    true, // randomizeIntroMon, always true in prior versions
+                    restoreState(dataBlock[2], 3), // raceMode
+                    restoreState(dataBlock[2], 4), // blockBrokenMoves
+                    restoreState(dataBlock[2], 5)  // limitPokemon
+            ));
+            dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
+        }
 
         // fix checksum
         CRC32 checksum = new CRC32();
@@ -578,6 +589,15 @@ public class SettingsUpdater {
         return ((value >> index) & 0x01) == 0x01;
     }
 
+    /**
+     * Returns b, with the given bits set to 0.
+     */
+    private static byte clearBits(byte b, int... bits) {
+        for (int bit : bits) {
+            b &= (byte) ~(1 << bit);
+        }
+        return b;
+    }
 
     private static byte getRemappedByte(byte old, int[] oldIndexes) {
         int newValue = 0;

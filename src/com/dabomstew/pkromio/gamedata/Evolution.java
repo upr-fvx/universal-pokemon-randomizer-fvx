@@ -41,6 +41,9 @@ public class Evolution implements Comparable<Evolution> {
         this.to = to;
         this.type = type;
         this.extraInfo = extra;
+        if (type.usesLevelThreshold()) {
+            this.estimatedEvoLvl = extra;
+        }
     }
 
     public Evolution(Evolution original) {
@@ -88,16 +91,8 @@ public class Evolution implements Comparable<Evolution> {
         return type;
     }
 
-    public void setType(EvolutionType type) {
-        this.type = type;
-    }
-
     public int getExtraInfo() {
         return extraInfo;
-    }
-
-    public void setExtraInfo(int extraInfo) {
-        this.extraInfo = extraInfo;
     }
 
     /**
@@ -117,6 +112,45 @@ public class Evolution implements Comparable<Evolution> {
 
     public int getForme() {
         return forme;
+    }
+
+    /**
+     * Sets the {@link EvolutionType} and the extraInfo of this {@link Evolution}.
+     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
+     * @param type New EvolutionType to be used for this evolution.
+     * @param extraInfo New extraInfo to be used for this evolution.
+     */
+    public void updateEvolutionMethod(EvolutionType type, int extraInfo) {
+        // Do not update estimatedEvoLevel if
+        // * both old and new evolution type do not use evo level threshold OR
+        // * old evolution type used evo level threshold but new evolution type does not, i.e., continue to enable
+        //   level up evolutions if needed using what was previously extraInfo, e.g. for 'Trainers Evolve their Pokemon'.
+        // Update estimatedEvoLvl if
+        // * evolution type changes from not using level threshold to using level threshold OR
+        // * both old and new evolution type use level threshold but the new extraInfo does not equal the
+        //   estimatedEvoLvl, i.e., if the extraInfo was updated.
+        // In particular, the above guarantees that estimatedEvoLvl and extraInfo are the same for evolutions that use a
+        // level threshold.
+        if (type.usesLevelThreshold() && (!this.type.usesLevelThreshold() || (extraInfo != estimatedEvoLvl))) {
+            estimatedEvoLvl = extraInfo;
+        }
+
+        // Update type and extraInfo
+        this.type = type;
+        this.extraInfo = extraInfo;
+    }
+
+    /**
+     * Sets the {@link EvolutionType} and the extraInfo of this {@link Evolution}.
+     * If applicable, extraInfo of this evolution will be set to the estimatedEvoLvl if useEstimatedLevels == true.
+     * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
+     * @param type New EvolutionType to be used for this evolution.
+     * @param extraInfo New extraInfo to be used for this evolution unless useEstimatedLevel == true and this evoluton uses a level threshold.
+     * @param useEstimatedLevels If true and if applicable, use the estimatedEvoLvl to set the extraInfo of this evolution.
+     */
+    public void updateEvolutionMethod(EvolutionType type, int extraInfo, boolean useEstimatedLevels) {
+        this.updateEvolutionMethod(type,
+                (useEstimatedLevels && type.usesLevelThreshold()) ? estimatedEvoLvl : extraInfo);
     }
 
     public void setForme(int forme) {

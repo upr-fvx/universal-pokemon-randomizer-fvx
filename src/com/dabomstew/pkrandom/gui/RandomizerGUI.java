@@ -370,6 +370,7 @@ public class RandomizerGUI {
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
+    private JCheckBox noRandomIntroMonCheckBox;
 
     private static final Random RND = new Random();
 
@@ -1605,9 +1606,10 @@ public class RandomizerGUI {
         }
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
         raceModeCheckBox.setSelected(settings.isRaceMode());
+        noRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
 
         peChangeImpossibleEvosCheckBox.setSelected(settings.isChangeImpossibleEvolutions());
-        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForImpossibleEvolutions());
+        peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForEvolutionImprovements());
         mdUpdateMovesCheckBox.setSelected(settings.isUpdateMoves());
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
         tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
@@ -1922,11 +1924,11 @@ public class RandomizerGUI {
         settings.setLimitPokemon(limitPokemonCheckBox.isSelected() && limitPokemonCheckBox.isVisible());
         settings.setCurrentRestrictions(currentRestrictions);
         settings.setBanIrregularAltFormes(noIrregularAltFormesCheckBox.isSelected() && noIrregularAltFormesCheckBox.isVisible());
+        settings.setRandomizeIntroMon(!noRandomIntroMonCheckBox.isSelected() && noRandomIntroMonCheckBox.isVisible());
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
         settings.setChangeImpossibleEvolutions(peChangeImpossibleEvosCheckBox.isSelected() && peChangeImpossibleEvosCheckBox.isVisible());
-        settings.setEstimateLevelForImpossibleEvolutions(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected()
-                && peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isVisible());
+        settings.setEstimateLevelForEvolutionImprovements(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected());
         settings.setUpdateMoves(mdUpdateMovesCheckBox.isSelected() && mdUpdateMovesCheckBox.isVisible());
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
@@ -2280,7 +2282,8 @@ public class RandomizerGUI {
 
         gameMascotLabel.setIcon(emptyIcon);
 
-        setInitialButtonState(limitPokemonCheckBox, limitPokemonButton, noIrregularAltFormesCheckBox, raceModeCheckBox);
+        setInitialButtonState(limitPokemonCheckBox, limitPokemonButton,
+                noIrregularAltFormesCheckBox, raceModeCheckBox, noRandomIntroMonCheckBox);
 
         currentRestrictions = null;
 
@@ -2612,6 +2615,9 @@ public class RandomizerGUI {
 
             noIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
             noIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
+
+            noRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
+            noRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());
 
             raceModeCheckBox.setEnabled(true);
 
@@ -3147,8 +3153,9 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(true);
-            // Only enable 'Use estimated level' if change impossible Evos is selected, otherwise disable and deselect it
-            if (peChangeImpossibleEvosCheckBox.isSelected()) {
+            // Only enable 'Use estimated level' if 'Change Impossible Evolutions' or 'Make Evolutions Easier' is
+            // selected, otherwise disable and deselect it
+            if (peChangeImpossibleEvosCheckBox.isSelected() || peMakeEvolutionsEasierCheckBox.isSelected()) {
                 peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setEnabled(true);
             } else {
                 disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);

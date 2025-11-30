@@ -397,10 +397,11 @@ public class GameRandomizer {
     }
 
     private void maybeApplyEvolutionImprovements() {
+        boolean useEstimatedLevels = settings.useEstimatedLevelsForEvolutionImprovements();
+
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
             boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
-            boolean useEstimatedLevels = settings.useEstimatedLevelsForImpossibleEvolutions();
             romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
@@ -408,7 +409,7 @@ public class GameRandomizer {
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(40, 30);
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
-            romHandler.makeEvolutionsEasier(wildsRandomizer);
+            romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
         // Remove time-based evolutions
@@ -678,9 +679,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeIntroPokemon() {
-        // Note: this is the only randomization that applies even if no setting is checked.
-        // Essentially, it works as confirmation that the Randomizer was applied at all.
-        if (romHandler.canSetIntroPokemon()) {
+        if (settings.isRandomizeIntroMon()) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

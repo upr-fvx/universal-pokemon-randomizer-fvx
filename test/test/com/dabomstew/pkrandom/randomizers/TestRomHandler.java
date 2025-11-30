@@ -408,9 +408,8 @@ public class TestRomHandler extends AbstractRomHandler {
 
         for(Evolution evolution : original.getEvolutionsFrom()) {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.getType(), evolution.getExtraInfo());
+                    evolution.getType(), evolution.getExtraInfo(), evolution.getEstimatedEvoLvl());
             evoCopy.setForme(evolution.getForme());
-            evoCopy.setEstimatedEvoLvl(evolution.getEstimatedEvoLvl());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
         }
@@ -546,6 +545,16 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         throw new UnsupportedOperationException("File functions cannot be called in TestRomHandler");
+    }
+
+    @Override
+    public void loadTrainers() {
+
+    }
+
+    @Override
+    public void saveTrainers() {
+
     }
 
     @Override
@@ -840,11 +849,6 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return gymAndEliteTypeThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        testTrainers = trainerData;
     }
 
     @Override
@@ -1339,7 +1343,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 

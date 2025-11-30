@@ -539,6 +539,9 @@ public class RandomizationLogger {
         sb.append(evoTypeStr);
         if (evo.getType().usesLevelThreshold()) {
             sb.append(String.format(getBS("Log.pe.usesLevelThreshold"), evo.getExtraInfo()));
+        } else {
+            // For usesLevelThreshold, extraInfo == estimatedEvoLvl, hence only print this info when it is supplementary
+            sb.append(String.format(getBS("Log.pe.useEstimatedEvoLvl"), evo.getEstimatedEvoLvl()));
         }
 
         return sb.toString();

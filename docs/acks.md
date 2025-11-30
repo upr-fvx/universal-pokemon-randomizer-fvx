@@ -90,6 +90,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - bepis (Shantae)
 - FourLeafSunny (Various)
 - NachoPeñalva (Wally, Cynthia)
+- Ploxel (King Dedede, Meta Knight)
 
 ## Direct code contributors
 

@@ -26,7 +26,6 @@ import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
 
@@ -108,6 +107,11 @@ public interface RomHandler {
 
     List<Species> getSpecies();
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadSpeciesStats();
+
     List<Species> getSpeciesInclFormes();
 
     SpeciesSet getAltFormes();
@@ -124,6 +128,11 @@ public interface RomHandler {
     SpeciesSet getIrregularFormes();
 
     RestrictedSpeciesService getRestrictedSpeciesService();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void saveSpeciesStats();
 
     // ==================================
     // Methods to set up Gen Restrictions
@@ -268,6 +277,9 @@ public interface RomHandler {
 
     List<Trainer> getTrainers();
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
     void loadTrainers();
 
     List<Integer> getMainPlaythroughTrainers();
@@ -281,6 +293,9 @@ public interface RomHandler {
 
     Map<String, Type> getGymAndEliteTypeThemes();
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
     void saveTrainers();
 
     boolean canAddPokemonToBossTrainers();
@@ -682,6 +697,16 @@ public interface RomHandler {
     // ========
     // Graphics
     // ========
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadPokemonPalettes();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void savePokemonPalettes();
 
     boolean hasPokemonPaletteSupport();
 

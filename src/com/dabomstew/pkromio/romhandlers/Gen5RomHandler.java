@@ -152,7 +152,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             }
         }
         loadItems();
-        loadPokemonStats();
+        loadSpeciesStats();
         loadMoves();
         loadTrainers();
         loadPokemonPalettes();
@@ -217,7 +217,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         try {
             pokeNarc = this.readNARC(romEntry.getFile("PokemonStats"));
             String[] pokeNames = readPokemonNames();
@@ -490,7 +490,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         List<String> nameList = getStrings(false, romEntry.getIntValue("PokemonNamesTextOffset"));
 
         int formeCount = Gen5Constants.getFormeCount(romEntry.getRomType());
@@ -4012,7 +4012,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    protected void loadPokemonPalettes() {
+    public void loadPokemonPalettes() {
         try {
             String NARCpath = getRomEntry().getFile("PokemonGraphics");
             NARCArchive pokeGraphicsNARC = readNARC(NARCpath);

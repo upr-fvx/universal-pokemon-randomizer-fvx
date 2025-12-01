@@ -135,7 +135,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         loadItems();
 
-        loadPokemonStats();
+        loadSpeciesStats();
         loadMoves();
         loadTrainers();
 
@@ -209,7 +209,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         try {
             pokeGarc = this.readGARC(romEntry.getFile("PokemonStats"),true);
             String[] pokeNames = readPokemonNames();
@@ -651,7 +651,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         int k = Gen7Constants.bsSize;
         int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
         int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());

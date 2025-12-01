@@ -138,7 +138,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(e);
 		}
 		loadItems();
-		loadPokemonStats();
+		loadSpeciesStats();
 		loadMoves();
         loadTrainers();
 		loadPokemonPalettes();
@@ -675,7 +675,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void loadPokemonStats() {
+	public void loadSpeciesStats() {
 		try {
 			String pstatsnarc = romEntry.getFile("PokemonStats");
 			pokeNarc = this.readNARC(pstatsnarc);
@@ -824,7 +824,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void savePokemonStats() {
+	public void saveSpeciesStats() {
 		// Update the "a/an X" list too, if it exists
 		List<String> namesList = getStrings(romEntry.getIntValue("PokemonNamesTextOffset"));
 		int formeCount = Gen4Constants.getFormeCount(romEntry.getRomType());
@@ -5862,7 +5862,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	protected void loadPokemonPalettes() {
+	public void loadPokemonPalettes() {
 		try {
 			String NARCpath = getRomEntry().getFile("PokemonGraphics");
 			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);

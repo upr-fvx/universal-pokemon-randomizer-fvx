@@ -1,20 +1,16 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.constants.SpeciesIDs;
-import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.Evolution;
 import com.dabomstew.pkromio.gamedata.EvolutionType;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
-import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
-import javafx.scene.chart.ScatterChart;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -90,8 +86,8 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             evosFromBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::new).collect(Collectors.toList()));
         }
 
-        ((AbstractRomHandler) romHandler).savePokemonStats();
-        ((AbstractRomHandler) romHandler).loadPokemonStats();
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
         if (romHandler instanceof AbstractGBRomHandler) {
             // TODO: not pleasant that GB romhandler load evolutions separately from stats,
             //  when they don't even save them separately.
@@ -136,7 +132,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             pk.getEvolutionsFrom().add(evo);
             universalTo.getEvolutionsTo().add(evo);
         }
-        ((AbstractRomHandler) romHandler).savePokemonStats();
+        romHandler.saveSpeciesStats();
     }
 
     @ParameterizedTest

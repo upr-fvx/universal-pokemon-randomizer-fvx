@@ -901,11 +901,6 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     public abstract List<BufferedImage> getAllPokemonImages();
 
-    public abstract void savePokemonPalettes();
-
-    // here for testing, please do not use otherwise
-    public abstract void loadPokemonStats();
-
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         try {
@@ -922,15 +917,13 @@ public abstract class AbstractRomHandler implements RomHandler {
      * overridden, this should be called as a superclass method.
      */
     protected void prepareSaveRom() {
-        savePokemonStats();
+        saveSpeciesStats();
         saveMoves();
         saveTrainers();
         savePokemonPalettes();
     }
 
     public abstract void saveMoves();
-
-    public abstract void savePokemonStats();
 
     protected abstract boolean saveRomFile(String filename, long seed);
 

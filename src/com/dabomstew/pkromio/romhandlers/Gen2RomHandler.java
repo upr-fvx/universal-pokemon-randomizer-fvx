@@ -195,7 +195,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         pokes = new Species[Gen2Constants.pokemonCount + 1];
         // Fetch our names
         String[] pokeNames = readPokemonNames();
@@ -211,7 +211,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         // Write pokemon names
         int offs = romEntry.getIntValue("PokemonNamesOffset");
         int len = romEntry.getIntValue("PokemonNamesLength");

@@ -538,7 +538,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         throw new UnsupportedOperationException();
     }
 
@@ -563,7 +563,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
 
     }
 
@@ -1478,6 +1478,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadPokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void savePokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean hasPokemonPaletteSupport() {
         throw new NotImplementedException();
     }
@@ -1514,11 +1524,6 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void savePokemonPalettes() {
         throw new NotImplementedException();
     }
 

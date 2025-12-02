@@ -410,6 +410,11 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		return itemIdsToSet(Gen6Constants.megaStones);
 	}
 
+    @Override
+    public void loadPokemonPalettes() {
+        // not applicable
+    }
+
 	@Override
 	public void savePokemonPalettes() {
 		// not applicable

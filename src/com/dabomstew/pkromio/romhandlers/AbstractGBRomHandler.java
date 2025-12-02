@@ -83,21 +83,19 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
      */
     protected void loadGameData() {
         loadItems();
-        loadPokemonStats();
+        loadSpeciesStats();
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();
         loadTrainers();
     }
 
-    // the below are public because it may be kinder to the testing environment
-    public abstract void loadPokemonStats();
-
+    // The below are public inside this abstract class for easier testing...
+    // but that's not very nice. Abstract classes are not interfaces!
+    // TODO: change this to not be as ugly
     public abstract void loadEvolutions();
 
     public abstract void loadMoves();
-
-    public abstract void loadPokemonPalettes();
 
     public abstract void loadItems();
 

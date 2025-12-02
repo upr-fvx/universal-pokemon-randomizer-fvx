@@ -138,7 +138,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			throw new RomIOException(e);
 		}
 		loadItems();
-		loadPokemonStats();
+		loadSpeciesStats();
 		loadMoves();
         loadTrainers();
 		loadPokemonPalettes();
@@ -675,7 +675,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void loadPokemonStats() {
+	public void loadSpeciesStats() {
 		try {
 			String pstatsnarc = romEntry.getFile("PokemonStats");
 			pokeNarc = this.readNARC(pstatsnarc);
@@ -824,7 +824,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public void savePokemonStats() {
+	public void saveSpeciesStats() {
 		// Update the "a/an X" list too, if it exists
 		List<String> namesList = getStrings(romEntry.getIntValue("PokemonNamesTextOffset"));
 		int formeCount = Gen4Constants.getFormeCount(romEntry.getRomType());
@@ -1291,7 +1291,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
-        FileFunctions.write2ByteInt(file, starterHeldItemOffset, items.get(0).getId());
+        Item item = items.get(0);
+        FileFunctions.write2ByteInt(file, starterHeldItemOffset, item == null ? 0 : item.getId());
     }
 
 	@Override
@@ -4550,9 +4551,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		prices.add(0);
 		try {
 			// In Diamond and Pearl, item IDs 112 through 134 are unused. In Platinum and
-			// HGSS, item ID 112 is used for
-			// the Griseous Orb. So we need to skip through the unused IDs at different
-			// points depending on the game.
+			// HGSS, item ID 112 is used for the Griseous Orb. So we need to skip through
+            // the unused IDs at different points depending on the game.
 			int startOfUnusedIDs = romEntry.getRomType() == Gen4Constants.Type_DP ? 112 : 113;
 			NARCArchive itemPriceNarc = this.readNARC(romEntry.getFile("ItemData"));
 			for (int i = 1; i < itemPriceNarc.files.size(); i++) {
@@ -4563,6 +4563,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 				prices.add(readWord(itemPriceNarc.files.get(i), 0));
 			}
+            // A *very* ugly fix to not being able to figure out how to read the item data/price for
+            // the Enigma Stone, but still needing it to be represented for easy testing.
+            // The downside to this (beyond being ugly) is that the Enigma Stone's price
+            // becomes unchangable - it's not written either in setShopPrices().
+            if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+                prices.add(0);
+            }
 			writeNARC(romEntry.getFile("ItemData"), itemPriceNarc);
 		} catch (IOException e) {
 			throw new RomIOException(e);
@@ -5855,7 +5862,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	protected void loadPokemonPalettes() {
+	public void loadPokemonPalettes() {
 		try {
 			String NARCpath = getRomEntry().getFile("PokemonGraphics");
 			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);

@@ -141,7 +141,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         loadItems();
 
-        loadPokemonStats();
+        loadSpeciesStats();
         loadMoves();
         loadTrainers();
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -192,7 +192,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         try {
             pokeGarc = this.readGARC(romEntry.getFile("PokemonStats"),true);
             String[] pokeNames = readPokemonNames();
@@ -606,7 +606,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         int k = Gen6Constants.getBsSize(romEntry.getRomType());
         byte[] duplicateData = pokeGarc.files.get(Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()) + 1).get(0);
         for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {

@@ -7,11 +7,11 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-@bergmaen for your code contributions,
-@slingshotocelot and @callomello for reporting Issues,
+[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Nachopeñalva and Ploxel for the CPG sprites, and
-AZBZ from the 3DS Pokémon Modding Discord server for help with Gen 7 Type Effectiveness randomization
+[Every person who made a new CPG] for the CPG sprites, and
+[Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
 # How to use
@@ -32,39 +32,16 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
-### Pokemon Evolutions
-- The option "Use Estimated Evolution Levels" is now also usable for "Random"
-  evolutions. (#111)
-- The option "Use Estimated Evolution Levels" is now also usable if "Make
-  Evolutions Easier" is selected. (#114)
-
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
-
-### Trainer Pokemon
-- Add option "Trainer Evolve their Pokemon" that can be selected if "Random
-  Every Level" for Pokemon Evolutions is not selected.
-  If selected, any trainer Pokemon will be evolved as far as possible at its
-  level. For any trainer Pokemon that does not evolve by level up, its
-  estimated evolution level is used. 
-  This replaces "Force Middle Stage at Level:".
-  (#107)
-
-### Types
-- (Gen 7) Added support for Type Effectiveness randomization.
-
-### Graphics
-- (Gen 3) New RSE Custom Player Graphics: Cynthia (from Pokémon) by NachoPeñalva.
-- (Gen 1) New Custom Player Graphics: Kind Dedede, Meta Knight (both from Kirby), by Ploxel.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
+<!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- Add option "No Random Intro Mon". If you want the Pokemon that the professor sends out in the intro (or Ethan's/Lyra's Marill in HGSS) to NOT be randomized, check this box. (#121)
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].
-- (Gen 4-7) Fixed additional trainer Pokemon of unrandomized trainers always
-  being duplicates of original trainer Pokemon. (#116)

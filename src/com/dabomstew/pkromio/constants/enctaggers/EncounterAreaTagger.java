@@ -51,7 +51,7 @@ public abstract class EncounterAreaTagger {
                 throw new IllegalArgumentException("Partial post-game areas and cutoff lengths do not match! (" +
                         partialPostGameAreas.length + " vs " + partialPostGameCutoffs.length + ")");
             }
-            this.partialPostGameCutoffs = partialPostGameAreas;
+            this.partialPostGameCutoffs = partialPostGameCutoffs;
         }
     }
 

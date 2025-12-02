@@ -1621,7 +1621,8 @@ public class Gen5Constants {
         tagRivalBW(trs, "FRIEND2", 0x16b);
 
         // Tag/PWT Battles with Cheren
-        tag(trs, "GYM1", 0x173, 0x278, 0x32E);
+        tag(trs, "GYM1", 0x173, 0x278);
+        tag(trs, "GYM1-NOTSTRONG", 0x32E); // the initial PWT fight
 
         // The Restaurant Brothers
         tag(trs, "GYM9-LEADER", 0x1f0); // Cilan
@@ -1630,7 +1631,8 @@ public class Gen5Constants {
 
         // Themed Trainers
         tag(trs, "THEMED:ZINZOLIN-STRONG", 0x2c0, 0x248, 0x15b, 0x1f1);
-        tag(trs, "THEMED:COLRESS-STRONG", 0x166, 0x158, 0x32d, 0x32f);
+        tag(trs, "THEMED:COLRESS-STRONG", 0x166, 0x158, 0x32d);
+        tag(trs, "THEMED:COLRESS-STRONG-NOTSTRONG", 0x32f); // the initial PWT fight
         tag(trs, "THEMED:SHADOW1", 0x247, 0x15c, 0x2af);
         tag(trs, "THEMED:SHADOW2", 0x1f2, 0x2b0);
         tag(trs, "THEMED:SHADOW3", 0x1f3, 0x2b1);

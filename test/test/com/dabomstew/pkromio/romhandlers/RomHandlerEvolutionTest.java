@@ -115,6 +115,68 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void condenseEvolutionLevelsDoesNothingIfHighestOriginalEvoLvlIsUsed(String romName) {
+        loadROM(romName);
+
+        Map<Species, List<Evolution>> evosToBefore = new HashMap<>();
+        Map<Species, List<Evolution>> evosFromBefore = new HashMap<>();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            evosToBefore.put(pk, pk.getEvolutionsTo().stream().map(Evolution::new).collect(Collectors.toList()));
+            evosFromBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::new).collect(Collectors.toList()));
+        }
+
+        romHandler.condenseLevelEvolutions(romHandler.getHighestOriginalEvoLvl(), romHandler.getHighestOriginalEvoLvl());
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            List<Evolution> toBefore = evosToBefore.get(pk);
+            List<Evolution> fromBefore = evosFromBefore.get(pk);
+            List<Evolution> toAfter = pk.getEvolutionsTo();
+            List<Evolution> fromAfter = pk.getEvolutionsFrom();
+
+            System.out.println(pk.getFullName());
+            System.out.println("Evos To");
+            System.out.println("Before: " + toBefore);
+            System.out.println("After: " + toAfter);
+            assertEquals(toBefore, toAfter);
+            System.out.println("Evos From");
+            System.out.println("Before: " + fromBefore);
+            System.out.println("After: " + fromAfter);
+            assertEquals(fromBefore, fromAfter);
+            System.out.println();
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void condenseEvolutionLevelsWorks(String romName) {
+        loadROM(romName);
+
+        int maxLvl = 4;
+        romHandler.condenseLevelEvolutions(maxLvl, romHandler.getHighestOriginalEvoLvl());
+
+        // Expected: All final evolution levels should be 4 and all intermediate levels should be 0.75*4 = 3
+        int expectedIntermediateLvl = (int) Math.ceil(0.75 * maxLvl);
+        for (Species pk : romHandler.getSpeciesSet()) {
+            if (pk != null) {
+                for (Evolution checkEvo : pk.getEvolutionsFrom()) {
+                    if (checkEvo.getType().usesLevelThreshold()) {
+                        System.out.println(checkEvo);
+                        if (!checkEvo.getTo().getEvolutionsFrom().isEmpty()) { // Evo is intermediate
+                            assertEquals(expectedIntermediateLvl, checkEvo.getExtraInfo());
+                            assertEquals(expectedIntermediateLvl, checkEvo.getEstimatedEvoLvl());
+                        } else {
+                            assertEquals(maxLvl, checkEvo.getExtraInfo());
+                            assertEquals(maxLvl, checkEvo.getEstimatedEvoLvl());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void allSpeciesCanBeGivenExactlyOneEvolutionAndSaved(String romName) {
         // for testing whether "Random Every Level" evolutions would work
         loadROM(romName);

@@ -43,7 +43,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 66;
+    public static final int LENGTH_OF_SETTINGS_DATA = 67;
 
     private CustomNamesSet customNames;
 
@@ -716,6 +716,9 @@ public class Settings {
         out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
                 false, false, false, false));
 
+        // 66 'Make evolutions easier' level select slider
+        out.write(makeEvolutionsEasierLvl);
+
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
             out.write(romName.length);
@@ -1072,6 +1075,7 @@ public class Settings {
         settings.setRaceMode(restoreState(data[65], 1));
         settings.setBlockBrokenMoves(restoreState(data[65], 2));
         settings.setLimitPokemon(restoreState(data[65], 3));
+        settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

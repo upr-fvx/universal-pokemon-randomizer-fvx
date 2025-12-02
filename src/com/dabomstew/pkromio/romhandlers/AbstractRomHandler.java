@@ -225,10 +225,6 @@ public abstract class AbstractRomHandler implements RomHandler {
                             checkEvo.setEstimatedEvoLvl(maxLevel);
                         }
                     }
-                    if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
-                        markImprovedEvolutions(pk);
-                        checkEvo.updateEvolutionMethod(EvolutionType.LEVEL, checkEvo.getExtraInfo());
-                    }
                 }
             }
         }

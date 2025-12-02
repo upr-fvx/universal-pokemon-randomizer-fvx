@@ -407,7 +407,12 @@ public class GameRandomizer {
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
-            romHandler.condenseLevelEvolutions(40, 30);
+            int makeEvolutionsEasierLvl = settings.getMakeEvolutionsEasierLvl();
+            if (makeEvolutionsEasierLvl < romHandler.getHighestOriginalEvoLvl()) {
+                // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
+                romHandler.condenseLevelEvolutions(makeEvolutionsEasierLvl,
+                        (int) Math.ceil(0.75 * makeEvolutionsEasierLvl));
+            }
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
             romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }

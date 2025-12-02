@@ -200,29 +200,33 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
-        // search for level evolutions
-        for (Species pk : getSpeciesSet()) {
-            if (pk != null) {
-                for (Evolution checkEvo : pk.getEvolutionsFrom()) {
-                    if (checkEvo.getType().usesLevelThreshold()) {
-                        // If evo is intermediate and too high, bring it down
-                        // Else if it's just too high, bring it down
-                        if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
-                        } else if (checkEvo.getExtraInfo() > maxLevel) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
-                        }
-                    } else {
-                        // For all other evolutions, the estimated evolution levels have to be condensed if necessary
-                        if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
-                        } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setEstimatedEvoLvl(maxLevel);
+    public void condenseLevelEvolutions(int maxLevel, int highestOriginalEvoLvl) {
+        // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
+        if (maxLevel < highestOriginalEvoLvl) {
+            int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
+            // search for level evolutions
+            for (Species pk : getSpeciesSet()) {
+                if (pk != null) {
+                    for (Evolution checkEvo : pk.getEvolutionsFrom()) {
+                        if (checkEvo.getType().usesLevelThreshold()) {
+                            // If evo is intermediate and too high, bring it down
+                            // Else if it's just too high, bring it down
+                            if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
+                            } else if (checkEvo.getExtraInfo() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
+                            }
+                        } else {
+                            // For all other evolutions, the estimated evolution levels have to be condensed if necessary
+                            if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
+                            } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxLevel);
+                            }
                         }
                     }
                 }

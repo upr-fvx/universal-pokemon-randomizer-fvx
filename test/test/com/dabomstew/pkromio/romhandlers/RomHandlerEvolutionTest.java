@@ -202,7 +202,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         loadROM(romName);
 
         romHandler.removeImpossibleEvolutions(true, true);
-        romHandler.condenseLevelEvolutions(40, 30);
+        romHandler.condenseLevelEvolutions(40, romHandler.getHighestOriginalEvoLvl());
         romHandler.makeEvolutionsEasier(true, true);
         romHandler.removeTimeBasedEvolutions();
 

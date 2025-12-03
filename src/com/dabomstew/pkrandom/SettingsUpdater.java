@@ -391,6 +391,17 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
+        // TODO uncomment after merge of other PR
+//        if (oldVersion < Version.FVX_1_3_5.id) {
+//            // New "Do Not Use Prematurely Evolved Pokemon" bit.
+//            // Set it if 'Trainers Evolve Their Pokemon' was selected
+//            if (dataBlock[63] == 0x01) {
+//                dataBlock[63] = 0x03;
+//            } else {
+//                dataBlock[63] = 0x00;
+//            }
+//        }
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

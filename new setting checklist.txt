@@ -33,6 +33,8 @@ If you are implementing a new setting, make sure you have added it
 ### If a new property was added to a class:
 * [ ] Make sure the property is supported in the RomHandlers, e.g., by the getters and setters.
 * [ ] If necessary, make sure the property is properly copied during deep copies in the tests.
+### RELEASE_NOTE-next.md
+* [ ] If necessary, write a release note following the template.
 
 Hint: Above list can be copied to a Pull Request to keep track of what is done
 or to argue for what things do not have to be done.

@@ -47,8 +47,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
         boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
-        boolean isUnchanged = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
-        boolean skipOriginalTeamMembers = false;
         boolean isTypeThemed = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED;
         boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
         boolean keepTypeThemes = settings.getTrainersMod() == Settings.TrainersMod.KEEP_THEMED;
@@ -70,12 +68,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
 
+        boolean skipOriginalTeamMembers = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
         // added that are supposed to be randomized according to the following settings
-        if (isUnchanged) {
+        if (skipOriginalTeamMembers) {
             keepTypeThemes = true;
             banIrregularAltFormes = true;
-            skipOriginalTeamMembers = true;
         }
 
         boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes

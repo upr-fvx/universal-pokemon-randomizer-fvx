@@ -273,7 +273,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                         Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
             }
             if (!evo.getTo().getEvolutionsFrom().isEmpty()) { // getTo Pkmn has an evolution
-                // Make sure the evo level is at most 80% of the following evolutions evo level (i.e., the following evolution has a 25% higher level
+                // Make sure the evo level is at most 80% of the following evolutions evo level, i.e., the following evolution has a 25% higher level.
                 for (Evolution nextEvo : evo.getTo().getEvolutionsFrom()) {
                     evo.setEstimatedEvoLvl(
                             Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));

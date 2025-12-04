@@ -739,7 +739,7 @@
                         <properties>
                           <enabled value="false"/>
                           <majorTickSpacing value="5"/>
-                          <maximum value="65"/>
+                          <maximum value="55"/>
                           <minimum value="30"/>
                           <minorTickSpacing value="1"/>
                           <paintLabels value="true"/>

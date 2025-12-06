@@ -1,6 +1,12 @@
 ---
 layout: default
 ---
-<h1>Release note for {{ page.name }}</h1>
+
+<div>
+    <h1 style="display: inline;">Release note for {{ page.name }}</h1>
+    <span style="float: right;">Released: {{ page.date | date: '%F' }}</span>
+</div>
 
 {{ content }}
+
+<hr>

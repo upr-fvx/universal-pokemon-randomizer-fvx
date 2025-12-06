@@ -1,10 +1,8 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
-import com.dabomstew.pkromio.constants.Gen4Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import com.dabomstew.pkromio.romhandlers.PokemonImageGetter;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
@@ -410,7 +408,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         for(Evolution evolution : original.getEvolutionsFrom()) {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.getType(), evolution.getExtraInfo());
+                    evolution.getType(), evolution.getExtraInfo(), evolution.getEstimatedEvoLvl());
             evoCopy.setForme(evolution.getForme());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
@@ -505,7 +503,7 @@ public class TestRomHandler extends AbstractRomHandler {
         List<Trainer> copiedTrainers = new ArrayList<>();
         for(Trainer original : originalTrainers) {
             Trainer copy = new Trainer(original);
-            for(TrainerPokemon tp : copy.pokemon) {
+            for(TrainerPokemon tp : copy.getPokemon()) {
                 tp.setSpecies(originalToTest.get(tp.getSpecies()));
             }
             copiedTrainers.add(copy);
@@ -540,7 +538,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         throw new UnsupportedOperationException();
     }
 
@@ -550,12 +548,22 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadTrainers() {
+
+    }
+
+    @Override
+    public void saveTrainers() {
+
+    }
+
+    @Override
     public void saveMoves() {
 
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
 
     }
 
@@ -841,11 +849,6 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return gymAndEliteTypeThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        testTrainers = trainerData;
     }
 
     @Override
@@ -1330,7 +1333,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 
@@ -1340,7 +1343,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 
@@ -1475,6 +1478,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadPokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void savePokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean hasPokemonPaletteSupport() {
         throw new NotImplementedException();
     }
@@ -1511,11 +1524,6 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void savePokemonPalettes() {
         throw new NotImplementedException();
     }
 

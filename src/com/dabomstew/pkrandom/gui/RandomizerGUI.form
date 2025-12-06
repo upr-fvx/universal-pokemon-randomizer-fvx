@@ -25,7 +25,7 @@
         <children>
           <component id="f2100" class="javax.swing.JCheckBox" binding="raceModeCheckBox" default-binding="true">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="0" left="0" bottom="0" right="30" weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -64,6 +64,17 @@
               <enabled value="false"/>
               <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.text"/>
               <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="cb8f5" class="javax.swing.JCheckBox" binding="noRandomIntroMonCheckBox">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noRandomIntroMonCheckBox.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noRandomIntroMonCheckBox.toolTipText"/>
             </properties>
           </component>
         </children>
@@ -720,6 +731,17 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peMakeEvolutionsEasierCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <component id="9ae0g" class="javax.swing.JCheckBox" binding="peUseEstimatedInsteadOfHardcodedLevelsCheckBox">
+                        <constraints>
+                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peUseEstimatedInsteadOfHardcodedLevelsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.peUseEstimatedInsteadOfHardcodedLevelsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                       <component id="81bd3" class="javax.swing.JCheckBox" binding="peAllowAltFormesCheckBox">
                         <constraints>
                           <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -733,7 +755,7 @@
                       </component>
                       <component id="b091c" class="javax.swing.JCheckBox" binding="peRemoveTimeBasedEvolutionsCheckBox">
                         <constraints>
-                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1888,44 +1910,20 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpForceMiddleStageAtCheckBox">
+                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpTrainersEvolveTheirPokemonCheckbox">
                         <constraints>
                           <grid row="4" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtCheckBox.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtCheckBox.toolTipText"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="63824" class="javax.swing.JSlider" binding="tpForceMiddleStageAtSlider">
-                        <constraints>
-                          <grid row="5" column="8" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <majorTickSpacing value="5"/>
-                          <maximum value="45"/>
-                          <minimum value="10"/>
-                          <minorTickSpacing value="1"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceMiddleStageAtSlider.toolTipText"/>
-                          <value value="10"/>
-                        </properties>
-                      </component>
-                      <vspacer id="2342c">
-                        <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
                       <component id="d6ea3" class="javax.swing.JCheckBox" binding="tpForceFullyEvolvedAtCheckBox">
                         <constraints>
-                          <grid row="8" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1936,7 +1934,7 @@
                       </component>
                       <component id="63823" class="javax.swing.JSlider" binding="tpForceFullyEvolvedAtSlider">
                         <constraints>
-                          <grid row="9" column="8" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="8" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1954,13 +1952,13 @@
                       </component>
                       <vspacer id="2342d">
                         <constraints>
-                          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
                       <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="12" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2362,7 +2360,7 @@
                       </hspacer>
                       <component id="670de" class="javax.swing.JSlider" binding="tpPercentageLevelModifierSlider" default-binding="true">
                         <constraints>
-                          <grid row="13" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="10" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>

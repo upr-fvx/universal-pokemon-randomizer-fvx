@@ -135,25 +135,34 @@ public class Species implements Comparable<Species> {
     }
 
     //Evolutionary Relatives functions
+    /**
+     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not an early evolved Pokemon.
+     * @param level The level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} is a legal evolution at the level.
+     */
+    public boolean isLegalEvolutionAtLevel(int level) {
+        boolean isLegalEvo = true; // If this does not have any evolutions to, then it is a legal evolution.
+        for (Evolution evo : this.getEvolutionsTo()) {
+            if (evo.getEstimatedEvoLvl() <= level) {
+                return true; // One evolution to that is legal suffices
+            }
+            isLegalEvo = false;
+        }
+        return isLegalEvo; // Only true if there was no evolution to, otherwise false
+    }
 
     /**
-     * Determines whether this {@link Species} is a basic Pokemon (has no pre-evolution) with an evolution
-     * that has an evolution of its own (without counting Mega Evolution).
-     * @param useOriginal Whether to use the evolution data from before randomization.
-     * @return A boolean, true if this {@link Species} is a basic Pokemon with an evolution that has
-     *         an evolution of its own
+     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution levels of its evolutions.
+     * @param level The level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} has a legal evolution at this level.
      */
-    public boolean isBasicPokemonWithMoreThanTwoEvoStages(boolean useOriginal) {
-        if (this.getPreEvolvedSpecies(useOriginal).isEmpty()) {
-            // We have a basic Pokemon (no pre-evolutions)
-            for (Species evolvedSpecies : this.getEvolvedSpecies(useOriginal)) {
-                if (!evolvedSpecies.getEvolvedSpecies(useOriginal).isEmpty()) {
-                    // Pokemon has one evolution that has an evolution of its own, i.e., has at least two evolution stages
-                    return true;
-                }
+    public boolean hasLegalEvolutionAtLevel(int level) {
+        for (Evolution evo : this.getEvolutionsFrom()) {
+            if (evo.getEstimatedEvoLvl() <= level) {
+                return true; // One evolution from that is legal suffices
             }
         }
-        return false;
+        return false; // Either no evolutions from or no legal evolution from. Either way, no legal evolution at level
     }
 
     /**

@@ -64,8 +64,8 @@ public class RomHandlerMoveTest extends RomHandlerTest {
         Map<Integer, List<MoveLearnt>> movesLearnt = romHandler.getMovesLearnt();
         Map<Integer, List<MoveLearnt>> before = new HashMap<>(movesLearnt);
         romHandler.setMovesLearnt(movesLearnt);
-        gbRomHandler.savePokemonStats();
-        gbRomHandler.loadPokemonStats();
+        gbRomHandler.saveSpeciesStats();
+        gbRomHandler.loadSpeciesStats();
         assertEquals(before, romHandler.getMovesLearnt());
     }
 

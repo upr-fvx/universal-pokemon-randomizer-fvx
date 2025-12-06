@@ -43,7 +43,7 @@ public class Settings {
 
     public static final int VERSION = Version.VERSION;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 65;
+    public static final int LENGTH_OF_SETTINGS_DATA = 66;
 
     private CustomNamesSet customNames;
 
@@ -53,9 +53,11 @@ public class Settings {
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
+    private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
+    private boolean randomizeIntroMon;
     private boolean blockBrokenMoves;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
@@ -180,8 +182,7 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
-    private boolean trainersForceMiddleStage;
-    private int trainersForceMiddleStageLevel = 10;
+    private boolean trainersEvolveTheirPokemon;
     private boolean trainersForceFullyEvolved;
     private int trainersForceFullyEvolvedLevel = 30;
     private boolean trainersLevelModified;
@@ -412,19 +413,19 @@ public class Settings {
 
         // 0: general options #1 + trainer/class names
         out.write(makeByteSelected(changeImpossibleEvolutions, updateMoves, updateMovesLegacy, randomizeTrainerNames,
-                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions));
+                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForEvolutionImprovements));
 
-        // 1: pokemon base stats & abilities
+        // 1: pokemon base stats
         out.write(makeByteSelected(baseStatsFollowEvolutions, baseStatisticsMod == BaseStatisticsMod.RANDOM,
                 baseStatisticsMod == BaseStatisticsMod.SHUFFLE, baseStatisticsMod == BaseStatisticsMod.UNCHANGED,
                 standardizeEXPCurves, updateBaseStats, baseStatsFollowMegaEvolutions, assignEvoStatsRandomly));
 
-        // 2: pokemon types & more general options
+        // 2: pokemon types
         out.write(makeByteSelected(speciesTypesMod == SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS,
-                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED, raceMode, blockBrokenMoves,
-                limitPokemon, typesFollowMegaEvolutions, dualTypeOnly));
+                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED,
+                false, false, false, typesFollowMegaEvolutions, dualTypeOnly));
 
-        // 3: v171: changed to the abilities byte
+        // 3: abilities
         out.write(makeByteSelected(abilitiesMod == AbilitiesMod.UNCHANGED, abilitiesMod == AbilitiesMod.RANDOMIZE,
                 allowWonderGuard, abilitiesFollowEvolutions, banTrappingAbilities, banNegativeAbilities, banBadAbilities,
                 abilitiesFollowMegaEvolutions));
@@ -703,12 +704,16 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon force evolutions
-        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+        // 63 trainer pokemon evolve
+        out.write(makeByteSelected(trainersEvolveTheirPokemon));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
                 false, false, false, false, false, false));
+
+        // 65 general options #2
+        out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
+                false, false, false, false));
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -746,6 +751,7 @@ public class Settings {
         settings.setRandomizeTrainerClassNames(restoreState(data[0], 4));
         settings.setMakeEvolutionsEasier(restoreState(data[0], 5));
         settings.setRemoveTimeBasedEvolutions(restoreState(data[0], 6));
+        settings.setEstimateLevelForEvolutionImprovements(restoreState(data[0], 7));
 
         settings.setBaseStatisticsMod(restoreEnum(BaseStatisticsMod.class, data[1], 3, // UNCHANGED
                 2, // SHUFFLE
@@ -761,11 +767,9 @@ public class Settings {
                 0, // RANDOM_FOLLOW_EVOLUTIONS
                 1 // COMPLETELY_RANDOM
         ));
-        settings.setRaceMode(restoreState(data[2], 3));
-        settings.setBlockBrokenMoves(restoreState(data[2], 4));
-        settings.setLimitPokemon(restoreState(data[2], 5));
         settings.setTypesFollowMegaEvolutions(restoreState(data[2],6));
         settings.setDualTypeOnly(restoreState(data[2], 7));
+
         settings.setAbilitiesMod(restoreEnum(AbilitiesMod.class, data[3], 0, // UNCHANGED
                 1 // RANDOMIZE
         ));
@@ -1058,11 +1062,15 @@ public class Settings {
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
-        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
-        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+        settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
+
+        settings.setRandomizeIntroMon(restoreState(data[65], 0));
+        settings.setRaceMode(restoreState(data[65], 1));
+        settings.setBlockBrokenMoves(restoreState(data[65], 2));
+        settings.setLimitPokemon(restoreState(data[65], 3));
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1097,6 +1105,10 @@ public class Settings {
     public TweakForROMFeedback tweakForRom(RomHandler rh) {
 
         TweakForROMFeedback feedback = new TweakForROMFeedback();
+
+        if (!rh.canSetIntroPokemon()) {
+            this.setRandomizeIntroMon(false);
+        }
 
         // move update check
         if (this.isUpdateMovesLegacy() && rh instanceof Gen5RomHandler) {
@@ -1282,6 +1294,10 @@ public class Settings {
         return changeImpossibleEvolutions;
     }
 
+    public boolean useEstimatedLevelsForEvolutionImprovements() {
+        return estimateLevelForEvolutionImprovements;
+    }
+
     public boolean isDualTypeOnly(){
         return dualTypeOnly;
     }
@@ -1292,6 +1308,10 @@ public class Settings {
 
     public void setChangeImpossibleEvolutions(boolean changeImpossibleEvolutions) {
         this.changeImpossibleEvolutions = changeImpossibleEvolutions;
+    }
+
+    public void setEstimateLevelForEvolutionImprovements(boolean estimateLevelForEvolutionImprovements) {
+        this.estimateLevelForEvolutionImprovements = estimateLevelForEvolutionImprovements;
     }
 
     public boolean isMakeEvolutionsEasier() {
@@ -1324,6 +1344,14 @@ public class Settings {
 
     public void setBanIrregularAltFormes(boolean banIrregularAltFormes) {
         this.banIrregularAltFormes = banIrregularAltFormes;
+    }
+
+    public boolean isRandomizeIntroMon() {
+        return randomizeIntroMon;
+    }
+
+    public void setRandomizeIntroMon(boolean randomizeIntroMon) {
+        this.randomizeIntroMon = randomizeIntroMon;
     }
 
     public boolean doBlockBrokenMoves() {
@@ -1894,20 +1922,12 @@ public class Settings {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
-    public boolean isTrainersForceMiddleStage() {
-        return trainersForceMiddleStage;
+    public boolean isTrainersEvolveTheirPokemon() {
+        return trainersEvolveTheirPokemon;
     }
 
-    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
-        this.trainersForceMiddleStage = trainersForceMiddleStage;
-    }
-
-    public int getTrainersForceMiddleStageLevel() {
-        return trainersForceMiddleStageLevel;
-    }
-
-    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
-        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
+    public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
+        this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
     }
 
     public boolean isTrainersForceFullyEvolved() {

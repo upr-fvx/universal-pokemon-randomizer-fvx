@@ -27,7 +27,7 @@ old and new.
 	{% unless rn.url contains "old/CTV/" %} {% continue %} {% endunless %}
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
-		<td>{{ rn.rdate }}</td>
+		<td>{{ rn.date | date: '%F' }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -40,7 +40,7 @@ old and new.
 	{% unless rn.url contains "old/V_branch/" %} {% continue %} {% endunless %}
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
-		<td>{{ rn.rdate }}</td>
+		<td>{{ rn.date | date: '%F' }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -53,7 +53,7 @@ old and new.
 	{% unless rn.url contains "old/ZX/" %} {% continue %} {% endunless %}
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
-		<td>{{ rn.rdate }}</td>
+		<td>{{ rn.date | date: '%F' }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -66,7 +66,7 @@ old and new.
 	{% unless rn.url contains "old/original/" %} {% continue %} {% endunless %}
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
-		<td>{{ rn.rdate }}</td>
+		<td>{{ rn.date | date: '%F' }}</td>
 	</tr>
 {% endfor %}
 </table>

@@ -5864,11 +5864,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public void loadPokemonPalettes() {
 		try {
-			String NARCpath = getRomEntry().getFile("PokemonGraphics");
-			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
-			for (Species pk : getSpeciesSetInclFormes()) {
+            String pokeGraphicsNARCPath = getRomEntry().getFile("PokemonGraphics");
+            NARCArchive pokeGraphicsNARC = readNARC(pokeGraphicsNARCPath);
+            String formeGraphicsNARCPath = getRomEntry().getFile("OtherPokemonGraphics");
+            NARCArchive formeGraphicsNARC = readNARC(formeGraphicsNARCPath);
+
+            for (Species pk : getSpeciesSetInclFormes()) {
 				if (getGraphicalFormePokes().contains(pk.getBaseForme().getNumber())) {
-					loadGraphicalFormePokemonPalettes(pk);
+					loadGraphicalFormePokemonPalettes(formeGraphicsNARC, pk);
 				} else {
 					pk.setNormalPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4));
 					pk.setShinyPalette(readPalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5));
@@ -5883,18 +5886,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	@Override
 	public void savePokemonPalettes() {
 		try {
-			String NARCpath = getRomEntry().getFile("PokemonGraphics");
-			NARCArchive pokeGraphicsNARC = readNARC(NARCpath);
+			String pokeGraphicsNARCPath = getRomEntry().getFile("PokemonGraphics");
+			NARCArchive pokeGraphicsNARC = readNARC(pokeGraphicsNARCPath);
+            String formeGraphicsNARCPath = getRomEntry().getFile("OtherPokemonGraphics");
+            NARCArchive formeGraphicsNARC = readNARC(formeGraphicsNARCPath);
 
 			for (Species pk : getSpeciesSetInclFormes()) {
 				if (getGraphicalFormePokes().contains(pk.getBaseForme().getNumber())) {
-					saveGraphicalFormePokemonPalettes(pk);
+					saveGraphicalFormePokemonPalettes(formeGraphicsNARC, pk);
 				} else {
 					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 4, pk.getNormalPalette());
 					writePalette(pokeGraphicsNARC, pk.getNumber() * 6 + 5, pk.getShinyPalette());
 				}
 			}
-			writeNARC(NARCpath, pokeGraphicsNARC);
+			writeNARC(pokeGraphicsNARCPath, pokeGraphicsNARC);
+            writeNARC(formeGraphicsNARCPath, formeGraphicsNARC);
 
 		} catch (IOException e) {
 			throw new RomIOException(e);
@@ -5905,24 +5911,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         return Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType()).keySet();
     }
 
-    protected void loadGraphicalFormePokemonPalettes(Species pk) throws IOException {
-        String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-        NARCArchive NARC = readNARC(NARCpath);
-
+    protected void loadGraphicalFormePokemonPalettes(NARCArchive narc, Species pk) throws IOException {
 		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType())
 				.get(pk.getBaseForme().getNumber());
-		pk.setNormalPalette(readPalette(NARC, palettes[0][pk.getFormeNumber()]));
-		pk.setShinyPalette(readPalette(NARC, palettes[1][pk.getFormeNumber()]));
+		pk.setNormalPalette(readPalette(narc, palettes[0][pk.getFormeNumber()]));
+		pk.setShinyPalette(readPalette(narc, palettes[1][pk.getFormeNumber()]));
     }
 
-    protected void saveGraphicalFormePokemonPalettes(Species pk) throws IOException {
-		String NARCpath = getRomEntry().getFile("OtherPokemonGraphics");
-		NARCArchive NARC = readNARC(NARCpath);
-
+    protected void saveGraphicalFormePokemonPalettes(NARCArchive narc, Species pk) throws IOException {
 		int[][] palettes = Gen4Constants.getOtherPokemonGraphicsPalettes(romEntry.getRomType())
 				.get(pk.getBaseForme().getNumber());
-		writePalette(NARC, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
-		writePalette(NARC, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
+		writePalette(narc, palettes[0][pk.getFormeNumber()], pk.getNormalPalette());
+		writePalette(narc, palettes[1][pk.getFormeNumber()], pk.getShinyPalette());
     }
 
 	public Gen4PokemonImageGetter createPokemonImageGetter(Species pk) {

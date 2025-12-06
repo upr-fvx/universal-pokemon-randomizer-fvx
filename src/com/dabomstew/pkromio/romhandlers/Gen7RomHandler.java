@@ -2866,14 +2866,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             if (pkmn != null) {
                 Evolution extraEntry = null;
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (changeWithOtherEvos) {
-                        if (evo.getType() == EvolutionType.WITH_OTHER) {
-                            // Replace w/ level 35 or the estimated evo level is useEstimatedLevels
-                            markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
-                        }
-                    }
-                    if (romEntry.getRomType() == Gen7Constants.Type_SM) {
+                    if (evo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, evo.getExtraInfo());
+                    } else if (changeWithOtherEvos && evo.getType() == EvolutionType.WITH_OTHER) {
+                        // Replace w/ level 35 or the estimated evo level is useEstimatedLevels
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
+
+                    } else if (romEntry.getRomType() == Gen7Constants.Type_SM) {
                         if (evo.getType() == EvolutionType.SNOWY) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),

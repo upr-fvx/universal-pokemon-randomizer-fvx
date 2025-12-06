@@ -92,6 +92,10 @@ After all samples are processed, compute the **estimated evolution level** as th
 estimatedLevel = round(weightedSum / weightSum);
 ```
 
+**Note**: If necessary, the estimated level is then adapted to be at least 25%
+higher than the evolution level of its previous evolution and such that the
+evolution level of its following evolution is at least 25% higher.
+
 ---
 
 ### Summary

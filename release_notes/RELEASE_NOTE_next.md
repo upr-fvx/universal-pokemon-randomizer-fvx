@@ -35,6 +35,14 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- Add option 'Do Not Use Prematurely Evolved Pokemon' that can be selected if 
+  Trainer Pokemon are randomized or additional Pokemon are added.
+  This option guarantees that each random/added Pokemon is at a legal evolution
+  stage at its level. This was previously included in the 'Trainers Evolve 
+  Their Pokemon' checkbox and is now removed in said setting.
+  (#125)
+
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 

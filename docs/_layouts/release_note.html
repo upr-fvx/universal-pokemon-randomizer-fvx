@@ -2,11 +2,45 @@
 layout: default
 ---
 
+{%- if page.prev -%}
+{%- endif -%}
+
+{% comment %} This big block identifies the previous and next releases {% endcomment %}
+
+{%- assign split_url = page.url | split: "/" -%} {%- assign folder = split_url | pop -%}
+{%- assign version = split_url | last -%}
+
+{%- assign i_last = "" -%}
+{%- for rn2 in site.release_notes -%}
+    {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
+    {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
+
+    {%- if i_last == version -%} {%- assign version_next = rn2 -%} {%- break -%} {%- endif -%}
+    {%- assign i_last = split_url | last -%}
+{%- endfor -%}
+
+{%- assign i_last = "" -%}
+{%- for rn2 in site.release_notes reversed -%}
+    {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
+    {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
+
+    {%- if i_last == version -%} {%- assign version_prev = rn2 -%} {%- break -%} {%- endif -%}
+    {%- assign i_last = split_url | last -%}
+{%- endfor -%}
+
 <div>
     <h1 style="display: inline;">Release note for {{ page.name }}</h1>
     <span style="float: right;">Released: {{ page.date | date: '%F' }}</span>
 </div>
 
-{{ content }}
+{%- if version_prev -%}
+<a href="{{ site.baseurl }}{{ version_prev.url }}">Previous: {{ version_prev.name }}</a><br>
+{%- endif -%}
+
+{%- if version_next -%}
+<a href="{{ site.baseurl }}{{ version_next.url }}">Next: {{ version_next.name }}</a>
+{%- endif -%}
 
 <hr>
+
+{{ content }}

@@ -2,7 +2,18 @@
 layout: default
 ---
 
+{% comment %} 
+========================= Note: ============================== 
+# Liquid won't let us make arrays out of non-string objects, #  
+# define functions etc, etc... That is why this page is full #
+# of horrid string concatenation, repetition and repetition. #
+==============================================================
+{% endcomment %}
 
+
+
+{%- assign versions_prev = "" -%}
+{%- assign versions_next = "" -%}
 
 {% comment %} 
 ===================================================
@@ -13,7 +24,7 @@ layout: default
 	{%- assign prev_url = "/release_notes/" | append: page.prev | append: ".html" -%}
 	{%- for rn in site.release_notes -%}
 		{%- if rn.url == prev_url -%}
-			{%- assign version_prev = rn -%} 
+			{%- assign versions_prev = versions_prev | append: "," | append: rn.url -%}
 			{%- break -%}
 		{%- endif -%}
 	{%- endfor -%}
@@ -30,7 +41,7 @@ layout: default
 	{%- if rn.prev -%}
 		{%- assign prev_url = "/release_notes/" | append: rn.prev | append: ".html" -%}
 		{%- if page.url == prev_url -%}
-			{%- assign version_next = rn -%} 
+			{%- assign versions_next = versions_next | append: "," | append: rn.url -%}
 			{%- break -%}
 		{%- endif -%}	
 	{%- endif -%}
@@ -52,7 +63,7 @@ layout: default
     {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
 
     {%- if i_last == version -%} 
-		{%- assign version_next = rn2 -%} 
+		{%- assign versions_next = versions_next | append: "," | append: rn2.url -%}
 		{%- break -%} 
 	{%- endif -%}
 	
@@ -65,7 +76,7 @@ layout: default
     {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
 
     {%- if i_last == version -%} 
-		{%- assign version_prev = rn2 -%} 
+		{%- assign versions_prev = versions_prev | append: "," | append: rn2.url -%}
 		{%- break -%} 
 	{%- endif -%}
 	
@@ -79,13 +90,29 @@ layout: default
     <span style="float: right;">Released: {{ page.date | date: '%F' }}</span>
 </div>
 
-{%- if version_prev -%}
-<a href="{{ site.baseurl }}{{ version_prev.url }}">Previous: {{ version_prev.name }}</a><br>
-{%- endif -%}
+Previous:
+{%- assign arr = versions_prev | split: "," -%}
+{%- for url in arr -%}
+	{%- for rn in site.release_notes -%}
+		{%- if rn.url == url -%}
+			<a href="{{ site.baseurl }}{{ url }}">{{ rn.name }}</a>,
+			{%- break -%}
+		{%- endif -%}	
+	{%- endfor -%}
+{%- endfor -%}
+<br>
 
-{%- if version_next -%}
-<a href="{{ site.baseurl }}{{ version_next.url }}">Next: {{ version_next.name }}</a>
-{%- endif -%}
+Next: 
+{%- assign arr = versions_next | split: "," -%}
+{%- for url in arr -%}
+	{%- for rn in site.release_notes -%}
+		{%- if rn.url == url -%}
+			<a href="{{ site.baseurl }}{{ url }}">{{ rn.name }}</a>,
+			{%- break -%}
+		{%- endif -%}	
+	{%- endfor -%}
+{%- endfor -%}
+<br>
 
 <hr>
 

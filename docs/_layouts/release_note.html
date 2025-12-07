@@ -21,12 +21,15 @@ layout: default
 ===================================================
 {% endcomment %}
 {%- if page.prev -%}
-	{%- assign prev_url = "/release_notes/" | append: page.prev | append: ".html" -%}
-	{%- for rn in site.release_notes -%}
-		{%- if rn.url == prev_url -%}
-			{%- assign versions_prev = versions_prev | append: "," | append: rn.url -%}
-			{%- break -%}
-		{%- endif -%}
+	{%- assign arr = page.prev | split: ", " -%}
+	{%- for prev_url_raw in arr -%}
+		{%- assign prev_url = "/release_notes/" | append: prev_url_raw | append: ".html" -%}
+		
+		{%- for rn in site.release_notes -%}
+			{%- if rn.url == prev_url -%}
+				{%- assign versions_prev = versions_prev | append: "," | append: rn.url -%}
+			{%- endif -%}
+		{%- endfor -%}
 	{%- endfor -%}
 {%- endif -%}
 
@@ -39,11 +42,14 @@ layout: default
 {% endcomment %}
 {%- for rn in site.release_notes -%}
 	{%- if rn.prev -%}
-		{%- assign prev_url = "/release_notes/" | append: rn.prev | append: ".html" -%}
-		{%- if page.url == prev_url -%}
-			{%- assign versions_next = versions_next | append: "," | append: rn.url -%}
-			{%- break -%}
-		{%- endif -%}	
+		{%- assign arr = rn.prev | split: ", " -%}
+		{%- for prev_url_raw in arr -%}
+			{%- assign prev_url = "/release_notes/" | append: prev_url_raw | append: ".html" -%}
+			
+			{%- if page.url == prev_url -%}
+				{%- assign versions_next = versions_next | append: "," | append: rn.url -%}
+			{%- endif -%}
+		{%- endfor -%}
 	{%- endif -%}
 {%- endfor -%}
 

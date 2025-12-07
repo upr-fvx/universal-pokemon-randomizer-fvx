@@ -2,11 +2,29 @@
 layout: default
 ---
 
+
+
+{% comment %} 
+===================================================
+# Convert manually set prev to collection objects #
+===================================================
+{% endcomment %}
 {%- if page.prev -%}
+	{%- assign prev_url = "/release_notes/" | append: page.prev | append: ".html" -%}
+	{%- for rn in site.release_notes -%}
+		{%- if rn.url == prev_url -%}
+			{%- assign version_prev = rn -%} 
+			{%- break -%}
+		{%- endif -%}
+	{%- endfor -%}
 {%- endif -%}
 
-{% comment %} This big block identifies the previous and next releases {% endcomment %}
 
+{% comment %} 
+==========================================
+# Auto-detect previous and next releases #
+========================================== 
+{% endcomment %}
 {%- assign split_url = page.url | split: "/" -%} {%- assign folder = split_url | pop -%}
 {%- assign version = split_url | last -%}
 
@@ -15,7 +33,11 @@ layout: default
     {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
     {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
 
-    {%- if i_last == version -%} {%- assign version_next = rn2 -%} {%- break -%} {%- endif -%}
+    {%- if i_last == version -%} 
+		{%- assign version_next = rn2 -%} 
+		{%- break -%} 
+	{%- endif -%}
+	
     {%- assign i_last = split_url | last -%}
 {%- endfor -%}
 
@@ -24,9 +46,15 @@ layout: default
     {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
     {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
 
-    {%- if i_last == version -%} {%- assign version_prev = rn2 -%} {%- break -%} {%- endif -%}
+    {%- if i_last == version -%} 
+		{%- assign version_prev = rn2 -%} 
+		{%- break -%} 
+	{%- endif -%}
+	
     {%- assign i_last = split_url | last -%}
 {%- endfor -%}
+
+
 
 <div>
     <h1 style="display: inline;">Release note for {{ page.name }}</h1>

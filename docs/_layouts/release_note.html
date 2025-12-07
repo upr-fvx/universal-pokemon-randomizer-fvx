@@ -20,6 +20,24 @@ layout: default
 {%- endif -%}
 
 
+
+{% comment %} 
+=====================================================
+# Find next using other release's manually set prev #
+=====================================================
+{% endcomment %}
+{%- for rn in site.release_notes -%}
+	{%- if rn.prev -%}
+		{%- assign prev_url = "/release_notes/" | append: rn.prev | append: ".html" -%}
+		{%- if page.url == prev_url -%}
+			{%- assign version_next = rn -%} 
+			{%- break -%}
+		{%- endif -%}	
+	{%- endif -%}
+{%- endfor -%}
+
+
+
 {% comment %} 
 ==========================================
 # Auto-detect previous and next releases #

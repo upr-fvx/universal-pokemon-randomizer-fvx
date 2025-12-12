@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
-import com.dabomstew.pkrandom.CustomNamesSet;
 import com.dabomstew.pkrandom.settings.SettingsManager;
+import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 
@@ -59,7 +59,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
         // Get the current trainer names data
         List<String> currentTrainerNames = romHandler.getTrainerNames();
-        if (currentTrainerNames.size() == 0) {
+        if (currentTrainerNames.isEmpty()) {
             // RBY have no trainer names
             return;
         }
@@ -100,7 +100,7 @@ public class TrainerNameRandomizer extends Randomizer {
                     }
                     String changeTo = trainerName;
                     int ctl = intStrLen;
-                    if (pickFrom != null && pickFrom.size() > 0 && intStrLen > 0) {
+                    if (pickFrom != null && !pickFrom.isEmpty() && intStrLen > 0) {
                         int innerTries = 0;
                         changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
                         ctl = romHandler.internalStringLength(changeTo);
@@ -203,7 +203,7 @@ public class TrainerNameRandomizer extends Randomizer {
                     pickFrom = trainerClassesByLength[idx].get(intStrLen);
                 }
                 String changeTo = trainerClassName;
-                if (pickFrom != null && pickFrom.size() > 0) {
+                if (pickFrom != null && !pickFrom.isEmpty()) {
                     changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
                     while (changeTo.length() > maxLength) {
                         changeTo = pickFrom.get(random.nextInt(pickFrom.size()));

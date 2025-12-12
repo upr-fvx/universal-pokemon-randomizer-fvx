@@ -4,6 +4,7 @@ name: Known Issues
 Here is a list of known issues with the randomizer, listed by game. If an issue appears on this page, that doesn't mean it will be ignored forever. It simply means it is an issue with the currently-released version of the randomizer. 
 
 - [All Games](#all-games)
+- [Red/Blue/Green](#redbluegreen)
 - [Gold/Silver](#goldsilver)
 - [Ruby/Sapphire](#rubysapphire)
 - [FireRed/LeafGreen](#fireredleafgreen)
@@ -14,11 +15,15 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 - [All Gen 6 Games](#all-gen-6-games)
 - [X/Y](#xy)
 - [All Gen 7 Games](#all-gen-7-games)
-- [Sun/Moon](#sun-moon) 
+- [Sun/Moon](#sunmoon) 
 
 ## All Games
 
 * When using the "Random" setting under Pokemon Base Statistics, evolving a Pokemon into something with a lower base HP than it currently has can result in HP underflow, which can cause a variety of issues depending on the game. To prevent this underflow entirely, enable the "Follow Evolutions" setting for Pokemon Base Statistics. To mitigate these underflows without enabling "Follow Evolutions", make sure that a Pokemon is at high health before evolving them. If an underflow *does* occur, healing at a Pokemon Center will fix it in every game.
+
+## Red/Blue/Green
+
+* Evolving a Pokemon into Mew, will give it glitchy stats. If you are using "Random Evolutions Every Level", evolving the Pokemon again and healing at a Pokemon center will fix all issues. Otherwise, the Mew will continue having glitchy stats, but this should be mostly harmless.
 
 ## Gold/Silver
 
@@ -74,6 +79,7 @@ Here is a list of known issues with the randomizer, listed by game. If an issue 
 
 * When the "Rival Carries Starter Through Game" and "Random Shiny Trainer Pokemon" settings are used simultaneously, the rival's starter can occasionally become shiny when it wasn't shiny before or vice versa.
 * When evolutions are randomized, it is possible, under very rare circumstances, for a Pokemon other than Nincada to create an "extra" Pokemon in your party if you have an empty party spot and a Poke Ball in your inventory. Specifically, this can happen if Nincada's "Ninjask evolution" is a Pokemon that was also used for another evolution, or a Pokemon whose alternate forme was used for another evolution. For example, if Sandile evolves into Alolan Dugtrio, and Nincada evolves into Dugtrio and Anorith, then evolving Sandile under the right conditions will add an Anorith to your party.
+* Using the evolution options "Random Every Level" and "No Convergence" together always causes the randomization to fail.
 
 ## Sun/Moon
 

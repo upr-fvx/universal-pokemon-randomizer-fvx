@@ -1,9 +1,9 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.settings.SettingsManager;
-import com.dabomstew.pkrandom.constants.GlobalConstants;
-import com.dabomstew.pkrandom.gamedata.Move;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.constants.GlobalConstants;
+import com.dabomstew.pkromio.gamedata.Move;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 
@@ -86,7 +86,7 @@ public class TMTutorMoveRandomizer extends Randomizer {
 
         for (int i = 0; i < tmCount - preservedFieldMoveCount; i++) {
             Move chosenMove;
-            if (goodDamagingLeft > 0 && usableDamagingMoves.size() > 0) {
+            if (goodDamagingLeft > 0 && !usableDamagingMoves.isEmpty()) {
                 chosenMove = usableDamagingMoves.get(random.nextInt(usableDamagingMoves.size()));
             } else {
                 chosenMove = usableMoves.get(random.nextInt(usableMoves.size()));
@@ -175,7 +175,7 @@ public class TMTutorMoveRandomizer extends Randomizer {
 
         for (int i = 0; i < mtCount - preservedFieldMoveCount; i++) {
             Move chosenMove;
-            if (goodDamagingLeft > 0 && usableDamagingMoves.size() > 0) {
+            if (goodDamagingLeft > 0 && !usableDamagingMoves.isEmpty()) {
                 chosenMove = usableDamagingMoves.get(random.nextInt(usableDamagingMoves.size()));
             } else {
                 chosenMove = usableMoves.get(random.nextInt(usableMoves.size()));

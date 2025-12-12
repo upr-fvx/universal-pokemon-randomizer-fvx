@@ -1,16 +1,26 @@
 package com.dabomstew.pkrandom.updaters;
 
-import com.dabomstew.pkrandom.gamedata.Effectiveness;
-import com.dabomstew.pkrandom.gamedata.Type;
-import com.dabomstew.pkrandom.gamedata.TypeTable;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Effectiveness;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.gamedata.TypeTable;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
-public class TypeEffectivenessUpdater extends Updater {
+import java.util.Map;
+import java.util.TreeMap;
 
-    // for now has no method to return anything loggable, separate from the final TypeTable
+public class TypeEffectivenessUpdater extends Updater<Type, Type, Effectiveness> {
+
+    public static final int UPDATE_TO_GEN = 6;
+
+    private final Map<Type, Map<Type, Update<Effectiveness>>> typeEffUpdates = new TreeMap<>();
 
     public TypeEffectivenessUpdater(RomHandler romHandler) {
         super(romHandler);
+    }
+
+    @Override
+    public Map<Type, Map<Type, Update<Effectiveness>>> getUpdates() {
+        return typeEffUpdates;
     }
 
     /**
@@ -20,16 +30,28 @@ public class TypeEffectivenessUpdater extends Updater {
         TypeTable typeTable = romHandler.getTypeTable();
 
         if (romHandler.generationOfPokemon() == 1) {
-            typeTable.setEffectiveness(Type.POISON, Type.BUG, Effectiveness.NEUTRAL);
-            typeTable.setEffectiveness(Type.BUG, Type.POISON, Effectiveness.HALF);
-            typeTable.setEffectiveness(Type.GHOST, Type.PSYCHIC, Effectiveness.DOUBLE);
-            typeTable.setEffectiveness(Type.ICE, Type.FIRE, Effectiveness.HALF);
+            updateEffectiveness(typeTable, Type.POISON, Type.BUG, Effectiveness.NEUTRAL);
+            updateEffectiveness(typeTable, Type.BUG, Type.POISON, Effectiveness.HALF);
+            updateEffectiveness(typeTable, Type.GHOST, Type.PSYCHIC, Effectiveness.DOUBLE);
+            updateEffectiveness(typeTable, Type.ICE, Type.FIRE, Effectiveness.HALF);
         } else {
-            typeTable.setEffectiveness(Type.GHOST, Type.STEEL, Effectiveness.NEUTRAL);
-            typeTable.setEffectiveness(Type.DARK, Type.STEEL, Effectiveness.NEUTRAL);
+            updateEffectiveness(typeTable, Type.GHOST, Type.STEEL, Effectiveness.NEUTRAL);
+            updateEffectiveness(typeTable, Type.DARK, Type.STEEL, Effectiveness.NEUTRAL);
         }
-        romHandler.setTypeTable(typeTable);
 
-        updated = true;
+        romHandler.setTypeTable(typeTable);
+    }
+
+    private void updateEffectiveness(TypeTable tt, Type attacker, Type defender, Effectiveness eff) {
+        Effectiveness before = tt.getEffectiveness(attacker, defender);
+        tt.setEffectiveness(attacker, defender, eff);
+        addUpdate(attacker, before, eff, defender);
+    }
+
+    private void addUpdate(Type attacker, Effectiveness before, Effectiveness after, Type defender) {
+        if (!typeEffUpdates.containsKey(attacker)) {
+            typeEffUpdates.put(attacker, new TreeMap<>());
+        }
+        typeEffUpdates.get(attacker).put(defender, new Update<>(before, after));
     }
 }

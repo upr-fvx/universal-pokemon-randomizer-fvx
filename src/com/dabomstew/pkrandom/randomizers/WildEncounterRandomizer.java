@@ -2,8 +2,8 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkrandom.gamedata.*;
-import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.*;
+import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.*;
 
@@ -54,22 +54,17 @@ public class WildEncounterRandomizer extends Randomizer {
                                      boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
                                      boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
                                      int levelModifier, boolean abilitiesAreRandomized) {
-        // - prep settings
-        // - get encounters
-        // - setup banned + allowed
-        // - randomize inner
-        // - apply level modifier
-        // - set encounters
 
-        rSpecService.setRestrictions(settings);
-
+        // get encounters
         List<EncounterArea> encounterAreas = romHandler.getEncounters(useTimeOfDay);
         List<EncounterArea> preppedAreas = prepEncounterAreas(encounterAreas);
 
+        // setup banned + allowed
         SpeciesSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
         SpeciesSet allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
 
+        // randomize inner
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
                 basicPokemonOnly, sameEvoStage, keepEvolutions);
@@ -96,7 +91,9 @@ public class WildEncounterRandomizer extends Randomizer {
                 break;
         }
 
+        // apply level modifier
         applyLevelModifier(levelModifier, encounterAreas);
+        // set encounters
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
     }
 
@@ -647,32 +644,6 @@ public class WildEncounterRandomizer extends Randomizer {
         }
 
         /**
-         * Given a {@link Type} (or null) and a set of banned {@link Species}, returns a set of {@link Species}
-         * valid for placement in that area, of the given type if there was one.
-         * @param areaType The Type which all {@link Species} returned should have, or null.
-         * @param banned The set of banned species. Can be empty.
-         * @return A {@link SpeciesSet} (which may be a reference to an existing set) which contains all
-         * available {@link Species} of that type, except any banned ones.
-         */
-        private SpeciesSet getTypeWithoutBanned(Type areaType, SpeciesSet banned) {
-
-            SpeciesSet validSpecies;
-            if (areaType != null) {
-                validSpecies = removeBannedSpecies(remainingByType.get(areaType), banned);
-                if(validSpecies.isEmpty()) {
-                    validSpecies = removeBannedSpecies(allowedByType.get(areaType), banned);
-                }
-            } else {
-                validSpecies = removeBannedSpecies(remaining, banned);
-                if(validSpecies.isEmpty()) {
-                    validSpecies = removeBannedSpecies(allowed, banned);
-                }
-            }
-
-            return validSpecies;
-        }
-
-        /**
          * Removes all {@link Species} contained in the banned set from the given pool.
          * Safe to pass referenced {@link SpeciesSet}s to.
          * @param startingPool The pool of {@link Species} to start from.
@@ -741,7 +712,7 @@ public class WildEncounterRandomizer extends Randomizer {
             SpeciesSet possiblyAllowed;
             possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
             if(needsInner) {
-                possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
+                possiblyAllowed = setupAllowedForReplacementInnerInfoMap(info, possiblyAllowed);
             }
             if(!possiblyAllowed.isEmpty()) {
                 return possiblyAllowed;
@@ -750,7 +721,7 @@ public class WildEncounterRandomizer extends Randomizer {
 
             possiblyAllowed = (typeForReplacement == null) ? allowed : allowedByType.get(typeForReplacement);
             if(needsInner) {
-                possiblyAllowed = setupAllowedForReplacementInner(info, possiblyAllowed);
+                possiblyAllowed = setupAllowedForReplacementInnerInfoMap(info, possiblyAllowed);
             }
             return possiblyAllowed;
             //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
@@ -771,15 +742,26 @@ public class WildEncounterRandomizer extends Randomizer {
             Type typeForReplacement = (theme != null) ? theme :
                     (keepPrimaryType ? current.getPrimaryType(true) : null);
 
-            SpeciesSet allowedForReplacement = getTypeWithoutBanned(typeForReplacement, area.getBannedSpecies());
+            SpeciesSet banned = area.getBannedSpecies();
+            boolean needsInner = !banned.isEmpty() || keepEvolutions || sameEvoStage;
+            //if none of these is true, the only restriction is the type
 
-            if(sameEvoStage) {
-                int stage = current.getStagesBefore(true);
-                allowedForReplacement = allowedForReplacement.filter(sp ->
-                        sp.getStagesBefore(false) == stage);
+            SpeciesSet possiblyAllowed;
+            possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
+            if(needsInner) {
+                possiblyAllowed = setupAllowedForReplacementInnerNoMap(possiblyAllowed, current, banned);
             }
+            if(!possiblyAllowed.isEmpty()) {
+                return possiblyAllowed;
+            }
+            //else - it didn't work looking at remaining. Let's try allowed.
 
-            return allowedForReplacement;
+            possiblyAllowed = (typeForReplacement == null) ? allowed : allowedByType.get(typeForReplacement);
+            if(needsInner) {
+                possiblyAllowed = setupAllowedForReplacementInnerNoMap(possiblyAllowed, current, banned);
+            }
+            return possiblyAllowed;
+            //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
         }
 
         /**
@@ -791,7 +773,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * @return startingPool if no additional restrictions were applied, a new {@link SpeciesSet} with the narrowed
          * set otherwise.
          */
-        private SpeciesSet setupAllowedForReplacementInner(SpeciesAreaInformation info, SpeciesSet startingPool) {
+        private SpeciesSet setupAllowedForReplacementInnerInfoMap(SpeciesAreaInformation info, SpeciesSet startingPool) {
             SpeciesSet allowedForReplacement;
             if(!info.getBannedForReplacement().isEmpty()) {
                 allowedForReplacement = new SpeciesSet(startingPool);
@@ -808,6 +790,33 @@ public class WildEncounterRandomizer extends Randomizer {
 
             if(keepEvolutions) {
                 allowedForReplacement = setupAllowedForFamily(allowedForReplacement, info);
+            }
+            return allowedForReplacement;
+        }
+
+        /**
+         * Given a pool of {@link Species} and a {@link SpeciesSet} of banned Species, narrows the pool down to
+         * {@link Species} valid as determined by the current settings.
+         * Assumes all type restrictions have already been applied.
+         * @param startingPool The pool to start from.
+         * @param current The Species to replace. (Only matters when sameEvoStage is true)
+         * @param banned The set of banned Species.
+         * @return startingPool if no additional restrictions were applied, a new {@link SpeciesSet} with the narrowed
+         * set otherwise.
+         */
+        private SpeciesSet setupAllowedForReplacementInnerNoMap(SpeciesSet startingPool, Species current, SpeciesSet banned) {
+            SpeciesSet allowedForReplacement;
+            if(!banned.isEmpty()) {
+                allowedForReplacement = new SpeciesSet(startingPool);
+                allowedForReplacement.removeAll(banned);
+            } else {
+                allowedForReplacement = startingPool;
+            }
+
+            if(sameEvoStage) {
+                int stage = current.getStagesBefore(true);
+                allowedForReplacement = allowedForReplacement.filter(sp ->
+                        sp.getStagesBefore(false) == stage);
             }
             return allowedForReplacement;
         }
@@ -992,11 +1001,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 SpeciesSet speciesInArea = new SpeciesSet();
                 for (Species poke : area.getSpeciesInArea()) {
                     //Different formes of the same species do not contribute to load
-                    if(poke.isBaseForme()) {
-                        speciesInArea.add(poke);
-                    } else {
-                        speciesInArea.add(poke.getBaseForme());
-                    }
+                    speciesInArea.add(poke.getBaseForme());
                 }
 
                 load += speciesInArea.size();

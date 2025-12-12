@@ -59,9 +59,9 @@ The NDS games introduced a lot of file formats, for which great programs have al
 - **NDS ROM extraction & creation** is handled using a Java port of code from **ndstool**.
 - **arm9.bin decompression & compression** is achieved using a Java port of **CUE's BLZ compressor**.
 - **Decompression of LZ10/11-compressed images** is achieved using the DSDecmp library.
-- **Decompression of Gen 1/2 Pokemon images** is achieved using a Java port of code from pokemon-reverse-engineering-tools
+- **Decompression of Gen 1/2 Pokemon images** is achieved using a Java port of code from [pokemon-reverse-engineering-tools](https://github.com/pret/pokemon-reverse-engineering-tools)
 - **Recompression of LZ10/11-compressed images** is achieved using modified code from [AlmiaE](https://github.com/SunakazeKun/AlmiaE).
-- **Recompression of Gen 2 images** is achieved using [FuSoYa's Lunar Compress DLL](https://fusoya.eludevisibility.org/lc/index.html). 
+- **Recompression of Gen 2 images** is achieved using [FuSoYa's Lunar Compress DLL](https://fusoya.eludevisibility.org/lc/index.html), or a Java port of code from [pokecrystal](https://github.com/pret/pokecrystal) on non-Windows OS:es. 
 - **3DS ROM extraction & creation** is handled using a Java port of code from Kaphotics' pk3DS and pkNX, and FireyFly's poketools.
 - **Reading/parsing BFLIM images** is achieved using Java port of code from KillzXGaming's Switch Toolbox.  
 
@@ -73,7 +73,7 @@ In addition,
 
 The Custom Player Graphics requires image files to insert into the game. Some of these are from other Pokémon ROM hacking projects, while others were made as general resources. Full credits for each CPG are included in its files, but for good measure an abridged version is here as well. 
 
-All authors were asked when possible; for some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notify us and it will be removed from the Randomizer.
+All authors were asked when possible, or clearly stated free use for the image. For some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notify us and it will be removed from the Randomizer.
 
 - voliol (Various)
 - altedgy (Blue)
@@ -84,6 +84,10 @@ All authors were asked when possible; for some old ROM hacks their creators are 
 - Luna (Leaf)
 - CFA (Luigi)
 - jojobear13 (Violet)
+- Pokeli (Red)
+- DelyBulacha (Frisk, Chara)
+- SharkGuy (Boyfriend)
+- bepis (Shantae)
 
 ## Direct code contributors
 
@@ -109,6 +113,8 @@ Since Dabomstew opened up the Randomizer to open source development, a number of
 - voliol
 - Realitaetsverlust 
 - Stella Hack 
+- Michael Long
+- Enrico Bergmann
 
 <!--- "Randomizer" is intentionally capitalized in this subheading. Normally on this website it is only capitalized while referring to the UPR, while the concept or randomizers is not. However, here we are paying respects and thus following the "capitalization means respect" principle. Plus Dabomstew capitalized it this way lol.-->
 ## The Randomizers that came before 

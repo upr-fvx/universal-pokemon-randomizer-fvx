@@ -45,6 +45,8 @@ public class Settings {
 
     public static final int LENGTH_OF_SETTINGS_DATA = 67;
 
+    public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
+
     private CustomNamesSet customNames;
 
     private String romName;
@@ -55,7 +57,7 @@ public class Settings {
     private boolean changeImpossibleEvolutions;
     private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
-    private int makeEvolutionsEasierLvl = 40;
+    private int makeEvolutionsEasierLvl = MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
     private boolean randomizeIntroMon;

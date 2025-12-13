@@ -417,8 +417,6 @@ public class RandomizerGUI {
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
 
-    private final int peMakeEvolutionsEasierLvlDefaultValue = 40;
-
     private List<String> trainerSettings = new ArrayList<>();
     private List<String> trainerSettingToolTips = new ArrayList<>();
     private final int TRAINER_UNCHANGED = 0, TRAINER_RANDOM = 1, TRAINER_RANDOM_EVEN = 2, TRAINER_RANDOM_EVEN_MAIN = 3,
@@ -2323,7 +2321,7 @@ public class RandomizerGUI {
                 peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
         peMakeEvolutionsEasierLvlSlider.setVisible(true);
         peMakeEvolutionsEasierLvlSlider.setEnabled(false);
-        peMakeEvolutionsEasierLvlSlider.setValue(peMakeEvolutionsEasierLvlDefaultValue);
+        peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
         setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
 				spRandomTwoEvosRadioButton, spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
@@ -2681,7 +2679,7 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peMakeEvolutionsEasierLvlSlider.setMaximum(
-                    Math.max(peMakeEvolutionsEasierLvlDefaultValue, romHandler.getHighestOriginalEvoLvl()));
+                    Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestOriginalEvoLvl()));
             updateSliderLabels(peMakeEvolutionsEasierLvlSlider); // Guarantee tick at maximum value of slider
             peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
@@ -3148,7 +3146,7 @@ public class RandomizerGUI {
             disableAndDeselectButtons(peChangeImpossibleEvosCheckBox, peUseEstimatedInsteadOfHardcodedLevelsCheckBox,
                     peMakeEvolutionsEasierCheckBox, peRemoveTimeBasedEvolutionsCheckBox);
             peMakeEvolutionsEasierLvlSlider.setEnabled(false);
-            peMakeEvolutionsEasierLvlSlider.setValue(peMakeEvolutionsEasierLvlDefaultValue);
+            peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
             // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
             disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox);
@@ -3248,7 +3246,7 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierLvlSlider.setEnabled(true);
         } else {
             peMakeEvolutionsEasierLvlSlider.setEnabled(false);
-            peMakeEvolutionsEasierLvlSlider.setValue(peMakeEvolutionsEasierLvlDefaultValue);
+            peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
         }
 
         boolean spCustomStatus = spCustomRadioButton.isSelected();

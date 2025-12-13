@@ -2680,7 +2680,7 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peMakeEvolutionsEasierLvlSlider.setMaximum(
                     Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestOriginalEvoLvl()));
-            updateSliderLabels(peMakeEvolutionsEasierLvlSlider); // Guarantee tick at maximum value of slider
+            guaranteeMaximumValueTick(peMakeEvolutionsEasierLvlSlider);
             peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
             peAllowAltFormesCheckBox.setVisible(pokemonGeneration >= 7);
@@ -3061,7 +3061,7 @@ public class RandomizerGUI {
         }
     }
 
-    private void updateSliderLabels(JSlider slider) {
+    private void guaranteeMaximumValueTick(JSlider slider) {
         // Create standard labels (only up to the last multiple)
         Dictionary<Integer, JLabel> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
 

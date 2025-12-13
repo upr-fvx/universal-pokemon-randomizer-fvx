@@ -38,7 +38,7 @@ public class DSDecmp {
         case 0x11:
             return decompress11LZ(data, offset);
         default:
-            return null;
+            throw new IllegalArgumentException("no compressed data found at offset 0x" + Integer.toHexString(offset));
         }
     }
 

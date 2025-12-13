@@ -32,6 +32,15 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- Add a slider that is enabled when 'Make Evolutions Easier' is selected.
+  It can be used to select at which level every Pokemon shall be evolved to 
+  its final stage. Three-stage evolutions will reach their middle stage by no 
+  later than 75% of the selected level. Furthermore, it is now possible to apply
+  the other evolution improvements of 'Make Evolutions Easier' without lowering 
+  evolution levels by choosing the maximum value of the slider. 
+  (#123)
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 

@@ -407,7 +407,7 @@ public class GameRandomizer {
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
-            romHandler.condenseLevelEvolutions(40, 30);
+            romHandler.condenseLevelEvolutions(settings.getMakeEvolutionsEasierLvl());
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
             romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }

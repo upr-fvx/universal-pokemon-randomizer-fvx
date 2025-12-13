@@ -127,6 +127,8 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
+    int getHighestOriginalEvoLvl();
+
     RestrictedSpeciesService getRestrictedSpeciesService();
 
     /**
@@ -585,7 +587,7 @@ public interface RomHandler {
 
     void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
-    void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
+    void condenseLevelEvolutions(int maxLevel);
 
     void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels);
 

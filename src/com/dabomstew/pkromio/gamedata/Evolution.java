@@ -145,7 +145,7 @@ public class Evolution implements Comparable<Evolution> {
      * If applicable, extraInfo of this evolution will be set to the estimatedEvoLvl if useEstimatedLevels == true.
      * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
      * @param type New EvolutionType to be used for this evolution.
-     * @param extraInfo New extraInfo to be used for this evolution unless useEstimatedLevel == true and this evoluton uses a level threshold.
+     * @param extraInfo New extraInfo to be used for this evolution unless useEstimatedLevel == true and this evolution uses a level threshold.
      * @param useEstimatedLevels If true and if applicable, use the estimatedEvoLvl to set the extraInfo of this evolution.
      */
     public void updateEvolutionMethod(EvolutionType type, int extraInfo, boolean useEstimatedLevels) {

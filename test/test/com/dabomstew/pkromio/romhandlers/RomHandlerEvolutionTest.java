@@ -126,7 +126,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             evosFromBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::new).collect(Collectors.toList()));
         }
 
-        romHandler.condenseLevelEvolutions(romHandler.getHighestOriginalEvoLvl(), romHandler.getHighestOriginalEvoLvl());
+        romHandler.condenseLevelEvolutions(romHandler.getHighestOriginalEvoLvl());
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             List<Evolution> toBefore = evosToBefore.get(pk);
@@ -153,7 +153,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         loadROM(romName);
 
         int maxLvl = 4;
-        romHandler.condenseLevelEvolutions(maxLvl, romHandler.getHighestOriginalEvoLvl());
+        romHandler.condenseLevelEvolutions(maxLvl);
 
         // Expected: All final evolution levels should be 4 and all intermediate levels should be 0.75*4 = 3
         int expectedIntermediateLvl = (int) Math.ceil(0.75 * maxLvl);
@@ -264,7 +264,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         loadROM(romName);
 
         romHandler.removeImpossibleEvolutions(true, true);
-        romHandler.condenseLevelEvolutions(40, romHandler.getHighestOriginalEvoLvl());
+        romHandler.condenseLevelEvolutions(40);
         romHandler.makeEvolutionsEasier(true, true);
         romHandler.removeTimeBasedEvolutions();
 

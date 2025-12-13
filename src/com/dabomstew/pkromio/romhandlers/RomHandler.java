@@ -587,7 +587,7 @@ public interface RomHandler {
 
     void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
-    void condenseLevelEvolutions(int maxLevel, int highestOriginalEvoLvl);
+    void condenseLevelEvolutions(int maxLevel);
 
     void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels);
 

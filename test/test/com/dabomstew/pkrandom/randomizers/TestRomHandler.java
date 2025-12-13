@@ -1338,7 +1338,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int highestOriginalEvoLvl) {
+    public void condenseLevelEvolutions(int maxLevel) {
         throw new NotImplementedException();
     }
 

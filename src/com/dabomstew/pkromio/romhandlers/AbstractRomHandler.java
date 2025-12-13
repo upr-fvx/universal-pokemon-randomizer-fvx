@@ -200,9 +200,9 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int highestOriginalEvoLvl) {
+    public void condenseLevelEvolutions(int maxLevel) {
         // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
-        if (maxLevel < highestOriginalEvoLvl) {
+        if (maxLevel < getHighestOriginalEvoLvl()) {
             int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
             // search for level evolutions
             for (Species pk : getSpeciesSet()) {

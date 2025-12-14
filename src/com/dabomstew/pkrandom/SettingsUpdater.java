@@ -391,16 +391,17 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
-        // TODO uncomment after merge of other PR
-//        if (oldVersion < Version.FVX_1_3_5.id) {
-//            // New "Do Not Use Prematurely Evolved Pokemon" bit.
-//            // Set it if 'Trainers Evolve Their Pokemon' was selected
-//            if (dataBlock[63] == 0x01) {
-//                dataBlock[63] = 0x03;
-//            } else {
-//                dataBlock[63] = 0x00;
-//            }
-//        }
+        if (oldVersion < Version.FVX_1_3_5.id) {
+            // New "Do Not Use Prematurely Evolved Pokemon" bit in existing byte 63 at bit 1.
+            // Set it if 'Trainers Evolve Their Pokemon' (bit 0 of byte 63) was selected since the new option was split
+            // from this existing option.
+            if ((dataBlock[63] & 1) != 0) {
+                dataBlock[63] |= (1 << 1);
+            }
+            // New 'Make Evolutions Easier' Slider for level selection. Previous behavior is reproduced by choosing
+            // the value 40.
+            insertExtraByte(66, (byte) 40);
+        }
 
         // fix checksum
         CRC32 checksum = new CRC32();

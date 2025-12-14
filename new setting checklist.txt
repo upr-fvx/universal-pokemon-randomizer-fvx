@@ -4,19 +4,19 @@ If you are implementing a new setting, make sure you have added it
 ### Settings.java:
 * [ ] setting definition (variable and/or enum state)
 * [ ] accessors (get, set) (if new variable)
-* [ ] toString
-* [ ] fromString
-* [ ] LENGTH_OF_SETTINGS_DATA if adding a new byte
+* [ ] `toString`
+* [ ] `fromString`
+* [ ] `LENGTH_OF_SETTINGS_DATA` if adding a new byte
 ### RandomizerGUI.form:
 * [ ] add GUI element to select setting (not necessary if combobox option?)
-### bundle.properties:
+### Bundle.properties:
 * [ ] strings for setting label & tooltip
 ### RandomizerGUI.java:
-* [ ] initialState
-* [ ] romLoaded
-* [ ] restoreStateFromSettings
-* [ ] createSettingsFromState
-* [ ] enableOrDisableSubControls
+* [ ] `initialState`
+* [ ] `romLoaded`
+* [ ] `restoreStateFromSettings`
+* [ ] `createSettingsFromState`
+* [ ] `enableOrDisableSubControls`
 * [ ] may also need to add action listeners to the constructor
 ### SettingsUpdater.java:
 * [ ] make update, if needed
@@ -33,6 +33,9 @@ If you are implementing a new setting, make sure you have added it
 ### If a new property was added to a class:
 * [ ] Make sure the property is supported in the RomHandlers, e.g., by the getters and setters.
 * [ ] If necessary, make sure the property is properly copied during deep copies in the tests.
+### Documentation
+* [ ] If necessary, write a release note in `RELEASE_NOTE-next.md `following the template.
+* [ ] If necessary, update affected pages in / add new pages to the wiki in `docs/_wikipages/`.
 
 Hint: Above list can be copied to a Pull Request to keep track of what is done
 or to argue for what things do not have to be done.

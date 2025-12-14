@@ -34,7 +34,7 @@ public class Roms {
     // crash trying to load.
     // -- voliol 2024-01-21
     private static final List<String> UNTESTABLE = Arrays.asList("Green (J)(T-Eng)", "Crystal SpeedChoice v3",
-            "Ruby (U/E) 1.2", "Sapphire (U/E) 1.2", "Emerald (T-Eng)", "Gold (K)", "Silver (K)");
+            "Emerald (T-Eng)", "Gold (K)", "Silver (K)");
 
     private static final List<String> ALL_GEN_1_ROMS;
     private static final List<String> ALL_GEN_2_ROMS;

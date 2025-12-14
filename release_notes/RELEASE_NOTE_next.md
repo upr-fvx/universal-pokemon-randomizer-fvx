@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a merged pull request] @Glamurio for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
@@ -32,6 +32,15 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
+### Pokemon Evolutions
+- Add a slider that is enabled when 'Make Evolutions Easier' is selected.
+  It can be used to select at which level every Pokemon shall be evolved to 
+  its final stage. Three-stage evolutions will reach their middle stage by no 
+  later than 75% of the selected level. Furthermore, it is now possible to apply
+  the other evolution improvements of 'Make Evolutions Easier' without lowering 
+  evolution levels by choosing the maximum value of the slider. 
+  (#123)
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
@@ -42,6 +51,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   stage at its level. This was previously included in the 'Trainers Evolve 
   Their Pokemon' checkbox and is now removed in said setting.
   (#125)
+
+### Graphics
+- (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

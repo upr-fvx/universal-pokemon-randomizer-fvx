@@ -3201,15 +3201,16 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             }
         }
 
-        if (changeWithOtherEvos) {
-            for (Species pkmn : pokes) {
-                if (pkmn != null) {
-                    for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                        if (evo.getType() == EvolutionType.WITH_OTHER) {
-                            // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
-                            markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
-                        }
+        for (Species pkmn : pokes) {
+            if (pkmn != null) {
+                for (Evolution evo : pkmn.getEvolutionsFrom()) {
+                    if (evo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, evo.getExtraInfo());
+                    } else if (changeWithOtherEvos && evo.getType() == EvolutionType.WITH_OTHER) {
+                        // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
                     }
                 }
             }

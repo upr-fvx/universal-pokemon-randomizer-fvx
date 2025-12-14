@@ -121,7 +121,8 @@ public class Version {
     public static final Version FVX_1_3_1 = new Version(413, "1.3.1", "FVX");
     public static final Version FVX_1_3_2 = new Version(414, "1.3.2", "FVX");
     public static final Version FVX_1_3_3 = new Version(415, "1.3.3", "FVX");
-    public static final Version FVX_1_3_4 = LATEST_VERSION;
+    public static final Version FVX_1_3_4 = new Version(416, "1.3.4", "FVX");
+    public static final Version FVX_1_3_5 = LATEST_VERSION;
 
     // add versions to the bottom as you create them
 
@@ -133,7 +134,7 @@ public class Version {
             CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0, Vb_0_10_1,
             Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0, FVX_1_0_1,
             FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3, FVX_1_2_0, FVX_1_2_1, FVX_1_2_2, FVX_1_3_0,
-            FVX_1_3_1, FVX_1_3_2, FVX_1_3_3, FVX_1_3_4
+            FVX_1_3_1, FVX_1_3_2, FVX_1_3_3, FVX_1_3_4, FVX_1_3_5
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {

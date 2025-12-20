@@ -14,7 +14,10 @@ import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romio.RomOpener;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class CliRandomizer {
 
@@ -166,7 +169,7 @@ public class CliRandomizer {
         List<String> allowedFlags = Arrays.asList("-i", "-o", "-s", "-S", "-z", "-c", "-d", "-u", "-l", "-h", "--help");
         for (int i = 0; i < args.length; i++) {
             if (allowedFlags.contains(args[i])) {
-                switch(args[i]) {
+                switch (args[i]) {
                     case "-i":
                         sourceRomFilePath = args[i + 1];
                         break;
@@ -190,7 +193,7 @@ public class CliRandomizer {
                         saveAsDirectory = true;
                         break;
                     case "-u":
-                        updateFilePath = args[i+1];
+                        updateFilePath = args[i + 1];
                         break;
                     case "-l":
                         saveLog = true;
@@ -247,7 +250,7 @@ public class CliRandomizer {
         } else {
             try {
                 settings = Settings.fromString(settingsString);
-            } catch (IllegalArgumentException | UnsupportedEncodingException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace(System.out);
                 return usageError("Invalid settings string.");
             }

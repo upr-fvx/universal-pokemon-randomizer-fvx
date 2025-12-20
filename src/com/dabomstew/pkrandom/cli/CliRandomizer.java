@@ -121,6 +121,9 @@ public class CliRandomizer {
     }
 
     private static CustomPlayerGraphics prepareCPG(RomHandler romHandler, String name, PlayerCharacterType type) {
+        if (name == null) {
+            return null;
+        }
         GraphicsPack pack = null;
         List<GraphicsPack> packs = CPGSelection.getAllCPGPacks(romHandler);
         for (GraphicsPack gp : packs) {
@@ -202,8 +205,12 @@ public class CliRandomizer {
             }
         }
 
-        if (sourceRomFilePath == null || outputRomFilePath == null) {
-            return usageError("Missing required argument");
+        if (sourceRomFilePath == null) {
+            return usageError("Missing required argument: -i (source ROM path)");
+        }
+
+        if (outputRomFilePath == null) {
+            return usageError("Missing required argument: -o (path for output ROM)");
         }
 
         // check that everything is readable/writable as appropriate
@@ -233,22 +240,16 @@ public class CliRandomizer {
                 settings = Settings.read(fis);
                 settings.setCustomNames(CustomNamesSet.readNamesFromFile());
                 fis.close();
-            } catch (UnsupportedOperationException | IllegalArgumentException | IOException e) {
-                try (PrintWriter pw = new PrintWriter(new StringWriter())) {
-                    pw.println("Invalid settings file. Error caught:");
-                    e.printStackTrace(pw);
-                    return usageError(pw.toString());
-                }
+            } catch (Exception e) {
+                e.printStackTrace(System.out);
+                return usageError("Invalid settings file.");
             }
         } else {
             try {
                 settings = Settings.fromString(settingsString);
-            } catch (UnsupportedEncodingException e) {
-                try (PrintWriter pw = new PrintWriter(new StringWriter())) {
-                    pw.println("Invalid settings string. Error caught:");
-                    e.printStackTrace(pw);
-                    return usageError(pw.toString());
-                }
+            } catch (IllegalArgumentException | UnsupportedEncodingException e) {
+                e.printStackTrace(System.out);
+                return usageError("Invalid settings string.");
             }
         }
 
@@ -291,25 +292,25 @@ public class CliRandomizer {
     }
 
     private static void printError(String text) {
-        System.err.println("ERROR: " + text);
+        System.out.println("ERROR: " + text);
     }
 
     private static void printWarning(String text) {
-        System.err.println("WARNING: " + text);
+        System.out.println("WARNING: " + text);
     }
 
     private static void printUsage() {
-        System.err.println("Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for new ROM>\n" +
+        System.out.println("Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for output ROM>\n" +
                            "       {-s <path to settings file> | -S <settings string> } [options]");
-        System.err.println("Optional flags: ");
-        System.err.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
-        System.err.println("-e <seed>          : Use the given seed.");
-        System.err.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
+        System.out.println("Optional flags: ");
+        System.out.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
+        System.out.println("-z <seed>          : Use the given seed.");
+        System.out.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
                            "                     data folder. \"type\" denotes which player character will be replaced,\n" +
                            "                     and must be either PC1 or PC2.");
-        System.err.println("-d                 : Save 3DS game as directory (LayeredFS).");
-        System.err.println("-u <path to update>: Apply the given 3DS game update before randomization.");
-        System.err.println("-l                 : Save a detailed log file.");
-        System.err.println("-h --help          : Print usage/help info.");
+        System.out.println("-d                 : Save 3DS game as directory (LayeredFS).");
+        System.out.println("-u <path to update>: Apply the given 3DS game update before randomization.");
+        System.out.println("-l                 : Save a detailed log file.");
+        System.out.println("-h --help          : Print usage/help info.");
     }
 }

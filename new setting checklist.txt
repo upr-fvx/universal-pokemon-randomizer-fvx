@@ -5,7 +5,7 @@ If you are implementing a new setting, make sure you have added it
 * [ ] setting definition (variable and/or enum state)
 * [ ] accessors (get, set) (if new variable)
 * [ ] toString
-* [ ] fromString
+* [ ] fromStringWithoutVersion
 * [ ] LENGTH_OF_SETTINGS_DATA if adding a new byte
 ### RandomizerGUI.form:
 * [ ] add GUI element to select setting (not necessary if combobox option?)

@@ -1329,7 +1329,7 @@ public class RandomizerGUI {
                 customPlayerGraphics = pld.getCustomPlayerGraphics();
                 settings.tweakForRom(this.romHandler);
                 this.restoreStateFromSettings(settings);
-            } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 // settings load failed
                 e.printStackTrace();
                 this.romHandler = null;
@@ -1513,28 +1513,23 @@ public class RandomizerGUI {
         );
         if (choice == 0) {
             String configString = loadSettingsStringField.getText().trim();
-            if (configString.length() > 0) {
+            if (!configString.isEmpty()) {
                 if (configString.length() < 3) {
                     JOptionPane.showMessageDialog(frame,bundle.getString("GUI.invalidSettingsString"));
                 } else {
                     try {
-                        int settingsStringVersionNumber = Integer.parseInt(configString.substring(0, 3));
-                        if (settingsStringVersionNumber < Version.VERSION) {
-                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringOlder"));
-                            String updatedSettingsString = new SettingsUpdater().update(settingsStringVersionNumber, configString.substring(3));
-                            Settings settings = Settings.fromString(updatedSettingsString);
-                            settings.tweakForRom(this.romHandler);
-                            restoreStateFromSettings(settings);
-                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringLoaded"));
-                        } else if (settingsStringVersionNumber > Version.VERSION) {
+                        int version = Integer.parseInt(configString.substring(0, 3));
+                        if (version > Version.VERSION) {
                             JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringTooNew"));
-                        } else {
-                            Settings settings = Settings.fromString(configString.substring(3));
-                            settings.tweakForRom(this.romHandler);
-                            restoreStateFromSettings(settings);
-                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringLoaded"));
+                            return;
+                        } else if (version < Version.VERSION) {
+                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringOlder"));
                         }
-                    } catch (UnsupportedEncodingException | IllegalArgumentException ex) {
+                        Settings settings = Settings.fromString(configString);
+                        settings.tweakForRom(this.romHandler);
+                        restoreStateFromSettings(settings);
+                        JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringLoaded"));
+                    } catch (IllegalArgumentException ex) {
                         JOptionPane.showMessageDialog(frame,bundle.getString("GUI.invalidSettingsString"));
                     }
                 }

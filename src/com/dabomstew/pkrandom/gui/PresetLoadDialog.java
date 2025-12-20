@@ -402,7 +402,7 @@ public class PresetLoadDialog extends JDialog {
     }
 
     public String getSettingsString() {
-        return settingsStringField.getText().substring(3);
+        return settingsStringField.getText();
     }
 
     public CustomNamesSet getCustomNames() {

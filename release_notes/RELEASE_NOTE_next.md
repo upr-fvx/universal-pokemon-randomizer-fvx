@@ -56,6 +56,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#134)
+- (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#133)
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].

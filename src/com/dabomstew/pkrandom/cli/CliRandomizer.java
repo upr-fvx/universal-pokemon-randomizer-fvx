@@ -160,7 +160,7 @@ public class CliRandomizer {
         String updateFilePath = null;
         boolean saveLog = false;
 
-        List<String> allowedFlags = Arrays.asList("-i", "-o", "-s", "-S", "-z", "-c", "-d", "-u", "-l", "--help");
+        List<String> allowedFlags = Arrays.asList("-i", "-o", "-s", "-S", "-z", "-c", "-d", "-u", "-l", "-h", "--help");
         for (int i = 0; i < args.length; i++) {
             if (allowedFlags.contains(args[i])) {
                 switch(args[i]) {
@@ -192,6 +192,7 @@ public class CliRandomizer {
                     case "-l":
                         saveLog = true;
                         break;
+                    case "-h":
                     case "--help":
                         printUsage();
                         return 0;
@@ -298,8 +299,17 @@ public class CliRandomizer {
     }
 
     private static void printUsage() {
-        System.err.println("Usage: java [-Xmx4096M] -jar PokeRandoFVX.jar cli -s <path to settings file> " +
-                "-i <path to source ROM> -o <path for new ROM> [-d][-u <path to 3DS game update>][-l]");
-        System.err.println("-d: Save 3DS game as directory (LayeredFS)");
+        System.err.println("Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for new ROM>\n" +
+                           "       {-s <path to settings file> | -S <settings string> } [options]");
+        System.err.println("Optional flags: ");
+        System.err.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
+        System.err.println("-e <seed>          : Use the given seed.");
+        System.err.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
+                           "                     data folder. \"type\" denotes which player character will be replaced,\n" +
+                           "                     and must be either PC1 or PC2.");
+        System.err.println("-d                 : Save 3DS game as directory (LayeredFS).");
+        System.err.println("-u <path to update>: Apply the given 3DS game update before randomization.");
+        System.err.println("-l                 : Save a detailed log file.");
+        System.err.println("-h --help          : Print usage/help info.");
     }
 }

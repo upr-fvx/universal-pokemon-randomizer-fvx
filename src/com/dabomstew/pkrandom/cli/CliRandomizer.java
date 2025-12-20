@@ -237,7 +237,7 @@ public class CliRandomizer {
             try {
                 File fh = new File(settingsFilePath);
                 FileInputStream fis = new FileInputStream(fh);
-                settings = Settings.read(fis);
+                settings = Settings.readFromFileFormat(fis);
                 settings.setCustomNames(CustomNamesSet.readNamesFromFile());
                 fis.close();
             } catch (Exception e) {

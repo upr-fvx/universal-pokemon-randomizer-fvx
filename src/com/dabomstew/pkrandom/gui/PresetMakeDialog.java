@@ -62,7 +62,7 @@ public class PresetMakeDialog extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         randomSeedField.setText(Long.toString(seed));
-        configStringField.setText(Version.VERSION + "" + configString);
+        configStringField.setText(configString);
         this.seed = seed;
         this.configString = configString;
         presetFileChooser.setCurrentDirectory(new File("./"));
@@ -190,7 +190,6 @@ public class PresetMakeDialog extends javax.swing.JDialog {
             fh = FileFunctions.fixFilename(fh, "rndp");
             try {
                 DataOutputStream dos = new DataOutputStream(Files.newOutputStream(fh.toPath()));
-                dos.writeInt(Version.VERSION);
                 dos.writeLong(seed);
                 dos.writeUTF(configString);
                 byte[] customNameData = CustomNamesSet.readNamesFromFile().getBytes();

@@ -2996,9 +2996,7 @@ public class RandomizerGUI {
             boolean cpgReplaceChoiceSupport = cpgSupport && romHandler.hasMultiplePlayerCharacters();
             cpgSelection.setReplaceChoiceVisible(cpgReplaceChoiceSupport);
 
-            if (!(ppalSupport || cpgSupport)) {
-                tabbedPane1.setEnabledAt(8, false);
-            }
+            tabbedPane1.setEnabledAt(8, ppalSupport || cpgSupport);
 
             // Misc. Tweaks
             int mtsAvailable = romHandler.miscTweaksAvailable();

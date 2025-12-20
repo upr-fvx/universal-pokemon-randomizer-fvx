@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] @Glamurio for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue] @CDNievas for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -43,6 +43,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
+- (CLI) Added options for the command line interface to use settings strings, seeds, and custom player graphics. (#132)
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes

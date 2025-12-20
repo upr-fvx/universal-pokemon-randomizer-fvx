@@ -313,7 +313,7 @@ public class CliRandomizer {
                            "                     and must be either PC1 or PC2.");
         System.out.println("-d                 : Save 3DS game as directory (LayeredFS).");
         System.out.println("-u <path to update>: Apply the given 3DS game update before randomization.");
-        System.out.println("-l                 : Save a detailed log file.");
+        System.out.println("-l                 : Generate a detailed log file.");
         System.out.println("-h --help          : Print usage/help info.");
     }
 }

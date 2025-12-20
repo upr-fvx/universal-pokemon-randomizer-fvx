@@ -367,8 +367,7 @@ public class Settings {
     private GraphicsPack customPlayerGraphics;
     private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
-    // to and from strings etc
-    public void write(FileOutputStream out) throws IOException {
+    public void writeToFileFormat(FileOutputStream out) throws IOException {
         byte[] settings = toString().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
         buf.putInt(VERSION);
@@ -377,7 +376,7 @@ public class Settings {
         out.write(buf.array());
     }
 
-    public static Settings read(FileInputStream in) throws IOException, UnsupportedOperationException {
+    public static Settings readFromFileFormat(FileInputStream in) throws IOException, UnsupportedOperationException {
         byte[] versionBytes = new byte[4];
         byte[] lengthBytes = new byte[4];
         int nread = in.read(versionBytes);
@@ -398,20 +397,37 @@ public class Settings {
         int length = ByteBuffer.wrap(lengthBytes).getInt();
         byte[] buffer = FileFunctions.readFullyIntoBuffer(in, length);
         String settings = new String(buffer, StandardCharsets.UTF_8);
-        boolean oldUpdate = false;
 
+        return fromStringAndVersion(settings, version);
+    }
+
+    /**
+     * Creates a Settings object from a settings string WITH its first 3 chars being the version ID,
+     * of the version the string was created in. Updates the Settings object if needed.
+     */
+    public static Settings fromString(String withVersion) {
+        int version = Integer.parseInt(withVersion.substring(0, 3));
+        String withoutVersion = withVersion.substring(3);
+        return fromStringAndVersion(withoutVersion, version);
+    }
+
+    private static Settings fromStringAndVersion(String s, int version) {
+        boolean updated = false;
         if (version < VERSION) {
-            oldUpdate = true;
-            settings = new SettingsUpdater().update(version, settings);
+            updated = true;
+            s = new SettingsUpdater().update(version, s);
         }
-
-        Settings settingsObj = fromString(settings);
-        settingsObj.setUpdatedFromOldVersion(oldUpdate);
-        return settingsObj;
+        Settings settings = fromStringWithoutVersion(s);
+        settings.setUpdatedFromOldVersion(updated);
+        return settings;
     }
 
     @Override
     public String toString() {
+        return VERSION + toStringWithoutVersion();
+    }
+
+    private String toStringWithoutVersion() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // 0: general options #1 + trainer/class names
@@ -743,7 +759,7 @@ public class Settings {
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
-    public static Settings fromString(String settingsString) throws UnsupportedEncodingException, IllegalArgumentException {
+    private static Settings fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
         byte[] data = Base64.getDecoder().decode(settingsString);
         checkChecksum(data);
 

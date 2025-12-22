@@ -187,7 +187,7 @@ public class Settings {
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
     private boolean trainersForceFullyEvolved;
-    private int trainersForceFullyEvolvedLevel = 30;
+    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -50 ~ 50
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
@@ -480,7 +480,7 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
         // 14 trainer pokemon force evolutions
-        out.write((trainersForceFullyEvolved ? 0x80 : 0) | trainersForceFullyEvolvedLevel);
+        out.write((trainersForceFullyEvolved ? 0x80 : 0) | (trainersEvolutionLevelModifier + 50));
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -839,7 +839,7 @@ public class Settings {
         ));
 
         settings.setTrainersForceFullyEvolved(restoreState(data[14], 7));
-        settings.setTrainersForceFullyEvolvedLevel(data[14] & 0x7F);
+        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
@@ -1969,12 +1969,12 @@ public class Settings {
         this.trainersForceFullyEvolved = trainersForceFullyEvolved;
     }
 
-    public int getTrainersForceFullyEvolvedLevel() {
-        return trainersForceFullyEvolvedLevel;
+    public int getTrainersEvolutionLevelModifier() {
+        return trainersEvolutionLevelModifier;
     }
 
-    public void setTrainersForceFullyEvolvedLevel(int trainersForceFullyEvolvedLevel) {
-        this.trainersForceFullyEvolvedLevel = trainersForceFullyEvolvedLevel;
+    public void setTrainersEvolutionLevelModifier(int trainersEvolutionLevelModifier) {
+        this.trainersEvolutionLevelModifier = trainersEvolutionLevelModifier;
     }
 
     public boolean isTrainersLevelModified() {

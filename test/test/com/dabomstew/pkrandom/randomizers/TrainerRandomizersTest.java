@@ -5,7 +5,6 @@ import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.Gen7Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -133,7 +132,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersEvolutionLevelModifier(20);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -722,7 +721,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         int trainersFullyEvolvedLevel = 30;
-        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
+        s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
@@ -742,7 +741,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
         int trainersFullyEvolvedLevel = 30;
-        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
+        s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         tpRando.evolveTrainerPokemonAsFarAsLegal();
         tpRando.forceFullyEvolvedTrainerPokes();
@@ -880,7 +879,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
         s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(30);
+        s.setTrainersEvolutionLevelModifier(30);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test

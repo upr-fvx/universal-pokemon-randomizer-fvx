@@ -3,7 +3,6 @@ package com.dabomstew.pkrandom.randomizers;
 import com.dabomstew.pkrandom.Settings;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkromio.MiscTweak;
-import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.AbilityIDs;
 import com.dabomstew.pkromio.constants.Gen7Constants;
 import com.dabomstew.pkromio.gamedata.*;
@@ -63,7 +62,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
         boolean evolveAsFarAsLegal = settings.isTrainersEvolveTheirPokemon();
         boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
-        int forceFullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
+        int forceFullyEvolvedLevel = settings.getTrainersEvolutionLevelModifier();
         boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
         boolean rivalCarriesStarter = settings.isRivalCarriesStarterThroughout();
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
@@ -840,7 +839,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
      */
     private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
         boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
-        int fullyEvolvedLevel = settings.getTrainersForceFullyEvolvedLevel();
+        int fullyEvolvedLevel = settings.getTrainersEvolutionLevelModifier();
 
         NavigableMap<Integer, Species> evolutions = new TreeMap<>();
         evolutions.put(initialLevel, base);
@@ -906,7 +905,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void forceFullyEvolvedTrainerPokes() {
-        int minLevel = settings.getTrainersForceFullyEvolvedLevel();
+        int minLevel = settings.getTrainersEvolutionLevelModifier();
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {

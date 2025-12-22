@@ -1950,22 +1950,33 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceFullyEvolvedAtCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="63823" class="javax.swing.JSlider" binding="tpForceFullyEvolvedAtSlider">
+                      <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="9" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="63823" class="javax.swing.JSlider" binding="tpPercentageEvolutionLevelModifierSlider" default-binding="true">
                         <constraints>
                           <grid row="6" column="8" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <majorTickSpacing value="5"/>
-                          <maximum value="65"/>
-                          <minimum value="30"/>
-                          <minorTickSpacing value="1"/>
+                          <majorTickSpacing value="10"/>
+                          <maximum value="50"/>
+                          <minimum value="-50"/>
+                          <minorTickSpacing value="2"/>
                           <paintLabels value="true"/>
                           <paintTicks value="true"/>
                           <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpForceFullyEvolvedAtSlider.toolTipText"/>
-                          <value value="30"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageEvolutionLevelModifierSlider.toolTipText"/>
+                          <value value="0"/>
                         </properties>
                       </component>
                       <vspacer id="2342d">

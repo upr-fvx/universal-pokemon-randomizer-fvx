@@ -153,7 +153,7 @@ public class RandomizerGUI {
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private JCheckBox tpForceFullyEvolvedAtCheckBox;
-    private JSlider tpForceFullyEvolvedAtSlider;
+    private JSlider tpPercentageEvolutionLevelModifierSlider;
     private JSlider tpPercentageLevelModifierSlider;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
     private JSpinner tpEliteFourUniquePokemonSpinner;
@@ -1728,7 +1728,7 @@ public class RandomizerGUI {
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
         tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
         tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
-        tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
+        tpPercentageEvolutionLevelModifierSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
         tpPercentageLevelModifierSlider.setValue(settings.getTrainersLevelModifier());
         tpEliteFourUniquePokemonCheckBox.setSelected(settings.getEliteFourUniquePokemonNumber() > 0);
@@ -2018,7 +2018,7 @@ public class RandomizerGUI {
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
         settings.setTrainersEvolveTheirPokemon(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
-        settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
+        settings.setTrainersForceFullyEvolvedLevel(tpPercentageEvolutionLevelModifierSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
         settings.setTrainersLevelModifier(tpPercentageLevelModifierSlider.getValue());
         settings.setEliteFourUniquePokemonNumber(tpEliteFourUniquePokemonCheckBox.isVisible() && tpEliteFourUniquePokemonCheckBox.isSelected() ? (int)tpEliteFourUniquePokemonSpinner.getValue() : 0);
@@ -2386,9 +2386,9 @@ public class RandomizerGUI {
 				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
-		tpForceFullyEvolvedAtSlider.setVisible(true);
-		tpForceFullyEvolvedAtSlider.setEnabled(false);
-		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+		tpPercentageEvolutionLevelModifierSlider.setVisible(true);
+		tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
+		tpPercentageEvolutionLevelModifierSlider.setValue(0);
 		tpPercentageLevelModifierSlider.setVisible(true);
 		tpPercentageLevelModifierSlider.setEnabled(false);
 		tpPercentageLevelModifierSlider.setValue(0);
@@ -3142,8 +3142,8 @@ public class RandomizerGUI {
 
             // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
             disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox);
-            tpForceFullyEvolvedAtSlider.setEnabled(false);
-            tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+            tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
+            tpPercentageEvolutionLevelModifierSlider.setValue(0);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3389,11 +3389,11 @@ public class RandomizerGUI {
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
-        if (tpForceFullyEvolvedAtCheckBox.isSelected()) {
-            tpForceFullyEvolvedAtSlider.setEnabled(true);
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) { // TODO or no premature evos checkbox
+            tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
         } else {
-            tpForceFullyEvolvedAtSlider.setEnabled(false);
-            tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+            tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
+            tpPercentageEvolutionLevelModifierSlider.setValue(0);
         }
 
         if (tpPercentageLevelModifierCheckBox.isSelected()) {

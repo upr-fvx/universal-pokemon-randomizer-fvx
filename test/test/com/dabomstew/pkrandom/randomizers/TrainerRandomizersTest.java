@@ -131,7 +131,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
         s.setTrainersEvolutionLevelModifier(20);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -719,7 +718,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
         int trainersFullyEvolvedLevel = 30;
         s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -739,7 +737,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
         int trainersFullyEvolvedLevel = 30;
         s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
@@ -877,7 +874,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
         s.setTrainersEvolutionLevelModifier(30);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 

@@ -61,7 +61,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
         boolean evolveAsFarAsLegal = settings.isTrainersEvolveTheirPokemon();
-        int forceFullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestOriginalEvoLvl());
+        int percentageEvoLvlModifier = settings.getTrainersEvolutionLevelModifier();
         boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
         boolean rivalCarriesStarter = settings.isRivalCarriesStarterThroughout();
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
@@ -208,7 +208,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 Species newSp;
                 int tpLevel = tp.getLevel();
-                boolean forceFinalEvolution = evolveAsFarAsLegal && tpLevel >= forceFullyEvolvedLevel;
+                double evoLvlModifier = (1 + percentageEvoLvlModifier / 100.0);
+                boolean forceFinalEvolution = evolveAsFarAsLegal
+                        && tpLevel >=  evoLvlModifier * romHandler.getHighestOriginalEvoLvl();
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
@@ -218,7 +220,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                         createFullyEvolvedPokemon(tp);
                         newSp = tp.getSpecies();
                     } else if (evolveAsFarAsLegal) { // Only relevant if tp did not fully evolve already
-                        newSp = evolveAsFarAsLegal(oldSp, tpLevel);
+                        newSp = evolveAsFarAsLegal(oldSp, tpLevel, evoLvlModifier);
                         tp.setSpecies(newSp);
                         setFormeForTrainerPokemon(tp, newSp);
                         tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
@@ -508,7 +510,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (finalFormOnly) {
             pickFrom = pickFrom.filterFinalEvos(false);
         } else if (evolveAsFarAsLegal) {
-            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level) && !p.hasLegalEvolutionAtLevel(level));
+            double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier()/100.0);
+            pickFrom = pickFrom.filter(p
+                    -> p.isLegalEvolutionAtLevel(level, evoLvlModifier)
+                    && !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
         }
 
         if (usePlacementHistory) {
@@ -872,10 +877,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void evolveTrainerPokemonAsFarAsLegal() {
+        double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier() / 100.0);
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.getPokemon()) {
-                Species newSpecies = evolveAsFarAsLegal(tp.getSpecies(), tp.getLevel());
+                Species newSpecies = evolveAsFarAsLegal(tp.getSpecies(), tp.getLevel(), evoLvlModifier);
                 if (newSpecies != tp.getSpecies()) {
                     tp.setSpecies(newSpecies);
                     setFormeForTrainerPokemon(tp, newSpecies);
@@ -886,10 +892,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private Species evolveAsFarAsLegal(Species species, int level) {
+    private Species evolveAsFarAsLegal(Species species, int level, double evoLvlModifier) {
         List<Evolution> possibleEvolutions = new ArrayList<>();
         for (Evolution evo : species.getEvolutionsFrom()) {
-            if (evo.getEstimatedEvoLvl() <= level) {
+            if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 possibleEvolutions.add(evo);
             }
         }
@@ -900,7 +906,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             chosenEvo = possibleEvolutions.get(random.nextInt(possibleEvolutions.size()));
         }
         Species evolvedSpecies = chosenEvo.getTo();
-        return evolveAsFarAsLegal(evolvedSpecies, level);
+        return evolveAsFarAsLegal(evolvedSpecies, level, evoLvlModifier);
     }
 
     public void createFullyEvolvedPokemon(TrainerPokemon tp) {

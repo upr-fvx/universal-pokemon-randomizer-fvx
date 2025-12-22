@@ -129,6 +129,8 @@ public interface RomHandler {
 
     int getHighestOriginalEvoLvl();
 
+    void setHighestOriginalEvoLvl(int highestOriginalEvoLvl);
+
     RestrictedSpeciesService getRestrictedSpeciesService();
 
     /**

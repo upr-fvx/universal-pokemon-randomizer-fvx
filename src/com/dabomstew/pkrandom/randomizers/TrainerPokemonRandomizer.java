@@ -61,8 +61,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
         boolean evolveAsFarAsLegal = settings.isTrainersEvolveTheirPokemon();
-        boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
-        int forceFullyEvolvedLevel = settings.getTrainersEvolutionLevelModifier();
+        int forceFullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestOriginalEvoLvl());
         boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
         boolean rivalCarriesStarter = settings.isRivalCarriesStarterThroughout();
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
@@ -209,7 +208,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 Species newSp;
                 int tpLevel = tp.getLevel();
-                boolean forceFinalEvolution = forceFullyEvolved && tpLevel >= forceFullyEvolvedLevel;
+                boolean forceFinalEvolution = evolveAsFarAsLegal && tpLevel >= forceFullyEvolvedLevel;
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
@@ -838,8 +837,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * @return A NavigableMap containing the Pokemon's evolutions by level.
      */
     private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
-        boolean forceFullyEvolved = settings.isTrainersForceFullyEvolved();
-        int fullyEvolvedLevel = settings.getTrainersEvolutionLevelModifier();
+        boolean forceFullyEvolved = settings.isTrainersEvolveTheirPokemon();
+        int fullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestOriginalEvoLvl());
 
         NavigableMap<Integer, Species> evolutions = new TreeMap<>();
         evolutions.put(initialLevel, base);
@@ -902,20 +901,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
         Species evolvedSpecies = chosenEvo.getTo();
         return evolveAsFarAsLegal(evolvedSpecies, level);
-    }
-
-    public void forceFullyEvolvedTrainerPokes() {
-        int minLevel = settings.getTrainersEvolutionLevelModifier();
-
-        List<Trainer> currentTrainers = romHandler.getTrainers();
-        for (Trainer t : currentTrainers) {
-            for (TrainerPokemon tp : t.getPokemon()) {
-                if (tp.getLevel() >= minLevel) {
-                    createFullyEvolvedPokemon(tp);
-                }
-            }
-        }
-        changesMade = true;
     }
 
     public void createFullyEvolvedPokemon(TrainerPokemon tp) {

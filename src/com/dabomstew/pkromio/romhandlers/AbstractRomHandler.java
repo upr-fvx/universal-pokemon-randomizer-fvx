@@ -71,6 +71,10 @@ public abstract class AbstractRomHandler implements RomHandler {
         return highestOriginalEvoLvl;
     }
 
+    public void setHighestOriginalEvoLvl(int highestOriginalEvoLvl) {
+        this.highestOriginalEvoLvl = highestOriginalEvoLvl;
+    }
+
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
     }
@@ -231,6 +235,8 @@ public abstract class AbstractRomHandler implements RomHandler {
                     }
                 }
             }
+            // Finally, update the highest evo level in the ROM
+            highestOriginalEvoLvl = maxLevel;
         }
     }
 

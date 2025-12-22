@@ -744,7 +744,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         tpRando.evolveTrainerPokemonAsFarAsLegal();
-        tpRando.forceFullyEvolvedTrainerPokes();
 
         // Test
         test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);

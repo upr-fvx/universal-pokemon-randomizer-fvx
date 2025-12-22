@@ -2421,8 +2421,6 @@ public class RandomizerGUI {
         tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "Single Battles" }));
 
 		totpPanel.setVisible(true);
-		totpAllyPanel.setVisible(true);
-		totpAuraPanel.setVisible(true);
         setInitialButtonState(totpUnchangedRadioButton, totpRandomRadioButton, totpRandomSimilarStrengthRadioButton,
 				totpAllyUnchangedRadioButton, totpAllyRandomRadioButton, totpAllyRandomSimilarStrengthRadioButton,
 				totpAuraUnchangedRadioButton, totpAuraRandomRadioButton, totpAuraRandomSameStrengthRadioButton,
@@ -2850,16 +2848,17 @@ public class RandomizerGUI {
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {
                 totpUnchangedRadioButton.setEnabled(true);
+                totpUnchangedRadioButton.setSelected(true);
                 totpRandomRadioButton.setEnabled(true);
                 totpRandomSimilarStrengthRadioButton.setEnabled(true);
 
-                totpAllyPanel.setVisible(romHandler.hasTotemPokemon());
                 totpAllyUnchangedRadioButton.setEnabled(true);
+                totpAllyUnchangedRadioButton.setSelected(true);
                 totpAllyRandomRadioButton.setEnabled(true);
                 totpAllyRandomSimilarStrengthRadioButton.setEnabled(true);
 
-                totpAuraPanel.setVisible(romHandler.hasTotemPokemon());
                 totpAuraUnchangedRadioButton.setEnabled(true);
+                totpAuraUnchangedRadioButton.setSelected(true);
                 totpAuraRandomRadioButton.setEnabled(true);
                 totpAuraRandomSameStrengthRadioButton.setEnabled(true);
 

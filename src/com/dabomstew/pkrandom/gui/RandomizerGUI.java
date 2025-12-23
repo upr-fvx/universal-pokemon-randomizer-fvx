@@ -1649,7 +1649,7 @@ public class RandomizerGUI {
 
         peMakeEvolutionsEasierCheckBox.setSelected(settings.isMakeEvolutionsEasier());
         peMakeEvolutionsEasierLvlSlider.setValue(
-                Math.min(settings.getMakeEvolutionsEasierLvl(), romHandler.getHighestOriginalEvoLvl()));
+                Math.min(settings.getMakeEvolutionsEasierLvl(), romHandler.getHighestEvoLvl()));
         peRemoveTimeBasedEvolutionsCheckBox.setSelected(settings.isRemoveTimeBasedEvolutions());
 
         spCustomRadioButton.setSelected(settings.getStartersMod() == Settings.StartersMod.CUSTOM);
@@ -2670,7 +2670,7 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peMakeEvolutionsEasierLvlSlider.setMaximum(
-                    Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestOriginalEvoLvl()));
+                    Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestEvoLvl()));
             guaranteeMaximumValueTick(peMakeEvolutionsEasierLvlSlider);
             peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());

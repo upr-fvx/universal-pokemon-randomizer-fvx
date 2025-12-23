@@ -127,9 +127,9 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
-    int getHighestOriginalEvoLvl();
+    int getHighestEvoLvl();
 
-    void setHighestOriginalEvoLvl(int highestOriginalEvoLvl);
+    void setHighestEvoLvl(int highestEvoLvl);
 
     RestrictedSpeciesService getRestrictedSpeciesService();
 

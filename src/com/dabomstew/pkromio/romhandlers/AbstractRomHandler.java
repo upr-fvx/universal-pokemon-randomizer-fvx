@@ -57,7 +57,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected int perfectAccuracy = 100; // default
 
-    private int highestOriginalEvoLvl = 0;
+    private int highestEvoLvl = 0;
 
     private List<Type> starterTypeTriangle = null;
 
@@ -67,12 +67,12 @@ public abstract class AbstractRomHandler implements RomHandler {
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
 
-    public int getHighestOriginalEvoLvl() {
-        return highestOriginalEvoLvl;
+    public int getHighestEvoLvl() {
+        return highestEvoLvl;
     }
 
-    public void setHighestOriginalEvoLvl(int highestOriginalEvoLvl) {
-        this.highestOriginalEvoLvl = highestOriginalEvoLvl;
+    public void setHighestEvoLvl(int highestEvoLvl) {
+        this.highestEvoLvl = highestEvoLvl;
     }
 
     public RestrictedSpeciesService getRestrictedSpeciesService() {
@@ -206,7 +206,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public void condenseLevelEvolutions(int maxLevel) {
         // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
-        if (maxLevel < getHighestOriginalEvoLvl()) {
+        if (maxLevel < getHighestEvoLvl()) {
             int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
             // search for level evolutions
             for (Species pk : getSpeciesSet()) {
@@ -236,7 +236,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
             // Finally, update the highest evo level in the ROM
-            highestOriginalEvoLvl = maxLevel;
+            highestEvoLvl = maxLevel;
         }
     }
 
@@ -250,8 +250,8 @@ public abstract class AbstractRomHandler implements RomHandler {
                     levelUpEvos.add(evoFrom);
                     // Set estimated evolution level and update highest evolution level in ROM
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
-                    if (evoFrom.getExtraInfo() > highestOriginalEvoLvl) {
-                        highestOriginalEvoLvl = evoFrom.getExtraInfo();
+                    if (evoFrom.getExtraInfo() > highestEvoLvl) {
+                        highestEvoLvl = evoFrom.getExtraInfo();
                     }
                 } else {
                     nonLevelUpEvos.add(evoFrom);
@@ -286,8 +286,8 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
             // Update highest evolution level in ROM if necessary
-            if (evo.getEstimatedEvoLvl() > highestOriginalEvoLvl) {
-                highestOriginalEvoLvl = evo.getEstimatedEvoLvl();
+            if (evo.getEstimatedEvoLvl() > highestEvoLvl) {
+                highestEvoLvl = evo.getEstimatedEvoLvl();
             }
         }
     }

@@ -210,7 +210,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 int tpLevel = tp.getLevel();
                 double evoLvlModifier = (1 + percentageEvoLvlModifier / 100.0);
                 boolean forceFinalEvolution = evolveAsFarAsLegal
-                        && tpLevel >=  evoLvlModifier * romHandler.getHighestOriginalEvoLvl();
+                        && tpLevel >=  evoLvlModifier * romHandler.getHighestEvoLvl();
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
@@ -843,7 +843,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
      */
     private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
         boolean forceFullyEvolved = settings.isTrainersEvolveTheirPokemon();
-        int fullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestOriginalEvoLvl());
+        int fullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestEvoLvl());
 
         NavigableMap<Integer, Species> evolutions = new TreeMap<>();
         evolutions.put(initialLevel, base);

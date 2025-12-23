@@ -71,10 +71,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         return highestEvoLvl;
     }
 
-    public void setHighestEvoLvl(int highestEvoLvl) {
-        this.highestEvoLvl = highestEvoLvl;
-    }
-
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
     }

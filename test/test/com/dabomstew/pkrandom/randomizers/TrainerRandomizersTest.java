@@ -131,7 +131,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersEvolutionLevelModifier(20);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -718,12 +718,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        int trainersFullyEvolvedLevel = 30;
-        s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
-        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
     }
 
     @ParameterizedTest
@@ -737,16 +737,17 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        int trainersFullyEvolvedLevel = 30;
-        s.setTrainersEvolutionLevelModifier(trainersFullyEvolvedLevel);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         tpRando.evolveTrainerPokemonAsFarAsLegal();
 
         // Test
-        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
     }
 
-    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersFullyEvolvedLevel) {
+    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersPercentageEvoLvlModifier) {
+        int trainersFullyEvolvedLevel = (int) Math.ceil((1 + trainersPercentageEvoLvlModifier/100.0) * romHandler.getHighestEvoLvl());
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
             for (int k = 0; k < tr.getPokemon().size(); k++) {
@@ -874,7 +875,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersEvolutionLevelModifier(30);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test

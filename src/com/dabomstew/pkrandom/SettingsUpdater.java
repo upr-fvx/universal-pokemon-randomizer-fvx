@@ -391,6 +391,16 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
+        // TODO after merge of #129
+        /* TODO
+        Idea: If ForceFullyEvolvedAt was selected with level x, either use highestEvoLvl 40, if Make Evolutions easier
+        was selected, or 55 otherwise (cannot really get the Gen from the Settings String and thus do not know if it
+        is 55 or 64). However, at the moment, 4 generations have 55 and 3 generations have 64 as highest evo lvl, i.e.,
+        using 55 is correct more often.
+        Then, calculate the percentage to get from the that level (40 or 55) to x and set the slider to that level.
+        TODO also, bump version to 1.4.0 instead of 1.3.5
+         */
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

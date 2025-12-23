@@ -44,6 +44,13 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- Remove 'Force Fully Evolved at Level:' checkbox and replace its level select
+  slider with a slider to select the percentage to scale trainer Pokemon
+  evolution levels and estimated evolution level by. The scaled evolution
+  levels affect the options 'Trainers Evolve their Pokemon' as well as 'Do Not
+  Use Prematurely Evolved Pokemon'. (#136)
+
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)
 - (Gen 2) New Custom Player Graphics: Duck (from Duck Life) by Happy Time Boredom.

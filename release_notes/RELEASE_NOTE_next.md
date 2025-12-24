@@ -47,9 +47,18 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Trainer Pokemon
 - Remove 'Force Fully Evolved at Level:' checkbox and replace its level select
   slider with a slider to select the percentage to scale trainer Pokemon
-  evolution levels and estimated evolution level by. The scaled evolution
+  evolution levels and estimated evolution levels by. The scaled evolution
   levels affect the options 'Trainers Evolve their Pokemon' as well as 'Do Not
-  Use Prematurely Evolved Pokemon'. (#136)
+  Use Prematurely Evolved Pokemon'. 
+  If 'Trainers Evolve their Pokemon' is selected, the Randomizer displays the
+  highest evolution level for Trainer Pokemon, i.e., the level every trainer
+  Pokemon will be fully evolved at, based on the percentage chosen with the new
+  slider and other relevant randomization options. 
+  With this, the previous functionality of 'Force Fully Evolved at Level:' to
+  have fully evolved trainer Pokemon before their actual evolution level is now
+  supported for 'Trainers Evolve their Pokemon' as well. Therefore, all
+  functionality of 'Force Fully Evolved at Level:' is now replicated and
+  improved upon by 'Trainers Evolve their Pokemon'. (#136)
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)

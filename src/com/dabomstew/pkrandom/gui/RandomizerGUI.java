@@ -154,6 +154,7 @@ public class RandomizerGUI {
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private JSlider tpPercentageEvolutionLevelModifierSlider;
     private JSlider tpPercentageLevelModifierSlider;
+    private JLabel tpCalculatedFullyEvolvedLvlLabel;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
     private JSpinner tpEliteFourUniquePokemonSpinner;
     private JCheckBox tpPercentageLevelModifierCheckBox;
@@ -507,6 +508,7 @@ public class RandomizerGUI {
         peRandomEveryLevelRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peChangeImpossibleEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
         peMakeEvolutionsEasierCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        peMakeEvolutionsEasierLvlSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -540,6 +542,7 @@ public class RandomizerGUI {
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
         // TODO action lister for no premature evolutions
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -700,6 +703,15 @@ public class RandomizerGUI {
     private void checkSpMaximumNeedsRaise() {
         if((int)spBSTMaximumSpinner.getValue() < (int)spBSTMinimumSpinner.getValue()) {
             spBSTMaximumSpinner.setValue(spBSTMinimumSpinner.getValue());
+        }
+    }
+
+    private void updateFullyEvolvedAtLvlLabel() {
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
+            int highestEvoLvl = peMakeEvolutionsEasierCheckBox.isSelected()
+                    ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
+            tpCalculatedFullyEvolvedLvlLabel.setText("Fully Evolved at Level: " +
+                    (int) Math.ceil((1 + tpPercentageEvolutionLevelModifierSlider.getValue()/100.0) * highestEvoLvl));
         }
     }
 
@@ -2387,6 +2399,9 @@ public class RandomizerGUI {
 		tpPercentageEvolutionLevelModifierSlider.setVisible(true);
 		tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
 		tpPercentageEvolutionLevelModifierSlider.setValue(0);
+        tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
+        tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
+        tpCalculatedFullyEvolvedLvlLabel.setText(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"));
 		tpPercentageLevelModifierSlider.setVisible(true);
 		tpPercentageLevelModifierSlider.setEnabled(false);
 		tpPercentageLevelModifierSlider.setValue(0);
@@ -3139,8 +3154,6 @@ public class RandomizerGUI {
 
             // Disable "Trainers Evolve their Pokemon"
             disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox);
-            tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
-            tpPercentageEvolutionLevelModifierSlider.setValue(0);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3387,9 +3400,18 @@ public class RandomizerGUI {
 
         if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) { // TODO or no premature evos checkbox
             tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
+            // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
+            tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         } else {
             tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
             tpPercentageEvolutionLevelModifierSlider.setValue(0);
+            tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
+        }
+
+        if (tpCalculatedFullyEvolvedLvlLabel.isEnabled()) {
+            updateFullyEvolvedAtLvlLabel();
+        } else {
+            tpCalculatedFullyEvolvedLvlLabel.setText(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"));
         }
 
         if (tpPercentageLevelModifierCheckBox.isSelected()) {

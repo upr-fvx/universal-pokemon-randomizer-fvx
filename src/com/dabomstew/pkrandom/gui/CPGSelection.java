@@ -9,12 +9,57 @@ import com.dabomstew.pkromio.romhandlers.RomHandler;
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class CPGSelection {
 
     private static final Random RND = new Random();
+
+    /**
+     * Returns a list of all Custom Player Graphics packs, which work with the given {@link RomHandler}.
+     * These are {@link GraphicsPack}, since that's the superclass.
+     */
+    public static List<GraphicsPack> getAllCPGPacks(RomHandler romHandler) {
+        // TODO: this doesn't really belong in this class
+        List<GraphicsPack> allPacks = new ArrayList<>();
+
+        File players = new File(SysConstants.customPCGDirectory);
+        File[] playerDirectories = players.listFiles(File::isDirectory);
+        if (playerDirectories != null) {
+            for (File playerDir : playerDirectories) {
+                try {
+                    String path = playerDir.getCanonicalPath();
+                    List<GraphicsPackEntry> inFile = GraphicsPackEntry.readAllFromFolder(path);
+                    inFile.forEach(entry -> {
+                        if (romHandler.generationOfPokemon() == 1 &&
+                                entry.getStringValue("RomType").equalsIgnoreCase("Gen1")) {
+                            allPacks.add(new Gen1PlayerCharacterGraphics(entry));
+                        } else if (romHandler.generationOfPokemon() == 2 &&
+                                entry.getStringValue("RomType").equalsIgnoreCase("Gen2")) {
+                            allPacks.add(new Gen2PlayerCharacterGraphics(entry));
+                        } else if (romHandler.generationOfPokemon() == 3) {
+                            if ((romHandler.getROMType() == Gen3Constants.RomType_Ruby ||
+                                    romHandler.getROMType() == Gen3Constants.RomType_Sapp ||
+                                    romHandler.getROMType() == Gen3Constants.RomType_Em) &&
+                                    entry.getStringValue("RomType").equalsIgnoreCase("RSE")) {
+                                allPacks.add(new RSEPlayerCharacterGraphics(entry));
+                            } else if (romHandler.getROMType() == Gen3Constants.RomType_FRLG &&
+                                    entry.getStringValue("RomType").equalsIgnoreCase("FRLG")) {
+                                allPacks.add(new FRLGPlayerCharacterGraphics(entry));
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println("Could not read CPG in: " + playerDir);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return Collections.unmodifiableList(allPacks);
+    }
 
     private JPanel form;
     private JComboBox<GraphicsPack> comboBox;
@@ -77,36 +122,7 @@ public class CPGSelection {
     public void fillComboBox(RomHandler romHandler) {
         DefaultComboBoxModel<GraphicsPack> comboBoxModel = new DefaultComboBoxModel<>();
         comboBox.setModel(comboBoxModel);
-        File players = new File(SysConstants.customPCGDirectory);
-        File[] playerDirectories = players.listFiles(File::isDirectory);
-        if (playerDirectories != null) {
-            for (File playerDir : playerDirectories) {
-                try {
-                    String path = playerDir.getCanonicalPath();
-                    List<GraphicsPackEntry> entries = GraphicsPackEntry.readAllFromFolder(path);
-                    entries.forEach(entry -> {
-                        if (entry.getStringValue("RomType").equalsIgnoreCase("Gen1") && romHandler.generationOfPokemon() == 1) {
-                            comboBoxModel.addElement(new Gen1PlayerCharacterGraphics(entry));
-                        } else if (entry.getStringValue("RomType").equalsIgnoreCase("Gen2") && romHandler.generationOfPokemon() == 2) {
-                            comboBoxModel.addElement(new Gen2PlayerCharacterGraphics(entry));
-                        } else if (romHandler.generationOfPokemon() == 3) {
-                            if ((romHandler.getROMType() == Gen3Constants.RomType_Ruby ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Sapp ||
-                                    romHandler.getROMType() == Gen3Constants.RomType_Em) &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("RSE")) {
-                                comboBoxModel.addElement(new RSEPlayerCharacterGraphics(entry));
-                            } else if (romHandler.getROMType() == Gen3Constants.RomType_FRLG &&
-                                    entry.getStringValue("RomType").equalsIgnoreCase("FRLG")) {
-                                comboBoxModel.addElement(new FRLGPlayerCharacterGraphics(entry));
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    System.out.println("Could not read " + playerDir);
-                    e.printStackTrace();
-                }
-            }
-        }
+        getAllCPGPacks(romHandler).forEach(comboBoxModel::addElement);
         setReplaceChoiceVisible(romHandler.hasMultiplePlayerCharacters());
     }
 

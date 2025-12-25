@@ -26,6 +26,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen6EncounterAreaTagger;
 import com.dabomstew.pkromio.ctr.AMX;
 import com.dabomstew.pkromio.ctr.GARCArchive;
 import com.dabomstew.pkromio.ctr.Mini;
@@ -140,8 +141,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         loadItems();
 
-        loadPokemonStats();
+        loadSpeciesStats();
         loadMoves();
+        loadTrainers();
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen6Constants.getShopNames(romEntry.getRomType());
 
@@ -190,7 +192,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         try {
             pokeGarc = this.readGARC(romEntry.getFile("PokemonStats"),true);
             String[] pokeNames = readPokemonNames();
@@ -361,7 +363,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int species = readWord(evoEntry, evo * 6 + 4);
                     if (method >= 1 && method <= Gen6Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen6Constants.evolutionTypeFromIndex(method);
-                        if (et.equals(EvolutionType.LEVEL_HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
+                        if (et.equals(EvolutionType.HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
                         int extraInfo = readWord(evoEntry, evo * 6 + 2);
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
@@ -604,7 +606,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         int k = Gen6Constants.getBsSize(romEntry.getRomType());
         byte[] duplicateData = pokeGarc.files.get(Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()) + 1).get(0);
         for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
@@ -786,7 +788,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         Species feebasEvolution = prismScaleEvo.getTo();
         int beautyNeededToEvolve = 170;
         Evolution beautyEvolution = new Evolution(feebas, feebasEvolution,
-                EvolutionType.LEVEL_HIGH_BEAUTY, beautyNeededToEvolve);
+                EvolutionType.HIGH_BEAUTY, beautyNeededToEvolve);
         feebas.getEvolutionsFrom().add(beautyEvolution);
         feebasEvolution.getEvolutionsTo().add(beautyEvolution);
     }
@@ -1101,7 +1103,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
-        Gen6Constants.tagEncounterAreas(encounterAreas, romEntry.getRomType());
+        new Gen6EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
 
         return encounterAreas;
     }
@@ -1807,13 +1809,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        List<Trainer> allTrainers = new ArrayList<>();
+    public void loadTrainers() {
+        trainers.clear();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
@@ -1837,34 +1839,34 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 // Victory Item; 2 bytes; The item given out after defeat.
                 //         In X/Y, these are berries, nuggets, pearls (e.g. Battle Chateau)
                 //         In ORAS, none of these are set.
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
-                tr.poketype = isORAS ? readWord(trainer,0) : trainer[0] & 0xFF;
-                tr.index = i;
-                tr.trainerclass = isORAS ? readWord(trainer,2) : trainer[1] & 0xFF;
+                tr.setPoketype(isORAS ? readWord(trainer,0) : trainer[0] & 0xFF);
+                tr.setIndex(i);
+                tr.setTrainerclass(isORAS ? readWord(trainer,2) : trainer[1] & 0xFF);
                 int offset = isORAS ? 6 : 2;
                 int battleType = trainer[offset] & 0xFF;
                 switch (battleType) {
                     case 0:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
                         break;
                     case 1:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                         break;
                     case 2:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.TRIPLE_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.TRIPLE_BATTLE);
                         break;
                     case 3:
-                        tr.currBattleStyle.setStyle(BattleStyle.Style.ROTATION_BATTLE);
+                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.ROTATION_BATTLE);
                         break;
                 }
                 int numPokes = trainer[offset+1] & 0xFF;
                 boolean healer = trainer[offset+13] != 0;
                 int pokeOffs = 0;
-                String trainerClass = tclasses.get(tr.trainerclass);
+                String trainerClass = tclasses.get(tr.getTrainerclass());
                 String trainerName = tnamesMap.getOrDefault(i - 1, "UNKNOWN");
-                tr.fullDisplayName = trainerClass + " " + trainerName;
+                tr.setFullDisplayName(trainerClass + " " + trainerName);
 
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
@@ -1914,21 +1916,20 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         }
                         pokeOffs += 8;
                     }
-                    tr.pokemon.add(tpk);
+                    tr.getPokemon().add(tpk);
                 }
-                allTrainers.add(tr);
+                trainers.add(tr);
             }
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
-                Gen6Constants.tagTrainersXY(allTrainers);
-                Gen6Constants.setMultiBattleStatusXY(allTrainers);
+                Gen6Constants.tagTrainersXY(trainers);
+                Gen6Constants.setMultiBattleStatusXY(trainers);
             } else {
-                Gen6Constants.tagTrainersORAS(allTrainers);
-                Gen6Constants.setMultiBattleStatusORAS(allTrainers);
+                Gen6Constants.tagTrainersORAS(trainers);
+                Gen6Constants.setMultiBattleStatusORAS(trainers);
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
-        return allTrainers;
     }
 
     @Override
@@ -1956,32 +1957,32 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        Iterator<Trainer> allTrainers = trainerData.iterator();
+    public void saveTrainers() {
+        Iterator<Trainer> allTrainers = trainers.iterator();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
-            GARCArchive trainers = this.readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
             // Get current movesets in case we need to reset them for certain
             // trainer mons.
             Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-            int trainernum = trainers.files.size();
+            int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trainers.files.get(i).get(0);
+                byte[] trainer = trs.files.get(i).get(0);
                 Trainer tr = allTrainers.next();
                 // preserve original poketype for held item & moves
                 int offset = 0;
                 if (isORAS) {
-                    writeWord(trainer,0,tr.poketype);
+                    writeWord(trainer,0, tr.getPoketype());
                     offset = 4;
                 } else {
-                    trainer[0] = (byte) tr.poketype;
+                    trainer[0] = (byte) tr.getPoketype();
                 }
-                int numPokes = tr.pokemon.size();
+                int numPokes = tr.getPokemon().size();
                 trainer[offset+3] = (byte) numPokes;
 
-                if (tr.forcedDoubleBattle) {
-                    switch (tr.currBattleStyle.getStyle()) {
+                if (tr.isForcedDoubleBattle()) {
+                    switch (tr.getCurrBattleStyle().getStyle()) {
                         case SINGLE_BATTLE:
                             if (trainer[offset + 2] != 0) {
                                 trainer[offset + 2] = 0;
@@ -2018,7 +2019,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 byte[] trpoke = new byte[bytesNeeded];
                 int pokeOffs = 0;
-                Iterator<TrainerPokemon> tpokes = tr.pokemon.iterator();
+                Iterator<TrainerPokemon> tpokes = tr.getPokemon().iterator();
                 for (int poke = 0; poke < numPokes; poke++) {
                     TrainerPokemon tp = tpokes.next();
                     byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
@@ -2035,7 +2036,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -2050,7 +2051,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 trpokes.setFile(i,trpoke);
             }
-            this.writeGARC(romEntry.getFile("TrainerData"), trainers);
+            this.writeGARC(romEntry.getFile("TrainerData"), trs);
             this.writeGARC(romEntry.getFile("TrainerPokemon"), trpokes);
         } catch (IOException ex) {
             throw new RomIOException(ex);
@@ -2789,8 +2790,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             effectivenessInternal = 2;
                             break;
                         case ZERO:
-                            effectivenessInternal = 0;
-                            break;
                         default:
                             effectivenessInternal = 0;
                     }
@@ -3125,12 +3124,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
         for (Species pkmn : pokes) {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    if (changeMoveEvos && evo.getType() == EvolutionType.LEVEL_WITH_MOVE) {
+                    if (changeMoveEvos && evo.getType() == EvolutionType.WITH_MOVE) {
                         // read move
                         int move = evo.getExtraInfo();
                         int levelLearntAt = 1;
@@ -3141,20 +3140,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             }
                         }
                         if (levelLearntAt == 1) {
-                            // override for piloswine
-                            levelLearntAt = 45;
+                            // override for piloswine: Set to level 45 (or estimatedLevel if useEstimatedLevels)
+                            levelLearntAt = useEstimatedLevels ? evo.getEstimatedEvoLvl() : 45;
                         }
-                        // change to pure level evo
+                        // change to pure level evo (use levelLearntAt over the estimatedEvoLvl)
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(levelLearntAt);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, levelLearntAt);
                     }
                     // Pure Trade
                     if (evo.getType() == EvolutionType.TRADE) {
-                        // Replace w/ level 37
+                        // Replace w/ level 37 (or estimated level is useEstimatedLevels)
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL);
-                        evo.setExtraInfo(37);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                     }
                     // Trade w/ Item
                     if (evo.getType() == EvolutionType.TRADE_ITEM) {
@@ -3163,10 +3160,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                             // Slowpoke is awkward - it already has a level evo
                             // So we can't do Level up w/ Held Item
                             // Put Water Stone instead
-                            evo.setType(EvolutionType.STONE);
-                            evo.setExtraInfo(ItemIDs.waterStone);
+                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else {
-                            evo.setType(EvolutionType.LEVEL_ITEM);
+                            evo.updateEvolutionMethod(EvolutionType.ITEM, evo.getExtraInfo(), useEstimatedLevels);
                         }
                     }
                     if (evo.getType() == EvolutionType.TRADE_SPECIAL) {
@@ -3175,8 +3171,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // (22)
                         // Based on what species we're currently dealing with
                         markImprovedEvolutions(pkmn);
-                        evo.setType(EvolutionType.LEVEL_WITH_OTHER);
-                        evo.setExtraInfo((evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast));
+                        evo.updateEvolutionMethod(EvolutionType.WITH_OTHER,
+                                (evo.getFrom().getNumber() == SpeciesIDs.karrablast ? SpeciesIDs.shelmet : SpeciesIDs.karrablast),
+                                useEstimatedLevels);
                     }
                     // TBD: Pancham, Sliggoo? Sylveon?
                 }
@@ -3185,7 +3182,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
 
         // Reduce the amount of happiness required to evolve.
         int offset = find(code, Gen6Constants.friendshipValueForEvoLocator);
@@ -3204,16 +3201,16 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             }
         }
 
-        if (changeWithOtherEvos) {
-            for (Species pkmn : pokes) {
-                if (pkmn != null) {
-                    for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                        if (evo.getType() == EvolutionType.LEVEL_WITH_OTHER) {
-                            // Replace w/ level 35
-                            markImprovedEvolutions(pkmn);
-                            evo.setType(EvolutionType.LEVEL);
-                            evo.setExtraInfo(35);
-                        }
+        for (Species pkmn : pokes) {
+            if (pkmn != null) {
+                for (Evolution evo : pkmn.getEvolutionsFrom()) {
+                    if (evo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, evo.getExtraInfo());
+                    } else if (changeWithOtherEvos && evo.getType() == EvolutionType.WITH_OTHER) {
+                        // Replace w/ level 35 or the estimated evo level if useEstimatedLevels
+                        markImprovedEvolutions(pkmn);
+                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
                     }
                 }
             }

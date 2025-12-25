@@ -58,7 +58,7 @@ public enum Type {
 
     /**
      * Gets all types of a given generation. This method is not formally deprecated, but please use
-     * {@link TypeTable#getTypes()} instead with possible. That way, your code will have better longevity.
+     * {@link TypeTable#getTypes()} instead when possible. That way, your code will have better longevity.
      * TypeTable#getTypes() will eventually support custom types, this will not.
      */
     public static List<Type> getAllTypes(int generation) {

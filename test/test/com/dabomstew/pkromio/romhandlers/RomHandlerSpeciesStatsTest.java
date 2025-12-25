@@ -1,8 +1,10 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
+import com.dabomstew.pkromio.gamedata.Gen1Species;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
-import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
+import com.dabomstew.pkromio.graphics.palettes.Palette;
+import com.dabomstew.pkromio.graphics.palettes.SGBPaletteID;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -85,8 +87,8 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         romHandler.getSpeciesSetInclFormes()
                 .forEach(pk -> records.put(pk, new BaseStatRecord(pk)));
 
-        ((AbstractRomHandler) romHandler).savePokemonStats();
-        ((AbstractRomHandler) romHandler).loadPokemonStats();
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());
@@ -104,8 +106,8 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         romHandler.getSpeciesSetInclFormes()
                 .forEach(pk -> records.put(pk, new HeldItemsRecord(pk)));
 
-        ((AbstractRomHandler) romHandler).savePokemonStats();
-        ((AbstractRomHandler) romHandler).loadPokemonStats();
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());

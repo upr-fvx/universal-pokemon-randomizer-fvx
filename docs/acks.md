@@ -88,7 +88,10 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - DelyBulacha (Frisk, Chara)
 - SharkGuy (Boyfriend)
 - bepis (Shantae)
-- FourLeafSunny (Freddy Fazbear)
+- FourLeafSunny (Various)
+- NachoPeñalva (Wally, Cynthia)
+- Ploxel (King Dedede, Meta Knight)
+- Happy Time Boredom (Duck)
 
 ## Direct code contributors
 
@@ -116,6 +119,7 @@ Since Dabomstew opened up the Randomizer to open source development, a number of
 - Stella Hack 
 - Michael Long
 - Enrico Bergmann
+- Glamurio
 
 <!--- "Randomizer" is intentionally capitalized in this subheading. Normally on this website it is only capitalized while referring to the UPR, while the concept or randomizers is not. However, here we are paying respects and thus following the "capitalization means respect" principle. Plus Dabomstew capitalized it this way lol.-->
 ## The Randomizers that came before 

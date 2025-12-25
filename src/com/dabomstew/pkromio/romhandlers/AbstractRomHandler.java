@@ -36,7 +36,6 @@ import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
@@ -58,11 +57,19 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected int perfectAccuracy = 100; // default
 
+    private int highestOriginalEvoLvl = 0;
+
     private List<Type> starterTypeTriangle = null;
+
+    protected final List<Trainer> trainers = new ArrayList<>();
 
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
+
+    public int getHighestOriginalEvoLvl() {
+        return highestOriginalEvoLvl;
+    }
 
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
@@ -107,6 +114,10 @@ public abstract class AbstractRomHandler implements RomHandler {
         return true;
     }
 
+    @Override
+    public List<Trainer> getTrainers() {
+        return Collections.unmodifiableList(trainers);
+    }
 
     public SpeciesSet getMainGameWildPokemonSpecies(boolean useTimeOfDay) {
         SpeciesSet wildPokemon = new SpeciesSet();
@@ -189,30 +200,129 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
-        // search for level evolutions
-        for (Species pk : getSpeciesSet()) {
-            if (pk != null) {
-                for (Evolution checkEvo : pk.getEvolutionsFrom()) {
-                    if (checkEvo.getType().usesLevel()) {
-                        // If evo is intermediate and too high, bring it down
-                        // Else if it's just too high, bring it down
-                        if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setExtraInfo(maxIntermediateLevel);
-                        } else if (checkEvo.getExtraInfo() > maxLevel) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setExtraInfo(maxLevel);
+    public void condenseLevelEvolutions(int maxLevel) {
+        // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
+        if (maxLevel < getHighestOriginalEvoLvl()) {
+            int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
+            // search for level evolutions
+            for (Species pk : getSpeciesSet()) {
+                if (pk != null) {
+                    for (Evolution checkEvo : pk.getEvolutionsFrom()) {
+                        if (checkEvo.getType().usesLevelThreshold()) {
+                            // If evo is intermediate and too high, bring it down
+                            // Else if it's just too high, bring it down
+                            if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
+                            } else if (checkEvo.getExtraInfo() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
+                            }
+                        } else {
+                            // For all other evolutions, the estimated evolution levels have to be condensed if necessary
+                            if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
+                            } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxLevel);
+                            }
                         }
-                    }
-                    if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
-                        markImprovedEvolutions(pk);
-                        checkEvo.setType(EvolutionType.LEVEL);
                     }
                 }
             }
         }
+    }
 
+    protected void estimateEvolutionLevels() {
+        // Get a list of all level-up evolutions and a list of all non-level-up evolutions
+        List<Evolution> levelUpEvos = new ArrayList<>();
+        List<Evolution> nonLevelUpEvos = new ArrayList<>();
+        for (Species pk : getSpeciesSet()) {
+            for (Evolution evoFrom : pk.getEvolutionsFrom()) {
+                if (evoFrom.getType().usesLevelThreshold()) {
+                    levelUpEvos.add(evoFrom);
+                    // Set estimated evolution level and update highest evolution level in ROM
+                    evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
+                    if (evoFrom.getExtraInfo() > highestOriginalEvoLvl) {
+                        highestOriginalEvoLvl = evoFrom.getExtraInfo();
+                    }
+                } else {
+                    nonLevelUpEvos.add(evoFrom);
+                }
+            }
+        }
+
+        // For all level-up evolutions, get triplets (BSTfrom, BSTto, evoLevel)
+        List<int[]> levelUpTriplet = new ArrayList<>();
+        for (Evolution evo : levelUpEvos) {
+            int[] triplet = {evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels(), evo.getExtraInfo()};
+            levelUpTriplet.add(triplet);
+        }
+
+        for (Evolution evo : nonLevelUpEvos) {
+            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpTriplet, evo.getFrom().getBSTForPowerLevels(), evo.getTo().getBSTForPowerLevels()));
+        }
+
+        // Postprocess estimated level
+        for (Evolution evo : nonLevelUpEvos) {
+            if (!evo.getFrom().getEvolutionsTo().isEmpty()) { // getFrom Pkmn has a pre-evolution
+                // Make sure the estimatedlevel is at least 25% higher than the evo level of the previous evolution
+                Evolution previousEvo = evo.getFrom().getEvolutionsTo().get(0);
+                evo.setEstimatedEvoLvl(
+                        Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
+            }
+            if (!evo.getTo().getEvolutionsFrom().isEmpty()) { // getTo Pkmn has an evolution
+                // Make sure the evo level is at most 80% of the following evolutions evo level, i.e., the following evolution has a 25% higher level.
+                for (Evolution nextEvo : evo.getTo().getEvolutionsFrom()) {
+                    evo.setEstimatedEvoLvl(
+                            Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));
+                }
+            }
+            // Update highest evolution level in ROM if necessary
+            if (evo.getEstimatedEvoLvl() > highestOriginalEvoLvl) {
+                highestOriginalEvoLvl = evo.getEstimatedEvoLvl();
+            }
+        }
+    }
+
+    private static int findEvolutionLevel(List<int[]> samples, int targetPreBST, int targetPostBST) {
+
+        // ==== CONFIGURATION PARAMETERS ====
+        double p = 1;                // distance weighting exponent: 1/d^p
+        double preFactor = 1.5;          // scaling factor for preBST
+        double postFactor = 3;         // scaling factor for postBST
+        double largeWeightForZero = 1; // weight to use if distance is zero
+        // ==================================
+
+        double weightedSum = 0.0;
+        double weightSum = 0.0;
+
+        for (int[] sample : samples) {
+            int samplePre = sample[0];
+            int samplePost = sample[1];
+            int sampleLevel = sample[2];
+
+            // Compute Euclidean distance
+            double dx = targetPreBST - samplePre;
+            double dy = targetPostBST - samplePost;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Weight = 1 / d^p, use largeWeightForZero if distance is zero
+            double weight = dist == 0 ? largeWeightForZero : 1.0 / Math.pow(dist, p);
+
+            // Pre/post scaling
+            double scaledPre = Math.pow((double) targetPreBST / samplePre, preFactor);
+            double scaledPost = Math.pow((double) targetPostBST / samplePost, postFactor);
+
+            double adjustedLevel = sampleLevel * (scaledPre + scaledPost) / 2.0;
+
+            weightedSum += adjustedLevel * weight;
+            weightSum += weight;
+        }
+
+        // Return weighted average
+        return (int) Math.round(weightedSum / weightSum);
     }
 
     @Override
@@ -226,8 +336,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
                 if (et == EvolutionType.LEVEL_DUSK) {
                     markImprovedEvolutions(pk);
-                    evo.setType(EvolutionType.STONE);
-                    evo.setExtraInfo(ItemIDs.duskStone);
+                    evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.duskStone);
                 } else if (et.usesTime()) {
                     markImprovedEvolutions(pk);
                     if (hadEvolutionOfType(pk, et.oppositeTime())) {
@@ -237,11 +346,10 @@ public abstract class AbstractRomHandler implements RomHandler {
                         // E.g. Eevee -> Espeon/Umbreon, which is a HAPPINESS_DAY/HAPPINESS_NIGHT pair.
                         // In this case, we can't just remove the time-based-less,
                         // so instead we use Sun/Moon Stone.
-                        evo.setType(EvolutionType.STONE);
                         int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
-                        evo.setExtraInfo(item);
+                        evo.updateEvolutionMethod(EvolutionType.STONE, item);
                     } else {
-                        evo.setType(et.timeless());
+                        evo.updateEvolutionMethod(et.timeless(), evo.getExtraInfo());
                     }
                 }
             }
@@ -259,6 +367,42 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
         return preImprovedEvolutions;
+    }
+
+    @Override
+    public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
+        int[] curMoves = new int[4];
+
+        int moveCount = 0;
+        List<MoveLearnt> movepool = movesets.get(pkmn);
+        for (MoveLearnt ml : movepool) {
+            if (ml.level > level) {
+                // we're done
+                break;
+            }
+
+            boolean alreadyKnownMove = false;
+            for (int i = 0; i < moveCount; i++) {
+                if (curMoves[i] == ml.move) {
+                    alreadyKnownMove = true;
+                    break;
+                }
+            }
+
+            if (!alreadyKnownMove) {
+                // add this move to the moveset
+                if (moveCount == 4) {
+                    // shift moves up and add to last slot
+                    System.arraycopy(curMoves, 1, curMoves, 0, 3);
+                    curMoves[3] = ml.move;
+                } else {
+                    // add to next available slot
+                    curMoves[moveCount++] = ml.move;
+                }
+            }
+        }
+
+        return curMoves;
     }
 
     /* Private methods/structs used internally by the above methods */
@@ -334,10 +478,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     /* Helper methods used by subclasses and/or this class */
 
     /**
-     * Splits occurrences of {@link EvolutionType#LEVEL_ITEM} into
-     * a {@link EvolutionType#LEVEL_ITEM_DAY} and a {@link EvolutionType#LEVEL_ITEM_NIGHT} part.<br>
-     * Since LEVEL_ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
-     * Assumes each Species has at most one LEVEL_ITEM Evolution.
+     * Splits occurrences of {@link EvolutionType#ITEM} into
+     * a {@link EvolutionType#ITEM_DAY} and a {@link EvolutionType#ITEM_NIGHT} part.<br>
+     * Since ITEM is not used internally in any ROM, this must be done before writing Evolutions.<br>
+     * Assumes each Species has at most one ITEM Evolution.
      */
     protected void splitLevelItemEvolutions() {
         for (Species pk : getSpecies()) {
@@ -346,15 +490,15 @@ public abstract class AbstractRomHandler implements RomHandler {
             }
             List<Evolution> levelItemEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getType() == EvolutionType.LEVEL_ITEM) {
+                if (evo.getType() == EvolutionType.ITEM) {
                     levelItemEvos.add(evo);
                 }
             }
             if (!levelItemEvos.isEmpty()) {
                 for (Evolution levelItemEvo : levelItemEvos) {
-                    levelItemEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                    levelItemEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY, levelItemEvo.getExtraInfo());
                     Evolution nightEvo = new Evolution(levelItemEvo);
-                    nightEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                    nightEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT, levelItemEvo.getExtraInfo());
                     nightEvo.getFrom().getEvolutionsFrom().add(nightEvo);
                     nightEvo.getTo().getEvolutionsTo().add(nightEvo);
                 }
@@ -363,10 +507,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     /**
-     * Merge occurrences of otherwise identical {@link EvolutionType#LEVEL_ITEM_DAY} and
-     * {@link EvolutionType#LEVEL_ITEM_NIGHT} {@link Evolution}s into a single one
-     * using {@link EvolutionType#LEVEL_ITEM}.<br>
-     * Assumes each Species has at most one pair of LEVEL_ITEM_DAY/NIGHT Evolutions.
+     * Merge occurrences of otherwise identical {@link EvolutionType#ITEM_DAY} and
+     * {@link EvolutionType#ITEM_NIGHT} {@link Evolution}s into a single one
+     * using {@link EvolutionType#ITEM}.<br>
+     * Assumes each Species has at most one pair of ITEM_DAY/NIGHT Evolutions.
      */
     protected void mergeLevelItemEvolutions() {
         for (Species pk : getSpecies()) {
@@ -376,9 +520,9 @@ public abstract class AbstractRomHandler implements RomHandler {
             List<Evolution> dayEvos = new ArrayList<>();
             List<Evolution> nightEvos = new ArrayList<>();
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                if (evo.getType() == EvolutionType.LEVEL_ITEM_DAY) {
+                if (evo.getType() == EvolutionType.ITEM_DAY) {
                     dayEvos.add(evo);
-                } else if (evo.getType() == EvolutionType.LEVEL_ITEM_NIGHT) {
+                } else if (evo.getType() == EvolutionType.ITEM_NIGHT) {
                     nightEvos.add(evo);
                 }
             }
@@ -386,10 +530,10 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution dayEvo : dayEvos) {
                 boolean merged = false;
 
-                dayEvo.setType(EvolutionType.LEVEL_ITEM_NIGHT);
+                dayEvo.updateEvolutionMethod(EvolutionType.ITEM_NIGHT, dayEvo.getExtraInfo());
                 for (Evolution nightEvo : nightEvos) {
                     if (dayEvo.equals(nightEvo)) {
-                        dayEvo.setType(EvolutionType.LEVEL_ITEM);
+                        dayEvo.updateEvolutionMethod(EvolutionType.ITEM, dayEvo.getExtraInfo());
                         nightEvo.getFrom().getEvolutionsFrom().remove(nightEvo);
                         nightEvo.getTo().getEvolutionsTo().remove(nightEvo);
                         merged = true;
@@ -397,7 +541,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
                 if (!merged) {
                     // The dayEvo didn't have an identical nightEvo, so turn it back
-                    dayEvo.setType(EvolutionType.LEVEL_ITEM_DAY);
+                    dayEvo.updateEvolutionMethod(EvolutionType.ITEM_DAY, dayEvo.getExtraInfo());
                 }
             }
         }
@@ -558,13 +702,13 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public List<String> getTrainerNames() {
-        return getTrainers().stream().map(tr -> tr.name).collect(Collectors.toList());
+        return getTrainers().stream().map(tr -> tr.getName()).collect(Collectors.toList());
     }
 
     @Override
     public void setTrainerNames(List<String> trainerNames) {
         for (int i = 0; i < trainerNames.size(); i++) {
-            getTrainers().get(i).name = trainerNames.get(i);
+            getTrainers().get(i).setName(trainerNames.get(i));
         }
     }
 
@@ -771,11 +915,6 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     public abstract List<BufferedImage> getAllPokemonImages();
 
-    public abstract void savePokemonPalettes();
-
-    // here for testing, please do not use otherwise
-    public abstract void loadPokemonStats();
-
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
         try {
@@ -792,14 +931,13 @@ public abstract class AbstractRomHandler implements RomHandler {
      * overridden, this should be called as a superclass method.
      */
     protected void prepareSaveRom() {
-        savePokemonStats();
+        saveSpeciesStats();
         saveMoves();
+        saveTrainers();
         savePokemonPalettes();
     }
 
     public abstract void saveMoves();
-
-    public abstract void savePokemonStats();
 
     protected abstract boolean saveRomFile(String filename, long seed);
 

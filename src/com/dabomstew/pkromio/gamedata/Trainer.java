@@ -100,21 +100,21 @@ public class Trainer implements Comparable<Trainer> {
     //  - XY does not use THEMED:[s]-STRONG for team admins and non-RIVAL/FRIEND-applicable rivals (Tierno & Trevor).
     //  - Gen 7 uses ELITE[n] for the kahunas.
 
-    public int offset;
-    public int index;
-    public List<TrainerPokemon> pokemon = new ArrayList<>();
-    public String tag;
+    private int offset;
+    private int index;
+    private List<TrainerPokemon> pokemon = new ArrayList<>();
+    private String tag;
     // This value has some flags about the trainer's pokemon (e.g. if they have items or custom moves)
-    public int poketype;
-    public String name; // TODO: make trainer name randomization use Trainer.name in all gens, really strange it doesn't
-    public int trainerclass;
-    public String fullDisplayName;
-    public MultiBattleStatus multiBattleStatus = MultiBattleStatus.NEVER;
-    public boolean forcedDoubleBattle; // for doubleBattleMode
-    public int forceStarterPosition = -1;
+    private int poketype;
+    private String name; // TODO: make trainer name randomization use Trainer.name in all gens, really strange it doesn't
+    private int trainerclass;
+    private String fullDisplayName;
+    private MultiBattleStatus multiBattleStatus = MultiBattleStatus.NEVER;
+    private boolean forcedDoubleBattle; // for doubleBattleMode
+    private int forceStarterPosition = -1;
     // Certain trainers (e.g., trainers in the PWT in BW2) require unique held items for all of their Pokemon to prevent a game crash.
-    public boolean requiresUniqueHeldItems;
-    public BattleStyle currBattleStyle = new BattleStyle(); // Defaults to "Unchanged", but need this per-trainer for the Random style option.
+    private boolean requiresUniqueHeldItems;
+    private BattleStyle currBattleStyle = new BattleStyle(); // Defaults to "Unchanged", but need this per-trainer for the Random style option.
 
     public Trainer() { }
 
@@ -135,8 +135,10 @@ public class Trainer implements Comparable<Trainer> {
         this.forcedDoubleBattle = original.forcedDoubleBattle;
         this.forceStarterPosition = original.forceStarterPosition;
         this.requiresUniqueHeldItems = original.requiresUniqueHeldItems;
+        this.currBattleStyle = original.currBattleStyle;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         if (fullDisplayName != null) {
@@ -192,6 +194,111 @@ public class Trainer implements Comparable<Trainer> {
     @Override
     public int compareTo(Trainer o) {
         return index - o.index;
+    }
+
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public List<TrainerPokemon> getPokemon() {
+        return pokemon;
+    }
+
+    public void setPokemon(List<TrainerPokemon> pokemon) {
+        this.pokemon = pokemon;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public int getPoketype() {
+        return poketype;
+    }
+
+    public void setPoketype(int poketype) {
+        this.poketype = poketype;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getTrainerclass() {
+        return trainerclass;
+    }
+
+    public void setTrainerclass(int trainerclass) {
+        this.trainerclass = trainerclass;
+    }
+
+    public String getFullDisplayName() {
+        return fullDisplayName;
+    }
+
+    public void setFullDisplayName(String fullDisplayName) {
+        this.fullDisplayName = fullDisplayName;
+    }
+
+    public MultiBattleStatus getMultiBattleStatus() {
+        return multiBattleStatus;
+    }
+
+    public void setMultiBattleStatus(MultiBattleStatus multiBattleStatus) {
+        this.multiBattleStatus = multiBattleStatus;
+    }
+
+    public boolean isForcedDoubleBattle() {
+        return forcedDoubleBattle;
+    }
+
+    public void setForcedDoubleBattle(boolean forcedDoubleBattle) {
+        this.forcedDoubleBattle = forcedDoubleBattle;
+    }
+
+    public int getForceStarterPosition() {
+        return forceStarterPosition;
+    }
+
+    public void setForceStarterPosition(int forceStarterPosition) {
+        this.forceStarterPosition = forceStarterPosition;
+    }
+
+    public boolean isRequiresUniqueHeldItems() {
+        return requiresUniqueHeldItems;
+    }
+
+    public void setRequiresUniqueHeldItems(boolean requiresUniqueHeldItems) {
+        this.requiresUniqueHeldItems = requiresUniqueHeldItems;
+    }
+
+    public BattleStyle getCurrBattleStyle() {
+        return currBattleStyle;
+    }
+
+    public void setCurrBattleStyle(BattleStyle currBattleStyle) {
+        this.currBattleStyle = currBattleStyle;
     }
 
     public boolean isBoss() {

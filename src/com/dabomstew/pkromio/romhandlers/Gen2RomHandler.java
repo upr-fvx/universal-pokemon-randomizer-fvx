@@ -27,6 +27,7 @@ import com.dabomstew.pkromio.GFXFunctions;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.*;
+import com.dabomstew.pkromio.constants.enctaggers.Gen2EncounterAreaTagger;
 import com.dabomstew.pkromio.exceptions.RomIOException;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.images.GBCImage;
@@ -89,7 +90,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Gen2RomEntry romEntry;
     private Species[] pokes;
     private List<Species> speciesList;
-    private List<Trainer> trainers;
     private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
@@ -195,7 +195,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         pokes = new Species[Gen2Constants.pokemonCount + 1];
         // Fetch our names
         String[] pokeNames = readPokemonNames();
@@ -211,7 +211,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         // Write pokemon names
         int offs = romEntry.getIntValue("PokemonNamesOffset");
         int len = romEntry.getIntValue("PokemonNamesLength");
@@ -703,7 +703,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         readHeadbuttEncounters(encounterAreas);
         readBugCatchingContestEncounters(encounterAreas);
 
-        Gen2Constants.tagEncounterAreas(encounterAreas, useTimeOfDay, romEntry.isCrystal());
+        new Gen2EncounterAreaTagger().tag(encounterAreas, getROMType(), useTimeOfDay);
 
         return encounterAreas;
     }
@@ -1019,24 +1019,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
-
-    @Override
     // This is very similar to the implementation in Gen1RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
     public void loadTrainers() {
+        trainers.clear();
         int trainerClassTableOffset = romEntry.getIntValue("TrainerDataTableOffset");
         int trainerClassAmount = romEntry.getIntValue("TrainerClassAmount");
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");
         List<String> tcnames = this.getTrainerClassNames();
-
-        trainers = new ArrayList<>();
 
         int index = 0;
         for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
@@ -1046,9 +1037,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClass]; trainerNum++) {
                 index++;
                 Trainer tr = readTrainer(offset);
-                tr.index = index;
-                tr.trainerclass = trainerClass;
-                tr.fullDisplayName = tcnames.get(trainerClass) + " " + tr.name;
+                tr.setIndex(index);
+                tr.setTrainerclass(trainerClass);
+                tr.setFullDisplayName(tcnames.get(trainerClass) + " " + tr.getName());
                 trainers.add(tr);
 
                 offset += trainerToBytes(tr).length;
@@ -1060,11 +1051,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     private Trainer readTrainer(int offset) {
         Trainer tr = new Trainer();
-        tr.offset = offset;
-        tr.name = readVariableLengthString(offset, false);
+        tr.setOffset(offset);
+        tr.setName(readVariableLengthString(offset, false));
         offset += lengthOfStringAt(offset, false);
         int dataType = rom[offset] & 0xFF;
-        tr.poketype = dataType;
+        tr.setPoketype(dataType);
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);
@@ -1083,7 +1074,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 }
                 offset += 4;
             }
-            tr.pokemon.add(tp);
+            tr.getPokemon().add(tp);
         }
         return tr;
     }
@@ -1108,7 +1099,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         List<Trainer> allTrainers = getTrainers();
         for (int i = 0; i < allTrainers.size(); i++) {
             Trainer tr = allTrainers.get(i);
-            if (tr.tag != null && ((tr.tag.contains("ELITE") || tr.tag.contains("CHAMPION")))) {
+            if (tr.getTag() != null && ((tr.getTag().contains("ELITE") || tr.getTag().contains("CHAMPION")))) {
                 eliteFourIndices.add(i + 1);
             }
 
@@ -1119,11 +1110,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return Gen2Constants.gymAndEliteThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
     }
 
     @Override
@@ -1144,8 +1130,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
-                if (tr.trainerclass != trainerClassNum) {
-                    System.err.println("Trainer mismatch: " + tr.name);
+                if (tr.getTrainerclass() != trainerClassNum) {
+                    System.err.println("Trainer mismatch: " + tr.getName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
                 baos.write(trainerBytes, 0, trainerBytes.length);
@@ -1165,8 +1151,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
         byte[] nameBytes = trainerNameToBytes(trainer);
         baos.write(nameBytes, 0, nameBytes.length);
-        baos.write(trainer.poketype);
-        for (TrainerPokemon tp : trainer.pokemon) {
+        baos.write(trainer.getPoketype());
+        for (TrainerPokemon tp : trainer.getPokemon()) {
             byte[] tpBytes = trainerPokemonToBytes(tp, trainer);
             baos.write(tpBytes, 0, tpBytes.length);
         }
@@ -1176,9 +1162,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] trainerNameToBytes(Trainer trainer) {
-        int trainerNameLength = internalStringLength(trainer.name) + 1;
+        int trainerNameLength = internalStringLength(trainer.getName()) + 1;
         byte[] trainerNameBytes = new byte[trainerNameLength];
-        writeFixedLengthString(trainerNameBytes, trainer.name, 0, trainerNameLength);
+        writeFixedLengthString(trainerNameBytes, trainer.getName(), 0, trainerNameLength);
         return trainerNameBytes;
     }
 
@@ -1214,7 +1200,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         // made quickly while refactoring trainer writing, might be applicable in more/better places
         // (including other gens)
         // TODO: look at the above
-        tp.setMoves(RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), this.getMovesLearnt(), tp.getLevel()));
+        tp.setMoves(getMovesAtLevel(tp.getSpecies().getNumber(), this.getMovesLearnt(), tp.getLevel()));
     }
 
     private int lengthOfTrainerClassAt(int offset, int numberOfTrainers) {
@@ -1920,7 +1906,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         // no move evos, so no need to check for those
         for (Species pkmn : pokes) {
             if (pkmn != null) {
@@ -1931,22 +1917,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
-                            evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(ItemIDs.waterStone);
+                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
-                            // Seadra: level 40
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(40); // level
+                            // Seadra: level 40 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
-                            // Level 37
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(37); // level
+                            // Level 37 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else {
                             // A new trade evo of a single stage Pokemon
-                            // level 30
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(30); // level
+                            // level 30 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         }
                     }
                 }
@@ -1956,7 +1938,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         // Reduce the amount of happiness required to evolve.
         int offset = find(rom, Gen2Constants.friendshipValueForEvoLocator);
         if (offset > 0) {

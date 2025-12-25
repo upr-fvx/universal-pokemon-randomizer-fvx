@@ -375,8 +375,8 @@ public class SettingsUpdater {
         }
 
         if (oldVersion < Version.FVX_1_3_3.id) {
-            // Force middle stage was removed and first bit of byte was used for new setting.
-            // Do not select this since it is unrelated to the choice in the old version
+            // Force middle stage was removed and first bit of byte was used for new option 'Trainers Evolve their Pokemon'.
+            // Do not select this since it is unrelated to the choice in the old version.
             dataBlock[63] = (byte) 0;
         }
 
@@ -399,6 +399,8 @@ public class SettingsUpdater {
         using 55 is correct more often.
         Then, calculate the percentage to get from the that level (40 or 55) to x and set the slider to that level.
         TODO also, bump version to 1.4.0 instead of 1.3.5
+        Furtermore, also make sure to select 'Trainers Evolve their Pokemon' if it was selected in the previous version
+        (FFEat has higher prio though, if it wasn't selected but TETP was selected, select it and chose 0% for the slider)
          */
 
         // fix checksum

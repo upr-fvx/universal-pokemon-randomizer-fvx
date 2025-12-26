@@ -138,12 +138,14 @@ public class Species implements Comparable<Species> {
     /**
      * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not an early evolved Pokemon.
      * @param level The level of the given {@link Species}.
+     * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as legal
+     *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} is a legal evolution at the level.
      */
-    public boolean isLegalEvolutionAtLevel(int level) {
+    public boolean isLegalEvolutionAtLevel(int level, double evoLvlModifier) {
         boolean isLegalEvo = true; // If this does not have any evolutions to, then it is a legal evolution.
         for (Evolution evo : this.getEvolutionsTo()) {
-            if (evo.getEstimatedEvoLvl() <= level) {
+            if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution to that is legal suffices
             }
             isLegalEvo = false;
@@ -154,11 +156,13 @@ public class Species implements Comparable<Species> {
     /**
      * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution levels of its evolutions.
      * @param level The level of the given {@link Species}.
+     * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as having legal
+     *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} has a legal evolution at this level.
      */
-    public boolean hasLegalEvolutionAtLevel(int level) {
+    public boolean hasLegalEvolutionAtLevel(int level, double evoLvlModifier) {
         for (Evolution evo : this.getEvolutionsFrom()) {
-            if (evo.getEstimatedEvoLvl() <= level) {
+            if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution from that is legal suffices
             }
         }

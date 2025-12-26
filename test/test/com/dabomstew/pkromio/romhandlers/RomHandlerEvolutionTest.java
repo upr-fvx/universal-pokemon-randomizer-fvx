@@ -115,7 +115,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void condenseEvolutionLevelsDoesNothingIfHighestOriginalEvoLvlIsUsed(String romName) {
+    public void condenseEvolutionLevelsDoesNothingIfHighestEvoLvlIsUsed(String romName) {
         loadROM(romName);
 
         Map<Species, List<Evolution>> evosToBefore = new HashMap<>();
@@ -126,7 +126,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             evosFromBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::new).collect(Collectors.toList()));
         }
 
-        romHandler.condenseLevelEvolutions(romHandler.getHighestOriginalEvoLvl());
+        romHandler.condenseLevelEvolutions(romHandler.getHighestEvoLvl());
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             List<Evolution> toBefore = evosToBefore.get(pk);

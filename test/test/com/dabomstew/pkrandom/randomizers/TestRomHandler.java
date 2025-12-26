@@ -137,6 +137,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean canAddPokemonToBossTrainers;
     private final boolean canAddPokemonToImportantTrainers;
     private final boolean canAddPokemonToRegularTrainers;
+    private int highestEvoLvl = 0;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -226,6 +227,7 @@ public class TestRomHandler extends AbstractRomHandler {
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
+        highestEvoLvl = mockupOf.getHighestEvoLvl();
     }
 
     /**
@@ -879,6 +881,11 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public int getHighestEvoLvl() {
+        return highestEvoLvl;
     }
 
     @Override

@@ -602,6 +602,28 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void doNotUsePrematureEvosWorks(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+        settings.setTrainersDoNotGetPrematureEvos(true);
+
+        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+
+        // If Pokemon has an evolution to, then the level of that evolution must be <= the level of the Pokemon
+        for (Trainer tr : romHandler.getTrainers()) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                for (Evolution evo : tp.getSpecies().getEvolutionsTo()) {
+                    System.out.println(tp + " with Evo " + evo);
+                    assertTrue(evo.getEstimatedEvoLvl() <= tp.getLevel());
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void typeDiverseTrainersWorks(String romName) {
         activateRomHandler(romName);
 

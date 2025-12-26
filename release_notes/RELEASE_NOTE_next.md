@@ -44,6 +44,14 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Trainer Pokemon
 - (Gen 1 + 2) Enabled "Better Movesets".
 
+### Trainer Pokemon
+- Add option 'Do Not Use Prematurely Evolved Pokemon' that can be selected if 
+  Trainer Pokemon are randomized or additional Pokemon are added.
+  This option guarantees that each random/added Pokemon is at a legal evolution
+  stage at its level. This was previously included in the 'Trainers Evolve 
+  Their Pokemon' checkbox and is now removed in said setting.
+  (#125)
+
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)
 - (Gen 2) New Custom Player Graphics: Duck (from Duck Life) by Happy Time Boredom.

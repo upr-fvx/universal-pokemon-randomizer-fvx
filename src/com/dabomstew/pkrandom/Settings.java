@@ -177,6 +177,7 @@ public class Settings {
     private TrainersMod trainersMod = TrainersMod.UNCHANGED;
     private boolean rivalCarriesStarterThroughout;
     private boolean trainersUsePokemonOfSimilarStrength;
+    private boolean trainersDoNotGetPrematureEvos;
     private boolean trainersMatchTypingDistribution;
     private boolean trainersBlockLegendaries = true;
     private boolean trainersUseLocalPokemon;
@@ -724,7 +725,7 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
         // 63 trainer pokemon evolve
-        out.write(makeByteSelected(trainersEvolveTheirPokemon));
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, trainersDoNotGetPrematureEvos));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1085,6 +1086,7 @@ public class Settings {
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
+        settings.setTrainersDoNotGetPrematureEvos(restoreState(data[63], 1));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
@@ -1884,6 +1886,14 @@ public class Settings {
 
     public void setTrainersUsePokemonOfSimilarStrength(boolean trainersUsePokemonOfSimilarStrength) {
         this.trainersUsePokemonOfSimilarStrength = trainersUsePokemonOfSimilarStrength;
+    }
+
+    public boolean isTrainersDoNotGetPrematureEvos() {
+        return trainersDoNotGetPrematureEvos;
+    }
+
+    public void setTrainersDoNotGetPrematureEvos(boolean trainersDoNotGetPrematureEvos) {
+        this.trainersDoNotGetPrematureEvos = trainersDoNotGetPrematureEvos;
     }
 
     public boolean isTrainersMatchTypingDistribution() {

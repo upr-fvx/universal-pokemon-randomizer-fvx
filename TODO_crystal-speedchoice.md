@@ -9,11 +9,12 @@ Though there might be more. Use the following Git commands to investigate: `git 
 
 ## The list:
 
-- add ROM Entry
+- complete ROM Entry
+  - offsets for graphics
+  - offsets for misc tweaks
 - write the checksum to ROM somehow
 
 - better movesets for Gen 1+2
-- add option to provide custom seed via CLI
 - add logs for field items
 - add logs for enc percentages
 

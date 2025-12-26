@@ -678,40 +678,43 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(ex);
         }
         // Fix text depending on version
+        String starterText = romEntry.getStoryText("Starter");
         if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-            List<String> yourHouseStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
-            for (int i = 0; i < 3; i++) {
-                yourHouseStrings.set(Gen5Constants.bw1StarterTextOffset - i,
-                        "\\xF000\\xBD02\\x0000The " + newStarters.get(i).getPrimaryType(false).camelCase()
-                                + "-type Pok\\x00E9mon\\xFFFE\\xF000\\xBD02\\x0000" + newStarters.get(i).getName());
-            }
-            // Update what the friends say
-            yourHouseStrings
-                    .set(Gen5Constants.bw1CherenText1Offset,
-                            "Cheren: Hey, how come you get to pick\\xFFFEout my Pok\\x00E9mon?"
-                                    + "\\xF000\\xBE01\\x0000\\xFFFEOh, never mind. I wanted this one\\xFFFEfrom the start, anyway."
-                                    + "\\xF000\\xBE01\\x0000");
-            yourHouseStrings.set(Gen5Constants.bw1CherenText2Offset,
-                    "It's decided. You'll be my opponent...\\xFFFEin our first Pok\\x00E9mon battle!"
-                            + "\\xF000\\xBE01\\x0000\\xFFFELet's see what you can do, \\xFFFEmy Pok\\x00E9mon!"
-                            + "\\xF000\\xBE01\\x0000");
+            String cherenText1 = romEntry.getStoryText("Cheren1");
+            String cherenText2 = romEntry.getStoryText("Cheren2");
 
-            // rewrite
+            List<String> yourHouseStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
+            if (!starterText.isEmpty()) {
+                for (int i = 0; i < 3; i++) {
+                    Species starter = newStarters.get(i);
+                    yourHouseStrings.set(Gen5Constants.bw1StarterTextOffset - i, String.format(starterText,
+                            starter.getPrimaryType(false).camelCase(), starter.getName()));
+                }
+            }
+
+            if (!cherenText1.isEmpty()) {
+                yourHouseStrings.set(Gen5Constants.bw1CherenText1Offset, cherenText1);
+            }
+            if (!cherenText2.isEmpty()) {
+                yourHouseStrings.set(Gen5Constants.bw1CherenText2Offset, cherenText2);
+            }
+
+            yourHouseStrings.forEach(System.out::println);
             setStrings(true, romEntry.getIntValue("StarterLocationTextOffset"), yourHouseStrings);
         } else {
-            List<String> starterTownStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
-            for (int i = 0; i < 3; i++) {
-                starterTownStrings.set(Gen5Constants.bw2StarterTextOffset - i, "\\xF000\\xBD02\\x0000The "
-                        + newStarters.get(i).getPrimaryType(false).camelCase()
-                        + "-type Pok\\x00E9mon\\xFFFE\\xF000\\xBD02\\x0000" + newStarters.get(i).getName());
-            }
-            // Update what the rival says
-            starterTownStrings.set(Gen5Constants.bw2RivalTextOffset,
-                    "\\xF000\\x0100\\x0001\\x0001: Let's see how good\\xFFFEa Trainer you are!"
-                            + "\\xF000\\xBE01\\x0000\\xFFFEI'll use my Pok\\x00E9mon"
-                            + "\\xFFFEthat I raised from an Egg!\\xF000\\xBE01\\x0000");
+            String rivalText = romEntry.getStoryText("Rival");
 
-            // rewrite
+            List<String> starterTownStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
+            if (!starterText.isEmpty()) {
+                for (int i = 0; i < 3; i++) {
+                    Species starter = newStarters.get(i);
+                    starterTownStrings.set(Gen5Constants.bw2StarterTextOffset - i, String.format(starterText,
+                                    starter.getPrimaryType(false).camelCase(), starter.getName()));
+                }
+            }
+            if (!rivalText.isEmpty()) {
+                starterTownStrings.set(Gen5Constants.bw2RivalTextOffset, rivalText);
+            }
             setStrings(true, romEntry.getIntValue("StarterLocationTextOffset"), starterTownStrings);
         }
         return true;

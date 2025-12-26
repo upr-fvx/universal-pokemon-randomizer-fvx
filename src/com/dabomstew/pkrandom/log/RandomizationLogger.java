@@ -264,8 +264,7 @@ public class RandomizationLogger {
                 moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated(), true);
         logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(),
-                TrainerMovesetRandomizer.hasSupport(romHandler.generationOfPokemon()));
+        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.totpPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
@@ -1012,8 +1011,10 @@ public class RandomizationLogger {
                 for (TrainerPokemon tpk : t.getPokemon()) {
                     List<Move> moves = romHandler.getMoves();
                     log.print(tpk.toString());
-                    log.print(", " + getBS("Log.tp.ability") + ": "
-                            + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    if (romHandler.abilitiesPerSpecies() != 0) {
+                        log.print(", " + getBS("Log.tp.ability") + ": "
+                                + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    }
                     log.print(" - ");
                     boolean first = true;
                     for (int move : tpk.getMoves()) {

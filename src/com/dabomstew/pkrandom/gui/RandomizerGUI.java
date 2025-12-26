@@ -2840,10 +2840,9 @@ public class RandomizerGUI {
 
             enableButtons(tpRandomizeTrainerNamesCheckBox, tpRandomizeTrainerClassNamesCheckBox);
 
-            tpNoEarlyWonderGuardCheckBox.setVisible(pokemonGeneration >= 3);
+            tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
-            tpBetterMovesetsCheckBox.setVisible(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
-            tpBetterMovesetsCheckBox.setEnabled(TrainerMovesetRandomizer.hasSupport(pokemonGeneration));
+            tpBetterMovesetsCheckBox.setEnabled(true);
 
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {

@@ -897,8 +897,16 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 3);
+    public void betterMovesets_DoesNotCauseCrash(String romName) {
+        activateRomHandler(romName);
+        Settings s = new Settings();
+        s.setBetterTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesets_DoesNotCauseUbiquitousMove(String romName) {
         activateRomHandler(romName);
 
         Settings s = new Settings();

@@ -41,8 +41,8 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   evolution levels by choosing the maximum value of the slider. 
   (#123)
 
-### Static Pokemon
-- (Gen 3) [The description of a changed feature here.]
+### Trainer Pokemon
+- (Gen 1 + 2) Enabled "Better Movesets".
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)

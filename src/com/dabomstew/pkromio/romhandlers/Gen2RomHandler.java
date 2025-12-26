@@ -164,6 +164,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         if (romEntry.getShopNames().isEmpty()) {
             romEntry.setShopNames(Gen2Constants.shopNames);
         }
+        if (romEntry.getArrayValue("SpecialShops").length == 0) {
+            romEntry.putArrayValue("SpecialShops", Gen2Constants.specialShops);
+        }
+        if (romEntry.getArrayValue("MainGameShops").length == 0) {
+            romEntry.putArrayValue("MainGameShops", Gen2Constants.mainGameShops);
+        }
     }
 
     @Override
@@ -1977,15 +1983,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public List<Shop> getShops() {
         List<Shop> shops = readShops();
-
-        shops.forEach(shop -> shop.setSpecialShop(true));
-        Gen2Constants.skipShops.forEach(i -> shops.get(i).setSpecialShop(false));
+        Set<Integer> specialShops = Arrays.stream(romEntry.getArrayValue("SpecialShops"))
+                .boxed().collect(Collectors.toSet());
+        specialShops.forEach(i -> shops.get(i).setSpecialShop(true));
 
         return shops;
     }
 
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
+        Set<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops"))
+                .boxed().collect(Collectors.toSet());
 
         int tableOffset = romEntry.getIntValue("ShopItemOffset");
         int shopAmount = romEntry.getIntValue("ShopAmount");
@@ -1994,7 +2002,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int shopOffset = readPointer(tableOffset + shopNum * 2, bankOf(tableOffset));
             Shop shop = readShop(shopOffset);
             shop.setName(romEntry.getShopNames().get(shopNum));
-            shop.setMainGame(Gen2Constants.mainGameShops.contains(shopNum));
+            shop.setMainGame(mainGameShops.contains(shopNum));
             shops.add(shop);
             shopNum++;
         }

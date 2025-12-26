@@ -14,7 +14,6 @@ Though there might be more. Use the following Git commands to investigate: `git 
   - offsets for misc tweaks
 - write the checksum to ROM somehow
 
-- better movesets for Gen 1+2
 - add logs for field items
 - add logs for enc percentages
 

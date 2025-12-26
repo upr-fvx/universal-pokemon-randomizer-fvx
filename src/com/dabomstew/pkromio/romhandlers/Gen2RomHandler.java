@@ -161,6 +161,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             }
         }
 
+        if (romEntry.getShopNames().isEmpty()) {
+            romEntry.setShopNames(Gen2Constants.shopNames);
+        }
     }
 
     @Override
@@ -1990,7 +1993,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         while (shopNum < shopAmount) {
             int shopOffset = readPointer(tableOffset + shopNum * 2, bankOf(tableOffset));
             Shop shop = readShop(shopOffset);
-            shop.setName(Gen2Constants.shopNames.get(shopNum));
+            shop.setName(romEntry.getShopNames().get(shopNum));
             shop.setMainGame(Gen2Constants.mainGameShops.contains(shopNum));
             shops.add(shop);
             shopNum++;
@@ -2000,7 +2003,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     private Shop readShop(int offset) {
         boolean longerItems = romEntry.getIntValue("LongerShopItems") == 1; // speedchoice
-        
+
         Shop shop = new Shop();
         shop.setItems(new ArrayList<>());
         int itemAmount = rom[offset++];
@@ -2038,7 +2041,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 data[i * 2 + 1] = (byte) 0x01;
                 data[i * 2 + 2] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
             } else {
-                data[i + 2] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
+                data[i + 1] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
             }
         }
         if (longerItems) {

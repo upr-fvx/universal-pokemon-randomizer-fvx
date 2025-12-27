@@ -59,4 +59,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#133)
 - (GUI) Fixed radio buttons in the Totem Pokemon panel being unselected when a ROM has been loaded. (#134)
-- (Gen 5) Fixed English strings being inserted into all versions, at the start of the game.
+- (Gen 5) Fixed English text being inserted into non-English versions. but the English ones
+The text shown when picking starters from the bag, is now in the proper language in the French/German/Spanish/Italian versions, and is unchanged in Japanese and Korean.
+Cheren's & Hugh's dialogues about what Pokémon they picked, is now unchanged in all non-English versions.

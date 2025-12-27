@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] @Glamurio for your code contributions,
-[Every person who submitted a solved issue] @CDNievas and @TheFreezingChicken for reporting Issues,
+[Every person who submitted a solved issue] @CDNievas, @TheFreezingChicken, and @scipio19 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -42,7 +42,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   (#123)
 
 ### Trainer Pokemon
-- (Gen 1 + 2) Enabled "Better Movesets".
+- (Gen 1 + 2) Enabled "Better Movesets". (#84)
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)
@@ -59,6 +59,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#133)
 - (GUI) Fixed radio buttons in the Totem Pokemon panel being unselected when a ROM has been loaded. (#134)
-- (Gen 5) Fixed English text being inserted into non-English versions. but the English ones
-The text shown when picking starters from the bag, is now in the proper language in the French/German/Spanish/Italian versions, and is unchanged in Japanese and Korean.
-Cheren's & Hugh's dialogues about what Pokémon they picked, is now unchanged in all non-English versions.
+- (Gen 5) Fixed English text being inserted into non-English versions.
+  - The text shown when picking starters from the bag, is now in the proper language in the French/German/Spanish/Italian versions, and is unchanged in Japanese and Korean.
+  - Cheren's & Hugh's dialogues about what Pokémon they picked, is now unchanged in all non-English versions.

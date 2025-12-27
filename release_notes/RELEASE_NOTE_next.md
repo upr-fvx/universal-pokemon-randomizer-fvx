@@ -59,5 +59,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#133)
 - (GUI) Fixed radio buttons in the Totem Pokemon panel being unselected when a ROM has been loaded. (#134)
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- (Gen 5) Fixed English strings being inserted into all versions, at the start of the game.

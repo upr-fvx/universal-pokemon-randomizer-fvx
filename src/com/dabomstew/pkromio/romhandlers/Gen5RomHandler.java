@@ -699,7 +699,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 yourHouseStrings.set(Gen5Constants.bw1CherenText2Offset, cherenText2);
             }
 
-            yourHouseStrings.forEach(System.out::println);
             setStrings(true, romEntry.getIntValue("StarterLocationTextOffset"), yourHouseStrings);
         } else {
             String rivalText = romEntry.getStoryText("Rival");

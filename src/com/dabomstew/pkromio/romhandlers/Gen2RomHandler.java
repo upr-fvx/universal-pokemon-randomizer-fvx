@@ -94,6 +94,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private boolean havePatchedFleeing;
+    private boolean havePatchedUnownAvailability;
     private List<Integer> itemOffs;
     private String[][] mapNames;
     private String[] landmarkNames;
@@ -882,6 +883,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
         if (!havePatchedFleeing) {
             patchFleeing();
+        }
+        if (!havePatchedUnownAvailability) {
+            patchUnownAvailability();
         }
 
         Iterator<EncounterArea> areaIterator = encounters.iterator();
@@ -2480,11 +2484,35 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void patchFleeing() {
-        havePatchedFleeing = true;
         int offset = romEntry.getIntValue("FleeingDataOffset");
         writeByte(offset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetTwoOffset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetThreeOffset, (byte) 0xFF);
+        havePatchedFleeing = true;
+    }
+
+    /**
+     * Makes it possible for Unown to appear in the wild, before the Ruins of Alph puzzles are solved.
+     */
+    private void patchUnownAvailability() {
+        // "AllowUnown" can be used by ROM hacks to mark that they already let Unown
+        // be encountered in the wild normally, and thus don't need to be patched.
+        if (romEntry.getIntValue("AllowUnown") == 0) {
+            // This patch works by changing a "cp UNOWN; jr nz, .done" to a non-conditional jump.
+            // That way, Unown doesn't get any special handling, and works like any other mon.
+            int offset = romEntry.getIntValue("UnownAvailabilityPatchOffset");
+            System.out.println("offset: 0x" + Integer.toHexString(offset).toUpperCase());
+            if (offset == 0) {
+                throw new RuntimeException("UnownAvailabilityPatchOffset is not defined in the ROM entry.");
+            }
+            if (rom[offset] != GBConstants.gbZ80JumpRelativeNZ) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffset\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offset] & 0xFF) + ", expected: 0x20." );
+            }
+            rom[offset] = GBConstants.gbZ80JumpRelative;
+        }
+        havePatchedUnownAvailability = true;
     }
 
     private void loadLandmarkNames() {

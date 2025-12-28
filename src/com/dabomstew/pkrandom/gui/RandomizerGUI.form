@@ -1947,8 +1947,8 @@
                         <properties>
                           <enabled value="false"/>
                           <majorTickSpacing value="10"/>
-                          <maximum value="50"/>
-                          <minimum value="-50"/>
+                          <maximum value="55"/>
+                          <minimum value="-55"/>
                           <minorTickSpacing value="2"/>
                           <paintLabels value="true"/>
                           <paintTicks value="true"/>

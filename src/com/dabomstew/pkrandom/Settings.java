@@ -186,7 +186,7 @@ public class Settings {
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
-    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
+    private int trainersEvolutionLevelModifier = 0; // -55 ~ 55
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -50 ~ 50
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
@@ -479,7 +479,7 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
         // 14 trainer pokemon evolution level modifier
-        out.write(trainersEvolutionLevelModifier + 50);
+        out.write(trainersEvolutionLevelModifier + 55);
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -837,7 +837,7 @@ public class Settings {
                 7  // KEEP_THEME_OR_PRIMARY
         ));
         
-        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
+        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 55);
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 

@@ -126,3 +126,13 @@ Next:
 <hr>
 
 {{ content }}
+
+<hr>
+
+<p>
+{%- if page.download -%}
+	<a href="{{ page.download }}">Download</a>
+{%- else -%}
+	No download link here. Find this version elsewhere.
+{%- endif -%}
+</p>

@@ -92,7 +92,8 @@ layout: default
 
 
 <div>
-    <h1 style="display: inline;">Release note for {{ page.name }}</h1>
+	{% include func_version_full_name.html url=page.url %}
+    <h1 style="display: inline;">Release note for {{ ret }}</h1>
     <span style="float: right;">Released: {{ page.date | date: '%F' }}</span>
 </div>
 
@@ -101,7 +102,8 @@ Previous:
 {%- for url in arr -%}
 	{%- for rn in site.release_notes -%}
 		{%- if rn.url == url -%}
-			<a href="{{ site.baseurl }}{{ url }}">{{ rn.name }}</a>,
+			{% include func_version_full_name.html url=rn.url %}
+			<a href="{{ site.baseurl }}{{ url }}">{{ ret }}</a>,
 			{%- break -%}
 		{%- endif -%}	
 	{%- endfor -%}
@@ -113,7 +115,8 @@ Next:
 {%- for url in arr -%}
 	{%- for rn in site.release_notes -%}
 		{%- if rn.url == url -%}
-			<a href="{{ site.baseurl }}{{ url }}">{{ rn.name }}</a>,
+			{% include func_version_full_name.html url=rn.url %}
+			<a href="{{ site.baseurl }}{{ url }}">{{ ret }}</a>,
 			{%- break -%}
 		{%- endif -%}	
 	{%- endfor -%}

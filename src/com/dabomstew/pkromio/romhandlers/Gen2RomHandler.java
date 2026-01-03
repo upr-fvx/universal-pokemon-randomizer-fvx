@@ -2498,19 +2498,31 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         // "AllowUnown" can be used by ROM hacks to mark that they already let Unown
         // be encountered in the wild normally, and thus don't need to be patched.
         if (romEntry.getIntValue("AllowUnown") == 0) {
-            // This patch works by changing a "cp UNOWN; jr nz, .done" to a non-conditional jump.
+            int[] offsets = romEntry.getArrayValue("UnownAvailabilityPatchOffsets");
+            if (offsets.length != 2) {
+                throw new RuntimeException("UnownAvailabilityPatchOffsets is either not defined in the ROM entry, " +
+                        "or contains the wrong amount of offsets.");
+            }
+
+            // The first part works by changing a "cp UNOWN; jr nz, .done" to a non-conditional jump.
             // That way, Unown doesn't get any special handling, and works like any other mon.
-            int offset = romEntry.getIntValue("UnownAvailabilityPatchOffset");
-            System.out.println("offset: 0x" + Integer.toHexString(offset).toUpperCase());
-            if (offset == 0) {
-                throw new RuntimeException("UnownAvailabilityPatchOffset is not defined in the ROM entry.");
-            }
-            if (rom[offset] != GBConstants.gbZ80JumpRelativeNZ) {
+            if (rom[offsets[0]] != GBConstants.gbZ80JumpRelativeNZ) {
                 throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
-                        "likely ROM entry value \"UnownAvailabilityPatchOffset\" is faulty.\n" +
-                        "Found: 0x" + Integer.toHexString(rom[offset] & 0xFF) + ", expected: 0x20." );
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[0]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[0]] & 0xFF) + ", expected: 0x20." );
             }
-            rom[offset] = GBConstants.gbZ80JumpRelative;
+            rom[offsets[0]] = GBConstants.gbZ80JumpRelative;
+
+            // The second part NOPs out a conditional loop, which loops back if the Unown form hasn't
+            // been unlocked yet and tries to roll a new one. In other words, an infinite loop if no
+            // forms have been unlocked.
+            if (rom[offsets[1]] != GBConstants.gbZ80JumpRelativeC) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[1]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[1]] & 0xFF) + ", expected: 0x38." );
+            }
+            rom[offsets[1]] = GBConstants.gbZ80Nop;
+            rom[offsets[1] + 1] = GBConstants.gbZ80Nop;
         }
         havePatchedUnownAvailability = true;
     }

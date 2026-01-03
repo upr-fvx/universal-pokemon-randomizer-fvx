@@ -46,5 +46,62 @@ out `wUnlockedUnowns`, or intuit which one must be the correct one, by e.g. goin
 
 Ultimately, we want to find `FE C9 20 06 FA`, and change it to `FE C9 18 06 FA`. Because `18 06 == jr .done`.
 
-However! Once we've done that we run into a problem: a black screen softlock as soon as a 
+However! Once we've done that we run into a problem: a black screen hardlock as soon as a 
 battle with an Unown starts. This is because there's another section which we need to change...
+
+```
+; Unown
+	ld a, [wTempEnemyMonSpecies]
+	cp UNOWN
+	jr nz, .Magikarp
+
+; Get letter based on DVs
+	ld hl, wEnemyMonDVs
+	predef GetUnownLetter
+; Can't use any letters that haven't been unlocked
+; If combined with forced shiny battletype, causes an infinite loop
+	call CheckUnownLetter
+	jr c, .GenerateDVs ; try again
+
+.Magikarp:
+	ld a, [wTempEnemyMonSpecies]
+	cp MAGIKARP
+	jr nz, .Happiness
+```
+
+This section here, in the `LoadEnemyMon` routine. Because it tries to reroll any Unown
+encountered into a letter that has been unlocked, and we haven't unlocked any letter, 
+we get a infinite loop hardlock. Like before, we're going to change the jump instruction, 
+though this time we're just going to NOP it out. 
+
+Calls are annoying to search with, because locations in ROM tend to vary slightly from 
+version to version. Remember, we do these searches because the Randomizer needs the offsets 
+of not just the dissassembled English version, but also all other languages.
+Predefs are annoying too, because we have to look somewhere else, and also they are big pieces of code 
+*guaranteed* to be repeated byte-by-byte at multiple locations in the ROM.
+
+So we're going to use the Magikarp section instead for our search. Unlike locations in ROM,
+WRAM addresses are largely unchanged between versions. So we can look it up in the .sym file.
+The .sym file either exist on a separate branch in Git ([as is the case with pokecrystal](https://github.com/pret/pokecrystal/blob/symbols/pokecrystal.sym)),
+or they can be gotten through building the ROM. The .sym file tells us `wTempEnemyMonSpecies==0xD204`. 
+
+So we get:
+
+```
+.Magikarp
+FA 04 D2    ld a, [wTempEnemyMonSpecies]
+FE 81       cp MAGIKARP
+20 XX       jr nz, .Happiness
+```
+
+`FA 04 D2 FE 81 20` is a very comfortably long string to search with.
+Of course, upon trying this search you'll find out that, (haha) this doesn't give any offsets in Gold/Silver, only in Crystal! 
+This is one of the funny games GameFreak play with us.
+
+But really, it is as simple as `wTempEnemyMonSpecies` being `0xD0ED` in those games. WRAM addresses 
+are somewhat stable, but not perfect. Fix that, and you're good to go... except this WRAM address is
+different in Japanese Gold, Silver, and Crystal. And those games don't have disassemblies.
+
+`.Magikarp` and `.Happiness` are `0x52` bytes apart, and the section up until and including `jr nz, .Happiness`
+is `0x7` bytes. `0x52-0x7=0x4B`, giving us `FE 81 20 4B`, and searching that finally gives us the offset 
+for the Japanese games as well. This method could also have been used for all other versions, skipping WRAM shenanigans.

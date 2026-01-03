@@ -41,8 +41,14 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   evolution levels by choosing the maximum value of the slider. 
   (#123)
 
+### Static Pokemon
+- (Gen 2) Allowed Unown to appear as a random static Pokémon.
+
 ### Trainer Pokemon
 - (Gen 1 + 2) Enabled "Better Movesets". (#84)
+
+### Wild Pokemon
+- (Gen 2) Allowed Unown to appear as a random wild Pokémon.
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)

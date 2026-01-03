@@ -867,8 +867,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             enc.setMaxLevel(rom[offset++] & 0xFF);
             area.add(enc);
         }
-        // Unown is banned for Bug Catching Contest (5/8/2016)
-        area.banSpecies(pokes[SpeciesIDs.unown]);
         encounterAreas.add(area);
     }
 
@@ -1558,19 +1556,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public SpeciesSet getBannedForWildEncounters() {
-        // Ban Unown because they don't show up unless you complete a puzzle in the Ruins of Alph.
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
-    }
-
-    @Override
     public boolean hasStaticAltFormes() {
         return false;
-    }
-
-    @Override
-    public SpeciesSet getBannedForStaticPokemon() {
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
     }
 
     @Override
@@ -2288,11 +2275,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
         if (romEntry.getArrayValue("CatchingTutorialOffsets").length != 0) {
-            // Unown is banned
-            if (opponent.getNumber() == SpeciesIDs.unown) {
-                return false;
-            }
-
             int[] offsets = romEntry.getArrayValue("CatchingTutorialOffsets");
             for (int offset : offsets) {
                 writeByte(offset, (byte) opponent.getNumber());

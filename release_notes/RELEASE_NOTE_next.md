@@ -42,7 +42,10 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   (#123)
 
 ### Static Pokemon
-- (Gen 3) [The description of a changed feature here.]
+- (Gen 2) Allowed Unown to appear as a random static Pokémon.
+
+### Wild Pokemon
+- (Gen 2) Allowed Unown to appear as a random wild Pokémon.
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)

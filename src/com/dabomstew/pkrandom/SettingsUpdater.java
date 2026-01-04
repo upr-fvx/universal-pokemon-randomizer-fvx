@@ -391,7 +391,7 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
-        if (oldVersion < Version.FVX_1_3_5.id) {
+        if (oldVersion < Version.FVX_1_4_0.id) {
             // New "Do Not Use Prematurely Evolved Pokemon" bit in existing byte 63 at bit 1.
             // Set it if 'Trainers Evolve Their Pokemon' (bit 0 of byte 63) was selected since the new option was split
             // from this existing option.
@@ -410,7 +410,7 @@ public class SettingsUpdater {
         is 55 or 64). However, at the moment, 4 generations have 55 and 3 generations have 64 as highest evo lvl, i.e.,
         using 55 is correct more often.
         Then, calculate the percentage to get from the that level (40 or 55) to x and set the slider to that level.
-        TODO also, bump version to 1.4.0 instead of 1.3.5
+
         Furtermore, also make sure to select 'Trainers Evolve their Pokemon' if it was selected in the previous version
         (FFEat has higher prio though, if it wasn't selected but TETP was selected, select it and chose 0% for the slider)
          */

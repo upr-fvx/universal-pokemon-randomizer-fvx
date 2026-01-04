@@ -540,7 +540,7 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        // TODO action lister for no premature evolutions
+        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -3399,7 +3399,7 @@ public class RandomizerGUI {
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
-        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) { // TODO or no premature evos checkbox
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected() || tpNoPrematureEvosCheckbox.isSelected()) {
             tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
             // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
             tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());

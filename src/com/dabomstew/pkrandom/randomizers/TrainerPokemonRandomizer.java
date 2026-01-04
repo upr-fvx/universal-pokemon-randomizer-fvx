@@ -208,17 +208,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 Species newSp;
                 int tpLevel = tp.getLevel();
                 double evoLvlModifier = (1 + percentageEvoLvlModifier / 100.0);
-                boolean forceFinalEvolution = evolveAsFarAsLegal
-                        && tpLevel >=  evoLvlModifier * romHandler.getHighestEvoLvl();
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
                 } else if (skipOriginalTeamMembers && !tp.isAddedTeamMember()) {
                     // We do not want to randomize Pkmn that were not added to the team
-                    if (forceFinalEvolution) {
-                        createFullyEvolvedPokemon(tp);
-                        newSp = tp.getSpecies();
-                    } else if (evolveAsFarAsLegal) { // Only relevant if tp did not fully evolve already
+                    if (evolveAsFarAsLegal) {
                         newSp = evolveAsFarAsLegal(oldSp, tpLevel, evoLvlModifier);
                         tp.setSpecies(newSp);
                         setFormeForTrainerPokemon(tp, newSp);
@@ -248,7 +243,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.getIndex())),
                             swapThisMegaEvo,
                             cacheReplacement,
-                            forceFinalEvolution,
                             evolveAsFarAsLegal,
                             usedTypes,
                             bannedForReplacement);
@@ -455,7 +449,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private Species pickTrainerPokeReplacement(Species current, int level,
                                                boolean usePowerLevels, boolean doNotUsePrematureEvos,
                                                Type type, boolean usePlacementHistory, boolean swapMegaEvos,
-                                               SpeciesSet useInsteadOfCached, boolean finalFormOnly, boolean evolveAsFarAsLegal,
+                                               SpeciesSet useInsteadOfCached, boolean evolveAsFarAsLegal,
                                                Set<Type> bannedTypes, SpeciesSet bannedPokemon) {
         SpeciesSet cacheOrReplacement;
         if(useInsteadOfCached == null) {
@@ -508,16 +502,12 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             !bannedTypes.contains(sp.getSecondaryType(false))));
         }
 
-        if (finalFormOnly) {
-            pickFrom = pickFrom.filterFinalEvos(false);
-        } else {
-            double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier()/100.0);
-            if (doNotUsePrematureEvos) {
-                pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
-            }
-            if (evolveAsFarAsLegal) {
-                pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
-            }
+        double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier() / 100.0);
+        if (doNotUsePrematureEvos) {
+            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
+        }
+        if (evolveAsFarAsLegal) {
+            pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
         }
 
         if (usePlacementHistory) {
@@ -533,7 +523,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //the cache replacement has no valid Pokemon
             //recurse using the cache
             return pickTrainerPokeReplacement(current, level, usePowerLevels, doNotUsePrematureEvos, type, usePlacementHistory,
-                    swapMegaEvos, null, finalFormOnly, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
         }
 
         withoutBannedPokemon = pickFrom.filter(pk -> !bannedPokemon.contains(pk));
@@ -543,7 +533,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //rather than using banned pokemon from the provided set,
             //see if we can get a non-banned pokemon from the cache
             Species cachePick = pickTrainerPokeReplacement(current, level, usePowerLevels, doNotUsePrematureEvos, type, usePlacementHistory,
-                    swapMegaEvos, null, finalFormOnly, evolveAsFarAsLegal ,bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, evolveAsFarAsLegal ,bannedTypes, bannedPokemon);
             if(withoutBannedPokemon.contains(cachePick)) {
                 return cachePick;
             }
@@ -881,7 +871,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void evolveTrainerPokemonAsFarAsLegal() {
-        double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier() / 100.0);
+        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.getPokemon()) {

@@ -516,9 +516,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
             }
             if (evolveAsFarAsLegal) {
-                pickFrom = pickFrom.filter(p
-                        -> p.isLegalEvolutionAtLevel(level, evoLvlModifier)
-                        && !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
+                pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
             }
         }
 

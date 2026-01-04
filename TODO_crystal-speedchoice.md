@@ -17,6 +17,4 @@ Though there might be more. Use the following Git commands to investigate: `git 
 - add logs for field items
 - add logs for enc percentages
 
-- allow unown in speedchoice
-
 - BST randomization (tricky)

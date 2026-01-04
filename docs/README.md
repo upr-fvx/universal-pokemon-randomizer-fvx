@@ -7,7 +7,7 @@ This website runs off Jekyll, and is deployed using GitHub actions using
 GitHub Pages. The site is updated whenever the master branch is pushed to, 
 so it is recommended you deploy the site locally first to test it, especially
 if you are new to Jekyll. To do that, you must install Jekyll locally:
-https://jekyllrb.com/docs/installation/
+https://jekyllrb.com/docs/installation/.
 
 In short, Jekyll allows articles to be written using Markdown instead of HTML.
 

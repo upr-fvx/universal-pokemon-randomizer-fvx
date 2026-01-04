@@ -8,5 +8,7 @@
   link: /wikipages/home.html
 - name: Screenshots
   link: /screenshots.html
+- name: Release Notes
+  link: /release_notes.html
 - name: Downloads
   link: /downloads.html

@@ -710,8 +710,9 @@ public class RandomizerGUI {
         if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
             int highestEvoLvl = peMakeEvolutionsEasierCheckBox.isSelected()
                     ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
-            tpCalculatedFullyEvolvedLvlLabel.setText("Fully Evolved at Level: " +
-                    (int) Math.ceil((1 + tpPercentageEvolutionLevelModifierSlider.getValue()/100.0) * highestEvoLvl));
+            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
+                    bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"),
+                    (int) Math.ceil((1 + tpPercentageEvolutionLevelModifierSlider.getValue()/100.0) * highestEvoLvl)));
         }
     }
 
@@ -2403,7 +2404,7 @@ public class RandomizerGUI {
 		tpPercentageEvolutionLevelModifierSlider.setValue(0);
         tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
         tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
-        tpCalculatedFullyEvolvedLvlLabel.setText(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"));
+        tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
 		tpPercentageLevelModifierSlider.setVisible(true);
 		tpPercentageLevelModifierSlider.setEnabled(false);
 		tpPercentageLevelModifierSlider.setValue(0);
@@ -3412,7 +3413,7 @@ public class RandomizerGUI {
         if (tpCalculatedFullyEvolvedLvlLabel.isEnabled()) {
             updateFullyEvolvedAtLvlLabel();
         } else {
-            tpCalculatedFullyEvolvedLvlLabel.setText(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"));
+            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
         }
 
         if (tpPercentageLevelModifierCheckBox.isSelected()) {

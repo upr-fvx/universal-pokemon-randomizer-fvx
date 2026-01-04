@@ -499,9 +499,9 @@ public class Gen2Constants {
         // Order in rom is BAYLEEF, QUILAVA, CROCONAW teams
         // Starters go CYNDA, TOTO, CHIKO
         // So we want 0=CROCONAW/FERALI, 1=BAYLEEF/MEGAN, 2=QUILAVA/TYPHLO
-        tbc(allTrainers, 9, 0, "RIVAL1-1");
-        tbc(allTrainers, 9, 1, "RIVAL1-2");
-        tbc(allTrainers, 9, 2, "RIVAL1-0");
+        tbc(allTrainers, 9, 0, "RIVAL1-1-NOTSTRONG");
+        tbc(allTrainers, 9, 1, "RIVAL1-2-NOTSTRONG");
+        tbc(allTrainers, 9, 2, "RIVAL1-0-NOTSTRONG");
 
         tbc(allTrainers, 9, 3, "RIVAL2-1");
         tbc(allTrainers, 9, 4, "RIVAL2-2");

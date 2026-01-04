@@ -57,6 +57,8 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     protected int perfectAccuracy = 100; // default
 
+    private int highestOriginalEvoLvl = 0;
+
     private List<Type> starterTypeTriangle = null;
 
     protected final List<Trainer> trainers = new ArrayList<>();
@@ -64,6 +66,10 @@ public abstract class AbstractRomHandler implements RomHandler {
     /*
      * Public Methods, implemented here for all gens. Unlikely to be overridden.
      */
+
+    public int getHighestOriginalEvoLvl() {
+        return highestOriginalEvoLvl;
+    }
 
     public RestrictedSpeciesService getRestrictedSpeciesService() {
         return rPokeService;
@@ -194,34 +200,34 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
-        // search for level evolutions
-        for (Species pk : getSpeciesSet()) {
-            if (pk != null) {
-                for (Evolution checkEvo : pk.getEvolutionsFrom()) {
-                    if (checkEvo.getType().usesLevelThreshold()) {
-                        // If evo is intermediate and too high, bring it down
-                        // Else if it's just too high, bring it down
-                        if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
-                        } else if (checkEvo.getExtraInfo() > maxLevel) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
+    public void condenseLevelEvolutions(int maxLevel) {
+        // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
+        if (maxLevel < getHighestOriginalEvoLvl()) {
+            int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
+            // search for level evolutions
+            for (Species pk : getSpeciesSet()) {
+                if (pk != null) {
+                    for (Evolution checkEvo : pk.getEvolutionsFrom()) {
+                        if (checkEvo.getType().usesLevelThreshold()) {
+                            // If evo is intermediate and too high, bring it down
+                            // Else if it's just too high, bring it down
+                            if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
+                            } else if (checkEvo.getExtraInfo() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
+                            }
+                        } else {
+                            // For all other evolutions, the estimated evolution levels have to be condensed if necessary
+                            if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
+                            } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
+                                markImprovedEvolutions(pk);
+                                checkEvo.setEstimatedEvoLvl(maxLevel);
+                            }
                         }
-                    } else {
-                        // For all other evolutions, the estimated evolution levels have to be condensed if necessary
-                        if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
-                        } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
-                            markImprovedEvolutions(pk);
-                            checkEvo.setEstimatedEvoLvl(maxLevel);
-                        }
-                    }
-                    if (checkEvo.getType() == EvolutionType.LEVEL_UPSIDE_DOWN) {
-                        markImprovedEvolutions(pk);
-                        checkEvo.updateEvolutionMethod(EvolutionType.LEVEL, checkEvo.getExtraInfo());
                     }
                 }
             }
@@ -236,7 +242,11 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution evoFrom : pk.getEvolutionsFrom()) {
                 if (evoFrom.getType().usesLevelThreshold()) {
                     levelUpEvos.add(evoFrom);
+                    // Set estimated evolution level and update highest evolution level in ROM
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
+                    if (evoFrom.getExtraInfo() > highestOriginalEvoLvl) {
+                        highestOriginalEvoLvl = evoFrom.getExtraInfo();
+                    }
                 } else {
                     nonLevelUpEvos.add(evoFrom);
                 }
@@ -263,11 +273,15 @@ public abstract class AbstractRomHandler implements RomHandler {
                         Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
             }
             if (!evo.getTo().getEvolutionsFrom().isEmpty()) { // getTo Pkmn has an evolution
-                // Make sure the evo level is at most 80% of the following evolutions evo level (i.e., the following evolution has a 25% higher level
+                // Make sure the evo level is at most 80% of the following evolutions evo level, i.e., the following evolution has a 25% higher level.
                 for (Evolution nextEvo : evo.getTo().getEvolutionsFrom()) {
                     evo.setEstimatedEvoLvl(
                             Math.min(evo.getEstimatedEvoLvl(), (int) Math.ceil(0.8 * nextEvo.getEstimatedEvoLvl())));
                 }
+            }
+            // Update highest evolution level in ROM if necessary
+            if (evo.getEstimatedEvoLvl() > highestOriginalEvoLvl) {
+                highestOriginalEvoLvl = evo.getEstimatedEvoLvl();
             }
         }
     }

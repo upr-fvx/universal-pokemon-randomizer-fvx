@@ -41,9 +41,11 @@ import java.util.zip.CRC32;
 
 public class Settings {
 
-    public static final int VERSION = Version.VERSION;
+    public static final int VERSION = Version.LATEST.id;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 66;
+    public static final int LENGTH_OF_SETTINGS_DATA = 67;
+
+    public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
 
     private CustomNamesSet customNames;
 
@@ -55,6 +57,7 @@ public class Settings {
     private boolean changeImpossibleEvolutions;
     private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
+    private int makeEvolutionsEasierLvl = MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
     private boolean randomizeIntroMon;
@@ -174,6 +177,7 @@ public class Settings {
     private TrainersMod trainersMod = TrainersMod.UNCHANGED;
     private boolean rivalCarriesStarterThroughout;
     private boolean trainersUsePokemonOfSimilarStrength;
+    private boolean trainersDoNotGetPrematureEvos;
     private boolean trainersMatchTypingDistribution;
     private boolean trainersBlockLegendaries = true;
     private boolean trainersUseLocalPokemon;
@@ -364,8 +368,7 @@ public class Settings {
     private GraphicsPack customPlayerGraphics;
     private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
-    // to and from strings etc
-    public void write(FileOutputStream out) throws IOException {
+    public void writeToFileFormat(FileOutputStream out) throws IOException {
         byte[] settings = toString().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
         buf.putInt(VERSION);
@@ -374,7 +377,7 @@ public class Settings {
         out.write(buf.array());
     }
 
-    public static Settings read(FileInputStream in) throws IOException, UnsupportedOperationException {
+    public static Settings readFromFileFormat(FileInputStream in) throws IOException, UnsupportedOperationException {
         byte[] versionBytes = new byte[4];
         byte[] lengthBytes = new byte[4];
         int nread = in.read(versionBytes);
@@ -395,20 +398,37 @@ public class Settings {
         int length = ByteBuffer.wrap(lengthBytes).getInt();
         byte[] buffer = FileFunctions.readFullyIntoBuffer(in, length);
         String settings = new String(buffer, StandardCharsets.UTF_8);
-        boolean oldUpdate = false;
 
+        return fromStringAndVersion(settings, version);
+    }
+
+    /**
+     * Creates a Settings object from a settings string WITH its first 3 chars being the version ID,
+     * of the version the string was created in. Updates the Settings object if needed.
+     */
+    public static Settings fromString(String withVersion) {
+        int version = Integer.parseInt(withVersion.substring(0, 3));
+        String withoutVersion = withVersion.substring(3);
+        return fromStringAndVersion(withoutVersion, version);
+    }
+
+    private static Settings fromStringAndVersion(String s, int version) {
+        boolean updated = false;
         if (version < VERSION) {
-            oldUpdate = true;
-            settings = new SettingsUpdater().update(version, settings);
+            updated = true;
+            s = new SettingsUpdater().update(version, s);
         }
-
-        Settings settingsObj = fromString(settings);
-        settingsObj.setUpdatedFromOldVersion(oldUpdate);
-        return settingsObj;
+        Settings settings = fromStringWithoutVersion(s);
+        settings.setUpdatedFromOldVersion(updated);
+        return settings;
     }
 
     @Override
     public String toString() {
+        return VERSION + toStringWithoutVersion();
+    }
+
+    private String toStringWithoutVersion() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // 0: general options #1 + trainer/class names
@@ -705,7 +725,7 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
         // 63 trainer pokemon evolve
-        out.write(makeByteSelected(trainersEvolveTheirPokemon));
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, trainersDoNotGetPrematureEvos));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -714,6 +734,9 @@ public class Settings {
         // 65 general options #2
         out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
                 false, false, false, false));
+
+        // 66 'Make evolutions easier' level select slider
+        out.write(makeEvolutionsEasierLvl);
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -737,7 +760,7 @@ public class Settings {
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
-    public static Settings fromString(String settingsString) throws UnsupportedEncodingException, IllegalArgumentException {
+    private static Settings fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
         byte[] data = Base64.getDecoder().decode(settingsString);
         checkChecksum(data);
 
@@ -1063,6 +1086,7 @@ public class Settings {
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
+        settings.setTrainersDoNotGetPrematureEvos(restoreState(data[63], 1));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
@@ -1071,6 +1095,7 @@ public class Settings {
         settings.setRaceMode(restoreState(data[65], 1));
         settings.setBlockBrokenMoves(restoreState(data[65], 2));
         settings.setLimitPokemon(restoreState(data[65], 3));
+        settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1320,6 +1345,14 @@ public class Settings {
 
     public void setMakeEvolutionsEasier(boolean makeEvolutionsEasier) {
         this.makeEvolutionsEasier = makeEvolutionsEasier;
+    }
+
+    public int getMakeEvolutionsEasierLvl() {
+        return makeEvolutionsEasierLvl;
+    }
+
+    public void setMakeEvolutionsEasierLvl(int makeEvolutionsEasierLvl) {
+        this.makeEvolutionsEasierLvl = makeEvolutionsEasierLvl;
     }
 
     public boolean isRemoveTimeBasedEvolutions() {
@@ -1853,6 +1886,14 @@ public class Settings {
 
     public void setTrainersUsePokemonOfSimilarStrength(boolean trainersUsePokemonOfSimilarStrength) {
         this.trainersUsePokemonOfSimilarStrength = trainersUsePokemonOfSimilarStrength;
+    }
+
+    public boolean isTrainersDoNotGetPrematureEvos() {
+        return trainersDoNotGetPrematureEvos;
+    }
+
+    public void setTrainersDoNotGetPrematureEvos(boolean trainersDoNotGetPrematureEvos) {
+        this.trainersDoNotGetPrematureEvos = trainersDoNotGetPrematureEvos;
     }
 
     public boolean isTrainersMatchTypingDistribution() {

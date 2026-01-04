@@ -391,6 +391,18 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
+        if (oldVersion < Version.FVX_1_3_5.id) {
+            // New "Do Not Use Prematurely Evolved Pokemon" bit in existing byte 63 at bit 1.
+            // Set it if 'Trainers Evolve Their Pokemon' (bit 0 of byte 63) was selected since the new option was split
+            // from this existing option.
+            if ((dataBlock[63] & 1) != 0) {
+                dataBlock[63] |= (1 << 1);
+            }
+            // New 'Make Evolutions Easier' Slider for level selection. Previous behavior is reproduced by choosing
+            // the value 40.
+            insertExtraByte(66, (byte) 40);
+        }
+
         // TODO after merge of #129
         /* TODO
         Idea: If ForceFullyEvolvedAt was selected with level x, either use highestEvoLvl 40, if Make Evolutions easier

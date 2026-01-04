@@ -36,7 +36,7 @@ public class Version {
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST = new Version(416, "1.3.4", "FVX");
+    public static final Version LATEST = new Version(417, "1.4.0", "FVX");
 
     public final int id;
     public final String name;

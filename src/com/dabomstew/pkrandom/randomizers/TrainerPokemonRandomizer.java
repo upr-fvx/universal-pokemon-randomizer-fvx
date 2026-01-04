@@ -903,15 +903,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return evolveAsFarAsLegal(evolvedSpecies, level, evoLvlModifier);
     }
 
-    public void createFullyEvolvedPokemon(TrainerPokemon tp) {
-        Species newSpecies = fullyEvolve(tp.getSpecies());
-        if (newSpecies != tp.getSpecies()) {
-            tp.setSpecies(newSpecies);
-            setFormeForTrainerPokemon(tp, newSpecies);
-            tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
-        }
-    }
-
     public void addTrainerPokemon() {
         int additionalNormal = settings.getAdditionalRegularTrainerPokemon();
         int additionalImportant = settings.getAdditionalImportantTrainerPokemon();

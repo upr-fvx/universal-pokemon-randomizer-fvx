@@ -32,14 +32,11 @@ public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the
     //  forking-and-then-merging that is bound to happen with an open-source project like this.
 
-    // LATEST_VERSION is a bit superfluous, but refactoring VERSION/VERSION_STRING felt like a project for later
     // id should increment by 1 for new version (note the current system has an upper limit of 999)
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
     public static final Version LATEST_VERSION = new Version(416, "1.3.4", "FVX");
-    public static final int VERSION = LATEST_VERSION.id;
-    public static final String VERSION_STRING = LATEST_VERSION.name;
 
     public final int id;
     public final String name;
@@ -138,13 +135,13 @@ public class Version {
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {
-        if (VERSION_STRING.contains("dev")) {
+        if (LATEST_VERSION.name.contains("dev")) {
             return false;
         }
         // Chop off leading "v" from release version
         try {
             String releaseVersionTrimmed = releaseVersion.substring(1);
-            String[] thisVersionPieces = VERSION_STRING.split("\\.");
+            String[] thisVersionPieces = LATEST_VERSION.name.split("\\.");
             String[] releaseVersionPieces = releaseVersionTrimmed.split("\\.");
             int smallestLength = Math.min(thisVersionPieces.length, releaseVersionPieces.length);
             for (int i = 0; i < smallestLength; i++) {

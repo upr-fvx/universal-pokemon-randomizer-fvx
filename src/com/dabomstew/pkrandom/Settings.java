@@ -187,7 +187,7 @@ public class Settings {
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
-    private int trainersEvolutionLevelModifier = 0; // -55 ~ 55
+    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -50 ~ 50
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2

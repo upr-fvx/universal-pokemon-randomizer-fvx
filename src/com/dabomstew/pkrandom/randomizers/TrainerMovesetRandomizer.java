@@ -11,13 +11,6 @@ import java.util.stream.Collectors;
 
 public class TrainerMovesetRandomizer extends Randomizer {
 
-    /**
-     * Returns whether a TrainerMovesetRandomizer can be used on games of the given generation.
-     */
-    public static boolean hasSupport(int generation) {
-        return true;
-    }
-
     private Map<Integer, List<MoveLearnt>> allLevelUpMoves;
     private Map<Integer, List<Integer>> allEggMoves;
     private Map<Species, boolean[]> allTMCompat, allTutorCompat;

@@ -94,6 +94,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private boolean havePatchedFleeing;
+    private boolean havePatchedUnownAvailability;
     private List<Integer> itemOffs;
     private String[][] mapNames;
     private String[] landmarkNames;
@@ -875,8 +876,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             enc.setMaxLevel(rom[offset++] & 0xFF);
             area.add(enc);
         }
-        // Unown is banned for Bug Catching Contest (5/8/2016)
-        area.banSpecies(pokes[SpeciesIDs.unown]);
         encounterAreas.add(area);
     }
 
@@ -891,6 +890,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
         if (!havePatchedFleeing) {
             patchFleeing();
+        }
+        if (!havePatchedUnownAvailability) {
+            patchUnownAvailability();
         }
 
         Iterator<EncounterArea> areaIterator = encounters.iterator();
@@ -1563,19 +1565,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public SpeciesSet getBannedForWildEncounters() {
-        // Ban Unown because they don't show up unless you complete a puzzle in the Ruins of Alph.
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
-    }
-
-    @Override
     public boolean hasStaticAltFormes() {
         return false;
-    }
-
-    @Override
-    public SpeciesSet getBannedForStaticPokemon() {
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
     }
 
     @Override
@@ -2311,11 +2302,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
         if (romEntry.getArrayValue("CatchingTutorialOffsets").length != 0) {
-            // Unown is banned
-            if (opponent.getNumber() == SpeciesIDs.unown) {
-                return false;
-            }
-
             int[] offsets = romEntry.getArrayValue("CatchingTutorialOffsets");
             for (int offset : offsets) {
                 writeByte(offset, (byte) opponent.getNumber());
@@ -2507,11 +2493,47 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void patchFleeing() {
-        havePatchedFleeing = true;
         int offset = romEntry.getIntValue("FleeingDataOffset");
         writeByte(offset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetTwoOffset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetThreeOffset, (byte) 0xFF);
+        havePatchedFleeing = true;
+    }
+
+    /**
+     * Makes it possible for Unown to appear in the wild, before the Ruins of Alph puzzles are solved.
+     */
+    private void patchUnownAvailability() {
+        // "AllowUnown" can be used by ROM hacks to mark that they already let Unown
+        // be encountered in the wild normally, and thus don't need to be patched.
+        if (romEntry.getIntValue("AllowUnown") == 0) {
+            int[] offsets = romEntry.getArrayValue("UnownAvailabilityPatchOffsets");
+            if (offsets.length != 2) {
+                throw new RuntimeException("UnownAvailabilityPatchOffsets is either not defined in the ROM entry, " +
+                        "or contains the wrong amount of offsets.");
+            }
+
+            // The first part works by changing a "cp UNOWN; jr nz, .done" to a non-conditional jump.
+            // That way, Unown doesn't get any special handling, and works like any other mon.
+            if (rom[offsets[0]] != GBConstants.gbZ80JumpRelativeNZ) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[0]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[0]] & 0xFF) + ", expected: 0x20." );
+            }
+            rom[offsets[0]] = GBConstants.gbZ80JumpRelative;
+
+            // The second part NOPs out a conditional loop, which loops back if the Unown form hasn't
+            // been unlocked yet and tries to roll a new one. In other words, an infinite loop if no
+            // forms have been unlocked.
+            if (rom[offsets[1]] != GBConstants.gbZ80JumpRelativeC) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[1]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[1]] & 0xFF) + ", expected: 0x38." );
+            }
+            rom[offsets[1]] = GBConstants.gbZ80Nop;
+            rom[offsets[1] + 1] = GBConstants.gbZ80Nop;
+        }
+        havePatchedUnownAvailability = true;
     }
 
     private void loadLandmarkNames() {

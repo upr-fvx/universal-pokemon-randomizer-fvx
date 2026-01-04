@@ -141,14 +141,14 @@ public class RandomizationLogger {
     }
 
     private void logHead() {
-        log.printf(getBS("Log.logo"), Version.VERSION_STRING);
+        log.printf(getBS("Log.logo"), Version.LATEST.name);
         log.printf(getBS("Log.title"));
         String gameName = romHandler.getROMName();
         if (romHandler.hasGameUpdateLoaded()) {
             gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
         }
         log.printf(getBS("Log.baseGame"), gameName);
-        log.printf(getBS("Log.version"), Version.LATEST_VERSION.branchName, Version.VERSION_STRING);
+        log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
         log.printf(getBS("Log.settings"), settings.toString());
         log.println();

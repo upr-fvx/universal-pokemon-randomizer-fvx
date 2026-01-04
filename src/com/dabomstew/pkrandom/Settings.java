@@ -41,7 +41,7 @@ import java.util.zip.CRC32;
 
 public class Settings {
 
-    public static final int VERSION = Version.VERSION;
+    public static final int VERSION = Version.LATEST.id;
 
     public static final int LENGTH_OF_SETTINGS_DATA = 67;
 

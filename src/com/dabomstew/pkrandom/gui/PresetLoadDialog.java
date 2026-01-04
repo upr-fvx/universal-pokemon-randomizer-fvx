@@ -137,7 +137,7 @@ public class PresetLoadDialog extends JDialog {
 
         try {
             int presetVersionNumber = Integer.parseInt(configString.substring(0, 3));
-            if (presetVersionNumber != Version.LATEST_VERSION.id) {
+            if (presetVersionNumber != Version.LATEST.id) {
                 promptForDifferentRandomizerVersion(presetVersionNumber);
                 safelyClearFields();
                 invalidValues();
@@ -179,7 +179,7 @@ public class PresetLoadDialog extends JDialog {
 
     private void promptForDifferentRandomizerVersion(int presetVN) {
         // so what version number was it?
-        if (presetVN > Version.LATEST_VERSION.id) {
+        if (presetVN > Version.LATEST.id) {
             // it's for a newer version
             JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.newerVersionRequired"));
         } else {
@@ -226,7 +226,7 @@ public class PresetLoadDialog extends JDialog {
             try {
                 DataInputStream dis = new DataInputStream(Files.newInputStream(fh.toPath()));
                 int checkInt = dis.readInt();
-                if (checkInt != Version.LATEST_VERSION.id) {
+                if (checkInt != Version.LATEST.id) {
                     dis.close();
                     promptForDifferentRandomizerVersion(checkInt);
                     return;

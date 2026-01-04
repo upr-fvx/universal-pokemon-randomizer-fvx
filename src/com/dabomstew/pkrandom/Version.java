@@ -36,7 +36,7 @@ public class Version {
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST_VERSION = new Version(416, "1.3.4", "FVX");
+    public static final Version LATEST = new Version(416, "1.3.4", "FVX");
 
     public final int id;
     public final String name;
@@ -119,7 +119,7 @@ public class Version {
     public static final Version FVX_1_3_2 = new Version(414, "1.3.2", "FVX");
     public static final Version FVX_1_3_3 = new Version(415, "1.3.3", "FVX");
     public static final Version FVX_1_3_4 = new Version(416, "1.3.4", "FVX");
-    public static final Version FVX_1_3_5 = LATEST_VERSION;
+    public static final Version FVX_1_3_5 = LATEST;
 
     // add versions to the bottom as you create them
 
@@ -135,13 +135,13 @@ public class Version {
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {
-        if (LATEST_VERSION.name.contains("dev")) {
+        if (LATEST.name.contains("dev")) {
             return false;
         }
         // Chop off leading "v" from release version
         try {
             String releaseVersionTrimmed = releaseVersion.substring(1);
-            String[] thisVersionPieces = LATEST_VERSION.name.split("\\.");
+            String[] thisVersionPieces = LATEST.name.split("\\.");
             String[] releaseVersionPieces = releaseVersionTrimmed.split("\\.");
             int smallestLength = Math.min(thisVersionPieces.length, releaseVersionPieces.length);
             for (int i = 0; i < smallestLength; i++) {

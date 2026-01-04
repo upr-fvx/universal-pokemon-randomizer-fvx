@@ -28,7 +28,6 @@ import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
 import com.dabomstew.pkrandom.random.SeedPicker;
-import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.MiscTweak;
@@ -492,7 +491,7 @@ public class RandomizerGUI {
             });
         }).run();
 
-        frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST_VERSION.name));
+        frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
         openROMButton.addActionListener(e -> selectAndOpenRom());
         pbsUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -710,7 +709,7 @@ public class RandomizerGUI {
             JOptionPane.showMessageDialog(frame, messages);
         }
         if (initialPopup) {
-            String message = String.format(bundle.getString("GUI.firstStart"),Version.LATEST_VERSION.name);
+            String message = String.format(bundle.getString("GUI.firstStart"),Version.LATEST.name);
             JLabel label = new JLabel("<html><a href=\"" + SysConstants.WIKI_IMPORTANT_INFO_URL + "\">Checking out the \"Important Information\" page on the Wiki is highly recommended.</a>");
             label.addMouseListener(new MouseAdapter() {
                 @Override
@@ -767,7 +766,7 @@ public class RandomizerGUI {
 
     private void initExplicit() {
 
-        versionLabel.setText(String.format(bundle.getString("GUI.versionLabel.text"), Version.LATEST_VERSION.name));
+        versionLabel.setText(String.format(bundle.getString("GUI.versionLabel.text"), Version.LATEST.name));
         mtNoExistLabel.setVisible(false);
         mtNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
@@ -1520,10 +1519,10 @@ public class RandomizerGUI {
                 } else {
                     try {
                         int version = Integer.parseInt(configString.substring(0, 3));
-                        if (version > Version.LATEST_VERSION.id) {
+                        if (version > Version.LATEST.id) {
                             JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringTooNew"));
                             return;
-                        } else if (version < Version.LATEST_VERSION.id) {
+                        } else if (version < Version.LATEST.id) {
                             JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringOlder"));
                         }
                         Settings settings = Settings.fromString(configString);
@@ -2175,7 +2174,7 @@ public class RandomizerGUI {
         try {
             String errlog = "error_" + ft.format(now) + ".txt";
             PrintStream ps = new PrintStream(new FileOutputStream(errlog));
-            ps.println("Randomizer Version: " + Version.LATEST_VERSION.name);
+            ps.println("Randomizer Version: " + Version.LATEST.name);
             if (seedString != null) {
                 ps.println("Seed: " + seedString);
             }
@@ -3881,7 +3880,7 @@ public class RandomizerGUI {
 
                         } else if (key.equals("firststart")) {
                             String val = tokens[1];
-                            if (val.equals(Version.LATEST_VERSION.name)) {
+                            if (val.equals(Version.LATEST.name)) {
                                 initialPopup = false;
                             }
 
@@ -3949,7 +3948,7 @@ public class RandomizerGUI {
             ps.println("outputdirectory=" + saveDirectory);
             ps.println(batchRandomizationSettings.toString());
             if (!initialPopup) {
-                ps.println("firststart=" + Version.LATEST_VERSION.name);
+                ps.println("firststart=" + Version.LATEST.name);
             }
             if (!gameUpdates.isEmpty()) {
                 ps.println();

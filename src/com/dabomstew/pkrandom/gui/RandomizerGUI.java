@@ -145,6 +145,7 @@ public class RandomizerGUI {
     private JSlider pmsForceGoodDamagingSlider;
     private JCheckBox tpRivalCarriesStarterCheckBox;
     private JCheckBox tpSimilarStrengthCheckBox;
+    private JCheckBox tpNoPrematureEvosCheckbox;
     private JCheckBox tpWeightTypesCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
@@ -1719,6 +1720,7 @@ public class RandomizerGUI {
         pmsEvolutionMovesCheckBox.setSelected(settings.isEvolutionMovesForAll());
 
         tpSimilarStrengthCheckBox.setSelected(settings.isTrainersUsePokemonOfSimilarStrength());
+        tpNoPrematureEvosCheckbox.setSelected(settings.isTrainersDoNotGetPrematureEvos());
         tpComboBox.setSelectedItem(trainerSettings.get(settings.getTrainersMod().ordinal()));
         tpRivalCarriesStarterCheckBox.setSelected(settings.isRivalCarriesStarterThroughout());
         tpWeightTypesCheckBox.setSelected(settings.isTrainersMatchTypingDistribution());
@@ -2010,6 +2012,7 @@ public class RandomizerGUI {
                 isTrainerSetting(TRAINER_TYPE_THEMED), isTrainerSetting(TRAINER_TYPE_THEMED_ELITE4_GYMS),
                 isTrainerSetting(TRAINER_KEEP_THEMED), isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY));
         settings.setTrainersUsePokemonOfSimilarStrength(tpSimilarStrengthCheckBox.isSelected());
+        settings.setTrainersDoNotGetPrematureEvos(tpNoPrematureEvosCheckbox.isSelected());
         settings.setRivalCarriesStarterThroughout(tpRivalCarriesStarterCheckBox.isSelected());
         settings.setTrainersMatchTypingDistribution(tpWeightTypesCheckBox.isSelected());
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
@@ -2373,8 +2376,8 @@ public class RandomizerGUI {
 		tpComboBox.setVisible(true);
 		tpComboBox.setEnabled(false);
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
-        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpWeightTypesCheckBox,
-				tpUseLocalPokemonCheckBox,
+        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox,
+                tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
                 tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
@@ -3347,11 +3350,11 @@ public class RandomizerGUI {
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
                     tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                     tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
-            enableButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
         } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
-            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
+            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
@@ -3360,7 +3363,7 @@ public class RandomizerGUI {
                     tpRegularTrainersTypeDiversityCheckBox,
                     tpEliteFourUniquePokemonCheckBox);
         } else {
-            enableButtons(tpSimilarStrengthCheckBox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
 

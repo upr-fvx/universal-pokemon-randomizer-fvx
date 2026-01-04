@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] @Glamurio for your code contributions,
+[Every person who submitted a merged pull request] @Glamurio and @bergmaen for your code contributions,
 [Every person who submitted a solved issue] @CDNievas, @TheFreezingChicken, and @scipio19 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom from Spriter's Resource for the CPG sprites, and

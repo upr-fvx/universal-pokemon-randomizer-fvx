@@ -207,7 +207,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                 Species newSp;
                 int tpLevel = tp.getLevel();
-                double evoLvlModifier = (1 + percentageEvoLvlModifier / 100.0);
+                double evoLvlModifier = 1 + percentageEvoLvlModifier / 100.0;
                 if(skipStarter) {
                     newSp = oldSp; //We've already set this to what we want it to be
                     skipStarter = false; //We don't want to skip the rival's other Pokemon
@@ -502,7 +502,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             !bannedTypes.contains(sp.getSecondaryType(false))));
         }
 
-        double evoLvlModifier = (1 + settings.getTrainersEvolutionLevelModifier() / 100.0);
+        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
         if (doNotUsePrematureEvos) {
             pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
         }

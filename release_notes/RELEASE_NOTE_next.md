@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] @Glamurio for your code contributions,
+[Every person who submitted a merged pull request] @Glamurio and @bergmaen for your code contributions,
 [Every person who submitted a solved issue] @CDNievas, @TheFreezingChicken, and @scipio19 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom from Spriter's Resource for the CPG sprites, and
@@ -57,6 +57,22 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   stage at its level. This was previously included in the 'Trainers Evolve 
   Their Pokemon' checkbox and is now removed in said setting.
   (#125)
+
+### Trainer Pokemon
+- Remove 'Force Fully Evolved at Level:' checkbox and replace its level select
+  slider with a slider to select the percentage to scale trainer Pokemon
+  evolution levels and estimated evolution levels by. The scaled evolution
+  levels affect the options 'Trainers Evolve their Pokemon' as well as 'Do Not
+  Use Prematurely Evolved Pokemon'. 
+  If 'Trainers Evolve their Pokemon' is selected, the Randomizer displays the
+  highest evolution level for Trainer Pokemon, i.e., the level every trainer
+  Pokemon will be fully evolved at, based on the percentage chosen with the new
+  slider and other relevant randomization options. 
+  With this, the previous functionality of 'Force Fully Evolved at Level:' to
+  have fully evolved trainer Pokemon before their actual evolution level is now
+  supported for 'Trainers Evolve their Pokemon' as well. Therefore, all
+  functionality of 'Force Fully Evolved at Level:' is now replicated and
+  improved upon by 'Trainers Evolve their Pokemon'. (#136)
 
 ### Graphics
 - (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)

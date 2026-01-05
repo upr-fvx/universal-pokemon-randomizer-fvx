@@ -375,8 +375,8 @@ public class SettingsUpdater {
         }
 
         if (oldVersion < Version.FVX_1_3_3.id) {
-            // Force middle stage was removed and first bit of byte was used for new setting.
-            // Do not select this since it is unrelated to the choice in the old version
+            // Force middle stage was removed and first bit of byte was used for new option 'Trainers Evolve their Pokemon'.
+            // Do not select this since it is unrelated to the choice in the old version.
             dataBlock[63] = (byte) 0;
         }
 
@@ -391,13 +391,34 @@ public class SettingsUpdater {
             dataBlock[2] = clearBits(dataBlock[2], 3, 4, 5);
         }
 
-        if (oldVersion < Version.FVX_1_3_5.id) {
-            // New "Do Not Use Prematurely Evolved Pokemon" bit in existing byte 63 at bit 1.
+        if (oldVersion < Version.FVX_1_4_0.id) {
+            // 'Force Fully Evolved at Level' (bit 0 of byte 14) was removed and its level selection slider (bits 1 to 7
+            // of byte 14) was replaced by a percentage selection slider to scale the trainer Pokemon evolution level by
+            // (bit 1 to 7 of byte 14).
+            // Compute new value for byte 14, i.e., the percentage modifier for the trainer Pokemon evolution level
+            int percentageModifierEvoLvl = 0;
+            if ((dataBlock[14] & 0x80) != 0) { // 'Force Fully Evolved at Level' was selected
+                int forceFullyEvolvedAtLvl = data[14] & 0x7F; // Selected level for 'Force Fully Evolved at Level'
+                // For the highest evolution level in the ROM, either use 40, if 'Make Evolutions Easier' (bit 5 of byte 0)
+                // was selected, or 55. (Cannot get the Generation from the Settings String and thus it is unknown if the
+                // highest evolution level is 55 or 64. However, at the moment, 4 generations have 55 and 3 generations
+                // have 64 as highest evo lvl, i.e., using 55 is correct more often.)
+                int highestEvoLvl = (dataBlock[0] & 0x20) != 0 ? 40 : 55;
+                percentageModifierEvoLvl = (int) Math.floor((double) forceFullyEvolvedAtLvl /highestEvoLvl);
+            } // Otherwise, even if only 'Trainers Evolve Their Pokemon' was selected, leave the percentage evolution level modifier at 0%
+
+            // First, reset byte 14
+            dataBlock[14] = (byte) 0;
+            // Then, write the percentage modifier for the evolution level
+            dataBlock[14] |= (byte) percentageModifierEvoLvl;
+
+            // New 'Do Not Use Prematurely Evolved Pokemon' bit in existing byte 63 at bit 1.
             // Set it if 'Trainers Evolve Their Pokemon' (bit 0 of byte 63) was selected since the new option was split
             // from this existing option.
             if ((dataBlock[63] & 1) != 0) {
                 dataBlock[63] |= (1 << 1);
             }
+
             // New 'Make Evolutions Easier' Slider for level selection. Previous behavior is reproduced by choosing
             // the value 40.
             insertExtraByte(66, (byte) 40);

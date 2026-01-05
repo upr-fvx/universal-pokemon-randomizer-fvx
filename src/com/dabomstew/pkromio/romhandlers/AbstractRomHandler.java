@@ -205,7 +205,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         if (maxLevel < getHighestEvoLvl()) {
             int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
             // search for level evolutions
-            for (Species pk : getSpeciesSet()) {
+            for (Species pk : getSpeciesSetInclFormes()) {
                 if (pk != null) {
                     for (Evolution checkEvo : pk.getEvolutionsFrom()) {
                         if (checkEvo.getType().usesLevelThreshold()) {
@@ -240,10 +240,14 @@ public abstract class AbstractRomHandler implements RomHandler {
         // Get a list of all level-up evolutions and a list of all non-level-up evolutions
         List<Evolution> levelUpEvos = new ArrayList<>();
         List<Evolution> nonLevelUpEvos = new ArrayList<>();
-        for (Species pk : getSpeciesSet()) {
+        for (Species pk : getSpeciesSetInclFormes()) {
             for (Evolution evoFrom : pk.getEvolutionsFrom()) {
                 if (evoFrom.getType().usesLevelThreshold()) {
-                    levelUpEvos.add(evoFrom);
+                    // Only base forms are used for later triplet calculations,
+                    // so e.g. Pumpkaboo->Gourgeist doesn't get overrepresented
+                    if (pk.isBaseForme()) {
+                        levelUpEvos.add(evoFrom);
+                    }
                     // Set estimated evolution level and update highest evolution level in ROM
                     evoFrom.setEstimatedEvoLvl(evoFrom.getExtraInfo());
                     if (evoFrom.getExtraInfo() > highestEvoLvl) {

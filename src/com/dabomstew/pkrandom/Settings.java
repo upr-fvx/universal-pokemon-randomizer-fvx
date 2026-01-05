@@ -369,7 +369,7 @@ public class Settings {
     private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
     public void writeToFileFormat(FileOutputStream out) throws IOException {
-        byte[] settings = toString().getBytes(StandardCharsets.UTF_8);
+        byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
         buf.putInt(VERSION);
         buf.putInt(settings.length);

@@ -1,20 +1,26 @@
-Below is a checklist, to make UPR FVX work with pokecrystal-speedchoice.
+This branch contains rudimentary support for pokecrystal-speedchoice v8. That is, it passes all unit tests.
 
-At the time of writing (2025-10-18), the most up-to-date pokecrystal-speedchoice branch is https://github.com/choatix/zxplus. However, it has diverged too early, and FVX changes too much of the general code layout. It should be easier to implement the below, partially from scratch, than try to merge anything using GitHub... sadly, since it would be ideal to credit everyone involved in speedchoice, and Git does that well. Dunno what the best solution for that is :/.
+When this effort was started (2025-10-18), the most up-to-date pokecrystal-speedchoice branch was https://github.com/choatix/zxplus. However, it diverged too early, and FVX changes too much of the general code layout. It was deemed easier to lift the ROM Entry, and implement needed features from scratch, than try to merge anything using GitHub... sadly, since it would be ideal to credit everyone involved in speedchoice, and Git does that well. Dunno what the best solution for that is :/.
 
-In any case, the below is a minimum list for things needed, to assert that FVX has pokecrystal-speedchoice support on par with the current speedchoice Randomizers / ZX-plus. 
+Below is a list of what was/is needed to give speedchoice support on par with the Vanilla games, and then what features ZX-plus has that FVX currently lacks. The prior are prioritized, especially since some of the latter are tricky to implement. 
 
 Though there might be more. Use the following Git commands to investigate: `git remote add zxplus https://github.com/choatix/zxplus.git
 `, `git log zxplus/main ^master --oneline --graph`, `git show <commit>`.
 
 ## The list:
 
-- complete ROM Entry
-  - offsets for graphics
-  - offsets for misc tweaks
-- write the checksum to ROM somehow
+To be supported on par with the Vanilla games
+- [x] allow Unown to appear without unlocking
+- [ ] complete ROM Entry 
+  - [x] shop offsets
+  - [x] graphics offsets
+  - [ ] misc tweak offsets
+- [ ] write the checksum to ROM somehow (unclear why needed, was implemented in old UPR versions)
 
-- add logs for field items
-- add logs for enc percentages
-
-- BST randomization (tricky)
+To be feature-complete with ZX-plus:
+- [x] better movesets for Gen 2
+- [x] option to provide custom seed via CLI
+- [ ] add logs for field items
+- [ ] add logs for encounter percentages
+- [ ] BST randomization (tricky)
+- [ ] ensure compatibility with the map/key item randomizer

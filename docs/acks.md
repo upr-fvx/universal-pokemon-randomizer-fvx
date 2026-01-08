@@ -89,7 +89,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - SharkGuy (Boyfriend)
 - bepis (Shantae)
 - FourLeafSunny (Various)
-- NachoPeñalva (Wally, Cynthia)
+- NachoPeñalva (Various)
 - Ploxel (King Dedede, Meta Knight)
 - Happy Time Boredom (Duck)
 

@@ -565,6 +565,16 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean shouldWriteCheckValue() {
+        return false;
+    }
+
+    @Override
+    public void writeCheckValue(int checkValue) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean canChangeShopSizes() {
         // DEFAULT: no
         return false;
@@ -708,7 +718,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public List<String> getTrainerNames() {
-        return getTrainers().stream().map(tr -> tr.getName()).collect(Collectors.toList());
+        return getTrainers().stream().map(Trainer::getName).collect(Collectors.toList());
     }
 
     @Override

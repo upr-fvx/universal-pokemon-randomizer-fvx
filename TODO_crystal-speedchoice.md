@@ -15,7 +15,7 @@ To be supported on par with the Vanilla games
   - [x] shop offsets
   - [x] graphics offsets
   - [ ] misc tweak offsets
-- [ ] write the checksum to ROM somehow (unclear why needed, was implemented in old UPR versions)
+- [x] write the checksum to ROM somehow (unclear why needed, was implemented in old UPR versions)
 
 To be feature-complete with ZX-plus:
 - [x] better movesets for Gen 2

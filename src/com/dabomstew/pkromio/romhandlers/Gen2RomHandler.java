@@ -3375,4 +3375,19 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         return romEntry;
     }
 
+    @Override
+    public boolean shouldWriteCheckValue() {
+        return romEntry.getIntValue("CheckValueOffset") != 0;
+    }
+
+    @Override
+    public void writeCheckValue(int checkValue) {
+        int offset = romEntry.getIntValue("CheckValueOffset");
+        if (offset == 0) {
+            throw new RuntimeException("No value for CheckValueOffset found in ROM Entry");
+        }
+        for (int i = 0; i < 4; i++) {
+            rom[offset + i] = (byte) ((checkValue >> (3 - i) * 8) & 0xFF);
+        }
+    }
 }

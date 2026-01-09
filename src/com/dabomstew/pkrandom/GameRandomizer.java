@@ -203,6 +203,9 @@ public class GameRandomizer {
             maybeSetCustomPlayerGraphics();
 
             results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
+            if (romHandler.shouldWriteCheckValue()) {
+                romHandler.writeCheckValue(results.checkValue);
+            }
 
             romHandler.saveRom(filename, seed, saveAsDirectory);
 

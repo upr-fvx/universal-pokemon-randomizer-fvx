@@ -41,6 +41,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
+- (Gen 2) Restored check value writing for pokecrystal-speedchoice.
 
 ## Bugfixes
 - (Gen [N]) Fixed [...]. (Issue #[issue num])

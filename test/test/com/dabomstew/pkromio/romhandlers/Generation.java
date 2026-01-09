@@ -31,7 +31,7 @@ public class Generation {
         generationMap.put("Gold", GEN2);
         generationMap.put("Silver", GEN2);
         generationMap.put("Crystal", GEN2);
-        generationMap.put("Crystal SpeedChoice v3", GEN2);
+        generationMap.put("Crystal SpeedChoice v8", GEN2);
         generationMap.put("Ruby", GEN3);
         generationMap.put("Sapphire", GEN3);
         generationMap.put("Fire Red", GEN3);

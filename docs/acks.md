@@ -68,6 +68,7 @@ The NDS games introduced a lot of file formats, for which great programs have al
 In addition,
 
 - **Pokémon Palette Randomization in Gen 3-5** is achieved using a port of code from [Artemis251's Emerald Randomizer](http://artemis251.fobby.net/downloads/emerald/).
+- **Support for pokecrystal-speedchoice v8** was achieved by referencing [Choatix' ZX-plus branch](https://github.com/choatix/zxplus).
 
 ## Images used for Custom Player Graphics
 

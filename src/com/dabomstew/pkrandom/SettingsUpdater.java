@@ -424,6 +424,13 @@ public class SettingsUpdater {
             insertExtraByte(66, (byte) 40);
         }
 
+        if (oldVersion < Version.FVX_1_4_2.id) {
+            // Shift dataBlock[14] from being a signed percentage to an unsigned percentage to avoid signed two's-
+            // complement handling (shift percentage range [-50, 50] to [0, 100]).
+            // NOTE: At this point, dataBlock[14] only holds the TP Evo Level Percentage Modifier.
+            dataBlock[14] += 50;
+        }
+
         // fix checksum
         CRC32 checksum = new CRC32();
         checksum.update(dataBlock, 0, actualDataLength - 8);

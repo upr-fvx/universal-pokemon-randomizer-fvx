@@ -1701,7 +1701,9 @@ public class RandomizerGUI {
         int[] customStarters = settings.getCustomStarters();
         spComboBox1.setSelectedIndex(customStarters[0]);
         spComboBox2.setSelectedIndex(customStarters[1]);
-        spComboBox3.setSelectedIndex(customStarters[2]);
+        if (!this.romHandler.isYellow()) { // Yellow only has two starters
+            spComboBox3.setSelectedIndex(customStarters[2]);
+        }
 
         peUnchangedRadioButton.setSelected(settings.getEvolutionsMod() == Settings.EvolutionsMod.UNCHANGED);
         peRandomRadioButton.setSelected(settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM);

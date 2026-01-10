@@ -44,5 +44,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 2) Restored check value writing for pokecrystal-speedchoice.
 
 ## Bugfixes
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (Red/Blue) Fixed rivals original starters not being randomized if starter
+  Pokemon are randomized, trainer Pokemon are unchanged, additional Pokemon are
+  added to important trainers, and rival is supposed to keep starter throughout
+  the game. (#145)
+- (Yellow) Fixed Settings from other games not being loadable in yellow. (#145)
 - (GUI) Fixed [...].

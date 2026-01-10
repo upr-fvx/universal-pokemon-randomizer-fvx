@@ -46,4 +46,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
- evolution levels not being loaded correctly. (#142)
+ evolution levels not being loaded correctly. (#144)

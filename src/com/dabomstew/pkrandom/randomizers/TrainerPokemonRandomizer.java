@@ -972,6 +972,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 newPokemon.setIsAddedTeamMember(true);
                 t.getPokemon().add(secondToLastIndex, newPokemon);
             }
+            // If the forced starter position was the last Pokemon, it's position has to be updated since additional Pokemon
+            // were inserted
+            if (t.getForceStarterPosition() != -1 && t.getForceStarterPosition() == originalSize - 1) {
+                t.setForceStarterPosition(Math.min(t.getForceStarterPosition() + additional, maxPokemon - 1));
+            }
         }
         changesMade = true;
     }

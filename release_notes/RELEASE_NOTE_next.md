@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
+@bergmaen for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
@@ -50,3 +50,6 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   the game. (#145)
 - (Yellow) Fixed Settings from other games not being loadable in yellow. (#145)
 - (GUI) Fixed [...].
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
+ evolution levels not being loaded correctly. (#144)

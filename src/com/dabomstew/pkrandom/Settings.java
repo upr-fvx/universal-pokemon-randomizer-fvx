@@ -480,7 +480,7 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
         // 14 trainer pokemon evolution level modifier
-        out.write(trainersEvolutionLevelModifier);
+        out.write(trainersEvolutionLevelModifier + 50);
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -838,7 +838,7 @@ public class Settings {
                 7  // KEEP_THEME_OR_PRIMARY
         ));
         
-        settings.setTrainersEvolutionLevelModifier(data[14] & 0x7F);
+        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 

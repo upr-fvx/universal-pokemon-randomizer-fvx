@@ -407,6 +407,7 @@ public class RandomizerGUI {
     private JFileChooser gameUpdateChooser = new JFileChooser();
 
     private JPopupMenu settingsMenu;
+    private JMenuItem themeSelectionMenuItem;
     private JMenuItem customNamesEditorMenuItem;
     private JMenuItem applyGameUpdateMenuItem;
     private JMenuItem removeGameUpdateMenuItem;
@@ -442,7 +443,6 @@ public class RandomizerGUI {
 
         haveCheckedCustomNames = false;
         attemptReadConfig();
-        initTheme();
         initExplicit();
         initTweaksPanel();
         initFileChooserDirectories();
@@ -614,6 +614,7 @@ public class RandomizerGUI {
         loadSettingsButton.addActionListener(e -> loadQS());
         saveSettingsButton.addActionListener(e -> saveQS());
         settingsButton.addActionListener(e -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
+        themeSelectionMenuItem.addActionListener(e -> new ThemeSelectionDialog(this, frame));
         customNamesEditorMenuItem.addActionListener(e -> new CustomNamesEditorDialog(frame));
         applyGameUpdateMenuItem.addActionListener(e -> applyGameUpdateMenuItemActionPerformed());
         removeGameUpdateMenuItem.addActionListener(e -> removeGameUpdateMenuItemActionPerformed());
@@ -766,9 +767,14 @@ public class RandomizerGUI {
         }
     }
 
-    private void initTheme() {
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
         if (!theme.isInstalled()) {
-            theme = Theme.DEFAULT;
+            this.theme = Theme.DEFAULT;
         }
 
         try {
@@ -778,6 +784,8 @@ public class RandomizerGUI {
             java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
+
+        attemptWriteConfig();
     }
 
     private void initFileChooserDirectories() {
@@ -864,6 +872,10 @@ public class RandomizerGUI {
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
+
+        themeSelectionMenuItem = new JMenuItem();
+        themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
+        settingsMenu.add(themeSelectionMenuItem);
 
         customNamesEditorMenuItem = new JMenuItem();
         customNamesEditorMenuItem.setText(bundle.getString("GUI.customNamesEditorMenuItem.text"));
@@ -3916,7 +3928,7 @@ public class RandomizerGUI {
                         }
 
                         if (key.equals("theme")) {
-                            theme = Theme.valueOf(tokens[1].trim());
+                            setTheme(Theme.valueOf(tokens[1].trim()));
 
                         } else if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());

@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 @bergmaen for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue] @LunaisLazier for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -42,6 +42,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
 - (Gen 2) Restored check value writing for pokecrystal-speedchoice.
+- (GUI) Added theme selection. This includes dark mode (!) and also the ability to change between Windows/Metal/FlatLaf themes. The Windows theme is still only available on Windows computers. (#151)
 
 ## Bugfixes
 - (Red/Blue) Fixed rivals original starters not being randomized if starter

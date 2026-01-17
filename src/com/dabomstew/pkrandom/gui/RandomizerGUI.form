@@ -1971,6 +1971,7 @@
                       <component id="abcd1" class="javax.swing.JLabel" binding="tpCalculatedFullyEvolvedLvlLabel">
                         <constraints>
                           <grid row="7" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>

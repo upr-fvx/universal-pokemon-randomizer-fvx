@@ -54,8 +54,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -386,6 +386,7 @@ public class RandomizerGUI {
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
 
+    private Theme theme = Theme.WINDOWS;
     private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;
@@ -441,6 +442,7 @@ public class RandomizerGUI {
 
         haveCheckedCustomNames = false;
         attemptReadConfig();
+        initTheme();
         initExplicit();
         initTweaksPanel();
         initFileChooserDirectories();
@@ -761,6 +763,20 @@ public class RandomizerGUI {
                     null);
             showInvalidRomPopup = !checkbox.isSelected();
             attemptWriteConfig();
+        }
+    }
+
+    private void initTheme() {
+        if (!theme.isInstalled()) {
+            theme = Theme.DEFAULT;
+        }
+
+        try {
+            javax.swing.UIManager.setLookAndFeel(theme.getLaf());
+            SwingUtilities.updateComponentTreeUI(mainPanel);
+        } catch (UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         }
     }
 
@@ -3899,7 +3915,10 @@ public class RandomizerGUI {
                             gameUpdates.put(key, tokens[1]);
                         }
 
-                        if (key.equals("checkedcustomnames172")) {
+                        if (key.equals("theme")) {
+                            theme = Theme.valueOf(tokens[1].trim());
+
+                        } else if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
 
                         } else if (key.equals("firststart")) {
@@ -3964,6 +3983,7 @@ public class RandomizerGUI {
 
         try {
             PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, "UTF-8");
+            ps.println("theme=" + theme);
             ps.println("checkedcustomnames=true");
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
@@ -4033,16 +4053,6 @@ public class RandomizerGUI {
             if (launcherInput.equals("please-use-the-launcher")) usedLauncher = true;
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("RandomizerGUI");
-                try {
-                    String lafName = javax.swing.UIManager.getSystemLookAndFeelClassName();
-                    // NEW: Only set Native LaF on windows.
-                    if (lafName.equalsIgnoreCase("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
-                        javax.swing.UIManager.setLookAndFeel(lafName);
-                    }
-                } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException ex) {
-                    java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                            ex);
-                }
                 frame.setContentPane(new RandomizerGUI().mainPanel);
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 frame.pack();

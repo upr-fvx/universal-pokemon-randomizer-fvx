@@ -11,15 +11,16 @@ Though there might be more. Use the following Git commands to investigate: `git 
 
 To be supported on par with the Vanilla games
 - [x] allow Unown to appear without unlocking
-- [ ] complete ROM Entry 
+- [x] complete ROM Entry 
   - [x] shop offsets
   - [x] graphics offsets
-  - [ ] misc tweak offsets
-- [x] write the checksum to ROM somehow (unclear why needed, was implemented in old UPR versions)
+  - [x] misc tweak offsets
+- [x] write the checksum to ROM
 
 To be feature-complete with ZX-plus:
 - [x] better movesets for Gen 2
 - [x] option to provide custom seed via CLI
+- [ ] option to even out enc rates
 - [ ] add logs for field items
 - [ ] add logs for encounter percentages
 - [ ] BST randomization (tricky)

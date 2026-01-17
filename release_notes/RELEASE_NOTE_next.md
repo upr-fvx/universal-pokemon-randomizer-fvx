@@ -36,7 +36,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 3) [The description of a changed feature here.]
 
 ### Misc. Tweaks
-- (Gen 4+5) [The description of a misc. tweak addition or change here.]
+- (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.

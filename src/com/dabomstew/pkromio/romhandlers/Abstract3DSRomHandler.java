@@ -66,6 +66,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		}
 		loadedFN = filename;
 		this.loadedROM(productCode, titleId);
+        estimateEvolutionLevels();
 		return true;
 	}
 
@@ -408,6 +409,11 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 	public Set<Item> getMegaStones() {
 		return itemIdsToSet(Gen6Constants.megaStones);
 	}
+
+    @Override
+    public void loadPokemonPalettes() {
+        // not applicable
+    }
 
 	@Override
 	public void savePokemonPalettes() {

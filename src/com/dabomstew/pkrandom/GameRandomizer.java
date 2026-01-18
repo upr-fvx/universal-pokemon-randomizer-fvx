@@ -203,6 +203,9 @@ public class GameRandomizer {
             maybeSetCustomPlayerGraphics();
 
             results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
+            if (romHandler.shouldWriteCheckValue()) {
+                romHandler.writeCheckValue(results.checkValue);
+            }
 
             romHandler.saveRom(filename, seed, saveAsDirectory);
 
@@ -397,17 +400,19 @@ public class GameRandomizer {
     }
 
     private void maybeApplyEvolutionImprovements() {
+        boolean useEstimatedLevels = settings.useEstimatedLevelsForEvolutionImprovements();
+
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
             boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
-            romHandler.removeImpossibleEvolutions(changeMoveEvos);
+            romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
-            romHandler.condenseLevelEvolutions(40, 30);
+            romHandler.condenseLevelEvolutions(settings.getMakeEvolutionsEasierLvl());
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
-            romHandler.makeEvolutionsEasier(wildsRandomizer);
+            romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
         // Remove time-based evolutions
@@ -529,8 +534,7 @@ public class GameRandomizer {
         // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
-
+        // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
@@ -555,13 +559,8 @@ public class GameRandomizer {
 
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else {
-            if (settings.isTrainersForceMiddleStage()) {
-                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
-            }
-            if (settings.isTrainersForceFullyEvolved()) {
-                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
-            }
+        } else if (settings.isTrainersEvolveTheirPokemon()) {
+            trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
     }
 
@@ -678,9 +677,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeIntroPokemon() {
-        // Note: this is the only randomization that applies even if no setting is checked.
-        // Essentially, it works as confirmation that the Randomizer was applied at all.
-        if (romHandler.canSetIntroPokemon()) {
+        if (settings.isRandomizeIntroMon()) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

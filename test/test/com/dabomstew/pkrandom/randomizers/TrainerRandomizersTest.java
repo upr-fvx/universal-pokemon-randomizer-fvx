@@ -5,7 +5,6 @@ import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.Gen7Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -131,10 +130,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
-        s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersEvolveTheirPokemon(true);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -580,7 +577,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     System.out.println(tp.getSpecies().getName() + " holds " + tp.getHeldItem());
 
                     int[] pkMoves = tp.isResetMoves() ?
-                            RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
+                            romHandler.getMovesAtLevel(tp.getSpecies().getNumber(), romHandler.getMovesLearnt(), tp.getLevel())
                             : Arrays.stream(tp.getMoves()).distinct().filter(mv -> mv != 0).toArray();
                     Set<Type> moveTypes = new HashSet<>();
                     for (int moveID : pkMoves) {
@@ -596,6 +593,28 @@ public class TrainerRandomizersTest extends RandomizerTest {
                         }
                     }
                     assertTrue(anyMoveTypeCorrect);
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void doNotUsePrematureEvosWorks(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+        settings.setTrainersDoNotGetPrematureEvos(true);
+
+        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+
+        // If Pokemon has an evolution to, then the level of that evolution must be <= the level of the Pokemon
+        for (Trainer tr : romHandler.getTrainers()) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                for (Evolution evo : tp.getSpecies().getEvolutionsTo()) {
+                    System.out.println(tp + " with Evo " + evo);
+                    assertTrue(evo.getEstimatedEvoLvl() <= tp.getLevel());
                 }
             }
         }
@@ -712,7 +731,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void nonForcefullyEvolvedPokemonAreCorrect(String romName) {
+    public void nonForcefullyEvolvedPokemonAreCorrectViaRandomizeTrainerPokes(String romName) {
         activateRomHandler(romName);
 
         // Record original species of all trainer Pokemon (for better console output only)
@@ -720,25 +739,51 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
-        s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersEvolveTheirPokemon(true);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void nonForcefullyEvolvedPokemonAreCorrectViaDirectMethodCall(String romName) {
+        activateRomHandler(romName);
+
+        // Record original species of all trainer Pokemon (for better console output only)
+        Map<Trainer, List<String>> originalNames = recordTrainerPokemonSpeciesNames();
+
+        // Randomize
+        Settings s = new Settings();
+        s.setTrainersEvolveTheirPokemon(true);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
+        TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
+        tpRando.evolveTrainerPokemonAsFarAsLegal();
+
+        // Test
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
+    }
+
+    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersPercentageEvoLvlModifier) {
+        int trainersFullyEvolvedLevel = (int) Math.ceil((1 + trainersPercentageEvoLvlModifier/100.0) * romHandler.getHighestEvoLvl());
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
-            for (int k = 0; k< tr.getPokemon().size(); k++) {
+            for (int k = 0; k < tr.getPokemon().size(); k++) {
                 TrainerPokemon tp = tr.getPokemon().get(k);
                 System.out.println(originalNames.get(tr).get(k) + "-->" + tp.getSpecies().getName());
-                if (tp.getLevel()<20) {
-                    // Everything below level 20 cannot be a basic Pokemon with two evolution stages
-                    assertFalse(tp.getSpecies().isBasicPokemonWithMoreThanTwoEvoStages(false));
-                }
-                else {
-                    // Everything over level 20 has to be fully evolved
+                if (tp.getLevel() >= trainersFullyEvolvedLevel) {
+                    // Everything >= trainersFullyEvolvedLevel has to be fully evolved
                     assertTrue(tp.getSpecies().getEvolvedSpecies(false).isEmpty());
+                } else {
+                    // Any evolution of the Pokemon must have an estimatedEvo level greater than the Pokemon's level,
+                    // otherwise it must be evolved because of 'Trainers evolve their Pokemon'
+                    for (Evolution evo : tp.getSpecies().getEvolutionsFrom()) {
+                        assertTrue(evo.getEstimatedEvoLvl() > tp.getLevel());
+                    }
                 }
             }
         }
@@ -851,10 +896,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         // Randomize
         Settings s = new Settings();
-        s.setTrainersForceMiddleStage(true);
-        s.setTrainersForceMiddleStageLevel(1);
-        s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersEvolveTheirPokemon(true);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
@@ -871,8 +914,16 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 3);
+    public void betterMovesets_DoesNotCauseCrash(String romName) {
+        activateRomHandler(romName);
+        Settings s = new Settings();
+        s.setBetterTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesets_DoesNotCauseUbiquitousMove(String romName) {
         activateRomHandler(romName);
 
         Settings s = new Settings();

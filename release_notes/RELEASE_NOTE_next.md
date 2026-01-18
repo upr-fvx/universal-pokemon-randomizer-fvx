@@ -7,10 +7,10 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+@bergmaen for your code contributions,
+[Every person who submitted a solved issue] @LunaisLazier for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] FourLeafSunny for the CPG sprites, and
+[Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -35,15 +35,22 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Graphics
-- (Gen 3) New FRLG Custom Player Graphics: Kris by FourLeafSunny
-
 ### Misc. Tweaks
-- (Gen 4+5) [The description of a misc. tweak addition or change here.]
+- (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
+- (Gen 2) Restored check value writing for pokecrystal-speedchoice.
+- (GUI) Added theme selection. This includes dark mode (!) and also the ability to change between Windows/Metal/FlatLaf themes. The Windows theme is still only available on Windows computers. (#151)
 
 ## Bugfixes
-- (Gen 3) Fixed overworld sprites of Custom Player Graphics sometimes getting an invalid/glitchy palette.
+- (Red/Blue) Fixed rivals original starters not being randomized if starter
+  Pokemon are randomized, trainer Pokemon are unchanged, additional Pokemon are
+  added to important trainers, and rival is supposed to keep starter throughout
+  the game. (#145)
+- (Yellow) Fixed Settings from other games not being loadable in yellow. (#145)
+- (GUI) Fixed [...].
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
+ evolution levels not being loaded correctly. (#144)

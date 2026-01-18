@@ -89,11 +89,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private Gen2RomEntry romEntry;
     private Species[] pokes;
     private List<Species> speciesList;
-    private List<Trainer> trainers;
     private List<Item> items;
     private Move[] moves;
     private Map<Integer, List<MoveLearnt>> movesets;
     private boolean havePatchedFleeing;
+    private boolean havePatchedUnownAvailability;
     private List<Integer> itemOffs;
     private String[][] mapNames;
     private String[] landmarkNames;
@@ -161,6 +161,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             }
         }
 
+        if (romEntry.getShopNames().isEmpty()) {
+            romEntry.setShopNames(Gen2Constants.shopNames);
+        }
+        if (romEntry.getArrayValue("SpecialShops").length == 0) {
+            romEntry.putArrayValue("SpecialShops", Gen2Constants.specialShops);
+        }
+        if (romEntry.getArrayValue("MainGameShops").length == 0) {
+            romEntry.putArrayValue("MainGameShops", Gen2Constants.mainGameShops);
+        }
     }
 
     @Override
@@ -195,7 +204,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         pokes = new Species[Gen2Constants.pokemonCount + 1];
         // Fetch our names
         String[] pokeNames = readPokemonNames();
@@ -211,7 +220,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
         // Write pokemon names
         int offs = romEntry.getIntValue("PokemonNamesOffset");
         int len = romEntry.getIntValue("PokemonNamesLength");
@@ -858,8 +867,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             enc.setMaxLevel(rom[offset++] & 0xFF);
             area.add(enc);
         }
-        // Unown is banned for Bug Catching Contest (5/8/2016)
-        area.banSpecies(pokes[SpeciesIDs.unown]);
         encounterAreas.add(area);
     }
 
@@ -874,6 +881,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public void setEncounters(List<EncounterArea> encounters) {
         if (!havePatchedFleeing) {
             patchFleeing();
+        }
+        if (!havePatchedUnownAvailability) {
+            patchUnownAvailability();
         }
 
         Iterator<EncounterArea> areaIterator = encounters.iterator();
@@ -1013,24 +1023,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<Trainer> getTrainers() {
-        if (trainers == null) {
-            throw new IllegalStateException("Trainers have not been loaded.");
-        }
-        return trainers;
-    }
-
-    @Override
     // This is very similar to the implementation in Gen1RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
     public void loadTrainers() {
+        trainers.clear();
         int trainerClassTableOffset = romEntry.getIntValue("TrainerDataTableOffset");
         int trainerClassAmount = romEntry.getIntValue("TrainerClassAmount");
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");
         List<String> tcnames = this.getTrainerClassNames();
-
-        trainers = new ArrayList<>();
 
         int index = 0;
         for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
@@ -1113,11 +1114,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return Gen2Constants.gymAndEliteThemes;
-    }
-
-    @Override
-    public void setTrainers(List<Trainer> trainers) {
-        this.trainers = trainers;
     }
 
     @Override
@@ -1208,7 +1204,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         // made quickly while refactoring trainer writing, might be applicable in more/better places
         // (including other gens)
         // TODO: look at the above
-        tp.setMoves(RomFunctions.getMovesAtLevel(tp.getSpecies().getNumber(), this.getMovesLearnt(), tp.getLevel()));
+        tp.setMoves(getMovesAtLevel(tp.getSpecies().getNumber(), this.getMovesLearnt(), tp.getLevel()));
     }
 
     private int lengthOfTrainerClassAt(int offset, int numberOfTrainers) {
@@ -1562,19 +1558,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public SpeciesSet getBannedForWildEncounters() {
-        // Ban Unown because they don't show up unless you complete a puzzle in the Ruins of Alph.
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
-    }
-
-    @Override
     public boolean hasStaticAltFormes() {
         return false;
-    }
-
-    @Override
-    public SpeciesSet getBannedForStaticPokemon() {
-        return new SpeciesSet(Collections.singletonList(pokes[SpeciesIDs.unown]));
     }
 
     @Override
@@ -1914,7 +1899,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         // no move evos, so no need to check for those
         for (Species pkmn : pokes) {
             if (pkmn != null) {
@@ -1925,22 +1910,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // change
                         if (evol.getFrom().getNumber() == SpeciesIDs.slowpoke) {
                             // Slowpoke: Make water stone => Slowking
-                            evol.setType(EvolutionType.STONE);
-                            evol.setExtraInfo(ItemIDs.waterStone);
+                            evol.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.seadra) {
-                            // Seadra: level 40
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(40); // level
+                            // Seadra: level 40 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
                         } else if (evol.getFrom().getNumber() == SpeciesIDs.poliwhirl || evol.getType() == EvolutionType.TRADE) {
                             // Poliwhirl or any of the original 4 trade evos
-                            // Level 37
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(37); // level
+                            // Level 37 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
                         } else {
                             // A new trade evo of a single stage Pokemon
-                            // level 30
-                            evol.setType(EvolutionType.LEVEL);
-                            evol.setExtraInfo(30); // level
+                            // level 30 (or estimated level if useEstimatedLevels)
+                            evol.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
                         }
                     }
                 }
@@ -1950,7 +1931,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         // Reduce the amount of happiness required to evolve.
         int offset = find(rom, Gen2Constants.friendshipValueForEvoLocator);
         if (offset > 0) {
@@ -1986,15 +1967,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public List<Shop> getShops() {
         List<Shop> shops = readShops();
-
-        shops.forEach(shop -> shop.setSpecialShop(true));
-        Gen2Constants.skipShops.forEach(i -> shops.get(i).setSpecialShop(false));
+        Set<Integer> specialShops = Arrays.stream(romEntry.getArrayValue("SpecialShops"))
+                .boxed().collect(Collectors.toSet());
+        specialShops.forEach(i -> shops.get(i).setSpecialShop(true));
 
         return shops;
     }
 
     private List<Shop> readShops() {
         List<Shop> shops = new ArrayList<>();
+        Set<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops"))
+                .boxed().collect(Collectors.toSet());
 
         int tableOffset = romEntry.getIntValue("ShopItemOffset");
         int shopAmount = romEntry.getIntValue("ShopAmount");
@@ -2002,8 +1985,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         while (shopNum < shopAmount) {
             int shopOffset = readPointer(tableOffset + shopNum * 2, bankOf(tableOffset));
             Shop shop = readShop(shopOffset);
-            shop.setName(Gen2Constants.shopNames.get(shopNum));
-            shop.setMainGame(Gen2Constants.mainGameShops.contains(shopNum));
+            shop.setName(romEntry.getShopNames().get(shopNum));
+            shop.setMainGame(mainGameShops.contains(shopNum));
             shops.add(shop);
             shopNum++;
         }
@@ -2011,15 +1994,21 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private Shop readShop(int offset) {
+        boolean longerItems = romEntry.getIntValue("LongerShopItems") == 1; // speedchoice
+
         Shop shop = new Shop();
         shop.setItems(new ArrayList<>());
         int itemAmount = rom[offset++];
+        if (longerItems) offset++;
         for (int itemNum = 0; itemNum < itemAmount; itemNum++) {
             int itemID = Gen2Constants.itemIDToStandard(rom[offset++] & 0xFF);
             shop.getItems().add(items.get(itemID));
+            if (longerItems) offset++;
         }
         if (rom[offset] != Gen2Constants.shopItemsTerminator) {
-            throw new RomIOException("Invalid shop data");
+            throw new RomIOException("Invalid shop data. Expected terminator 0x" +
+                    Integer.toHexString(Gen2Constants.shopItemsTerminator) + ", was 0x" +
+                    Integer.toHexString(rom[offset]));
         }
         return shop;
     }
@@ -2035,10 +2024,20 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] shopToBytes(Shop shop) {
-        byte[] data = new byte[shop.getItems().size() + 2];
+        boolean longerItems = romEntry.getIntValue("LongerShopItems") == 1; // speedchoice
+        int size = 1 + (shop.getItems().size() + 1) * (longerItems ? 2 : 1);
+        byte[] data = new byte[size];
         data[0] = (byte) shop.getItems().size();
         for (int i = 0; i < shop.getItems().size(); i++) {
-            data[i + 1] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
+            if (longerItems) {
+                data[i * 2 + 1] = (byte) 0x01;
+                data[i * 2 + 2] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
+            } else {
+                data[i + 1] = (byte) (Gen2Constants.itemIDToInternal(shop.getItems().get(i).getId()) & 0xFF);
+            }
+        }
+        if (longerItems) {
+            data[data.length - 2] = (byte) 0x01;
         }
         data[data.length - 1] = (byte) 0xFF;
         return data;
@@ -2296,11 +2295,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
         if (romEntry.getArrayValue("CatchingTutorialOffsets").length != 0) {
-            // Unown is banned
-            if (opponent.getNumber() == SpeciesIDs.unown) {
-                return false;
-            }
-
             int[] offsets = romEntry.getArrayValue("CatchingTutorialOffsets");
             for (int offset : offsets) {
                 writeByte(offset, (byte) opponent.getNumber());
@@ -2492,11 +2486,47 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void patchFleeing() {
-        havePatchedFleeing = true;
         int offset = romEntry.getIntValue("FleeingDataOffset");
         writeByte(offset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetTwoOffset, (byte) 0xFF);
         writeByte(offset + Gen2Constants.fleeingSetThreeOffset, (byte) 0xFF);
+        havePatchedFleeing = true;
+    }
+
+    /**
+     * Makes it possible for Unown to appear in the wild, before the Ruins of Alph puzzles are solved.
+     */
+    private void patchUnownAvailability() {
+        // "AllowUnown" can be used by ROM hacks to mark that they already let Unown
+        // be encountered in the wild normally, and thus don't need to be patched.
+        if (romEntry.getIntValue("AllowUnown") == 0) {
+            int[] offsets = romEntry.getArrayValue("UnownAvailabilityPatchOffsets");
+            if (offsets.length != 2) {
+                throw new RuntimeException("UnownAvailabilityPatchOffsets is either not defined in the ROM entry, " +
+                        "or contains the wrong amount of offsets.");
+            }
+
+            // The first part works by changing a "cp UNOWN; jr nz, .done" to a non-conditional jump.
+            // That way, Unown doesn't get any special handling, and works like any other mon.
+            if (rom[offsets[0]] != GBConstants.gbZ80JumpRelativeNZ) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[0]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[0]] & 0xFF) + ", expected: 0x20." );
+            }
+            rom[offsets[0]] = GBConstants.gbZ80JumpRelative;
+
+            // The second part NOPs out a conditional loop, which loops back if the Unown form hasn't
+            // been unlocked yet and tries to roll a new one. In other words, an infinite loop if no
+            // forms have been unlocked.
+            if (rom[offsets[1]] != GBConstants.gbZ80JumpRelativeC) {
+                throw new RuntimeException("Unexpected byte found in the ROM's choose wild encounter routine, " +
+                        "likely ROM entry value \"UnownAvailabilityPatchOffsets[1]\" is faulty.\n" +
+                        "Found: 0x" + Integer.toHexString(rom[offsets[1]] & 0xFF) + ", expected: 0x38." );
+            }
+            rom[offsets[1]] = GBConstants.gbZ80Nop;
+            rom[offsets[1] + 1] = GBConstants.gbZ80Nop;
+        }
+        havePatchedUnownAvailability = true;
     }
 
     private void loadLandmarkNames() {
@@ -3338,4 +3368,19 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         return romEntry;
     }
 
+    @Override
+    public boolean shouldWriteCheckValue() {
+        return romEntry.getIntValue("CheckValueOffset") != 0;
+    }
+
+    @Override
+    public void writeCheckValue(int checkValue) {
+        int offset = romEntry.getIntValue("CheckValueOffset");
+        if (offset == 0) {
+            throw new RuntimeException("No value for CheckValueOffset found in ROM Entry");
+        }
+        for (int i = 0; i < 4; i++) {
+            rom[offset + i] = (byte) ((checkValue >> (3 - i) * 8) & 0xFF);
+        }
+    }
 }

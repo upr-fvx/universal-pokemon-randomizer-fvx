@@ -41,7 +41,7 @@ import java.util.Set;
  * After a Rom has been loaded with {@link #loadRom(String)}, a number of data types reflecting the contents of the
  * Rom can be acquired through getters (e.g. {@link #getSpecies()}, {@link #getStarters()}, {@link #getTrainers()}).
  * Most of the corresponding data also have setters which update the contents of the Rom (e.g.
- * {@link #setStarters(List)}, {@link #setTrainers(List)}), but some (most notably the {@link Species} data from
+ * {@link #setStarters(List)}), but some (most notably the {@link Species} data from
  * {@link #getSpecies()}) are instead updated simply by editing the object returned by the setter.
  * An edited Rom can be saved with {@link #saveRom(String, long, boolean)}.
  * <br><br>
@@ -87,6 +87,14 @@ public interface RomHandler {
 
     String getGameUpdateVersion();
 
+    // ========================
+    // Speedchoice save methods
+    // ========================
+
+    boolean shouldWriteCheckValue();
+
+    void writeCheckValue(int checkValue);
+
     // ===========
     // Log methods
     // ===========
@@ -107,6 +115,11 @@ public interface RomHandler {
 
     List<Species> getSpecies();
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadSpeciesStats();
+
     List<Species> getSpeciesInclFormes();
 
     SpeciesSet getAltFormes();
@@ -122,7 +135,14 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
+    int getHighestEvoLvl();
+
     RestrictedSpeciesService getRestrictedSpeciesService();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void saveSpeciesStats();
 
     // ==================================
     // Methods to set up Gen Restrictions
@@ -290,6 +310,11 @@ public interface RomHandler {
 
     List<Trainer> getTrainers();
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadTrainers();
+
     List<Integer> getMainPlaythroughTrainers();
 
     /**
@@ -301,7 +326,10 @@ public interface RomHandler {
 
     Map<String, Type> getGymAndEliteTypeThemes();
 
-    void setTrainers(List<Trainer> trainerData);
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void saveTrainers();
 
     boolean canAddPokemonToBossTrainers();
 
@@ -356,7 +384,18 @@ public interface RomHandler {
 
     boolean supportsFourStartingMoves();
 
-    // ==============
+    /**
+     * Get the 4 moves known by a Species at a particular level.
+     *
+     * @param pkmn Species index to get moves for.
+     * @param movesets Map of Species indices mapped to movesets.
+     * @param level Level to get at.
+     * @return Array with move indices.
+     */
+    int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
+
+
+        // ==============
     // Static Pokemon
     // ==============
 
@@ -577,11 +616,11 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
-    void removeImpossibleEvolutions(boolean changeMoveEvos);
+    void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
-    void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel);
+    void condenseLevelEvolutions(int maxLevel);
 
-    void makeEvolutionsEasier(boolean changeWithOtherEvos);
+    void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels);
 
     boolean hasTimeBasedEvolutions();
 
@@ -595,8 +634,8 @@ public interface RomHandler {
 
     /**
      * Returns a {@link Map} containing all Species whose
-     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean)},
-     * {@link #makeEvolutionsEasier(boolean)}, or {@link #removeTimeBasedEvolutions()},
+     * {@link Evolution}s were changed using {@link #removeImpossibleEvolutions(boolean, boolean)},
+     * {@link #makeEvolutionsEasier(boolean, boolean)}, or {@link #removeTimeBasedEvolutions()},
      * and a {@link List} of all their Evolutions <b>pre-</b>change.<br>
      * If those methods have not been called, this Set is empty.
      */
@@ -691,6 +730,16 @@ public interface RomHandler {
     // ========
     // Graphics
     // ========
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadPokemonPalettes();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void savePokemonPalettes();
 
     boolean hasPokemonPaletteSupport();
 

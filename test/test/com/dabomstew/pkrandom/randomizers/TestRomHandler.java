@@ -1,6 +1,7 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
@@ -137,6 +138,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean canAddPokemonToBossTrainers;
     private final boolean canAddPokemonToImportantTrainers;
     private final boolean canAddPokemonToRegularTrainers;
+    private int highestEvoLvl = 0;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -226,6 +228,7 @@ public class TestRomHandler extends AbstractRomHandler {
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
+        highestEvoLvl = mockupOf.getHighestEvoLvl();
     }
 
     /**
@@ -408,7 +411,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         for(Evolution evolution : original.getEvolutionsFrom()) {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.getType(), evolution.getExtraInfo());
+                    evolution.getType(), evolution.getExtraInfo(), evolution.getEstimatedEvoLvl());
             evoCopy.setForme(evolution.getForme());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
@@ -538,7 +541,7 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void loadPokemonStats() {
+    public void loadSpeciesStats() {
         throw new UnsupportedOperationException();
     }
 
@@ -548,12 +551,22 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadTrainers() {
+
+    }
+
+    @Override
+    public void saveTrainers() {
+
+    }
+
+    @Override
     public void saveMoves() {
 
     }
 
     @Override
-    public void savePokemonStats() {
+    public void saveSpeciesStats() {
 
     }
 
@@ -649,11 +662,23 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Species getAltFormeOfSpecies(Species base, int forme) {
-        if(testAltFormesMap.get(base) == null) {
-            return base;
-        } else {
-            return testAltFormesMap.get(base).get(forme);
+        if (base == null) {
+            throw new IllegalArgumentException("base can't be null");
         }
+
+        // Minior causes trouble when testing, because testAltFormesMap doesn't properly
+        // represent forms-with-forms. This is a quick workaround, instead of fixing that.
+        // All will need to be reworked come the form rewrite, anyways...
+        if (base.getBaseNumber() == SpeciesIDs.minior) {
+            return base;
+        }
+
+        Species altForme = testAltFormesMap.get(base) == null ? base
+                : testAltFormesMap.get(base).get(forme);
+        if (altForme == null) {
+            throw new RuntimeException("species " + base.getFullName() + " has no alt forme " + forme);
+        }
+        return altForme;
         //why is this even in RomHandler??
     }
 
@@ -839,11 +864,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void setTrainers(List<Trainer> trainerData) {
-        testTrainers = trainerData;
-    }
-
-    @Override
     public boolean canAddPokemonToBossTrainers() {
         return canAddPokemonToBossTrainers;
     }
@@ -871,6 +891,11 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public int getHighestEvoLvl() {
+        return highestEvoLvl;
     }
 
     @Override
@@ -1325,17 +1350,17 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public void removeImpossibleEvolutions(boolean changeMoveEvos) {
+    public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void condenseLevelEvolutions(int maxLevel, int maxIntermediateLevel) {
+    public void condenseLevelEvolutions(int maxLevel) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void makeEvolutionsEasier(boolean changeWithOtherEvos) {
+    public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
         throw new NotImplementedException();
     }
 
@@ -1470,6 +1495,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadPokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void savePokemonPalettes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean hasPokemonPaletteSupport() {
         throw new NotImplementedException();
     }
@@ -1506,11 +1541,6 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void savePokemonPalettes() {
         throw new NotImplementedException();
     }
 

@@ -760,9 +760,9 @@ public class Gen4Constants {
 
     public static final String typeEffectivenessTableLocator = "000505000805";
 
-    private static final int trophyGardenGrassEncounterIndexDP = 304, trophyGardenGrassEncounterIndexPt = 308;
-    private static final List<Integer> marshGrassEncounterIndicesDP = Arrays.asList(76, 82, 88, 94, 100, 102),
-            marshGrassEncounterIndicesPt = Arrays.asList(76, 82, 88, 94, 100, 106);
+    private static final int trophyGardenGrassEncounterIndexDP = 1648, trophyGardenGrassEncounterIndexPt = 1652;
+    private static final List<Integer> marshGrassEncounterIndicesDP = Arrays.asList(292, 310, 328, 346, 364, 378),
+            marshGrassEncounterIndicesPt = Arrays.asList(292, 310, 328, 346, 364, 382);
 
     public static final String pickupTableLocator = "110012001A000300", rarePickupTableLocator = "19005C00DD00";
     public static final int numberOfCommonPickupItems = 18, numberOfRarePickupItems = 11;

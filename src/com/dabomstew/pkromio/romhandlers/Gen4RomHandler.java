@@ -1425,8 +1425,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		readFeebasTileEncounters(encounterAreas, extraEncounterData, encounterOverlay);
 		readHoneyTreeEncounters(encounterAreas, extraEncounterData, encounterOverlay);
-//		readTrophyGardenRotatingEncounters(encounterAreas, extraEncounterData);
-//		readGreatMarshRotatingEncounters(encounterAreas, extraEncounterData);
+		readTrophyGardenRotatingEncounters(encounterAreas, extraEncounterData);
+		readGreatMarshRotatingEncounters(encounterAreas, extraEncounterData);
 	}
 
 	private void readFeebasTileEncounters(List<EncounterArea> encounterAreas, NARCArchive extraEncounterData, byte[] encounterOverlay) {
@@ -1484,12 +1484,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		EncounterArea area = readExtraEncounterAreaDPPt(trophyGardenData, 0, 16);
 
 		// Trophy Garden rotating Pokemon get their levels from the regular Trophy Garden grass encounters,
-		// indices 6 and 7. To make the logs nice, read in these encounters for this area and set the level
+        // (the "always" slots).
+        // To make the logs nice, read in these encounters for this area and set the level
 		// and maxLevel for the rotating encounters appropriately.
 		int trophyGardenGrassEncounterIndex = Gen4Constants.getTrophyGardenGrassEncounterIndex(romEntry.getRomType());
 		EncounterArea trophyGardenGrassEncounterSet = encounterAreas.get(trophyGardenGrassEncounterIndex);
-		int level1 = trophyGardenGrassEncounterSet.get(6).getLevel();
-		int level2 = trophyGardenGrassEncounterSet.get(7).getLevel();
+		int level1 = trophyGardenGrassEncounterSet.get(0).getLevel();
+		int level2 = trophyGardenGrassEncounterSet.get(1).getLevel();
 		for (Encounter enc : area) {
 			enc.setLevel(Math.min(level1, level2));
 			if (level1 != level2) {
@@ -1510,21 +1511,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			EncounterArea area = readExtraEncounterAreaDPPt(greatMarshData, 0, 32);
 
 			// Great Marsh rotating Pokemon get their levels from the regular Great Marsh grass encounters,
-			// indices 6 and 7. To make the logs nice, read in these encounters for all areas and set the
+            // (the "always" slots).
+			// To make the logs nice, read in these encounters for all areas and set the
 			// level and maxLevel for the rotating encounters appropriately.
 			int level = 100;
 			int maxLevel = 0;
 			List<Integer> marshGrassEncounterIndices = Gen4Constants.getMarshGrassEncounterIndices(romEntry.getRomType());
 			for (Integer marshGrassEncounterIndex : marshGrassEncounterIndices) {
 				EncounterArea marshGrassArea = encounterAreas.get(marshGrassEncounterIndex);
-				int currentLevel = marshGrassArea.get(6).getLevel();
+				int currentLevel = marshGrassArea.get(0).getLevel();
 				if (currentLevel < level) {
 					level = currentLevel;
 				}
 				if (currentLevel > maxLevel) {
 					maxLevel = currentLevel;
 				}
-				currentLevel = marshGrassArea.get(7).getLevel();
+				currentLevel = marshGrassArea.get(1).getLevel();
 				if (currentLevel < level) {
 					level = currentLevel;
 				}
@@ -1994,8 +1996,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		writeFeebasEncounters(areaIterator, extraEncounterData, encounterOverlay);
 		writeHoneyTreeEncounters(areaIterator, extraEncounterData, encounterOverlay);
-//		writeTrophyGardenRotatingEncounters(areaIterator, extraEncounterData);
-//		writeGreatMarshRotatingEncounters(areaIterator, extraEncounterData);
+		writeTrophyGardenRotatingEncounters(areaIterator, extraEncounterData);
+		writeGreatMarshRotatingEncounters(areaIterator, extraEncounterData);
 
 		// Save
 		writeOverlay(romEntry.getIntValue("EncounterOvlNumber"), encounterOverlay);

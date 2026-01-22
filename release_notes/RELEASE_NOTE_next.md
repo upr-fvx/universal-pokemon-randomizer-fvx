@@ -35,6 +35,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Wild Pokemon
+- (GUI) Renamed "Keep Area/Zone Theme" to more consistent "Keep Set/Zone Theme".
+
 ### Misc. Tweaks
 - (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.
 

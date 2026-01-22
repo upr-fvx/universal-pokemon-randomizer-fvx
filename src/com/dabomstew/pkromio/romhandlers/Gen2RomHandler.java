@@ -700,7 +700,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         Iterator<Item> sHeldItems = items.iterator();
         for (int offset : shiOffsets) {
-            writeByte(offset, (byte) Gen2Constants.itemIDToInternal(sHeldItems.next().getId() & 0xFF));
+            writeByte(offset, (byte) Gen2Constants.itemIDToInternal(sHeldItems.next().getId()));
         }
     }
 

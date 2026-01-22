@@ -3928,7 +3928,13 @@ public class RandomizerGUI {
                         }
 
                         if (key.equals("theme")) {
-                            setTheme(Theme.valueOf(tokens[1].trim()));
+                            Theme theme;
+                            try {
+                                theme = Theme.valueOf(tokens[1].trim());
+                            } catch (IllegalArgumentException ignored) {
+                                theme = Theme.DEFAULT;
+                            }
+                            setTheme(theme);
 
                         } else if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());

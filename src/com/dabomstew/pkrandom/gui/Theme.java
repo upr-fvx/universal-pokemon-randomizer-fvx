@@ -31,7 +31,6 @@ public enum Theme {
         this.laf = laf;
         boolean installed = false;
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            System.out.println(info.getClassName());
             if (info.getClassName().equals(laf.getClass().getName())) {
                 installed = true;
                 break;

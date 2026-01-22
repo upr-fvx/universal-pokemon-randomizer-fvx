@@ -56,3 +56,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
  evolution levels not being loaded correctly. (#144)
 - (Gen 2) Fixed random starter held items randomization failure. (#155)
+- (GUI) Fixed "No-Game-Breaking Moves" not being saved properly to settings files. (#153)

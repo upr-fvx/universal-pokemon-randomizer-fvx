@@ -1686,7 +1686,6 @@ public class RandomizerGUI {
         ptRandomCompletelyRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         ptUnchangedRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.UNCHANGED);
         ptFollowMegaEvosCheckBox.setSelected(settings.isTypesFollowMegaEvolutions());
-        pmsNoGameBreakingMovesCheckBox.setSelected(settings.doBlockBrokenMoves());
 
         peMakeEvolutionsEasierCheckBox.setSelected(settings.isMakeEvolutionsEasier());
         peMakeEvolutionsEasierLvlSlider.setValue(

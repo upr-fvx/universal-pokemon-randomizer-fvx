@@ -429,6 +429,8 @@ public class SettingsUpdater {
             // complement handling (shift percentage range [-50, 50] to [0, 100]).
             // NOTE: At this point, dataBlock[14] only holds the TP Evo Level Percentage Modifier.
             dataBlock[14] += 50;
+            // Clear the old and redundant "blockBrokenMoves" bit.
+            dataBlock[65] = clearBits(dataBlock[65], 2);
         }
 
         // fix checksum

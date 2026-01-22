@@ -29,10 +29,12 @@ package com.dabomstew.pkrandom;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -61,7 +63,6 @@ public class Settings {
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
     private boolean randomizeIntroMon;
-    private boolean blockBrokenMoves;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
     private boolean dualTypeOnly;
@@ -363,9 +364,6 @@ public class Settings {
     private boolean pokemonPalettesFollowTypes;
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
-
-    private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterType customPlayerGraphicsCharacterMod;
 
     public void writeToFileFormat(FileOutputStream out) throws IOException {
         byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
@@ -731,7 +729,7 @@ public class Settings {
                 false, false, false, false, false, false));
 
         // 65 general options #2
-        out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
+        out.write(makeByteSelected(randomizeIntroMon, raceMode, false, limitPokemon,
                 false, false, false, false));
 
         // 66 'Make evolutions easier' level select slider
@@ -972,7 +970,6 @@ public class Settings {
 
         settings.setTrainersLevelModified(restoreState(data[38], 7));
         settings.setTrainersLevelModifier((data[38] & 0x7F) - 50);
-        //settings.setTrainersLevelModifier((data[38] & 0x7F));
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,
@@ -1091,7 +1088,7 @@ public class Settings {
 
         settings.setRandomizeIntroMon(restoreState(data[65], 0));
         settings.setRaceMode(restoreState(data[65], 1));
-        settings.setBlockBrokenMoves(restoreState(data[65], 2));
+
         settings.setLimitPokemon(restoreState(data[65], 3));
         settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
 
@@ -1383,16 +1380,6 @@ public class Settings {
 
     public void setRandomizeIntroMon(boolean randomizeIntroMon) {
         this.randomizeIntroMon = randomizeIntroMon;
-    }
-
-    public boolean doBlockBrokenMoves() {
-        return blockBrokenMoves;
-    }
-
-    public void setBlockBrokenMoves(boolean blockBrokenMoves) {
-        blockBrokenMovesetMoves = blockBrokenMoves;
-        blockBrokenTMMoves = blockBrokenMoves;
-        blockBrokenTutorMoves = blockBrokenMoves;
     }
 
     public boolean isLimitPokemon() {
@@ -2815,26 +2802,6 @@ public class Settings {
 	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
-
-    public GraphicsPack getCustomPlayerGraphics() {
-        return customPlayerGraphics;
-    }
-
-    public void setCustomPlayerGraphics(GraphicsPack customPlayerGraphics) {
-        this.customPlayerGraphics = customPlayerGraphics;
-    }
-
-    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
-        return customPlayerGraphicsCharacterMod;
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
-        this.customPlayerGraphicsCharacterMod = playerCharacterMod;
-    }
 
 	private static int makeByteSelected(boolean... bools) {
         if (bools.length > 8) {

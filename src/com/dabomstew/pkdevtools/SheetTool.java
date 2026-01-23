@@ -3,6 +3,8 @@ package com.dabomstew.pkdevtools;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,15 +19,15 @@ public class SheetTool {
         private final ImageIcon icon;
 
         private ImageLabel(BufferedImage bufferedImage) {
-            if (bufferedImage == null) {
-                bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-            }
             this.icon = new ImageIcon();
             setIcon(icon);
             setImage(bufferedImage);
         }
 
         public void setImage(BufferedImage bim) {
+            if (bim == null) {
+                bim = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
+            }
             this.bim = bim;
             update();
         }
@@ -37,9 +39,9 @@ public class SheetTool {
         }
     }
 
-    private static class SheetImageLabel extends ImageLabel {
+    private class SheetImageLabel extends ImageLabel {
 
-        private static class Frame {
+        private class Frame {
             int x, y, w, h;
             private Frame(int x, int y, int w, int h) {
                 this.x = x;
@@ -58,12 +60,31 @@ public class SheetTool {
 
         private SheetImageLabel(BufferedImage bufferedImage) {
             super(bufferedImage);
+            // stupid super-long mouse listeners. why can't there just be a clicklistener...
+            this.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    selectFrameImage(e);
+                }
+                @Override
+                public void mousePressed(MouseEvent e) {
+                }
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                }
+            });
         }
 
         @Override
         public void setImage(BufferedImage bim) {
             super.setImage(bim);
-            this.backgroundColor = bim.getRGB(0, 0); // TODO: manual selection
+            this.backgroundColor = this.bim.getRGB(0, 0); // TODO: manual selection
             this.frames = initFrames();
             System.out.println(frames);
         }
@@ -123,6 +144,23 @@ public class SheetTool {
                 return bim.getRGB(x, y) == backgroundColor;
             }
         }
+
+        private void selectFrameImage(MouseEvent e) {
+            Frame f = findFrame(e.getX(), e.getY());
+            if (f == null) {
+                return;
+            }
+            selectedFrameLabel.setImage(bim.getSubimage(f.x, f.y, f.w, f.h));
+        }
+
+        private Frame findFrame(int x, int y) {
+            for (Frame f : frames) {
+                if (f.x <= x && x < (f.x + f.w) && f.y <= y && y < (f.y + f.h)) {
+                    return f;
+                }
+            }
+            return null;
+        }
     }
 
     private JButton openFromImageButton;
@@ -132,11 +170,13 @@ public class SheetTool {
     private JButton saveToImageButton;
     private JPanel mainPanel;
     private JLabel infoLabel;
+    private JPanel selectedFramePanel;
 
     private final JFileChooser imageChooser;
 
     private final SheetImageLabel toImageLabel;
     private final SheetImageLabel fromImageLabel;
+    private final ImageLabel selectedFrameLabel;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -159,6 +199,8 @@ public class SheetTool {
         fromImageScrollPane.setViewportView(fromImageLabel);
         this.toImageLabel = new SheetImageLabel(null);
         toImageScrollPane.setViewportView(toImageLabel);
+        this.selectedFrameLabel = new ImageLabel(null);
+        selectedFramePanel.add(selectedFrameLabel);
 
         infoLabel.setText("");
 

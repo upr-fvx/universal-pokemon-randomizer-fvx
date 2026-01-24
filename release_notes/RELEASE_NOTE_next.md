@@ -10,7 +10,7 @@ Thanks to
 @bergmaen for your code contributions,
 [Every person who submitted a solved issue] @LunaisLazier and @Gabbyxo97 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and
+[Every person who made a new CPG] FourLeafSunny from Spriters' Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -37,6 +37,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 ### Wild Pokemon
 - (GUI) Renamed "Keep Area/Zone Theme" to more consistent "Keep Set/Zone Theme".
+
+### Graphics
+- (Gen 3) New FRLG Custom Player Graphics: Ethan (from Pokémon) by FourLeafSunny.
 
 ### Misc. Tweaks
 - (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.

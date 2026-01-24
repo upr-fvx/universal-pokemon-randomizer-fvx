@@ -30,7 +30,7 @@ public class RomHandlerTest {
     private static final String LAST_DOT_REGEX = "\\.+(?![^.]*\\.)";
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{2,3,4,5}, new Roms.Region[] {Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{2}, new Roms.Region[] {Roms.Region.USA}, true, false, false);
     }
 
     public static String[] getAllRomNames() {

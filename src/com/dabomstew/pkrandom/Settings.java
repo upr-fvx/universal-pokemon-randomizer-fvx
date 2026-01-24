@@ -29,10 +29,12 @@ package com.dabomstew.pkrandom;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -61,7 +63,6 @@ public class Settings {
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
     private boolean randomizeIntroMon;
-    private boolean blockBrokenMoves;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
     private boolean dualTypeOnly;
@@ -187,8 +188,7 @@ public class Settings {
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
-    private boolean trainersForceFullyEvolved;
-    private int trainersForceFullyEvolvedLevel = 30;
+    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -50 ~ 50
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
@@ -365,11 +365,8 @@ public class Settings {
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
 
-    private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterType customPlayerGraphicsCharacterMod;
-
     public void writeToFileFormat(FileOutputStream out) throws IOException {
-        byte[] settings = toString().getBytes(StandardCharsets.UTF_8);
+        byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
         buf.putInt(VERSION);
         buf.putInt(settings.length);
@@ -480,8 +477,8 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEMED,
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
-        // 14 trainer pokemon force evolutions
-        out.write((trainersForceFullyEvolved ? 0x80 : 0) | trainersForceFullyEvolvedLevel);
+        // 14 trainer pokemon evolution level modifier
+        out.write(trainersEvolutionLevelModifier + 50);
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -732,7 +729,7 @@ public class Settings {
                 false, false, false, false, false, false));
 
         // 65 general options #2
-        out.write(makeByteSelected(randomizeIntroMon, raceMode, blockBrokenMoves, limitPokemon,
+        out.write(makeByteSelected(randomizeIntroMon, raceMode, false, limitPokemon,
                 false, false, false, false));
 
         // 66 'Make evolutions easier' level select slider
@@ -838,9 +835,8 @@ public class Settings {
                 6, // KEEP_THEMED
                 7  // KEEP_THEME_OR_PRIMARY
         ));
-
-        settings.setTrainersForceFullyEvolved(restoreState(data[14], 7));
-        settings.setTrainersForceFullyEvolvedLevel(data[14] & 0x7F);
+        
+        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
@@ -974,7 +970,6 @@ public class Settings {
 
         settings.setTrainersLevelModified(restoreState(data[38], 7));
         settings.setTrainersLevelModifier((data[38] & 0x7F) - 50);
-        //settings.setTrainersLevelModifier((data[38] & 0x7F));
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,
@@ -1093,7 +1088,7 @@ public class Settings {
 
         settings.setRandomizeIntroMon(restoreState(data[65], 0));
         settings.setRaceMode(restoreState(data[65], 1));
-        settings.setBlockBrokenMoves(restoreState(data[65], 2));
+
         settings.setLimitPokemon(restoreState(data[65], 3));
         settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
 
@@ -1385,16 +1380,6 @@ public class Settings {
 
     public void setRandomizeIntroMon(boolean randomizeIntroMon) {
         this.randomizeIntroMon = randomizeIntroMon;
-    }
-
-    public boolean doBlockBrokenMoves() {
-        return blockBrokenMoves;
-    }
-
-    public void setBlockBrokenMoves(boolean blockBrokenMoves) {
-        blockBrokenMovesetMoves = blockBrokenMoves;
-        blockBrokenTMMoves = blockBrokenMoves;
-        blockBrokenTutorMoves = blockBrokenMoves;
     }
 
     public boolean isLimitPokemon() {
@@ -1971,20 +1956,12 @@ public class Settings {
         this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
     }
 
-    public boolean isTrainersForceFullyEvolved() {
-        return trainersForceFullyEvolved;
+    public int getTrainersEvolutionLevelModifier() {
+        return trainersEvolutionLevelModifier;
     }
 
-    public void setTrainersForceFullyEvolved(boolean trainersForceFullyEvolved) {
-        this.trainersForceFullyEvolved = trainersForceFullyEvolved;
-    }
-
-    public int getTrainersForceFullyEvolvedLevel() {
-        return trainersForceFullyEvolvedLevel;
-    }
-
-    public void setTrainersForceFullyEvolvedLevel(int trainersForceFullyEvolvedLevel) {
-        this.trainersForceFullyEvolvedLevel = trainersForceFullyEvolvedLevel;
+    public void setTrainersEvolutionLevelModifier(int trainersEvolutionLevelModifier) {
+        this.trainersEvolutionLevelModifier = trainersEvolutionLevelModifier;
     }
 
     public boolean isTrainersLevelModified() {
@@ -2825,26 +2802,6 @@ public class Settings {
 	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
-
-    public GraphicsPack getCustomPlayerGraphics() {
-        return customPlayerGraphics;
-    }
-
-    public void setCustomPlayerGraphics(GraphicsPack customPlayerGraphics) {
-        this.customPlayerGraphics = customPlayerGraphics;
-    }
-
-    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
-        return customPlayerGraphicsCharacterMod;
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
-        this.customPlayerGraphicsCharacterMod = playerCharacterMod;
-    }
 
 	private static int makeByteSelected(boolean... bools) {
         if (bools.length > 8) {

@@ -87,6 +87,14 @@ public interface RomHandler {
 
     String getGameUpdateVersion();
 
+    // ========================
+    // Speedchoice save methods
+    // ========================
+
+    boolean shouldWriteCheckValue();
+
+    void writeCheckValue(int checkValue);
+
     // ===========
     // Log methods
     // ===========
@@ -127,7 +135,7 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
-    int getHighestOriginalEvoLvl();
+    int getHighestEvoLvl();
 
     RestrictedSpeciesService getRestrictedSpeciesService();
 

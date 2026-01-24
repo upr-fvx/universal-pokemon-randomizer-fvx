@@ -1,6 +1,7 @@
 package test.com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
@@ -137,6 +138,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean canAddPokemonToBossTrainers;
     private final boolean canAddPokemonToImportantTrainers;
     private final boolean canAddPokemonToRegularTrainers;
+    private int highestEvoLvl = 0;
 
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
@@ -226,6 +228,7 @@ public class TestRomHandler extends AbstractRomHandler {
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
+        highestEvoLvl = mockupOf.getHighestEvoLvl();
     }
 
     /**
@@ -659,11 +662,23 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public Species getAltFormeOfSpecies(Species base, int forme) {
-        if(testAltFormesMap.get(base) == null) {
-            return base;
-        } else {
-            return testAltFormesMap.get(base).get(forme);
+        if (base == null) {
+            throw new IllegalArgumentException("base can't be null");
         }
+
+        // Minior causes trouble when testing, because testAltFormesMap doesn't properly
+        // represent forms-with-forms. This is a quick workaround, instead of fixing that.
+        // All will need to be reworked come the form rewrite, anyways...
+        if (base.getBaseNumber() == SpeciesIDs.minior) {
+            return base;
+        }
+
+        Species altForme = testAltFormesMap.get(base) == null ? base
+                : testAltFormesMap.get(base).get(forme);
+        if (altForme == null) {
+            throw new RuntimeException("species " + base.getFullName() + " has no alt forme " + forme);
+        }
+        return altForme;
         //why is this even in RomHandler??
     }
 
@@ -879,6 +894,11 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public int getHighestEvoLvl() {
+        return highestEvoLvl;
     }
 
     @Override

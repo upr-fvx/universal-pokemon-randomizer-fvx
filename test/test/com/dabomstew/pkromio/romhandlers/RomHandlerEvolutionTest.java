@@ -1,10 +1,7 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkromio.constants.SpeciesIDs;
-import com.dabomstew.pkromio.gamedata.Evolution;
-import com.dabomstew.pkromio.gamedata.EvolutionType;
-import com.dabomstew.pkromio.gamedata.Item;
-import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import com.dabomstew.pkromio.romhandlers.AbstractRomHandler;
 import org.junit.jupiter.api.Disabled;
@@ -115,7 +112,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void condenseEvolutionLevelsDoesNothingIfHighestOriginalEvoLvlIsUsed(String romName) {
+    public void condenseEvolutionLevelsDoesNothingIfHighestEvoLvlIsUsed(String romName) {
         loadROM(romName);
 
         Map<Species, List<Evolution>> evosToBefore = new HashMap<>();
@@ -126,7 +123,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
             evosFromBefore.put(pk, pk.getEvolutionsFrom().stream().map(Evolution::new).collect(Collectors.toList()));
         }
 
-        romHandler.condenseLevelEvolutions(romHandler.getHighestOriginalEvoLvl());
+        romHandler.condenseLevelEvolutions(romHandler.getHighestEvoLvl());
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             List<Evolution> toBefore = evosToBefore.get(pk);
@@ -279,6 +276,22 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                     System.out.println(evo);
                     assertEquals(evo.getExtraInfo(), evo.getEstimatedEvoLvl());
                 }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void noEstimatedEvoLevelIsZero(String romName) {
+        loadROM(romName);
+
+        // We always check alt forms, because even if they shouldn't have different
+        // evos from their base forms before Gen 7, in practice they do, or at least
+        // have the data structures for it.
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                System.out.println(evo);
+                assertNotEquals(0, evo.getEstimatedEvoLvl());
             }
         }
     }

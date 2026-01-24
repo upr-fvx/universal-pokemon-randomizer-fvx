@@ -7,10 +7,10 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] @Glamurio for your code contributions,
-[Every person who submitted a solved issue] @CDNievas, @TheFreezingChicken, and @scipio19 for reporting Issues,
+@bergmaen for your code contributions,
+[Every person who submitted a solved issue] @LunaisLazier and @Gabbyxo97 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Happy Time Boredom from Spriter's Resource for the CPG sprites, and
+[Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -32,47 +32,28 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Pokemon Base Stats
 - [The description of a new feature here.]
 
-### Pokemon Evolutions
-- Add a slider that is enabled when 'Make Evolutions Easier' is selected.
-  It can be used to select at which level every Pokemon shall be evolved to 
-  its final stage. Three-stage evolutions will reach their middle stage by no 
-  later than 75% of the selected level. Furthermore, it is now possible to apply
-  the other evolution improvements of 'Make Evolutions Easier' without lowering 
-  evolution levels by choosing the maximum value of the slider. 
-  (#123)
-
 ### Static Pokemon
-- (Gen 2) Allowed Unown to appear as a random static Pokémon.
-
-### Trainer Pokemon
-- (Gen 1 + 2) Enabled "Better Movesets". (#84)
+- (Gen 3) [The description of a changed feature here.]
 
 ### Wild Pokemon
-- (Gen 2) Allowed Unown to appear as a random wild Pokémon.
-
-### Trainer Pokemon
-- Add option 'Do Not Use Prematurely Evolved Pokemon' that can be selected if 
-  Trainer Pokemon are randomized or additional Pokemon are added.
-  This option guarantees that each random/added Pokemon is at a legal evolution
-  stage at its level. This was previously included in the 'Trainers Evolve 
-  Their Pokemon' checkbox and is now removed in said setting.
-  (#125)
-
-### Graphics
-- (Gen 5) More Pokémon species can have their palettes randomized (all from Bulbasaur-Girafarig). (#91)
-- (Gen 2) New Custom Player Graphics: Duck (from Duck Life) by Happy Time Boredom.
+- (GUI) Renamed "Keep Area/Zone Theme" to more consistent "Keep Set/Zone Theme".
 
 ### Misc. Tweaks
-- (Gen 4+5) [The description of a misc. tweak addition or change here.]
+- (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- (CLI) Added options for the command line interface to use settings strings, seeds, and custom player graphics. (#132)
 - [The description of some miscellaneous feature (new or changed) here.]
+- (Gen 2) Restored check value writing for pokecrystal-speedchoice.
+- (GUI) Added theme selection. This includes dark mode (!) and also the ability to change between Windows/Metal/FlatLaf themes. The Windows theme is still only available on Windows computers. (#151)
 
 ## Bugfixes
-- (GUI) Fixed Graphics tab staying disabled when switching between ROMs. (#133)
-- (GUI) Fixed radio buttons in the Totem Pokemon panel being unselected when a ROM has been loaded. (#134)
-- (Gen 5) Fixed English text being inserted into non-English versions.
-  - The text shown when picking starters from the bag, is now in the proper language in the French/German/Spanish/Italian versions, and is unchanged in Japanese and Korean.
-  - Cheren's & Hugh's dialogues about what Pokémon they picked, is now unchanged in all non-English versions.
+- (Red/Blue) Fixed rivals original starters not being randomized if starter
+  Pokemon are randomized, trainer Pokemon are unchanged, additional Pokemon are
+  added to important trainers, and rival is supposed to keep starter throughout
+  the game. (#145)
+- (Yellow) Fixed Settings from other games not being loadable in yellow. (#145)
+- (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
+ evolution levels not being loaded correctly. (#144)
+- (Gen 2) Fixed random starter held items randomization failure. (#155)
+- (GUI) Fixed "No-Game-Breaking Moves" not being saved properly to settings files. (#153)

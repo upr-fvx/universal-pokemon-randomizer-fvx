@@ -54,8 +54,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -152,9 +152,9 @@ public class RandomizerGUI {
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
-    private JCheckBox tpForceFullyEvolvedAtCheckBox;
-    private JSlider tpForceFullyEvolvedAtSlider;
+    private JSlider tpPercentageEvolutionLevelModifierSlider;
     private JSlider tpPercentageLevelModifierSlider;
+    private JLabel tpCalculatedFullyEvolvedLvlLabel;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
     private JSpinner tpEliteFourUniquePokemonSpinner;
     private JCheckBox tpPercentageLevelModifierCheckBox;
@@ -386,6 +386,7 @@ public class RandomizerGUI {
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
 
+    private Theme theme = Theme.WINDOWS;
     private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;
@@ -406,6 +407,7 @@ public class RandomizerGUI {
     private JFileChooser gameUpdateChooser = new JFileChooser();
 
     private JPopupMenu settingsMenu;
+    private JMenuItem themeSelectionMenuItem;
     private JMenuItem customNamesEditorMenuItem;
     private JMenuItem applyGameUpdateMenuItem;
     private JMenuItem removeGameUpdateMenuItem;
@@ -508,6 +510,7 @@ public class RandomizerGUI {
         peRandomEveryLevelRadioButton.addActionListener(e -> enableOrDisableSubControls());
         peChangeImpossibleEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
         peMakeEvolutionsEasierCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        peMakeEvolutionsEasierLvlSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
         spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -539,7 +542,9 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpForceFullyEvolvedAtCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -609,6 +614,7 @@ public class RandomizerGUI {
         loadSettingsButton.addActionListener(e -> loadQS());
         saveSettingsButton.addActionListener(e -> saveQS());
         settingsButton.addActionListener(e -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
+        themeSelectionMenuItem.addActionListener(e -> new ThemeSelectionDialog(this, frame));
         customNamesEditorMenuItem.addActionListener(e -> new CustomNamesEditorDialog(frame));
         applyGameUpdateMenuItem.addActionListener(e -> applyGameUpdateMenuItemActionPerformed());
         removeGameUpdateMenuItem.addActionListener(e -> removeGameUpdateMenuItemActionPerformed());
@@ -703,6 +709,16 @@ public class RandomizerGUI {
         }
     }
 
+    private void updateFullyEvolvedAtLvlLabel() {
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
+            int highestEvoLvl = peMakeEvolutionsEasierCheckBox.isSelected()
+                    ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
+            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
+                    bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"),
+                    (int) Math.ceil((1 + tpPercentageEvolutionLevelModifierSlider.getValue()/100.0) * highestEvoLvl)));
+        }
+    }
+
     private void showInitialPopup() {
         if (!usedLauncher) {
             String message = bundle.getString("GUI.pleaseUseTheLauncher");
@@ -749,6 +765,27 @@ public class RandomizerGUI {
             showInvalidRomPopup = !checkbox.isSelected();
             attemptWriteConfig();
         }
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+        if (!theme.isInstalled()) {
+            this.theme = Theme.DEFAULT;
+        }
+
+        try {
+            javax.swing.UIManager.setLookAndFeel(theme.getLaf());
+            SwingUtilities.updateComponentTreeUI(mainPanel);
+        } catch (UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
+        }
+
+        attemptWriteConfig();
     }
 
     private void initFileChooserDirectories() {
@@ -835,6 +872,10 @@ public class RandomizerGUI {
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
+
+        themeSelectionMenuItem = new JMenuItem();
+        themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
+        settingsMenu.add(themeSelectionMenuItem);
 
         customNamesEditorMenuItem = new JMenuItem();
         customNamesEditorMenuItem.setText(bundle.getString("GUI.customNamesEditorMenuItem.text"));
@@ -1645,11 +1686,10 @@ public class RandomizerGUI {
         ptRandomCompletelyRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         ptUnchangedRadioButton.setSelected(settings.getSpeciesTypesMod() == Settings.SpeciesTypesMod.UNCHANGED);
         ptFollowMegaEvosCheckBox.setSelected(settings.isTypesFollowMegaEvolutions());
-        pmsNoGameBreakingMovesCheckBox.setSelected(settings.doBlockBrokenMoves());
 
         peMakeEvolutionsEasierCheckBox.setSelected(settings.isMakeEvolutionsEasier());
         peMakeEvolutionsEasierLvlSlider.setValue(
-                Math.min(settings.getMakeEvolutionsEasierLvl(), romHandler.getHighestOriginalEvoLvl()));
+                Math.min(settings.getMakeEvolutionsEasierLvl(), romHandler.getHighestEvoLvl()));
         peRemoveTimeBasedEvolutionsCheckBox.setSelected(settings.isRemoveTimeBasedEvolutions());
 
         spCustomRadioButton.setSelected(settings.getStartersMod() == Settings.StartersMod.CUSTOM);
@@ -1688,7 +1728,9 @@ public class RandomizerGUI {
         int[] customStarters = settings.getCustomStarters();
         spComboBox1.setSelectedIndex(customStarters[0]);
         spComboBox2.setSelectedIndex(customStarters[1]);
-        spComboBox3.setSelectedIndex(customStarters[2]);
+        if (!this.romHandler.isYellow()) { // Yellow only has two starters
+            spComboBox3.setSelectedIndex(customStarters[2]);
+        }
 
         peUnchangedRadioButton.setSelected(settings.getEvolutionsMod() == Settings.EvolutionsMod.UNCHANGED);
         peRandomRadioButton.setSelected(settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM);
@@ -1728,8 +1770,7 @@ public class RandomizerGUI {
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
         tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
-        tpForceFullyEvolvedAtCheckBox.setSelected(settings.isTrainersForceFullyEvolved());
-        tpForceFullyEvolvedAtSlider.setValue(settings.getTrainersForceFullyEvolvedLevel());
+        tpPercentageEvolutionLevelModifierSlider.setValue(settings.getTrainersEvolutionLevelModifier());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
         tpPercentageLevelModifierSlider.setValue(settings.getTrainersLevelModifier());
         tpEliteFourUniquePokemonCheckBox.setSelected(settings.getEliteFourUniquePokemonNumber() > 0);
@@ -2019,8 +2060,7 @@ public class RandomizerGUI {
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
         settings.setTrainersEvolveTheirPokemon(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
-        settings.setTrainersForceFullyEvolved(tpForceFullyEvolvedAtCheckBox.isSelected());
-        settings.setTrainersForceFullyEvolvedLevel(tpForceFullyEvolvedAtSlider.getValue());
+        settings.setTrainersEvolutionLevelModifier(tpPercentageEvolutionLevelModifierSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
         settings.setTrainersLevelModifier(tpPercentageLevelModifierSlider.getValue());
         settings.setEliteFourUniquePokemonNumber(tpEliteFourUniquePokemonCheckBox.isVisible() && tpEliteFourUniquePokemonCheckBox.isSelected() ? (int)tpEliteFourUniquePokemonSpinner.getValue() : 0);
@@ -2380,7 +2420,7 @@ public class RandomizerGUI {
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
-                tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox, tpPercentageLevelModifierCheckBox,
+                tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
@@ -2388,9 +2428,12 @@ public class RandomizerGUI {
 				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
-		tpForceFullyEvolvedAtSlider.setVisible(true);
-		tpForceFullyEvolvedAtSlider.setEnabled(false);
-		tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+		tpPercentageEvolutionLevelModifierSlider.setVisible(true);
+		tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
+		tpPercentageEvolutionLevelModifierSlider.setValue(0);
+        tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
+        tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
+        tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
 		tpPercentageLevelModifierSlider.setVisible(true);
 		tpPercentageLevelModifierSlider.setEnabled(false);
 		tpPercentageLevelModifierSlider.setValue(0);
@@ -2674,7 +2717,7 @@ public class RandomizerGUI {
             peChangeImpossibleEvosCheckBox.setEnabled(true);
             peMakeEvolutionsEasierCheckBox.setEnabled(true);
             peMakeEvolutionsEasierLvlSlider.setMaximum(
-                    Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestOriginalEvoLvl()));
+                    Math.max(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestEvoLvl()));
             guaranteeMaximumValueTick(peMakeEvolutionsEasierLvlSlider);
             peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
             peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
@@ -2781,7 +2824,6 @@ public class RandomizerGUI {
             tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-            tpForceFullyEvolvedAtCheckBox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             tpBattleStylePanel.setVisible(pokemonGeneration >= 3);
@@ -3141,10 +3183,8 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierLvlSlider.setEnabled(false);
             peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
-            // Disable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
-            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpForceFullyEvolvedAtCheckBox);
-            tpForceFullyEvolvedAtSlider.setEnabled(false);
-            tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+            // Disable "Trainers Evolve their Pokemon"
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3165,9 +3205,8 @@ public class RandomizerGUI {
                 disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
             }
 
-            // Re-enable "Trainers Evolve their Pokemon" and "Force Fully Evolved" Trainer Pokemon
+            // Re-enable "Trainers Evolve their Pokemon"
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-            tpForceFullyEvolvedAtCheckBox.setEnabled(true);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {
@@ -3390,11 +3429,20 @@ public class RandomizerGUI {
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
-        if (tpForceFullyEvolvedAtCheckBox.isSelected()) {
-            tpForceFullyEvolvedAtSlider.setEnabled(true);
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected() || tpNoPrematureEvosCheckbox.isSelected()) {
+            tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
+            // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
+            tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         } else {
-            tpForceFullyEvolvedAtSlider.setEnabled(false);
-            tpForceFullyEvolvedAtSlider.setValue(tpForceFullyEvolvedAtSlider.getMinimum());
+            tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
+            tpPercentageEvolutionLevelModifierSlider.setValue(0);
+            tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
+        }
+
+        if (tpCalculatedFullyEvolvedLvlLabel.isEnabled()) {
+            updateFullyEvolvedAtLvlLabel();
+        } else {
+            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
         }
 
         if (tpPercentageLevelModifierCheckBox.isSelected()) {
@@ -3878,7 +3926,16 @@ public class RandomizerGUI {
                             gameUpdates.put(key, tokens[1]);
                         }
 
-                        if (key.equals("checkedcustomnames172")) {
+                        if (key.equals("theme")) {
+                            Theme theme;
+                            try {
+                                theme = Theme.valueOf(tokens[1].trim());
+                            } catch (IllegalArgumentException ignored) {
+                                theme = Theme.DEFAULT;
+                            }
+                            setTheme(theme);
+
+                        } else if (key.equals("checkedcustomnames172")) {
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
 
                         } else if (key.equals("firststart")) {
@@ -3943,6 +4000,7 @@ public class RandomizerGUI {
 
         try {
             PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, "UTF-8");
+            ps.println("theme=" + theme);
             ps.println("checkedcustomnames=true");
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
@@ -4012,16 +4070,6 @@ public class RandomizerGUI {
             if (launcherInput.equals("please-use-the-launcher")) usedLauncher = true;
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("RandomizerGUI");
-                try {
-                    String lafName = javax.swing.UIManager.getSystemLookAndFeelClassName();
-                    // NEW: Only set Native LaF on windows.
-                    if (lafName.equalsIgnoreCase("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
-                        javax.swing.UIManager.setLookAndFeel(lafName);
-                    }
-                } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException ex) {
-                    java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                            ex);
-                }
                 frame.setContentPane(new RandomizerGUI().mainPanel);
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 frame.pack();

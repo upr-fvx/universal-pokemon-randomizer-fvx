@@ -191,14 +191,11 @@ public class Gen2Constants {
             "Goldenrod Tunnel Herb Shop"
     ));
 
-    // i.e. normal pokemarts + TM shops + shops that must be skipped for other reasons
-    public static final List<Integer> skipShops = Collections.unmodifiableList(Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 29, 30, 32)
-    );
+    public static final int[] specialShops = new int[]{7, 8, 26, 27, 28, 31, 33};
 
-    public static final List<Integer> mainGameShops = Collections.unmodifiableList(Arrays.asList(
+    public static final int[] mainGameShops = new int[]{
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 32, 33
-    ));
+    };
 
     public static final int itemCount = 256, itemAttributesEntrySize = 7;
 
@@ -499,9 +496,9 @@ public class Gen2Constants {
         // Order in rom is BAYLEEF, QUILAVA, CROCONAW teams
         // Starters go CYNDA, TOTO, CHIKO
         // So we want 0=CROCONAW/FERALI, 1=BAYLEEF/MEGAN, 2=QUILAVA/TYPHLO
-        tbc(allTrainers, 9, 0, "RIVAL1-1-NOTSTRONG");
-        tbc(allTrainers, 9, 1, "RIVAL1-2-NOTSTRONG");
-        tbc(allTrainers, 9, 2, "RIVAL1-0-NOTSTRONG");
+        tbc(allTrainers, 9, 0, "RIVAL1-1");
+        tbc(allTrainers, 9, 1, "RIVAL1-2");
+        tbc(allTrainers, 9, 2, "RIVAL1-0");
 
         tbc(allTrainers, 9, 3, "RIVAL2-1");
         tbc(allTrainers, 9, 4, "RIVAL2-2");

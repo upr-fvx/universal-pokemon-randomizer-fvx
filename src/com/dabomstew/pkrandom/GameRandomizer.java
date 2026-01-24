@@ -35,6 +35,7 @@ import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
@@ -207,12 +208,16 @@ public class GameRandomizer {
                 romHandler.writeCheckValue(results.checkValue);
             }
 
-            romHandler.saveRom(filename, seed, saveAsDirectory);
+            boolean couldSave = romHandler.saveRom(filename, seed, saveAsDirectory);
 
             try {
                 logger.logResults(log, startTime);
             } catch (Exception e) {
                 results.logE = e;
+            }
+
+            if (!couldSave) {
+                results.e = new IOException("Could not save ROM, reason unknown.");
             }
         } catch (Exception e) {
             results.e = e;

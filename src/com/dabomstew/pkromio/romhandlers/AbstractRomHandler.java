@@ -933,13 +933,8 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public boolean saveRom(String filename, long seed, boolean saveAsDirectory) {
-        try {
-            prepareSaveRom();
-            return saveAsDirectory ? saveRomDirectory(filename) : saveRomFile(filename, seed);
-        } catch (RomIOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        prepareSaveRom();
+        return saveAsDirectory ? saveRomDirectory(filename) : saveRomFile(filename, seed);
     }
 
     /**

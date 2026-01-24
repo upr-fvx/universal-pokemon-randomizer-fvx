@@ -431,6 +431,12 @@ public class SettingsUpdater {
             dataBlock[14] += 50;
             // Clear the old and redundant "blockBrokenMoves" bit.
             dataBlock[65] = clearBits(dataBlock[65], 2);
+            // Splits "better trainer movesets" into three bits for boss/important/regular trainers,
+            // and clears the old bit.
+            if (checkBit(dataBlock[29], 7)) {
+                dataBlock[61] = setBits(dataBlock[61], 3, 4, 5);
+                dataBlock[29] = clearBits(dataBlock[29], 7);
+            }
         }
 
         // fix checksum
@@ -639,6 +645,23 @@ public class SettingsUpdater {
             b &= (byte) ~(1 << bit);
         }
         return b;
+    }
+
+    /**
+     * Returns b, with the given bits set to 1.
+     */
+    private static byte setBits(byte b, int... bits) {
+        for (int bit : bits) {
+            b |= (byte) (1 << bit);
+        }
+        return b;
+    }
+
+    /**
+     * Returns whether the bit in b is set to 1 (true) or 0 (false).
+     */
+    private static boolean checkBit(byte b, int bit) {
+        return (b & (1 << bit)) != 0;
     }
 
     private static byte getRemappedByte(byte old, int[] oldIndexes) {

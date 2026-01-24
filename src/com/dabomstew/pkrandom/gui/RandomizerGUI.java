@@ -1802,7 +1802,9 @@ public class RandomizerGUI {
         tpRegularTrainersTypeDiversityCheckBox.setSelected(settings.isDiverseTypesForRegularTrainers());
 
         tpRandomShinyTrainerPokemonCheckBox.setSelected(settings.isShinyChance());
-        tpBetterMovesetsCheckBox.setSelected(settings.isBetterTrainerMovesets());
+        tpBetterMovesetsBossTrainersCheckBox.setSelected(settings.isBetterBossTrainerMovesets());
+        tpBetterMovesetsImportantTrainersCheckBox.setSelected(settings.isBetterImportantTrainerMovesets());
+        tpBetterMovesetsRegularTrainersCheckBox.setSelected(settings.isBetterRegularTrainerMovesets());
 
         totpUnchangedRadioButton.setSelected(settings.getTotemPokemonMod() == Settings.TotemPokemonMod.UNCHANGED);
         totpRandomRadioButton.setSelected(settings.getTotemPokemonMod() == Settings.TotemPokemonMod.RANDOM);
@@ -2076,8 +2078,10 @@ public class RandomizerGUI {
         settings.setAdditionalImportantTrainerPokemon(tpImportantTrainersCheckBox.isVisible() && tpImportantTrainersCheckBox.isSelected() ? (int)tpImportantTrainersSpinner.getValue() : 0);
         settings.setAdditionalRegularTrainerPokemon(tpRegularTrainersCheckBox.isVisible() && tpRegularTrainersCheckBox.isSelected() ? (int)tpRegularTrainersSpinner.getValue() : 0);
         settings.setShinyChance(tpRandomShinyTrainerPokemonCheckBox.isVisible() && tpRandomShinyTrainerPokemonCheckBox.isSelected());
-        settings.setBetterTrainerMovesets(tpBetterMovesetsCheckBox.isVisible() && tpBetterMovesetsCheckBox.isSelected());
-        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpBossTrainersItemsCheckBox.isSelected());
+        settings.setBetterBossTrainerMovesets(tpBetterMovesetsBossTrainersCheckBox.isVisible() && tpBetterMovesetsBossTrainersCheckBox.isSelected());
+        settings.setBetterImportantTrainerMovesets(tpBetterMovesetsImportantTrainersCheckBox.isVisible() && tpBetterMovesetsImportantTrainersCheckBox.isSelected());
+        settings.setBetterRegularTrainerMovesets(tpBetterMovesetsRegularTrainersCheckBox.isVisible() && tpBetterMovesetsBossTrainersCheckBox.isSelected());
+        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(tpImportantTrainersItemsCheckBox.isVisible() && tpImportantTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForRegularTrainerPokemon(tpRegularTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setConsumableItemsOnlyForTrainers(tpConsumableItemsOnlyCheckBox.isVisible() && tpConsumableItemsOnlyCheckBox.isSelected());

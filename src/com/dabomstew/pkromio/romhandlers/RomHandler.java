@@ -70,7 +70,7 @@ public interface RomHandler {
     // =======================
 
     boolean loadRom(String filename);
-    
+
     boolean saveRom(String filename, long seed, boolean saveAsDirectory);
 
     String loadedFilename();

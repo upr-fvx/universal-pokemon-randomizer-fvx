@@ -371,6 +371,10 @@ public class RandomizerGUI {
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
     private JCheckBox noRandomIntroMonCheckBox;
+    private JLabel tpBetterMovesetsLabel;
+    private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
+    private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
+    private JCheckBox tpBetterMovesetsRegularTrainersCheckBox;
 
     private static final Random RND = new Random();
 

@@ -10,61 +10,65 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+/**
+ * This is a developer tool for swiftly transferring sprites from one sheet format to another.
+ * <br><br>
+ * The Randomizer can read Custom Player Graphics from sprite sheets. On sites such as
+ * Spriters' Resource, people share sprites they've made, organized in sheets. However,
+ * the Randomizer can only read sheets formatted in specific ways (see the CPG wikipage),
+ * and most sheets shared online won't share that format. Thus, there is a transfer
+ * process, which this tool aims to reduce the tedium of.
+ */
 public class SheetTool {
+
+    private static final boolean DEBUG_VISUALIZE_CLICKS = false;
 
     private static class ImageLabel extends JLabel {
 
-        protected BufferedImage bim;
+        public BufferedImage image;
         private final ImageIcon icon;
 
-        private ImageLabel(BufferedImage bufferedImage) {
+        private ImageLabel(BufferedImage image) {
             this.icon = new ImageIcon();
             setIcon(icon);
-            setImage(bufferedImage);
+            setImage(image);
         }
 
-        public void setImage(BufferedImage bim) {
-            if (bim == null) {
-                bim = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
+        public BufferedImage getImage() {
+            return image;
+        }
+
+        public void setImage(BufferedImage image) {
+            if (image == null) {
+                image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+                image.setRGB(0, 0, 0x00000000); // transparent
             }
-            this.bim = bim;
+            this.image = image;
             update();
         }
 
-        private void update() {
-            icon.setImage(bim);
+        public void update() {
+            icon.setImage(image);
             revalidate();
             repaint();
         }
-    }
 
-    private class SheetImageLabel extends ImageLabel {
-
-        private class Frame {
-            int x, y, w, h;
-            private Frame(int x, int y, int w, int h) {
-                this.x = x;
-                this.y = y;
-                this.w = w;
-                this.h = h;
-            }
-            @Override
-            public String toString() {
-                return String.format("{%d, %d, %d, %d}", x, y, w, h);
-            }
-        }
-
-        private int backgroundColor;
-        private List<Frame> frames;
-
-        private SheetImageLabel(BufferedImage bufferedImage) {
-            super(bufferedImage);
-            // stupid super-long mouse listeners. why can't there just be a clicklistener...
-            this.addMouseListener(new MouseListener() {
+        public void addClickListener(Consumer<MouseEvent> consumer) {
+            addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    selectFrameImage(e);
+                    if (DEBUG_VISUALIZE_CLICKS) {
+                        System.out.println(e.getX() + ", " + e.getY());
+                        image.setRGB(e.getX(), e.getY(), 0xFFFF0000);
+                        image.setRGB(e.getX() - 1, e.getY(), 0xFFFF0000);
+                        image.setRGB(e.getX() + 1, e.getY(), 0xFFFF0000);
+                        image.setRGB(e.getX(), e.getY() - 1, 0xFFFF0000);
+                        image.setRGB(e.getX(), e.getY() + 1, 0xFFFF0000);
+                        update();
+                    }
+                    consumer.accept(e);
                 }
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -80,20 +84,43 @@ public class SheetTool {
                 }
             });
         }
+    }
+
+    private class SheetImageLabel extends ImageLabel {
+
+        public class Frame {
+            int x, y, w, h;
+            private Frame(int x, int y, int w, int h) {
+                this.x = x;
+                this.y = y;
+                this.w = w;
+                this.h = h;
+            }
+            @Override
+            public String toString() {
+                return String.format("{x=%d, y=%d, w=%d, h=%d}", x, y, w, h);
+            }
+        }
+
+        private int backgroundColor;
+        private List<Frame> frames;
+
+        private SheetImageLabel(BufferedImage bufferedImage) {
+            super(bufferedImage);
+        }
 
         @Override
-        public void setImage(BufferedImage bim) {
-            super.setImage(bim);
-            this.backgroundColor = this.bim.getRGB(0, 0); // TODO: manual selection
+        public void setImage(BufferedImage image) {
+            super.setImage(image);
+            this.backgroundColor = this.image.getRGB(0, 0); // TODO: manual selection
             this.frames = initFrames();
-            System.out.println(frames);
         }
 
         private List<Frame> initFrames() {
             List<Frame> frames = new ArrayList<>();
 
-            for (int x = 0; x < bim.getWidth(); x++) {
-                for (int y = 0; y < bim.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                for (int y = 0; y < image.getHeight(); y++) {
                     Frame f = lookForFrame(x, y);
                     if (f != null) {
                         frames.add(f);
@@ -138,22 +165,14 @@ public class SheetTool {
         private boolean isBG(int x, int y) {
             if (x < 0 || y < 0) {
                 return true;
-            } else if (x > bim.getWidth() || y > bim.getHeight()) {
+            } else if (x > image.getWidth() || y > image.getHeight()) {
                 return false;
             } else {
-                return bim.getRGB(x, y) == backgroundColor;
+                return image.getRGB(x, y) == backgroundColor;
             }
         }
 
-        private void selectFrameImage(MouseEvent e) {
-            Frame f = findFrame(e.getX(), e.getY());
-            if (f == null) {
-                return;
-            }
-            selectedFrameLabel.setImage(bim.getSubimage(f.x, f.y, f.w, f.h));
-        }
-
-        private Frame findFrame(int x, int y) {
+        public Frame findFrame(int x, int y) {
             for (Frame f : frames) {
                 if (f.x <= x && x < (f.x + f.w) && f.y <= y && y < (f.y + f.h)) {
                     return f;
@@ -171,6 +190,7 @@ public class SheetTool {
     private JPanel mainPanel;
     private JLabel infoLabel;
     private JPanel selectedFramePanel;
+    private JLabel selectedFrameInfoLabel;
 
     private final JFileChooser imageChooser;
 
@@ -196,8 +216,10 @@ public class SheetTool {
         imageChooser.setFileFilter(new FileNameExtensionFilter("PNG/BMP file", "png", "bmp"));
 
         this.fromImageLabel = new SheetImageLabel(null);
+        fromImageLabel.addClickListener(this::selectFrameImage);
         fromImageScrollPane.setViewportView(fromImageLabel);
         this.toImageLabel = new SheetImageLabel(null);
+        toImageLabel.addClickListener(this::drawFrameImage);
         toImageScrollPane.setViewportView(toImageLabel);
         this.selectedFrameLabel = new ImageLabel(null);
         selectedFramePanel.add(selectedFrameLabel);
@@ -207,6 +229,37 @@ public class SheetTool {
         openFromImageButton.addActionListener(e -> openFromImage());
         openToImageButton.addActionListener(e -> openToImage());
         saveToImageButton.addActionListener(e -> saveToImage());
+    }
+
+    private void selectFrameImage(MouseEvent e) {
+        SheetImageLabel source = (SheetImageLabel) e.getSource();
+        SheetImageLabel.Frame f = source.findFrame(e.getX(), e.getY());
+        if (f == null) {
+            infoLabel.setText("Can't select! No frame found at (x=%d, y=%d).");
+            return;
+        }
+        selectedFrameInfoLabel.setText(String.format("Selected (%dx%d):", f.w, f.h));
+        selectedFrameLabel.setImage(source.getImage().getSubimage(f.x, f.y, f.w, f.h));
+        infoLabel.setText("Selected frame: " + f);
+    }
+
+    private void drawFrameImage(MouseEvent e) {
+        SheetImageLabel source = (SheetImageLabel) e.getSource();
+        SheetImageLabel.Frame f = source.findFrame(e.getX(), e.getY());
+        if (f == null) {
+            infoLabel.setText("Can't draw! No frame found at (x=%d, y=%d).");
+            return;
+        }
+        BufferedImage toDraw = selectedFrameLabel.getImage();
+        if (toDraw.getWidth() != f.w || toDraw.getHeight() != f.h) {
+            infoLabel.setText(String.format("Can't draw! Wrong size of target frame!! (%dx%d) != (%dx%d)",
+                    toDraw.getWidth(), toDraw.getHeight(), f.w, f.h));
+            return;
+        }
+        BufferedImage toDrawOnto = source.getImage();
+        toDrawOnto.getGraphics().drawImage(toDraw, f.x, f.y, f.w, f.h, null);
+        source.setImage(toDrawOnto);
+        infoLabel.setText("Successfully drew frame at (x=%d, y=%d).");
     }
 
     private void openFromImage() {
@@ -240,7 +293,7 @@ public class SheetTool {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File f = imageChooser.getSelectedFile();
             try {
-                ImageIO.write(toImageLabel.bim, "png", f);
+                ImageIO.write(toImageLabel.getImage(), "png", f);
                 infoLabel.setText("Successfully saved \"to\" image.");
             } catch (IOException e) {
                 infoLabel.setText("Could not write \"to\" image!");

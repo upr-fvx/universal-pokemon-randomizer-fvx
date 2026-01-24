@@ -34,6 +34,8 @@ public class SheetTool {
             this.icon = new ImageIcon();
             setIcon(icon);
             setImage(image);
+            setHorizontalAlignment(SwingConstants.LEFT);
+            setVerticalAlignment(SwingConstants.TOP);
         }
 
         public BufferedImage getImage() {
@@ -235,7 +237,7 @@ public class SheetTool {
         SheetImageLabel source = (SheetImageLabel) e.getSource();
         SheetImageLabel.Frame f = source.findFrame(e.getX(), e.getY());
         if (f == null) {
-            infoLabel.setText("Can't select! No frame found at (x=%d, y=%d).");
+            infoLabel.setText(String.format("Can't select! No frame found at (x=%d, y=%d).", e.getX(), e.getY()));
             return;
         }
         selectedFrameInfoLabel.setText(String.format("Selected (%dx%d):", f.w, f.h));
@@ -247,7 +249,7 @@ public class SheetTool {
         SheetImageLabel source = (SheetImageLabel) e.getSource();
         SheetImageLabel.Frame f = source.findFrame(e.getX(), e.getY());
         if (f == null) {
-            infoLabel.setText("Can't draw! No frame found at (x=%d, y=%d).");
+            infoLabel.setText(String.format("Can't draw! No frame found at (x=%d, y=%d).", e.getX(), e.getY()));
             return;
         }
         BufferedImage toDraw = selectedFrameLabel.getImage();
@@ -259,7 +261,7 @@ public class SheetTool {
         BufferedImage toDrawOnto = source.getImage();
         toDrawOnto.getGraphics().drawImage(toDraw, f.x, f.y, f.w, f.h, null);
         source.setImage(toDrawOnto);
-        infoLabel.setText("Successfully drew frame at (x=%d, y=%d).");
+        infoLabel.setText(String.format("Successfully drew frame at (x=%d, y=%d).", e.getX(), e.getY()));
     }
 
     private void openFromImage() {

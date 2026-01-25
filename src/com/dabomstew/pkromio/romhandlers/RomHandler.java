@@ -308,6 +308,12 @@ public interface RomHandler {
      */
     void saveTrainers();
 
+    boolean canGiveCustomMovesetsToBossTrainers();
+
+    boolean canGiveCustomMovesetsToImportantTrainers();
+
+    boolean canGiveCustomMovesetsToRegularTrainers();
+
     boolean canAddPokemonToBossTrainers();
 
     boolean canAddPokemonToImportantTrainers();

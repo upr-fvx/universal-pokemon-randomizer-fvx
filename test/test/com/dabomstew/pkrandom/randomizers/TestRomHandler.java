@@ -135,6 +135,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private final Map<String, Type> gymAndEliteTypeThemes;
     private final boolean trainerPokemonAlwaysUseAbility1;
     private final boolean trainerPokemonUseBaseFormeAbilities;
+    private final boolean canGiveCustomMovesetsToBossTrainers;
+    private final boolean canGiveCustomMovesetsToImportantTrainers;
+    private final boolean canGiveCustomMovesetsToRegularTrainers;
     private final boolean canAddPokemonToBossTrainers;
     private final boolean canAddPokemonToImportantTrainers;
     private final boolean canAddPokemonToRegularTrainers;
@@ -223,6 +226,9 @@ public class TestRomHandler extends AbstractRomHandler {
         gymAndEliteTypeThemes = Collections.unmodifiableMap(mockupOf.getGymAndEliteTypeThemes());
         trainerPokemonAlwaysUseAbility1 = mockupOf.isTrainerPokemonAlwaysUseAbility1();
         trainerPokemonUseBaseFormeAbilities = mockupOf.isTrainerPokemonUseBaseFormeAbilities();
+        canGiveCustomMovesetsToBossTrainers = mockupOf.canGiveCustomMovesetsToBossTrainers();
+        canGiveCustomMovesetsToImportantTrainers = mockupOf.canGiveCustomMovesetsToImportantTrainers();
+        canGiveCustomMovesetsToRegularTrainers = mockupOf.canGiveCustomMovesetsToRegularTrainers();
         canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
         canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
@@ -276,9 +282,9 @@ public class TestRomHandler extends AbstractRomHandler {
 
         // Items are passed around by reference a lot, but as we only expect their "allowed" attribute
         // to change, we can (and do) just reset that.
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i) != null) {
-                items.get(i).setAllowed(originalAllowedItems.contains(items.get(i)));
+        for (Item item : items) {
+            if (item != null) {
+                item.setAllowed(originalAllowedItems.contains(item));
             }
         }
 
@@ -864,6 +870,21 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public Map<String, Type> getGymAndEliteTypeThemes() {
         return gymAndEliteTypeThemes;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        return canGiveCustomMovesetsToBossTrainers;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        return canGiveCustomMovesetsToImportantTrainers;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        return canGiveCustomMovesetsToRegularTrainers;
     }
 
     @Override

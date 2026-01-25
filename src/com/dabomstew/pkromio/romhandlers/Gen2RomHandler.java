@@ -1226,6 +1226,24 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        // because there isn't enough space in the bank with trainer data
+        return false;
+    }
+
+    @Override
     public boolean canAddPokemonToBossTrainers() {
         // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
         return romEntry.isNonJapanese();

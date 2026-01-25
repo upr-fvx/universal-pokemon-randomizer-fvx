@@ -1321,6 +1321,28 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        // For now, since the Gen 1 trainer moveset format is finicky.
+        // Probably will only be plausible in Yellow, without porting the whole
+        // format of Yellow to earlier games.
+        // TODO
+        return false;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        // Might be possible, might not. See: space limitations.
+        // TODO
+        return false;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        // because there isn't enough space in the bank with trainer data
+        return false;
+    }
+
+    @Override
     public boolean canAddPokemonToBossTrainers() {
         // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
         return romEntry.isNonJapanese();

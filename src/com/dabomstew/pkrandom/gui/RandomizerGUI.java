@@ -2895,9 +2895,19 @@ public class RandomizerGUI {
 
             tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
-            tpBetterMovesetsBossTrainersCheckBox.setEnabled(true);
-            tpBetterMovesetsImportantTrainersCheckBox.setEnabled(true);
-            tpBetterMovesetsRegularTrainersCheckBox.setEnabled(true);
+
+            boolean canGiveMovesetsToBoss = romHandler.canGiveCustomMovesetsToBossTrainers();
+            boolean canGiveMovesetsToImportant = romHandler.canGiveCustomMovesetsToImportantTrainers();
+            boolean canGiveMovesetsToRegular = romHandler.canGiveCustomMovesetsToRegularTrainers();
+            boolean betterMovesetsAvailable = canGiveMovesetsToBoss || canGiveMovesetsToImportant || canGiveMovesetsToRegular;
+
+            tpBetterMovesetsLabel.setVisible(betterMovesetsAvailable);
+            tpBetterMovesetsBossTrainersCheckBox.setEnabled(canGiveMovesetsToBoss);
+            tpBetterMovesetsBossTrainersCheckBox.setVisible(canGiveMovesetsToBoss);
+            tpBetterMovesetsImportantTrainersCheckBox.setEnabled(canGiveMovesetsToImportant);
+            tpBetterMovesetsImportantTrainersCheckBox.setVisible(canGiveMovesetsToImportant);
+            tpBetterMovesetsRegularTrainersCheckBox.setEnabled(canGiveMovesetsToRegular);
+            tpBetterMovesetsRegularTrainersCheckBox.setVisible(canGiveMovesetsToRegular);
 
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {

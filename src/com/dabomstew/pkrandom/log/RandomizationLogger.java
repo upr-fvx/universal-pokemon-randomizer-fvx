@@ -995,8 +995,6 @@ public class RandomizationLogger {
             }
             prevHadCustomMoves = hasCustomMoves;
             log.print("#" + t.getIndex() + " ");
-            if (t.pokemonHaveCustomMoves())
-                log.print("(tag=" + t.getTag() + ") ");
             String originalTrainerName = originalTrainerNames.get(t.getIndex());
             String currentTrainerName = "";
             if (t.getFullDisplayName() != null) {

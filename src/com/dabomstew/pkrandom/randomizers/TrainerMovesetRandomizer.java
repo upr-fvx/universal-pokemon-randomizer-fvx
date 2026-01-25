@@ -34,6 +34,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 .filter(t -> (t.isBoss() && betterBossMovesets) ||
                         (t.isImportant() && betterImportantMovesets) ||
                         (t.isRegular() && betterRegularMovesets))
+                .filter(t -> !t.shouldNotGetBuffs())
                 .collect(Collectors.toList());
 
         for (Trainer t : trainers) {

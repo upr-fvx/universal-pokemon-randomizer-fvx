@@ -310,6 +310,10 @@ public class Trainer implements Comparable<Trainer> {
         return tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND") || tag.endsWith("STRONG"));
     }
 
+    public boolean isRegular() {
+        return !isBoss() && !isImportant();
+    }
+
     public boolean shouldNotGetBuffs() {
         return tag != null && (tag.startsWith("RIVAL1-") || tag.startsWith("FRIEND1-") || tag.endsWith("NOTSTRONG"));
     }

@@ -38,7 +38,6 @@ public class TrainerMovesetRandomizer extends Randomizer {
                 .collect(Collectors.toList());
 
         for (Trainer t : trainers) {
-            t.setPokemonHaveCustomMoves(true);
 
             for (TrainerPokemon tp : t.getPokemon()) {
                 tp.setResetMoves(false);

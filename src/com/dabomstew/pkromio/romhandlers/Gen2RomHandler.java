@@ -1066,7 +1066,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         tr.setName(readVariableLengthString(offset, false));
         offset += lengthOfStringAt(offset, false);
         int dataType = rom[offset] & 0xFF;
-        tr.setPoketype(dataType);
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);

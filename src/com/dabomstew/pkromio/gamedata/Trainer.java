@@ -22,6 +22,7 @@ package com.dabomstew.pkromio.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.constants.MoveIDs;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -104,8 +105,6 @@ public class Trainer implements Comparable<Trainer> {
     private int index;
     private List<TrainerPokemon> pokemon = new ArrayList<>();
     private String tag;
-    // This value has some flags about the trainer's pokemon (e.g. if they have items or custom moves)
-    private int poketype;
     private String name; // TODO: make trainer name randomization use Trainer.name in all gens, really strange it doesn't
     private int trainerclass;
     private String fullDisplayName;
@@ -127,7 +126,6 @@ public class Trainer implements Comparable<Trainer> {
             this.pokemon.add(copiedTP);
         }
         this.tag = original.tag;
-        this.poketype = original.poketype;
         this.name = original.name;
         this.trainerclass = original.trainerclass;
         this.fullDisplayName = original.fullDisplayName;
@@ -229,12 +227,19 @@ public class Trainer implements Comparable<Trainer> {
         this.tag = tag;
     }
 
+    /**
+     * Returns the "poketype", used in most Pokemon games.
+     * It is a representation of "do the mons have custom moves?" + "do the mons have held items"?
+     */
     public int getPoketype() {
-        return poketype;
-    }
-
-    public void setPoketype(int poketype) {
-        this.poketype = poketype;
+        int pokeType = 0;
+        if (pokemonHaveCustomMoves()) {
+            pokeType += 1;
+        }
+        if (pokemonHaveItems()) {
+            pokeType += 2;
+        }
+        return pokeType;
     }
 
     public String getName() {
@@ -318,31 +323,24 @@ public class Trainer implements Comparable<Trainer> {
         return tag != null && (tag.startsWith("RIVAL1-") || tag.startsWith("FRIEND1-") || tag.endsWith("NOTSTRONG"));
     }
 
-    public void setPokemonHaveItems(boolean haveItems) {
-        if (haveItems) {
-            this.poketype |= 2;
-        } else {
-            // https://stackoverflow.com/a/1073328
-            this.poketype = poketype & ~2;
-        }
-    }
-
     public boolean pokemonHaveItems() {
-        // This flag seems consistent for all gens
-        return (this.poketype & 2) == 2;
-    }
-
-    public void setPokemonHaveCustomMoves(boolean haveCustomMoves) {
-        if (haveCustomMoves) {
-            this.poketype |= 1;
-        } else {
-            this.poketype = poketype & ~1;
-        }
+        return pokemon.stream().anyMatch(tp -> tp.getHeldItem() != null);
     }
 
     public boolean pokemonHaveCustomMoves() {
-        // This flag seems consistent for all gens
-        return (this.poketype & 1) == 1;
+        for (TrainerPokemon tp : pokemon) {
+            if (tp.isResetMoves()) continue;
+            for (int moveID : tp.getMoves()) {
+                if (moveID != MoveIDs.none) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean pokemonHaveDifferentLevels() {
+        return pokemon.stream().map(TrainerPokemon::getLevel).distinct().count() > 1;
     }
 
     public boolean pokemonHaveUniqueHeldItems() {

@@ -1189,7 +1189,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int dataType = rom[offset] & 0xFF;
         if (dataType == 0xFF) {
             // "Special" trainer
-            tr.setPoketype(1);
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
@@ -1199,7 +1198,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 offset += 2;
             }
         } else {
-            tr.setPoketype(0);
             offset++;
             while (rom[offset] != 0x0) {
                 TrainerPokemon tp = new TrainerPokemon();
@@ -1284,7 +1282,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private byte[] trainerToBytes(Trainer trainer) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (trainer.getPoketype() == 0) {
+        if (!trainer.pokemonHaveDifferentLevels()) {
             // Regular trainer
             int fixedLevel = trainer.getPokemon().get(0).getLevel();
             baos.write(fixedLevel);

@@ -1138,6 +1138,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
                 tr.setIndex(i);
+                boolean readMovesets = (trainer[0] & 1) != 0;
+                boolean readItems = (trainer[0] & 2) != 0;
                 tr.setTrainerclass(trainer[1] & 0xFF);
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
@@ -1188,11 +1190,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
-                    if (tr.pokemonHaveItems()) {
+                    if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                     }
-                    if (tr.pokemonHaveCustomMoves()) {
+                    if (readMovesets) {
                         for (int move = 0; move < 4; move++) {
                             tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }

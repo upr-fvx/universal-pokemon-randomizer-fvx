@@ -2129,13 +2129,6 @@ public class Settings {
         this.shinyChance = shinyChance;
     }
 
-    @Deprecated
-    public void setBetterTrainerMovesets(boolean betterTrainerMovesets) {
-        setBetterBossTrainerMovesets(betterTrainerMovesets);
-        setBetterImportantTrainerMovesets(betterTrainerMovesets);
-        setBetterRegularTrainerMovesets(betterTrainerMovesets);
-    }
-
     public boolean isBetterBossTrainerMovesets() {
         return betterBossTrainerMovesets;
     }

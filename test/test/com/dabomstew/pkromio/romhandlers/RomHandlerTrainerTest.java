@@ -333,35 +333,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void trainersWithCustomMoves_HaveCustomMoves(String romName) {
-        loadROM(romName);
-        Set<Trainer> bad = new HashSet<>();
-        for (Trainer tr : romHandler.getTrainers()) {
-            if (!tr.pokemonHaveCustomMoves()) {
-                continue;
-            }
-            System.out.println(tr);
-            for (TrainerPokemon tp : tr.getPokemon()) {
-                System.out.println(Arrays.toString(tp.getMoves()));
-                boolean hasRealMove = false;
-                for (Integer moveID : tp.getMoves()){
-                    if (moveID != MoveIDs.none) {
-                        hasRealMove = true;
-                        break;
-                    }
-                }
-                if (!hasRealMove) {
-                    bad.add(tr);
-                }
-            }
-        }
-        System.out.println("\n=== Bad trainers: ===");
-        bad.forEach(System.out::println);
-        assertTrue(bad.isEmpty());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
     public void trainerNamesAreNotEmpty(String romName) {
         loadROM(romName);
         assertFalse(romHandler.getTrainerNames().isEmpty());

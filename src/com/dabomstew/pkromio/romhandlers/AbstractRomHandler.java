@@ -100,6 +100,21 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        return true;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        return true;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        return true;
+    }
+
+    @Override
     public boolean canAddPokemonToBossTrainers() {
         return true;
     }

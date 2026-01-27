@@ -570,7 +570,9 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTrainerMovesets() {
-        if (settings.isBetterTrainerMovesets()) {
+        if (settings.isBetterBossTrainerMovesets()
+                || settings.isBetterImportantTrainerMovesets()
+                || settings.isBetterRegularTrainerMovesets()) {
             trainerMovesetRandomizer.randomizeTrainerMovesets();
         }
     }

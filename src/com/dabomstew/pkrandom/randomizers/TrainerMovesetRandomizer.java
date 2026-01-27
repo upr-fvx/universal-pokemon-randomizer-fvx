@@ -26,11 +26,18 @@ public class TrainerMovesetRandomizer extends Randomizer {
     public void randomizeTrainerMovesets() {
         boolean isCyclicEvolutions = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         boolean isOnlyMultiBattles = settings.getBattleStyle().isOnlyMultiBattles();
+        boolean betterBossMovesets = settings.isBetterBossTrainerMovesets();
+        boolean betterImportantMovesets = settings.isBetterImportantTrainerMovesets();
+        boolean betterRegularMovesets = settings.isBetterRegularTrainerMovesets();
 
-        List<Trainer> trainers = romHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers().stream()
+                .filter(t -> (t.isBoss() && betterBossMovesets) ||
+                        (t.isImportant() && betterImportantMovesets) ||
+                        (t.isRegular() && betterRegularMovesets))
+                .filter(t -> !t.shouldNotGetBuffs())
+                .collect(Collectors.toList());
 
         for (Trainer t : trainers) {
-            t.setPokemonHaveCustomMoves(true);
 
             for (TrainerPokemon tp : t.getPokemon()) {
                 tp.setResetMoves(false);

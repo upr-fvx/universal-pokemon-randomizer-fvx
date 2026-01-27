@@ -35,6 +35,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- Split the "Better Movesets" option into three options, for boss trainers, important trainers, and regular trainers. In Gen 2, only boss trainers and important trainers may be given better movesets, due to memory constraints. (#157)
+- (Gen 1) Disabled "Better Movesets", since the feature did not function at all in this Gen. 
+- "Better Movesets" now excludes the first rival/friend battle, and other "not strong" trainers. This is consistent with those trainers not being given other boosts, like held items and added Pokemon.
+
 ### Wild Pokemon
 - (GUI) Renamed "Keep Area/Zone Theme" to more consistent "Keep Set/Zone Theme".
 

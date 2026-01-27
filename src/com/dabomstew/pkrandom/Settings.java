@@ -208,7 +208,9 @@ public class Settings {
     private boolean diverseTypesForRegularTrainers;
     private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
-    private boolean betterTrainerMovesets;
+    private boolean betterBossTrainerMovesets;
+    private boolean betterImportantTrainerMovesets;
+    private boolean betterRegularTrainerMovesets;
     private boolean randomizeWildPokemon;
     public enum WildPokemonZoneMod {
         NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
@@ -571,7 +573,7 @@ public class Settings {
                 trainersBlockEarlyWonderGuard,
                 swapTrainerMegaEvos,
                 shinyChance,
-                betterTrainerMovesets));
+                false));
 
         // 30 - 33: pokemon restrictions
         try {
@@ -707,10 +709,10 @@ public class Settings {
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);
 
-        // 61 trainer type diversity
+        // 61 trainer type diversity + better movesets
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
-                diverseTypesForRegularTrainers,
-                false, false, false, false, false));
+                diverseTypesForRegularTrainers, betterBossTrainerMovesets, betterImportantTrainerMovesets,
+                betterRegularTrainerMovesets, false, false));
 
         // 62 setting battle style: modification (3bits) + style (4bits)
         out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
@@ -957,7 +959,6 @@ public class Settings {
         settings.setTrainersBlockEarlyWonderGuard(restoreState(data[29], 4));
         settings.setSwapTrainerMegaEvos(restoreState(data[29], 5));
         settings.setShinyChance(restoreState(data[29], 6));
-        settings.setBetterTrainerMovesets(restoreState(data[29], 7));
 
         // gen restrictions
         int genLimit = FileFunctions.readFullInt(data, 30);
@@ -1076,6 +1077,9 @@ public class Settings {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+        settings.setBetterBossTrainerMovesets(restoreState(data[61], 3));
+        settings.setBetterImportantTrainerMovesets(restoreState(data[61], 4));
+        settings.setBetterRegularTrainerMovesets(restoreState(data[61], 5));
 
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
@@ -2125,12 +2129,28 @@ public class Settings {
         this.shinyChance = shinyChance;
     }
 
-    public boolean isBetterTrainerMovesets() {
-        return betterTrainerMovesets;
+    public boolean isBetterBossTrainerMovesets() {
+        return betterBossTrainerMovesets;
     }
 
-    public void setBetterTrainerMovesets(boolean betterTrainerMovesets) {
-        this.betterTrainerMovesets = betterTrainerMovesets;
+    public void setBetterBossTrainerMovesets(boolean betterBossTrainerMovesets) {
+        this.betterBossTrainerMovesets = betterBossTrainerMovesets;
+    }
+
+    public boolean isBetterImportantTrainerMovesets() {
+        return betterImportantTrainerMovesets;
+    }
+
+    public void setBetterImportantTrainerMovesets(boolean betterImportantTrainerMovesets) {
+        this.betterImportantTrainerMovesets = betterImportantTrainerMovesets;
+    }
+
+    public boolean isBetterRegularTrainerMovesets() {
+        return betterRegularTrainerMovesets;
+    }
+
+    public void setBetterRegularTrainerMovesets(boolean betterRegularTrainerMovesets) {
+        this.betterRegularTrainerMovesets = betterRegularTrainerMovesets;
     }
 
     public boolean isRandomizeWildPokemon() {

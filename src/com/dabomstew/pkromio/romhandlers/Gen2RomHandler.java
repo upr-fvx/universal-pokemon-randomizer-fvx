@@ -1066,7 +1066,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         tr.setName(readVariableLengthString(offset, false));
         offset += lengthOfStringAt(offset, false);
         int dataType = rom[offset] & 0xFF;
-        tr.setPoketype(dataType);
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);
@@ -1223,6 +1222,24 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             offset += trainerLength;
         }
         return sum;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        // because there isn't enough space in the bank with trainer data
+        return false;
     }
 
     @Override

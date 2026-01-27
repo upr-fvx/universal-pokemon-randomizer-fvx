@@ -317,7 +317,6 @@ public class RandomizerGUI {
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
     private JComboBox tpComboBox;
-    private JCheckBox tpBetterMovesetsCheckBox;
     private JCheckBox paEnsureTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
     private JRadioButton ppalRandomRadioButton;
@@ -371,6 +370,10 @@ public class RandomizerGUI {
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
     private JCheckBox noRandomIntroMonCheckBox;
+    private JLabel tpBetterMovesetsLabel;
+    private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
+    private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
+    private JCheckBox tpBetterMovesetsRegularTrainersCheckBox;
 
     private static final Random RND = new Random();
 
@@ -1798,7 +1801,9 @@ public class RandomizerGUI {
         tpRegularTrainersTypeDiversityCheckBox.setSelected(settings.isDiverseTypesForRegularTrainers());
 
         tpRandomShinyTrainerPokemonCheckBox.setSelected(settings.isShinyChance());
-        tpBetterMovesetsCheckBox.setSelected(settings.isBetterTrainerMovesets());
+        tpBetterMovesetsBossTrainersCheckBox.setSelected(settings.isBetterBossTrainerMovesets());
+        tpBetterMovesetsImportantTrainersCheckBox.setSelected(settings.isBetterImportantTrainerMovesets());
+        tpBetterMovesetsRegularTrainersCheckBox.setSelected(settings.isBetterRegularTrainerMovesets());
 
         totpUnchangedRadioButton.setSelected(settings.getTotemPokemonMod() == Settings.TotemPokemonMod.UNCHANGED);
         totpRandomRadioButton.setSelected(settings.getTotemPokemonMod() == Settings.TotemPokemonMod.RANDOM);
@@ -2072,8 +2077,10 @@ public class RandomizerGUI {
         settings.setAdditionalImportantTrainerPokemon(tpImportantTrainersCheckBox.isVisible() && tpImportantTrainersCheckBox.isSelected() ? (int)tpImportantTrainersSpinner.getValue() : 0);
         settings.setAdditionalRegularTrainerPokemon(tpRegularTrainersCheckBox.isVisible() && tpRegularTrainersCheckBox.isSelected() ? (int)tpRegularTrainersSpinner.getValue() : 0);
         settings.setShinyChance(tpRandomShinyTrainerPokemonCheckBox.isVisible() && tpRandomShinyTrainerPokemonCheckBox.isSelected());
-        settings.setBetterTrainerMovesets(tpBetterMovesetsCheckBox.isVisible() && tpBetterMovesetsCheckBox.isSelected());
-        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpBossTrainersItemsCheckBox.isSelected());
+        settings.setBetterBossTrainerMovesets(tpBetterMovesetsBossTrainersCheckBox.isVisible() && tpBetterMovesetsBossTrainersCheckBox.isSelected());
+        settings.setBetterImportantTrainerMovesets(tpBetterMovesetsImportantTrainersCheckBox.isVisible() && tpBetterMovesetsImportantTrainersCheckBox.isSelected());
+        settings.setBetterRegularTrainerMovesets(tpBetterMovesetsRegularTrainersCheckBox.isVisible() && tpBetterMovesetsRegularTrainersCheckBox.isSelected());
+        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(tpImportantTrainersItemsCheckBox.isVisible() && tpImportantTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForRegularTrainerPokemon(tpRegularTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setConsumableItemsOnlyForTrainers(tpConsumableItemsOnlyCheckBox.isVisible() && tpConsumableItemsOnlyCheckBox.isSelected());
@@ -2425,7 +2432,9 @@ public class RandomizerGUI {
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
 				tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
 				tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
-				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox, tpBetterMovesetsCheckBox,
+				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox,
+                tpBetterMovesetsBossTrainersCheckBox, tpBetterMovesetsImportantTrainersCheckBox,
+                tpBetterMovesetsRegularTrainersCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
 		tpPercentageEvolutionLevelModifierSlider.setVisible(true);
@@ -2886,7 +2895,19 @@ public class RandomizerGUI {
 
             tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
-            tpBetterMovesetsCheckBox.setEnabled(true);
+
+            boolean canGiveMovesetsToBoss = romHandler.canGiveCustomMovesetsToBossTrainers();
+            boolean canGiveMovesetsToImportant = romHandler.canGiveCustomMovesetsToImportantTrainers();
+            boolean canGiveMovesetsToRegular = romHandler.canGiveCustomMovesetsToRegularTrainers();
+            boolean betterMovesetsAvailable = canGiveMovesetsToBoss || canGiveMovesetsToImportant || canGiveMovesetsToRegular;
+
+            tpBetterMovesetsLabel.setVisible(betterMovesetsAvailable);
+            tpBetterMovesetsBossTrainersCheckBox.setEnabled(canGiveMovesetsToBoss);
+            tpBetterMovesetsBossTrainersCheckBox.setVisible(canGiveMovesetsToBoss);
+            tpBetterMovesetsImportantTrainersCheckBox.setEnabled(canGiveMovesetsToImportant);
+            tpBetterMovesetsImportantTrainersCheckBox.setVisible(canGiveMovesetsToImportant);
+            tpBetterMovesetsRegularTrainersCheckBox.setEnabled(canGiveMovesetsToRegular);
+            tpBetterMovesetsRegularTrainersCheckBox.setVisible(canGiveMovesetsToRegular);
 
             totpPanel.setVisible(romHandler.hasTotemPokemon());
             if (totpPanel.isVisible()) {

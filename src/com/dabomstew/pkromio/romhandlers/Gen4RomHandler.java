@@ -2680,7 +2680,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                 byte[] trainer = trs.files.get(i);
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
-                tr.setPoketype(trainer[0] & 0xFF);
+                boolean readMovesets = (trainer[0] & 1) != 0;
+                boolean readItems = (trainer[0] & 2) != 0;
                 tr.setTrainerclass(trainer[1] & 0xFF);
                 tr.setIndex(i);
                 int numPokes = trainer[3] & 0xFF;
@@ -2719,11 +2720,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen4Constants.getFormeSuffixByBaseForme(species, formnum));
                     pokeOffs += 6;
-                    if (tr.pokemonHaveItems()) {
+                    if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                     }
-                    if (tr.pokemonHaveCustomMoves()) {
+                    if (readMovesets) {
                         for (int move = 0; move < 4; move++) {
                             tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move * 2));
                         }

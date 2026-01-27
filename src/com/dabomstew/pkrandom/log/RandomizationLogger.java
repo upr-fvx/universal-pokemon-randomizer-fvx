@@ -986,7 +986,14 @@ public class RandomizationLogger {
         printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
         String[] battleStyleNames = getBS("Log.tp.battleStyleNames").split(",");
+
+        boolean prevHadCustomMoves = false;
         for (Trainer t : trainers) {
+            boolean hasCustomMoves = shouldLogCustomMoves(t);
+            if (hasCustomMoves && !prevHadCustomMoves) {
+                log.println();
+            }
+            prevHadCustomMoves = hasCustomMoves;
             log.print("#" + t.getIndex() + " ");
             String originalTrainerName = originalTrainerNames.get(t.getIndex());
             String currentTrainerName = "";
@@ -1006,7 +1013,7 @@ public class RandomizationLogger {
                 log.printf("@%X", t.getOffset());
             }
 
-            if (trainerMovesetRandomizer.isChangesMade()) {
+            if (hasCustomMoves) {
                 log.println();
                 for (TrainerPokemon tpk : t.getPokemon()) {
                     List<Move> moves = romHandler.getMoves();
@@ -1045,6 +1052,18 @@ public class RandomizationLogger {
             log.println();
         }
         printSectionSeparator();
+    }
+
+    private boolean shouldLogCustomMoves(Trainer t) {
+        if (!t.pokemonHaveCustomMoves()) {
+            return false;
+        }
+        for (TrainerPokemon tp : t.getPokemon()) {
+            if (!tp.isResetMoves()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean shouldLogStaticPokemon() {

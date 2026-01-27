@@ -1634,7 +1634,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
             int pointerToPokes = readPointer(trOffset + (entryLen - 4));
-            tr.setPoketype(pokeDataType);
             tr.setName(this.readVariableLengthString(trOffset + 4));
             tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
             // Pokemon structure data is like
@@ -1722,7 +1721,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		Trainer mossdeepSteven = new Trainer();
 		mossdeepSteven.setOffset(mossdeepStevenOffset);
 		mossdeepSteven.setIndex(trainers.size() + 1);
-		mossdeepSteven.setPoketype(1); // Custom moves, but no held items
 
 		// This is literally how the game does it too, lol. Have to subtract one because
 		// the trainers internally are one-indexed, but then trainers is zero-indexed.

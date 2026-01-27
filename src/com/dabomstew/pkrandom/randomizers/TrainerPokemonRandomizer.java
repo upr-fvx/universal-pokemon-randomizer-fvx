@@ -1034,7 +1034,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (!giveToBossPokemon && t.isBoss()) {
                 continue;
             }
-            t.setPokemonHaveItems(true);
             if (highestLevelOnly) {
                 int maxLevel = -1;
                 TrainerPokemon highestLevelPoke = null;

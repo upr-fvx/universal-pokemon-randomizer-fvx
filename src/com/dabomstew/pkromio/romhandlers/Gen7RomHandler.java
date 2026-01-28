@@ -1181,7 +1181,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < 3; i++) {
                 int offset = i * 0x14;
                 Item item = items.get(i);
-                FileFunctions.write2ByteInt(giftsFile, offset + 8, item.getId());
+                FileFunctions.write2ByteInt(giftsFile, offset + 8, item == null ? 0 : item.getId());
             }
             writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
         } catch (IOException e) {

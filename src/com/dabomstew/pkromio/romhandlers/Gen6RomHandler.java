@@ -1069,7 +1069,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < count; i++) {
                 if (!starterIndices.contains(i)) continue;
                 Item item = itemsIter.next();
-                if (item.getId() == 0) {
+                if (item == null) {
                     FileFunctions.writeFullInt(staticCRO, offset + i * size + 12, -1);
                 } else {
                     FileFunctions.writeFullInt(staticCRO, offset + i * size + 12, item.getId());

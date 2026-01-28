@@ -1161,6 +1161,35 @@ public class Settings {
             }
         }
 
+        // trainers
+        if (!rh.canGiveCustomMovesetsToBossTrainers()) {
+            this.setBetterBossTrainerMovesets(false);
+        }
+        if (!rh.canGiveCustomMovesetsToImportantTrainers()) {
+            this.setBetterImportantTrainerMovesets(false);
+        }
+        if (!rh.canGiveCustomMovesetsToRegularTrainers()) {
+            this.setBetterRegularTrainerMovesets(false);
+        }
+        if (!rh.canAddPokemonToBossTrainers()) {
+            this.setAdditionalBossTrainerPokemon(0);
+        }
+        if (!rh.canAddPokemonToImportantTrainers()) {
+            this.setAdditionalImportantTrainerPokemon(0);
+        }
+        if (!rh.canAddPokemonToRegularTrainers()) {
+            this.setAdditionalRegularTrainerPokemon(0);
+        }
+        if (!rh.canAddHeldItemsToBossTrainers()) {
+            this.setRandomizeHeldItemsForBossTrainerPokemon(false);
+        }
+        if (!rh.canAddHeldItemsToImportantTrainers()) {
+            this.setRandomizeHeldItemsForImportantTrainerPokemon(false);
+        }
+        if (!rh.canAddHeldItemsToRegularTrainers()) {
+            this.setRandomizeHeldItemsForRegularTrainerPokemon(false);
+        }
+
         // gen restrictions
         if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;

@@ -66,3 +66,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 2) Fixed random starter held items randomization failure. (#155)
 - (GUI) Fixed "No-Game-Breaking Moves" not being saved properly to settings files. (#153)
 - (Gen 2) Fixed randomization failure when Farfetch'd was set as one of the Game Corner prizes.
+- (Log) Fixed visual misalignment of the top row in logged Type Tables.

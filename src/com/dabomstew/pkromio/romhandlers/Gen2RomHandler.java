@@ -1622,9 +1622,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writePaddedPokemonName(String name, int length, int offset) {
-        String paddedName = String.format("%-" + length + "s", name);
-        byte[] rawData = translateString(paddedName);
-        System.arraycopy(rawData, 0, rom, offset, length);
+        // Assumes the most efficient way for translateString() to translate n space characters,
+        // is to have them each take up a byte.
+        byte[] padding = translateString(new String(new char[length]).replace("\0", " "));
+        byte[] unpadded = translateString(name);
+        if (padding.length != length) {
+            throw new RuntimeException("Padding is the wrong length.");
+        }
+        if (padding.length < unpadded.length) {
+            throw new RuntimeException("Padding is shorter than the unpadded string.");
+        }
+        System.arraycopy(padding, 0, rom, offset, length);
+        System.arraycopy(unpadded, 0, rom, offset, unpadded.length);
     }
 
     @Override

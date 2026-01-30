@@ -34,18 +34,22 @@ public enum Theme {
                 break;
             }
         }
-        this.installed = installed;
 
+        LookAndFeel laf;
         if (installed) {
             try {
-                this.laf = (LookAndFeel) Class.forName(className).getConstructor().newInstance();
+                laf = (LookAndFeel) Class.forName(className).getConstructor().newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                      InvocationTargetException e) {
-                throw new RuntimeException("Could not init Theme.laf from class name=" + className);
+                installed = false;
+                laf = null;
+                System.out.println("Could not init Theme.laf from class name=" + className + ". " + e);
             }
         } else {
-            this.laf = null;
+            laf = null;
         }
+        this.installed = installed;
+        this.laf = laf;
     }
 
     public String getUiName() {

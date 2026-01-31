@@ -37,6 +37,7 @@ tasks.register('moveIntoReleaseDir', Copy) {
 
     from('src/main/resources') {
         exclude 'data/players_unused'
+        exclude 'com'
     }
     from 'src/launcher'
     from 'build/libs'
@@ -50,4 +51,10 @@ tasks.register('createReleaseZip', Zip) {
     from 'build/target'
     destinationDirectory = file('build/dist')
     archiveFileName = 'UPR_FVX.zip' // TODO: make it include version
+}
+
+tasks.register('launchUnix', Exec) {
+    dependsOn 'moveIntoReleaseDir'
+    workingDir 'build/target'
+    commandLine 'bash', './launcher_UNIX.sh'
 }

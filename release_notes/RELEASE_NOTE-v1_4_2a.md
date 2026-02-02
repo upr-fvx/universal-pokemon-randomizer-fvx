@@ -12,4 +12,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - Other Unix-based systems: Use `launcher_UNIX.sh`
 
 ## Bugfixes
-- Made failure to setup the Windows theme, no longer prevent the Randomizer from opening. Instead, it should only disable the Windows theme.
+- Made failure to setup the Windows theme, no longer prevent the Randomizer from opening. Instead, it should only disable the Windows theme. (#159)

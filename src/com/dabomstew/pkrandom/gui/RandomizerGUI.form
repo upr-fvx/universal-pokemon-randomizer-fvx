@@ -2102,20 +2102,9 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpUseLocalPokemon.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="21090" class="javax.swing.JCheckBox" binding="tpBetterMovesetsCheckBox">
-                        <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
                       <component id="b62cd" class="javax.swing.JLabel" binding="tpAdditionalPokemonForLabel">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2124,7 +2113,7 @@
                       </component>
                       <component id="8f956" class="javax.swing.JCheckBox" binding="tpBossTrainersCheckBox">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2135,7 +2124,7 @@
                       </component>
                       <component id="6d5aa" class="javax.swing.JCheckBox" binding="tpImportantTrainersCheckBox">
                         <constraints>
-                          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2146,7 +2135,7 @@
                       </component>
                       <component id="39903" class="javax.swing.JCheckBox" binding="tpRegularTrainersCheckBox">
                         <constraints>
-                          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2157,7 +2146,7 @@
                       </component>
                       <component id="da8e4" class="javax.swing.JSpinner" binding="tpRegularTrainersSpinner">
                         <constraints>
-                          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="4" bottom="0" right="0" weightx="0.0" weighty="0.0" ipadx="10"/>
                         </constraints>
                         <properties>
@@ -2166,7 +2155,7 @@
                       </component>
                       <component id="e7a99" class="javax.swing.JSpinner" binding="tpImportantTrainersSpinner">
                         <constraints>
-                          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="4" bottom="0" right="0" weightx="0.0" weighty="0.0" ipadx="10"/>
                         </constraints>
                         <properties>
@@ -2175,7 +2164,7 @@
                       </component>
                       <component id="181e" class="javax.swing.JSpinner" binding="tpBossTrainersSpinner">
                         <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="4" bottom="0" right="0" weightx="0.0" weighty="0.0" ipadx="10"/>
                         </constraints>
                         <properties>
@@ -2184,7 +2173,7 @@
                       </component>
                       <component id="2918f" class="javax.swing.JLabel" binding="tpHeldItemsLabel">
                         <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2193,7 +2182,7 @@
                       </component>
                       <component id="dad16" class="javax.swing.JCheckBox" binding="tpBossTrainersItemsCheckBox">
                         <constraints>
-                          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2204,7 +2193,7 @@
                       </component>
                       <component id="31e9a" class="javax.swing.JCheckBox" binding="tpConsumableItemsOnlyCheckBox">
                         <constraints>
-                          <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2215,7 +2204,7 @@
                       </component>
                       <component id="d7d93" class="javax.swing.JCheckBox" binding="tpImportantTrainersItemsCheckBox">
                         <constraints>
-                          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2226,7 +2215,7 @@
                       </component>
                       <component id="79d6a" class="javax.swing.JCheckBox" binding="tpSensibleItemsCheckBox">
                         <constraints>
-                          <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2237,7 +2226,7 @@
                       </component>
                       <component id="7fddd" class="javax.swing.JCheckBox" binding="tpRegularTrainersItemsCheckBox">
                         <constraints>
-                          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2248,7 +2237,7 @@
                       </component>
                       <component id="f3c52" class="javax.swing.JCheckBox" binding="tpHighestLevelGetsItemCheckBox">
                         <constraints>
-                          <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2259,7 +2248,7 @@
                       </component>
                       <component id="f4bb1" class="javax.swing.JLabel" binding="tpTypeDiversityLabel">
                         <constraints>
-                          <grid row="9" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="10" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2268,7 +2257,7 @@
                       </component>
                       <component id="a3d18" class="javax.swing.JCheckBox" binding="tpBossTrainersTypeDiversityCheckBox">
                         <constraints>
-                          <grid row="10" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="11" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2279,7 +2268,7 @@
                       </component>
                       <component id="e1be3" class="javax.swing.JCheckBox" binding="tpImportantTrainersTypeDiversityCheckBox">
                         <constraints>
-                          <grid row="10" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2291,7 +2280,7 @@
                       </component>
                       <grid id="e2e3a" binding="tpBattleStylePanel" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="11" column="1" row-span="3" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="12" column="1" row-span="3" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -2357,7 +2346,7 @@
                       </grid>
                       <component id="66a0b" class="javax.swing.JCheckBox" binding="tpRegularTrainersTypeDiversityCheckBox">
                         <constraints>
-                          <grid row="10" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -2405,6 +2394,48 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
+                      <component id="11fe" class="javax.swing.JLabel" binding="tpBetterMovesetsLabel">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsLabel"/>
+                        </properties>
+                      </component>
+                      <component id="8b5bb" class="javax.swing.JCheckBox" binding="tpBetterMovesetsBossTrainersCheckBox">
+                        <constraints>
+                          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsBossTrainersCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsBossTrainersCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="82f9a" class="javax.swing.JCheckBox" binding="tpBetterMovesetsImportantTrainersCheckBox">
+                        <constraints>
+                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsImportantTrainersCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsImportantTrainersCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="c1f3b" class="javax.swing.JCheckBox" binding="tpBetterMovesetsRegularTrainersCheckBox">
+                        <constraints>
+                          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsRegularTrainersCheckBox.text"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpBetterMovesetsRegularTrainersCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                   <hspacer id="66d2">

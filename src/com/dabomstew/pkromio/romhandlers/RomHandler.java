@@ -70,7 +70,7 @@ public interface RomHandler {
     // =======================
 
     boolean loadRom(String filename);
-    
+
     boolean saveRom(String filename, long seed, boolean saveAsDirectory);
 
     String loadedFilename();
@@ -307,6 +307,12 @@ public interface RomHandler {
      * Only made public for testing. Do NOT use otherwise!
      */
     void saveTrainers();
+
+    boolean canGiveCustomMovesetsToBossTrainers();
+
+    boolean canGiveCustomMovesetsToImportantTrainers();
+
+    boolean canGiveCustomMovesetsToRegularTrainers();
 
     boolean canAddPokemonToBossTrainers();
 

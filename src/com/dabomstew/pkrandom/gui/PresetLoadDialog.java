@@ -330,7 +330,6 @@ public class PresetLoadDialog extends JDialog {
             Scanner scanner = new Scanner(config, "UTF-8");
             while (scanner.hasNext()) {
                 String q = scanner.nextLine().trim();
-                System.out.println(q);
                 if (q.contains("//")) {
                     q = q.substring(0, q.indexOf("//")).trim();
                 }

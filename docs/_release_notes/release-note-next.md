@@ -7,8 +7,8 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-@bergmaen for your code contributions,
-[Every person who submitted a solved issue] @LunaisLazier and @Gabbyxo97 for reporting Issues,
+[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -35,25 +35,13 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Wild Pokemon
-- (GUI) Renamed "Keep Area/Zone Theme" to more consistent "Keep Set/Zone Theme".
-
 ### Misc. Tweaks
-- (Gen 2) Added support for "Reusable TMs" and "Forgettable HMs" to pokecrystal-speedchoice v8.
+- (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
-- (Gen 2) Restored check value writing for pokecrystal-speedchoice.
-- (GUI) Added theme selection. This includes dark mode (!) and also the ability to change between Windows/Metal/FlatLaf themes. The Windows theme is still only available on Windows computers. (#151)
 
 ## Bugfixes
-- (Red/Blue) Fixed rivals original starters not being randomized if starter
-  Pokemon are randomized, trainer Pokemon are unchanged, additional Pokemon are
-  added to important trainers, and rival is supposed to keep starter throughout
-  the game. (#145)
-- (Yellow) Fixed Settings from other games not being loadable in yellow. (#145)
-- (GUI) Fixed Settings String for the selected percentage for trainer Pokemon
- evolution levels not being loaded correctly. (#144)
-- (Gen 2) Fixed random starter held items randomization failure. (#155)
-- (GUI) Fixed "No-Game-Breaking Moves" not being saved properly to settings files. (#153)
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

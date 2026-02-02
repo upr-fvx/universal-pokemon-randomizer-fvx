@@ -1066,7 +1066,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         tr.setName(readVariableLengthString(offset, false));
         offset += lengthOfStringAt(offset, false);
         int dataType = rom[offset] & 0xFF;
-        tr.setPoketype(dataType);
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
             //System.out.println(tr);
@@ -1223,6 +1222,24 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             offset += trainerLength;
         }
         return sum;
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToBossTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToImportantTrainers() {
+        // because there isn't enough space in the bank with trainer data; the Japanese ROMs are smaller
+        return romEntry.isNonJapanese();
+    }
+
+    @Override
+    public boolean canGiveCustomMovesetsToRegularTrainers() {
+        // because there isn't enough space in the bank with trainer data
+        return false;
     }
 
     @Override
@@ -1605,9 +1622,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writePaddedPokemonName(String name, int length, int offset) {
-        String paddedName = String.format("%-" + length + "s", name);
-        byte[] rawData = translateString(paddedName);
-        System.arraycopy(rawData, 0, rom, offset, length);
+        // Assumes the most efficient way for translateString() to translate n space characters,
+        // is to have them each take up a byte.
+        byte[] padding = translateString(new String(new char[length]).replace("\0", " "));
+        byte[] unpadded = translateString(name);
+        if (padding.length != length) {
+            throw new RuntimeException("Padding is the wrong length.");
+        }
+        if (padding.length < unpadded.length) {
+            throw new RuntimeException("Padding is shorter than the unpadded string.");
+        }
+        System.arraycopy(padding, 0, rom, offset, length);
+        System.arraycopy(unpadded, 0, rom, offset, unpadded.length);
     }
 
     @Override

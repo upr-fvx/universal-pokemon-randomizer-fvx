@@ -917,7 +917,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void betterMovesets_DoesNotCauseCrash(String romName) {
         activateRomHandler(romName);
         Settings s = new Settings();
-        s.setBetterTrainerMovesets(true);
+        s.setBetterBossTrainerMovesets(true);
+        s.setBetterImportantTrainerMovesets(true);
+        s.setBetterRegularTrainerMovesets(true);
         new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
     }
 
@@ -927,7 +929,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-        s.setBetterTrainerMovesets(true);
+        s.setBetterBossTrainerMovesets(true);
+        s.setBetterImportantTrainerMovesets(true);
+        s.setBetterRegularTrainerMovesets(true);
         new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
 
         Map<Integer, Integer> moveCounts = new TreeMap<>();

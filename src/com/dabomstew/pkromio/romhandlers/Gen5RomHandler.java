@@ -1137,8 +1137,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trainer = trs.files.get(i);
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
-                tr.setPoketype(trainer[0] & 0xFF);
                 tr.setIndex(i);
+                boolean readMovesets = (trainer[0] & 1) != 0;
+                boolean readItems = (trainer[0] & 2) != 0;
                 tr.setTrainerclass(trainer[1] & 0xFF);
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
@@ -1189,11 +1190,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
-                    if (tr.pokemonHaveItems()) {
+                    if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                     }
-                    if (tr.pokemonHaveCustomMoves()) {
+                    if (readMovesets) {
                         for (int move = 0; move < 4; move++) {
                             tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }
@@ -1214,7 +1215,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     for (int trno = 0; trno < 17; trno++) {
                         Trainer tr = new Trainer();
                         tr.setIndex(trainers.size() + 1);
-                        tr.setPoketype(3); // have held items and custom moves
                         int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
                         tr.setFullDisplayName(tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
                         tr.setRequiresUniqueHeldItems(true);

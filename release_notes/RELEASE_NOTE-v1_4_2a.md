@@ -1,0 +1,15 @@
+Hi! This release aims to lessen the impact of a bug introduced last version, which prevented the Randomizer from launching at all on some Windows setups. 
+
+Thanks to @AxelElric8 for reporting the Issue, and everyone else who has participated in the discussion (@Pokepal7, @UserNotFound32, @mememan498, and @Gabbyxo97) for your valuable insights, including finding a temporary fix!
+
+# How to use
+
+Download the Randomizer below by clicking on `UPR_FVX-v1.4.2a.zip`. After downloading, extract the contents of the 
+zip file to a folder on your computer. You can then run the Randomizer by double-clicking the appropriate launcher script:
+
+- Windows: Use `launcher_WINDOWS.bat`
+- Mac: Use `launcher_MAC.command`
+- Other Unix-based systems: Use `launcher_UNIX.sh`
+
+## Bugfixes
+- Made failure to setup the Windows theme, no longer prevent the Randomizer from opening. Instead, it should only disable the Windows theme.

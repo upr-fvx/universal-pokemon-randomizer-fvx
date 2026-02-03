@@ -20,35 +20,42 @@ header {
   margin: 20px;
 }
 
-nav {
-  text-align: center;
-  font-size: 130%;
-  list-style: none;
+main {
+	position: relative;
+	max-width: 900px;
+	padding: 0;
+	margin: auto;  
+	
+	background: var(--color2);
+	border: 4px ridge;
+	border-color: var(--color3);
 }
-nav ul {
+
+main nav {
+  position: absolute;
+  font-size: 100%;
+  width: 200px;
+ 
+  background: var(--color3);
+  padding: 0px 4px;
+}
+main nav ul {
+  list-style-type: none;
+  margin: 0px 0px 4px 0px;
   padding: 0px;
-  margin: 5px 5px 0px;
 }
-nav li {
-  display: inline-block;
-  padding: 5px 10px;
-  
+main nav li {
+  padding: 4px;
   background: var(--color2);
-  border-width: 4px;
-  border-style: ridge ridge none;
-  border-color: var(--color3);
 }
-nav a {
+main nav a {
   text-decoration: none;
 }
 
-main {
-	background: var(--color2);
-	max-width: 900px;
-	padding: 40px;
-	margin: auto;  
-	border: 4px ridge;
-	border-color: var(--color3);
+#content {
+	padding-left: 200px;
+	margin: 0px 20px 20px 20px;
+	width: auto;
 }
 
 .wikipagelist {

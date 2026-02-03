@@ -21,7 +21,6 @@ header {
 }
 
 main {
-	position: relative;
 	max-width: 900px;
 	padding: 0;
 	margin: auto;  
@@ -29,15 +28,17 @@ main {
 	background: var(--color2);
 	border: 4px ridge;
 	border-color: var(--color3);
+	
+	
+    display: grid;
+    grid-template-columns: 200px auto;
 }
 
 main nav {
-  position: absolute;
-  font-size: 100%;
-  width: 200px;
+  grid-column: 1;
  
   background: var(--color3);
-  padding: 0px 4px;
+  padding: 0px 4px 0px 2px;
 }
 main nav ul {
   list-style-type: none;
@@ -53,9 +54,8 @@ main nav a {
 }
 
 #content {
-	padding-left: 200px;
-	margin: 0px 20px 20px 20px;
-	width: auto;
+    grid-column: 2;
+	margin: 20px;
 }
 
 .wikipagelist {

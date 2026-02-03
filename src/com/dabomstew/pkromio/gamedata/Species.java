@@ -42,6 +42,7 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private Species baseForme = null;
     private int formeNumber = 0;
+    private Species alolanForm = null;
     private int cosmeticForms = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
@@ -144,7 +145,21 @@ public class Species implements Comparable<Species> {
      */
     public boolean isLegalEvolutionAtLevel(int level, double evoLvlModifier) {
         boolean isLegalEvo = true; // If this does not have any evolutions to, then it is a legal evolution.
-        for (Evolution evo : this.getEvolutionsTo()) {
+
+        // Change forme if needed
+        Species species = this;
+        if (species.getEvolutionsTo().isEmpty()) {
+            // If species does not have an evolution but a base forme, try to determine if the base forme has an
+            // evolution, e.g., species is a Mega-Evolution, Battle Bond Greninja, ...
+            if (!species.isBaseForme()) {
+                species = species.getBaseForme();
+            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan frome that carries
+                                                           // evolution info, e.g., Raichu in SM USUM
+                species = species.getAlolanForme();
+            }
+        }
+
+        for (Evolution evo : species.getEvolutionsTo()) {
             if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution to that is legal suffices
             }
@@ -161,7 +176,20 @@ public class Species implements Comparable<Species> {
      * @return A boolean, true if this {@link Species} has a legal evolution at this level.
      */
     public boolean hasLegalEvolutionAtLevel(int level, double evoLvlModifier) {
-        for (Evolution evo : this.getEvolutionsFrom()) {
+        // Change forme if needed
+        Species species = this;
+        if (species.getEvolutionsFrom().isEmpty()) {
+            // If species does not have an evolution from but a base forme, try to determine if the base forme has an
+            // evolution from.
+            if (!species.isBaseForme()) {
+                species = species.getBaseForme();
+            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan forme that carries
+                // evolution info
+                species = species.getAlolanForme();
+            }
+        }
+
+        for (Evolution evo : species.getEvolutionsFrom()) {
             if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution from that is legal suffices
             }
@@ -601,6 +629,14 @@ public class Species implements Comparable<Species> {
 
     public void setBaseForme(Species baseForme) {
         this.baseForme = baseForme;
+    }
+
+    public Species getAlolanForme() {
+        return alolanForm;
+    }
+
+    public void setAlolanForme(Species alolanForm) {
+        this.alolanForm = alolanForm;
     }
 
     /**

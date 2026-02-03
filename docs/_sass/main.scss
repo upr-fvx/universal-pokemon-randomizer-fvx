@@ -42,18 +42,7 @@ main nav {
   margin: 0px;
 }
 main nav #buttondiv {
-  max-width: 100px;
-  margin: auto;  
-  padding: 0;
-  text-align: center;
-}
-main nav button {
-  width: 32px;
-  height: 32px;
-  background-color: var(--color3);
-  background-image: url("icon_hamburger.png");
-  border: none;
-  cursor: pointer;
+  display: none;
 }
 main nav ul {
   padding: 0px;
@@ -69,6 +58,31 @@ main nav li {
 main nav a {
   text-decoration: none;
 }
+@media (scripting: enabled) {
+	main nav #buttondiv {
+		display: block;
+		max-width: 100px;
+		margin: auto;  
+		padding: 0;
+		text-align: center;
+	}
+	main nav button {
+		width: 32px;
+		height: 32px;
+		background-color: var(--color3);
+		border: none;
+		cursor: pointer;
+	}
+	main nav .hamburgerbutton {
+		background-image: url("icon_hamburger.png");
+	}
+	main nav .crossbutton {
+		background-image: url("icon_cross.png");
+	}
+	main nav ul {
+		display: none;
+	}
+}
 @media screen and (min-width: 600px) {
 	main nav {
 		grid-column: 1;
@@ -78,6 +92,7 @@ main nav a {
 		display: none;
 	}
 	main nav ul {
+		display: block;
 		margin: 0px 0px 4px 0px;
 		text-align: left;
 	}

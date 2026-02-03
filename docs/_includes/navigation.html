@@ -1,7 +1,23 @@
-<div id=buttondiv>
-	<button type="button"></button>
+<script>
+function hideShow() {
+	var list = document.getElementById("navlist");
+	var button = document.getElementById("navbutton");
+	if (list.style.display === "block") {
+		list.style.display = "none";
+		button.classList.remove("crossbutton");
+		button.classList.add("hamburgerbutton");
+	} else {
+		list.style.display = "block";
+		button.classList.remove("hamburgerbutton");
+		button.classList.add("crossbutton");
+	}
+}
+</script>	
+
+<div id=buttondiv> 
+	<button id="navbutton" type="button" class="hamburgerbutton" onclick="hideShow()"></button>
 </div>
-<ul>
+<ul id="navlist">
 {% for item in site.data.navigation %}
 <li>
 	<a href="{{ site.baseurl }}{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a>

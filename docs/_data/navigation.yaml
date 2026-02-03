@@ -2,13 +2,29 @@
   link: /
 - name: About
   link: /about.html
+  sub-pages:
+  - name: History
+    link: /about_history.html
+  - name: Other Randomizers 
+    link: /about_other_randomizers.html
 - name: Acknowledgements
   link: /acks.html
 - name: Wiki
   link: /wikipages/home.html
+  sub-pages:
+  - name: Important Info
+    link: /wikipages/important_info.html
+  - name: New Feature Summary
+    link: /wikipages/new_feature_summary.html
+  - name: Randomizing 3DS Games
+    link: /wikipages/3ds_games.html
+  - name: Evolutions
+    link: /wikipages/evolutions.html
 - name: Screenshots
   link: /screenshots.html
-- name: Release Notes
-  link: /release_notes.html
 - name: Downloads
   link: /downloads.html
+  sub-pages: 
+  - name: Release Notes
+    link: /release_notes.html
+  

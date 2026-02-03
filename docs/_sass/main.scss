@@ -19,6 +19,10 @@ header {
   font-family: verdana, sans-serif;
   margin: 20px;
 }
+header a, header a:visited {
+  color: inherit;
+  text-decoration: none;
+}
 
 main {
 	max-width: 900px;

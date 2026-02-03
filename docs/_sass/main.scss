@@ -41,6 +41,20 @@ main nav {
   padding: 0px 2px 4px 2px;
   margin: 0px;
 }
+main nav #buttondiv {
+  max-width: 100px;
+  margin: auto;  
+  padding: 0;
+  text-align: center;
+}
+main nav button {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color3);
+  background-image: url("icon_hamburger.png");
+  border: none;
+  cursor: pointer;
+}
 main nav ul {
   padding: 0px;
   margin: 0px;
@@ -59,6 +73,9 @@ main nav a {
 	main nav {
 		grid-column: 1;
 		padding: 0px 4px 0px 2px;
+	}
+	main nav button {
+		display: none;
 	}
 	main nav ul {
 		margin: 0px 0px 4px 0px;

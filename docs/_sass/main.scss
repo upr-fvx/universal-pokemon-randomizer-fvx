@@ -28,22 +28,25 @@ main {
 	background: var(--color2);
 	border: 4px ridge;
 	border-color: var(--color3);
-	
-	
-    display: grid;
-    grid-template-columns: 200px auto;
+}
+@media screen and (min-width: 600px) {
+	main {
+		display: grid;
+		grid-template-columns: 200px auto;
+	}
 }
 
 main nav {
-  grid-column: 1;
- 
   background: var(--color3);
-  padding: 0px 4px 0px 2px;
+  padding: 0px 2px 4px 2px;
+  margin: 0px;
 }
 main nav ul {
-  list-style-type: none;
-  margin: 0px 0px 4px 0px;
   padding: 0px;
+  margin: 0px;
+  text-align: center;
+  list-style-type: none;
+  background: var(--color3);
 }
 main nav li {
   padding: 4px;
@@ -52,10 +55,24 @@ main nav li {
 main nav a {
   text-decoration: none;
 }
+@media screen and (min-width: 600px) {
+	main nav {
+		grid-column: 1;
+		padding: 0px 4px 0px 2px;
+	}
+	main nav ul {
+		margin: 0px 0px 4px 0px;
+		text-align: left;
+	}
+}
 
 #content {
-    grid-column: 2;
 	margin: 20px;
+}
+@media screen and (min-width: 600px) {
+	#content {
+		grid-column: 2;
+	}
 }
 
 .wikipagelist {

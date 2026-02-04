@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
+@bergmaen for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
@@ -46,5 +46,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
+- (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
+  'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].

@@ -42,7 +42,7 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private Species baseForme = null;
     private int formeNumber = 0;
-    private Species alolanForm = null;
+    private Species alolanForme = null;
     private int cosmeticForms = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
@@ -149,11 +149,11 @@ public class Species implements Comparable<Species> {
         // Change forme if needed
         Species species = this;
         if (species.getEvolutionsTo().isEmpty()) {
-            // If species does not have an evolution but a base forme, try to determine if the base forme has an
-            // evolution, e.g., species is a Mega-Evolution, Battle Bond Greninja, ...
+            // If species does not have an evolution to but a base forme, try to determine if the base forme has an
+            // evolution to, e.g., species is a Mega-Evolution, Battle Bond Greninja, ...
             if (!species.isBaseForme()) {
                 species = species.getBaseForme();
-            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan frome that carries
+            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan forme that carries
                                                            // evolution info, e.g., Raichu in SM USUM
                 species = species.getAlolanForme();
             }
@@ -632,11 +632,11 @@ public class Species implements Comparable<Species> {
     }
 
     public Species getAlolanForme() {
-        return alolanForm;
+        return alolanForme;
     }
 
-    public void setAlolanForme(Species alolanForm) {
-        this.alolanForm = alolanForm;
+    public void setAlolanForme(Species alolanForme) {
+        this.alolanForme = alolanForme;
     }
 
     /**

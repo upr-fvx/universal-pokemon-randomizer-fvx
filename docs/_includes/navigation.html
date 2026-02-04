@@ -2,14 +2,14 @@
 function hideShow() {
 	var list = document.getElementById("navlist");
 	var button = document.getElementById("navbutton");
-	if (list.style.display === "block") {
-		list.style.display = "none";
-		button.classList.remove("crossbutton");
-		button.classList.add("hamburgerbutton");
-	} else {
+	if (list.style.display === "") {
 		list.style.display = "block";
 		button.classList.remove("hamburgerbutton");
 		button.classList.add("crossbutton");
+	} else {
+		list.style.display = "";
+		button.classList.remove("crossbutton");
+		button.classList.add("hamburgerbutton");
 	}
 }
 </script>	

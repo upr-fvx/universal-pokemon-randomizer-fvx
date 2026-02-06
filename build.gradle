@@ -1,12 +1,14 @@
-// The dilemma: the "io.github.file5.guidesigner" plugin requires Java 11+.
-// However, as Oracle pushes Java 8 to end users, the Randomizer *must* be
-// runnable using Java 8.
-// Question: Is it possible to have Gradle run off a more modern Java version,
-// yet build a Java 8 app? Read up!
-
 plugins {
     id 'java'
     id 'io.github.file5.guidesigner' version '1.0.2'
+}
+
+java {
+    toolchain {
+        // Oracle pushes Java 8 to low-tech end users, via https://www.java.com/en/download/.
+        // This means we *have* to use Java 8 for the app, otherwise it will be inaccessible to these users.
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 
 repositories {
@@ -67,6 +69,11 @@ tasks.register('createReleaseZip', Zip) {
 
 tasks.register('launchUnix', Exec) {
     dependsOn 'moveIntoReleaseDir'
+    workingDir 'build/target'
+    commandLine 'bash', './launcher_UNIX.sh'
+}
+
+tasks.register('relaunchUnix', Exec) {
     workingDir 'build/target'
     commandLine 'bash', './launcher_UNIX.sh'
 }

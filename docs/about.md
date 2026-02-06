@@ -65,37 +65,7 @@ True to its ancestry in ZX, it supports all vanilla core series Pokémon games f
 
 For developers, FVX also has a considerable amount of refactoring and new features, including separate Randomizer classes for each category of randomization, a SpeciesSet class with many helper functions, and automated tests for most features.
 
-## History of the Randomizer
-December 12, 2012, Dabomstew released the first version of the Universal Pokemon Randomizer. It was not the first randomizer of its kind, Artemis251's Emerald randomizer among others (see [Acknowledgements]({{ site.baseurl }}/acks.html)) had already broken the ground of randomizing Pokémon games. What made the UPR stand out was its goal of being able to randomize all then-released Pokémon games, from Gen 1 to Gen 5. Thus, the *Universal* Pokémon Randomizer.
+## Further reading
 
-May 15, 2014, in conjunction with the release of UPR 1.6.1, the Randomizer became open source, [hosted on GitHub](https://github.com/Dabomstew/universal-pokemon-randomizer). 
-
-October 21, 2016, Dabomstew stopped working on the project, passing the torch to the community to continue its development and maintenance. This lead to the birth of a multitute of Randomizer branches. Since this website is primarily for the FVX branch, the below history will focus on its lineage. However, this lineage is not the only one. Some notable other branches are mentioned in the section below.
-
-May 8, 2019, the first version of the Universal Pokémon Randomizer ZX was released. The UPR ZX is a significant branch that emerged from the original UPR, developed by Ajarmar with significant contributions from darkeye and cleartonic. It added a slew of new features and rebalancing, with the most notable perhaps being support for the 3DS games (Gen 6 & 7). Despite its popularity, the development of the ZX branch eventually ceased. The last update was released February 12, 2023, marking the end of an era.
-
-August 6, 2022, voliol released the first version of a nameless branch, later "UPR ZX V branch". This branch had some focus on graphical features, and also contained considerable refactoring. Initially, the branch was based off brentspector's branch, but later "moved" to ZX.
-
-Dec 1, 2023, foxoftheasterisk began work on a branch focused on adding features to control the randomization, called "Closer To Vanilla". Although it was originally intended to implement features to be added to the ZX branch rather than have its own releases, she eventually released a single version on May 17, 2024.
-
-July 11, 2024, collaboration between foxoftheasterisk and voliol led to a release of their branches merged (and then some): the Universal Pokémon Randomizer FVX.
-
-## Other Pokémon randomizers and UPR branches
-
-As mentioned above, the UPR is not the only tool for randomizing Pokémon games, and the FVX branch is not its only branch. 
-
-Below, a small selection of other randomizers and branches are listed. They have been chosen for being notable and filling niches that the UPR or the FVX branch don't. However, there are more! See [The BIG List of Video Game Randomizers](https://randomizers.debigare.com/) for more non-UPR randomizers, and browse through forks on GitHub to find unmentioned branches. 
-
-### Randomizers
-
-- **[The Crystal Randofuser](https://github.com/xCrystal/crystal-randofuser)** (by xCrystal) is a randomizer for Pokémon Crystal, where Pokémon lines are fused when randomized. You no longer have Abra-Kadabra-Alakazam, Chikorita-Bayleef-Meganium - you have Chikabra-Baydabra-Megakazam! Or the like. 
-- **[Sanqui's Online Randomizer](https://sanqui.net/randomizer/)** (by Sanqui) is not only an online randomizer for Pokémon Red, it adds new Pokémon species to the game, all the way up to Gen 6. 
-- **[GBAXG](https://kittypboxx.github.io/GBAXG/)** (by KittyPBoxx) is a cross-game map randomizer of Pokémon FireRed, Emerald, and the Crystal Dust ROM hack. This does not mean it works on any of those given games - it works on all of them, *at once*. Travel between three regions seamlessly, and keep your team and items as you look for Gym Leaders and the Elite 4.
-- **[Archipelago](https://archipelago.gg/)** is a so-called "multi-game" randomizer. Not only does it support many many games from disparate franchises, but it lets you combine them in a sense. Or if you don't feel up for that, the games can be randomized by their own. At the time of writing, Archipelago officially supports Pokémon [Red/Blue](https://archipelago.gg/games/Pokemon%20Red%20and%20Blue/info/en) and [Emerald](https://archipelago.gg/games/Pokemon%20Emerald/info/en), but more are likely to be added in the future. 
-
-### Branches
-
-- **[The Gaia Fork](https://github.com/sphericalice/universal-pokemon-randomizer)** (by Spherical Ice) branches off from the original UPR, and adds support to the popular Gaia ROM hack.
-- **[brentspector's branch](https://github.com/brentspector/universal-pokemon-randomizer)** (by brentspector) branches off from the original UPR, and adds a number of features and tweaks, such as support for FireRed Randomizable 809. 
-- **[Ironhidelvan's branch](https://github.com/IronhideIvan/universal-pokemon-randomizer-zx)** (by Ironhidelvan) branches off from ZX, and adds options to improve trades and trainer teams, among others.
-- **Speedchoice branches** (by [Dabomstew](https://github.com/Dabomstew/UPR-Speedchoice), and [choatix](https://github.com/choatix/zxplus)) are ones that support Speedchoice ROM hacks. Since there are multiple branches with multiple releases each, each compatible with only some ROMs, finding the right Randomizer can be tricky. To solve this, Speedchoice communities tend to pack the relevant Randomizer with the download of the Speedchoice ROM itself.  
+- [History of the Randomizer]({{ site.baseurl}}/about_history.html)
+- [Other Pokémon randomizers and UPR branches]({{ site.baseurl}}/about_other_randomizers.html)

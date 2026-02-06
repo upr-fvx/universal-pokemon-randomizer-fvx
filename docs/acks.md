@@ -88,11 +88,11 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - Pokeli (Red)
 - DelyBulacha (Frisk, Chara)
 - SharkGuy (Boyfriend)
-- bepis (Shantae)
+- bepis (Shantae, Quote)
 - FourLeafSunny (Various)
 - NachoPeñalva (Various)
 - Ploxel (King Dedede, Meta Knight)
-- Happy Time Boredom (Duck)
+- Happy Time Boredom (Duck, Dennis the Menace)
 
 ## Direct code contributors
 

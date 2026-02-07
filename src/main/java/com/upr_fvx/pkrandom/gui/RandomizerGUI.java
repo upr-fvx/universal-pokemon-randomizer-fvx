@@ -257,7 +257,7 @@ public class RandomizerGUI {
     private JRadioButton tpUnchangedBattleStyleRadioButton;
     private JRadioButton tpRandomBattleStyleRadioButton;
     private JRadioButton tpSingleStyleRadioButton;
-    private JComboBox tpBattleStyleCombobox;
+    private JComboBox<String> tpBattleStyleCombobox;
     private JCheckBox tpBossTrainersCheckBox;
     private JCheckBox tpImportantTrainersCheckBox;
     private JCheckBox tpRegularTrainersCheckBox;
@@ -291,7 +291,7 @@ public class RandomizerGUI {
     private JCheckBox paWeighDuplicatesTogetherCheckBox;
     private JCheckBox miscBalanceStaticLevelsCheckBox;
     private JCheckBox miscRetainAltFormesCheckBox;
-    private JComboBox pbsEXPCurveComboBox;
+    private JComboBox<String> pbsEXPCurveComboBox;
     private JCheckBox miscRunWithoutRunningShoesCheckBox;
     private JCheckBox peRemoveTimeBasedEvolutionsCheckBox;
     private JCheckBox tmFollowEvolutionsCheckBox;
@@ -316,7 +316,7 @@ public class RandomizerGUI {
     private JCheckBox noIrregularAltFormesCheckBox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
-    private JComboBox tpComboBox;
+    private JComboBox<String> tpComboBox;
     private JCheckBox paEnsureTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
     private JRadioButton ppalRandomRadioButton;
@@ -338,7 +338,7 @@ public class RandomizerGUI {
     private JRadioButton spRandomBasicRadioButton;
     private JRadioButton spTypeFwgRadioButton;
     private JRadioButton spTypeSingleRadioButton;
-    private JComboBox spTypeSingleComboBox;
+    private JComboBox<String> spTypeSingleComboBox;
     private JCheckBox spTypeNoDualCheckbox;
     private JRadioButton spTypeUniqueRadioButton;
     private JCheckBox spNoLegendariesCheckBox;
@@ -3119,6 +3119,7 @@ public class RandomizerGUI {
 
     private void guaranteeMaximumValueTick(JSlider slider) {
         // Create standard labels (only up to the last multiple)
+        @SuppressWarnings("unchecked") // pretty sure this warning is unavoidable, due to Swing being ancient
         Dictionary<Integer, JLabel> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
 
         // Force label at the exact maximum

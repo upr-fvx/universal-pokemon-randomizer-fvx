@@ -137,7 +137,8 @@ public class Species implements Comparable<Species> {
 
     //Evolutionary Relatives functions
     /**
-     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not an early evolved Pokemon.
+     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not
+     * an early evolved Pokemon (if this {@link Species} does not have a pre-evolution, its formes are checked a well).
      * @param level The level of the given {@link Species}.
      * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as legal
      *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
@@ -149,13 +150,16 @@ public class Species implements Comparable<Species> {
         // Change forme if needed
         Species species = this;
         if (species.getEvolutionsTo().isEmpty()) {
-            // If species does not have an evolution to but a base forme, try to determine if the base forme has an
-            // evolution to, e.g., species is a Mega-Evolution, Battle Bond Greninja, ...
-            if (!species.isBaseForme()) {
-                species = species.getBaseForme();
-            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan forme that carries
-                                                           // evolution info, e.g., Raichu in SM USUM
+            if (species.getAlolanForme() != null && !species.getAlolanForme().getEvolutionsTo().isEmpty()) {
+                // species might be base forme with Alolan forme that carries evolution info, e.g., Raichu in SM USUM
                 species = species.getAlolanForme();
+            } else {
+                // If species does not have an evolutionTo but a base forme, try to determine if the base forme has an
+                // evolutionTo, e.g., species is a Mega-Evolution, Battle Bond Greninja, ...
+                while (!species.isBaseForme() && species.getBaseForme().getEvolutionsTo().isEmpty()) {
+                    species = species.getBaseForme();
+                }
+                species = species.getBaseForme(); // = species if species.isBaseForme(), else species.getBaseForme()
             }
         }
 
@@ -169,7 +173,8 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution levels of its evolutions.
+     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution
+     * levels of its evolutions (if this {@link Species} does not have an evolution, its formes are checked a well).
      * @param level The level of the given {@link Species}.
      * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as having legal
      *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
@@ -179,13 +184,16 @@ public class Species implements Comparable<Species> {
         // Change forme if needed
         Species species = this;
         if (species.getEvolutionsFrom().isEmpty()) {
-            // If species does not have an evolution from but a base forme, try to determine if the base forme has an
-            // evolution from.
-            if (!species.isBaseForme()) {
-                species = species.getBaseForme();
-            } else if (species.getAlolanForme() != null) { // species might be base forme with Alolan forme that carries
-                // evolution info
+            if (species.getAlolanForme() != null && !species.getAlolanForme().getEvolutionsFrom().isEmpty()) {
+                // species might be base forme with Alolan forme that carries evolution info
                 species = species.getAlolanForme();
+            } else {
+                // If species does not have an evolutionFrom but a base forme, try to determine if the base forme has an
+                // evolutionFrom, e.g., Eternal Flower Floette
+                while (!species.isBaseForme() && species.getBaseForme().getEvolutionsFrom().isEmpty()) {
+                    species = species.getBaseForme();
+                }
+                species = species.getBaseForme(); // = species if species.isBaseForme(), else species.getBaseForme()
             }
         }
 

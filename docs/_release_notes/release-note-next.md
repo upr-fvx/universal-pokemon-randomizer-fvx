@@ -35,6 +35,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- (Gen 1-7) Trainers that should not receive buffs, e.g. the initial rival
+  battle in Red/Blue, no longer have their Pokemon's level increased if a value
+  greater than 0 is chosen for 'Percentage Level Modifier:'. (Pull request #164)
+
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
 

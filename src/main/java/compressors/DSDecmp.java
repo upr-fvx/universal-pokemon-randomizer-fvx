@@ -1,6 +1,6 @@
 package compressors;
 
-import com.upr_fvx.pkromio.FileFunctions;
+import com.uprfvx.pkromio.FileFunctions;
 
 //MODIFIED DSDECMP-JAVA SOURCE FOR RANDOMIZER'S NEEDS
 //License is below

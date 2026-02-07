@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-import com.upr_fvx.pkromio.FileFunctions;
+import com.uprfvx.pkromio.FileFunctions;
 
 /*----------------------------------------------------------------------------*/
 /*--  BLZCoder.java - Bottom LZ coding for Nintendo GBA/DS/3DS              --*/

@@ -1,6 +1,6 @@
 package compressors;
 
-import com.upr_fvx.pkromio.graphics.images.GBCImage;
+import com.uprfvx.pkromio.graphics.images.GBCImage;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

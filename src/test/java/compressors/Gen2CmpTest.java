@@ -1,6 +1,6 @@
 package test.compressors;
 
-import com.upr_fvx.pkromio.graphics.images.GBCImage;
+import com.uprfvx.pkromio.graphics.images.GBCImage;
 import compressors.Gen2Cmp;
 import compressors.Gen2Decmp;
 import compressors.gen2.Gen2Compressor;

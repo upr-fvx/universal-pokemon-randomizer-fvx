@@ -203,11 +203,11 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	}
 
 	private String getResourceAddress(String fileKey) {
-		return "/com/dabomstew/pkromio/graphics/resources/" + getFileName(fileKey);
+		return "/com/dabomstew/pkromio/graphics/" + getFileName(fileKey);
 	}
 
 	private String getSourceFileAddress(String fileKey) {
-		return "src/com/dabomstew/pkromio/graphics/resources/" + getFileName(fileKey);
+		return "src/main/java/resources/com/dabomstew/pkromio/graphics/" + getFileName(fileKey);
 	}
 
 	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {

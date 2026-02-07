@@ -1,0 +1,33 @@
+<!-- 
+Takes the path to a release note, and sets the variable "ret"
+to the full name of the version that release note belongs to.
+
+Input: include.url
+Output: ret
+
+E.g. "release_notes/v1_2_1.html" -> ret:"FVX v1.2.1", 
+     "release_notes/old/zx/v4_6_0.html" -> "ZX 4.6.0"
+-->
+{%- for rn in site.release_notes -%}
+	{%- if rn.url == include.url -%}
+		
+		{%- if rn.url contains "/old/CTV/" -%}
+			{% capture ret %}CTV {{ rn.name }}{% endcapture %}
+		
+		{%- elsif rn.url contains "/old/V_branch/"  -%}
+			{% capture ret %}V branch {{ rn.name }}{% endcapture %}
+			
+		{%- elsif rn.url contains "/old/ZX/"  -%}
+			{% capture ret %}ZX {{ rn.name }}{% endcapture %}
+			
+		{%- elsif rn.url contains "/old/original/"  -%}
+			<!-- No prefix for original UPR -->
+			{% capture ret %}{{ rn.name }}{% endcapture %}
+			
+		{%- else -%}
+			{% capture ret %}FVX {{ rn.name }}{% endcapture %}
+			
+		{%- endif -%}
+		{%- break -%}
+	{%- endif -%}	
+{%- endfor -%}

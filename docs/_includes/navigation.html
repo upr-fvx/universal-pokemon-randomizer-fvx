@@ -1,9 +1,35 @@
-<nav>
-  <ul>
-  {% for item in site.data.navigation %}
-	<li>
-		<a href="{{ site.baseurl }}{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a>
+<script>
+function hideShow() {
+	var list = document.getElementById("navlist");
+	var button = document.getElementById("navbutton");
+	if (list.style.display === "") {
+		list.style.display = "block";
+		button.classList.remove("hamburgerbutton");
+		button.classList.add("crossbutton");
+	} else {
+		list.style.display = "";
+		button.classList.remove("crossbutton");
+		button.classList.add("hamburgerbutton");
+	}
+}
+</script>	
+
+<div id=buttondiv> 
+	<button id="navbutton" type="button" class="hamburgerbutton" onclick="hideShow()"></button>
+</div>
+<ul id="navlist">
+{% for item in site.data.navigation %}
+<li {% if page.url == item.link %}class="current"{% endif %}>
+	<a href="{{ site.baseurl }}{{ item.link }}">{{ item.name }}</a>
+	{% if item.sub-pages %}
+	<ul>
+	{% for item2 in item.sub-pages %}
+	<li {% if page.url == item2.link %}class="current"{% endif %}>
+		<a href="{{ site.baseurl }}{{ item2.link }}">{{ item2.name }}</a>
 	</li>
-  {% endfor %}
-  </ul>
-</nav>
+	{% endfor %}
+	</ul>
+	{% endif %}
+</li>
+{% endfor %}
+</ul>

@@ -6,4 +6,6 @@ title: Home
 
 This is a site for the **Universal Pokémon Randomizer** in general, and its **FVX** branch in particular. 
 
-For an overview of what the Randomizer is and can do, and its history, see [About]({{ site.baseurl }}/about.html). For contributions and credits, see [Acknowledgements]({{ site.baseurl }}/acks.html). For more detailed info of how to use it, and how certain options work, see [Wiki]({{ site.baseurl }}/wikipages/home.html). For a visual preview of the Randomizer and its output, see [Screenshots]({{ site.baseurl }}/screenshots.html). And for downloads, see... [Downloads]({{ site.baseurl }}/downloads.html).
+For an overview of what the Randomizer is and can do, and its history, see [About]({{ site.baseurl }}/about.html). For contributions and credits, see [Acknowledgements]({{ site.baseurl }}/acks.html). For more detailed info of how to use it, and how certain options work, see [Wiki]({{ site.baseurl }}/wikipages/home.html). For a visual preview of the Randomizer and its output, see [Screenshots]({{ site.baseurl }}/screenshots.html). 
+
+And for downloads, see... [Downloads]({{ site.baseurl }}/downloads.html).

@@ -1,6 +1,6 @@
 package test.compressors;
 
-import com.dabomstew.pkromio.graphics.images.GBCImage;
+import com.upr_fvx.pkromio.graphics.images.GBCImage;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
 import org.junit.jupiter.params.ParameterizedTest;

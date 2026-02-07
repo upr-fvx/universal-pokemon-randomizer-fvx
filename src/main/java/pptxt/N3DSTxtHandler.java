@@ -20,7 +20,7 @@ package pptxt;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.constants.N3DSConstants;
+import com.upr_fvx.pkromio.constants.N3DSConstants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

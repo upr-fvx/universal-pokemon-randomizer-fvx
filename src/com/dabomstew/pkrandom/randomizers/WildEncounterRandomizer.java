@@ -792,7 +792,7 @@ public class WildEncounterRandomizer extends Randomizer {
             }
 
             if(noPrematureEvolutions) {
-                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level));
+                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level, 1));
             }
 
             if(keepEvolutions) {
@@ -826,7 +826,7 @@ public class WildEncounterRandomizer extends Randomizer {
                         sp.getStagesBefore(false) == stage);
             }
             if(noPrematureEvolutions) {
-                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level));
+                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level, 1));
             }
             return allowedForReplacement;
         }

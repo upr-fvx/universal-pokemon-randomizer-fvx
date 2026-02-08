@@ -145,6 +145,7 @@ public class RandomizerGUI {
     private JSlider pmsForceGoodDamagingSlider;
     private JCheckBox tpRivalCarriesStarterCheckBox;
     private JCheckBox tpSimilarStrengthCheckBox;
+    private JCheckBox tpAvoidDuplicatesCheckBox;
     private JCheckBox tpNoPrematureEvosCheckbox;
     private JCheckBox tpWeightTypesCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;

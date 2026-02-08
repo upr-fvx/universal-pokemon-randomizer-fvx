@@ -293,6 +293,10 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
                 System.out.println(evo);
                 assertNotEquals(0, evo.getEstimatedEvoLvl());
             }
+            for (Evolution evo : pk.getEvolutionsTo()) {
+                System.out.println(evo);
+                assertNotEquals(0, evo.getEstimatedEvoLvl());
+            }
         }
     }
 

@@ -24,10 +24,9 @@ package com.dabomstew.pkromio;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.gamedata.MoveLearnt;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -428,6 +427,32 @@ public class RomFunctions {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * A tool for finding and printing for offsets, to put in a {@link RomEntry}.
+     * @param entryName The name of the entry, to be printed out.
+     * @param haystack Where to search.
+     * @param hexNeedle The bytes to search for, as a hex string.
+     * @param relOffset The relative offset of the target offset, compared to the start of the needle.
+     *                  This is useful, because in many cases the target offset is not part of an appropriate needle,
+     *                  because it is a pointer or close to pointers (pointers change between each ROM).<br>
+     *                  <b>E.g.</b> if you have code that looks like <code>XX YY 12 34 56</code>, where
+     *                  <code>XX YY</code> is hard to identify, then you can use <code>hexNeedle = "12 34 56"</code>,
+     *                  and <code>relOffset = -2</code>.
+     */
+    public static void identifyRomEntryOffsetsByHex(String entryName, byte[] haystack, String hexNeedle, int relOffset) {
+        byte[] needle = hexToBytes(hexNeedle);
+        List<Integer> pos = search(haystack, needle);
+        if (pos.isEmpty()) {
+            System.out.println(entryName + ": Could not find any offsets");
+        }
+        if (pos.size() >= 2) {
+            System.out.println(entryName + ": Found multiple possible offsets");
+        }
+        for (int o : pos) {
+            System.out.println(entryName + "=0x" + Integer.toHexString(o + relOffset).toUpperCase());
+        }
     }
 
 }

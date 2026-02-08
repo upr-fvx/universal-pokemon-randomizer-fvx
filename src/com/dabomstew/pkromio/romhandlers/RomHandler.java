@@ -70,7 +70,7 @@ public interface RomHandler {
     // =======================
 
     boolean loadRom(String filename);
-    
+
     boolean saveRom(String filename, long seed, boolean saveAsDirectory);
 
     String loadedFilename();
@@ -86,6 +86,14 @@ public interface RomHandler {
     void removeGameUpdate();
 
     String getGameUpdateVersion();
+
+    // ========================
+    // Speedchoice save methods
+    // ========================
+
+    boolean shouldWriteCheckValue();
+
+    void writeCheckValue(int checkValue);
 
     // ===========
     // Log methods
@@ -127,7 +135,7 @@ public interface RomHandler {
 
     SpeciesSet getIrregularFormes();
 
-    int getHighestOriginalEvoLvl();
+    int getHighestEvoLvl();
 
     RestrictedSpeciesService getRestrictedSpeciesService();
 
@@ -299,6 +307,12 @@ public interface RomHandler {
      * Only made public for testing. Do NOT use otherwise!
      */
     void saveTrainers();
+
+    boolean canGiveCustomMovesetsToBossTrainers();
+
+    boolean canGiveCustomMovesetsToImportantTrainers();
+
+    boolean canGiveCustomMovesetsToRegularTrainers();
 
     boolean canAddPokemonToBossTrainers();
 

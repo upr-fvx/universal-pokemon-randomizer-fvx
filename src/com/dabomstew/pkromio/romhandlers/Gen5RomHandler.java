@@ -678,40 +678,42 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(ex);
         }
         // Fix text depending on version
+        String starterText = romEntry.getStoryText("Starter");
         if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-            List<String> yourHouseStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
-            for (int i = 0; i < 3; i++) {
-                yourHouseStrings.set(Gen5Constants.bw1StarterTextOffset - i,
-                        "\\xF000\\xBD02\\x0000The " + newStarters.get(i).getPrimaryType(false).camelCase()
-                                + "-type Pok\\x00E9mon\\xFFFE\\xF000\\xBD02\\x0000" + newStarters.get(i).getName());
-            }
-            // Update what the friends say
-            yourHouseStrings
-                    .set(Gen5Constants.bw1CherenText1Offset,
-                            "Cheren: Hey, how come you get to pick\\xFFFEout my Pok\\x00E9mon?"
-                                    + "\\xF000\\xBE01\\x0000\\xFFFEOh, never mind. I wanted this one\\xFFFEfrom the start, anyway."
-                                    + "\\xF000\\xBE01\\x0000");
-            yourHouseStrings.set(Gen5Constants.bw1CherenText2Offset,
-                    "It's decided. You'll be my opponent...\\xFFFEin our first Pok\\x00E9mon battle!"
-                            + "\\xF000\\xBE01\\x0000\\xFFFELet's see what you can do, \\xFFFEmy Pok\\x00E9mon!"
-                            + "\\xF000\\xBE01\\x0000");
+            String cherenText1 = romEntry.getStoryText("Cheren1");
+            String cherenText2 = romEntry.getStoryText("Cheren2");
 
-            // rewrite
+            List<String> yourHouseStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
+            if (!starterText.isEmpty()) {
+                for (int i = 0; i < 3; i++) {
+                    Species starter = newStarters.get(i);
+                    yourHouseStrings.set(Gen5Constants.bw1StarterTextOffset - i, String.format(starterText,
+                            starter.getPrimaryType(false).camelCase(), starter.getName()));
+                }
+            }
+
+            if (!cherenText1.isEmpty()) {
+                yourHouseStrings.set(Gen5Constants.bw1CherenText1Offset, cherenText1);
+            }
+            if (!cherenText2.isEmpty()) {
+                yourHouseStrings.set(Gen5Constants.bw1CherenText2Offset, cherenText2);
+            }
+
             setStrings(true, romEntry.getIntValue("StarterLocationTextOffset"), yourHouseStrings);
         } else {
-            List<String> starterTownStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
-            for (int i = 0; i < 3; i++) {
-                starterTownStrings.set(Gen5Constants.bw2StarterTextOffset - i, "\\xF000\\xBD02\\x0000The "
-                        + newStarters.get(i).getPrimaryType(false).camelCase()
-                        + "-type Pok\\x00E9mon\\xFFFE\\xF000\\xBD02\\x0000" + newStarters.get(i).getName());
-            }
-            // Update what the rival says
-            starterTownStrings.set(Gen5Constants.bw2RivalTextOffset,
-                    "\\xF000\\x0100\\x0001\\x0001: Let's see how good\\xFFFEa Trainer you are!"
-                            + "\\xF000\\xBE01\\x0000\\xFFFEI'll use my Pok\\x00E9mon"
-                            + "\\xFFFEthat I raised from an Egg!\\xF000\\xBE01\\x0000");
+            String rivalText = romEntry.getStoryText("Rival");
 
-            // rewrite
+            List<String> starterTownStrings = getStrings(true, romEntry.getIntValue("StarterLocationTextOffset"));
+            if (!starterText.isEmpty()) {
+                for (int i = 0; i < 3; i++) {
+                    Species starter = newStarters.get(i);
+                    starterTownStrings.set(Gen5Constants.bw2StarterTextOffset - i, String.format(starterText,
+                                    starter.getPrimaryType(false).camelCase(), starter.getName()));
+                }
+            }
+            if (!rivalText.isEmpty()) {
+                starterTownStrings.set(Gen5Constants.bw2RivalTextOffset, rivalText);
+            }
             setStrings(true, romEntry.getIntValue("StarterLocationTextOffset"), starterTownStrings);
         }
         return true;
@@ -1135,8 +1137,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trainer = trs.files.get(i);
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
-                tr.setPoketype(trainer[0] & 0xFF);
                 tr.setIndex(i);
+                boolean readMovesets = (trainer[0] & 1) != 0;
+                boolean readItems = (trainer[0] & 2) != 0;
                 tr.setTrainerclass(trainer[1] & 0xFF);
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
@@ -1187,11 +1190,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
-                    if (tr.pokemonHaveItems()) {
+                    if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                     }
-                    if (tr.pokemonHaveCustomMoves()) {
+                    if (readMovesets) {
                         for (int move = 0; move < 4; move++) {
                             tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }
@@ -1212,7 +1215,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     for (int trno = 0; trno < 17; trno++) {
                         Trainer tr = new Trainer();
                         tr.setIndex(trainers.size() + 1);
-                        tr.setPoketype(3); // have held items and custom moves
                         int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
                         tr.setFullDisplayName(tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
                         tr.setRequiresUniqueHeldItems(true);

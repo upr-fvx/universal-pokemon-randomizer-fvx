@@ -3,6 +3,7 @@ package test.com.dabomstew.pkromio.romhandlers;
 import com.dabomstew.pkromio.gamedata.Gen1Species;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
+import com.dabomstew.pkromio.gamedata.SpeciesSet;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 import com.dabomstew.pkromio.graphics.palettes.SGBPaletteID;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
@@ -74,6 +77,22 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         @Override
         public String toString() {
             return String.format("{%s/%s/%s/%s}", guaranteed, common, rare, darkGrass);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void baseFormeOfAlolanFormesHasCorrectAlolanForme(String romName) {
+        loadROM(romName);
+        SpeciesSet speciesSet = romHandler.getSpeciesSetInclFormes();
+        for (Species pk : speciesSet) {
+            if (pk.getFormeSuffix().equals("-Alolan")) {
+                // Alolan formes must have a base forme that must have the alolan forme as alolanForme
+                assertEquals(pk, pk.getBaseForme().getAlolanForme());
+            } else if (!pk.equals(pk.getBaseForme())) {
+                // Any forme that is not alolan forme must not have a base forme with alolan forme
+                assertNull(pk.getBaseForme().getAlolanForme());
+            }
         }
     }
 

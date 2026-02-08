@@ -5,7 +5,6 @@ import com.dabomstew.pkrandom.randomizers.SpeciesTypeRandomizer;
 import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
-import com.dabomstew.pkromio.RomFunctions;
 import com.dabomstew.pkromio.constants.Gen7Constants;
 import com.dabomstew.pkromio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -132,8 +131,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Settings s = new Settings();
         s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED);
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(20);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -742,13 +740,12 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
-        int trainersFullyEvolvedLevel = 30;
-        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
-        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
     }
 
     @ParameterizedTest
@@ -762,18 +759,17 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
-        int trainersFullyEvolvedLevel = 30;
-        s.setTrainersForceFullyEvolvedLevel(trainersFullyEvolvedLevel);
+        int trainersPercentageEvoLvlModifier = -50;
+        s.setTrainersEvolutionLevelModifier(trainersPercentageEvoLvlModifier);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         tpRando.evolveTrainerPokemonAsFarAsLegal();
-        tpRando.forceFullyEvolvedTrainerPokes();
 
         // Test
-        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersFullyEvolvedLevel);
+        test_nonForcefullyEvolvedPokemonAreCorrect(originalNames, trainersPercentageEvoLvlModifier);
     }
 
-    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersFullyEvolvedLevel) {
+    private void test_nonForcefullyEvolvedPokemonAreCorrect(Map<Trainer, List<String>> originalNames, int trainersPercentageEvoLvlModifier) {
+        int trainersFullyEvolvedLevel = (int) Math.ceil((1 + trainersPercentageEvoLvlModifier/100.0) * romHandler.getHighestEvoLvl());
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println("\n" + tr);
             for (int k = 0; k < tr.getPokemon().size(); k++) {
@@ -901,8 +897,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Randomize
         Settings s = new Settings();
         s.setTrainersEvolveTheirPokemon(true);
-        s.setTrainersForceFullyEvolved(true);
-        s.setTrainersForceFullyEvolvedLevel(30);
+        s.setTrainersEvolutionLevelModifier(-50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
@@ -919,12 +914,24 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void betterMovesetsDoesNotCauseUbiquitousMove(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) >= 3);
+    public void betterMovesets_DoesNotCauseCrash(String romName) {
+        activateRomHandler(romName);
+        Settings s = new Settings();
+        s.setBetterBossTrainerMovesets(true);
+        s.setBetterImportantTrainerMovesets(true);
+        s.setBetterRegularTrainerMovesets(true);
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void betterMovesets_DoesNotCauseUbiquitousMove(String romName) {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-        s.setBetterTrainerMovesets(true);
+        s.setBetterBossTrainerMovesets(true);
+        s.setBetterImportantTrainerMovesets(true);
+        s.setBetterRegularTrainerMovesets(true);
         new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
 
         Map<Integer, Integer> moveCounts = new TreeMap<>();

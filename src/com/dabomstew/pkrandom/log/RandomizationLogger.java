@@ -141,16 +141,16 @@ public class RandomizationLogger {
     }
 
     private void logHead() {
-        log.printf(getBS("Log.logo"), Version.VERSION_STRING);
+        log.printf(getBS("Log.logo"), Version.LATEST.name);
         log.printf(getBS("Log.title"));
         String gameName = romHandler.getROMName();
         if (romHandler.hasGameUpdateLoaded()) {
             gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
         }
         log.printf(getBS("Log.baseGame"), gameName);
-        log.printf(getBS("Log.version"), Version.LATEST_VERSION.branchName, Version.VERSION_STRING);
+        log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
-        log.printf(getBS("Log.settings"), Version.VERSION + settings.toString());
+        log.printf(getBS("Log.settings"), settings.toString());
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();
@@ -264,8 +264,7 @@ public class RandomizationLogger {
                 moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated(), true);
         logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(),
-                TrainerMovesetRandomizer.hasSupport(romHandler.generationOfPokemon()));
+        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.totpPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
@@ -987,7 +986,14 @@ public class RandomizationLogger {
         printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
         String[] battleStyleNames = getBS("Log.tp.battleStyleNames").split(",");
+
+        boolean prevHadCustomMoves = false;
         for (Trainer t : trainers) {
+            boolean hasCustomMoves = shouldLogCustomMoves(t);
+            if (hasCustomMoves && !prevHadCustomMoves) {
+                log.println();
+            }
+            prevHadCustomMoves = hasCustomMoves;
             log.print("#" + t.getIndex() + " ");
             String originalTrainerName = originalTrainerNames.get(t.getIndex());
             String currentTrainerName = "";
@@ -1007,13 +1013,15 @@ public class RandomizationLogger {
                 log.printf("@%X", t.getOffset());
             }
 
-            if (trainerMovesetRandomizer.isChangesMade()) {
+            if (hasCustomMoves) {
                 log.println();
                 for (TrainerPokemon tpk : t.getPokemon()) {
                     List<Move> moves = romHandler.getMoves();
                     log.print(tpk.toString());
-                    log.print(", " + getBS("Log.tp.ability") + ": "
-                            + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    if (romHandler.abilitiesPerSpecies() != 0) {
+                        log.print(", " + getBS("Log.tp.ability") + ": "
+                                + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    }
                     log.print(" - ");
                     boolean first = true;
                     for (int move : tpk.getMoves()) {
@@ -1044,6 +1052,18 @@ public class RandomizationLogger {
             log.println();
         }
         printSectionSeparator();
+    }
+
+    private boolean shouldLogCustomMoves(Trainer t) {
+        if (!t.pokemonHaveCustomMoves()) {
+            return false;
+        }
+        for (TrainerPokemon tp : t.getPokemon()) {
+            if (!tp.isResetMoves()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean shouldLogStaticPokemon() {

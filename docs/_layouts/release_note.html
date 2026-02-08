@@ -1,0 +1,138 @@
+---
+layout: default
+---
+
+{% comment %} 
+========================= Note: ============================== 
+# Liquid won't let us make arrays out of non-string objects, #  
+# define functions etc, etc... That is why this page is full #
+# of horrid string concatenation, repetition and repetition. #
+==============================================================
+{% endcomment %}
+
+
+
+{%- assign versions_prev = "" -%}
+{%- assign versions_next = "" -%}
+
+{% comment %} 
+===================================================
+# Convert manually set prev to collection objects #
+===================================================
+{% endcomment %}
+{%- if page.prev -%}
+	{%- assign arr = page.prev | split: ", " -%}
+	{%- for prev_url_raw in arr -%}
+		{%- assign prev_url = "/release_notes/" | append: prev_url_raw | append: ".html" -%}
+		
+		{%- for rn in site.release_notes -%}
+			{%- if rn.url == prev_url -%}
+				{%- assign versions_prev = versions_prev | append: "," | append: rn.url -%}
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endfor -%}
+{%- endif -%}
+
+
+
+{% comment %} 
+=====================================================
+# Find next using other release's manually set prev #
+=====================================================
+{% endcomment %}
+{%- for rn in site.release_notes -%}
+	{%- if rn.prev -%}
+		{%- assign arr = rn.prev | split: ", " -%}
+		{%- for prev_url_raw in arr -%}
+			{%- assign prev_url = "/release_notes/" | append: prev_url_raw | append: ".html" -%}
+			
+			{%- if page.url == prev_url -%}
+				{%- assign versions_next = versions_next | append: "," | append: rn.url -%}
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endif -%}
+{%- endfor -%}
+
+
+
+{% comment %} 
+==========================================
+# Auto-detect previous and next releases #
+========================================== 
+{% endcomment %}
+{%- assign split_url = page.url | split: "/" -%} {%- assign folder = split_url | pop -%}
+{%- assign version = split_url | last -%}
+
+{%- assign i_last = "" -%}
+{%- for rn2 in site.release_notes -%}
+    {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
+    {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
+
+    {%- if i_last == version -%} 
+		{%- assign versions_next = versions_next | append: "," | append: rn2.url -%}
+		{%- break -%} 
+	{%- endif -%}
+	
+    {%- assign i_last = split_url | last -%}
+{%- endfor -%}
+
+{%- assign i_last = "" -%}
+{%- for rn2 in site.release_notes reversed -%}
+    {%- assign split_url = rn2.url | split: "/" -%} {%- assign folder2 = split_url | pop -%}
+    {%- unless folder2 == folder -%} {%- continue -%} {%- endunless -%}
+
+    {%- if i_last == version -%} 
+		{%- assign versions_prev = versions_prev | append: "," | append: rn2.url -%}
+		{%- break -%} 
+	{%- endif -%}
+	
+    {%- assign i_last = split_url | last -%}
+{%- endfor -%}
+
+
+
+<div>
+	{% include func_version_full_name.html url=page.url %}
+    <h1 style="display: inline;">Release note for {{ ret }}</h1>
+    <span style="float: right;">Released: {{ page.date | date: '%F' }}</span>
+</div>
+
+Previous:
+{%- assign arr = versions_prev | split: "," -%}
+{%- for url in arr -%}
+	{%- for rn in site.release_notes -%}
+		{%- if rn.url == url -%}
+			{% include func_version_full_name.html url=rn.url %}
+			<a href="{{ site.baseurl }}{{ url }}">{{ ret }}</a>,
+			{%- break -%}
+		{%- endif -%}	
+	{%- endfor -%}
+{%- endfor -%}
+<br>
+
+Next: 
+{%- assign arr = versions_next | split: "," -%}
+{%- for url in arr -%}
+	{%- for rn in site.release_notes -%}
+		{%- if rn.url == url -%}
+			{% include func_version_full_name.html url=rn.url %}
+			<a href="{{ site.baseurl }}{{ url }}">{{ ret }}</a>,
+			{%- break -%}
+		{%- endif -%}	
+	{%- endfor -%}
+{%- endfor -%}
+<br>
+
+<hr>
+
+{{ content }}
+
+<hr>
+
+<p>
+{%- if page.download -%}
+	<a href="{{ page.download }}">Download</a>
+{%- else -%}
+	No download link here. Find this version elsewhere.
+{%- endif -%}
+</p>

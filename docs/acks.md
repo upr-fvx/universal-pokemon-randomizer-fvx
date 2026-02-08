@@ -68,6 +68,7 @@ The NDS games introduced a lot of file formats, for which great programs have al
 In addition,
 
 - **Pokémon Palette Randomization in Gen 3-5** is achieved using a port of code from [Artemis251's Emerald Randomizer](http://artemis251.fobby.net/downloads/emerald/).
+- **Support for pokecrystal-speedchoice v8** was achieved by referencing [Choatix' ZX-plus branch](https://github.com/choatix/zxplus).
 
 ## Images used for Custom Player Graphics
 
@@ -87,10 +88,11 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - Pokeli (Red)
 - DelyBulacha (Frisk, Chara)
 - SharkGuy (Boyfriend)
-- bepis (Shantae)
+- bepis (Shantae, Quote)
 - FourLeafSunny (Various)
-- NachoPeñalva (Wally, Cynthia)
+- NachoPeñalva (Various)
 - Ploxel (King Dedede, Meta Knight)
+- Happy Time Boredom (Duck, Dennis the Menace)
 
 ## Direct code contributors
 
@@ -118,6 +120,7 @@ Since Dabomstew opened up the Randomizer to open source development, a number of
 - Stella Hack 
 - Michael Long
 - Enrico Bergmann
+- Glamurio
 
 <!--- "Randomizer" is intentionally capitalized in this subheading. Normally on this website it is only capitalized while referring to the UPR, while the concept or randomizers is not. However, here we are paying respects and thus following the "capitalization means respect" principle. Plus Dabomstew capitalized it this way lol.-->
 ## The Randomizers that came before 

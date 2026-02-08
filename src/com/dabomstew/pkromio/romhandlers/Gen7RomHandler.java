@@ -254,6 +254,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     currentMap.put(formNum,i);
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
+                if (pokes[i].getFormeSuffix().equals("-Alolan")) {
+                    pokes[fi.baseForme].setAlolanForme(pokes[i]);
+                }
                 i++;
             }
             if (prevSpecies != 0) {
@@ -1181,7 +1184,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < 3; i++) {
                 int offset = i * 0x14;
                 Item item = items.get(i);
-                FileFunctions.write2ByteInt(giftsFile, offset + 8, item.getId());
+                FileFunctions.write2ByteInt(giftsFile, offset + 8, item == null ? 0 : item.getId());
             }
             writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
         } catch (IOException e) {
@@ -1549,7 +1552,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 byte[] trainer = trs.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
-                tr.setPoketype(trainer[13] & 0xFF);
                 tr.setIndex(i);
                 tr.setTrainerclass(trainer[0] & 0xFF);
                 int battleType = trainer[2] & 0xFF;

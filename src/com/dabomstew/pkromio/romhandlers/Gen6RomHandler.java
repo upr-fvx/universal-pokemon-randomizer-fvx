@@ -1069,7 +1069,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < count; i++) {
                 if (!starterIndices.contains(i)) continue;
                 Item item = itemsIter.next();
-                if (item.getId() == 0) {
+                if (item == null) {
                     FileFunctions.writeFullInt(staticCRO, offset + i * size + 12, -1);
                 } else {
                     FileFunctions.writeFullInt(staticCRO, offset + i * size + 12, item.getId());
@@ -1842,7 +1842,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 byte[] trainer = trs.files.get(i).get(0);
                 byte[] trpoke = trpokes.files.get(i).get(0);
                 Trainer tr = new Trainer();
-                tr.setPoketype(isORAS ? readWord(trainer,0) : trainer[0] & 0xFF);
+                int pokeType = isORAS ? readWord(trainer,0) : trainer[0] & 0xFF;
+                boolean readMovesets = (pokeType & 1) != 0;
+                boolean readItems = (pokeType & 2) != 0;
                 tr.setIndex(i);
                 tr.setTrainerclass(isORAS ? readWord(trainer,2) : trainer[1] & 0xFF);
                 int offset = isORAS ? 6 : 2;
@@ -1904,13 +1906,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     tpk.setForme(formnum);
                     tpk.setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
-                    if (tr.pokemonHaveItems()) {
+                    if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
                         pokeOffs += 2;
                         tpk.setHasMegaStone(tpk.getHeldItem() != null &&
                                         Gen6Constants.megaStones.contains(tpk.getHeldItem().getId()));
                     }
-                    if (tr.pokemonHaveCustomMoves()) {
+                    if (readMovesets) {
                         for (int move = 0; move < 4; move++) {
                             tpk.getMoves()[move] = readWord(trpoke, pokeOffs + (move*2));
                         }

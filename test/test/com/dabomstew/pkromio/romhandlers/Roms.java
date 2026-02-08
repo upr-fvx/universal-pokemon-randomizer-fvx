@@ -33,8 +33,8 @@ public class Roms {
     // as soon as some basic offsets are found/added. Otherwise they just flood the test cases with errors because they
     // crash trying to load.
     // -- voliol 2024-01-21
-    private static final List<String> UNTESTABLE = Arrays.asList("Green (J)(T-Eng)", "Crystal SpeedChoice v3",
-            "Emerald (T-Eng)", "Gold (K)", "Silver (K)");
+    private static final List<String> UNTESTABLE = Arrays.asList("Green (J)(T-Eng)", "Emerald (T-Eng)",
+            "Gold (K)", "Silver (K)");
 
     private static final List<String> ALL_GEN_1_ROMS;
     private static final List<String> ALL_GEN_2_ROMS;
@@ -61,22 +61,30 @@ public class Roms {
     private static final List<List<String>> ALL_ROMS_BY_GENERATION = Arrays.asList(ALL_GEN_1_ROMS, ALL_GEN_2_ROMS,
             ALL_GEN_3_ROMS, ALL_GEN_4_ROMS, ALL_GEN_5_ROMS, ALL_GEN_6_ROMS, ALL_GEN_7_ROMS);
 
+    private static final List<String> HACK_ROMS = Arrays.asList(
+            "Green (J)(T-Eng)",
+            "Crystal SpeedChoice v8",
+            "Emerald (T-Eng)"
+    );
+
     private static List<String> getNames(List<? extends RomEntry> romEntries) {
         return romEntries.stream().map(RomEntry::getName).collect(Collectors.toList());
     }
 
     public static String[] getAllRoms() {
-        return getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, Region.values(), true);
+        return getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, Region.values(), true, true, true);
     }
 
-    public static String[] getRoms(int[] generations, Region[] regions, boolean includeUntestable) {
+    public static String[] getRoms(int[] generations, Region[] regions, boolean includeHacks, boolean includeVanilla, boolean includeUntestable) {
         List<String> roms = new ArrayList<>();
         for (int gen : generations) {
             List<String> ofGen = ALL_ROMS_BY_GENERATION.get(gen - 1);
-            if (gen < 6) {
-                ofGen.removeIf(s -> !isOfRegion(s, regions));
-            }
-            roms.addAll(ofGen);
+            System.out.println(ofGen);
+            ofGen.stream()
+                    .filter(rom -> gen >= 6 || isHack(rom) || isOfRegion(rom, regions))
+                    .filter(rom -> includeHacks || !isHack(rom))
+                    .filter(rom -> includeVanilla || isHack(rom))
+                    .forEach(roms::add);
         }
         if (!includeUntestable) {
             roms.removeAll(UNTESTABLE);
@@ -95,6 +103,10 @@ public class Roms {
             }
         }
         return false;
+    }
+
+    public static boolean isHack(String romName) {
+        return HACK_ROMS.contains(romName);
     }
 
 }

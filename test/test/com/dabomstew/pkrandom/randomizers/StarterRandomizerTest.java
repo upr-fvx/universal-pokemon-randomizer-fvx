@@ -481,4 +481,40 @@ public class StarterRandomizerTest extends RandomizerTest {
             assertTrue(starter.getPreEvolvedSpecies(false).isEmpty());
         }
     }
+
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void customStartersCanBeSet(String romName) {
+        activateRomHandler(romName);
+        Settings s = new Settings();
+        s.setStartersMod(Settings.StartersMod.CUSTOM);
+        int customCount = romHandler.starterCount();
+        int[] custom = new int[customCount];
+        for (int i = 0; i < custom.length; i++) {
+            custom[i] = i + 1;
+        }
+        s.setCustomStarters(custom);
+
+        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+
+        List<Species> starters = romHandler.getStarters();
+        List<Species> allPokes = romHandler.getSpecies();
+
+        StringBuilder sb = new StringBuilder("Starters");
+        sb.append(" (should be ");
+        for (int i = 0; i < customCount; i++) {
+            sb.append(allPokes.get(custom[i]).getName());
+            if (i != customCount - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("): ");
+        sb.append(starters);
+        System.out.println(sb);
+
+        for (int i = 0; i < customCount; i++) {
+            assertEquals(starters.get(i), allPokes.get(custom[i]));
+        }
+    }
 }

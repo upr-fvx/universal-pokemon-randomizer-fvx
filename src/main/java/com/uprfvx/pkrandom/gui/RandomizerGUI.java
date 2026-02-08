@@ -389,7 +389,7 @@ public class RandomizerGUI {
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
 
-    private Theme theme = Theme.WINDOWS;
+    private Theme theme = Theme.DEFAULT;
     private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;

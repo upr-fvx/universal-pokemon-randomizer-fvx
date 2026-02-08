@@ -12,7 +12,7 @@ public enum Theme {
     FLATLAF_LIGHT("FlatLaf (Light)", "com.formdev.flatlaf.FlatLightLaf"),
     FLATLAF_DARK("FlatLaf (Dark)", "com.formdev.flatlaf.FlatDarkLaf");
 
-    public static final Theme DEFAULT = METAL;
+    public static final Theme DEFAULT = WINDOWS.installed ? WINDOWS : METAL;
 
     private final String uiName;
     private final boolean installed;

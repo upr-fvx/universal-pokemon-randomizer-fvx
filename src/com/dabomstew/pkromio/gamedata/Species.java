@@ -28,6 +28,7 @@ import com.dabomstew.pkromio.constants.SpeciesIDs;
 import com.dabomstew.pkromio.graphics.palettes.Palette;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Represents a Pokémon species or forme.
@@ -42,6 +43,7 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private Species baseForme = null;
     private int formeNumber = 0;
+    private Species alolanForme = null;
     private int cosmeticForms = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
@@ -136,15 +138,16 @@ public class Species implements Comparable<Species> {
 
     //Evolutionary Relatives functions
     /**
-     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not an early evolved Pokemon.
+     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not
+     * an early evolved Pokemon (if this {@link Species} does not have a pre-evolution, its formes are checked a well).
      * @param level The level of the given {@link Species}.
      * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as legal
      *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} is a legal evolution at the level.
      */
     public boolean isLegalEvolutionAtLevel(int level, double evoLvlModifier) {
-        boolean isLegalEvo = true; // If this does not have any evolutions to, then it is a legal evolution.
-        for (Evolution evo : this.getEvolutionsTo()) {
+        boolean isLegalEvo = true; // If this or its formes do not have any evolutions to, then it is a legal evolution.
+        for (Evolution evo : getEvolutionsOfForme(Species::getEvolutionsTo)) {
             if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution to that is legal suffices
             }
@@ -154,19 +157,44 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution levels of its evolutions.
+     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution
+     * levels of its evolutions (if this {@link Species} does not have an evolution, its formes are checked a well).
      * @param level The level of the given {@link Species}.
      * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as having legal
      *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
      * @return A boolean, true if this {@link Species} has a legal evolution at this level.
      */
     public boolean hasLegalEvolutionAtLevel(int level, double evoLvlModifier) {
-        for (Evolution evo : this.getEvolutionsFrom()) {
+        for (Evolution evo : getEvolutionsOfForme(Species::getEvolutionsFrom)) {
             if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
                 return true; // One evolution from that is legal suffices
             }
         }
         return false; // Either no evolutions from or no legal evolution from. Either way, no legal evolution at level
+    }
+
+    /**
+     * Gets the relevant evolutions to/from of this {@link Species} or its formes.
+     * @param evolutionsAccessor Either Species.getEvolutionsFrom() or Species.getEvolutionsTo().
+     * @return A list of the evolutions to/from this {@link Species}.
+     */
+    private List<Evolution> getEvolutionsOfForme(Function<Species, List<Evolution>> evolutionsAccessor) {
+        Species species = this;
+        if (evolutionsAccessor.apply(species).isEmpty()) {
+            if (species.getAlolanForme() != null && !evolutionsAccessor.apply(species.getAlolanForme()).isEmpty()) {
+                // species might be base forme with Alolan forme that carries evolution info, e.g., Alolan Raichu
+                species = species.getAlolanForme();
+            } else {
+                // If species does not have the relevant evolutions but a base forme, try to determine if the base forme
+                // has the relevant evolutions, e.g., Eternal Flower Floette for evolutionsFrom or Megas for evolutionsTo
+                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getBaseForme()).isEmpty()) {
+                    species = species.getBaseForme();
+                }
+                species = species.getBaseForme(); // = species if species.isBaseForme(), else species.getBaseForme()
+            }
+        }
+
+        return evolutionsAccessor.apply(species);
     }
 
     /**
@@ -601,6 +629,14 @@ public class Species implements Comparable<Species> {
 
     public void setBaseForme(Species baseForme) {
         this.baseForme = baseForme;
+    }
+
+    public Species getAlolanForme() {
+        return alolanForme;
+    }
+
+    public void setAlolanForme(Species alolanForme) {
+        this.alolanForme = alolanForme;
     }
 
     /**

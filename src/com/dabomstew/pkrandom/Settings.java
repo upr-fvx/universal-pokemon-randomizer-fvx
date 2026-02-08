@@ -178,6 +178,7 @@ public class Settings {
     private TrainersMod trainersMod = TrainersMod.UNCHANGED;
     private boolean rivalCarriesStarterThroughout;
     private boolean trainersUsePokemonOfSimilarStrength;
+    private boolean trainersAvoidDuplicates;
     private boolean trainersDoNotGetPrematureEvos;
     private boolean trainersMatchTypingDistribution;
     private boolean trainersBlockLegendaries = true;
@@ -573,7 +574,7 @@ public class Settings {
                 trainersBlockEarlyWonderGuard,
                 swapTrainerMegaEvos,
                 shinyChance,
-                false));
+                trainersAvoidDuplicates));
 
         // 30 - 33: pokemon restrictions
         try {
@@ -959,6 +960,7 @@ public class Settings {
         settings.setTrainersBlockEarlyWonderGuard(restoreState(data[29], 4));
         settings.setSwapTrainerMegaEvos(restoreState(data[29], 5));
         settings.setShinyChance(restoreState(data[29], 6));
+        settings.setTrainersAvoidDuplicates(restoreState(data[29], 7));
 
         // gen restrictions
         int genLimit = FileFunctions.readFullInt(data, 30);
@@ -1904,6 +1906,14 @@ public class Settings {
 
     public void setTrainersUsePokemonOfSimilarStrength(boolean trainersUsePokemonOfSimilarStrength) {
         this.trainersUsePokemonOfSimilarStrength = trainersUsePokemonOfSimilarStrength;
+    }
+
+    public boolean isTrainersAvoidDuplicates() {
+        return trainersAvoidDuplicates;
+    }
+
+    public void setTrainersAvoidDuplicates(boolean trainersAvoidDuplicates) {
+        this.trainersAvoidDuplicates = trainersAvoidDuplicates;
     }
 
     public boolean isTrainersDoNotGetPrematureEvos() {

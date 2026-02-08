@@ -1766,6 +1766,7 @@ public class RandomizerGUI {
         pmsEvolutionMovesCheckBox.setSelected(settings.isEvolutionMovesForAll());
 
         tpSimilarStrengthCheckBox.setSelected(settings.isTrainersUsePokemonOfSimilarStrength());
+        tpAvoidDuplicatesCheckBox.setSelected(settings.isTrainersAvoidDuplicates());
         tpNoPrematureEvosCheckbox.setSelected(settings.isTrainersDoNotGetPrematureEvos());
         tpComboBox.setSelectedItem(trainerSettings.get(settings.getTrainersMod().ordinal()));
         tpRivalCarriesStarterCheckBox.setSelected(settings.isRivalCarriesStarterThroughout());
@@ -2059,6 +2060,7 @@ public class RandomizerGUI {
                 isTrainerSetting(TRAINER_TYPE_THEMED), isTrainerSetting(TRAINER_TYPE_THEMED_ELITE4_GYMS),
                 isTrainerSetting(TRAINER_KEEP_THEMED), isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY));
         settings.setTrainersUsePokemonOfSimilarStrength(tpSimilarStrengthCheckBox.isSelected());
+        settings.setTrainersAvoidDuplicates(tpAvoidDuplicatesCheckBox.isSelected());
         settings.setTrainersDoNotGetPrematureEvos(tpNoPrematureEvosCheckbox.isSelected());
         settings.setRivalCarriesStarterThroughout(tpRivalCarriesStarterCheckBox.isSelected());
         settings.setTrainersMatchTypingDistribution(tpWeightTypesCheckBox.isSelected());
@@ -2424,7 +2426,7 @@ public class RandomizerGUI {
 		tpComboBox.setVisible(true);
 		tpComboBox.setEnabled(false);
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
-        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox,
+        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox,
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
@@ -3411,11 +3413,11 @@ public class RandomizerGUI {
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
                     tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                     tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
-            enableButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
         } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
-            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
@@ -3424,7 +3426,7 @@ public class RandomizerGUI {
                     tpRegularTrainersTypeDiversityCheckBox,
                     tpEliteFourUniquePokemonCheckBox);
         } else {
-            enableButtons(tpSimilarStrengthCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
 

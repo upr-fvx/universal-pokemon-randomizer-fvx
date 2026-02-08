@@ -1,0 +1,94 @@
+Gradle allows for modular projects, and this presents an opportunity to separate
+the already somewhat modularized code of the Randomizer, and enforce dependency relations
+(e.g. making sure RomHandler code never depends on the Randomizer classes).
+
+Below are sketches, for how it could be done.
+
+== Sketch of the root directory ==
+
+docs
+    _release_notes
+    _wikipages
+    assets
+    acks.md
+    [various other dirs+files, the ones above are the ones that need extra attention]
+
+devtools
+    main
+        java.com.uprfvx.devtools
+    [probably no tests for devtools]
+
+random
+    [would be nice to separate the GUI to yet another layer/subproject, but that's for later]
+    main
+        launcher
+        java.com.uprfvx.random
+        resources
+            com.uprfvx
+            data
+    test
+        java.com.uprfvx.random
+        resources
+            settings
+
+romio
+    main
+        java.com.uprfvx.romio
+    test
+        java.com.uprfvx.romio
+        resources
+            encounters
+            players
+
+utils
+    main
+        java
+            compressors
+            cuecompressors
+            pptxt
+            randompoint
+            thenewpoketext
+        resources
+            Lunar_Compress.dll
+    tests
+        java
+            compressors
+        resources
+            images
+
+roms
+    [roms could arguably be under romio/test/resources... but then the random tests want to use them too.]
+    [putting them outside of it all is a sort of compromise, but I am not certain how I feel about it]
+    README.txt
+
+.github
+.gitignore
+[various gradle files]
+README.md
+new setting checklist.txt
+LICENSE.txt
+TODO_crystal-speedchoice.md [would be nice to get rid of too ^^]
+
+== Module descriptions / dependency relations ==
+
+docs:
+    - The Randomizer's website, also holding the release notes.
+    Documents everything. Not a strict code-wise dependency, but it needs to "know" about all other parts.
+
+devtools:
+    - Devtools, primarily for generating resources for romio.
+    Depends on romio.
+    Needs access to random/main/resources.
+
+random:
+    - The randomization logic, and also the GUI.
+    Depends on romio.
+
+romio:
+    - The interface to the game files (ROMs).
+    Depends on utils.
+
+utils:
+    - Various utilities such as compressors, most of them ports of external code.
+    Depends on the Lunar Compress DLL (residing in utils/resources for now).
+    Important the Lunar Compress DLL gets passed up.

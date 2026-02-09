@@ -1,79 +1,26 @@
+// This root-level build.gradle contains build info that can be/is shared between the modules.
+
 plugins {
     id 'java'
-    id 'io.github.file5.guidesigner' version '1.0.2'
 }
 
-java {
-    toolchain {
-        // Oracle pushes Java 8 to low-tech end users, via https://www.java.com/en/download/.
-        // This means we *have* to use Java 8 for the app, otherwise it will be inaccessible to these users.
-        languageVersion = JavaLanguageVersion.of(8)
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        toolchain {
+            // Oracle pushes Java 8 to low-tech end users, via https://www.java.com/en/download/.
+            // This means we *have* to use Java 8 for the app, otherwise it will be inaccessible to these users.
+            languageVersion = JavaLanguageVersion.of(8)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation('org.junit.jupiter:junit-jupiter:5.10.0')
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    // Needed to compile the IntelliJ GUI Designer forms
-    implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:+'
-    implementation 'com.jgoodies:forms:1.1-preview'
-
-    // Other dependencies
-    implementation('com.formdev:flatlaf:3.7')
-    implementation('net.java.dev.jna:jna:5.18.1')
-    testImplementation('org.junit.jupiter:junit-jupiter:5.10.0')
-}
-
-jar {
-    archiveFileName = 'UPR-FVX.jar'
-    manifest {
-        attributes 'Main-Class': 'com.uprfvx.pkrandom.gui.RandomizerGUI'
-    }
-
-    // Makes the jar fat (include all runtime dependencies)
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    } {
-        exclude "META-INF/LICENSE"
-    }
-}
-
-tasks.register('clearReleaseDir', Delete) {
-    delete 'build/target'
-}
-
-tasks.register('moveIntoReleaseDir', Copy) {
-    dependsOn 'jar'
-    dependsOn 'clearReleaseDir'
-
-    from('src/main/resources') {
-        exclude 'data/players_unused'
-        exclude 'com'
-    }
-    from 'src/launcher'
-    from 'build/libs'
-
-    into 'build/target'
-}
-
-tasks.register('createReleaseZip', Zip) {
-    dependsOn 'moveIntoReleaseDir'
-
-    from 'build/target'
-    destinationDirectory = file('build/dist')
-    archiveFileName = 'UPR_FVX.zip' // TODO: make it include version
-}
-
-tasks.register('launchUnix', Exec) {
-    dependsOn 'moveIntoReleaseDir'
-    workingDir 'build/target'
-    commandLine 'bash', './launcher_UNIX.sh'
-}
-
-tasks.register('relaunchUnix', Exec) {
-    workingDir 'build/target'
-    commandLine 'bash', './launcher_UNIX.sh'
-}

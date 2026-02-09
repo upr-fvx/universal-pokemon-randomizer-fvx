@@ -1,0 +1,67 @@
+plugins {
+    id 'io.github.file5.guidesigner' version '1.0.2'
+}
+
+dependencies {
+    // Internal dependencies
+    implementation(project(':romio'))
+
+    // Needed to compile the IntelliJ GUI Designer forms
+    implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:+'
+    implementation 'com.jgoodies:forms:1.1-preview'
+
+    // Other dependencies
+    implementation('com.formdev:flatlaf:3.7')
+}
+
+jar {
+    archiveFileName = 'UPR-FVX.jar'
+    manifest {
+        attributes 'Main-Class': 'com.uprfvx.random.gui.RandomizerGUI'
+    }
+
+    // Makes the jar fat (include all runtime dependencies)
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    } {
+        exclude "META-INF/LICENSE"
+    }
+}
+
+tasks.register('clearReleaseDir', Delete) {
+    delete 'build/target'
+}
+
+tasks.register('moveIntoReleaseDir', Copy) {
+    dependsOn 'jar'
+    dependsOn 'clearReleaseDir'
+
+    from('main/resources') {
+        exclude 'data/players_unused'
+        exclude 'com'
+    }
+    from 'main/launcher'
+    from 'build/libs'
+
+    into 'build/target'
+}
+
+tasks.register('createReleaseZip', Zip) {
+    dependsOn 'moveIntoReleaseDir'
+
+    from 'build/target'
+    destinationDirectory = file('build/dist')
+    archiveFileName = 'UPR_FVX.zip' // TODO: make it include version
+}
+
+tasks.register('launchUnix', Exec) {
+    dependsOn 'moveIntoReleaseDir'
+    workingDir 'build/target'
+    commandLine 'bash', './launcher_UNIX.sh'
+}
+
+tasks.register('relaunchUnix', Exec) {
+    workingDir 'build/target'
+    commandLine 'bash', './launcher_UNIX.sh'
+}

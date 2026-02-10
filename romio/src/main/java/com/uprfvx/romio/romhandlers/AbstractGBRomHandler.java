@@ -1,6 +1,5 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.GFXFunctions;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.GBConstants;
@@ -13,6 +12,8 @@ import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.gbspace.FreedSpace;
 import com.uprfvx.romio.romhandlers.romentries.AbstractGBRomEntry;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -53,7 +54,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         this.originalRom = new byte[rom.length];
         System.arraycopy(rom, 0, originalRom, 0, rom.length);
         loadedFileName = filename;
-        this.actualCRC32 = FileFunctions.getCRC32(rom);
+        this.actualCRC32 = IOFunctions.getCRC32(rom);
     }
 
     /**
@@ -151,7 +152,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     public void printRomDiagnostics(PrintStream logStream) {
         Path p = Paths.get(loadedFileName);
         logStream.println("File name: " + p.getFileName().toString());
-        long crc = FileFunctions.getCRC32(originalRom);
+        long crc = IOFunctions.getCRC32(originalRom);
         logStream.println("Original ROM CRC32: " + String.format("%08X", crc));
     }
 

@@ -1,6 +1,5 @@
 package com.uprfvx.devtools;
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Shop;
 import com.uprfvx.romio.romhandlers.Abstract3DSRomHandler;
@@ -8,6 +7,7 @@ import com.uprfvx.romio.romhandlers.AbstractDSRomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.ROMFilter;
 import com.uprfvx.romio.romio.RomOpener;
+import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -188,7 +188,7 @@ public class ShopEditor {
             // Fix or add extension
             List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
             extensions.remove(this.romHandler.getDefaultExtension());
-            fh = FileFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
+            fh = FileNameFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
             allowed = true;
             if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
                 String currentFN = this.romHandler.loadedFilename();

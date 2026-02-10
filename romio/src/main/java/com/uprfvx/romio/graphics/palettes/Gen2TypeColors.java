@@ -21,7 +21,6 @@ package com.uprfvx.romio.graphics.palettes;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.randomizers.Gen2PaletteRandomizer;
 import com.uprfvx.romio.gamedata.Type;
 
 import java.util.Map;
@@ -31,8 +30,11 @@ import java.util.Random;
  * Contains methods for accessing TypeColor constants for Gen 2 games (G/S/C).
  * The constants are read from .txt files.
  * <p>
- * See {@link Gen2PaletteRandomizer} for an explanation on "bright colors" and
- * "dark colors".
+ * Pokémon palettes in Gen 2 do de facto only have two colors, as their sprites can
+ * only have four, and two color slots are always occupied by white respectively
+ * black. The remaining two colors are here divided into "bright colors" and
+ * "dark colors", as those descriptors generally correspond to each of the color
+ * slots.
  */
 public class Gen2TypeColors {
 

@@ -1,10 +1,11 @@
 package com.uprfvx.romio.newnds;
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.exceptions.RomIOException;
 import cuecompressors.BLZCoder;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -487,7 +488,7 @@ public class NDSRom {
             byte[] arm9 = new byte[arm9_size];
             this.baseRom.seek(arm9_offset);
             this.baseRom.readFully(arm9);
-            originalArm9CRC = FileFunctions.getCRC32(arm9);
+            originalArm9CRC = IOFunctions.getCRC32(arm9);
             // footer check
             int nitrocode = readFromFile(this.baseRom, 4);
             if (nitrocode == 0xDEC00621) {

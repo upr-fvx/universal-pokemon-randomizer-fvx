@@ -22,7 +22,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
@@ -38,12 +37,11 @@ import com.uprfvx.romio.romhandlers.romentries.Gen3RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
 import compressors.DSCmp;
 import compressors.DSDecmp;
+import filefunctions.IOFunctions;
+import filefunctions.PatchFunctions;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -87,25 +85,27 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void loadTextTable(String filename) {
-        try {
-            Scanner sc = new Scanner(FileFunctions.openConfig(filename + ".tbl"), "UTF-8");
-            while (sc.hasNextLine()) {
-                String q = sc.nextLine();
-                if (!q.trim().isEmpty()) {
-                    String[] r = q.split("=", 2);
-                    if (r[1].endsWith("\r\n")) {
-                        r[1] = r[1].substring(0, r[1].length() - 2);
-                    }
-                    tb[Integer.parseInt(r[0], 16)] = r[1];
-                    d.put(r[1], (byte) Integer.parseInt(r[0], 16));
-                }
-            }
-            sc.close();
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found!");
-        }
+    private static final String TEXT_TABLES_PATH = "com/uprfvx/romio/texttables";
 
+    private void loadTextTable(String filename) {
+        String tablePath = TEXT_TABLES_PATH + "/" + filename + ".tbl";
+        InputStream is = getClass().getResourceAsStream(tablePath);
+        if (is == null) {
+            throw new RuntimeException("Text table not found: " + tablePath);
+        }
+        Scanner sc = new Scanner(is, "UTF-8");
+        while (sc.hasNextLine()) {
+            String q = sc.nextLine();
+            if (!q.trim().isEmpty()) {
+                String[] r = q.split("=", 2);
+                if (r[1].endsWith("\r\n")) {
+                    r[1] = r[1].substring(0, r[1].length() - 2);
+                }
+                tb[Integer.parseInt(r[0], 16)] = r[1];
+                d.put(r[1], (byte) Integer.parseInt(r[0], 16));
+            }
+        }
+        sc.close();
     }
 
     // This ROM's data
@@ -439,7 +439,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (rom.length != Gen3Constants.size16M) {
             return true;
         }
-        long csum = FileFunctions.getCRC32(rom);
+        long csum = IOFunctions.getCRC32(rom);
         return csum != 3716707868L;
     }
 
@@ -2028,7 +2028,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int offset = romEntry.getIntValue("EggMoves");
         int currentSpecies = 0;
         List<Integer> currentMoves = new ArrayList<>();
-        int val = FileFunctions.read2ByteInt(rom, offset);
+        int val = IOFunctions.read2ByteInt(rom, offset);
 
         // Check egg_moves.h in the Gen 3 decomps for more info on how this algorithm works.
         while (val != 0xFFFF) {
@@ -2043,7 +2043,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 currentMoves.add(val);
             }
             offset += 2;
-            val = FileFunctions.read2ByteInt(rom, offset);
+            val = IOFunctions.read2ByteInt(rom, offset);
         }
 
         // Need to make sure the last entry gets recorded too
@@ -2057,10 +2057,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void setEggMoves(Map<Integer, List<Integer>> eggMoves) {
         int offset = romEntry.getIntValue("EggMoves");
         for (int species : eggMoves.keySet()) {
-            FileFunctions.write2ByteInt(rom, offset, pokedexToInternal[species] + 20000);
+            IOFunctions.write2ByteInt(rom, offset, pokedexToInternal[species] + 20000);
             offset += 2;
             for (int move : eggMoves.get(species)) {
-                FileFunctions.write2ByteInt(rom, offset, move);
+                IOFunctions.write2ByteInt(rom, offset, move);
                 offset += 2;
             }
         }
@@ -2122,7 +2122,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (species == 0xFFFF) {
                 // Patch hasn't been applied, so apply it first
                 try {
-                    FileFunctions.applyPatch(rom, romEntry.getTweakFile("StaticFirstBattleTweak"));
+                    PatchFunctions.applyPatch(rom, romEntry.getTweakFile("StaticFirstBattleTweak"));
                     species = readWord(startingSpeciesOffset);
                 } catch (IOException e) {
                     throw new RomIOException(e);
@@ -2142,7 +2142,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (species == 0xFFFF) {
                 // Patch hasn't been applied, so apply it first
                 try {
-                    FileFunctions.applyPatch(rom, romEntry.getTweakFile("GhostMarowakTweak"));
+                    PatchFunctions.applyPatch(rom, romEntry.getTweakFile("GhostMarowakTweak"));
                     species = readWord(ghostMarowakOffsets[0]);
                 } catch (IOException e) {
                     throw new RomIOException(e);
@@ -2248,7 +2248,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (firstSpecies == 0xFFFF) {
                 // This means that the IPS patch hasn't been applied yet, since the first species
                 // ID location is free space.
-                FileFunctions.applyPatch(rom, romEntry.getTweakFile("RoamingPokemonTweak"));
+                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("RoamingPokemonTweak"));
             }
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
@@ -2320,7 +2320,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         writeByte(offset + 22, (byte) 0x57);
 
         // In the space formerly occupied by the first 0x2000000, write Latios's ID
-        FileFunctions.writeFullInt(rom, offset + 128, pokedexToInternal[SpeciesIDs.latios]);
+        IOFunctions.writeFullInt(rom, offset + 128, pokedexToInternal[SpeciesIDs.latios]);
 
         // Where the original function computes Latios's ID by setting r0 to 0xCC << 1, just pc-relative
         // load our constant. We have four bytes of space to play with, and we need to make sure the offset
@@ -2335,7 +2335,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // that, we only need one instruction to return to the caller, giving us four bytes to write
         // Latios's species ID.
         writeBytes(offset + 182, new byte[] { 0x00, (byte) 0xBD});
-        FileFunctions.writeFullInt(rom, offset + 184, pokedexToInternal[SpeciesIDs.latios]);
+        IOFunctions.writeFullInt(rom, offset + 184, pokedexToInternal[SpeciesIDs.latios]);
 
         // Now write a pc-relative load to this new species ID constant over the original move and lsl. Similar
         // to before, we need to write a nop first for alignment, then pc-relative load into r6.
@@ -2352,7 +2352,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         writeByte(offset + 14, (byte) 0x41);
 
         // In the space formerly occupied by the first 0x03005D8C, write Latios's ID
-        FileFunctions.writeFullInt(rom, offset + 28, pokedexToInternal[SpeciesIDs.latios]);
+        IOFunctions.writeFullInt(rom, offset + 28, pokedexToInternal[SpeciesIDs.latios]);
 
         // In the original function, we "lsl r0, r0, #0x10" then compare r0 to 0. The thing is, this left
         // shift doesn't actually matter, because 0 << 0x10 = 0, and [non-zero] << 0x10 = [non-zero].
@@ -3043,11 +3043,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 0; i < shopPointerOffsets.length; i++) {
             int offset = readPointer(shopPointerOffsets[i]);
             List<Item> shopItems = new ArrayList<>();
-            int val = FileFunctions.read2ByteInt(rom, offset);
+            int val = IOFunctions.read2ByteInt(rom, offset);
             while (val != 0x0000) {
                 shopItems.add(items.get(Gen3Constants.itemIDToStandard(val)));
                 offset += 2;
-                val = FileFunctions.read2ByteInt(rom, offset);
+                val = IOFunctions.read2ByteInt(rom, offset);
             }
             Shop shop = new Shop();
             shop.setItems(shopItems);
@@ -3117,7 +3117,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int internal = 1; internal < internalItemCount; internal++) {
             int offset = itemDataOffset + (internal * entrySize) + 16;
             int id = Gen3Constants.itemIDToStandard(internal);
-            FileFunctions.write2ByteInt(rom, offset, prices.get(id));
+            IOFunctions.write2ByteInt(rom, offset, prices.get(id));
         }
     }
 
@@ -3140,7 +3140,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (pickupItemsTableOffset > 0) {
             for (int i = 0; i < pickupItemCount; i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
-                int id = Gen3Constants.itemIDToStandard(FileFunctions.read2ByteInt(rom, itemOffset));
+                int id = Gen3Constants.itemIDToStandard(IOFunctions.read2ByteInt(rom, itemOffset));
                 PickupItem pickupItem = new PickupItem(items.get(id));
                 pickupItems.add(pickupItem);
             }
@@ -3196,7 +3196,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             for (int i = 0; i < pickupItems.size(); i++) {
                 int itemOffset = pickupItemsTableOffset + (sizeOfPickupEntry * i);
                 int itemInternalID = Gen3Constants.itemIDToInternal(pickupItems.get(i).getItem().getId());
-                FileFunctions.write2ByteInt(rom, itemOffset, itemInternalID);
+                IOFunctions.write2ByteInt(rom, itemOffset, itemInternalID);
             }
         }
     }
@@ -3295,7 +3295,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         if (romEntry.hasTweakFile("NewIndexToMusicTweak")) {
             try {
-                FileFunctions.applyPatch(rom, romEntry.getTweakFile("NewIndexToMusicTweak"));
+                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("NewIndexToMusicTweak"));
             } catch (IOException e) {
                 throw new RomIOException(e);
             }
@@ -3899,7 +3899,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private void applyFastestTextPatch() {
         if(romEntry.hasTweakFile("InstantTextTweak")) {
             try {
-                FileFunctions.applyPatch(rom, romEntry.getTweakFile("InstantTextTweak"));
+                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("InstantTextTweak"));
             } catch (IOException e) {
                 throw new RomIOException(e);
             }

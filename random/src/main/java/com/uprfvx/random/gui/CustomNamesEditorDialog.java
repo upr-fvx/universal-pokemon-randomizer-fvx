@@ -27,8 +27,8 @@ package com.uprfvx.random.gui;
 
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RootPath;
+import filefunctions.FileFunctions;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

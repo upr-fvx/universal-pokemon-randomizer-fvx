@@ -22,7 +22,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.GBConstants;
 import com.uprfvx.romio.exceptions.RomIOException;
@@ -33,10 +32,7 @@ import com.uprfvx.romio.romhandlers.romentries.GBUnusedChunkEntry;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -127,32 +123,36 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         longestTableToken = 0;
     }
 
+    private static final String TEXT_TABLES_PATH = "com/uprfvx/romio/texttables";
+
     protected void readTextTable(String name) {
-        try {
-            Scanner sc = new Scanner(FileFunctions.openConfig(name + ".tbl"), "UTF-8");
-            while (sc.hasNextLine()) {
-                String q = sc.nextLine();
-                if (!q.trim().isEmpty()) {
-                    String[] r = q.split("=", 2);
-                    if (r[1].endsWith("\r\n")) {
-                        r[1] = r[1].substring(0, r[1].length() - 2);
-                    }
-                    int hexcode = Integer.parseInt(r[0], 16);
-                    if (tb[hexcode] != null) {
-                        String oldMatch = tb[hexcode];
-                        tb[hexcode] = null;
-                        if (d.get(oldMatch) == hexcode) {
-                            d.remove(oldMatch);
-                        }
-                    }
-                    tb[hexcode] = r[1];
-                    longestTableToken = Math.max(longestTableToken, r[1].length());
-                    d.put(r[1], (byte) hexcode);
-                }
-            }
-            sc.close();
-        } catch (FileNotFoundException ignored) {
+        String tablePath = TEXT_TABLES_PATH + "/" + name + ".tbl";
+        InputStream is = getClass().getResourceAsStream(tablePath);
+        if (is == null) {
+            throw new RuntimeException("Text table not found: " + tablePath);
         }
+        Scanner sc = new Scanner(is, "UTF-8");
+        while (sc.hasNextLine()) {
+            String q = sc.nextLine();
+            if (!q.trim().isEmpty()) {
+                String[] r = q.split("=", 2);
+                if (r[1].endsWith("\r\n")) {
+                    r[1] = r[1].substring(0, r[1].length() - 2);
+                }
+                int hexcode = Integer.parseInt(r[0], 16);
+                if (tb[hexcode] != null) {
+                    String oldMatch = tb[hexcode];
+                    tb[hexcode] = null;
+                    if (d.get(oldMatch) == hexcode) {
+                        d.remove(oldMatch);
+                    }
+                }
+                tb[hexcode] = r[1];
+                longestTableToken = Math.max(longestTableToken, r[1].length());
+                d.put(r[1], (byte) hexcode);
+            }
+        }
+        sc.close();
     }
 
     protected String readString(int offset, int maxLength, boolean textEngineMode) {

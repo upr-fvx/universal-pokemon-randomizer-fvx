@@ -25,8 +25,9 @@ package com.uprfvx.random.customnames;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.SysConstants;
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RootPath;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -122,7 +123,7 @@ public class CustomNamesSet {
         }
 
         String resourcePath = DEFAULT_FILE_PATH + filename;
-        InputStream is = FileFunctions.class.getResourceAsStream(resourcePath);
+        InputStream is = CustomNamesSet.class.getResourceAsStream(resourcePath);
         if (is == null) {
             throw new FileNotFoundException("Could not find resource " + resourcePath);
         }
@@ -135,7 +136,7 @@ public class CustomNamesSet {
             return true;
         }
 
-        return FileFunctions.class.getResource(DEFAULT_FILE_PATH + filename) != null;
+        return CustomNamesSet.class.getResource(DEFAULT_FILE_PATH + filename) != null;
     }
 
     // Custom Names use TWO custom check sum methods for whatever reason.
@@ -168,7 +169,7 @@ public class CustomNamesSet {
         int switches = data[byteIndex] & 0xFF;
         if (((switches >> switchIndex) & 0x01) == 0x01) {
             // have to check the CRC
-            int crc = FileFunctions.readFullIntBigEndian(data, offsetInData);
+            int crc = IOFunctions.readFullIntBigEndian(data, offsetInData);
 
             return getFileChecksum() == crc;
         }
@@ -208,7 +209,7 @@ public class CustomNamesSet {
     private List<String> readNamesBlock(InputStream in) throws IOException {
         // Read the size of the block to come.
         byte[] szData = FileFunctions.readFullyIntoBuffer(in, 4);
-        int size = FileFunctions.readFullIntBigEndian(szData, 0);
+        int size = IOFunctions.readFullIntBigEndian(szData, 0);
         if (in.available() < size) {
             throw new IOException("Invalid size specified.");
         }
@@ -254,7 +255,7 @@ public class CustomNamesSet {
         }
         byte[] namesData = outNames.toString().getBytes(StandardCharsets.UTF_8);
         byte[] szData = new byte[4];
-        FileFunctions.writeFullIntBigEndian(szData, 0, namesData.length);
+        IOFunctions.writeFullIntBigEndian(szData, 0, namesData.length);
         out.write(szData);
         out.write(namesData);
     }

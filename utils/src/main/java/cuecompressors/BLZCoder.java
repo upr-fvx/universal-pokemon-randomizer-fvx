@@ -1,12 +1,12 @@
 package cuecompressors;
 
+import filefunctions.FileFunctions;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-
-import com.uprfvx.romio.FileFunctions;
 
 /*----------------------------------------------------------------------------*/
 /*--  BLZCoder.java - Bottom LZ coding for Nintendo GBA/DS/3DS              --*/

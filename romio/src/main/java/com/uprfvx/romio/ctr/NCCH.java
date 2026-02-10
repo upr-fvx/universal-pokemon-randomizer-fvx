@@ -21,11 +21,12 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.exceptions.RomIOException;
 import cuecompressors.BLZCoder;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -173,32 +174,32 @@ public class NCCH {
         byte[] romfsHeaderData = new byte[romfs_header_size];
         baseRom.seek(romfsOffset);
         baseRom.readFully(romfsHeaderData);
-        originalRomfsHeaderCRC = FileFunctions.getCRC32(romfsHeaderData);
-        int magic1 = FileFunctions.readFullIntBigEndian(romfsHeaderData, 0x00);
-        int magic2 = FileFunctions.readFullIntBigEndian(romfsHeaderData, 0x04);
+        originalRomfsHeaderCRC = IOFunctions.getCRC32(romfsHeaderData);
+        int magic1 = IOFunctions.readFullIntBigEndian(romfsHeaderData, 0x00);
+        int magic2 = IOFunctions.readFullIntBigEndian(romfsHeaderData, 0x04);
         if (magic1 != romfs_magic_1 || magic2 != romfs_magic_2) {
             System.err.println("NCCH: romfs does not contain magic values");
             // Not a valid romfs
             return;
         }
-        int masterHashSize = FileFunctions.readFullInt(romfsHeaderData, 0x08);
-        int level3HashBlockSize = 1 << FileFunctions.readFullInt(romfsHeaderData, 0x4C);
+        int masterHashSize = IOFunctions.readFullInt(romfsHeaderData, 0x08);
+        int level3HashBlockSize = 1 << IOFunctions.readFullInt(romfsHeaderData, 0x4C);
         long level3Offset = romfsOffset + alignLong(0x60 + masterHashSize, level3HashBlockSize);
 
         byte[] level3HeaderData = new byte[level3_header_size];
         baseRom.seek(level3Offset);
         baseRom.readFully(level3HeaderData);
-        int headerLength = FileFunctions.readFullInt(level3HeaderData, 0x00);
+        int headerLength = IOFunctions.readFullInt(level3HeaderData, 0x00);
         if (headerLength != level3_header_size) {
             // Not a valid romfs
             System.err.println("NCCH: romfs does not have a proper level 3 header");
             return;
         }
-        int directoryMetadataOffset = FileFunctions.readFullInt(level3HeaderData, 0x0C);
-        int directoryMetadataLength = FileFunctions.readFullInt(level3HeaderData, 0x10);
-        int fileMetadataOffset = FileFunctions.readFullInt(level3HeaderData, 0x1c);
-        int fileMetadataLength = FileFunctions.readFullInt(level3HeaderData, 0x20);
-        int fileDataOffsetFromHeaderStart = FileFunctions.readFullInt(level3HeaderData, 0x24);
+        int directoryMetadataOffset = IOFunctions.readFullInt(level3HeaderData, 0x0C);
+        int directoryMetadataLength = IOFunctions.readFullInt(level3HeaderData, 0x10);
+        int fileMetadataOffset = IOFunctions.readFullInt(level3HeaderData, 0x1c);
+        int fileMetadataLength = IOFunctions.readFullInt(level3HeaderData, 0x20);
+        int fileDataOffsetFromHeaderStart = IOFunctions.readFullInt(level3HeaderData, 0x24);
         fileDataOffset = level3Offset + fileDataOffsetFromHeaderStart;
 
         byte[] directoryMetadataBlock = new byte[directoryMetadataLength];
@@ -421,8 +422,8 @@ public class NCCH {
         // updated file data. We're assuming here that the master hash size is smaller than the level 3
         // hash block size, which it almost certainly will because we're not adding large amounts of data
         // to the romfs
-        int masterHashSize = FileFunctions.readFullInt(romfsHeaderData, 0x08);
-        int level3HashBlockSize = 1 << FileFunctions.readFullInt(romfsHeaderData, 0x4C);
+        int masterHashSize = IOFunctions.readFullInt(romfsHeaderData, 0x08);
+        int level3HashBlockSize = 1 << IOFunctions.readFullInt(romfsHeaderData, 0x4C);
         long level3Offset = romfsOffset + alignLong(0x60 + masterHashSize, level3HashBlockSize);
         long newLevel3Offset = newRomfsOffset + alignLong(0x60 + masterHashSize, level3HashBlockSize);
 
@@ -436,12 +437,12 @@ public class NCCH {
 
         // Write out both hash tables and the directory metadata table. Since we're not adding or removing
         // any files/directories, we can just use what's in the base ROM for this.
-        int directoryHashTableOffset = FileFunctions.readFullInt(level3HeaderData, 0x04);
-        int directoryHashTableLength = FileFunctions.readFullInt(level3HeaderData, 0x08);
-        int directoryMetadataTableOffset = FileFunctions.readFullInt(level3HeaderData, 0x0C);
-        int directoryMetadataTableLength = FileFunctions.readFullInt(level3HeaderData, 0x10);
-        int fileHashTableOffset = FileFunctions.readFullInt(level3HeaderData, 0x14);
-        int fileHashTableLength = FileFunctions.readFullInt(level3HeaderData, 0x18);
+        int directoryHashTableOffset = IOFunctions.readFullInt(level3HeaderData, 0x04);
+        int directoryHashTableLength = IOFunctions.readFullInt(level3HeaderData, 0x08);
+        int directoryMetadataTableOffset = IOFunctions.readFullInt(level3HeaderData, 0x0C);
+        int directoryMetadataTableLength = IOFunctions.readFullInt(level3HeaderData, 0x10);
+        int fileHashTableOffset = IOFunctions.readFullInt(level3HeaderData, 0x14);
+        int fileHashTableLength = IOFunctions.readFullInt(level3HeaderData, 0x18);
         byte[] directoryHashTable = new byte[directoryHashTableLength];
         baseRom.seek(level3Offset + directoryHashTableOffset);
         baseRom.readFully(directoryHashTable);
@@ -459,14 +460,14 @@ public class NCCH {
         fNew.write(fileHashTable);
 
         // Now reconstruct the file metadata table. It may need to be changed if any file grew or shrunk
-        int fileMetadataTableOffset = FileFunctions.readFullInt(level3HeaderData, 0x1C);
-        int fileMetadataTableLength = FileFunctions.readFullInt(level3HeaderData, 0x20);
+        int fileMetadataTableOffset = IOFunctions.readFullInt(level3HeaderData, 0x1C);
+        int fileMetadataTableLength = IOFunctions.readFullInt(level3HeaderData, 0x20);
         byte[] newFileMetadataTable = updateFileMetadataTable(fileMetadataTableLength);
         fNew.seek(newLevel3Offset + fileMetadataTableOffset);
         fNew.write(newFileMetadataTable);
 
         // Using the new file metadata table, output the file data
-        int fileDataOffset = FileFunctions.readFullInt(level3HeaderData, 0x24);
+        int fileDataOffset = IOFunctions.readFullInt(level3HeaderData, 0x24);
         long endOfFileDataOffset = 0;
         for (FileMetadata metadata : fileMetadataList) {
             System.out.println("NCCH: Writing file " + metadata.file.fullPath + " to romfs");
@@ -498,10 +499,10 @@ public class NCCH {
         long newLevel3EndingOffset = endOfFileDataOffset;
         long newLevel3HashdataSize = newLevel3EndingOffset - newLevel3Offset;
         long numberOfLevel3HashBlocks = alignLong(newLevel3HashdataSize, level3HashBlockSize) / level3HashBlockSize;
-        int level2HashBlockSize = 1 << FileFunctions.readFullInt(romfsHeaderData, 0x34);
+        int level2HashBlockSize = 1 << IOFunctions.readFullInt(romfsHeaderData, 0x34);
         long newLevel2HashdataSize = numberOfLevel3HashBlocks * 0x20;
         long numberOfLevel2HashBlocks = alignLong(newLevel2HashdataSize, level2HashBlockSize) / level2HashBlockSize;
-        int level1HashBlockSize = 1 << FileFunctions.readFullInt(romfsHeaderData, 0x1C);
+        int level1HashBlockSize = 1 << IOFunctions.readFullInt(romfsHeaderData, 0x1C);
         long newLevel1HashdataSize = numberOfLevel2HashBlocks * 0x20;
         long newLevel1Offset = newLevel3Offset + alignLong(newLevel3HashdataSize, level3HashBlockSize);
         long newLevel2Offset = newLevel1Offset + alignLong(newLevel1HashdataSize, level1HashBlockSize);
@@ -543,13 +544,13 @@ public class NCCH {
         long level1LogicalOffset = 0;
         long level2LogicalOffset = alignLong(newLevel1HashdataSize, level1HashBlockSize);
         long level3LogicalOffset = alignLong(level2LogicalOffset + newLevel2HashdataSize, level2HashBlockSize);
-        FileFunctions.writeFullInt(romfsHeaderData, 0x08, (int) numberOfLevel1HashBlocks * 0x20);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x0C, level1LogicalOffset);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x14, newLevel1HashdataSize);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x24, level2LogicalOffset);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x2C, newLevel2HashdataSize);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x3C, level3LogicalOffset);
-        FileFunctions.writeFullLong(romfsHeaderData, 0x44, newLevel3HashdataSize);
+        IOFunctions.writeFullInt(romfsHeaderData, 0x08, (int) numberOfLevel1HashBlocks * 0x20);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x0C, level1LogicalOffset);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x14, newLevel1HashdataSize);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x24, level2LogicalOffset);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x2C, newLevel2HashdataSize);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x3C, level3LogicalOffset);
+        IOFunctions.writeFullLong(romfsHeaderData, 0x44, newLevel3HashdataSize);
         fNew.seek(newRomfsOffset);
         fNew.write(romfsHeaderData);
         long currentLength = newFileEndingOffset - newRomfsOffset;
@@ -669,7 +670,7 @@ public class NCCH {
             // size of the exefs header, so we need to add it back ourselves.
             baseRom.seek(exefsOffset + exefs_header_size + codeFileHeader.offset);
             baseRom.readFully(code);
-            originalCodeCRC = FileFunctions.getCRC32(code);
+            originalCodeCRC = IOFunctions.getCRC32(code);
 
             if (codeCompressed) {
                 code = new BLZCoder(null).BLZ_DecodePub(code, ".code");
@@ -936,8 +937,8 @@ public class NCCH {
             byte[] filenameBytes = new byte[0x8];
             System.arraycopy(exefsHeaderData, fileHeaderOffset, filenameBytes, 0, 0x8);
             this.filename = new String(filenameBytes, StandardCharsets.UTF_8).trim();
-            this.offset = FileFunctions.readFullInt(exefsHeaderData, fileHeaderOffset + 0x08);
-            this.size = FileFunctions.readFullInt(exefsHeaderData, fileHeaderOffset + 0x0C);
+            this.offset = IOFunctions.readFullInt(exefsHeaderData, fileHeaderOffset + 0x08);
+            this.size = IOFunctions.readFullInt(exefsHeaderData, fileHeaderOffset + 0x0C);
         }
 
         public boolean isValid() {
@@ -948,8 +949,8 @@ public class NCCH {
             byte[] output = new byte[0x10];
             byte[] filenameBytes = this.filename.getBytes(StandardCharsets.UTF_8);
             System.arraycopy(filenameBytes, 0, output, 0, filenameBytes.length);
-            FileFunctions.writeFullInt(output, 0x08, this.offset);
-            FileFunctions.writeFullInt(output, 0x0C, this.size);
+            IOFunctions.writeFullInt(output, 0x08, this.offset);
+            IOFunctions.writeFullInt(output, 0x0C, this.size);
             return output;
         }
     }
@@ -964,12 +965,12 @@ public class NCCH {
         public String name;
 
         public DirectoryMetadata(byte[] directoryMetadataBlock, int offset) {
-            parentDirectoryOffset = FileFunctions.readFullInt(directoryMetadataBlock, offset);
-            siblingDirectoryOffset = FileFunctions.readFullInt(directoryMetadataBlock, offset + 0x04);
-            firstChildDirectoryOffset = FileFunctions.readFullInt(directoryMetadataBlock, offset + 0x08);
-            firstFileOffset = FileFunctions.readFullInt(directoryMetadataBlock, offset + 0x0C);
-            nextDirectoryInHashBucketOffset = FileFunctions.readFullInt(directoryMetadataBlock, offset + 0x10);
-            nameLength = FileFunctions.readFullInt(directoryMetadataBlock, offset + 0x14);
+            parentDirectoryOffset = IOFunctions.readFullInt(directoryMetadataBlock, offset);
+            siblingDirectoryOffset = IOFunctions.readFullInt(directoryMetadataBlock, offset + 0x04);
+            firstChildDirectoryOffset = IOFunctions.readFullInt(directoryMetadataBlock, offset + 0x08);
+            firstFileOffset = IOFunctions.readFullInt(directoryMetadataBlock, offset + 0x0C);
+            nextDirectoryInHashBucketOffset = IOFunctions.readFullInt(directoryMetadataBlock, offset + 0x10);
+            nameLength = IOFunctions.readFullInt(directoryMetadataBlock, offset + 0x14);
             name = "";
             if (nameLength != metadata_unused) {
                 byte[] nameBytes = new byte[nameLength];
@@ -992,12 +993,12 @@ public class NCCH {
 
         public FileMetadata(byte[] fileMetadataBlock, int offset) {
             this.offset = offset;
-            parentDirectoryOffset = FileFunctions.readFullInt(fileMetadataBlock, offset);
-            siblingFileOffset = FileFunctions.readFullInt(fileMetadataBlock, offset + 0x04);
-            fileDataOffset = FileFunctions.readFullLong(fileMetadataBlock, offset + 0x08);
-            fileDataLength = FileFunctions.readFullLong(fileMetadataBlock, offset + 0x10);
-            nextFileInHashBucketOffset = FileFunctions.readFullInt(fileMetadataBlock, offset + 0x18);
-            nameLength = FileFunctions.readFullInt(fileMetadataBlock, offset + 0x1C);
+            parentDirectoryOffset = IOFunctions.readFullInt(fileMetadataBlock, offset);
+            siblingFileOffset = IOFunctions.readFullInt(fileMetadataBlock, offset + 0x04);
+            fileDataOffset = IOFunctions.readFullLong(fileMetadataBlock, offset + 0x08);
+            fileDataLength = IOFunctions.readFullLong(fileMetadataBlock, offset + 0x10);
+            nextFileInHashBucketOffset = IOFunctions.readFullInt(fileMetadataBlock, offset + 0x18);
+            nameLength = IOFunctions.readFullInt(fileMetadataBlock, offset + 0x1C);
             name = "";
             if (nameLength != metadata_unused) {
                 byte[] nameBytes = new byte[nameLength];
@@ -1012,12 +1013,12 @@ public class NCCH {
                 metadataLength += alignInt(nameLength, 4);
             }
             byte[] output = new byte[metadataLength];
-            FileFunctions.writeFullInt(output, 0x00, this.parentDirectoryOffset);
-            FileFunctions.writeFullInt(output, 0x04, this.siblingFileOffset);
-            FileFunctions.writeFullLong(output, 0x08, this.fileDataOffset);
-            FileFunctions.writeFullLong(output, 0x10, this.fileDataLength);
-            FileFunctions.writeFullInt(output, 0x18, this.nextFileInHashBucketOffset);
-            FileFunctions.writeFullInt(output, 0x1C, this.nameLength);
+            IOFunctions.writeFullInt(output, 0x00, this.parentDirectoryOffset);
+            IOFunctions.writeFullInt(output, 0x04, this.siblingFileOffset);
+            IOFunctions.writeFullLong(output, 0x08, this.fileDataOffset);
+            IOFunctions.writeFullLong(output, 0x10, this.fileDataLength);
+            IOFunctions.writeFullInt(output, 0x18, this.nextFileInHashBucketOffset);
+            IOFunctions.writeFullInt(output, 0x1C, this.nameLength);
             if (!name.equals("")) {
                 byte[] nameBytes = name.getBytes(StandardCharsets.UTF_16LE);
                 System.arraycopy(nameBytes, 0, output, 0x20, nameBytes.length);

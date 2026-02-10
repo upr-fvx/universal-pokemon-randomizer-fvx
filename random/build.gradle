@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // Internal dependencies
     implementation(project(':romio'))
+    implementation(project(':utils'))
 
     // Needed to compile the IntelliJ GUI Designer forms
     implementation 'com.jetbrains.intellij.java:java-gui-forms-rt:+'

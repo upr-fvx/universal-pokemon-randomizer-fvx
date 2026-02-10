@@ -1,13 +1,12 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.devtools.PaletteDescriptionTool;
 import com.uprfvx.romio.gamedata.Species;
 
 import java.awt.image.BufferedImage;
 
 /**
  * A helping class for getting images of Pokemon out of the {@link RomHandler}, for purposes such as the mascot,
- * debugging, and peripheral tools (e.g. {@link PaletteDescriptionTool}).
+ * debugging, and devtools.
  */
 public abstract class PokemonImageGetter {
     protected Species pk;

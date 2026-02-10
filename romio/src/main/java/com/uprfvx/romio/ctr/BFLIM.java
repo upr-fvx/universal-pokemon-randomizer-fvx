@@ -23,7 +23,7 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.awt.image.BufferedImage;
 
@@ -85,7 +85,7 @@ public class BFLIM {
                     int x = SwizzleLUT[px] & 7;
                     int y = (SwizzleLUT[px] - x) >> 3;
                     int outputOffset = (tx + x + ((height - 1 - (ty + y)) * width)) * 4;
-                    int value = FileFunctions.read2ByteInt(data, inputOffset);
+                    int value = IOFunctions.read2ByteInt(data, inputOffset);
                     if (image.format == 7) {
                         decodeRGBA5551(output, outputOffset, value);
                     } else if (image.format == 8) {
@@ -160,19 +160,19 @@ public class BFLIM {
 
         public Header(byte[] bflimBytes) {
             int headerOffset = bflimBytes.length - 0x28;
-            int signature = FileFunctions.readFullIntBigEndian(bflimBytes, headerOffset);
+            int signature = IOFunctions.readFullIntBigEndian(bflimBytes, headerOffset);
             if (signature != 0x464C494D) {
                 throw new IllegalArgumentException("Invalid BFLIM: cannot find FLIM header");
             }
-            boolean bigEndian = FileFunctions.read2ByteInt(bflimBytes, headerOffset + 4) == 0xFFFE;
+            boolean bigEndian = IOFunctions.read2ByteInt(bflimBytes, headerOffset + 4) == 0xFFFE;
             if (bigEndian) {
                 throw new IllegalArgumentException("Unsupported BFLIM: this is a big endian BFLIM");
             }
-            int headerSize = FileFunctions.read2ByteInt(bflimBytes, headerOffset + 6);
+            int headerSize = IOFunctions.read2ByteInt(bflimBytes, headerOffset + 6);
             if (headerSize != 0x14) {
                 throw new IllegalArgumentException("Invalid BFLIM: header length does not equal 0x14");
             }
-            version = FileFunctions.readFullInt(bflimBytes, headerOffset + 8);
+            version = IOFunctions.readFullInt(bflimBytes, headerOffset + 8);
         }
     }
 
@@ -187,17 +187,17 @@ public class BFLIM {
 
         public Image(byte[] bflimBytes) {
             int imageHeaderOffset = bflimBytes.length - 0x14;
-            int signature = FileFunctions.readFullIntBigEndian(bflimBytes, imageHeaderOffset);
+            int signature = IOFunctions.readFullIntBigEndian(bflimBytes, imageHeaderOffset);
             if (signature != 0x696D6167) {
                 throw new IllegalArgumentException("Invalid BFLIM: cannot find imag header");
             }
-            size = FileFunctions.readFullInt(bflimBytes, imageHeaderOffset + 4);
-            width = (short) FileFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 8);
-            height = (short) FileFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 10);
-            alignment = (short) FileFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 12);
+            size = IOFunctions.readFullInt(bflimBytes, imageHeaderOffset + 4);
+            width = (short) IOFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 8);
+            height = (short) IOFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 10);
+            alignment = (short) IOFunctions.read2ByteInt(bflimBytes, imageHeaderOffset + 12);
             format = bflimBytes[imageHeaderOffset + 14];
             flags = bflimBytes[imageHeaderOffset + 15];
-            imageSize = FileFunctions.readFullInt(bflimBytes, imageHeaderOffset + 16);
+            imageSize = IOFunctions.readFullInt(bflimBytes, imageHeaderOffset + 16);
         }
     }
 }

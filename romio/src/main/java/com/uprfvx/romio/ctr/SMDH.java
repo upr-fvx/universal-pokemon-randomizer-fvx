@@ -21,7 +21,7 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.nio.charset.StandardCharsets;
 
@@ -71,7 +71,7 @@ public class SMDH {
     }
 
     private boolean isValid() {
-        int magic = FileFunctions.readFullInt(data, 0x0);
+        int magic = IOFunctions.readFullInt(data, 0x0);
         return magic == smdh_magic;
     }
 

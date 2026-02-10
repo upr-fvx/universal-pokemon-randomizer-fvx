@@ -22,8 +22,8 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.exceptions.RomIOException;
+import filefunctions.IOFunctions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,10 +60,10 @@ public class AMX {
     public AMX(byte[] data, int scriptNum) throws IOException {
         int found = 0;
         for (int i = 0; i < data.length - 3; i++) {
-            int val = FileFunctions.readFullInt(data,i);
+            int val = IOFunctions.readFullInt(data,i);
             if (val == amxMagic) {
                 if (found == scriptNum) {
-                    int length = FileFunctions.readFullInt(data,i-4);
+                    int length = IOFunctions.readFullInt(data,i-4);
                     readHeaderAndDecompress(Arrays.copyOfRange(data,i-4,i-4+length));
                     scriptOffset = i-4;
                     break;
@@ -80,19 +80,19 @@ public class AMX {
 
     // Credit to the creators of pk3DS (Kaphotics et al)
     private void readHeaderAndDecompress(byte[] encData) throws IOException {
-        length = FileFunctions.readFullInt(encData,0);
-        int magic = FileFunctions.readFullInt(encData,4);
+        length = IOFunctions.readFullInt(encData,0);
+        int magic = IOFunctions.readFullInt(encData,4);
         if (magic != amxMagic) {
             throw new IOException();
         }
 
-        ptrOffset = FileFunctions.read2ByteInt(encData,8);
-        ptrCount = FileFunctions.read2ByteInt(encData,0xA);
+        ptrOffset = IOFunctions.read2ByteInt(encData,8);
+        ptrCount = IOFunctions.read2ByteInt(encData,0xA);
 
-        scriptInstrStart = FileFunctions.readFullInt(encData,0xC);
-        scriptMovementStart = FileFunctions.readFullInt(encData,0x10);
-        finalOffset = FileFunctions.readFullInt(encData,0x14);
-        allocatedMemory = FileFunctions.readFullInt(encData,0x18);
+        scriptInstrStart = IOFunctions.readFullInt(encData,0xC);
+        scriptMovementStart = IOFunctions.readFullInt(encData,0x10);
+        finalOffset = IOFunctions.readFullInt(encData,0x14);
+        allocatedMemory = IOFunctions.readFullInt(encData,0x18);
 
         compLength = length - scriptInstrStart;
         byte[] compressedBytes = Arrays.copyOfRange(encData,scriptInstrStart,length);

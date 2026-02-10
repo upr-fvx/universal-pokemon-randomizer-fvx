@@ -1,6 +1,6 @@
 package compressors;
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.IOFunctions;
 
 //MODIFIED DSDECMP-JAVA SOURCE FOR RANDOMIZER'S NEEDS
 //License is below
@@ -47,7 +47,7 @@ public class DSDecmp {
         int length = (data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8) | ((data[offset + 2] & 0xFF) << 16);
         offset += 3;
         if (length == 0) {
-            length = FileFunctions.readFullIntBigEndian(data, offset);
+            length = IOFunctions.readFullIntBigEndian(data, offset);
             offset += 4;
         }
 
@@ -96,7 +96,7 @@ public class DSDecmp {
         int length = (data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8) | ((data[offset + 2] & 0xFF) << 16);
         offset += 3;
         if (length == 0) {
-            length = FileFunctions.readFullIntBigEndian(data, offset);
+            length = IOFunctions.readFullIntBigEndian(data, offset);
             offset += 4;
         }
 

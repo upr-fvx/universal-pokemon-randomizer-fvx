@@ -1,4 +1,4 @@
-package thenewpoketext;
+package text;
 
 /*----------------------------------------------------------------------------*/
 /*--  PokeTextData.java - decodes gen4 games text into Unicode              --*/

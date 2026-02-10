@@ -21,7 +21,8 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +53,7 @@ public class RomfsFile {
             byte[] buf = new byte[this.size];
             rom.seek(this.offset);
             rom.readFully(buf);
-            originalCRC = FileFunctions.getCRC32(buf);
+            originalCRC = IOFunctions.getCRC32(buf);
             if (parent.isWritingEnabled()) {
                 // make a file
                 String tmpDir = parent.getTmpFolder();

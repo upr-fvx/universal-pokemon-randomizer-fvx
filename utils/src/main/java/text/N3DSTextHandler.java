@@ -1,4 +1,4 @@
-package pptxt;
+package text;
 
 /*----------------------------------------------------------------------------*/
 /*--  N3DSTxtHandler.java - text processing for the 3DS Pokemon games       --*/
@@ -20,8 +20,6 @@ package pptxt;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.constants.N3DSConstants;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,7 +27,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class N3DSTxtHandler {
+public class N3DSTextHandler {
 
     private static final int KEY_BASE = 0x7C89;
     private static final int KEY_ADVANCE = 0x2983;
@@ -44,8 +42,8 @@ public class N3DSTxtHandler {
     private static int romType;
 
     public static List<String> readTexts(byte[] ds, boolean remapChars, int romType) {
-        N3DSTxtHandler.remapChars = remapChars;
-        N3DSTxtHandler.romType = romType;
+        N3DSTextHandler.remapChars = remapChars;
+        N3DSTextHandler.romType = romType;
         List<String> strings = new ArrayList<>();
         int numSections, numEntries, totalLength, initialKey, sectionDataOffset, sectionLength;
 
@@ -303,7 +301,7 @@ public class N3DSTxtHandler {
     }
 
     private static int getVariableNumber(String variable, int romType) throws IOException {
-        int v = N3DSConstants.getVariableCode(variable,romType);
+        int v = N3DSTextCodes.getVariableCode(variable,romType);
         if (v != 0) {
             return v;
         }
@@ -336,7 +334,7 @@ public class N3DSTxtHandler {
                 return String.format("[~ %d]",line);
         }
 
-        String varName = N3DSConstants.getTextVariableCodes(romType).getOrDefault(variable,String.format("%04X",variable));
+        String varName = N3DSTextCodes.getTextVariableCodes(romType).getOrDefault(variable,String.format("%04X",variable));
         sb.append("[VAR ").append(varName);
         if (count > 1) {
             sb.append("(");

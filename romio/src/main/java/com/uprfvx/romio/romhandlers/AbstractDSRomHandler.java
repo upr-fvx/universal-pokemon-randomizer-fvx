@@ -1,6 +1,5 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.GFXFunctions;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
@@ -12,6 +11,8 @@ import com.uprfvx.romio.graphics.palettes.Palette;
 import com.uprfvx.romio.newnds.NARCArchive;
 import com.uprfvx.romio.newnds.NDSRom;
 import com.uprfvx.romio.romhandlers.romentries.AbstractDSRomEntry;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -379,11 +380,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         tcmCopyingPointersOffset = RomFunctions.searchForFirst(arm9, 0, prefix);
         tcmCopyingPointersOffset += prefix.length; // because it was a prefix
 
-        int oldDestPointersOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - arm9Offset;
+        int oldDestPointersOffset = IOFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - arm9Offset;
         int itcmSrcOffset =
-                FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
+                IOFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - arm9Offset;
         int itcmSizeOffset = oldDestPointersOffset + 4;
-        int oldITCMSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        int oldITCMSize = IOFunctions.readFullInt(arm9, itcmSizeOffset);
         if (oldITCMSize + extendBy > ITCM_LENGTH) {
             throw new IllegalArgumentException("Can't extend the section which is copied to ITCM past 32 KiB.");
         }
@@ -396,11 +397,11 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         // 1. Pointer to destination pointers/sizes
         // 2. ARM9 size
         // 3. Size of the area copied to ITCM
-        FileFunctions.writeFullInt(newARM9, tcmCopyingPointersOffset,
+        IOFunctions.writeFullInt(newARM9, tcmCopyingPointersOffset,
                 oldDestPointersOffset + extendBy + arm9Offset);
-        FileFunctions.writeFullInt(newARM9, tcmCopyingPointersOffset + 4,
+        IOFunctions.writeFullInt(newARM9, tcmCopyingPointersOffset + 4,
                 newARM9.length + arm9Offset);
-        FileFunctions.writeFullInt(newARM9, itcmSizeOffset, oldITCMSize + extendBy);
+        IOFunctions.writeFullInt(newARM9, itcmSizeOffset, oldITCMSize + extendBy);
 
         // Finally, shift everything
         System.arraycopy(newARM9, oldDTCMOffset, newARM9, oldDTCMOffset + extendBy,
@@ -420,8 +421,8 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         if (tcmCopyingPointersOffset == -1) {
             throw new IllegalStateException("tcmCopyingPointersOffset has not been initialized");
         }
-        int itcmSizeOffset = FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
-        int itcmSize = FileFunctions.readFullInt(arm9, itcmSizeOffset);
+        int itcmSizeOffset = IOFunctions.readFullInt(arm9, tcmCopyingPointersOffset) - getARM9Offset() + 4;
+        int itcmSize = IOFunctions.readFullInt(arm9, itcmSizeOffset);
         int itcmSrcOffset = getITCMSrcOffset();
         return offset >= itcmSrcOffset && offset < itcmSrcOffset + itcmSize;
     }
@@ -462,7 +463,7 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
     }
 
     private int getITCMSrcOffset() {
-        return FileFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
+        return IOFunctions.readFullInt(arm9, tcmCopyingPointersOffset + 8) - getARM9Offset();
     }
 
     /**

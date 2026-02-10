@@ -24,7 +24,7 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.FileFunctions;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,7 +4,6 @@ import com.uprfvx.random.GameRandomizer;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.gui.CPGSelection;
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.graphics.packs.GraphicsPack;
@@ -12,6 +11,7 @@ import com.uprfvx.romio.romhandlers.Abstract3DSRomHandler;
 import com.uprfvx.romio.romhandlers.AbstractDSRomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.RomOpener;
+import filefunctions.FileNameFunctions;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class CliRandomizer {
                     List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
                     extensions.remove(romHandler.getDefaultExtension());
 
-                    fh = FileFunctions.fixFilename(fh, romHandler.getDefaultExtension(), extensions);
+                    fh = FileNameFunctions.fixFilename(fh, romHandler.getDefaultExtension(), extensions);
                     if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
                         String currentFN = romHandler.loadedFilename();
                         if (currentFN.equals(fh.getAbsolutePath())) {

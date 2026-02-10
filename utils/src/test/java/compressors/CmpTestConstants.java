@@ -1,4 +1,4 @@
-package test.compressors;
+package compressors;
 
 public class CmpTestConstants {
 

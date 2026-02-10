@@ -22,8 +22,8 @@ package com.uprfvx.random;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.MiscTweak;
+import filefunctions.IOFunctions;
 
 import java.nio.ByteBuffer;
 import java.util.Base64;
@@ -248,7 +248,7 @@ public class SettingsUpdater {
         // type effectiveness
         insertExtraByte(56, (byte) 0x1);
         // move the former Update Type Effectiveness misctweak to a proper setting
-        int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 34);
+        int miscTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 34);
         boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
         if (updateTypeEffectiveness) {
             dataBlock[56] |= 0x40;
@@ -289,7 +289,7 @@ public class SettingsUpdater {
             // type effectiveness
             insertExtraByte(55, (byte) 0x1);
             // move the former Update Type Effectiveness misctweak to a proper setting
-            int miscTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
+            int miscTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 32);
             boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
             if (updateTypeEffectiveness) {
                 dataBlock[55] |= 0x40;
@@ -473,7 +473,7 @@ public class SettingsUpdater {
             insertExtraByte(22, (byte) 1);
 
             // Move some bits from general options to misc tweaks
-            int oldTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 27);
+            int oldTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 27);
             if ((dataBlock[0] & 1) != 0) {
                 oldTweaks |= MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
             }
@@ -486,7 +486,7 @@ public class SettingsUpdater {
             if ((dataBlock[2] & (1 << 5)) != 0) {
                 oldTweaks |= MiscTweak.FORCE_CHALLENGE_MODE.getValue();
             }
-            FileFunctions.writeFullIntBigEndian(dataBlock, 27, oldTweaks);
+            IOFunctions.writeFullIntBigEndian(dataBlock, 27, oldTweaks);
 
             // Now remap the affected bytes
             dataBlock[0] = getRemappedByte(dataBlock[0], new int[] { 2, 3, 4, 6, 7 });
@@ -580,9 +580,9 @@ public class SettingsUpdater {
             // This tweak used to be "Randomize Hidden Hollows", which got moved to static Pokemon
             // randomization, so the misc tweak became unused in this version. It eventually *was*
             // used in a future version for something else, but don't get confused by the new name.
-            int oldTweaks = FileFunctions.readFullIntBigEndian(dataBlock, 32);
+            int oldTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 32);
             oldTweaks &= ~MiscTweak.FORCE_CHALLENGE_MODE.getValue();
-            FileFunctions.writeFullIntBigEndian(dataBlock, 32, oldTweaks);
+            IOFunctions.writeFullIntBigEndian(dataBlock, 32, oldTweaks);
 
             // Trainer Pokemon held items
             insertExtraByte(48, (byte) 0);
@@ -593,24 +593,24 @@ public class SettingsUpdater {
             insertExtraByte(49, (byte) 0);
 
             // Clear "assoc" state from GenRestrictions as it doesn't exist any longer
-            int genRestrictions = FileFunctions.readFullIntBigEndian(dataBlock, 28);
+            int genRestrictions = IOFunctions.readFullIntBigEndian(dataBlock, 28);
             genRestrictions &= 127;
-            FileFunctions.writeFullIntBigEndian(dataBlock, 28, genRestrictions);
+            IOFunctions.writeFullIntBigEndian(dataBlock, 28, genRestrictions);
         }
 
         if (oldVersion < Version.ZX_4_5_0.id) {
             // 5-10 custom starters, offset by 1 because of new "Random" option
-            int starter1 = FileFunctions.read2ByteInt(dataBlock, 5);
-            int starter2 = FileFunctions.read2ByteInt(dataBlock, 7);
-            int starter3 = FileFunctions.read2ByteInt(dataBlock, 9);
+            int starter1 = IOFunctions.read2ByteInt(dataBlock, 5);
+            int starter2 = IOFunctions.read2ByteInt(dataBlock, 7);
+            int starter3 = IOFunctions.read2ByteInt(dataBlock, 9);
 
             starter1 += 1;
             starter2 += 1;
             starter3 += 1;
 
-            FileFunctions.write2ByteInt(dataBlock, 5, starter1);
-            FileFunctions.write2ByteInt(dataBlock, 7, starter2);
-            FileFunctions.write2ByteInt(dataBlock, 9, starter3);
+            IOFunctions.write2ByteInt(dataBlock, 5, starter1);
+            IOFunctions.write2ByteInt(dataBlock, 7, starter2);
+            IOFunctions.write2ByteInt(dataBlock, 9, starter3);
 
             // 50 elite four unique pokemon (3 bits)
             insertExtraByte(50, (byte) 0);
@@ -664,14 +664,14 @@ public class SettingsUpdater {
             // Also, 0 was previously used to denote "all generations allowed".
             // Make it use -1 (I.e., all bits 1) instead.
             // Finally, make it little endian.
-            int restrictions = FileFunctions.readFullIntBigEndian(dataBlock, 30);
+            int restrictions = IOFunctions.readFullIntBigEndian(dataBlock, 30);
             int allowEvoRelatives = (restrictions & 0x80) >> 7;
             restrictions <<= 1;
             restrictions |= allowEvoRelatives;
             if (restrictions == 0) {
                 restrictions = -1;
             }
-            FileFunctions.writeFullInt(dataBlock, 30, restrictions);
+            IOFunctions.writeFullInt(dataBlock, 30, restrictions);
         }
 
         if (oldVersion < Version.FVX_1_3_3.id) {

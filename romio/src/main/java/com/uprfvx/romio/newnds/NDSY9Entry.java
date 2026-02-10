@@ -1,7 +1,8 @@
 package com.uprfvx.romio.newnds;
 
-import com.uprfvx.romio.FileFunctions;
 import cuecompressors.BLZCoder;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,7 +59,7 @@ public class NDSY9Entry {
             byte[] buf = new byte[this.original_size];
             rom.seek(this.offset);
             rom.readFully(buf);
-            originalCRC = FileFunctions.getCRC32(buf);
+            originalCRC = IOFunctions.getCRC32(buf);
             // Compression?
             if (compress_flag != 0 && this.original_size == this.compressed_size && this.compressed_size != 0) {
                 buf = new BLZCoder(null).BLZ_DecodePub(buf, "overlay " + overlay_id);

@@ -22,7 +22,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.GFXFunctions;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
@@ -36,7 +35,9 @@ import com.uprfvx.romio.romhandlers.romentries.DSStaticPokemon;
 import com.uprfvx.romio.romhandlers.romentries.Gen5RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.InFileEntry;
 import compressors.DSDecmp;
-import pptxt.PPTxtHandler;
+import filefunctions.IOFunctions;
+import filefunctions.PatchFunctions;
+import text.PPTxtHandler;
 
 import javax.naming.OperationNotSupportedException;
 import java.awt.*;
@@ -293,7 +294,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 }
 
                 int internalStatusType = readWord(moveData, 8);
-                int flags = FileFunctions.readFullInt(moveData, 32);
+                int flags = IOFunctions.readFullInt(moveData, 32);
                 moves[i].makesContact = (flags & 0x001) != 0;
                 moves[i].isChargeMove = (flags & 0x002) != 0;
                 moves[i].isRechargeMove = (flags & 0x004) != 0;
@@ -2053,12 +2054,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             int firstConstantOffset = find(boxLegendaryOverlay, Gen5Constants.blackBoxLegendaryCheckPrefix1);
             if (firstConstantOffset > 0) {
                 firstConstantOffset += Gen5Constants.blackBoxLegendaryCheckPrefix1.length() / 2; // because it was a prefix
-                FileFunctions.writeFullInt(boxLegendaryOverlay, firstConstantOffset, boxLegendarySpecies);
+                IOFunctions.writeFullInt(boxLegendaryOverlay, firstConstantOffset, boxLegendarySpecies);
             }
             int secondConstantOffset = find(boxLegendaryOverlay, Gen5Constants.blackBoxLegendaryCheckPrefix2);
             if (secondConstantOffset > 0) {
                 secondConstantOffset += Gen5Constants.blackBoxLegendaryCheckPrefix2.length() / 2; // because it was a prefix
-                FileFunctions.writeFullInt(boxLegendaryOverlay, secondConstantOffset, boxLegendarySpecies);
+                IOFunctions.writeFullInt(boxLegendaryOverlay, secondConstantOffset, boxLegendarySpecies);
             }
         } else {
             // In White, Zekrom's species ID is always loaded by loading 161 into a register
@@ -2077,7 +2078,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 // In the space that used to hold the address of the "scrcmd_pokemon_fld.c"
                 // string, we're going to instead store the species ID of the box legendary
                 // so that we can do a pc-relative load to it.
-                FileFunctions.writeFullInt(boxLegendaryOverlay, firstFunctionOffset + 320, boxLegendarySpecies);
+                IOFunctions.writeFullInt(boxLegendaryOverlay, firstFunctionOffset + 320, boxLegendarySpecies);
 
                 // Zekrom's species ID is originally loaded by doing a mov into r1 and then a shift
                 // on that same register four instructions later. This nops out the first instruction
@@ -2105,7 +2106,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 boxLegendaryOverlay[secondFunctionOffset + 505] = 0x1C;
 
                 // Now replace the 0x00000000 constant with the species ID
-                FileFunctions.writeFullInt(boxLegendaryOverlay, secondFunctionOffset + 556, boxLegendarySpecies);
+                IOFunctions.writeFullInt(boxLegendaryOverlay, secondFunctionOffset + 556, boxLegendarySpecies);
 
                 // Lastly, replace the mov and lsl that originally puts Zekrom's species ID into r1
                 // with a pc-relative of the above constant and a nop.
@@ -2130,7 +2131,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         overlay[offset + 10] = 0x00;
 
         // Now in the space that used to do "mov r0, #0x2" and return, write Thundurus's ID
-        FileFunctions.writeFullInt(overlay, offset + 20, SpeciesIDs.thundurus);
+        IOFunctions.writeFullInt(overlay, offset + 20, SpeciesIDs.thundurus);
 
         // Lastly, instead of computing Thundurus's ID as TornadusID + 1, pc-relative load it
         // from what we wrote earlier.
@@ -2448,7 +2449,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
 
         try {
-            FileFunctions.applyPatch(data, patchName);
+            PatchFunctions.applyPatch(data, patchName);
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -2857,7 +2858,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         // update the constant
         int offset = romEntry.getIntValue("ShedinjaSpeciesOffset");
         if (offset > 0) {
-            FileFunctions.writeFullInt(arm9, offset, extraEvolution.getNumber());
+            IOFunctions.writeFullInt(arm9, offset, extraEvolution.getNumber());
         }
     }
 
@@ -3171,7 +3172,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
                     // Now write the species ID in the 4 bytes of space now available at the bottom,
                     // and then write a pc-relative load to this species ID at the offset.
-                    FileFunctions.writeFullInt(introCryOverlay, offset + 38, introPokemon);
+                    IOFunctions.writeFullInt(introCryOverlay, offset + 38, introPokemon);
                     introCryOverlay[offset] = 0x9;
                     introCryOverlay[offset + 1] = 0x48;
                     writeOverlay(romEntry.getIntValue("IntroCryOvlNumber"), introCryOverlay);
@@ -3821,7 +3822,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             if (pickupItemsTableOffset > 0) {
                 for (int i = 0; i < Gen5Constants.numberOfPickupItems; i++) {
                     int itemOffset = pickupItemsTableOffset + (2 * i);
-                    int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
+                    int id = IOFunctions.read2ByteInt(battleOverlay, itemOffset);
                     PickupItem pickupItem = new PickupItem(items.get(id));
                     pickupItems.add(pickupItem);
                 }
@@ -3856,7 +3857,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (int i = 0; i < Gen5Constants.numberOfPickupItems; i++) {
                     int itemOffset = pickupItemsTableOffset + (2 * i);
                     int id = pickupItems.get(i).getItem().getId();
-                    FileFunctions.write2ByteInt(battleOverlay, itemOffset, id);
+                    IOFunctions.write2ByteInt(battleOverlay, itemOffset, id);
                 }
                 writeOverlay(romEntry.getIntValue("PickupOvlNumber"), battleOverlay);
             }
@@ -3868,15 +3869,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private void computeCRC32sForRom() throws IOException {
         this.actualOverlayCRC32s = new HashMap<>();
         this.actualFileCRC32s = new HashMap<>();
-        this.actualArm9CRC32 = FileFunctions.getCRC32(arm9);
+        this.actualArm9CRC32 = IOFunctions.getCRC32(arm9);
         for (int overlayNumber : romEntry.getOverlayExpectedCRC32Keys()) {
             byte[] overlay = readOverlay(overlayNumber);
-            long crc32 = FileFunctions.getCRC32(overlay);
+            long crc32 = IOFunctions.getCRC32(overlay);
             this.actualOverlayCRC32s.put(overlayNumber, crc32);
         }
         for (String fileKey : romEntry.getFileKeys()) {
             byte[] file = readFile(romEntry.getFile(fileKey));
-            long crc32 = FileFunctions.getCRC32(file);
+            long crc32 = IOFunctions.getCRC32(file);
             this.actualFileCRC32s.put(fileKey, crc32);
         }
     }

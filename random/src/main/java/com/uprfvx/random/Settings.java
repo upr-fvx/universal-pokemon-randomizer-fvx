@@ -27,9 +27,10 @@ package com.uprfvx.random;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -812,8 +813,8 @@ public class Settings {
         settings.setBanBadRandomStarterHeldItems(restoreState(data[4], 5));
         settings.setAllowStarterAltFormes(restoreState(data[4],6));
 
-        settings.setCustomStarters(new int[]{FileFunctions.read2ByteInt(data, 5),
-                FileFunctions.read2ByteInt(data, 7), FileFunctions.read2ByteInt(data, 9)});
+        settings.setCustomStarters(new int[]{IOFunctions.read2ByteInt(data, 5),
+                IOFunctions.read2ByteInt(data, 7), IOFunctions.read2ByteInt(data, 9)});
 
         settings.setMovesetsMod(restoreEnum(MovesetsMod.class, data[11], 2, // UNCHANGED
                 1, // RANDOM_PREFER_SAME_TYPE
@@ -961,11 +962,11 @@ public class Settings {
         settings.setShinyChance(restoreState(data[29], 6));
 
         // gen restrictions
-        int genLimit = FileFunctions.readFullInt(data, 30);
+        int genLimit = IOFunctions.readFullInt(data, 30);
         GenRestrictions restrictions = new GenRestrictions(genLimit);
         settings.setCurrentRestrictions(restrictions);
 
-        int codeTweaks = FileFunctions.readFullIntBigEndian(data, 34);
+        int codeTweaks = IOFunctions.readFullIntBigEndian(data, 34);
 
         settings.setCurrentMiscTweaks(codeTweaks);
 
@@ -2877,7 +2878,7 @@ public class Settings {
 
     private static void writeFullInt(ByteArrayOutputStream out, int value) throws IOException {
         byte[] crc = new byte[4];
-        FileFunctions.writeFullInt(crc, 0, value);
+        IOFunctions.writeFullInt(crc, 0, value);
         out.write(crc);
     }
 

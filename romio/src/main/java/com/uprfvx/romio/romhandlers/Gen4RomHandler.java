@@ -32,8 +32,10 @@ import com.uprfvx.romio.newnds.NARCArchive;
 import com.uprfvx.romio.romhandlers.romentries.DSStaticPokemon;
 import com.uprfvx.romio.romhandlers.romentries.Gen4RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.InFileEntry;
-import thenewpoketext.PokeTextData;
-import thenewpoketext.TextToPoke;
+import filefunctions.IOFunctions;
+import filefunctions.PatchFunctions;
+import text.PokeTextData;
+import text.TextToPoke;
 
 import javax.naming.OperationNotSupportedException;
 import java.awt.image.BufferedImage;
@@ -1279,7 +1281,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         int starterScriptNumber = romEntry.getIntValue("StarterPokemonScriptOffset");
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
-        int id = FileFunctions.read2ByteInt(file, starterHeldItemOffset);
+        int id = IOFunctions.read2ByteInt(file, starterHeldItemOffset);
         return Collections.singletonList(items.get(id));
     }
 
@@ -1292,7 +1294,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         int starterHeldItemOffset = romEntry.getIntValue("StarterPokemonHeldItemOffset");
         byte[] file = scriptNarc.files.get(starterScriptNumber);
         Item item = items.get(0);
-        FileFunctions.write2ByteInt(file, starterHeldItemOffset, item == null ? 0 : item.getId());
+        IOFunctions.write2ByteInt(file, starterHeldItemOffset, item == null ? 0 : item.getId());
     }
 
 	@Override
@@ -2050,7 +2052,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				// constant that has the same effect.
 				int newRange = maxLevel - level;
 				int divisor = (0xFFFF / (newRange + 1)) + 1;
-				FileFunctions.writeFullInt(encounterOverlay, offset + 148, divisor);
+				IOFunctions.writeFullInt(encounterOverlay, offset + 148, divisor);
 			}
 			writeExtraEncountersDPPt(honeyTreeData, 0, honeyTreeArea);
 		}
@@ -3183,7 +3185,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int currentOffset = startingOffset;
 		int currentSpecies = 0;
 		List<Integer> currentMoves = new ArrayList<>();
-		int val = FileFunctions.read2ByteInt(data, currentOffset);
+		int val = IOFunctions.read2ByteInt(data, currentOffset);
 
 		// Egg move data is stored exactly like in Gen 3, so check egg_moves.h in the
 		// Gen 3 decomps for more info on how this algorithm works.
@@ -3199,7 +3201,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				currentMoves.add(val);
 			}
 			currentOffset += 2;
-			val = FileFunctions.read2ByteInt(data, currentOffset);
+			val = IOFunctions.read2ByteInt(data, currentOffset);
 		}
 
 		// Need to make sure the last entry gets recorded too
@@ -3213,10 +3215,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void writeEggMoves(Map<Integer, List<Integer>> eggMoves, byte[] data, int startingOffset) {
 		int currentOffset = startingOffset;
 		for (int species : eggMoves.keySet()) {
-			FileFunctions.write2ByteInt(data, currentOffset, species + 20000);
+			IOFunctions.write2ByteInt(data, currentOffset, species + 20000);
 			currentOffset += 2;
 			for (int move : eggMoves.get(species)) {
-				FileFunctions.write2ByteInt(data, currentOffset, move);
+				IOFunctions.write2ByteInt(data, currentOffset, move);
 				currentOffset += 2;
 			}
 		}
@@ -3663,7 +3665,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// entry is clearly unused, just replace Darkrai's species ID constant with
 		// Cresselia's, since
 		// in the original code, her ID is computed as 0x7A << 0x2
-		FileFunctions.writeFullInt(arm9, offset + 244, SpeciesIDs.cresselia);
+		IOFunctions.writeFullInt(arm9, offset + 244, SpeciesIDs.cresselia);
 
 		// Now write a pc-relative load to our new constant over where Cresselia's ID is
 		// normally mov'd
@@ -4630,13 +4632,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			if (pickupItemsTableOffset > 0 && rarePickupItemsTableOffset > 0) {
 				for (int i = 0; i < Gen4Constants.numberOfCommonPickupItems; i++) {
 					int itemOffset = pickupItemsTableOffset + (2 * i);
-					int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
+					int id = IOFunctions.read2ByteInt(battleOverlay, itemOffset);
 					PickupItem pickupItem = new PickupItem(items.get(id));
 					pickupItems.add(pickupItem);
 				}
 				for (int i = 0; i < Gen4Constants.numberOfRarePickupItems; i++) {
 					int itemOffset = rarePickupItemsTableOffset + (2 * i);
-					int id = FileFunctions.read2ByteInt(battleOverlay, itemOffset);
+					int id = IOFunctions.read2ByteInt(battleOverlay, itemOffset);
 					PickupItem pickupItem = new PickupItem(items.get(id));
 					pickupItems.add(pickupItem);
 				}
@@ -4672,12 +4674,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int i = 0; i < Gen4Constants.numberOfCommonPickupItems; i++) {
 					int itemOffset = pickupItemsTableOffset + (2 * i);
 					int id = itemIterator.next().getItem().getId();
-					FileFunctions.write2ByteInt(battleOverlay, itemOffset, id);
+					IOFunctions.write2ByteInt(battleOverlay, itemOffset, id);
 				}
 				for (int i = 0; i < Gen4Constants.numberOfRarePickupItems; i++) {
 					int itemOffset = rarePickupItemsTableOffset + (2 * i);
 					int id = itemIterator.next().getItem().getId();
-					FileFunctions.write2ByteInt(battleOverlay, itemOffset, id);
+					IOFunctions.write2ByteInt(battleOverlay, itemOffset, id);
 				}
 				writeOverlay(romEntry.getIntValue("BattleOvlNumber"), battleOverlay);
 			}
@@ -5716,7 +5718,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		String patchName = romEntry.getTweakFile(ctName);
 
 		try {
-			FileFunctions.applyPatch(data, patchName);
+			PatchFunctions.applyPatch(data, patchName);
 			return true;
 		} catch (IOException e) {
 			throw new RomIOException(e);
@@ -5726,15 +5728,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void computeCRC32sForRom() throws IOException {
 		this.actualOverlayCRC32s = new HashMap<>();
 		this.actualFileCRC32s = new HashMap<>();
-		this.actualArm9CRC32 = FileFunctions.getCRC32(arm9);
+		this.actualArm9CRC32 = IOFunctions.getCRC32(arm9);
 		for (int overlayNumber : romEntry.getOverlayExpectedCRC32Keys()) {
 			byte[] overlay = readOverlay(overlayNumber);
-			long crc32 = FileFunctions.getCRC32(overlay);
+			long crc32 = IOFunctions.getCRC32(overlay);
 			this.actualOverlayCRC32s.put(overlayNumber, crc32);
 		}
 		for (String fileKey : romEntry.getFileKeys()) {
 			byte[] file = readFile(romEntry.getFile(fileKey));
-			long crc32 = FileFunctions.getCRC32(file);
+			long crc32 = IOFunctions.getCRC32(file);
 			this.actualFileCRC32s.put(fileKey, crc32);
 		}
 	}

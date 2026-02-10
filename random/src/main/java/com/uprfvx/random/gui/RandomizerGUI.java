@@ -29,7 +29,6 @@ import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.constants.GlobalConstants;
@@ -40,6 +39,8 @@ import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
 import com.uprfvx.romio.romio.RomOpener;
+import filefunctions.FileFunctions;
+import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -1036,7 +1037,7 @@ public class RandomizerGUI {
                 // Fix or add extension
                 List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
                 extensions.remove(this.romHandler.getDefaultExtension());
-                fh = FileFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
+                fh = FileNameFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
                 allowed = true;
                 if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
                     String currentFN = this.romHandler.loadedFilename();
@@ -1189,7 +1190,7 @@ public class RandomizerGUI {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = qsSaveChooser.getSelectedFile();
             // Fix or add extension
-            fh = FileFunctions.fixFilename(fh, "rnqs");
+            fh = FileNameFunctions.fixFilename(fh, "rnqs");
             // Save now?
             try {
                 FileOutputStream fos = new FileOutputStream(fh);
@@ -1392,7 +1393,7 @@ public class RandomizerGUI {
                     // Fix or add extension
                     List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
                     extensions.remove(this.romHandler.getDefaultExtension());
-                    fh = FileFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
+                    fh = FileNameFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
                     allowed = true;
                     if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
                         String currentFN = this.romHandler.loadedFilename();

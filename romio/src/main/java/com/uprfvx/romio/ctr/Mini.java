@@ -21,7 +21,7 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.IOFunctions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -83,13 +83,13 @@ public class Mini {
             return null;
         }
 
-        int count = FileFunctions.read2ByteInt(fileData, 2);
+        int count = IOFunctions.read2ByteInt(fileData, 2);
         int ctr = 4;
-        int start = FileFunctions.readFullInt(fileData, ctr);
+        int start = IOFunctions.readFullInt(fileData, ctr);
         ctr += 4;
         byte[][] returnData = new byte[count][];
         for (int i = 0; i < count; i++) {
-            int end = FileFunctions.readFullInt(fileData, ctr);
+            int end = IOFunctions.readFullInt(fileData, ctr);
             ctr += 4;
             int len = end - start;
             byte[] data = new byte[len];

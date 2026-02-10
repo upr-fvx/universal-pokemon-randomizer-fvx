@@ -3,12 +3,11 @@ package com.uprfvx.romio.romhandlers.romentries;
 import com.uprfvx.romio.constants.Gen2Constants;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import static com.uprfvx.romio.FileFunctions.openConfig;
 
 /**
  * A description of a specific rom, or version of a rom. The {@code RomEntry} differentiates the rom from
@@ -20,6 +19,8 @@ import static com.uprfvx.romio.FileFunctions.openConfig;
  * "Crystal (U)" and "Crystal (S)", despite both being roms of Pokémon crystal.
  */
 public abstract class RomEntry extends IniEntry {
+
+    private static final String ROMENTRIES_PATH = "com/uprfvx/romio/romentries";
 
     protected abstract static class RomEntryReader<T extends RomEntry> extends IniEntryReader<T> {
 
@@ -38,7 +39,11 @@ public abstract class RomEntry extends IniEntry {
 
         @Override
         public List<T> readEntriesFromFile(String fileName) throws FileNotFoundException {
-            Scanner scanner = new Scanner(openConfig(fileName), "UTF-8");
+            InputStream is = getClass().getResourceAsStream(ROMENTRIES_PATH + "/" + fileName);
+            if (is == null) {
+                throw new RuntimeException("ROM Entry file not found: " + ROMENTRIES_PATH + "/" + fileName);
+            }
+            Scanner scanner = new Scanner(is, "UTF-8");
             setFileName(fileName);
             return readEntriesFromScanner(scanner);
         }

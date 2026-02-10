@@ -21,7 +21,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.Gen6Constants;
 import com.uprfvx.romio.ctr.GARCArchive;
@@ -30,6 +29,7 @@ import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.exceptions.RomIOException;
 import com.uprfvx.romio.gamedata.*;
+import filefunctions.FileFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;

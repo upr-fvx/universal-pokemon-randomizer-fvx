@@ -1,14 +1,12 @@
 package compressors;
 
-import com.uprfvx.romio.graphics.images.GBCImage;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Pokémon Gen 1 compressor. Since it is only used for image compression in the games,
- * it only takes {@link GBCImage}s as input.
+ * it takes two {@link BufferedImage}s representing an image's bitplanes.
  * <br><br>
  * This implementation was largely ported by
  * <a href=https://rgmechex.com/tech/gen1decompress.html>Frieze/RGME's JavaScript implementation</a>.
@@ -17,27 +15,39 @@ import java.util.List;
  */
 public class Gen1Cmp {
 
+    private static final int TILE_DIM = 8;
     private static final int MAX_DIMENSION = 15;
     private static final int BLACK = 0xFF000000;
 
-    private final GBCImage image;
+    private final BufferedImage bitplane1Image;
+    private final BufferedImage bitplane2Image;
 
     private final int width;
     private final int height;
     private int[][] bp1;
     private int[][] bp2;
 
-    public static byte[] compress(GBCImage image) {
-        return new Gen1Cmp(image).compressInner();
+    public static byte[] compress(BufferedImage bitplane1Image, BufferedImage bitplane2Image) {
+        return new Gen1Cmp(bitplane1Image, bitplane2Image).compressInner();
     }
 
-    public Gen1Cmp(GBCImage image) {
-        this.image = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
-        if (image.getWidthInTiles() > MAX_DIMENSION || image.getHeightInTiles() > MAX_DIMENSION) {
-            throw new IllegalArgumentException("Image dimensions (in tiles) of " + image.getWidthInTiles() + "x" + image.getHeightInTiles() +
-                    " exceeds " + MAX_DIMENSION + "x" + MAX_DIMENSION + ".");
+    public Gen1Cmp(BufferedImage bitplane1Image, BufferedImage bitplane2Image) {
+        if (bitplane1Image.getWidth() != bitplane2Image.getWidth()
+                || bitplane1Image.getHeight() != bitplane2Image.getHeight()) {
+            throw new IllegalArgumentException(String.format(
+                    "bitplane images are not the same size (%dx%d, %dx%d)",
+                    bitplane1Image.getWidth(), bitplane1Image.getHeight(),
+                    bitplane2Image.getWidth(), bitplane2Image.getHeight()));
+        }
+        this.bitplane1Image = bitplane1Image;
+        this.bitplane2Image = bitplane2Image;
+        this.width = bitplane1Image.getWidth();
+        this.height = bitplane1Image.getHeight();
+
+        if (width / TILE_DIM > MAX_DIMENSION || height / TILE_DIM > MAX_DIMENSION) {
+            throw new IllegalArgumentException(String.format(
+                    "Image dimensions (in tiles) of %dx%d exceeds %dx%d.",
+                    width, height, MAX_DIMENSION, MAX_DIMENSION));
         }
     }
 
@@ -84,8 +94,8 @@ public class Gen1Cmp {
     }
 
     private void initBitplanes(boolean order) {
-        bp1 = bitplaneFromImage(order ? image.getBitplane2Image() : image.getBitplane1Image());
-        bp2 = bitplaneFromImage(order ? image.getBitplane1Image() : image.getBitplane2Image());
+        bp1 = bitplaneFromImage(order ? bitplane2Image : bitplane1Image);
+        bp2 = bitplaneFromImage(order ? bitplane1Image : bitplane2Image);
     }
 
     private int[][] bitplaneFromImage(BufferedImage image) {

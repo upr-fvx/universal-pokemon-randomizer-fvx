@@ -1,4 +1,4 @@
-package pptxt;
+package text;
 
 /*----------------------------------------------------------------------------*/
 /*--  PPTxtHandler.java - handles generation 5 games text encoding          --*/
@@ -6,45 +6,42 @@ package pptxt;
 /*--  Ported to Java and bugfixed/customized by Dabomstew                   --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.InputStream;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.uprfvx.romio.FileFunctions;
-
 public class PPTxtHandler {
 
-    private static Map<String, String> pokeToText = new HashMap<>();
-    private static Map<String, String> textToPoke = new HashMap<>();
+    private static final String TABLE_PATH = "text/Generation5.tbl";
 
-    private static Pattern pokeToTextPattern, textToPokePattern;
+    private static final Map<String, String> pokeToText = new HashMap<>();
+    private static final Map<String, String> textToPoke = new HashMap<>();
+
+    private static final Pattern pokeToTextPattern;
+    private static final Pattern textToPokePattern;
 
     static {
-        try {
-            Scanner sc = new Scanner(FileFunctions.openConfig("Generation5.tbl"), "UTF-8");
-            while (sc.hasNextLine()) {
-                String q = sc.nextLine();
-                if (!q.trim().isEmpty()) {
-                    String[] r = q.split("=", 2);
-                    if (r[1].endsWith("\r\n")) {
-                        r[1] = r[1].substring(0, r[1].length() - 2);
-                    }
-                    pokeToText.put(Character.toString((char) Integer.parseInt(r[0], 16)), r[1].replace("\\", "\\\\")
-                            .replace("$", "\\$"));
-                    textToPoke.put(r[1], "\\\\x" + r[0]);
-                }
-            }
-            sc.close();
-            pokeToTextPattern = makePattern(pokeToText.keySet());
-            textToPokePattern = makePattern(textToPoke.keySet());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        InputStream is = UnicodeParser.class.getResourceAsStream(TABLE_PATH);
+        if (is == null) {
+            throw new RuntimeException("Couldn't find " + TABLE_PATH);
         }
+        Scanner sc = new Scanner(is, "UTF-8");
+        while (sc.hasNextLine()) {
+            String q = sc.nextLine();
+            if (!q.trim().isEmpty()) {
+                String[] r = q.split("=", 2);
+                if (r[1].endsWith("\r\n")) {
+                    r[1] = r[1].substring(0, r[1].length() - 2);
+                }
+                pokeToText.put(Character.toString((char) Integer.parseInt(r[0], 16)), r[1].replace("\\", "\\\\")
+                        .replace("$", "\\$"));
+                textToPoke.put(r[1], "\\\\x" + r[0]);
+            }
+        }
+        sc.close();
+        pokeToTextPattern = makePattern(pokeToText.keySet());
+        textToPokePattern = makePattern(textToPoke.keySet());
     }
 
     private static Pattern makePattern(Iterable<String> tokens) {

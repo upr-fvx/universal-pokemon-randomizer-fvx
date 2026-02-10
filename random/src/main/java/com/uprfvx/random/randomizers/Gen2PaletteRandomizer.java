@@ -36,11 +36,7 @@ import java.util.Random;
 /**
  * A {@link PaletteRandomizer} for Gen 2 games (G/S/C).
  * <p>
- * Pokémon palettes in Gen 2 do de facto only have two colors, as their sprites can
- * only have four, and two color slots are always occupied by white respectively
- * black. The remaining two colors are here divided into "bright colors" and
- * "dark colors", as those descriptors generally correspond to each of the color
- * slots.
+ * See {@link Gen2TypeColors} for an explanation on light/dark colors.
  */
 public class Gen2PaletteRandomizer extends PaletteRandomizer {
 

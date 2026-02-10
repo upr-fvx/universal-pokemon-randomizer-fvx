@@ -22,7 +22,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.FileFunctions;
 import com.uprfvx.romio.GFXFunctions;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
@@ -40,6 +39,7 @@ import com.uprfvx.romio.romhandlers.romentries.GBCTMTextEntry;
 import com.uprfvx.romio.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
+import filefunctions.PatchFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -2339,7 +2339,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
 
         try {
-            FileFunctions.applyPatch(rom, patchName);
+            PatchFunctions.applyPatch(rom, patchName);
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -2981,7 +2981,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         DataRewriter<GBCImage> dataRewriter = new IndirectBankDataRewriter<>(bankOffsets);
 
         dataRewriter.rewriteData(primaryPointerOffset, frontImage, secondaryPointerOffsets,
-                Gen1Cmp::compress, this::lengthOfCompressedDataAt);
+                image -> Gen1Cmp.compress(image.getBitplane1Image(), image.getBitplane2Image()),
+                this::lengthOfCompressedDataAt);
     }
 
     private void rewritePlayerBackImage(GBCImage backImage) {
@@ -3013,7 +3014,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] playerPlusOldManBackImagesToBytes(GBCImage playerBack) {
-        byte[] playerBackData = Gen1Cmp.compress(playerBack);
+        byte[] playerBackData = Gen1Cmp.compress(playerBack.getBitplane1Image(), playerBack.getBitplane2Image());
         byte[] oldManBackData = readCompressedOldManBackData();
 
         byte[] bothData = new byte[playerBackData.length + oldManBackData.length];

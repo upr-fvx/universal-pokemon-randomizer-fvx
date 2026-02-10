@@ -31,7 +31,8 @@ package com.uprfvx.random.gui;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.romio.FileFunctions;
+import filefunctions.FileFunctions;
+import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -186,7 +187,7 @@ public class PresetMakeDialog extends javax.swing.JDialog {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = presetFileChooser.getSelectedFile();
             // Fix extension?
-            fh = FileFunctions.fixFilename(fh, "rndp");
+            fh = FileNameFunctions.fixFilename(fh, "rndp");
             try {
                 DataOutputStream dos = new DataOutputStream(Files.newOutputStream(fh.toPath()));
                 dos.writeLong(seed);

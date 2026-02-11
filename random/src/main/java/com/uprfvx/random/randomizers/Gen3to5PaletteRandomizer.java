@@ -49,12 +49,6 @@ import java.util.Map.Entry;
 public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 
 	/**
-	 * A setting to use when testing the palette description files.
-	 * If false, the corresponding source file is read instead of the compiled resource.
-	 */
-	private final static boolean COMPILED = true;
-
-	/**
 	 * An identifier for the related resource files. ROMs that share a
 	 * paletteFilesID also share all resources. If they shouldn't, different ROMs
 	 * must be assigned separate IDs.
@@ -151,22 +145,11 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	public List<PaletteDescription> getPaletteDescriptions(String fileKey) {
 		List<PaletteDescription> paletteDescriptions = new ArrayList<>();
 
-		Reader reader;
-		if (COMPILED) {
-			try {
-				InputStream infi = getClass().getResourceAsStream(getResourceAddress(fileKey));
-				reader = new InputStreamReader(infi);
-			} catch (NullPointerException e) {
-				throw new RuntimeException(new RuntimeException("Could not find resource " + getResourceAddress(fileKey), e));
-			}
-		} else {
-			try {
-				reader = new FileReader(getSourceFileAddress(fileKey));
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		BufferedReader br = new BufferedReader(reader);
+        InputStream is = getClass().getResourceAsStream(getResourceAddress(fileKey));
+        if (is == null) {
+            throw new RuntimeException(new RuntimeException("Could not find resource " + getResourceAddress(fileKey)));
+        }
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 		String line;
 		try {
@@ -174,14 +157,16 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 				paletteDescriptions.add(new PaletteDescription(line));
 			}
 		} catch (IOException e) {
-			throw new RuntimeException("Could not read palette description file "
-					+ (COMPILED ? getResourceAddress(fileKey) : getSourceFileAddress(fileKey)) + ".");
+			throw new RuntimeException("Could not read palette description file " + getSourceFileAddress(fileKey) + ".");
 		}
 
 		return paletteDescriptions;
 	}
 
 	public void savePaletteDescriptionSource(String fileKey, List<PaletteDescription> paletteDescriptions) {
+        // TODO: not removing this, because I believe it is used by PaletteDescriptionTool?
+        //  It probably doesn't belong here either way, but would be silly to remove it
+        //  before having a better alternative.
 		String fileAdress = getSourceFileAddress(fileKey);
 
 		try (PrintWriter writer = new PrintWriter(new FileWriter(fileAdress))) {
@@ -203,11 +188,11 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	}
 
 	private String getResourceAddress(String fileKey) {
-		return "/com/uprfvx/pkromio/graphics/" + getFileName(fileKey);
+		return "/com/uprfvx/romio/graphics/" + getFileName(fileKey);
 	}
 
 	private String getSourceFileAddress(String fileKey) {
-		return "src/main/java/resources/com/uprfvx/pkromio/graphics/" + getFileName(fileKey);
+		return "src/main/java/resources/com/uprfvx/romio/graphics/" + getFileName(fileKey);
 	}
 
 	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {

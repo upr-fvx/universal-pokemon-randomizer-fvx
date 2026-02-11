@@ -61,7 +61,7 @@ public class PresetLoadDialog extends JDialog {
 
         this.parentGUI = parentGUI;
 
-        this.bundle = java.util.ResourceBundle.getBundle("com/uprfvx/pkrandom/gui/Bundle");
+        this.bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
         this.romFileChooser = romFileChooser;
         this.presetFileChooser = new JFileChooser();

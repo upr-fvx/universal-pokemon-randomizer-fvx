@@ -41,7 +41,7 @@ import java.util.zip.CRC32;
 public class CustomNamesSet {
 
     private static final int CUSTOM_NAMES_VERSION = 1;
-    private static final String DEFAULT_FILE_PATH = "/com/uprfvx/pkrandom/customnames/";
+    private static final String DEFAULT_FILE_PATH = "/com/uprfvx/random/customnames/";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
         InputStream is = openFile(SysConstants.customNamesFile);

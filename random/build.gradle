@@ -38,11 +38,11 @@ tasks.register('moveIntoReleaseDir', Copy) {
     dependsOn 'jar'
     dependsOn 'clearReleaseDir'
 
-    from('main/resources') {
+    from('src/main/resources') {
         exclude 'data/players_unused'
         exclude 'com'
     }
-    from 'main/launcher'
+    from 'src/main/launcher'
     from 'build/libs'
 
     into 'build/target'

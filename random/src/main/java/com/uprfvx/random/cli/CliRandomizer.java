@@ -23,7 +23,7 @@ public class CliRandomizer {
 
     // TODO: Why is this class fully static? It gives bad vibes since it's also in Java. Is it really fine like this?
 
-    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/pkrandom/gui/Bundle");
+    private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
     private final static RomOpener romOpener = new RomOpener();
 

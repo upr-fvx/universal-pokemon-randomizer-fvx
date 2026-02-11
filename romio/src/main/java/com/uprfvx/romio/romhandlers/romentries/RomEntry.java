@@ -20,7 +20,7 @@ import java.util.Scanner;
  */
 public abstract class RomEntry extends IniEntry {
 
-    private static final String ROMENTRIES_PATH = "com/uprfvx/romio/romentries";
+    private static final String ROMENTRIES_PATH = "/com/uprfvx/romio/romentries";
 
     protected abstract static class RomEntryReader<T extends RomEntry> extends IniEntryReader<T> {
 

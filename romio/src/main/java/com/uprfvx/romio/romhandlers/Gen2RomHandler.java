@@ -40,7 +40,6 @@ import com.uprfvx.romio.romhandlers.romentries.GBCTMTextEntry;
 import com.uprfvx.romio.romhandlers.romentries.Gen2RomEntry;
 import compressors.Gen2Cmp;
 import compressors.Gen2Decmp;
-import filefunctions.PatchFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -2280,7 +2279,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
         String patchName = romEntry.getTweakFile("BWXPTweak");
         try {
-            PatchFunctions.applyPatch(rom, patchName);
+            RomFunctions.applyPatch(rom, patchName);
         } catch (IOException e) {
             throw new RomIOException(e);
         }

@@ -13,8 +13,8 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="CPGSelection.replaceLabel.text"/>
-          <toolTipText resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="CPGSelection.replaceLabel.toolTipText"/>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="CPGSelection.replaceLabel.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="CPGSelection.replaceLabel.toolTipText"/>
         </properties>
       </component>
       <component id="3e5b5" class="javax.swing.JRadioButton" binding="replaceRadioButton1">
@@ -24,8 +24,8 @@
         </constraints>
         <properties>
           <enabled value="false"/>
-          <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GUI.cpgReplaceRadioButton1.text"/>
-          <toolTipText resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GUI.cpgReplaceRadioButton1.toolTipText"/>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgReplaceRadioButton1.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgReplaceRadioButton1.toolTipText"/>
         </properties>
       </component>
       <component id="d996a" class="javax.swing.JRadioButton" binding="replaceRadioButton2">
@@ -35,8 +35,8 @@
         </constraints>
         <properties>
           <enabled value="false"/>
-          <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GUI.cpgReplaceRadioButton2.text"/>
-          <toolTipText resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GUI.cpgReplaceRadioButton2.toolTipText"/>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgReplaceRadioButton2.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgReplaceRadioButton2.toolTipText"/>
         </properties>
       </component>
       <vspacer id="d8d3d">
@@ -52,7 +52,7 @@
         </constraints>
         <properties>
           <enabled value="false"/>
-          <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GUI.cpgRandomButton.text"/>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgRandomButton.text"/>
         </properties>
       </component>
       <component id="1bc24" class="javax.swing.JComboBox" binding="comboBox">
@@ -64,7 +64,7 @@
           <enabled value="false"/>
         </properties>
       </component>
-      <nested-form id="8b8c7" form-file="com/uprfvx/pkrandom/gui/GraphicsPackInfo.form" binding="infoForm">
+      <nested-form id="8b8c7" form-file="com/uprfvx/random/gui/GraphicsPackInfo.form" binding="infoForm">
         <constraints>
           <grid row="1" column="0" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="0" right="10" weightx="0.0" weighty="0.0"/>

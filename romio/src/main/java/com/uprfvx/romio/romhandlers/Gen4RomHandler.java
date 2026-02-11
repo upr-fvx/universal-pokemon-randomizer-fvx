@@ -22,7 +22,10 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.*;
+import com.uprfvx.romio.ARMThumbCode;
+import com.uprfvx.romio.GFXFunctions;
+import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen4EncounterAreaTagger;
 import com.uprfvx.romio.exceptions.RomIOException;
@@ -33,7 +36,6 @@ import com.uprfvx.romio.romhandlers.romentries.DSStaticPokemon;
 import com.uprfvx.romio.romhandlers.romentries.Gen4RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.InFileEntry;
 import filefunctions.IOFunctions;
-import filefunctions.PatchFunctions;
 import text.PokeTextData;
 import text.TextToPoke;
 
@@ -5718,7 +5720,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		String patchName = romEntry.getTweakFile(ctName);
 
 		try {
-			PatchFunctions.applyPatch(data, patchName);
+			RomFunctions.applyPatch(data, patchName);
 			return true;
 		} catch (IOException e) {
 			throw new RomIOException(e);

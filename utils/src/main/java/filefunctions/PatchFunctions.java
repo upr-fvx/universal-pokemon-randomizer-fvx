@@ -11,16 +11,18 @@ import static filefunctions.FileFunctions.readFullyIntoBuffer;
  */
 public class PatchFunctions {
 
-    private static byte[] getCodeTweakFile(String path) throws IOException {
-        InputStream is = Objects.requireNonNull(
-                FileFunctions.class.getResourceAsStream(path));
+    private static byte[] getPatchFile(String path) throws IOException {
+        InputStream is = FileFunctions.class.getResourceAsStream(path);
+        if (is == null) {
+            throw new IOException("Could not read patch resource at: " + path);
+        }
         byte[] buf = readFullyIntoBuffer(is, is.available());
         is.close();
         return buf;
     }
 
     public static void applyPatch(byte[] rom, String path) throws IOException {
-        byte[] patch = getCodeTweakFile(path);
+        byte[] patch = getPatchFile(path);
 
         // check sig
         int patchlen = patch.length;

@@ -32,7 +32,10 @@ import com.uprfvx.romio.romhandlers.romentries.GBUnusedChunkEntry;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -122,8 +125,6 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
         longestTableToken = 0;
     }
-
-    private static final String TEXT_TABLES_PATH = "com/uprfvx/romio/texttables";
 
     protected void readTextTable(String name) {
         String tablePath = TEXT_TABLES_PATH + "/" + name + ".tbl";

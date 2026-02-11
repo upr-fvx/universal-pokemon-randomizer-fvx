@@ -123,7 +123,7 @@ public class OperationDialog extends javax.swing.JDialog {
     private ImageIcon getLoadingIcon() {
         try {
             InputStream in = OperationDialog.class
-                    .getResourceAsStream("/com/uprfvx/pkrandom/gui/loading.gif");
+                    .getResourceAsStream("/com/uprfvx/random/gui/loading.gif");
             byte[] buf = FileFunctions.readFullyIntoBuffer(in, in.available());
             in.close();
             Image image = Toolkit.getDefaultToolkit().createImage(buf);

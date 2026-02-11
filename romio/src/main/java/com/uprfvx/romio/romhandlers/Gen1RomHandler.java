@@ -39,7 +39,6 @@ import com.uprfvx.romio.romhandlers.romentries.GBCTMTextEntry;
 import com.uprfvx.romio.romhandlers.romentries.Gen1RomEntry;
 import compressors.Gen1Cmp;
 import compressors.Gen1Decmp;
-import filefunctions.PatchFunctions;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -2339,7 +2338,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
 
         try {
-            PatchFunctions.applyPatch(rom, patchName);
+            RomFunctions.applyPatch(rom, patchName);
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);

@@ -25,12 +25,24 @@ package com.uprfvx.romio;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
+import filefunctions.PatchFunctions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class RomFunctions {
+
+    private static final String PATCHES_PATH = "/com/uprfvx/romio/patches";
+
+    /**
+     * Wraps {@link PatchFunctions#applyPatch(byte[], String)},
+     * so the {@link #PATCHES_PATH} and ".ips" doesn't have to be included each time.
+     */
+    public static void applyPatch(byte[] rom, String patchName) throws IOException {
+        PatchFunctions.applyPatch(rom, PATCHES_PATH + "/" + patchName + ".ips");
+    }
 
     public static String camelCase(String original) {
         char[] string = original.toLowerCase().toCharArray();

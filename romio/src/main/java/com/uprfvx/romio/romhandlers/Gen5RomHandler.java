@@ -36,7 +36,6 @@ import com.uprfvx.romio.romhandlers.romentries.Gen5RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.InFileEntry;
 import compressors.DSDecmp;
 import filefunctions.IOFunctions;
-import filefunctions.PatchFunctions;
 import text.PPTxtHandler;
 
 import javax.naming.OperationNotSupportedException;
@@ -2449,7 +2448,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
 
         try {
-            PatchFunctions.applyPatch(data, patchName);
+            RomFunctions.applyPatch(data, patchName);
             return true;
         } catch (IOException e) {
             throw new RomIOException(e);

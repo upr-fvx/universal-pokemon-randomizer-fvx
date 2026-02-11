@@ -116,7 +116,7 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
 
     private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/pkrandom/gui/Bundle");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
         setTitle(bundle.getString("GenerationLimitDialog.title"));
         gen1CheckBox.addActionListener(ev -> enableAndDisableBoxes());
         gen2CheckBox.addActionListener(ev -> enableAndDisableBoxes());

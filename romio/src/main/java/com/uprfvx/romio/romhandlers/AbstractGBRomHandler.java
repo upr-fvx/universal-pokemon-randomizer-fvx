@@ -29,6 +29,8 @@ import java.util.function.Function;
  */
 public abstract class AbstractGBRomHandler extends AbstractRomHandler {
 
+    protected static final String TEXT_TABLES_PATH = "/com/uprfvx/romio/texttables";
+
     protected byte[] rom;
     protected byte[] originalRom;
     private String loadedFileName;

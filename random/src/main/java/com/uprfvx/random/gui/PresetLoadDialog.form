@@ -36,7 +36,7 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.cancelButton.text"/>
+                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.cancelButton.text"/>
                 </properties>
               </component>
               <component id="e7465" class="javax.swing.JButton" binding="applyButton">
@@ -45,7 +45,7 @@
                 </constraints>
                 <properties>
                   <enabled value="false"/>
-                  <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.acceptButton.text"/>
+                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.acceptButton.text"/>
                 </properties>
               </component>
             </children>
@@ -65,7 +65,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.presetFileLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.presetFileLabel.text"/>
             </properties>
           </component>
           <component id="ebe63" class="javax.swing.JLabel">
@@ -74,7 +74,7 @@
             </constraints>
             <properties>
               <enabled value="true"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.orLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.orLabel.text"/>
             </properties>
           </component>
           <component id="d3400" class="javax.swing.JLabel">
@@ -82,7 +82,7 @@
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.configStringBoxLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.configStringBoxLabel.text"/>
             </properties>
           </component>
           <component id="c58f9" class="javax.swing.JLabel">
@@ -91,7 +91,7 @@
             </constraints>
             <properties>
               <requestFocusEnabled value="true"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.romFileBoxLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.romFileBoxLabel.text"/>
             </properties>
           </component>
           <component id="cafda" class="javax.swing.JLabel">
@@ -100,7 +100,7 @@
             </constraints>
             <properties>
               <requestFocusEnabled value="true"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.seedBoxLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.seedBoxLabel.text"/>
             </properties>
           </component>
           <component id="fa2a" class="javax.swing.JButton" binding="romButton">
@@ -109,7 +109,7 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.romFileButton.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.romFileButton.text"/>
             </properties>
           </component>
           <component id="8b3a4" class="javax.swing.JTextField" binding="presetFileField">
@@ -136,7 +136,7 @@
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.presetFileButton.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.presetFileButton.text"/>
             </properties>
           </component>
           <component id="604d4" class="javax.swing.JTextField" binding="romField">
@@ -163,7 +163,7 @@
               <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.romRequiredLabel.text"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.romRequiredLabel.text"/>
             </properties>
           </component>
           <component id="d5595" class="javax.swing.JButton" binding="cpgSelectLastButton">
@@ -174,8 +174,8 @@
               <enabled value="false"/>
               <horizontalTextPosition value="10"/>
               <selected value="false"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.cpgUseLastCheckBox.text"/>
-              <toolTipText resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.cpgUseLastCheckBox.toolTipText"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.cpgUseLastCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.cpgUseLastCheckBox.toolTipText"/>
             </properties>
           </component>
           <component id="f2190" class="javax.swing.JCheckBox" binding="cpgUseCheckButton">
@@ -185,14 +185,14 @@
             <properties>
               <enabled value="false"/>
               <inheritsPopupMenu value="true"/>
-              <label resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.cpgChooseButton"/>
-              <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="PresetLoadDialog.cpgChooseButton"/>
+              <label resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.cpgChooseButton"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="PresetLoadDialog.cpgChooseButton"/>
               <verifyInputWhenFocusTarget value="false"/>
             </properties>
           </component>
         </children>
       </grid>
-      <nested-form id="16982" form-file="com/uprfvx/pkrandom/gui/CPGSelection.form" binding="cpgSelection">
+      <nested-form id="16982" form-file="com/uprfvx/random/gui/CPGSelection.form" binding="cpgSelection">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>

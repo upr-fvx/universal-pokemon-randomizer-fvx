@@ -23,7 +23,10 @@ package com.uprfvx.romio.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.EvolutionType;
+import com.uprfvx.romio.gamedata.MoveCategory;
+import com.uprfvx.romio.gamedata.Trainer;
+import com.uprfvx.romio.gamedata.Type;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -23,6 +23,7 @@ package com.uprfvx.romio.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.services.RestrictedSpeciesService;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

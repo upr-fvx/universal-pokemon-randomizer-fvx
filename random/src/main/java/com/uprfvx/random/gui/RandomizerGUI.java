@@ -419,7 +419,7 @@ public class RandomizerGUI {
     private JMenuItem keepOrUnloadGameAfterRandomizingMenuItem;
     private JMenuItem batchRandomizationMenuItem;
 
-    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/uprfvx/pkrandom/gui/emptyIcon.png"));
+    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/uprfvx/random/gui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
 
@@ -438,7 +438,7 @@ public class RandomizerGUI {
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
-        bundle = ResourceBundle.getBundle("com/uprfvx/pkrandom/gui/Bundle");
+        bundle = ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };

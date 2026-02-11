@@ -111,7 +111,7 @@
         </constraints>
         <properties>
           <font style="1"/>
-          <text resource-bundle="com/uprfvx/pkrandom/gui/Bundle" key="GenerationLimitDialog.warningXYLabel.text"/>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GenerationLimitDialog.warningXYLabel.text"/>
         </properties>
       </component>
       <hspacer id="1601f">

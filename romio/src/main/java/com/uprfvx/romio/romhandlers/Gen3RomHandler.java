@@ -38,10 +38,12 @@ import com.uprfvx.romio.romhandlers.romentries.RomEntry;
 import compressors.DSCmp;
 import compressors.DSDecmp;
 import filefunctions.IOFunctions;
-import filefunctions.PatchFunctions;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -85,7 +87,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private static final String TEXT_TABLES_PATH = "com/uprfvx/romio/texttables";
 
     private void loadTextTable(String filename) {
         String tablePath = TEXT_TABLES_PATH + "/" + filename + ".tbl";
@@ -2122,7 +2123,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (species == 0xFFFF) {
                 // Patch hasn't been applied, so apply it first
                 try {
-                    PatchFunctions.applyPatch(rom, romEntry.getTweakFile("StaticFirstBattleTweak"));
+                    RomFunctions.applyPatch(rom, romEntry.getTweakFile("StaticFirstBattleTweak"));
                     species = readWord(startingSpeciesOffset);
                 } catch (IOException e) {
                     throw new RomIOException(e);
@@ -2142,7 +2143,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (species == 0xFFFF) {
                 // Patch hasn't been applied, so apply it first
                 try {
-                    PatchFunctions.applyPatch(rom, romEntry.getTweakFile("GhostMarowakTweak"));
+                    RomFunctions.applyPatch(rom, romEntry.getTweakFile("GhostMarowakTweak"));
                     species = readWord(ghostMarowakOffsets[0]);
                 } catch (IOException e) {
                     throw new RomIOException(e);
@@ -2248,7 +2249,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (firstSpecies == 0xFFFF) {
                 // This means that the IPS patch hasn't been applied yet, since the first species
                 // ID location is free space.
-                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("RoamingPokemonTweak"));
+                RomFunctions.applyPatch(rom, romEntry.getTweakFile("RoamingPokemonTweak"));
             }
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
@@ -3295,7 +3296,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         if (romEntry.hasTweakFile("NewIndexToMusicTweak")) {
             try {
-                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("NewIndexToMusicTweak"));
+                RomFunctions.applyPatch(rom, romEntry.getTweakFile("NewIndexToMusicTweak"));
             } catch (IOException e) {
                 throw new RomIOException(e);
             }
@@ -3899,7 +3900,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private void applyFastestTextPatch() {
         if(romEntry.hasTweakFile("InstantTextTweak")) {
             try {
-                PatchFunctions.applyPatch(rom, romEntry.getTweakFile("InstantTextTweak"));
+                RomFunctions.applyPatch(rom, romEntry.getTweakFile("InstantTextTweak"));
             } catch (IOException e) {
                 throw new RomIOException(e);
             }

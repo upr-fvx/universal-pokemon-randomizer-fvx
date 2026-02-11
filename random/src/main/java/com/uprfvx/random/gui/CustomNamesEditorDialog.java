@@ -208,7 +208,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         closeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/pkrandom/gui/Bundle");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
         setTitle(bundle.getString("CustomNamesEditorDialog.title"));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addWindowListener(new java.awt.event.WindowAdapter() {

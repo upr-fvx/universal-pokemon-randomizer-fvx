@@ -1,13 +1,13 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.random.Settings;
-import com.uprfvx.random.randomizers.ItemRandomizer;
+import com.uprfvx.romio.constants.ItemIDs;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Shop;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,20 +56,25 @@ public class RomHandlerShopTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void shopItemsCanBeRandomizedAndGetAndSet(String romName) {
+    public void shopItemsCanBeChangedWithGetAndSet(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasShopSupport());
-        new ItemRandomizer(romHandler, new Settings(), RND).randomizeShopItems();
 
-        List<Shop> before = new ArrayList<>();
-        for (Shop original : romHandler.getShops()) {
-            before.add(new Shop(original));
+        // Master Ball is used since we don't expect it in the unmodified ROM.
+        Item masterBall = romHandler.getItems().get(ItemIDs.masterBall);
+
+        List<Shop> shops = romHandler.getShops();
+        for (Shop shop : shops) {
+            Collections.fill(shop.getItems(), masterBall);
         }
-        System.out.println("Before: " + toMultilineString(before));
-        romHandler.setShops(romHandler.getShops());
+        romHandler.setShops(shops);
 
-        System.out.println("After: " + toMultilineString(romHandler.getShops()));
-        assertEquals(before, romHandler.getShops());
+        for (Shop shop : romHandler.getShops()) {
+            System.out.println(shop);
+            for (Item item : shop.getItems()) {
+                assertEquals(masterBall, item);
+            }
+        }
     }
 
     @ParameterizedTest

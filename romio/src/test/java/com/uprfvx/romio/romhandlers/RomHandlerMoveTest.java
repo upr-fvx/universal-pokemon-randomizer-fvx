@@ -1,16 +1,12 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.random.Settings;
-import com.uprfvx.random.randomizers.TMTutorMoveRandomizer;
+import com.uprfvx.romio.constants.MoveIDs;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveLearnt;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -102,14 +98,21 @@ public class RomHandlerMoveTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void moveTutorsCanBeRandomizedAndGetAndSet(String romName) {
+    public void moveTutorMovesCanBeChangedWithGetAndSet(String romName) {
         loadROM(romName);
         assumeTrue(romHandler.hasMoveTutors());
-        new TMTutorMoveRandomizer(romHandler, new Settings(), RND).randomizeMoveTutorMoves();
-        List<Integer> moveTutorMoves = romHandler.getMoveTutorMoves();
-        List<Integer> before = new ArrayList<>(moveTutorMoves);
+
+        List<Integer> moveTutorMoves = new ArrayList<>(romHandler.getMoveTutorMoves());
+        // struggle is used because we don't expect it in the unmodified ROM.
+        Collections.fill(moveTutorMoves, MoveIDs.struggle);
         romHandler.setMoveTutorMoves(moveTutorMoves);
-        assertEquals(before, romHandler.getMoveTutorMoves());
+
+        List<Move> moves = romHandler.getMoves();
+        int i = 0;
+        for (int moveID : romHandler.getMoveTutorMoves()) {
+            System.out.println("Move tutor #" + i + ": " + moves.get(moveID));
+            assertEquals(MoveIDs.struggle, moveID);
+        }
     }
 
 }

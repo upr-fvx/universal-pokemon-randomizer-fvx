@@ -50,7 +50,9 @@ public class GBAImageTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void toBytesMirrorsGFXFunction() {
+        // TODO: consider removing this test, and the deprecated method it refers to
         GBAImage a = new GBAImage.Builder(bim1).build();
         assertArrayEquals(GFXFunctions.readTiledImageData(a), a.toBytes());
     }

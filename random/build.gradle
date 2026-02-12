@@ -1,6 +1,4 @@
-plugins {
-    id 'io.github.file5.guidesigner' version '1.0.2'
-}
+apply plugin: 'io.github.file5.guidesigner'
 
 dependencies {
     // Internal dependencies

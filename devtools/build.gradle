@@ -1,3 +1,7 @@
+apply plugin: 'io.github.file5.guidesigner'
+
 dependencies {
+    implementation(project(':random'))
     implementation(project(':romio'))
+    implementation(project(':utils'))
 }

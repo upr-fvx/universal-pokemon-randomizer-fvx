@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TrainerRandomizersTest extends RandomizerTest {
@@ -726,6 +727,37 @@ public class TrainerRandomizersTest extends RandomizerTest {
             }
 
             assertTrue(duplicateHighestLevel || !ace.isAddedTeamMember());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomTrainerHaveAvoidDuplicates(String romName) {
+        activateRomHandler(romName);
+        assumeTrue(romHandler.canAddPokemonToBossTrainers());
+
+        addPossibleTrainerPokemon(); // Fill all trainer teams to increase chance of duplicates if there is a bug
+
+        Settings s = new Settings(); //TrainersMod == UNCHANGED
+        s.setTrainersMod(Settings.TrainersMod.RANDOM);
+        s.setTrainersAvoidDuplicates(true);
+        // Restrict pool to make duplicates more likely if there is a bug
+        s.setTrainersUsePokemonOfSimilarStrength(true);
+        s.setTrainersBlockLegendaries(true);
+        s.setTrainersDoNotGetPrematureEvos(true);
+        s.setTrainersEvolveTheirPokemon(true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+
+            SpeciesSet alreadyPlaced = new SpeciesSet();
+
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                Species sp = tp.getSpecies();
+                assumeFalse(alreadyPlaced.contains(sp)); // species must not have been placed already
+                alreadyPlaced.add(sp);
+            }
         }
     }
 

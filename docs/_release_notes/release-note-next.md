@@ -35,6 +35,14 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
+### Trainer Pokemon
+- (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,
+  any randomly chosen Pokemon for a given trainer will be different from the
+  other Pokemon of the trainer. However, if other rules restrict the set of
+  available Pokemon too much, duplicates are possible and weaker or stronger
+  Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
+  selected. (Issue #162)
+
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
 

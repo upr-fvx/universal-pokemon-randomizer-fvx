@@ -34,7 +34,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
-            if (t.shouldNotGetBuffs() && levelModifier > 0) continue;
+            if (t.isFirstRivalOrFriend() && levelModifier > 0) continue;
             applyLevelModifierToTrainerPokemon(t, levelModifier);
         }
         changesMade = true;

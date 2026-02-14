@@ -36,6 +36,12 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 3) [The description of a changed feature here.]
 
 ### Trainer Pokemon
+- (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,
+  any randomly chosen Pokemon for a given trainer will be different from the
+  other Pokemon of the trainer. However, if other rules restrict the set of
+  available Pokemon too much, duplicates are possible and weaker or stronger
+  Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
+  selected. (Issue #162)
 - (Gen 1-7) Trainers that should not receive buffs, e.g. the initial rival
   battle in Red/Blue, no longer have their Pokemon's level increased if a value
   greater than 0 is chosen for 'Percentage Level Modifier:'. (Pull request #164)

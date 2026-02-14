@@ -10,7 +10,6 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
 import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
@@ -22,6 +21,18 @@ import java.util.stream.Collectors;
  *
  */
 public class TestRomHandler extends AbstractRomHandler {
+
+    /**
+     * Used for methods which could be supported by the TestRomHandler, but aren't implemented (yet).
+     * Compare with plain {@link UnsupportedOperationException}, which is used in this class to mean
+     * "this fundamentally doesn't work with (this) TestRomHandler".
+     */
+    private static class NotImplementedException extends UnsupportedOperationException {
+        public NotImplementedException() {
+            super();
+        }
+    }
+
     //Species
     private final SpeciesSet originalSpeciesInclFormes;
     private SpeciesSet testSpeciesInclFormes = null;

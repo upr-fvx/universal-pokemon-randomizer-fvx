@@ -141,14 +141,14 @@ public class RandomizationLogger {
     }
 
     private void logHead() {
-        log.printf(getBS("Log.logo"), Version.VERSION_STRING);
+        log.printf(getBS("Log.logo"), Version.LATEST.name);
         log.printf(getBS("Log.title"));
         String gameName = romHandler.getROMName();
         if (romHandler.hasGameUpdateLoaded()) {
             gameName = gameName + " (" + romHandler.getGameUpdateVersion() + ")";
         }
         log.printf(getBS("Log.baseGame"), gameName);
-        log.printf(getBS("Log.version"), Version.LATEST_VERSION.branchName, Version.VERSION_STRING);
+        log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
         log.printf(getBS("Log.settings"), settings.toString());
         log.println();
@@ -264,8 +264,7 @@ public class RandomizationLogger {
                 moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated(), true);
         logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(),
-                TrainerMovesetRandomizer.hasSupport(romHandler.generationOfPokemon()));
+        logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.totpPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
@@ -537,8 +536,11 @@ public class RandomizationLogger {
         }
 
         sb.append(evoTypeStr);
-        if (evo.getType().usesLevel()) {
-            sb.append(String.format(getBS("Log.pe.usesLevel"), evo.getExtraInfo()));
+        if (evo.getType().usesLevelThreshold()) {
+            sb.append(String.format(getBS("Log.pe.usesLevelThreshold"), evo.getExtraInfo()));
+        } else {
+            // For usesLevelThreshold, extraInfo == estimatedEvoLvl, hence only print this info when it is supplementary
+            sb.append(String.format(getBS("Log.pe.useEstimatedEvoLvl"), evo.getEstimatedEvoLvl()));
         }
 
         return sb.toString();
@@ -984,14 +986,21 @@ public class RandomizationLogger {
         printSectionTitle("tp");
         List<Trainer> trainers = romHandler.getTrainers();
         String[] battleStyleNames = getBS("Log.tp.battleStyleNames").split(",");
+
+        boolean prevHadCustomMoves = false;
         for (Trainer t : trainers) {
-            log.print("#" + t.index + " ");
-            String originalTrainerName = originalTrainerNames.get(t.index);
+            boolean hasCustomMoves = shouldLogCustomMoves(t);
+            if (hasCustomMoves && !prevHadCustomMoves) {
+                log.println();
+            }
+            prevHadCustomMoves = hasCustomMoves;
+            log.print("#" + t.getIndex() + " ");
+            String originalTrainerName = originalTrainerNames.get(t.getIndex());
             String currentTrainerName = "";
-            if (t.fullDisplayName != null) {
-                currentTrainerName = t.fullDisplayName;
-            } else if (t.name != null) {
-                currentTrainerName = t.name;
+            if (t.getFullDisplayName() != null) {
+                currentTrainerName = t.getFullDisplayName();
+            } else if (t.getName() != null) {
+                currentTrainerName = t.getName();
             }
             if (!currentTrainerName.isEmpty()) {
                 if (trainerNameRandomizer.isChangesMade()) {
@@ -1000,17 +1009,19 @@ public class RandomizationLogger {
                     log.printf("(%s)", currentTrainerName);
                 }
             }
-            if (t.offset != 0) {
-                log.printf("@%X", t.offset);
+            if (t.getOffset() != 0) {
+                log.printf("@%X", t.getOffset());
             }
 
-            if (trainerMovesetRandomizer.isChangesMade()) {
+            if (hasCustomMoves) {
                 log.println();
-                for (TrainerPokemon tpk : t.pokemon) {
+                for (TrainerPokemon tpk : t.getPokemon()) {
                     List<Move> moves = romHandler.getMoves();
                     log.print(tpk.toString());
-                    log.print(", " + getBS("Log.tp.ability") + ": "
-                            + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    if (romHandler.abilitiesPerSpecies() != 0) {
+                        log.print(", " + getBS("Log.tp.ability") + ": "
+                                + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
+                    }
                     log.print(" - ");
                     boolean first = true;
                     for (int move : tpk.getMoves()) {
@@ -1027,7 +1038,7 @@ public class RandomizationLogger {
             } else {
                 log.print(" - ");
                 boolean first = true;
-                for (TrainerPokemon tpk : t.pokemon) {
+                for (TrainerPokemon tpk : t.getPokemon()) {
                     if (!first) {
                         log.print(", ");
                     }
@@ -1036,11 +1047,23 @@ public class RandomizationLogger {
                 }
             }
             if (settings.getBattleStyle().isBattleStyleChanged()) {
-                log.printf(" (Battle Style: %s)", battleStyleNames[t.currBattleStyle.getStyle().ordinal()]);
+                log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
             }
             log.println();
         }
         printSectionSeparator();
+    }
+
+    private boolean shouldLogCustomMoves(Trainer t) {
+        if (!t.pokemonHaveCustomMoves()) {
+            return false;
+        }
+        for (TrainerPokemon tp : t.getPokemon()) {
+            if (!tp.isResetMoves()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean shouldLogStaticPokemon() {
@@ -1317,10 +1340,10 @@ public class RandomizationLogger {
         List<String> trainerNames = new ArrayList<>();
         trainerNames.add(""); // for index 0
         for (Trainer t : trainers) {
-            if (t.fullDisplayName != null) {
-                trainerNames.add(t.fullDisplayName);
-            } else if (t.name != null) {
-                trainerNames.add(t.name);
+            if (t.getFullDisplayName() != null) {
+                trainerNames.add(t.getFullDisplayName());
+            } else if (t.getName() != null) {
+                trainerNames.add(t.getName());
             } else {
                 trainerNames.add("");
             }

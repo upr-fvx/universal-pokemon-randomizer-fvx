@@ -29,10 +29,12 @@ package com.dabomstew.pkrandom.settings;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkromio.FileFunctions;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -45,9 +47,11 @@ import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
 public class SettingsManager {
 
-    public static final int VERSION = Version.VERSION;
+    public static final int VERSION = Version.LATEST.id;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 65;
+    public static final int LENGTH_OF_SETTINGS_DATA = 67;
+
+    public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
     public <T> T getSetting(String settingName) {
         //TODO
         return null;
@@ -61,10 +65,12 @@ public class SettingsManager {
     private int currentMiscTweaks;
 
     private boolean changeImpossibleEvolutions;
+    private boolean estimateLevelForEvolutionImprovements;
     private boolean makeEvolutionsEasier;
+    private int makeEvolutionsEasierLvl = MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL;
     private boolean removeTimeBasedEvolutions;
     private boolean raceMode;
-    private boolean blockBrokenMoves;
+    private boolean randomizeIntroMon;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
     private boolean dualTypeOnly;
@@ -180,6 +186,8 @@ public class SettingsManager {
     private TrainersMod trainersMod = TrainersMod.UNCHANGED;
     private boolean rivalCarriesStarterThroughout;
     private boolean trainersUsePokemonOfSimilarStrength;
+    private boolean trainersAvoidDuplicates;
+    private boolean trainersDoNotGetPrematureEvos;
     private boolean trainersMatchTypingDistribution;
     private boolean trainersBlockLegendaries = true;
     private boolean trainersUseLocalPokemon;
@@ -188,10 +196,8 @@ public class SettingsManager {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
-    private boolean trainersForceMiddleStage;
-    private int trainersForceMiddleStageLevel = 10;
-    private boolean trainersForceFullyEvolved;
-    private int trainersForceFullyEvolvedLevel = 30;
+    private boolean trainersEvolveTheirPokemon;
+    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -50 ~ 50
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
@@ -211,7 +217,9 @@ public class SettingsManager {
     private boolean diverseTypesForRegularTrainers;
     private BattleStyle settingBattleStyle = new BattleStyle();
     private boolean shinyChance;
-    private boolean betterTrainerMovesets;
+    private boolean betterBossTrainerMovesets;
+    private boolean betterImportantTrainerMovesets;
+    private boolean betterRegularTrainerMovesets;
     private boolean randomizeWildPokemon;
     public enum WildPokemonZoneMod {
         NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
@@ -368,17 +376,8 @@ public class SettingsManager {
     private boolean pokemonPalettesFollowEvolutions;
     private boolean pokemonPalettesShinyFromNormal;
 
-    public enum CustomPlayerGraphicsMod {
-        UNCHANGED, RANDOM
-    }
-
-    private CustomPlayerGraphicsMod customPlayerGraphicsMod; // TODO: save/load from the settings file
-    private GraphicsPack customPlayerGraphics;
-    private PlayerCharacterType customPlayerGraphicsCharacterMod;
-
-    // to and from strings etc
-    public void write(FileOutputStream out) throws IOException {
-        byte[] settings = toString().getBytes(StandardCharsets.UTF_8);
+    public void writeToFileFormat(FileOutputStream out) throws IOException {
+        byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
         buf.putInt(VERSION);
         buf.putInt(settings.length);
@@ -386,7 +385,7 @@ public class SettingsManager {
         out.write(buf.array());
     }
 
-    public static SettingsManager read(FileInputStream in) throws IOException, UnsupportedOperationException {
+    public static SettingsManager readFromFileFormat(FileInputStream in) throws IOException, UnsupportedOperationException {
         byte[] versionBytes = new byte[4];
         byte[] lengthBytes = new byte[4];
         int nread = in.read(versionBytes);
@@ -407,37 +406,54 @@ public class SettingsManager {
         int length = ByteBuffer.wrap(lengthBytes).getInt();
         byte[] buffer = FileFunctions.readFullyIntoBuffer(in, length);
         String settings = new String(buffer, StandardCharsets.UTF_8);
-        boolean oldUpdate = false;
 
+        return fromStringAndVersion(settings, version);
+    }
+
+    /**
+     * Creates a Settings object from a settings string WITH its first 3 chars being the version ID,
+     * of the version the string was created in. Updates the Settings object if needed.
+     */
+    public static Settings fromString(String withVersion) {
+        int version = Integer.parseInt(withVersion.substring(0, 3));
+        String withoutVersion = withVersion.substring(3);
+        return fromStringAndVersion(withoutVersion, version);
+    }
+
+    private static Settings fromStringAndVersion(String s, int version) {
+        boolean updated = false;
         if (version < VERSION) {
-            oldUpdate = true;
-            settings = new SettingsUpdater().update(version, settings);
+            updated = true;
+            s = new SettingsUpdater().update(version, s);
         }
-
-        SettingsManager settingsObj = fromString(settings);
-        settingsObj.setUpdatedFromOldVersion(oldUpdate);
-        return settingsObj;
+        Settings settings = fromStringWithoutVersion(s);
+        settings.setUpdatedFromOldVersion(updated);
+        return settings;
     }
 
     @Override
     public String toString() {
+        return VERSION + toStringWithoutVersion();
+    }
+
+    private String toStringWithoutVersion() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // 0: general options #1 + trainer/class names
         out.write(makeByteSelected(changeImpossibleEvolutions, updateMoves, updateMovesLegacy, randomizeTrainerNames,
-                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions));
+                randomizeTrainerClassNames, makeEvolutionsEasier, removeTimeBasedEvolutions, estimateLevelForEvolutionImprovements));
 
-        // 1: pokemon base stats & abilities
+        // 1: pokemon base stats
         out.write(makeByteSelected(baseStatsFollowEvolutions, baseStatisticsMod == BaseStatisticsMod.RANDOM,
                 baseStatisticsMod == BaseStatisticsMod.SHUFFLE, baseStatisticsMod == BaseStatisticsMod.UNCHANGED,
                 standardizeEXPCurves, updateBaseStats, baseStatsFollowMegaEvolutions, assignEvoStatsRandomly));
 
-        // 2: pokemon types & more general options
+        // 2: pokemon types
         out.write(makeByteSelected(speciesTypesMod == SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS,
-                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED, raceMode, blockBrokenMoves,
-                limitPokemon, typesFollowMegaEvolutions, dualTypeOnly));
+                speciesTypesMod == SpeciesTypesMod.COMPLETELY_RANDOM, speciesTypesMod == SpeciesTypesMod.UNCHANGED,
+                false, false, false, typesFollowMegaEvolutions, dualTypeOnly));
 
-        // 3: v171: changed to the abilities byte
+        // 3: abilities
         out.write(makeByteSelected(abilitiesMod == AbilitiesMod.UNCHANGED, abilitiesMod == AbilitiesMod.RANDOMIZE,
                 allowWonderGuard, abilitiesFollowEvolutions, banTrappingAbilities, banNegativeAbilities, banBadAbilities,
                 abilitiesFollowMegaEvolutions));
@@ -472,8 +488,8 @@ public class SettingsManager {
                 trainersMod == TrainersMod.KEEP_THEMED,
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
-        // 14 trainer pokemon force evolutions
-        out.write((trainersForceFullyEvolved ? 0x80 : 0) | trainersForceFullyEvolvedLevel);
+        // 14 trainer pokemon evolution level modifier
+        out.write(trainersEvolutionLevelModifier + 50);
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -566,7 +582,7 @@ public class SettingsManager {
                 trainersBlockEarlyWonderGuard,
                 swapTrainerMegaEvos,
                 shinyChance,
-                betterTrainerMovesets));
+                trainersAvoidDuplicates));
 
         // 30 - 33: pokemon restrictions
         try {
@@ -702,10 +718,10 @@ public class SettingsManager {
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);
 
-        // 61 trainer type diversity
+        // 61 trainer type diversity + better movesets
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
-                diverseTypesForRegularTrainers,
-                false, false, false, false, false));
+                diverseTypesForRegularTrainers, betterBossTrainerMovesets, betterImportantTrainerMovesets,
+                betterRegularTrainerMovesets, false, false));
 
         // 62 setting battle style: modification (3bits) + style (4bits)
         out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
@@ -716,12 +732,19 @@ public class SettingsManager {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon force evolutions
-        out.write((trainersForceMiddleStage ? 0x80 : 0) | trainersForceMiddleStageLevel);
+        // 63 trainer pokemon evolve
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, trainersDoNotGetPrematureEvos));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
                 false, false, false, false, false, false));
+
+        // 65 general options #2
+        out.write(makeByteSelected(randomizeIntroMon, raceMode, false, limitPokemon,
+                false, false, false, false));
+
+        // 66 'Make evolutions easier' level select slider
+        out.write(makeEvolutionsEasierLvl);
 
         try {
             byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
@@ -745,7 +768,7 @@ public class SettingsManager {
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
-    public static SettingsManager fromString(String settingsString) throws UnsupportedEncodingException, IllegalArgumentException {
+    private static SettingsManager fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
         byte[] data = Base64.getDecoder().decode(settingsString);
         checkChecksum(data);
 
@@ -759,6 +782,7 @@ public class SettingsManager {
         settings.setRandomizeTrainerClassNames(restoreState(data[0], 4));
         settings.setMakeEvolutionsEasier(restoreState(data[0], 5));
         settings.setRemoveTimeBasedEvolutions(restoreState(data[0], 6));
+        settings.setEstimateLevelForEvolutionImprovements(restoreState(data[0], 7));
 
         settings.setBaseStatisticsMod(restoreEnum(BaseStatisticsMod.class, data[1], 3, // UNCHANGED
                 2, // SHUFFLE
@@ -774,11 +798,9 @@ public class SettingsManager {
                 0, // RANDOM_FOLLOW_EVOLUTIONS
                 1 // COMPLETELY_RANDOM
         ));
-        settings.setRaceMode(restoreState(data[2], 3));
-        settings.setBlockBrokenMoves(restoreState(data[2], 4));
-        settings.setLimitPokemon(restoreState(data[2], 5));
         settings.setTypesFollowMegaEvolutions(restoreState(data[2],6));
         settings.setDualTypeOnly(restoreState(data[2], 7));
+
         settings.setAbilitiesMod(restoreEnum(AbilitiesMod.class, data[3], 0, // UNCHANGED
                 1 // RANDOMIZE
         ));
@@ -824,9 +846,8 @@ public class SettingsManager {
                 6, // KEEP_THEMED
                 7  // KEEP_THEME_OR_PRIMARY
         ));
-
-        settings.setTrainersForceFullyEvolved(restoreState(data[14], 7));
-        settings.setTrainersForceFullyEvolvedLevel(data[14] & 0x7F);
+        
+        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
@@ -947,7 +968,7 @@ public class SettingsManager {
         settings.setTrainersBlockEarlyWonderGuard(restoreState(data[29], 4));
         settings.setSwapTrainerMegaEvos(restoreState(data[29], 5));
         settings.setShinyChance(restoreState(data[29], 6));
-        settings.setBetterTrainerMovesets(restoreState(data[29], 7));
+        settings.setTrainersAvoidDuplicates(restoreState(data[29], 7));
 
         // gen restrictions
         int genLimit = FileFunctions.readFullInt(data, 30);
@@ -960,7 +981,6 @@ public class SettingsManager {
 
         settings.setTrainersLevelModified(restoreState(data[38], 7));
         settings.setTrainersLevelModifier((data[38] & 0x7F) - 50);
-        //settings.setTrainersLevelModifier((data[38] & 0x7F));
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,
@@ -1067,15 +1087,24 @@ public class SettingsManager {
         settings.setDiverseTypesForBossTrainers(restoreState(data[61], 0));
         settings.setDiverseTypesForImportantTrainers(restoreState(data[61], 1));
         settings.setDiverseTypesForRegularTrainers(restoreState(data[61], 2));
+        settings.setBetterBossTrainerMovesets(restoreState(data[61], 3));
+        settings.setBetterImportantTrainerMovesets(restoreState(data[61], 4));
+        settings.setBetterRegularTrainerMovesets(restoreState(data[61], 5));
 
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
-        settings.setTrainersForceMiddleStage(restoreState(data[63], 7));
-        settings.setTrainersForceMiddleStageLevel(data[63] & 0x7F);
+        settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
+        settings.setTrainersDoNotGetPrematureEvos(restoreState(data[63], 1));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
+
+        settings.setRandomizeIntroMon(restoreState(data[65], 0));
+        settings.setRaceMode(restoreState(data[65], 1));
+
+        settings.setLimitPokemon(restoreState(data[65], 3));
+        settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
@@ -1111,6 +1140,10 @@ public class SettingsManager {
 
         TweakForROMFeedback feedback = new TweakForROMFeedback();
 
+        if (!rh.canSetIntroPokemon()) {
+            this.setRandomizeIntroMon(false);
+        }
+
         // move update check
         if (this.isUpdateMovesLegacy() && rh instanceof Gen5RomHandler) {
             // don't actually update moves
@@ -1136,6 +1169,35 @@ public class SettingsManager {
                     this.customStarters[starter] = romSpecies.indexOf(romStarters.get(starter));
                 }
             }
+        }
+
+        // trainers
+        if (!rh.canGiveCustomMovesetsToBossTrainers()) {
+            this.setBetterBossTrainerMovesets(false);
+        }
+        if (!rh.canGiveCustomMovesetsToImportantTrainers()) {
+            this.setBetterImportantTrainerMovesets(false);
+        }
+        if (!rh.canGiveCustomMovesetsToRegularTrainers()) {
+            this.setBetterRegularTrainerMovesets(false);
+        }
+        if (!rh.canAddPokemonToBossTrainers()) {
+            this.setAdditionalBossTrainerPokemon(0);
+        }
+        if (!rh.canAddPokemonToImportantTrainers()) {
+            this.setAdditionalImportantTrainerPokemon(0);
+        }
+        if (!rh.canAddPokemonToRegularTrainers()) {
+            this.setAdditionalRegularTrainerPokemon(0);
+        }
+        if (!rh.canAddHeldItemsToBossTrainers()) {
+            this.setRandomizeHeldItemsForBossTrainerPokemon(false);
+        }
+        if (!rh.canAddHeldItemsToImportantTrainers()) {
+            this.setRandomizeHeldItemsForImportantTrainerPokemon(false);
+        }
+        if (!rh.canAddHeldItemsToRegularTrainers()) {
+            this.setRandomizeHeldItemsForRegularTrainerPokemon(false);
         }
 
         // gen restrictions
@@ -1295,6 +1357,10 @@ public class SettingsManager {
         return changeImpossibleEvolutions;
     }
 
+    public boolean useEstimatedLevelsForEvolutionImprovements() {
+        return estimateLevelForEvolutionImprovements;
+    }
+
     public boolean isDualTypeOnly(){
         return dualTypeOnly;
     }
@@ -1307,12 +1373,24 @@ public class SettingsManager {
         this.changeImpossibleEvolutions = changeImpossibleEvolutions;
     }
 
+    public void setEstimateLevelForEvolutionImprovements(boolean estimateLevelForEvolutionImprovements) {
+        this.estimateLevelForEvolutionImprovements = estimateLevelForEvolutionImprovements;
+    }
+
     public boolean isMakeEvolutionsEasier() {
         return makeEvolutionsEasier;
     }
 
     public void setMakeEvolutionsEasier(boolean makeEvolutionsEasier) {
         this.makeEvolutionsEasier = makeEvolutionsEasier;
+    }
+
+    public int getMakeEvolutionsEasierLvl() {
+        return makeEvolutionsEasierLvl;
+    }
+
+    public void setMakeEvolutionsEasierLvl(int makeEvolutionsEasierLvl) {
+        this.makeEvolutionsEasierLvl = makeEvolutionsEasierLvl;
     }
 
     public boolean isRemoveTimeBasedEvolutions() {
@@ -1339,14 +1417,12 @@ public class SettingsManager {
         this.banIrregularAltFormes = banIrregularAltFormes;
     }
 
-    public boolean doBlockBrokenMoves() {
-        return blockBrokenMoves;
+    public boolean isRandomizeIntroMon() {
+        return randomizeIntroMon;
     }
 
-    public void setBlockBrokenMoves(boolean blockBrokenMoves) {
-        blockBrokenMovesetMoves = blockBrokenMoves;
-        blockBrokenTMMoves = blockBrokenMoves;
-        blockBrokenTutorMoves = blockBrokenMoves;
+    public void setRandomizeIntroMon(boolean randomizeIntroMon) {
+        this.randomizeIntroMon = randomizeIntroMon;
     }
 
     public boolean isLimitPokemon() {
@@ -1840,6 +1916,22 @@ public class SettingsManager {
         this.trainersUsePokemonOfSimilarStrength = trainersUsePokemonOfSimilarStrength;
     }
 
+    public boolean isTrainersAvoidDuplicates() {
+        return trainersAvoidDuplicates;
+    }
+
+    public void setTrainersAvoidDuplicates(boolean trainersAvoidDuplicates) {
+        this.trainersAvoidDuplicates = trainersAvoidDuplicates;
+    }
+
+    public boolean isTrainersDoNotGetPrematureEvos() {
+        return trainersDoNotGetPrematureEvos;
+    }
+
+    public void setTrainersDoNotGetPrematureEvos(boolean trainersDoNotGetPrematureEvos) {
+        this.trainersDoNotGetPrematureEvos = trainersDoNotGetPrematureEvos;
+    }
+
     public boolean isTrainersMatchTypingDistribution() {
         return trainersMatchTypingDistribution;
     }
@@ -1907,36 +1999,20 @@ public class SettingsManager {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
-    public boolean isTrainersForceMiddleStage() {
-        return trainersForceMiddleStage;
+    public boolean isTrainersEvolveTheirPokemon() {
+        return trainersEvolveTheirPokemon;
     }
 
-    public void setTrainersForceMiddleStage(boolean trainersForceMiddleStage) {
-        this.trainersForceMiddleStage = trainersForceMiddleStage;
+    public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
+        this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
     }
 
-    public int getTrainersForceMiddleStageLevel() {
-        return trainersForceMiddleStageLevel;
+    public int getTrainersEvolutionLevelModifier() {
+        return trainersEvolutionLevelModifier;
     }
 
-    public void setTrainersForceMiddleStageLevel(int trainersForceMiddleStageLevel) {
-        this.trainersForceMiddleStageLevel = trainersForceMiddleStageLevel;
-    }
-
-    public boolean isTrainersForceFullyEvolved() {
-        return trainersForceFullyEvolved;
-    }
-
-    public void setTrainersForceFullyEvolved(boolean trainersForceFullyEvolved) {
-        this.trainersForceFullyEvolved = trainersForceFullyEvolved;
-    }
-
-    public int getTrainersForceFullyEvolvedLevel() {
-        return trainersForceFullyEvolvedLevel;
-    }
-
-    public void setTrainersForceFullyEvolvedLevel(int trainersForceFullyEvolvedLevel) {
-        this.trainersForceFullyEvolvedLevel = trainersForceFullyEvolvedLevel;
+    public void setTrainersEvolutionLevelModifier(int trainersEvolutionLevelModifier) {
+        this.trainersEvolutionLevelModifier = trainersEvolutionLevelModifier;
     }
 
     public boolean isTrainersLevelModified() {
@@ -2100,12 +2176,28 @@ public class SettingsManager {
         this.shinyChance = shinyChance;
     }
 
-    public boolean isBetterTrainerMovesets() {
-        return betterTrainerMovesets;
+    public boolean isBetterBossTrainerMovesets() {
+        return betterBossTrainerMovesets;
     }
 
-    public void setBetterTrainerMovesets(boolean betterTrainerMovesets) {
-        this.betterTrainerMovesets = betterTrainerMovesets;
+    public void setBetterBossTrainerMovesets(boolean betterBossTrainerMovesets) {
+        this.betterBossTrainerMovesets = betterBossTrainerMovesets;
+    }
+
+    public boolean isBetterImportantTrainerMovesets() {
+        return betterImportantTrainerMovesets;
+    }
+
+    public void setBetterImportantTrainerMovesets(boolean betterImportantTrainerMovesets) {
+        this.betterImportantTrainerMovesets = betterImportantTrainerMovesets;
+    }
+
+    public boolean isBetterRegularTrainerMovesets() {
+        return betterRegularTrainerMovesets;
+    }
+
+    public void setBetterRegularTrainerMovesets(boolean betterRegularTrainerMovesets) {
+        this.betterRegularTrainerMovesets = betterRegularTrainerMovesets;
     }
 
     public boolean isRandomizeWildPokemon() {
@@ -2777,38 +2869,6 @@ public class SettingsManager {
 	public void setPokemonPalettesShinyFromNormal(boolean pokemonPalettesShinyFromNormal) {
 		this.pokemonPalettesShinyFromNormal = pokemonPalettesShinyFromNormal;
 	}
-
-    public CustomPlayerGraphicsMod getCustomPlayerGraphicsMod() {
-        return customPlayerGraphicsMod;
-    }
-
-    public void setCustomPlayerGraphicsMod(boolean... bools) {
-        setCustomPlayerGraphicsMod(getEnum(CustomPlayerGraphicsMod.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsMod(CustomPlayerGraphicsMod customPlayerGraphicsMod) {
-        this.customPlayerGraphicsMod = customPlayerGraphicsMod;
-    }
-
-    public GraphicsPack getCustomPlayerGraphics() {
-        return customPlayerGraphics;
-    }
-
-    public void setCustomPlayerGraphics(GraphicsPack customPlayerGraphics) {
-        this.customPlayerGraphics = customPlayerGraphics;
-    }
-
-    public PlayerCharacterType getCustomPlayerGraphicsCharacterMod() {
-        return customPlayerGraphicsCharacterMod;
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(boolean... bools) {
-        setCustomPlayerGraphicsCharacterMod(getEnum(PlayerCharacterType.class, bools));
-    }
-
-    public void setCustomPlayerGraphicsCharacterMod(PlayerCharacterType playerCharacterMod) {
-        this.customPlayerGraphicsCharacterMod = playerCharacterMod;
-    }
 
 	private static int makeByteSelected(boolean... bools) {
         if (bools.length > 8) {

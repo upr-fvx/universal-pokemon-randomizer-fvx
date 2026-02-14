@@ -54,6 +54,8 @@ plugins:
 collections:
     wikipages:
         output: true
+    release_notes:
+        output: true
         
 defaults:
   - scope:
@@ -61,6 +63,11 @@ defaults:
       type: "wikipages"
     values:
       layout: "wikipage"
+  - scope:
+      path: ""
+      type: "release_notes"
+    values:
+      layout: "release_note"
   - scope:
       path: ""
     values:

@@ -1,16 +1,14 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
 import com.dabomstew.pkrandom.settings.SettingsManager;
+import com.dabomstew.pkrandom.randomizers.TrainerMovesetRandomizer;
 import com.dabomstew.pkrandom.randomizers.TrainerPokemonRandomizer;
+import com.dabomstew.pkromio.constants.MoveIDs;
 import com.dabomstew.pkromio.gamedata.*;
-import com.dabomstew.pkromio.romhandlers.AbstractGBRomHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,106 +50,158 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void trainersDoNotChangeWithGetAndSet(String romName) {
+    public void trainersDoNotChangeWithLoadAndSave(String romName) {
         // TODO: this comparison needs to be deeper
         loadROM(romName);
         List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        romHandler.setTrainers(trainers);
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
         assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void trainersDoNotChangeWithLoadAndSave(String romName) {
-        // TODO: this comparison needs to be deeper
-        assumeTrue(isGBGame(romName));
+    public void trainersSaveAndLoadCorrectlyAfterSettingDoubleBattleMode(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) > 2);
         loadROM(romName);
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        Settings settings = new Settings();
+        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
+        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void trainersSaveAndLoadCorrectlyAfterSettingDoubleBattleMode(String romName) {
-        assumeTrue(getGenerationNumberOf(romName) == 3);
+    public void canGiveCustomMovesets_ToBossTrainers_AndSaveAndLoad(String romName) {
         loadROM(romName);
-        SettingsManager settings = new SettingsManager();
-        settings.setBattleStyle(new BattleStyle(BattleStyle.Modification.SINGLE_STYLE, BattleStyle.Style.DOUBLE_BATTLE));
-        new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers());
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (Trainer tr : trainers) {
+            if (!tr.isBoss()) continue;
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                tp.setMoves(new int[] {1, 2, 3, 4}); // four real moves
+            }
+        }
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void canGiveCustomMovesets_ToBossAndImportantTrainers_AndSaveAndLoad(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers());
+        assumeTrue(romHandler.canGiveCustomMovesetsToImportantTrainers());
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (Trainer tr : trainers) {
+            if (tr.isRegular()) continue;
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                tp.setMoves(new int[] {1, 2, 3, 4}); // four real moves
+            }
+        }
+        List<Trainer> before = new ArrayList<>(trainers);
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void canGiveCustomMovesets_ToAllTrainers_AndSaveAndLoad(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers());
+        assumeTrue(romHandler.canGiveCustomMovesetsToImportantTrainers());
+        assumeTrue(romHandler.canGiveCustomMovesetsToRegularTrainers());
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (Trainer tr : trainers) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                tp.setMoves(new int[] {1, 2, 3, 4}); // four real moves
+            }
+        }
+        List<Trainer> before = new ArrayList<>(trainers);
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void GiveCustomMovesets_ToAllTrainers_AndSaveAndLoad_GivesThemCustomMovesets(String romName) {
+        loadROM(romName);
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers());
+        assumeTrue(romHandler.canGiveCustomMovesetsToImportantTrainers());
+        assumeTrue(romHandler.canGiveCustomMovesetsToRegularTrainers());
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (Trainer tr : trainers) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                tp.setMoves(new int[] {1, 2, 3, 4}); // four real moves
+            }
+        }
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+            tr.getPokemon().forEach(tp -> System.out.println(Arrays.toString(tp.getMoves())));
+            assertTrue(tr.pokemonHaveCustomMoves());
+        }
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddPokemonToBossTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
         SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddPokemonToImportantTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToImportantTrainers());
         SettingsManager s = new SettingsManager();
         s.setAdditionalImportantTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddPokemonToBossAndImportantTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers());
         SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(6);
         s.setAdditionalImportantTrainerPokemon(6);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddPokemonToAllTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
@@ -160,35 +210,30 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setAdditionalImportantTrainerPokemon(5);
         s.setAdditionalRegularTrainerPokemon(5);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void addPokemonToBossAndImportantTrainersAndSaveAndLoadGivesThemFullParties(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers());
         SettingsManager s = new SettingsManager();
         s.setAdditionalBossTrainerPokemon(5);
         s.setAdditionalImportantTrainerPokemon(5);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        for (Trainer tr : gbRomHandler.getTrainers()) {
-            if (tr.multiBattleStatus == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()
+        List<Trainer> trainers = romHandler.getTrainers();
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()
                     && (tr.isBoss() || tr.isImportant())) {
                 System.out.println(tr);
-                assertEquals(6, tr.pokemon.size());
+                assertEquals(6, tr.getPokemon().size());
             }
         }
     }
@@ -196,7 +241,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void addPokemonToAllTrainersAndSaveAndLoadGivesThemFullParties(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
@@ -205,15 +249,12 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setAdditionalImportantTrainerPokemon(5);
         s.setAdditionalRegularTrainerPokemon(5);
         new TrainerPokemonRandomizer(romHandler, s, RND).addTrainerPokemon();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        for (Trainer tr : gbRomHandler.getTrainers()) {
-            if (tr.multiBattleStatus == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()) {
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()) {
                 System.out.println(tr);
-                assertEquals(6, tr.pokemon.size());
+                assertEquals(6, tr.getPokemon().size());
             }
         }
     }
@@ -221,43 +262,36 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddHeldItemsToBossTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddHeldItemsToImportantTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
         SettingsManager s = new SettingsManager();
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddHeldItemsToBossAndImportantTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
@@ -265,19 +299,16 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setRandomizeHeldItemsForImportantTrainerPokemon(true);
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void canAddHeldItemsToAllTrainersAndSaveAndLoad(String romName) {
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
@@ -287,20 +318,16 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         s.setRandomizeHeldItemsForRegularTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
+        List<Trainer> trainers = romHandler.getTrainers();
         List<Trainer> before = new ArrayList<>(trainers);
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        assertEquals(before, gbRomHandler.getTrainers());
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        assertEquals(before, romHandler.getTrainers());
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void addHeldItemsToAllTrainersAndSaveAndLoadGivesThemHeldItems(String romName) {
-        // Fails in Emerald because it can't give held items to Mossdeep Steven
-        assumeTrue(isGBGame(romName));
         loadROM(romName);
         assumeTrue(romHandler.canAddHeldItemsToBossTrainers());
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
@@ -310,18 +337,14 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         s.setRandomizeHeldItemsForBossTrainerPokemon(true);
         s.setRandomizeHeldItemsForRegularTrainerPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerHeldItems();
-        AbstractGBRomHandler gbRomHandler = (AbstractGBRomHandler) romHandler;
-        List<Trainer> trainers = gbRomHandler.getTrainers();
-        gbRomHandler.setTrainers(trainers);
-        gbRomHandler.saveTrainers();
-        gbRomHandler.loadTrainers();
-        for (Trainer tr : gbRomHandler.getTrainers()) {
-            // TODO: add clause to ignore mossdeep steven
-            System.out.println(tr.fullDisplayName);
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr.getFullDisplayName());
             if (tr.shouldNotGetBuffs()) {
                 System.out.println("skip");
             } else {
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     System.out.println(tp);
                     assertNotEquals(null, tp.getHeldItem());
                 }
@@ -331,18 +354,43 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void addingAsMuchAsPossibleToTrainers_AndSaveAndLoad_DoesNotCrash(String romName) {
+        loadROM(romName);
+
+        Settings s = new Settings();
+        s.setAdditionalBossTrainerPokemon(romHandler.canAddPokemonToBossTrainers() ? 5 : 0);
+        s.setAdditionalImportantTrainerPokemon(romHandler.canAddPokemonToImportantTrainers() ? 5 : 0);
+        s.setAdditionalRegularTrainerPokemon(romHandler.canAddPokemonToRegularTrainers() ? 5 : 0);
+        s.setRandomizeHeldItemsForBossTrainerPokemon(romHandler.canAddHeldItemsToBossTrainers());
+        s.setRandomizeHeldItemsForImportantTrainerPokemon(romHandler.canAddHeldItemsToImportantTrainers());
+        s.setRandomizeHeldItemsForRegularTrainerPokemon(romHandler.canAddHeldItemsToRegularTrainers());
+        s.setBetterBossTrainerMovesets(romHandler.canGiveCustomMovesetsToBossTrainers());
+        s.setBetterImportantTrainerMovesets(romHandler.canGiveCustomMovesetsToImportantTrainers());
+        s.setBetterRegularTrainerMovesets(romHandler.canGiveCustomMovesetsToRegularTrainers());
+
+        TrainerPokemonRandomizer tpr = new TrainerPokemonRandomizer(romHandler, s, RND);
+        tpr.addTrainerPokemon();
+        tpr.randomizeTrainerHeldItems();
+        new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void trainersTaggedRival1OrFriend1OnlyHaveCorrectStarters(String romName) {
         loadROM(romName);
 
         List<Species> starters = romHandler.getStarters();
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL1-") || tr.tag.contains("FRIEND1-"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL1-") || tr.getTag().contains("FRIEND1-"))) {
                 System.out.println(tr);
 
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 Species expected = starters.get((variant + offset) % 3);
-                Species actual = tr.pokemon.get(0).getSpecies();
+                Species actual = tr.getPokemon().get(0).getSpecies();
 
                 assertEquals(expected, actual);
             }
@@ -359,9 +407,9 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 .collect(Collectors.toList());
 
         for (Trainer tr : romHandler.getTrainers()) {
-            if (tr.tag != null && (tr.tag.contains("RIVAL") || tr.tag.contains("FRIEND"))) {
+            if (tr.getTag() != null && (tr.getTag().contains("RIVAL") || tr.getTag().contains("FRIEND"))) {
                 System.out.println(tr);
-                int variant = Integer.parseInt(tr.tag.split("-")[1]);
+                int variant = Integer.parseInt(tr.getTag().split("-")[1]);
                 if (romHandler.isYellow()) {
                     // Yellow uses the variant syntax, to instead refer to alternate battles,
                     // with different evos of the original starter.
@@ -369,11 +417,11 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                     variant = 0;
                 }
 
-                int offset = tr.tag.contains("RIVAL") ? 1 : 2;
+                int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 SpeciesSet expectedFamily = starterFamilies.get((variant + offset) % 3);
 
                 boolean carriesStarter = false;
-                for (TrainerPokemon tp : tr.pokemon) {
+                for (TrainerPokemon tp : tr.getPokemon()) {
                     if (expectedFamily.contains(tp.getSpecies())) {
                         carriesStarter = true;
                         break;

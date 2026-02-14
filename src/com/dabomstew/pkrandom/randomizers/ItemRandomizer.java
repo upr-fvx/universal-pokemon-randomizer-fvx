@@ -2,9 +2,6 @@ package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.exceptions.RandomizationException;
-import com.dabomstew.pkromio.constants.Gen1ItemIDs;
-import com.dabomstew.pkromio.constants.Gen2ItemIDs;
-import com.dabomstew.pkromio.constants.Gen3ItemIDs;
 import com.dabomstew.pkromio.constants.ItemIDs;
 import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.PickupItem;
@@ -293,43 +290,23 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void addCheapRareCandiesToShops() {
-        int rareCandyID = getRareCandyID();
-        addRareCandiesToShops(rareCandyID);
-        makeRareCandiesCheap(rareCandyID);
+        addRareCandiesToShops();
+        makeRareCandiesCheap();
         shopChangesMade = true;
     }
 
-    private int getRareCandyID() {
-        // Alas, the Randomizer is stuck on Java 8...
-        int rareCandyID;
-        switch (romHandler.generationOfPokemon()) {
-            case 1:
-                rareCandyID = Gen1ItemIDs.rareCandy;
-                break;
-            case 2:
-                rareCandyID = Gen2ItemIDs.rareCandy;
-                break;
-            case 3:
-                rareCandyID = Gen3ItemIDs.rareCandy;
-                break;
-            default:
-                rareCandyID = ItemIDs.rareCandy;
-        }
-        return rareCandyID;
-    }
-
-    private void addRareCandiesToShops(int rareCandyID) {
+    private void addRareCandiesToShops() {
         List<Item> allItems = romHandler.getItems();
         List<Shop> shops = romHandler.getShops();
         for (Shop sh : shops) {
-            sh.getItems().add(allItems.get(rareCandyID));
+            sh.getItems().add(allItems.get(ItemIDs.rareCandy));
         }
         romHandler.setShops(shops);
     }
 
-    private void makeRareCandiesCheap(int rareCandyID) {
+    private void makeRareCandiesCheap() {
         List<Integer> prices = romHandler.getShopPrices();
-        prices.set(rareCandyID, 10);
+        prices.set(ItemIDs.rareCandy, 10);
         romHandler.setShopPrices(prices);
     }
 

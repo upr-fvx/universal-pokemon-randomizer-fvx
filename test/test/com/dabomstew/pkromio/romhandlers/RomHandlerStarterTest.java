@@ -1,12 +1,14 @@
 package test.com.dabomstew.pkromio.romhandlers;
 
-import com.dabomstew.pkrandom.settings.SettingsManager;
-import com.dabomstew.pkrandom.randomizers.StarterRandomizer;
+import com.dabomstew.pkromio.constants.ItemIDs;
+import com.dabomstew.pkromio.constants.SpeciesIDs;
+import com.dabomstew.pkromio.gamedata.Item;
 import com.dabomstew.pkromio.gamedata.Species;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,50 +36,45 @@ public class RomHandlerStarterTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void startersCanBeRandomizedAndGetAndSet(String romName) {
+    public void startersCanBeChangedWithSet(String romName) {
         loadROM(romName);
-        SettingsManager s = new SettingsManager();
-        s.setStartersMod(false, false, true);
-        System.out.println(s.getStartersMod());
-        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
-        List<Species> starters = romHandler.getStarters();
-        List<Species> before = new ArrayList<>(starters);
-        romHandler.setStarters(starters);
-        assertEquals(before, romHandler.getStarters());
+        // mewtwo because we don't expect it as a starter in the unmodified ROM
+        Species mewtwo = romHandler.getSpecies().get(SpeciesIDs.mewtwo);
+
+        List<Species> before = new ArrayList<>(romHandler.getStarters());
+        Collections.fill(before, mewtwo);
+        System.out.println(before);
+        romHandler.setStarters(before);
+
+        List<Species> after = new ArrayList<>(romHandler.getStarters());
+        System.out.println(after);
+        assertEquals(before, after);
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void customStartersCanBeSet(String romName) {
+    public void starterHeldItemsDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
-        SettingsManager s = new SettingsManager();
-        s.setStartersMod(false, true, false);
-        int customCount = romHandler.starterCount();
-        int[] custom = new int[customCount];
-        for (int i = 0; i < custom.length; i++) {
-            custom[i] = i + 1;
-        }
-        s.setCustomStarters(custom);
+        List<Item> before = new ArrayList<>(romHandler.getStarterHeldItems());
+        System.out.println(before);
+        romHandler.setStarterHeldItems(before);
+        assertEquals(before, romHandler.getStarterHeldItems());
+    }
 
-        new StarterRandomizer(romHandler, s, RND).randomizeStarters();
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void starterHeldItemsCanBeChangedWithSet(String romName) {
+        loadROM(romName);
+        // master ball because we don't expect it as a held item in the unmodified ROM
+        Item masterBall = romHandler.getItems().get(ItemIDs.masterBall);
 
-        List<Species> starters = romHandler.getStarters();
-        List<Species> allPokes = romHandler.getSpecies();
+        List<Item> before = new ArrayList<>(romHandler.getStarterHeldItems());
+        Collections.fill(before, masterBall);
+        System.out.println(before);
+        romHandler.setStarterHeldItems(before);
 
-        StringBuilder sb = new StringBuilder("Starters");
-        sb.append(" (should be ");
-        for (int i = 0; i < customCount; i++) {
-            sb.append(allPokes.get(custom[i]).getName());
-            if (i != customCount - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("): ");
-        sb.append(starters);
-        System.out.println(sb);
-
-        for (int i = 0; i < customCount; i++) {
-            assertEquals(starters.get(i), allPokes.get(custom[i]));
-        }
+        List<Item> after = new ArrayList<>(romHandler.getStarterHeldItems());
+        System.out.println(after);
+        assertEquals(before, after);
     }
 }

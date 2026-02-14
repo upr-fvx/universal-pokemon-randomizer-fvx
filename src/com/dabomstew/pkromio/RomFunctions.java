@@ -24,65 +24,13 @@ package com.dabomstew.pkromio;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkromio.gamedata.MoveLearnt;
+import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class RomFunctions {
-
-    /**
-     * Get the 4 moves known by a Species at a particular level.
-     * 
-     * @param pkmn Species index to get moves for.
-     * @param movesets Map of Species indices mapped to movesets.
-     * @param level Level to get at.
-     * @return Array with move indices.
-     */
-    public static int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
-        return getMovesAtLevel(pkmn, movesets, level, 0);
-    }
-
-    public static int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level, int emptyValue) {
-        int[] curMoves = new int[4];
-
-        if (emptyValue != 0) {
-            Arrays.fill(curMoves, emptyValue);
-        }
-
-        int moveCount = 0;
-        List<MoveLearnt> movepool = movesets.get(pkmn);
-        for (MoveLearnt ml : movepool) {
-            if (ml.level > level) {
-                // we're done
-                break;
-            }
-
-            boolean alreadyKnownMove = false;
-            for (int i = 0; i < moveCount; i++) {
-                if (curMoves[i] == ml.move) {
-                    alreadyKnownMove = true;
-                    break;
-                }
-            }
-
-            if (!alreadyKnownMove) {
-                // add this move to the moveset
-                if (moveCount == 4) {
-                    // shift moves up and add to last slot
-                    System.arraycopy(curMoves, 1, curMoves, 0, 3);
-                    curMoves[3] = ml.move;
-                } else {
-                    // add to next available slot
-                    curMoves[moveCount++] = ml.move;
-                }
-            }
-        }
-
-        return curMoves;
-    }
 
     public static String camelCase(String original) {
         char[] string = original.toLowerCase().toCharArray();
@@ -479,6 +427,32 @@ public class RomFunctions {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * A tool for finding and printing for offsets, to put in a {@link RomEntry}.
+     * @param entryName The name of the entry, to be printed out.
+     * @param haystack Where to search.
+     * @param hexNeedle The bytes to search for, as a hex string.
+     * @param relOffset The relative offset of the target offset, compared to the start of the needle.
+     *                  This is useful, because in many cases the target offset is not part of an appropriate needle,
+     *                  because it is a pointer or close to pointers (pointers change between each ROM).<br>
+     *                  <b>E.g.</b> if you have code that looks like <code>XX YY 12 34 56</code>, where
+     *                  <code>XX YY</code> is hard to identify, then you can use <code>hexNeedle = "12 34 56"</code>,
+     *                  and <code>relOffset = -2</code>.
+     */
+    public static void identifyRomEntryOffsetsByHex(String entryName, byte[] haystack, String hexNeedle, int relOffset) {
+        byte[] needle = hexToBytes(hexNeedle);
+        List<Integer> pos = search(haystack, needle);
+        if (pos.isEmpty()) {
+            System.out.println(entryName + ": Could not find any offsets");
+        }
+        if (pos.size() >= 2) {
+            System.out.println(entryName + ": Found multiple possible offsets");
+        }
+        for (int o : pos) {
+            System.out.println(entryName + "=0x" + Integer.toHexString(o + relOffset).toUpperCase());
+        }
     }
 
 }

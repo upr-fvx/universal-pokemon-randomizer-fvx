@@ -41,7 +41,7 @@ public class CheckValueCalculator {
 
     private void addTrainerInfo() {
         for (Trainer t : romHandler.getTrainers()) {
-            for (TrainerPokemon tpk : t.pokemon) {
+            for (TrainerPokemon tpk : t.getPokemon()) {
                 addToCV(tpk.getLevel(), tpk.getSpecies().getNumber());
             }
         }

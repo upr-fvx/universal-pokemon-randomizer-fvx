@@ -115,7 +115,7 @@ public class ItemRandomizer extends Randomizer {
 
         boolean banBadItems = settings.isBanBadRandomFieldItems();
         boolean uniqueItems = !settings.isBalanceShopPrices();
-        boolean evenItems = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
+        boolean evenItems = settings.getFieldItemsMod() == SettingsManager.FieldItemsMod.RANDOM_EVEN;
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);

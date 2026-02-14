@@ -1,16 +1,17 @@
 package com.dabomstew.pkrandom;
 
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkromio.gamedata.*;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
 public class CheckValueCalculator {
 
     private final RomHandler romHandler;
-    private final Settings settings;
+    private final SettingsManager settings;
 
     private int checkValue;
 
-    public CheckValueCalculator(RomHandler romHandler, Settings settings) {
+    public CheckValueCalculator(RomHandler romHandler, SettingsManager settings) {
         this.romHandler = romHandler;
         this.settings = settings;
     }

@@ -301,7 +301,7 @@ public class GameRandomizer {
         maybeRandomizeTrainerNames();
 
         // Apply metronome only mode now that trainers have been dealt with
-        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+        if (settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY) {
             speciesMovesetRandomizer.metronomeOnlyMode();
         }
 
@@ -410,7 +410,7 @@ public class GameRandomizer {
 
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
-            boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
+            boolean changeMoveEvos = settings.getMovesetsMod() != SettingsManager.MovesetsMod.UNCHANGED;
             romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 

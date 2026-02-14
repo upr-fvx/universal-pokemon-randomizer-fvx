@@ -1,6 +1,7 @@
 package com.dabomstew.pkrandom.randomizers;
 
 import com.dabomstew.pkrandom.Settings;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkromio.gamedata.Species;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
@@ -14,7 +15,7 @@ import java.util.Random;
  */
 public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
 
-    public Gen1SpeciesBaseStatRandomizer(RomHandler romHandler, Settings settings, Random random) {
+    public Gen1SpeciesBaseStatRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 

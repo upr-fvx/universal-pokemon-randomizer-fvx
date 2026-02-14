@@ -152,7 +152,7 @@ public class CliRandomizer {
         String sourceRomFilePath = null;
         String outputRomFilePath = null;
 
-        Settings settings;
+        SettingsManager settings;
         long seed = -1;
         String settingsFilePath = null;
         String settingsString = null;
@@ -240,7 +240,7 @@ public class CliRandomizer {
             try {
                 File fh = new File(settingsFilePath);
                 FileInputStream fis = new FileInputStream(fh);
-                settings = Settings.readFromFileFormat(fis);
+                settings = SettingsManager.readFromFileFormat(fis);
                 settings.setCustomNames(CustomNamesSet.readNamesFromFile());
                 fis.close();
             } catch (Exception e) {
@@ -249,7 +249,7 @@ public class CliRandomizer {
             }
         } else {
             try {
-                settings = Settings.fromString(settingsString);
+                settings = SettingsManager.fromString(settingsString);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace(System.out);
                 return usageError("Invalid settings string.");

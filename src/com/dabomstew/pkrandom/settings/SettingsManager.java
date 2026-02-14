@@ -41,9 +41,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.zip.CRC32;
 
-import com.dabomstew.pkrandom.CustomNamesSet;
-import com.dabomstew.pkrandom.FileFunctions;
-import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
 public class SettingsManager {
 
@@ -414,19 +411,19 @@ public class SettingsManager {
      * Creates a Settings object from a settings string WITH its first 3 chars being the version ID,
      * of the version the string was created in. Updates the Settings object if needed.
      */
-    public static Settings fromString(String withVersion) {
+    public static SettingsManager fromString(String withVersion) {
         int version = Integer.parseInt(withVersion.substring(0, 3));
         String withoutVersion = withVersion.substring(3);
         return fromStringAndVersion(withoutVersion, version);
     }
 
-    private static Settings fromStringAndVersion(String s, int version) {
+    private static SettingsManager fromStringAndVersion(String s, int version) {
         boolean updated = false;
         if (version < VERSION) {
             updated = true;
             s = new SettingsUpdater().update(version, s);
         }
-        Settings settings = fromStringWithoutVersion(s);
+        SettingsManager settings = fromStringWithoutVersion(s);
         settings.setUpdatedFromOldVersion(updated);
         return settings;
     }

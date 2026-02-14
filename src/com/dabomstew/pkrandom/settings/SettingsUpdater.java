@@ -26,9 +26,6 @@ import com.dabomstew.pkrandom.FileFunctions;
 import com.dabomstew.pkrandom.MiscTweak;
 import com.dabomstew.pkrandom.Version;
 
-import com.dabomstew.pkromio.FileFunctions;
-import com.dabomstew.pkromio.MiscTweak;
-
 import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.zip.CRC32;

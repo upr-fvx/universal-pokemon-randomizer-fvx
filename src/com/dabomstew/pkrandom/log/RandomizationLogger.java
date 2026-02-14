@@ -5,6 +5,7 @@ import com.dabomstew.pkrandom.SysConstants;
 import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.random.RandomSource;
 import com.dabomstew.pkrandom.randomizers.*;
+import com.dabomstew.pkrandom.settings.SettingsManager;
 import com.dabomstew.pkrandom.updaters.*;
 import com.dabomstew.pkromio.MiscTweak;
 import com.dabomstew.pkromio.gamedata.*;
@@ -22,7 +23,7 @@ public class RandomizationLogger {
     private static final int TYPE_NAME_LEN = 8;
 
     private final RandomSource randomSource;
-    private final Settings settings;
+    private final SettingsManager settings;
     private final RomHandler romHandler;
     private final ResourceBundle bundle;
 
@@ -61,7 +62,7 @@ public class RandomizationLogger {
 
     private PrintStream log;
 
-    public RandomizationLogger(RandomSource randomSource, Settings settings, RomHandler romHandler, ResourceBundle bundle,
+    public RandomizationLogger(RandomSource randomSource, SettingsManager settings, RomHandler romHandler, ResourceBundle bundle,
                                SpeciesBaseStatUpdater speciesBSUpdater, MoveUpdater moveUpdater,
                                TypeEffectivenessUpdater typeEffUpdater, IntroPokemonRandomizer introPokeRandomizer,
                                SpeciesBaseStatRandomizer speciesBSRandomizer, SpeciesTypeRandomizer speciesTypeRandomizer,
@@ -747,12 +748,12 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMovesets() {
-        return speciesMovesetRandomizer.isChangesMade() || settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY;
+        return speciesMovesetRandomizer.isChangesMade() || settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logMovesets() {
         printSectionTitle("pms");
-        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+        if (settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every Pokémon learns only Metronome.");
             printSectionSeparator();
             return;
@@ -821,13 +822,13 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogTMMoves() {
-        return tmtMoveRandomizer.isTMChangesMade() || settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY;
+        return tmtMoveRandomizer.isTMChangesMade() || settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logTMMoves() {
         printSectionTitle("tm");
 
-        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+        if (settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY) {
             log.printf(getBS("Log.tm.metronomeMode"));
         } else {
             List<Integer> tmMoves = romHandler.getTMMoves();
@@ -848,9 +849,9 @@ public class RandomizationLogger {
         if (settings.isFullHMCompat()) {
             log.printf(getBS("Log.tmc.fullHM"));
         }
-        if (settings.getTmsHmsCompatibilityMod() == Settings.TMsHMsCompatibilityMod.FULL) {
+        if (settings.getTmsHmsCompatibilityMod() == SettingsManager.TMsHMsCompatibilityMod.FULL) {
             log.printf(getBS("Log.tmc.full"));
-        } else if (settings.getTmsHmsCompatibilityMod() != Settings.TMsHMsCompatibilityMod.UNCHANGED) {
+        } else if (settings.getTmsHmsCompatibilityMod() != SettingsManager.TMsHMsCompatibilityMod.UNCHANGED) {
             Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
             List<Move> tmHMs = getTMHMs();
 
@@ -938,13 +939,13 @@ public class RandomizationLogger {
 
     private boolean shouldLogMoveTutorMoves() {
         return romHandler.hasMoveTutors() && (tmtMoveRandomizer.isTutorChangesMade() ||
-                settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY);
+                settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY);
     }
 
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
         printSectionTitle("mt");
 
-        if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+        if (settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY) {
             log.printf(getBS("Log.mt.metronomeMode"));
         } else {
             List<Integer> newMtMoves = romHandler.getMoveTutorMoves();
@@ -963,7 +964,7 @@ public class RandomizationLogger {
 
     private void logMoveTutorCompatibility() {
         printSectionTitle("mtc");
-        if (settings.getMoveTutorsCompatibilityMod() == Settings.MoveTutorsCompatibilityMod.FULL) {
+        if (settings.getMoveTutorsCompatibilityMod() == SettingsManager.MoveTutorsCompatibilityMod.FULL) {
             log.printf(getBS("Log.mtc.full"));
         } else {
             Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
@@ -1201,7 +1202,7 @@ public class RandomizationLogger {
         if (settings.isAddCheapRareCandiesToShops()) {
             log.printf(getBS("Log.sh.addedRareCandies"));
         }
-        if (settings.getShopItemsMod() != Settings.ShopItemsMod.UNCHANGED) {
+        if (settings.getShopItemsMod() != SettingsManager.ShopItemsMod.UNCHANGED) {
             log.printf(getBS("Log.sh.specialShops"));
             List<Shop> shops = romHandler.getShops();
             for (Shop shop : shops) {

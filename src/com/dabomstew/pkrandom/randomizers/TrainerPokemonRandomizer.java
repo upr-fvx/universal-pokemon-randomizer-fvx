@@ -70,16 +70,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
 
-        boolean skipOriginalTeamMembers = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
+        boolean skipOriginalTeamMembers = settings.getTrainersMod() == SettingsManager.TrainersMod.UNCHANGED;
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
         // added that are supposed to be randomized according to the following settings
         if (skipOriginalTeamMembers) {
             keepTypeThemes = true;
             banIrregularAltFormes = true;
         }
-
-        boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
-                || keepThemeOrPrimaryTypes;
 
         // Set up Pokemon pool
         cachedByType = new TreeMap<>();

@@ -146,7 +146,6 @@ public class RandomizerGUI {
     private JCheckBox tpRivalCarriesStarterCheckBox;
     private JCheckBox tpSimilarStrengthCheckBox;
     private JCheckBox tpAvoidDuplicatesCheckBox;
-    private JCheckBox tpNoPrematureEvosCheckbox;
     private JCheckBox tpWeightTypesCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
@@ -315,6 +314,7 @@ public class RandomizerGUI {
     private JCheckBox miscForceChallengeModeCheckBox;
     private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
     private JCheckBox noIrregularAltFormesCheckBox;
+    private JCheckBox tpNoPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
     private JComboBox tpComboBox;
@@ -546,7 +546,6 @@ public class RandomizerGUI {
         pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
@@ -682,6 +681,7 @@ public class RandomizerGUI {
         tmLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
         mtLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
         noIrregularAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
         ptIsDualTypeCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spTypeNoDualCheckbox.addActionListener(e->enableOrDisableSubControls());
         teUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -1643,6 +1643,7 @@ public class RandomizerGUI {
             currentRestrictions.limitToGen(romHandler.generationOfPokemon());
         }
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
+        tpNoPrematureEvosCheckbox.setSelected(settings.isTrainersDoNotGetPrematureEvos());
         raceModeCheckBox.setSelected(settings.isRaceMode());
         noRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
 
@@ -1767,7 +1768,6 @@ public class RandomizerGUI {
 
         tpSimilarStrengthCheckBox.setSelected(settings.isTrainersUsePokemonOfSimilarStrength());
         tpAvoidDuplicatesCheckBox.setSelected(settings.isTrainersAvoidDuplicates());
-        tpNoPrematureEvosCheckbox.setSelected(settings.isTrainersDoNotGetPrematureEvos());
         tpComboBox.setSelectedItem(trainerSettings.get(settings.getTrainersMod().ordinal()));
         tpRivalCarriesStarterCheckBox.setSelected(settings.isRivalCarriesStarterThroughout());
         tpWeightTypesCheckBox.setSelected(settings.isTrainersMatchTypingDistribution());
@@ -1967,6 +1967,7 @@ public class RandomizerGUI {
         settings.setLimitPokemon(limitPokemonCheckBox.isSelected() && limitPokemonCheckBox.isVisible());
         settings.setCurrentRestrictions(currentRestrictions);
         settings.setBanIrregularAltFormes(noIrregularAltFormesCheckBox.isSelected() && noIrregularAltFormesCheckBox.isVisible());
+        settings.setTrainersDoNotGetPrematureEvos(tpNoPrematureEvosCheckbox.isSelected());
         settings.setRandomizeIntroMon(!noRandomIntroMonCheckBox.isSelected() && noRandomIntroMonCheckBox.isVisible());
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
@@ -2061,7 +2062,6 @@ public class RandomizerGUI {
                 isTrainerSetting(TRAINER_KEEP_THEMED), isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY));
         settings.setTrainersUsePokemonOfSimilarStrength(tpSimilarStrengthCheckBox.isSelected());
         settings.setTrainersAvoidDuplicates(tpAvoidDuplicatesCheckBox.isSelected());
-        settings.setTrainersDoNotGetPrematureEvos(tpNoPrematureEvosCheckbox.isSelected());
         settings.setRivalCarriesStarterThroughout(tpRivalCarriesStarterCheckBox.isSelected());
         settings.setTrainersMatchTypingDistribution(tpWeightTypesCheckBox.isSelected());
         settings.setTrainersBlockLegendaries(tpDontUseLegendariesCheckBox.isSelected());
@@ -2329,7 +2329,7 @@ public class RandomizerGUI {
         gameMascotLabel.setIcon(emptyIcon);
 
         setInitialButtonState(limitPokemonCheckBox, limitPokemonButton,
-                noIrregularAltFormesCheckBox, raceModeCheckBox, noRandomIntroMonCheckBox);
+                noIrregularAltFormesCheckBox, tpNoPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
 
         currentRestrictions = null;
 
@@ -2426,7 +2426,7 @@ public class RandomizerGUI {
 		tpComboBox.setVisible(true);
 		tpComboBox.setEnabled(false);
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
-        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox,
+        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox,
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
 				tpRandomizeTrainerClassNamesCheckBox,
@@ -3207,8 +3207,8 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierLvlSlider.setEnabled(false);
             peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
-            // Disable "Trainers Evolve their Pokemon"
-            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox);
+            // Disable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpNoPrematureEvosCheckbox);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3229,8 +3229,9 @@ public class RandomizerGUI {
                 disableAndDeselectButtons(peUseEstimatedInsteadOfHardcodedLevelsCheckBox);
             }
 
-            // Re-enable "Trainers Evolve their Pokemon"
+            // Re-enable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
+            tpNoPrematureEvosCheckbox.setEnabled(true);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {
@@ -3413,11 +3414,11 @@ public class RandomizerGUI {
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
                     tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                     tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
-            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
         } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
-            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpSwapMegaEvosCheckBox, tpRandomShinyTrainerPokemonCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
@@ -3426,7 +3427,7 @@ public class RandomizerGUI {
                     tpRegularTrainersTypeDiversityCheckBox,
                     tpEliteFourUniquePokemonCheckBox);
         } else {
-            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
+            enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
 

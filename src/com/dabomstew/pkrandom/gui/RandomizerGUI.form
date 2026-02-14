@@ -55,15 +55,15 @@
               <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.toolTipText"/>
             </properties>
           </component>
-          <component id="42e70" class="javax.swing.JCheckBox" binding="noIrregularAltFormesCheckBox" default-binding="true">
+          <component id="23cx3" class="javax.swing.JCheckBox" binding="tpNoPrematureEvosCheckbox">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.toolTipText"/>
             </properties>
           </component>
           <component id="cb8f5" class="javax.swing.JCheckBox" binding="noRandomIntroMonCheckBox">
@@ -1920,17 +1920,6 @@
                           <enabled value="false"/>
                           <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpAvoidDuplicatesCheckBox.text"/>
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpAvoidDuplicatesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="23cx3" class="javax.swing.JCheckBox" binding="tpNoPrematureEvosCheckbox">
-                        <constraints>
-                          <grid row="4" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.text"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="5ff08" class="javax.swing.JCheckBox" binding="tpWeightTypesCheckBox">
@@ -4832,7 +4821,7 @@
       </component>
       <component id="52c7e" class="javax.swing.JButton" binding="saveSettingsButton" default-binding="true">
         <constraints>
-          <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.1" weighty="0.0"/>
         </constraints>
         <properties>
@@ -4843,7 +4832,7 @@
       </component>
       <component id="b0dde" class="javax.swing.JButton" binding="loadSettingsButton" default-binding="true">
         <constraints>
-          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.1" weighty="0.0"/>
         </constraints>
         <properties>

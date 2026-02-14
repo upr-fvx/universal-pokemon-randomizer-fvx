@@ -37,8 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.zip.CRC32;
 
 import com.dabomstew.pkrandom.Version;
@@ -49,10 +48,20 @@ public class SettingsManager {
     public static final int LENGTH_OF_SETTINGS_DATA = 67;
 
     public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
+
     public <T> T getSetting(String settingName) {
         //TODO
         return null;
     }
+
+    public <T> void setSetting(String settingName, T state)
+    {
+        //TODO
+        return;
+    }
+
+    private HashMap<String, SettingState<?>> settingStates;
+    private HashMap<String, Set<String>> dependencies;
 
     private CustomNamesSet customNames;
 

@@ -5,6 +5,12 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import java.util.Map;
 import java.util.function.Predicate;
 
+/**
+ * A SettingDefinition for enums that supports restrictions for individual enum states.
+ * Should be used even for enums that do not require such restrictions, for compatibility with the GUI.
+ * TODO: wait, how is that going to work
+ * @param <T>
+ */
 public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<T> {
 
     Map<T, SettingRestriction> restrictions;
@@ -16,6 +22,11 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
         super(name, category, defaultValue, prerequisite, supported);
         this.restrictions = restrictedStates;
         support = supportedStates;
+    }
+
+    public EnumSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
+                                 Predicate<RomHandler> supported) {
+        this(name, category, defaultValue, prerequisite, supported, null, null);
     }
 
     public boolean isValueEnabled(T value) {

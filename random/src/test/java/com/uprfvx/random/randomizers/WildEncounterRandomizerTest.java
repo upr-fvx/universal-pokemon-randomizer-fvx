@@ -4,7 +4,6 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.Gen5Constants;
 import com.uprfvx.romio.gamedata.*;
-import javafx.util.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -1707,6 +1706,8 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         checkAllSpeciesKeepSameEvoStage(before, after);
     }
 
+    private record SpeciesPair(Species before, Species after) { }
+
     private static void checkAllSpeciesKeepSameEvoStage(List<EncounterArea> before, List<EncounterArea> after) {
         if(before.size() != after.size()) {
             throw new RuntimeException("Encounter area counts do not match before and after!");
@@ -1725,15 +1726,15 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println("Before: " + areaBefore);
             System.out.println("After: " + areaAfter);
 
-            Set<Pair<Species, Species>> pairs = new HashSet<>();
+            Set<SpeciesPair> pairs = new HashSet<>();
             for(int j = 0; j < areaBefore.size(); j++) {
-                pairs.add(new Pair<>(areaBefore.get(j).getSpecies(), areaAfter.get(j).getSpecies()));
+                pairs.add(new SpeciesPair(areaBefore.get(j).getSpecies(), areaAfter.get(j).getSpecies()));
             }
 
-            for(Pair<Species, Species> pair : pairs) {
-                System.out.print("\t" + pair.getKey().getFullName() + " -> " + pair.getValue().getFullName() + ": ");
-                int stageBefore = pair.getKey().getStagesBefore(true);
-                int stageAfter = pair.getValue().getStagesBefore(false);
+            for(SpeciesPair pair : pairs) {
+                System.out.print("\t" + pair.before().getFullName() + " -> " + pair.after().getFullName() + ": ");
+                int stageBefore = pair.before().getStagesBefore(true);
+                int stageAfter = pair.after().getStagesBefore(false);
                 System.out.println(stageBefore + " -> " + stageAfter);
                 assertEquals(stageBefore, stageAfter);
             }

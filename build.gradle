@@ -10,9 +10,7 @@ subprojects {
 
     java {
         toolchain {
-            // Oracle pushes Java 8 to low-tech end users, via https://www.java.com/en/download/.
-            // This means we *have* to use Java 8 for the app, otherwise it will be inaccessible to these users.
-            languageVersion = JavaLanguageVersion.of(8)
+            languageVersion = JavaLanguageVersion.of(17)
         }
     }
 
@@ -23,6 +21,19 @@ subprojects {
     dependencies {
         testImplementation('org.junit.jupiter:junit-jupiter:5.10.0')
         testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        // Oracle pushes Java 8 RLEs to low-tech end users, via https://www.java.com/en/download/.
+        // This means the app *has* to run on these RLEs, otherwise it will be inaccessible to these users.
+        // The below enables a sort of compatibility mode, so our newer JDK can compile this code.
+        // However, this compatibility mode is quite harsh, essentially forcing us to follow Java 8,
+        // when writing in the afflicted classes.
+        // Also, the compatibility mode for Java 8 is obsolete in any JDK post Java 17 :).
+        // Tests and the like can use the JDK to its full potential though!
+        if (it.name == "compileJava") {
+            options.release = 8
+        }
     }
 
     tasks.named('test', Test) {

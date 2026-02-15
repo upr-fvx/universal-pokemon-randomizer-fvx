@@ -606,7 +606,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings settings = new Settings();
         settings.setTrainersMod(Settings.TrainersMod.RANDOM);
-        settings.setTrainersDoNotGetPrematureEvos(true);
+        settings.setBanPrematureEvos(true);
 
         new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
 
@@ -744,7 +744,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Restrict pool to make duplicates more likely if there is a bug
         s.setTrainersUsePokemonOfSimilarStrength(true);
         s.setTrainersBlockLegendaries(true);
-        s.setTrainersDoNotGetPrematureEvos(true);
+        s.setBanPrematureEvos(true);
         s.setTrainersEvolveTheirPokemon(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 

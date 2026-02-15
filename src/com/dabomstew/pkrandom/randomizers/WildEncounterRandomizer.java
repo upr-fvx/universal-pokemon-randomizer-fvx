@@ -30,20 +30,20 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
         boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
-        boolean noPrematureEvolutions = settings.isBanPrematureEvos();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
         boolean noLegendaries = settings.isBlockWildLegendaries();
         boolean balanceShakingGrass = settings.isBalanceShakingGrass();
         boolean allowAltFormes = settings.isAllowWildAltFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
+        boolean noPrematureEvolutions = settings.isBanPrematureEvos();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType,
-                basicPokemonOnly, sameEvoStage, keepEvolutions, noPrematureEvolutions,
+                basicPokemonOnly, sameEvoStage, keepEvolutions,
                 catchEmAll, similarStrength, balanceShakingGrass,
-                noLegendaries, allowAltFormes, banIrregularAltFormes,
+                noLegendaries, allowAltFormes, banIrregularAltFormes, noPrematureEvolutions,
                 levelModifier, abilitiesAreRandomized);
         changesMade = true;
     }
@@ -51,9 +51,10 @@ public class WildEncounterRandomizer extends Randomizer {
     private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
-                                    boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions, boolean noPrematureEvolutions,
+                                    boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
                                     boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
-                                    boolean noLegendaries, boolean allowAltFormes, boolean banIrregularAltFormes,
+                                    boolean noLegendaries, boolean allowAltFormes,
+                                    boolean banIrregularAltFormes, boolean noPrematureEvolutions,
                                     int levelModifier, boolean abilitiesAreRandomized) {
 
         // get encounters
@@ -164,7 +165,8 @@ public class WildEncounterRandomizer extends Randomizer {
         public InnerRandomizer(SpeciesSet allowed, SpeciesSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                boolean catchEmAll, boolean similarStrength, boolean balanceLowLevelEncounters,
-                               boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions, boolean noPrematureEvolutions) {
+                               boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
+                               boolean noPrematureEvolutions) {
 
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
@@ -179,7 +181,8 @@ public class WildEncounterRandomizer extends Randomizer {
             this.basicPokemonOnly = basicPokemonOnly;
             this.sameEvoStage = sameEvoStage;
             this.keepEvolutions = keepEvolutions;
-            this.noPrematureEvolutions = noPrematureEvolutions;
+            // Make sure to disable noPrematureEvolutions if other evolution restrictions for wild pokemon are active
+            this.noPrematureEvolutions = !sameEvoStage && !keepEvolutions && noPrematureEvolutions;
 
             this.needsTypes = keepPrimaryType || keepTypeThemes || randomTypeThemes;
             this.catchEmAll = catchEmAll;
@@ -671,6 +674,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * @param area The area the encounter is in. Used to determine banned {@link Species} if
          *             areaInformationMap is not populated.
          * @param zoneType A Type that all {@link Species} in the current zone should be.
+         * @param level The level of the given {@link Species}.
          * @return A {@link SpeciesSet} containing all valid replacements for the encounter. This may be a
          * reference to another set; do not modify!
          */
@@ -697,6 +701,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * otherwise. To find replacements for an unmapped Species, use setupAllowedForReplacementNoInfoMap().
          * @param current The {@link Species} to replace.
          * @param theme A {@link Type} that the allowed replacements should all be. Overrides any other type themes.
+         * @param level The level of the given {@link Species}.
          * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
          * to a local variable; do not modify!
          * @throws NullPointerException if the info map was not set up.
@@ -738,6 +743,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * @param area The area that this encounter was found in. Used to determine banned Species.
          * @param theme A {@link Type} that the allowed replacements should all be. If null,
          *              returns Species of all Types.
+         * @param level The level of the given {@link Species}.
          * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
          * to a local variable; do not modify!
          */
@@ -773,6 +779,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * Assumes all type restrictions have already been applied.
          * @param info The restrictions for the current encounter.
          * @param startingPool The pool to start from.
+         * @param level The level of the given {@link Species}.
          * @return startingPool if no additional restrictions were applied, a new {@link SpeciesSet} with the narrowed
          * set otherwise.
          */
@@ -791,12 +798,12 @@ public class WildEncounterRandomizer extends Randomizer {
                         sp.getStagesBefore(false) == stage);
             }
 
-            if(noPrematureEvolutions) {
-                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level, 1));
-            }
-
             if(keepEvolutions) {
                 allowedForReplacement = setupAllowedForFamily(allowedForReplacement, info);
+            }
+
+            if(noPrematureEvolutions) {
+                allowedForReplacement = allowedForReplacement.filter(sp -> sp.isLegalEvolutionAtLevel(level, 1));
             }
             return allowedForReplacement;
         }
@@ -808,6 +815,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * @param startingPool The pool to start from.
          * @param current The Species to replace. (Only matters when sameEvoStage is true)
          * @param banned The set of banned Species.
+         * @param level The level of the given {@link Species}.
          * @return startingPool if no additional restrictions were applied, a new {@link SpeciesSet} with the narrowed
          * set otherwise.
          */

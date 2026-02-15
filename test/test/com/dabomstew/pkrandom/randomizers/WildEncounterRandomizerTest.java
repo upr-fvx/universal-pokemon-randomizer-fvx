@@ -155,6 +155,27 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         checkForNoAlternateFormes();
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void doNotUsePrematureEvosWorks(String romName) {
+        activateRomHandler(romName);
+
+        Settings settings = getStandardSettings(romName);
+        settings.setBanPrematureEvos(true);
+
+        new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
+
+        // If Pokemon has an evolution to, then the level of that evolution must be <= the level of the Pokemon
+        for (EncounterArea area : romHandler.getEncounters(true)) {
+            for (Encounter enc : area) {
+                for (Evolution evo : enc.getSpecies().getEvolutionsTo()) {
+                    System.out.println(enc + " with Evo " + evo);
+                    assertTrue(evo.getEstimatedEvoLvl() <= enc.getLevel());
+                }
+            }
+        }
+    }
+
     // since alt formes are not guaranteed, this test can be considered "reverse";
     // any success is a success for the test as a whole
     @ParameterizedTest

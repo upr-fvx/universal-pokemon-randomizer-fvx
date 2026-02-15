@@ -42,6 +42,9 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   available Pokemon too much, duplicates are possible and weaker or stronger
   Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
   selected. (Issue #162)
+- (Gen 1-7) The first rival and/or friend battles no longer have their
+  Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
+  Level Modifier:'. (Pull request #164)
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.

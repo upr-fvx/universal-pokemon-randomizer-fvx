@@ -30,7 +30,7 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
         boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
-        boolean noPrematureEvolutions = settings.isTrainersDoNotGetPrematureEvos();
+        boolean noPrematureEvolutions = settings.isBanPrematureEvos();
         boolean catchEmAll = settings.isCatchEmAllEncounters();
         boolean similarStrength = settings.isSimilarStrengthEncounters();
         boolean noLegendaries = settings.isBlockWildLegendaries();

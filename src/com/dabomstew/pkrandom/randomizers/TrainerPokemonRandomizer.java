@@ -43,7 +43,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         //TODO: this method direly needs a refactor to despaghettify
         boolean usePowerLevels = settings.isTrainersUsePokemonOfSimilarStrength();
         boolean avoidDuplicates = settings.isTrainersAvoidDuplicates();
-        boolean doNotUsePrematureEvos = settings.isTrainersDoNotGetPrematureEvos();
+        boolean doNotUsePrematureEvos = settings.isBanPrematureEvos();
         boolean weightByFrequency = settings.isTrainersMatchTypingDistribution();
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();

@@ -65,6 +65,7 @@ public class Settings {
     private boolean randomizeIntroMon;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
+    private boolean banPrematureEvos;
     private boolean dualTypeOnly;
 
     public enum BaseStatisticsMod {
@@ -179,7 +180,6 @@ public class Settings {
     private boolean rivalCarriesStarterThroughout;
     private boolean trainersUsePokemonOfSimilarStrength;
     private boolean trainersAvoidDuplicates;
-    private boolean trainersDoNotGetPrematureEvos;
     private boolean trainersMatchTypingDistribution;
     private boolean trainersBlockLegendaries = true;
     private boolean trainersUseLocalPokemon;
@@ -724,8 +724,8 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon evolve
-        out.write(makeByteSelected(trainersEvolveTheirPokemon, trainersDoNotGetPrematureEvos));
+        // 63 trainer pokemon evolve, no premature evolutions
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1087,7 +1087,7 @@ public class Settings {
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
 
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
-        settings.setTrainersDoNotGetPrematureEvos(restoreState(data[63], 1));
+        settings.setBanPrematureEvos(restoreState(data[63], 1));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
@@ -1916,12 +1916,12 @@ public class Settings {
         this.trainersAvoidDuplicates = trainersAvoidDuplicates;
     }
 
-    public boolean isTrainersDoNotGetPrematureEvos() {
-        return trainersDoNotGetPrematureEvos;
+    public boolean isBanPrematureEvos() {
+        return banPrematureEvos;
     }
 
-    public void setTrainersDoNotGetPrematureEvos(boolean trainersDoNotGetPrematureEvos) {
-        this.trainersDoNotGetPrematureEvos = trainersDoNotGetPrematureEvos;
+    public void setBanPrematureEvos(boolean banPrematureEvos) {
+        this.banPrematureEvos = banPrematureEvos;
     }
 
     public boolean isTrainersMatchTypingDistribution() {

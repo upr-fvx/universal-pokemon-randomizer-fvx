@@ -55,7 +55,7 @@
               <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.toolTipText"/>
             </properties>
           </component>
-          <component id="23cx3" class="javax.swing.JCheckBox" binding="tpNoPrematureEvosCheckbox">
+          <component id="23cx3" class="javax.swing.JCheckBox" binding="noPrematureEvosCheckbox">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>

@@ -314,7 +314,7 @@ public class RandomizerGUI {
     private JCheckBox miscForceChallengeModeCheckBox;
     private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
     private JCheckBox noIrregularAltFormesCheckBox;
-    private JCheckBox tpNoPrematureEvosCheckbox;
+    private JCheckBox noPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
     private JComboBox tpComboBox;
@@ -681,7 +681,7 @@ public class RandomizerGUI {
         tmLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
         mtLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
         noIrregularAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
+        noPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
         ptIsDualTypeCheckBox.addActionListener(e -> enableOrDisableSubControls());
         spTypeNoDualCheckbox.addActionListener(e->enableOrDisableSubControls());
         teUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -1643,7 +1643,7 @@ public class RandomizerGUI {
             currentRestrictions.limitToGen(romHandler.generationOfPokemon());
         }
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
-        tpNoPrematureEvosCheckbox.setSelected(settings.isTrainersDoNotGetPrematureEvos());
+        noPrematureEvosCheckbox.setSelected(settings.isBanPrematureEvos());
         raceModeCheckBox.setSelected(settings.isRaceMode());
         noRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
 
@@ -1967,7 +1967,7 @@ public class RandomizerGUI {
         settings.setLimitPokemon(limitPokemonCheckBox.isSelected() && limitPokemonCheckBox.isVisible());
         settings.setCurrentRestrictions(currentRestrictions);
         settings.setBanIrregularAltFormes(noIrregularAltFormesCheckBox.isSelected() && noIrregularAltFormesCheckBox.isVisible());
-        settings.setTrainersDoNotGetPrematureEvos(tpNoPrematureEvosCheckbox.isSelected());
+        settings.setBanPrematureEvos(noPrematureEvosCheckbox.isSelected());
         settings.setRandomizeIntroMon(!noRandomIntroMonCheckBox.isSelected() && noRandomIntroMonCheckBox.isVisible());
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
@@ -2329,7 +2329,7 @@ public class RandomizerGUI {
         gameMascotLabel.setIcon(emptyIcon);
 
         setInitialButtonState(limitPokemonCheckBox, limitPokemonButton,
-                noIrregularAltFormesCheckBox, tpNoPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
+                noIrregularAltFormesCheckBox, noPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
 
         currentRestrictions = null;
 
@@ -3208,7 +3208,7 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
             // Disable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
-            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, tpNoPrematureEvosCheckbox);
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, noPrematureEvosCheckbox);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3231,7 +3231,7 @@ public class RandomizerGUI {
 
             // Re-enable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-            tpNoPrematureEvosCheckbox.setEnabled(true);
+            noPrematureEvosCheckbox.setEnabled(true);
         }
 
         if (pbsUnchangedRadioButton.isSelected()) {
@@ -3454,7 +3454,7 @@ public class RandomizerGUI {
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
-        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected() || tpNoPrematureEvosCheckbox.isSelected()) {
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected() || noPrematureEvosCheckbox.isSelected()) {
             tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
             // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
             tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());

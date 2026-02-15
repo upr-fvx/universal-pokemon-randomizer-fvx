@@ -319,8 +319,12 @@ public class Trainer implements Comparable<Trainer> {
         return !isBoss() && !isImportant();
     }
 
+    public boolean isFirstRivalOrFriend() {
+        return tag != null && (tag.startsWith("RIVAL1-") || tag.startsWith("FRIEND1-"));
+    }
+
     public boolean shouldNotGetBuffs() {
-        return tag != null && (tag.startsWith("RIVAL1-") || tag.startsWith("FRIEND1-") || tag.endsWith("NOTSTRONG"));
+        return isFirstRivalOrFriend() || (tag != null && tag.endsWith("NOTSTRONG"));
     }
 
     public boolean pokemonHaveItems() {

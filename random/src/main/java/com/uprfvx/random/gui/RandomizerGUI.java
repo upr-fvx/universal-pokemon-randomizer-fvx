@@ -3120,8 +3120,7 @@ public class RandomizerGUI {
 
     private void guaranteeMaximumValueTick(JSlider slider) {
         // Create standard labels (only up to the last multiple)
-        @SuppressWarnings("unchecked") // pretty sure this warning is unavoidable, due to Swing being ancient
-        Dictionary<Integer, JLabel> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
+        Dictionary<Integer, JComponent> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
 
         // Force label at the exact maximum
         int max = slider.getMaximum();

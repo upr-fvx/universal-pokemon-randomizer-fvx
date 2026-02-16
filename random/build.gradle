@@ -29,7 +29,7 @@ jar {
     }
 }
 
-// We get the launcher here, so we can use the same JDK for running jlink,
+// We get the launcher here, so we can use the same JDK for running jlink and jdeps,
 // as is used for compiling the program.
 def launcher = javaToolchains.launcherFor {
     languageVersion = java.toolchain.languageVersion
@@ -41,10 +41,10 @@ def javaHome = launcher.map { it.metadata.installationPath }
 // By depending on the "Java Runtime Image", developers can write in modern Java
 // (previously, the Randomizer was locked to Java 8 since that's the newest version that gets
 // official Oracle JREs, and low-tech end users WILL download from the "download Java" page),
-// and end users will not have to download any JRE at all!
+// and end users do not have to download any JRE at all!
 
-// The jdeps utility is used to figure out which Java modules the program uses. No code for it yet.
-// TODO: write jdeps code
+// The jdeps utility is used to figure out which Java modules the program uses.
+// While very useful, it does not always work. Any module "not found" must be manually identified.
 
 // The jlink task currently doesn't have a way of checking if it is "UP-TO-DATE", beyond checking
 // if a "java-runtime-image" directory already exists. As the "Java Runtime Image" could become
@@ -54,18 +54,26 @@ def javaHome = launcher.map { it.metadata.installationPath }
 // deleted.
 // TODO: figure out how often "every now and again" is
 tasks.register('jlink', Exec) {
-    def jlinkPath = 'bin/jlink'
     def outputDir = layout.buildDirectory.dir('java-runtime-image')
-    def modules = 'java.base,java.desktop,java.logging'
+    def modules = 'java.base,java.desktop,java.logging,java.naming'
 
     onlyIf {
         !outputDir.get().asFile.exists()
     }
 
-    executable = javaHome.map { it.file(jlinkPath).asFile.absolutePath }.get()
+    executable = javaHome.map { it.file('bin/jlink').asFile.absolutePath }.get()
     args = [
             '--add-modules', modules,
             '--output', outputDir.get().asFile.absolutePath
+    ]
+}
+
+tasks.register('jdeps', Exec) {
+    dependsOn moveIntoReleaseDir
+
+    executable = javaHome.map { it.file('bin/jdeps').asFile.absolutePath }.get()
+    args = [
+            layout.buildDirectory.dir('target').get().asFile.absolutePath + '/UPR-FVX.jar'
     ]
 }
 

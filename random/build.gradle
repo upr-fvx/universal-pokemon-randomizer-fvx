@@ -32,51 +32,65 @@ jar {
     }
 }
 
-// All of these are 64-bit
-def jdks = [
-        Linux_x86: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_linux_hotspot_25.0.2_10.tar.gz'],
-        Linux_ARM: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.2_10.tar.gz'],
-        Windows: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_windows_hotspot_25.0.2_10.zip'],
-        Mac_x86: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_mac_hotspot_25.0.2_10.tar.gz'],
-        Mac_ARM: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.2_10.tar.gz']
-]
-
-jdks.each {name, cfg ->
-    def extension = 'tar.gz'
-    def decompresser = { tarTree(it) }
-    if (cfg.url.endsWith('zip')) {
-        extension = 'zip'
-        decompresser = { zipTree(it) }
-    }
-
-    def download = tasks.register("downloadJDK${name}", Download) {
-        src cfg.url
-        dest layout.buildDirectory.file("jdks/compressed/${name}.${extension}")
-        overwrite false
-    }
-
-    def decompress = tasks.register("decompressJDK${name}", Copy) {
-        dependsOn download
-        from download.map { t -> decompresser(t.dest) }
-        into layout.buildDirectory.dir("jdks/decompressed/${name}")
-    }
-}
-
-tasks.register('prepareAllJDKs') {
-    dependsOn decompressJDKLinux_x86,
-            decompressJDKLinux_ARM,
-            decompressJDKWindows,
-            decompressJDKMac_x86,
-            decompressJDKMac_ARM
-}
-
-
 // We get the launcher here, so we can use the same JDK for running jlink and jdeps,
 // as is used for compiling the program (the "toolchain" JDK).
 def launcher = javaToolchains.launcherFor {
     languageVersion = java.toolchain.languageVersion
 }
 def javaHome = launcher.map { it.metadata.installationPath }
+
+// All of these are 64-bit
+def jdks = [
+        Linux_x86: [apiOS: 'linux', apiArchitecture: 'x64'],
+        Linux_ARM: [apiOS: 'linux', apiArchitecture: 'aarch64'],
+        Windows: [apiOS: 'windows', apiArchitecture: 'x64', jmodsInZip: true],
+        Mac_x86: [apiOS: 'mac', apiArchitecture: 'x64'],
+        Mac_ARM: [apiOS: 'mac', apiArchitecture: 'aarch64'],
+]
+
+jdks.each {name, cfg ->
+    def extension = 'tar.gz'
+    def decompresser = { tarTree(it) }
+    if (cfg.jmodsInZip) {
+        extension = 'zip'
+        decompresser = { zipTree(it) }
+    }
+
+    def download = tasks.register("downloadJmods${name}", Download) {
+        src "http://api.adoptium.net/v3/binary/latest/25/ga/${cfg.apiOS}/${cfg.apiArchitecture}/jmods/hotspot/normal/eclipse"
+        dest layout.buildDirectory.file("jmods/compressed/${name}.${extension}")
+        overwrite false
+    }
+
+    def decompress = tasks.register("decompressJmods${name}", Copy) {
+        dependsOn download
+        from download.map { t -> decompresser(t.dest) }
+        into layout.buildDirectory.dir("jmods/decompressed/${name}")
+    }
+
+    tasks.register("jlink${name}", Exec) {
+        dependsOn decompress
+
+        def modulePath = layout.buildDirectory.dir("jmods/decompressed/${name}")
+        def outputDir = layout.buildDirectory.dir("java-runtime-image/${name}")
+        def modules = 'java.base,java.desktop,java.logging,java.naming'
+
+        onlyIf {
+            !outputDir.get().asFile.exists()
+        }
+
+        executable = javaHome.map { it.file('bin/jlink').asFile.absolutePath }.get()
+        args = [
+                '--module-path', modulePath.get().asFile.absolutePath,
+                '--add-modules', modules,
+                '--output', outputDir.get().asFile.absolutePath
+        ]
+    }
+}
+
+tasks.register('prepareAllJavaRuntimeImages') {
+    dependsOn jlinkLinux_x86, jlinkLinux_ARM, jlinkWindows, jlinkMac_x86, jlinkMac_ARM
+}
 
 // The jlink utility is used to create a "Java Runtime Image", essentially a mini-JDK/JRE
 // that contains only the modules of Java that the program uses.
@@ -95,20 +109,6 @@ def javaHome = launcher.map { it.metadata.installationPath }
 // is conclusive. If it isn't, the module list must be updated and the "java-runtime-image" dir
 // deleted.
 // TODO: figure out how often "every now and again" is
-tasks.register('jlink', Exec) {
-    def outputDir = layout.buildDirectory.dir('java-runtime-image')
-    def modules = 'java.base,java.desktop,java.logging,java.naming'
-
-    onlyIf {
-        !outputDir.get().asFile.exists()
-    }
-
-    executable = javaHome.map { it.file('bin/jlink').asFile.absolutePath }.get()
-    args = [
-            '--add-modules', modules,
-            '--output', outputDir.get().asFile.absolutePath
-    ]
-}
 
 tasks.register('jdeps', Exec) {
     dependsOn moveIntoReleaseDir
@@ -126,7 +126,7 @@ tasks.register('clearReleaseDir', Delete) {
 tasks.register('moveIntoReleaseDir', Copy) {
     dependsOn 'jar'
     dependsOn 'clearReleaseDir'
-    dependsOn 'jlink'
+    dependsOn 'prepareAllJavaRuntimeImages'
 
     from('src/main/resources') {
         exclude 'data/players_unused'
@@ -134,7 +134,7 @@ tasks.register('moveIntoReleaseDir', Copy) {
     }
     from 'src/main/launcher'
     from 'build/libs'
-    from('build/java-runtime-image') {
+    from('build/java-runtime-image/Linux_x86') {
         into 'java'
     }
 

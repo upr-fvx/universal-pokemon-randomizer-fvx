@@ -524,8 +524,14 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             !bannedTypes.contains(sp.getSecondaryType(false))));
         }
 
-        pickFrom = filterEvolutions(level, doNotUsePrematureEvos, evolveAsFarAsLegal, pickFrom);
-
+        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
+        if (doNotUsePrematureEvos) {
+            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
+        }
+        if (evolveAsFarAsLegal) {
+            pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
+        }
+        
         if (usePlacementHistory) {
             // "Distributed" settings
             double placementAverage = getPlacementAverage();
@@ -565,26 +571,16 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 pickFrom.addAll(alreadyPlaced);
                 alreadyPlaced.clear();
 
-                // Re-do evolution filtering to not break any evolution stage contracts
-                pickFrom = filterEvolutions(level, doNotUsePrematureEvos, evolveAsFarAsLegal, pickFrom);
+                // Cannot choose from pickFrom now since some contracts might be broken. Therefore, try again with
+                // alreadyPlaced empty and thus allowing duplicates.
+                return pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
+                        swapMegaEvos, useInsteadOfCached, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
             }
         }
-
 
         return usePowerLevels ?
                 pickFrom.getRandomSimilarStrengthSpecies(current, random) :
                 pickFrom.getRandomSpecies(random);
-    }
-
-    private SpeciesSet filterEvolutions(int level, boolean doNotUsePrematureEvos, boolean evolveAsFarAsLegal, SpeciesSet pickFrom) {
-        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
-        if (doNotUsePrematureEvos) {
-            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
-        }
-        if (evolveAsFarAsLegal) {
-            pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
-        }
-        return pickFrom;
     }
 
     /**

@@ -33,68 +33,41 @@ jar {
 }
 
 // All of these are 64-bit
-def JDK_DOWNLOAD_URL_LINUX_x86 = 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_linux_hotspot_25.0.2_10.tar.gz'
-def JDK_DOWNLOAD_URL_LINUX_ARM = 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.2_10.tar.gz'
-def JDK_DOWNLOAD_URL_WINDOWS = 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_windows_hotspot_25.0.2_10.zip'
-def JDK_DOWNLOAD_URL_MAC_x86 = 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_mac_hotspot_25.0.2_10.tar.gz'
-def JDK_DOWNLOAD_URL_MAC_ARM = 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.2_10.tar.gz'
+def jdks = [
+        Linux_x86: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_linux_hotspot_25.0.2_10.tar.gz'],
+        Linux_ARM: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.2_10.tar.gz'],
+        Windows: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_windows_hotspot_25.0.2_10.zip'],
+        Mac_x86: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_x64_mac_hotspot_25.0.2_10.tar.gz'],
+        Mac_ARM: [url: 'https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.2_10.tar.gz']
+]
 
-tasks.register('downloadJDKLinuxx86', Download) {
-    src JDK_DOWNLOAD_URL_LINUX_x86
-    dest layout.buildDirectory.file("jdks/compressed/Linux_x86.tar.gz")
-    overwrite false
+jdks.each {name, cfg ->
+    def extension = 'tar.gz'
+    def decompresser = { tarTree(it) }
+    if (cfg.url.endsWith('zip')) {
+        extension = 'zip'
+        decompresser = { zipTree(it) }
+    }
+
+    def download = tasks.register("downloadJDK${name}", Download) {
+        src cfg.url
+        dest layout.buildDirectory.file("jdks/compressed/${name}.${extension}")
+        overwrite false
+    }
+
+    def decompress = tasks.register("decompressJDK${name}", Copy) {
+        dependsOn download
+        from download.map { t -> decompresser(t.dest) }
+        into layout.buildDirectory.dir("jdks/decompressed/${name}")
+    }
 }
-tasks.register('downloadJDKLinuxARM', Download) {
-    src JDK_DOWNLOAD_URL_LINUX_ARM
-    dest layout.buildDirectory.file("jdks/compressed/Linux_ARM.tar.gz")
-    overwrite false
-}
-tasks.register('downloadJDKWindows', Download) {
-    src JDK_DOWNLOAD_URL_WINDOWS
-    dest layout.buildDirectory.file("jdks/compressed/Windows.zip")
-    overwrite false
-}
-tasks.register('downloadJDKMacx86', Download) {
-    src JDK_DOWNLOAD_URL_MAC_x86
-    dest layout.buildDirectory.file("jdks/compressed/Mac_x86.tar.gz")
-    overwrite false
-}
-tasks.register('downloadJDKMacARM', Download) {
-    src JDK_DOWNLOAD_URL_MAC_ARM
-    dest layout.buildDirectory.file("jdks/compressed/Mac_ARM.tar.gz")
-    overwrite false
-}
-tasks.register('decompressJDKLinuxx86', Copy) {
-    dependsOn downloadJDKLinuxx86
-    from tarTree(downloadJDKLinuxx86.dest)
-    into layout.buildDirectory.file("jdks/decompressed/Linux_x86")
-}
-tasks.register('decompressJDKLinuxARM', Copy) {
-    dependsOn downloadJDKLinuxARM
-    from tarTree(downloadJDKLinuxARM.dest)
-    into layout.buildDirectory.file("jdks/decompressed/Linux_ARM")
-}
-tasks.register('decompressJDKWindows', Copy) {
-    dependsOn downloadJDKWindows
-    from zipTree(downloadJDKWindows.dest)
-    into layout.buildDirectory.file("jdks/decompressed/Windows")
-}
-tasks.register('decompressJDKMacx86', Copy) {
-    dependsOn downloadJDKMacx86
-    from tarTree(downloadJDKMacx86.dest)
-    into layout.buildDirectory.file("jdks/decompressed/Mac_x86")
-}
-tasks.register('decompressJDKMacARM', Copy) {
-    dependsOn downloadJDKMacARM
-    from tarTree(downloadJDKMacARM.dest)
-    into layout.buildDirectory.file("jdks/decompressed/Mac_ARM")
-}
+
 tasks.register('prepareAllJDKs') {
-    dependsOn decompressJDKLinuxx86,
-            decompressJDKLinuxARM,
+    dependsOn decompressJDKLinux_x86,
+            decompressJDKLinux_ARM,
             decompressJDKWindows,
-            decompressJDKMacx86,
-            decompressJDKMacARM
+            decompressJDKMac_x86,
+            decompressJDKMac_ARM
 }
 
 

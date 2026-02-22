@@ -3411,11 +3411,25 @@ public class RandomizerGUI {
             disableAndDeselectButtons(tpSwapMegaEvosCheckBox,
                     tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox, tpRegularTrainersItemsCheckBox,
                     tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox, tpHighestLevelGetsItemCheckBox,
-                    tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
-                    tpRegularTrainersTypeDiversityCheckBox, tpEliteFourUniquePokemonCheckBox);
+                    tpEliteFourUniquePokemonCheckBox);
             enableButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,
                     tpRandomShinyTrainerPokemonCheckBox);
+            if (tpBossTrainersCheckBox.isSelected()) {
+                tpBossTrainersTypeDiversityCheckBox.setEnabled(true);
+            } else {
+                disableAndDeselectButtons(tpBossTrainersTypeDiversityCheckBox);
+            }
+            if (tpImportantTrainersCheckBox.isSelected()) {
+                tpImportantTrainersTypeDiversityCheckBox.setEnabled(true);
+            } else {
+                disableAndDeselectButtons(tpImportantTrainersTypeDiversityCheckBox);
+            }
+            if (tpRegularTrainersCheckBox.isSelected()) {
+                tpRegularTrainersTypeDiversityCheckBox.setEnabled(true);
+            } else {
+                disableAndDeselectButtons(tpRegularTrainersTypeDiversityCheckBox);
+            }
         } else if (isTrainerSetting(TRAINER_UNCHANGED)) {
             disableAndDeselectButtons(tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox, tpNoPrematureEvosCheckbox, tpDontUseLegendariesCheckBox,
                     tpUseLocalPokemonCheckBox, tpNoEarlyWonderGuardCheckBox, tpAllowAlternateFormesCheckBox,

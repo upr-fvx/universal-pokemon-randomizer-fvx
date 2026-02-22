@@ -524,24 +524,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             !bannedTypes.contains(sp.getSecondaryType(false))));
         }
 
-        if (!alreadyPlaced.isEmpty()) {
-            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
-            // Remove species already placed for the current trainer from pool
-            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
-            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
-            if (pickFrom.isEmpty()) {
-                pickFrom.addAll(alreadyPlaced);
-                alreadyPlaced.clear();
-            }
-        }
-
-        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
-        if (doNotUsePrematureEvos) {
-            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
-        }
-        if (evolveAsFarAsLegal) {
-            pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
-        }
+        pickFrom = filterEvolutions(level, doNotUsePrematureEvos, evolveAsFarAsLegal, pickFrom);
 
         if (usePlacementHistory) {
             // "Distributed" settings
@@ -573,9 +556,35 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //if we didn't... well, if it's banned anyway, it might as well be from the substitution set
         }
 
+        if (!alreadyPlaced.isEmpty()) {
+            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
+            // Remove species already placed for the current trainer from pool
+            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
+            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
+            if (pickFrom.isEmpty()) {
+                pickFrom.addAll(alreadyPlaced);
+                alreadyPlaced.clear();
+
+                // Re-do evolution filtering to not break any evolution stage contracts
+                pickFrom = filterEvolutions(level, doNotUsePrematureEvos, evolveAsFarAsLegal, pickFrom);
+            }
+        }
+
+
         return usePowerLevels ?
                 pickFrom.getRandomSimilarStrengthSpecies(current, random) :
                 pickFrom.getRandomSpecies(random);
+    }
+
+    private SpeciesSet filterEvolutions(int level, boolean doNotUsePrematureEvos, boolean evolveAsFarAsLegal, SpeciesSet pickFrom) {
+        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
+        if (doNotUsePrematureEvos) {
+            pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
+        }
+        if (evolveAsFarAsLegal) {
+            pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
+        }
+        return pickFrom;
     }
 
     /**

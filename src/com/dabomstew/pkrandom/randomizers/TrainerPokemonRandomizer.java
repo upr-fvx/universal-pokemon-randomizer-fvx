@@ -531,7 +531,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (evolveAsFarAsLegal) {
             pickFrom = pickFrom.filter(p -> !p.hasLegalEvolutionAtLevel(level, evoLvlModifier));
         }
-        
+
         if (usePlacementHistory) {
             // "Distributed" settings
             double placementAverage = getPlacementAverage();
@@ -568,11 +568,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
             // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
             if (pickFrom.isEmpty()) {
-                pickFrom.addAll(alreadyPlaced);
+                // Try again with alreadyPlaced empty and thus allowing duplicates while trying to uphold other contracts.
                 alreadyPlaced.clear();
-
-                // Cannot choose from pickFrom now since some contracts might be broken. Therefore, try again with
-                // alreadyPlaced empty and thus allowing duplicates.
                 return pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
                         swapMegaEvos, useInsteadOfCached, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
             }

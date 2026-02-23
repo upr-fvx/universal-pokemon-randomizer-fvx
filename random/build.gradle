@@ -32,6 +32,10 @@ jar {
     }
 }
 
+tasks.register('clearReleaseDir', Delete) {
+    delete 'build/target'
+}
+
 // We get the launcher here, so we can use the same JDK for running jlink and jdeps,
 // as is used for compiling the program (the "toolchain" JDK).
 def launcher = javaToolchains.launcherFor {
@@ -40,15 +44,31 @@ def launcher = javaToolchains.launcherFor {
 def javaHome = launcher.map { it.metadata.installationPath }
 
 // All of these are 64-bit
-def jdks = [
-        Linux_x86: [apiOS: 'linux', apiArchitecture: 'x64'],
-        Linux_ARM: [apiOS: 'linux', apiArchitecture: 'aarch64'],
-        Windows: [apiOS: 'windows', apiArchitecture: 'x64', jmodsInZip: true],
-        Mac_x86: [apiOS: 'mac', apiArchitecture: 'x64'],
-        Mac_ARM: [apiOS: 'mac', apiArchitecture: 'aarch64'],
+def platforms = [
+        Linux_x86: [
+                apiOS: 'linux', apiArchitecture: 'x64',
+                launcherExtension: 'sh'
+        ],
+        Linux_ARM: [
+                apiOS: 'linux', apiArchitecture: 'aarch64',
+                launcherExtension: 'sh'
+        ],
+        Windows: [
+                apiOS: 'windows', apiArchitecture: 'x64', jmodsInZip: true,
+                launcherExtension: 'bat'
+        ],
+        Mac_x86: [
+                apiOS: 'mac', apiArchitecture: 'x64',
+                launcherExtension: 'command'
+        ],
+        Mac_ARM: [
+                apiOS: 'mac', apiArchitecture: 'aarch64',
+                launcherExtension: 'command'
+        ],
 ]
 
-jdks.each {name, cfg ->
+platforms.each {name, cfg ->
+    def taskName = name.replace("_", "")
     def extension = 'tar.gz'
     def decompresser = { tarTree(it) }
     if (cfg.jmodsInZip) {
@@ -56,19 +76,19 @@ jdks.each {name, cfg ->
         decompresser = { zipTree(it) }
     }
 
-    def download = tasks.register("downloadJmods${name}", Download) {
+    def download = tasks.register("downloadJmods${taskName}", Download) {
         src "http://api.adoptium.net/v3/binary/latest/25/ga/${cfg.apiOS}/${cfg.apiArchitecture}/jmods/hotspot/normal/eclipse"
         dest layout.buildDirectory.file("jmods/compressed/${name}.${extension}")
         overwrite false
     }
 
-    def decompress = tasks.register("decompressJmods${name}", Copy) {
+    def decompress = tasks.register("decompressJmods${taskName}", Copy) {
         dependsOn download
         from download.map { t -> decompresser(t.dest) }
         into layout.buildDirectory.dir("jmods/decompressed/${name}")
     }
 
-    tasks.register("jlink${name}", Exec) {
+    def jlink = tasks.register("jlink${taskName}", Exec) {
         dependsOn decompress
 
         def modulePath = layout.buildDirectory.dir("jmods/decompressed/${name}")
@@ -86,10 +106,48 @@ jdks.each {name, cfg ->
                 '--output', outputDir.get().asFile.absolutePath
         ]
     }
+
+    def move = tasks.register("moveIntoReleaseDir${taskName}", Copy) {
+        dependsOn 'jar'
+        dependsOn 'clearReleaseDir'
+        dependsOn jlink
+
+        from('src/main/resources') {
+            exclude 'data/players_unused'
+            exclude 'com'
+        }
+        def launcherName = "launcher.${cfg.launcherExtension}"
+        from('src/main/launcher') {
+            include 'README.txt'
+            expand(launcherName: launcherName)
+        }
+        from('src/main/launcher') {
+            include "**.${cfg.launcherExtension}"
+            rename {return launcherName}
+        }
+        from layout.buildDirectory.dir('libs')
+        from(layout.buildDirectory.dir("java-runtime-image/${name}")) {
+            into 'java'
+        }
+
+        into layout.buildDirectory.dir("target/${name}")
+    }
+
+    tasks.register("createReleaseZip${taskName}", Zip) {
+        dependsOn move
+
+        from layout.buildDirectory.dir("target/${name}")
+        destinationDirectory = file('build/dist')
+        archiveFileName = "UPR_FVX_${name}.zip" // TODO: make it include version
+    }
 }
 
-tasks.register('prepareAllJavaRuntimeImages') {
-    dependsOn jlinkLinux_x86, jlinkLinux_ARM, jlinkWindows, jlinkMac_x86, jlinkMac_ARM
+tasks.register('createReleaseZips') {
+    dependsOn createReleaseZipLinuxx86,
+            createReleaseZipLinuxARM,
+            createReleaseZipWindows,
+            createReleaseZipMacx86,
+            createReleaseZipMacARM
 }
 
 // The jlink utility is used to create a "Java Runtime Image", essentially a mini-JDK/JRE
@@ -110,48 +168,19 @@ tasks.register('prepareAllJavaRuntimeImages') {
 // deleted.
 // TODO: figure out how often "every now and again" is
 
-tasks.register('jdeps', Exec) {
-    dependsOn moveIntoReleaseDir
-
-    executable = javaHome.map { it.file('bin/jdeps').asFile.absolutePath }.get()
-    args = [
-            layout.buildDirectory.dir('target').get().asFile.absolutePath + '/UPR-FVX.jar'
-    ]
-}
-
-tasks.register('clearReleaseDir', Delete) {
-    delete 'build/target'
-}
-
-tasks.register('moveIntoReleaseDir', Copy) {
-    dependsOn 'jar'
-    dependsOn 'clearReleaseDir'
-    dependsOn 'prepareAllJavaRuntimeImages'
-
-    from('src/main/resources') {
-        exclude 'data/players_unused'
-        exclude 'com'
-    }
-    from 'src/main/launcher'
-    from 'build/libs'
-    from('build/java-runtime-image/Linux_x86') {
-        into 'java'
-    }
-
-    into 'build/target'
-}
-
-tasks.register('createReleaseZip', Zip) {
-    dependsOn 'moveIntoReleaseDir'
-
-    from 'build/target'
-    destinationDirectory = file('build/dist')
-    archiveFileName = 'UPR_FVX.zip' // TODO: make it include version
-}
+//tasks.register('jdeps', Exec) {
+//    dependsOn moveIntoReleaseDir
+//
+//    executable = javaHome.map { it.file('bin/jdeps').asFile.absolutePath }.get()
+//    args = [
+//            layout.buildDirectory.dir('target').get().asFile.absolutePath + '/UPR-FVX.jar'
+//    ]
+//}
 
 tasks.register('launchUnix', Exec) {
-    dependsOn 'moveIntoReleaseDir'
-    workingDir 'build/target'
+    dependsOn 'moveIntoReleaseDirLinuxx86'
+
+    workingDir 'build/target/Linux_x86'
     commandLine 'bash', './launcher_UNIX.sh'
 }
 

@@ -57,7 +57,6 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
 /**
@@ -386,7 +385,7 @@ public class RandomizerGUI {
     private GenRestrictions currentRestrictions;
     private OperationDialog opDialog;
 
-    private ResourceBundle bundle;
+    private final ResourceBundle bundle;
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
 
@@ -403,12 +402,12 @@ public class RandomizerGUI {
 
     private final RomOpener romOpener = new RomOpener();
 
-    private JFileChooser romOpenChooser = new JFileChooser();
-    private JFileChooser romSaveChooser = new JFileChooser();
-    private JFileChooser qsOpenChooser = new JFileChooser();
-    private JFileChooser qsSaveChooser = new JFileChooser();
-    private JFileChooser qsUpdateChooser = new JFileChooser();
-    private JFileChooser gameUpdateChooser = new JFileChooser();
+    private final JFileChooser romOpenChooser = new JFileChooser();
+    private final JFileChooser romSaveChooser = new JFileChooser();
+    private final JFileChooser qsOpenChooser = new JFileChooser();
+    private final JFileChooser qsSaveChooser = new JFileChooser();
+    private final JFileChooser qsUpdateChooser = new JFileChooser();
+    private final JFileChooser gameUpdateChooser = new JFileChooser();
 
     private JPopupMenu settingsMenu;
     private JMenuItem themeSelectionMenuItem;
@@ -419,18 +418,18 @@ public class RandomizerGUI {
     private JMenuItem keepOrUnloadGameAfterRandomizingMenuItem;
     private JMenuItem batchRandomizationMenuItem;
 
-    private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/uprfvx/random/gui/emptyIcon.png"));
+    private final ImageIcon emptyIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/com/uprfvx/random/gui/emptyIcon.png")));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
 
-    private List<String> trainerSettings = new ArrayList<>();
-    private List<String> trainerSettingToolTips = new ArrayList<>();
+    private final List<String> trainerSettings = new ArrayList<>();
+    private final List<String> trainerSettingToolTips = new ArrayList<>();
     private final int TRAINER_UNCHANGED = 0, TRAINER_RANDOM = 1, TRAINER_RANDOM_EVEN = 2, TRAINER_RANDOM_EVEN_MAIN = 3,
                         TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5, TRAINER_KEEP_THEMED = 6,
                         TRAINER_KEEP_THEME_OR_PRIMARY = 7;
 
-    private List<String> selectableBattleStyles = new ArrayList<>();
-    private List<String> selectableBattleStylesTooltips = new ArrayList<>();
+    private final List<String> selectableBattleStyles = new ArrayList<>();
+    private final List<String> selectableBattleStylesTooltips = new ArrayList<>();
     private final int SINGLE_BATTLE = 0, DOUBLE_BATTLE = 1, TRIPLE_BATTLE = 2, ROTATION_BATTLE = 3;
 
     private BatchRandomizationSettings batchRandomizationSettings;
@@ -465,7 +464,7 @@ public class RandomizerGUI {
 
             try {
 
-                URL url = new URL(SysConstants.RELEASES_API_URL);
+                URL url = new URI(SysConstants.RELEASES_API_URL).toURL();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");
@@ -493,104 +492,103 @@ public class RandomizerGUI {
                 latestVersionString = String.format("<b>%s</b>", latestVersionString);
             }
             String finalLatestVersionString = latestVersionString;
-            SwingUtilities.invokeLater(() -> {
-                websiteLinkLabel.setText(String.format(bundle.getString("GUI.websiteLinkLabel.text"), finalLatestVersionString));
-            });
+            SwingUtilities.invokeLater(() -> websiteLinkLabel.setText(
+                    String.format(bundle.getString("GUI.websiteLinkLabel.text"), finalLatestVersionString)));
         }).run();
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
-        openROMButton.addActionListener(e -> selectAndOpenRom());
-        pbsUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pbsShuffleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pbsRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pbsFollowMegaEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        pbsFollowEvolutionsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        pbsStandardizeEXPCurvesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        paUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        paRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        peUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        peRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        peRandomEveryLevelRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        peChangeImpossibleEvosCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        peMakeEvolutionsEasierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        peMakeEvolutionsEasierLvlSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
-        peAllowAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        spUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spComboBox1.addActionListener(e -> enableOrDisableSubControls());
-        spComboBox2.addActionListener(e -> enableOrDisableSubControls());
-        spComboBox3.addActionListener(e -> enableOrDisableSubControls());
-        spRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spRandomTwoEvosRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spRandomBasicRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spTypeNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spTypeFwgRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spTypeTriangleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spTypeSingleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spBSTMinimumCheckbox.addActionListener(e -> enableOrDisableSubControls());
-        spBSTMaximumCheckbox.addActionListener(e -> enableOrDisableSubControls());
-        spBSTMinimumSpinner.addChangeListener(e -> checkSpMaximumNeedsRaise());
-        spBSTMaximumSpinner.addChangeListener(e -> checkSpMinimumNeedsLower());
-        stpUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        stpSwapLegendariesSwapStandardsRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        stpRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        stpRandomSimilarStrengthRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        stpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        igtUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        igtRandomizeGivenPokemonOnlyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        igtRandomizeBothRequestedGivenRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pmsUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pmsRandomPreferringSameTypeRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pmsRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pmsMetronomeOnlyModeRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpNoPrematureEvosCheckbox.addActionListener(e -> enableOrDisableSubControls());
-        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
-        tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
-        tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        tpRandomBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        tpSingleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        openROMButton.addActionListener(_ -> selectAndOpenRom());
+        pbsUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pbsShuffleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pbsRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pbsFollowMegaEvosCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        pbsFollowEvolutionsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        pbsStandardizeEXPCurvesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        paUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        paRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        peUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        peRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        peRandomEveryLevelRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        peChangeImpossibleEvosCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        peMakeEvolutionsEasierCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        peMakeEvolutionsEasierLvlSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
+        peAllowAltFormesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        spUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spCustomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spComboBox1.addActionListener(_ -> enableOrDisableSubControls());
+        spComboBox2.addActionListener(_ -> enableOrDisableSubControls());
+        spComboBox3.addActionListener(_ -> enableOrDisableSubControls());
+        spRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spRandomTwoEvosRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spRandomBasicRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spTypeNoneRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spTypeFwgRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spTypeTriangleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spTypeSingleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spBSTMinimumCheckbox.addActionListener(_ -> enableOrDisableSubControls());
+        spBSTMaximumCheckbox.addActionListener(_ -> enableOrDisableSubControls());
+        spBSTMinimumSpinner.addChangeListener(_ -> checkSpMaximumNeedsRaise());
+        spBSTMaximumSpinner.addChangeListener(_ -> checkSpMinimumNeedsLower());
+        stpUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        stpSwapLegendariesSwapStandardsRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        stpRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        stpRandomSimilarStrengthRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        stpPercentageLevelModifierCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        igtUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        igtRandomizeGivenPokemonOnlyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        igtRandomizeBothRequestedGivenRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pmsUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pmsRandomPreferringSameTypeRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pmsRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pmsMetronomeOnlyModeRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        pmsGuaranteedLevel1MovesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        pmsForceGoodDamagingCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpNoPrematureEvosCheckbox.addActionListener(_ -> enableOrDisableSubControls());
+        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(_ -> enableOrDisableSubControls());
+        tpPercentageEvolutionLevelModifierSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
+        tpPercentageLevelModifierCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpEliteFourUniquePokemonCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpUnchangedBattleStyleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        tpRandomBattleStyleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        tpSingleStyleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
 
-        wpRandomizeWildPokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        wpZoneNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpZoneEncounterSetRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpZoneMapRadioButton.addActionListener(e->enableOrDisableSubControls());
-        wpZoneNamedLocationRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpZoneGameRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpTRNoneRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpTRThemedAreasRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpTRKeepPrimaryRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        wpSimilarStrengthCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        wpSetMinimumCatchRateCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        wpRandomizeHeldItemsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        wpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tmUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        tmRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        tmForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        thcUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        thcRandomPreferSameTypeRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        thcRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        thcFullCompatibilityRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        mtcUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtcRandomPreferSameTypeRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtcRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        mtcFullCompatibilityRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        fiUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        fiShuffleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        fiRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        fiRandomEvenDistributionRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        shUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        shShuffleRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        shRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        puUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        puRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        wpRandomizeWildPokemonCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        wpZoneNoneRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpZoneEncounterSetRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpZoneMapRadioButton.addActionListener(_->enableOrDisableSubControls());
+        wpZoneNamedLocationRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpZoneGameRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpTRNoneRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpTRThemedAreasRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpTRKeepPrimaryRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        wpSimilarStrengthCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        wpSetMinimumCatchRateCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        wpRandomizeHeldItemsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        wpPercentageLevelModifierCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tmUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        tmRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        tmForceGoodDamagingCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        thcUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        thcRandomPreferSameTypeRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        thcRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        thcFullCompatibilityRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtForceGoodDamagingCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        mtcUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtcRandomPreferSameTypeRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtcRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        mtcFullCompatibilityRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        fiUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        fiShuffleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        fiRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        fiRandomEvenDistributionRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        shUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        shShuffleRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        shRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        puUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        puRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
         websiteLinkLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -613,18 +611,18 @@ public class RandomizerGUI {
                 }
             }
         });
-        randomizeSaveButton.addActionListener(e -> saveROM());
-        premadeSeedButton.addActionListener(e -> presetLoader());
-        loadSettingsButton.addActionListener(e -> loadQS());
-        saveSettingsButton.addActionListener(e -> saveQS());
-        settingsButton.addActionListener(e -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
-        themeSelectionMenuItem.addActionListener(e -> new ThemeSelectionDialog(this, frame));
-        customNamesEditorMenuItem.addActionListener(e -> new CustomNamesEditorDialog(frame));
-        applyGameUpdateMenuItem.addActionListener(e -> applyGameUpdateMenuItemActionPerformed());
-        removeGameUpdateMenuItem.addActionListener(e -> removeGameUpdateMenuItemActionPerformed());
-        loadGetSettingsMenuItem.addActionListener(e -> loadGetSettingsMenuItemActionPerformed());
-        keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(e -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
-        limitPokemonButton.addActionListener(e -> {
+        randomizeSaveButton.addActionListener(_ -> saveROM());
+        premadeSeedButton.addActionListener(_ -> presetLoader());
+        loadSettingsButton.addActionListener(_ -> loadQS());
+        saveSettingsButton.addActionListener(_ -> saveQS());
+        settingsButton.addActionListener(_ -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
+        themeSelectionMenuItem.addActionListener(_ -> new ThemeSelectionDialog(this, frame));
+        customNamesEditorMenuItem.addActionListener(_ -> new CustomNamesEditorDialog(frame));
+        applyGameUpdateMenuItem.addActionListener(_ -> applyGameUpdateMenuItemActionPerformed());
+        removeGameUpdateMenuItem.addActionListener(_ -> removeGameUpdateMenuItemActionPerformed());
+        loadGetSettingsMenuItem.addActionListener(_ -> loadGetSettingsMenuItemActionPerformed());
+        keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(_ -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
+        limitPokemonButton.addActionListener(_ -> {
             GenerationLimitDialog gld = new GenerationLimitDialog(frame, currentRestrictions,
                     romHandler.generationOfPokemon(), romHandler.forceSwapStaticMegaEvos());
             if (gld.pressedOK()) {
@@ -637,23 +635,23 @@ public class RandomizerGUI {
                 }
             }
         });
-        limitPokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpAllowAlternateFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpBossTrainersCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpImportantTrainersCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpRegularTrainersCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpBossTrainersItemsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpImportantTrainersItemsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpRegularTrainersItemsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        totpUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpRandomSimilarStrengthRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpAllyUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpAllyRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpAllyRandomSimilarStrengthRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        totpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        pbsUpdateBaseStatsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        mdUpdateMovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
+        limitPokemonCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpAllowAlternateFormesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpBossTrainersCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpImportantTrainersCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpRegularTrainersCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpBossTrainersItemsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpImportantTrainersItemsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tpRegularTrainersItemsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        totpUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpRandomSimilarStrengthRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpAllyUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpAllyRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpAllyRandomSimilarStrengthRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        totpPercentageLevelModifierCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        pbsUpdateBaseStatsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        mdUpdateMovesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
         frame.addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -675,30 +673,30 @@ public class RandomizerGUI {
 
             }
         });
-        ptUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        ptRandomFollowEvolutionsRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        ptRandomCompletelyRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        spRandomizeStarterHeldItemsCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tmLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        mtLevelupMoveSanityCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        noIrregularAltFormesCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        ptIsDualTypeCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        spTypeNoDualCheckbox.addActionListener(e->enableOrDisableSubControls());
-        teUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        teRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        teRandomBalancedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        teKeepTypeIdentitiesRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        teInverseRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        ppalUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        ppalRandomRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        cpgUnchangedRadioButton.addActionListener(e -> enableOrDisableSubControls());
-        cpgCustomRadioButton.addActionListener(e -> enableOrDisableSubControls());
+        ptUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        ptRandomFollowEvolutionsRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        ptRandomCompletelyRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        spRandomizeStarterHeldItemsCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        tmLevelupMoveSanityCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        mtLevelupMoveSanityCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        noIrregularAltFormesCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        ptIsDualTypeCheckBox.addActionListener(_ -> enableOrDisableSubControls());
+        spTypeNoDualCheckbox.addActionListener(_->enableOrDisableSubControls());
+        teUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        teRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        teRandomBalancedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        teKeepTypeIdentitiesRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        teInverseRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        ppalUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        ppalRandomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        cpgUnchangedRadioButton.addActionListener(_ -> enableOrDisableSubControls());
+        cpgCustomRadioButton.addActionListener(_ -> enableOrDisableSubControls());
         tpComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 enableOrDisableSubControls();
             }
         });
-        batchRandomizationMenuItem.addActionListener(e -> batchRandomizationSettingsDialog());
+        batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
     }
 
     private void checkSpMinimumNeedsLower() {
@@ -1066,7 +1064,7 @@ public class RandomizerGUI {
             int endingIndex = startingIndex + numberOfRandomizedROMs;
             final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
-            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
                 int i;
 
                 @Override
@@ -1230,11 +1228,7 @@ public class RandomizerGUI {
 
     private PrintStream getPrintStream(ByteArrayOutputStream baos) {
         PrintStream log;
-        try {
-            log = new PrintStream(baos, false, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log = new PrintStream(baos);
-        }
+        log = new PrintStream(baos, false, StandardCharsets.UTF_8);
         return log;
     }
 
@@ -3796,7 +3790,7 @@ public class RandomizerGUI {
                         romHandler.getSpeciesInclFormes()
                                 .stream()
                                 .filter(pk -> pk == null || !pk.isCosmeticReplacement())
-                                .collect(Collectors.toList()) :
+                                .toList() :
                         romHandler.getSpecies();
         String[] pokeNames = new String[allPokes.size()];
         pokeNames[0] = "Random";
@@ -3929,7 +3923,7 @@ public class RandomizerGUI {
         }
 
         try {
-            Scanner sc = new Scanner(fh, "UTF-8");
+            Scanner sc = new Scanner(fh, StandardCharsets.UTF_8);
             boolean isReadingUpdates = false;
             while (sc.hasNextLine()) {
                 String q = sc.nextLine().trim();
@@ -4021,7 +4015,7 @@ public class RandomizerGUI {
         }
 
         try {
-            PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, "UTF-8");
+            PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, StandardCharsets.UTF_8);
             ps.println("theme=" + theme);
             ps.println("checkedcustomnames=true");
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
@@ -4105,14 +4099,10 @@ public class RandomizerGUI {
         // but it was written in earlier versions so it feels safer to just keep it.
         // Feel free to investigate if you feel like it. Maybe it's entirely redundant.
         // --voliol 2025-04-27
-        try {
-            URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
-            String file = location.getFile();
-            String plusEncoded = file.replaceAll("\\+", "%2b");
-            File f = new File(java.net.URLDecoder.decode(plusEncoded, "UTF-8"));
-            RootPath.path = f.getParentFile() + File.separator;
-        } catch (UnsupportedEncodingException ignored) {
-            RootPath.path = "./";
-        }
+        URL location = RandomizerGUI.class.getProtectionDomain().getCodeSource().getLocation();
+        String file = location.getFile();
+        String plusEncoded = file.replaceAll("\\+", "%2b");
+        File f = new File(java.net.URLDecoder.decode(plusEncoded, StandardCharsets.UTF_8));
+        RootPath.path = f.getParentFile() + File.separator;
     }
 }

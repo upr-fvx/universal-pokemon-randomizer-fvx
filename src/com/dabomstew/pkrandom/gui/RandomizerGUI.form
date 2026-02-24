@@ -2106,9 +2106,9 @@
                         <properties>
                           <enabled value="false"/>
                           <majorTickSpacing value="10"/>
-                          <maximum value="50"/>
-                          <minimum value="-50"/>
-                          <minorTickSpacing value="2"/>
+                          <maximum value="20"/>
+                          <minimum value="-20"/>
+                          <minorTickSpacing value="1"/>
                           <paintLabels value="true"/>
                           <paintTicks value="true"/>
                           <snapToTicks value="true"/>

@@ -44,7 +44,7 @@ def launcher = javaToolchains.launcherFor {
 def javaHome = launcher.map { it.metadata.installationPath }
 
 // All of these are 64-bit
-def platforms = [
+ext.platforms = [
         Linux_x86: [
                 apiOS: 'linux', apiArchitecture: 'x64',
                 launcherExtension: 'sh'
@@ -84,7 +84,14 @@ platforms.each {name, cfg ->
 
     def decompress = tasks.register("decompressJmods${taskName}", Copy) {
         dependsOn download
-        from download.map { t -> decompresser(t.dest) }
+        from(download.map { t -> decompresser(t.dest) }) {
+            // This removes the intermediary "JDK-[version]-jmods" directory,
+            // which is nice because we don't know "[version]".
+            eachFile {
+                relativePath = new RelativePath(relativePath.isFile(), relativePath.segments.tail())
+            }
+            exclude '**-jmods'
+        }
         into layout.buildDirectory.dir("jmods/decompressed/${name}")
     }
 
@@ -177,15 +184,35 @@ tasks.register('createReleaseZips') {
 //    ]
 //}
 
-tasks.register('launchUnix', Exec) {
-    dependsOn 'moveIntoReleaseDirLinuxx86'
-
-    workingDir 'build/target/Linux_x86'
-    commandLine 'bash', './launcher_UNIX.sh'
+def detectPlatform() {
+    // detects the platform you're running this on
+    def name = System.getProperty('os.name')
+    def arch = System.getProperty('os.arch')
+    if (name.contains('Linux')) {
+        return arch == 'aarch64' ? platforms['Linux_ARM'] : platforms['Linux_x86']
+    }
+    if (name.contains('Windows')) {
+        return platforms['Windows']
+    }
+    if (name.contains('Mac') || name.contains('mac')) {
+        return arch == 'aarch64' ? platforms['Mac_ARM'] : platforms['Mac_x86']
+    }
 }
 
-tasks.register('relaunchUnix', Exec) {
+tasks.register('launch', Exec) {
+    def platform = detectPlatform()
+    println(platform)
+
+    println("./launcher.${platform.launcherExtension}")
+
+    dependsOn "moveIntoReleaseDirLinuxx86"
+
+    workingDir 'build/target/Linux_x86'
+    commandLine 'bash', "./launcher.${platform.launcherExtension}"
+}
+
+tasks.register('relaunch', Exec) {
     workingDir 'build/target'
-    commandLine 'bash', './launcher_UNIX.sh'
+    commandLine 'bash', './launcher.sh'
 }
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GBAImageTest {
 
-    private static final String IMAGES_ADDRESS = "test/resources/images";
+    private static final String IMAGES_ADDRESS = "src/test/resources/images";
 
     private static BufferedImage bim1;
     private static BufferedImage bim2;

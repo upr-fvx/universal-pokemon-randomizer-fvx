@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PlayerCharacterGraphicsTest {
 
-    private static final String TEST_CPG_PATH = "test/resources/players";
+    private static final String TEST_CPG_PATH = "src/test/resources/players";
 
     private static final List<GraphicsPackEntry> cpgEntries = initCPGEntries();
 

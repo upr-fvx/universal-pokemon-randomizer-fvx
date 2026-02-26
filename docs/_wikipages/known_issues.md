@@ -1,7 +1,7 @@
 ---
 name: Known Issues
 ---
-Here is a list of known issues with the randomizer, listed by game. If an issue appears on this page, that doesn't mean it will be ignored forever. It simply means it is an issue with the currently-released version of the randomizer. 
+Here is a list of known issues with the Randomizer, listed by game. If an issue appears on this page, that doesn't mean it will be ignored forever. It simply means it is an issue with the currently-released version of the Randomizer. 
 
 - [All Games](#all-games)
 - [Red/Blue/Green](#redbluegreen)

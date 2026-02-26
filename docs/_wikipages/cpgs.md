@@ -23,7 +23,7 @@ To add a CPG, create a new folder within `data/players/`, e.g. `data/players/my_
 - Image and/or palette file(s) containing the graphics. This can be a single sheet (recommended), or multiple images + palettes.
 - A text file called `info.ini`, containing some info about the custom player graphics, such as who made it, and also how to use the graphics file(s).
 
-![the randomizer's root folder, with data/ highlighted]({{ site.baseurl }}/assets/images/wikipages/cpg/nav1.png)
+![the Randomizer's root folder, with data/ highlighted]({{ site.baseurl }}/assets/images/wikipages/cpg/nav1.png)
 
 ![the data/ folder, with players/ highlighted]({{ site.baseurl }}/assets/images/wikipages/cpg/nav2.png)
 

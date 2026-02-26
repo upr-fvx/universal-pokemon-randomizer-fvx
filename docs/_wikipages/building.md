@@ -1,6 +1,8 @@
 ---
 name: Building the Universal Pokémon Randomizer FVX
 ---
+[TODO: rewrite this page entirely for Gradle changes]
+
 This page is to help aspiring developers learn how to build the randomizer; if you're not interested in development, please download an official release from our [release page](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases) instead. Versions of the randomizer built via the steps on this page will **not** be officially supported!
 
 ## Setting up the project IntelliJ IDEA

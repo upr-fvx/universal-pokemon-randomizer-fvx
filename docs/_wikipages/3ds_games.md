@@ -17,7 +17,7 @@ If you have a 3DS running custom firmware (CFW), you can dump your Pokemon games
 
 These are the primary formats that you'll see for 3DS games. **So long as your game is decrypted, Universal Pokemon Randomizer FVX can work with all of these!**
 
-* **CCI/3DS** - Short for **C**TR **C**art **I**mage. This is a dump of a game from a cartridge. It very often has the .3ds file extension, since cartridge dumps from the original DS had the .nds extension. The randomizer supports both .3ds and .cci file extensions.
+* **CCI/3DS** - Short for **C**TR **C**art **I**mage. This is a dump of a game from a cartridge. It very often has the .3ds file extension, since cartridge dumps from the original DS had the .nds extension. the Randomizer supports both .3ds and .cci file extensions.
 * **CIA** - Short for **C**TR **I**mportable **A**rchive. This is a dump of an installed title, usually purchased from the eShop. Digital games are dumped in this format, and game updates are also in this format.
 * **CXI** - Short for **C**TR e**X**ecutable **I**mage. You can consider this the "bare minimum" file format, as it contains only what is necessary to execute a program and nothing more. Both CCIs and CIAs *contain* a CXI for a game, along with other things like the game manual and system updates. None of these extras are strictly necessary for running a game, however.
 
@@ -31,15 +31,15 @@ The "CXI" option will output the game as a single CXI file; this file contains a
 
 ## 3DS game updates
 
-When a 3DS game is loaded in the randomizer, the Settings submenu will have new options to let you load a game update into the randomizer or unload a game update if one is currently loaded:
+When a 3DS game is loaded in the Randomizer, the Settings submenu will have new options to let you load a game update into the Randomizer or unload a game update if one is currently loaded:
 
 ![Image of Settings submenu when a 3DS game is loaded]({{ site.baseurl }}/assets/images/wikipages/3ds_games/settings.png)
 
-The "Load Game Update" option loads a game update (in CIA format) into the randomizer. Loading a game update will allow you to create a randomized version of the game with that update applied. For the 3DS games, these updates are almost exclusively bug fixes, but some bugs are either [game-breaking](https://bulbapedia.bulbagarden.net/wiki/Lumiose_City_save_glitch) or can [negatively affect randomization](https://bulbapedia.bulbagarden.net/wiki/List_of_glitches_in_Generation_VII#Evolution_move_learning_glitch). When you load a game update for the first time, the randomizer will remember the location of that update and automatically load it every time you load its associated game. If you want to stop using a game update, simply select "Unload Game Update".
+The "Load Game Update" option loads a game update (in CIA format) into the Randomizer. Loading a game update will allow you to create a randomized version of the game with that update applied. For the 3DS games, these updates are almost exclusively bug fixes, but some bugs are either [game-breaking](https://bulbapedia.bulbagarden.net/wiki/Lumiose_City_save_glitch) or can [negatively affect randomization](https://bulbapedia.bulbagarden.net/wiki/List_of_glitches_in_Generation_VII#Evolution_move_learning_glitch). When you load a game update for the first time, the Randomizer will remember the location of that update and automatically load it every time you load its associated game. If you want to stop using a game update, simply select "Unload Game Update".
 
-There are two important things to keep in mind when using game updates with the randomizer:
-- When a game update is loaded, the randomizer can *only* output your randomized game as a LayeredFS directory. This is a technical limitation based on how 3DS game updates work.
-- **If you create a LayeredFS directory using a particular version of the game, you *MUST* have that *same* version of the game installed in Citra or on your 3DS!** Ignoring this advice can lead to negative consequences, including the randomization simply not working or the game outright crashing upon booting up. To help you determine which version of the game update you need to install, the [ROM Information section]({{ site.baseurl }}/assets/images/wikipages/3ds_games/rom_info.png) in the randomizer will display the game's version if a game update is loaded. For more information about managing game updates in Citra or on your 3DS, please read [Managing game updates](#managing-game-updates).
+There are two important things to keep in mind when using game updates with the Randomizer:
+- When a game update is loaded, the Randomizer can *only* output your randomized game as a LayeredFS directory. This is a technical limitation based on how 3DS game updates work.
+- **If you create a LayeredFS directory using a particular version of the game, you *MUST* have that *same* version of the game installed in Citra or on your 3DS!** Ignoring this advice can lead to negative consequences, including the randomization simply not working or the game outright crashing upon booting up. To help you determine which version of the game update you need to install, the [ROM Information section]({{ site.baseurl }}/assets/images/wikipages/3ds_games/rom_info.png) in the Randomizer will display the game's version if a game update is loaded. For more information about managing game updates in Citra or on your 3DS, please read [Managing game updates](#managing-game-updates).
 
 ## Guide for creating a randomized game
 1. Open the Universal Pokemon Randomizer FVX
@@ -52,14 +52,14 @@ There are two important things to keep in mind when using game updates with the 
 
 These steps below assume that you have a randomized CXI, created as described in [this section](#guide-for-creating-a-randomized-game).
 
-1. If you loaded a game update in the randomizer, make sure that Citra has the same version of that game update installed. If you did *not* load a game update, then make sure that Citra *also* does not have any game updates for the game installed. The [Managing game updates in Citra](#managing-game-updates-in-citra) section will help you with this.
+1. If you loaded a game update in the Randomizer, make sure that Citra has the same version of that game update installed. If you did *not* load a game update, then make sure that Citra *also* does not have any game updates for the game installed. The [Managing game updates in Citra](#managing-game-updates-in-citra) section will help you with this.
 2. In Citra, select File -> Load File..., then load the CXI you created earlier
 
 ## Guide for playing your randomized LayeredFS directory on the Citra emulator
 
 These steps below assume that you have a randomized LayeredFS directory, created as described in [this section](#guide-for-creating-a-randomized-game).
 
-1. If you loaded a game update in the randomizer, make sure that Citra has the same version of that game update installed. If you did *not* load a game update, then make sure that Citra *also* does not have any game updates for the game installed. The [Managing game updates in Citra](#managing-game-updates-in-citra) section will help you with this.
+1. If you loaded a game update in the Randomizer, make sure that Citra has the same version of that game update installed. If you did *not* load a game update, then make sure that Citra *also* does not have any game updates for the game installed. The [Managing game updates in Citra](#managing-game-updates-in-citra) section will help you with this.
 2. In Citra, right-click the game in the game list and select "Open Mods Location"
 2. Navigate to where you saved your LayeredFS directory; you should see a folder whose name consists of sixteen hexadecimal digits which vary depending on the game. Copy what's *within* the LayeredFS directory and paste it in the mod folder that you opened in the last step. You're doing it correctly if you're copying over a "romfs" directory and a file called "code.bin"
 3. Double-click on the game in the game list to load the now-modified game
@@ -71,12 +71,12 @@ These steps below assume you are running [Luma3DS](https://github.com/LumaTeam/L
 1. Insert your 3DS's SD card into your computer, then navigate to where you saved your LayeredFS directory; you should see a folder whose name consists of sixteen hexadecimal digits which vary depending on the game. Copy this directory and paste it to sdroot:/luma/titles
 2. Eject your 3DS's SD card from your computer and insert it back into your 3DS
 3. Turn on your 3DS and enter Luma configuration mode (this is usually done by holding Select while pressing Power). Ensure that "Enable game patching" is enabled [like so]({{ site.baseurl }}/assets/images/wikipages/3ds_games/enable_patching.png), then press Start to save and reboot into the regular 3DS Home Menu.
-4. If you loaded a game update in the randomizer, make sure that your 3DS has the same version of that game update installed. If you did *not* load a game update, then make sure that your 3DS *also* does not have any game updates for the game installed. The [Managing game updates on a 3DS](#managing-game-updates-on-a-3ds) section will help you with this.
+4. If you loaded a game update in the Randomizer, make sure that your 3DS has the same version of that game update installed. If you did *not* load a game update, then make sure that your 3DS *also* does not have any game updates for the game installed. The [Managing game updates on a 3DS](#managing-game-updates-on-a-3ds) section will help you with this.
 5. Return to the 3DS Home Menu and select your Pokemon game
 
 ## Managing game updates
 
-To repeat what was said earlier: **if you create a LayeredFS directory using a particular version of the game, you *MUST* have that *same* version of the game installed in Citra or on your 3DS.** This section will teach you how to manage game updates so that you can make sure your version of the game matches the version you've loaded in the randomizer.
+To repeat what was said earlier: **if you create a LayeredFS directory using a particular version of the game, you *MUST* have that *same* version of the game installed in Citra or on your 3DS.** This section will teach you how to manage game updates so that you can make sure your version of the game matches the version you've loaded in the Randomizer.
 
 #### Managing game updates in Citra
 To install a game update...

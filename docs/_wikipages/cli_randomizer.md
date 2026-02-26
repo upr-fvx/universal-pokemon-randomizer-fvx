@@ -1,7 +1,7 @@
 ---
 name: CLI Randomizer
 ---
-The CLI randomizer can be used by starting the randomizer from the command line with the program argument `cli`.
+The CLI randomizer can be used by starting the Randomizer from the command line with the program argument `cli`.
 
 ```
 Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for output ROM>

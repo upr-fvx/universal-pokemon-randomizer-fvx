@@ -1,13 +1,13 @@
 ---
 name: Important Info
 ---
-This page contains information that is recommended for everyone who uses the randomizer to read.
+This page contains information that is recommended for everyone who uses the Randomizer to read.
 
-The information here is only such information that takes up too much space to be in the program itself; if you're wondering what some setting in the randomizer does, you can hover your mouse over the setting in the program to get a pop-up description. Additional information about some settings can also be found on the other pages of this Wiki.
+The information here is only such information that takes up too much space to be in the program itself; if you're wondering what some setting in the Randomizer does, you can hover your mouse over the setting in the program to get a pop-up description. Additional information about some settings can also be found on the other pages of this Wiki.
 
 ## EXP Curves and Evolutions
 
-Experience (EXP) Curves are what determine how quickly a Pokemon levels up; there is a setting in the randomizer that can be used to standardize these for all Pokemon in a few different ways. However, EXP Curves have a less obvious side effect: **Pokemon can only evolve into Pokemon that have the same EXP Curve as themselves.** As such, standardizing EXP Curves will expand the pool of possible evolutions for all Pokemon (for some Pokemon, quite drastically - for example, [there are only 14 Pokemon with the Fluctuating EXP Curve,](https://bulbapedia.bulbagarden.net/wiki/Category:Pok%C3%A9mon_in_the_Fluctuating_experience_group) so their random evolution possibilities are **very** limited if EXP Curves are not standardized).
+Experience (EXP) Curves are what determine how quickly a Pokemon levels up; there is a setting in the Randomizer that can be used to standardize these for all Pokemon in a few different ways. However, EXP Curves have a less obvious side effect: **Pokemon can only evolve into Pokemon that have the same EXP Curve as themselves.** As such, standardizing EXP Curves will expand the pool of possible evolutions for all Pokemon (for some Pokemon, quite drastically - for example, [there are only 14 Pokemon with the Fluctuating EXP Curve,](https://bulbapedia.bulbagarden.net/wiki/Category:Pok%C3%A9mon_in_the_Fluctuating_experience_group) so their random evolution possibilities are **very** limited if EXP Curves are not standardized).
 
 ## Quirks involving the "Follow Mega Evolutions" settings in Gen 7
 

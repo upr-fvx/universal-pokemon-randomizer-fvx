@@ -3135,18 +3135,27 @@ public class RandomizerGUI {
     private void updateSliderValue(JSlider slider, int newVal) {
         // Guarantee that newVal is between the min and max, the action listener will then cause moveSliderInterval to
         // update the bounds correctly
-        slider.setMinimum(newVal - 1);
-        slider.setMaximum(newVal + 1);
+        slider.setMinimum(newVal - 15);
+        slider.setMaximum(newVal + 15);
         slider.setValue(newVal);
     }
 
     private void moveSliderInterval(JSlider slider) {
+        int newMin = slider.getMinimum();
         int newVal = slider.getValue();
+        int newMax = slider.getMaximum();
+
         int min = -50;
         int max = 75;
-        int size = 20;
-        int newMin = Math.min(Math.max(min, newVal - size), max - 2*size);
-        int newMax = Math.min(Math.max(min + 2*size, newVal + size), max);
+        int size = 15;
+        int scrollZone = 7;
+        if (newVal < newMin + scrollZone && min != newMin) {
+            newMin = Math.max(min, newVal - scrollZone);
+            newMax = newMin + 2*size;
+        } else if (newMax - scrollZone < newVal && max != newMax) {
+            newMax = Math.min(max, newVal + scrollZone);
+            newMin = newMax - 2*size;
+        }
 
         slider.setMinimum(newMin);
         slider.setMaximum(newMax);

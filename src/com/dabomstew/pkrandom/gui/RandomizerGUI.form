@@ -2105,9 +2105,9 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <majorTickSpacing value="10"/>
-                          <maximum value="20"/>
-                          <minimum value="-20"/>
+                          <majorTickSpacing value="5"/>
+                          <maximum value="15"/>
+                          <minimum value="-15"/>
                           <minorTickSpacing value="1"/>
                           <paintLabels value="true"/>
                           <paintTicks value="true"/>

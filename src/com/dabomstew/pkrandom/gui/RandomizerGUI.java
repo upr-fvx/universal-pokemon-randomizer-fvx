@@ -433,6 +433,8 @@ public class RandomizerGUI {
     private List<String> selectableBattleStylesTooltips = new ArrayList<>();
     private final int SINGLE_BATTLE = 0, DOUBLE_BATTLE = 1, TRIPLE_BATTLE = 2, ROTATION_BATTLE = 3;
 
+    private final int SLIDER_MIN = -50, SLIDER_MAX = 75, SLIDER_WINDOW = 15, SLIDER_SCROLL_ZONE = 7;
+
     private BatchRandomizationSettings batchRandomizationSettings;
 
     public RandomizerGUI() {
@@ -3135,8 +3137,8 @@ public class RandomizerGUI {
     private void updateSliderValue(JSlider slider, int newVal) {
         // Guarantee that newVal is between the min and max, the action listener will then cause moveSliderInterval to
         // update the bounds correctly
-        slider.setMinimum(newVal - 15);
-        slider.setMaximum(newVal + 15);
+        slider.setMinimum(Math.max(SLIDER_MIN, newVal - SLIDER_WINDOW));
+        slider.setMaximum(Math.min(SLIDER_MAX, newVal + SLIDER_WINDOW));
         slider.setValue(newVal);
     }
 
@@ -3145,16 +3147,12 @@ public class RandomizerGUI {
         int newVal = slider.getValue();
         int newMax = slider.getMaximum();
 
-        int min = -50;
-        int max = 75;
-        int size = 15;
-        int scrollZone = 7;
-        if (newVal < newMin + scrollZone && min != newMin) {
-            newMin = Math.max(min, newVal - scrollZone);
-            newMax = newMin + 2*size;
-        } else if (newMax - scrollZone < newVal && max != newMax) {
-            newMax = Math.min(max, newVal + scrollZone);
-            newMin = newMax - 2*size;
+        if (newVal < newMin + SLIDER_SCROLL_ZONE && SLIDER_MIN != newMin) {
+            newMin = Math.max(SLIDER_MIN, newVal - SLIDER_SCROLL_ZONE);
+            newMax = newMin + 2*SLIDER_WINDOW;
+        } else if (newMax - SLIDER_SCROLL_ZONE < newVal && SLIDER_MAX != newMax) {
+            newMax = Math.min(SLIDER_MAX, newVal + SLIDER_SCROLL_ZONE);
+            newMin = newMax - 2*SLIDER_WINDOW;
         }
 
         slider.setMinimum(newMin);

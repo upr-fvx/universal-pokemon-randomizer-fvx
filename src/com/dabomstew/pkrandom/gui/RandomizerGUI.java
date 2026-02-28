@@ -433,7 +433,7 @@ public class RandomizerGUI {
     private List<String> selectableBattleStylesTooltips = new ArrayList<>();
     private final int SINGLE_BATTLE = 0, DOUBLE_BATTLE = 1, TRIPLE_BATTLE = 2, ROTATION_BATTLE = 3;
 
-    private final int SLIDER_MIN = -50, SLIDER_MAX = 75, SLIDER_WINDOW = 15, SLIDER_SCROLL_ZONE = 7;
+    private final int SLIDER_MIN = -50, SLIDER_MAX = 75, SLIDER_WINDOW = 15, SLIDER_SCROLL_ZONE = 3;
 
     private BatchRandomizationSettings batchRandomizationSettings;
 

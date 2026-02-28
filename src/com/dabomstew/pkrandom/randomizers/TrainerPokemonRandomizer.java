@@ -493,6 +493,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
             pickFrom = cacheOrReplacement;
         }
 
+        if (!alreadyPlaced.isEmpty()) {
+            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
+            // Remove species already placed for the current trainer from pool
+            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
+            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
+            if (pickFrom.isEmpty()) {
+                pickFrom.addAll(alreadyPlaced);
+                alreadyPlaced.clear();
+            }
+        }
+
         if (type != null && cachedByType != null) {
             // "Type Themed" settings
             SpeciesSet pokemonOfType;
@@ -560,19 +571,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 return cachePick;
             }
             //if we didn't... well, if it's banned anyway, it might as well be from the substitution set
-        }
-
-        if (!alreadyPlaced.isEmpty()) {
-            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
-            // Remove species already placed for the current trainer from pool
-            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
-            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
-            if (pickFrom.isEmpty()) {
-                // Try again with alreadyPlaced empty and thus allowing duplicates while trying to uphold other contracts.
-                alreadyPlaced.clear();
-                return pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
-                        swapMegaEvos, useInsteadOfCached, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
-            }
         }
 
         return usePowerLevels ?

@@ -3454,7 +3454,7 @@ public class RandomizerGUI {
 
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
-        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected() || noPrematureEvosCheckbox.isSelected()) {
+        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
             tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
             // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
             tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());

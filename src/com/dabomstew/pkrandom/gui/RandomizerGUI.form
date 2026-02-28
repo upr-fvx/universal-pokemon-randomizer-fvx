@@ -62,8 +62,8 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.text"/>
-              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.toolTipText"/>
+              <text resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noPrematureEvosCheckbox.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.noPrematureEvosCheckbox.toolTipText"/>
             </properties>
           </component>
           <component id="cb8f5" class="javax.swing.JCheckBox" binding="noRandomIntroMonCheckBox">

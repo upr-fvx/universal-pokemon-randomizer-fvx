@@ -27,7 +27,7 @@ public class RandomizerTest {
 
     protected static final Random RND = new Random();
 
-    private static final String TEST_ROMS_PATH = "test/roms";
+    private static final String TEST_ROMS_PATH = System.getProperty("romsPath");
     private static final String LAST_DOT_REGEX = "\\.+(?![^.]*\\.)";
 
     //extremely hacky workaround for lack of ParameterizedContainer

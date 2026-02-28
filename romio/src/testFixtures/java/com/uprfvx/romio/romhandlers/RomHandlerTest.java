@@ -7,8 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -23,9 +21,7 @@ public class RomHandlerTest {
     // and expect some test cases to need updating too, though hopefully only in a minor way
     protected static final int HIGHEST_GENERATION = 7;
 
-    protected static final Random RND = new Random();
-
-    private static final String TEST_ROMS_PATH = "test/roms";
+    private static final String TEST_ROMS_PATH = System.getProperty("romsPath");
     private static final String LAST_DOT_REGEX = "\\.+(?![^.]*\\.)";
 
     public static String[] getRomNames() {
@@ -42,7 +38,7 @@ public class RomHandlerTest {
             names = paths.filter(Files::isRegularFile)
                     .map(p -> p.toFile().getName()).filter(s -> !s.endsWith(".txt"))
                     .map(s -> s.split(LAST_DOT_REGEX)[0])
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

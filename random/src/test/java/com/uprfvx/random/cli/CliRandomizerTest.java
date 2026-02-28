@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CliRandomizerTest {
 
-    static final String SOURCE_PATH = RootPath.path + "/test/roms/Gold (U).gbc";
-    static final String OUT_PATH = RootPath.path + "/out/cli_test_out.gbc";
-    static final String SETTINGS_PATH = RootPath.path + "/test/resources/settings/cli_clean.rnqs";
-    static final String SETTINGS_PATH_INVALID = RootPath.path + "/test/resources/settings/cli_invalid.rnqs";
+    static final String SOURCE_PATH = System.getProperty("romsPath") + "/Gold (U).gbc";
+    static final String OUT_PATH = "build/test-results/cli_test_out.gbc";
+    static final String SETTINGS_PATH = "src/test/resources/settings/cli_clean.rnqs";
+    static final String SETTINGS_PATH_INVALID = "src/test/resources/settings/cli_invalid.rnqs";
 
     static final String SETTINGS_STRING = "416ACOBAQQEAAcAAQAEAAEeCQARAQEUAAAUAEAEAAEA/////wAAAAAyBDIBAAgJMgkCADIAAgABAAEBAAAAAAAJAAABEFBva2Vtb24gQmx1ZSAoVSkobx8q48M4ig==";
     static final String SETTINGS_STRING_INVALID = "ö416ACOBAQQEAAcAAQAEAAEeCQARAQEUAAAUAEAEAAEA/////wAAAAAyBDIBAAgJMgkCADIAAgABAAEBAAAAAAAJAAABEFBva2Vtb24gQmx1ZSAoVSkobx8q48M4ig==";

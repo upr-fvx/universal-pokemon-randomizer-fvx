@@ -51,6 +51,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 1-7) The first rival and/or friend battles no longer have their
   Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
   Level Modifier:'. (Pull request #164)
+- (Gen 1-7) Even for 'Unchanged' Trainer Pokemon, if an 'Additional Pokemon
+  for...' option is selected, enable respective 'Force Diverse Types for...'
+  option as well. Selecting it guarantees that for any trainers that are not
+  type themed the added Pokemon have diverse types from the original Pokemon of
+  the trainer. (Issue #150)
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.

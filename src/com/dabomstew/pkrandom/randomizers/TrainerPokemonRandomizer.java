@@ -197,15 +197,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
             Set<Type> usedTypes = EnumSet.noneOf(Type.class);
 
             SpeciesSet alreadyPlaced = new SpeciesSet(); // Must stay empty throughout if avoidDuplicates == false
-            if (avoidDuplicates && skipOriginalTeamMembers) {
-                // If only additional TP are randomized, remember the original team members as already placed
+
+            // If only additional TP are randomized, remember the original team members or their types as already used
+            if ((avoidDuplicates || forceTypeDiverse) && skipOriginalTeamMembers) {
                 for (TrainerPokemon tp : trainerPokemonList) {
                     if (!tp.isAddedTeamMember()) {
                         Species sp = tp.getSpecies();
                         if (tp.getForme() > 0) {
                             sp = romHandler.getAltFormeOfSpecies(sp, tp.getForme());
                         }
-                        alreadyPlaced.add(sp);
+                        if (avoidDuplicates) {
+                            alreadyPlaced.add(sp);
+                        }
+                        updateUsedTypes(forceTypeDiverse, typeForTrainer, usedTypes, sp);
                     }
                 }
             }
@@ -288,12 +292,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     bannedFromUnique.add(newSp);
                 }
 
-                if(forceTypeDiverse && typeForTrainer == null) {
-                    usedTypes.add(newSp.getPrimaryType(false));
-                    if(newSp.hasSecondaryType(false)) {
-                        usedTypes.add(newSp.getSecondaryType(false));
-                    }
-                }
+                updateUsedTypes(forceTypeDiverse, typeForTrainer, usedTypes, newSp);
 
                 if (swapThisMegaEvo) {
                     tp.setHeldItem(newSp
@@ -312,6 +311,15 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Save it all up
         changesMade = true;
+    }
+
+    private static void updateUsedTypes(boolean forceTypeDiverse, Type typeForTrainer, Set<Type> usedTypes, Species sp) {
+        if(forceTypeDiverse && typeForTrainer == null) {
+            usedTypes.add(sp.getPrimaryType(false));
+            if(sp.hasSecondaryType(false)) {
+                usedTypes.add(sp.getSecondaryType(false));
+            }
+        }
     }
 
     private Type getTypeForTrainer(Trainer t, boolean isTypeThemed, boolean weightByFrequency, boolean noLegendaries, boolean includeFormes, boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes) {

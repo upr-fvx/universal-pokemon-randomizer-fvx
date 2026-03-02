@@ -30,6 +30,12 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
 ### Pokemon Base Stats
+- (Gen 1-7) Moved the option 'Do Not Use Prematurely Evolved Pokemon' from the
+  Trainer Pokemon tab to the General Options. If selected, it now also affects
+  randomized Wild Pokemon if neither 'Same Evolution Stage' nor 'Keep
+  Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
+
+### Pokemon Base Stats
 - [The description of a new feature here.]
 
 ### Static Pokemon

@@ -44,7 +44,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         //TODO: this method direly needs a refactor to despaghettify
         boolean usePowerLevels = settings.isTrainersUsePokemonOfSimilarStrength();
         boolean avoidDuplicates = settings.isTrainersAvoidDuplicates();
-        boolean doNotUsePrematureEvos = settings.isTrainersDoNotGetPrematureEvos();
         boolean weightByFrequency = settings.isTrainersMatchTypingDistribution();
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
@@ -57,6 +56,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
+        boolean doNotUsePrematureEvos = settings.isBanPrematureEvos();
         boolean swapMegaEvos = settings.isSwapTrainerMegaEvos();
         boolean shinyChance = settings.isShinyChance();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;

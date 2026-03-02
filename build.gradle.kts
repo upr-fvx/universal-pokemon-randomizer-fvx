@@ -1,12 +1,12 @@
 // This root-level build.gradle contains build info that can be/is shared between the modules.
 
 plugins {
-    id 'java'
-    id 'io.github.file5.guidesigner' version '1.0.2'
+    java
+    id("io.github.file5.guidesigner") version "1.0.2"
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply(plugin = "java")
 
     java {
         toolchain {
@@ -19,12 +19,12 @@ subprojects {
     }
 
     dependencies {
-        testImplementation('org.junit.jupiter:junit-jupiter:5.10.0')
-        testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+        testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
-    tasks.named('test', Test) {
-        systemProperty "romsPath", rootProject.file("roms").absolutePath
+    tasks.named<Test>("test") {
+        systemProperty("romsPath", rootProject.file("roms").absolutePath)
         useJUnitPlatform()
         ignoreFailures = true
     }

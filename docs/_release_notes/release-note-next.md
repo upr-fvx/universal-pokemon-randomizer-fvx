@@ -7,7 +7,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
+@bergmaen for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
@@ -29,10 +29,32 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION]-[OS].zip`. If y
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
 ### Pokemon Base Stats
+- (Gen 1-7) Moved the option 'Do Not Use Prematurely Evolved Pokemon' from the
+  Trainer Pokemon tab to the General Options. If selected, it now also affects
+  randomized Wild Pokemon if neither 'Same Evolution Stage' nor 'Keep
+  Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
+
+### Pokemon Base Stats
 - [The description of a new feature here.]
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
+
+### Trainer Pokemon
+- (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,
+  any randomly chosen Pokemon for a given trainer will be different from the
+  other Pokemon of the trainer. However, if other rules restrict the set of
+  available Pokemon too much, duplicates are possible and weaker or stronger
+  Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
+  selected. (Issue #162)
+- (Gen 1-7) The first rival and/or friend battles no longer have their
+  Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
+  Level Modifier:'. (Pull request #164)
+- (Gen 1-7) Even for 'Unchanged' Trainer Pokemon, if an 'Additional Pokemon
+  for...' option is selected, enable respective 'Force Diverse Types for...'
+  option as well. Selecting it guarantees that for any trainers that are not
+  type themed the added Pokemon have diverse types from the original Pokemon of
+  the trainer. (Issue #150)
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
@@ -56,5 +78,7 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION]-[OS].zip`. If y
     - It should be possible to further facilitate/automatize tasks, using GitHub Actions hooking into Gradle.
 
 ## Bugfixes
+- (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
+  'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
 - (Gen [N]) Fixed [...]. (Issue #[issue num])
 - (GUI) Fixed [...].

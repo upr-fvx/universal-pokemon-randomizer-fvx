@@ -23,17 +23,6 @@
           <color color="-4473925"/>
         </border>
         <children>
-          <component id="f2100" class="javax.swing.JCheckBox" binding="raceModeCheckBox" default-binding="true">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag top="0" left="0" bottom="0" right="30" weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <enabled value="false"/>
-              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.raceModeCheckBox.text"/>
-              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.raceModeCheckBox.toolTipText"/>
-            </properties>
-          </component>
           <component id="d9ef2" class="javax.swing.JCheckBox" binding="limitPokemonCheckBox">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -66,15 +55,37 @@
               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.noIrregularAltFormesCheckBox.toolTipText"/>
             </properties>
           </component>
-          <component id="cb8f5" class="javax.swing.JCheckBox" binding="noRandomIntroMonCheckBox">
+          <component id="23cx3" class="javax.swing.JCheckBox" binding="noPrematureEvosCheckbox">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
               <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.noPrematureEvosCheckbox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.noPrematureEvosCheckbox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="cb8f5" class="javax.swing.JCheckBox" binding="noRandomIntroMonCheckBox">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
               <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.noRandomIntroMonCheckBox.text"/>
               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.noRandomIntroMonCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="f2100" class="javax.swing.JCheckBox" binding="raceModeCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="0" left="0" bottom="0" right="30" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.raceModeCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.raceModeCheckBox.toolTipText"/>
             </properties>
           </component>
         </children>
@@ -1900,15 +1911,112 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSimilarStrengthCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="23cx3" class="javax.swing.JCheckBox" binding="tpNoPrematureEvosCheckbox">
+                      <component id="25cfb" class="javax.swing.JCheckBox" binding="tpAvoidDuplicatesCheckBox">
                         <constraints>
                           <grid row="3" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpNoPrematureEvosCheckbox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpAvoidDuplicatesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpAvoidDuplicatesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="5ff08" class="javax.swing.JCheckBox" binding="tpWeightTypesCheckBox">
+                        <constraints>
+                          <grid row="4" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpWeightTypesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpWeightTypesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="82ca5" class="javax.swing.JCheckBox" binding="tpUseLocalPokemonCheckBox">
+                        <constraints>
+                          <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpUseLocalPokemon.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpUseLocalPokemon.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="acf1a" class="javax.swing.JCheckBox" binding="tpDontUseLegendariesCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="6" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpDontUseLegendariesCheckBox.text"/>
+                        </properties>
+                      </component>
+                      <component id="d0471" class="javax.swing.JCheckBox" binding="tpNoEarlyWonderGuardCheckBox">
+                        <constraints>
+                          <grid row="7" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpNoEarlyWonderGuardCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpNoEarlyWonderGuardCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="be65d" class="javax.swing.JCheckBox" binding="tpAllowAlternateFormesCheckBox">
+                        <constraints>
+                          <grid row="8" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpAllowAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpAllowAlternateFormesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="af4d1" class="javax.swing.JCheckBox" binding="tpSwapMegaEvosCheckBox">
+                        <constraints>
+                          <grid row="9" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSwapMegaEvosCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSwapMegaEvosCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="34a10" class="javax.swing.JCheckBox" binding="tpRandomShinyTrainerPokemonCheckBox">
+                        <constraints>
+                          <grid row="10" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomShinyTrainerPokemonCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomShinyTrainerPokemonCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="28e4c" class="javax.swing.JCheckBox" binding="tpEliteFourUniquePokemonCheckBox">
+                        <constraints>
+                          <grid row="11" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <selected value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
+                        <constraints>
+                          <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
                         </properties>
                       </component>
                       <component id="e225c" class="javax.swing.JCheckBox" binding="tpRandomizeTrainerNamesCheckBox">
@@ -2361,30 +2469,9 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
-                        <constraints>
-                          <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                        </properties>
-                      </component>
-                      <component id="28e4c" class="javax.swing.JCheckBox" binding="tpEliteFourUniquePokemonCheckBox">
-                        <constraints>
-                          <grid row="11" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <selected value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
                       <hspacer id="4e1ca">
                         <constraints>
-                          <grid row="12" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="13" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>

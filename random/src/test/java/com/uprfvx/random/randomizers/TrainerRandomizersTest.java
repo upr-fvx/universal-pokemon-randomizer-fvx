@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TrainerRandomizersTest extends RandomizerTest {
@@ -601,7 +602,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         Settings settings = new Settings();
         settings.setTrainersMod(Settings.TrainersMod.RANDOM);
-        settings.setTrainersDoNotGetPrematureEvos(true);
+        settings.setBanPrematureEvos(true);
 
         new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
 
@@ -666,6 +667,118 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void typeDiverseTrainersWorksForAddedPokemon(String romName) {
+        activateRomHandler(romName);
+
+        Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
+        Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
+        recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
+
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.UNCHANGED);
+        addPossibleTrainerPokemon();
+        settings.setDiverseTypesForRegularTrainers(true);
+        settings.setDiverseTypesForImportantTrainers(true);
+        settings.setDiverseTypesForBossTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+
+        for (Trainer trainer : romHandler.getTrainers()) {
+            Set<Type> usedTypes = EnumSet.noneOf(Type.class);
+
+            Type theme = typeThemedTrainers.get(trainer);
+            boolean hasNoTypeTheme = theme == null;
+
+            System.out.println(trainer.getFullDisplayName() + " with " +
+                    (hasNoTypeTheme ? "no type theme" : "type theme " + theme) + ".");
+
+            if (hasNoTypeTheme) {
+                // Record used original types
+                for (TrainerPokemon tp : trainer.getPokemon()) {
+                    if (!tp.isAddedTeamMember()) {
+                        Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                        usedTypes.add(sp.getPrimaryType(false));
+                        if (sp.hasSecondaryType(false)) {
+                            usedTypes.add(sp.getSecondaryType(false));
+                        }
+
+                    }
+                }
+            }
+
+            for (TrainerPokemon tp : trainer.getPokemon()) {
+                Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+
+                Type primaryType = sp.getPrimaryType(false);
+                Type secondaryType = sp.getSecondaryType(false);
+
+                System.out.println("\t" + sp.getFullName() + ": " + primaryType +
+                        (secondaryType == null ? "" : "/" + secondaryType));
+                if (tp.isAddedTeamMember() && hasNoTypeTheme) {
+                    // Added trainer Pokemon shall not share any types with each other and the original team members
+                    if (usedTypes.contains(primaryType)) {
+                        fail("Type " + primaryType + " already used by this trainer!");
+                    }
+                    usedTypes.add(primaryType);
+
+                    if (secondaryType != null) {
+                        if (usedTypes.contains(secondaryType)) {
+                            fail("Type " + secondaryType + " already used by this trainer!");
+                        }
+                        usedTypes.add(secondaryType);
+                    }
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void typeDiverseTrainersDoesNotBreakTypeThemeForAddedPokemon(String romName) {
+        activateRomHandler(romName);
+
+        Map<Trainer, List<String>> beforeTrainerStrings = new HashMap<>();
+        Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
+        recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
+
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.UNCHANGED);
+        addPossibleTrainerPokemon();
+        settings.setDiverseTypesForRegularTrainers(true);
+        settings.setDiverseTypesForImportantTrainers(true);
+        settings.setDiverseTypesForBossTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+
+        for (Trainer trainer : romHandler.getTrainers()) {
+            Type theme = typeThemedTrainers.get(trainer);
+            boolean hasNoTypeTheme = theme == null;
+
+            System.out.println(trainer.getFullDisplayName() + " with " +
+                    (hasNoTypeTheme ? "no type theme" : "type theme " + theme) + ".");
+
+            for (TrainerPokemon tp : trainer.getPokemon()) {
+                Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+
+                Type primaryType = sp.getPrimaryType(false);
+                Type secondaryType = sp.getSecondaryType(false);
+
+                System.out.println("\t" + sp.getFullName() + ": " + primaryType +
+                        (secondaryType == null ? "" : "/" + secondaryType));
+                if (tp.isAddedTeamMember() && !hasNoTypeTheme) {
+                    // Trainer has type theme, additional Pokemon must adhere to it
+                    // NOTE: only check added team members because, e.g., GYM trainers original Pokemon might not adhere
+                    // to the Gym's type theme
+                    if (primaryType != theme && !(secondaryType != null && secondaryType == theme)) {
+                        fail("Pokemon does not use type theme of this trainer!");
+                    }
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void addedPokemonKeepTypeTheme(String romName) {
         activateRomHandler(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
@@ -722,6 +835,37 @@ public class TrainerRandomizersTest extends RandomizerTest {
             }
 
             assertTrue(duplicateHighestLevel || !ace.isAddedTeamMember());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomTrainerHaveAvoidDuplicates(String romName) {
+        activateRomHandler(romName);
+        assumeTrue(romHandler.canAddPokemonToBossTrainers());
+
+        addPossibleTrainerPokemon(); // Fill all trainer teams to increase chance of duplicates if there is a bug
+
+        Settings s = new Settings(); //TrainersMod == UNCHANGED
+        s.setTrainersMod(Settings.TrainersMod.RANDOM);
+        s.setTrainersAvoidDuplicates(true);
+        // Restrict pool to make duplicates more likely if there is a bug
+        s.setTrainersUsePokemonOfSimilarStrength(true);
+        s.setTrainersBlockLegendaries(true);
+        s.setBanPrematureEvos(true);
+        s.setTrainersEvolveTheirPokemon(true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        for (Trainer tr : romHandler.getTrainers()) {
+            System.out.println(tr);
+
+            SpeciesSet alreadyPlaced = new SpeciesSet();
+
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                Species sp = tp.getSpecies();
+                assumeFalse(alreadyPlaced.contains(sp)); // species must not have been placed already
+                alreadyPlaced.add(sp);
+            }
         }
     }
 

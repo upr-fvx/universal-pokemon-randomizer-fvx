@@ -34,6 +34,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
+            if (t.isFirstRivalOrFriend() && levelModifier > 0) continue;
             applyLevelModifierToTrainerPokemon(t, levelModifier);
         }
         changesMade = true;
@@ -42,7 +43,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     public void randomizeTrainerPokes() {
         //TODO: this method direly needs a refactor to despaghettify
         boolean usePowerLevels = settings.isTrainersUsePokemonOfSimilarStrength();
-        boolean doNotUsePrematureEvos = settings.isTrainersDoNotGetPrematureEvos();
+        boolean avoidDuplicates = settings.isTrainersAvoidDuplicates();
         boolean weightByFrequency = settings.isTrainersMatchTypingDistribution();
         boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
         boolean noLegendaries = settings.isTrainersBlockLegendaries();
@@ -55,6 +56,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean mainPlaythroughSetting = settings.getTrainersMod() == Settings.TrainersMod.MAINPLAYTHROUGH;
         boolean includeFormes = settings.isAllowTrainerAlternateFormes();
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
+        boolean doNotUsePrematureEvos = settings.isBanPrematureEvos();
         boolean swapMegaEvos = settings.isSwapTrainerMegaEvos();
         boolean shinyChance = settings.isShinyChance();
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
@@ -194,6 +196,24 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     (!t.isBoss() && !t.isImportant() && regularDiversity);
             Set<Type> usedTypes = EnumSet.noneOf(Type.class);
 
+            SpeciesSet alreadyPlaced = new SpeciesSet(); // Must stay empty throughout if avoidDuplicates == false
+
+            // If only additional TP are randomized, remember the original team members or their types as already used
+            if ((avoidDuplicates || forceTypeDiverse) && skipOriginalTeamMembers) {
+                for (TrainerPokemon tp : trainerPokemonList) {
+                    if (!tp.isAddedTeamMember()) {
+                        Species sp = tp.getSpecies();
+                        if (tp.getForme() > 0) {
+                            sp = romHandler.getAltFormeOfSpecies(sp, tp.getForme());
+                        }
+                        if (avoidDuplicates) {
+                            alreadyPlaced.add(sp);
+                        }
+                        updateUsedTypes(forceTypeDiverse, typeForTrainer, usedTypes, sp);
+                    }
+                }
+            }
+
             for (TrainerPokemon tp : trainerPokemonList) {
 
                 boolean eliteFourSetUniquePokemon =
@@ -238,6 +258,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             oldSp,
                             tpLevel,
                             usePowerLevels,
+                            alreadyPlaced,
                             doNotUsePrematureEvos,
                             (keepThemeOrPrimaryTypes && typeForTrainer == null ? oldSp.getPrimaryType(true) : typeForTrainer),
                             distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.getIndex())),
@@ -260,6 +281,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     setPlacementHistory(newSp);
                 }
 
+                if (avoidDuplicates) {
+                    alreadyPlaced.add(newSp);
+                }
+
                 if (eliteFourSetUniquePokemon) {
                     usedAsUnique.add(newSp);
                 }
@@ -267,12 +292,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     bannedFromUnique.add(newSp);
                 }
 
-                if(forceTypeDiverse && typeForTrainer == null) {
-                    usedTypes.add(newSp.getPrimaryType(false));
-                    if(newSp.hasSecondaryType(false)) {
-                        usedTypes.add(newSp.getSecondaryType(false));
-                    }
-                }
+                updateUsedTypes(forceTypeDiverse, typeForTrainer, usedTypes, newSp);
 
                 if (swapThisMegaEvo) {
                     tp.setHeldItem(newSp
@@ -291,6 +311,15 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Save it all up
         changesMade = true;
+    }
+
+    private static void updateUsedTypes(boolean forceTypeDiverse, Type typeForTrainer, Set<Type> usedTypes, Species sp) {
+        if(forceTypeDiverse && typeForTrainer == null) {
+            usedTypes.add(sp.getPrimaryType(false));
+            if(sp.hasSecondaryType(false)) {
+                usedTypes.add(sp.getSecondaryType(false));
+            }
+        }
     }
 
     private Type getTypeForTrainer(Trainer t, boolean isTypeThemed, boolean weightByFrequency, boolean noLegendaries, boolean includeFormes, boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes) {
@@ -447,7 +476,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
 
     private Species pickTrainerPokeReplacement(Species current, int level,
-                                               boolean usePowerLevels, boolean doNotUsePrematureEvos,
+                                               boolean usePowerLevels, SpeciesSet alreadyPlaced,
+                                               boolean doNotUsePrematureEvos,
                                                Type type, boolean usePlacementHistory, boolean swapMegaEvos,
                                                SpeciesSet useInsteadOfCached, boolean evolveAsFarAsLegal,
                                                Set<Type> bannedTypes, SpeciesSet bannedPokemon) {
@@ -469,6 +499,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     .collect(Collectors.toCollection(SpeciesSet::new));
         } else {
             pickFrom = cacheOrReplacement;
+        }
+
+        if (!alreadyPlaced.isEmpty()) {
+            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
+            // Remove species already placed for the current trainer from pool
+            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
+            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
+            if (pickFrom.isEmpty()) {
+                pickFrom.addAll(alreadyPlaced);
+                alreadyPlaced.clear();
+            }
         }
 
         if (type != null && cachedByType != null) {
@@ -522,7 +563,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if(pickFrom.isEmpty() && useInsteadOfCached != null) {
             //the cache replacement has no valid Pokemon
             //recurse using the cache
-            return pickTrainerPokeReplacement(current, level, usePowerLevels, doNotUsePrematureEvos, type, usePlacementHistory,
+            return pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
                     swapMegaEvos, null, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
         }
 
@@ -532,7 +573,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         } else if(useInsteadOfCached != null) {
             //rather than using banned pokemon from the provided set,
             //see if we can get a non-banned pokemon from the cache
-            Species cachePick = pickTrainerPokeReplacement(current, level, usePowerLevels, doNotUsePrematureEvos, type, usePlacementHistory,
+            Species cachePick = pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
                     swapMegaEvos, null, evolveAsFarAsLegal ,bannedTypes, bannedPokemon);
             if(withoutBannedPokemon.contains(cachePick)) {
                 return cachePick;

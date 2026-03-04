@@ -414,6 +414,7 @@ public class TestRomHandler extends AbstractRomHandler {
         if(!original.isBaseForme()) {
             Species copyBaseForme = originalToCopies.get(original.getBaseForme());
             copy.setBaseForme(copyBaseForme);
+            copyBaseForme.setAlolanForme(copy);
             testAltFormes.add(copy);
 
             if(originalIrregularFormes.contains(original)) {

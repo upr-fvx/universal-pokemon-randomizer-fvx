@@ -1,3 +1,9 @@
+// This line is a result of IDE recommendation, without quite understanding
+// WHY it needs to import the Download class in addition to defining.
+// If info about this is online (almost certainly) it is obscured in a way I couldn't find it.
+// -- voliol 2026-03-04
+import de.undercouch.gradle.tasks.download.Download
+
 plugins {
     id("de.undercouch.download") version "5.7.0"
 }
@@ -55,9 +61,12 @@ enum class PlatformConfig(
     Mac_x86("mac", "x64", "command"),
     Mac_ARM("mac", "aarch64", "command")
 }
+fun taskName(cfg: PlatformConfig): String {
+    return cfg.name.replace("_", "")
+}
 
+val zipTasks = mutableListOf<TaskProvider<Zip>>()
 PlatformConfig.entries.forEach { cfg ->
-    val taskName = cfg.name.replace("_", "")
     var extension = "tar.gz"
     var decompresser: (File) -> Any = { tarTree(it) }
     if (cfg.jmodsInZip) {
@@ -65,26 +74,27 @@ PlatformConfig.entries.forEach { cfg ->
         decompresser = { zipTree(it) }
     }
 
-    val download = tasks.register<Download>("downloadJmods$taskName") {
+    val download = tasks.register<Download>("downloadJmods${taskName(cfg)}") {
         src("http://api.adoptium.net/v3/binary/latest/25/ga/${cfg.apiOS}/${cfg.apiArchitecture}/jmods/hotspot/normal/eclipse")
         dest(layout.buildDirectory.file("jmods/compressed/${cfg.name}.$extension"))
         overwrite(false)
     }
 
-    val decompress = tasks.register<Copy>("decompressJmods$taskName") {
+    val decompress = tasks.register<Copy>("decompressJmods${taskName(cfg)}") {
         dependsOn(download)
         from(download.map { t -> decompresser(t.dest) }) {
             // This removes the intermediary "JDK-[version]-jmods" directory,
             // which is nice because we don't know "[version]".
             eachFile {
-                relativePath = RelativePath(relativePath.isFile(), relativePath.segments.tail())
+                relativePath = RelativePath(relativePath.isFile,
+                    relativePath.segments.drop(1).toString())
             }
             exclude("**-jmods")
         }
         into(layout.buildDirectory.dir("jmods/decompressed/${cfg.name}"))
     }
 
-    val jlink = tasks.register<Exec>("jlink$taskName") {
+    val jlink = tasks.register<Exec>("jlink${taskName(cfg)}") {
         dependsOn(decompress)
 
         val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}")
@@ -103,7 +113,7 @@ PlatformConfig.entries.forEach { cfg ->
         )
     }
 
-    val copy = tasks.register<Copy>("moveIntoReleaseDir$taskName") {
+    val copy = tasks.register<Copy>("moveIntoReleaseDir${taskName(cfg)}") {
         dependsOn("jar")
         dependsOn("clearReleaseDir")
         dependsOn(jlink)
@@ -129,7 +139,7 @@ PlatformConfig.entries.forEach { cfg ->
         into(layout.buildDirectory.dir("target/${cfg.name}"))
     }
 
-    tasks.register<Zip>("createReleaseZip$taskName") {
+    val zip = tasks.register<Zip>("createReleaseZip${taskName(cfg)}") {
         dependsOn(copy)
 
         from(layout.buildDirectory.dir("target/${cfg.name}"))
@@ -137,16 +147,11 @@ PlatformConfig.entries.forEach { cfg ->
         archiveFileName = "UPR_FVX_${cfg.name}.zip" // TODO: make it include version
         // TODO: make tar.gz in MAC+Unix
     }
+    zipTasks.add(zip)
 }
 
 tasks.register("createReleaseZips") {
-//    dependsOn(
-//        createReleaseZipLinuxx86,
-//        createReleaseZipLinuxARM,
-//        createReleaseZipWindows,
-//        createReleaseZipMacx86,
-//        createReleaseZipMacARM
-//    )
+    dependsOn(zipTasks)
 }
 
 // The jlink utility is used to create a "Java Runtime Image", essentially a mini-JDK/JRE
@@ -180,33 +185,29 @@ fun detectPlatform(): PlatformConfig {
     // detects the platform you're running this on
     val name = System.getProperty("os.name")
     val arch = System.getProperty("os.arch")
-    val platform: PlatformConfig;
-    if (name.contains("Linux")) {
-        platform = if (arch == "aarch64") PlatformConfig.Linux_ARM else PlatformConfig.Linux_x86
+    return if (name.contains("Linux")) {
+        if (arch == "aarch64") PlatformConfig.Linux_ARM else PlatformConfig.Linux_x86
     } else if (name.contains("Windows")) {
-        platform = PlatformConfig.Windows
+        PlatformConfig.Windows
     } else if (name.contains("Mac") || name.contains("mac")) {
-        platform = if (arch == "aarch64") PlatformConfig.Mac_ARM else PlatformConfig.Mac_x86
+        if (arch == "aarch64") PlatformConfig.Mac_ARM else PlatformConfig.Mac_x86
     } else {
-        error("Unidentified platform: " + name + " (arch: " + arch + ")")
+        error("Unidentified platform: $name (arch: $arch)")
     }
-    return platform
 }
 
 tasks.register<Exec>("launch") {
     val platform: PlatformConfig = detectPlatform()
-    println(platform)
+    dependsOn("moveIntoReleaseDir${taskName(platform)}")
 
-    println("./launcher.$platform.launcherExtension")
-
-    dependsOn("moveIntoReleaseDirLinuxx86")
-
-    workingDir("build/target/Linux_x86")
-    commandLine("bash", "./launcher.$platform.launcherExtension")
+    workingDir("build/target/${platform.name}")
+    commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 
 tasks.register<Exec>("relaunch") {
-    workingDir("build/target")
-    commandLine("bash", "./launcher.sh")
+    val platform: PlatformConfig = detectPlatform()
+
+    workingDir("build/target/${platform.name}")
+    commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 

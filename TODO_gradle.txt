@@ -1,6 +1,8 @@
 TODO before the gradle branch can be merged:
 
 - make launch task automatically detect platform/build+launch correct build
+    - confirm it works
+- separate ROM tests from other tests
 - put the important gradle tasks somewhere nice?
     - i.e. test and launch
 - document module division
@@ -8,7 +10,6 @@ TODO before the gradle branch can be merged:
     - document in README.md?
     - document in the Gradle building page
 - document Gradle building in wiki
-- move code to Kotlin (Groovy already upsets me ^^, and it is what the Gradle docs recommends)
 - include version num in release ZIPs
 - update the website's download code to work with multiple downloads/release
 
@@ -92,7 +93,7 @@ docs:
     Documents everything. Not a strict code-wise dependency, but it needs to "know" about all other parts.
 
 devtools:
-    - Devtools, primarily for generating resources for romio.
+    - Devtools, primarily for generating resources for romio/random.
     Depends on romio.
     Needs access to random/main/resources.
 

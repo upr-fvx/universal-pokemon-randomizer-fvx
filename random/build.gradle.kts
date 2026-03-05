@@ -154,32 +154,14 @@ tasks.register("createReleaseZips") {
     dependsOn(zipTasks)
 }
 
-// The jlink utility is used to create a "Java Runtime Image", essentially a mini-JDK/JRE
-// that contains only the modules of Java that the program uses.
-// By depending on the "Java Runtime Image", developers can write in modern Java
-// (previously, the Randomizer was locked to Java 8 since that's the newest version that gets
-// official Oracle JREs, and low-tech end users WILL download from the "download Java" page),
-// and end users do not have to download any JRE at all!
+tasks.register<Exec>("jdeps") {
+    dependsOn(tasks.jar)
 
-// The jdeps utility is used to figure out which Java modules the program uses.
-// While very useful, it does not always work. Any module "not found" must be manually identified.
-
-// The jlink task currently doesn't have a way of checking if it is "UP-TO-DATE", beyond checking
-// if a "java-runtime-image" directory already exists. As the "Java Runtime Image" could become
-// outdated, whenever a new dependency is added or the Randomizer's own code starts relying on
-// additional Java modules, every now and again jdeps must be ran to confirm the list of modules
-// is conclusive. If it isn't, the module list must be updated and the "java-runtime-image" dir
-// deleted.
-// TODO: figure out how often "every now and again" is
-
-//tasks.register("jdeps", Exec) {
-//    dependsOn moveIntoReleaseDir
-//
-//    executable = javaHome.map { it.file("bin/jdeps").asFile.absolutePath }.get()
-//    args = [
-//            layout.buildDirectory.dir("target").get().asFile.absolutePath + "/UPR-FVX.jar"
-//    ]
-//}
+    executable = javaHome.map { it.file("bin/jdeps").asFile.absolutePath }.get()
+    args(
+        layout.buildDirectory.dir("libs").get().asFile.absolutePath + "/UPR-FVX.jar"
+    )
+}
 
 fun detectPlatform(): PlatformConfig {
     // detects the platform you're running this on
@@ -200,14 +182,14 @@ tasks.register<Exec>("launch") {
     val platform: PlatformConfig = detectPlatform()
     dependsOn("moveIntoReleaseDir${taskName(platform)}")
 
-    workingDir("build/target/${platform.name}")
+    workingDir(layout.buildDirectory.dir("target/${platform.name}"))
     commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 
 tasks.register<Exec>("relaunch") {
     val platform: PlatformConfig = detectPlatform()
 
-    workingDir("build/target/${platform.name}")
+    workingDir(layout.buildDirectory.dir("target/${platform.name}"))
     commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerGraphicsTest extends RomHandlerTest {
 
-    private static final String TEST_CPG_PATH = "test/resources/players";
+    private static final String TEST_CPG_PATH = "players";
     
     private static class PaletteRecord {
         private final Palette normal, shiny;

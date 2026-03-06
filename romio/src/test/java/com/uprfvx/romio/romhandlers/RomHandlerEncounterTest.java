@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEncounterTest extends RomHandlerTest {
 
-    private static final String EARLIER_OUTPUTS_PATH = "test/resources/encounters/";
+    private static final String EARLIER_OUTPUTS_PATH = "encounters/";
 
     @ParameterizedTest
     @MethodSource("getRomNames")

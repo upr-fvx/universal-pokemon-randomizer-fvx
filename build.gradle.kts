@@ -24,7 +24,6 @@ subprojects {
     }
 
     tasks.named<Test>("test") {
-        systemProperty("romsPath", rootProject.file("roms").absolutePath)
         useJUnitPlatform()
         ignoreFailures = true
     }

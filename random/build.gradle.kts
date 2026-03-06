@@ -193,3 +193,31 @@ tasks.register<Exec>("relaunch") {
     commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 
+// TODO: why does this cause instrumentForms to fail???
+tasks.named<Test>("test") {
+    filter {
+        excludeTestsMatching("*Randomizer*Test")
+        excludeTestsMatching("*Updater*Test")
+    }
+}
+
+// TODO: this shares a bunch of info with random:testROMs, would be nice to combine them
+tasks.register<Test>("testROMs") {
+    description = "Runs tests dependent on loading ROM files."
+    group = "verification"
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    systemProperty("romsPath", rootProject.file("roms").absolutePath)
+
+    shouldRunAfter("test")
+
+    useJUnitPlatform()
+    ignoreFailures = true
+
+    filter {
+        includeTestsMatching("*Randomizer*Test")
+        includeTestsMatching("*Updater*Test")
+    }
+}
+

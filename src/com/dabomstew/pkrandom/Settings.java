@@ -191,7 +191,7 @@ public class Settings {
     private boolean trainersEvolveTheirPokemon;
     private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
-    private int trainersLevelModifier = 0; // -50 ~ 50
+    private int trainersLevelModifier = 0; // -100 ~ 150
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
     private boolean allowTrainerAlternateFormes;
     private boolean swapTrainerMegaEvos;
@@ -596,7 +596,7 @@ public class Settings {
         }
 
         // 38 trainer pokemon level modifier
-        out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
+        out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+100));
 
         // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,

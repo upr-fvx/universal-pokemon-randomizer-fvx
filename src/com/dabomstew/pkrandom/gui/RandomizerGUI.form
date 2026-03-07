@@ -2098,22 +2098,14 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="670de" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="tpPercentageLevelModifierSlider" default-binding="true">
+                      <component id="670de" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="tpPercentageLevelModifierSpinSlider" default-binding="true">
                         <constraints>
                           <grid row="10" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <majorTickSpacing value="5"/>
-                          <maximum value="15"/>
-                          <minimum value="-15"/>
-                          <minorTickSpacing value="1"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierSlider.toolTipText"/>
-                          <value value="0"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="41124">

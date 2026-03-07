@@ -191,7 +191,7 @@ public class Settings {
     private boolean trainersEvolveTheirPokemon;
     private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
-    private int trainersLevelModifier = 0; // -100 ~ 150
+    private int trainersLevelModifier = 0; // -100 ~ 155
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
     private boolean allowTrainerAlternateFormes;
     private boolean swapTrainerMegaEvos;

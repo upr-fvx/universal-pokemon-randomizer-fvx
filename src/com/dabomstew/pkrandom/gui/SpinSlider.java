@@ -15,24 +15,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class SpinSlider extends JPanel {
-
-    public static void main(String args[]) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame f = new JFrame("SpinSlider!");
-                f.add(new SpinSlider());
-                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                f.pack();
-                f.setVisible(true);
-            }
-        });
-    }
+    private final JSpinner spinner = new JSpinner();
+    private final JSlider slider = new JSlider();
 
     public SpinSlider() {
         this.setLayout(new FlowLayout());
-        final JSpinner spinner = new JSpinner();
-        final JSlider slider = new JSlider();
+
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -58,5 +46,18 @@ public class SpinSlider extends JPanel {
             }
         });
         this.add(spinner);
+    }
+
+    public int getValue() {
+        return slider.getValue();
+    }
+
+    public void setValue(int value) {
+        slider.setValue(value);
+    }
+
+    public void setEnabled(boolean enabled) {
+        slider.setEnabled(enabled);
+        spinner.setEnabled(enabled);
     }
 }

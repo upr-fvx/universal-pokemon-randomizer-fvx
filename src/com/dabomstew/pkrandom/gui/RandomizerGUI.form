@@ -2098,7 +2098,7 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="670de" class="javax.swing.JSlider" binding="tpPercentageLevelModifierSlider" default-binding="true">
+                      <component id="670de" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="tpPercentageLevelModifierSlider" default-binding="true">
                         <constraints>
                           <grid row="10" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>

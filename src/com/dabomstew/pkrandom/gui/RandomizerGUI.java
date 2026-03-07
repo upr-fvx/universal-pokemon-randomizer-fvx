@@ -154,7 +154,7 @@ public class RandomizerGUI {
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private JSlider tpPercentageEvolutionLevelModifierSlider;
-    private JSlider tpPercentageLevelModifierSlider;
+    private SpinSlider tpPercentageLevelModifierSlider;
     private JLabel tpCalculatedFullyEvolvedLvlLabel;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
     private JSpinner tpEliteFourUniquePokemonSpinner;
@@ -552,7 +552,6 @@ public class RandomizerGUI {
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
         tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
-        tpPercentageLevelModifierSlider.addChangeListener(e -> moveSliderInterval(tpPercentageLevelModifierSlider));
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
         tpRandomBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -1780,7 +1779,7 @@ public class RandomizerGUI {
         tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
         tpPercentageEvolutionLevelModifierSlider.setValue(settings.getTrainersEvolutionLevelModifier());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
-        updateSliderValue(tpPercentageLevelModifierSlider, settings.getTrainersLevelModifier());
+        tpPercentageLevelModifierSlider.setValue(settings.getTrainersLevelModifier());
         tpEliteFourUniquePokemonCheckBox.setSelected(settings.getEliteFourUniquePokemonNumber() > 0);
         tpEliteFourUniquePokemonSpinner.setValue(settings.getEliteFourUniquePokemonNumber() > 0 ? settings.getEliteFourUniquePokemonNumber() : 1);
         tpAllowAlternateFormesCheckBox.setSelected(settings.isAllowTrainerAlternateFormes());
@@ -2451,7 +2450,7 @@ public class RandomizerGUI {
         tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
 		tpPercentageLevelModifierSlider.setVisible(true);
 		tpPercentageLevelModifierSlider.setEnabled(false);
-		updateSliderValue(tpPercentageLevelModifierSlider, 0);
+        tpPercentageLevelModifierSlider.setValue(0);
 		tpEliteFourUniquePokemonSpinner.setVisible(true);
 		tpEliteFourUniquePokemonSpinner.setEnabled(false);
 		tpEliteFourUniquePokemonSpinner.setValue(1);
@@ -3501,7 +3500,7 @@ public class RandomizerGUI {
             tpPercentageLevelModifierSlider.setEnabled(true);
         } else {
             tpPercentageLevelModifierSlider.setEnabled(false);
-            updateSliderValue(tpPercentageLevelModifierSlider, 0);
+            tpPercentageLevelModifierSlider.setValue(0);
         }
 
         if (tpBossTrainersCheckBox.isSelected()) {

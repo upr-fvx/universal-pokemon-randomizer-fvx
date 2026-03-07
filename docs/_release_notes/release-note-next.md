@@ -30,6 +30,12 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
 ### Pokemon Base Stats
+- (Gen 1-7) Moved the option 'Do Not Use Prematurely Evolved Pokemon' from the
+  Trainer Pokemon tab to the General Options. If selected, it now also affects
+  randomized Wild Pokemon if neither 'Same Evolution Stage' nor 'Keep
+  Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
+
+### Pokemon Base Stats
 - [The description of a new feature here.]
 
 ### Static Pokemon
@@ -45,6 +51,11 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 - (Gen 1-7) The first rival and/or friend battles no longer have their
   Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
   Level Modifier:'. (Pull request #164)
+- (Gen 1-7) Even for 'Unchanged' Trainer Pokemon, if an 'Additional Pokemon
+  for...' option is selected, enable respective 'Force Diverse Types for...'
+  option as well. Selecting it guarantees that for any trainers that are not
+  type themed the added Pokemon have diverse types from the original Pokemon of
+  the trainer. (Issue #150)
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.

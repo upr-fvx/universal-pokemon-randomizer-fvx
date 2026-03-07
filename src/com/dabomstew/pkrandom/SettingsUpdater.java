@@ -739,11 +739,24 @@ public class SettingsUpdater {
             }
         }
 
-        // In Version.FVX_1_4_3, 'Do Not Use Prematurely Evolved Pokemon' was moved from Trainer Pokemon to the general
-        // options as 'No Premature Evolutions' which now also affect Wild Pokemon randomization if no other evolution
-        // restrictions apply. The new general option uses the same bit (dataBlock[63], bit 1). Assuming that most
-        // users that want to use the option for Trainer Pokemon want to also use it for Wild Pokemon, keep the
-        // selection state for the option.
+        if (oldVersion < Version.FVX_1_4_3.id) {
+            // In Version.FVX_1_4_3, 'Do Not Use Prematurely Evolved Pokemon' was moved from Trainer Pokemon to the general
+            // options as 'No Premature Evolutions' which now also affect Wild Pokemon randomization if no other evolution
+            // restrictions apply. The new general option uses the same bit (dataBlock[63], bit 1). Assuming that most
+            // users that want to use the option for Trainer Pokemon want to also use it for Wild Pokemon, keep the
+            // selection state for the option.
+
+            // Increase percentage modifier ranges from [-50, 50] to the maximum possible with a byte: [-100, 155].
+            // The activation checkbox bits were moved for this from the original byte (previously one bit activation,
+            // 7 bit value).
+            // Trainer level modifier
+            if (checkBit(dataBlock[38], 7)) {
+                dataBlock[63] = setBits(dataBlock[63], 2);
+                int val = (dataBlock[38] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
+                dataBlock[38] = (byte)(val  - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
+            }
+        }
+
 
         // ^ Insert update for new version above!! ^
 

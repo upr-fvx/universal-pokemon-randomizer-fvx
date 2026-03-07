@@ -16,7 +16,7 @@ public class SpinSlider extends JPanel {
 
     public SpinSlider() {
         int MIN_VALUE = -100;
-        int MAX_VALUE = 150;
+        int MAX_VALUE = 155;
         int DEFAULT_VALUE = 0;
 
         this.setLayout(new FlowLayout(FlowLayout.LEFT));

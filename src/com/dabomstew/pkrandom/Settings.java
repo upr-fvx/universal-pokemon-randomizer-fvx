@@ -596,7 +596,7 @@ public class Settings {
         }
 
         // 38 trainer pokemon level modifier
-        out.write(trainersLevelModifier + 100);
+        out.write(trainersLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
@@ -971,7 +971,7 @@ public class Settings {
 
         settings.setCurrentMiscTweaks(codeTweaks);
 
-        settings.setTrainersLevelModifier(data[38] - 100);
+        settings.setTrainersLevelModifier(data[38] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,

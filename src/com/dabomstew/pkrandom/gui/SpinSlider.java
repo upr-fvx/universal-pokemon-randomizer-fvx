@@ -1,6 +1,6 @@
 package com.dabomstew.pkrandom.gui;
 
-// Source - https://stackoverflow.com/a/6067986
+// Based on Source - https://stackoverflow.com/a/6067986
 // Posted by trashgod, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-03-07, License - CC BY-SA 3.0
 

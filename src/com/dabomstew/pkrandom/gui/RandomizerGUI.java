@@ -3133,31 +3133,6 @@ public class RandomizerGUI {
         slider.setLabelTable(table);
     }
 
-    private void updateSliderValue(JSlider slider, int newVal) {
-        // Guarantee that newVal is between the min and max, the action listener will then cause moveSliderInterval to
-        // update the bounds correctly
-        slider.setMinimum(Math.max(SLIDER_MIN, newVal - SLIDER_WINDOW));
-        slider.setMaximum(Math.min(SLIDER_MAX, newVal + SLIDER_WINDOW));
-        slider.setValue(newVal);
-    }
-
-    private void moveSliderInterval(JSlider slider) {
-        int newMin = slider.getMinimum();
-        int newVal = slider.getValue();
-        int newMax = slider.getMaximum();
-
-        if (newVal < newMin + SLIDER_SCROLL_ZONE && SLIDER_MIN != newMin) {
-            newMin = Math.max(SLIDER_MIN, newVal - SLIDER_SCROLL_ZONE);
-            newMax = newMin + 2*SLIDER_WINDOW;
-        } else if (newMax - SLIDER_SCROLL_ZONE < newVal && SLIDER_MAX != newMax) {
-            newMax = Math.min(SLIDER_MAX, newVal + SLIDER_SCROLL_ZONE);
-            newMin = newMax - 2*SLIDER_WINDOW;
-        }
-
-        slider.setMinimum(newMin);
-        slider.setMaximum(newMax);
-    }
-
     private void setRomNameLabel() {
         if (romHandler.hasGameUpdateLoaded()) {
             romNameLabel.setText(romHandler.getROMName() + " (" + romHandler.getGameUpdateVersion() + ")");

@@ -1,7 +1,6 @@
 ---
 name: Building the Universal Pokémon Randomizer FVX
 ---
-[TODO: rewrite this page entirely for Gradle changes]
 
 This page is to help aspiring developers learn how to build the Randomizer; if you're not interested in development, please download an official release from our [release page](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases) instead. Versions of the randomizer built via the steps on this page will **not** be officially supported!
 
@@ -24,16 +23,21 @@ git clone https://github.com/upr-fvx/universal-pokemon-randomizer-fvx.git
 6. Under File -> Settings -> Build, Execution, Deployment -> Build Tools -> Gradle, [ensure the project is built and ran using Gradle, and that the Gradle JVM is the Project SDK]({{ site.baseurl }}/assets/images/wikipages/building/gradle_options.png).
 
 ### Building and launching the Randomizer (quick)
-[TODO: rewrite this section, after figuring out presentation of gradle tasks]
-Assuming that you followed all steps in the previous section, you should now see something like Run -> Run 'Randomizer' (or whatever you named your Application configuration). Clicking that will build all code and run the randomizer if the build is successful. Congrats, you've now built the randomizer!
+Assuming you followed all steps in the previous section, you should see the elephantine Gradle icon near the top-left corner of IntelliJ. [Click on the icon, and navigate to "universal-pokemon-randomizer-fvx -> Tasks -> launch"]({{ site.baseurl }}/assets/images/wikipages/building/gradle_launch.png). There should be a `launch` task next to a cog icon. Double-clicking that will build all code and run the Randomizer if the build is successful. 
 
-## Building, launching, testing and deploying the Randomizer
+Congrats, you've now built the randomizer!
 
-The `random:launch` and `random:relaunch` tasks are the easiest way to get the Randomizer running locally, but there are other Gradle tasks.
+## Building, launching, testing and releasing the Randomizer
 
-[TODO: write about these]
+The `random:launch` task (seen above) is the easiest way to get the Randomizer running locally, but there are other Gradle tasks.
 
-To prepare a Randomizer release, use the `random:createReleaseZips` task. 
+`random:relaunch` (in the "launch" group) will re-launch the Randomizer without building it again. This is useful if you want to manually test `config.ini`, or just accidentally closed down the window and don't want to re-build. 
+
+`test` (in the "verification" group) runs all tests that *don't* rely on supplying ROM files. The general `test` task runs the applicable tests for all modules, but `utils:test` and `romio:test` can also be run separately.
+
+`romio:testROMs` and `random:testROMs` (in the "verification" group for each module) runs all tests that *do* rely on supplying ROM files. These ROM files should be put in `roms/`, according to the format described there. Which ROMs are tested, is controlled within the `RomHandlerTest` and `RandomizerTest` classes.
+
+`random:createReleaseZips` (in the "release" group) prepares the zip files for a Randomizer release. 
 
 ### About Java runtime images (`jlink` and `jdeps`)
 (this section is technical, and won't be needed for most developers)

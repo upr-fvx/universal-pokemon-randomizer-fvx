@@ -39,6 +39,7 @@ tasks.jar {
 }
 
 tasks.register<Delete>("clearReleaseDir") {
+    group = "release setup"
     delete("build/target")
 }
 
@@ -75,12 +76,14 @@ PlatformConfig.entries.forEach { cfg ->
     }
 
     val download = tasks.register<Download>("downloadJmods${taskName(cfg)}") {
+        group = "release setup"
         src("http://api.adoptium.net/v3/binary/latest/25/ga/${cfg.apiOS}/${cfg.apiArchitecture}/jmods/hotspot/normal/eclipse")
         dest(layout.buildDirectory.file("jmods/compressed/${cfg.name}.$extension"))
         overwrite(false)
     }
 
     val decompress = tasks.register<Copy>("decompressJmods${taskName(cfg)}") {
+        group = "release setup"
         dependsOn(download)
         from(download.map { t -> decompresser(t.dest) }) {
             // This removes the intermediary "JDK-[version]-jmods" directory,
@@ -95,6 +98,7 @@ PlatformConfig.entries.forEach { cfg ->
     }
 
     val jlink = tasks.register<Exec>("jlink${taskName(cfg)}") {
+        group = "release setup"
         dependsOn(decompress)
 
         val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}")
@@ -114,6 +118,7 @@ PlatformConfig.entries.forEach { cfg ->
     }
 
     val copy = tasks.register<Copy>("moveIntoReleaseDir${taskName(cfg)}") {
+        group = "release setup"
         dependsOn("jar")
         dependsOn("clearReleaseDir")
         dependsOn(jlink)
@@ -139,18 +144,20 @@ PlatformConfig.entries.forEach { cfg ->
         into(layout.buildDirectory.dir("target/${cfg.name}"))
     }
 
+    // This is intentionally zip for all platforms, since that makes the downloads easier to navigate for end users.
     val zip = tasks.register<Zip>("createReleaseZip${taskName(cfg)}") {
+        group = "release setup"
         dependsOn(copy)
 
         from(layout.buildDirectory.dir("target/${cfg.name}"))
         destinationDirectory = file("build/dist")
         archiveFileName = "UPR_FVX_${cfg.name}.zip" // TODO: make it include version
-        // TODO: make tar.gz in MAC+Unix
     }
     zipTasks.add(zip)
 }
 
 tasks.register("createReleaseZips") {
+    group = "release"
     dependsOn(zipTasks)
 }
 
@@ -179,6 +186,7 @@ fun detectPlatform(): PlatformConfig {
 }
 
 tasks.register<Exec>("launch") {
+    group = "launch"
     val platform: PlatformConfig = detectPlatform()
     dependsOn("moveIntoReleaseDir${taskName(platform)}")
 
@@ -187,13 +195,13 @@ tasks.register<Exec>("launch") {
 }
 
 tasks.register<Exec>("relaunch") {
+    group = "launch"
     val platform: PlatformConfig = detectPlatform()
 
     workingDir(layout.buildDirectory.dir("target/${platform.name}"))
     commandLine("bash", "./launcher.${platform.launcherExtension}")
 }
 
-// TODO: why does this cause instrumentForms to fail???
 tasks.named<Test>("test") {
     filter {
         excludeTestsMatching("*Randomizer*Test")

@@ -1,8 +1,6 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.romio.gamedata.Item;
-import com.uprfvx.romio.gamedata.Species;
-import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -76,6 +74,17 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         }
     }
 
+    private record BreedingInfoRecord(EggGroup primaryEggGroup, EggGroup secondaryEggGroup, int eggCycles) {
+        public BreedingInfoRecord(Species pk) {
+            BreedingInfo bi = pk.getBreedingInfo();
+            this(
+                    bi == null ? null : bi.getPrimaryEggGroup(),
+                    bi == null ? null : bi.getSecondaryEggGroup(),
+                    bi == null ? -1 : bi.getEggCycles()
+            );
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void baseFormeOfAlolanFormesHasCorrectAlolanForme(String romName) {
@@ -127,6 +136,25 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());
             assertEquals(records.get(pk), new HeldItemsRecord(pk));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void breedingInfoDoesNotChangeWithLoadAndSave(String romName) {
+        loadROM(romName);
+        // it always loads the base stats once
+
+        Map<Species, BreedingInfoRecord> records = new HashMap<>();
+        romHandler.getSpeciesSetInclFormes()
+                .forEach(pk -> records.put(pk, new BreedingInfoRecord(pk)));
+
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            System.out.println(pk.getFullName());
+            assertEquals(records.get(pk), new BreedingInfoRecord(pk));
         }
     }
 

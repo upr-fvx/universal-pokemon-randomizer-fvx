@@ -591,6 +591,12 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         int rareHeldItemID = Gen2Constants.itemIDToStandard(rom[offset + Gen2Constants.bsRareHeldItemOffset] & 0xFF);
         pkmn.setRareHeldItem(items.get(rareHeldItemID));
         pkmn.setGrowthCurve(ExpCurve.fromByte(rom[offset + Gen2Constants.bsGrowthCurveOffset]));
+        BreedingInfo bi = new BreedingInfo(
+                EggGroup.fromID((rom[offset + Gen2Constants.bsEggGroupsOffset] & 0xF0) >> 4),
+                EggGroup.fromID(rom[offset + Gen2Constants.bsEggGroupsOffset] & 0xF),
+                rom[offset + Gen2Constants.bsEggCyclesOffset] & 0xFF
+        );
+        pkmn.setBreedingInfo(bi);
         pkmn.setFrontImageDimensions(rom[offset + Gen2Constants.bsFrontImageDimensionsOffset] & 0xFF);
 
     }
@@ -613,6 +619,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         writeByte(offset + Gen2Constants.bsRareHeldItemOffset, pkmn.getRareHeldItem() == null ? 0
                 : (byte) Gen2Constants.itemIDToInternal(pkmn.getRareHeldItem().getId()));
         writeByte(offset + Gen2Constants.bsGrowthCurveOffset, pkmn.getGrowthCurve().toByte());
+
+        BreedingInfo bi = pkmn.getBreedingInfo();
+        writeNybble(offset + Gen2Constants.bsEggGroupsOffset, true, bi.getPrimaryEggGroup().toID());
+        int secondaryEggGroupID = bi.getSecondaryEggGroup() == null ? bi.getPrimaryEggGroup().toID()
+                : bi.getSecondaryEggGroup().toID();
+        writeNybble(offset + Gen2Constants.bsEggGroupsOffset, false, secondaryEggGroupID);
+        writeByte(offset + Gen2Constants.bsEggCyclesOffset, (byte) bi.getEggCycles());
     }
 
     private String[] readPokemonNames() {

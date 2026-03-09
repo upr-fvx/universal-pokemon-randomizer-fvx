@@ -7,6 +7,7 @@ package text;
 /*----------------------------------------------------------------------------*/
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,7 +24,7 @@ public class UnicodeParser {
         if (is == null) {
             throw new RuntimeException("Couldn't find " + TABLE_PATH);
         }
-        Scanner sc = new Scanner(is, "UTF-8");
+        Scanner sc = new Scanner(is, StandardCharsets.UTF_8);
         while (sc.hasNextLine()) {
             String q = sc.nextLine();
             if (!q.trim().isEmpty()) {

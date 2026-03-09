@@ -411,6 +411,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
         pkmn.setGenderRatio(stats[Gen5Constants.bsGenderRatioOffset] & 0xFF);
 
+        BreedingInfo bi = new BreedingInfo(
+                EggGroup.fromID(stats[Gen5Constants.bsPrimaryEggGroupOffset] & 0xFF),
+                EggGroup.fromID(stats[Gen5Constants.bsSecondaryEggGroupOffset] & 0xFF),
+                stats[Gen5Constants.bsEggCyclesOffset] & 0xFF
+        );
+        pkmn.setBreedingInfo(bi);
+
         int formeCount = stats[Gen5Constants.bsFormeCountOffset] & 0xFF;
         if (formeCount > 1) {
             graphicalFormeCounts.put(pkmn, formeCount);
@@ -548,6 +555,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             writeWord(stats, Gen5Constants.bsDarkGrassHeldItemOffset,
                     pkmn.getDarkGrassHeldItem() == null ? 0 : pkmn.getDarkGrassHeldItem().getId());
         }
+
+        BreedingInfo bi = pkmn.getBreedingInfo();
+        stats[Gen5Constants.bsPrimaryEggGroupOffset] = (byte) bi.getPrimaryEggGroup().toID();
+        byte secondaryEggGroupByte = (byte) (bi.getSecondaryEggGroup() == null ? bi.getPrimaryEggGroup().toID()
+                : bi.getSecondaryEggGroup().toID());
+        stats[Gen5Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
+        stats[Gen5Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
     }
 
     @Override

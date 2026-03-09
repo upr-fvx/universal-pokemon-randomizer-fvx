@@ -765,6 +765,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		pkmn.setGenderRatio(stats[Gen4Constants.bsGenderRatioOffset] & 0xFF);
 
+        BreedingInfo bi = new BreedingInfo(
+                EggGroup.fromID(stats[Gen4Constants.bsPrimaryEggGroupOffset] & 0xFF),
+                EggGroup.fromID(stats[Gen4Constants.bsSecondaryEggGroupOffset] & 0xFF),
+                stats[Gen4Constants.bsEggCyclesOffset] & 0xFF
+        );
+        pkmn.setBreedingInfo(bi);
+
 		int cosmeticForms = Gen4Constants.cosmeticForms.getOrDefault(pkmn.getNumber(), 0);
 		if (cosmeticForms > 0 && romEntry.getRomType() != Gen4Constants.Type_DP) {
 			pkmn.setCosmeticForms(cosmeticForms);
@@ -897,6 +904,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			writeWord(stats, Gen4Constants.bsRareHeldItemOffset,
 					pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
 		}
+
+        BreedingInfo bi = pkmn.getBreedingInfo();
+        stats[Gen4Constants.bsPrimaryEggGroupOffset] = (byte) bi.getPrimaryEggGroup().toID();
+        byte secondaryEggGroupByte = (byte) (bi.getSecondaryEggGroup() == null ? bi.getPrimaryEggGroup().toID()
+                : bi.getSecondaryEggGroup().toID());
+        stats[Gen4Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
+        stats[Gen4Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
 	}
 
 	@Override

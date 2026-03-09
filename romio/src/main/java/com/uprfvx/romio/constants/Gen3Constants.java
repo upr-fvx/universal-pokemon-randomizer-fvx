@@ -86,7 +86,8 @@ public class Gen3Constants {
     public static final int bsHPOffset = 0, bsAttackOffset = 1, bsDefenseOffset = 2, bsSpeedOffset = 3,
             bsSpAtkOffset = 4, bsSpDefOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7,
             bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsGenderRatioOffset = 16,
-            bsGrowthCurveOffset = 19, bsAbility1Offset = 22, bsAbility2Offset = 23;
+            bsEggCyclesOffset = 17, bsGrowthCurveOffset = 19, bsPrimaryEggGroupOffset = 20, bsSecondaryEggGroupOffset = 21,
+            bsAbility1Offset = 22, bsAbility2Offset = 23;
 
     public static final byte textTerminator = (byte) 0xFF, textVariable = (byte) 0xFD, textPadding = (byte) 0x00;
 

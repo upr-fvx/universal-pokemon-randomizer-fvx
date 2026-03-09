@@ -1083,6 +1083,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         pkmn.setGenderRatio(rom[offset + Gen3Constants.bsGenderRatioOffset] & 0xFF);
+
+        BreedingInfo bi = new BreedingInfo(
+                EggGroup.fromID(rom[offset + Gen3Constants.bsPrimaryEggGroupOffset] & 0xFF),
+                EggGroup.fromID(rom[offset + Gen3Constants.bsSecondaryEggGroupOffset] & 0xFF),
+                rom[offset + Gen3Constants.bsEggCyclesOffset] & 0xFF
+        );
+        pkmn.setBreedingInfo(bi);
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {
@@ -1120,6 +1127,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         writeByte(offset + Gen3Constants.bsGenderRatioOffset, (byte) pkmn.getGenderRatio());
+
+        BreedingInfo bi = pkmn.getBreedingInfo();
+        writeByte(offset + Gen3Constants.bsPrimaryEggGroupOffset, (byte) bi.getPrimaryEggGroup().toID());
+        byte secondaryEggGroupByte = (byte) (bi.getSecondaryEggGroup() == null ? bi.getPrimaryEggGroup().toID()
+                : bi.getSecondaryEggGroup().toID());
+        writeByte(offset + Gen3Constants.bsSecondaryEggGroupOffset, secondaryEggGroupByte);
+        writeByte(offset + Gen3Constants.bsEggCyclesOffset, (byte) bi.getEggCycles());
     }
 
     private void loadPokemonNames() {

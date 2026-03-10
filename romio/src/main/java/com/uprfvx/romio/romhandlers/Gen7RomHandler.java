@@ -341,6 +341,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             pkmn.setRareHeldItem(item2);
         }
 
+        BreedingInfo bi = new BreedingInfo(
+                EggGroup.fromID(stats[Gen7Constants.bsPrimaryEggGroupOffset] & 0xFF),
+                EggGroup.fromID(stats[Gen7Constants.bsSecondaryEggGroupOffset] & 0xFF),
+                stats[Gen7Constants.bsEggCyclesOffset] & 0xFF
+        );
+        pkmn.setBreedingInfo(bi);
+
         int formeCount = stats[Gen7Constants.bsFormeCountOffset] & 0xFF;
         if (formeCount > 1) {
             if (!altFormes.containsKey(pkmn.getNumber())) {
@@ -710,6 +717,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     pkmn.getRareHeldItem() == null ? 0 : pkmn.getRareHeldItem().getId());
         }
 
+        BreedingInfo bi = pkmn.getBreedingInfo();
+        stats[Gen7Constants.bsPrimaryEggGroupOffset] = (byte) bi.getPrimaryEggGroup().toID();
+        byte secondaryEggGroupByte = (byte) (bi.getSecondaryEggGroup() == null ? bi.getPrimaryEggGroup().toID()
+                : bi.getSecondaryEggGroup().toID());
+        stats[Gen7Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
+        stats[Gen7Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
+
+        // TODO: this is a very risky way of checking for the form, fix it
         if (pkmn.getFullName().equals("Meowstic")) {
             stats[Gen7Constants.bsGenderOffset] = 0;
         } else if (pkmn.getFullName().equals("Meowstic-F")) {

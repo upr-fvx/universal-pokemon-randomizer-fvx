@@ -1,8 +1,6 @@
 package com.uprfvx.romio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  Gen1Constants.java - Constants for Red/Green/Blue/Yellow              --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -32,6 +30,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Constants for Red/Green/Blue/Yellow
+ */
 public class Gen1Constants {
 
     public static final int Type_RB = 0;

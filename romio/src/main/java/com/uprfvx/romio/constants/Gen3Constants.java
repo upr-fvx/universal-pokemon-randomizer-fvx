@@ -1,8 +1,6 @@
 package com.uprfvx.romio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  Gen3Constants.java - Constants for Ruby/Sapphire/FR/LG/Emerald        --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -33,6 +31,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Constants for Ruby/Sapphire/FR/LG/Emerald
+ */
 public class Gen3Constants {
 
     public static final int RomType_Ruby = 0;

@@ -1,8 +1,6 @@
 package com.uprfvx.romio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  Gen4Constants.java - Constants for DPPt and HGSS                      --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -30,6 +28,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Constants for DPPt and HGSS
+ */
 public class Gen4Constants {
 
     public static final int Type_DP = 0;

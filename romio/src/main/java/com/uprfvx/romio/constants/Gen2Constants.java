@@ -1,8 +1,6 @@
 package com.uprfvx.romio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  Gen2Constants.java - Constants for Gold/Silver/Crystal                --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -33,6 +31,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Constants for Gold/Silver/Crystal
+ */
 public class Gen2Constants {
 
     public static final int Type_GS = 0;

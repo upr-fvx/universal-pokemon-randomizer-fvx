@@ -388,14 +388,14 @@ public class Gen3Constants {
     public static final List<Integer> evolutionItems = Arrays.asList(ItemIDs.sunStone, ItemIDs.moonStone,
             ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone);
 
-    public static final List<Integer> consumableHeldItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> consumableHeldItems = List.of(
             ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry,
             ItemIDs.aspearBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry,
             ItemIDs.sitrusBerry, ItemIDs.figyBerry, ItemIDs.wikiBerry, ItemIDs.magoBerry, ItemIDs.aguavBerry,
             ItemIDs.iapapaBerry, ItemIDs.liechiBerry, ItemIDs.ganlonBerry, ItemIDs.salacBerry,
             ItemIDs.petayaBerry, ItemIDs.apicotBerry, ItemIDs.lansatBerry, ItemIDs.starfBerry,
             ItemIDs.berryJuice, ItemIDs.whiteHerb, ItemIDs.mentalHerb
-    ));
+    );
 
     public static final List<Integer> allHeldItems = setupAllHeldItems();
 
@@ -412,7 +412,7 @@ public class Gen3Constants {
         return Collections.unmodifiableList(list);
     }
 
-    public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeConsumableItems = List.of(
             ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry,
             ItemIDs.aspearBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry,
             ItemIDs.sitrusBerry, ItemIDs.ganlonBerry, ItemIDs.salacBerry,
@@ -420,12 +420,12 @@ public class Gen3Constants {
             // the flavor berries because, prior to Gen 7, they aren't worth the risk.
             ItemIDs.apicotBerry, ItemIDs.lansatBerry, ItemIDs.starfBerry, ItemIDs.berryJuice,
             ItemIDs.whiteHerb, ItemIDs.mentalHerb
-    ));
+    );
 
-    public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeItems = List.of(
             ItemIDs.brightPowder, ItemIDs.quickClaw, ItemIDs.kingsRock, ItemIDs.focusBand, ItemIDs.scopeLens,
             ItemIDs.leftovers, ItemIDs.shellBell, ItemIDs.laxIncense
-    ));
+    );
 
     public static final Map<Type, List<Integer>> typeBoostingItems = initializeTypeBoostingItems();
 
@@ -491,47 +491,27 @@ public class Gen3Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x09; // ???-type
-        }
-        switch (type) {
-        case NORMAL:
-            return 0x00;
-        case FIGHTING:
-            return 0x01;
-        case FLYING:
-            return 0x02;
-        case POISON:
-            return 0x03;
-        case GROUND:
-            return 0x04;
-        case ROCK:
-            return 0x05;
-        case BUG:
-            return 0x06;
-        case GHOST:
-            return 0x07;
-        case FIRE:
-            return 0x0A;
-        case WATER:
-            return 0x0B;
-        case GRASS:
-            return 0x0C;
-        case ELECTRIC:
-            return 0x0D;
-        case PSYCHIC:
-            return 0x0E;
-        case ICE:
-            return 0x0F;
-        case DRAGON:
-            return 0x10;
-        case STEEL:
-            return 0x08;
-        case DARK:
-            return 0x11;
-        default:
-            return 0; // normal by default
-        }
+        return switch (type) {
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x06;
+            case GHOST -> 0x07;
+            case null -> 0x09; // ???-type
+            case FIRE -> 0x0A;
+            case WATER -> 0x0B;
+            case GRASS -> 0x0C;
+            case ELECTRIC -> 0x0D;
+            case PSYCHIC -> 0x0E;
+            case ICE -> 0x0F;
+            case DRAGON -> 0x10;
+            case STEEL -> 0x08;
+            case DARK -> 0x11;
+            default -> 0; // normal by default
+        };
     }
 
     public static final int nonNeutralEffectivenessCount = 110;
@@ -1065,7 +1045,7 @@ public class Gen3Constants {
         }
     }
 
-    private static final List<String> locationTagsTraverseOrderRSE = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderRSE = List.of(
             "ROUTE 101", "ROUTE 103",
             "ROUTE 102", "PETALBURG CITY", "ROUTE 104", "PETALBURG WOODS", "ROUTE 116", "RUSTURF TUNNEL",
             "DEWFORD TOWN", "GRANITE CAVE", "ROUTE 109", "SLATEPORT CITY", "ROUTE 110", "ALTERING CAVE",
@@ -1077,9 +1057,9 @@ public class Gen3Constants {
             "PACIFIDLOG TOWN", "ROUTE 132", "ROUTE 133", "ROUTE 134", "ROUTE 105", "ROUTE 106", "ROUTE 107",
             "ROUTE 108", "ABANDONED SHIP", "EVER GRANDE CITY", "VICTORY ROAD", "SKY PILLAR", "DESERT UNDERPASS",
             "ARTISAN CAVE"
-    ));
+    );
 
-    private static final List<String> locationTagsTraverseOrderFRLG = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderFRLG = List.of(
             "PALLET TOWN", "ROUTE 1",
             "VIRIDIAN CITY", "ROUTE 22", "ROUTE 2", "VIRIDIAN FOREST", "ROUTE 3", "MT. MOON", "ROUTE 4",
             "CERULEAN CITY", "ROUTE 24", "ROUTE 25", "ROUTE 5", "ROUTE 6", "VERMILION CITY", "S.S. ANNE", "ROUTE 11",
@@ -1092,7 +1072,7 @@ public class Gen3Constants {
             "ALTERING CAVE", "FIVE ISLAND", "FIVE ISLE MEADOW", "MEMORIAL PILLAR", "WATER LABYRINTH", "RESORT GORGEOUS",
             "LOST CAVE", "TRAINER TOWER", "CANYON ENTRANCE", "SEVAULT CANYON", "TANOBY RUINS", "TANOBY CHAMBERS",
             "CERULEAN CAVE"
-    ));
+    );
 
     public static List<String> getLocationTagsTraverseOrder(int romType) {
         return romType == RomType_FRLG ? locationTagsTraverseOrderFRLG : locationTagsTraverseOrderRSE;

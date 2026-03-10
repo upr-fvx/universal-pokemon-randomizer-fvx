@@ -213,15 +213,11 @@ public class Gen7Constants {
             MoveCategory.SPECIAL };
 
     public static byte moveCategoryToByte(MoveCategory cat) {
-        switch (cat) {
-            case PHYSICAL:
-                return 1;
-            case SPECIAL:
-                return 2;
-            case STATUS:
-            default:
-                return 0;
-        }
+        return switch (cat) {
+            case PHYSICAL -> 1;
+            case SPECIAL -> 2;
+            case STATUS -> 0;
+        };
     }
 
     public static final int route1EncAreaIndex = 0, route1PikipekEncIndex = 8, route1PikipekStaticIndex = 0;
@@ -795,49 +791,27 @@ public class Gen7Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x00; // normal?
-        }
-        switch (type) {
-            case NORMAL:
-                return 0x00;
-            case FIGHTING:
-                return 0x01;
-            case FLYING:
-                return 0x02;
-            case POISON:
-                return 0x03;
-            case GROUND:
-                return 0x04;
-            case ROCK:
-                return 0x05;
-            case BUG:
-                return 0x06;
-            case GHOST:
-                return 0x07;
-            case FIRE:
-                return 0x09;
-            case WATER:
-                return 0x0A;
-            case GRASS:
-                return 0x0B;
-            case ELECTRIC:
-                return 0x0C;
-            case PSYCHIC:
-                return 0x0D;
-            case ICE:
-                return 0x0E;
-            case DRAGON:
-                return 0x0F;
-            case STEEL:
-                return 0x08;
-            case DARK:
-                return 0x10;
-            case FAIRY:
-                return 0x11;
-            default:
-                return 0; // normal by default
-        }
+        return switch (type) {
+            case null -> 0x00; // no ???-type, so make normal
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x06;
+            case GHOST -> 0x07;
+            case FIRE -> 0x09;
+            case WATER -> 0x0A;
+            case GRASS -> 0x0B;
+            case ELECTRIC -> 0x0C;
+            case PSYCHIC -> 0x0D;
+            case ICE -> 0x0E;
+            case DRAGON -> 0x0F;
+            case STEEL -> 0x08;
+            case DARK -> 0x10;
+            case FAIRY -> 0x11;
+        };
     }
 
     public static byte getSunnyEvolutionExtraInfo(int romType) {
@@ -851,9 +825,9 @@ public class Gen7Constants {
     public static final int evolutionMethodLevelGame = 0x24,
             evolutionMethodLevelGameDay = 0x25, evolutionMethodLevelGameNight = 0x26;
 
-    public static final List<Integer> gameSpecificEvolutionMethods = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> gameSpecificEvolutionMethods = List.of(
             evolutionMethodLevelGame, evolutionMethodLevelGameDay, evolutionMethodLevelGameNight
-    ));
+    );
 
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
             EvolutionType.HAPPINESS, EvolutionType.HAPPINESS_DAY, EvolutionType.HAPPINESS_NIGHT, EvolutionType.LEVEL,
@@ -895,18 +869,14 @@ public class Gen7Constants {
     }
 
     public static List<Integer> getAreaIndicesForLocationEvolution(EvolutionType et, int romType) {
-        switch (et) {
-            case MAGNETIC_FIELD:
+        return switch (et) {
+            case MAGNETIC_FIELD ->
                 // {Vast Poni Canyon} : {Blush Mountain, Vast Poni Canyon}
-                return romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
-            case MOSS_ROCK:
-                return Collections.singletonList(74); // {Lush Jungle}
-            case ICE_ROCK:
-            case SNOWY:
-                return Collections.singletonList(138); // {Mount Lanakila}
-            default:
-                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
-        }
+                    romType == Type_SM ? Collections.singletonList(198) : Arrays.asList(126, 198);
+            case MOSS_ROCK -> Collections.singletonList(74); // {Lush Jungle}
+            case ICE_ROCK, SNOWY -> Collections.singletonList(138); // {Mount Lanakila}
+            default -> throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        };
     }
 
     private static List<Boolean> setupRelevantEncounterFiles(int romType) {
@@ -1101,11 +1071,6 @@ public class Gen7Constants {
             ItemIDs.tm74, ItemIDs.tm79, ItemIDs.tm80, ItemIDs.tm81, ItemIDs.tm83, ItemIDs.tm84, ItemIDs.tm85,
             ItemIDs.tm86, ItemIDs.tm88, ItemIDs.tm91, ItemIDs.tm93, ItemIDs.tm97, ItemIDs.tm99, ItemIDs.tm100
     );
-
-    public static void main(String[] args) {
-        System.out.println(requiredFieldTMsSM.stream().distinct().sorted().collect(Collectors.toList()));
-        System.out.println(requiredFieldTMsUSUM.stream().distinct().sorted().collect(Collectors.toList()));
-    }
 
     public static List<Integer> getRequiredFieldTMs(int romType) {
         if (romType == Type_SM) {
@@ -1342,7 +1307,7 @@ public class Gen7Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Sun_and_Moon>this walkthrough</a>.
      */
-    private static final List<String> locationTagsTraverseOrderSM = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderSM = List.of(
             "ROUTE 1", "HAU'OLI CITY", "ROUTE 2", "HAU'OLI CEMETERY", "VERDANT CAVERN", "ROUTE 3", "MELEMELE MEADOW",
             "SEAWARD CAVE", "KALA'E BAY", "TEN CARAT HILL", "ROUTE 4", "PANIOLA TOWN", "ROUTE 5", "BROOKLET HILL",
             "ROUTE 6",  "ROUTE 7", "WELA VOLCANO PARK", "ROUTE 8", "LUSH JUNGLE", "DIGLETT'S TUNNEL", "ROUTE 9",
@@ -1352,14 +1317,14 @@ public class Gen7Constants {
             "PONI WILDS", "ANCIENT PONI PATH", "PONI BREAKER COAST", "EXEGGUTOR ISLAND", "VAST PONI CANYON",
             "MOUNT LANAKILA", "HAINA DESERT", "PONI GROVE", "PONI PLAINS", "PONI MEADOW", "RESOLUTION CAVE",
             "MELEMELE SEA", "PONI COAST", "PONI GAUNTLET", "UNUSED"
-    ));
+    );
 
     /**
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Walkthrough:Pok%C3%A9mon_Sun_and_Moon>this walkthrough</a>,
      * but adding "SANDY CAVE" and "DIVIDING PEAK TUNNEL" in appropriate spots.
      */
-    private static final List<String> locationTagsTraverseOrderUSUM = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderUSUM = List.of(
             "ROUTE 1", "HAU'OLI CITY", "ROUTE 2", "SANDY CAVE", "HAU'OLI CEMETERY", "VERDANT CAVERN", "ROUTE 3",
             "MELEMELE MEADOW", "SEAWARD CAVE", "KALA'E BAY", "TEN CARAT HILL", "ROUTE 4", "PANIOLA TOWN", "ROUTE 5",
             "BROOKLET HILL", "ROUTE 6",  "ROUTE 7", "WELA VOLCANO PARK", "DIVIDING PEAK TUNNEL", "ROUTE 8",
@@ -1369,7 +1334,7 @@ public class Gen7Constants {
             "ULA'ULA MEADOW", "ROUTE 17", "SEAFOLK VILLAGE", "PONI WILDS", "ANCIENT PONI PATH", "PONI BREAKER COAST",
             "EXEGGUTOR ISLAND", "VAST PONI CANYON", "MOUNT LANAKILA", "HAINA DESERT", "PONI GROVE", "PONI PLAINS",
             "PONI MEADOW", "RESOLUTION CAVE", "MELEMELE SEA", "PONI COAST", "PONI GAUNTLET", "UNUSED"
-    ));
+    );
 
     public static List<String> getLocationTagsTraverseOrder(int romType) {
         return romType == Type_SM ? locationTagsTraverseOrderSM : locationTagsTraverseOrderUSUM;

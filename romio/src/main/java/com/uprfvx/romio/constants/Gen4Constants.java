@@ -135,18 +135,18 @@ public class Gen4Constants {
         return list;
     }
 
-    public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeConsumableItems = List.of(
             ItemIDs.cheriBerry, ItemIDs.chestoBerry, ItemIDs.pechaBerry, ItemIDs.rawstBerry, ItemIDs.aspearBerry, ItemIDs.leppaBerry,
             ItemIDs.oranBerry, ItemIDs.persimBerry, ItemIDs.lumBerry, ItemIDs.sitrusBerry, ItemIDs.ganlonBerry, ItemIDs.salacBerry,
             // An NPC pokemon's nature is generated randomly with IVs during gameplay. Therefore, we do not include
             // the flavor berries because, prior to Gen 7, they aren't worth the risk.
             ItemIDs.apicotBerry, ItemIDs.lansatBerry, ItemIDs.starfBerry, ItemIDs.enigmaBerry, ItemIDs.micleBerry, ItemIDs.custapBerry,
-            ItemIDs.jabocaBerry, ItemIDs.rowapBerry, ItemIDs.berryJuice, ItemIDs.whiteHerb, ItemIDs.mentalHerb, ItemIDs.focusSash));
+            ItemIDs.jabocaBerry, ItemIDs.rowapBerry, ItemIDs.berryJuice, ItemIDs.whiteHerb, ItemIDs.mentalHerb, ItemIDs.focusSash);
 
-    public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeItems = List.of(
             ItemIDs.brightPowder, ItemIDs.quickClaw, ItemIDs.kingsRock, ItemIDs.focusBand, ItemIDs.scopeLens, ItemIDs.leftovers,
             ItemIDs.shellBell, ItemIDs.laxIncense, ItemIDs.wideLens, ItemIDs.expertBelt, ItemIDs.lifeOrb, ItemIDs.zoomLens,
-            ItemIDs.destinyKnot, ItemIDs.shedShell, ItemIDs.razorClaw, ItemIDs.razorFang));
+            ItemIDs.destinyKnot, ItemIDs.shedShell, ItemIDs.razorClaw, ItemIDs.razorFang);
 
     public static final Map<Type, List<Integer>> typeBoostingItems = initializeTypeBoostingItems();
 
@@ -380,9 +380,9 @@ public class Gen4Constants {
         }
     }
 
-    private static final List<Integer> dpMainGameShops = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Integer> dpMainGameShops = List.of(
        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
-    ));
+    );
 
     private static final List<Integer> ptMainGameShops = setupPTMainGameShops();
 
@@ -392,10 +392,10 @@ public class Gen4Constants {
         return Collections.unmodifiableList(l);
     }
 
-    private static final List<Integer> hgssMainGameShops = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Integer> hgssMainGameShops = List.of(
             // Mahogony Before Hideout intentionally excluded, as its items won't be forever accessible
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 30
-    ));
+    );
 
     public static List<Integer> getMainGameShops(int romType) {
         if (romType == Type_DP) {
@@ -481,10 +481,10 @@ public class Gen4Constants {
     // Technically the property of being big or not is one of the sprites and not species,
     // but it just happens that all species with SOME overworld sprite that's big have all
     // their overworld sprites be big.
-    public static final List<Integer> hgssBigOverworldPokemon = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> hgssBigOverworldPokemon = List.of(
             SpeciesIDs.steelix, SpeciesIDs.lugia, SpeciesIDs.hoOh, SpeciesIDs.wailord, SpeciesIDs.kyogre, SpeciesIDs.groudon,
             SpeciesIDs.rayquaza, SpeciesIDs.dialga, SpeciesIDs.palkia, SpeciesIDs.regigigas, SpeciesIDs.giratina, SpeciesIDs.arceus
-    ));
+    );
 
     private static final Map<Integer, int[][]> otherPokemonGraphicsImagesDP = initOtherPokemonGraphicsImagesDP();
     private static final Map<Integer, int[][]> otherPokemonGraphicsImagesPt = initOtherPokemonGraphicsImagesPt();
@@ -663,15 +663,11 @@ public class Gen4Constants {
             MoveCategory.STATUS };
 
     public static byte moveCategoryToByte(MoveCategory cat) {
-        switch (cat) {
-        case PHYSICAL:
-            return 0;
-        case SPECIAL:
-            return 1;
-        case STATUS:
-        default:
-            return 2;
-        }
+        return switch (cat) {
+            case PHYSICAL -> 0;
+            case SPECIAL -> 1;
+            case STATUS -> 2;
+        };
     }
 
     public static final int noDamageSleepEffect = 1, damagePoisonEffect = 2, damageAbsorbEffect = 3, damageBurnEffect = 4,
@@ -1406,47 +1402,27 @@ public class Gen4Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x09; // ???-type
-        }
-        switch (type) {
-        case NORMAL:
-            return 0x00;
-        case FIGHTING:
-            return 0x01;
-        case FLYING:
-            return 0x02;
-        case POISON:
-            return 0x03;
-        case GROUND:
-            return 0x04;
-        case ROCK:
-            return 0x05;
-        case BUG:
-            return 0x06;
-        case GHOST:
-            return 0x07;
-        case FIRE:
-            return 0x0A;
-        case WATER:
-            return 0x0B;
-        case GRASS:
-            return 0x0C;
-        case ELECTRIC:
-            return 0x0D;
-        case PSYCHIC:
-            return 0x0E;
-        case ICE:
-            return 0x0F;
-        case DRAGON:
-            return 0x10;
-        case STEEL:
-            return 0x08;
-        case DARK:
-            return 0x11;
-        default:
-            return 0; // normal by default
-        }
+        return switch (type) {
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x06;
+            case GHOST -> 0x07;
+            case null -> 0x09; // ???-type
+            case FIRE -> 0x0A;
+            case WATER -> 0x0B;
+            case GRASS -> 0x0C;
+            case ELECTRIC -> 0x0D;
+            case PSYCHIC -> 0x0E;
+            case ICE -> 0x0F;
+            case DRAGON -> 0x10;
+            case STEEL -> 0x08;
+            case DARK -> 0x11;
+            default -> 0; // normal by default
+        };
     }
 
     public static final byte typeTableTerminator = (byte) 0xFF, typeTableForesightTerminator = (byte) 0xFE;
@@ -1482,16 +1458,12 @@ public class Gen4Constants {
 
     public static int getMapIndexForLocationEvolution(EvolutionType et) {
         // assumes this is for DPPt
-        switch (et) {
-            case MAGNETIC_FIELD:
-                return 10; // Mt. Coronet
-            case MOSS_ROCK:
-                return 8; // Eterna Forest
-            case ICE_ROCK:
-                return 166; // Route 217
-            default:
-                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
-        }
+        return switch (et) {
+            case MAGNETIC_FIELD -> 10; // Mt. Coronet
+            case MOSS_ROCK -> 8; // Eterna Forest
+            case ICE_ROCK -> 166; // Route 217
+            default -> throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        };
     }
 
     public static int getFormeCount(int romType) {
@@ -2066,7 +2038,7 @@ public class Gen4Constants {
     /**
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Diamond_and_Pearl/Walkthrough>this walkthrough</a>.
      */
-    private static final List<String> locationTagsTraverseOrderDPPt = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderDPPt = List.of(
             "TWINLEAF TOWN", "ROUTE 201", "LAKE VERITY", "ROUTE 202", "ROUTE 203", "OREBURGH GATE",
             "OREBURGH MINE", "ROUTE 204", "RAVAGED PATH", "VALLEY WINDWORKS", "ROUTE 205", "ETERNA FOREST",
             "OLD CHATEAU", "ETERNA CITY", "ROUTE 206", "WAYWARD CAVE", "ROUTE 207", "ROUTE 208", "ROUTE 209",
@@ -2077,13 +2049,13 @@ public class Gen4Constants {
             "SUNYSHORE CITY", "ROUTE 223", "VICTORY ROAD", "POKEMON LEAGUE", "ROUTE 224", "ROUTE 230", "ROUTE 229",
             "RESORT AREA", "ROUTE 228", "ROUTE 226", "ROUTE 227", "ROUTE 225", "STARK MOUNTAIN", "SNOWPOINT TEMPLE",
             "SENDOFF SPRING", "TURNBACK CAVE", "HONEY TREE", "UNKNOWN"
-    ));
+    );
 
     /**
      * Based on <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Gold_and_Silver/Walkthrough>this walkthrough</a>,
      * with Gen IV-only locations added.
      */
-    private static final List<String> locationTagsTraverseOrderHGSS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderHGSS = List.of(
             "NEW BARK TOWN", "ROUTE 29", "ROUTE 46", "CHERRYGROVE CITY", "ROUTE 30", "ROUTE 31", "DARK CAVE",
             "VIOLET CITY", "SPROUT TOWER", "ROUTE 32", "RUINS OF ALPH", "UNION CAVE", "ROUTE 33", "AZALEA TOWN",
             "SLOWPOKE WELL", "ILEX FOREST", "ROUTE 34", "GOLDENROD CITY", "ROUTE 35", "NATIONAL PARK",
@@ -2099,7 +2071,7 @@ public class Gen4Constants {
             "VIRIDIAN CITY", "ROUTE 1", "PALLET TOWN",
             "ROUTE 21", "CINNABAR ISLAND", "ROUTE 20", "SEAFOAM ISLANDS", "ROUTE 19", "ROUTE 22", "ROUTE 28",
             "MT. SILVER", "MT. SILVER CAVE", "CERULEAN CAVE", "BUG CATCHING CONTEST"
-    ));
+    );
 
     public static List<String> getLocationTagsTraverseOrder(int romType) {
         return romType == Type_HGSS ? locationTagsTraverseOrderHGSS : locationTagsTraverseOrderDPPt;

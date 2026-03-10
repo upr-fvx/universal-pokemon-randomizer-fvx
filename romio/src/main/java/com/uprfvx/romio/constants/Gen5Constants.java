@@ -155,15 +155,11 @@ public class Gen5Constants {
             MoveCategory.SPECIAL };
 
     public static byte moveCategoryToByte(MoveCategory cat) {
-        switch (cat) {
-        case PHYSICAL:
-            return 1;
-        case SPECIAL:
-            return 2;
-        case STATUS:
-        default:
-            return 0;
-        }
+        return switch (cat) {
+            case PHYSICAL -> 1;
+            case SPECIAL -> 2;
+            case STATUS -> 0;
+        };
     }
 
     public static final int trappingEffect = 106;
@@ -502,47 +498,27 @@ public class Gen5Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x00; // normal?
-        }
-        switch (type) {
-        case NORMAL:
-            return 0x00;
-        case FIGHTING:
-            return 0x01;
-        case FLYING:
-            return 0x02;
-        case POISON:
-            return 0x03;
-        case GROUND:
-            return 0x04;
-        case ROCK:
-            return 0x05;
-        case BUG:
-            return 0x06;
-        case GHOST:
-            return 0x07;
-        case FIRE:
-            return 0x09;
-        case WATER:
-            return 0x0A;
-        case GRASS:
-            return 0x0B;
-        case ELECTRIC:
-            return 0x0C;
-        case PSYCHIC:
-            return 0x0D;
-        case ICE:
-            return 0x0E;
-        case DRAGON:
-            return 0x0F;
-        case STEEL:
-            return 0x08;
-        case DARK:
-            return 0x10;
-        default:
-            return 0; // normal by default
-        }
+        return switch (type) {
+            case null -> 0x00; // no ???-type, so make normal
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x06;
+            case GHOST -> 0x07;
+            case FIRE -> 0x09;
+            case WATER -> 0x0A;
+            case GRASS -> 0x0B;
+            case ELECTRIC -> 0x0C;
+            case PSYCHIC -> 0x0D;
+            case ICE -> 0x0E;
+            case DRAGON -> 0x0F;
+            case STEEL -> 0x08;
+            case DARK -> 0x10;
+            default -> 0; // normal by default
+        };
     }
 
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
@@ -574,16 +550,12 @@ public class Gen5Constants {
     }
 
     public static int getMapIndexForLocationEvolution(EvolutionType et, int romType) {
-        switch (et) {
-            case MAGNETIC_FIELD:
-                return romType == Type_BW ? 41 : 20; // Chargestone Cave
-            case MOSS_ROCK:
-                return romType == Type_BW ? 5 : 8; // Pinwheel Forest
-            case ICE_ROCK:
-                return romType == Type_BW ? 44 : 23; // Twist Mountain
-            default:
-                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
-        }
+        return switch (et) {
+            case MAGNETIC_FIELD -> romType == Type_BW ? 41 : 20; // Chargestone Cave
+            case MOSS_ROCK -> romType == Type_BW ? 5 : 8; // Pinwheel Forest
+            case ICE_ROCK -> romType == Type_BW ? 44 : 23; // Twist Mountain
+            default -> throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        };
     }
 
     public static int getAreaDataEntryLength(int romType) {
@@ -1777,7 +1749,7 @@ public class Gen5Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:Black_and_White_walkthrough>this walkthrough</a>.
      */
-    private static final List<String> locationTagsTraverseOrderBW = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW = List.of(
             "ROUTE 1", "ROUTE 2", "STRIATON CITY", "DREAMYARD", "ROUTE 3", "WELLSPRING CAVE",
             "PINWHEEL FOREST", "CASTELIA CITY", "ROUTE 4", "DESERT RESORT", "ROUTE 5", "RELIC CASTLE", "ROUTE 5",
             "DRIFTVEIL DRAWBRIDGE", "DRIFTVEIL CITY", "COLD STORAGE", "ROUTE 6", "CHARGESTONE CAVE", "ROUTE 7",
@@ -1786,12 +1758,12 @@ public class Gen5Constants {
             "CHALLENGER'S CAVE", "ROUTE 11", "VILLAGE BRIDGE", "ROUTE 12", "ROUTE 13", "GIANT CHASM",
             "UNDELLA TOWN", "UNDELLA BAY", "ROUTE 14", "ABUNDANT SHRINE", "ROUTE 15", "MARVELOUS BRIDGE", "ROUTE 16",
             "LOSTLORN FOREST"
-    ));
+    );
 
     /**
      * Same order as the in-game Pokédex Habitat List.
      */
-    private static final List<String> locationTagsTraverseOrderBW2 = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderBW2 = List.of(
             "ASPERTIA CITY", "ROUTE 19", "ROUTE 20", "FLOCCESY RANCH", "VIRBANK CITY", "VIRBANK COMPLEX",
             "CASTELIA CITY", "CASTELIA SEWERS", "ROUTE 4", "DESERT RESORT", "RELIC CASTLE", "ROUTE 5", "ROUTE 16",
             "LOSTLORN FOREST", "DRIFTVEIL DRAWBRIDGE", "ROUTE 6", "RELIC PASSAGE", "CLAY TUNNEL", "MISTRALTON CAVE",
@@ -1802,7 +1774,7 @@ public class Gen5Constants {
             "DRAGONSPIRAL TOWER", "TWIST MOUNTAIN", "PINWHEEL FOREST", "ROUTE 3", "WELLSPRING CAVE", "STRIATON CITY",
             "DREAMYARD", "ROUTE 2", "ROUTE 1", "ROUTE 17", "ROUTE 18", "P2 LABORATORY",
             "NATURE PRESERVE"
-    ));
+    );
 
     public static List<String> getLocationTagsTraverseOrder(int romType) {
         return romType == Type_BW ? locationTagsTraverseOrderBW : locationTagsTraverseOrderBW2;

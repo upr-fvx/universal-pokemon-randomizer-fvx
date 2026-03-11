@@ -1,3 +1,4 @@
+# ROM files
 *.NDS
 *.nds
 *.GB
@@ -12,6 +13,21 @@
 *.cci
 *.RNDP
 *.rndp
+
+# IntelliJ
+.idea/
+*.iml
+
+# Gradle project-specific cache directory
+.gradle
+
+# Gradle build output directory
+build
+
+# Kotlin plugin data
+.kotlin
+
+# Various / unidentified why they are in this .gitignore (might not be needed anymore)
 tmp_*
 *.sgm
 *.sav
@@ -23,34 +39,14 @@ tmp_*
 config.ini
 *.pkm
 error_*.txt
-src/main/java/com/dabomstew/pkromio/localtests
 bin
 *.log
 *.bin
 nbproject
 build.xml
 manifest.mf
-/nicknames.txt
-/trainerclasses.txt
-/trainernames.txt
-/build/
 *.dsm
 *.dsv
 build_eclipse.xml
-/customnames.rncn
-gen5r_race.rnqs
 .classpath
 .settings/org.eclipse.jdt.core.prefs
-util/files
-util/log
-out/
-.idea/
-*.iml
-# Ignore Gradle project-specific cache directory
-.gradle
-
-# Ignore Gradle build output directory
-build
-
-# Ignore Kotlin plugin data
-.kotlin

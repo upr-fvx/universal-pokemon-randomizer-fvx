@@ -1040,7 +1040,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private void writeOldRodEncounters(Iterator<EncounterArea> areaIterator) {
         int oldRodOffset = romEntry.getIntValue("OldRodOffset");
         EncounterArea area = areaIterator.next();
-        Encounter oldRodEnc = area.get(0);
+        Encounter oldRodEnc = area.getFirst();
         writeBytes(oldRodOffset + 1, new byte[]{
                 (byte) pokeNumToRBYTable[oldRodEnc.getSpecies().getNumber()],
                 (byte) oldRodEnc.getLevel()
@@ -1283,7 +1283,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (!trainer.pokemonHaveDifferentLevels()) {
             // Regular trainer
-            int fixedLevel = trainer.getPokemon().get(0).getLevel();
+            int fixedLevel = trainer.getPokemon().getFirst().getLevel();
             baos.write(fixedLevel);
             for (TrainerPokemon tp : trainer.getPokemon()) {
                 baos.write((byte) pokeNumToRBYTable[tp.getSpecies().getNumber()]);
@@ -1401,24 +1401,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             int effectivenessInternal = rom[currentOffset + 2];
             Type attacking = Gen1Constants.typeTable[attackingType];
             Type defending = Gen1Constants.typeTable[defendingType];
-            Effectiveness effectiveness;
-            switch (effectivenessInternal) {
-                case 20:
-                    effectiveness = Effectiveness.DOUBLE;
-                    break;
-                case 10:
-                    effectiveness = Effectiveness.NEUTRAL;
-                    break;
-                case 5:
-                    effectiveness = Effectiveness.HALF;
-                    break;
-                case 0:
-                    effectiveness = Effectiveness.ZERO;
-                    break;
-                default:
-                    effectiveness = null;
-                    break;
-            }
+            Effectiveness effectiveness = switch (effectivenessInternal) {
+                case 20 -> Effectiveness.DOUBLE;
+                case 10 -> Effectiveness.NEUTRAL;
+                case 5 -> Effectiveness.HALF;
+                case 0 -> Effectiveness.ZERO;
+                default -> null;
+            };
             if (effectiveness != null) {
                 typeTable.setEffectiveness(attacking, defending, effectiveness);
             }
@@ -1444,21 +1433,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             for (Type defender : typeTable.getTypes()) {
                 Effectiveness eff = typeTable.getEffectiveness(attacker, defender);
                 if (eff != Effectiveness.NEUTRAL) {
-                    byte effectivenessInternal;
-                    switch (eff) {
-                        case DOUBLE:
-                            effectivenessInternal = 20;
-                            break;
-                        case HALF:
-                            effectivenessInternal = 5;
-                            break;
-                        case ZERO:
-                            effectivenessInternal = 0;
-                            break;
-                        default:
-                            effectivenessInternal = 0;
-                            break;
-                    }
+                    byte effectivenessInternal = switch (eff) {
+                        case DOUBLE -> 20;
+                        case HALF -> 5;
+                        case ZERO -> 0;
+                        default -> 0;
+                    };
                     writeBytes(currentOffset, new byte[]{Gen1Constants.typeToByte(attacker),
                             Gen1Constants.typeToByte(defender), effectivenessInternal});
                     currentOffset += 3;
@@ -1765,7 +1745,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         } else if (found.size() > 1) {
             return -2; // not unique
         } else {
-            return found.get(0);
+            return found.getFirst();
         }
     }
 
@@ -2868,17 +2848,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] evoTypeExtraInfoToBytes(Evolution evo) {
-        switch (evo.getType()) {
-            case LEVEL:
-                return new byte[]{(byte) evo.getExtraInfo()};
-            case STONE:
-                return new byte[]{(byte) Gen1Constants.itemIDToInternal(evo.getExtraInfo()), 0x01}; // minimum level
-            case TRADE:
-                return new byte[]{(byte) 0x01}; // minimum level
-            default:
-                throw new IllegalStateException("EvolutionType " + evo.getType() + " is not supported " +
-                        "by Gen 1 games.");
-        }
+        return switch (evo.getType()) {
+            case LEVEL -> new byte[]{(byte) evo.getExtraInfo()};
+            case STONE -> new byte[]{(byte) Gen1Constants.itemIDToInternal(evo.getExtraInfo()), 0x01}; // minimum level
+            case TRADE -> new byte[]{(byte) 0x01}; // minimum level
+            default -> throw new IllegalStateException("EvolutionType " + evo.getType() + " is not supported " +
+                    "by Gen 1 games.");
+        };
     }
 
     private byte[] moveLearntToBytes(MoveLearnt ml) {
@@ -2900,10 +2876,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (toReplace != PlayerCharacterType.PC1) {
             throw new IllegalArgumentException("Invalid toReplace. Only one player character in Gen 1.");
         }
-        if (!(unchecked instanceof GBCPlayerCharacterGraphics)) {
+        if (!(unchecked instanceof GBCPlayerCharacterGraphics playerGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
-        GBCPlayerCharacterGraphics playerGraphics = (GBCPlayerCharacterGraphics) unchecked;
 
         if (playerGraphics.hasFrontImage()) {
             rewritePlayerFrontImage(playerGraphics.getFrontImage());

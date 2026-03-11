@@ -1852,7 +1852,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         } else if (found.size() > 1) {
             return -2; // not unique
         } else {
-            return found.get(0);
+            return found.getFirst();
         }
     }
 
@@ -2352,23 +2352,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 int effectivenessInternal = rom[currentOffset + 2];
                 Type attacking = Gen2Constants.typeTable[attackingType];
                 Type defending = Gen2Constants.typeTable[defendingType];
-                Effectiveness effectiveness;
-                switch (effectivenessInternal) {
-                    case 20:
-                        effectiveness = Effectiveness.DOUBLE;
-                        break;
-                    case 10:
-                        effectiveness = Effectiveness.NEUTRAL;
-                        break;
-                    case 5:
-                        effectiveness = Effectiveness.HALF;
-                        break;
-                    case 0:
-                        effectiveness = Effectiveness.ZERO;
-                        break;
-                    default:
-                        effectiveness = null;
-                }
+                Effectiveness effectiveness = switch (effectivenessInternal) {
+                    case 20 -> Effectiveness.DOUBLE;
+                    case 10 -> Effectiveness.NEUTRAL;
+                    case 5 -> Effectiveness.HALF;
+                    case 0 -> Effectiveness.ZERO;
+                    default -> null;
+                };
                 if (effectiveness != null) {
                     typeTable.setEffectiveness(attacking, defending, effectiveness);
                 }
@@ -2407,17 +2397,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 if (eff != Effectiveness.NEUTRAL) {
                     ByteArrayOutputStream part = (defender == Type.GHOST && eff == Effectiveness.ZERO)
                             ? ghostImmunities : mainPart;
-                    byte effectivenessInternal;
-                    switch (eff) {
-                        case DOUBLE : effectivenessInternal= 20;
-                            break;
-                        case HALF:
-                            effectivenessInternal = 5;
-                            break;
-                        default:
-                            effectivenessInternal = 0;
-                            break;
-                    }
+                    byte effectivenessInternal = switch (eff) {
+                        case DOUBLE -> 20;
+                        case HALF -> 5;
+                        default -> 0;
+                    };
                     part.write(Gen2Constants.typeToByte(attacker));
                     part.write(Gen2Constants.typeToByte(defender));
                     part.write(effectivenessInternal);
@@ -2863,29 +2847,19 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private byte[] evoTypeExtraInfoToBytes(Evolution evo) {
-         switch (evo.getType()) {
-             case LEVEL:
-                 return new byte[]{(byte) evo.getExtraInfo()};
-             case STONE: case TRADE_ITEM:
-                 return new byte[]{(byte) Gen2Constants.itemIDToInternal(evo.getExtraInfo())};
-             case TRADE:
-                 return new byte[]{(byte) 0xFF};
-             case HAPPINESS:
-                 return new byte[]{(byte) 0x01};
-             case HAPPINESS_DAY:
-                 return new byte[]{(byte) 0x02};
-             case HAPPINESS_NIGHT:
-                 return new byte[]{(byte) 0x03};
-             case LEVEL_ATTACK_HIGHER:
-                 return new byte[]{(byte) evo.getExtraInfo(), (byte) 0x01};
-             case LEVEL_DEFENSE_HIGHER:
-                 return new byte[]{(byte) evo.getExtraInfo(), (byte) 0x02};
-             case LEVEL_ATK_DEF_SAME:
-                 return new byte[]{(byte) evo.getExtraInfo(), (byte) 0x03};
-             default:
-                 throw new IllegalStateException("EvolutionType " + evo.getType() + " is not supported " +
-                         "by Gen 2 games.");
-         }
+        return switch (evo.getType()) {
+            case LEVEL -> new byte[]{(byte) evo.getExtraInfo()};
+            case STONE, TRADE_ITEM -> new byte[]{(byte) Gen2Constants.itemIDToInternal(evo.getExtraInfo())};
+            case TRADE -> new byte[]{(byte) 0xFF};
+            case HAPPINESS -> new byte[]{(byte) 0x01};
+            case HAPPINESS_DAY -> new byte[]{(byte) 0x02};
+            case HAPPINESS_NIGHT -> new byte[]{(byte) 0x03};
+            case LEVEL_ATTACK_HIGHER -> new byte[]{(byte) evo.getExtraInfo(), (byte) 0x01};
+            case LEVEL_DEFENSE_HIGHER -> new byte[]{(byte) evo.getExtraInfo(), (byte) 0x02};
+            case LEVEL_ATK_DEF_SAME -> new byte[]{(byte) evo.getExtraInfo(), (byte) 0x03};
+            default -> throw new IllegalStateException("EvolutionType " + evo.getType() + " is not supported " +
+                    "by Gen 2 games.");
+        };
     }
 
     private byte[] moveLearntToBytes(MoveLearnt ml) {
@@ -3078,10 +3052,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
         PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
 
-        if (!(unchecked instanceof Gen2PlayerCharacterGraphics)) {
+        if (!(unchecked instanceof Gen2PlayerCharacterGraphics playerGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
-        Gen2PlayerCharacterGraphics playerGraphics = (Gen2PlayerCharacterGraphics) unchecked;
 
         if (playerGraphics.hasFrontImage()) {
             rewritePlayerFrontImage(playerGraphics.getFrontImage(), toReplace);

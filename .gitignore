@@ -8,6 +8,8 @@
 *.gba
 *.3DS
 *.3ds
+*.CCI
+*.cci
 *.RNDP
 *.rndp
 tmp_*

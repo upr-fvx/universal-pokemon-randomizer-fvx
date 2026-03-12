@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEncounterTest extends RomHandlerTest {
 
-    private static final String EARLIER_OUTPUTS_PATH = "encounters/";
+    private static final String EARLIER_OUTPUTS_PATH = "/encounters/";
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -297,9 +297,9 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         }
 
         if(romHandler.hasMapIndices()) {
-            assertNotEquals(areasByMapIndex.size(), 1, "No map indices when hasMapIndices is true!");
+            assertNotEquals(1, areasByMapIndex.size(), "No map indices when hasMapIndices is true!");
         } else {
-            assertEquals(areasByMapIndex.size(), 1,
+            assertEquals(1, areasByMapIndex.size(),
                     "Map indices are present, but hasMapIndices is false!");
             //Assumptions.abort("Does not have map indices.");
         }

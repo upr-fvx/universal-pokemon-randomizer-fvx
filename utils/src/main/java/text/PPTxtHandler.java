@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class PPTxtHandler {
 
-    private static final String TABLE_PATH = "text/Generation5.tbl";
+    private static final String TABLE_PATH = "/text/Generation5.tbl";
 
     private static final Map<String, String> pokeToText = new HashMap<>();
     private static final Map<String, String> textToPoke = new HashMap<>();

@@ -1,129 +1,135 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.dabomstew.pkrandom.gui;
-
-/*----------------------------------------------------------------------------*/
-/*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
-/*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
-/*--  Pokemon and any associated names and the like are                     --*/
-/*--  trademark and (C) Nintendo 1996-2020.                                 --*/
-/*--                                                                        --*/
-/*--  The custom code written here is licensed under the terms of the GPL:  --*/
-/*--                                                                        --*/
-/*--  This program is free software: you can redistribute it and/or modify  --*/
-/*--  it under the terms of the GNU General Public License as published by  --*/
-/*--  the Free Software Foundation, either version 3 of the License, or     --*/
-/*--  (at your option) any later version.                                   --*/
-/*--                                                                        --*/
-/*--  This program is distributed in the hope that it will be useful,       --*/
-/*--  but WITHOUT ANY WARRANTY; without even the implied warranty of        --*/
-/*--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          --*/
-/*--  GNU General Public License for more details.                          --*/
-/*--                                                                        --*/
-/*--  You should have received a copy of the GNU General Public License     --*/
-/*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
-/*----------------------------------------------------------------------------*/
 
 import com.dabomstew.pkrandom.Version;
 import com.dabomstew.pkrandom.customnames.CustomNamesSet;
 import com.dabomstew.pkrandom.exceptions.InvalidSupplementFilesException;
 import com.dabomstew.pkromio.RootPath;
+import com.dabomstew.pkromio.gamedata.PlayerCharacterType;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
+import com.dabomstew.pkromio.graphics.packs.GraphicsPack;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
-import com.dabomstew.pkromio.romio.ROMFilter;
 import com.dabomstew.pkromio.romio.RomOpener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /**
  * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
+    private JPanel contentPane;
+    private JButton applyButton;
+    private JButton cancelButton;
+    private JButton presetFileButton;
+    private JButton romButton;
+    private JTextField presetFileField;
+    private JTextField settingsStringField;
+    private JTextField seedField;
+    private JTextField romField;
+    private JCheckBox cpgUseCheckButton;
+    private JButton cpgSelectLastButton;
+    private JLabel romRequiredLabel;
+    private CPGSelection cpgSelection;
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -7898067118947765260L;
     private final RandomizerGUI parentGUI;
+    private final ResourceBundle bundle;
+    private final JFileChooser presetFileChooser;
+    private final JFileChooser romFileChooser;
     private final RomOpener romOpener;
-    private RomHandler currentROM;
-    private boolean completed = false;
-    private String requiredName = null;
-    private volatile boolean changeFieldsWithoutCheck = false;
-    private CustomNamesSet customNames;
-    private java.util.ResourceBundle bundle;
 
-    /**
-     * Creates new form PresetLoadDialog
-     */
-    public PresetLoadDialog(RandomizerGUI parent, JFrame frame, RomOpener romOpener) {
+    private boolean enforceFieldCheck = true;
+    private CustomPlayerGraphics lastUsedCPG;
+
+    private RomHandler currentROM;
+    private CustomNamesSet customNames;
+    private CustomPlayerGraphics customPlayerGraphics;
+    private String requiredName;
+    private boolean completed;
+
+    public PresetLoadDialog(RandomizerGUI parentGUI, JFrame frame, JFileChooser romFileChooser, RomOpener romOpener) {
         super(frame, true);
-        bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
-        initComponents();
-        this.parentGUI = parent;
+
+        this.parentGUI = parentGUI;
+
+        this.bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle");
+
+        this.romFileChooser = romFileChooser;
+        this.presetFileChooser = new JFileChooser();
+        presetFileChooser.setFileFilter(new PresetFileFilter());
+        presetFileChooser.setCurrentDirectory(new File(RootPath.path));
+
         this.romOpener = romOpener;
-        this.presetFileChooser.setCurrentDirectory(new File(RootPath.path));
-        this.romFileChooser.setCurrentDirectory(new File(RootPath.path));
-        initialState();
+
+        setTitle(bundle.getString("PresetLoadDialog.title"));
+        setContentPane(contentPane);
+        setResizable(false);
         setLocationRelativeTo(frame);
+        getRootPane().setDefaultButton(cancelButton);
+
+        cpgSelection.setVisible(false);
+
+        initListeners();
+
+        pack();
         setVisible(true);
     }
 
-    private void initialState() {
-        this.romFileButton.setEnabled(false);
-        this.acceptButton.setEnabled(false);
-        addChangeListener(this.randomSeedField);
-        addChangeListener(this.configStringField);
+    private void initListeners() {
+        presetFileButton.addActionListener(e -> onPresetFileButton());
+        romButton.addActionListener(e -> onRomButton());
+
+        DocumentListener checkListener = new CheckDocumentListener();
+        seedField.getDocument().addDocumentListener(checkListener);
+        settingsStringField.getDocument().addDocumentListener(checkListener);
+
+        cpgUseCheckButton.addActionListener(e -> onCPGUseCheckButton());
+        cpgSelectLastButton.addActionListener(e -> onCPGSelectLastButton());
+
+        applyButton.addActionListener(e -> onApply());
+        cancelButton.addActionListener(e -> dispose());
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    private void addChangeListener(JTextField field) {
-        field.getDocument().addDocumentListener(new DocumentListener() {
+    private class CheckDocumentListener implements DocumentListener {
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (!changeFieldsWithoutCheck)
-                    PresetLoadDialog.this.checkValues();
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
 
-            }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (!changeFieldsWithoutCheck)
-                    PresetLoadDialog.this.checkValues();
-
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                if (!changeFieldsWithoutCheck)
-                    PresetLoadDialog.this.checkValues();
-
-            }
-        });
-
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            if (enforceFieldCheck) checkValues();
+        }
     }
 
     private boolean checkValues() {
         String name;
         try {
-            Long.parseLong(this.randomSeedField.getText());
+            Long.parseLong(seedField.getText());
         } catch (NumberFormatException ex) {
             invalidValues();
             return false;
         }
 
         // 161 onwards: look for version number
-        String configString = this.configStringField.getText();
+        String configString = settingsStringField.getText();
         if (configString.length() < 3) {
             invalidValues();
             return false;
@@ -131,7 +137,7 @@ public class PresetLoadDialog extends JDialog {
 
         try {
             int presetVersionNumber = Integer.parseInt(configString.substring(0, 3));
-            if (presetVersionNumber != Version.VERSION) {
+            if (presetVersionNumber != Version.LATEST.id) {
                 promptForDifferentRandomizerVersion(presetVersionNumber);
                 safelyClearFields();
                 invalidValues();
@@ -143,7 +149,7 @@ public class PresetLoadDialog extends JDialog {
         }
 
         try {
-            name = this.parentGUI.getValidRequiredROMName(configString.substring(3), customNames);
+            name = parentGUI.getValidRequiredROMName(configString.substring(3), customNames);
         } catch (InvalidSupplementFilesException ex) {
             safelyClearFields();
             invalidValues();
@@ -158,21 +164,22 @@ public class PresetLoadDialog extends JDialog {
             return false;
         }
         requiredName = name;
-        this.romRequiredLabel.setText(String.format(bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"),
+        romRequiredLabel.setText(String.format(bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"),
                 name));
-        this.romFileButton.setEnabled(true);
+        romButton.setEnabled(true);
 
         if (currentROM != null && !currentROM.getROMName().equals(name)) {
-            this.currentROM = null;
-            this.acceptButton.setEnabled(false);
-            this.romFileField.setText("");
+            currentROM = null;
+            applyButton.setEnabled(false);
+            romField.setText("");
+            disableCPGSelection();
         }
         return true;
     }
 
     private void promptForDifferentRandomizerVersion(int presetVN) {
         // so what version number was it?
-        if (presetVN > Version.VERSION) {
+        if (presetVN > Version.LATEST.id) {
             // it's for a newer version
             JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.newerVersionRequired"));
         } else {
@@ -191,54 +198,35 @@ public class PresetLoadDialog extends JDialog {
         }
     }
 
+
     private void safelyClearFields() {
         SwingUtilities.invokeLater(() -> {
-            changeFieldsWithoutCheck = true;
-            configStringField.setText("");
-            randomSeedField.setText("");
-            changeFieldsWithoutCheck = false;
+            enforceFieldCheck = false;
+            settingsStringField.setText("");
+            seedField.setText("");
+            enforceFieldCheck = true;
         });
     }
 
     private void invalidValues() {
-        this.currentROM = null;
-        this.romFileField.setText("");
-        this.romRequiredLabel.setText(bundle.getString("PresetLoadDialog.romRequiredLabel.text"));
-        this.romFileButton.setEnabled(false);
-        this.acceptButton.setEnabled(false);
-        this.requiredName = null;
-
+        currentROM = null;
+        romField.setText("");
+        romRequiredLabel.setText(bundle.getString("PresetLoadDialog.romRequiredLabel.text"));
+        romButton.setEnabled(false);
+        applyButton.setEnabled(false);
+        requiredName = null;
+        disableCPGSelection();
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public RomHandler getROM() {
-        return currentROM;
-    }
-
-    public long getSeed() {
-        return Long.parseLong(this.randomSeedField.getText());
-    }
-
-    public String getConfigString() {
-        return this.configStringField.getText().substring(3);
-    }
-
-    public CustomNamesSet getCustomNames() {
-        return customNames;
-    }
-
-    private void presetFileButtonActionPerformed() {// GEN-FIRST:event_presetFileButtonActionPerformed
+    private void onPresetFileButton() {
         presetFileChooser.setSelectedFile(null);
         int returnVal = presetFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = presetFileChooser.getSelectedFile();
             try {
-                DataInputStream dis = new DataInputStream(new FileInputStream(fh));
+                DataInputStream dis = new DataInputStream(Files.newInputStream(fh.toPath()));
                 int checkInt = dis.readInt();
-                if (checkInt != Version.VERSION) {
+                if (checkInt != Version.LATEST.id) {
                     dis.close();
                     promptForDifferentRandomizerVersion(checkInt);
                     return;
@@ -246,20 +234,20 @@ public class PresetLoadDialog extends JDialog {
                 long seed = dis.readLong();
                 String preset = dis.readUTF();
                 customNames = new CustomNamesSet(dis);
-                changeFieldsWithoutCheck = true;
-                this.randomSeedField.setText(Long.toString(seed));
-                this.configStringField.setText(checkInt + "" + preset);
-                changeFieldsWithoutCheck = false;
+                enforceFieldCheck = false;
+                seedField.setText(Long.toString(seed));
+                settingsStringField.setText(checkInt + "" + preset);
+                enforceFieldCheck = true;
                 if (checkValues()) {
-                    this.randomSeedField.setEnabled(false);
-                    this.configStringField.setEnabled(false);
-                    this.presetFileField.setText(fh.getAbsolutePath());
+                    seedField.setEnabled(false);
+                    settingsStringField.setEnabled(false);
+                    presetFileField.setText(fh.getAbsolutePath());
                 } else {
-                    this.randomSeedField.setText("");
-                    this.configStringField.setText("");
-                    this.randomSeedField.setEnabled(true);
-                    this.configStringField.setEnabled(true);
-                    this.presetFileField.setText("");
+                    seedField.setText("");
+                    settingsStringField.setText("");
+                    seedField.setEnabled(true);
+                    settingsStringField.setEnabled(true);
+                    presetFileField.setText("");
                     customNames = null;
                     JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
                 }
@@ -268,9 +256,9 @@ public class PresetLoadDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));
             }
         }
-    }// GEN-LAST:event_presetFileButtonActionPerformed
+    }
 
-    private void romFileButtonActionPerformed() {// GEN-FIRST:event_romFileButtonActionPerformed
+    private void onRomButton() {
         romFileChooser.setSelectedFile(null);
         int returnVal = romFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -289,11 +277,12 @@ public class PresetLoadDialog extends JDialog {
                             RomHandler checkHandler = results.getRomHandler();
                             if (checkHandler.getROMName().equals(requiredName)) {
                                 // Got it
-                                romFileField.setText(f.getAbsolutePath());
+                                romField.setText(f.getAbsolutePath());
                                 currentROM = checkHandler;
-                                acceptButton.setEnabled(true);
+                                maybeEnableCPGSelection();
+                                applyButton.setEnabled(true);
                             } else {
-                                JOptionPane.showMessageDialog(PresetLoadDialog.this, String.format(
+                                JOptionPane.showMessageDialog(this, String.format(
                                         bundle.getString("PresetLoadDialog.notRequiredROM"), requiredName,
                                         checkHandler.getROMName()));
                             }
@@ -304,16 +293,87 @@ public class PresetLoadDialog extends JDialog {
                 } catch (Exception e) {
                     SwingUtilities.invokeLater(() -> {
                         opDialog.setVisible(false);
-                        JOptionPane.showMessageDialog(PresetLoadDialog.this,
+                        JOptionPane.showMessageDialog(this,
                                 bundle.getString("GUI.loadFailedNoLog"));
                     });
                 }
             });
             t.start();
         }
-    }// GEN-LAST:event_romFileButtonActionPerformed
+    }
 
-    private void acceptButtonActionPerformed() {// GEN-FIRST:event_acceptButtonActionPerformed
+    private void disableCPGSelection() {
+        cpgUseCheckButton.setSelected(false);
+        cpgUseCheckButton.setEnabled(false);
+        cpgSelectLastButton.setEnabled(false);
+        cpgSelection.setVisible(false);
+        pack();
+    }
+
+    private void maybeEnableCPGSelection() {
+        boolean cpgSupport = currentROM.hasCustomPlayerGraphicsSupport();
+        cpgUseCheckButton.setEnabled(cpgSupport);
+        cpgSelection.fillComboBox(currentROM);
+        cpgSelection.setEnabled(true);
+
+        if (cpgSupport) {
+            lastUsedCPG = getLastUsedCPGFromConfig();
+            cpgSelectLastButton.setEnabled(lastUsedCPG != null);
+        }
+    }
+
+    private CustomPlayerGraphics getLastUsedCPGFromConfig() {
+        String cpgName = null;
+        PlayerCharacterType typeToReplace = null;
+        File config = new File(RootPath.path + "config.ini");
+        try {
+            Scanner scanner = new Scanner(config, "UTF-8");
+            while (scanner.hasNext()) {
+                String q = scanner.nextLine().trim();
+                if (q.contains("//")) {
+                    q = q.substring(0, q.indexOf("//")).trim();
+                }
+                String[] tokens = q.split("=", 2);
+                if (tokens.length == 2) {
+                    if (tokens[0].startsWith("lastusedcpg." + currentROM.getROMName() + ".pack")) {
+                        cpgName = tokens[1];
+                    } else if (tokens[0].startsWith("lastusedcpg." + currentROM.getROMName() + ".type")) {
+                        typeToReplace = PlayerCharacterType.valueOf(tokens[1]);
+                    }
+                }
+            }
+        } catch (FileNotFoundException ignored) {
+            return null;
+        }
+        if (cpgName == null || typeToReplace == null) {
+            return null;
+        }
+        GraphicsPack graphicsPack = null;
+        for (GraphicsPack gp : cpgSelection.getGraphicsPacks()) {
+            if (gp.getName().equals(cpgName)) {
+                graphicsPack = gp;
+                break;
+            }
+        }
+        if (graphicsPack == null) {
+            return null;
+        }
+        return new CustomPlayerGraphics(graphicsPack, typeToReplace);
+    }
+
+    private void onCPGUseCheckButton() {
+        cpgSelection.setVisible(cpgUseCheckButton.isSelected());
+        pack();
+    }
+
+    private void onCPGSelectLastButton() {
+        cpgSelection.setCustomPlayerGraphics(lastUsedCPG);
+        if (!cpgUseCheckButton.isSelected()) {
+            cpgUseCheckButton.doClick();
+        }
+    }
+
+    private void onApply() {
         if (customNames == null) {
             try {
                 customNames = CustomNamesSet.readNamesFromFile();
@@ -321,187 +381,35 @@ public class PresetLoadDialog extends JDialog {
                 e.printStackTrace();
             }
         }
+        if (cpgUseCheckButton.isSelected()) {
+            customPlayerGraphics = cpgSelection.getCustomPlayerGraphics();
+        }
         completed = true;
-        this.setVisible(false);
-    }// GEN-LAST:event_acceptButtonActionPerformed
+        dispose();
+    }
 
-    private void cancelButtonActionPerformed() {// GEN-FIRST:event_cancelButtonActionPerformed
-        completed = false;
-        this.setVisible(false);
-    }// GEN-LAST:event_cancelButtonActionPerformed
+    public boolean isCompleted() {
+        return completed;
+    }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed"
-    // desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    public RomHandler getROM() {
+        return currentROM;
+    }
 
-        presetFileChooser = new JFileChooser();
-        romFileChooser = new JFileChooser();
-        presetFileLabel = new javax.swing.JLabel();
-        presetFileField = new JTextField();
-        presetFileButton = new javax.swing.JButton();
-        orLabel = new javax.swing.JLabel();
-        seedBoxLabel = new javax.swing.JLabel();
-        randomSeedField = new JTextField();
-        configStringBoxLabel = new javax.swing.JLabel();
-        configStringField = new JTextField();
-        romRequiredLabel = new javax.swing.JLabel();
-        romFileBoxLabel = new javax.swing.JLabel();
-        romFileField = new JTextField();
-        romFileButton = new javax.swing.JButton();
-        acceptButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
+    public long getSeed() {
+        return Long.parseLong(seedField.getText());
+    }
 
-        presetFileChooser.setFileFilter(new PresetFileFilter());
+    public String getSettingsString() {
+        return settingsStringField.getText();
+    }
 
-        romFileChooser.setFileFilter(new ROMFilter());
+    public CustomNamesSet getCustomNames() {
+        return customNames;
+    }
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/gui/Bundle"); // NOI18N
-        setTitle(bundle.getString("PresetLoadDialog.title")); // NOI18N
-        setModal(true);
-        setResizable(false);
+    public CustomPlayerGraphics getCustomPlayerGraphics() {
+        return customPlayerGraphics;
+    }
 
-        presetFileLabel.setText(bundle.getString("PresetLoadDialog.presetFileLabel.text")); // NOI18N
-
-        presetFileField.setEditable(false);
-
-        presetFileButton.setText(bundle.getString("PresetLoadDialog.presetFileButton.text")); // NOI18N
-        presetFileButton.addActionListener(evt -> presetFileButtonActionPerformed());
-
-        orLabel.setFont(new java.awt.Font("Tahoma", Font.BOLD, 11)); // NOI18N
-        orLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        orLabel.setText(bundle.getString("PresetLoadDialog.orLabel.text")); // NOI18N
-
-        seedBoxLabel.setText(bundle.getString("PresetLoadDialog.seedBoxLabel.text")); // NOI18N
-
-        configStringBoxLabel.setText(bundle.getString("PresetLoadDialog.configStringBoxLabel.text")); // NOI18N
-
-        romRequiredLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        romRequiredLabel.setText(bundle.getString("PresetLoadDialog.romRequiredLabel.text")); // NOI18N
-
-        romFileBoxLabel.setText(bundle.getString("PresetLoadDialog.romFileBoxLabel.text")); // NOI18N
-
-        romFileField.setEditable(false);
-
-        romFileButton.setText(bundle.getString("PresetLoadDialog.romFileButton.text")); // NOI18N
-        romFileButton.addActionListener(evt -> romFileButtonActionPerformed());
-
-        acceptButton.setText(bundle.getString("PresetLoadDialog.acceptButton.text")); // NOI18N
-        acceptButton.addActionListener(evt -> acceptButtonActionPerformed());
-
-        cancelButton.setText(bundle.getString("PresetLoadDialog.cancelButton.text")); // NOI18N
-        cancelButton.addActionListener(evt -> cancelButtonActionPerformed());
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout
-                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(
-                        layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(
-                                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(romFileBoxLabel,
-                                                        javax.swing.GroupLayout.Alignment.LEADING,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(presetFileLabel,
-                                                        javax.swing.GroupLayout.Alignment.LEADING,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(seedBoxLabel, javax.swing.GroupLayout.Alignment.LEADING,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(configStringBoxLabel,
-                                                        javax.swing.GroupLayout.Alignment.LEADING,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addGroup(
-                                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(
-                                                        layout.createSequentialGroup()
-                                                                .addComponent(acceptButton)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                        169, Short.MAX_VALUE)
-                                                                .addComponent(cancelButton))
-                                                .addComponent(randomSeedField).addComponent(configStringField)
-                                                .addComponent(presetFileField).addComponent(romFileField))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(
-                                        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(presetFileButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(romFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 1,
-                                                        Short.MAX_VALUE)).addGap(12, 12, 12))
-                .addComponent(orLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-                        Short.MAX_VALUE)
-                .addComponent(romRequiredLabel, javax.swing.GroupLayout.DEFAULT_SIZE,
-                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-                layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(presetFileLabel)
-                                        .addComponent(presetFileField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(presetFileButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(orLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(seedBoxLabel)
-                                        .addComponent(randomSeedField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(configStringBoxLabel)
-                                        .addComponent(configStringField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(romRequiredLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(romFileBoxLabel)
-                                        .addComponent(romFileField, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(romFileButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                        .addGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(acceptButton).addComponent(cancelButton)).addContainerGap()));
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton acceptButton;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel configStringBoxLabel;
-    private JTextField configStringField;
-    private javax.swing.JLabel orLabel;
-    private javax.swing.JButton presetFileButton;
-    private JFileChooser presetFileChooser;
-    private JTextField presetFileField;
-    private javax.swing.JLabel presetFileLabel;
-    private JTextField randomSeedField;
-    private javax.swing.JLabel romFileBoxLabel;
-    private javax.swing.JButton romFileButton;
-    private JFileChooser romFileChooser;
-    private JTextField romFileField;
-    private javax.swing.JLabel romRequiredLabel;
-    private javax.swing.JLabel seedBoxLabel;
-    // End of variables declaration//GEN-END:variables
 }

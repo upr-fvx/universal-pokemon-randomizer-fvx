@@ -31,9 +31,11 @@ import com.dabomstew.pkrandom.updaters.SpeciesBaseStatUpdater;
 import com.dabomstew.pkrandom.updaters.TypeEffectivenessUpdater;
 import com.dabomstew.pkrandom.updaters.Updater;
 import com.dabomstew.pkromio.MiscTweak;
+import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.Gen1RomHandler;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ResourceBundle;
@@ -86,6 +88,7 @@ public class GameRandomizer {
     private final RandomSource randomSource = new RandomSource();
 
     private final Settings settings;
+    private final CustomPlayerGraphics customPlayerGraphics;
     private final RomHandler romHandler;
     private final boolean saveAsDirectory;
 
@@ -117,8 +120,10 @@ public class GameRandomizer {
     private final PaletteRandomizer paletteRandomizer;
     private final MiscTweakRandomizer miscTweakRandomizer;
 
-    public GameRandomizer(Settings settings, RomHandler romHandler, ResourceBundle bundle, boolean saveAsDirectory) {
+    public GameRandomizer(Settings settings, CustomPlayerGraphics customPlayerGraphics, RomHandler romHandler,
+                          ResourceBundle bundle, boolean saveAsDirectory) {
         this.settings = settings;
+        this.customPlayerGraphics = customPlayerGraphics;
         this.romHandler = romHandler;
         this.saveAsDirectory = saveAsDirectory;
 
@@ -199,13 +204,20 @@ public class GameRandomizer {
             maybeSetCustomPlayerGraphics();
 
             results.checkValue = new CheckValueCalculator(romHandler, settings).calculate();
+            if (romHandler.shouldWriteCheckValue()) {
+                romHandler.writeCheckValue(results.checkValue);
+            }
 
-            romHandler.saveRom(filename, seed, saveAsDirectory);
+            boolean couldSave = romHandler.saveRom(filename, seed, saveAsDirectory);
 
             try {
                 logger.logResults(log, startTime);
             } catch (Exception e) {
                 results.logE = e;
+            }
+
+            if (!couldSave) {
+                results.e = new IOException("Could not save ROM, reason unknown.");
             }
         } catch (Exception e) {
             results.e = e;
@@ -234,11 +246,13 @@ public class GameRandomizer {
     }
 
     private void maybeSetCustomPlayerGraphics() {
-        // this setting/feature sticks out for being atypical,
-        // versus the rest of the randomizer..... is this the right place for it to be?
-        if (settings.getCustomPlayerGraphicsMod() == Settings.CustomPlayerGraphicsMod.RANDOM) {
-            romHandler.setCustomPlayerGraphics(settings.getCustomPlayerGraphics(),
-                    settings.getCustomPlayerGraphicsCharacterMod());
+        // This setting/feature sticks out for being atypical,
+        // versus the rest of the randomizer.....
+        // But if we consider the GameRandomizer to be
+        // "the thing that does all the changes to the ROM, chosen through the UI",
+        // then it makes sense that this should be here.
+        if (customPlayerGraphics != null) {
+            romHandler.setCustomPlayerGraphics(customPlayerGraphics);
         }
     }
 
@@ -391,17 +405,19 @@ public class GameRandomizer {
     }
 
     private void maybeApplyEvolutionImprovements() {
+        boolean useEstimatedLevels = settings.useEstimatedLevelsForEvolutionImprovements();
+
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
             boolean changeMoveEvos = settings.getMovesetsMod() != Settings.MovesetsMod.UNCHANGED;
-            romHandler.removeImpossibleEvolutions(changeMoveEvos);
+            romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
-            romHandler.condenseLevelEvolutions(40, 30);
+            romHandler.condenseLevelEvolutions(settings.getMakeEvolutionsEasierLvl());
             boolean wildsRandomizer = settings.isRandomizeWildPokemon();
-            romHandler.makeEvolutionsEasier(wildsRandomizer);
+            romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
         // Remove time-based evolutions
@@ -523,8 +539,7 @@ public class GameRandomizer {
         // 2. Add extra Trainer Pokemon with level between lowest and highest original trainer Pokemon
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
-        // 5. Randomize Trainer Pokemon (or force fully evolved if not randomizing, i.e., UNCHANGED and no additional Pkmn)
-
+        // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
         if (settings.isTrainersLevelModified()) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
@@ -549,18 +564,15 @@ public class GameRandomizer {
 
         if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else {
-            if (settings.isTrainersForceMiddleStage()) {
-                trainerPokeRandomizer.forceMiddleStageTrainerPokes();
-            }
-            if (settings.isTrainersForceFullyEvolved()) {
-                trainerPokeRandomizer.forceFullyEvolvedTrainerPokes();
-            }
+        } else if (settings.isTrainersEvolveTheirPokemon()) {
+            trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
     }
 
     private void maybeRandomizeTrainerMovesets() {
-        if (settings.isBetterTrainerMovesets()) {
+        if (settings.isBetterBossTrainerMovesets()
+                || settings.isBetterImportantTrainerMovesets()
+                || settings.isBetterRegularTrainerMovesets()) {
             trainerMovesetRandomizer.randomizeTrainerMovesets();
         }
     }
@@ -672,9 +684,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeIntroPokemon() {
-        // Note: this is the only randomization that applies even if no setting is checked.
-        // Essentially, it works as confirmation that the Randomizer was applied at all.
-        if (romHandler.canSetIntroPokemon()) {
+        if (settings.isRandomizeIntroMon()) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

@@ -19,9 +19,11 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
             putSpecialKeyMethod("Type", Gen5RomEntry::setRomType);
             putSpecialKeyMethod("IsBlack", Gen5RomEntry::setBlack);
             putSpecialKeyMethod("CopyTradeScripts", Gen5RomEntry::setCopyTradeScripts);
+            putSpecialKeyMethod("CopyStoryText", Gen5RomEntry::setCopyStoryText);
             putSpecialKeyMethod("StaticPokemonFakeBall{}", Gen5RomEntry::addStaticPokemonFakeBall);
             putSpecialKeyMethod("RoamingPokemon{}", Gen5RomEntry::addRoamingPokemon);
             putSpecialKeyMethod("TradeScript[]", Gen5RomEntry::addTradeScript);
+            putKeyPrefixMethod("StoryText<", Gen5RomEntry::addStoryText);
             putKeyPrefixMethod("StarterOffsets", Gen5RomEntry::addStarterOffsets);
         }
 
@@ -80,11 +82,13 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
     public static final Gen5RomEntryReader<Gen5RomEntry> READER = new Gen5RomEntryReader<>();
 
     private boolean copyTradeScripts = false;
+    private boolean copyStoryText = false;
     private boolean black = false;
     private final List<DSStaticPokemon> staticPokemonFakeBall = new ArrayList<>();
     private final List<Gen5RomHandler.RoamingPokemon> roamingPokemon = new ArrayList<>();
     private final List<Gen5RomHandler.TradeScript> tradeScripts = new ArrayList<>();
     private final Map<String, InFileEntry[]> offsetArrayEntries = new HashMap<>();
+    private final Map<String, String> storyTexts = new HashMap<>();
 
     public Gen5RomEntry(String name) {
         super(name);
@@ -103,6 +107,10 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
 
     private void setCopyTradeScripts(String s) {
         copyTradeScripts = IniEntryReader.parseBoolean(s);
+    }
+
+    private void setCopyStoryText(String s) {
+        copyStoryText = IniEntryReader.parseBoolean(s);
     }
 
     public boolean isBlack() {
@@ -165,6 +173,16 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
         offsetArrayEntries.put(valuePair[0], offs);
     }
 
+    public String getStoryText(String key) {
+        return storyTexts.getOrDefault(key, "");
+    }
+
+    private void addStoryText(String[] valuePair) {
+        String key = valuePair[0].split("<")[1].split(">")[0];
+        String value = valuePair[1];
+        storyTexts.put(key, value);
+    }
+
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
@@ -182,6 +200,9 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
             }
             if (copyTradeScripts) {
                 tradeScripts.addAll(gen5Other.tradeScripts);
+            }
+            if (copyStoryText) {
+                storyTexts.putAll(gen5Other.storyTexts);
             }
         }
     }

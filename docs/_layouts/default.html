@@ -11,9 +11,14 @@
 		{% include title.html %}
 		</header>
 		
-		{% include navigation.html %}
 		<main>
-		{{ content }}
+			<nav>
+				{% include navigation.html %}
+			</nav>
+			
+			<div id="content">
+				{{ content }}
+			</div>
 		</main>
 
 		<footer>

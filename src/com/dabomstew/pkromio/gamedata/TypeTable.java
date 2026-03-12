@@ -284,7 +284,7 @@ public class TypeTable {
         }
 
         for (int i = 0; i < 3; i+= 3) {
-            sb.append(new String(new char[maxNameLength]).replace("\0", " "));
+            sb.append(new String(new char[maxNameLength + 1]).replace("\0", " "));
             for (Type defender : types) {
                 sb.append(defender.name().length() > i ? defender.name().charAt(i) : " ");
                 sb.append(defender.name().length() > i + 1 ? defender.name().charAt(i + 1) : " ");

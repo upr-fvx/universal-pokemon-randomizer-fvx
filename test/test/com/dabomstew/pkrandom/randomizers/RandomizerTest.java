@@ -34,7 +34,7 @@ public class RandomizerTest {
     private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, false);
+        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, true, true, false);
     }
 
     public static String[] getAllRomNames() {

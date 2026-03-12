@@ -32,14 +32,11 @@ public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the
     //  forking-and-then-merging that is bound to happen with an open-source project like this.
 
-    // LATEST_VERSION is a bit superfluous, but refactoring VERSION/VERSION_STRING felt like a project for later
     // id should increment by 1 for new version (note the current system has an upper limit of 999)
 
     // If creating a new fork, should "jump" the version number by some number of hundreds.
     // (This is not ideal, but it's better than sharing increments)
-    public static final Version LATEST_VERSION = new Version(413, "1.3.1", "FVX");
-    public static final int VERSION = LATEST_VERSION.id;
-    public static final String VERSION_STRING = LATEST_VERSION.name;
+    public static final Version LATEST = new Version(420, "1.4.2a", "FVX");
 
     public final int id;
     public final String name;
@@ -118,7 +115,15 @@ public class Version {
     public static final Version FVX_1_2_1 = new Version(410, "1.2.1", "FVX");
     public static final Version FVX_1_2_2 = new Version(411, "1.2.2", "FVX");
     public static final Version FVX_1_3_0 = new Version(412, "1.3.0", "FVX");
-    public static final Version FVX_1_3_1 = LATEST_VERSION;
+    public static final Version FVX_1_3_1 = new Version(413, "1.3.1", "FVX");
+    public static final Version FVX_1_3_2 = new Version(414, "1.3.2", "FVX");
+    public static final Version FVX_1_3_3 = new Version(415, "1.3.3", "FVX");
+    public static final Version FVX_1_3_4 = new Version(416, "1.3.4", "FVX");
+    public static final Version FVX_1_4_0 = new Version(417, "1.4.0", "FVX");
+    public static final Version FVX_1_4_1 = new Version(418, "1.4.1", "FVX");
+    public static final Version FVX_1_4_2 = new Version(419, "1.4.2", "FVX");
+    public static final Version FVX_1_4_2a = new Version(419, "1.4.2a", "FVX");
+    public static final Version FVX_1_4_3 = LATEST;
 
     // add versions to the bottom as you create them
 
@@ -130,17 +135,17 @@ public class Version {
             CTV_4_7_0, CTV_4_7_1, CTV_4_7_2, CTV_4_8_0, Vb_0_9_0, Vb_0_9_1, Vb_0_9_2, Vb_0_9_3, Vb_0_10_0, Vb_0_10_1,
             Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0, FVX_1_0_1,
             FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3, FVX_1_2_0, FVX_1_2_1, FVX_1_2_2, FVX_1_3_0,
-            FVX_1_3_1
+            FVX_1_3_1, FVX_1_3_2, FVX_1_3_3, FVX_1_3_4, FVX_1_4_0, FVX_1_4_1, FVX_1_4_2, FVX_1_4_2a, FVX_1_4_3
     ));
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {
-        if (VERSION_STRING.contains("dev")) {
+        if (LATEST.name.contains("dev")) {
             return false;
         }
         // Chop off leading "v" from release version
         try {
             String releaseVersionTrimmed = releaseVersion.substring(1);
-            String[] thisVersionPieces = VERSION_STRING.split("\\.");
+            String[] thisVersionPieces = LATEST.name.split("\\.");
             String[] releaseVersionPieces = releaseVersionTrimmed.split("\\.");
             int smallestLength = Math.min(thisVersionPieces.length, releaseVersionPieces.length);
             for (int i = 0; i < smallestLength; i++) {

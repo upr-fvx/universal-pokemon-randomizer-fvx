@@ -1,9 +1,6 @@
 package com.dabomstew.pkromio.constants;
 
 /*----------------------------------------------------------------------------*/
-/*--  ItemIDs.java - defines an index number constant for every item in the --*/
-/*--               game from Diamond/Pearl to Sword/Shield.                 --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -24,16 +21,36 @@ package com.dabomstew.pkromio.constants;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.dabomstew.pkromio.romhandlers.RomHandler;
+
+/**
+ * Defines an index number constant for every item in the game.
+ * GameFreak has been <i>mostly</i> consistent with the item IDs
+ * starting with Generation 4. Places where they were not consistent
+ * are specifically called out in comments.<br>
+ * Sources:
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_IV)>Gen 4</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_V)>Gen 5</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)>Gen 6</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)>Gen 7</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Let%27s_Go,_Pikachu!_and_Let%27s_Go,_Eevee!)>LGPE</a>,
+ * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VIII)>Gen 8</a>
+ * <br>
+ * {@link RomHandler}s are expected to use these IDs, even if they
+ * internally use some other item order, mapping them to the IDs
+ * of the corresponding item. Some internal items do not correspond
+ * to a standard ID; they are "unique" for a given (set of) game(s).
+ * Unique items are given an offset to their internal numbering,
+ * to not conflict with any standard IDs.<br>
+ * The unique item IDs of Gens 1-3, are found under the
+ * {@link Gen1}, {@link Gen2}, {@link Gen3} internal classes.
+ */
 @SuppressWarnings("unused")
 public class ItemIDs {
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_IV)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_V)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VI)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VII)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Let%27s_Go,_Pikachu!_and_Let%27s_Go,_Eevee!)
-    // https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_VIII)
-    // Unlike in previous generations, GameFreak was *mostly* consistent with this item list starting with Diamond and
-    // Pearl. Places where they were not consistent are specifically called out in comments.
+
+    // Items >=1000 are introduced in LGPE, which is not supported yet,
+    // so no risk of conflict. Increase this if LGPE gets official support.
+    public static final int UNIQUE_OFFSET = 1000;
 
     // These items are generally available in Diamond/Pearl and onwards.
     public static final int none = 0;
@@ -1668,4 +1685,374 @@ public class ItemIDs {
     public static final int carrotSeeds = 1605;
     public static final int abilityPatch = 1606;
     public static final int reinsofUnity = 1607;
+
+    /**
+     * IDs for the "unique" items of Gen 1.
+     * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_I)>Source.</a>
+     */
+    public static class Gen1 {
+        public static final int townMap = UNIQUE_OFFSET + 5;
+        public static final int bicycle = UNIQUE_OFFSET + 6;
+        public static final int questionMark7 = UNIQUE_OFFSET + 7;
+        public static final int pokedex = UNIQUE_OFFSET + 9;
+        public static final int boulderBadge = UNIQUE_OFFSET + 21;
+        public static final int cascadeBadge = UNIQUE_OFFSET + 22;
+        public static final int thunderBadge = UNIQUE_OFFSET + 23;
+        public static final int rainbowBadge = UNIQUE_OFFSET + 24;
+        public static final int soulBadge = UNIQUE_OFFSET + 25;
+        public static final int marshBadge = UNIQUE_OFFSET + 26;
+        public static final int volcanoBadge = UNIQUE_OFFSET + 27;
+        public static final int earthBadge = UNIQUE_OFFSET + 28;
+        public static final int oldAmber = UNIQUE_OFFSET + 31;
+        public static final int domeFossil = UNIQUE_OFFSET + 41;
+        public static final int helixFossil = UNIQUE_OFFSET + 42;
+        public static final int secretKey = UNIQUE_OFFSET + 43;
+        public static final int questionMark44 = UNIQUE_OFFSET + 44;
+        public static final int bikeVoucher = UNIQUE_OFFSET + 45;
+        public static final int cardKey = UNIQUE_OFFSET + 48;
+        public static final int ppUpGlitch = UNIQUE_OFFSET + 50;
+        public static final int coin = UNIQUE_OFFSET + 59;
+        public static final int ssTicket = UNIQUE_OFFSET + 63;
+        public static final int goldTeeth = UNIQUE_OFFSET + 64;
+        public static final int coinCase = UNIQUE_OFFSET + 69;
+        public static final int oaksParcel = UNIQUE_OFFSET + 70;
+        public static final int itemfinder = UNIQUE_OFFSET + 71;
+        public static final int silphScope = UNIQUE_OFFSET + 72;
+        public static final int pokeFlute = UNIQUE_OFFSET + 73;
+        public static final int liftKey = UNIQUE_OFFSET + 74;
+        public static final int expAll = UNIQUE_OFFSET + 75;
+        public static final int oldRod = UNIQUE_OFFSET + 76;
+        public static final int goodRod = UNIQUE_OFFSET + 77;
+        public static final int superRod = UNIQUE_OFFSET + 78;
+        public static final int unused84 = UNIQUE_OFFSET + 84;
+        public static final int unused85 = UNIQUE_OFFSET + 85;
+        public static final int unused86 = UNIQUE_OFFSET + 86;
+        public static final int unused87 = UNIQUE_OFFSET + 87;
+        public static final int unused88 = UNIQUE_OFFSET + 88;
+        public static final int unused89 = UNIQUE_OFFSET + 89;
+        public static final int unused90 = UNIQUE_OFFSET + 90;
+        public static final int unused91 = UNIQUE_OFFSET + 91;
+        public static final int unused92 = UNIQUE_OFFSET + 92;
+        public static final int unused93 = UNIQUE_OFFSET + 93;
+        public static final int unused94 = UNIQUE_OFFSET + 94;
+        public static final int unused95 = UNIQUE_OFFSET + 95;
+        public static final int unused96 = UNIQUE_OFFSET + 96;
+        public static final int unused97 = UNIQUE_OFFSET + 97;
+        public static final int unused98 = UNIQUE_OFFSET + 98;
+        public static final int unused99 = UNIQUE_OFFSET + 99;
+        public static final int unused100 = UNIQUE_OFFSET + 100;
+        public static final int unused101 = UNIQUE_OFFSET + 101;
+        public static final int unused102 = UNIQUE_OFFSET + 102;
+        public static final int unused103 = UNIQUE_OFFSET + 103;
+        public static final int unused104 = UNIQUE_OFFSET + 104;
+        public static final int unused105 = UNIQUE_OFFSET + 105;
+        public static final int unused106 = UNIQUE_OFFSET + 106;
+        public static final int unused107 = UNIQUE_OFFSET + 107;
+        public static final int unused108 = UNIQUE_OFFSET + 108;
+        public static final int unused109 = UNIQUE_OFFSET + 109;
+        public static final int unused110 = UNIQUE_OFFSET + 110;
+        public static final int unused111 = UNIQUE_OFFSET + 111;
+        public static final int unused112 = UNIQUE_OFFSET + 112;
+        public static final int unused113 = UNIQUE_OFFSET + 113;
+        public static final int unused114 = UNIQUE_OFFSET + 114;
+        public static final int unused115 = UNIQUE_OFFSET + 115;
+        public static final int unused116 = UNIQUE_OFFSET + 116;
+        public static final int unused117 = UNIQUE_OFFSET + 117;
+        public static final int unused118 = UNIQUE_OFFSET + 118;
+        public static final int unused119 = UNIQUE_OFFSET + 119;
+        public static final int unused120 = UNIQUE_OFFSET + 120;
+        public static final int unused121 = UNIQUE_OFFSET + 121;
+        public static final int unused122 = UNIQUE_OFFSET + 122;
+        public static final int unused123 = UNIQUE_OFFSET + 123;
+        public static final int unused124 = UNIQUE_OFFSET + 124;
+        public static final int unused125 = UNIQUE_OFFSET + 125;
+        public static final int unused126 = UNIQUE_OFFSET + 126;
+        public static final int unused127 = UNIQUE_OFFSET + 127;
+        public static final int unused128 = UNIQUE_OFFSET + 128;
+        public static final int unused129 = UNIQUE_OFFSET + 129;
+        public static final int unused130 = UNIQUE_OFFSET + 130;
+        public static final int unused131 = UNIQUE_OFFSET + 131;
+        public static final int unused132 = UNIQUE_OFFSET + 132;
+        public static final int unused133 = UNIQUE_OFFSET + 133;
+        public static final int unused134 = UNIQUE_OFFSET + 134;
+        public static final int unused135 = UNIQUE_OFFSET + 135;
+        public static final int unused136 = UNIQUE_OFFSET + 136;
+        public static final int unused137 = UNIQUE_OFFSET + 137;
+        public static final int unused138 = UNIQUE_OFFSET + 138;
+        public static final int unused139 = UNIQUE_OFFSET + 139;
+        public static final int unused140 = UNIQUE_OFFSET + 140;
+        public static final int unused141 = UNIQUE_OFFSET + 141;
+        public static final int unused142 = UNIQUE_OFFSET + 142;
+        public static final int unused143 = UNIQUE_OFFSET + 143;
+        public static final int unused144 = UNIQUE_OFFSET + 144;
+        public static final int unused145 = UNIQUE_OFFSET + 145;
+        public static final int unused146 = UNIQUE_OFFSET + 146;
+        public static final int unused147 = UNIQUE_OFFSET + 147;
+        public static final int unused148 = UNIQUE_OFFSET + 148;
+        public static final int unused149 = UNIQUE_OFFSET + 149;
+        public static final int unused150 = UNIQUE_OFFSET + 150;
+        public static final int unused151 = UNIQUE_OFFSET + 151;
+        public static final int unused152 = UNIQUE_OFFSET + 152;
+        public static final int unused153 = UNIQUE_OFFSET + 153;
+        public static final int unused154 = UNIQUE_OFFSET + 154;
+        public static final int unused155 = UNIQUE_OFFSET + 155;
+        public static final int unused156 = UNIQUE_OFFSET + 156;
+        public static final int unused157 = UNIQUE_OFFSET + 157;
+        public static final int unused158 = UNIQUE_OFFSET + 158;
+        public static final int unused159 = UNIQUE_OFFSET + 159;
+        public static final int unused160 = UNIQUE_OFFSET + 160;
+        public static final int unused161 = UNIQUE_OFFSET + 161;
+        public static final int unused162 = UNIQUE_OFFSET + 162;
+        public static final int unused163 = UNIQUE_OFFSET + 163;
+        public static final int unused164 = UNIQUE_OFFSET + 164;
+        public static final int unused165 = UNIQUE_OFFSET + 165;
+        public static final int unused166 = UNIQUE_OFFSET + 166;
+        public static final int unused167 = UNIQUE_OFFSET + 167;
+        public static final int unused168 = UNIQUE_OFFSET + 168;
+        public static final int unused169 = UNIQUE_OFFSET + 169;
+        public static final int unused170 = UNIQUE_OFFSET + 170;
+        public static final int unused171 = UNIQUE_OFFSET + 171;
+        public static final int unused172 = UNIQUE_OFFSET + 172;
+        public static final int unused173 = UNIQUE_OFFSET + 173;
+        public static final int unused174 = UNIQUE_OFFSET + 174;
+        public static final int unused175 = UNIQUE_OFFSET + 175;
+        public static final int unused176 = UNIQUE_OFFSET + 176;
+        public static final int unused177 = UNIQUE_OFFSET + 177;
+        public static final int unused178 = UNIQUE_OFFSET + 178;
+        public static final int unused179 = UNIQUE_OFFSET + 179;
+        public static final int unused180 = UNIQUE_OFFSET + 180;
+        public static final int unused181 = UNIQUE_OFFSET + 181;
+        public static final int unused182 = UNIQUE_OFFSET + 182;
+        public static final int unused183 = UNIQUE_OFFSET + 183;
+        public static final int unused184 = UNIQUE_OFFSET + 184;
+        public static final int unused185 = UNIQUE_OFFSET + 185;
+        public static final int unused186 = UNIQUE_OFFSET + 186;
+        public static final int unused187 = UNIQUE_OFFSET + 187;
+        public static final int unused188 = UNIQUE_OFFSET + 188;
+        public static final int unused189 = UNIQUE_OFFSET + 189;
+        public static final int unused190 = UNIQUE_OFFSET + 190;
+        public static final int unused191 = UNIQUE_OFFSET + 191;
+        public static final int unused192 = UNIQUE_OFFSET + 192;
+        public static final int unused193 = UNIQUE_OFFSET + 193;
+        public static final int unused194 = UNIQUE_OFFSET + 194;
+        public static final int unused195 = UNIQUE_OFFSET + 195;
+        public static final int tm51Unused = UNIQUE_OFFSET + 251;
+        public static final int tm52Unused = UNIQUE_OFFSET + 252;
+        public static final int tm53Unused = UNIQUE_OFFSET + 253;
+        public static final int tm54Unused = UNIQUE_OFFSET + 254;
+        public static final int tm55Unused = UNIQUE_OFFSET + 255;
+
+        public static final int first = townMap, last = tm55Unused;
+    }
+
+    /**
+     * IDs for the "unique" items of Gen 2.
+     * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_II)>Source.</a>
+     */
+    public static class Gen2 {
+        public static final int terusama6 = UNIQUE_OFFSET + 6;
+        public static final int bicycle = UNIQUE_OFFSET + 7;
+        public static final int terusama25 = UNIQUE_OFFSET + 25;
+        public static final int terusama45 = UNIQUE_OFFSET + 45;
+        public static final int terusama50 = UNIQUE_OFFSET + 50;
+        public static final int coinCase = UNIQUE_OFFSET + 54;
+        public static final int itemfinder = UNIQUE_OFFSET + 55;
+        public static final int terusama56 = UNIQUE_OFFSET + 56;
+        public static final int oldRod = UNIQUE_OFFSET + 58;
+        public static final int goodRod = UNIQUE_OFFSET + 59;
+        public static final int silverLeaf = UNIQUE_OFFSET + 60;
+        public static final int superRod = UNIQUE_OFFSET + 61;
+        public static final int redScale = UNIQUE_OFFSET + 66;
+        public static final int secretPotion = UNIQUE_OFFSET + 67;
+        public static final int ssTicket = UNIQUE_OFFSET + 68;
+        public static final int mysteryEgg = UNIQUE_OFFSET + 69;
+        public static final int clearBell = UNIQUE_OFFSET + 70; // exclusive to Crystal
+        public static final int silverWing = UNIQUE_OFFSET + 71;
+        public static final int goldLeaf = UNIQUE_OFFSET + 75;
+        public static final int terusama90 = UNIQUE_OFFSET + 90;
+        public static final int terusama100 = UNIQUE_OFFSET + 100;
+        public static final int pinkBow = UNIQUE_OFFSET + 104;
+        public static final int gsBall = UNIQUE_OFFSET + 115; // exclusive to Crystal
+        public static final int blueCard = UNIQUE_OFFSET + 116; // exclusive to Crystal
+        public static final int terusama120 = UNIQUE_OFFSET + 120;
+        public static final int cardKey = UNIQUE_OFFSET + 127;
+        public static final int machinePart = UNIQUE_OFFSET + 128;
+        public static final int eggTicket = UNIQUE_OFFSET + 129; // exclusive to Crystal
+        public static final int lostItem = UNIQUE_OFFSET + 130;
+        public static final int basementKey = UNIQUE_OFFSET + 133;
+        public static final int pass = UNIQUE_OFFSET + 134;
+        public static final int terusama135 = UNIQUE_OFFSET + 135;
+        public static final int terusama136 = UNIQUE_OFFSET + 136;
+        public static final int terusama137 = UNIQUE_OFFSET + 137;
+        public static final int terusama141 = UNIQUE_OFFSET + 141;
+        public static final int terusama142 = UNIQUE_OFFSET + 142;
+        public static final int terusama145 = UNIQUE_OFFSET + 145;
+        public static final int terusama147 = UNIQUE_OFFSET + 147;
+        public static final int terusama148 = UNIQUE_OFFSET + 148;
+        public static final int terusama149 = UNIQUE_OFFSET + 149;
+        public static final int berserkGene = UNIQUE_OFFSET + 152;
+        public static final int terusama153 = UNIQUE_OFFSET + 153;
+        public static final int terusama154 = UNIQUE_OFFSET + 154;
+        public static final int terusama155 = UNIQUE_OFFSET + 155;
+        public static final int terusama162 = UNIQUE_OFFSET + 162;
+        public static final int normalBox = UNIQUE_OFFSET + 167;
+        public static final int gorgeousBox = UNIQUE_OFFSET + 168;
+        public static final int polkadotBow = UNIQUE_OFFSET + 170;
+        public static final int terusama171 = UNIQUE_OFFSET + 171;
+        public static final int squirtBottle = UNIQUE_OFFSET + 175;
+        public static final int terusama176 = UNIQUE_OFFSET + 176;
+        public static final int rainbowWing = UNIQUE_OFFSET + 178;
+        public static final int terusama179 = UNIQUE_OFFSET + 179;
+        public static final int brickPiece = UNIQUE_OFFSET + 180;
+        public static final int terusama190 = UNIQUE_OFFSET + 190;
+        public static final int tm04Unused = UNIQUE_OFFSET + 195;
+        public static final int tm28Unused = UNIQUE_OFFSET + 220;
+        public static final int hm08Unused = UNIQUE_OFFSET + 250;
+        public static final int hm09Unused = UNIQUE_OFFSET + 251;
+        public static final int hm10Unused = UNIQUE_OFFSET + 252;
+        public static final int hm11Unused = UNIQUE_OFFSET + 253;
+        public static final int hm12Unused = UNIQUE_OFFSET + 254;
+        public static final int cancel = UNIQUE_OFFSET + 255;
+
+        public static final int first = terusama6, last = cancel;
+    }
+
+    /**
+     * IDs for the "unique" items of Gen 3.
+     * <a href=https://bulbapedia.bulbagarden.net/wiki/List_of_items_by_index_number_(Generation_III)>Source.</a>
+     */
+    public static class Gen3 {
+        public static final int unknown52 = UNIQUE_OFFSET + 52;
+        public static final int unknown53 = UNIQUE_OFFSET + 53;
+        public static final int unknown54 = UNIQUE_OFFSET + 54;
+        public static final int unknown55 = UNIQUE_OFFSET + 55;
+        public static final int unknown56 = UNIQUE_OFFSET + 56;
+        public static final int unknown57 = UNIQUE_OFFSET + 57;
+        public static final int unknown58 = UNIQUE_OFFSET + 58;
+        public static final int unknown59 = UNIQUE_OFFSET + 59;
+        public static final int unknown60 = UNIQUE_OFFSET + 60;
+        public static final int unknown61 = UNIQUE_OFFSET + 61;
+        public static final int unknown62 = UNIQUE_OFFSET + 62;
+        public static final int unknown72 = UNIQUE_OFFSET + 72;
+        public static final int unknown82 = UNIQUE_OFFSET + 82;
+        public static final int unknown87 = UNIQUE_OFFSET + 87;
+        public static final int unknown88 = UNIQUE_OFFSET + 88;
+        public static final int unknown89 = UNIQUE_OFFSET + 89;
+        public static final int unknown90 = UNIQUE_OFFSET + 90;
+        public static final int unknown91 = UNIQUE_OFFSET + 91;
+        public static final int unknown92 = UNIQUE_OFFSET + 92;
+        public static final int unknown99 = UNIQUE_OFFSET + 99;
+        public static final int unknown100 = UNIQUE_OFFSET + 100;
+        public static final int unknown101 = UNIQUE_OFFSET + 101;
+        public static final int unknown102 = UNIQUE_OFFSET + 102;
+        public static final int unknown105 = UNIQUE_OFFSET + 105;
+        public static final int unknown112 = UNIQUE_OFFSET + 112;
+        public static final int unknown113 = UNIQUE_OFFSET + 113;
+        public static final int unknown114 = UNIQUE_OFFSET + 114;
+        public static final int unknown115 = UNIQUE_OFFSET + 115;
+        public static final int unknown116 = UNIQUE_OFFSET + 116;
+        public static final int unknown117 = UNIQUE_OFFSET + 117;
+        public static final int unknown118 = UNIQUE_OFFSET + 118;
+        public static final int unknown119 = UNIQUE_OFFSET + 119;
+        public static final int unknown120 = UNIQUE_OFFSET + 120;
+        public static final int unknown176 = UNIQUE_OFFSET + 176;
+        public static final int unknown177 = UNIQUE_OFFSET + 177;
+        public static final int unknown178 = UNIQUE_OFFSET + 178;
+        public static final int unknown226 = UNIQUE_OFFSET + 226;
+        public static final int unknown227 = UNIQUE_OFFSET + 227;
+        public static final int unknown228 = UNIQUE_OFFSET + 228;
+        public static final int unknown229 = UNIQUE_OFFSET + 229;
+        public static final int unknown230 = UNIQUE_OFFSET + 230;
+        public static final int unknown231 = UNIQUE_OFFSET + 231;
+        public static final int unknown232 = UNIQUE_OFFSET + 232;
+        public static final int unknown233 = UNIQUE_OFFSET + 233;
+        public static final int unknown234 = UNIQUE_OFFSET + 234;
+        public static final int unknown235 = UNIQUE_OFFSET + 235;
+        public static final int unknown236 = UNIQUE_OFFSET + 236;
+        public static final int unknown237 = UNIQUE_OFFSET + 237;
+        public static final int unknown238 = UNIQUE_OFFSET + 238;
+        public static final int unknown239 = UNIQUE_OFFSET + 239;
+        public static final int unknown240 = UNIQUE_OFFSET + 240;
+        public static final int unknown241 = UNIQUE_OFFSET + 241;
+        public static final int unknown242 = UNIQUE_OFFSET + 242;
+        public static final int unknown243 = UNIQUE_OFFSET + 243;
+        public static final int unknown244 = UNIQUE_OFFSET + 244;
+        public static final int unknown245 = UNIQUE_OFFSET + 245;
+        public static final int unknown246 = UNIQUE_OFFSET + 246;
+        public static final int unknown247 = UNIQUE_OFFSET + 247;
+        public static final int unknown248 = UNIQUE_OFFSET + 248;
+        public static final int unknown249 = UNIQUE_OFFSET + 249;
+        public static final int unknown250 = UNIQUE_OFFSET + 250;
+        public static final int unknown251 = UNIQUE_OFFSET + 251;
+        public static final int unknown252 = UNIQUE_OFFSET + 252;
+        public static final int unknown253 = UNIQUE_OFFSET + 253;
+        public static final int machBike = UNIQUE_OFFSET + 259;
+        public static final int coinCase = UNIQUE_OFFSET + 260;
+        public static final int itemfinder = UNIQUE_OFFSET + 261;
+        public static final int oldRod = UNIQUE_OFFSET + 262;
+        public static final int goodRod = UNIQUE_OFFSET + 263;
+        public static final int superRod = UNIQUE_OFFSET + 264;
+        public static final int ssTicket = UNIQUE_OFFSET + 265;
+        public static final int contestPass = UNIQUE_OFFSET + 266;
+        public static final int unknown267 = UNIQUE_OFFSET + 267;
+        public static final int wailmerPail = UNIQUE_OFFSET + 268;
+        public static final int devonGoods = UNIQUE_OFFSET + 269;
+        public static final int sootSack = UNIQUE_OFFSET + 270;
+        public static final int basementKey = UNIQUE_OFFSET + 271;
+        public static final int acroBike = UNIQUE_OFFSET + 272;
+        public static final int pokeblockCase = UNIQUE_OFFSET + 273;
+        public static final int letter = UNIQUE_OFFSET + 274;
+        public static final int eonTicket = UNIQUE_OFFSET + 275;
+        public static final int redOrb = UNIQUE_OFFSET + 276;
+        public static final int blueOrb = UNIQUE_OFFSET + 277;
+        public static final int scanner = UNIQUE_OFFSET + 278;
+        public static final int goGoggles = UNIQUE_OFFSET + 279;
+        public static final int meteorite = UNIQUE_OFFSET + 280;
+        public static final int rm1Key = UNIQUE_OFFSET + 281;
+        public static final int rm2Key = UNIQUE_OFFSET + 282;
+        public static final int rm4Key = UNIQUE_OFFSET + 283;
+        public static final int rm6Key = UNIQUE_OFFSET + 284;
+        public static final int storageKey = UNIQUE_OFFSET + 285;
+        public static final int rootFossil = UNIQUE_OFFSET + 286;
+        public static final int clawFossil = UNIQUE_OFFSET + 287;
+        public static final int devonScope = UNIQUE_OFFSET + 288;
+        public static final int unknown347 = UNIQUE_OFFSET + 347;
+        public static final int unknown348 = UNIQUE_OFFSET + 348;
+
+        /* Exclusive to FRLG and Emerald */
+        public static final int oaksParcel = UNIQUE_OFFSET + 349;
+        public static final int pokeFlute = UNIQUE_OFFSET + 350;
+        public static final int secretKey = UNIQUE_OFFSET + 351;
+        public static final int bikeVoucher = UNIQUE_OFFSET + 352;
+        public static final int goldTeeth = UNIQUE_OFFSET + 353;
+        public static final int oldAmber = UNIQUE_OFFSET + 354;
+        public static final int cardKey = UNIQUE_OFFSET + 355;
+        public static final int liftKey = UNIQUE_OFFSET + 356;
+        public static final int helixFossil = UNIQUE_OFFSET + 357;
+        public static final int domeFossil = UNIQUE_OFFSET + 358;
+        public static final int silphScope = UNIQUE_OFFSET + 359;
+        public static final int bicycle = UNIQUE_OFFSET + 360;
+        public static final int townMap = UNIQUE_OFFSET + 361;
+        public static final int vsSeeker = UNIQUE_OFFSET + 362;
+        public static final int fameChecker = UNIQUE_OFFSET + 363;
+        public static final int tmCase = UNIQUE_OFFSET + 364;
+        public static final int berryPouch = UNIQUE_OFFSET + 365;
+        public static final int teachyTV = UNIQUE_OFFSET + 366;
+        public static final int triPass = UNIQUE_OFFSET + 367;
+        public static final int rainbowPass = UNIQUE_OFFSET + 368;
+        public static final int tea = UNIQUE_OFFSET + 369;
+        public static final int mysticTicket = UNIQUE_OFFSET + 370;
+        public static final int auroraTicket = UNIQUE_OFFSET + 371;
+        public static final int powderJar = UNIQUE_OFFSET + 372;
+        public static final int ruby = UNIQUE_OFFSET + 373;
+        public static final int sapphire = UNIQUE_OFFSET + 374;
+
+        /* Exclusive to Emerald */
+        public static final int magmaEmblem = UNIQUE_OFFSET + 375;
+        public static final int oldSeaMap = UNIQUE_OFFSET + 376;
+
+        public static final int first = unknown52;
+        public static final int lastRS = unknown348, lastFRLG = sapphire, lastEm = oldSeaMap;
+        public static final int last = lastEm;
+    }
 }

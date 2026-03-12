@@ -25,7 +25,8 @@ public abstract class TiledImage extends BufferedImage {
         private BufferedImage bim;
 
         private boolean columnMode;
-        private boolean transparent; // TODO: implement background/first palette index transparency
+        private Palette forcedPalette;
+        private boolean transparent;
 
         public Builder(int width, int height, Palette palette) {
             this.width = width;
@@ -62,6 +63,14 @@ public abstract class TiledImage extends BufferedImage {
             return this;
         }
 
+        /**
+         * Enforces a {@link Palette} to be used.
+         */
+        public Builder<T> forcedPalette(Palette forcedPalette) {
+            this.forcedPalette = forcedPalette;
+            return this;
+        }
+
         public Builder<T> transparent(boolean transparent) {
             this.transparent = transparent;
             return this;
@@ -72,6 +81,9 @@ public abstract class TiledImage extends BufferedImage {
                 palette = preparePalette(bim);
             }
             IndexColorModel colorModel = GFXFunctions.indexColorModelFromPalette(palette, getBPP());
+            if (transparent) {
+                colorModel = makeFirstColorTransparent(colorModel);
+            }
             T t = init(width, height, colorModel, columnMode);
 
             if (data != null) {
@@ -80,7 +92,23 @@ public abstract class TiledImage extends BufferedImage {
                 t.drawImage(bim);
             }
 
+            if (forcedPalette != null) {
+                palette = forcedPalette;
+                data = t.toBytes();
+                bim = null;
+                forcedPalette = null;
+                t = build();
+            }
+
             return t;
+        }
+
+        private IndexColorModel makeFirstColorTransparent(IndexColorModel colorModel) {
+            int size = colorModel.getMapSize();
+            int[] colors = new int[size];
+            colorModel.getRGBs(colors);
+            colors[0] &= 0x00FFFFFF;
+            return GFXFunctions.indexColorModelFromPalette(colors, colorModel.getPixelSize());
         }
 
         protected abstract Palette preparePalette(BufferedImage image);
@@ -209,6 +237,9 @@ public abstract class TiledImage extends BufferedImage {
      */
     public abstract TiledImage getSubimageFromFrame(int i, int w, int h);
 
+    /**
+     * Just checks whether the raster is the same, disregarding colors.
+     */
     @Override
     public boolean equals(Object other) {
         if (other instanceof TiledImage) {
@@ -218,11 +249,10 @@ public abstract class TiledImage extends BufferedImage {
         return false;
     }
 
-    private int[] getRasterData() {
+    protected int[] getRasterData() {
         Raster raster = getRaster();
         return raster.getPixels(0, 0, raster.getWidth(), raster.getHeight(),
                 new int[raster.getWidth() * raster.getHeight()]);
     }
-
 
 }

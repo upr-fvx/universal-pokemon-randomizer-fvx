@@ -19,36 +19,107 @@ header {
   font-family: verdana, sans-serif;
   margin: 20px;
 }
-
-nav {
-  text-align: center;
-  font-size: 130%;
-  list-style: none;
-}
-nav ul {
-  padding: 0px;
-  margin: 5px 5px 0px;
-}
-nav li {
-  display: inline-block;
-  padding: 5px 10px;
-  
-  background: var(--color2);
-  border-width: 4px;
-  border-style: ridge ridge none;
-  border-color: var(--color3);
-}
-nav a {
+header a, header a:visited {
+  color: inherit;
   text-decoration: none;
 }
 
 main {
-	background: var(--color2);
 	max-width: 900px;
-	padding: 40px;
+	padding: 0;
 	margin: auto;  
+	
+	background: var(--color2);
 	border: 4px ridge;
 	border-color: var(--color3);
+}
+@media screen and (min-width: 600px) {
+	main {
+		display: grid;
+		grid-template-columns: 200px auto;
+	}
+}
+
+main nav {
+  background: var(--color3);
+  padding: 0px 2px 4px 2px;
+  margin: 0px;
+}
+main nav #buttondiv {
+  display: none;
+}
+main nav ul {
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  list-style-type: none;
+  background: var(--color3);
+}
+main nav li {
+  padding: 4px;
+  margin-top: 4px;
+  background: var(--color2);
+}
+main nav a, main nav a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+@media (scripting: enabled) {
+	main nav #buttondiv {
+		display: block;
+		max-width: 100px;
+		margin: auto;  
+		padding: 0;
+		text-align: center;
+	}
+	main nav button {
+		width: 32px;
+		height: 32px;
+		background-color: var(--color3);
+		border: none;
+		cursor: pointer;
+	}
+	main nav .hamburgerbutton {
+		background-image: url("icon_hamburger.png");
+	}
+	main nav .crossbutton {
+		background-image: url("icon_cross.png");
+	}
+	main nav ul {
+		display: none;
+	}
+}
+@media screen and (min-width: 600px) {
+	main nav {
+		grid-column: 1;
+		padding: 0px 4px 0px 2px;
+	}
+	main nav button {
+		display: none;
+	}
+	main nav ul {
+		display: block;
+		margin: 0px 0px 4px 0px;
+		text-align: left;
+	}
+	main nav ul ul {
+		color: black;
+		margin: 0px 0px 2px 0px;
+	}
+	main nav ul ul li {
+		margin-top: 2px;
+		background-color: var(--color4);
+        font-size: 80%;
+	}
+}
+
+#content {
+	margin: 20px;
+}
+@media screen and (min-width: 600px) {
+	#content {
+		grid-column: 2;
+	}
 }
 
 .wikipagelist {
@@ -71,10 +142,14 @@ th, td {
 	padding: 5px;
 }
 
-li {
+.versiontable {
+    width: 100%;
+}
+
+#content li {
 	margin-top: 4px;
 }
-ul { 
+#content ul { 
 	padding-left: 20px;
 }
 
@@ -91,6 +166,10 @@ pre.highlight {
 
 img {
   max-width: 100%;
+}
+
+.screenshot {
+  max-width: 256px;
 }
 
 footer {

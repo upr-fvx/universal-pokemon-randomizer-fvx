@@ -259,4 +259,12 @@ public class Palette implements Cloneable {
         return palette;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Palette) {
+            Palette other = (Palette) obj;
+            return Arrays.equals(colors, other.colors);
+        }
+        return false;
+    }
 }

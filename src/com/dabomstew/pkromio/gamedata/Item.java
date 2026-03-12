@@ -2,7 +2,7 @@ package com.dabomstew.pkromio.gamedata;
 
 import java.util.Objects;
 
-public class Item {
+public class Item implements Comparable<Item> {
 
     // TODO: ideally, there should be an ItemType enum.
     //  This would eliminate disparate handling for questions like "is this a TM?", "is this a Mega Stone?",
@@ -76,5 +76,10 @@ public class Item {
     @Override
     public String toString() {
         return id + "-" + name;
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return id - o.id;
     }
 }

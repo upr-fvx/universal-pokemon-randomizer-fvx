@@ -9,7 +9,6 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,8 +57,9 @@ public class GBCImage extends TiledImage {
                 throw new IllegalArgumentException("palette.size()=" + palette.size() + " exceeds max palette size "
                         + PALETTE_SIZE + ".");
             }
-            List<Integer> colors = new ArrayList<>(Arrays.stream(palette.toARGB()).boxed().collect(Collectors.toList()));
-            colors.sort((c1, c2) -> compareColors(new Color(c1), new Color(c2)));
+            List<Integer> colors = Arrays.stream(palette.toARGB()).boxed()
+                    .sorted((c1, c2) -> compareColors(new Color(c1), new Color(c2)))
+                    .collect(Collectors.toList());
             Palette fixed = new Palette(DEFAULT_PALETTE);
             for (int i = 0; i < colors.size(); i++) {
                 Color color = new Color(colors.get(i));
@@ -202,10 +202,6 @@ public class GBCImage extends TiledImage {
         bitplanesPrepared = true;
     }
 
-    public Palette getPalette() {
-        return new Palette(colors);
-    }
-
     @Override
     public GBCImage getSubimageFromTileRange(int from, int to) {
         GBCImage subimage = new GBCImage.Builder(to - from, 1, getPalette()).build();
@@ -242,21 +238,6 @@ public class GBCImage extends TiledImage {
         int x = (i * w) % getWidthInTiles();
         int y = ((i * w) / getWidthInTiles()) * h;
         return getSubimageFromTileRect(x, y, w, h);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof GBCImage) {
-            GBCImage otherImage = (GBCImage) other;
-            return Arrays.equals(getRasterData(), otherImage.getRasterData());
-        }
-        return false;
-    }
-
-    private int[] getRasterData() {
-        Raster raster = getRaster();
-        return raster.getPixels(0, 0, raster.getWidth(), raster.getHeight(),
-                new int[raster.getWidth() * raster.getHeight()]);
     }
 
 }

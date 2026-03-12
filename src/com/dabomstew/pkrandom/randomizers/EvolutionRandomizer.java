@@ -171,10 +171,10 @@ public class EvolutionRandomizer extends Randomizer {
             if (evolveEveryLevel) {
                 newEvo = new Evolution(from, picked, EvolutionType.LEVEL, 1);
             } else {
-                newEvo = new Evolution(from, picked, evo.getType(), evo.getExtraInfo());
+                newEvo = new Evolution(from, picked, evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
             }
             if (newEvo.getType() == EvolutionType.LEVEL_FEMALE_ESPURR) {
-                newEvo.setType(EvolutionType.LEVEL_FEMALE_ONLY);
+                newEvo.updateEvolutionMethod(EvolutionType.LEVEL_FEMALE_ONLY, newEvo.getExtraInfo());
             }
             newEvo.setForme(picked.getRandomCosmeticFormeNumber(random));
             return newEvo;

@@ -122,7 +122,7 @@ public class ARMThumbCodeTest {
 
         ARMThumbCode code = new ARMThumbCode(IN_BL);
         System.out.println(code);
-        code.insertInstructions(0, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+        code.insertInstructions(IN_BL.length, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
         System.out.println(code);
 
         byte[] out = code.toBytes();
@@ -150,12 +150,12 @@ public class ARMThumbCodeTest {
         // Just the lowest disp bits should have changed here
         assertEquals(IN_BL[0], out[4]);
         assertEquals(IN_BL[1], out[5]);
-        assertEquals(IN_BL[2] + 4, out[6]);
+        assertEquals(IN_BL[2] + 2, out[6]);
         assertEquals(IN_BL[3], out[7]);
         // ---
         assertEquals(IN_BL[4], out[8]);
         assertEquals(IN_BL[5], out[9]);
-        assertEquals(IN_BL[6] + 4, out[10]);
+        assertEquals(IN_BL[6] + 2, out[10]);
         assertEquals(IN_BL[7], out[11]);
     }
 
@@ -175,12 +175,12 @@ public class ARMThumbCodeTest {
         // Just the lowest disp bits should have changed here
         assertEquals(IN_BL[4], out[0]);
         assertEquals(IN_BL[5], out[1]);
-        assertEquals(IN_BL[6] - 4, out[2]);
+        assertEquals(IN_BL[6] - 2, out[2]);
         assertEquals(IN_BL[7], out[3]);
         // ---
         assertEquals(IN_BL[8], out[4]);
         assertEquals(IN_BL[9], out[5]);
-        assertEquals(IN_BL[10] - 4, out[6]);
+        assertEquals(IN_BL[10] - 2, out[6]);
         assertEquals(IN_BL[11], out[7]);
     }
 

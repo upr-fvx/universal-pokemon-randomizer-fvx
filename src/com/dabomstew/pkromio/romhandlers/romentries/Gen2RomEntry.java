@@ -20,6 +20,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
             super();
             putSpecialKeyMethod("StaticPokemon{}", Gen2RomEntry::addStaticPokemon);
             putSpecialKeyMethod("StaticPokemonGameCorner{}", Gen2RomEntry::addStaticPokemonGameCorner);
+            putSpecialKeyMethod("ShopName[]", Gen2RomEntry::addShopName);
             // aliases for backwards compatibility with old .ini files
             putIntAlias("PicPointers", "PokemonImages");
             putIntAlias("UnownPicPointers", "UnownImages");
@@ -73,6 +74,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
     public static final Gen2RomEntryReader<Gen2RomEntry> READER = new Gen2RomEntryReader<>();
 
     private final List<Gen2RomHandler.StaticPokemon> staticPokemon = new ArrayList<>();
+    private List<String> shopNames = new ArrayList<>();
 
     private Gen2RomEntry(String name) {
         super(name);
@@ -81,6 +83,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
     public Gen2RomEntry(Gen2RomEntry original) {
         super(original);
         this.staticPokemon.addAll(original.staticPokemon);
+        this.shopNames.addAll(original.shopNames);
     }
 
     public boolean isCrystal() {
@@ -108,6 +111,28 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
 
     private void addStaticPokemonGameCorner(String s) {
         staticPokemon.add(Gen2RomEntryReader.parseStaticPokemon(s, true));
+    }
+
+    public List<String> getShopNames() {
+        return Collections.unmodifiableList(shopNames);
+    }
+
+    private void addShopName(String s)  {
+        if (s.startsWith("[") && s.endsWith("]")) {
+            String[] parts = s.substring(1, s.length() - 1).split(",", 2);
+            int index = IniEntryReader.parseInt(parts[0]);
+            String name = parts[1].trim();
+            while (shopNames.size() < index) {
+                shopNames.add("MISSING NAME");
+            }
+            shopNames.add(name);
+        } else {
+            System.out.println("Could not parse shop name: " + s);
+        }
+    }
+
+    public void setShopNames(List<String> shopNames) {
+        this.shopNames = shopNames;
     }
 
     @Override

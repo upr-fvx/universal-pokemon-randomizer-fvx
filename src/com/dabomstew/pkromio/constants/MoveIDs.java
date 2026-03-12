@@ -26,6 +26,7 @@ package com.dabomstew.pkromio.constants;
 @SuppressWarnings("unused")
 public class MoveIDs {
     // https://bulbapedia.bulbagarden.net/wiki/List_of_moves
+    public static final int none = 0;
     public static final int pound = 1;
     public static final int karateChop = 2;
     public static final int doubleSlap = 3;

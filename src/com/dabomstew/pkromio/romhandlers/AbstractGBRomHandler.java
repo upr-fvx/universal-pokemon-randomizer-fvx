@@ -40,6 +40,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         loadRomFile(filename);
         midLoadingSetUp();
         loadGameData();
+        estimateEvolutionLevels();
         return true;
     }
 
@@ -82,25 +83,21 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
      */
     protected void loadGameData() {
         loadItems();
-        loadPokemonStats();
+        loadSpeciesStats();
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();
         loadTrainers();
     }
 
-    // the below are public because it may be kinder to the testing environment
-    public abstract void loadPokemonStats();
-
+    // The below are public inside this abstract class for easier testing...
+    // but that's not very nice. Abstract classes are not interfaces!
+    // TODO: change this to not be as ugly
     public abstract void loadEvolutions();
 
     public abstract void loadMoves();
 
-    public abstract void loadPokemonPalettes();
-
     public abstract void loadItems();
-
-    public abstract void loadTrainers();
 
     @Override
     public String loadedFilename() {
@@ -157,17 +154,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
         long crc = FileFunctions.getCRC32(originalRom);
         logStream.println("Original ROM CRC32: " + String.format("%08X", crc));
     }
-
-    @Override
-    protected void prepareSaveRom() {
-        super.prepareSaveRom();
-        // because most other gens write the trainers to ROM each time setTrainers is used,
-        // instead of having a saveTrainers. (obviously those other gens shouldn't do that either,
-        // but code's never perfect)
-        saveTrainers();
-    }
-
-    abstract public void saveTrainers();
 
     @Override
     public boolean hasPhysicalSpecialSplit() {

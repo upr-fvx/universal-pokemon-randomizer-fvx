@@ -43,8 +43,11 @@ public class RomHandlerFieldItemTest extends RomHandlerTest {
         // find a TM and a non-TM, to use as examples
         Item tm = null;
         Item nonTM = null;
-        for (int i = 1; i < allItems.size() && (tm == null || nonTM == null); i++) {
+        for (int i = 0; i < allItems.size() && (tm == null || nonTM == null); i++) {
             Item item = allItems.get(i);
+            if (item == null) {
+                continue;
+            }
             if (item.isAllowed()) {
                 if (item.isTM()) tm = item;
                 else nonTM = item;

@@ -10,8 +10,6 @@ import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.*;
@@ -639,7 +637,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -705,7 +703,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public void removeEvosForPokemonPool() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
         //Why is THIS in RomHandler, either???
     }
 
@@ -748,17 +746,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean supportsStarterHeldItems() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Item> getStarterHeldItems() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setStarterHeldItems(List<Item> items) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -768,22 +766,22 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int highestAbilityIndex() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String abilityName(int number) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<Integer, List<Integer>> getAbilityVariations() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getUselessAbilities() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -798,13 +796,13 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasMegaEvolutions() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
         if(!useTimeOfDay) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         if(testEncounters == null) {
@@ -817,7 +815,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -843,7 +841,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public void enableGuaranteedPokemonCatching() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -905,17 +903,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean canAddHeldItemsToBossTrainers() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean canAddHeldItemsToImportantTrainers() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -925,22 +923,22 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Item> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Set<Item> getAllConsumableHeldItems() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Set<Item> getAllHeldItems() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasRivalFinalBattle() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -950,7 +948,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasPhysicalSpecialSplit() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -985,7 +983,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getMovesBannedFromLevelup() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1007,7 +1005,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean supportsFourStartingMoves() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1066,32 +1064,32 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getSpecialMusicStatics() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void applyCorrectStaticMusic(Map<Integer, Integer> specialMusicStaticChanges) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasStaticMusicFix() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasTotemPokemon() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<TotemPokemon> getTotemPokemon() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setTotemPokemon(List<TotemPokemon> totemPokemon) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1187,62 +1185,62 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean canChangeTrainerText() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<String> getTrainerNames() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setTrainerNames(List<String> trainerNames) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public TrainerNameMode trainerNameMode() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int maxTrainerNameLength() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int maxSumOfTrainerNameLengths() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getTCNameLengthsByTrainer() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<String> getTrainerClassNames() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setTrainerClassNames(List<String> trainerClassNames) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean fixedTrainerClassNamesLength() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int maxTrainerClassNameLength() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getDoublesTrainerClasses() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1320,17 +1318,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getShopPrices() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected Map<Integer, Integer> getBalancedShopPrices() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setShopPrices(List<Integer> prices) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1351,47 +1349,47 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<InGameTrade> getInGameTrades() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setInGameTrades(List<InGameTrade> trades) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasDVs() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int maxTradeNicknameLength() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int maxTradeOTNameLength() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void condenseLevelEvolutions(int maxLevel) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void makeEvolutionsEasier(boolean changeWithOtherEvos, boolean useEstimatedLevels) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<Species, List<Evolution>> getPreImprovedEvolutions() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1401,22 +1399,22 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getGameBreakingMoves() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getIllegalMoves() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getFieldMoves() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Integer> getEarlyRequiredHMMoves() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1436,17 +1434,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasMultiplePlayerCharacters() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getROMName() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getROMCode() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
         //What even is this...?
     }
 
@@ -1457,7 +1455,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public String getSupportLevel() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1467,12 +1465,12 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public int internalStringLength(String string) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean setIntroPokemon(Species pk) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1498,17 +1496,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setPCPotionItem(Item item) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasFunctionalFormes() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -1531,42 +1529,42 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasPokemonPaletteSupport() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean pokemonPaletteSupportIsPartial() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasCustomPlayerGraphicsSupport() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCustomPlayerGraphics(CustomPlayerGraphics customPlayerGraphics) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasPokemonImageGetter() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public PokemonImageGetter createPokemonImageGetter(Species pk) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getPaletteFilesID() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<BufferedImage> getAllPokemonImages() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

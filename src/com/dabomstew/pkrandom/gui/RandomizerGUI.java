@@ -130,6 +130,7 @@ public class RandomizerGUI {
     private JCheckBox mdRandomizeMoveAccuracyCheckBox;
     private JCheckBox mdRandomizeMovePPCheckBox;
     private JCheckBox mdRandomizeMoveTypesCheckBox;
+    private JCheckBox mdRandomizeMoveNamesCheckBox;
     private JCheckBox mdRandomizeMoveCategoryCheckBox;
     private JCheckBox mdUpdateMovesCheckBox;
     private JCheckBox mdLegacyCheckBox;
@@ -1753,6 +1754,7 @@ public class RandomizerGUI {
         mdRandomizeMovePowerCheckBox.setSelected(settings.isRandomizeMovePowers());
         mdRandomizeMovePPCheckBox.setSelected(settings.isRandomizeMovePPs());
         mdRandomizeMoveTypesCheckBox.setSelected(settings.isRandomizeMoveTypes());
+        mdRandomizeMoveNamesCheckBox.setSelected(settings.isRandomizeMoveNames());
 
         pmsRandomCompletelyRadioButton.setSelected(settings.getMovesetsMod() == Settings.MovesetsMod.COMPLETELY_RANDOM);
         pmsRandomPreferringSameTypeRadioButton.setSelected(settings.getMovesetsMod() == Settings.MovesetsMod.RANDOM_PREFER_SAME_TYPE);
@@ -2043,6 +2045,7 @@ public class RandomizerGUI {
         settings.setRandomizeMovePowers(mdRandomizeMovePowerCheckBox.isSelected());
         settings.setRandomizeMovePPs(mdRandomizeMovePPCheckBox.isSelected());
         settings.setRandomizeMoveTypes(mdRandomizeMoveTypesCheckBox.isSelected());
+        settings.setRandomizeMoveNames(mdRandomizeMoveNamesCheckBox.isSelected());
 
         settings.setMovesetsMod(pmsUnchangedRadioButton.isSelected(), pmsRandomPreferringSameTypeRadioButton.isSelected(),
                 pmsRandomCompletelyRadioButton.isSelected(), pmsMetronomeOnlyModeRadioButton.isSelected());
@@ -2817,6 +2820,7 @@ public class RandomizerGUI {
             mdRandomizeMoveAccuracyCheckBox.setEnabled(true);
             mdRandomizeMovePPCheckBox.setEnabled(true);
             mdRandomizeMoveTypesCheckBox.setEnabled(true);
+            mdRandomizeMoveNamesCheckBox.setEnabled(true);
             mdRandomizeMoveCategoryCheckBox.setEnabled(romHandler.hasPhysicalSpecialSplit());
             mdRandomizeMoveCategoryCheckBox.setVisible(romHandler.hasPhysicalSpecialSplit());
             mdUpdateMovesCheckBox.setEnabled(pokemonGeneration < 8);

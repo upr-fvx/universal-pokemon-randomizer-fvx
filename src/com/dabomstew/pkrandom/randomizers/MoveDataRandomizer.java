@@ -5,14 +5,26 @@ import com.dabomstew.pkromio.constants.MoveIDs;
 import com.dabomstew.pkromio.gamedata.Move;
 import com.dabomstew.pkromio.gamedata.MoveCategory;
 import com.dabomstew.pkromio.romhandlers.RomHandler;
+import com.dabomstew.pkromio.gamedata.Type;
+import com.dabomstew.pkromio.graphics.palettes.TypeColor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MoveDataRandomizer extends Randomizer {
 
+    private boolean nameChangesMade;
+    
     public MoveDataRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
+    }
+
+    /**
+     * Returns whether any changes have been made to Move names.
+     */
+    public boolean isNameChangesMade() {
+        return nameChangesMade;
     }
 
     // Makes sure to not touch move ID 165 (Struggle)
@@ -123,6 +135,55 @@ public class MoveDataRandomizer extends Randomizer {
             }
         }
         changesMade = true;
+    }
+
+    private static final Map<Type, String[]> TYPE_MOVE_NAMES = TypeColor.readTypeNameMapFromFile("data/TypeMoveNames.txt");
+    private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES = TypeColor.readCatNameMapFromFile("data/CatMoveNames.txt");
+    public static String getRandomMoveName(Type type, Random random, MoveCategory... category) {
+        // Get type-based move names
+        String[] typeNames = TYPE_MOVE_NAMES.get(type);
+    
+        // If no type names are available, default to "Attack"
+        String typeWord = (typeNames == null || typeNames.length == 0)
+                            ? "Attack"
+                            : typeNames[random.nextInt(typeNames.length)];
+
+        System.out.println("Type: " + type + ", Chosen Type Name: " + typeWord);
+
+        // Determine the category to use: if none provided, pick one randomly
+        MoveCategory chosenCat = (category.length > 0) ? category[0] : switch (random.nextInt(3)) {
+            case 0 -> MoveCategory.PHYSICAL;
+            case 1 -> MoveCategory.SPECIAL;
+            case 2 -> MoveCategory.STATUS;
+            default -> MoveCategory.PHYSICAL; // Default case, though technically unreachable
+        };
+    
+        // Get category-based move names
+        String[] catNames = CAT_MOVE_NAMES.get(chosenCat);
+    
+        // If no category names are available, default to a generic term
+        String categoryWord = (catNames == null || catNames.length == 0)
+                                ? "Strike"
+                                : catNames[random.nextInt(catNames.length)];
+
+        System.out.println("Chosen Category: " + chosenCat + ", Chosen Category Name: " + categoryWord);
+
+        // Combine type word and category word to form the move name
+        return typeWord + " " + categoryWord;
+    }
+
+    public void randomizeMoveNames() {
+        List<Move> moves = romHandler.getMoves();
+        for (Move mv : moves) {
+            if (mv != null && mv.internalId != MoveIDs.struggle) {
+                String newName = getRandomMoveName(mv.type, random, mv.category);
+                mv.oldName = mv.name;
+                mv.name = newName;
+                mv.newName = newName;
+            }
+        }
+        changesMade = true;
+        nameChangesMade = true;
     }
 
     public void randomizeMoveCategory() {

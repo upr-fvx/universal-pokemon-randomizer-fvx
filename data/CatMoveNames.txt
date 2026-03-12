@@ -1,0 +1,11 @@
+Words used for category-based move name randomization.
+
+It is possible to add/remove words, and even categories,
+but each mentioned category must have at least one assigned name.
+Categories must correspond to MoveCategory enumerator values found in pokemon/MoveCategory.java. 
+If you don't know what that means, don't worry about it.
+
+# Category-based move words
+[PHYSICAL] (Slam) (Bash) (Strike) (Hit) (Crush) (Whack) (Charge) (Tackle) (Pummel) (Smite) (Assault) (Beatdown) (Rampage) (Clobber) (Bop) (Kick) (Strike) (Smash) (Thump) (Thwack) (Wallop) (Thwump) (Jolt) (Jab) (Slap) (Bump) (Wham) (Hammer) (Strike) (Knockdown) (Rush) (Grasp) (Throttle) (Twister) (Crush) (Stomp) (Charge) (Pounce) (Uppercut) (Lunge) (Grapple) (Smash) (Thump)
+[SPECIAL] (Blast) (Pulse) (Beam) (Wave) (Surge) (Charge) (Ignite) (Spark) (Flicker) (Shock) (Radiate) (Flare) (Eruption) (Combustion) (Burst) (Inferno) (Torrent) (Surge) (Fireball) (Arcane) (Radiance) (Vortex) (Energy) (Cascade) (Flicker) (Current) (Wind) (Blast) (Hyper) (Beam) (Luminosity) (Quasar) (Hypernova) (Power) (Surge) (Plasma) (Spark) (Ignite) (Light)
+[STATUS] (Scream) (Aura) (Heal) (Calm) (Glare) (Charm) (Confuse) (Soothe) (Restore) (Boost) (Gift) (Empower) (Charge) (Disable) (Shield) (Cheer) (Reflect) (Bewitch) (Ensnare) (Enchant) (Energize) (Fortify) (Strengthen) (Purify) (Cleanse) (Revitalize) (Assist) (Hypnotize) (Tranquilize) (Pacify) (Buff) (Healing) (Soothing) (Revive) (Energize) (Recharge) (Mend) (Refurbish)

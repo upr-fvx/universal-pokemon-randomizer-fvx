@@ -3858,6 +3858,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getArrayValue("HMMovesForgettableFunctionOffsets").length != 0) {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
         }
+        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
         return available;
     }
 
@@ -3884,6 +3885,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             applyReusableTMsPatch();
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
             applyForgettableHMsPatch();
+        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
+            getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
         }
     }
 

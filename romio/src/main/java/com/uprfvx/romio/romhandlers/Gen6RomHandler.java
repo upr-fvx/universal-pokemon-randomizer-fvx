@@ -2593,6 +2593,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         available |= MiscTweak.BAN_LUCKY_EGG.getValue();
         available |= MiscTweak.RETAIN_ALT_FORMES.getValue();
         available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
+        if (romEntry.getRomType() != Gen6Constants.Type_ORAS) {
+            // because the wynaut+togepi eggs in ORAS are allegedly hardcoded to take long to hatch
+            // until we can change those too with the tweak, it shouldn't be falsely advertising itself for ORAS
+            // TODO
+            available |= MiscTweak.FAST_EGG_HATCHING.getValue();
+        }
         return available;
     }
 
@@ -2610,6 +2616,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             }
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
+        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
+            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
         }
     }
 

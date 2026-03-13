@@ -2357,6 +2357,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         available |= MiscTweak.BAN_LUCKY_EGG.getValue();
         available |= MiscTweak.SOS_BATTLES_FOR_ALL.getValue();
         available |= MiscTweak.RETAIN_ALT_FORMES.getValue();
+        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
         return available;
     }
 
@@ -2374,6 +2375,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
+            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
         }
     }
 

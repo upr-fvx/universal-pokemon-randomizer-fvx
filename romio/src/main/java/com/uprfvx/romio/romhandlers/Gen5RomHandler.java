@@ -2171,6 +2171,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
         }
+        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
         return available;
     }
 
@@ -2206,6 +2207,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             disableLowHpMusic();
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
             applyForgettableHMsPatch();
+        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
+            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
         }
     }
 

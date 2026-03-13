@@ -5278,6 +5278,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
        // if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
         //}
+        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
         return available;
     }
 
@@ -5303,6 +5304,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			applyReusableTMsPatch();
 		} else if (tweak == MiscTweak.FORGETTABLE_HMS) {
             applyForgettableHMsPatch();
+        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
+            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
         }
     }
 

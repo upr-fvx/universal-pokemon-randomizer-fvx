@@ -60,7 +60,7 @@ Download the Randomizer below by clicking on `UPR_FVX-v[VERSION]-[OS].zip`. If y
 - (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
 
 ### Misc. Tweaks
-- (Gen 4+5) [The description of a misc. tweak addition or change here.]
+- (All games except ORAS) New Misc. Tweak: "Fast Egg Hatching". Makes all eggs hatch in as few egg cycles as possible. Generally, this means all eggs will hatch in <256 steps.
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.

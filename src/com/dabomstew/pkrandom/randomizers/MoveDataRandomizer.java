@@ -8,9 +8,11 @@ import com.dabomstew.pkromio.romhandlers.RomHandler;
 import com.dabomstew.pkromio.gamedata.Type;
 import com.dabomstew.pkromio.graphics.palettes.TypeColor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class MoveDataRandomizer extends Randomizer {
 
@@ -137,39 +139,63 @@ public class MoveDataRandomizer extends Randomizer {
         changesMade = true;
     }
 
+    private static final Set<String> USED_MOVE_NAMES = new HashSet<>();
     private static final Map<Type, String[]> TYPE_MOVE_NAMES = TypeColor.readTypeNameMapFromFile("data/TypeMoveNames.txt");
     private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES = TypeColor.readCatNameMapFromFile("data/CatMoveNames.txt");
+    private static final int MAX_MOVE_NAME_LENGTH = 12;
+    private static final int MAX_ATTEMPTS = 50;
+    
     public static String getRandomMoveName(Type type, Random random, MoveCategory... category) {
-        // Get type-based move names
-        String[] typeNames = TYPE_MOVE_NAMES.get(type);
-    
+
         // If no type names are available, default to "Attack"
-        String typeWord = (typeNames == null || typeNames.length == 0)
-                            ? "Attack"
-                            : typeNames[random.nextInt(typeNames.length)];
-
-        System.out.println("Type: " + type + ", Chosen Type Name: " + typeWord);
-
-        // Determine the category to use: if none provided, pick one randomly
-        MoveCategory chosenCat = (category.length > 0) ? category[0] : switch (random.nextInt(3)) {
-            case 0 -> MoveCategory.PHYSICAL;
-            case 1 -> MoveCategory.SPECIAL;
-            case 2 -> MoveCategory.STATUS;
-            default -> MoveCategory.PHYSICAL; // Default case, though technically unreachable
-        };
+        String[] typeNames = TYPE_MOVE_NAMES.get(type);
+        if (typeNames == null || typeNames.length == 0) {
+            typeNames = new String[]{"Attack"};
+        }
     
-        // Get category-based move names
+        MoveCategory chosenCat = (category.length > 0)
+                ? category[0]
+                : switch (random.nextInt(3)) {
+                    case 0 -> MoveCategory.PHYSICAL;
+                    case 1 -> MoveCategory.SPECIAL;
+                    default -> MoveCategory.STATUS;
+                };
+    
+        // If no category names are available, default to "Strike"
         String[] catNames = CAT_MOVE_NAMES.get(chosenCat);
+        if (catNames == null || catNames.length == 0) {
+            catNames = new String[]{"Strike"};
+        }
     
-        // If no category names are available, default to a generic term
-        String categoryWord = (catNames == null || catNames.length == 0)
-                                ? "Strike"
-                                : catNames[random.nextInt(catNames.length)];
+        System.out.println("Type: " + type + ", Category: " + chosenCat);
+    
+        // Try multiple times to get a short enough name
+        for (int i = 0; i < MAX_ATTEMPTS; i++) {
 
-        System.out.println("Chosen Category: " + chosenCat + ", Chosen Category Name: " + categoryWord);
-
-        // Combine type word and category word to form the move name
-        return typeWord + " " + categoryWord;
+            String typeWord = typeNames[random.nextInt(typeNames.length)];
+            String categoryWord = catNames[random.nextInt(catNames.length)];
+            String moveName = typeWord + " " + categoryWord;
+        
+            if (moveName.length() > MAX_MOVE_NAME_LENGTH) {
+                System.out.println("Rejected Move Name: '" + moveName + "' (" + moveName.length() + " chars, too long)");
+                continue;
+            }
+        
+            if (USED_MOVE_NAMES.contains(moveName)) {
+                System.out.println("Rejected Move Name: '" + moveName + "' (duplicate)");
+                continue;
+            }
+        
+            USED_MOVE_NAMES.add(moveName);
+        
+            System.out.println("Chosen Type Name: " + typeWord);
+            System.out.println("Chosen Category Name: " + categoryWord);
+            return moveName;
+        }
+    
+        // Absolute fallback
+        System.out.println("WARNING: Move name generation failed after " + MAX_ATTEMPTS + " attempts. Using fallback.");
+        return "Attack Strike";
     }
 
     public void randomizeMoveNames() {

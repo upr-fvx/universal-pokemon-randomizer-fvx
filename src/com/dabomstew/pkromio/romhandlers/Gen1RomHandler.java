@@ -220,13 +220,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         return null;
     }
 
+    private int[] originalMoveNameOffsets;   // ROM offset for each move name (indexed by ROM internal ID, 1-based)
+    private int[] originalMoveNameLengths;   // byte length of each move name including terminator (indexed by ROM internal ID, 1-based)
+
     private String[] readMoveNames() {
         int moveCount = romEntry.getIntValue("MoveCount");
         int offset = romEntry.getIntValue("MoveNamesOffset");
         String[] moveNames = new String[moveCount + 1];
+        originalMoveNameOffsets = new int[moveCount + 1];
+        originalMoveNameLengths = new int[moveCount + 1];
         for (int i = 1; i <= moveCount; i++) {
+            originalMoveNameOffsets[i] = offset;
+            int len = lengthOfStringAt(offset, false);
+            originalMoveNameLengths[i] = len;
             moveNames[i] = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
+            offset += len;
         }
         return moveNames;
     }
@@ -505,15 +513,25 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public void saveMoves() {
         int movesOffset = romEntry.getIntValue("MoveDataOffset");
-        int nameLength = romEntry.getIntValue("MoveNamesOffset");
+        int moveCount = romEntry.getIntValue("MoveCount");
+ 
+        // Save move names using the cached offsets and lengths from load time.
+        // Move names in Gen 1 are variable-length strings stored back-to-back.
+        // We write each new name into the same slot the original occupied,
+        // padded/truncated to the original byte length.
+        for (int i = 1; i <= moveCount; i++) {
+            int moveNum = moveRomToNumTable[i];
+            if (moveNum > 0 && moveNum < moves.length && moves[moveNum] != null) {
+                writeFixedLengthString(moves[moveNum].name,
+                        originalMoveNameOffsets[i], originalMoveNameLengths[i]);
+            }
+        }
+ 
+        // Save move data (effect, power, type, accuracy, PP) at MoveDataOffset.
+        // Each move's data entry is 6 bytes; byte 0 is animation, bytes 1-5 are the stats.
         for (Move m : moves) {
             if (m != null) {
                 int i = m.internalId;
-
-                String newMoveName = moves[i].name;
-                int stringOffset = movesOffset + (i - 1) * nameLength;
-                writeFixedLengthString(newMoveName, stringOffset, nameLength);
-
                 int hitratio = (int) Math.round(m.hitratio * 2.55);
                 hitratio = Math.max(0, hitratio);
                 hitratio = Math.min(255, hitratio);
@@ -524,7 +542,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             }
         }
     }
-
+    
     public List<Move> getMoves() {
         return Arrays.asList(moves);
     }

@@ -238,12 +238,20 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         saveEvosAndMovesLearnt();
     }
 
+    private int[] originalMoveNameOffsets;   // ROM offset for each move name (indexed by ROM internal ID, 1-based)
+    private int[] originalMoveNameLengths;   // byte length of each move name including terminator (indexed by ROM internal ID, 1-based)
+
     private String[] readMoveNames() {
         int offset = romEntry.getIntValue("MoveNamesOffset");
         String[] moveNames = new String[Gen2Constants.moveCount + 1];
+        originalMoveNameOffsets = new int[Gen2Constants.moveCount + 1];
+        originalMoveNameLengths = new int[Gen2Constants.moveCount + 1];
         for (int i = 1; i <= Gen2Constants.moveCount; i++) {
+            originalMoveNameOffsets[i] = offset;
+            int len = lengthOfStringAt(offset, false);
+            originalMoveNameLengths[i] = len;
             moveNames[i] = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
+            offset += len;
         }
         return moveNames;
     }
@@ -554,14 +562,20 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public void saveMoves() {
-        int offs = romEntry.getIntValue("MoveDataOffset");
-        int len = romEntry.getIntValue("MoveNamesOffset");
-
-        for (int i = 1; i <= 251; i++) {
-            String newMoveName = moves[i].name;
-            int stringOffset = offs + (i - 1) * len;
-            writeFixedLengthString(newMoveName, stringOffset, len);
-
+        int movesDataOffset = romEntry.getIntValue("MoveDataOffset");
+ 
+        // Save move names using cached offsets/lengths from load time.
+        // In Gen 2, internal IDs map 1:1 to the moves array (no remapping table).
+        for (int i = 1; i <= Gen2Constants.moveCount; i++) {
+            if (moves[i] != null) {
+                writeFixedLengthString(moves[i].name,
+                        originalMoveNameOffsets[i], originalMoveNameLengths[i]);
+            }
+        }
+ 
+        // Save move data at MoveDataOffset.
+        // Each move's data entry is 7 bytes; byte 0 is animation, bytes 1-5 are stats.
+        for (int i = 1; i <= Gen2Constants.moveCount; i++) {
             int hitratio = (int) Math.round(moves[i].hitratio * 2.55);
             if (hitratio < 0) {
                 hitratio = 0;
@@ -569,8 +583,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             if (hitratio > 255) {
                 hitratio = 255;
             }
-            writeBytes(offs + (i - 1) * 7 + 1, new byte[]{(byte) moves[i].effectIndex, (byte) moves[i].power,
-                    Gen2Constants.typeToByte(moves[i].type), (byte) hitratio, (byte) moves[i].pp});
+            writeBytes(movesDataOffset + (i - 1) * 7 + 1, new byte[]{
+                    (byte) moves[i].effectIndex, (byte) moves[i].power,
+                    Gen2Constants.typeToByte(moves[i].type), (byte) hitratio, (byte) moves[i].pp
+            });
         }
     }
 

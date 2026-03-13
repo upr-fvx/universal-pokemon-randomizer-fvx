@@ -325,7 +325,7 @@ public class MoveDataRandomizer extends Randomizer {
      * 4. Stat buffs (self-targeting positive) -> STATUS_BUFF
      * 5. Stat debuffs (opponent-targeting) -> STATUS_DEBUFF
      * 6. Field/ally effects -> STATUS_BUFF
-     * 7. Fallback -> STATUS_HEAL (for unclassifiable moves like Splash, Teleport)
+     * 7. Fallback (for unclassifiable moves like Splash, Teleport)
      */
     private static String[] getStatusSubcategoryWords(Move mv) {
         // Known healing moves identified by move number
@@ -368,8 +368,9 @@ public class MoveDataRandomizer extends Randomizer {
             }
         }
  
-        // Fallback for unclassifiable STATUS moves (Splash, Teleport, etc.)
-        return getExtraList("STATUS_HEAL");
+        // Fallback: return null for unclassifiable STATUS moves (Splash, Teleport, etc.)
+        // so getActionWords falls through to the generic [STATUS] word list in CatMoveNames.txt.
+        return null;
     }
  
     /**

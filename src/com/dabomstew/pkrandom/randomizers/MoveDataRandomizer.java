@@ -171,33 +171,11 @@ public class MoveDataRandomizer extends Randomizer {
      */
     public static final Set<Integer> healMoves = Set.of(
             // Self-healing (restore user's HP)
-            MoveIDs.recover,        // 105 - Gen 1, restores 50% HP
-            MoveIDs.softBoiled,     // 135 - Gen 1, restores 50% HP
-            MoveIDs.rest,           // 156 - Gen 1, full heal + sleep
-            MoveIDs.milkDrink,      // 208 - Gen 2, restores 50% HP
-            MoveIDs.morningSun,     // 234 - Gen 2, weather-dependent heal
-            MoveIDs.synthesis,      // 235 - Gen 2, weather-dependent heal
-            MoveIDs.moonlight,      // 236 - Gen 2, weather-dependent heal
-            MoveIDs.swallow,        // 256 - Gen 3, heals based on Stockpile count
-            MoveIDs.wish,           // 273 - Gen 3, delayed heal next turn
-            MoveIDs.ingrain,        // 275 - Gen 3, gradual heal + trapped
-            MoveIDs.refresh,        // 287 - Gen 3, cures own status
-            MoveIDs.slackOff,       // 303 - Gen 3, restores 50% HP
-            MoveIDs.roost,          // 355 - Gen 4, restores 50% HP
-            MoveIDs.healingWish,    // 361 - Gen 4, faints user, fully heals switch-in
-            MoveIDs.aquaRing,       // 392 - Gen 4, gradual heal each turn
-            MoveIDs.healOrder,      // 456 - Gen 4, restores 50% HP
-            MoveIDs.lunarDance,     // 461 - Gen 4, faints user, fully heals switch-in
- 
-            // Ally/party healing
-            MoveIDs.healBell,       // 215 - Gen 2, cures party status conditions
-            MoveIDs.aromatherapy,   // 312 - Gen 3, cures party status conditions
-            MoveIDs.healPulse,      // 505 - Gen 5, heals target 50% HP
-            MoveIDs.floralHealing,  // 666 - Gen 7, heals target
-            MoveIDs.purify,         // 685 - Gen 7, cures target's status + heals
-            MoveIDs.shoreUp,        // 659 - Gen 7, restores 50% HP (more in sandstorm)
-            MoveIDs.lifeDew,        // 791 - Gen 8, heals user and allies
-            MoveIDs.jungleHealing   // 816 - Gen 8, heals party + cures status
+            MoveIDs.recover, MoveIDs.softBoiled, MoveIDs.rest, MoveIDs.milkDrink, MoveIDs.morningSun, MoveIDs.synthesis,
+            MoveIDs.moonlight, MoveIDs.swallow, MoveIDs.wish, MoveIDs.ingrain, MoveIDs.refresh, MoveIDs.slackOff,
+            MoveIDs.roost, MoveIDs.healingWish, MoveIDs.aquaRing, MoveIDs.healOrder, MoveIDs.lunarDance, MoveIDs.healBell,
+            MoveIDs.aromatherapy, MoveIDs.healPulse, MoveIDs.floralHealing, MoveIDs.purify, MoveIDs.shoreUp,
+            MoveIDs.lifeDew, MoveIDs.jungleHealing
     );
  
     /**
@@ -273,12 +251,12 @@ public class MoveDataRandomizer extends Randomizer {
      * Determines the best "action word" for a move based on its properties.
      *
      * Priority:
-     * 1. isPunchMove -> PUNCH words
-     * 2. isSoundMove -> SOUND words
-     * 3. Drain moves (damaging + absorbPercent > 0) -> DRAIN words
-     * 4. STATUS category -> subcategory based on mechanical effect
-     * 5. isTrapMove -> STATUS_TRAP words
-     * 6. Default -> standard PHYSICAL/SPECIAL/STATUS words
+     * 1. isPunchMove
+     * 2. isSoundMove
+     * 3. Drain moves (damaging + absorbPercent > 0)
+     * 4. STATUS category
+     * 5. isTrapMove
+     * 6. Default
      */
     private static String[] getActionWords(Move mv) {
         if (mv.isPunchMove) {

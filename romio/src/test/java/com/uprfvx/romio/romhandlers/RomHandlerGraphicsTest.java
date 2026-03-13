@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerGraphicsTest extends RomHandlerTest {
 
-    private static final String TEST_CPG_PATH = "players";
+    private static final String TEST_CPG_PATH = "/players";
     
     private static class PaletteRecord {
         private final Palette normal, shiny;
@@ -37,8 +37,7 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof PaletteRecord)) return false;
-            PaletteRecord that = (PaletteRecord) o;
+            if (!(o instanceof PaletteRecord that)) return false;
             return Objects.equals(normal, that.normal) && Objects.equals(shiny, that.shiny);
         }
 
@@ -153,18 +152,16 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
     }
 
     private GraphicsPack getCustomPlayerGraphicsPack() {
-        switch (romHandler.generationOfPokemon()) {
-            case 1:
-                return new Gen1PlayerCharacterGraphics(cpgEntries.get(0));
-            case 2:
-                return new Gen2PlayerCharacterGraphics(cpgEntries.get(1));
-            case 3:
+        return switch (romHandler.generationOfPokemon()) {
+            case 1 -> new Gen1PlayerCharacterGraphics(cpgEntries.get(0));
+            case 2 -> new Gen2PlayerCharacterGraphics(cpgEntries.get(1));
+            case 3 -> {
                 Gen3RomHandler gen3RomHandler = (Gen3RomHandler) romHandler;
-                return gen3RomHandler.getRomEntry().getRomType() == Gen3Constants.RomType_FRLG ?
+                yield gen3RomHandler.getRomEntry().getRomType() == Gen3Constants.RomType_FRLG ?
                         new FRLGPlayerCharacterGraphics(cpgEntries.get(3)) :
                         new RSEPlayerCharacterGraphics(cpgEntries.get(2));
-            default:
-                return null;
-        }
+            }
+            default -> null;
+        };
     }
 }

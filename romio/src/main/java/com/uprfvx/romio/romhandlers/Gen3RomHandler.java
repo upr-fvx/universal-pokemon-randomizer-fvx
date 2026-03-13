@@ -94,7 +94,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (is == null) {
             throw new RuntimeException("Text table not found: " + tablePath);
         }
-        Scanner sc = new Scanner(is, "UTF-8");
+        Scanner sc = new Scanner(is, StandardCharsets.UTF_8);
         while (sc.hasNextLine()) {
             String q = sc.nextLine();
             if (!q.trim().isEmpty()) {
@@ -243,40 +243,22 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void addTrainerFrontPalettesToRomEntry() {
-        int offset;
-        switch (romEntry.getRomType()) {
-            case Gen3Constants.RomType_Ruby:
-            case Gen3Constants.RomType_Sapp:
-                offset = Gen3Constants.rsTrainerFrontPalettesOffset;
-                break;
-            case Gen3Constants.RomType_Em:
-                offset = Gen3Constants.emTrainerFrontPalettesOffset;
-                break;
-            case Gen3Constants.RomType_FRLG:
-                offset = Gen3Constants.frlgTrainerFrontPalettesOffset;
-                break;
-            default:
-                throw new RuntimeException("Invalid romType");
-        }
+        int offset = switch (romEntry.getRomType()) {
+            case Gen3Constants.RomType_Ruby, Gen3Constants.RomType_Sapp -> Gen3Constants.rsTrainerFrontPalettesOffset;
+            case Gen3Constants.RomType_Em -> Gen3Constants.emTrainerFrontPalettesOffset;
+            case Gen3Constants.RomType_FRLG -> Gen3Constants.frlgTrainerFrontPalettesOffset;
+            default -> throw new RuntimeException("Invalid romType");
+        };
         addRelativeOffsetToRomEntry("TrainerFrontPalettes", "TrainerFrontImages", offset);
     }
 
     private void addTrainerBackPalettesToRomEntry() {
-        int offset;
-        switch (romEntry.getRomType()) {
-            case Gen3Constants.RomType_Ruby:
-            case Gen3Constants.RomType_Sapp:
-                offset = Gen3Constants.rsTrainerBackPalettesOffset;
-                break;
-            case Gen3Constants.RomType_Em:
-                offset = Gen3Constants.emTrainerBackPalettesOffset;
-                break;
-            case Gen3Constants.RomType_FRLG:
-                offset = Gen3Constants.frlgTrainerBackPalettesOffset;
-                break;
-            default:
-                throw new RuntimeException("Invalid romType");
-        }
+        int offset = switch (romEntry.getRomType()) {
+            case Gen3Constants.RomType_Ruby, Gen3Constants.RomType_Sapp -> Gen3Constants.rsTrainerBackPalettesOffset;
+            case Gen3Constants.RomType_Em -> Gen3Constants.emTrainerBackPalettesOffset;
+            case Gen3Constants.RomType_FRLG -> Gen3Constants.frlgTrainerBackPalettesOffset;
+            default -> throw new RuntimeException("Invalid romType");
+        };
         addRelativeOffsetToRomEntry("TrainerBackPalettes", "TrainerBackImages", offset);
 
     }
@@ -1404,7 +1386,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (items.size() != 1) {
             return;
         }
-        Item item = items.get(0);
+        Item item = items.getFirst();
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // offset from normal starter offset as a word
             int baseOffset = romEntry.getIntValue("StarterPokemon");
@@ -1895,7 +1877,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // The Mossdeep Steven trainer is special because it is *not* really a trainer to the game, just Pokemon data.
         // The randomizer surrounds this data with a Trainer object so it can be randomized.
 		int mossdeepStevenOffset = romEntry.getIntValue("MossdeepStevenTeamOffset");
-		Trainer mossdeepSteven = trainers.get(trainers.size() - 1);
+		Trainer mossdeepSteven = trainers.getLast();
 
         // The below code *could* be implemented using trainerPokemonToBytes(mossdeepSteven), but then extra
         // precautions would need to be taken so the mossdeepSteven Trainer's properties aren't changed.
@@ -2241,25 +2223,25 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void getRoamers(List<StaticEncounter> statics) throws IOException {
         if (romEntry.getRomType() == Gen3Constants.RomType_Ruby) {
-            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().get(0).speciesOffsets[0]);
+            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().getFirst().speciesOffsets[0]);
             if (firstSpecies == 0) {
                 // Before applying the patch, the first species offset will be pointing to
                 // the lower bytes of 0x2000000, so when it reads a word, it will be 0.
                 applyRubyRoamerPatch();
             }
-            StaticPokemon roamer = romEntry.getRoamingPokemon().get(0);
+            StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
             StaticEncounter se = new StaticEncounter();
             se.setSpecies(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
-            StaticPokemon roamer = romEntry.getRoamingPokemon().get(0);
+            StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
             StaticEncounter se = new StaticEncounter();
             se.setSpecies(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_FRLG && romEntry.hasTweakFile("RoamingPokemonTweak")) {
-            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().get(0).speciesOffsets[0]);
+            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().getFirst().speciesOffsets[0]);
             if (firstSpecies == 0xFFFF) {
                 // This means that the IPS patch hasn't been applied yet, since the first species
                 // ID location is free space.
@@ -2273,7 +2255,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 statics.add(se);
             }
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Em) {
-            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().get(0).speciesOffsets[0]);
+            int firstSpecies = readWord(rom, romEntry.getRoamingPokemon().getFirst().speciesOffsets[0]);
             if (firstSpecies >= pokesInternal.length) {
                 // Before applying the patch, the first species offset is a pointer with a huge value.
                 // Thus, this check is a good indicator that the patch needs to be applied.
@@ -2296,8 +2278,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void setRoamers(List<StaticEncounter> statics) {
         if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
-            StaticEncounter roamerEncounter = statics.get(statics.size() - 1);
-            StaticPokemon roamer = romEntry.getRoamingPokemon().get(0);
+            StaticEncounter roamerEncounter = statics.getLast();
+            StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
             roamer.setPokemon(this, roamerEncounter.getSpecies());
             for (int i = 0; i < roamer.levelOffsets.length; i++) {
                 roamer.setLevel(rom, roamerEncounter.getLevel(), i);
@@ -2316,7 +2298,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int[] southernIslandOffsets = romEntry.getArrayValue("StaticSouthernIslandOffsets");
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticEncounter southernIslandEncounter = statics.get(southernIslandOffsets[i]);
-                StaticEncounter roamerEncounter = southernIslandEncounter.getLinkedEncounters().get(0);
+                StaticEncounter roamerEncounter = southernIslandEncounter.getLinkedEncounters().getFirst();
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
                 roamer.setPokemon(this, roamerEncounter.getSpecies());
                 for (int j = 0; j < roamer.levelOffsets.length; j++) {
@@ -2682,7 +2664,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         } else if (found.size() > 1) {
             return -2; // not unique
         } else {
-            return found.get(0);
+            return found.getFirst();
         }
     }
 
@@ -3050,8 +3032,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public List<Shop> getShops() {
         List<String> shopNames = Gen3Constants.getShopNames(romEntry.getRomType());
-        List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().collect(Collectors.toList());
-        List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().collect(Collectors.toList());
+        List<Integer> mainGameShops = Arrays.stream(romEntry.getArrayValue("MainGameShops")).boxed().toList();
+        List<Integer> skipShops = Arrays.stream(romEntry.getArrayValue("SkipShops")).boxed().toList();
 
         List<Shop> shops = new ArrayList<>();
         int[] shopPointerOffsets = romEntry.getArrayValue("ShopPointerOffsets");
@@ -4058,24 +4040,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 int effectivenessInternal = rom[currentOffset + 2];
                 Type attacking = Gen3Constants.typeTable[attackingType];
                 Type defending = Gen3Constants.typeTable[defendingType];
-                Effectiveness effectiveness;
-                switch (effectivenessInternal) {
-                    case 20:
-                        effectiveness = Effectiveness.DOUBLE;
-                        break;
-                    case 10:
-                        effectiveness = Effectiveness.NEUTRAL;
-                        break;
-                    case 5:
-                        effectiveness = Effectiveness.HALF;
-                        break;
-                    case 0:
-                        effectiveness = Effectiveness.ZERO;
-                        break;
-                    default:
-                        effectiveness = null;
-                        break;
-                }
+                Effectiveness effectiveness = switch (effectivenessInternal) {
+                    case 20 -> Effectiveness.DOUBLE;
+                    case 10 -> Effectiveness.NEUTRAL;
+                    case 5 -> Effectiveness.HALF;
+                    case 0 -> Effectiveness.ZERO;
+                    default -> null;
+                };
                 if (effectiveness != null) {
                     typeTable.setEffectiveness(attacking, defending, effectiveness);
                 }
@@ -4113,17 +4084,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 if (eff != Effectiveness.NEUTRAL) {
                     ByteArrayOutputStream part = (defender == Type.GHOST && eff == Effectiveness.ZERO)
                             ? ghostImmunities : mainPart;
-                    byte effectivenessInternal ;switch (eff) {
-                        case DOUBLE:
-                            effectivenessInternal = 20;
-                            break;
-                        case HALF:
-                            effectivenessInternal = 5;
-                            break;
-                        default:
-                            effectivenessInternal = 0;
-                            break;
-                    }
+                    byte effectivenessInternal = switch (eff) {
+                        case DOUBLE -> 20;
+                        case HALF -> 5;
+                        default -> 0;
+                    };
                     part.write(Gen3Constants.typeToByte(attacker));
                     part.write(Gen3Constants.typeToByte(defender));
                     part.write(effectivenessInternal);
@@ -4229,10 +4194,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         GraphicsPack unchecked = customPlayerGraphics.getGraphicsPack();
         PlayerCharacterType toReplace = customPlayerGraphics.getTypeToReplace();
 
-        if (!(unchecked instanceof Gen3PlayerCharacterGraphics)) {
+        if (!(unchecked instanceof Gen3PlayerCharacterGraphics playerGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
-        Gen3PlayerCharacterGraphics playerGraphics = (Gen3PlayerCharacterGraphics) unchecked;
 
         if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
             separateFrontAndBackPlayerPalettes();
@@ -4287,10 +4251,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void setRSECustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, PlayerCharacterType toReplace) {
-        if (!(unchecked instanceof RSEPlayerCharacterGraphics)) {
+        if (!(unchecked instanceof RSEPlayerCharacterGraphics playerGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
-        RSEPlayerCharacterGraphics playerGraphics = (RSEPlayerCharacterGraphics) unchecked;
 
         if (playerGraphics.hasSitJumpSprite()) {
             writePlayerSprite(playerGraphics.getSitJumpSprite(), toReplace, "SitJumpImage");
@@ -4315,10 +4278,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void setFRLGCustomPlayerGraphics(Gen3PlayerCharacterGraphics unchecked, PlayerCharacterType toReplace) {
-        if (!(unchecked instanceof FRLGPlayerCharacterGraphics)) {
+        if (!(unchecked instanceof FRLGPlayerCharacterGraphics playerGraphics)) {
             throw new IllegalArgumentException("Invalid playerGraphics");
         }
-        FRLGPlayerCharacterGraphics playerGraphics = (FRLGPlayerCharacterGraphics) unchecked;
 
         if (playerGraphics.hasItemSprite()) {
             writePlayerSprite(playerGraphics.getItemSprite(), toReplace, "ItemImage");
@@ -4618,19 +4580,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     public String getPaletteFilesID() {
-        switch (romEntry.getRomType()) {
-            case Gen3Constants.RomType_Ruby:
-            case Gen3Constants.RomType_Sapp:
+        return switch (romEntry.getRomType()) {
+            case Gen3Constants.RomType_Ruby, Gen3Constants.RomType_Sapp ->
                 // TODO: look at Blastoise, Caterpie, Kadabra, Deoxys.
                 // otherwise all palettes are pretty much identical (in use).
-                return "E";
-            case Gen3Constants.RomType_Em:
-                return "E";
-            case Gen3Constants.RomType_FRLG:
-                return "FRLG";
-            default:
-                return null;
-        }
+                    "E";
+            case Gen3Constants.RomType_Em -> "E";
+            case Gen3Constants.RomType_FRLG -> "FRLG";
+            default -> null;
+        };
     }
 
     @Override

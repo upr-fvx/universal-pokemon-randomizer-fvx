@@ -69,7 +69,7 @@ public class Gen6Constants {
     public static final String introInitialCryOffset3XY = "0020E0E30310A0E1E4FDFFEB0000A0E3";
     public static final String introRepeatedCryOffsetXY = "1080BDE800002041000000008D001000";
 
-    public static final List<Integer> speciesWithMegaEvos = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> speciesWithMegaEvos = List.of(
             SpeciesIDs.venusaur, SpeciesIDs.charizard, SpeciesIDs.blastoise, SpeciesIDs.alakazam, SpeciesIDs.gengar,
             SpeciesIDs.kangaskhan, SpeciesIDs.pinsir, SpeciesIDs.gyarados, SpeciesIDs.aerodactyl, SpeciesIDs.mewtwo,
             SpeciesIDs.ampharos, SpeciesIDs.scizor, SpeciesIDs.heracross, SpeciesIDs.houndoom, SpeciesIDs.tyranitar,
@@ -81,7 +81,7 @@ public class Gen6Constants {
             SpeciesIDs.swampert, SpeciesIDs.sableye, SpeciesIDs.sharpedo, SpeciesIDs.camerupt, SpeciesIDs.altaria,
             SpeciesIDs.glalie, SpeciesIDs.salamence, SpeciesIDs.metagross, SpeciesIDs.rayquaza, SpeciesIDs.lopunny,
             SpeciesIDs.gallade, SpeciesIDs.audino, SpeciesIDs.diancie
-    ));
+    );
 
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
     private static final Map<Integer,Map<Integer,String>> formeSuffixesByBaseForme = setupFormeSuffixesByBaseForme();
@@ -194,15 +194,11 @@ public class Gen6Constants {
             MoveCategory.SPECIAL };
 
     public static byte moveCategoryToByte(MoveCategory cat) {
-        switch (cat) {
-            case PHYSICAL:
-                return 1;
-            case SPECIAL:
-                return 2;
-            case STATUS:
-            default:
-                return 0;
-        }
+        return switch (cat) {
+            case PHYSICAL -> 1;
+            case SPECIAL -> 2;
+            case STATUS -> 0;
+        };
     }
 
     public static final int noDamageTargetTrappingEffect = 106, noDamageFieldTrappingEffect = 354,
@@ -640,49 +636,27 @@ public class Gen6Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x00; // normal?
-        }
-        switch (type) {
-            case NORMAL:
-                return 0x00;
-            case FIGHTING:
-                return 0x01;
-            case FLYING:
-                return 0x02;
-            case POISON:
-                return 0x03;
-            case GROUND:
-                return 0x04;
-            case ROCK:
-                return 0x05;
-            case BUG:
-                return 0x06;
-            case GHOST:
-                return 0x07;
-            case FIRE:
-                return 0x09;
-            case WATER:
-                return 0x0A;
-            case GRASS:
-                return 0x0B;
-            case ELECTRIC:
-                return 0x0C;
-            case PSYCHIC:
-                return 0x0D;
-            case ICE:
-                return 0x0E;
-            case DRAGON:
-                return 0x0F;
-            case STEEL:
-                return 0x08;
-            case DARK:
-                return 0x10;
-            case FAIRY:
-                return 0x11;
-            default:
-                return 0; // normal by default
-        }
+        return switch (type) {
+            case null -> 0x00; // no ???-type, so make normal
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x06;
+            case GHOST -> 0x07;
+            case FIRE -> 0x09;
+            case WATER -> 0x0A;
+            case GRASS -> 0x0B;
+            case ELECTRIC -> 0x0C;
+            case PSYCHIC -> 0x0D;
+            case ICE -> 0x0E;
+            case DRAGON -> 0x0F;
+            case STEEL -> 0x08;
+            case DARK -> 0x10;
+            case FAIRY -> 0x11;
+        };
     }
 
     private static final EvolutionType[] evolutionTypeTable = new EvolutionType[] {
@@ -716,16 +690,12 @@ public class Gen6Constants {
     }
 
     public static int getMapIndexForLocationEvolution(EvolutionType et, int romType) {
-        switch (et) {
-            case MAGNETIC_FIELD:
-                return romType == Type_XY ? 272 : 139; // Route 13 : New Mauville
-            case MOSS_ROCK:
-                return romType == Type_XY ? 282 : 82; // Route 20 : Petalburg Woods
-            case ICE_ROCK:
-                return romType == Type_XY ? 313 : 128; // Frost Cavern : Shoal Cave
-            default:
-                throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
-        }
+        return switch (et) {
+            case MAGNETIC_FIELD -> romType == Type_XY ? 272 : 139; // Route 13 : New Mauville
+            case MOSS_ROCK -> romType == Type_XY ? 282 : 82; // Route 20 : Petalburg Woods
+            case ICE_ROCK -> romType == Type_XY ? 313 : 128; // Frost Cavern : Shoal Cave
+            default -> throw new IllegalArgumentException(et + " is not a valid EvolutionType for this game.");
+        };
     }
 
     public static String getSaveLoadFormeReversionPrefix(int romType) {
@@ -1139,21 +1109,21 @@ public class Gen6Constants {
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:X_and_Y_walkthrough>this walkthrough</a>.
      */
-    private static final List<String> locationTagsTraverseOrderXY = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderXY = List.of(
             "ROUTE 2", "SANTALUNE FOREST", "ROUTE 3", "ROUTE 4", "ROUTE 5", "ROUTE 6", "PARFUM PALACE", "ROUTE 7",
             "CONNECTING CAVE", "ROUTE 8", "AMBRETTE TOWN", "ROUTE 9", "GLITTERING CAVE", "CYLLAGE CITY", "ROUTE 10",
             "ROUTE 11", "REFLECTION CAVE", "SHALOUR CITY", "ROUTE 12", "AZURE BAY", "ROUTE 13", "ROUTE 14",
             "LAVERRE CITY", "ROUTE 15", "LOST HOTEL", "ROUTE 16", "FROST CAVERN", "ROUTE 17", "ROUTE 18",
             "COURIWAY TOWN", "ROUTE 19", "ROUTE 20", "POKEMON VILLAGE", "ROUTE 21", "ROUTE 22", "VICTORY ROAD",
             "TERMINUS CAVE"
-    ));
+    );
 
     /**
      * Based on
      * <a href=https://bulbapedia.bulbagarden.net/wiki/Appendix:Omega_Ruby_and_Alpha_Sapphire_walkthrough>this walkthrough</a>,
      * with ROUTE 105 & 108 moved down since you can't explore them at all until later.
      */
-    private static final List<String> locationTagsTraverseOrderORAS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> locationTagsTraverseOrderORAS = List.of(
             "ROUTE 101", "ROUTE 103", "ROUTE 102", "PETALBURG CITY", "ROUTE 104", "PETALBURG WOODS", "ROUTE 116",
             "RUSTURF TUNNEL", "DEWFORD TOWN", "ROUTE 106", "ROUTE 107", "GRANITE CAVE", "ROUTE 109",
             "SLATEPORT CITY", "ROUTE 110", "ROUTE 117", "ROUTE 111", "ROUTE 112", "FIERY PATH", "ROUTE 113",
@@ -1164,7 +1134,7 @@ public class Gen6Constants {
             "ROUTE 130", "ROUTE 131", "PACIFIDLOG TOWN", "ROUTE 132", "ROUTE 133", "ROUTE 134", "SEALED CHAMBER",
             "ROUTE 105", "ROUTE 108", "SEA MAUVILLE", "SCORCHED SLAB", "EVER GRANDE CITY", "MIRAGE ISLAND",
             "MIRAGE FOREST", "MIRAGE CAVE", "MIRAGE MOUNTAIN", "VICTORY ROAD", "SKY PILLAR", "BATTLE RESORT"
-    ));
+    );
 
     public static List<String> getLocationTagsTraverseOrder(int romType) {
         return romType == Type_XY ? locationTagsTraverseOrderXY : locationTagsTraverseOrderORAS;

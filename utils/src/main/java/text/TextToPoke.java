@@ -12,6 +12,8 @@ import java.util.List;
 
 public class TextToPoke {
 
+    private record PointerEntry(int ptr, int chars) {}
+
     public static byte[] MakeFile(List<String> textarr, boolean compressed) {
         int base = textarr.size() * 8 + 4;
         List<PointerEntry> ptrtable = new ArrayList<>();
@@ -31,7 +33,7 @@ public class TextToPoke {
 
     private static List<Integer> ToCode(String text, boolean compressed) {
         List<Integer> data = new ArrayList<>();
-        while (text.length() != 0) {
+        while (!text.isEmpty()) {
             int i = Math.max(0, 6 - text.length());
             if (text.charAt(0) == '\\') {
                 if (text.charAt(1) == 'x') {
@@ -44,7 +46,7 @@ public class TextToPoke {
                 } else if (text.charAt(1) == 'z') {
                     List<Integer> var = new ArrayList<>();
                     int w = 0;
-                    while (text.length() != 0) {
+                    while (!text.isEmpty()) {
                         if (text.charAt(0) == '\\' && text.charAt(1) == 'z') {
                             w++;
                             var.add(Integer.parseInt(text.substring(2, 6), 16));
@@ -64,11 +66,11 @@ public class TextToPoke {
                 } else if (text.charAt(1) == 'l') {
                     data.add(0x25BD);
                     text = text.substring(2);
-                } else if (text.substring(1, 4).equals("and")) {
+                } else if (text.startsWith("and", 1)) {
                     data.add(0x1C2);
                     text = text.substring(4);
                 } else {
-                    System.out.printf("unknown escape: %s\n", text.substring(1, 2));
+                    System.out.printf("unknown escape: %s\n", text.charAt(1));
                     text = text.substring(2);
                 }
             } else {
@@ -76,7 +78,7 @@ public class TextToPoke {
                     i++;
                 }
                 if (i == 6) {
-                    System.out.printf("Char not found %s(%x)", text.substring(0, 1), (byte)text.charAt(0));
+                    System.out.printf("Char not found %s(%x)", text.charAt(0), (byte) text.charAt(0));
                     text = text.substring(1);
                 } else {
                     data.add(UnicodeParser.d.get(text.substring(0, 6 - i)));
@@ -85,7 +87,7 @@ public class TextToPoke {
             }
         }
         if (compressed) {
-            if (data.size() % 5 != 0 || data.size() == 0) {
+            if (data.size() % 5 != 0 || data.isEmpty()) {
                 data.add(0x1FF);
             }
             byte[] bits = new byte[data.size() * 9];
@@ -168,17 +170,6 @@ public class TextToPoke {
             }
         }
         return barr;
-    }
-
-    private static class PointerEntry {
-
-        private int ptr;
-        private int chars;
-
-        public PointerEntry(int ptr, int chars) {
-            this.ptr = ptr;
-            this.chars = chars;
-        }
     }
 
 }

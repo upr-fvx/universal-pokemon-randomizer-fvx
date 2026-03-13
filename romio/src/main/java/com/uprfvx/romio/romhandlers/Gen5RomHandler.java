@@ -1100,7 +1100,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private void loadWildMapNames() {
         try {
             wildMapNames = new HashMap<>();
-            byte[] mapHeaderData = this.readNARC(romEntry.getFile("MapTableFile")).files.get(0);
+            byte[] mapHeaderData = this.readNARC(romEntry.getFile("MapTableFile")).files.getFirst();
             int numMapHeaders = mapHeaderData.length / 48;
             List<String> allMapNames = getStrings(false, romEntry.getIntValue("MapNamesTextOffset"));
             for (int map = 0; map < numMapHeaders; map++) {
@@ -1448,7 +1448,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     public void makeDoubleBattleModePossible() {
         try {
             NARCArchive trainerTextBoxes = readNARC(romEntry.getFile("TrainerTextBoxes"));
-            byte[] data = trainerTextBoxes.files.get(0);
+            byte[] data = trainerTextBoxes.files.getFirst();
             for (int i = 0; i < data.length; i += 4) {
                 int trainerIndex = readWord(data, i);
                 if (originalDoubleTrainers.contains(trainerIndex)) {
@@ -1686,9 +1686,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     public static class TradeScript {
-        private int fileNum;
-        private int[] requestedOffsets;
-        private int[] givenOffsets;
+        private final int fileNum;
+        private final int[] requestedOffsets;
+        private final int[] givenOffsets;
 
         public TradeScript(int fileNum, int[] requestedOffsets, int[] givenOffsets) {
             this.fileNum = fileNum;
@@ -1869,7 +1869,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             List<Species> allowedHiddenHollowSpecies = new ArrayList<>();
             allowedHiddenHollowSpecies.addAll(Arrays.asList(Arrays.copyOfRange(pokes,1,494)));
             allowedHiddenHollowSpecies.addAll(
-                    Gen5Constants.bw2HiddenHollowUnovaPokemon.stream().map(i -> pokes[i]).collect(Collectors.toList()));
+                    Gen5Constants.bw2HiddenHollowUnovaPokemon.stream().map(i -> pokes[i]).toList());
 
             try {
                 NARCArchive hhNARC = this.readNARC(romEntry.getFile("HiddenHollows"));
@@ -1916,7 +1916,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         // Roaming encounters
         if (!romEntry.getRoamingPokemon().isEmpty()) {
             try {
-                int firstSpeciesOffset = romEntry.getRoamingPokemon().get(0).speciesOverlayOffsets[0];
+                int firstSpeciesOffset = romEntry.getRoamingPokemon().getFirst().speciesOverlayOffsets[0];
                 byte[] overlay = readOverlay(romEntry.getIntValue("RoamerOvlNumber"));
                 if (readWord(overlay, firstSpeciesOffset) > pokes.length) {
                     // In the original code, this is "mov r0, #0x2", which read as a word is
@@ -1994,18 +1994,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                 // this value overrides the genderRatio of the species.
                                 // The vanilla grottoes have some variance in genderRatios, but for simplicity's sake
                                 // we just set all Pokémon to 30% female, unless they are always female/male/genderless.
-                                int genderRatio;
-                                switch (se.getSpecies().getGenderRatio()) {
-                                    case 0xFE: // female
-                                        genderRatio = 100;
-                                        break;
-                                    case 0x00: // male
-                                    case 0xFF: // genderless
-                                        genderRatio = 0;
-                                        break;
-                                    default:
-                                        genderRatio = 30;
-                                }
+                                int genderRatio = switch (se.getSpecies().getGenderRatio()) {
+                                    case 0xFE -> // female
+                                            100;
+                                    case 0x00, 0xFF -> // male, genderless
+                                            0;
+                                    default -> 30;
+                                };
                                 hhEntry[version * 78 + raritySlot * 26 + 16 + group] = (byte) genderRatio;
                                 hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) se.getForme(); // forme
                                 hhEntry[version * 78 + raritySlot * 26 + 12 + group] = (byte) se.getLevel();
@@ -2308,24 +2303,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (Type defender : typeTable.getTypes()) {
                     int offset = tableOffset + (Gen5Constants.typeToByte(attacker) * tableWidth) + Gen5Constants.typeToByte(defender);
                     int effectivenessInternal = battleOverlay[offset];
-                    Effectiveness effectiveness;
-                    switch (effectivenessInternal) {
-                        case 8:
-                            effectiveness = Effectiveness.DOUBLE;
-                            break;
-                        case 4:
-                            effectiveness = Effectiveness.NEUTRAL;
-                            break;
-                        case 2:
-                            effectiveness = Effectiveness.HALF;
-                            break;
-                        case 0:
-                            effectiveness = Effectiveness.ZERO;
-                            break;
-                        default:
-                            effectiveness = null;
-                            break;
-                    }
+                    Effectiveness effectiveness = switch (effectivenessInternal) {
+                        case 8 -> Effectiveness.DOUBLE;
+                        case 4 -> Effectiveness.NEUTRAL;
+                        case 2 -> Effectiveness.HALF;
+                        case 0 -> Effectiveness.ZERO;
+                        default -> null;
+                    };
                     typeTable.setEffectiveness(attacker, defender, effectiveness);
                 }
             }
@@ -2352,23 +2336,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 for (Type defender : typeTable.getTypes()) {
                     int offset = tableOffset + (Gen5Constants.typeToByte(attacker) * tableWidth) + Gen5Constants.typeToByte(defender);
                     Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
-                    byte effectivenessInternal;
-                    switch (effectiveness) {
-                        case DOUBLE:
-                            effectivenessInternal = 8;
-                            break;
-                        case NEUTRAL:
-                            effectivenessInternal = 4;
-                            break;
-                        case HALF:
-                            effectivenessInternal = 2;
-                            break;
-                        case ZERO:
-                            effectivenessInternal = 0;
-                            break;
-                        default:
-                            effectivenessInternal = 0;
-                    }
+                    byte effectivenessInternal = switch (effectiveness) {
+                        case DOUBLE -> 8;
+                        case NEUTRAL -> 4;
+                        case HALF -> 2;
+                        case ZERO -> 0;
+                        default -> 0;
+                    };
                     battleOverlay[offset] = effectivenessInternal;
                 }
             }
@@ -2999,7 +2973,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     public List<String> getTrainerNames() {
         List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        tnames.remove(0); // blank one
+        tnames.removeFirst(); // blank one
         if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
             List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
             tnames.addAll(pwtNames);
@@ -3042,7 +3016,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
             List<String> newTNames = new ArrayList<>();
             List<String> newPWTNames = new ArrayList<>();
-            newTNames.add(0, tnames.get(0)); // the 0-entry, preserve it
+            newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
             for (int i = 1; i < tnames.size() + pwtNames.size(); i++) {
                 if (i < tnames.size()) {
                     newTNames.add(trainerNames.get(i - 1));
@@ -3054,7 +3028,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             setStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"), newPWTNames);
         } else {
             List<String> newTNames = new ArrayList<>(trainerNames);
-            newTNames.add(0, tnames.get(0)); // the 0-entry, preserve it
+            newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
             setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
         }
     }
@@ -3559,7 +3533,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 Species baby = pokes[i];
                 while (!baby.getEvolutionsTo().isEmpty()) {
                     // Grab the first "to evolution" even if there are multiple
-                    baby = baby.getEvolutionsTo().get(0).getFrom();
+                    baby = baby.getEvolutionsTo().getFirst().getFrom();
                 }
                 writeWord(babyNARC.files.get(i), 0, baby.getNumber());
             }
@@ -4182,15 +4156,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
     
     public String getPaletteFilesID() {
-        switch (romEntry.getRomType()) {
-            case Gen5Constants.Type_BW:
-                return "BW";
-            case Gen5Constants.Type_BW2:
+        return switch (romEntry.getRomType()) {
+            case Gen5Constants.Type_BW -> "BW";
+            case Gen5Constants.Type_BW2 ->
                 // TODO: check if this should be identical
-                return "BW";
-            default:
-                return null;
-        }
+                    "BW";
+            default -> null;
+        };
     }
 
     @Override

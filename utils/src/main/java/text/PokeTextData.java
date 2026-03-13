@@ -11,7 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PokeTextData {
-    private byte[] data;
+
+    private record PointerEntry(int ptr, int chars) {}
+
+    private final byte[] data;
     private List<PointerEntry> ptrlist;
     public List<String> strlist;
     public boolean compressFlag;
@@ -55,8 +58,8 @@ public class PokeTextData {
 
         for (int i = 0; i < num; i++) {
             PointerEntry entry = this.ptrlist.get(i);
-            DecyptTxt(entry.getChars(), i + 1, entry.getPtr());
-            this.strlist.add(MakeString(entry.getChars(), entry.getPtr()));
+            DecyptTxt(entry.chars(), i + 1, entry.ptr());
+            this.strlist.add(MakeString(entry.chars(), entry.ptr()));
         }
     }
 
@@ -65,7 +68,7 @@ public class PokeTextData {
         int num = read16(0);
         for (int i = 0; i < num; i++) {
             PointerEntry entry = this.ptrlist.get(i);
-            DecyptTxt(entry.getChars(), i + 1, entry.getPtr());
+            DecyptTxt(entry.chars(), i + 1, entry.ptr());
         }
 
         DecyptPtrs(read16(0), read16(2), 4);
@@ -182,25 +185,6 @@ public class PokeTextData {
 
     public int GetKey() {
         return read16(2);
-    }
-
-    public class PointerEntry {
-
-        private int ptr;
-        private int chars;
-
-        public PointerEntry(int ptr, int chars) {
-            this.ptr = ptr;
-            this.chars = chars;
-        }
-
-        public int getPtr() {
-            return ptr;
-        }
-
-        public int getChars() {
-            return chars;
-        }
     }
 
 }

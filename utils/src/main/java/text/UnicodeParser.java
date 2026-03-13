@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class UnicodeParser {
 
-    private static final String TABLE_PATH = "text/Generation4.tbl";
+    private static final String TABLE_PATH = "/text/Generation4.tbl";
 
     public static String[] tb = new String[65536];
     public static Map<String, Integer> d = new HashMap<>();

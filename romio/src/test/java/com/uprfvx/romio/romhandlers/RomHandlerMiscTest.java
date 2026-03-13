@@ -96,7 +96,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     @MethodSource("getRomNames")
     public void firstSpeciesInSpeciesListIsNull(String romName) {
         loadROM(romName);
-        assertNull(romHandler.getSpecies().get(0));
+        assertNull(romHandler.getSpecies().getFirst());
     }
 
     @ParameterizedTest
@@ -108,22 +108,15 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     }
 
     private int getPokemonCount() {
-        switch (romHandler.generationOfPokemon()) {
-            case 1:
-                return Gen1Constants.pokemonCount;
-            case 2:
-                return Gen2Constants.pokemonCount;
-            case 3:
-                return Gen3Constants.pokemonCount;
-            case 4:
-                return Gen4Constants.pokemonCount;
-            case 5:
-                return Gen5Constants.pokemonCount;
-            case 6:
-                return Gen6Constants.pokemonCount;
-            default:
-                return Gen7Constants.getPokemonCount(romHandler.getROMType());
-        }
+        return switch (romHandler.generationOfPokemon()) {
+            case 1 -> Gen1Constants.pokemonCount;
+            case 2 -> Gen2Constants.pokemonCount;
+            case 3 -> Gen3Constants.pokemonCount;
+            case 4 -> Gen4Constants.pokemonCount;
+            case 5 -> Gen5Constants.pokemonCount;
+            case 6 -> Gen6Constants.pokemonCount;
+            default -> Gen7Constants.getPokemonCount(romHandler.getROMType());
+        };
     }
 
     @ParameterizedTest

@@ -3754,8 +3754,8 @@ public class RandomizerGUI {
         for (int i = 0; i < numTweaks; i++) {
             MiscTweak ct = MiscTweak.allTweaks.get(i);
             JCheckBox tweakBox = new JCheckBox();
-            tweakBox.setText(ct.getTweakName());
-            tweakBox.setToolTipText(ct.getTooltipText());
+            tweakBox.setText(MiscTweakStrings.getName(ct, bundle));
+            tweakBox.setToolTipText(MiscTweakStrings.getToolTipText(ct, bundle));
             tweakCheckBoxes.add(tweakBox);
         }
     }

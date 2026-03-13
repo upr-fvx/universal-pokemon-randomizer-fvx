@@ -62,7 +62,7 @@ public class Gen2Constants {
     public static final int fishingAreaCount = 12, pokesPerFishingArea = 11, fishingAreaEntryLength = 3,
             timeSpecificFishingAreaCount = 11, pokesPerTSFishingArea = 4;
 
-    public static final List<Integer> crystalUnusedFishingAreas = Collections.unmodifiableList(Arrays.asList(6, 11));
+    public static final List<Integer> crystalUnusedFishingAreas = List.of(6, 11);
 
     public static final String[] fishingAreaNames = new String[]{"Shore", "Ocean", "Lake", "Pond",
             "Dratini 1 (Ice Path, Dragon's Den)", "Qwilfish Swarm (Route 32)", "Remoraid Swarm (Route 44)",
@@ -159,7 +159,7 @@ public class Gen2Constants {
 
     public static final byte shopItemsTerminator = (byte) 0xFF;
 
-    public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> shopNames = List.of(
             "Cherrygrove Poké Mart (Before Pokédex)",
             "Cherrygrove Poké Mart (After Pokédex)",
             "Violet Poké Mart",
@@ -194,7 +194,7 @@ public class Gen2Constants {
             "Mt. Moon Square Shop",
             "Indigo Plateau Poké Mart",
             "Goldenrod Tunnel Herb Shop"
-    ));
+    );
 
     public static final int[] specialShops = new int[]{7, 8, 26, 27, 28, 31, 33};
 
@@ -205,16 +205,16 @@ public class Gen2Constants {
     public static final int itemCount = 256, itemAttributesEntrySize = 7;
 
     // Held-while-traded evo items (upgrade etc.) are not considered because players are not expected to trade. Same as in Gen3Constants.
-    public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> evolutionItems = List.of(
             ItemIDs.sunStone, ItemIDs.moonStone, ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone,
             ItemIDs.leafStone
-    ));
+    );
 
-    public static final List<Integer> generalPurposeConsumableItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeConsumableItems = List.of(
             ItemIDs.pechaBerry, ItemIDs.cheriBerry, ItemIDs.aspearBerry, ItemIDs.rawstBerry, ItemIDs.persimBerry,
             ItemIDs.chestoBerry, ItemIDs.lumBerry, ItemIDs.leppaBerry, ItemIDs.oranBerry, ItemIDs.sitrusBerry,
             ItemIDs.berryJuice
-    ));
+    );
 
     public static final List<Integer> consumableHeldItems = setupConsumableHeldItems();
 
@@ -224,21 +224,21 @@ public class Gen2Constants {
         return Collections.unmodifiableList(consumableHeldItems);
     }
 
-    public static final List<Integer> generalPurposeItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> generalPurposeItems = List.of(
             ItemIDs.brightPowder, ItemIDs.quickClaw, ItemIDs.kingsRock, ItemIDs.smokeBall
-    ));
+    );
 
     public static final List<Integer> allHeldItems = setupAllHeldItems();
 
     private static List<Integer> setupAllHeldItems() {
         List<Integer> allHeldItems = new ArrayList<>(generalPurposeItems);
-        allHeldItems.addAll(Collections.unmodifiableList(Arrays.asList(
+        allHeldItems.addAll(List.of(
                 // type-boosting items
                 ItemIDs.blackBelt, ItemIDs.blackGlasses, ItemIDs.charcoal, ItemIDs.dragonScale,
                 ItemIDs.hardStone, ItemIDs.magnet, ItemIDs.metalCoat, ItemIDs.miracleSeed,
                 ItemIDs.mysticWater, ItemIDs.neverMeltIce, ItemIDs.Gen2.pinkBow, ItemIDs.Gen2.polkadotBow,
                 ItemIDs.sharpBeak, ItemIDs.silverPowder, ItemIDs.softSand, ItemIDs.spellTag,
-                ItemIDs.twistedSpoon)));
+                ItemIDs.twistedSpoon));
         allHeldItems.addAll(consumableHeldItems);
         return Collections.unmodifiableList(allHeldItems);
     }
@@ -282,19 +282,19 @@ public class Gen2Constants {
     }
 
     // rare candy, lucky egg, and all the "valuable items"
-    public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> opShopItems = List.of(
             ItemIDs.rareCandy, ItemIDs.luckyEgg,
             ItemIDs.nugget, ItemIDs.tinyMushroom, ItemIDs.bigMushroom, ItemIDs.pearl, ItemIDs.bigPearl,
             ItemIDs.stardust, ItemIDs.stardust, ItemIDs.Gen2.brickPiece, ItemIDs.Gen2.silverLeaf, ItemIDs.Gen2.goldLeaf
-    ));
+    );
 
     public static final Set<Integer> bannedItems = setupBannedItems();
     public static final Set<Integer> badItems = setupBadItems();
     public static final Set<Integer> tmItems = setupTMItems();
     // In VietCrystal only, these items crash your game if used, glitch out your inventory if carried
-    public static final List<Integer> vietCrystalBannedItems = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Integer> vietCrystalBannedItems = List.of(
             ItemIDs.burnHeal, ItemIDs.calcium, ItemIDs.elixir, ItemIDs.twistedSpoon
-    ));
+    );
 
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>();
@@ -386,88 +386,51 @@ public class Gen2Constants {
     }
 
     public static byte typeToByte(Type type) {
-        if (type == null) {
-            return 0x13; // ???-type
-        }
-        switch (type) {
-        case NORMAL:
-            return 0x00;
-        case FIGHTING:
-            return 0x01;
-        case FLYING:
-            return 0x02;
-        case POISON:
-            return 0x03;
-        case GROUND:
-            return 0x04;
-        case ROCK:
-            return 0x05;
-        case BUG:
-            return 0x07;
-        case GHOST:
-            return 0x08;
-        case FIRE:
-            return 0x14;
-        case WATER:
-            return 0x15;
-        case GRASS:
-            return 0x16;
-        case ELECTRIC:
-            return 0x17;
-        case PSYCHIC:
-            return 0x18;
-        case ICE:
-            return 0x19;
-        case DRAGON:
-            return 0x1A;
-        case STEEL:
-            return 0x09;
-        case DARK:
-            return 0x1B;
-        default:
-            return 0; // normal by default
-        }
+        return switch (type) {
+            case NORMAL -> 0x00;
+            case FIGHTING -> 0x01;
+            case FLYING -> 0x02;
+            case POISON -> 0x03;
+            case GROUND -> 0x04;
+            case ROCK -> 0x05;
+            case BUG -> 0x07;
+            case GHOST -> 0x08;
+            case null -> 0x13; // ???-type
+            case FIRE -> 0x14;
+            case WATER -> 0x15;
+            case GRASS -> 0x16;
+            case ELECTRIC -> 0x17;
+            case PSYCHIC -> 0x18;
+            case ICE -> 0x19;
+            case DRAGON -> 0x1A;
+            case STEEL -> 0x09;
+            case DARK -> 0x1B;
+            default -> 0; // normal by default
+        };
     }
 
     public static final int nonNeutralEffectivenessCount = 110;
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
-        switch (evolutionType) {
-            case LEVEL:
-                return 1;
-            case STONE:
-                return 2;
-            case TRADE:
-            case TRADE_ITEM:
-                return 3;
-            case HAPPINESS:
-            case HAPPINESS_DAY:
-            case HAPPINESS_NIGHT:
-                return 4;
-            case LEVEL_ATTACK_HIGHER:
-            case LEVEL_DEFENSE_HIGHER:
-            case LEVEL_ATK_DEF_SAME:
-                return 5;
-            default:
-                return -1;
-        }
+        return switch (evolutionType) {
+            case LEVEL -> 1;
+            case STONE -> 2;
+            case TRADE, TRADE_ITEM -> 3;
+            case HAPPINESS, HAPPINESS_DAY, HAPPINESS_NIGHT -> 4;
+            case LEVEL_ATTACK_HIGHER, LEVEL_DEFENSE_HIGHER, LEVEL_ATK_DEF_SAME -> 5;
+            default -> -1;
+        };
     }
 
     public static EvolutionType evolutionTypeFromIndex(int index) {
-        switch (index) {
-            case 1:
-                return EvolutionType.LEVEL;
-            case 2:
-                return EvolutionType.STONE;
-            case 3:
-                return EvolutionType.TRADE;
-            case 4:
-                return EvolutionType.HAPPINESS;
-            case 5:
-                return EvolutionType.LEVEL_ATTACK_HIGHER;
-            default:
-                return EvolutionType.NONE;
-        }
+        return switch (index) {
+            case 1 -> EvolutionType.LEVEL;
+            case 2 -> EvolutionType.STONE;
+            case 3 -> EvolutionType.TRADE;
+            case 4 -> EvolutionType.HAPPINESS;
+            case 5 -> EvolutionType.LEVEL_ATTACK_HIGHER;
+            default -> EvolutionType.NONE;
+        };
     }
 
     public static void universalTrainerTags(List<Trainer> allTrainers) {
@@ -672,7 +635,7 @@ public class Gen2Constants {
      * The order the player is "expected" to traverse locations. Based on
      * <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Gold_and_Silver/Walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrder = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> locationTagsTraverseOrder = List.of(
             "NEW BARK TOWN", "ROUTE 29", "ROUTE 46", "CHERRYGROVE CITY", "ROUTE 30", "ROUTE 31", "DARK CAVE",
             "VIOLET CITY", "SPROUT TOWER", "ROUTE 32", "RUINS OF ALPH", "UNION CAVE", "ROUTE 33",
             "SLOWPOKE WELL", "ILEX FOREST", "ROUTE 34", "GOLDENROD CITY", "ROUTE 35", "NATIONAL PARK",
@@ -692,7 +655,7 @@ public class Gen2Constants {
             "HEADBUTT ROUTE", "HEADBUTT TOWN", "HEADBUTT KANTO", "HEADBUTT FOREST C", "HEADBUTT LAKE",
             "HEADBUTT CANYON C",
             "ROCK SMASH", "BUG CATCHING CONTEST"
-    ));
+    );
 
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
 

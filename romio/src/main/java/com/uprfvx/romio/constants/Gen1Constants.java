@@ -149,36 +149,28 @@ public class Gen1Constants {
     public static final int nonNeutralEffectivenessCount = 82;
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
-        switch (evolutionType) {
-            case LEVEL:
-                return 1;
-            case STONE:
-                return 2;
-            case TRADE:
-                return 3;
-            default:
-                return -1;
-        }
+        return switch (evolutionType) {
+            case LEVEL -> 1;
+            case STONE -> 2;
+            case TRADE -> 3;
+            default -> -1;
+        };
     }
 
     public static EvolutionType evolutionTypeFromIndex(int index) {
-        switch (index) {
-            case 1:
-                return EvolutionType.LEVEL;
-            case 2:
-                return EvolutionType.STONE;
-            case 3:
-                return EvolutionType.TRADE;
-            default:
-                return EvolutionType.NONE;
-        }
+        return switch (index) {
+            case 1 -> EvolutionType.LEVEL;
+            case 2 -> EvolutionType.STONE;
+            case 3 -> EvolutionType.TRADE;
+            default -> EvolutionType.NONE;
+        };
     }
 
     public static final byte farTextStart = (byte) 0x17;
 
     public static final byte shopItemsScript = (byte) 0xFE, shopItemsTerminator = (byte) 0xFF;
 
-    public static final List<String> shopNames = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> shopNames = List.of(
             "Viridian Poké Mart",
             "Pewter Poké Mart",
             "Cerulean Poké Mart",
@@ -193,19 +185,14 @@ public class Gen1Constants {
             "Cinnabar Poké Mart",
             "Saffron Poké Mart",
             "Indigo Plateau Lobby"
-    ));
+    );
 
-    public static final List<Integer> specialShops = Collections.unmodifiableList(Arrays.asList(
-            8, 9 // just the Celadon 5F ones
-    ));
+    public static final List<Integer> specialShops = List.of(8, 9); // just the Celadon 5F ones
 
-    public static final List<Integer> evolutionItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.moonStone, ItemIDs.fireStone, ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone
-    ));
+    public static final List<Integer> evolutionItems = List.of(ItemIDs.moonStone, ItemIDs.fireStone,
+            ItemIDs.thunderStone, ItemIDs.waterStone, ItemIDs.leafStone);
 
-    public static final List<Integer> opShopItems = Collections.unmodifiableList(Arrays.asList(
-            ItemIDs.rareCandy, ItemIDs.nugget
-    ));
+    public static final List<Integer> opShopItems = List.of(ItemIDs.rareCandy, ItemIDs.nugget);
 
     public static final Set<Integer> bannedItems = setupBannedItems();
 
@@ -504,11 +491,12 @@ public class Gen1Constants {
         throw new IndexOutOfBoundsException("No trainer with classNum=" + classNum + ", number=" + number);
     }
 
+    // route 23, cerulean cave
     /**
      * The order the player is "expected" to traverse locations. Taken from
      * <a href=https://strategywiki.org/wiki/Pok%C3%A9mon_Red_and_Blue/Walkthrough>this walkthrough</a>.
      */
-    public static final List<String> locationTagsTraverseOrder = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> locationTagsTraverseOrder = List.of(
             "PALLET TOWN", "ROUTE 1", "VIRIDIAN CITY", "ROUTE 2", "ROUTE 22", "VIRIDIAN FOREST", "ROUTE 3",
             "MT.MOON", "ROUTE 4", "CERULEAN CITY", "ROUTE 24", "ROUTE 25", "ROUTE 5", "ROUTE 6", "VERMILION CITY",
             "ROUTE 11", "DIGLETT'S CAVE", "ROUTE 9", "ROUTE 10", "ROCK TUNNEL", "ROUTE 8", "ROUTE 7", "CELADON CITY",
@@ -526,7 +514,7 @@ public class Gen1Constants {
             "SUPER ROD 6", // safari zone
             "SUPER ROD 8", // route 19, route 20, route 21, seafoam islands
             "SUPER ROD 9" // route 23, cerulean cave
-    ));
+    );
 
     public static final Map<Integer, Integer> balancedItemPrices = Stream.of(new Integer[][]{
             {ItemIDs.masterBall, 3000},

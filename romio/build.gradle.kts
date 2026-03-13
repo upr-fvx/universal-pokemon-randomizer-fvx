@@ -24,6 +24,7 @@ tasks.register<Test>("testROMs") {
 
     useJUnitPlatform()
     ignoreFailures = true
+    maxHeapSize = "4G"
 
     filter {
         includeTestsMatching("*RomHandler*Test")

@@ -1588,4 +1588,4 @@ public class TestRomHandler extends AbstractRomHandler {
     public boolean hasTypeEffectivenessSupport() {
         return hasTypeEffectivenessSupport;
     }
-}s
+}

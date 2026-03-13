@@ -3,6 +3,7 @@ package com.uprfvx.random.log;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.Version;
+import com.uprfvx.random.gui.MiscTweakStrings;
 import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.randomizers.*;
 import com.uprfvx.random.updaters.*;
@@ -293,7 +294,7 @@ public class RandomizationLogger {
             int miscTweaks = settings.getCurrentMiscTweaks();
             for (MiscTweak mt : MiscTweak.allTweaks) {
                 if ((miscTweaks & mt.getValue()) != 0) {
-                    log.println(mt.getTweakName());
+                    log.println(MiscTweakStrings.getName(mt, bundle));
                 }
             }
         } else {
@@ -667,32 +668,22 @@ public class RandomizationLogger {
 
     private void logStarters() {
         printSectionTitle("sp");
-        String mode = null;
-        switch (settings.getStartersMod()) {
-            case UNCHANGED:
-                mode = getBS("Log.sp.unchanged"); // should never happen
-                break;
-            case CUSTOM:
-                mode = getBS("Log.sp.custom");
-                break;
-            case COMPLETELY_RANDOM:
-                mode = getBS("Log.sp.random");
-                break;
-            case RANDOM_BASIC:
-                mode = getBS("Log.sp.randomBasic");
-                break;
-            case RANDOM_WITH_TWO_EVOLUTIONS:
-                mode = getBS("Log.sp.random2Evolution");
-        }
+        String mode = switch (settings.getStartersMod()) {
+            case UNCHANGED -> getBS("Log.sp.unchanged"); // should never happen
+            case CUSTOM -> getBS("Log.sp.custom");
+            case COMPLETELY_RANDOM -> getBS("Log.sp.random");
+            case RANDOM_BASIC -> getBS("Log.sp.randomBasic");
+            case RANDOM_WITH_TWO_EVOLUTIONS -> getBS("Log.sp.random2Evolution");
+        };
         log.printf(getBS("Log.sp.mode"), mode);
 
         List<Species> starters = romHandler.getStarters();
         List<Item> heldItems = romHandler.getStarterHeldItems();
 
         for (int i = 0; i < starters.size(); i++) {
-            if (heldItems.size() == 1 && heldItems.get(0) != null) {
+            if (heldItems.size() == 1 && heldItems.getFirst() != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
-                        heldItems.get(0).getName());
+                        heldItems.getFirst().getName());
             } else if (heldItems.size() == starters.size() && heldItems.get(i) != null) {
                 log.printf(getBS("Log.sp.setWithItem"), i + 1, starters.get(i).getFullName(),
                         heldItems.get(i).getName());
@@ -1150,18 +1141,13 @@ public class RandomizationLogger {
     }
 
     private String getSOSString(Encounter e) {
-        switch (e.getSosType()) {
-            case RAIN:
-                return getBS("Log.wp.rainSOS");
-            case HAIL:
-                return getBS("Log.wp.hailSOS");
-            case SAND:
-                return getBS("Log.wp.sandSOS");
-            case GENERIC:
-                return getBS("Log.wp.genericSOS");
-            default:
-                return "THIS SHOULD NOT BE SEEN, PLEASE REPORT BUG";
-        }
+        return switch (e.getSosType()) {
+            case RAIN -> getBS("Log.wp.rainSOS");
+            case HAIL -> getBS("Log.wp.hailSOS");
+            case SAND -> getBS("Log.wp.sandSOS");
+            case GENERIC -> getBS("Log.wp.genericSOS");
+            case null -> "THIS SHOULD NOT BE SEEN, PLEASE REPORT BUG";
+        };
     }
 
     private boolean shouldLogInGameTrades() {

@@ -1,9 +1,6 @@
 package com.uprfvx.romio;
 
 /*----------------------------------------------------------------------------*/
-/*--  MiscTweak.java - represents a miscellaneous tweak that can be applied --*/
-/*--                   to some or all games that the randomizer supports.   --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -27,15 +24,16 @@ package com.uprfvx.romio;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
+/**
+ * Represents a miscellaneous tweak that can be applied
+ * to some or all games that the Randomizer supports.
+ */
 public class MiscTweak implements Comparable<MiscTweak> {
 
     // Note that Java ints are 32 bits, so with the current implementation
     // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;
-
-    private static final ResourceBundle bundle = ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
     public static List<MiscTweak> allTweaks = new ArrayList<>();
 
@@ -72,14 +70,12 @@ public class MiscTweak implements Comparable<MiscTweak> {
     /* @formatter:on */
 
     private final int value;
-    private final String tweakName;
-    private final String tooltipText;
+    private final String id;
     private final int priority;
 
-    private MiscTweak(int value, String tweakID, int priority) {
+    private MiscTweak(int value, String id, int priority) {
         this.value = value;
-        this.tweakName = bundle.getString("CodeTweaks." + tweakID + ".name"); // this feels really dumb
-        this.tooltipText = bundle.getString("CodeTweaks." + tweakID + ".toolTipText");
+        this.id = id;
         this.priority = priority;
         allTweaks.add(this);
     }
@@ -88,12 +84,8 @@ public class MiscTweak implements Comparable<MiscTweak> {
         return value;
     }
 
-    public String getTweakName() {
-        return tweakName;
-    }
-
-    public String getTooltipText() {
-        return tooltipText;
+    public String getID() {
+        return id;
     }
 
     @Override

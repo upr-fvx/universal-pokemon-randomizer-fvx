@@ -3561,8 +3561,7 @@ public class RandomizerGUI {
                     wpZoneGameRadioButton, wpZoneNamedLocationRadioButton, wpZoneMapRadioButton,
                     wpZoneEncounterSetRadioButton, wpZoneNoneRadioButton);
             disableButtonsWithDefault(wpTRNoneRadioButton,
-                    wpTRNoneRadioButton, wpTRKeepPrimaryRadioButton, wpTRThemedAreasRadioButton,
-                    wpTRMatchHabitatRadioButton);
+                    wpTRNoneRadioButton, wpTRKeepPrimaryRadioButton, wpTRThemedAreasRadioButton);
             disableButtonsWithDefault(wpERNoneRadioButton,
                     wpERNoneRadioButton, wpERBasicOnlyRadioButton, wpERSameEvolutionStageRadioButton);
             disableAndDeselectButtons(wpERKeepEvolutionsCheckBox, wpSimilarStrengthCheckBox, wpCatchEmAllModeCheckBox,

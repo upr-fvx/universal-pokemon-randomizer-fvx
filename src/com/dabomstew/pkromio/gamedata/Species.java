@@ -88,6 +88,7 @@ public class Species implements Comparable<Species> {
     private int callRate;
 
     private ExpCurve growthCurve;
+    private Habitat habitat;
     
     private Palette normalPalette;
     private Palette shinyPalette;
@@ -967,6 +968,14 @@ public class Species implements Comparable<Species> {
 
     public void setGrowthCurve(ExpCurve growthCurve) {
         this.growthCurve = growthCurve;
+    }
+
+    public Habitat getHabitat() {
+        return habitat;
+    }
+
+    public void setHabitat(Habitat habitat) {
+        this.habitat = habitat;
     }
 
     public Palette getNormalPalette() {

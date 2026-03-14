@@ -220,7 +220,7 @@ public class Settings {
     private boolean splitWildZoneByEncounterTypes;
     
     public enum WildPokemonTypeMod {
-        NONE, RANDOM_THEMES, KEEP_PRIMARY
+        NONE, RANDOM_THEMES, KEEP_PRIMARY, MATCH_HABITAT
     }
     private WildPokemonTypeMod wildPokemonTypeMod = WildPokemonTypeMod.NONE;
     private boolean keepWildTypeThemes;

@@ -254,6 +254,42 @@ public class SpeciesSet extends HashSet<Species> {
     }
 
     /**
+     * Groups the {@link Species} in this set by their {@link Habitat}.
+     * Species with no habitat assigned are excluded from the result.
+     * @return A Map from each Habitat to the SpeciesSet of species in that habitat.
+     */
+    public Map<Habitat, SpeciesSet> sortByHabitat() {
+        Map<Habitat, SpeciesSet> habitatMap = new EnumMap<>(Habitat.class);
+        for (Habitat h : Habitat.values()) {
+            habitatMap.put(h, new SpeciesSet());
+        }
+
+        for (Species spec : this) {
+            Habitat h = spec.getHabitat();
+            if (h != null) {
+                habitatMap.get(h).add(spec);
+            }
+        }
+
+        return habitatMap;
+    }
+
+    /**
+     * Returns a new SpeciesSet containing only the Species with the given Habitat.
+     * @param habitat The habitat to filter by.
+     * @return A new SpeciesSet of matching species.
+     */
+    public SpeciesSet filterByHabitat(Habitat habitat) {
+        SpeciesSet result = new SpeciesSet();
+        for (Species spec : this) {
+            if (spec.getHabitat() == habitat) {
+                result.add(spec);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Adds the given {@link Species} to the given map, creating a new {@link SpeciesSet} if needed.
      * @param type The type to add the {@link Species} to.
      * @param species The {@link Species} to add.

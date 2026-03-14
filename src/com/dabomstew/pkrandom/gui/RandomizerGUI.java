@@ -3586,7 +3586,7 @@ public class RandomizerGUI {
                 enableButtons(wpTRThemedAreasRadioButton, wpCatchEmAllModeCheckBox);
             } else {
                 disableButtonsWithDefault(wpTRNoneRadioButton,
-                        wpTRThemedAreasRadioButton, wpTRMatchHabitatRadioButton);
+                        wpTRThemedAreasRadioButton);
                 if(!wpSplitByEncounterTypesCheckBox.isSelected()) {
                     disableAndDeselectButtons(wpCatchEmAllModeCheckBox);
                 } else {

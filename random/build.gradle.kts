@@ -3,6 +3,10 @@
 // If info about this is online (almost certainly) it is obscured in a way I couldn't find it.
 // -- voliol 2026-03-04
 import de.undercouch.gradle.tasks.download.Download
+import java.io.ByteArrayOutputStream
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 plugins {
     id("de.undercouch.download") version "5.7.0"
@@ -41,6 +45,24 @@ tasks.jar {
 tasks.register<Delete>("clearReleaseDir") {
     group = "release setup"
     delete("build/target")
+}
+
+// This is in a way ugly, compared to the ideomatic way of having
+// Version be a Gradle config var that nestles its way into the Java.
+// However, the Version.java class wasn't going away wholesale either way,
+// and it is imho preferable to only have Versions be defined in one place
+// - especially for devs who don't touch the Gradle.
+// -- voliol 2026-03-14
+var version: String? = null
+tasks.register<JavaExec>("getVersionName") {
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "com.uprfvx.random.Version"
+
+    val versionNameStream = ByteArrayOutputStream()
+    standardOutput = versionNameStream
+    doLast {
+        version = "v" + versionNameStream.toString().replace(".", "_")
+    }
 }
 
 // We get the launcher here, so we can use the same JDK for running jlink and jdeps,
@@ -148,10 +170,17 @@ PlatformConfig.entries.forEach { cfg ->
     val zip = tasks.register<Zip>("createReleaseZip${taskName(cfg)}") {
         group = "release setup"
         dependsOn(copy)
+        dependsOn("getVersionName")
 
         from(layout.buildDirectory.dir("target/${cfg.name}"))
         destinationDirectory = file("build/dist")
-        archiveFileName = "UPR_FVX_${cfg.name}.zip" // TODO: make it include version
+        archiveFileName = "DummyName_${cfg.name}"
+        doLast {
+            val oldPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + archiveFileName.get())
+            val newName = "UPR_FVX-${version}-${cfg.name}.zip"
+            val newPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + newName)
+            Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING)
+        }
     }
     zipTasks.add(zip)
 }

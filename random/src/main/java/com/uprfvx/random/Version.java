@@ -1,8 +1,6 @@
 package com.uprfvx.random;
 
 /*----------------------------------------------------------------------------*/
-/*--  Version.java - contains information about the randomizer's versions   --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,10 +22,12 @@ package com.uprfvx.random;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a version (release) of the Randomizer.
+ * This class also contains constants for each of the extant versions.
+ */
 public class Version {
     // TODO: come up with some more clever way to deal with versions; this one still falls flat with the
     //  forking-and-then-merging that is bound to happen with an open-source project like this.
@@ -127,7 +127,7 @@ public class Version {
 
     // add versions to the bottom as you create them
 
-    public static final List<Version> ALL_VERSIONS = Collections.unmodifiableList(Arrays.asList(
+    public static final List<Version> ALL_VERSIONS = List.of(
             v1_0_1a, v1_0_2a, v1_1_0, v1_1_1, v1_1_2, v1_2_0a, v1_5_0, v1_6_0a, v1_6_1, v1_6_2, v1_6_3b, v1_7_0b,
             v1_7_1, v1_7_2,
             ZX_3_0_0, ZX_3_1_0, ZX_4_0_0, ZX_4_0_1, ZX_4_0_2, ZX_4_1_0, ZX_4_2_0, ZX_4_2_1, ZX_4_3_0, ZX_4_4_0,
@@ -136,7 +136,7 @@ public class Version {
             Vb_0_10_2, Vb_0_10_3, Vb_0_11_0, Vb_0_12_0, Vb_0_12_0a, FVX_0_1_0, FVX_0_1_1, FVX_1_0_0, FVX_1_0_1,
             FVX_1_0_2, FVX_1_0_3, FVX_1_1_0, FVX_1_1_2, FVX_1_1_3, FVX_1_2_0, FVX_1_2_1, FVX_1_2_2, FVX_1_3_0,
             FVX_1_3_1, FVX_1_3_2, FVX_1_3_3, FVX_1_3_4, FVX_1_4_0, FVX_1_4_1, FVX_1_4_2, FVX_1_4_2a, FVX_1_4_3
-    ));
+    );
 
     public static boolean isReleaseVersionNewer(String releaseVersion) {
         if (LATEST.name.contains("dev")) {
@@ -162,5 +162,12 @@ public class Version {
             // Really not a big deal if we fail at this, probably because we can't connect to Github.
             return false;
         }
+    }
+
+    // This exists so the version may be accessed in the build layer,
+    // for e.g. naming release folders accordingly.
+    // DO NOT REMOVE!
+    public static void main() {
+        System.out.println(LATEST.name);
     }
 }

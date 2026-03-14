@@ -824,6 +824,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             data[5] = (byte) moves[i].pp;
         }
         setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset") + 1, moveNames);
+
+        try {
+            writeStringsForAllLanguages(moveNames, romEntry.getIntValue("MoveNamesTextOffset"));
+            writeStringsForAllLanguages(moveNames, romEntry.getIntValue("MoveNamesTextOffset") + 1);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
         try {
             if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                 moveGarc.setFile(0, Mini.PackMini(miniArchive, "WD"));

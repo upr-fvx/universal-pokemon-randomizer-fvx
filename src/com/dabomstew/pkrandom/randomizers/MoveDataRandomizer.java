@@ -237,7 +237,7 @@ public class MoveDataRandomizer extends Randomizer {
         return switch (generation) {
             case 1 -> 10;
             case 2, 3 -> 12;
-            case 4, 5 -> 16;
+            case 4, 5 -> 15;
             default -> 24;
         };
     }

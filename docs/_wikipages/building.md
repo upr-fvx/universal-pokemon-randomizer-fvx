@@ -10,10 +10,10 @@ The Universal Pokémon Randomizer FVX is written in Java 25 using IntelliJ IDEA.
 
 ## Setting up the project
 
-The main developers of this Randomizer use IntelliJ IDEA to develop, build, and test the Randomizer. Other Java IDEs may or may not work (they will probably have difficulties building the GUI), but IDEA is the only one that works for sure. The following steps assume you're using IDEA:
+The main developers of this Randomizer use IntelliJ IDEA to develop, build, and test the Randomizer. Other Java IDEs may or may not work (they will probably not include the right GUI editor), but IDEA is the only one that works for sure. The following steps assume you're using IDEA:
 
 1. Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/). The free Community version is fine.
-2. Clone the randomizer's source code to your machine like so:
+2. Clone the randomizer's source code to your machine like so (if you are unfamiliar with Git, we recommend [the first 3 chapters of the Git book](https://git-scm.com/book/en/v2)):
 ```
 git clone https://github.com/upr-fvx/universal-pokemon-randomizer-fvx.git
 ```

@@ -127,7 +127,7 @@ public class EncounterAreaHabitatMapper {
 
         // Step 3: Check display name as fallback
         String displayName = area.getDisplayName();
-        if (displayName != null && result.isEmpty()) {
+        if (displayName != null && result.isEmpty() && locationTag == null) {
             addHabitatsFromKeywords(displayName.toUpperCase(), result);
         }
 

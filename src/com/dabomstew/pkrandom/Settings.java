@@ -507,7 +507,7 @@ public class Settings {
                 wildPokemonEvolutionMod == WildPokemonEvolutionMod.NONE,
                 wildPokemonEvolutionMod == WildPokemonEvolutionMod.BASIC_ONLY,
                 wildPokemonEvolutionMod == WildPokemonEvolutionMod.KEEP_STAGE,
-                false));
+                wildPokemonTypeMod == WildPokemonTypeMod.MATCH_HABITAT));
 
         // 18 wild pokemon (various)
         out.write(makeByteSelected(useTimeBasedEncounters, useMinimumCatchRate,
@@ -857,7 +857,8 @@ public class Settings {
         settings.setCatchEmAllEncounters(restoreState(data[16], 2));
         settings.setWildPokemonTypeMod(restoreEnum(WildPokemonTypeMod.class, data[17], 0, // NONE
                 2, // THEMED_AREAS
-                1 // KEEP_PRIMARY
+                1, // KEEP_PRIMARY
+                7  // MATCH_HABITAT
         ));
         settings.setKeepWildTypeThemes(restoreState(data[17], 3));
         settings.setWildPokemonEvolutionMod(restoreEnum(WildPokemonEvolutionMod.class, data[17],

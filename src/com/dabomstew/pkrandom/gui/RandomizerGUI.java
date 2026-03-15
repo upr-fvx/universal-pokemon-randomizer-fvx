@@ -3610,9 +3610,13 @@ public class RandomizerGUI {
                 disableAndDeselectButtons(wpERKeepEvolutionsCheckBox);
             }
 
-            // Habitat matching is mutually exclusive with type theme options
+            // Habitat matching is mutually exclusive with type theme options and 1-to-1 zone mapping modes
             if (wpTRMatchHabitatRadioButton.isSelected()) {
                 disableAndDeselectButtons(wpTRKeepThemesCheckBox);
+                disableButtonsWithDefault(wpZoneNoneRadioButton,
+                        wpZoneGameRadioButton, wpZoneNamedLocationRadioButton,
+                        wpZoneMapRadioButton, wpZoneEncounterSetRadioButton);
+                disableAndDeselectButtons(wpSplitByEncounterTypesCheckBox);
             }
         }
 

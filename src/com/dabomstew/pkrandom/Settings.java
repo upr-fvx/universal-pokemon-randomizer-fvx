@@ -191,7 +191,7 @@ public class Settings {
     private boolean trainersEvolveTheirPokemon;
     private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
     private boolean trainersLevelModified;
-    private int trainersLevelModifier = 0; // -50 ~ 50
+    private int trainersLevelModifier = 0; // -100 ~ 155
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
     private boolean allowTrainerAlternateFormes;
     private boolean swapTrainerMegaEvos;
@@ -596,7 +596,7 @@ public class Settings {
         }
 
         // 38 trainer pokemon level modifier
-        out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
+        out.write(trainersLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
@@ -724,8 +724,8 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon evolve, no premature evolutions
-        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos));
+        // 63 trainer pokemon evolve, no premature evolutions, SpinSlider activation checkboxes
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -971,8 +971,7 @@ public class Settings {
 
         settings.setCurrentMiscTweaks(codeTweaks);
 
-        settings.setTrainersLevelModified(restoreState(data[38], 7));
-        settings.setTrainersLevelModifier((data[38] & 0x7F) - 50);
+        settings.setTrainersLevelModifier(data[38] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,
@@ -1088,6 +1087,7 @@ public class Settings {
 
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
         settings.setBanPrematureEvos(restoreState(data[63], 1));
+        settings.setTrainersLevelModified(restoreState(data[63], 2));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

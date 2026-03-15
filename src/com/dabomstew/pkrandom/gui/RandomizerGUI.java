@@ -2410,7 +2410,7 @@ public class RandomizerGUI {
 				igtRandomizeIVsCheckBox, igtRandomizeItemsCheckBox);
 
         setInitialButtonState(mdRandomizeMovePowerCheckBox, mdRandomizeMoveAccuracyCheckBox, mdRandomizeMovePPCheckBox,
-				mdRandomizeMoveTypesCheckBox, mdRandomizeMoveCategoryCheckBox, mdUpdateMovesCheckBox);
+            mdRandomizeMoveTypesCheckBox, mdRandomizeMoveCategoryCheckBox, mdUpdateMovesCheckBox, mdRandomizeMoveNamesCheckBox);
 		mdUpdateComboBox.setVisible(true);
 		mdUpdateComboBox.setEnabled(false);
 		mdUpdateComboBox.setSelectedIndex(0);

@@ -39,6 +39,8 @@ import com.dabomstew.pkromio.graphics.packs.CustomPlayerGraphics;
 import com.dabomstew.pkromio.romhandlers.romentries.RomEntry;
 import com.dabomstew.pkromio.services.RestrictedSpeciesService;
 import com.dabomstew.pkromio.services.TypeService;
+import com.dabomstew.pkromio.gamedata.Habitat;
+import com.dabomstew.pkromio.gamedata.HabitatData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -251,7 +253,24 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
+    /**
+     * Loads habitat data from the config file and assigns it to each Species.
+     * Should be called after loadSpeciesStats().
+     */
+    protected void loadHabitatData() {
+        for (Species sp : getSpecies()) {
+            if (sp != null) {
+                Habitat h = HabitatData.getHabitat(sp);
+                if (h != null) {
+                    sp.setHabitat(h);
+                }
+            }
+        }
+    }
+
+    // Then at the very start of estimateEvolutionLevels(), add one line:
     protected void estimateEvolutionLevels() {
+        loadHabitatData();  // <-- ADD THIS LINE
         // Get a list of all level-up evolutions and a list of all non-level-up evolutions
         List<Evolution> levelUpEvos = new ArrayList<>();
         List<Evolution> nonLevelUpEvos = new ArrayList<>();

@@ -465,8 +465,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void saveMoves() {
+        List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
         for (int i = 1; i <= Gen5Constants.moveCount; i++) {
             byte[] data = moveNarc.files.get(i);
+            String newMoveName = moves[i].name;
+			moveNames.set(i, newMoveName);
             data[2] = Gen5Constants.moveCategoryToByte(moves[i].category);
             data[3] = (byte) moves[i].power;
             data[0] = Gen5Constants.typeToByte(moves[i].type);
@@ -480,6 +483,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             data[4] = (byte) hitratio;
             data[5] = (byte) moves[i].pp;
         }
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
 
         try {
             this.writeNARC(romEntry.getFile("MoveData"), moveNarc);

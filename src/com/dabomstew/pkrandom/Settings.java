@@ -153,6 +153,7 @@ public class Settings {
     private boolean randomizeMoveAccuracies;
     private boolean randomizeMovePPs;
     private boolean randomizeMoveTypes;
+    private boolean randomizeMoveNames;
     private boolean randomizeMoveCategory;
     private boolean updateMoves;
     private int updateMovesToGeneration;
@@ -559,7 +560,7 @@ public class Settings {
         // 27 move randomizers
         // + static music
         out.write(makeByteSelected(randomizeMovePowers, randomizeMoveAccuracies, randomizeMovePPs, randomizeMoveTypes,
-                randomizeMoveCategory, correctStaticMusic));
+                randomizeMoveCategory, correctStaticMusic, randomizeMoveNames));
 
         // 28 evolutions 1
         out.write(makeByteSelected(evolutionsMod == EvolutionsMod.UNCHANGED, evolutionsMod == EvolutionsMod.RANDOM,
@@ -941,6 +942,7 @@ public class Settings {
         settings.setRandomizeMoveTypes(restoreState(data[27], 3));
         settings.setRandomizeMoveCategory(restoreState(data[27], 4));
         settings.setCorrectStaticMusic(restoreState(data[27], 5));
+        settings.setRandomizeMoveNames(restoreState(data[27], 6));
 
         settings.setEvolutionsMod(restoreEnum(EvolutionsMod.class, data[28], 0, // UNCHANGED
                 1, // RANDOM
@@ -1802,6 +1804,14 @@ public class Settings {
 
     public void setRandomizeMoveTypes(boolean randomizeMoveTypes) {
         this.randomizeMoveTypes = randomizeMoveTypes;
+    }
+
+    public boolean isRandomizeMoveNames() {
+        return randomizeMoveNames;
+    }
+
+    public void setRandomizeMoveNames(boolean randomizeMoveNames) {
+        this.randomizeMoveNames = randomizeMoveNames;
     }
 
     public boolean isRandomizeMoveCategory() {

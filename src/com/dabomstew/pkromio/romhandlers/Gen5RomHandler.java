@@ -153,6 +153,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
         loadItems();
         loadSpeciesStats();
+        loadHabitatData();
         loadMoves();
         loadTrainers();
         loadPokemonPalettes();

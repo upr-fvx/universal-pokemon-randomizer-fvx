@@ -142,6 +142,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         loadItems();
 
         loadSpeciesStats();
+        loadHabitatData();
         loadMoves();
         loadTrainers();
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));

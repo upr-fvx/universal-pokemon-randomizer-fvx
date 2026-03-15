@@ -27,6 +27,7 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean randomTypeThemes = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.RANDOM_THEMES;
         boolean keepTypeThemes = settings.isKeepWildTypeThemes();
         boolean keepPrimaryType = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
+        boolean matchHabitat = settings.getWildPokemonTypeMod() == Settings.WildPokemonTypeMod.MATCH_HABITAT;
         boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
         boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
         boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
@@ -40,7 +41,7 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == Settings.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType,
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, matchHabitat,
                 basicPokemonOnly, sameEvoStage, keepEvolutions,
                 catchEmAll, similarStrength, balanceShakingGrass,
                 noLegendaries, allowAltFormes, banIrregularAltFormes, noPrematureEvolutions,
@@ -51,6 +52,7 @@ public class WildEncounterRandomizer extends Randomizer {
     private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                     boolean useTimeOfDay,
                                     boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
+                                    boolean matchHabitat,
                                     boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
                                     boolean catchEmAll, boolean similarStrength, boolean balanceShakingGrass,
                                     boolean noLegendaries, boolean allowAltFormes,
@@ -71,7 +73,8 @@ public class WildEncounterRandomizer extends Randomizer {
 
         // randomize inner
         InnerRandomizer ir = new InnerRandomizer(allowed, banned,
-                randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
+                randomTypeThemes, keepTypeThemes, keepPrimaryType, matchHabitat,
+                catchEmAll, similarStrength, balanceShakingGrass,
                 basicPokemonOnly, sameEvoStage, keepEvolutions, noPrematureEvolutions);
         switch (mode) {
             case NONE:
@@ -139,6 +142,7 @@ public class WildEncounterRandomizer extends Randomizer {
         private final boolean randomTypeThemes;
         private final boolean keepTypeThemes;
         private final boolean keepPrimaryType;
+        private final boolean matchHabitat;
         private final boolean needsTypes;
         private final boolean catchEmAll;
         private final boolean similarStrength;
@@ -151,9 +155,11 @@ public class WildEncounterRandomizer extends Randomizer {
         private boolean useMapping;
 
         private Map<Type, SpeciesSet> allowedByType;
+        private Map<Habitat, SpeciesSet> allowedByHabitat;
         private final SpeciesSet allowed;
         private final SpeciesSet banned;
         private Map<Type, SpeciesSet> remainingByType;
+        private Map<Habitat, SpeciesSet> remainingByHabitat;
         private SpeciesSet remaining;
 
         private Map<Species, Species> zoneMap;
@@ -164,6 +170,7 @@ public class WildEncounterRandomizer extends Randomizer {
 
         public InnerRandomizer(SpeciesSet allowed, SpeciesSet banned,
                                boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
+                               boolean matchHabitat,
                                boolean catchEmAll, boolean similarStrength, boolean balanceLowLevelEncounters,
                                boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
                                boolean noPrematureEvolutions) {
@@ -171,9 +178,14 @@ public class WildEncounterRandomizer extends Randomizer {
             if (randomTypeThemes && keepPrimaryType) {
                 throw new IllegalArgumentException("Can't use keepPrimaryType with randomTypeThemes.");
             }
+            if (matchHabitat && (randomTypeThemes || keepPrimaryType)) {
+                throw new IllegalArgumentException("Can't combine matchHabitat with type theme options.");
+            }
+
             this.randomTypeThemes = randomTypeThemes;
             this.keepTypeThemes = keepTypeThemes;
             this.keepPrimaryType = keepPrimaryType;
+            this.matchHabitat = matchHabitat;
 
             if(basicPokemonOnly && sameEvoStage) {
                 throw new IllegalArgumentException("Can't use basicPokemonOnly with sameEvoStage.");
@@ -199,6 +211,9 @@ public class WildEncounterRandomizer extends Randomizer {
             if (needsTypes) {
                 this.allowedByType = allowed.sortByType(false, typeService.getTypes());
             }
+            if (matchHabitat) {
+                this.allowedByHabitat = this.allowed.sortByHabitat();
+            }
             //any algorithm that uses mapping should use remaining, not just catch-em-all
             //easiest to just always use it
             refillRemainingSpecies();
@@ -210,6 +225,12 @@ public class WildEncounterRandomizer extends Randomizer {
                 remainingByType = new EnumMap<>(Type.class);
                 for (Type t : typeService.getTypes()) {
                     remainingByType.put(t, new SpeciesSet(allowedByType.get(t)));
+                }
+            }
+            if (matchHabitat) {
+                remainingByHabitat = new EnumMap<>(Habitat.class);
+                for (Habitat h : Habitat.values()) {
+                    remainingByHabitat.put(h, new SpeciesSet(allowedByHabitat.get(h)));
                 }
             }
         }
@@ -568,6 +589,11 @@ public class WildEncounterRandomizer extends Randomizer {
          * @return A Type chosen by one of the above-listed methods, or null if none was chosen.
          */
         private Type pickZoneType(List<EncounterArea> zone) {
+            // Habitat matching doesn't use zone-level type themes
+            if (matchHabitat) {
+                return null;
+            }
+
             Type picked = null;
             if(keepTypeThemes) {
                 //see if any types are shared among all areas in the zone
@@ -683,7 +709,7 @@ public class WildEncounterRandomizer extends Randomizer {
             if(areaInformationMap == null) {
                 allowedForReplacement = setupAllowedForReplacementNoInfoMap(current, area, zoneType, level);
             } else {
-                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, zoneType, level);
+                allowedForReplacement = setupAllowedForReplacementUsingInfoMap(current, area, zoneType, level);
             }
 
             if (allowedForReplacement.isEmpty()) {
@@ -700,6 +726,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * Assumes that the info map is populated and contains an entry for the given species; throws an exception
          * otherwise. To find replacements for an unmapped Species, use setupAllowedForReplacementNoInfoMap().
          * @param current The {@link Species} to replace.
+         * @param area The area that this encounter was found in. Used for habitat matching.
          * @param theme A {@link Type} that the allowed replacements should all be. Overrides any other type themes.
          * @param level The level of the given {@link Species}.
          * @return A {@link SpeciesSet} of valid replacements for the given {@link Species}. Warning: May be a reference
@@ -707,14 +734,43 @@ public class WildEncounterRandomizer extends Randomizer {
          * @throws NullPointerException if the info map was not set up.
          * @throws IllegalStateException if the info map did not contain a non-null value for the given {@link Species}.
          */
-        private SpeciesSet setupAllowedForReplacementUsingInfoMap(Species current, Type theme, int level) {
+        private SpeciesSet setupAllowedForReplacementUsingInfoMap(Species current, EncounterArea area, Type theme, int level) {
             SpeciesAreaInformation info = areaInformationMap.get(current);
             if(info == null) {
                 throw new IllegalStateException("Info was null for encounter's species!");
             }
 
-            Type typeForReplacement = (theme != null) ? theme : info.getTheme(keepPrimaryType);
             boolean needsInner = !info.bannedForReplacement.isEmpty() || keepEvolutions || sameEvoStage || noPrematureEvolutions;
+
+            // Habitat matching: use habitat of the area or original species to select pool
+            if (matchHabitat) {
+                SpeciesSet habitatPool = getHabitatPoolForArea(area, current);
+
+                SpeciesSet possiblyAllowed = habitatPool;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerInfoMap(info, possiblyAllowed, level);
+                }
+                if (!possiblyAllowed.isEmpty()) {
+                    return possiblyAllowed;
+                }
+                // Fallback to full remaining pool
+                possiblyAllowed = remaining;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerInfoMap(info, possiblyAllowed, level);
+                }
+                if (!possiblyAllowed.isEmpty()) {
+                    return possiblyAllowed;
+                }
+                // Final fallback to allowed
+                possiblyAllowed = allowed;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerInfoMap(info, possiblyAllowed, level);
+                }
+                return possiblyAllowed;
+            }
+
+            // Original type-based logic
+            Type typeForReplacement = (theme != null) ? theme : info.getTheme(keepPrimaryType);
             //if none of these is true, the only restriction is the type
 
             SpeciesSet possiblyAllowed;
@@ -740,7 +796,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * of the given type if there was one. <br>
          * Ignores any information present in the info map.
          * @param current The {@link Species} to replace.
-         * @param area The area that this encounter was found in. Used to determine banned Species.
+         * @param area The area that this encounter was found in. Used to determine banned Species and habitat.
          * @param theme A {@link Type} that the allowed replacements should all be. If null,
          *              returns Species of all Types.
          * @param level The level of the given {@link Species}.
@@ -748,12 +804,39 @@ public class WildEncounterRandomizer extends Randomizer {
          * to a local variable; do not modify!
          */
         private SpeciesSet setupAllowedForReplacementNoInfoMap(Species current, EncounterArea area, Type theme, int level) {
-            Type typeForReplacement = (theme != null) ? theme :
-                    (keepPrimaryType ? current.getPrimaryType(true) : null);
-
             SpeciesSet banned = area.getBannedSpecies();
             boolean needsInner = !banned.isEmpty() || keepEvolutions || sameEvoStage || noPrematureEvolutions;
-            //if none of these is true, the only restriction is the type
+
+            // Habitat matching: use area habitat to select pool
+            if (matchHabitat) {
+                SpeciesSet habitatPool = getHabitatPoolForArea(area, current);
+
+                SpeciesSet possiblyAllowed = habitatPool;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerNoMap(possiblyAllowed, current, banned, level);
+                }
+                if (!possiblyAllowed.isEmpty()) {
+                    return possiblyAllowed;
+                }
+                // Fallback to full remaining pool
+                possiblyAllowed = remaining;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerNoMap(possiblyAllowed, current, banned, level);
+                }
+                if (!possiblyAllowed.isEmpty()) {
+                    return possiblyAllowed;
+                }
+                // Final fallback to allowed
+                possiblyAllowed = allowed;
+                if (needsInner) {
+                    possiblyAllowed = setupAllowedForReplacementInnerNoMap(possiblyAllowed, current, banned, level);
+                }
+                return possiblyAllowed;
+            }
+
+            // Original type-based logic
+            Type typeForReplacement = (theme != null) ? theme :
+                    (keepPrimaryType ? current.getPrimaryType(true) : null);
 
             SpeciesSet possiblyAllowed;
             possiblyAllowed = (typeForReplacement == null) ? remaining : remainingByType.get(typeForReplacement);
@@ -771,6 +854,38 @@ public class WildEncounterRandomizer extends Randomizer {
             }
             return possiblyAllowed;
             //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
+        }
+
+        /**
+         * Builds a pool of species matching the habitat(s) of the given encounter area.
+         * If the area maps to multiple habitats, all matching species are combined.
+         * Falls back to the full remaining/allowed pool if the habitat pool is too small.
+         * @param area The encounter area to determine habitats for.
+         * @param current The current species (used as additional habitat hint if area has no clear mapping).
+         * @return A SpeciesSet of species matching the area's habitat(s).
+         */
+        private SpeciesSet getHabitatPoolForArea(EncounterArea area, Species current) {
+            Set<Habitat> areaHabitats = EncounterAreaHabitatMapper.getHabitatsForArea(area);
+
+            // Also consider the current species' own habitat as a fallback hint
+            if (areaHabitats.isEmpty() && current.getHabitat() != null) {
+                areaHabitats = EnumSet.of(current.getHabitat());
+            }
+
+            SpeciesSet pool = new SpeciesSet();
+            for (Habitat h : areaHabitats) {
+                SpeciesSet habitatRemaining = catchEmAll
+                        ? remainingByHabitat.getOrDefault(h, new SpeciesSet())
+                        : allowedByHabitat.getOrDefault(h, new SpeciesSet());
+                pool.addAll(habitatRemaining);
+            }
+
+            // If the habitat pool is too small, fall back to the full pool
+            if (pool.size() < 3) {
+                pool = new SpeciesSet(catchEmAll ? remaining : allowed);
+            }
+
+            return pool;
         }
 
         /**
@@ -876,6 +991,21 @@ public class WildEncounterRandomizer extends Randomizer {
                 remainingByType.get(replacement.getPrimaryType(false)).remove(replacement);
                 if (replacement.hasSecondaryType(false)) {
                     remainingByType.get(replacement.getSecondaryType(false)).remove(replacement);
+                }
+            }
+            if (matchHabitat) {
+                Habitat h = replacement.getHabitat();
+                if (h != null) {
+                    SpeciesSet habitatRemaining = remainingByHabitat.get(h);
+                    if (habitatRemaining != null) {
+                        habitatRemaining.remove(replacement);
+                        if (habitatRemaining.isEmpty()) {
+                            SpeciesSet habitatAllowed = allowedByHabitat.get(h);
+                            if (habitatAllowed != null) {
+                                habitatRemaining.addAll(habitatAllowed);
+                            }
+                        }
+                    }
                 }
             }
 

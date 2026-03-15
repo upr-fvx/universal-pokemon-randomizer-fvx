@@ -268,9 +268,8 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
-    // Then at the very start of estimateEvolutionLevels(), add one line:
     protected void estimateEvolutionLevels() {
-        loadHabitatData();  // <-- ADD THIS LINE
+        loadHabitatData();
         // Get a list of all level-up evolutions and a list of all non-level-up evolutions
         List<Evolution> levelUpEvos = new ArrayList<>();
         List<Evolution> nonLevelUpEvos = new ArrayList<>();

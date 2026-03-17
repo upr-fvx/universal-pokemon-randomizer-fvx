@@ -2,16 +2,11 @@ package com.uprfvx.romio.graphics.palettes;
 
 import com.uprfvx.romio.gamedata.Type;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * A {@link Color} with an associated {@link Type}.
@@ -22,13 +17,22 @@ public class TypeColor extends Color {
 	private static final String COLOR_TOKEN_REGEX = "\\(.*?\\)";
 	private static final String TOKEN_REGEX = TYPE_TOKEN_REGEX + "|" + COLOR_TOKEN_REGEX;
 
-	public static Map<Type, TypeColor[]> readTypeColorMapFromFile(String fileName) {
+    public static Map<Type, TypeColor[]> readTypeColorMapFromResource(String resourcePath) {
+        return readTypeColorMapFromStream(Objects.requireNonNull(TypeColor.class.getResourceAsStream(resourcePath)));
+    }
+
+	public static Map<Type, TypeColor[]> readTypeColorMapFromStream(InputStream is) {
 		Map<Type, TypeColor[]> map = new EnumMap<>(Type.class);
 
 		Type type = null;
 		List<TypeColor> typeColors = new ArrayList<>();
 
-		String fileString = readAllFromTextFile(fileName);
+        String fileString;
+        try {
+            fileString = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 		Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(fileString);
 		while (matcher.find()) {
 			String token = matcher.group();
@@ -57,16 +61,6 @@ public class TypeColor extends Color {
 		return map;
 	}
 
-	private static String readAllFromTextFile(String fileName) {
-		String fileString;
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-			fileString = br.lines().collect(Collectors.joining());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return fileString;
-	}
-
 	public static void putIntsAsTypeColors(Map<Type, TypeColor[]> map, Type type, int[] ints) {
 		TypeColor[] typeColors = new TypeColor[ints.length];
 		for (int i = 0; i < typeColors.length; i++) {
@@ -75,7 +69,7 @@ public class TypeColor extends Color {
 		map.put(type, typeColors);
 	}
 
-	private Type type;
+	private final Type type;
 
 	public TypeColor(int hex, Type type) {
 		super(hex);

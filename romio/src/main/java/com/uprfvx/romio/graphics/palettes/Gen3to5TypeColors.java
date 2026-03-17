@@ -32,25 +32,27 @@ import java.util.Random;
  */
 public class Gen3to5TypeColors {
 
-	private static final Map<Type, TypeColor[]> TYPE_COLORS = TypeColor
-			.readTypeColorMapFromFile("data/Gen3to5TypeColors.txt");
+	private static final Map<Type, TypeColor[]> TYPE_COLORS =
+            TypeColor.readTypeColorMapFromResource("/data/Gen3to5TypeColors.txt");
 	private static final Color DEFAULT_COLOR = new Color(0xC0C0C0);
 
 	public static TypeColor getRandomTypeColor(Type type, Random random) {
 		TypeColor[] typeColors = TYPE_COLORS.get(type);
-		TypeColor color = typeColors == null ? new TypeColor(DEFAULT_COLOR, type)
-				: typeColors[random.nextInt(typeColors.length)];
-		return color;
+		return typeColors == null ? new TypeColor(DEFAULT_COLOR, type)
+                : typeColors[random.nextInt(typeColors.length)];
 	}
 	
-	private static RandomColorSelector randomColorSelector = new RandomColorSelector(new Random(),
-	RandomColorSelector.Mode.HSV, hsv -> {
-		double w = hsv[1];
-		if (20 <= hsv[0] && hsv[0] <= 70) {
-			w *= 3;
-		}
-		return w;
-	}, new double[] { 0, 0, 0.6 }, new double[] { 360, 1, 1 });
+	private static final RandomColorSelector randomColorSelector = new RandomColorSelector(
+            new Random(),
+            RandomColorSelector.Mode.HSV, hsv -> {
+                double w = hsv[1];
+                if (20 <= hsv[0] && hsv[0] <= 70) {
+                    w *= 3;
+                }
+                return w;
+	        },
+            new double[] { 0, 0, 0.6 }, new double[] { 360, 1, 1 }
+    );
 
 	// TODO: something about too similar colors being chosen for the same mon?
 	public static TypeColor getRandomTypeColor(Random random) {

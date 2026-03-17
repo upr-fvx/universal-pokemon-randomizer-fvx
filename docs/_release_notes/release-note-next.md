@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 @bergmaen for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue]@Shiigu for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -70,5 +70,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
   'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- Fixed Special Attack not getting randomized when "Randomize Added Stats on Evolution" is used (Issue #178)

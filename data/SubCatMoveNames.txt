@@ -11,10 +11,10 @@ context-aware naming based on a move's mechanical properties.
 [STATUS_TRAP] (Snare) (Bind) (Trap) (Tether) (Cage) (Entrap) (Lock) (Clamp) (Latch) (Ensnare) (Grip) (Web) (Coil) (Noose) (Pin) (Anchor)
 
 # Per-status-type infliction words (POISON and TOXIC_POISON share a list)
-[INFLICT_POISON] (Poison) (Toxin) (Venom) (Blight) (Plague) (Infect) (Taint) (Fester) (Sicken) (Envenom) (Corrupt) (Defile) (Pox) (Rot) (Wilt)
+[INFLICT_POISON] (Poison) (Toxin) (Venom) (Blight) (Plague) (Infect) (Taint) (Sicken) (Corrupt) (Defile) (Pox) (Rot) (Wilt)
 [INFLICT_BURN] (Burn) (Scald) (Sear) (Brand) (Char) (Singe) (Ignite) (Scorch) (Kindle) (Blister) (Torch) (Cauterize) (Smolder) (Flare) (Heat)
-[INFLICT_FREEZE] (Freeze) (Chill) (Frost) (Ice) (Glaciate) (Numb) (Frostbite) (Hail) (Shiver) (Encase) (Solidify) (Petrify) (Flash) (Glaze) (Rime)
-[INFLICT_PARALYZE] (Stun) (Numb) (Paralyze) (Shock) (Jolt) (Disable) (Freeze) (Lock) (Seize) (Halt) (Static) (Spark) (Zap) (Tingle) (Daze)
+[INFLICT_FREEZE] (Freeze) (Chill) (Frost) (Ice) (Glaciate) (Hail) (Shiver) (Encase) (Solidify) (Petrify) (Rime)
+[INFLICT_PARALYZE] (Stun) (Paralyze) (Shock) (Jolt) (Disable) (Lock) (Seize) (Halt) (Static) (Spark) (Zap) (Tingle)
 [INFLICT_SLEEP] (Lullaby) (Drowse) (Hypnosis) (Slumber) (Snooze) (Doze) (Dream) (Drift) (Nap) (Trance) (Haze) (Daze) (Yawn) (Sway) (Soothe)
 [INFLICT_CONFUSION] (Muddle) (Daze) (Dizzy) (Confuse) (Befuddle) (Puzzle) (Bewilder) (Jumble) (Fluster) (Rattle) (Baffle) (Stagger) (Spin) (Tangle) (Stupor)
 

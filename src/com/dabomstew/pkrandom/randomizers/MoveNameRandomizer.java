@@ -32,6 +32,9 @@ public class MoveNameRandomizer extends Randomizer {
 
     private static final int MAX_ATTEMPTS = 50;
 
+    private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
+    private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
+
     private static final Map<Type, String[]> TYPE_MOVE_NAMES =
         MoveNameRandomizer.readTypeNameMapFromFile("data/TypeMoveNames.txt");
     private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES =
@@ -40,9 +43,6 @@ public class MoveNameRandomizer extends Randomizer {
         MoveNameRandomizer.readNameListFile("data/SubCatMoveNames.txt");
 
     private final Set<String> usedMoveNames = new HashSet<>();
-
-    private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
-    private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
 
     /**
      * Reads a name-list file and returns a map of key -> word array.
@@ -135,12 +135,32 @@ public class MoveNameRandomizer extends Randomizer {
         usedMoveNames.clear();
         List<Move> moves = romHandler.getMoves();
         int maxNameLength = romHandler.getMaxMoveNameLength();
+        boolean useUpperCase = detectUpperCaseNames(moves);
         for (Move mv : moves) {
             if (mv != null && mv.internalId != MoveIDs.struggle) {
-                mv.name = getRandomMoveName(mv, mv.type, maxNameLength);
+                String name = getRandomMoveName(mv, mv.type, maxNameLength);
+                mv.name = useUpperCase ? name.toUpperCase() : name;
             }
         }
         changesMade = true;
+    }
+
+    /**
+     * Detects whether the ROM stores move names in ALL CAPS by sampling
+     * existing move names. If a majority of alphabetic characters are
+     * uppercase, we assume the ROM uses ALL CAPS.
+     */
+    private static boolean detectUpperCaseNames(List<Move> moves) {
+        int upper = 0, lower = 0;
+        for (Move mv : moves) {
+            if (mv == null || mv.name == null) continue;
+            for (char c : mv.name.toCharArray()) {
+                if (Character.isUpperCase(c)) upper++;
+                else if (Character.isLowerCase(c)) lower++;
+            }
+        }
+        // If there are essentially no lowercase letters, it's ALL CAPS
+        return lower == 0 || (upper > 0 && lower * 10 < upper);
     }
 
     // Move all the name generation logic here:

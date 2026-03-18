@@ -750,6 +750,18 @@ public interface RomHandler {
 
     List<BufferedImage> getAllPokemonImages();
 
+    /**
+     * Returns the maximum length of a move name in this ROM.
+     * Different games in the same generation may have different limits.
+     */
+    int getMaxMoveNameLength();
+
+    /**
+     * Returns whether or not the ROM is English
+     * Used for move name randomization, likely becomes obsolete when we introduce multilingual support
+     */
+    boolean isEnglish();
+
     // ======
     // Types
     // ======

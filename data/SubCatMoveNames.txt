@@ -7,7 +7,7 @@ context-aware naming based on a move's mechanical properties.
 # Status subcategory words
 [STATUS_HEAL] (Heal) (Mend) (Cure) (Restore) (Soothe) (Revive) (Purify) (Cleanse) (Remedy) (Salve) (Relief) (Balm) (Aid) (Nurture) (Renew) (Rest) (Wish) (Grace) (Calm) (Ease)
 [STATUS_BUFF] (Boost) (Empower) (Fortify) (Bolster) (Rally) (Harden) (Sharpen) (Focus) (Charge) (Buff) (Amplify) (Enhance) (Steel) (Brace) (Prime) (Hone)
-[STATUS_DEBUFF] (Weaken) (Sap) (Drain) (Hinder) (Impair) (Slow) (Dull) (Erode) (Dampen) (Reduce) (Cripple) (Wither) (Falter) (Lessen) (Hamper) (Wane)
+[STATUS_DEBUFF] (Weaken) (Sap) (Drain) (Hinder) (Impair) (Slow) (Dull) (Erode) (Dampen) (Reduce) (Wither) (Falter) (Lessen) (Hamper) (Wane)
 [STATUS_TRAP] (Snare) (Bind) (Trap) (Tether) (Cage) (Entrap) (Lock) (Clamp) (Latch) (Ensnare) (Grip) (Web) (Coil) (Noose) (Pin) (Anchor)
 
 # Per-status-type infliction words (POISON and TOXIC_POISON share a list)

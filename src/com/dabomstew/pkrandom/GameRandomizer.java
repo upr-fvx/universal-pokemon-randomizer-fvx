@@ -107,6 +107,7 @@ public class GameRandomizer {
     private final StaticPokemonRandomizer staticPokeRandomizer;
     private final TradeRandomizer tradeRandomizer;
     private final MoveDataRandomizer moveDataRandomizer;
+    private final MoveNameRandomizer moveNameRandomizer;
     private final SpeciesMovesetRandomizer speciesMovesetRandomizer;
     private final TrainerPokemonRandomizer trainerPokeRandomizer;
     private final TrainerMovesetRandomizer trainerMovesetRandomizer;
@@ -142,6 +143,7 @@ public class GameRandomizer {
         this.staticPokeRandomizer = new StaticPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tradeRandomizer = new TradeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.moveDataRandomizer = new MoveDataRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.moveNameRandomizer = new MoveNameRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.speciesMovesetRandomizer = new SpeciesMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerPokeRandomizer = new TrainerPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -172,7 +174,7 @@ public class GameRandomizer {
         this.logger = new RandomizationLogger(randomSource, settings, romHandler, bundle,
                 speciesBSUpdater, moveUpdater, typeEffUpdater,
                 introPokeRandomizer, speciesBSRandomizer, speciesTypeRandomizer, speciesAbilityRandomizer,
-                evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer,
+                evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer, moveNameRandomizer,
                 speciesMovesetRandomizer, trainerPokeRandomizer, trainerMovesetRandomizer, trainerNameRandomizer,
                 wildEncounterRandomizer, encHeldItemRandomizer, tmtMoveRandomizer, tmhmtCompRandomizer, itemRandomizer,
                 typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
@@ -354,7 +356,7 @@ public class GameRandomizer {
         }
 
         if (settings.isRandomizeMoveNames()) {
-            moveDataRandomizer.randomizeMoveNames();
+            moveNameRandomizer.randomizeMoveNames();
         }
 
         if (settings.isRandomizeMoveCategory() && romHandler.hasPhysicalSpecialSplit()) {

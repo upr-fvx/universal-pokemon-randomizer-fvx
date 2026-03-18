@@ -477,4 +477,9 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 	// - voliol 2022-08-07
 	public abstract String getGARCPath(String fileName);
 
+	@Override
+	public boolean isEnglish() {
+		// 3DS games are multi-language, but they all include English so we default to true
+		return true;
+	}
 }

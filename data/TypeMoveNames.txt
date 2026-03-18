@@ -12,7 +12,7 @@ If you don't know what that means, don't worry about it.
 [BUG] (Buzz) (Sting) (Web) (Slash) (Snare) (Infest) (Pounce) (Scurry) (Swarm) (Chomp) (Tangle) (Flutter) (Pollen) (Antagonize) (Beetle) (Attack) (Roach) (Nibble) (Flutter) (Sting) (Crawl) (Swarm) (Rumble) (Bug)
 [POISON] (Venom) (Toxin) (Sludge) (Acid) (Noxious) (Bane) (Stench) (Mist) (Spill) (Venomous) (Fume) (Pollen) (Cloud) (Sewage) (Miasma) (Acidic) (Corrosive) (Toxicity) (Pox) (Malady) (Blight) (Curdle) (Slime)
 [ROCK] (Rock) (Boulder) (Shard) (Marble) (Stomp) (Rockslide) (Pile) (Collapse) (Barricade) (Rocky) (Stone) (Slab) (Wall) (Crumble) (Grunge) (Grind) (Bedrock) (Pebble) (Dust) (Shatter) (Quarried) (Gravel)
-[GROUND] (Quake) (Mud) (Tremor) (Rumble) (Sinkhole) (Dig) (Slide) (Quagmire) (Erode) (Sift) (Pitfall) (Shift) (Earth) (Subside) (Crumble) (Silt) (Soil) (Plow) (Grit) (Sift) (Shatter) (Tilt) (Dirty) (Earth)
+[GROUND] (Quake) (Mud) (Tremor) (Rumble) (Sinkhole) (Dig) (Slide) (Quagmire) (Sift) (Pitfall) (Shift) (Earth) (Subside) (Crumble) (Silt) (Soil) (Plow) (Grit) (Sift) (Shatter) (Tilt) (Dirty)
 [DARK] (Shadow) (Dark) (Sneak) (Veil) (Cloak) (Gloom) (Scare) (Haunt) (Grin) (Muffle) (Dread) (Darkness) (Night) (Twilight) (Murk) (Shade) (Phantasm) (Dusk) (Abyss) (Veil) (Phantom) (Stalker) (Midnight) (Lurk)
 [STEEL] (Blade) (Spike) (Iron) (Clang) (Steel) (Forge) (Copper) (Hammer) (Copper) (Anvil) (Alloy) (Metallic) (Rivet) (Metal) (Knock) (Shatter) (Chisel) (Edge) (Cast) (Steel) (Forge) (Smelt) (Rivet) (Wrench)
 [ICE] (Frost) (Chill) (Shiver) (Freeze) (Glacier) (Icy) (Slip) (Snow) (Shatter) (Blizzard) (Hail) (Frigid) (Cool) (Sleet) (Icebound) (Crystal) (Glaciate) (Frostbite) (Tundra) (Glimmer) (Frozen)

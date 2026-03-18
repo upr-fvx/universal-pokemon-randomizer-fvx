@@ -71,8 +71,6 @@ public class Move implements Comparable<Move> {
     }
 
     public String name;
-    public String newName;
-    public String oldName;
     public int number;
     public int internalId;
     public int power;

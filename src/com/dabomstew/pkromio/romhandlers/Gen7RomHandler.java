@@ -3718,4 +3718,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     protected Gen7RomEntry getRomEntry() {
         return romEntry;
     }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 24;
+    };
 }

@@ -31,6 +31,7 @@ public class RandomizationLogger {
     private final List<StaticEncounter> originalStatics;
     private final List<TotemPokemon> originalTotems;
     private final List<InGameTrade> originalTrades;
+    private final List<String> originalMoveNames;
 
     // this huge list of shared attributes with GameRandomizer could maybe be shared in a better way?
     private final SpeciesBaseStatUpdater speciesBSUpdater;
@@ -46,6 +47,7 @@ public class RandomizationLogger {
     private final StaticPokemonRandomizer staticPokeRandomizer;
     private final TradeRandomizer tradeRandomizer;
     private final MoveDataRandomizer moveDataRandomizer;
+    private final MoveNameRandomizer moveNameRandomizer;
     private final SpeciesMovesetRandomizer speciesMovesetRandomizer;
     private final TrainerPokemonRandomizer trainerPokeRandomizer;
     private final TrainerMovesetRandomizer trainerMovesetRandomizer;
@@ -67,7 +69,7 @@ public class RandomizationLogger {
                                SpeciesBaseStatRandomizer speciesBSRandomizer, SpeciesTypeRandomizer speciesTypeRandomizer,
                                SpeciesAbilityRandomizer speciesAbilityRandomizer, EvolutionRandomizer evoRandomizer,
                                StarterRandomizer starterRandomizer, StaticPokemonRandomizer staticPokeRandomizer,
-                               TradeRandomizer tradeRandomizer, MoveDataRandomizer moveDataRandomizer,
+                               TradeRandomizer tradeRandomizer, MoveDataRandomizer moveDataRandomizer, MoveNameRandomizer moveNameRandomizer,
                                SpeciesMovesetRandomizer speciesMovesetRandomizer, TrainerPokemonRandomizer trainerPokeRandomizer,
                                TrainerMovesetRandomizer trainerMovesetRandomizer, TrainerNameRandomizer trainerNameRandomizer,
                                WildEncounterRandomizer wildEncounterRandomizer, EncounterHeldItemRandomizer encHeldItemRandomizer,
@@ -84,6 +86,7 @@ public class RandomizationLogger {
         this.originalStatics = romHandler.canChangeStaticPokemon() ? romHandler.getStaticPokemon() : null;
         this.originalTotems = romHandler.hasTotemPokemon() ? romHandler.getTotemPokemon() : null;
         this.originalTrades = romHandler.getInGameTrades();
+        this.originalMoveNames = getOriginalMoveNames(romHandler.getMoves());
 
         this.speciesBSUpdater = speciesBSUpdater;
         this.moveUpdater = moveUpdater;
@@ -97,6 +100,7 @@ public class RandomizationLogger {
         this.staticPokeRandomizer = staticPokeRandomizer;
         this.tradeRandomizer = tradeRandomizer;
         this.moveDataRandomizer = moveDataRandomizer;
+        this.moveNameRandomizer = moveNameRandomizer;
         this.speciesMovesetRandomizer = speciesMovesetRandomizer;
         this.trainerPokeRandomizer = trainerPokeRandomizer;
         this.trainerMovesetRandomizer = trainerMovesetRandomizer;
@@ -261,7 +265,7 @@ public class RandomizationLogger {
                 romHandler.canChangeStaticPokemon());
         logOverviewLine(getBS("GUI.igtPanel.title"), tradeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.mdPanel.title"),
-                moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated(), true);
+                moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated() || moveNameRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(), true);
@@ -358,7 +362,7 @@ public class RandomizationLogger {
         if (shouldLogMoveUpdates())
             logMoveUpdates();
         if (shouldLogMoveData())
-            logMoveData();
+            logMoveData(originalMoveNames);
         if (shouldLogMovesets())
             logMovesets();
 
@@ -707,15 +711,24 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMoveData() {
-        return (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated());
+        return (moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated() || moveNameRandomizer.isChangesMade());
     }
 
-    private void logMoveData() {
+    private void logMoveData(List<String> originalMoveNames) {
         printSectionTitle("md");
-
-        int columns = 6;
+    
+        boolean namesChanged = moveNameRandomizer.isChangesMade();
+    
         List<String> head = new ArrayList<>(Arrays.asList(
-                getBS("Log.md.num"), getBS("Log.md.name"), getBS("Log.md.type"),
+                getBS("Log.md.num"), getBS("Log.md.name")
+        ));
+        int columns = 6;
+        if (namesChanged) {
+            head.add(1, getBS("Log.md.oldName"));
+            columns++;
+        }
+        head.addAll(Arrays.asList(
+                getBS("Log.md.type"),
                 getBS("Log.md.power"), getBS("Log.md.accuracy"), getBS("Log.md.pp")
         ));
         if (romHandler.hasPhysicalSpecialSplit()) {
@@ -724,25 +737,28 @@ public class RandomizationLogger {
         }
         TextTable table = new TextTable(columns);
         table.addRow(head);
-
-        table.setColumnAlignments(TextTable.Alignment.RIGHT, 3, 4, 5); // power, acc., pp
-
-        for (Move mv : romHandler.getMoves()) {
-            if (mv == null) {
-                continue;
+    
+        for (int i = 0; i < romHandler.getMoves().size(); i++) {
+            Move mv = romHandler.getMoves().get(i);
+            if (mv == null) continue;
+            List<String> row = new ArrayList<>();
+            row.add(mv.internalId + "");
+            if (namesChanged) {
+                String oldName = originalMoveNames.get(i);
+                row.add(oldName != null ? oldName : "???");
             }
-            List<String> row = new ArrayList<>(Arrays.asList(
-                    mv.internalId + "", mv.name, (mv.type == null) ? "???" : mv.type.toString(),
-                    mv.power + "", (int) mv.hitratio + "%", mv.pp + ""
-            ));
+            row.add(mv.name);
+            row.add((mv.type == null) ? "???" : mv.type.toString());
+            row.add(mv.power + "");
+            row.add((int) mv.hitratio + "%");
+            row.add(mv.pp + "");
             if (romHandler.hasPhysicalSpecialSplit()) {
                 row.add(mv.category.toString());
             }
             table.addRow(row);
         }
-
+    
         log.print(table);
-
         printSectionSeparator();
     }
 
@@ -1351,6 +1367,13 @@ public class RandomizationLogger {
         return trainerNames;
     }
 
+    private static List<String> getOriginalMoveNames(List<Move> moves) {
+        List<String> names = new ArrayList<>();
+        for (Move mv : moves) {
+            names.add(mv != null ? mv.name : null);
+        }
+        return names;
+    }
 }
 
 

@@ -4670,4 +4670,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public Gen3RomEntry getRomEntry() {
         return romEntry;
     }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
+    };
+
+    @Override
+    public boolean isEnglish() {
+        String romCode = getRomEntry().getRomCode();
+        return romCode.length() >= 4 && romCode.charAt(3) == 'E';
+    }
 }

@@ -6101,4 +6101,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return romEntry;
 	}
 
+    @Override
+    public int getMaxMoveNameLength() {
+        return 15;
+    };
+
+	@Override
+	public boolean isEnglish() {
+		String romCode = getRomEntry().getRomCode();
+		return romCode.length() >= 4 && romCode.charAt(3) == 'E';
+	}
 }

@@ -20,10 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Randomizer for move names. This is a purely cosmetic feature — it does not
- * affect gameplay — and should use the cosmetic {@link Random} object so that
- * it does not disturb the main random sequence for players who share a seed
- * but differ in cosmetic settings or data files.
+ * Randomizer for move names. This is a purely cosmetic feature, it does not affect gameplay.
  * <p>
  * Compare with {@link TrainerNameRandomizer} and the {@link PaletteRandomizer}
  * subclasses, which follow the same pattern.
@@ -170,9 +167,6 @@ public class MoveNameRandomizer extends Randomizer {
     // - getExtraList(String)
     // - healMoves set
     // - STATUS_TYPE_TO_LIST_KEY map
-    //
-    // The key difference: usedMoveNames is now an instance field (not static),
-    // and the random object comes from the constructor (the cosmetic Random).
 
     private String getRandomMoveName(Move mv, Type type, int maxMoveNameLength) {
         String[] typeNames = TYPE_MOVE_NAMES.get(type);
@@ -229,7 +223,6 @@ public class MoveNameRandomizer extends Randomizer {
             if (words != null && words.length > 0) return words;
         }
  
-        // Drain moves: damaging moves that heal by dealing damage (Giga Drain, Drain Punch, etc.)
         if (mv.absorbPercent > 0 && mv.power > 0) {
             String[] words = getExtraList("DRAIN");
             if (words != null && words.length > 0) return words;
@@ -337,7 +330,6 @@ public class MoveNameRandomizer extends Randomizer {
             StatusType.SLEEP, "INFLICT_SLEEP",
             StatusType.CONFUSION, "INFLICT_CONFUSION"
     );
-
 
     private static String[] getExtraList(String key) {
         if (EXTRA_NAME_LISTS == null) return null;

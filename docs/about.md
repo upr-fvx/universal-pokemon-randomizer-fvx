@@ -10,7 +10,9 @@ The **Universal Pokémon Randomizer** (**UPR**) is a randomizer for Pokémon gam
 
 All versions of the UPR can randomize core series games from Generation 1-5, from Red/Green to Black 2/White 2. All versions based on UPR ZX, including the FVX branch linked to by this site, also support randomizing Generation 6 and Generation 7 games.
 
-The UPR does not support ROM hacks, but it does support all official localizations of the games it supports (except Korean Gold/Silver). ROM hacks *may* still work with the UPR in practise, especially if they are old or only make minor changes to the game. However, this is done at own risk.
+The UPR does not support ROM hacks*, but it does support all official localizations of the games it supports (except Korean Gold/Silver). ROM hacks *may* still work with the UPR in practise, especially if they are old or only make minor changes to the game. However, this is done at own risk.
+
+*With the exception for Crystal SpeedChoice v8.
 
 ### What can the UPR randomize in the game?
 

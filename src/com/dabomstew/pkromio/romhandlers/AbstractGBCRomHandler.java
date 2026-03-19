@@ -528,6 +528,6 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
     @Override
     public boolean isEnglish() {
         String name = getRomEntry().getName();
-        return name.contains("(U)");
+        return name.contains("(U)") || name.contains("SpeedChoice");
     }
 }

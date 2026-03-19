@@ -752,7 +752,6 @@ public interface RomHandler {
 
     /**
      * Returns the maximum length of a move name in this ROM.
-     * Different games in the same generation may have different limits.
      */
     int getMaxMoveNameLength();
 

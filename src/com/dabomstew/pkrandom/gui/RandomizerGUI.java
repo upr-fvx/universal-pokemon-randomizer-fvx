@@ -2820,8 +2820,9 @@ public class RandomizerGUI {
             mdRandomizeMoveAccuracyCheckBox.setEnabled(true);
             mdRandomizeMovePPCheckBox.setEnabled(true);
             mdRandomizeMoveTypesCheckBox.setEnabled(true);
-            mdRandomizeMoveNamesCheckBox.setEnabled(pokemonGeneration >= 3 && romHandler.isEnglish());
-            mdRandomizeMoveNamesCheckBox.setVisible(pokemonGeneration >= 3);
+            boolean canRandomizeMoveNames = pokemonGeneration >= 3 && romHandler.isEnglish();
+            mdRandomizeMoveNamesCheckBox.setEnabled(canRandomizeMoveNames);
+            mdRandomizeMoveNamesCheckBox.setVisible(canRandomizeMoveNames);
             mdRandomizeMoveCategoryCheckBox.setEnabled(romHandler.hasPhysicalSpecialSplit());
             mdRandomizeMoveCategoryCheckBox.setVisible(romHandler.hasPhysicalSpecialSplit());
             mdUpdateMovesCheckBox.setEnabled(pokemonGeneration < 8);

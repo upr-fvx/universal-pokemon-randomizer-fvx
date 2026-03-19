@@ -143,7 +143,7 @@ public class GameRandomizer {
         this.staticPokeRandomizer = new StaticPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tradeRandomizer = new TradeRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.moveDataRandomizer = new MoveDataRandomizer(romHandler, settings, randomSource.getNonCosmetic());
-        this.moveNameRandomizer = new MoveNameRandomizer(romHandler, settings, randomSource.getNonCosmetic());
+        this.moveNameRandomizer = new MoveNameRandomizer(romHandler, settings, randomSource.getCosmetic());
         this.speciesMovesetRandomizer = new SpeciesMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerPokeRandomizer = new TrainerPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());

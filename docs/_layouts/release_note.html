@@ -129,9 +129,24 @@ Next:
 
 <hr>
 
+{% comment %}
+==================
+# Download links #
+==================
+{% endcomment %}
 <p>
 {%- if page.download -%}
-	<a href="{{ page.download }}">Download</a>
+    {%- assign downloads = page.download | split: ", " -%}
+    {%- if downloads.size == 1 -%}
+        <a href="{{ downloads[0] }}">Download</a>
+    {%- else -%}
+        <b>Downloads:</b><br>
+        {%- for download in downloads -%}
+            {%- assign parts = download | split: "/" -%}
+            {%- assign name = parts[-1] -%}
+            <a href="{{ download }}">{{ name }}<br></a>
+        {%- endfor -%}
+    {%- endif -%}
 {%- else -%}
 	No download link here. Find this version elsewhere.
 {%- endif -%}

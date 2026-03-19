@@ -1,13 +1,15 @@
-<!-- 
-Takes the path to a release note, and sets the variable "ret"
-to the full name of the version that release note belongs to.
+{% comment %}
 
-Input: include.url
-Output: ret
+    Takes the path to a release note, and sets the variable "ret"
+    to the full name of the version that release note belongs to.
 
-E.g. "release_notes/v1_2_1.html" -> ret:"FVX v1.2.1", 
-     "release_notes/old/zx/v4_6_0.html" -> "ZX 4.6.0"
--->
+    Input: include.url
+    Output: ret
+
+    E.g. "release_notes/v1_2_1.html" -> ret:"FVX v1.2.1",
+         "release_notes/old/zx/v4_6_0.html" -> "ZX 4.6.0"
+
+{% endcomment %}
 {%- for rn in site.release_notes -%}
 	{%- if rn.url == include.url -%}
 		

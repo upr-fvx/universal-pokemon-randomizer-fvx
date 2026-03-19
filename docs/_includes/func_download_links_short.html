@@ -1,14 +1,17 @@
-<!--
-Takes the path to a release note, and sets the variable "ret"
-to a list of links for that release's downloads, using the
-short names defined in [release note].download_short_names.
+{% comment %}
 
-Input: include.url
-Output: ret
+    Takes the path to a release note, and sets the variable "ret"
+    to a list of links for that release's downloads, using the
+    short names defined in [release note].download_short_names.
 
-E.g. "release_notes/v1_2_2.html" -> "<a href="https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/v1.2.2/UPR_FVX_v1.2.2.zip">Download</a>",
-     "release_notes/v1_3_0.html" -> "<a href="[...]/UPR_FVX_v1.3.0.zip">v1.3.0</a>, <a href="[...]/UniversalPokemonShopEditor.zip.zip">UPSE</a>"
--->
+    Input: include.url
+    Output: ret
+
+    E.g. "release_notes/v1_2_2.html" -> "<a href="https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/v1.2.2/UPR_FVX_v1.2.2.zip">Download</a>",
+         "release_notes/v1_3_0.html" -> "<a href="[...]/UPR_FVX_v1.3.0.zip">v1.3.0</a>, <a href="[...]/UniversalPokemonShopEditor.zip.zip">UPSE</a>"
+
+{% endcomment %}
+{%- assign found = false -%}
 {%- for rn in site.release_notes -%}
     {%- if rn.url == include.url -%}
 
@@ -38,6 +41,8 @@ E.g. "release_notes/v1_2_2.html" -> "<a href="https://github.com/upr-fvx/univers
             {% capture ret %}---{% endcapture %}
         {%- endif -%}
 
+        {%- assign found = true -%}
         {%- break -%}
     {%- endif -%}
 {%- endfor -%}
+{% unless found %}!!! could not find release note corresponding to: {{include.url}} !!!{% endunless %}

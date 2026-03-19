@@ -16,7 +16,8 @@ These release notes / downloads are mirrored from [UPR FVX's GitHub page](https:
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
-		<td><a href="{{ rn.download }}">Download</a></td>
+        {% include func_download_links_short.html url=rn.url %}
+		<td>{{ ret }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -32,7 +33,8 @@ This release note / download is mirrored from [Closer-to-Vanilla's GitHub page](
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
-		<td><a href="{{ rn.download }}">Download</a></td>
+        {% include func_download_links_short.html url=rn.url %}
+		<td>{{ ret }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -48,7 +50,8 @@ These release notes / downloads are mirrored from [the V branch's GitHub page](h
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
-		<td><a href="{{ rn.download }}">Download</a></td>
+        {% include func_download_links_short.html url=rn.url %}
+		<td>{{ ret }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -64,7 +67,8 @@ These release notes / downloads are mirrored from [UPR ZX's GitHub page](https:/
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
-		<td><a href="{{ rn.download }}">Download</a></td>
+        {% include func_download_links_short.html url=rn.url %}
+		<td>{{ ret }}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -80,7 +84,8 @@ These release notes / downloads are mirrored from [an archived version of Daboms
 	<tr>
 		<td><a href="{{ site.baseurl }}{{ rn.url }}">{{ rn.name }}</a></td>
 		<td>{{ rn.date | date: '%F' }}</td>
-		<td>{% if rn.download %} <a href="{{ rn.download }}">Download </a>{% else %} --- {% endif %}</td>
+        {% include func_download_links_short.html url=rn.url %}
+		<td>{{ ret }}</td>
 	</tr>
 {% endfor %}
 </table>

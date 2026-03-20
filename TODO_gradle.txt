@@ -1,4 +1,1 @@
 TODO before the gradle branch can be merged:
-
-- make launch task automatically detect platform/build+launch correct build
-    - confirm it works

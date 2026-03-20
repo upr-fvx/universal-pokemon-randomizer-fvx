@@ -220,7 +220,12 @@ tasks.register<Exec>("launch") {
     dependsOn("moveIntoReleaseDir${taskName(platform)}")
 
     workingDir(layout.buildDirectory.dir("target/${platform.name}"))
-    commandLine("bash", "./launcher.${platform.launcherExtension}")
+	if (platform == PlatformConfig.Windows) {
+		commandLine("cmd", "/c", "launcher.${platform.launcherExtension}")
+	} else {
+		// Not tested on Mac due to a lack of devices to test on.
+		commandLine("bash", "./launcher.${platform.launcherExtension}")
+	}
 }
 
 tasks.register<Exec>("relaunch") {
@@ -228,7 +233,13 @@ tasks.register<Exec>("relaunch") {
     val platform: PlatformConfig = detectPlatform()
 
     workingDir(layout.buildDirectory.dir("target/${platform.name}"))
-    commandLine("bash", "./launcher.${platform.launcherExtension}")
+	
+    if (platform == PlatformConfig.Windows) {
+		commandLine("cmd", "/c", "launcher.${platform.launcherExtension}")
+	} else {
+		// Not tested on Mac due to a lack of devices to test on.
+		commandLine("bash", "./launcher.${platform.launcherExtension}")
+	}
 }
 
 tasks.named<Test>("test") {

@@ -8,7 +8,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 @bergmaen for your code contributions,
-[Every person who submitted a solved issue]@Shiigu for reporting Issues,
+[Every person who submitted a solved issue]@MClarke93 and @Shiigu for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -47,7 +47,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   other Pokemon of the trainer. However, if other rules restrict the set of
   available Pokemon too much, duplicates are possible and weaker or stronger
   Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
-  selected. (Issue #162)
+  selected. (Issue #5, #162)
 - (Gen 1-7) The first rival and/or friend battles no longer have their
   Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
   Level Modifier:'. (Pull request #164)

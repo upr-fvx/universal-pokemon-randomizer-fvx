@@ -483,7 +483,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             data[4] = (byte) hitratio;
             data[5] = (byte) moves[i].pp;
         }
+        // Update pre-composed battle messages with new move names
+        List<String> battleMsgs = getStrings(false, romEntry.getIntValue("BattleMoveNamesTextOffset"));
+        List<String> oldMoveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
+        for (int i = 1; i <= Gen5Constants.moveCount; i++) {
+            String oldName = oldMoveNames.get(i);
+            String newName = moves[i].name;
+            int base = i * 3;
+            for (int j = 0; j < 3; j++) {
+                if (base + j < battleMsgs.size()) {
+                    battleMsgs.set(base + j, battleMsgs.get(base + j).replace(oldName, newName));
+                }
+            }
+        }
         setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+        setStrings(false, romEntry.getIntValue("BattleMoveNamesTextOffset"), battleMsgs);
 
         try {
             this.writeNARC(romEntry.getFile("MoveData"), moveNarc);

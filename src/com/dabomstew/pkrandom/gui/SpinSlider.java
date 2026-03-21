@@ -58,7 +58,7 @@ public class SpinSlider extends JPanel {
 
     @Override
     public void setToolTipText(String toolTipText) {
-        slider.setToolTipText(toolTipText);
-        spinner.setToolTipText(toolTipText);
+        slider.setToolTipText(String.format(toolTipText, "slider"));
+        spinner.setToolTipText(String.format(toolTipText, "spinner"));
     }
 }

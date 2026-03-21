@@ -297,7 +297,7 @@ public class RandomizerGUI {
     private JCheckBox tmFollowEvolutionsCheckBox;
     private JCheckBox mtFollowEvolutionsCheckBox;
     private JCheckBox stpPercentageLevelModifierCheckBox;
-    private JSlider stpPercentageLevelModifierSlider;
+    private SpinSlider stpPercentageLevelModifierSpinSlider;
     private JCheckBox stpFixMusicCheckBox;
     private JCheckBox miscFasterHPAndEXPBarsCheckBox;
     private JCheckBox tpBossTrainersItemsCheckBox;
@@ -859,7 +859,14 @@ public class RandomizerGUI {
                 1
         );
 
-        SpinnerNumberModel percentageSpinSliderModel = new SpinnerNumberModel(
+        SpinnerNumberModel stpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        );
+
+        SpinnerNumberModel tpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
                 0,
                 -100,
                 155,
@@ -879,12 +886,13 @@ public class RandomizerGUI {
             }
         }
 
+        stpPercentageLevelModifierSpinSlider.setModel(stpPercentageLevelModifierSpinSliderModel);
+
         tpBossTrainersSpinner.setModel(bossTrainerModel);
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
-
-        tpPercentageLevelModifierSpinSlider.setModel(percentageSpinSliderModel);
+        tpPercentageLevelModifierSpinSlider.setModel(tpPercentageLevelModifierSpinSliderModel);
 
         themeSelectionMenuItem = new JMenuItem();
         themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
@@ -1876,7 +1884,7 @@ public class RandomizerGUI {
         stpAllowAltFormesCheckBox.setSelected(settings.isAllowStaticAltFormes());
         stpSwapMegaEvosCheckBox.setSelected(settings.isSwapStaticMegaEvos());
         stpPercentageLevelModifierCheckBox.setSelected(settings.isStaticLevelModified());
-        stpPercentageLevelModifierSlider.setValue(settings.getStaticLevelModifier());
+        stpPercentageLevelModifierSpinSlider.setValue(settings.getStaticLevelModifier());
         stpFixMusicCheckBox.setSelected(settings.isCorrectStaticMusic());
 
         thcRandomCompletelyRadioButton
@@ -2141,7 +2149,7 @@ public class RandomizerGUI {
         settings.setAllowStaticAltFormes(stpAllowAltFormesCheckBox.isSelected() && stpAllowAltFormesCheckBox.isVisible());
         settings.setSwapStaticMegaEvos(stpSwapMegaEvosCheckBox.isSelected() && stpSwapMegaEvosCheckBox.isVisible());
         settings.setStaticLevelModified(stpPercentageLevelModifierCheckBox.isSelected());
-        settings.setStaticLevelModifier(stpPercentageLevelModifierSlider.getValue());
+        settings.setStaticLevelModifier(stpPercentageLevelModifierSpinSlider.getValue());
         settings.setCorrectStaticMusic(stpFixMusicCheckBox.isSelected() && stpFixMusicCheckBox.isVisible());
 
         settings.setTmsMod(tmUnchangedRadioButton.isSelected(), tmRandomRadioButton.isSelected());
@@ -2407,9 +2415,9 @@ public class RandomizerGUI {
 				stpRandomCompletelyRadioButton, stpRandomSimilarStrengthRadioButton, stpPercentageLevelModifierCheckBox,
 				stpLimitMainGameLegendariesCheckBox, stpRandomize600BSTCheckBox, stpAllowAltFormesCheckBox,
 				stpSwapMegaEvosCheckBox, stpFixMusicCheckBox);
-		stpPercentageLevelModifierSlider.setVisible(true);
-		stpPercentageLevelModifierSlider.setEnabled(false);
-		stpPercentageLevelModifierSlider.setValue(0);
+		stpPercentageLevelModifierSpinSlider.setVisible(true);
+		stpPercentageLevelModifierSpinSlider.setEnabled(false);
+		stpPercentageLevelModifierSpinSlider.setValue(0);
 
         setInitialButtonState(igtUnchangedRadioButton, igtRandomizeGivenPokemonOnlyRadioButton,
 				igtRandomizeBothRequestedGivenRadioButton, igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox,
@@ -2790,8 +2798,8 @@ public class RandomizerGUI {
                 stpSwapMegaEvosCheckBox.setVisible(pokemonGeneration == 6 && !romHandler.forceSwapStaticMegaEvos());
                 stpPercentageLevelModifierCheckBox.setVisible(true);
                 stpPercentageLevelModifierCheckBox.setEnabled(true);
-                stpPercentageLevelModifierSlider.setVisible(true);
-                stpPercentageLevelModifierSlider.setEnabled(false);
+                stpPercentageLevelModifierSpinSlider.setVisible(true);
+                stpPercentageLevelModifierSpinSlider.setEnabled(false);
                 stpFixMusicCheckBox.setVisible(romHandler.hasStaticMusicFix());
                 stpFixMusicCheckBox.setEnabled(false);
             } else {
@@ -2801,7 +2809,7 @@ public class RandomizerGUI {
                 stpRandomize600BSTCheckBox.setVisible(false);
                 stpLimitMainGameLegendariesCheckBox.setVisible(false);
                 stpPercentageLevelModifierCheckBox.setVisible(false);
-                stpPercentageLevelModifierSlider.setVisible(false);
+                stpPercentageLevelModifierSpinSlider.setVisible(false);
                 stpFixMusicCheckBox.setVisible(false);
             }
 
@@ -3373,10 +3381,10 @@ public class RandomizerGUI {
         }
 
         if (stpPercentageLevelModifierCheckBox.isSelected()) {
-            stpPercentageLevelModifierSlider.setEnabled(true);
+            stpPercentageLevelModifierSpinSlider.setEnabled(true);
         } else {
-            stpPercentageLevelModifierSlider.setEnabled(false);
-            stpPercentageLevelModifierSlider.setValue(0);
+            stpPercentageLevelModifierSpinSlider.setEnabled(false);
+            stpPercentageLevelModifierSpinSlider.setValue(0);
         }
 
         if (igtUnchangedRadioButton.isSelected()) {

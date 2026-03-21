@@ -253,7 +253,7 @@ public class Settings {
     private boolean allowStaticAltFormes;
     private boolean swapStaticMegaEvos;
     private boolean staticLevelModified;
-    private int staticLevelModifier = 0; // -50 ~ 50
+    private int staticLevelModifier = 0; // -100 ~ 155
     private boolean correctStaticMusic;
 
     public enum TotemPokemonMod {
@@ -653,7 +653,7 @@ public class Settings {
         out.write(selectedEXPCurve.toByte());
 
         // 49 Static level modifier
-        out.write((staticLevelModified ? 0x80 : 0) | (staticLevelModifier+50));
+        out.write(staticLevelModifier - 28);  // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 50 trainer pokemon held items / pokemon ensure two abilities / trainers use local pokemon
         out.write(makeByteSelected(randomizeHeldItemsForBossTrainerPokemon,
@@ -725,7 +725,8 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
         // 63 trainer pokemon evolve, no premature evolutions, SpinSlider activation checkboxes
-        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified));
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
+                staticLevelModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1016,8 +1017,7 @@ public class Settings {
 
         settings.setSelectedEXPCurve(ExpCurve.fromByte(data[48]));
 
-        settings.setStaticLevelModified(restoreState(data[49],7));
-        settings.setStaticLevelModifier((data[49] & 0x7F) - 50);
+        settings.setStaticLevelModifier(data[49] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setRandomizeHeldItemsForBossTrainerPokemon(restoreState(data[50], 0));
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(restoreState(data[50], 1));
@@ -1088,6 +1088,7 @@ public class Settings {
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
         settings.setBanPrematureEvos(restoreState(data[63], 1));
         settings.setTrainersLevelModified(restoreState(data[63], 2));
+        settings.setStaticLevelModified(restoreState(data[63], 3));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

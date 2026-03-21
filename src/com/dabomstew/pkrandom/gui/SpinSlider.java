@@ -16,7 +16,11 @@ public class SpinSlider extends JPanel {
 
     public SpinSlider() {
         // Set up slider
-        slider.addChangeListener(e -> spinner.setValue(slider.getValue()));
+        slider.addChangeListener(e -> {
+            if (slider.getValueIsAdjusting()) {
+                spinner.setValue(slider.getValue());
+            }
+        });
         slider.setMinorTickSpacing(5);
         slider.setMajorTickSpacing(50);
         slider.setPaintTicks(true);
@@ -40,10 +44,13 @@ public class SpinSlider extends JPanel {
         slider.setMinimum((Integer) model.getMinimum());
         slider.setMaximum((Integer) model.getMaximum());
         spinner.setModel(model);
+        setValue((Integer) model.getValue());
     }
 
     public void setValue(int value) {
         slider.setValue(value);
+        SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
+        model.setValue(value);
     }
 
     public int getValue() {

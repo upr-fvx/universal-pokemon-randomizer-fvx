@@ -1350,21 +1350,13 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.tooltipText"/>
                         </properties>
                       </component>
-                      <component id="f3518" class="javax.swing.JSlider" binding="stpPercentageLevelModifierSlider">
+                      <component id="f3518" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
                         <constraints>
                           <grid row="2" column="4" row-span="3" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <majorTickSpacing value="10"/>
-                          <maximum value="50"/>
-                          <minimum value="-50"/>
-                          <minorTickSpacing value="2"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <snapToTicks value="true"/>
-                          <value value="0"/>
                         </properties>
                       </component>
                       <component id="ae826" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">

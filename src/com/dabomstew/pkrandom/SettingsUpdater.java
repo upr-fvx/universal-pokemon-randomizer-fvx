@@ -755,6 +755,12 @@ public class SettingsUpdater {
                 int val = (dataBlock[38] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
                 dataBlock[38] = (byte)(val  - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
             }
+            // Static Pokemon level modifier
+            if (checkBit(dataBlock[49], 7)) {
+                dataBlock[63] = setBits(dataBlock[63], 3);
+                int val = (dataBlock[49] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
+                dataBlock[49] = (byte)(val  - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
+            }
         }
 
 

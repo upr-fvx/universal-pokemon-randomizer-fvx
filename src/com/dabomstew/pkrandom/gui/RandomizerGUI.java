@@ -859,6 +859,13 @@ public class RandomizerGUI {
                 1
         );
 
+        SpinnerNumberModel percentageSpinSliderModel = new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        );
+
         List<String> keys = new ArrayList<>(bundle.keySet());
         Collections.sort(keys);
         for (String k: keys) {
@@ -876,6 +883,8 @@ public class RandomizerGUI {
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
+
+        tpPercentageLevelModifierSpinSlider.setModel(percentageSpinSliderModel);
 
         themeSelectionMenuItem = new JMenuItem();
         themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));

@@ -36,6 +36,7 @@ If you are implementing a new setting, make sure you have added it
 ### Documentation
 * [ ] Write a release note in `docs/_release_notes/release-note-next.md` following the template.
 * [ ] Add yourself to the "Thanks to" section, at the top of the same file.
+* [ ] If necessary, also add others to the "Thanks to" section (who submitted the issue you're solving, drew the CPG sprites, etc.).
 * [ ] If necessary, update affected pages in / add new pages to the wiki in `docs/_wikipages/`.
 
 Hint: Above list can be copied to a Pull Request to keep track of what is done

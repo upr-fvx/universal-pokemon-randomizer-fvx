@@ -1,14 +1,17 @@
-<!-- This is a template for release notes. Everything in square brackets should be replaced. -->
+<!-- This is a template for release notes. --> 
+<!-- If you are a contributor editing this file as part of a PR, most of the below should be left untouched. -->
+<!-- If you are finalizing a release, everything in square brackets should be replaced. -->
 
 [Greeting, short description of the release. Mention if it's a minor or major release, highlight major features.]
 
-<!-- Any category below can be skipped if there are no people in it. -->
+<!-- When editing as part of a PR, credit yourself and people in the other categories as appropriate.-->
+<!-- When finalizing, any category below can be skipped/removed if there are no people in it. -->
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 @bergmaen for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue]@MClarke93 and @Shiigu for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -25,7 +28,8 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 
 # Changelog
 ## New and Changed Features
-<!-- Group features by the tabs by where they appear in the GUI. Namely, use the names of the boxed categories (not necessarily the same as the tab names) -->
+<!-- When editing as part of a PR, add your feature/bugfix below. Use (Issue #[issue num]) to denote the associated issue. -->
+<!-- Group features by where they appear in the GUI tabs. Namely, use the names of the boxed categories (not necessarily the same as the tab names). This means e.g. a "Pokemon Evolutions" feature would go between "Pokemon Base Stats" and "Static Pokemon". -->
 <!-- Below are some example features. They are not expansive, because it is annoying to remove a dozen categories that don't have any new/changed features this release. -->
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
@@ -36,7 +40,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
 
 ### Pokemon Base Stats
-- [The description of a new feature here.]
+- [The description of a new feature here.] (Issue #[issue num])
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
@@ -47,7 +51,7 @@ zip file to a folder on your computer. You can then run the Randomizer by double
   other Pokemon of the trainer. However, if other rules restrict the set of
   available Pokemon too much, duplicates are possible and weaker or stronger
   Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
-  selected. (Issue #162)
+  selected. (Issue #5, #162)
 - (Gen 1-7) The first rival and/or friend battles no longer have their
   Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
   Level Modifier:'. (Pull request #164)
@@ -70,5 +74,4 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 ## Bugfixes
 - (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
   'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
-- (Gen [N]) Fixed [...]. (Issue #[issue num])
-- (GUI) Fixed [...].
+- Fixed Special Attack not getting randomized when "Randomize Added Stats on Evolution" is used (Issue #178)

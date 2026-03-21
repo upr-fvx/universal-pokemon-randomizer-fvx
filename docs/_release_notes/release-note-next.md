@@ -1,4 +1,4 @@
-<!-- This is a template for release notes. Everything in square brackets should be replaced. -->
+<!-- This is a template for release notes. As part of finalizing a release, everything in square brackets should be replaced. However, if you are a contributor editing this file as part of a PR, most of the below should be left untouched. -->
 
 [Greeting, short description of the release. Mention if it's a minor or major release, highlight major features.]
 
@@ -8,6 +8,11 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 @bergmaen and @glamurio for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
+[Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
+[Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
+[Community members who helped with some feature] for help with [feature]
+[Etc.]!
 
 # How to use
 
@@ -24,8 +29,44 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Below are some example features. They are not expansive, because it is annoying to remove a dozen categories that don't have any new/changed features this release. -->
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
+### Pokemon Base Stats
+- [The description of a new feature here.]
+
+### Static Pokemon
+- (Gen 3) [The description of a changed feature here.]
+
 ### Move Data
 - (Gen 3-7) Added the ability to randomize move names. Due to technical limitations,
-this feature is only availabe from Generation 3 and upwards. (Pull Request #175)
+this feature is only availabe from Generation 3 and upwards. (Issue #176)
+
+### Trainer Pokemon
+- (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,
+  any randomly chosen Pokemon for a given trainer will be different from the
+  other Pokemon of the trainer. However, if other rules restrict the set of
+  available Pokemon too much, duplicates are possible and weaker or stronger
+  Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
+  selected. (Issue #162)
+- (Gen 1-7) The first rival and/or friend battles no longer have their
+  Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
+  Level Modifier:'. (Pull request #164)
+- (Gen 1-7) Even for 'Unchanged' Trainer Pokemon, if an 'Additional Pokemon
+  for...' option is selected, enable respective 'Force Diverse Types for...'
+  option as well. Selecting it guarantees that for any trainers that are not
+  type themed the added Pokemon have diverse types from the original Pokemon of
+  the trainer. (Issue #150)
+
+### Graphics
+- (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
+
+### Misc. Tweaks
+- (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
+### Misc.
+- [The description of some miscellaneous feature (new or changed) here.]
+
+## Bugfixes
+- (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
+  'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
+- (Gen [N]) Fixed [...]. (Issue #[issue num])
+- (GUI) Fixed [...].

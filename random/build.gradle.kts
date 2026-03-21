@@ -53,7 +53,6 @@ tasks.register<Delete>("clearReleaseDir") {
 // and it is imho preferable to only have Versions be defined in one place
 // - especially for devs who don't touch the Gradle.
 // -- voliol 2026-03-14
-var version: String? = null
 tasks.register<JavaExec>("getVersionName") {
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass = "com.uprfvx.random.Version"
@@ -61,7 +60,7 @@ tasks.register<JavaExec>("getVersionName") {
     val versionNameStream = ByteArrayOutputStream()
     standardOutput = versionNameStream
     doLast {
-        version = "v" + versionNameStream.toString().replace(".", "_")
+        rootProject.extra["randomizerVersion"] = "v${versionNameStream.toString().trim()}"
     }
 }
 
@@ -177,7 +176,8 @@ PlatformConfig.entries.forEach { cfg ->
         archiveFileName = "DummyName_${cfg.name}"
         doLast {
             val oldPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + archiveFileName.get())
-            val newName = "UPR_FVX-${version}-${cfg.name}.zip"
+            val versionName = (rootProject.extra["randomizerVersion"] as String).replace(".", "_")
+            val newName = "UPR_FVX-${versionName}-${cfg.name}.zip"
             val newPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + newName)
             Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING)
         }

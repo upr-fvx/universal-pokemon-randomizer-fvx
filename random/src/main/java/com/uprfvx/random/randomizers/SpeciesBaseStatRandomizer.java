@@ -174,7 +174,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         to.setHp((int) Math.min(255, Math.max(1, from.getHp() + hpDiff)));
         to.setAttack((int) Math.min(255, Math.max(1, from.getAttack() + atkDiff)));
         to.setDefense((int) Math.min(255, Math.max(1, from.getDefense() + defDiff)));
-        to.setDefense((int) Math.min(255, Math.max(1, from.getSpatk() + spaDiff)));
+        to.setSpatk((int) Math.min(255, Math.max(1, from.getSpatk() + spaDiff)));
         to.setSpdef((int) Math.min(255, Math.max(1, from.getSpdef() + spdDiff)));
         to.setSpeed((int) Math.min(255, Math.max(1, from.getSpeed() + speDiff)));
     }

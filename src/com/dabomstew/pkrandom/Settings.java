@@ -726,7 +726,7 @@ public class Settings {
 
         // 63 trainer pokemon evolve, no premature evolutions, SpinSlider activation checkboxes
         out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
-                staticLevelModified, wildLevelsModified));
+                wildLevelsModified, staticLevelModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1087,8 +1087,8 @@ public class Settings {
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
         settings.setBanPrematureEvos(restoreState(data[63], 1));
         settings.setTrainersLevelModified(restoreState(data[63], 2));
-        settings.setStaticLevelModified(restoreState(data[63], 3));
-        settings.setWildLevelsModified(restoreState(data[63], 4));
+        settings.setWildLevelsModified(restoreState(data[63], 3));
+        settings.setStaticLevelModified(restoreState(data[63], 4));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

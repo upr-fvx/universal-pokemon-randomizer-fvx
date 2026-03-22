@@ -750,8 +750,8 @@ public class SettingsUpdater {
             // The activation checkbox bits were moved for this from the original byte (previously one bit activation,
             // 7 bit value).
             updatePercentageLevelModifier(38, 2); // Trainer level modifier
-            updatePercentageLevelModifier(49, 3); // Static Pokemon level modifier
-            updatePercentageLevelModifier(40, 4); // Wild Pokemon level modifier
+            updatePercentageLevelModifier(40, 3); // Wild Pokemon level modifier
+            updatePercentageLevelModifier(49, 4); // Static Pokemon level modifier
         }
 
 

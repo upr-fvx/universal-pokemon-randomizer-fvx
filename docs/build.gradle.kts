@@ -36,6 +36,7 @@ tasks.register("checkVersionUpdated") {
 tasks.register("checkReleaseNoteDone") {
     doLast {
         val text = File(nextPath).readText(StandardCharsets.UTF_8)
+            .replace(commentRegex, "") // much easier than to use regex to ignore brackets in comments.
         if (squareBracketRegex.find(text) != null) {
             val matches = squareBracketRegex.findAll(text)
             var matchesString = ""
@@ -55,7 +56,7 @@ tasks.register("checkFinalizeReleaseNote") {
 
 tasks.register("finalizeReleaseNote") {
     dependsOn(":random:getVersionName")
-//    dependsOn("checkFinalizeReleaseNote")
+    dependsOn("checkFinalizeReleaseNote")
     doLast {
         val releaseName = (rootProject.extra["randomizerVersion"] as String)
         val releaseNameDotless = releaseName.replace(".", "_")

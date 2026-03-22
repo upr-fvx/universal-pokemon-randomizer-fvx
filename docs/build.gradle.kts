@@ -11,7 +11,7 @@ val templatePath = "$releaseNotesPath/release-note-template.md"
 val nextPath = "$releaseNotesPath/release-note-next.md"
 
 // identifies stray [] but not when used in Markdown links
-val squareBracketRegex = "(?<!\\])\\[[^\\]]*\\](?![\\[\\(])".toRegex()
+val squareBracketRegex = "(?!\\[VERSION\\])(?!\\[OS\\])(?<!\\])\\[[^\\]]*\\](?![\\[\\(])".toRegex()
 // identifies html-style comments that end with newline
 val commentRegex = "<!--[\\s\\S]*?-->\\r?\\n".toRegex()
 
@@ -67,7 +67,7 @@ tasks.register("finalizeReleaseNote") {
         sb.append("name: $releaseName\n")
         sb.append("date: ${LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))}\n")
         sb.append("download: ")
-        var iter = platformNames.iterator();
+        var iter = platformNames.iterator()
         while (iter.hasNext()) {
             sb.append("https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/" +
                     "$releaseName/" +
@@ -75,13 +75,14 @@ tasks.register("finalizeReleaseNote") {
             if (iter.hasNext()) sb.append(", ") else sb.append("\n")
         }
         sb.append("download_short_names: ")
-        iter = platformNames.iterator();
+        iter = platformNames.iterator()
         while (iter.hasNext()) {
             sb.append(iter.next())
             if (iter.hasNext()) sb.append(", ") else sb.append("\n")
         }
         sb.append("---\n")
-        sb.append(text.replace(commentRegex, ""))
+        sb.append(text.replace(commentRegex, "")
+            .replace("[VERSION]", releaseNameDotless))
 
         File(releaseNamePath).writeText(sb.toString(), StandardCharsets.UTF_8)
         File(templatePath).copyTo(File(nextPath), true)

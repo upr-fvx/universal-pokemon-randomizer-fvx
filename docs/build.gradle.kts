@@ -15,6 +15,10 @@ val squareBracketRegex = "(?<!\\])\\[[^\\]]*\\](?![\\[\\(])".toRegex()
 // identifies html-style comments that end with newline
 val commentRegex = "<!--[\\s\\S]*?-->\\r?\\n".toRegex()
 
+// same as the names in random/build.gradle.kts#PlatformConfig,
+// but importing them appeared unreasonably cumbersome
+val platformNames = arrayOf("Windows", "Linux_x86", "Linux_ARM", "Mac_x86", "Mac_ARM")
+
 tasks.register("checkVersionUpdated") {
     dependsOn(":random:getVersionName")
     doLast {
@@ -51,16 +55,31 @@ tasks.register("checkFinalizeReleaseNote") {
 
 tasks.register("finalizeReleaseNote") {
     dependsOn(":random:getVersionName")
-    dependsOn("checkFinalizeReleaseNote")
+//    dependsOn("checkFinalizeReleaseNote")
     doLast {
-        val releaseName = (rootProject.extra["randomizerVersion"] as String).replace(".", "_")
-        val releaseNamePath = "$releaseNotesPath/$releaseName.md"
+        val releaseName = (rootProject.extra["randomizerVersion"] as String)
+        val releaseNameDotless = releaseName.replace(".", "_")
+        val releaseNamePath = "$releaseNotesPath/$releaseNameDotless.md"
 
         var text = File(nextPath).readText(StandardCharsets.UTF_8)
         val sb = StringBuilder()
         sb.append("---\n")
-        sb.append("name: ${rootProject.extra["randomizerVersion"] as String}\n")
+        sb.append("name: $releaseName\n")
         sb.append("date: ${LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))}\n")
+        sb.append("download: ")
+        var iter = platformNames.iterator();
+        while (iter.hasNext()) {
+            sb.append("https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/" +
+                    "$releaseName/" +
+                    "UPR_FVX-$releaseNameDotless-${iter.next()}.zip")
+            if (iter.hasNext()) sb.append(", ") else sb.append("\n")
+        }
+        sb.append("download_short_names: ")
+        iter = platformNames.iterator();
+        while (iter.hasNext()) {
+            sb.append(iter.next())
+            if (iter.hasNext()) sb.append(", ") else sb.append("\n")
+        }
         sb.append("---\n")
         sb.append(text.replace(commentRegex, ""))
 

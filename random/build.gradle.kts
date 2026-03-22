@@ -77,9 +77,9 @@ enum class PlatformConfig(
     val launcherExtension: String,
     val jmodsInZip: Boolean = false
 ) {
+    Windows("windows", "x64", "bat", jmodsInZip = true),
     Linux_x86("linux", "x64", "sh"),
     Linux_ARM("linux", "aarch64", "sh"),
-    Windows("windows", "x64", "bat", jmodsInZip = true),
     Mac_x86("mac", "x64", "command"),
     Mac_ARM("mac", "aarch64", "command")
 }

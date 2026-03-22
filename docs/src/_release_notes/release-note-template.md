@@ -21,9 +21,9 @@ Thanks to
 
 Download the Randomizer below by clicking on `UPR_FVX-v[VERSION]-[OS].zip`. If you are on Linux or Mac, and don't know if your computer uses x86 or ARM, there are guides on the internet. After downloading, extract the contents of the zip file to a folder on your computer. You can then run the Randomizer by double-clicking the launcher script:
 
-- Windows: Use `launcher_WINDOWS.bat`
-- Mac: Use `launcher_MAC.command`
-- Linux: Use `launcher_UNIX.sh`
+- Windows: Use `launcher.bat`
+- Linux: Use `launcher.sh`
+- Mac: Use `launcher.command`
 
 # Changelog
 ## New and Changed Features

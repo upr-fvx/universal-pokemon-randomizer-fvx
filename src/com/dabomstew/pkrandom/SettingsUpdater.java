@@ -749,18 +749,9 @@ public class SettingsUpdater {
             // Increase percentage modifier ranges from [-50, 50] to the maximum possible with a byte: [-100, 155].
             // The activation checkbox bits were moved for this from the original byte (previously one bit activation,
             // 7 bit value).
-            // Trainer level modifier
-            if (checkBit(dataBlock[38], 7)) {
-                dataBlock[63] = setBits(dataBlock[63], 2);
-                int val = (dataBlock[38] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
-                dataBlock[38] = (byte)(val  - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
-            }
-            // Static Pokemon level modifier
-            if (checkBit(dataBlock[49], 7)) {
-                dataBlock[63] = setBits(dataBlock[63], 3);
-                int val = (dataBlock[49] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
-                dataBlock[49] = (byte)(val  - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
-            }
+            updatePercentageLevelModifier(38, 2); // Trainer level modifier
+            updatePercentageLevelModifier(49, 3); // Static Pokemon level modifier
+            updatePercentageLevelModifier(40, 4); // Wild Pokemon level modifier
         }
 
 
@@ -780,4 +771,12 @@ public class SettingsUpdater {
         return Base64.getEncoder().encodeToString(finalConfigString);
     }
 
+    private void updatePercentageLevelModifier(int originalByte, int newBit) {
+        if (checkBit(dataBlock[originalByte], 7)) {
+            // If slider activation checkbox was selected, move this information to byte 63 at position newBit
+            dataBlock[63] = setBits(dataBlock[63], newBit);
+        }
+        int val = (dataBlock[originalByte] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
+        dataBlock[originalByte] = (byte) (val - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
+    }
 }

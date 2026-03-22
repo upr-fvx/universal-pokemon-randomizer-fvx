@@ -128,8 +128,8 @@ public class WildEncounterRandomizer extends Randomizer {
         if (levelModifier != 0) {
             for (EncounterArea area : currentEncounterAreas) {
                 for (Encounter enc : area) {
-                    enc.setLevel(Math.min(100, (int) Math.round(enc.getLevel() * (1 + levelModifier / 100.0))));
-                    enc.setMaxLevel(Math.min(100, (int) Math.round(enc.getMaxLevel() * (1 + levelModifier / 100.0))));
+                    enc.setLevel(applyPercentageLevelModifier(enc.getLevel(), levelModifier));
+                    enc.setMaxLevel(applyPercentageLevelModifier(enc.getMaxLevel(), levelModifier));
                 }
             }
         }

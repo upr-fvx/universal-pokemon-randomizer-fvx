@@ -174,7 +174,7 @@ public class RandomizerGUI {
     private JCheckBox wpBanBadItemsCheckBox;
     private JCheckBox wpBalanceShakingGrassPokemonCheckBox;
     private JCheckBox wpPercentageLevelModifierCheckBox;
-    private JSlider wpPercentageLevelModifierSlider;
+    private SpinSlider wpPercentageLevelModifierSpinSlider;
     private JSlider wpSetMinimumCatchRateSlider;
     private JRadioButton tmUnchangedRadioButton;
     private JRadioButton tmRandomRadioButton;
@@ -873,6 +873,14 @@ public class RandomizerGUI {
                 1
         );
 
+
+        SpinnerNumberModel wpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        );
+
         List<String> keys = new ArrayList<>(bundle.keySet());
         Collections.sort(keys);
         for (String k: keys) {
@@ -893,6 +901,8 @@ public class RandomizerGUI {
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
         tpPercentageLevelModifierSpinSlider.setModel(tpPercentageLevelModifierSpinSliderModel);
+
+        wpPercentageLevelModifierSpinSlider.setModel(wpPercentageLevelModifierSpinSliderModel);
 
         themeSelectionMenuItem = new JMenuItem();
         themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
@@ -1870,7 +1880,7 @@ public class RandomizerGUI {
         wpBanBadItemsCheckBox.setSelected(settings.isBanBadRandomWildPokemonHeldItems());
         wpBalanceShakingGrassPokemonCheckBox.setSelected(settings.isBalanceShakingGrass());
         wpPercentageLevelModifierCheckBox.setSelected(settings.isWildLevelsModified());
-        wpPercentageLevelModifierSlider.setValue(settings.getWildLevelModifier());
+        wpPercentageLevelModifierSpinSlider.setValue(settings.getWildLevelModifier());
         wpAllowAltFormesCheckBox.setSelected(settings.isAllowWildAltFormes());
 
         stpUnchangedRadioButton.setSelected(settings.getStaticPokemonMod() == Settings.StaticPokemonMod.UNCHANGED);
@@ -2139,7 +2149,7 @@ public class RandomizerGUI {
         settings.setBanBadRandomWildPokemonHeldItems(wpBanBadItemsCheckBox.isSelected() && wpBanBadItemsCheckBox.isVisible());
         settings.setBalanceShakingGrass(wpBalanceShakingGrassPokemonCheckBox.isSelected() && wpBalanceShakingGrassPokemonCheckBox.isVisible());
         settings.setWildLevelsModified(wpPercentageLevelModifierCheckBox.isSelected());
-        settings.setWildLevelModifier(wpPercentageLevelModifierSlider.getValue());
+        settings.setWildLevelModifier(wpPercentageLevelModifierSpinSlider.getValue());
         settings.setAllowWildAltFormes(wpAllowAltFormesCheckBox.isSelected() && wpAllowAltFormesCheckBox.isVisible());
 
         settings.setStaticPokemonMod(stpUnchangedRadioButton.isSelected(), stpSwapLegendariesSwapStandardsRadioButton.isSelected(),
@@ -2517,9 +2527,9 @@ public class RandomizerGUI {
 		wpSetMinimumCatchRateSlider.setVisible(true);
 		wpSetMinimumCatchRateSlider.setEnabled(false);
 		wpSetMinimumCatchRateSlider.setValue(wpSetMinimumCatchRateSlider.getMinimum());
-		wpPercentageLevelModifierSlider.setVisible(true);
-		wpPercentageLevelModifierSlider.setEnabled(false);
-		wpPercentageLevelModifierSlider.setValue(0);
+		wpPercentageLevelModifierSpinSlider.setVisible(true);
+		wpPercentageLevelModifierSpinSlider.setEnabled(false);
+		wpPercentageLevelModifierSpinSlider.setValue(0);
 
         setInitialButtonState(tmUnchangedRadioButton, tmRandomRadioButton, tmNoGameBreakingMovesCheckBox,
 				tmFullHMCompatibilityCheckBox, tmLevelupMoveSanityCheckBox, tmKeepFieldMoveTMsCheckBox,
@@ -3645,10 +3655,10 @@ public class RandomizerGUI {
         }
 
         if (wpPercentageLevelModifierCheckBox.isSelected()) {
-            wpPercentageLevelModifierSlider.setEnabled(true);
+            wpPercentageLevelModifierSpinSlider.setEnabled(true);
         } else {
-            wpPercentageLevelModifierSlider.setEnabled(false);
-            wpPercentageLevelModifierSlider.setValue(0);
+            wpPercentageLevelModifierSpinSlider.setEnabled(false);
+            wpPercentageLevelModifierSpinSlider.setValue(0);
         }
 
         if (pmsMetronomeOnlyModeRadioButton.isSelected()) {

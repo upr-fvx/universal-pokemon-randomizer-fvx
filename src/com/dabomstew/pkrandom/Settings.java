@@ -241,7 +241,7 @@ public class Settings {
     private boolean banBadRandomWildPokemonHeldItems;
     private boolean balanceShakingGrass;
     private boolean wildLevelsModified;
-    private int wildLevelModifier = 0;
+    private int wildLevelModifier = 0; // -100 ~ 155
     private boolean allowWildAltFormes;
 
     public enum StaticPokemonMod {
@@ -604,7 +604,7 @@ public class Settings {
                 false, guaranteeEvolutionItems));
 
         // 40 wild level modifier
-        out.write((wildLevelsModified ? 0x80 : 0) | (wildLevelModifier+50));
+        out.write(wildLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 41 EXP curve mod, block broken moves, alt forme stuff
         out.write(makeByteSelected(
@@ -726,7 +726,7 @@ public class Settings {
 
         // 63 trainer pokemon evolve, no premature evolutions, SpinSlider activation checkboxes
         out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
-                staticLevelModified));
+                staticLevelModified, wildLevelsModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -982,8 +982,7 @@ public class Settings {
         settings.setBanOPShopItems(restoreState(data[39],5));
         settings.setGuaranteeEvolutionItems(restoreState(data[39],7));
 
-        settings.setWildLevelsModified(restoreState(data[40],7));
-        settings.setWildLevelModifier((data[40] & 0x7F) - 50);
+        settings.setWildLevelModifier(data[40] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setExpCurveMod(restoreEnum(ExpCurveMod.class,data[41],0,1,2));
 
@@ -1089,6 +1088,7 @@ public class Settings {
         settings.setBanPrematureEvos(restoreState(data[63], 1));
         settings.setTrainersLevelModified(restoreState(data[63], 2));
         settings.setStaticLevelModified(restoreState(data[63], 3));
+        settings.setWildLevelsModified(restoreState(data[63], 4));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

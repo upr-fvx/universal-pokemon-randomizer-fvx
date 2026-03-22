@@ -2938,22 +2938,14 @@
                           <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpRandomizeWildPokemonCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="7e56b" class="javax.swing.JSlider" binding="wpPercentageLevelModifierSlider" default-binding="true">
+                      <component id="7e56b" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="wpPercentageLevelModifierSpinSlider" default-binding="true">
                         <constraints>
                           <grid row="12" column="5" row-span="2" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <majorTickSpacing value="10"/>
-                          <maximum value="50"/>
-                          <minimum value="-50"/>
-                          <minorTickSpacing value="2"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpPercentageLevelModifierSlider.toolTipText"/>
-                          <value value="0"/>
+                          <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.wpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="438d0" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">

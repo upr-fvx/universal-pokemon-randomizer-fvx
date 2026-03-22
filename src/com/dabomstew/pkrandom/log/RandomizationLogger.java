@@ -826,7 +826,8 @@ public class RandomizationLogger {
 
     private String formatMovesetMove(Move mv, Species learner) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%-12s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%",
+        int maxMoveNameLength = romHandler.getMaxMoveNameLength();
+        sb.append(String.format("%-" + maxMoveNameLength + "s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%",
                 mv.name, mv.type, mv.category,
                 mv.category == MoveCategory.STATUS ? "--" : String.format("%3d", mv.power),
                 mv.pp, mv.hitratio));

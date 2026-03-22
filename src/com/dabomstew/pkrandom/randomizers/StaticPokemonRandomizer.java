@@ -37,10 +37,10 @@ public class StaticPokemonRandomizer extends Randomizer {
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
         for (StaticEncounter se : currentStaticPokemon) {
             if (!se.isEgg()) {
-                se.setLevel(Math.min(100, (int) Math.round(se.getLevel() * (1 + levelModifier / 100.0))));
+                se.setLevel(applyPercentageLevelModifier(se.getLevel(), levelModifier));
                 for (StaticEncounter linkedStatic : se.getLinkedEncounters()) {
                     if (!linkedStatic.isEgg()) {
-                        linkedStatic.setLevel(Math.min(100, (int) Math.round(linkedStatic.getLevel() * (1 + levelModifier / 100.0))));
+                        linkedStatic.setLevel(applyPercentageLevelModifier(linkedStatic.getLevel(), levelModifier));
                     }
                 }
             }

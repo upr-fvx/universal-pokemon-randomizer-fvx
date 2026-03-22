@@ -70,6 +70,12 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
+- The percentage level modifier sliders for Static Pokemon, Trainer Pokemon,
+  and Wild Pokemon can now be used to select any integer value between -100%
+  and 155%. Furthermore, thanks to an added spinner, it is now easier to
+  recognize which value is chosen and to fine-tune the selection. Note that
+  the lowest possible level is 1 and the highest possible level is 100.
+  (Issue #170)
 
 ## Bugfixes
 - (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite

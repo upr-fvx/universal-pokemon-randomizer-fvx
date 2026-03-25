@@ -139,6 +139,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		loadItems();
 		loadSpeciesStats();
+		loadHabitatData();
 		loadMoves();
         loadTrainers();
 		loadPokemonPalettes();

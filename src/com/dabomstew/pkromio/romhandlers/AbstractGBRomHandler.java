@@ -84,6 +84,7 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     protected void loadGameData() {
         loadItems();
         loadSpeciesStats();
+        loadHabitatData();
         loadEvolutions();
         loadMoves();
         loadPokemonPalettes();

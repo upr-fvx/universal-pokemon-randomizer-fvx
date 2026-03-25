@@ -136,6 +136,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         loadItems();
 
         loadSpeciesStats();
+        loadHabitatData();
         loadMoves();
         loadTrainers();
 

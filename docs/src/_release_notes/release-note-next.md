@@ -73,13 +73,13 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
   - For end users, this has the following effects: 
     - Fixes for urgent bugs will come faster (since building and packaging a new release is faster).
     - The Randomizer now comes with a mini-version of Java, sufficient to run it. This means Java does not need to be separately installed. On the other hand the mini-Java takes some space, so to not bloat the download folder, it is now divided into one download for each OS/architecture (Windows, Mac x86, Mac ARM, Linux x86, Linux ARM). The Randomizer no longer supports running on 32-bit Windows.
-    - (32-bit Windows, or other odd OS/architecture combos, can probably still work *if* you manage scrunch up a compatible Java 25 JRE. Contact us using GitHub Issues, if you want to give it a try.)
+    - (32-bit Windows, or other odd OS/architecture combos, can probably still work *if* you manage scrunch up a compatible Java 25 JRE.)
   - For developers, this has the following effects:
     - Gradle is now used, for building and testing the Randomizer. [The "Building" page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/building.html) has been updated to account for these changes.
     - Dependencies are automatically managed.
     - We are no longer stuck with Java 8, now using Java 25.
     - Building and packaging a new release is much faster.
-    - The code has been restructured, and the `romio`/`random`/`devtools` division has been pulled to root. `utils` has also been pulled out of `romio`. This division is also enforced by Gradle. [TODO: see this wiki page explaining the code divisions. Or a readme?]
+    - The code has been restructured, and the `romio`/`random`/`devtools` division has been pulled to root. `utils` has also been pulled out of `romio`. This division is also enforced by Gradle. See [this wiki page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/structure.html) explaining the code divisions.
     - It should be possible to further facilitate/automatize tasks, using GitHub Actions hooking into Gradle.
 
 ## Bugfixes

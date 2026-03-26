@@ -45,6 +45,7 @@ public class TestRomHandler extends AbstractRomHandler {
     Map<Species, Map<Integer, Species>> testAltFormesMap = null;
     private RestrictedSpeciesService testRSS = null;
     private List<Species> testSpeciesInOrder = null;
+    private List<Species> testSpeciesInclFormesInOrder = null;
 
     //Abilities
     private final int abilitiesPerSpecies;
@@ -271,6 +272,7 @@ public class TestRomHandler extends AbstractRomHandler {
         testAltFormesMap = null;
         testRSS = null;
         testSpeciesInOrder = null;
+        testSpeciesInclFormesInOrder = null;
 
         testMoves = null;
         testMovesLearnt = null;
@@ -643,14 +645,19 @@ public class TestRomHandler extends AbstractRomHandler {
         if(testSpeciesInOrder == null) {
             testSpeciesInOrder = new ArrayList<>(getSpeciesSet());
             testSpeciesInOrder.sort(Comparator.comparingInt(Species::getNumber)); //ok that's some sleek syntax. gj java.
-            testSpeciesInOrder.add(0, null); // and this is less sleek haha, O(#numPokemon)
+            testSpeciesInOrder.addFirst(null); // and this is less sleek haha, O(#numPokemon)
         }
         return testSpeciesInOrder;
     }
 
     @Override
     public List<Species> getSpeciesInclFormes() {
-        throw new NotImplementedException();
+        if(testSpeciesInclFormesInOrder == null) {
+            testSpeciesInclFormesInOrder = new ArrayList<>(getSpeciesSetInclFormes());
+            testSpeciesInclFormesInOrder.sort(Comparator.comparingInt(Species::getNumber)); //ok that's some sleek syntax. gj java.
+            testSpeciesInclFormesInOrder.addFirst(null); // and this is less sleek haha, O(#numPokemon)
+        }
+        return testSpeciesInclFormesInOrder;
     }
 
     @Override

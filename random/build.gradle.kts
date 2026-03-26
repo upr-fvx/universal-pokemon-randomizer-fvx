@@ -9,9 +9,9 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 plugins {
+    id("io.github.file5.guidesigner") version "1.0.2"
     id("de.undercouch.download") version "5.7.0"
 }
-apply(plugin = "io.github.file5.guidesigner")
 
 dependencies {
     // Internal dependencies

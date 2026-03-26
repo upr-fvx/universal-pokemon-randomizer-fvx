@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -120,7 +121,8 @@ public abstract class IniEntryReader<T extends IniEntry> {
     }
 
     public List<T> readEntriesFromFile(String fileName) throws IOException {
-        Scanner scanner = new Scanner(Files.newInputStream(Paths.get(fileName)), "UTF-8");
+        System.out.println(Paths.get(fileName).toFile().getAbsolutePath());
+        Scanner scanner = new Scanner(Files.newInputStream(Paths.get(fileName)), StandardCharsets.UTF_8);
         setFileName(fileName);
         return readEntriesFromScanner(scanner);
     }

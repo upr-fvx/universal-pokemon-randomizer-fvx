@@ -2,7 +2,6 @@
 
 plugins {
     java
-    id("io.github.file5.guidesigner") version "1.0.2"
 }
 
 subprojects {

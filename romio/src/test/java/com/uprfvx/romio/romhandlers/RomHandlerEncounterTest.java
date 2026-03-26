@@ -19,7 +19,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerEncounterTest extends RomHandlerTest {
 
-    private static final String EARLIER_OUTPUTS_PATH = "/encounters/";
+    private static final String EARLIER_OUTPUTS_PATH = Objects.requireNonNull(
+            RomHandlerGraphicsTest.class.getResource("/encounters/")).getPath();
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -87,7 +88,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         printAllEncounters(sw);
 
         String path = EARLIER_OUTPUTS_PATH + romHandler.getROMName() + ".txt";
-        writeFile(path, sw.toString().replaceAll("\r\n", "\n"));
+        Files.writeString(Paths.get(path), sw.toString().replaceAll("\r\n", "\n"));
     }
 
     private void printAllEncounters(StringWriter sw) {
@@ -123,10 +124,6 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
     private static String readFile(String path) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, StandardCharsets.UTF_8);
-    }
-
-    private static void writeFile(String path, String toWrite) throws IOException {
-        Files.write(Paths.get(path), toWrite.getBytes(StandardCharsets.UTF_8));
     }
 
     @ParameterizedTest

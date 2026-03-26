@@ -1,0 +1,26 @@
+Words used for type-based move name randomization.
+
+It is possible to add/remove words, and even types,
+but each mentioned type must have at least one assigned name.
+Types must also correspond to Type enumerator values found in gamedata/Type.java.
+If you don't know what that means, don't worry about it.
+
+# Type-based move words
+[NORMAL] (Normal) (Basic) (Simple) (Plain) (Common) (Standard) (Ordinary) (Routine) (Steady) (Generic) (Cozy) (Modest) (Friendly) (Clean) (Hyper) (True) (Core) (Prime) (Pure)
+[FIGHTING] (Punch) (Jab) (Smash) (Kick) (Barrage) (Blitz) (Brawl) (Tussle) (Combo) (Grapple) (Haymaker) (Counter) (Dempsey) (Uppercut) (Rushdown) (Takedown) (Armbar) (Hammer) (Fist) (Combo) (Beatdown) (Sweep) (Tackle) (Rush)
+[FLYING] (Gust) (Wing) (Glide) (Soaring) (Flutter) (Flock) (Feather) (Flap) (Hover) (Skyward) (Breeze) (Whirlwind) (Drift) (Wind) (Twirl) (Flying) (Gale) (Aerie) (Skyfall) (Bird) (Airborne) (Cloud)
+[BUG] (Buzz) (Stinger) (Web) (Mandible) (Infest) (Pounce) (Scurry) (Swarm) (Chomp) (Carapace) (Pincer) (Hive) (Beetle) (Roach) (Nibble) (Crawl) (Swarm) (Rumble) (Bug)
+[POISON] (Venom) (Toxic) (Sludge) (Acid) (Noxious) (Bane) (Stench) (Fume) (Sewage) (Miasma) (Acidic) (Corrosive) (Pox) (Malady) (Blight) (Slime) (Rot) (Bilious) (Plague)
+[ROCK] (Rock) (Boulder) (Shard) (Marble) (Pile) (Collapse) (Rocky) (Stone) (Quartz) (Amber) (Slate) (Grind) (Bedrock) (Pebble) (Gravel) (Diamond) (Onyx)
+[GROUND] (Quake) (Muddy) (Tremor) (Rumble) (Underground) (Quagmire) (Pitfall) (Silt) (Soil) (Dirty) (Sand) (Desert) (Dust) (Burrow) (Glass) (Earthen) (Crumble)
+[DARK] (Shadow) (Dark) (Sneak) (Cloak) (Gloom) (Scare) (Haunt) (Dread) (Darkness) (Night) (Twilight) (Murky) (Phantasm) (Dusk) (Abyss) (Veil) (Stalker) (Midnight)
+[STEEL] (Blade) (Spike) (Iron) (Clang) (Rusty) (Copper) (Anvil) (Alloy) (Metallic) (Metal) (Chisel) (Edge) (Steel) (Forge) (Smelting) (Nail) (Wrench)
+[ICE] (Frost) (Chill) (Shiver) (Freeze) (Glacier) (Icy) (Slip) (Snow) (Shatter) (Blizzard) (Hail) (Frigid) (Cool) (Sleet) (Crystal) (Glaciate) (Frostbite) (Tundra) (Glimmer) (Frozen)
+[WATER] (Sapphire) (Wave) (Splash) (Torrent) (Flood) (Cascade) (Drip) (River) (Mist) (Geyser) (Surf) (Waterfall) (Tidal) (Azure) (Ripple) (Aqua) (Bubble) (Soapy) (Foam) (Drench) (Plunge) (Soak)
+[FIRE] (Ruby) (Flame) (Ember) (Blaze) (Scorch) (Ignite) (Inferno) (Burn) (Kindle) (Heatwave) (Pyre) (Flicker) (Bonfire) (Burning) (Firestorm) (Crimson) (Sizzle) (Grill) (Heat) (Fire) (Fiery)
+[GRASS] (Emerald) (Leaf) (Vine) (Thorny) (Blossom) (Pollen) (Flora) (Sprout) (Bloom) (Verdant) (Growth) (Thicket) (Herbal) (Foliage) (Canopy) (Mossy) (Root) (Veggie) (Grassy)
+[PSYCHIC] (Mind) (Mental) (Psi) (Telekinesis) (Insight) (Dream) (Aura) (Focus) (Vision) (Clarity) (Illusion) (Hypnosis) (Thought) (Sense) (Empathy) (Foresight) (Mirage) (Psychic)
+[GHOST] (Spirit) (Wraith) (Haunt) (Phantom) (Specter) (Whisper) (Shadow) (Shade) (Creepy) (Apparition) (Soul) (Poltergeist) (Terror) (Spooky) (Ectoplasm) (Ghastly)
+[ELECTRIC] (Bolt) (Shock) (Spark) (Volt) (Jolt) (Surge) (Zap) (Flicker) (Thunder) (Current) (Shockwave) (Amp) (Charge) (Tesla) (Voltage) (Electric) (Lightning) (Flash) (Energy) (Charge)
+[DRAGON] (Claw) (Roar) (Fang) (Scale) (Tail) (Dragon) (Ancient) (Talon) (Serpent) (Lizard) (Wyrm) (Draconic) (Fang) (Drake) (Leviathan) (Legend) (Mythic) (Fury) (Draco) (Twisting) (Brutal)
+[FAIRY] (Charm) (Sparkle) (Shine) (Twinkle) (Wonder) (Bliss) (Gleam) (Fable) (Dazzle) (Melody) (Magic) (Whimsy) (Dreamy) (Glistening) (Star) (Glitter) (Serenade) (Pixie) (Fairy)

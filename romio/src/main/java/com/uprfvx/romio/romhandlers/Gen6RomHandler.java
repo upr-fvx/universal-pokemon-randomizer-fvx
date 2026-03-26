@@ -810,6 +810,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void saveMoves() {
+        List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
         int moveCount = Gen6Constants.getMoveCount(romEntry.getRomType());
         byte[][] miniArchive = new byte[0][0];
         if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
@@ -822,6 +823,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             } else {
                 data = moveGarc.files.get(i).get(0);
             }
+            String newMoveName = moves[i].name;
+			moveNames.set(i, newMoveName);
             data[2] = Gen6Constants.moveCategoryToByte(moves[i].category);
             data[3] = (byte) moves[i].power;
             data[0] = Gen6Constants.typeToByte(moves[i].type);
@@ -835,6 +838,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             data[4] = (byte) hitratio;
             data[5] = (byte) moves[i].pp;
         }
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset") + 1, moveNames);
+
         try {
             if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                 moveGarc.setFile(0, Mini.PackMini(miniArchive, "WD"));
@@ -4108,4 +4114,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     public Gen6RomEntry getRomEntry() {
         return romEntry;
     }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 24;
+    };
 }

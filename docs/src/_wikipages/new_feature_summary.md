@@ -112,6 +112,11 @@ In Gen 1-3 games, allows replacing the player's sprites with new sprite sets.
 Several preset possibilities are included.
 Not supported for Gen 4 and up.
 
+## Move Name Randomization
+ 
+Replaces every move's display name with a context-aware randomly generated name. This is a purely cosmetic feature that does not affect gameplay.  
+Names are composed from a type-based word and an action word chosen based on the move's mechanical properties (e.g. punch moves, sound moves, drain moves, status effects). The word lists are user-editable in the `data/` folder.
+
 # Types
 * Moved "Update type effectiveness" to the new Types tab.
 

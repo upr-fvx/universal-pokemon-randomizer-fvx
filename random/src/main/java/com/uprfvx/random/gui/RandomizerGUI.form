@@ -1620,6 +1620,17 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mdRandomizeMoveTypesCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <component id="77bd9" class="javax.swing.JCheckBox" binding="mdRandomizeMoveNamesCheckBox">
+                        <constraints>
+                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mdRandomizeMoveNamesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mdRandomizeMoveNamesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                       <component id="7dbd0" class="javax.swing.JCheckBox" binding="mdRandomizeMoveCategoryCheckBox">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>

@@ -3404,4 +3404,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             rom[offset + i] = (byte) ((checkValue >> (3 - i) * 8) & 0xFF);
         }
     }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
+    };
 }

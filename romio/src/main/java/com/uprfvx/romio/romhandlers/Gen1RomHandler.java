@@ -3157,4 +3157,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         return romEntry;
     }
 
+    @Override
+    public int getMaxMoveNameLength() {
+        return 10;
+    };
 }

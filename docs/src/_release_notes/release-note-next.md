@@ -10,7 +10,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-@bergmaen for your code contributions,
+@bergmaen and @glamurio for your code contributions,
 [Every person who submitted a solved issue]@MClarke93 and @Shiigu for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
@@ -39,11 +39,12 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
   randomized Wild Pokemon if neither 'Same Evolution Stage' nor 'Keep
   Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
 
-### Pokemon Base Stats
-- [The description of a new feature here.] (Issue #[issue num])
-
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
+
+### Move Data
+- (Gen 3-7) Added the ability to randomize move names. Due to technical limitations,
+this feature is only availabe from Generation 3 and upwards. (Issue #176)
 
 ### Trainer Pokemon
 - (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,

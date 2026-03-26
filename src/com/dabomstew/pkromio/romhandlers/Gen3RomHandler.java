@@ -1030,11 +1030,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void saveMoves() {
         int moveCount = romEntry.getIntValue("MoveCount");
         int offs = romEntry.getIntValue("MoveData");
+        int nameoffs = romEntry.getIntValue("MoveNames");
+        int namelen = romEntry.getIntValue("MoveNameLength");
+
         for (int i = 1; i <= moveCount; i++) {
 
             int hitratio = (int) Math.round(moves[i].hitratio);
             hitratio = Math.max(hitratio, 0);
             hitratio = Math.min(hitratio, 100);
+            
+            String newMoveName = moves[i].name;
+            int stringOffset = nameoffs + i * namelen;
+            writeFixedLengthString(newMoveName, stringOffset, namelen);
 
             // TODO: where does this 0xC come from?
             writeBytes(offs + i * 0xC, new byte[] { (byte) moves[i].effectIndex,
@@ -4662,5 +4669,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public Gen3RomEntry getRomEntry() {
         return romEntry;
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
+    };
+
+    @Override
+    public boolean isEnglish() {
+        String romCode = getRomEntry().getRomCode();
+        return romCode.length() >= 4 && romCode.charAt(3) == 'E';
     }
 }

@@ -798,8 +798,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	@Override
 	public void saveMoves() {
+		List<String> moveNames = getStrings(romEntry.getIntValue("MoveNamesTextOffset"));
 		for (int i = 1; i <= Gen4Constants.moveCount; i++) {
 			byte[] data = moveNarc.files.get(i);
+			String newMoveName = moves[i].name;
+			moveNames.set(i, newMoveName);
 			writeWord(data, 0, moves[i].effectIndex);
 			data[2] = Gen4Constants.moveCategoryToByte(moves[i].category);
 			data[3] = (byte) moves[i].power;
@@ -814,6 +817,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			data[5] = (byte) hitratio;
 			data[6] = (byte) moves[i].pp;
 		}
+		// Update pre-composed battle messages with new move names
+		List<String> battleMsgs = getStrings(romEntry.getIntValue("BattleMoveNamesTextOffset"));
+		List<String> oldMoveNames = getStrings(romEntry.getIntValue("MoveNamesTextOffset"));
+		for (int i = 1; i <= Gen4Constants.moveCount; i++) {
+			String oldName = oldMoveNames.get(i);
+			String newName = moves[i].name;
+			int base = i * 3;
+			for (int j = 0; j < 3; j++) {
+				if (base + j < battleMsgs.size()) {
+					battleMsgs.set(base + j, battleMsgs.get(base + j).replace(oldName, newName));
+				}
+			}
+		}
+		setStrings(romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+		setStrings(romEntry.getIntValue("BattleMoveNamesTextOffset"), battleMsgs);
 
 		try {
 			this.writeNARC(romEntry.getFile("MoveData"), moveNarc);
@@ -6097,4 +6115,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return romEntry;
 	}
 
+    @Override
+    public int getMaxMoveNameLength() {
+        return 15;
+    };
+
+	@Override
+	public boolean isEnglish() {
+		String romCode = getRomEntry().getRomCode();
+		return romCode.length() >= 4 && romCode.charAt(3) == 'E';
+	}
 }

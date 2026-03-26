@@ -995,4 +995,20 @@ public abstract class AbstractRomHandler implements RomHandler {
     public String toString() {
         return super.toString() + "[" + getROMName() + " | " + getROMCode() + "]";
     }
+
+    @Override
+    public boolean isEnglish() {
+        // Subclasses should override with ROM-specific checks.
+        return false;
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return switch (generationOfPokemon()) {
+            case 1 -> 10;
+            case 2, 3 -> 12;
+            case 4, 5 -> 15;
+            default -> 24;
+        };
+    }
 }

@@ -1,0 +1,11 @@
+Words used for category-based move name randomization.
+
+It is possible to add/remove words, and even categories,
+but each mentioned category must have at least one assigned name.
+Categories must correspond to MoveCategory enumerator values found in pokemon/MoveCategory.java. 
+If you don't know what that means, don't worry about it.
+
+# Category-based move words
+[PHYSICAL] (Slam) (Bash) (Strike) (Hit) (Crush) (Charge) (Tackle) (Pummel) (Assault) (Beatdown) (Rampage) (Clobber) (Kick) (Strike) (Smash) (Jab) (Slap) (Hammer) (Strike) (Rush) (Grasp) (Throttle) (Twister) (Crush) (Stomp) (Charge) (Pounce) (Uppercut) (Lunge) (Grapple) (Smash)
+[SPECIAL] (Blast) (Pulse) (Wave) (Charge) (Ignite) (Spark) (Flicker) (Shock) (Flare) (Eruption) (Burst) (Vortex) (Energy) (Cascade) (Flicker) (Current) (Wind) (Beam) (Quasar) (Power) (Surge) (Aura) (Smite) (Strike) (Ball)
+[STATUS] (Aura) (Calm) (Glare) (Charm) (Gift) (Charge) (Disable) (Shield) (Cheer) (Reflect) (Bewitch) (Enchant) (Fortify) (Assist) (Pacify) (Recharge) (Refurbish) (Guard) (Ward) (Avert) (Protect) (Evade) (Cloak) (Feint) (Shift) (Trick)

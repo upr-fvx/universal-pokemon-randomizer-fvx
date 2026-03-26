@@ -465,8 +465,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void saveMoves() {
+        List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
         for (int i = 1; i <= Gen5Constants.moveCount; i++) {
             byte[] data = moveNarc.files.get(i);
+            String newMoveName = moves[i].name;
+			moveNames.set(i, newMoveName);
             data[2] = Gen5Constants.moveCategoryToByte(moves[i].category);
             data[3] = (byte) moves[i].power;
             data[0] = Gen5Constants.typeToByte(moves[i].type);
@@ -480,6 +483,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             data[4] = (byte) hitratio;
             data[5] = (byte) moves[i].pp;
         }
+        // Update pre-composed battle messages with new move names
+        List<String> battleMsgs = getStrings(false, romEntry.getIntValue("BattleMoveNamesTextOffset"));
+        List<String> oldMoveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
+        for (int i = 1; i <= Gen5Constants.moveCount; i++) {
+            String oldName = oldMoveNames.get(i);
+            String newName = moves[i].name;
+            int base = i * 3;
+            for (int j = 0; j < 3; j++) {
+                if (base + j < battleMsgs.size()) {
+                    battleMsgs.set(base + j, battleMsgs.get(base + j).replace(oldName, newName));
+                }
+            }
+        }
+        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+        setStrings(false, romEntry.getIntValue("BattleMoveNamesTextOffset"), battleMsgs);
 
         try {
             this.writeNARC(romEntry.getFile("MoveData"), moveNarc);
@@ -4184,4 +4202,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return romEntry;
     }
     
+    @Override
+    public int getMaxMoveNameLength() {
+        return 15;
+    }
+
+    @Override
+    public boolean isEnglish() {
+        String romCode = getRomEntry().getRomCode();
+        return romCode.length() >= 4 && romCode.charAt(3) == 'O';
+    }
 }

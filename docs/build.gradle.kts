@@ -20,6 +20,7 @@ val commentRegex = "<!--[\\s\\S]*?-->\\r?\\n".toRegex()
 val platformNames = arrayOf("Windows", "Linux_x86", "Linux_ARM", "Mac_x86", "Mac_ARM")
 
 tasks.register("checkVersionUpdated") {
+    group = "release setup"
     dependsOn(":random:getVersionName")
     doLast {
         val releaseName = (rootProject.extra["randomizerVersion"] as String).replace(".", "_")
@@ -34,6 +35,7 @@ tasks.register("checkVersionUpdated") {
 }
 
 tasks.register("checkReleaseNoteDone") {
+    group = "release setup"
     doLast {
         val text = File(nextPath).readText(StandardCharsets.UTF_8)
             .replace(commentRegex, "") // much easier than to use regex to ignore brackets in comments.
@@ -50,11 +52,13 @@ tasks.register("checkReleaseNoteDone") {
 }
 
 tasks.register("checkFinalizeReleaseNote") {
+    group = "release setup"
     dependsOn("checkVersionUpdated")
     dependsOn("checkReleaseNoteDone")
 }
 
 tasks.register("finalizeReleaseNote") {
+    group = "release"
     dependsOn(":random:getVersionName")
     dependsOn("checkFinalizeReleaseNote")
     doLast {
@@ -71,7 +75,7 @@ tasks.register("finalizeReleaseNote") {
         var iter = platformNames.iterator()
         while (iter.hasNext()) {
             sb.append("https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/" +
-                    "$releaseName/" +
+                    "${releaseName.replace("v", "vFVX")}/" +
                     "UPR_FVX-$releaseNameDotless-${iter.next()}.zip")
             if (iter.hasNext()) sb.append(", ") else sb.append("\n")
         }

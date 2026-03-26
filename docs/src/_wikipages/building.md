@@ -37,7 +37,14 @@ The `random:launch` task (seen above) is the easiest way to get the Randomizer r
 
 `romio:testROMs` and `random:testROMs` (in the "verification" group for each module) runs all tests that *do* rely on supplying ROM files. These ROM files should be put in `roms/`, according to the format described there. Which ROMs are tested, is controlled within the `RomHandlerTest` and `RandomizerTest` classes.
 
-`random:createReleaseZips` (in the "release" group) prepares the zip files for a Randomizer release. 
+### Releasing the Randomizer
+(this section is about tasks for releasing a new Randomizer version, and won't be needed for most developers)
+
+`random:createReleaseZips` (in the "release" group) prepares the zip files for a Randomizer release. They end up in `random/build/dist`.
+
+`docs:finalizeReleaseNote` (in the "release" group) finalizes `release-note-next.md`. This removes comments, adds Liquid front-matter, and finally renames it `[version].md`. A new `release-note-next.md` is then created, by copying `release-note-template.md`. Note that some steps of finalizing the release note must be done manually before running this task. These steps are explained in `release-note-next.md`.
+
+When creating a GitHub release, its tag must be `vFVX[version]`. E.g. `vFVX1.4.2`. Otherwise, the download links on the (non-GitHub) website won't work.
 
 ### About Java runtime images (`jlink` and `jdeps`)
 (this section is technical, and won't be needed for most developers)

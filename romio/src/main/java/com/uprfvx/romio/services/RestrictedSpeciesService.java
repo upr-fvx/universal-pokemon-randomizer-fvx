@@ -47,7 +47,7 @@ public class RestrictedSpeciesService {
         SpeciesSet allowedSpecs = new SpeciesSet();
         allowedSpecs.addAll(noLegendaries ? getNonLegendaries(allowAltFormes) : getAll(allowAltFormes));
         if (allowAltFormes && !allowCosmeticFormes) {
-            allowedSpecs.removeIf(Species::isCosmeticReplacement);
+            allowedSpecs.removeIf(Species::isEssentiallyCosmetic);
         }
         return SpeciesSet.unmodifiable(allowedSpecs);
     }

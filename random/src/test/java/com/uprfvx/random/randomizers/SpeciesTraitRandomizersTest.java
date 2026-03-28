@@ -28,7 +28,7 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
         SpeciesSet formes = all.filter(s -> !s.isBaseForme());
 
         for(Species forme : formes) {
-            if(forme.isActuallyCosmetic()) {
+            if(forme.isEssentiallyCosmetic()) {
                 System.out.println(forme.getFullName() + ": Is cosmetic");
                 System.out.println("\t" + forme.getPrimaryType(false) +
                         (forme.hasSecondaryType(false) ? "/" + forme.getSecondaryType(false) : ""));

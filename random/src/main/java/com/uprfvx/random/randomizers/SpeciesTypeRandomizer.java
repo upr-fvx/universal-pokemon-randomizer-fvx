@@ -61,7 +61,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
     private void carryTypesToAltFormes() {
         SpeciesSet allPokes = romHandler.getSpeciesSetInclFormes();
         for (Species sp : allPokes) {
-            if (sp != null && sp.isActuallyCosmetic()) {
+            if (sp != null && sp.isEssentiallyCosmetic()) {
                 sp.setPrimaryType(sp.getBaseForme().getPrimaryType(false));
                 sp.setSecondaryType(sp.getBaseForme().getSecondaryType(false));
             }

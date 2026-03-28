@@ -1488,8 +1488,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         int formeNumber = enc.getFormeNumber();
         Species forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
 
-
-        return forme.isCosmeticReplacement() ? base : forme;
+        return forme.isEssentiallyCosmetic() ? base : forme;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {

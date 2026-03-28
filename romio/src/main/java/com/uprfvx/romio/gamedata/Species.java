@@ -738,6 +738,14 @@ public class Species implements Comparable<Species> {
         return null;
     }
 
+    /**
+     * Returns true if this is an "essentially cosmetic" alt forme. "Essentially",
+     * because "true" cosmetic alt formes don't get loaded as Species objects.<br>
+     * <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+     * <br><br>
+     * Despite the name, not all "cosmetic" replacements are purely cosmetic
+     * (e.g. Pumpkaboo's sizing), but we view them as interchangeable nonetheless.
+     */
     public boolean isEssentiallyCosmetic() {
         return essentiallyCosmetic;
     }
@@ -759,28 +767,6 @@ public class Species implements Comparable<Species> {
             throw new IllegalStateException(getNumberAndFullName() + " is not an essentially cosmetic forme.");
         }
         this.ignoreCosmetic = true;
-    }
-
-    /**
-     * Checks whether the form is a purely cosmetic variant on its base form.
-     * Has some false positives and negatives at the current time.<br>
-     * See also {@link #isCosmeticReplacement()}
-     * @return Whether the form is cosmetic.
-     */
-    @Deprecated
-    public boolean isActuallyCosmetic() {
-        throw new UnsupportedOperationException(); // TODO: refactor out
-    }
-
-    /**
-     * Checks if this forme can be chosen as a "cosmetic" replacement.<br>
-     * To check if the forme is a cosmetic forme, use {@link #isActuallyCosmetic()}. <br>
-     * Despite the name, not all "cosmetic" replacements are purely cosmetic (e.g. Pumpkaboo's sizing).
-     * @return True if the forme is a cosmetic variant, false otherwise.
-     */
-    @Deprecated
-    public boolean isCosmeticReplacement() {
-        throw new UnsupportedOperationException(); // TODO: refactor out
     }
 
     /**

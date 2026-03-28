@@ -68,7 +68,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
                 }
             }
 
-            if (pkmn.isActuallyCosmetic()) {
+            if (pkmn.isEssentiallyCosmetic()) {
                 for (int i = 0; i < moves.size(); i++) {
                     moves.get(i).move = movesets.get(pkmn.getBaseForme().getNumber()).get(i).move;
                 }
@@ -219,7 +219,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
 
             double atkSpAtkRatio = pkmn.getAttackSpecialAttackRatio();
 
-            if (pkmn.isActuallyCosmetic()) {
+            if (pkmn.isEssentiallyCosmetic()) {
                 for (int i = 0; i < moves.size(); i++) {
                     moves.set(i, movesets.get(pkmn.getBaseForme().getNumber()).get(i));
                 }

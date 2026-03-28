@@ -100,7 +100,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         });
 
 
-        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
+        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {

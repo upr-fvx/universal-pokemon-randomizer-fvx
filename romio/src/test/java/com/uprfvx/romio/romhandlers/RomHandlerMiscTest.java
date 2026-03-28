@@ -324,39 +324,4 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void actuallyCosmeticAndIsCosmeticFormeMatch(String romName) {
-        loadROM(romName);
-
-        SpeciesSet mismatched = new SpeciesSet();
-
-        System.out.println("Cosmetic replacements which are cosmetic formes: ");
-
-        for (Species forme : romHandler.getSpeciesSetInclFormes()) {
-            if (forme.isCosmeticReplacement() != forme.isActuallyCosmetic()) {
-                mismatched.add(forme);
-            }
-            if (forme.isCosmeticReplacement() && forme.isActuallyCosmetic()) {
-                System.out.print(forme.getFullName());
-                if (forme.getName().equals(forme.getFullName())) {
-                    System.out.print(" " + forme.getFormeNumber());
-                }
-                System.out.println();
-            }
-        }
-        System.out.println();
-
-        if (!mismatched.isEmpty()) {
-            for (Species forme : mismatched) {
-                System.out.println(forme.getFullName() +
-                        (forme.getFormeSuffix().isEmpty() ? " " + forme.getFormeNumber() : "")
-                        + ": isCosmeticReplacement = " + forme.isCosmeticReplacement()
-                        + "; isActuallyCosmetic = " + forme.isActuallyCosmetic());
-            }
-            //Assumptions.abort();
-            //This test isn't really meant to be passed, so much as it's meant to be informative.
-        }
-    }
-
 }

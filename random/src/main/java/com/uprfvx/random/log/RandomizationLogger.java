@@ -431,7 +431,7 @@ public class RandomizationLogger {
 
         // Table body
         for (Species pk : allSpecies) {
-            if (pk == null || pk.isActuallyCosmetic() || pk.getEvolutionsFrom().isEmpty()) {
+            if (pk == null || pk.isEssentiallyCosmetic() || pk.getEvolutionsFrom().isEmpty()) {
                 continue;
             }
 
@@ -595,7 +595,7 @@ public class RandomizationLogger {
 
         // Rows for each species
         for (Species pk : allSpecies) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+            if (pk == null || pk.isEssentiallyCosmetic()) {
                 continue;
             }
 
@@ -769,7 +769,7 @@ public class RandomizationLogger {
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
         for (Species pk : romHandler.getSpeciesInclFormes()) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+            if (pk == null || pk.isEssentiallyCosmetic()) {
                 continue;
             }
 

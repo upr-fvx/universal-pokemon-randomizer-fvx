@@ -158,4 +158,18 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void printFormes(String romName) {
+        loadROM(romName);
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (pk.getAltFormes().isEmpty()) continue;
+            System.out.println(pk.getNumberAndFullName());
+            for (Species altForme : pk.getAltFormes()) {
+                System.out.println(altForme.getFormeNumber() + ":\t" + altForme.getNumberAndFullName());
+            }
+        }
+    }
+
 }

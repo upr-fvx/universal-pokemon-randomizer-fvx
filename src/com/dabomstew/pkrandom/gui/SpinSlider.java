@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class SpinSlider extends JPanel {
@@ -59,6 +60,10 @@ public class SpinSlider extends JPanel {
 
     public int getMinimum() {
         return slider.getMinimum();
+    }
+
+    public void addChangeListener(ChangeListener l) {
+        slider.addChangeListener(l);
     }
 
     @Override

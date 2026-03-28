@@ -189,7 +189,7 @@ public class Settings {
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
-    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
+    private int trainersEvolutionLevelModifier = 0; // -100 ~ 155
     private boolean trainersLevelModified;
     private int trainersLevelModifier = 0; // -100 ~ 155
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
@@ -481,7 +481,7 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
         // 14 trainer pokemon evolution level modifier
-        out.write(trainersEvolutionLevelModifier + 50);
+        out.write(trainersEvolutionLevelModifier - 28);  // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -724,7 +724,7 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon evolve, no premature evolutions, SpinSlider activation checkboxes
+        // 63 trainer pokemon evolve, no premature evolutions, Other SpinSlider activation checkboxes
         out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
                 wildLevelsModified, staticLevelModified));
 
@@ -840,7 +840,7 @@ public class Settings {
                 7  // KEEP_THEME_OR_PRIMARY
         ));
         
-        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
+        settings.setTrainersEvolutionLevelModifier(data[14] + 28);  // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 

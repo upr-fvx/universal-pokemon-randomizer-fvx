@@ -740,15 +740,20 @@ public class SettingsUpdater {
         }
 
         if (oldVersion < Version.FVX_1_4_3.id) {
-            // In Version.FVX_1_4_3, 'Do Not Use Prematurely Evolved Pokemon' was moved from Trainer Pokemon to the general
-            // options as 'No Premature Evolutions' which now also affect Wild Pokemon randomization if no other evolution
-            // restrictions apply. The new general option uses the same bit (dataBlock[63], bit 1). Assuming that most
-            // users that want to use the option for Trainer Pokemon want to also use it for Wild Pokemon, keep the
-            // selection state for the option.
+            /*
+            In Version.FVX_1_4_3, 'Do Not Use Prematurely Evolved Pokemon' was moved from Trainer Pokemon to the
+            general options as 'No Premature Evolutions' which now also affect Wild Pokemon randomization if no other
+            evolution restrictions apply. The new general option uses the same bit (dataBlock[63], bit 1). Assuming that
+            most users that want to use the option for Trainer Pokemon want to also use it for Wild Pokemon, keep the
+            selection state for the option
+            */
 
             // Increase percentage modifier ranges from [-50, 50] to the maximum possible with a byte: [-100, 155].
-            // The activation checkbox bits were moved for this from the original byte (previously one bit activation,
-            // 7 bit value).
+            // Trainer Pokemon Evolution level modifier:
+            int val = (dataBlock[14] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
+            dataBlock[14] = (byte) (val - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
+            // For the following percentage modifier ranges, the activation checkbox bits were moved for this from the
+            // original byte (previously one bit activation, 7 bit value).
             updatePercentageLevelModifier(38, 2); // Trainer level modifier
             updatePercentageLevelModifier(40, 3); // Wild Pokemon level modifier
             updatePercentageLevelModifier(49, 4); // Static Pokemon level modifier

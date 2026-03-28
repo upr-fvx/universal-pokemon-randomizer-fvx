@@ -152,7 +152,7 @@ public class RandomizerGUI {
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
-    private JSlider tpPercentageEvolutionLevelModifierSlider;
+    private SpinSlider tpPercentageEvolutionLevelModifierSpinSlider;
     private SpinSlider tpPercentageLevelModifierSpinSlider;
     private JLabel tpCalculatedFullyEvolvedLvlLabel;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
@@ -547,7 +547,7 @@ public class RandomizerGUI {
         pmsGuaranteedLevel1MovesCheckBox.addActionListener(e -> enableOrDisableSubControls());
         pmsForceGoodDamagingCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(e -> enableOrDisableSubControls());
-        tpPercentageEvolutionLevelModifierSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
+        tpPercentageEvolutionLevelModifierSpinSlider.addChangeListener(e -> updateFullyEvolvedAtLvlLabel());
         tpPercentageLevelModifierCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpEliteFourUniquePokemonCheckBox.addActionListener(e -> enableOrDisableSubControls());
         tpUnchangedBattleStyleRadioButton.addActionListener(e -> enableOrDisableSubControls());
@@ -717,9 +717,10 @@ public class RandomizerGUI {
         if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
             int highestEvoLvl = peMakeEvolutionsEasierCheckBox.isSelected()
                     ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
+            int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + tpPercentageEvolutionLevelModifierSpinSlider.getValue() / 100.0));
             tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
                     bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"),
-                    (int) Math.ceil((1 + tpPercentageEvolutionLevelModifierSlider.getValue()/100.0) * highestEvoLvl)));
+                    Math.max(1, Math.min(100, modifiedLevel))));
         }
     }
 
@@ -890,6 +891,12 @@ public class RandomizerGUI {
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
+        tpPercentageEvolutionLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        ));
         tpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
                 0,
                 -100,
@@ -1802,7 +1809,7 @@ public class RandomizerGUI {
         tpUseLocalPokemonCheckBox.setSelected(settings.isTrainersUseLocalPokemon());
         tpNoEarlyWonderGuardCheckBox.setSelected(settings.isTrainersBlockEarlyWonderGuard());
         tpTrainersEvolveTheirPokemonCheckbox.setSelected(settings.isTrainersEvolveTheirPokemon());
-        tpPercentageEvolutionLevelModifierSlider.setValue(settings.getTrainersEvolutionLevelModifier());
+        tpPercentageEvolutionLevelModifierSpinSlider.setValue(settings.getTrainersEvolutionLevelModifier());
         tpPercentageLevelModifierCheckBox.setSelected(settings.isTrainersLevelModified());
         tpPercentageLevelModifierSpinSlider.setValue(settings.getTrainersLevelModifier());
         tpEliteFourUniquePokemonCheckBox.setSelected(settings.getEliteFourUniquePokemonNumber() > 0);
@@ -2095,7 +2102,7 @@ public class RandomizerGUI {
         settings.setTrainersUseLocalPokemon(tpUseLocalPokemonCheckBox.isSelected());
         settings.setTrainersBlockEarlyWonderGuard(tpNoEarlyWonderGuardCheckBox.isSelected());
         settings.setTrainersEvolveTheirPokemon(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
-        settings.setTrainersEvolutionLevelModifier(tpPercentageEvolutionLevelModifierSlider.getValue());
+        settings.setTrainersEvolutionLevelModifier(tpPercentageEvolutionLevelModifierSpinSlider.getValue());
         settings.setTrainersLevelModified(tpPercentageLevelModifierCheckBox.isSelected());
         settings.setTrainersLevelModifier(tpPercentageLevelModifierSpinSlider.getValue());
         settings.setEliteFourUniquePokemonNumber(tpEliteFourUniquePokemonCheckBox.isVisible() && tpEliteFourUniquePokemonCheckBox.isSelected() ? (int)tpEliteFourUniquePokemonSpinner.getValue() : 0);
@@ -2467,9 +2474,9 @@ public class RandomizerGUI {
                 tpBetterMovesetsRegularTrainersCheckBox,
                 tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                 tpRegularTrainersTypeDiversityCheckBox);
-		tpPercentageEvolutionLevelModifierSlider.setVisible(true);
-		tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
-		tpPercentageEvolutionLevelModifierSlider.setValue(0);
+		tpPercentageEvolutionLevelModifierSpinSlider.setVisible(true);
+		tpPercentageEvolutionLevelModifierSpinSlider.setEnabled(false);
+		tpPercentageEvolutionLevelModifierSpinSlider.setValue(0);
         tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
         tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
         tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
@@ -3496,12 +3503,12 @@ public class RandomizerGUI {
         tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
         if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
-            tpPercentageEvolutionLevelModifierSlider.setEnabled(true);
+            tpPercentageEvolutionLevelModifierSpinSlider.setEnabled(true);
             // Only enable fully evolved lvl label if trainer Pokemon are forced to evolve
             tpCalculatedFullyEvolvedLvlLabel.setEnabled(tpTrainersEvolveTheirPokemonCheckbox.isSelected());
         } else {
-            tpPercentageEvolutionLevelModifierSlider.setEnabled(false);
-            tpPercentageEvolutionLevelModifierSlider.setValue(0);
+            tpPercentageEvolutionLevelModifierSpinSlider.setEnabled(false);
+            tpPercentageEvolutionLevelModifierSpinSlider.setValue(0);
             tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
         }
 

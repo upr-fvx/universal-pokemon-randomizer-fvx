@@ -167,7 +167,7 @@ public class Settings {
     private int guaranteedMoveCount = 2;
     private boolean reorderDamagingMoves;
     private boolean movesetsForceGoodDamaging;
-    private int movesetsGoodDamagingPercent = 0;
+    private int movesetsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenMovesetMoves;
     private boolean evolutionMovesForAll;
 

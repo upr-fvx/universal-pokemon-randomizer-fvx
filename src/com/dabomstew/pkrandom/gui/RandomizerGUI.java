@@ -142,7 +142,7 @@ public class RandomizerGUI {
     private JCheckBox pmsNoGameBreakingMovesCheckBox;
     private JCheckBox pmsForceGoodDamagingCheckBox;
     private JSlider pmsGuaranteedLevel1MovesSlider;
-    private JSlider pmsForceGoodDamagingSlider;
+    private SpinSlider pmsForceGoodDamagingSpinSlider;
     private JCheckBox tpRivalCarriesStarterCheckBox;
     private JCheckBox tpSimilarStrengthCheckBox;
     private JCheckBox tpAvoidDuplicatesCheckBox;
@@ -859,27 +859,19 @@ public class RandomizerGUI {
                 1
         );
 
-        SpinnerNumberModel stpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
+        stpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
                 0,
                 -100,
                 155,
                 1
-        );
+        ));
 
-        SpinnerNumberModel tpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
+        pmsForceGoodDamagingSpinSlider.setModel(new SpinnerNumberModel(
                 0,
-                -100,
-                155,
-                1
-        );
-
-
-        SpinnerNumberModel wpPercentageLevelModifierSpinSliderModel = new SpinnerNumberModel(
                 0,
-                -100,
-                155,
+                100,
                 1
-        );
+        ));
 
         List<String> keys = new ArrayList<>(bundle.keySet());
         Collections.sort(keys);
@@ -894,15 +886,23 @@ public class RandomizerGUI {
             }
         }
 
-        stpPercentageLevelModifierSpinSlider.setModel(stpPercentageLevelModifierSpinSliderModel);
-
         tpBossTrainersSpinner.setModel(bossTrainerModel);
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
-        tpPercentageLevelModifierSpinSlider.setModel(tpPercentageLevelModifierSpinSliderModel);
+        tpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        ));
 
-        wpPercentageLevelModifierSpinSlider.setModel(wpPercentageLevelModifierSpinSliderModel);
+        wpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        ));
 
         themeSelectionMenuItem = new JMenuItem();
         themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
@@ -1789,7 +1789,7 @@ public class RandomizerGUI {
         pmsGuaranteedLevel1MovesSlider.setValue(settings.getGuaranteedMoveCount());
         pmsReorderDamagingMovesCheckBox.setSelected(settings.isReorderDamagingMoves());
         pmsForceGoodDamagingCheckBox.setSelected(settings.isMovesetsForceGoodDamaging());
-        pmsForceGoodDamagingSlider.setValue(settings.getMovesetsGoodDamagingPercent());
+        pmsForceGoodDamagingSpinSlider.setValue(settings.getMovesetsGoodDamagingPercent());
         pmsNoGameBreakingMovesCheckBox.setSelected(settings.isBlockBrokenMovesetMoves());
         pmsEvolutionMovesCheckBox.setSelected(settings.isEvolutionMovesForAll());
 
@@ -2078,7 +2078,7 @@ public class RandomizerGUI {
         settings.setReorderDamagingMoves(pmsReorderDamagingMovesCheckBox.isSelected());
 
         settings.setMovesetsForceGoodDamaging(pmsForceGoodDamagingCheckBox.isSelected());
-        settings.setMovesetsGoodDamagingPercent(pmsForceGoodDamagingSlider.getValue());
+        settings.setMovesetsGoodDamagingPercent(pmsForceGoodDamagingSpinSlider.getValue());
         settings.setBlockBrokenMovesetMoves(pmsNoGameBreakingMovesCheckBox.isSelected());
         settings.setEvolutionMovesForAll(pmsEvolutionMovesCheckBox.isVisible() &&
                 pmsEvolutionMovesCheckBox.isSelected());
@@ -2446,9 +2446,9 @@ public class RandomizerGUI {
 		pmsGuaranteedLevel1MovesSlider.setVisible(true);
 		pmsGuaranteedLevel1MovesSlider.setEnabled(false);
 		pmsGuaranteedLevel1MovesSlider.setValue(pmsGuaranteedLevel1MovesSlider.getMinimum());
-		pmsForceGoodDamagingSlider.setVisible(true);
-		pmsForceGoodDamagingSlider.setEnabled(false);
-		pmsForceGoodDamagingSlider.setValue(pmsForceGoodDamagingSlider.getMinimum());
+		pmsForceGoodDamagingSpinSlider.setVisible(true);
+		pmsForceGoodDamagingSpinSlider.setEnabled(false);
+		pmsForceGoodDamagingSpinSlider.setValue(pmsForceGoodDamagingSpinSlider.getMinimum());
 
 		tpComboBox.setVisible(true);
 		tpComboBox.setEnabled(false);
@@ -3427,10 +3427,10 @@ public class RandomizerGUI {
         }
 
         if (pmsForceGoodDamagingCheckBox.isSelected()) {
-            pmsForceGoodDamagingSlider.setEnabled(true);
+            pmsForceGoodDamagingSpinSlider.setEnabled(true);
         } else {
-            pmsForceGoodDamagingSlider.setEnabled(false);
-            pmsForceGoodDamagingSlider.setValue(pmsForceGoodDamagingSlider.getMinimum());
+            pmsForceGoodDamagingSpinSlider.setEnabled(false);
+            pmsForceGoodDamagingSpinSlider.setValue(pmsForceGoodDamagingSpinSlider.getMinimum());
         }
 
         boolean pokemonAdded = tpBossTrainersCheckBox.isSelected() || tpImportantTrainersCheckBox.isSelected() ||

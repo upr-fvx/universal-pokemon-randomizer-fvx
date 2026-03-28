@@ -57,6 +57,10 @@ public class SpinSlider extends JPanel {
         return slider.getValue();
     }
 
+    public int getMinimum() {
+        return slider.getMinimum();
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         slider.setEnabled(enabled);

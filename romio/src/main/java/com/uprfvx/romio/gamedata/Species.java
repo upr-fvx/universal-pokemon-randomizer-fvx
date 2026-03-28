@@ -51,6 +51,10 @@ public class Species implements Comparable<Species> {
     // True Cosmetic        - Cosmetic formes that do not have stat blocks within their game's data,
     //                        which are thus not loaded in as Species objects.
     //                        E.g., the formes of Burmy, Wormadam.
+    // Invisible Cosmetic   - True cosmetic formes which are *entirely* ignored, and not even loaded as
+    //                        integer forme ids, due to being confusing or being handled automatically
+    //                        by the game.
+    //                        E.g., the formes of Arceus, Genesect, Xerneas.
     // Essentially Cosmetic - Cosmetic formes with stat blocks that are thus loaded as Species objects,
     //                        but which should be treated as "cosmetic". When modifying the attributes
     //                        of a base forme, they should be carried to the cosmetic forme as well,
@@ -653,6 +657,8 @@ public class Species implements Comparable<Species> {
      * Registers an altForme Species with a given formeNumber.
      */
     public void addAltForme(int formeNumber, Species altForme) {
+        System.out.printf("New forme to %s, formeNumber=%d, %s%n",
+                getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
         if (altFormes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
                     "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
@@ -673,7 +679,8 @@ public class Species implements Comparable<Species> {
      * Species objects (e.g. those of Burmy), but still need to be known of.
      */
     public void addCosmeticAltForme(int formeNumber) {
-        addAltForme(formeNumber, this);
+        System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
+        altFormes.put(formeNumber, this);
         cosmeticFormeNumbers.add(formeNumber);
     }
 

@@ -42,6 +42,12 @@ public class Gen6Constants {
     private static final int xyFormeCount = 77, orasFormeCount = 104;
     private static final int orasformeMovesetOffset = 35;
 
+    public static final List<Integer> invisibleCosmeticForms = List.of(
+            // Arceus/Genesect: to avoid confusion
+            // Xerneas: Should be handled automatically?
+            SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.xerneas
+    );
+
     public static final List<Integer> actuallyCosmeticForms = Arrays.asList(
             SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.keldeoCosmetic1,

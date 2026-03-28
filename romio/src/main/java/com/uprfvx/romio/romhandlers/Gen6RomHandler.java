@@ -218,8 +218,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 loadBasicPokeStats(pokes[i], pokeGarc.files.get(k).get(0),formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
-                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 if (fi.baseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -231,6 +231,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     formNum = 1;
                     currentMap = new HashMap<>();
                     currentMap.put(formNum,i);
+                }
+                if (Gen6Constants.actuallyCosmeticForms.contains(i)) {
+                    pokes[i].setEssentiallyCosmetic();
+                }
+                if (Gen6Constants.ignoreCosmeticForms.contains(i)) {
+                    pokes[i].setIgnoreCosmetic();
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i++;
@@ -321,21 +327,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                     }
                 } else {
-                    if (pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.genesect && pkmn.getNumber() != SpeciesIDs.xerneas) {
-                        // Reason for exclusions:
-                        // Arceus/Genesect: to avoid confusion
-                        // Xerneas: Should be handled automatically?
+                    if (!Gen6Constants.invisibleCosmeticForms.contains(pkmn.getNumber())) {
                         for (int i = 0; i < formeCount; i++) {
                             pkmn.addCosmeticAltForme(i + 1);
                         }
                     }
-                }
-            } else {
-                if (Gen6Constants.actuallyCosmeticForms.contains(pkmn.getNumber())) {
-                    pkmn.setEssentiallyCosmetic();
-                }
-                if (Gen6Constants.ignoreCosmeticForms.contains(pkmn.getNumber())) {
-                    pkmn.setIgnoreCosmetic();
                 }
             }
         }
@@ -374,7 +370,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isCosmeticReplacement()) pokes[species].getEvolutionsTo().add(evol);
+                            if (!pk.isEssentiallyCosmetic()) {
+                                pokes[species].getEvolutionsTo().add(evol);
+                            }
                         }
                     }
                 }
@@ -4117,5 +4115,5 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 24;
-    };
+    }
 }

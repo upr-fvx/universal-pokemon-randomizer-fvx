@@ -621,6 +621,12 @@ public class Gen7Constants {
         return m;
     }
 
+    public static final List<Integer> invisibleCosmeticForms = List.of(
+            // Arceus/Genesect/Silvally: to avoid confusion
+            // Xerneas: Should be handled automatically?
+            SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.silvally, SpeciesIDs.xerneas
+    );
+
     private static final List<Integer> actuallyCosmeticFormsSM = Arrays.asList(
             SpeciesIDs.SMFormes.cherrimCosmetic1,
             SpeciesIDs.SMFormes.shellosCosmetic1,

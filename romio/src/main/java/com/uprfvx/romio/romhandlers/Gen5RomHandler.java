@@ -236,8 +236,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 loadBasicPokeStats(pokes[i], pokeNarc.files.get(k), formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
-                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 pokes[i].setFormeSuffix(Gen5Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
+                if (i == SpeciesIDs.Gen5Formes.keldeoCosmetic1) {
+                    pokes[i].setEssentiallyCosmetic();
+                }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i = i + 1;
             }
@@ -418,25 +421,22 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         pkmn.setBreedingInfo(bi);
 
         int formeCount = stats[Gen5Constants.bsFormeCountOffset] & 0xFF;
+        System.out.println(pkmn.getNumber() + " formCount=" + formeCount);
         if (formeCount > 1) {
             graphicalFormeCounts.put(pkmn, formeCount);
             formeGraphicsIndices.put(pkmn, romEntry.getIntValue("FormeGraphicsOffset") + readWord(stats, Gen5Constants.bsFormeSpriteOffset));
             int firstFormeOffset = readWord(stats, Gen5Constants.bsFormeOffset);
+            System.out.println("\tfirstFormeOffset=" + firstFormeOffset);
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
                     altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                 }
             } else {
-                if (pkmn.getNumber() != SpeciesIDs.cherrim && pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.deerling && pkmn.getNumber() != SpeciesIDs.sawsbuck && pkmn.getNumber() < SpeciesIDs.genesect) {
-                    // Reason for exclusions:
-                    // Cherrim/Arceus/Genesect: to avoid confusion
-                    // Deerling/Sawsbuck: handled automatically in gen 5
+                if (!Gen5Constants.invisibleCosmeticFormes.contains(pkmn.getNumber())
+                        && pkmn.getNumber() <= SpeciesIDs.genesect) {
                     for (int i = 0; i < formeCount; i++) {
                         pkmn.addCosmeticAltForme(i + 1);
                     }
-                }
-                if (pkmn.getNumber() == SpeciesIDs.Gen5Formes.keldeoCosmetic1) {
-                    pkmn.setEssentiallyCosmetic();
                 }
             }
         }

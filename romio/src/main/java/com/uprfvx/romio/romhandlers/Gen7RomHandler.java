@@ -237,9 +237,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 FormeInfo fi = formeMappings.get(k);
                 int realBaseForme = pokes[fi.baseForme].isBaseForme() ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
                 pokes[i].setName(pokeNames[realBaseForme]);
-                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix()
                         + Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 if (realBaseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -252,10 +252,16 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     currentMap = new HashMap<>();
                     currentMap.put(formNum,i);
                 }
-                pokes[i].setGeneration(generationOf(pokes[i]));
+                if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(i)) {
+                    pokes[i].setEssentiallyCosmetic();
+                }
+                if (Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(i)) {
+                    pokes[i].setIgnoreCosmetic();
+                }
                 if (pokes[i].getFormeSuffix().equals("-Alolan")) {
                     pokes[i].setAlolan();
                 }
+                pokes[i].setGeneration(generationOf(pokes[i]));
                 i++;
             }
             if (prevSpecies != 0) {
@@ -370,26 +376,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         }
                     }
                 } else {
-                    if (pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.genesect && pkmn.getNumber() != SpeciesIDs.xerneas && pkmn.getNumber() != SpeciesIDs.silvally) {
-                        // Reason for exclusions:
-                        // Arceus/Genesect/Silvally: to avoid confusion
-                        // Xerneas: Should be handled automatically?
+                    if (!Gen7Constants.invisibleCosmeticForms.contains(pkmn.getNumber())) {
                         for (int i = 0; i < formeCount; i++) {
                             pkmn.addCosmeticAltForme(i + 1);
                         }
                     }
-                }
-            } else {
-                formeCount = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType())
-                        .getOrDefault(pkmn.getNumber(),0);
-                for (int i = 0; i < formeCount; i++) {
-                    pkmn.addCosmeticAltForme(i + 1);
-                }
-                if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(pkmn.getNumber())) {
-                    pkmn.setEssentiallyCosmetic();
-                }
-                if (Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(pkmn.getNumber())) {
-                    pkmn.setIgnoreCosmetic();
                 }
             }
         }
@@ -431,14 +422,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         int extraInfo = readWord(evoEntry, evo * 8 + 2);
                         int forme = evoEntry[evo * 8 + 6];
                         int level = evoEntry[evo * 8 + 7];
-                        Evolution evol = new Evolution(pk, getPokemonForEncounter(species,forme), et, extraInfo);
+                        // Why is "getSpeciesFor*Encounter*" used here???
+                        Evolution evol = new Evolution(pk, getSpeciesForEncounter(species,forme), et, extraInfo);
                         evol.setForme(forme);
                         if (et.usesLevelThreshold()) {
                             evol.updateEvolutionMethod(evol.getType(), level);
                         }
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isCosmeticReplacement()) {
+                            if (!pk.isEssentiallyCosmetic()) {
                                 if (evol.getForme() > 0) {
                                     // The forme number for the evolution might represent an actual alt forme, or it
                                     // might simply represent a cosmetic forme. If it represents an actual alt forme,
@@ -1266,7 +1258,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = speciesAndFormeData >> 11;
             if (species != 0) {
                 Encounter enc = new Encounter();
-                enc.setSpecies(getPokemonForEncounter(species, forme));
+                enc.setSpecies(getSpeciesForEncounter(species, forme));
                 enc.setFormeNumber(forme);
                 enc.setLevel(minLevel);
                 enc.setMaxLevel(maxLevel);
@@ -1277,7 +1269,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     species = readWord(encounterTable, offset + (40 * j)) & 0x7FF;
                     forme = readWord(encounterTable, offset + (40 * j)) >> 11;
                     Encounter sos = new Encounter();
-                    sos.setSpecies(getPokemonForEncounter(species, forme));
+                    sos.setSpecies(getSpeciesForEncounter(species, forme));
                     sos.setFormeNumber(forme);
                     sos.setLevel(minLevel);
                     sos.setMaxLevel(maxLevel);
@@ -1295,7 +1287,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = readWord(encounterTable, offset) >> 11;
             if (species != 0) {
                 Encounter weatherSOS = new Encounter();
-                weatherSOS.setSpecies(getPokemonForEncounter(species, forme));
+                weatherSOS.setSpecies(getSpeciesForEncounter(species, forme));
                 weatherSOS.setFormeNumber(forme);
                 weatherSOS.setLevel(minLevel);
                 weatherSOS.setMaxLevel(maxLevel);
@@ -1317,18 +1309,18 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private Species getPokemonForEncounter(int species, int forme) {
-        Species pokemon = pokes[species];
+    private Species getSpeciesForEncounter(int species, int forme) {
+        Species pk = pokes[species];
 
-        // If the forme is purely cosmetic, just use the base forme as the Pokemon
-        // for this encounter (the cosmetic forme will be stored in the encounter).
-        if (forme <= pokemon.getCosmeticForms() || forme == 30 || forme == 31) {
-            return pokemon;
+        // Forme 30 & 31 are "fake" formes - really stand-ins for
+        // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
+        // Thus, they don't modify what species should be returned here.
+        // Forme -1 similarly represents "keep the forme when evolving" in evolution data.
+        // (why is this method used for evo data? who knows...)
+        if (forme == 30 || forme == 31 || forme == -1) {
+            return pk;
         } else {
-            int speciesWithForme = absolutePokeNumByBaseForme
-                    .getOrDefault(species, dummyAbsolutePokeNums)
-                    .getOrDefault(forme, 0);
-            return pokes[speciesWithForme];
+            return pk.getForme(forme);
         }
     }
 

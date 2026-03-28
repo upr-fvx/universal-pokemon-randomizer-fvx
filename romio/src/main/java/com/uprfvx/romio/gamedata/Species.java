@@ -43,9 +43,10 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private int formeNumber = 0;
     private Species baseForme = null;
-    private final Map<Integer, Species> altFormes = new HashMap<>();
+    private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
 
-    private boolean alolan = false;
+    // There are a few different kinds of formes:
+    // Alolan               - Formes that are Alolan twists on the base forme. E.g, Alolan Raichu.
     // Cosmetic             - Formes that only differ from their base forme, in non-essential ways.
     // True Cosmetic        - Cosmetic formes that do not have stat blocks within their game's data,
     //                        which are thus not loaded in as Species objects.
@@ -57,16 +58,10 @@ public class Species implements Comparable<Species> {
     //                        E.g., the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
     // Ignore Cosmetic      - Essentially cosmetic formes that are identical or confusing somehow,
     //                        that should thus be ignored when picking random cosmetic formes.
+    private boolean alolan = false;
     private boolean essentiallyCosmetic = false;
     private boolean ignoreCosmetic = false;
-    private List<Integer> cosmeticFormeNumbers = new ArrayList<>();
-
-    private boolean actuallyCosmetic = false;
-    private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
-    //TODO: condense this cosmetic bs into a single denotation
-
-    @Deprecated
-    private int cosmeticForms = 0;
+    private final List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
 
     private int generation = -1;
 
@@ -121,7 +116,6 @@ public class Species implements Comparable<Species> {
 
     public Species(int number) {
         this.number = number;
-        this.altFormes.put(0, this);
     }
 
     /**
@@ -522,6 +516,14 @@ public class Species implements Comparable<Species> {
         //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
+    /**
+     * For debugging. Number is enough to identify a mon, but isn't immediately recognizable.
+     * Full name is immediately recognizable but some formes share the same full name.
+     */
+    public String getNumberAndFullName() {
+        return "#" + number + " - " + getFullName();
+    }
+
     public String getFullName() {
         return name + formeSuffix;
     }
@@ -599,27 +601,16 @@ public class Species implements Comparable<Species> {
 
     /**
      * Gets a random cosmetic forme of this Species, including itself.
+     * {@link #isIgnoreCosmetic()} formes are not picked.
      * @param random A seeded random number generator.
      * @return A forme number for a random cosmetic forme of this Species, including itself.
      */
     public int getRandomCosmeticFormeNumber(Random random) {
-        if(cosmeticForms == 0) {
-            return formeNumber;
+        int formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
+        while (getForme(formeNum).isIgnoreCosmetic()) {
+            formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
         }
-
-        int num = random.nextInt(cosmeticForms);
-        if (num == cosmeticForms) {
-            return formeNumber;
-        }
-
-        if(!realCosmeticFormNumbers.isEmpty()) {
-            if(num > realCosmeticFormNumbers.size()) {
-                throw new IllegalStateException("Not all cosmetic formes listed in cosmeticFormeNumbers!");
-            }
-            return realCosmeticFormNumbers.get(num);
-        } else {
-            return formeNumber + num;
-        }
+        return formeNum;
     }
 
     public String getName() {
@@ -669,12 +660,12 @@ public class Species implements Comparable<Species> {
     public void addAltForme(int formeNumber, Species altForme) {
         if (altFormes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
-                    "Species #%d - %s already has a forme with formeNumber=%d", number, getFullName(), formeNumber));
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
         }
         if (!altForme.isBaseForme()) {
             throw new IllegalStateException(String.format(
-                    "altForme (Species #%d - %s) is already the alt forme of another Species (#%d - %s)",
-                    altForme.number, altForme.getFullName(), altForme.baseForme.number, altForme.baseForme.getFullName()
+                    "altForme (Species %s) is already the alt forme of another Species (%s)",
+                    altForme.getNumberAndFullName(), altForme.baseForme.getNumberAndFullName()
             ));
         }
         altFormes.put(formeNumber, altForme);
@@ -688,7 +679,7 @@ public class Species implements Comparable<Species> {
      */
     public void addCosmeticAltForme(int formeNumber) {
         addAltForme(formeNumber, this);
-        realCosmeticFormNumbers.add(formeNumber);
+        cosmeticFormeNumbers.add(formeNumber);
     }
 
     /**
@@ -701,7 +692,7 @@ public class Species implements Comparable<Species> {
         Species forme = altFormes.get(formeNumber);
         if (forme == null) {
             throw new NoSuchElementException(String.format(
-                    "Species #%d - %s does not have a forme with formeNumber=%d", number, getFullName(), formeNumber));
+                    "Species %s does not have a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
         }
         return forme;
     }
@@ -729,12 +720,12 @@ public class Species implements Comparable<Species> {
 
     @Deprecated
     public int getCosmeticForms() {
-        return cosmeticForms;
+        throw new UnsupportedOperationException();
     }
 
     @Deprecated
     public void setCosmeticForms(int cosmeticForms) {
-        this.cosmeticForms = cosmeticForms;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -744,8 +735,8 @@ public class Species implements Comparable<Species> {
         return alolan;
     }
 
-    public void setAlolan(boolean alolan) {
-        this.alolan = alolan;
+    public void setAlolan() {
+        this.alolan = true;
     }
 
     /**
@@ -760,14 +751,38 @@ public class Species implements Comparable<Species> {
         return null;
     }
 
+    public boolean isEssentiallyCosmetic() {
+        return essentiallyCosmetic;
+    }
+
+    public void setEssentiallyCosmetic() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.essentiallyCosmetic = true;
+        this.cosmeticFormeNumbers.add(formeNumber);
+    }
+
+    public boolean isIgnoreCosmetic() {
+        return ignoreCosmetic;
+    }
+
+    public void setIgnoreCosmetic() {
+        if (!essentiallyCosmetic) {
+            throw new IllegalStateException(getNumberAndFullName() + " is not an essentially cosmetic forme.");
+        }
+        this.ignoreCosmetic = true;
+    }
+
     /**
      * Checks whether the form is a purely cosmetic variant on its base form.
      * Has some false positives and negatives at the current time.<br>
      * See also {@link #isCosmeticReplacement()}
      * @return Whether the form is cosmetic.
      */
+    @Deprecated
     public boolean isActuallyCosmetic() {
-        return actuallyCosmetic;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -776,29 +791,24 @@ public class Species implements Comparable<Species> {
      * Despite the name, not all "cosmetic" replacements are purely cosmetic (e.g. Pumpkaboo's sizing).
      * @return True if the forme is a cosmetic variant, false otherwise.
      */
+    @Deprecated
     public boolean isCosmeticReplacement() {
-        if(baseForme == null) {
-            return false;
-        }
-
-        Species base = baseForme;
-        if(base.getRealCosmeticFormNumbers().isEmpty()) {
-            return formeNumber <= base.formeNumber + base.getCosmeticForms();
-        } else {
-            return base.getRealCosmeticFormNumbers().contains(formeNumber);
-        }
+        throw new UnsupportedOperationException();
     }
 
+    @Deprecated
     public void setActuallyCosmetic(boolean actuallyCosmetic) {
-        this.actuallyCosmetic = actuallyCosmetic;
+        throw new UnsupportedOperationException();
     }
 
+    @Deprecated
     public List<Integer> getRealCosmeticFormNumbers() {
-        return realCosmeticFormNumbers;
+        throw new UnsupportedOperationException();
     }
 
+    @Deprecated
     public void setRealCosmeticFormNumbers(List<Integer> realCosmeticFormNumbers) {
-        this.realCosmeticFormNumbers = realCosmeticFormNumbers;
+        throw new UnsupportedOperationException();
     }
 
     /**

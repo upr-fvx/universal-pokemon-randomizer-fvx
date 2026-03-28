@@ -254,7 +254,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 if (pokes[i].getFormeSuffix().equals("-Alolan")) {
-                    pokes[i].setAlolan(true);
+                    pokes[i].setAlolan();
                 }
                 i++;
             }

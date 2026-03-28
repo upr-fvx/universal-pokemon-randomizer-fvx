@@ -773,7 +773,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		int cosmeticForms = Gen4Constants.cosmeticForms.getOrDefault(pkmn.getNumber(), 0);
 		if (cosmeticForms > 0 && romEntry.getRomType() != Gen4Constants.Type_DP) {
-			pkmn.setCosmeticForms(cosmeticForms);
+            for (int i = 0; i < cosmeticForms; i++) {
+                pkmn.addCosmeticAltForme(i + 1);
+            }
 		}
 	}
 

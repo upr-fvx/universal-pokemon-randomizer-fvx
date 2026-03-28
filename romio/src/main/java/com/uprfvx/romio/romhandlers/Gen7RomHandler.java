@@ -359,12 +359,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     for (int i = 1; i < formeCount; i++) {
                         if (j == 0 || j > jMax) {
                             altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
-                            if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) {
-                                if (!Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(firstFormeOffset+i-1)) { // Skip ignored forms (identical or confusing cosmetic forms)
-                                    pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);
-                                    pkmn.getRealCosmeticFormNumbers().add(i);
-                                }
-                            }
                         } else {
                             altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j));
                             j++;
@@ -380,15 +374,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         // Reason for exclusions:
                         // Arceus/Genesect/Silvally: to avoid confusion
                         // Xerneas: Should be handled automatically?
-                        pkmn.setCosmeticForms(formeCount);
+                        for (int i = 0; i < formeCount; i++) {
+                            pkmn.addCosmeticAltForme(i + 1);
+                        }
                     }
                 }
             } else {
-                if (!Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(pkmn.getNumber())) {
-                    pkmn.setCosmeticForms(Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType()).getOrDefault(pkmn.getNumber(),0));
+                formeCount = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType())
+                        .getOrDefault(pkmn.getNumber(),0);
+                for (int i = 0; i < formeCount; i++) {
+                    pkmn.addCosmeticAltForme(i + 1);
                 }
                 if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(pkmn.getNumber())) {
-                    pkmn.setActuallyCosmetic(true);
+                    pkmn.setEssentiallyCosmetic();
+                }
+                if (Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(pkmn.getNumber())) {
+                    pkmn.setIgnoreCosmetic();
                 }
             }
         }

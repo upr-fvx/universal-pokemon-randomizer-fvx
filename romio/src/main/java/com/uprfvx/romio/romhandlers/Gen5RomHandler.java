@@ -425,19 +425,18 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
                     altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
-                    if (pkmn.getNumber() == SpeciesIDs.keldeo) {
-                        pkmn.setCosmeticForms(formeCount);
-                    }
                 }
             } else {
                 if (pkmn.getNumber() != SpeciesIDs.cherrim && pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.deerling && pkmn.getNumber() != SpeciesIDs.sawsbuck && pkmn.getNumber() < SpeciesIDs.genesect) {
                     // Reason for exclusions:
                     // Cherrim/Arceus/Genesect: to avoid confusion
                     // Deerling/Sawsbuck: handled automatically in gen 5
-                    pkmn.setCosmeticForms(formeCount);
+                    for (int i = 0; i < formeCount; i++) {
+                        pkmn.addCosmeticAltForme(i + 1);
+                    }
                 }
                 if (pkmn.getNumber() == SpeciesIDs.Gen5Formes.keldeoCosmetic1) {
-                    pkmn.setActuallyCosmetic(true);
+                    pkmn.setEssentiallyCosmetic();
                 }
             }
         }

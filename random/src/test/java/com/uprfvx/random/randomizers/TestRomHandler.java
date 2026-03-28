@@ -354,11 +354,12 @@ public class TestRomHandler extends AbstractRomHandler {
 
         //formes
         copy.setFormeSuffix(original.getFormeSuffix());
-        copy.setFormeNumber(original.getFormeNumber());
-        copy.setCosmeticForms(original.getCosmeticForms());
-        copy.setActuallyCosmetic(original.isActuallyCosmetic());
-
-        copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
+        // TODO: copying new forme stuff
+//        copy.setFormeNumber(original.getFormeNumber());
+//        copy.setCosmeticForms(original.getCosmeticForms());
+//        copy.setActuallyCosmetic(original.isActuallyCosmetic());
+//
+//        copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
         //I don't know if that copy is necessary, but it shouldn't hurt?
 
         copy.setGeneration(original.getGeneration());
@@ -417,8 +418,9 @@ public class TestRomHandler extends AbstractRomHandler {
         Species copy = originalToCopies.get(original);
         if(!original.isBaseForme()) {
             Species copyBaseForme = originalToCopies.get(original.getBaseForme());
-            copy.setBaseForme(copyBaseForme);
-            copyBaseForme.setAlolanForme(copy);
+            // TODO: copy new forme stuff
+//            copy.setBaseForme(copyBaseForme);
+//            copyBaseForme.setAlolanForme(copy);
             testAltFormes.add(copy);
 
             if(originalIrregularFormes.contains(original)) {

@@ -61,6 +61,13 @@ public class Gen6Constants {
             SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu
     );
 
+    public static final List<Integer> ignoreCosmeticForms = Arrays.asList(
+            SpeciesIDs.Gen6Formes.cherrimCosmetic1,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic1, SpeciesIDs.Gen6Formes.pikachuCosmetic2,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic3, SpeciesIDs.Gen6Formes.pikachuCosmetic4,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu
+    );
+
     public static final String criesTablePrefixXY = "60000A006B000A0082000A003D010A00";
 
     public static final String introPokemonModelOffsetXY = "01000400020002000200000003000000";

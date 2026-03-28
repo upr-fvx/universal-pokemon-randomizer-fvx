@@ -649,11 +649,6 @@ public class Species implements Comparable<Species> {
         return baseForme == null;
     }
 
-    @Deprecated
-    public void setBaseForme(Species baseForme) {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Registers an altForme Species with a given formeNumber.
      */
@@ -704,28 +699,13 @@ public class Species implements Comparable<Species> {
         return new SpeciesSet(altFormes.values()).filter(pk -> !pk.equals(this));
     }
 
-    @Deprecated
-    public void setAlolanForme(Species alolanForme) {
-        throw new UnsupportedOperationException();
-    }
-
     public int getFormeNumber() {
         return formeNumber;
     }
 
     @Deprecated
-    public void setFormeNumber(int formeNumber) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
     public int getCosmeticForms() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
-    public void setCosmeticForms(int cosmeticForms) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(); // TODO: refactor out
     }
 
     /**
@@ -782,7 +762,7 @@ public class Species implements Comparable<Species> {
      */
     @Deprecated
     public boolean isActuallyCosmetic() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(); // TODO: refactor out
     }
 
     /**
@@ -793,22 +773,7 @@ public class Species implements Comparable<Species> {
      */
     @Deprecated
     public boolean isCosmeticReplacement() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
-    public void setActuallyCosmetic(boolean actuallyCosmetic) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
-    public List<Integer> getRealCosmeticFormNumbers() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Deprecated
-    public void setRealCosmeticFormNumbers(List<Integer> realCosmeticFormNumbers) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(); // TODO: refactor out
     }
 
     /**

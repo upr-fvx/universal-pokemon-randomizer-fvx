@@ -319,23 +319,23 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (firstFormeOffset != 0) {
                     for (int i = 1; i < formeCount; i++) {
                         altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
-                        if (Gen6Constants.actuallyCosmeticForms.contains(firstFormeOffset+i-1)) {
-                            if (pkmn.getNumber() != SpeciesIDs.pikachu && pkmn.getNumber() != SpeciesIDs.cherrim) { // No Pikachu/Cherrim
-                                pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);
-                            }
-                        }
                     }
                 } else {
                     if (pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.genesect && pkmn.getNumber() != SpeciesIDs.xerneas) {
                         // Reason for exclusions:
                         // Arceus/Genesect: to avoid confusion
                         // Xerneas: Should be handled automatically?
-                        pkmn.setCosmeticForms(formeCount);
+                        for (int i = 0; i < formeCount; i++) {
+                            pkmn.addCosmeticAltForme(i + 1);
+                        }
                     }
                 }
             } else {
                 if (Gen6Constants.actuallyCosmeticForms.contains(pkmn.getNumber())) {
-                    pkmn.setActuallyCosmetic(true);
+                    pkmn.setEssentiallyCosmetic();
+                }
+                if (Gen6Constants.ignoreCosmeticForms.contains(pkmn.getNumber())) {
+                    pkmn.setIgnoreCosmetic();
                 }
             }
         }

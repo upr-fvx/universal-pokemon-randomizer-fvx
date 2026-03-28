@@ -399,6 +399,8 @@ public class TestRomHandler extends AbstractRomHandler {
         copy.setCallRate(original.getCallRate());
         copy.setGrowthCurve(original.getGrowthCurve());
 
+        // TODO this should also include breedingInfo
+
         return copy;
     }
 

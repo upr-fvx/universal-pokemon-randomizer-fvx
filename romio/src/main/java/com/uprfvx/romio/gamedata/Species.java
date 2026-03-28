@@ -41,18 +41,32 @@ public class Species implements Comparable<Species> {
     private final int number;
 
     private String formeSuffix = "";
-    private Species baseForme = null;
     private int formeNumber = 0;
-
-    private final Map<Integer, Species> formes = new HashMap<>();
-
-    @Deprecated
-    private int cosmeticForms = 0;
+    private Species baseForme = null;
+    private final Map<Integer, Species> altFormes = new HashMap<>();
 
     private boolean alolan = false;
+    // Cosmetic             - Formes that only differ from their base forme, in non-essential ways.
+    // True Cosmetic        - Cosmetic formes that do not have stat blocks within their game's data,
+    //                        which are thus not loaded in as Species objects.
+    //                        E.g., the formes of Burmy, Wormadam.
+    // Essentially Cosmetic - Cosmetic formes with stat blocks that are thus loaded as Species objects,
+    //                        but which should be treated as "cosmetic". When modifying the attributes
+    //                        of a base forme, they should be carried to the cosmetic forme as well,
+    //                        and when picking a random cosmetic forme they should be included.
+    //                        E.g., the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+    // Ignore Cosmetic      - Essentially cosmetic formes that are identical or confusing somehow,
+    //                        that should thus be ignored when picking random cosmetic formes.
+    private boolean essentiallyCosmetic = false;
+    private boolean ignoreCosmetic = false;
+    private List<Integer> cosmeticFormeNumbers = new ArrayList<>();
+
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
     //TODO: condense this cosmetic bs into a single denotation
+
+    @Deprecated
+    private int cosmeticForms = 0;
 
     private int generation = -1;
 
@@ -107,7 +121,7 @@ public class Species implements Comparable<Species> {
 
     public Species(int number) {
         this.number = number;
-        this.formes.put(0, this);
+        this.altFormes.put(0, this);
     }
 
     /**
@@ -653,7 +667,7 @@ public class Species implements Comparable<Species> {
      * Registers an altForme Species with a given formeNumber.
      */
     public void addAltForme(int formeNumber, Species altForme) {
-        if (formes.containsKey(formeNumber)) {
+        if (altFormes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
                     "Species #%d - %s already has a forme with formeNumber=%d", number, getFullName(), formeNumber));
         }
@@ -663,7 +677,7 @@ public class Species implements Comparable<Species> {
                     altForme.number, altForme.getFullName(), altForme.baseForme.number, altForme.baseForme.getFullName()
             ));
         }
-        formes.put(formeNumber, altForme);
+        altFormes.put(formeNumber, altForme);
         altForme.baseForme = this;
         altForme.formeNumber = formeNumber;
     }
@@ -684,7 +698,7 @@ public class Species implements Comparable<Species> {
      */
     public Species getForme(int formeNumber) {
         // TODO: what is the desired functionality if you use this on an alt forme? On an alt forme with alt formes?
-        Species forme = formes.get(formeNumber);
+        Species forme = altFormes.get(formeNumber);
         if (forme == null) {
             throw new NoSuchElementException(String.format(
                     "Species #%d - %s does not have a forme with formeNumber=%d", number, getFullName(), formeNumber));
@@ -696,7 +710,7 @@ public class Species implements Comparable<Species> {
      * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
      */
     public SpeciesSet getAltFormes() {
-        return new SpeciesSet(formes.values()).filter(pk -> !pk.equals(this));
+        return new SpeciesSet(altFormes.values()).filter(pk -> !pk.equals(this));
     }
 
     @Deprecated

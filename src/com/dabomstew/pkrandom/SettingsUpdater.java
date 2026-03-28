@@ -756,7 +756,8 @@ public class SettingsUpdater {
             // original byte (previously one bit activation, 7 bit value).
             updatePercentageLevelModifier(38, 2); // Trainer level modifier
             updatePercentageLevelModifier(40, 3); // Wild Pokemon level modifier
-            updatePercentageLevelModifier(49, 4); // Static Pokemon level modifier
+            updatePercentageLevelModifier(45, 4); // Totem Pokemon level modifier
+            updatePercentageLevelModifier(49, 5); // Static Pokemon level modifier
         }
 
 

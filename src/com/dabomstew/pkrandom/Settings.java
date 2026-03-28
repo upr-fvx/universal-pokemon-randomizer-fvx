@@ -273,7 +273,7 @@ public class Settings {
     private AuraMod auraMod = AuraMod.UNCHANGED;
     private boolean randomizeTotemHeldItems;
     private boolean totemLevelsModified;
-    private int totemLevelModifier = 0;
+    private int totemLevelModifier = 0; // -100 ~ 155
     private boolean allowTotemAltFormes;
 
     public enum TMsMod {
@@ -643,7 +643,7 @@ public class Settings {
                 allowTotemAltFormes));
 
         // 45 Totem level modifier
-        out.write((totemLevelsModified ? 0x80 : 0) | (totemLevelModifier+50));
+        out.write(totemLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 46 - 47: These two get a byte each for future proofing
         out.write(updateBaseStatsToGeneration);
@@ -653,7 +653,7 @@ public class Settings {
         out.write(selectedEXPCurve.toByte());
 
         // 49 Static level modifier
-        out.write(staticLevelModifier - 28);  // Shift to int8 range: [-100, 155] --> [-128, 127]
+        out.write(staticLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 50 trainer pokemon held items / pokemon ensure two abilities / trainers use local pokemon
         out.write(makeByteSelected(randomizeHeldItemsForBossTrainerPokemon,
@@ -726,7 +726,7 @@ public class Settings {
 
         // 63 trainer pokemon evolve, no premature evolutions, Other SpinSlider activation checkboxes
         out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
-                wildLevelsModified, staticLevelModified));
+                wildLevelsModified, totemLevelsModified, staticLevelModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -1007,8 +1007,7 @@ public class Settings {
         settings.setAllyPokemonMod(restoreEnum(AllyPokemonMod.class,data[44],3,4,5));
         settings.setRandomizeTotemHeldItems(restoreState(data[44],6));
         settings.setAllowTotemAltFormes(restoreState(data[44],7));
-        settings.setTotemLevelsModified(restoreState(data[45],7));
-        settings.setTotemLevelModifier((data[45] & 0x7F) - 50);
+        settings.setTotemLevelModifier(data[45] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setUpdateBaseStatsToGeneration(data[46]);
 
@@ -1088,7 +1087,8 @@ public class Settings {
         settings.setBanPrematureEvos(restoreState(data[63], 1));
         settings.setTrainersLevelModified(restoreState(data[63], 2));
         settings.setWildLevelsModified(restoreState(data[63], 3));
-        settings.setStaticLevelModified(restoreState(data[63], 4));
+        settings.setTotemLevelsModified(restoreState(data[63],4));
+        settings.setStaticLevelModified(restoreState(data[63], 5));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

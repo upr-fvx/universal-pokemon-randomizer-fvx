@@ -280,7 +280,7 @@ public class RandomizerGUI {
     private JRadioButton totpAuraRandomRadioButton;
     private JRadioButton totpAuraRandomSameStrengthRadioButton;
     private JCheckBox totpPercentageLevelModifierCheckBox;
-    private JSlider totpPercentageLevelModifierSlider;
+    private SpinSlider totpPercentageLevelModifierSpinSlider;
     private JCheckBox totpRandomizeHeldItemsCheckBox;
     private JCheckBox totpAllowAltFormesCheckBox;
     private JPanel totpPanel;
@@ -898,6 +898,13 @@ public class RandomizerGUI {
                 1
         ));
         tpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
+                0,
+                -100,
+                155,
+                1
+        ));
+
+        totpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
                 0,
                 -100,
                 155,
@@ -1853,7 +1860,7 @@ public class RandomizerGUI {
         totpRandomizeHeldItemsCheckBox.setSelected(settings.isRandomizeTotemHeldItems());
         totpAllowAltFormesCheckBox.setSelected(settings.isAllowTotemAltFormes());
         totpPercentageLevelModifierCheckBox.setSelected(settings.isTotemLevelsModified());
-        totpPercentageLevelModifierSlider.setValue(settings.getTotemLevelModifier());
+        totpPercentageLevelModifierSpinSlider.setValue(settings.getTotemLevelModifier());
 
         wpRandomizeWildPokemonCheckBox.setSelected(settings.isRandomizeWildPokemon());
 
@@ -2133,7 +2140,7 @@ public class RandomizerGUI {
         settings.setRandomizeTotemHeldItems(totpRandomizeHeldItemsCheckBox.isSelected());
         settings.setAllowTotemAltFormes(totpAllowAltFormesCheckBox.isSelected());
         settings.setTotemLevelsModified(totpPercentageLevelModifierCheckBox.isSelected());
-        settings.setTotemLevelModifier(totpPercentageLevelModifierSlider.getValue());
+        settings.setTotemLevelModifier(totpPercentageLevelModifierSpinSlider.getValue());
 
         settings.setRandomizeWildPokemon(wpRandomizeWildPokemonCheckBox.isSelected());
         settings.setWildPokemonZoneMod(wpZoneNoneRadioButton.isSelected(),
@@ -2516,9 +2523,9 @@ public class RandomizerGUI {
 				totpAllyUnchangedRadioButton, totpAllyRandomRadioButton, totpAllyRandomSimilarStrengthRadioButton,
 				totpAuraUnchangedRadioButton, totpAuraRandomRadioButton, totpAuraRandomSameStrengthRadioButton,
 				totpPercentageLevelModifierCheckBox, totpRandomizeHeldItemsCheckBox, totpAllowAltFormesCheckBox);
-		totpPercentageLevelModifierSlider.setVisible(true);
-		totpPercentageLevelModifierSlider.setEnabled(false);
-		totpPercentageLevelModifierSlider.setValue(0);
+		totpPercentageLevelModifierSpinSlider.setVisible(true);
+		totpPercentageLevelModifierSpinSlider.setEnabled(false);
+		totpPercentageLevelModifierSpinSlider.setValue(0);
 
         setInitialButtonState(wpRandomizeWildPokemonCheckBox, wpZoneNoneRadioButton, wpZoneEncounterSetRadioButton,
                 wpZoneMapRadioButton, wpZoneNamedLocationRadioButton, wpZoneGameRadioButton,
@@ -2966,7 +2973,7 @@ public class RandomizerGUI {
                 totpRandomizeHeldItemsCheckBox.setEnabled(true);
                 totpAllowAltFormesCheckBox.setEnabled(false);
                 totpPercentageLevelModifierCheckBox.setEnabled(true);
-                totpPercentageLevelModifierSlider.setEnabled(false);
+                totpPercentageLevelModifierSpinSlider.setEnabled(false);
             }
 
             // Wild Pokemon
@@ -3580,10 +3587,10 @@ public class RandomizerGUI {
         }
 
         if (totpPercentageLevelModifierCheckBox.isSelected()) {
-            totpPercentageLevelModifierSlider.setEnabled(true);
+            totpPercentageLevelModifierSpinSlider.setEnabled(true);
         } else {
-            totpPercentageLevelModifierSlider.setEnabled(false);
-            totpPercentageLevelModifierSlider.setValue(0);
+            totpPercentageLevelModifierSpinSlider.setEnabled(false);
+            totpPercentageLevelModifierSpinSlider.setValue(0);
         }
 
         if (!wpRandomizeWildPokemonCheckBox.isSelected()) {

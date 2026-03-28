@@ -285,7 +285,7 @@ public class Settings {
     private boolean keepFieldMoveTMs;
     private boolean fullHMCompat;
     private boolean tmsForceGoodDamaging;
-    private int tmsGoodDamagingPercent = 0;
+    private int tmsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenTMMoves;
     private boolean tmsFollowEvolutions;
 
@@ -303,7 +303,7 @@ public class Settings {
     private boolean tutorLevelUpMoveSanity;
     private boolean keepFieldMoveTutors;
     private boolean tutorsForceGoodDamaging;
-    private int tutorsGoodDamagingPercent = 0;
+    private int tutorsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenTutorMoves;
     private boolean tutorFollowEvolutions;
 

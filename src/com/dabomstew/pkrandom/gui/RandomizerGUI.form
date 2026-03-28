@@ -3188,20 +3188,14 @@
                               <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tmForceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="60c91" class="javax.swing.JSlider" binding="tmForceGoodDamagingSlider" default-binding="true">
+                          <component id="60c91" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="tmForceGoodDamagingSpinSlider" default-binding="true">
                             <constraints>
                               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <majorTickSpacing value="20"/>
-                              <minorTickSpacing value="5"/>
-                              <paintLabels value="true"/>
-                              <paintTicks value="true"/>
-                              <snapToTicks value="true"/>
-                              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tmForceGoodDamagingSlider.toolTipText"/>
-                              <value value="0"/>
+                              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.tmForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -3419,20 +3413,14 @@
                               <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.mtRandomRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="108c3" class="javax.swing.JSlider" binding="mtForceGoodDamagingSlider">
+                          <component id="108c3" class="com.dabomstew.pkrandom.gui.SpinSlider" binding="mtForceGoodDamagingSpinSlider">
                             <constraints>
                               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <majorTickSpacing value="20"/>
-                              <minorTickSpacing value="5"/>
-                              <paintLabels value="true"/>
-                              <paintTicks value="true"/>
-                              <snapToTicks value="true"/>
-                              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.mtForceGoodDamagingSlider.toolTipText"/>
-                              <value value="0"/>
+                              <toolTipText resource-bundle="com/dabomstew/pkrandom/gui/Bundle" key="GUI.mtForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
                           <component id="3c7ba" class="javax.swing.JCheckBox" binding="mtNoGameBreakingMovesCheckBox">

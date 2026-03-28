@@ -43,8 +43,13 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private Species baseForme = null;
     private int formeNumber = 0;
-    private Species alolanForme = null;
+
+    private final Map<Integer, Species> formes = new HashMap<>();
+
+    @Deprecated
     private int cosmeticForms = 0;
+
+    private boolean alolan = false;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
     //TODO: condense this cosmetic bs into a single denotation
@@ -102,6 +107,7 @@ public class Species implements Comparable<Species> {
 
     public Species(int number) {
         this.number = number;
+        this.formes.put(0, this);
     }
 
     /**
@@ -183,9 +189,10 @@ public class Species implements Comparable<Species> {
     private List<Evolution> getEvolutionsOfForme(Function<Species, List<Evolution>> evolutionsAccessor) {
         Species species = this;
         if (evolutionsAccessor.apply(species).isEmpty()) {
-            if (species.getAlolanForme() != null && !evolutionsAccessor.apply(species.getAlolanForme()).isEmpty()) {
+            Species alolanForme = species.getAlolanForme();
+            if (alolanForme != null && !evolutionsAccessor.apply(alolanForme).isEmpty()) {
                 // species might be base forme with Alolan forme that carries evolution info, e.g., Alolan Raichu
-                species = species.getAlolanForme();
+                species = alolanForme;
             } else {
                 // If species does not have the relevant evolutions but a base forme, try to determine if the base forme
                 // has the relevant evolutions, e.g., Eternal Flower Floette for evolutionsFrom or Megas for evolutionsTo
@@ -629,18 +636,6 @@ public class Species implements Comparable<Species> {
         return isBaseForme() ? this : baseForme;
     }
 
-    public void setBaseForme(Species baseForme) {
-        this.baseForme = baseForme;
-    }
-
-    public Species getAlolanForme() {
-        return alolanForme;
-    }
-
-    public void setAlolanForme(Species alolanForme) {
-        this.alolanForme = alolanForme;
-    }
-
     /**
      * Returns whether this {@link Species} is a base forme.
      * @return False if the {@link Species} has a different base forme, true otherwise.
@@ -649,20 +644,106 @@ public class Species implements Comparable<Species> {
         return baseForme == null;
     }
 
+    @Deprecated
+    public void setBaseForme(Species baseForme) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Registers an altForme Species with a given formeNumber.
+     */
+    public void addAltForme(int formeNumber, Species altForme) {
+        if (formes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species #%d - %s already has a forme with formeNumber=%d", number, getFullName(), formeNumber));
+        }
+        if (!altForme.isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "altForme (Species #%d - %s) is already the alt forme of another Species (#%d - %s)",
+                    altForme.number, altForme.getFullName(), altForme.baseForme.number, altForme.baseForme.getFullName()
+            ));
+        }
+        formes.put(formeNumber, altForme);
+        altForme.baseForme = this;
+        altForme.formeNumber = formeNumber;
+    }
+
+    /**
+     * Registers a formeNumber as a cosmetic forme. This is useful since cosmetic formes are largely not loaded as
+     * Species objects (e.g. those of Burmy), but still need to be known of.
+     */
+    public void addCosmeticAltForme(int formeNumber) {
+        addAltForme(formeNumber, this);
+        realCosmeticFormNumbers.add(formeNumber);
+    }
+
+    /**
+     * Returns the forme of this Species with the given formeNumber.<br>
+     * Returns this Species, if formeNumber==0, or that of a true cosmetic forme.<br>
+     * @throws NoSuchElementException if no forme with the formeNumber exists
+     */
+    public Species getForme(int formeNumber) {
+        // TODO: what is the desired functionality if you use this on an alt forme? On an alt forme with alt formes?
+        Species forme = formes.get(formeNumber);
+        if (forme == null) {
+            throw new NoSuchElementException(String.format(
+                    "Species #%d - %s does not have a forme with formeNumber=%d", number, getFullName(), formeNumber));
+        }
+        return forme;
+    }
+
+    /**
+     * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
+     */
+    public SpeciesSet getAltFormes() {
+        return new SpeciesSet(formes.values()).filter(pk -> !pk.equals(this));
+    }
+
+    @Deprecated
+    public void setAlolanForme(Species alolanForme) {
+        throw new UnsupportedOperationException();
+    }
+
     public int getFormeNumber() {
         return formeNumber;
     }
 
+    @Deprecated
     public void setFormeNumber(int formeNumber) {
-        this.formeNumber = formeNumber;
+        throw new UnsupportedOperationException();
     }
 
+    @Deprecated
     public int getCosmeticForms() {
         return cosmeticForms;
     }
 
+    @Deprecated
     public void setCosmeticForms(int cosmeticForms) {
         this.cosmeticForms = cosmeticForms;
+    }
+
+    /**
+     * Returns whether this is an Alolan forme.
+     */
+    public boolean isAlolan() {
+        return alolan;
+    }
+
+    public void setAlolan(boolean alolan) {
+        this.alolan = alolan;
+    }
+
+    /**
+     * Returns the Alolan alt forme if this Species has one, or null otherwise.
+     */
+    public Species getAlolanForme() {
+        for (Species forme : getAltFormes()) {
+            if (forme.isAlolan()) {
+                return forme;
+            }
+        }
+        return null;
     }
 
     /**

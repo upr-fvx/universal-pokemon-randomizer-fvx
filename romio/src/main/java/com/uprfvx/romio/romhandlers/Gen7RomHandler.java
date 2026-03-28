@@ -237,8 +237,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 FormeInfo fi = formeMappings.get(k);
                 int realBaseForme = pokes[fi.baseForme].isBaseForme() ? fi.baseForme : pokes[fi.baseForme].getBaseForme().getNumber();
                 pokes[i].setName(pokeNames[realBaseForme]);
-                pokes[i].setBaseForme(pokes[fi.baseForme]);
-                pokes[i].setFormeNumber(fi.formeNumber);
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix()
                         + Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 if (realBaseForme == prevSpecies) {
@@ -255,7 +254,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 if (pokes[i].getFormeSuffix().equals("-Alolan")) {
-                    pokes[fi.baseForme].setAlolanForme(pokes[i]);
+                    pokes[i].setAlolan(true);
                 }
                 i++;
             }

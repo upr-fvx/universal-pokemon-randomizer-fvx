@@ -218,8 +218,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 loadBasicPokeStats(pokes[i], pokeGarc.files.get(k).get(0),formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
-                pokes[i].setBaseForme(pokes[fi.baseForme]);
-                pokes[i].setFormeNumber(fi.formeNumber);
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 if (fi.baseForme == prevSpecies) {
                     formNum++;

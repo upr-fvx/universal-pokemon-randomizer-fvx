@@ -34,10 +34,10 @@ If you are implementing a new setting, make sure you have added it
 * [ ] Make sure the property is supported in the RomHandlers, e.g., by the getters and setters.
 * [ ] If necessary, make sure the property is properly copied during deep copies in the tests.
 ### Documentation
-* [ ] Write a release note in `docs/_release_notes/release-note-next.md` following the template.
+* [ ] Write a release note in `docs/src/_release_notes/release-note-next.md` following the template.
 * [ ] Add yourself to the "Thanks to" section, at the top of the same file.
 * [ ] If necessary, also add others to the "Thanks to" section (who submitted the issue you're solving, drew the CPG sprites, etc.).
-* [ ] If necessary, update affected pages in / add new pages to the wiki in `docs/_wikipages/`.
+* [ ] If necessary, update affected pages in / add new pages to the wiki in `docs/src/_wikipages/`.
 
 Hint: Above list can be copied to a Pull Request to keep track of what is done
 or to argue for what things do not have to be done.

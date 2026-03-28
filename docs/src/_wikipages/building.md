@@ -23,7 +23,7 @@ git clone https://github.com/upr-fvx/universal-pokemon-randomizer-fvx.git
 6. Under File -> Settings -> Build, Execution, Deployment -> Build Tools -> Gradle, [ensure the project is built and ran using Gradle, and that the Gradle JVM is the Project SDK]({{ site.baseurl }}/assets/images/wikipages/building/gradle_options.png).
 
 ### Building and launching the Randomizer (quick)
-Assuming you followed all steps in the previous section, you should see the elephantine Gradle icon near the top-left corner of IntelliJ. [Click on the icon, and navigate to "universal-pokemon-randomizer-fvx -> Tasks -> launch"]({{ site.baseurl }}/assets/images/wikipages/building/gradle_launch.png). There should be a `launch` task next to a cog icon. Double-clicking that will build all code and run the Randomizer if the build is successful. 
+Assuming you followed all steps in the previous section, you should see the elephantine Gradle icon near the top-right corner of IntelliJ. [Click on the icon, and navigate to "universal-pokemon-randomizer-fvx -> Tasks -> launch"]({{ site.baseurl }}/assets/images/wikipages/building/gradle_launch.png). There should be a `launch` task next to a cog icon. Double-clicking that will build all code and run the Randomizer if the build is successful. 
 
 Congrats, you've now built the randomizer!
 

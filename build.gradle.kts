@@ -15,6 +15,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven("https://www.jetbrains.com/intellij-repository/releases") // to get IntelliJ's GUI form builder
     }
 
     dependencies {

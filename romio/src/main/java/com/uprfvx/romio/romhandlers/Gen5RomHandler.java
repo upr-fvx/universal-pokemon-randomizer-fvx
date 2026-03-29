@@ -846,19 +846,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         List<Encounter> encounters = new ArrayList<>();
         for (int i = 0; i < number; i++) {
             Encounter enc = new Encounter();
-            int species = readWord(data, offset + i * 4) & 0x7FF;
+            int speciesID = readWord(data, offset + i * 4) & 0x7FF;
             int forme = readWord(data, offset + i * 4) >> 11;
-            Species baseForme = pokes[species];
-            if (forme <= baseForme.getCosmeticForms() || forme == 30 || forme == 31) {
-                enc.setSpecies(pokes[species]);
-            } else {
-                int speciesWithForme = Gen5Constants.getAbsolutePokeNumByBaseForme(species,forme);
-                if (speciesWithForme == 0) {
-                    enc.setSpecies(pokes[species]); // Failsafe
-                } else {
-                    enc.setSpecies(pokes[speciesWithForme]);
-                }
+            Species pk = pokes[speciesID];
+            if (forme != 30 && forme != 31) {
+                pk = pk.getForme(forme);
             }
+            enc.setSpecies(pk);
             enc.setFormeNumber(forme);
             enc.setLevel(data[offset + 2 + i * 4] & 0xFF);
             enc.setMaxLevel(data[offset + 3 + i * 4] & 0xFF);

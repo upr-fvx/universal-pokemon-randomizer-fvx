@@ -339,6 +339,15 @@ public class SettingsUpdater {
         moveByte(53, 55);
     }
 
+    private void updatePercentageLevelModifier(int originalByte, int newBit) {
+        if (checkBit(dataBlock[originalByte], 7)) {
+            // If slider activation checkbox was selected, move this information to byte 63 at position newBit
+            dataBlock[63] = setBits(dataBlock[63], newBit);
+        }
+        int val = (dataBlock[originalByte] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
+        dataBlock[originalByte] = (byte) (val - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
+    }
+    
     /**
      * Given a quicksettings config string from an old randomizer version,
      * update it to be compatible with the currently running randomizer version.
@@ -739,7 +748,7 @@ public class SettingsUpdater {
             }
         }
 
-        if (oldVersion < Version.FVX_1_4_3.id) {
+        if (oldVersion < Version.FVX_1_5_0.id) {
             /*
             In Version.FVX_1_4_3, 'Do Not Use Prematurely Evolved Pokemon' was moved from Trainer Pokemon to the
             general options as 'No Premature Evolutions' which now also affect Wild Pokemon randomization if no other
@@ -777,12 +786,4 @@ public class SettingsUpdater {
         return Base64.getEncoder().encodeToString(finalConfigString);
     }
 
-    private void updatePercentageLevelModifier(int originalByte, int newBit) {
-        if (checkBit(dataBlock[originalByte], 7)) {
-            // If slider activation checkbox was selected, move this information to byte 63 at position newBit
-            dataBlock[63] = setBits(dataBlock[63], newBit);
-        }
-        int val = (dataBlock[originalByte] & 0x7F) - 50; // Undo previous shift: [0, 100] --> [-50, 50]
-        dataBlock[originalByte] = (byte) (val - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
-    }
 }

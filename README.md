@@ -22,9 +22,9 @@ If you want to guarantee your feature makes it in, the only way is to pick up Ja
 
 # Contributing
 
-If you want to contribute something to the codebase, we recommended to create an issue for it first (using the`Contribution Idea` template). This way, we can discuss how to accomplish this, and possibly whether it is a good fit for the randomizer. 
+If you want to contribute something to the codebase, we recommended to create an issue for it first (using the`Contribution Idea` template). This way, we can discuss how to accomplish this, and possibly whether it is a good fit for the Randomizer. 
 
-[This page on the wiki](https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/wiki/Building-Universal-Pokemon-Randomizer-FVX) explains how to set up to build/test locally.
+[This page on the wiki](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/building.html) explains how to set up to build/test locally. [This wiki page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/structure.html) explains the basic structure of the code.
 
 If you are adding a new setting, make sure you follow the new setting checklist in the root folder of the repository.
 

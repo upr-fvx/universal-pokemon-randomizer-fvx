@@ -501,17 +501,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
             pickFrom = cacheOrReplacement;
         }
 
-        if (!alreadyPlaced.isEmpty()) {
-            // alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
-            // Remove species already placed for the current trainer from pool
-            pickFrom = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
-            // If nothing remains in the pool, add all placed species to the pool again and clear alreadyPlaced
-            if (pickFrom.isEmpty()) {
-                pickFrom.addAll(alreadyPlaced);
-                alreadyPlaced.clear();
-            }
-        }
-
         if (type != null && cachedByType != null) {
             // "Type Themed" settings
             SpeciesSet pokemonOfType;
@@ -579,6 +568,21 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 return cachePick;
             }
             //if we didn't... well, if it's banned anyway, it might as well be from the substitution set
+        }
+
+        // To avoid duplicates (if the option is selected) as often as possible, the following has to be the last filter
+        // applied in this method
+        if (!alreadyPlaced.isEmpty()) {
+            // The SpeciesSet alreadyPlaced can only be non-empty if settings.isTrainersAvoidDuplicate is selected.
+            // Determine pool of Species that have not been placed for the current trainer yet.
+            SpeciesSet notPlaced = pickFrom.filter(pk -> !alreadyPlaced.contains(pk));
+            if (!notPlaced.isEmpty()) { // Only update pool pickFrom if there are unplaced Species left, ...
+                pickFrom = notPlaced;
+            } else { // ... otherwise accept duplicates.
+                // With alreadyPlaced as is, it is guaranteed that notPlaced would be empty for all remaining Pokemon
+                // of the current trainer. Therefore, reset alreadyPlaced to try to minimize number of duplicates.
+                alreadyPlaced.clear();
+            }
         }
 
         return usePowerLevels ?

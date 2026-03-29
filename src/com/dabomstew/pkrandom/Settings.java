@@ -167,7 +167,7 @@ public class Settings {
     private int guaranteedMoveCount = 2;
     private boolean reorderDamagingMoves;
     private boolean movesetsForceGoodDamaging;
-    private int movesetsGoodDamagingPercent = 0;
+    private int movesetsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenMovesetMoves;
     private boolean evolutionMovesForAll;
 
@@ -189,9 +189,9 @@ public class Settings {
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
     private boolean trainersEvolveTheirPokemon;
-    private int trainersEvolutionLevelModifier = 0; // -50 ~ 50
+    private int trainersEvolutionLevelModifier = 0; // -100 ~ 155
     private boolean trainersLevelModified;
-    private int trainersLevelModifier = 0; // -50 ~ 50
+    private int trainersLevelModifier = 0; // -100 ~ 155
     private int eliteFourUniquePokemonNumber = 0; // 0 ~ 2
     private boolean allowTrainerAlternateFormes;
     private boolean swapTrainerMegaEvos;
@@ -241,7 +241,7 @@ public class Settings {
     private boolean banBadRandomWildPokemonHeldItems;
     private boolean balanceShakingGrass;
     private boolean wildLevelsModified;
-    private int wildLevelModifier = 0;
+    private int wildLevelModifier = 0; // -100 ~ 155
     private boolean allowWildAltFormes;
 
     public enum StaticPokemonMod {
@@ -253,7 +253,7 @@ public class Settings {
     private boolean allowStaticAltFormes;
     private boolean swapStaticMegaEvos;
     private boolean staticLevelModified;
-    private int staticLevelModifier = 0; // -50 ~ 50
+    private int staticLevelModifier = 0; // -100 ~ 155
     private boolean correctStaticMusic;
 
     public enum TotemPokemonMod {
@@ -273,7 +273,7 @@ public class Settings {
     private AuraMod auraMod = AuraMod.UNCHANGED;
     private boolean randomizeTotemHeldItems;
     private boolean totemLevelsModified;
-    private int totemLevelModifier = 0;
+    private int totemLevelModifier = 0; // -100 ~ 155
     private boolean allowTotemAltFormes;
 
     public enum TMsMod {
@@ -285,7 +285,7 @@ public class Settings {
     private boolean keepFieldMoveTMs;
     private boolean fullHMCompat;
     private boolean tmsForceGoodDamaging;
-    private int tmsGoodDamagingPercent = 0;
+    private int tmsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenTMMoves;
     private boolean tmsFollowEvolutions;
 
@@ -303,7 +303,7 @@ public class Settings {
     private boolean tutorLevelUpMoveSanity;
     private boolean keepFieldMoveTutors;
     private boolean tutorsForceGoodDamaging;
-    private int tutorsGoodDamagingPercent = 0;
+    private int tutorsGoodDamagingPercent = 0; // 0 ~ 100
     private boolean blockBrokenTutorMoves;
     private boolean tutorFollowEvolutions;
 
@@ -481,7 +481,7 @@ public class Settings {
                 trainersMod == TrainersMod.KEEP_THEME_OR_PRIMARY));
         
         // 14 trainer pokemon evolution level modifier
-        out.write(trainersEvolutionLevelModifier + 50);
+        out.write(trainersEvolutionLevelModifier - 28);  // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 15 wild pokemon (areas)
         out.write(makeByteSelected(!randomizeWildPokemon,
@@ -596,7 +596,7 @@ public class Settings {
         }
 
         // 38 trainer pokemon level modifier
-        out.write((trainersLevelModified ? 0x80 : 0) | (trainersLevelModifier+50));
+        out.write(trainersLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 39 shop items 1
         out.write(makeByteSelected(shopItemsMod == ShopItemsMod.RANDOM, shopItemsMod == ShopItemsMod.SHUFFLE,
@@ -604,7 +604,7 @@ public class Settings {
                 false, guaranteeEvolutionItems));
 
         // 40 wild level modifier
-        out.write((wildLevelsModified ? 0x80 : 0) | (wildLevelModifier+50));
+        out.write(wildLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 41 EXP curve mod, block broken moves, alt forme stuff
         out.write(makeByteSelected(
@@ -643,7 +643,7 @@ public class Settings {
                 allowTotemAltFormes));
 
         // 45 Totem level modifier
-        out.write((totemLevelsModified ? 0x80 : 0) | (totemLevelModifier+50));
+        out.write(totemLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 46 - 47: These two get a byte each for future proofing
         out.write(updateBaseStatsToGeneration);
@@ -653,7 +653,7 @@ public class Settings {
         out.write(selectedEXPCurve.toByte());
 
         // 49 Static level modifier
-        out.write((staticLevelModified ? 0x80 : 0) | (staticLevelModifier+50));
+        out.write(staticLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
 
         // 50 trainer pokemon held items / pokemon ensure two abilities / trainers use local pokemon
         out.write(makeByteSelected(randomizeHeldItemsForBossTrainerPokemon,
@@ -724,8 +724,9 @@ public class Settings {
                         settingBattleStyle.getStyle() == BattleStyle.Style.TRIPLE_BATTLE,
                         settingBattleStyle.getStyle() == BattleStyle.Style.ROTATION_BATTLE) << 3));
 
-        // 63 trainer pokemon evolve, no premature evolutions
-        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos));
+        // 63 trainer pokemon evolve, no premature evolutions, Other SpinSlider activation checkboxes
+        out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
+                wildLevelsModified, totemLevelsModified, staticLevelModified));
 
         // 64 shop items 2
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
@@ -839,7 +840,7 @@ public class Settings {
                 7  // KEEP_THEME_OR_PRIMARY
         ));
         
-        settings.setTrainersEvolutionLevelModifier((data[14] & 0x7F) - 50);
+        settings.setTrainersEvolutionLevelModifier(data[14] + 28);  // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setRandomizeWildPokemon(!restoreState(data[15], 0));
 
@@ -971,8 +972,7 @@ public class Settings {
 
         settings.setCurrentMiscTweaks(codeTweaks);
 
-        settings.setTrainersLevelModified(restoreState(data[38], 7));
-        settings.setTrainersLevelModifier((data[38] & 0x7F) - 50);
+        settings.setTrainersLevelModifier(data[38] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
         settings.setShopItemsMod(restoreEnum(ShopItemsMod.class,data[39],
                 2,
                 1,
@@ -982,8 +982,7 @@ public class Settings {
         settings.setBanOPShopItems(restoreState(data[39],5));
         settings.setGuaranteeEvolutionItems(restoreState(data[39],7));
 
-        settings.setWildLevelsModified(restoreState(data[40],7));
-        settings.setWildLevelModifier((data[40] & 0x7F) - 50);
+        settings.setWildLevelModifier(data[40] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setExpCurveMod(restoreEnum(ExpCurveMod.class,data[41],0,1,2));
 
@@ -1008,8 +1007,7 @@ public class Settings {
         settings.setAllyPokemonMod(restoreEnum(AllyPokemonMod.class,data[44],3,4,5));
         settings.setRandomizeTotemHeldItems(restoreState(data[44],6));
         settings.setAllowTotemAltFormes(restoreState(data[44],7));
-        settings.setTotemLevelsModified(restoreState(data[45],7));
-        settings.setTotemLevelModifier((data[45] & 0x7F) - 50);
+        settings.setTotemLevelModifier(data[45] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setUpdateBaseStatsToGeneration(data[46]);
 
@@ -1017,8 +1015,7 @@ public class Settings {
 
         settings.setSelectedEXPCurve(ExpCurve.fromByte(data[48]));
 
-        settings.setStaticLevelModified(restoreState(data[49],7));
-        settings.setStaticLevelModifier((data[49] & 0x7F) - 50);
+        settings.setStaticLevelModifier(data[49] + 28); // Shift from int8 range: [-128, 127] --> [-100, 155]
 
         settings.setRandomizeHeldItemsForBossTrainerPokemon(restoreState(data[50], 0));
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(restoreState(data[50], 1));
@@ -1088,6 +1085,10 @@ public class Settings {
 
         settings.setTrainersEvolveTheirPokemon(restoreState(data[63], 0));
         settings.setBanPrematureEvos(restoreState(data[63], 1));
+        settings.setTrainersLevelModified(restoreState(data[63], 2));
+        settings.setWildLevelsModified(restoreState(data[63], 3));
+        settings.setTotemLevelsModified(restoreState(data[63],4));
+        settings.setStaticLevelModified(restoreState(data[63], 5));
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));

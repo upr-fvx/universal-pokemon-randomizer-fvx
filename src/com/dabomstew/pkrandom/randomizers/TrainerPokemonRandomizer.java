@@ -767,7 +767,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
         if (levelModifier != 0) {
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                tp.setLevel(Math.min(100, (int) Math.round(tp.getLevel() * (1 + levelModifier / 100.0))));
+                tp.setLevel(applyPercentageLevelModifier(tp.getLevel(), levelModifier));
             }
         }
     }

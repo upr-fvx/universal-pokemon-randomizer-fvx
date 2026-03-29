@@ -70,6 +70,15 @@ zip file to a folder on your computer. You can then run the Randomizer by double
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
+- The percentage level modifier sliders for Static Pokemon, Trainer Pokemon
+  Evolution Levels, Trainer Pokemon, Totem Pokemon, and Wild Pokemon can now be
+  used to select any integer value between -100% and 155%. Furthermore, thanks
+  to an added spinner, it is now easier to recognize which value is chosen and
+  to fine-tune the selection. Note that the lowest possible level is 1 and the
+  highest possible level is 100. 
+  Furthermore, the percentage modifier for good damaging moves for randomized
+  move sets, TMs, and move tutors can now be used to select any integer value 
+  between 0% and 100%. (Issue #170)
 
 ## Bugfixes
 - (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite

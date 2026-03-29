@@ -37,4 +37,9 @@ public abstract class Randomizer {
     public boolean isChangesMade() {
         return changesMade;
     }
+
+    protected int applyPercentageLevelModifier(int level, int percentageLevelModifier) {
+        int modifiedLevel = (int) Math.round(level * (1 + percentageLevelModifier / 100.0));
+        return Math.max(1, Math.min(100, modifiedLevel));
+    }
 }

@@ -122,7 +122,7 @@ public class Version {
     public static final Version FVX_1_4_0 = new Version(417, "1.4.0", "FVX");
     public static final Version FVX_1_4_1 = new Version(418, "1.4.1", "FVX");
     public static final Version FVX_1_4_2 = new Version(419, "1.4.2", "FVX");
-    public static final Version FVX_1_4_2a = new Version(419, "1.4.2a", "FVX");
+    public static final Version FVX_1_4_2a = new Version(420, "1.4.2a", "FVX");
     public static final Version FVX_1_5_0 = LATEST;
 
     // add versions to the bottom as you create them

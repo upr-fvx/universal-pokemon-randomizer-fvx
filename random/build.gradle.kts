@@ -71,17 +71,20 @@ val launcher = javaToolchains.launcherFor {
 }
 val javaHome = launcher.map { it.metadata.installationPath }
 
+val javaVersion = "25.0.2"
+val jdkVersion = "12"
+
 // All of these are 64-bit
 enum class PlatformConfig(
     val apiOS: String, val apiArchitecture: String,
     val launcherExtension: String,
     val jmodsInZip: Boolean = false
 ) {
-    Windows("windows", "x64", "bat", jmodsInZip = true),
-    Linux_x86("linux", "x64", "sh"),
+    Windows("windows", "amd64", "bat", jmodsInZip = true),
+    Linux_x86("linux", "amd64", "sh"),
     Linux_ARM("linux", "aarch64", "sh"),
-    Mac_x86("mac", "x64", "command"),
-    Mac_ARM("mac", "aarch64", "command")
+    Mac_x86("macos", "amd64", "command"),
+    Mac_ARM("macos", "aarch64", "command")
 }
 fun taskName(cfg: PlatformConfig): String {
     return cfg.name.replace("_", "")
@@ -90,7 +93,7 @@ fun taskName(cfg: PlatformConfig): String {
 val zipTasks = mutableListOf<TaskProvider<Zip>>()
 PlatformConfig.entries.forEach { cfg ->
     var extension = "tar.gz"
-    var decompresser: (File) -> Any = { tarTree(it) }
+    var decompresser: (File) -> FileTree = { tarTree(it) }
     if (cfg.jmodsInZip) {
         extension = "zip"
         decompresser = { zipTree(it) }
@@ -98,7 +101,9 @@ PlatformConfig.entries.forEach { cfg ->
 
     val download = tasks.register<Download>("downloadJmods${taskName(cfg)}") {
         group = "release setup"
-        src("http://api.adoptium.net/v3/binary/latest/25/ga/${cfg.apiOS}/${cfg.apiArchitecture}/jmods/hotspot/normal/eclipse")
+        // We use BellSoft Liberica because they include jmods in their normal JDK releases.
+        // At the time of writing Adoptium Eclipse Temurin does not, which caused a bunch of Jlink confusion.
+        src("https://download.bell-sw.com/java/$javaVersion+$jdkVersion/bellsoft-jdk$javaVersion+$jdkVersion-${cfg.apiOS}-${cfg.apiArchitecture}.$extension")
         dest(layout.buildDirectory.file("jmods/compressed/${cfg.name}.$extension"))
         overwrite(false)
     }
@@ -106,15 +111,7 @@ PlatformConfig.entries.forEach { cfg ->
     val decompress = tasks.register<Copy>("decompressJmods${taskName(cfg)}") {
         group = "release setup"
         dependsOn(download)
-        from(download.map { t -> decompresser(t.dest) }) {
-            // This removes the intermediary "JDK-[version]-jmods" directory,
-            // which is nice because we don't know "[version]".
-            eachFile {
-                relativePath = RelativePath(relativePath.isFile,
-                    relativePath.segments.drop(1).toString())
-            }
-            exclude("**-jmods")
-        }
+        from(download.map { t -> decompresser(t.dest) })
         into(layout.buildDirectory.dir("jmods/decompressed/${cfg.name}"))
     }
 
@@ -122,7 +119,7 @@ PlatformConfig.entries.forEach { cfg ->
         group = "release setup"
         dependsOn(decompress)
 
-        val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}")
+        val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}/jdk-$javaVersion/jmods")
         val outputDir = layout.buildDirectory.dir("java-runtime-image/${cfg.name}")
         val modules = "java.base,java.desktop,java.logging,java.naming"
 

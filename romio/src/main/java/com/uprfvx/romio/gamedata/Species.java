@@ -43,6 +43,7 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private int formeNumber = 0;
     private Species baseForme = null;
+    private Species conceptualBaseForme = null; // for "formes-of-formes" TODO: convert code to use this
     private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
 
     // There are a few different kinds of formes:
@@ -651,6 +652,33 @@ public class Species implements Comparable<Species> {
      */
     public boolean isBaseForme() {
         return baseForme == null;
+    }
+
+    /**
+     * Returns the conceptual base forme. If no conceptual base forme has been set
+     * (via {@link #setConceptualBaseForme(Species)}), returns {@link #getBaseForme()}.
+     */
+    public Species getConceptualBaseForme() {
+        return conceptualBaseForme == null ? getBaseForme() : conceptualBaseForme;
+    }
+
+    /**
+     * Sets the conceptual base forme. This is only possible if this Species and
+     * {@code conceptualBaseForme} are alt formes of the same base forme.
+     */
+    public void setConceptualBaseForme(Species conceptualBaseForme) {
+        if (isBaseForme()) {
+            throw new IllegalStateException("This Species (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.isBaseForme()) {
+            throw new IllegalArgumentException("conceptualBaseForme (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.baseForme != baseForme) {
+            throw new IllegalArgumentException(String.format(
+                    "This Species (%s) and conceptualBaseForme (%s) must share the same base forme",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
+        this.conceptualBaseForme = conceptualBaseForme;
     }
 
     /**

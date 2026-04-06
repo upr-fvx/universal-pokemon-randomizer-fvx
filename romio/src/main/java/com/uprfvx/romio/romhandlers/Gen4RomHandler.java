@@ -955,12 +955,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public Species getAltFormeOfSpecies(Species base, int forme) {
-		int pokeNum = Gen4Constants.getAbsolutePokeNumByBaseForme(base.getNumber(), forme);
-		return pokeNum != 0 ? pokes[pokeNum] : base;
-	}
-
-	@Override
 	public SpeciesSet getIrregularFormes() {
 		return new SpeciesSet();
 	}
@@ -2893,7 +2887,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					if (tr.pokemonHaveCustomMoves()) {
 						if (tp.isResetMoves()) {
 							int[] pokeMoves = getMovesAtLevel(
-									getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+									tp.getSpecies().getForme(tp.getForme()).getNumber(), movesets, tp.getLevel());
 							for (int m = 0; m < 4; m++) {
 								writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
 							}
@@ -3047,12 +3041,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	public SpeciesSet getBannedFormesForTrainerPokemon() {
 		SpeciesSet banned = new SpeciesSet();
 		if (romEntry.getRomType() != Gen4Constants.Type_DP) {
-			Species giratinaOrigin = this.getAltFormeOfSpecies(pokes[SpeciesIDs.giratina], 1);
-			if (giratinaOrigin != null) {
-				// Ban Giratina-O for trainers in Gen 4, since he just instantly transforms
-				// back to Altered Forme if he's not holding the Griseous Orb.
-				banned.add(giratinaOrigin);
-			}
+            // Ban Giratina-O for trainers in Gen 4, since it just instantly transforms
+            // back to Altered Forme if he's not holding the Griseous Orb.
+            banned.add(pokes[SpeciesIDs.Gen4Formes.giratinaO]);
 		}
 		return banned;
 	}
@@ -3354,7 +3345,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				DSStaticPokemon statP = romEntry.getStaticPokemon().get(i);
 				StaticEncounter se = new StaticEncounter();
 				Species newPK = statP.getPokemon(this, scriptNARC);
-				newPK = getAltFormeOfSpecies(newPK, statP.getForme(scriptNARC));
+				newPK = newPK.getForme(statP.getForme(scriptNARC));
 				se.setSpecies(newPK);
 				se.setLevel(statP.getLevel(scriptNARC, 0));
 				se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x -> x == currentOffset));

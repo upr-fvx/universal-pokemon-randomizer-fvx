@@ -175,7 +175,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + tr);
                 for (TrainerPokemon tp : tr.getPokemon()) {
-                    Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                    Species sp = tp.getSpecies().getForme(tp.getForme());
                     System.out.println("\t" + sp);
                     boolean keepsTheme = sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme;
                     if (!keepsTheme) {
@@ -227,7 +227,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                speciesPrimaryTypes.add(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()));
+                speciesPrimaryTypes.add(tp.getSpecies().getForme(tp.getForme()));
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
         }
@@ -641,7 +641,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
             for(TrainerPokemon tp : trainer.getPokemon()) {
                 Species sp = tp.getSpecies();
                 if(tp.getForme() != 0) {
-                    sp = romHandler.getAltFormeOfSpecies(sp, tp.getForme());
+                    sp = sp.getForme(tp.getForme());
                 }
 
                 Type primaryType = sp.getPrimaryType(false);
@@ -696,7 +696,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 // Record used original types
                 for (TrainerPokemon tp : trainer.getPokemon()) {
                     if (!tp.isAddedTeamMember()) {
-                        Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                        Species sp = tp.getSpecies().getForme(tp.getForme());
                         usedTypes.add(sp.getPrimaryType(false));
                         if (sp.hasSecondaryType(false)) {
                             usedTypes.add(sp.getSecondaryType(false));
@@ -707,7 +707,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
             }
 
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                Species sp = tp.getSpecies().getForme(tp.getForme());
 
                 Type primaryType = sp.getPrimaryType(false);
                 Type secondaryType = sp.getSecondaryType(false);
@@ -758,7 +758,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     (hasNoTypeTheme ? "no type theme" : "type theme " + theme) + ".");
 
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                Species sp = romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme());
+                Species sp = tp.getSpecies().getForme(tp.getForme());
 
                 Type primaryType = sp.getPrimaryType(false);
                 Type secondaryType = sp.getSecondaryType(false);

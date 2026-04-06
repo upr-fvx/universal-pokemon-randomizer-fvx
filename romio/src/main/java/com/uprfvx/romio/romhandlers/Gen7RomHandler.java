@@ -1002,13 +1002,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return megaEvolutions;
     }
 
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        throw new UnsupportedOperationException();
-//        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-//        return pokeNum != 0 ? (!pokes[pokeNum].isCosmeticReplacement() ? pokes[pokeNum] : pokes[pokeNum].getBaseForme()) : base;
-    }
-
 	@Override
 	public SpeciesSet getIrregularFormes() {
 		return Gen7Constants.getIrregularFormes(romEntry.getRomType())
@@ -1671,7 +1664,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs, itemId);
                     pokeOffs += 4;
                     if (tp.isResetMoves()) {
-                        int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                        int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()).getNumber(), movesets, tp.getLevel());
                         for (int m = 0; m < 4; m++) {
                             writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                         }
@@ -1839,7 +1832,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
+                Species altForme = originalForme.getForme(formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     int numberOfEggMoves = readWord(movedata, 2);
@@ -1851,7 +1844,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     eggMoves.put(altForme.getNumber(), moves);
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
+                    altForme = originalForme.getForme(formeNumber);
                 }
                 iter.remove();
             }
@@ -1883,7 +1876,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 Species originalForme = iter.next();
                 int formeNumber = 1;
                 int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = getAltFormeOfSpecies(originalForme, formeNumber);
+                Species altForme = originalForme.getForme(formeNumber);
                 while (!originalForme.equals(altForme)) {
                     byte[] movedata = eggMovesGarc.files.get(fileNumber).get(0);
                     List<Integer> moves = eggMoves.get(altForme.getNumber());
@@ -1892,7 +1885,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     formeNumber++;
                     fileNumber++;
-                    altForme = getAltFormeOfSpecies(originalForme, formeNumber);
+                    altForme = originalForme.getForme(formeNumber);
                 }
                 iter.remove();
             }

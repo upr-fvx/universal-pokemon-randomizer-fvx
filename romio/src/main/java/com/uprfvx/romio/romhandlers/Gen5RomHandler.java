@@ -602,12 +602,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return new ArrayList<>();
     }
 
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        int pokeNum = Gen5Constants.getAbsolutePokeNumByBaseForme(base.getNumber(),forme);
-        return pokeNum != 0 ? pokes[pokeNum] : base;
-    }
-
 	@Override
 	public SpeciesSet getIrregularFormes() {
 		return Gen5Constants.getIrregularFormes(romEntry.getRomType())
@@ -1396,7 +1390,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -1840,7 +1834,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             DSStaticPokemon statP = romEntry.getStaticPokemon().get(i);
             StaticEncounter se = new StaticEncounter();
             Species newPK = statP.getPokemon(this, scriptNARC);
-            newPK = getAltFormeOfSpecies(newPK, statP.getForme(scriptNARC));
+            newPK = newPK.getForme(statP.getForme(scriptNARC));
             se.setSpecies(newPK);
             se.setLevel(statP.getLevel(scriptNARC, 0));
             se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x-> x == currentOffset));
@@ -1891,7 +1885,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             for (int group = 0; group < 4; group++) {
                                 StaticEncounter se = new StaticEncounter();
                                 Species newPK = pokes[readWord(hhEntry, version * 78 + raritySlot * 26 + group * 2)];
-                                newPK = getAltFormeOfSpecies(newPK, hhEntry[version * 78 + raritySlot * 26 + 20 + group]);
+                                newPK = newPK.getForme(hhEntry[version * 78 + raritySlot * 26 + 20 + group]);
                                 se.setSpecies(newPK);
                                 se.setLevel(hhEntry[version * 78 + raritySlot * 26 + 12 + group]);
                                 se.setMaxLevel(hhEntry[version * 78 + raritySlot * 26 + 8 + group]);

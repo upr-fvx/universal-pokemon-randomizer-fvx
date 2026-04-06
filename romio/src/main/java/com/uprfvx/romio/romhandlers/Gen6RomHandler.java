@@ -913,12 +913,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return megaEvolutions;
     }
 
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? pokes[pokeNum] : base;
-    }
-
 	@Override
 	public SpeciesSet getIrregularFormes() {
 		return Gen6Constants.getIrregularFormes(romEntry.getRomType())
@@ -2039,7 +2033,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()).getNumber(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }

@@ -171,7 +171,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 Species newPK;
                 Species oldPK = old.getSpecies();
                 if (old.getForme() > 0) {
-                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
+                    oldPK = old.getSpecies().getForme(old.getForme());
                 }
                 Integer oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
@@ -353,7 +353,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 Species newPK;
                 Species oldPK = old.getSpecies();
                 if (old.getForme() > 0) {
-                    oldPK = romHandler.getAltFormeOfSpecies(oldPK, old.getForme());
+                    oldPK = old.getSpecies().getForme(old.getForme());
                 }
 
                 if (similarStrengthTotem) {
@@ -396,7 +396,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     Species newAllyPK;
                     Species oldAllyPK = oldAlly.getSpecies();
                     if (oldAlly.getForme() > 0) {
-                        oldAllyPK = romHandler.getAltFormeOfSpecies(oldAllyPK, oldAlly.getForme());
+                        oldAllyPK = oldAlly.getSpecies().getForme(oldAlly.getForme());
                     }
                     if (similarStrengthAllies) {
                         newAllyPK = pickStaticPowerLvlReplacement(

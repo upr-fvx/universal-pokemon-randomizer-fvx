@@ -24,7 +24,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println(area);
             for (Encounter enc : area) {
                 if(enc.getSpecies().isLegendary()) {
-                    Species forme = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    Species forme = enc.getSpecies().getForme(enc.getFormeNumber());
                     fail(forme.getFullName() + " is legendary!");
                 }
             }
@@ -731,14 +731,14 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             }
 
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
-            Encounter firstEnc = area.get(0);
-            Species firstSpec = romHandler.getAltFormeOfSpecies(firstEnc.getSpecies(), firstEnc.getFormeNumber());
+            Encounter firstEnc = area.getFirst();
+            Species firstSpec = firstEnc.getSpecies().getForme(firstEnc.getFormeNumber());
             SpeciesSet allInArea = area.getSpeciesInArea();
 
             Type primaryType = firstSpec.getPrimaryType(false);
             boolean primaryTypeMatched = true;
             for(Encounter enc : area) {
-                Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species spec = enc.getSpecies().getForme(enc.getFormeNumber());
                 if(!spec.hasType(primaryType, false)) {
                     System.out.println(spec);
                     primaryTypeMatched = false;
@@ -755,7 +755,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
                 boolean secondaryTypeMatched = true;
                 for(Encounter enc : area) {
-                    Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    Species spec = enc.getSpecies().getForme(enc.getFormeNumber());
                     if(!spec.hasType(secondaryType, false)) {
                         System.out.println(spec);
                         secondaryTypeMatched = false;
@@ -788,7 +788,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             beforeAreaStrings.add(beforeStrings);
             beforeStrings.add(area.toString());
             for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = enc.getSpecies().getForme(enc.getFormeNumber());
                 beforeStrings.add(toNameAndTypesString(pk));
             }
 
@@ -845,7 +845,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + area);
                 for (Encounter enc : area) {
-                    Species sp = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    Species sp = enc.getSpecies().getForme(enc.getFormeNumber());
                     System.out.println("\t" + toNameAndTypesString(sp));
                     assertTrue(sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme);
                 }
@@ -866,7 +866,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             List<Type> beforeTypes = new ArrayList<>();
             beforePrimaryTypes.add(beforeTypes);
             for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = enc.getSpecies().getForme(enc.getFormeNumber());
                 beforeStrings.add(toNameAndTypesString(pk));
                 beforeTypes.add(pk.getPrimaryType(false));
             }
@@ -886,7 +886,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println("After: " + area);
             for (int j = 0; j < area.size(); j++) {
                 Encounter enc = area.get(j);
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = enc.getSpecies().getForme(enc.getFormeNumber());
                 Type primary = beforePrimaryTypes.get(i).get(j);
                 System.out.println("\t" + toNameAndTypesString(pk));
                 assertTrue(pk.getPrimaryType(false) == primary || pk.getSecondaryType(false) == primary);
@@ -1486,7 +1486,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     private Species getNonCosmeticForme(Encounter enc) {
         Species base = enc.getSpecies();
         int formeNumber = enc.getFormeNumber();
-        Species forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
+        Species forme = base.getForme(formeNumber);
 
         return forme.isEssentiallyCosmetic() ? base : forme;
     }

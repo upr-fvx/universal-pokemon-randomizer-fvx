@@ -1345,11 +1345,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        return base;
-    }
-
-    @Override
     public SpeciesSet getIrregularFormes() {
         return new SpeciesSet();
     }

@@ -690,28 +690,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        if (base == null) {
-            throw new IllegalArgumentException("base can't be null");
-        }
-
-        // Minior causes trouble when testing, because testAltFormesMap doesn't properly
-        // represent forms-with-forms. This is a quick workaround, instead of fixing that.
-        // All will need to be reworked come the form rewrite, anyways...
-        if (base.getBaseNumber() == SpeciesIDs.minior) {
-            return base;
-        }
-
-        Species altForme = testAltFormesMap.get(base) == null ? base
-                : testAltFormesMap.get(base).get(forme);
-        if (altForme == null) {
-            throw new RuntimeException("species " + base.getFullName() + " has no alt forme " + forme);
-        }
-        return altForme;
-        //why is this even in RomHandler??
-    }
-
-    @Override
     public SpeciesSet getIrregularFormes() {
         return testIrregularFormes;
     }

@@ -1093,7 +1093,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
                 int[] moveset = highestLevelPoke.isResetMoves() ?
                         romHandler.getMovesAtLevel(
-                                highestLevelPoke.getSpecies().getForme(highestLevelPoke.getForme()).getNumber(),
+                                highestLevelPoke.getSpecies().getForme(highestLevelPoke.getForme()),
                                 movesets,
                                 highestLevelPoke.getLevel()) :
                         highestLevelPoke.getMoves();
@@ -1102,7 +1102,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 for (TrainerPokemon tp : t.getPokemon()) {
                     int[] moveset = tp.isResetMoves() ?
                             romHandler.getMovesAtLevel(
-                                    tp.getSpecies().getForme(tp.getForme()).getNumber(),
+                                    tp.getSpecies().getForme(tp.getForme()),
                                     movesets,
                                     tp.getLevel()) :
                             tp.getMoves();
@@ -1153,7 +1153,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
                         int[] pokeMoves = tp.isResetMoves() ?
                                 romHandler.getMovesAtLevel(
-                                        tp.getSpecies().getForme(tp.getForme()).getNumber(),
+                                        tp.getSpecies().getForme(tp.getForme()),
                                         romHandler.getMovesLearnt(), tp.getLevel()) :
                                 tp.getMoves();
                         pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();

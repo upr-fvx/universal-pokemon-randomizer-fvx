@@ -372,12 +372,12 @@ public interface RomHandler {
     /**
      * Get the 4 moves known by a Species at a particular level.
      *
-     * @param pkmn Species index to get moves for.
+     * @param pkmn Species to get moves for.
      * @param movesets Map of Species indices mapped to movesets.
      * @param level Level to get at.
      * @return Array with move indices.
      */
-    int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
+    int[] getMovesAtLevel(Species pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
 
 
         // ==============

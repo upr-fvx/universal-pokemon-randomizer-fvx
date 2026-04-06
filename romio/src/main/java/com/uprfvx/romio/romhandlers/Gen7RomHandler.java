@@ -1664,7 +1664,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs, itemId);
                     pokeOffs += 4;
                     if (tp.isResetMoves()) {
-                        int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()).getNumber(), movesets, tp.getLevel());
+                        int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()), movesets, tp.getLevel());
                         for (int m = 0; m < 4; m++) {
                             writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                         }

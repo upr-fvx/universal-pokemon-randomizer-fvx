@@ -748,31 +748,35 @@ public class Gen7Constants {
         }
     }
 
-    private static final Map<Integer,Integer> altFormesWithCosmeticFormsSM = setupAltFormesWithCosmeticForms(Type_SM);
-    private static final Map<Integer,Integer> altFormesWithCosmeticFormsUSUM = setupAltFormesWithCosmeticForms(Type_USUM);
+    private static final Map<Integer,Integer> altFormesWithConceptualBaseFormesSM = Map.of(
+            SpeciesIDs.SMFormes.raticateACosmetic1, SpeciesIDs.SMFormes.raticateA,
+            SpeciesIDs.SMFormes.zygarde10Cosmetic1, SpeciesIDs.SMFormes.zygarde10,
+            SpeciesIDs.SMFormes.miniorCCosmetic1, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic2, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic3, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic4, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic5, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic6, SpeciesIDs.SMFormes.miniorC
+    );
 
-    public static Map<Integer,Integer> getAltFormesWithCosmeticForms(int romType) {
+    private static final Map<Integer,Integer> altFormesWithConceptualBaseFormesUSUM = Map.of(
+            SpeciesIDs.USUMFormes.raticateACosmetic1, SpeciesIDs.USUMFormes.raticateA,
+            SpeciesIDs.USUMFormes.marowakACosmetic1, SpeciesIDs.USUMFormes.raticateA,
+            SpeciesIDs.USUMFormes.zygarde10Cosmetic1, SpeciesIDs.USUMFormes.zygarde10,
+            SpeciesIDs.USUMFormes.miniorCCosmetic1, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic2, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic3, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic4, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic5, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic6, SpeciesIDs.USUMFormes.miniorC
+    );
+
+    public static Map<Integer,Integer> getAltFormesWithConceptualBaseFormes(int romType) {
         if (romType == Type_SM) {
-            return altFormesWithCosmeticFormsSM;
+            return altFormesWithConceptualBaseFormesSM;
         } else {
-            return altFormesWithCosmeticFormsUSUM;
+            return altFormesWithConceptualBaseFormesUSUM;
         }
-    }
-
-    private static Map<Integer,Integer> setupAltFormesWithCosmeticForms(int romType) {
-        Map<Integer,Integer> map = new HashMap<>();
-        if (romType == Type_SM) {
-            map.put(SpeciesIDs.SMFormes.raticateA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.SMFormes.zygarde10,1); // 1 form (Power Construct)
-            map.put(SpeciesIDs.SMFormes.miniorC,6); // 6 forms (colors)
-        } else {
-            map.put(SpeciesIDs.USUMFormes.raticateA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.USUMFormes.marowakA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.USUMFormes.zygarde10,1); // 1 form (Power Construct)
-            map.put(SpeciesIDs.USUMFormes.miniorC,6); // 6 forms (colors)
-        }
-
-        return map;
     }
 
     private static Type[] constructTypeTable() {

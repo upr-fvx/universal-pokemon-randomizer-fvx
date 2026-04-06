@@ -223,6 +223,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setGeneration(generationOf(pokes[i]));
             }
 
+            Map<Integer, Integer> withConceptualBaseFormes = Gen7Constants.getAltFormesWithConceptualBaseFormes(getROMType());
             int i = pokemonCount + 1;
             for (int k: formeMappings.keySet()) {
                 pokes[i] = new Species(i);
@@ -234,6 +235,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pokes[i].setFormeSuffix(pokes[i].getBaseForme().getFormeSuffix()
                         + Gen7Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
+                if (withConceptualBaseFormes.containsKey(i)) {
+                    pokes[i].setConceptualBaseForme(pokes[withConceptualBaseFormes.get(i)]);
+                }
                 if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(i)) {
                     pokes[i].setEssentiallyCosmetic();
                 }
@@ -337,22 +341,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             if (!altFormes.containsKey(pkmn.getNumber())) {
                 int firstFormeOffset = IOFunctions.read2ByteInt(stats, Gen7Constants.bsFormeOffset);
                 if (firstFormeOffset != 0) {
-                    int j = 0;
-                    int jMax = 0;
-                    int theAltForme = 0;
-                    Set<Integer> altFormesWithCosmeticForms = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType()).keySet();
                     for (int i = 1; i < formeCount; i++) {
-                        if (j == 0 || j > jMax) {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
-                        } else {
-                            altFormes.put(firstFormeOffset + i - 1,new FormeInfo(theAltForme,j));
-                            j++;
-                        }
-                        if (altFormesWithCosmeticForms.contains(firstFormeOffset + i - 1)) {
-                            j = 1;
-                            jMax = Gen7Constants.getAltFormesWithCosmeticForms(romEntry.getRomType()).get(firstFormeOffset + i - 1);
-                            theAltForme = firstFormeOffset + i - 1;
-                        }
+                        altFormes.put(firstFormeOffset + i - 1, new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                     }
                 } else {
                     if (!Gen7Constants.invisibleCosmeticForms.contains(pkmn.getNumber())) {
@@ -377,15 +367,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         // Forme 30 & 31 are "fake" formes - really stand-ins for
         // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
         // Thus, they don't modify what species should be returned here.
-        if (formeNumber != 30 && formeNumber != 31) {
-            Map<Integer, Integer> speciesIDsOfFormes = internalSpeciesIDsByBaseForme
-                    .getOrDefault(speciesID, Map.of(0, speciesID));
-            Integer formeSpeciesID = speciesIDsOfFormes.get(formeNumber);
-            if (formeSpeciesID == null) {
-                throw new IllegalArgumentException(pk.getNumberAndFullName() + " does not have an internal forme #"
-                        + formeNumber);
-            }
-            pk = pokes[formeSpeciesID];
+        // Likewise, -1 stands for "keep the forme upon evolution" in the evo data.
+        if (formeNumber != 30 && formeNumber != 31 && formeNumber != -1) {
+            pk = pk.getForme(formeNumber);
         }
 
         return pk;
@@ -402,67 +386,50 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void populateEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                pkmn.getEvolutionsFrom().clear();
-                pkmn.getEvolutionsTo().clear();
+        for (Species pk : pokes) {
+            if (pk != null) {
+                pk.getEvolutionsFrom().clear();
+                pk.getEvolutionsTo().clear();
             }
         }
 
         // Read GARC
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
-            for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); i++) {
-                Species pk = pokes[i];
-                byte[] evoEntry = evoGARC.files.get(i).get(0);
-                for (int evo = 0; evo < 8; evo++) {
-                    int method = readWord(evoEntry, evo * 8);
-                    int species = readWord(evoEntry, evo * 8 + 4);
+            for (int pkNum = 1; pkNum <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); pkNum++) {
+                Species pkFrom = pokes[pkNum];
+                byte[] evoEntry = evoGARC.files.get(pkNum).get(0);
+                for (int i = 0; i < 8; i++) {
+                    int method = readWord(evoEntry, i * 8);
+                    int species = readWord(evoEntry, i * 8 + 4);
                     if (method >= 1 && method <= Gen7Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen7Constants.gameSpecificEvolutionMethods.contains(method) ?
-                                getGameSpecificEvolutionType(evoEntry, evo) :
+                                getGameSpecificEvolutionType(evoEntry, i) :
                                 Gen7Constants.evolutionTypeFromIndex(method);
                         if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
 
-                        int extraInfo = readWord(evoEntry, evo * 8 + 2);
-                        int forme = evoEntry[evo * 8 + 6];
-                        int level = evoEntry[evo * 8 + 7];
-                        // -1 represents "keep the forme when evolving" in evolution data.
-                        Species evoTo = forme == -1 ? pokes[species] : pokes[species].getForme(forme);
-                        Evolution evol = new Evolution(pk, evoTo, et, extraInfo);
-                        evol.setForme(forme);
+                        int extraInfo = readWord(evoEntry, i * 8 + 2);
+                        int forme = evoEntry[i * 8 + 6];
+                        int level = evoEntry[i * 8 + 7];
+                        Species pkTo = getInternalForme(species, forme);
+                        Evolution evo = new Evolution(pkFrom, pkTo, et, extraInfo);
+                        evo.setForme(forme);
                         if (et.usesLevelThreshold()) {
-                            evol.updateEvolutionMethod(evol.getType(), level);
+                            evo.updateEvolutionMethod(evo.getType(), level);
                         }
-                        if (!pk.getEvolutionsFrom().contains(evol)) {
-                            pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isEssentiallyCosmetic()) {
-                                if (evol.getForme() > 0) {
-                                    // The forme number for the evolution might represent an actual alt forme, or it
-                                    // might simply represent a cosmetic forme. If it represents an actual alt forme,
-                                    // we'll need to figure out what the absolute species ID for that alt forme is
-                                    // and update its evolutions. If it instead represents a cosmetic forme, then the
-                                    // absolutePokeNumByBaseFormeMap will be null, since there's no secondary species
-                                    // entry for this forme.
-                                    Map<Integer, Integer> internalFormes = internalSpeciesIDsByBaseForme.get(species);
-                                    if (internalFormes != null) {
-                                        species = internalFormes.get(evol.getForme());
-                                    }
-                                }
-                                pokes[species].getEvolutionsTo().add(evol);
-                            }
-                        }
+                        pkFrom.getEvolutionsFrom().add(evo);
+                        pkTo.getEvolutionsTo().add(evo);
                     }
                 }
 
                 // Nincada's Shedinja evo is hardcoded into the game's executable,
                 // so if the Pokemon is Nincada, then let's and put it as one of its evolutions
-                if (pk.getNumber() == SpeciesIDs.nincada) {
+                if (pkFrom.getNumber() == SpeciesIDs.nincada) {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
-                    Evolution evol = new Evolution(pk, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
-                    evol.setForme(-1);
-                    pk.getEvolutionsFrom().add(evol);
-                    shedinja.getEvolutionsTo().add(evol);
+                    Evolution evo = new Evolution(pkFrom, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
+                    evo.setForme(-1);
+                    pkFrom.getEvolutionsFrom().add(evo);
+                    shedinja.getEvolutionsTo().add(evo);
                 }
             }
         } catch (IOException e) {
@@ -1256,7 +1223,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = speciesAndFormeData >> 11;
             if (species != 0) {
                 Encounter enc = new Encounter();
-                enc.setSpecies(getSpeciesForEncounter(species, forme));
+                enc.setSpecies(getInternalForme(species, forme));
                 enc.setFormeNumber(forme);
                 enc.setLevel(minLevel);
                 enc.setMaxLevel(maxLevel);
@@ -1267,7 +1234,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     species = readWord(encounterTable, offset + (40 * j)) & 0x7FF;
                     forme = readWord(encounterTable, offset + (40 * j)) >> 11;
                     Encounter sos = new Encounter();
-                    sos.setSpecies(getSpeciesForEncounter(species, forme));
+                    sos.setSpecies(getInternalForme(species, forme));
                     sos.setFormeNumber(forme);
                     sos.setLevel(minLevel);
                     sos.setMaxLevel(maxLevel);
@@ -1285,7 +1252,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = readWord(encounterTable, offset) >> 11;
             if (species != 0) {
                 Encounter weatherSOS = new Encounter();
-                weatherSOS.setSpecies(getSpeciesForEncounter(species, forme));
+                weatherSOS.setSpecies(getInternalForme(species, forme));
                 weatherSOS.setFormeNumber(forme);
                 weatherSOS.setLevel(minLevel);
                 weatherSOS.setMaxLevel(maxLevel);
@@ -1304,19 +1271,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return SOSType.HAIL;
         } else {
             return SOSType.SAND;
-        }
-    }
-
-    private Species getSpeciesForEncounter(int species, int forme) {
-        Species pk = pokes[species];
-
-        // Forme 30 & 31 are "fake" formes - really stand-ins for
-        // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
-        // Thus, they don't modify what species should be returned here.
-        if (forme == 30 || forme == 31) {
-            return pk;
-        } else {
-            return pk.getForme(forme);
         }
     }
 

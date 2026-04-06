@@ -10,10 +10,10 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-@bergmaen and @glamurio for your code contributions,
-[Every person who submitted a solved issue]@MClarke93 and @Shiigu for reporting Issues,
+[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Happy Time Boredom and bepis from Spriter's Resource for the CPG sprites, and
+[Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -34,56 +34,18 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
 ### Pokemon Base Stats
-- (Gen 1-7) Moved the option 'Do Not Use Prematurely Evolved Pokemon' from the
-  Trainer Pokemon tab to the General Options. If selected, it now also affects
-  randomized Wild Pokemon if neither 'Same Evolution Stage' nor 'Keep
-  Relations' is selected for Wild Pokemon Evolution Restrictions. (Issue #146)
+- [The description of a new feature here.] (Issue #[issue num])
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Move Data
-- (Gen 3-7) Added the ability to randomize move names. Due to technical limitations,
-this feature is only availabe from Generation 3 and upwards. (Issue #176)
-
-### Trainer Pokemon
-- (Gen 1-7) Introduce new option 'Try to Avoid Duplicates'. If this is checked,
-  any randomly chosen Pokemon for a given trainer will be different from the
-  other Pokemon of the trainer. However, if other rules restrict the set of
-  available Pokemon too much, duplicates are possible and weaker or stronger
-  Pokemon might be chosen even if 'Try to Use Pokemon with Similar Strength' is
-  selected. (Issue #5, #162)
-- (Gen 1-7) The first rival and/or friend battles no longer have their
-  Pokemon's level increased if a value greater than 0 is chosen for 'Percentage
-  Level Modifier:'. (Pull request #164)
-- (Gen 1-7) Even for 'Unchanged' Trainer Pokemon, if an 'Additional Pokemon
-  for...' option is selected, enable respective 'Force Diverse Types for...'
-  option as well. Selecting it guarantees that for any trainers that are not
-  type themed the added Pokemon have diverse types from the original Pokemon of
-  the trainer. (Issue #150)
-
-### Graphics
-- (Gen 2) New Custom Player Graphics: Dennis the Menace (from Beano) by Happy Time Boredom, Quote (from Cave Story) by bepis.
-
 ### Misc. Tweaks
-- (All games except ORAS) New Misc. Tweak: "Fast Egg Hatching". Makes all eggs hatch in as few egg cycles as possible. Generally, this means all eggs will hatch in <256 steps.
+- (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- Upgraded/automatized the Randomizer's build environment. 
-  - For end users, this has the following effects: 
-    - Fixes for urgent bugs will come faster (since building and packaging a new release is faster).
-    - The Randomizer now comes with a mini-version of Java, sufficient to run it. This means Java does not need to be separately installed. On the other hand the mini-Java takes some space, so to not bloat the download folder, it is now divided into one download for each OS/architecture (Windows, Mac x86, Mac ARM, Linux x86, Linux ARM). The Randomizer no longer supports running on 32-bit Windows.
-    - (32-bit Windows, or other odd OS/architecture combos, can probably still work *if* you manage scrunch up a compatible Java 25 JRE.)
-  - For developers, this has the following effects:
-    - Gradle is now used, for building and testing the Randomizer. [The "Building" page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/building.html) has been updated to account for these changes.
-    - Dependencies are automatically managed.
-    - We are no longer stuck with Java 8, now using Java 25.
-    - Building and packaging a new release is much faster.
-    - The code has been restructured, and the `romio`/`random`/`devtools` division has been pulled to root. `utils` has also been pulled out of `romio`. This division is also enforced by Gradle. See [this wiki page](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/structure.html) explaining the code divisions.
-    - It should be possible to further facilitate/automatize tasks, using GitHub Actions hooking into Gradle.
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen 4-7) Fixed Pokemon with formes showing up prematurely evolved despite
-  'Do Not Use Prematurely Evolved Pokemon' being selected. (Issue #142)
-- Fixed Special Attack not getting randomized when "Randomize Added Stats on Evolution" is used (Issue #178)
+- (Gen [N]) Fixed [...]. 
+- (GUI) Fixed [...].

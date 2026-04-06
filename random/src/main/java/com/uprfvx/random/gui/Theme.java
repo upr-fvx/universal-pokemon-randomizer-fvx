@@ -7,12 +7,13 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 public enum Theme {
-    WINDOWS("Windows", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"),
+    // TODO: package the windows theme into the java runtime image, so it can be used again
+//    WINDOWS("Windows", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"),
     METAL("Metal", "javax.swing.plaf.metal.MetalLookAndFeel"),
     FLATLAF_LIGHT("FlatLaf (Light)", "com.formdev.flatlaf.FlatLightLaf"),
     FLATLAF_DARK("FlatLaf (Dark)", "com.formdev.flatlaf.FlatDarkLaf");
 
-    public static final Theme DEFAULT = WINDOWS.installed ? WINDOWS : METAL;
+    public static final Theme DEFAULT = METAL;
 
     private final String uiName;
     private final boolean installed;

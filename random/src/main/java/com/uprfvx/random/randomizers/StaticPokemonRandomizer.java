@@ -37,10 +37,10 @@ public class StaticPokemonRandomizer extends Randomizer {
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
         for (StaticEncounter se : currentStaticPokemon) {
             if (!se.isEgg()) {
-                se.setLevel(Math.min(100, (int) Math.round(se.getLevel() * (1 + levelModifier / 100.0))));
+                se.setLevel(applyPercentageLevelModifier(se.getLevel(), levelModifier));
                 for (StaticEncounter linkedStatic : se.getLinkedEncounters()) {
                     if (!linkedStatic.isEgg()) {
-                        linkedStatic.setLevel(Math.min(100, (int) Math.round(linkedStatic.getLevel() * (1 + levelModifier / 100.0))));
+                        linkedStatic.setLevel(applyPercentageLevelModifier(linkedStatic.getLevel(), levelModifier));
                     }
                 }
             }
@@ -289,12 +289,12 @@ public class StaticPokemonRandomizer extends Randomizer {
         if (levelModifier != 0) {
             for (StaticEncounter se : replacements) {
                 if (!se.isEgg()) {
-                    se.setLevel(Math.min(100, (int) Math.round(se.getLevel() * (1 + levelModifier / 100.0))));
-                    se.setMaxLevel(Math.min(100, (int) Math.round(se.getMaxLevel() * (1 + levelModifier / 100.0))));
+                    se.setLevel(applyPercentageLevelModifier(se.getLevel(), levelModifier));
+                    se.setMaxLevel(applyPercentageLevelModifier(se.getMaxLevel(), levelModifier));
                     for (StaticEncounter linkedStatic : se.getLinkedEncounters()) {
                         if (!linkedStatic.isEgg()) {
-                            linkedStatic.setLevel(Math.min(100, (int) Math.round(linkedStatic.getLevel() * (1 + levelModifier / 100.0))));
-                            linkedStatic.setMaxLevel(Math.min(100, (int) Math.round(linkedStatic.getMaxLevel() * (1 + levelModifier / 100.0))));
+                            linkedStatic.setLevel(applyPercentageLevelModifier(linkedStatic.getLevel(), levelModifier));
+                            linkedStatic.setMaxLevel(applyPercentageLevelModifier(linkedStatic.getMaxLevel(), levelModifier));
                         }
                     }
                 }
@@ -374,7 +374,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 newTotem.setLevel(old.getLevel());
 
                 if (levelModifier != 0) {
-                    newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
+                    newTotem.setLevel(applyPercentageLevelModifier(newTotem.getLevel(), levelModifier));
                 }
                 if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(!allowAltFormes ? rSpecService.getAll(false) : listInclFormesExclCosmetics);
@@ -384,7 +384,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 newTotem.setSpecies(old.getSpecies());
                 newTotem.setLevel(old.getLevel());
                 if (levelModifier != 0) {
-                    newTotem.setLevel(Math.min(100, (int) Math.round(newTotem.getLevel() * (1 + levelModifier / 100.0))));
+                    newTotem.setLevel(applyPercentageLevelModifier(newTotem.getLevel(), levelModifier));
                 }
                 setSpeciesAndFormeForStaticEncounter(newTotem, newTotem.getSpecies());
             }
@@ -415,7 +415,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     newAlly.setResetMoves(true);
                     newAlly.setLevel(oldAlly.getLevel());
                     if (levelModifier != 0) {
-                        newAlly.setLevel(Math.min(100, (int) Math.round(newAlly.getLevel() * (1 + levelModifier / 100.0))));
+                        newAlly.setLevel(applyPercentageLevelModifier(newAlly.getLevel(), levelModifier));
                     }
 
                     newTotem.getAllies().put(oldAllyIndex, newAlly);
@@ -428,7 +428,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 newTotem.setAllies(old.getAllies());
                 for (StaticEncounter ally : newTotem.getAllies().values()) {
                     if (levelModifier != 0) {
-                        ally.setLevel(Math.min(100, (int) Math.round(ally.getLevel() * (1 + levelModifier / 100.0))));
+                        ally.setLevel(applyPercentageLevelModifier(ally.getLevel(), levelModifier));
                         setSpeciesAndFormeForStaticEncounter(ally, ally.getSpecies());
                     }
                 }

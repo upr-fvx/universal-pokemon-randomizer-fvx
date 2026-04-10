@@ -32,6 +32,60 @@ import java.util.function.Function;
 
 /**
  * Represents a Pokémon species or forme.
+ * <br><br>
+ * There are a few different kinds of formes:
+ * <dl>
+ *     <dt>Base Formes:</dt>
+ *     <dd>The default formes. Obvious for some mons, e.g., Deoxys or Venusaur.
+ *     For others, it is less obvious, but one always exists.<br>
+ *     <b>E.g.</b>, Wormadam-Plant is the base forme of Wormadam. Being the base forme,
+ *     it will be referred to as just "Wormadam" in most places by the Randomizer.
+ *     <br><b>Note:</b> All Pokémon species without alt formes, still count as base formes.</dd>
+ *
+ *     <dt>Alt Formes:</dt>
+ *     <dd>All other formes. An alt forme can get its
+ *     base forme using {@link #getBaseForme()}. A base forme can get its alt formes
+ *     using {@link #getForme(int)} or {@link #getAltFormes()}.<br>
+ *     <b>E.g.</b>, Deoxys-Attack, Venusaur-Mega, Wormadam-Sandy.</dd>
+ *
+ *     <dt>Alolan Formes:</dt>
+ *     <dd>Alt formes that are Alolan twists on the base forme.<br>
+ *     <b>E.g</b>, Alolan Raichu.</dd>
+ *
+ *     <dt>Cosmetic Formes:</dt>
+ *     <dd>Alt formes that only differ from their base forme, in non-essential ways.</dd>
+ *
+ *     <dt>True Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes that do not have stat blocks within their game's data,
+ *     which are thus not loaded in as Species objects.<br>
+ *     <b>E.g.</b>, the formes of Burmy, Shellos.</dd>
+ *
+ *     <dt>Invisible Cosmetic Formes:</dt>
+ *     <dd>True cosmetic formes which are *entirely* ignored, and not even loaded as integer
+ *     forme ids, due to being confusing or being handled automatically by the game.<br>
+ *     <b>E.g.</b>, the formes of Arceus, Genesect, Xerneas.</dd>
+ *
+ *     <dt>Essentially Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes with stat blocks that are thus loaded as Species objects,
+ *     but which should be treated as "cosmetic". When modifying the attributes of a
+ *     base forme, they should be carried to the cosmetic forme as well, and when
+ *     picking a random cosmetic forme they should be included.<br>
+ *     <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+ *     </dd>
+ *
+ *     <dt>Ignore Cosmetic Formes:</dt>
+ *     <dd>Essentially cosmetic formes that are identical or confusing somehow,
+ *     that should thus be ignored when picking random cosmetic formes.<br>
+ *     <b>E.g.</b>, the different Minior-Core formes.</dd>
+ *
+ *     <dt>Conceptual Base Formes:</dt>
+ *     <dd>The formes an alt forme is conceptually based on. For most alt formes, this is
+ *     the same as the base forme. For some, it is another alt forme. Relevant when copying
+ *     attributes to alt formes.<br>
+ *     <b>E.g.,</b> Raticate-Alolan is the conceptual base forme of Raticate-Alolan-Totem.
+ *     When copying attributes, this must be used instead of the base forme, so Raticate-Alolan-Totem
+ *     gets the attributes of Raticate-Alolan.</dd>
+ * </dl>
  */
 public class Species implements Comparable<Species> {
     //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
@@ -40,33 +94,17 @@ public class Species implements Comparable<Species> {
     private String name;
     private final int number;
 
+    private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
+    private final List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
+
     private String formeSuffix = "";
     private int formeNumber = 0;
     private Species baseForme = null;
     private Species conceptualBaseForme = null; // for "formes-of-formes"
-    private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
 
-    // There are a few different kinds of formes:
-    // Alolan               - Formes that are Alolan twists on the base forme. E.g, Alolan Raichu.
-    // Cosmetic             - Formes that only differ from their base forme, in non-essential ways.
-    // True Cosmetic        - Cosmetic formes that do not have stat blocks within their game's data,
-    //                        which are thus not loaded in as Species objects.
-    //                        E.g., the formes of Burmy, Wormadam.
-    // Invisible Cosmetic   - True cosmetic formes which are *entirely* ignored, and not even loaded as
-    //                        integer forme ids, due to being confusing or being handled automatically
-    //                        by the game.
-    //                        E.g., the formes of Arceus, Genesect, Xerneas.
-    // Essentially Cosmetic - Cosmetic formes with stat blocks that are thus loaded as Species objects,
-    //                        but which should be treated as "cosmetic". When modifying the attributes
-    //                        of a base forme, they should be carried to the cosmetic forme as well,
-    //                        and when picking a random cosmetic forme they should be included.
-    //                        E.g., the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
-    // Ignore Cosmetic      - Essentially cosmetic formes that are identical or confusing somehow,
-    //                        that should thus be ignored when picking random cosmetic formes.
     private boolean alolan = false;
     private boolean essentiallyCosmetic = false;
     private boolean ignoreCosmetic = false;
-    private final List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
 
     private int generation = -1;
 
@@ -730,11 +768,6 @@ public class Species implements Comparable<Species> {
 
     public int getFormeNumber() {
         return formeNumber;
-    }
-
-    @Deprecated
-    public int getCosmeticForms() {
-        throw new UnsupportedOperationException(); // TODO: refactor out
     }
 
     /**

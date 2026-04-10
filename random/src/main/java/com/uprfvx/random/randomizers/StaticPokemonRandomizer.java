@@ -526,11 +526,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
     private void setSpeciesAndFormeForStaticEncounter(StaticEncounter newStatic, Species sp) {
         newStatic.setForme(sp.getRandomCosmeticFormeNumber(random));
-        Species base = sp;
-        while (!base.isBaseForme()) {
-            base = base.getBaseForme();
-        }
-        newStatic.setSpecies(base);
+        newStatic.setSpecies(sp.getBaseForme());
     }
 
 }

@@ -34,7 +34,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder);
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> copyUpShuffledStatsOrder(pk.getBaseForme(), pk));
+                .forEach(pk -> copyUpShuffledStatsOrder(pk.getConceptualBaseForme(), pk));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
@@ -94,7 +94,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
+                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {

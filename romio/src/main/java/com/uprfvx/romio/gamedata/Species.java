@@ -43,7 +43,7 @@ public class Species implements Comparable<Species> {
     private String formeSuffix = "";
     private int formeNumber = 0;
     private Species baseForme = null;
-    private Species conceptualBaseForme = null; // for "formes-of-formes" TODO: convert code to use this
+    private Species conceptualBaseForme = null; // for "formes-of-formes"
     private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
 
     // There are a few different kinds of formes:
@@ -145,16 +145,7 @@ public class Species implements Comparable<Species> {
     }
 
     public int getBaseNumber() {
-        // One might think this could just be turned into
-        // return getBaseForme().getNumber()
-        // but note the "while"; this works with formes-of-formes.
-        // Formes-of-formes admittedly only exist in Gen 7,
-        // but until something is done about them, don't touch this code.
-        Species base = this;
-        while (base.baseForme != null) {
-            base = base.baseForme;
-        }
-        return base.number;
+        return getBaseForme().getNumber();
     }
 
     //Evolutionary Relatives functions
@@ -687,6 +678,10 @@ public class Species implements Comparable<Species> {
     public void addAltForme(int formeNumber, Species altForme) {
         System.out.printf("New forme to %s, formeNumber=%d, %s%n",
                 getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
         if (altFormes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
                     "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
@@ -718,7 +713,6 @@ public class Species implements Comparable<Species> {
      * @throws NoSuchElementException if no forme with the formeNumber exists
      */
     public Species getForme(int formeNumber) {
-        // TODO: what is the desired functionality if you use this on an alt forme? On an alt forme with alt formes?
         Species forme = altFormes.get(formeNumber);
         if (forme == null) {
             throw new NoSuchElementException(String.format(
@@ -751,6 +745,9 @@ public class Species implements Comparable<Species> {
     }
 
     public void setAlolan() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
         this.alolan = true;
     }
 

@@ -198,7 +198,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
             if (pkmn.isEssentiallyCosmetic()) {
-                boolean[] baseFlags = compat.get(pkmn.getBaseForme());
+                boolean[] baseFlags = compat.get(pkmn.getConceptualBaseForme());
                 for (int i = 1; i < flags.length; i++) {
                     flags[i] = baseFlags[i];
                 }
@@ -304,7 +304,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
             if (pkmn.isEssentiallyCosmetic()) {
-                boolean[] baseFlags = compat.get(pkmn.getBaseForme());
+                boolean[] baseFlags = compat.get(pkmn.getConceptualBaseForme());
                 for (int i = 1; i < flags.length; i++) {
                     flags[i] = baseFlags[i];
                 }

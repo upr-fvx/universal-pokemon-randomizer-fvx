@@ -32,7 +32,7 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
                 System.out.println(forme.getFullName() + ": Is cosmetic");
                 System.out.println("\t" + forme.getPrimaryType(false) +
                         (forme.hasSecondaryType(false) ? "/" + forme.getSecondaryType(false) : ""));
-                Species base = forme.getBaseForme();
+                Species base = forme.getConceptualBaseForme();
                 System.out.println("\tBase: " + base.getFullName() + "; " + base.getPrimaryType(false) +
                         (base.hasSecondaryType(false) ? "/" + base.getSecondaryType(false) : ""));
                 assertEquals(forme.getPrimaryType(false), base.getPrimaryType(false),

@@ -395,7 +395,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 }
 
                 enc.setSpecies(replacement);
-                setFormeForEncounter(enc, replacement);
+                setFormeForEncounter(enc);
             }
 
             if (area.isForceMultipleSpecies()) {
@@ -553,7 +553,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 }
 
                 enc.setSpecies(replacement);
-                setFormeForEncounter(enc, replacement);
+                setFormeForEncounter(enc);
             }
 
         }
@@ -1248,11 +1248,10 @@ public class WildEncounterRandomizer extends Randomizer {
         return prepped;
     }
 
-    private void setFormeForEncounter(Encounter enc, Species sp) {
-        enc.setFormeNumber(enc.getSpecies().getRandomCosmeticFormeNumber(random));
-        while(!enc.getSpecies().isBaseForme()) {
-            enc.setSpecies(enc.getSpecies().getBaseForme());
-        }
+    private void setFormeForEncounter(Encounter enc) {
+        Species sp = enc.getSpecies();
+        enc.setFormeNumber(sp.getRandomCosmeticFormeNumber(random));
+        enc.setSpecies(sp.getBaseForme());
     }
 
     public void changeCatchRates() {

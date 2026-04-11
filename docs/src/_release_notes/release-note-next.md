@@ -10,8 +10,8 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a merged pull request] @bergmaen for your code contributions,
+[Every person who submitted a solved issue] @Michael1992 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -47,5 +47,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
+- (GUI) Fixed broken Trainer Pokémon checkboxes. (Issue #188)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

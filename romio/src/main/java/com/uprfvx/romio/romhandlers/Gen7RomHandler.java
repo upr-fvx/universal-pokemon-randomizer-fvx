@@ -238,7 +238,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 if (withConceptualBaseFormes.containsKey(i)) {
                     pokes[i].setConceptualBaseForme(pokes[withConceptualBaseFormes.get(i)]);
                 }
-                if (Gen7Constants.getActuallyCosmeticForms(romEntry.getRomType()).contains(i)) {
+                if (Gen7Constants.getEssentiallyCosmeticForms(romEntry.getRomType()).contains(i)) {
                     pokes[i].setEssentiallyCosmetic();
                 }
                 if (Gen7Constants.getIgnoreForms(romEntry.getRomType()).contains(i)) {

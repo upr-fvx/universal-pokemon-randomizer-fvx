@@ -232,7 +232,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     currentMap = new HashMap<>();
                     currentMap.put(formNum,i);
                 }
-                if (Gen6Constants.actuallyCosmeticForms.contains(i)) {
+                if (Gen6Constants.essentiallyCosmeticForms.contains(i)) {
                     pokes[i].setEssentiallyCosmetic();
                 }
                 if (Gen6Constants.ignoreCosmeticForms.contains(i)) {
@@ -3052,7 +3052,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public SpeciesSet getBannedForStaticPokemon() {
-        return new SpeciesSet(Gen6Constants.actuallyCosmeticForms
+        return new SpeciesSet(Gen6Constants.essentiallyCosmeticForms
                 .stream()
                 .filter(index -> index < Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()))
                 .map(index -> pokes[index])

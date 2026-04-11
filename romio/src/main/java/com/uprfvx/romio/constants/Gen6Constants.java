@@ -48,7 +48,7 @@ public class Gen6Constants {
             SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.xerneas
     );
 
-    public static final List<Integer> actuallyCosmeticForms = Arrays.asList(
+    public static final List<Integer> essentiallyCosmeticForms = Arrays.asList(
             SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.keldeoCosmetic1,
             SpeciesIDs.Gen6Formes.furfrouCosmetic1, SpeciesIDs.Gen6Formes.furfrouCosmetic2,

@@ -63,6 +63,17 @@ public class SpeciesTest {
     }
 
     @Test
+    public void setConceptualBaseForme_AlreadyHasConceptualBaseForme_ThrowsIllegalStateException() {
+        use(a, b, c, d);
+        a.addAltForme(1, b);
+        a.addAltForme(2, c);
+        a.addAltForme(3, d);
+        d.setConceptualBaseForme(b);
+        assertThrowsExactly(IllegalStateException.class,
+                () -> d.setConceptualBaseForme(c));
+    }
+
+    @Test
     public void setConceptualBaseForme_OnBaseForme_ThrowsIllegalStateException() {
         use(a, b);
         assertThrowsExactly(IllegalStateException.class,

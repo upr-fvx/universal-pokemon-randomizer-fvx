@@ -696,6 +696,11 @@ public class Species implements Comparable<Species> {
      * {@code conceptualBaseForme} are alt formes of the same base forme.
      */
     public void setConceptualBaseForme(Species conceptualBaseForme) {
+        if (this.conceptualBaseForme != null) {
+            throw new IllegalStateException(String.format(
+                    "This Species (%s) already has a conceptual base forme (%s)",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
         if (isBaseForme()) {
             throw new IllegalStateException("This Species (" + getNumberAndFullName() + ") must be an alt forme");
         }
@@ -708,6 +713,7 @@ public class Species implements Comparable<Species> {
                     getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
         }
         this.conceptualBaseForme = conceptualBaseForme;
+        this.formeSuffix = conceptualBaseForme.formeSuffix + this.formeSuffix;
     }
 
     /**

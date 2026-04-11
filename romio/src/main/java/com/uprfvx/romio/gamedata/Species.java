@@ -703,7 +703,7 @@ public class Species implements Comparable<Species> {
             throw new IllegalArgumentException("conceptualBaseForme (" + getNumberAndFullName() + ") must be an alt forme");
         }
         if (conceptualBaseForme.baseForme != baseForme) {
-            throw new IllegalArgumentException(String.format(
+            throw new IllegalStateException(String.format(
                     "This Species (%s) and conceptualBaseForme (%s) must share the same base forme",
                     getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
         }
@@ -716,6 +716,10 @@ public class Species implements Comparable<Species> {
     public void addAltForme(int formeNumber, Species altForme) {
         System.out.printf("New forme to %s, formeNumber=%d, %s%n",
                 getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
+        if (altForme.equals(this)) {
+            throw new IllegalArgumentException(String.format(
+                    "Can't add Species %s as its own alt forme.", getNumberAndFullName()));
+        }
         if (!isBaseForme()) {
             throw new IllegalStateException(String.format(
                     "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
@@ -741,6 +745,14 @@ public class Species implements Comparable<Species> {
      */
     public void addCosmeticAltForme(int formeNumber) {
         System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        if (altFormes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
         altFormes.put(formeNumber, this);
         cosmeticFormeNumbers.add(formeNumber);
     }
@@ -748,9 +760,14 @@ public class Species implements Comparable<Species> {
     /**
      * Returns the forme of this Species with the given formeNumber.<br>
      * Returns this Species, if formeNumber==0, or that of a true cosmetic forme.<br>
+     * @throws IllegalStateException if this is an alt forme
      * @throws NoSuchElementException if no forme with the formeNumber exists
      */
     public Species getForme(int formeNumber) {
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
         Species forme = altFormes.get(formeNumber);
         if (forme == null) {
             throw new NoSuchElementException(String.format(

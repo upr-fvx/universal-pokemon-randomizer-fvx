@@ -565,6 +565,27 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             writeBytes(offs + (i - 1) * 7 + 1, new byte[]{(byte) moves[i].effectIndex, (byte) moves[i].power,
                     Gen2Constants.typeToByte(moves[i].type), (byte) hitratio, (byte) moves[i].pp});
         }
+
+        writeMoveNames();
+    }
+
+    private void writeMoveNames() {
+        // We haven't checked the other languages store names the same way
+        // (especially the Japanese versions tend to be cramped)
+        // Also even English Crystal stores the names mid-bank.
+        if (!isEnglish() || getROMType() == Gen2Constants.Type_Crystal) return;
+
+        // assumes the moves are at the end of their bank
+        int offset = romEntry.getIntValue("MoveNamesOffset");
+        int startOfNextBank = offset + GBConstants.bankSize - offset % GBConstants.bankSize;
+        for (Move mv : moves) {
+            if (mv == null) continue;
+            if (offset >= startOfNextBank) {
+                throw new RuntimeException("Trying to write move names to subsequent bank.");
+            }
+            writeVariableLengthString(mv.name, offset, false);
+            offset += lengthOfStringAt(offset, false);
+        }
     }
 
     public List<Move> getMoves() {

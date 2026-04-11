@@ -962,8 +962,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         savePokemonPalettes();
     }
 
-    public abstract void saveMoves();
-
     protected abstract boolean saveRomFile(String filename, long seed);
 
     protected abstract boolean saveRomDirectory(String filename);

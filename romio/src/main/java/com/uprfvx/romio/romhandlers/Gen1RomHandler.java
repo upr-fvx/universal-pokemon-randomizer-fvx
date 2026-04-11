@@ -518,6 +518,24 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
     }
 
+    private void writeMoveNames() {
+        // We haven't checked the other languages store names the same way
+        // (especially the Japanese versions tend to be cramped)
+        if (!isEnglish()) return;
+
+        // assumes the moves are at the end of their bank
+        int offset = romEntry.getIntValue("MoveNamesOffset");
+        int startOfNextBank = offset + GBConstants.bankSize - offset % GBConstants.bankSize;
+        for (Move mv : moves) {
+            if (mv == null) continue;
+            if (offset >= startOfNextBank) {
+                throw new RuntimeException("Trying to write move names to subsequent bank.");
+            }
+            writeVariableLengthString(mv.name, offset, false);
+            offset += lengthOfStringAt(offset, false);
+        }
+    }
+
     public List<Move> getMoves() {
         return Arrays.asList(moves);
     }

@@ -366,6 +366,12 @@ public interface RomHandler {
      */
     int getMaxMoveNameLength();
 
+    /**
+     * Returns the maximum length of all move names combined,
+     * or -1 if there is none.
+     */
+    int getMaxSumOfMoveNameLengths();
+
     // ================
     // Pokemon Movesets
     // ================

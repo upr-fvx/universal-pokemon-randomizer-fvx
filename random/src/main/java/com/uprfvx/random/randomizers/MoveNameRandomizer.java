@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.constants.MoveIDs;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveCategory;
@@ -27,7 +28,8 @@ import java.util.regex.Pattern;
  */
 public class MoveNameRandomizer extends Randomizer {
 
-    private static final int MAX_ATTEMPTS = 50;
+    private static final int MAX_ATTEMPTS = 100000;
+    private static final int MAX_ATTEMPTS_PER_NAME = 50;
 
     private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
     private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
@@ -132,14 +134,26 @@ public class MoveNameRandomizer extends Randomizer {
         usedMoveNames.clear();
         List<Move> moves = romHandler.getMoves();
         int maxNameLength = romHandler.getMaxMoveNameLength();
+        int maxSumLength = romHandler.getMaxSumOfMoveNameLengths();
         boolean useUpperCase = detectUpperCaseNames(moves);
-        for (Move mv : moves) {
-            if (mv != null && mv.internalId != MoveIDs.struggle) {
-                String name = getRandomMoveName(mv, mv.type, maxNameLength);
-                mv.name = useUpperCase ? name.toUpperCase() : name;
+
+        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+            for (Move mv : moves) {
+                if (mv != null && mv.internalId != MoveIDs.struggle) {
+                    String name = getRandomMoveName(mv, mv.type, maxNameLength);
+                    mv.name = useUpperCase ? name.toUpperCase() : name;
+                }
+            }
+            int sumLength = moves.stream().filter(Objects::nonNull)
+                    .mapToInt(mv -> mv.name.length())
+                    .sum();
+            if (sumLength <= maxSumLength) {
+                changesMade = true;
+                return;
             }
         }
-        changesMade = true;
+
+        throw new RandomizationException("Could not randomize move names within " + MAX_ATTEMPTS + " attempts.");
     }
 
     /**
@@ -176,7 +190,7 @@ public class MoveNameRandomizer extends Randomizer {
 
         String[] actionWords = getActionWords(mv);
 
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        for (int i = 0; i < MAX_ATTEMPTS_PER_NAME; i++) {
             String typeWord = typeNames[random.nextInt(typeNames.length)];
             String actionWord = actionWords[random.nextInt(actionWords.length)];
             String moveName = typeWord + " " + actionWord;
@@ -336,7 +350,4 @@ public class MoveNameRandomizer extends Randomizer {
         return EXTRA_NAME_LISTS.get(key);
     }
 
-    public boolean isChangesMade() {
-        return changesMade;
-    }
 }

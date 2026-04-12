@@ -516,6 +516,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 });
             }
         }
+        writeMoveNames();
     }
 
     private void writeMoveNames() {
@@ -538,6 +539,20 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     public List<Move> getMoves() {
         return Arrays.asList(moves);
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
+    }
+
+    @Override
+    public int getMaxSumOfMoveNameLengths() {
+        // assumes the moves are at the end of their bank
+        int offset = romEntry.getIntValue("MoveNamesOffset");
+        int totalLength = GBConstants.bankSize - offset % GBConstants.bankSize;
+        int terminatorsLength = romEntry.getIntValue("MoveCount") * 2;
+        return totalLength - terminatorsLength;
     }
 
     private void loadPokedexOrder() {
@@ -3174,9 +3189,4 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public Gen1RomEntry getRomEntry() {
         return romEntry;
     }
-
-    @Override
-    public int getMaxMoveNameLength() {
-        return 10;
-    };
 }

@@ -1000,12 +1000,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public int getMaxMoveNameLength() {
-        return switch (generationOfPokemon()) {
-            case 1 -> 10;
-            case 2, 3 -> 12;
-            case 4, 5 -> 15;
-            default -> 24;
-        };
+    public int getMaxSumOfMoveNameLengths() {
+        return -1; // No max sum
     }
 }

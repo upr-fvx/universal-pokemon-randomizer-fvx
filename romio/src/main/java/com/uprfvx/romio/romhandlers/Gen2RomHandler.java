@@ -572,8 +572,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private void writeMoveNames() {
         // We haven't checked the other languages store names the same way
         // (especially the Japanese versions tend to be cramped)
-        // Also even English Crystal stores the names mid-bank.
-        if (!isEnglish() || getROMType() == Gen2Constants.Type_Crystal) return;
+        if (!isEnglish()) return;
 
         // assumes the moves are at the end of their bank
         int offset = romEntry.getIntValue("MoveNamesOffset");
@@ -590,6 +589,32 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     public List<Move> getMoves() {
         return Arrays.asList(moves);
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
+    }
+
+    @Override
+    public int getMaxSumOfMoveNameLengths() {
+        int offset = romEntry.getIntValue("MoveNamesOffset");
+
+        int totalLength;
+        if (romEntry.isCrystal()) {
+            // Crystal move names are immediately followed by other data,
+            // so the totalLength can't be more than in vanilla
+            totalLength = 0;
+            for (int i = 1; i <= Gen2Constants.moveCount; i++) {
+                totalLength += lengthOfStringAt(offset + totalLength, false);
+            }
+        } else {
+            // GS move names are at the end of their bank, so the space after is free pickings
+            totalLength = GBConstants.bankSize - offset % GBConstants.bankSize;
+        }
+
+        int terminatorsLength = Gen2Constants.moveCount;
+        return totalLength - terminatorsLength;
     }
 
     private void loadBasicPokeStats(Species pkmn, int offset) {
@@ -3426,8 +3451,4 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    @Override
-    public int getMaxMoveNameLength() {
-        return 12;
-    };
 }

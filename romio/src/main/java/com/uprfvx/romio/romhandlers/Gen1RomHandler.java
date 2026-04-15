@@ -220,13 +220,51 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private String[] readMoveNames() {
-        int moveCount = romEntry.getIntValue("MoveCount");
-        int offset = romEntry.getIntValue("MoveNamesOffset");
-        String[] moveNames = new String[moveCount + 1];
-        for (int i = 1; i <= moveCount; i++) {
-            moveNames[i] = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
+
+        List<Integer> bankOffsets = new ArrayList<>();
+        bankOffsets.add(
+            RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("CB A6 CB B6 FA")) + 11
+        );
+        bankOffsets.add(
+                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("FE 02 3E 98 06 88")) - 53
+        );
+        bankOffsets.add(
+                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("2A FE 50 28 04 12 13 18")) - 15
+        );
+        bankOffsets.add(
+                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("FF E5 3E 02 EA")) + 14
+        );
+
+        if (bankOffsets.stream().mapToInt(o -> rom[o] & 0xFF).distinct().count() != 1) {
+            throw new RuntimeException("non-equal banks");
         }
+
+        System.out.println("MoveNamesBankOffsets=[" +
+                bankOffsets.stream()
+                        .map(o -> "0x" + Integer.toHexString(o).toUpperCase())
+                        .collect(Collectors.joining(", ")) +
+                "]");
+
+        // TODO: code for finding NamesTableOffset
+
+//        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
+//        int bankOffset = romEntry.getArrayValue("MoveNamesBankOffsets")[0];
+//        int bank = rom[bankOffset] & 0xFF;
+//        int offset = readPointer(namesTableOffset + 2, bank);
+//
+        int moveCount = romEntry.getIntValue("MoveCount");
+//        int maxLength = getMaxMoveNameLength();
+        String[] moveNames = new String[moveCount + 1];
+        Arrays.fill(moveNames, "FOOBAR");
+//        for (int i = 1; i <= moveCount; i++) {
+//            String moveName = readVariableLengthString(offset, false);
+//            if (moveName.length() > maxLength) {
+//                throw new RomIOException("Invalid move name at offset=0x" +
+//                        Integer.toHexString(offset) + ":" + moveName);
+//            }
+//            moves[i].name = moveName;
+//            offset += lengthOfStringAt(offset, false);
+//        }
         return moveNames;
     }
 

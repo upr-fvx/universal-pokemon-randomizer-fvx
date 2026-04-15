@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RomFunctions {
 
@@ -452,19 +453,27 @@ public class RomFunctions {
      *                  <b>E.g.</b> if you have code that looks like <code>XX YY 12 34 56</code>, where
      *                  <code>XX YY</code> is hard to identify, then you can use <code>hexNeedle = "12 34 56"</code>,
      *                  and <code>relOffset = -2</code>.
+     * @return Returns true if any offsets were found.
      */
-    public static void identifyRomEntryOffsetsByHex(String entryName, byte[] haystack, String hexNeedle, int relOffset) {
+    public static boolean identifyRomEntryOffsetsByHex(String entryName, byte[] haystack, String hexNeedle, int relOffset) {
         byte[] needle = hexToBytes(hexNeedle);
         List<Integer> pos = search(haystack, needle);
         if (pos.isEmpty()) {
             System.out.println(entryName + ": Could not find any offsets");
+            return false;
         }
         if (pos.size() >= 2) {
             System.out.println(entryName + ": Found multiple possible offsets");
+            System.out.println(entryName + "=["
+                    + pos.stream().map(o -> "0x" + Integer.toHexString(o + relOffset).toUpperCase())
+                            .collect(Collectors.joining(", "))
+                    + "]");
         }
         for (int o : pos) {
             System.out.println(entryName + "=0x" + Integer.toHexString(o + relOffset).toUpperCase());
+            System.out.println("at offset: 0x" + Integer.toHexString(haystack[o + relOffset] & 0xFF));
         }
+        return true;
     }
 
 }

@@ -413,14 +413,13 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
                 }
             }
 
-            System.out.println("Bank before: " + Integer.toHexString(bank));
             setPointerReader(pointerOffset -> readPointer(pointerOffset, bank));
         }
 
         @Override
         protected int repointAndWriteToFreeSpace(int pointerOffset, byte[] data) {
 
-            int newOffset = findAndUnfreeSpace(data.length);
+            int newOffset = findAndUnfreeSpaceInUnreservedBanksOrInBank(data.length, bank);
 
             pointerWriter.accept(pointerOffset, newOffset);
             writeBytes(newOffset, data);
@@ -433,7 +432,7 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         }
     }
 
-    protected int findAndUnfreeSpaceInBank(int length, int bank) {
+    private int findAndUnfreeSpaceInBank(int length, int bank) {
         int foundOffset;
         do {
             foundOffset = getFreedSpace().findAndUnfreeInBank(length, bank);
@@ -458,6 +457,25 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         if (foundOffset == -1) {
             throw new RomIOException("Both bank 0x" + Integer.toHexString(bank) + " and bank 0x0 full. " +
                     "Can't find " + length + " free bytes anywhere.");
+        }
+        return foundOffset;
+    }
+
+    private int findAndUnfreeSpaceInUnreservedBanksOrInBank(int length, int reservedBank) {
+        int foundOffset;
+        do {
+            foundOffset = getFreedSpace().findAndUnfree(length);
+        } while (isRomSpaceUsed(foundOffset, length));
+        // The reserved bank is deprioritized - if we can move data out of a reserved bank, we want to.
+        // That way, the data which the bank was reserved for (which can presumably not be moved) gets extra space.
+        if (foundOffset == -1) {
+            do {
+                foundOffset = getFreedSpace().findAndUnfreeInBank(length, reservedBank);
+            } while (isRomSpaceUsed(foundOffset, length));
+        }
+        if (foundOffset == -1) {
+            throw new RomIOException("All banks, including reserved bank 0x" + Integer.toHexString(reservedBank) +
+                    " full. Can't find " + length + " free bytes anywhere.");
         }
         return foundOffset;
     }

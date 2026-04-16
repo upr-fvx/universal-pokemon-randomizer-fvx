@@ -238,17 +238,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private String[] readMoveNames() {
-        byte[] needle = new byte[6];
-        int monNamesOffset = romEntry.getIntValue("PokemonNamesOffset");
-        int moveNamesOffset = romEntry.getIntValue("MoveNamesOffset");
-        needle[0] = (byte) bankOf(monNamesOffset);
-        writeWord(needle, 1, makeGBPointer(monNamesOffset));
-        needle[3] = (byte) bankOf(moveNamesOffset);
-        writeWord(needle, 4, makeGBPointer(moveNamesOffset));
-
-        RomFunctions.identifyRomEntryOffsetsByHex("NamesTableOffset", rom,
-                RomFunctions.bytesToHex(needle), 0);
-
         int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
         int bank = rom[namesTableOffset + 3] & 0xFF;
         int offset = readPointer(namesTableOffset + 4, bank);

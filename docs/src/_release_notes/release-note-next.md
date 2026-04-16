@@ -36,6 +36,9 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ### Pokemon Base Stats
 - [The description of a new feature here.] (Issue #[issue num])
 
+### Move Data
+- (Gen 1+2) Added support for "Randomize Move Names" option.
+
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 

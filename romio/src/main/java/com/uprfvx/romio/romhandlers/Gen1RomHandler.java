@@ -220,40 +220,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private String[] readMoveNames() {
-
-        byte[] needle = new byte[4];
-        int monNamesOffset = romEntry.getIntValue("PokemonNamesOffset");
-        int moveNamesOffset = romEntry.getIntValue("MoveNamesOffset");
-        writeWord(needle, 0, makeGBPointer(monNamesOffset));
-        writeWord(needle, 2, makeGBPointer(moveNamesOffset));
-
-        RomFunctions.identifyRomEntryOffsetsByHex("NamesTableOffset", rom,
-                RomFunctions.bytesToHex(needle),0);
-
-        List<Integer> bankOffsets = new ArrayList<>();
-        bankOffsets.add(
-            RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("CB A6 CB B6 FA")) + 11
-        );
-        bankOffsets.add(
-                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("FE 02 3E 98 06 88")) - 53
-        );
-        bankOffsets.add(
-                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("2A FE 50 28 04 12 13 18")) - 15
-        );
-        bankOffsets.add(
-                RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("FF E5 3E 02 EA")) + 14
-        );
-
-        if (bankOffsets.stream().mapToInt(o -> rom[o] & 0xFF).distinct().count() != 1) {
-            throw new RuntimeException("non-equal banks");
-        }
-
-        System.out.println("MoveNamesBankOffsets=[" +
-                bankOffsets.stream()
-                        .map(o -> "0x" + Integer.toHexString(o).toUpperCase())
-                        .collect(Collectors.joining(", ")) +
-                "]");
-
         int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
         int bankOffset = romEntry.getArrayValue("MoveNamesBankOffsets")[0];
         int bank = rom[bankOffset] & 0xFF;
@@ -558,21 +524,29 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writeMoveNames() {
-        // We haven't checked the other languages store names the same way
-        // (especially the Japanese versions tend to be cramped)
-        if (!isEnglish()) return;
+        int pointerOffset = romEntry.getIntValue("NamesTableOffset") + 2;
+        int[] bankOffsets = romEntry.getArrayValue("MoveNamesBankOffsets");
 
-        // assumes the moves are at the end of their bank
-        int offset = romEntry.getIntValue("MoveNamesOffset");
-        int startOfNextBank = offset + GBConstants.bankSize - offset % GBConstants.bankSize;
-        for (Move mv : moves) {
-            if (mv == null) continue;
-            if (offset >= startOfNextBank) {
-                throw new RuntimeException("Trying to write move names to subsequent bank.");
-            }
-            writeVariableLengthString(mv.name, offset, false);
-            offset += lengthOfStringAt(offset, false);
+        List<String> moveNames = Arrays.stream(moves).skip(1).map(m -> m.name).toList();
+        DataRewriter<List<String>> dw = new IndirectBankDataRewriter<>(bankOffsets);
+        dw.rewriteData(pointerOffset, moveNames, this::moveNamesToBytes,
+                o -> lengthOfMoveNamesAt(o, moveNames.size()));
+    }
+
+    private byte[] moveNamesToBytes(List<String> moveNames) {
+        // could be reused for any list of variable-length strings
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for (String name : moveNames) {
+            byte[] translated = translateString(name);
+            baos.write(translated, 0, translated.length);
+            baos.write(GBConstants.stringTerminator);
         }
+        return baos.toByteArray();
+    }
+
+    private int lengthOfMoveNamesAt(int offset, int nameCount) {
+        // could be reused for any list of variable-length strings
+        return lengthOfDataWithTerminatorsAt(offset, GBConstants.stringTerminator, nameCount);
     }
 
     public List<Move> getMoves() {

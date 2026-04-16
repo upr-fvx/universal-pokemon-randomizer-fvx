@@ -1,15 +1,19 @@
 
 == Gen 1 move name bank offsets ==
 
-We want to be able to repoint the move names. 
+We want to be able to repoint the move names, because when randomizing the move names they may end up
+longer than the original names. Then, they won't fit in their original location. 
+And to "move" a piece of data, you have to repoint it.
 
-To do so, we must find where the games refer to the bank of the move names.
+Since the GameBoy relies on bank switching, we must find both the offsets for 
+the 2-byte pointer to the move names (not done here), and the offsets where 
+the games refer to the bank of the move names, preparing a switch.
 
 We start by grep-ing "MoveNames" in the pret/pokeyellow repository, finding four usages of BANK(MoveNames).
 The Randomizer has tooling for finding offsets across all games, if we have a hex search string,
 and a relative offset to the start of that hex search string.
 
-Below, we have identified those two variables for the four locations.
+Below, we have identified those two variables for the four locations. 
 
 NN: knowable byte, constant between games
 XX: unknowable byte, varying between games

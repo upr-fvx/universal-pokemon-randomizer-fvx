@@ -221,6 +221,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private String[] readMoveNames() {
 
+        byte[] needle = new byte[4];
+        int monNamesOffset = romEntry.getIntValue("PokemonNamesOffset");
+        int moveNamesOffset = romEntry.getIntValue("MoveNamesOffset");
+        writeWord(needle, 0, makeGBPointer(monNamesOffset));
+        writeWord(needle, 2, makeGBPointer(moveNamesOffset));
+
+        RomFunctions.identifyRomEntryOffsetsByHex("NamesTableOffset", rom,
+                RomFunctions.bytesToHex(needle),0);
+
         List<Integer> bankOffsets = new ArrayList<>();
         bankOffsets.add(
             RomFunctions.searchForFirst(rom, 0, RomFunctions.hexToBytes("CB A6 CB B6 FA")) + 11
@@ -245,26 +254,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                         .collect(Collectors.joining(", ")) +
                 "]");
 
-        // TODO: code for finding NamesTableOffset
+        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
+        int bankOffset = romEntry.getArrayValue("MoveNamesBankOffsets")[0];
+        int bank = rom[bankOffset] & 0xFF;
+        int offset = readPointer(namesTableOffset + 2, bank);
 
-//        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
-//        int bankOffset = romEntry.getArrayValue("MoveNamesBankOffsets")[0];
-//        int bank = rom[bankOffset] & 0xFF;
-//        int offset = readPointer(namesTableOffset + 2, bank);
-//
         int moveCount = romEntry.getIntValue("MoveCount");
-//        int maxLength = getMaxMoveNameLength();
         String[] moveNames = new String[moveCount + 1];
-        Arrays.fill(moveNames, "FOOBAR");
-//        for (int i = 1; i <= moveCount; i++) {
-//            String moveName = readVariableLengthString(offset, false);
-//            if (moveName.length() > maxLength) {
-//                throw new RomIOException("Invalid move name at offset=0x" +
-//                        Integer.toHexString(offset) + ":" + moveName);
-//            }
-//            moves[i].name = moveName;
-//            offset += lengthOfStringAt(offset, false);
-//        }
+        for (int i = 1; i <= moveCount; i++) {
+            moveNames[i] = readVariableLengthString(offset, false);
+            offset += lengthOfStringAt(offset, false);
+        }
         return moveNames;
     }
 

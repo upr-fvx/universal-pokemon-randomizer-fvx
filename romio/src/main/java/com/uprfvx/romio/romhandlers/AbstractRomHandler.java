@@ -998,9 +998,4 @@ public abstract class AbstractRomHandler implements RomHandler {
         // Subclasses should override with ROM-specific checks.
         return false;
     }
-
-    @Override
-    public int getMaxSumOfMoveNameLengths() {
-        return -1; // No max sum
-    }
 }

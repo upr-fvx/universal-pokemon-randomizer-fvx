@@ -238,7 +238,21 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private String[] readMoveNames() {
-        int offset = romEntry.getIntValue("MoveNamesOffset");
+        byte[] needle = new byte[6];
+        int monNamesOffset = romEntry.getIntValue("PokemonNamesOffset");
+        int moveNamesOffset = romEntry.getIntValue("MoveNamesOffset");
+        needle[0] = (byte) bankOf(monNamesOffset);
+        writeWord(needle, 1, makeGBPointer(monNamesOffset));
+        needle[3] = (byte) bankOf(moveNamesOffset);
+        writeWord(needle, 4, makeGBPointer(moveNamesOffset));
+
+        RomFunctions.identifyRomEntryOffsetsByHex("NamesTableOffset", rom,
+                RomFunctions.bytesToHex(needle), 0);
+
+        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
+        int bank = rom[namesTableOffset + 3] & 0xFF;
+        int offset = readPointer(namesTableOffset + 4, bank);
+
         String[] moveNames = new String[Gen2Constants.moveCount + 1];
         for (int i = 1; i <= Gen2Constants.moveCount; i++) {
             moveNames[i] = readVariableLengthString(offset, false);
@@ -570,21 +584,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void writeMoveNames() {
-        // We haven't checked the other languages store names the same way
-        // (especially the Japanese versions tend to be cramped)
-        if (!isEnglish()) return;
+        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
+        int pointerOffset = namesTableOffset + 4;
+        int[] bankOffsets = new int[] { namesTableOffset + 3 };
 
-        // assumes the moves are at the end of their bank
-        int offset = romEntry.getIntValue("MoveNamesOffset");
-        int startOfNextBank = offset + GBConstants.bankSize - offset % GBConstants.bankSize;
-        for (Move mv : moves) {
-            if (mv == null) continue;
-            if (offset >= startOfNextBank) {
-                throw new RuntimeException("Trying to write move names to subsequent bank.");
-            }
-            writeVariableLengthString(mv.name, offset, false);
-            offset += lengthOfStringAt(offset, false);
-        }
+        List<String> moveNames = Arrays.stream(moves).skip(1).map(m -> m.name).toList();
+        DataRewriter<List<String>> dw = new IndirectBankDataRewriter<>(bankOffsets);
+        dw.rewriteData(pointerOffset, moveNames, this::variableLengthStringsToBytes,
+                o -> lengthOfStringsAt(o, moveNames.size()));
     }
 
     public List<Move> getMoves() {
@@ -594,27 +601,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 12;
-    }
-
-    @Override
-    public int getMaxSumOfMoveNameLengths() {
-        int offset = romEntry.getIntValue("MoveNamesOffset");
-
-        int totalLength;
-        if (romEntry.isCrystal()) {
-            // Crystal move names are immediately followed by other data,
-            // so the totalLength can't be more than in vanilla
-            totalLength = 0;
-            for (int i = 1; i <= Gen2Constants.moveCount; i++) {
-                totalLength += lengthOfStringAt(offset + totalLength, false);
-            }
-        } else {
-            // GS move names are at the end of their bank, so the space after is free pickings
-            totalLength = GBConstants.bankSize - offset % GBConstants.bankSize;
-        }
-
-        int terminatorsLength = Gen2Constants.moveCount;
-        return totalLength - terminatorsLength;
     }
 
     private void loadBasicPokeStats(Species pkmn, int offset) {

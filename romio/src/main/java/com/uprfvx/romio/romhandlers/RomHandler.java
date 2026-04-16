@@ -347,7 +347,7 @@ public interface RomHandler {
     /**
      * Only made public for testing. Do NOT use otherwise!
      */
-    public abstract void loadMoves();
+    void loadMoves();
 
     /**
      * Only made public for testing. Do NOT use otherwise!
@@ -365,12 +365,6 @@ public interface RomHandler {
      * Returns the maximum length of a move name in this ROM.
      */
     int getMaxMoveNameLength();
-
-    /**
-     * Returns the maximum length of all move names combined,
-     * or -1 if there is none.
-     */
-    int getMaxSumOfMoveNameLengths();
 
     // ================
     // Pokemon Movesets

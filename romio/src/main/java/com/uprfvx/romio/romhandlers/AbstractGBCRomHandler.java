@@ -191,6 +191,15 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         return len;
     }
 
+    /**
+     * Returns the internal length of a number of variable-length strings in a row.
+     * @param offset The offset of the start of the first string.
+     * @param count The number of strings to consider.
+     */
+    protected int lengthOfStringsAt(int offset, int count) {
+        return lengthOfDataWithTerminatorsAt(offset, GBConstants.stringTerminator, count);
+    }
+
     protected byte[] translateString(String text) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         while (!text.isEmpty()) {
@@ -244,6 +253,16 @@ public abstract class AbstractGBCRomHandler extends AbstractGBRomHandler {
         if (!alreadyTerminated) {
             data[offset + translated.length] = GBConstants.stringTerminator;
         }
+    }
+
+    protected byte[] variableLengthStringsToBytes(List<String> strings) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for (String s : strings) {
+            byte[] translated = translateString(s);
+            baos.write(translated, 0, translated.length);
+            baos.write(GBConstants.stringTerminator);
+        }
+        return baos.toByteArray();
     }
 
     protected int makeGBPointer(int offset) {

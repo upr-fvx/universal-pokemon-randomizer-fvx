@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
  */
 public class MoveNameRandomizer extends Randomizer {
 
-    private static final int MAX_ATTEMPTS = 100000;
     private static final int MAX_ATTEMPTS_PER_NAME = 50;
 
     private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
@@ -134,26 +133,14 @@ public class MoveNameRandomizer extends Randomizer {
         usedMoveNames.clear();
         List<Move> moves = romHandler.getMoves();
         int maxNameLength = romHandler.getMaxMoveNameLength();
-        int maxSumLength = romHandler.getMaxSumOfMoveNameLengths();
         boolean useUpperCase = detectUpperCaseNames(moves);
-
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            for (Move mv : moves) {
-                if (mv != null && mv.internalId != MoveIDs.struggle) {
-                    String name = getRandomMoveName(mv, mv.type, maxNameLength);
-                    mv.name = useUpperCase ? name.toUpperCase() : name;
-                }
-            }
-            int sumLength = moves.stream().filter(Objects::nonNull)
-                    .mapToInt(mv -> mv.name.length())
-                    .sum();
-            if (sumLength <= maxSumLength) {
-                changesMade = true;
-                return;
+        for (Move mv : moves) {
+            if (mv != null && mv.internalId != MoveIDs.struggle) {
+                String name = getRandomMoveName(mv, mv.type, maxNameLength);
+                mv.name = useUpperCase ? name.toUpperCase() : name;
             }
         }
-
-        throw new RandomizationException("Could not randomize move names within " + MAX_ATTEMPTS + " attempts.");
+        changesMade = true;
     }
 
     /**

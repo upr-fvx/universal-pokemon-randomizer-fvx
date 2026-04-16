@@ -529,24 +529,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         List<String> moveNames = Arrays.stream(moves).skip(1).map(m -> m.name).toList();
         DataRewriter<List<String>> dw = new IndirectBankDataRewriter<>(bankOffsets);
-        dw.rewriteData(pointerOffset, moveNames, this::moveNamesToBytes,
-                o -> lengthOfMoveNamesAt(o, moveNames.size()));
-    }
-
-    private byte[] moveNamesToBytes(List<String> moveNames) {
-        // could be reused for any list of variable-length strings
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        for (String name : moveNames) {
-            byte[] translated = translateString(name);
-            baos.write(translated, 0, translated.length);
-            baos.write(GBConstants.stringTerminator);
-        }
-        return baos.toByteArray();
-    }
-
-    private int lengthOfMoveNamesAt(int offset, int nameCount) {
-        // could be reused for any list of variable-length strings
-        return lengthOfDataWithTerminatorsAt(offset, GBConstants.stringTerminator, nameCount);
+        dw.rewriteData(pointerOffset, moveNames, this::variableLengthStringsToBytes,
+                o -> lengthOfStringsAt(o, moveNames.size()));
     }
 
     public List<Move> getMoves() {
@@ -556,15 +540,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 12;
-    }
-
-    @Override
-    public int getMaxSumOfMoveNameLengths() {
-        // assumes the moves are at the end of their bank
-        int offset = romEntry.getIntValue("MoveNamesOffset");
-        int totalLength = GBConstants.bankSize - offset % GBConstants.bankSize;
-        int terminatorsLength = romEntry.getIntValue("MoveCount") * 2;
-        return totalLength - terminatorsLength;
     }
 
     private void loadPokedexOrder() {

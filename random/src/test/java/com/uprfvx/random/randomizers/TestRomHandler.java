@@ -329,7 +329,7 @@ public class TestRomHandler extends AbstractRomHandler {
             originalToTest.put(orig, copy);
         }
         for (Species orig : originalSet) {
-            Species.transferTraitsToCopy(originalToTest.get(orig), orig, originalToTest);
+            Species.transferTraitsToCopy(orig, originalToTest);
         }
 
         // And these can be populated once the copy process is done

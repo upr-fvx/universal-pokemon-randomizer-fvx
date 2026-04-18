@@ -1183,25 +1183,30 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Transfers (copies) all traits from one species to another. The copy must already be instantiated,
-     * and have the same class as the original.
+     * Transfers (copies) all traits from one species to another. This method is expected to be called
+     * as part of a process of deep copying all Species. For this reason, it takes a {@link Map} of all
+     * the original Species to their copies. The copy Species is then inferred, from the original Species
+     * and the map.
      * <br><br>
-     * This transfers simple traits like types and base stats, but also all traits that reference
-     * other Species (formes, evolutions, mega evolutions). In case this method is used when
-     * making copies of all Species, a Map of all the original Species to their copies can be given.
-     * In that case, transferred references will be references to the copies.
+     * This transfers simple traits like types and base stats, but also all traits that reference other
+     * Species (formes, evolutions, mega evolutions). Transferred references are turned into references
+     * to the copies, using {@code originalToCopies}.
      * <br><br>
      * For evolutions and mega evolutions, it only assigns those from this Species,
      * but also assigns it to the Species evolved to.
      * This should result in all evolutions being properly assigned if this function is called on all Species.
      *
      * @param original The Species to copy traits from.
-     * @param copy The Species to copy traits onto.
      * @param originalToCopies A Map of all the original Species to their copies.
-     *                         If null, relations will be copied as-is.
      */
-    public static void transferTraitsToCopy(Species copy, Species original,
-                                            Map<Species, Species> originalToCopies) {
+    // TODO: it would be nice to generalize the mass copying this expects to be part of (in SpeciesSet?),
+    //  so this can be partially hidden. Currently the mass copying is only done in/by TestRomHandler,
+    //  but it could be usable for making backed-up originals of each Species. 
+    public static void transferTraitsToCopy(Species original, Map<Species, Species> originalToCopies) {
+        if (originalToCopies == null) {
+            throw new NullPointerException("originalToCopies is null");
+        }
+        Species copy = originalToCopies.get(original);
         if (copy.number != original.number) {
             throw new IllegalArgumentException("copy must have same number as original. Expected: " +
                     original.number + ", was:" + copy.number);
@@ -1213,7 +1218,6 @@ public class Species implements Comparable<Species> {
 
         transferSimpleTraitsToCopy(copy, original);
         transferReferentialTraitsToCopy(copy, original, originalToCopies);
-
         // TODO: write unit tests
     }
 
@@ -1277,42 +1281,20 @@ public class Species implements Comparable<Species> {
         copy.essentiallyCosmetic = original.essentiallyCosmetic;
         copy.ignoreCosmetic = original.ignoreCosmetic;
 
-        // This honestly is so weird.
-        // If we allow originalToCopies to be null, it will break the usual contract of 0->this,
-        // by having 0->original. But even beyond that, if we were to make a special case to force
-        // 0->this, it will incorrectly report that so-and-so is an alt forme of this, when they
-        // really are alt formes of original.
-        // Perhaps the solution is simply to not let originalToCopies be null...
         copy.altFormes = new HashMap<>();
         for (Map.Entry<Integer, Species> entry : original.altFormes.entrySet()) {
-            int formeNumber = entry.getKey();
-            Species altForme = originalToCopies == null ? entry.getValue() : originalToCopies.get(entry.getValue());
-            copy.altFormes.put(formeNumber, altForme);
+            copy.altFormes.put(entry.getKey(), originalToCopies.get(entry.getValue()));
         }
 
-        if (original.baseForme == null) {
-            copy.baseForme = null;
-        } else if (originalToCopies == null) {
-            copy.baseForme = original.baseForme;
-        } else {
-            copy.baseForme = originalToCopies.get(original.baseForme);
-        }
-
-        if (original.conceptualBaseForme == null) {
-            copy.conceptualBaseForme = null;
-        } else if (originalToCopies == null) {
-            copy.conceptualBaseForme = original.conceptualBaseForme;
-        } else {
-            copy.conceptualBaseForme = originalToCopies.get(original.conceptualBaseForme);
-        }
+        copy.baseForme = original.baseForme == null ? null : originalToCopies.get(original.baseForme);
+        copy.conceptualBaseForme = original.conceptualBaseForme == null ?
+                null : originalToCopies.get(original.conceptualBaseForme);
     }
 
     private static void transferEvolutionsToCopy(Species copy, Species original,
                                                  Map<Species, Species> originalToCopies) {
-        for(Evolution evo : original.getEvolutionsFrom()) {
-            Species evoTo = originalToCopies == null ? evo.getTo() : originalToCopies.get(evo.getTo());
-
-            Evolution evoCopy = new Evolution(copy, evoTo,
+        for (Evolution evo : original.getEvolutionsFrom()) {
+            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evo.getTo()),
                     evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
             evoCopy.setForme(evo.getForme());
             copy.getEvolutionsFrom().add(evoCopy);
@@ -1322,10 +1304,8 @@ public class Species implements Comparable<Species> {
 
     private static void transferMegaEvolutionsToCopy(Species copy, Species original,
                                                      Map<Species, Species> originalToCopies) {
-        for(MegaEvolution mevo : original.getMegaEvolutionsFrom()) {
-            Species mevoTo = originalToCopies == null ? mevo.getTo() : originalToCopies.get(mevo.getTo());
-
-            MegaEvolution mevoCopy = new MegaEvolution(copy, mevoTo,
+        for (MegaEvolution mevo : original.getMegaEvolutionsFrom()) {
+            MegaEvolution mevoCopy = new MegaEvolution(copy, originalToCopies.get(mevo.getTo()),
                     mevo.isNeedsItem(), mevo.getItem());
             copy.getMegaEvolutionsFrom().add(mevoCopy);
             mevoCopy.getTo().getMegaEvolutionsTo().add(mevoCopy);

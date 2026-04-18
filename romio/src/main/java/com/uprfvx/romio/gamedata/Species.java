@@ -94,8 +94,8 @@ public class Species implements Comparable<Species> {
     private String name;
     private final int number;
 
-    private final Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
-    private final List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
+    private Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
+    private List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
 
     private String formeSuffix = "";
     private int formeNumber = 0;
@@ -1091,6 +1091,7 @@ public class Species implements Comparable<Species> {
         this.genderRatio = genderRatio;
     }
 
+    // TODO: move this to be a RomHandler internal field; it is not interesting to other classes
     public int getFrontImageDimensions() {
         return frontImageDimensions;
     }
@@ -1181,5 +1182,153 @@ public class Species implements Comparable<Species> {
         this.megaEvolutionsTo = megaEvolutionsTo;
     }
 
+    /**
+     * Transfers (copies) all traits from one species to another. The copy must already be instantiated,
+     * and have the same class as the original.
+     * <br><br>
+     * This transfers simple traits like types and base stats, but also all traits that reference
+     * other Species (formes, evolutions, mega evolutions). In case this method is used when
+     * making copies of all Species, a Map of all the original Species to their copies can be given.
+     * In that case, transferred references will be references to the copies.
+     * <br><br>
+     * For evolutions and mega evolutions, it only assigns those from this Species,
+     * but also assigns it to the Species evolved to.
+     * This should result in all evolutions being properly assigned if this function is called on all Species.
+     *
+     * @param original The Species to copy traits from.
+     * @param copy The Species to copy traits onto.
+     * @param originalToCopies A Map of all the original Species to their copies.
+     *                         If null, relations will be copied as-is.
+     */
+    public static void transferTraitsToCopy(Species copy, Species original,
+                                            Map<Species, Species> originalToCopies) {
+        if (copy.number != original.number) {
+            throw new IllegalArgumentException("copy must have same number as original. Expected: " +
+                    original.number + ", was:" + copy.number);
+        }
+        if (copy.getClass() != original.getClass()) {
+            throw new IllegalArgumentException("copy must have same class as original. Expected: " +
+                    original.getClass() + ", was:" + copy.getClass());
+        }
 
+        transferSimpleTraitsToCopy(copy, original);
+        transferReferentialTraitsToCopy(copy, original, originalToCopies);
+
+        // TODO: write unit tests
+    }
+
+    private static void transferSimpleTraitsToCopy(Species copy, Species original) {
+        copy.name = original.getName();
+
+        copy.generation = original.generation;
+
+        //Types
+        copy.primaryType = original.primaryType;
+        copy.secondaryType = original.secondaryType;
+        //using original or not shouldn't matter
+
+        //base stats
+        copy.hp = original.hp;
+        copy.attack = original.attack;
+        copy.defense = original.defense;
+        copy.spatk = original.spatk;
+        copy.spdef = original.spdef;
+        copy.speed = original.speed;
+        copy.special = original.special;
+
+        //abilities
+        copy.ability1 = original.ability1;
+        copy.ability2 = original.ability2;
+        copy.ability3 = original.ability3;
+
+        copy.expYield = original.expYield;
+
+        //wild encounter related
+        copy.catchRate = original.catchRate;
+        copy.commonHeldItem = original.commonHeldItem;
+        copy.rareHeldItem = original.rareHeldItem;
+        copy.darkGrassHeldItem = original.darkGrassHeldItem;
+        copy.genderRatio = original.genderRatio;
+        copy.callRate = original.callRate;
+
+        //misc
+        copy.frontImageDimensions = original.frontImageDimensions;
+        copy.growthCurve = original.growthCurve;
+        copy.breedingInfo = new BreedingInfo(original.breedingInfo);
+    }
+
+    private static void transferReferentialTraitsToCopy(Species copy, Species original,
+                                                        Map<Species, Species> originalToCopies) {
+        transferFormesToCopy(copy, original, originalToCopies);
+        transferEvolutionsToCopy(copy, original, originalToCopies);
+        transferMegaEvolutionsToCopy(copy, original, originalToCopies);
+    }
+
+    private static void transferFormesToCopy(Species copy, Species original,
+                                             Map<Species, Species> originalToCopies) {
+        // Simple forme traits are grouped with the referential
+        // traits so they're less likely to be missed.
+        copy.cosmeticFormeNumbers = new ArrayList<>(original.cosmeticFormeNumbers);
+
+        copy.formeSuffix = original.formeSuffix;
+        copy.formeNumber = original.formeNumber;
+
+        copy.alolan = original.alolan;
+        copy.essentiallyCosmetic = original.essentiallyCosmetic;
+        copy.ignoreCosmetic = original.ignoreCosmetic;
+
+        // This honestly is so weird.
+        // If we allow originalToCopies to be null, it will break the usual contract of 0->this,
+        // by having 0->original. But even beyond that, if we were to make a special case to force
+        // 0->this, it will incorrectly report that so-and-so is an alt forme of this, when they
+        // really are alt formes of original.
+        // Perhaps the solution is simply to not let originalToCopies be null...
+        copy.altFormes = new HashMap<>();
+        for (Map.Entry<Integer, Species> entry : original.altFormes.entrySet()) {
+            int formeNumber = entry.getKey();
+            Species altForme = originalToCopies == null ? entry.getValue() : originalToCopies.get(entry.getValue());
+            copy.altFormes.put(formeNumber, altForme);
+        }
+
+        if (original.baseForme == null) {
+            copy.baseForme = null;
+        } else if (originalToCopies == null) {
+            copy.baseForme = original.baseForme;
+        } else {
+            copy.baseForme = originalToCopies.get(original.baseForme);
+        }
+
+        if (original.conceptualBaseForme == null) {
+            copy.conceptualBaseForme = null;
+        } else if (originalToCopies == null) {
+            copy.conceptualBaseForme = original.conceptualBaseForme;
+        } else {
+            copy.conceptualBaseForme = originalToCopies.get(original.conceptualBaseForme);
+        }
+    }
+
+    private static void transferEvolutionsToCopy(Species copy, Species original,
+                                                 Map<Species, Species> originalToCopies) {
+        for(Evolution evo : original.getEvolutionsFrom()) {
+            Species evoTo = originalToCopies == null ? evo.getTo() : originalToCopies.get(evo.getTo());
+
+            Evolution evoCopy = new Evolution(copy, evoTo,
+                    evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+            evoCopy.setForme(evo.getForme());
+            copy.getEvolutionsFrom().add(evoCopy);
+            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
+        }
+    }
+
+    private static void transferMegaEvolutionsToCopy(Species copy, Species original,
+                                                     Map<Species, Species> originalToCopies) {
+        for(MegaEvolution mevo : original.getMegaEvolutionsFrom()) {
+            Species mevoTo = originalToCopies == null ? mevo.getTo() : originalToCopies.get(mevo.getTo());
+
+            MegaEvolution mevoCopy = new MegaEvolution(copy, mevoTo,
+                    mevo.isNeedsItem(), mevo.getItem());
+            copy.getMegaEvolutionsFrom().add(mevoCopy);
+            mevoCopy.getTo().getMegaEvolutionsTo().add(mevoCopy);
+        }
+    }
 }

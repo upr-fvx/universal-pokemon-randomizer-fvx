@@ -271,7 +271,6 @@ public class TestRomHandler extends AbstractRomHandler {
         testMegaEvolutions = null;
         testAltFormes = null;
         testIrregularFormes = null;
-        testAltFormesMap = null;
         testRSS = null;
         testSpeciesInOrder = null;
         testSpeciesInclFormesInOrder = null;
@@ -321,136 +320,25 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet deepCopySpeciesSet(SpeciesSet originalSet) {
         SpeciesSet newSet = new SpeciesSet();
         originalToTest = new HashMap<>();
-        for(Species orig : originalSet) {
-            Species copy = copySpeciesStaticTraits(orig);
+        // We need to create empty copies of all Species before transferring/copying traits,
+        // otherwise species relations can't be copied.
+        for (Species orig : originalSet) {
+            Species copy = orig instanceof Gen1Species ?
+                    new Gen1Species(orig.getNumber()) : new Species(orig.getNumber());
             newSet.add(copy);
             originalToTest.put(orig, copy);
         }
-
-        testMegaEvolutions = new ArrayList<>();
-        testAltFormes = new SpeciesSet();
-        testIrregularFormes = new SpeciesSet();
-        testAltFormesMap = new HashMap<>();
-        //now that they're all here, iterate again to copy relations
-        for(Species orig : originalSet) {
-            copySpeciesRelations(orig, originalToTest);
+        for (Species orig : originalSet) {
+            Species.transferTraitsToCopy(originalToTest.get(orig), orig, originalToTest);
         }
+
+        // And these can be populated once the copy process is done
+        testAltFormes = new SpeciesSet(newSet).filter(pk -> !pk.isBaseForme());
+        testIrregularFormes = new SpeciesSet(originalIrregularFormes.stream().map(originalToTest::get).toList());
+        testMegaEvolutions = new ArrayList<>();
+        newSet.forEach(pk -> testMegaEvolutions.addAll(pk.getMegaEvolutionsFrom()));
 
         return newSet;
-    }
-
-    /**
-     * Copies all data from one species to another, excepting data which contains references to other Species.
-     * @param original The Species to copy.
-     * @return A new Species with none of its fields having reference to the original Species.
-     */
-    private static Species copySpeciesStaticTraits(Species original) {
-        boolean isGen1 = original instanceof Gen1Species;
-        Species copy;
-        if(isGen1) {
-            copy = new Gen1Species(original.getNumber());
-        } else {
-            copy = new Species(original.getNumber());
-        }
-        copy.setName(original.getName());
-
-        //formes
-        copy.setFormeSuffix(original.getFormeSuffix());
-        // TODO: copying new forme stuff
-//        copy.setFormeNumber(original.getFormeNumber());
-//        copy.setCosmeticForms(original.getCosmeticForms());
-//        copy.setActuallyCosmetic(original.isActuallyCosmetic());
-//
-//        copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
-        //I don't know if that copy is necessary, but it shouldn't hurt?
-
-        copy.setGeneration(original.getGeneration());
-
-        //Types
-        copy.setPrimaryType(original.getPrimaryType(true));
-        copy.setSecondaryType(original.getSecondaryType(true));
-        //using original or not shouldn't matter
-
-        //base stats
-        copy.setHp(original.getHp());
-        copy.setAttack(original.getAttack());
-        copy.setDefense(original.getDefense());
-        copy.setSpeed(original.getSpeed());
-        if(isGen1) {
-            copy.setSpecial(original.getSpecial());
-        } else {
-            copy.setSpatk(original.getSpatk());
-            copy.setSpdef(original.getSpdef());
-        }
-
-        //abilities
-        copy.setAbility1(original.getAbility1());
-        copy.setAbility2(original.getAbility2());
-        copy.setAbility3(original.getAbility3());
-
-        copy.setExpYield(original.getExpYield());
-
-        //wild encounter related
-        copy.setCatchRate(original.getCatchRate());
-        copy.setCommonHeldItem(original.getCommonHeldItem());
-        copy.setRareHeldItem(original.getRareHeldItem());
-        copy.setDarkGrassHeldItem(original.getDarkGrassHeldItem());
-        copy.setGenderRatio(original.getGenderRatio());
-
-        //misc
-        copy.setFrontImageDimensions(original.getFrontImageDimensions());
-        copy.setCallRate(original.getCallRate());
-        copy.setGrowthCurve(original.getGrowthCurve());
-
-        copy.setBreedingInfo(new BreedingInfo(original.getBreedingInfo()));
-
-        return copy;
-    }
-
-    /**
-     * Given an original species and a copy of that species, as well as a map of all original species to copies of them,
-     * copies all data which contains references to other Species, updating those references to the copies. <br>
-     * For evolutions and mega evolutions, it only assigns those from this Species,
-     * but also assigns it to the Species evolved to.
-     * This should result in all evolutions being properly assigned if this function is called on all Species.
-     * @param original The Species to copy relations from. They will be copied to its mapped value.
-     * @param originalToCopies A Map of the original Species to their copies.
-     */
-    private void copySpeciesRelations(Species original, Map<Species, Species> originalToCopies) {
-        Species copy = originalToCopies.get(original);
-        if(!original.isBaseForme()) {
-            Species copyBaseForme = originalToCopies.get(original.getBaseForme());
-            // TODO: copy new forme stuff
-//            copy.setBaseForme(copyBaseForme);
-//            copyBaseForme.setAlolanForme(copy);
-            testAltFormes.add(copy);
-
-            if(originalIrregularFormes.contains(original)) {
-                testIrregularFormes.add(copy);
-            }
-            if(!testAltFormesMap.containsKey(copyBaseForme)) {
-                testAltFormesMap.put(copyBaseForme, new HashMap<>());
-                testAltFormesMap.get(copyBaseForme).put(copyBaseForme.getFormeNumber(), copyBaseForme);
-            }
-            testAltFormesMap.get(copyBaseForme).put(copy.getFormeNumber(), copy);
-        }
-
-        for(Evolution evolution : original.getEvolutionsFrom()) {
-            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.getType(), evolution.getExtraInfo(), evolution.getEstimatedEvoLvl());
-            evoCopy.setForme(evolution.getForme());
-            copy.getEvolutionsFrom().add(evoCopy);
-            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
-        }
-
-        for(MegaEvolution evolution : original.getMegaEvolutionsFrom()) {
-            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.isNeedsItem(), evolution.getItem());
-            copy.getMegaEvolutionsFrom().add(evoCopy);
-            evoCopy.getTo().getMegaEvolutionsTo().add(evoCopy);
-
-            testMegaEvolutions.add(evoCopy);
-        }
     }
 
     /**

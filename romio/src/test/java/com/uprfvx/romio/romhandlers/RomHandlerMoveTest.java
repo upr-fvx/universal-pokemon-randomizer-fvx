@@ -42,6 +42,17 @@ public class RomHandlerMoveTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void moveNamesDoNotChangeWithLoadAndSave(String romName) {
+        loadROM(romName);
+        List<String> before = romHandler.getMoves().stream().filter(Objects::nonNull).map(m -> m.name).toList();
+        romHandler.saveMoves();
+        romHandler.loadMoves();
+        List<String> after = romHandler.getMoves().stream().filter(Objects::nonNull).map(m -> m.name).toList();
+        assertEquals(before, after);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void movesLearntDoNotChangeWithGetAndSet(String romName) {
         loadROM(romName);
         Map<Integer, List<MoveLearnt>> movesLearnt = romHandler.getMovesLearnt();

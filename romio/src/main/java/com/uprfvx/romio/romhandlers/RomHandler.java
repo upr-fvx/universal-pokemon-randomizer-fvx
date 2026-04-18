@@ -341,6 +341,16 @@ public interface RomHandler {
     // Move Data
     // =========
 
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadMoves();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void saveMoves();
+
     boolean hasPhysicalSpecialSplit();
 
     // return all the moves valid in this game.

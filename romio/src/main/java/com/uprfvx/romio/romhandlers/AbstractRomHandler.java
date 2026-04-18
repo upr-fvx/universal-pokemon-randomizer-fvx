@@ -962,8 +962,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         savePokemonPalettes();
     }
 
-    public abstract void saveMoves();
-
     protected abstract boolean saveRomFile(String filename, long seed);
 
     protected abstract boolean saveRomDirectory(String filename);
@@ -999,15 +997,5 @@ public abstract class AbstractRomHandler implements RomHandler {
     public boolean isEnglish() {
         // Subclasses should override with ROM-specific checks.
         return false;
-    }
-
-    @Override
-    public int getMaxMoveNameLength() {
-        return switch (generationOfPokemon()) {
-            case 1 -> 10;
-            case 2, 3 -> 12;
-            case 4, 5 -> 15;
-            default -> 24;
-        };
     }
 }

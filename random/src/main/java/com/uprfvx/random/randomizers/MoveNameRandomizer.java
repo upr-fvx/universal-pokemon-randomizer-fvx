@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.constants.MoveIDs;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveCategory;
@@ -27,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public class MoveNameRandomizer extends Randomizer {
 
-    private static final int MAX_ATTEMPTS = 50;
+    private static final int MAX_ATTEMPTS_PER_NAME = 50;
 
     private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
     private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
@@ -176,7 +177,7 @@ public class MoveNameRandomizer extends Randomizer {
 
         String[] actionWords = getActionWords(mv);
 
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        for (int i = 0; i < MAX_ATTEMPTS_PER_NAME; i++) {
             String typeWord = typeNames[random.nextInt(typeNames.length)];
             String actionWord = actionWords[random.nextInt(actionWords.length)];
             String moveName = typeWord + " " + actionWord;
@@ -336,7 +337,4 @@ public class MoveNameRandomizer extends Randomizer {
         return EXTRA_NAME_LISTS.get(key);
     }
 
-    public boolean isChangesMade() {
-        return changesMade;
-    }
 }

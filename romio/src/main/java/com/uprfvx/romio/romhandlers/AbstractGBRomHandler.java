@@ -98,8 +98,6 @@ public abstract class AbstractGBRomHandler extends AbstractRomHandler {
     // TODO: change this to not be as ugly
     public abstract void loadEvolutions();
 
-    public abstract void loadMoves();
-
     public abstract void loadItems();
 
     @Override

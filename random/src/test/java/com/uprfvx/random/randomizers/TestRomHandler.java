@@ -57,6 +57,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private Map<Integer, List<MoveLearnt>> testMovesLearnt;
     private final Map<Integer, List<Integer>> originalEggMoves;
     private Map<Integer, List<Integer>> testEggMoves;
+    private final int maxMoveNameLength;
 
     // TMs/HMs/Tutors
     private final List<Integer> originalTMMoves;
@@ -170,6 +171,7 @@ public class TestRomHandler extends AbstractRomHandler {
         originalMoves = Collections.unmodifiableList(mockupOf.getMoves());
         originalMovesLearnt = Collections.unmodifiableMap(mockupOf.getMovesLearnt());
         originalEggMoves = Collections.unmodifiableMap(mockupOf.getEggMoves());
+        maxMoveNameLength = mockupOf.getMaxMoveNameLength();
 
         originalTMMoves = Collections.unmodifiableList(mockupOf.getTMMoves());
         hmMoves = Collections.unmodifiableList(mockupOf.getHMMoves());
@@ -585,6 +587,11 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadMoves() {
+
+    }
+
+    @Override
     public void saveMoves() {
 
     }
@@ -959,6 +966,11 @@ public class TestRomHandler extends AbstractRomHandler {
             testMoves = deepCopyMoves(originalMoves);
         }
         return testMoves;
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return maxMoveNameLength;
     }
 
     @Override

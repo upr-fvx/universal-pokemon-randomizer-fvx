@@ -220,8 +220,12 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     private String[] readMoveNames() {
+        int namesTableOffset = romEntry.getIntValue("NamesTableOffset");
+        int bankOffset = romEntry.getArrayValue("MoveNamesBankOffsets")[0];
+        int bank = rom[bankOffset] & 0xFF;
+        int offset = readPointer(namesTableOffset + 2, bank);
+
         int moveCount = romEntry.getIntValue("MoveCount");
-        int offset = romEntry.getIntValue("MoveNamesOffset");
         String[] moveNames = new String[moveCount + 1];
         for (int i = 1; i <= moveCount; i++) {
             moveNames[i] = readVariableLengthString(offset, false);
@@ -516,10 +520,26 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 });
             }
         }
+        writeMoveNames();
+    }
+
+    private void writeMoveNames() {
+        int pointerOffset = romEntry.getIntValue("NamesTableOffset") + 2;
+        int[] bankOffsets = romEntry.getArrayValue("MoveNamesBankOffsets");
+
+        List<String> moveNames = Arrays.stream(moves).skip(1).map(m -> m.name).toList();
+        DataRewriter<List<String>> dw = new IndirectBankDataRewriter<>(bankOffsets);
+        dw.rewriteData(pointerOffset, moveNames, this::variableLengthStringsToBytes,
+                o -> lengthOfStringsAt(o, moveNames.size()));
     }
 
     public List<Move> getMoves() {
         return Arrays.asList(moves);
+    }
+
+    @Override
+    public int getMaxMoveNameLength() {
+        return 12;
     }
 
     private void loadPokedexOrder() {
@@ -3151,9 +3171,4 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public Gen1RomEntry getRomEntry() {
         return romEntry;
     }
-
-    @Override
-    public int getMaxMoveNameLength() {
-        return 10;
-    };
 }

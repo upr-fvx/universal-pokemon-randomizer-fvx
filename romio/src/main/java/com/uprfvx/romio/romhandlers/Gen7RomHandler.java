@@ -489,7 +489,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private void loadMoves() {
+    @Override
+    public void loadMoves() {
         try {
             moveGarc = this.readGARC(romEntry.getFile("MoveData"),true);
             int moveCount = Gen7Constants.getMoveCount(romEntry.getRomType());

@@ -209,7 +209,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		return items;
 	}
 
-	private void loadMoves() {
+    @Override
+	public void loadMoves() {
 		try {
 			moveNarc = this.readNARC(romEntry.getFile("MoveData"));
 			moves = new Move[Gen4Constants.moveCount + 1];

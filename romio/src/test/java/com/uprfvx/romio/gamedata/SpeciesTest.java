@@ -2,6 +2,7 @@ package com.uprfvx.romio.gamedata;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -9,7 +10,13 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SpeciesTest {
-    
+
+    // === Setup / usable variables ==================
+
+    // Having these objects like this (hardcoded a,b,c,d... instead of in some array or so)
+    // might seem silly. It is! But this verbose mess up here comes in exchange for the
+    // tests themselves being more readable/straight-forward.
+
     private static final int A_NUM = 1;
     private static final int B_NUM = 2;
     private static final int C_NUM = 3;
@@ -52,6 +59,31 @@ public class SpeciesTest {
             dCopy = null;
         }
     }
+
+    /**
+     * Applies {@link Species#transferAttributesToCopy(Species, Map)} to all
+     * pairs of originals / copies that are used in this test, as per {@link #use(Species...)}.
+     */
+    private void transferAttributesToCopies() {
+        Map<Species, Species> originalToCopy = new HashMap<>();
+        if (a != null && aCopy != null) {
+            originalToCopy.put(a, aCopy);
+        }
+        if (b != null && bCopy != null) {
+            originalToCopy.put(b, bCopy);
+        }
+        if (c != null && cCopy != null) {
+            originalToCopy.put(c, cCopy);
+        }
+        if (d != null && dCopy != null) {
+            originalToCopy.put(d, dCopy);
+        }
+        for (Species original : originalToCopy.keySet()) {
+            Species.transferAttributesToCopy(original, originalToCopy);
+        }
+    }
+
+    // ==================================================
 
     @Test
     public void getBaseForme_OfBaseForme_ReturnsItself() {
@@ -344,9 +376,7 @@ public class SpeciesTest {
         a.setFrontImageDimensions(16);
         a.setGrowthCurve(ExpCurve.MEDIUM_FAST);
 
-        System.out.println(a);
-        System.out.println(aCopy);
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+        transferAttributesToCopies();
 
         assertEquals("original", aCopy.getName());
         assertEquals(1, aCopy.getGeneration());
@@ -376,7 +406,7 @@ public class SpeciesTest {
         Item guaranteedItem = new Item(1, "Guaranteed");
         a.setGuaranteedHeldItem(guaranteedItem);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+        transferAttributesToCopies();
 
         assertEquals(guaranteedItem, aCopy.getGuaranteedHeldItem());
     }
@@ -391,7 +421,7 @@ public class SpeciesTest {
         a.setRareHeldItem(rareItem);
         a.setDarkGrassHeldItem(darkGrassItem);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+        transferAttributesToCopies();
 
         assertEquals(commonItem, aCopy.getCommonHeldItem());
         assertEquals(rareItem, aCopy.getRareHeldItem());
@@ -404,7 +434,7 @@ public class SpeciesTest {
         BreedingInfo breedingInfo = new BreedingInfo(EggGroup.FIELD, null, 1);
         a.setBreedingInfo(breedingInfo);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+        transferAttributesToCopies();
 
         assertNotNull(aCopy.getBreedingInfo());
         assertEquals(EggGroup.FIELD, aCopy.getBreedingInfo().getPrimaryEggGroup());
@@ -417,10 +447,12 @@ public class SpeciesTest {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy, b, bCopy));
+        transferAttributesToCopies();
 
-        assertEquals(aCopy, aCopy.getForme(0));
-        assertEquals(bCopy, aCopy.getForme(1));
+        // important to not assertEquals here, since the copies equal the originals
+        // (since equality is based on number only)
+        assertSame(aCopy, aCopy.getForme(0));
+        assertSame(bCopy, aCopy.getForme(1));
     }
 
     @Test
@@ -428,7 +460,7 @@ public class SpeciesTest {
         use(a, aCopy);
         a.addCosmeticAltForme(1);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+        transferAttributesToCopies();
 
         assertEquals(List.of(0, 1), aCopy.getCosmeticFormeNumbers());
     }
@@ -438,8 +470,7 @@ public class SpeciesTest {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);
 
-        Species.transferAttributesToCopy(a, Map.of(a, aCopy, b, bCopy));
-        Species.transferAttributesToCopy(b, Map.of(a, aCopy, b, bCopy));
+        transferAttributesToCopies();
 
         assertEquals(1, bCopy.getFormeNumber());
     }
@@ -450,9 +481,7 @@ public class SpeciesTest {
         a.addAltForme(1, b);
         b.setFormeSuffix("Suffix");
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
+        transferAttributesToCopies();
 
         assertEquals("Suffix", bCopy.getFormeSuffix());
     }
@@ -462,11 +491,9 @@ public class SpeciesTest {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
+        transferAttributesToCopies();
 
-        assertEquals(aCopy, bCopy.getBaseForme());
+        assertSame(aCopy, bCopy.getBaseForme());
     }
 
     @Test
@@ -476,12 +503,9 @@ public class SpeciesTest {
         a.addAltForme(2, c);
         c.setConceptualBaseForme(b);
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy, c, cCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
-        Species.transferAttributesToCopy(c, originalToCopy);
+        transferAttributesToCopies();
 
-        assertEquals(bCopy, cCopy.getConceptualBaseForme());
+        assertSame(bCopy, cCopy.getConceptualBaseForme());
     }
 
     @Test
@@ -490,9 +514,7 @@ public class SpeciesTest {
         a.addAltForme(1, b);
         b.setAlolan();
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
+        transferAttributesToCopies();
 
         assertTrue(bCopy.isAlolan());
     }
@@ -503,9 +525,7 @@ public class SpeciesTest {
         a.addAltForme(1, b);
         b.setEssentiallyCosmetic();
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
+        transferAttributesToCopies();
 
         assertTrue(bCopy.isEssentiallyCosmetic());
     }
@@ -517,10 +537,155 @@ public class SpeciesTest {
         b.setEssentiallyCosmetic();
         b.setIgnoreCosmetic();
 
-        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
-        Species.transferAttributesToCopy(a, originalToCopy);
-        Species.transferAttributesToCopy(b, originalToCopy);
+        transferAttributesToCopies();
 
         assertTrue(bCopy.isIgnoreCosmetic());
     }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_MatchingEvolutionsFromAndToAreSame() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertSame(aCopy.getEvolutionsFrom().getFirst(), bCopy.getEvolutionsTo().getFirst());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_FromReferenceGetCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertSame(aCopy, aCopy.getEvolutionsFrom().getFirst().getFrom());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_ToReferenceGetCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertSame(bCopy, aCopy.getEvolutionsFrom().getFirst().getTo());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_EvolutionTypeGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertEquals(EvolutionType.LEVEL, aCopy.getEvolutionsFrom().getFirst().getType());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_EvolutionExtraInfoGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertEquals(1, aCopy.getEvolutionsFrom().getFirst().getExtraInfo());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_EstimatedEvoLvlGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1, 2);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertEquals(2, aCopy.getEvolutionsFrom().getFirst().getEstimatedEvoLvl());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEvolutions_FormeGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
+        evolution.setForme(2);
+        a.getEvolutionsFrom().add(evolution);
+        b.getEvolutionsTo().add(evolution);
+
+        transferAttributesToCopies();
+
+        assertEquals(2, aCopy.getEvolutionsFrom().getFirst().getForme());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithMegaEvolutions_MatchingMegaEvolutionsFromAndToAreSame() {
+        use(a, b, aCopy, bCopy);
+        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
+        a.getMegaEvolutionsFrom().add(megaEvolution);
+        b.getMegaEvolutionsTo().add(megaEvolution);
+
+        transferAttributesToCopies();
+
+        assertSame(aCopy.getMegaEvolutionsFrom().getFirst(), bCopy.getMegaEvolutionsTo().getFirst());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithMegaEvolutions_FromReferenceGetCopied() {
+        use(a, b, aCopy, bCopy);
+        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
+        a.getMegaEvolutionsFrom().add(megaEvolution);
+        b.getMegaEvolutionsTo().add(megaEvolution);
+
+        transferAttributesToCopies();
+
+        assertSame(aCopy, aCopy.getMegaEvolutionsFrom().getFirst().getFrom());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithMegaEvolutions_ToReferenceGetCopied() {
+        use(a, b, aCopy, bCopy);
+        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
+        a.getMegaEvolutionsFrom().add(megaEvolution);
+        b.getMegaEvolutionsTo().add(megaEvolution);
+
+        transferAttributesToCopies();
+
+        assertSame(bCopy, aCopy.getMegaEvolutionsFrom().getFirst().getTo());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithMegaEvolutions_NeedsItemGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        MegaEvolution megaEvolution = new MegaEvolution(a, b, true, null);
+        a.getMegaEvolutionsFrom().add(megaEvolution);
+        b.getMegaEvolutionsTo().add(megaEvolution);
+
+        transferAttributesToCopies();
+
+        assertTrue(aCopy.getMegaEvolutionsFrom().getFirst().isNeedsItem());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithMegaEvolutions_ItemGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        Item item = new Item(1, "Item");
+        MegaEvolution megaEvolution = new MegaEvolution(a, b, true, item);
+        a.getMegaEvolutionsFrom().add(megaEvolution);
+        b.getMegaEvolutionsTo().add(megaEvolution);
+
+        transferAttributesToCopies();
+
+        assertEquals(item, aCopy.getMegaEvolutionsFrom().getFirst().getItem());
+    }
+
 }

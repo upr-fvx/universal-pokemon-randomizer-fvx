@@ -94,7 +94,7 @@ public class Species implements Comparable<Species> {
     private String name;
     private final int number;
 
-    private Map<Integer, Species> altFormes = new HashMap<>(Map.of(0, this));
+    private Map<Integer, Species> formes = new HashMap<>(Map.of(0, this));
     private List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
 
     private String formeSuffix = "";
@@ -634,6 +634,13 @@ public class Species implements Comparable<Species> {
     }
 
     /**
+     * Returns an unmodifiable list of the forme numbers of this Species and its cosmetic formes.
+     */
+    public List<Integer> getCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(cosmeticFormeNumbers);
+    }
+
+    /**
      * Gets a random cosmetic forme of this Species, including itself.
      * {@link #isIgnoreCosmetic()} formes are not picked.
      * @param random A seeded random number generator.
@@ -730,7 +737,7 @@ public class Species implements Comparable<Species> {
             throw new IllegalStateException(String.format(
                     "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
         }
-        if (altFormes.containsKey(formeNumber)) {
+        if (formes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
                     "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
         }
@@ -740,7 +747,7 @@ public class Species implements Comparable<Species> {
                     altForme.getNumberAndFullName(), altForme.baseForme.getNumberAndFullName()
             ));
         }
-        altFormes.put(formeNumber, altForme);
+        formes.put(formeNumber, altForme);
         altForme.baseForme = this;
         altForme.formeNumber = formeNumber;
     }
@@ -755,11 +762,11 @@ public class Species implements Comparable<Species> {
             throw new IllegalStateException(String.format(
                     "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
         }
-        if (altFormes.containsKey(formeNumber)) {
+        if (formes.containsKey(formeNumber)) {
             throw new IllegalStateException(String.format(
                     "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
         }
-        altFormes.put(formeNumber, this);
+        formes.put(formeNumber, this);
         cosmeticFormeNumbers.add(formeNumber);
     }
 
@@ -774,7 +781,7 @@ public class Species implements Comparable<Species> {
             throw new IllegalStateException(String.format(
                     "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
         }
-        Species forme = altFormes.get(formeNumber);
+        Species forme = formes.get(formeNumber);
         if (forme == null) {
             throw new NoSuchElementException(String.format(
                     "Species %s does not have a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
@@ -786,7 +793,7 @@ public class Species implements Comparable<Species> {
      * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
      */
     public SpeciesSet getAltFormes() {
-        return new SpeciesSet(altFormes.values()).filter(pk -> !pk.equals(this));
+        return new SpeciesSet(formes.values()).filter(pk -> !pk.equals(this));
     }
 
     public int getFormeNumber() {
@@ -1293,9 +1300,9 @@ public class Species implements Comparable<Species> {
         copy.essentiallyCosmetic = original.essentiallyCosmetic;
         copy.ignoreCosmetic = original.ignoreCosmetic;
 
-        copy.altFormes = new HashMap<>();
-        for (Map.Entry<Integer, Species> entry : original.altFormes.entrySet()) {
-            copy.altFormes.put(entry.getKey(), originalToCopies.get(entry.getValue()));
+        copy.formes = new HashMap<>();
+        for (Map.Entry<Integer, Species> entry : original.formes.entrySet()) {
+            copy.formes.put(entry.getKey(), originalToCopies.get(entry.getValue()));
         }
 
         copy.baseForme = original.baseForme == null ? null : originalToCopies.get(original.baseForme);

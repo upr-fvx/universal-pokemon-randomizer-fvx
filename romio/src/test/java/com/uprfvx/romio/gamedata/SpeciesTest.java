@@ -19,7 +19,16 @@ public class SpeciesTest {
     private Species b = new Species(B_NUM);
     private Species c = new Species(C_NUM);
     private Species d = new Species(D_NUM);
+    {
+        a.setName("A");
+        b.setName("B");
+        c.setName("C");
+        d.setName("D");
+    }
     private Species aCopy = new Species(A_NUM);
+    private Species bCopy = new Species(B_NUM);
+    private Species cCopy = new Species(C_NUM);
+    private Species dCopy = new Species(D_NUM);
     
     /**
      * Selects which Species objects may be used in this test.
@@ -35,6 +44,12 @@ public class SpeciesTest {
             d = null;
         } else if (!List.of(toUse).contains(aCopy)) {
             aCopy = null;
+        } else if (!List.of(toUse).contains(bCopy)) {
+            bCopy = null;
+        } else if (!List.of(toUse).contains(cCopy)) {
+            cCopy = null;
+        } else if (!List.of(toUse).contains(dCopy)) {
+            dCopy = null;
         }
     }
 
@@ -303,7 +318,7 @@ public class SpeciesTest {
 
 
     @Test
-    public void transferAttributesToCopy_SimplestAttributes_TransfersAllAttributes() {
+    public void transferAttributesToCopy_WithSimplestAttributes_TransfersAllAttributes() {
         // Simplest -> primitives and enums.
         // Items and BreedingInfo get their own tests since they rely on full Objects,
         // even if these are simple ones.
@@ -395,5 +410,117 @@ public class SpeciesTest {
         assertEquals(EggGroup.FIELD, aCopy.getBreedingInfo().getPrimaryEggGroup());
         assertNull(aCopy.getBreedingInfo().getSecondaryEggGroup());
         assertEquals(1, aCopy.getBreedingInfo().getEggCycles());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_FormesGetCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy, b, bCopy));
+
+        assertEquals(aCopy, aCopy.getForme(0));
+        assertEquals(bCopy, aCopy.getForme(1));
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_CosmeticFormesGetCopied() {
+        use(a, aCopy);
+        a.addCosmeticAltForme(1);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+
+        assertEquals(List.of(0, 1), aCopy.getCosmeticFormeNumbers());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_FormeNumberGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy, b, bCopy));
+        Species.transferAttributesToCopy(b, Map.of(a, aCopy, b, bCopy));
+
+        assertEquals(1, bCopy.getFormeNumber());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_FormeSuffixGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        b.setFormeSuffix("Suffix");
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+
+        assertEquals("Suffix", bCopy.getFormeSuffix());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_BaseFormeGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+
+        assertEquals(aCopy, bCopy.getBaseForme());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_ConceptualBaseFormeGetsCopied() {
+        use(a, b, c, aCopy, bCopy, cCopy);
+        a.addAltForme(1, b);
+        a.addAltForme(2, c);
+        c.setConceptualBaseForme(b);
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy, c, cCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+        Species.transferAttributesToCopy(c, originalToCopy);
+
+        assertEquals(bCopy, cCopy.getConceptualBaseForme());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_AlolanGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        b.setAlolan();
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+
+        assertTrue(bCopy.isAlolan());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_EssentiallyCosmeticGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        b.setEssentiallyCosmetic();
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+
+        assertTrue(bCopy.isEssentiallyCosmetic());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithFormes_IgnoreCosmeticGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        b.setEssentiallyCosmetic();
+        b.setIgnoreCosmetic();
+
+        Map<Species, Species> originalToCopy = Map.of(a, aCopy, b, bCopy);
+        Species.transferAttributesToCopy(a, originalToCopy);
+        Species.transferAttributesToCopy(b, originalToCopy);
+
+        assertTrue(bCopy.isIgnoreCosmetic());
     }
 }

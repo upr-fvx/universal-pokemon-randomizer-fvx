@@ -1259,6 +1259,7 @@ public class Species implements Comparable<Species> {
 
         //wild encounter related
         copy.catchRate = original.catchRate;
+        copy.guaranteedHeldItem = original.guaranteedHeldItem;
         copy.commonHeldItem = original.commonHeldItem;
         copy.rareHeldItem = original.rareHeldItem;
         copy.darkGrassHeldItem = original.darkGrassHeldItem;
@@ -1268,7 +1269,8 @@ public class Species implements Comparable<Species> {
         //misc
         copy.frontImageDimensions = original.frontImageDimensions;
         copy.growthCurve = original.growthCurve;
-        copy.breedingInfo = new BreedingInfo(original.breedingInfo);
+        copy.breedingInfo = original.breedingInfo == null ?
+                null : new BreedingInfo(original.breedingInfo);
     }
 
     private static void transferReferentialAttributesToCopy(Species copy, Species original,

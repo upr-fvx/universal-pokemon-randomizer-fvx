@@ -1,6 +1,5 @@
 package com.uprfvx.romio.gamedata;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,39 +15,26 @@ public class SpeciesTest {
     private static final int C_NUM = 3;
     private static final int D_NUM = 4;
 
-    private Species a, b, c, d;
-    private Species aCopy, bCopy, cCopy, dCopy;
-
-    // This is a bit silly... and also doesn't work.
-    // pk == [x] becomes pk == null before [x] is assigned,
-    // alas no C-style pointer shenanigans...
-    // In principle, we could just define each of the species
-    // when init-ing the SpeciesTest, but I want it to be impossible
-    // to declare somehow at the start of each test which Species
-    // are being used, and throwing if undeclared ones are used.
+    private Species a = new Species(A_NUM);
+    private Species b = new Species(B_NUM);
+    private Species c = new Species(C_NUM);
+    private Species d = new Species(D_NUM);
+    private Species aCopy = new Species(A_NUM);
+    
+    /**
+     * Selects which Species objects may be used in this test.
+     */
     private void use(Species... toUse) {
-        for (Species pk : toUse) {
-            if (pk == a) {
-                a = new Species(A_NUM);
-                a.setName("a");
-            } else if (pk == b) {
-                b = new Species(B_NUM);
-                b.setName("b");
-            } else if (pk == c) {
-                c = new Species(C_NUM);
-                c.setName("c");
-            } else if (pk == d) {
-                d = new Species(D_NUM);
-                d.setName("d");
-            } else if (pk == aCopy) {
-                aCopy = new Species(A_NUM);
-            } else if (pk == bCopy) {
-                bCopy = new Species(B_NUM);
-            } else if (pk == cCopy) {
-                cCopy = new Species(C_NUM);
-            } else if (pk == dCopy) {
-                dCopy = new Species(D_NUM);
-            }
+        if (!List.of(toUse).contains(a)) {
+            a = null;
+        } else if(!List.of(toUse).contains(b)) {
+            b = null;
+        } else if(!List.of(toUse).contains(c)) {
+            c = null;
+        } else if(!List.of(toUse).contains(d)) {
+            d = null;
+        } else if (!List.of(toUse).contains(aCopy)) {
+            aCopy = null;
         }
     }
 

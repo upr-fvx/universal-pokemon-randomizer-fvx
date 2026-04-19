@@ -200,7 +200,7 @@ public class Gen5Constants {
             SpeciesIDs.Gen5Formes.kyuremB
     );
 
-    public static final List<Integer> invisibleCosmeticFormes = List.of(
+    public static final List<Integer> ignoreTrueCosmeticFormes = List.of(
             // Cherrim/Arceus/Genesect: to avoid confusion
             // Deerling/Sawsbuck: handled automatically in gen 5
             SpeciesIDs.cherrim, SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.deerling, SpeciesIDs.sawsbuck

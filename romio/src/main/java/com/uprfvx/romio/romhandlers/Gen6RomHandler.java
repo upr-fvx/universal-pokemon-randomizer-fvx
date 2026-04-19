@@ -327,9 +327,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                     }
                 } else {
-                    if (!Gen6Constants.invisibleCosmeticForms.contains(pkmn.getNumber())) {
-                        for (int i = 0; i < formeCount; i++) {
-                            pkmn.addCosmeticAltForme(i + 1);
+                    boolean ignore = Gen6Constants.ignoreTrueCosmeticForms.contains(pkmn.getNumber());
+                    for (int i = 0; i < formeCount; i++) {
+                        pkmn.addCosmeticAltForme(i + 1);
+                        if (ignore) {
+                            pkmn.setIgnoreCosmeticAltForme(i + 1);
                         }
                     }
                 }

@@ -60,11 +60,6 @@ import java.util.function.Function;
  *     which are thus not loaded in as Species objects.<br>
  *     <b>E.g.</b>, the formes of Burmy, Shellos.</dd>
  *
- *     <dt>Invisible Cosmetic Formes:</dt>
- *     <dd>True cosmetic formes which are *entirely* ignored, and not even loaded as integer
- *     forme ids, due to being confusing or being handled automatically by the game.<br>
- *     <b>E.g.</b>, the formes of Arceus, Genesect, Xerneas.</dd>
- *
  *     <dt>Essentially Cosmetic Formes:</dt>
  *     <dd>Cosmetic formes with stat blocks that are thus loaded as Species objects,
  *     but which should be treated as "cosmetic". When modifying the attributes of a
@@ -74,9 +69,10 @@ import java.util.function.Function;
  *     </dd>
  *
  *     <dt>Ignore Cosmetic Formes:</dt>
- *     <dd>Essentially cosmetic formes that are identical or confusing somehow,
+ *     <dd>Cosmetic formes that are identical or confusing somehow,
  *     that should thus be ignored when picking random cosmetic formes.<br>
- *     <b>E.g.</b>, the different Minior-Core formes.</dd>
+ *     These can be either true or essential.<br>
+ *     <b>E.g.</b>, the formes of Arceus, Genesect, Xerneas, the different Minior-Core formes.</dd>
  *
  *     <dt>Conceptual Base Formes:</dt>
  *     <dd>The formes an alt forme is conceptually based on. For most alt formes, this is
@@ -96,6 +92,7 @@ public class Species implements Comparable<Species> {
 
     private Map<Integer, Species> formes = new HashMap<>(Map.of(0, this));
     private List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
+    private List<Integer> ignoreCosmeticFormeNumbers = new ArrayList<>();
 
     private String formeSuffix = "";
     private int formeNumber = 0;
@@ -104,7 +101,6 @@ public class Species implements Comparable<Species> {
 
     private boolean alolan = false;
     private boolean essentiallyCosmetic = false;
-    private boolean ignoreCosmetic = false;
 
     private int generation = -1;
 
@@ -634,21 +630,28 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Returns an unmodifiable list of the forme numbers of this Species and its cosmetic formes.
+     * Returns an unmodifiable {@link List} of the forme numbers of this Species and its cosmetic formes.
      */
     public List<Integer> getCosmeticFormeNumbers() {
         return Collections.unmodifiableList(cosmeticFormeNumbers);
     }
 
     /**
+     * Returns an unmodifiable {@link List} of this Species' ignore cosmetic forme numbers.
+     */
+    public List<Integer> getIgnoreCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(ignoreCosmeticFormeNumbers);
+    }
+
+    /**
      * Gets a random cosmetic forme of this Species, including itself.
-     * {@link #isIgnoreCosmetic()} formes are not picked.
+     * Ignore cosmetic formes are not picked.
      * @param random A seeded random number generator.
      * @return A forme number for a random cosmetic forme of this Species, including itself.
      */
     public int getRandomCosmeticFormeNumber(Random random) {
         int formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
-        while (getForme(formeNum).isIgnoreCosmetic()) {
+        while (ignoreCosmeticFormeNumbers.contains(formeNum)) {
             formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
         }
         return formeNum;
@@ -846,15 +849,32 @@ public class Species implements Comparable<Species> {
         this.cosmeticFormeNumbers.add(formeNumber);
     }
 
-    public boolean isIgnoreCosmetic() {
-        return ignoreCosmetic;
-    }
-
     public void setIgnoreCosmetic() {
         if (!essentiallyCosmetic) {
             throw new IllegalStateException(getNumberAndFullName() + " is not an essentially cosmetic forme.");
         }
-        this.ignoreCosmetic = true;
+        baseForme.ignoreCosmeticFormeNumbers.add(formeNumber);
+    }
+
+    /**
+     * Sets the true cosmetic forme as being "ignore cosmetic".
+     * For essentially cosmetic formes, use {@link #setIgnoreCosmetic()}.
+     * @param formeNumber the forme number of the to-be ignore cosmetic forme
+     * @throws IllegalStateException if formeNumber is not a cosmetic forme of this species,
+     *                               or if it is the forme number of an essentially cosmetic forme.
+     */
+    public void setIgnoreCosmeticAltForme(int formeNumber) {
+        if (!cosmeticFormeNumbers.contains(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s does not have a cosmetic forme with formeNumber=%d.",
+                    getNumberAndFullName(), formeNumber));
+        }
+        if (!getForme(formeNumber).isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "The forme of %s with formeNumber=%d is essentially cosmetic. " +
+                            "This method is only for true cosmetic formes.", getNumberAndFullName(), formeNumber));
+        }
+        ignoreCosmeticFormeNumbers.add(formeNumber);
     }
 
     /**
@@ -1292,13 +1312,13 @@ public class Species implements Comparable<Species> {
         // Simple forme Attributes are grouped with the referential
         // Attributes so they're less likely to be missed.
         copy.cosmeticFormeNumbers = new ArrayList<>(original.cosmeticFormeNumbers);
+        copy.ignoreCosmeticFormeNumbers = new ArrayList<>(original.ignoreCosmeticFormeNumbers);
 
         copy.formeSuffix = original.formeSuffix;
         copy.formeNumber = original.formeNumber;
 
         copy.alolan = original.alolan;
         copy.essentiallyCosmetic = original.essentiallyCosmetic;
-        copy.ignoreCosmetic = original.ignoreCosmetic;
 
         copy.formes = new HashMap<>();
         for (Map.Entry<Integer, Species> entry : original.formes.entrySet()) {

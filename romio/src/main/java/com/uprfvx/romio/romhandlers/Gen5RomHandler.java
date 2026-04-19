@@ -422,7 +422,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         pkmn.setBreedingInfo(bi);
 
         int formeCount = stats[Gen5Constants.bsFormeCountOffset] & 0xFF;
-        System.out.println(pkmn.getNumber() + " formCount=" + formeCount);
         if (formeCount > 1) {
             graphicalFormeCounts.put(pkmn, formeCount);
             formeGraphicsIndices.put(pkmn, romEntry.getIntValue("FormeGraphicsOffset") + readWord(stats, Gen5Constants.bsFormeSpriteOffset));
@@ -433,11 +432,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
                 }
             } else {
-                if (!Gen5Constants.invisibleCosmeticFormes.contains(pkmn.getNumber())
-                        && pkmn.getNumber() <= SpeciesIDs.genesect) {
+                if (pkmn.getNumber() <= SpeciesIDs.genesect) {
+                    boolean ignore = Gen5Constants.ignoreTrueCosmeticFormes.contains(pkmn.getNumber());
                     for (int i = 0; i < formeCount; i++) {
                         pkmn.addCosmeticAltForme(i + 1);
+                        if (ignore) {
+                            pkmn.setIgnoreCosmeticAltForme(i + 1);
+                        }
                     }
+
                 }
             }
         }

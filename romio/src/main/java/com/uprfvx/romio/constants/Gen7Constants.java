@@ -621,7 +621,7 @@ public class Gen7Constants {
         return m;
     }
 
-    public static final List<Integer> invisibleCosmeticForms = List.of(
+    public static final List<Integer> ignoreTrueCosmeticForms = List.of(
             // Arceus/Genesect/Silvally: to avoid confusion
             // Xerneas: Should be handled automatically?
             SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.silvally, SpeciesIDs.xerneas

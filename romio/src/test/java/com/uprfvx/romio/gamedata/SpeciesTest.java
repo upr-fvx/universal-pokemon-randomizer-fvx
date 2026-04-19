@@ -466,6 +466,17 @@ public class SpeciesTest {
     }
 
     @Test
+    public void transferAttributesToCopy_WithFormes_IgnoreCosmeticFormesGetCopied() {
+        use(a, aCopy);
+        a.addCosmeticAltForme(1);
+        a.setIgnoreCosmeticAltForme(1);
+
+        transferAttributesToCopies();
+
+        assertEquals(List.of(1), aCopy.getIgnoreCosmeticFormeNumbers());
+    }
+
+    @Test
     public void transferAttributesToCopy_WithFormes_FormeNumberGetsCopied() {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);
@@ -528,18 +539,6 @@ public class SpeciesTest {
         transferAttributesToCopies();
 
         assertTrue(bCopy.isEssentiallyCosmetic());
-    }
-
-    @Test
-    public void transferAttributesToCopy_WithFormes_IgnoreCosmeticGetsCopied() {
-        use(a, b, aCopy, bCopy);
-        a.addAltForme(1, b);
-        b.setEssentiallyCosmetic();
-        b.setIgnoreCosmetic();
-
-        transferAttributesToCopies();
-
-        assertTrue(bCopy.isIgnoreCosmetic());
     }
 
     @Test

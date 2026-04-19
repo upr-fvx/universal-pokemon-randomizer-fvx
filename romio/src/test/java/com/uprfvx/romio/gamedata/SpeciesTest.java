@@ -1,31 +1,53 @@
 package com.uprfvx.romio.gamedata;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SpeciesTest {
+    
+    private static final int A_NUM = 1;
+    private static final int B_NUM = 2;
+    private static final int C_NUM = 3;
+    private static final int D_NUM = 4;
 
     private Species a, b, c, d;
+    private Species aCopy, bCopy, cCopy, dCopy;
 
-    // This is a bit silly, but usage-wise it's nice
+    // This is a bit silly... and also doesn't work.
+    // pk == [x] becomes pk == null before [x] is assigned,
+    // alas no C-style pointer shenanigans...
+    // In principle, we could just define each of the species
+    // when init-ing the SpeciesTest, but I want it to be impossible
+    // to declare somehow at the start of each test which Species
+    // are being used, and throwing if undeclared ones are used.
     private void use(Species... toUse) {
         for (Species pk : toUse) {
             if (pk == a) {
-                a = new Species(1);
+                a = new Species(A_NUM);
                 a.setName("a");
             } else if (pk == b) {
-                b = new Species(2);
+                b = new Species(B_NUM);
                 b.setName("b");
             } else if (pk == c) {
-                c = new Species(3);
+                c = new Species(C_NUM);
                 c.setName("c");
             } else if (pk == d) {
-                d = new Species(4);
+                d = new Species(D_NUM);
                 d.setName("d");
+            } else if (pk == aCopy) {
+                aCopy = new Species(A_NUM);
+            } else if (pk == bCopy) {
+                bCopy = new Species(B_NUM);
+            } else if (pk == cCopy) {
+                cCopy = new Species(C_NUM);
+            } else if (pk == dCopy) {
+                dCopy = new Species(D_NUM);
             }
         }
     }
@@ -255,5 +277,137 @@ public class SpeciesTest {
         a.addAltForme(1, b);
         assertThrowsExactly(IllegalStateException.class,
                 b::setIgnoreCosmetic);
+    }
+    
+    @Test
+    public void transferAttributesToCopy_OriginalIsNull_ThrowsNullPointerException() {
+        assertThrowsExactly(NullPointerException.class,
+                () -> Species.transferAttributesToCopy(null, Map.of()));
+    }
+
+    @Test
+    public void transferAttributesToCopy_OriginalToCopiesIsNull_ThrowsNullPointerException() {
+        use(a);
+        assertThrowsExactly(NullPointerException.class,
+                () -> Species.transferAttributesToCopy(a, null));
+    }
+
+    @Test
+    public void transferAttributesToCopy_CopyIsNotInOriginalToCopies_ThrowsIllegalArgumentException() {
+        use(a);
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> Species.transferAttributesToCopy(a, Map.of()));
+    }
+
+    @Test
+    public void transferAttributesToCopy_CopyHasDifferentNumber_ThrowsIllegalArgumentException() {
+        use(a, b);
+        Species aCopy = new Species(99);
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> Species.transferAttributesToCopy(a, Map.of(a, aCopy)));
+    }
+    
+    @Test
+    public void transferAttributesToCopy_CopyHasDifferentClass_ThrowsIllegalArgumentException() {
+        use(a, b);
+        Species aCopy = new Gen1Species(A_NUM);
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> Species.transferAttributesToCopy(a, Map.of(a, aCopy)));
+    }
+
+
+    @Test
+    public void transferAttributesToCopy_SimplestAttributes_TransfersAllAttributes() {
+        // Simplest -> primitives and enums.
+        // Items and BreedingInfo get their own tests since they rely on full Objects,
+        // even if these are simple ones.
+        use(a, aCopy);
+        a.setName("original");
+        a.setGeneration(1);
+        a.setPrimaryType(Type.NORMAL);
+        a.setSecondaryType(null);
+        a.setHp(2);
+        a.setAttack(3);
+        a.setDefense(4);
+        a.setSpatk(5);
+        a.setSpdef(6);
+        a.setSpeed(7);
+        a.setSpecial(8);
+        a.setAbility1(9);
+        a.setAbility2(10);
+        a.setAbility3(11);
+        a.setExpYield(12);
+        a.setCatchRate(13);
+        a.setGenderRatio(14);
+        a.setCallRate(15);
+        a.setFrontImageDimensions(16);
+        a.setGrowthCurve(ExpCurve.MEDIUM_FAST);
+
+        System.out.println(a);
+        System.out.println(aCopy);
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+
+        assertEquals("original", aCopy.getName());
+        assertEquals(1, aCopy.getGeneration());
+        assertEquals(Type.NORMAL, aCopy.getPrimaryType(false));
+        assertNull(aCopy.getSecondaryType(false));
+        assertEquals(2, aCopy.getHp());
+        assertEquals(3, aCopy.getAttack());
+        assertEquals(4, aCopy.getDefense());
+        assertEquals(5, aCopy.getSpatk());
+        assertEquals(6, aCopy.getSpdef());
+        assertEquals(7, aCopy.getSpeed());
+        assertEquals(8, aCopy.getSpecial());
+        assertEquals(9, aCopy.getAbility1());
+        assertEquals(10, aCopy.getAbility2());
+        assertEquals(11, aCopy.getAbility3());
+        assertEquals(12, aCopy.getExpYield());
+        assertEquals(13, aCopy.getCatchRate());
+        assertEquals(14, aCopy.getGenderRatio());
+        assertEquals(15, aCopy.getCallRate());
+        assertEquals(16, aCopy.getFrontImageDimensions());
+        assertEquals(ExpCurve.MEDIUM_FAST, aCopy.getGrowthCurve());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithGuaranteedHeldItem_TransfersGuaranteedHeldItem() {
+        use(a, aCopy);
+        Item guaranteedItem = new Item(1, "Guaranteed");
+        a.setGuaranteedHeldItem(guaranteedItem);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+
+        assertEquals(guaranteedItem, aCopy.getGuaranteedHeldItem());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithNonGuaranteedHeldItems_TransfersNonGuaranteedHeldItems() {
+        use(a, aCopy);
+        Item commonItem = new Item(1, "Common");
+        Item rareItem = new Item(2, "Rare");
+        Item darkGrassItem = new Item(3, "DarkGrass");
+        a.setCommonHeldItem(commonItem);
+        a.setRareHeldItem(rareItem);
+        a.setDarkGrassHeldItem(darkGrassItem);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+
+        assertEquals(commonItem, aCopy.getCommonHeldItem());
+        assertEquals(rareItem, aCopy.getRareHeldItem());
+        assertEquals(darkGrassItem, aCopy.getDarkGrassHeldItem());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithBreedingInfo_TransfersBreedingInfo() {
+        use(a, aCopy);
+        BreedingInfo breedingInfo = new BreedingInfo(EggGroup.FIELD, null, 1);
+        a.setBreedingInfo(breedingInfo);
+
+        Species.transferAttributesToCopy(a, Map.of(a, aCopy));
+
+        assertNotNull(aCopy.getBreedingInfo());
+        assertEquals(EggGroup.FIELD, aCopy.getBreedingInfo().getPrimaryEggGroup());
+        assertNull(aCopy.getBreedingInfo().getSecondaryEggGroup());
+        assertEquals(1, aCopy.getBreedingInfo().getEggCycles());
     }
 }

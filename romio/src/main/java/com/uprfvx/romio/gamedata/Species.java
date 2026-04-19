@@ -1183,12 +1183,12 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Transfers (copies) all traits from one species to another. This method is expected to be called
-     * as part of a process of deep copying all Species. For this reason, it takes a {@link Map} of all
+     * Transfers (copies) all attributes from one species to another. This method is expected to be called
+     * as part of a process of copying all Species. For this reason, it takes a {@link Map} of all
      * the original Species to their copies. The copy Species is then inferred, from the original Species
      * and the map.
      * <br><br>
-     * This transfers simple traits like types and base stats, but also all traits that reference other
+     * This transfers simple attributes like types and base stats, but also all attributes that reference other
      * Species (formes, evolutions, mega evolutions). Transferred references are turned into references
      * to the copies, using {@code originalToCopies}.
      * <br><br>
@@ -1196,17 +1196,28 @@ public class Species implements Comparable<Species> {
      * but also assigns it to the Species evolved to.
      * This should result in all evolutions being properly assigned if this function is called on all Species.
      *
-     * @param original The Species to copy traits from.
+     * @param original The Species to copy attributes from.
      * @param originalToCopies A Map of all the original Species to their copies.
+     * @throws NullPointerException if original or originalToCopies is null.
+     * @throws IllegalArgumentException if originalToCopies does not contain original as a key,
+     *                                  if the copy of original does not have the same number as original,
+     *                                  or if the copy of original does not have the same class as original.
      */
     // TODO: it would be nice to generalize the mass copying this expects to be part of (in SpeciesSet?),
     //  so this can be partially hidden. Currently the mass copying is only done in/by TestRomHandler,
-    //  but it could be usable for making backed-up originals of each Species. 
-    public static void transferTraitsToCopy(Species original, Map<Species, Species> originalToCopies) {
+    //  but it could be usable for making backed-up originals of each Species.
+    public static void transferAttributesToCopy(Species original, Map<Species, Species> originalToCopies) {
+        if (original == null) {
+            throw new NullPointerException("original is null");
+        }
         if (originalToCopies == null) {
             throw new NullPointerException("originalToCopies is null");
         }
         Species copy = originalToCopies.get(original);
+        if (copy == null) {
+            throw new IllegalArgumentException("originalToCopies does not contain original (" +
+                    original.getNumberAndFullName() + ") as a key.");
+        }
         if (copy.number != original.number) {
             throw new IllegalArgumentException("copy must have same number as original. Expected: " +
                     original.number + ", was:" + copy.number);
@@ -1216,12 +1227,12 @@ public class Species implements Comparable<Species> {
                     original.getClass() + ", was:" + copy.getClass());
         }
 
-        transferSimpleTraitsToCopy(copy, original);
-        transferReferentialTraitsToCopy(copy, original, originalToCopies);
+        transferSimpleAttributesToCopy(copy, original);
+        transferReferentialAttributesToCopy(copy, original, originalToCopies);
         // TODO: write unit tests
     }
 
-    private static void transferSimpleTraitsToCopy(Species copy, Species original) {
+    private static void transferSimpleAttributesToCopy(Species copy, Species original) {
         copy.name = original.getName();
 
         copy.generation = original.generation;
@@ -1229,7 +1240,6 @@ public class Species implements Comparable<Species> {
         //Types
         copy.primaryType = original.primaryType;
         copy.secondaryType = original.secondaryType;
-        //using original or not shouldn't matter
 
         //base stats
         copy.hp = original.hp;
@@ -1261,7 +1271,7 @@ public class Species implements Comparable<Species> {
         copy.breedingInfo = new BreedingInfo(original.breedingInfo);
     }
 
-    private static void transferReferentialTraitsToCopy(Species copy, Species original,
+    private static void transferReferentialAttributesToCopy(Species copy, Species original,
                                                         Map<Species, Species> originalToCopies) {
         transferFormesToCopy(copy, original, originalToCopies);
         transferEvolutionsToCopy(copy, original, originalToCopies);
@@ -1270,8 +1280,8 @@ public class Species implements Comparable<Species> {
 
     private static void transferFormesToCopy(Species copy, Species original,
                                              Map<Species, Species> originalToCopies) {
-        // Simple forme traits are grouped with the referential
-        // traits so they're less likely to be missed.
+        // Simple forme Attributes are grouped with the referential
+        // Attributes so they're less likely to be missed.
         copy.cosmeticFormeNumbers = new ArrayList<>(original.cosmeticFormeNumbers);
 
         copy.formeSuffix = original.formeSuffix;

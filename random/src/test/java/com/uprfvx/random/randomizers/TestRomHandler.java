@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.romio.MiscTweak;
-import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.AbstractRomHandler;
@@ -329,7 +328,7 @@ public class TestRomHandler extends AbstractRomHandler {
             originalToTest.put(orig, copy);
         }
         for (Species orig : originalSet) {
-            Species.transferTraitsToCopy(orig, originalToTest);
+            Species.transferAttributesToCopy(orig, originalToTest);
         }
 
         // And these can be populated once the copy process is done

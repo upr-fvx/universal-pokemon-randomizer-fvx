@@ -1430,11 +1430,19 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] world = Mini.UnpackMini(file.get(0), "WD")[0];
             worlds.add(world);
         }
+
         GARCArchive zoneDataGarc = readGARC(romEntry.getFile("ZoneData"), false);
         byte[] zoneDataBytes = zoneDataGarc.getFile(0);
         byte[] worldData = zoneDataGarc.getFile(1);
         List<String> locationList = createGoodLocationList();
         ZoneData[] zoneData = getZoneData(zoneDataBytes, worldData, locationList, worlds);
+
+        // This GARC is actually about 100 times bigger than the encounter data itself,
+        // some hundreds of megabytes large (varies between games).
+        // Not all computers are bothered by this RAM-wise, but reading as much data is very slow on HDDs.
+        // When testing on my computer, it accounted for about half of the games' load times.
+        // It would be ideal for cases like these, if we could load only part(s) of a GARC into memory.
+        // TODO: optimize
         encounterGarc = readGARC(romEntry.getFile("WildPokemon"), Gen7Constants.getRelevantEncounterFiles(romEntry.getRomType()));
         int fileCount = encounterGarc.files.size();
         int numberOfAreas = fileCount / 11;

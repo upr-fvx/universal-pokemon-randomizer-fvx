@@ -31,18 +31,33 @@ import java.io.RandomAccessFile;
 
 public class RomfsFile {
 
-    private NCCH parent;
-    public long offset;
-    public int size;
-    public String fullPath;
+    private enum Extracted {
+        NOT, TO_FILE, TO_RAM
+    }
+
+    private final NCCH parent;
+    private final long offset;
+    private int size;
+    private final String fullPath;
+
     private Extracted status = Extracted.NOT;
     private String extFilename;
-    public byte[] data;
-    public boolean fileChanged = false;
-    public long originalCRC;
+    private byte[] data;
 
-    public RomfsFile(NCCH parent) {
+    private boolean changed;
+    private long originalCRC;
+
+    public RomfsFile(NCCH parent, long offset, int size, String fullPath) {
+        if (offset < 0) {
+            throw new IllegalArgumentException("offset must be non-negative");
+        }
+        if (size < 0) {
+            throw new IllegalArgumentException("size must be non-negative");
+        }
         this.parent = parent;
+        this.offset = offset;
+        this.size = size;
+        this.fullPath = fullPath;
     }
 
     public byte[] getContents() throws IOException {
@@ -92,7 +107,7 @@ public class RomfsFile {
             // temp extract
             getContents();
         }
-        fileChanged = true;
+        changed = true;
         size = data.length;
         if (status == Extracted.TO_FILE) {
             String tmpDir = parent.getTmpFolder();
@@ -105,7 +120,6 @@ public class RomfsFile {
                 System.arraycopy(data, 0, this.data, 0, data.length);
             } else {
                 // make new array
-                this.data = null;
                 this.data = new byte[data.length];
                 System.arraycopy(data, 0, this.data, 0, data.length);
             }
@@ -120,7 +134,23 @@ public class RomfsFile {
         return getContents();
     }
 
-    private enum Extracted {
-        NOT, TO_FILE, TO_RAM
+    public long getOffset() {
+        return offset;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public long getOriginalCRC() {
+        return originalCRC;
     }
 }

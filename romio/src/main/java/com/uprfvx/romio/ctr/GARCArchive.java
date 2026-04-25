@@ -34,29 +34,27 @@ import java.util.TreeMap;
 
 public class GARCArchive {
 
-    private final int VER_4 = 0x0400;
-    private final int VER_6 = 0x0600;
+    private static final int VER_4 = 0x0400;
+    private static final int VER_6 = 0x0600;
+    private static final int garcHeaderSize_4 = 0x1C;
+    private static final int garcHeaderSize_6 = 0x24;
+    private static final String garcMagic = "CRAG";
+    private static final String fatoMagic = "OTAF";
+    private static final String fatbMagic = "BTAF";
+    private static final String fimbMagic = "BMIF";
+
     private int version;
-    private final int garcHeaderSize_4 = 0x1C;
-    private final int garcHeaderSize_6 = 0x24;
-    private final String garcMagic = "CRAG";
-    private final String fatoMagic = "OTAF";
-    private final String fatbMagic = "BTAF";
-    private final String fimbMagic = "BMIF";
     private boolean skipDecompression = true;
 
-    public List<Map<Integer,byte[]>> files = new ArrayList<>();
-    private Map<Integer,Boolean> isCompressed = new TreeMap<>();
+    public List<Map<Integer, byte[]>> files;
+
+    private Map<Integer, Boolean> isCompressed = new TreeMap<>();
     private List<Boolean> compressThese = null;
 
     private GARCFrame garc;
     private FATOFrame fato;
     private FATBFrame fatb;
     private FIMBFrame fimb;
-
-    public GARCArchive() {
-
-    }
 
     public GARCArchive(byte[] data, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
@@ -174,7 +172,14 @@ public class GARCArchive {
             for (int k: entry.subEntries.keySet()) {
                 FATBSubEntry subEntry = entry.subEntries.get(k);
                 bbuf.position(garc.dataOffset + subEntry.start);
+
+                // And this is another problem. We don't want to copy all files in the GARC,
+                // when we don't know that all of them will ever be read
+                // (before writing, everything needs to be read before we write).
+                // In general, reading late is always good, because then test cases can
+                // skip unnecessary reading.
                 byte[] file = new byte[subEntry.length];
+
                 boolean compressed = compressThese == null ?
                         bbuf.get(bbuf.position()) == 0x11 && !skipDecompression :
                         bbuf.get(bbuf.position()) == 0x11 && compressThese.get(i);
@@ -341,7 +346,7 @@ public class GARCArchive {
         return fimb.files.get(index);
     }
 
-    private class GARCFrame {
+    private static class GARCFrame {
         int headerSize;
         int endianness;
         int version;
@@ -353,7 +358,7 @@ public class GARCArchive {
         int contentPadToNearest;
     }
 
-    private class FATOFrame {
+    private static class FATOFrame {
         int headerSize;
         int entryCount;
         int padding;
@@ -361,19 +366,19 @@ public class GARCArchive {
         int[] entries;
     }
 
-    private class FATBFrame {
+    private static class FATBFrame {
         int headerSize;
         int fileCount;
         FATBEntry[] entries;
     }
 
-    private class FATBEntry {
+    private static class FATBEntry {
         int vector;
         boolean isFolder;
         Map<Integer,FATBSubEntry> subEntries;
     }
 
-    private class FATBSubEntry {
+    private static class FATBSubEntry {
         boolean exists;
         int start;
         int end;
@@ -381,7 +386,7 @@ public class GARCArchive {
         int padding;
     }
 
-    private class FIMBFrame {
+    private static class FIMBFrame {
         int headerSize;
         int dataSize;
         List<Map<Integer,byte[]>> files;

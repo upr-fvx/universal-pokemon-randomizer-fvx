@@ -52,7 +52,11 @@ public class RomfsFile {
             RandomAccessFile rom = parent.getBaseRom();
             byte[] buf = new byte[this.size];
             rom.seek(this.offset);
+
+            // This isn't nice, when files are archives, and we only need a tiny bit of them.
+            // TODO: figure out if we can avoid this copying, can we get a RandomAccessFile back?
             rom.readFully(buf);
+
             originalCRC = IOFunctions.getCRC32(buf);
             if (parent.isWritingEnabled()) {
                 // make a file
@@ -77,7 +81,7 @@ public class RomfsFile {
             byte[] newcopy = new byte[this.data.length];
             System.arraycopy(this.data, 0, newcopy, 0, this.data.length);
             return newcopy;
-        } else {
+        } else { // this.status == Extracted.TO_FILE
             String tmpDir = parent.getTmpFolder();
             return FileFunctions.readFileFullyIntoBuffer(tmpDir + this.extFilename);
         }

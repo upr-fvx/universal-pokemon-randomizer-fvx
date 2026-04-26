@@ -48,8 +48,6 @@ public class GARCArchive {
     private int version;
     private boolean skipDecompression = true;
 
-    public List<Map<Integer, byte[]>> files;
-
     private final Map<Integer, Boolean> isCompressed = new TreeMap<>();
     private List<Boolean> compressThese = null;
 
@@ -61,13 +59,11 @@ public class GARCArchive {
     public GARCArchive(RandomAccessFileWindow fileWindow, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
         readFrames(fileWindow);
-        files = fimb.files;
     }
 
     public GARCArchive(RandomAccessFileWindow fileWindow, List<Boolean> compressedThese) throws IOException {
         this.compressThese = compressedThese;
         readFrames(fileWindow);
-        files = fimb.files;
     }
 
     private void readFrames(RandomAccessFileWindow fw) throws IOException {
@@ -203,10 +199,6 @@ public class GARCArchive {
         }
     }
 
-    public void updateFiles(List<Map<Integer,byte[]>> files) {
-        fimb.files = files;
-    }
-
     public byte[] getBytes() throws IOException {
         int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
         ByteBuffer garcBuf = ByteBuffer.allocate(garcHeaderSize);
@@ -333,6 +325,14 @@ public class GARCArchive {
         buf.put(new StringBuffer(magic).reverse().toString().getBytes());
     }
 
+    public List<Map<Integer,byte[]>> getFiles() {
+        return fimb.files;
+    }
+
+    public void setFiles(List<Map<Integer,byte[]>> files) {
+        fimb.files = files;
+    }
+
     public byte[] getFile(int index) {
         return fimb.files.get(index).get(0);
     }
@@ -347,6 +347,13 @@ public class GARCArchive {
 
     public Map<Integer,byte[]> getDirectory(int index) {
         return fimb.files.get(index);
+    }
+
+    /**
+     * Returns the number of files in this GARCArchive.
+     */
+    public int size() {
+        return fimb.files.size();
     }
 
     private static class GARCFrame {

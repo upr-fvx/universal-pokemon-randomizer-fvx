@@ -357,7 +357,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 			throw new RomIOException(e);
 		}
 
-		for (int i = 1; i < pokeGraphicsGARC.files.size(); i++) {
+		for (int i = 1; i < pokeGraphicsGARC.size(); i++) {
 			BufferedImage icon = getPokemonIcon(i, pokeGraphicsGARC, false, true);
 			bims.add(icon);
 		}
@@ -368,7 +368,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		try {
 			String GARCPath = getGARCPath("PokemonGraphics");
 			GARCArchive pokeGraphicsGARC = readGARC(GARCPath, false);
-			return pokeGraphicsGARC.files.size();
+			return pokeGraphicsGARC.size();
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}

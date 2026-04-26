@@ -21,6 +21,7 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.uprfvx.romio.RomFunctions;
 import cuecompressors.BLZCoder;
 
 import java.io.ByteArrayOutputStream;
@@ -74,6 +75,13 @@ public class GARCArchive {
             throw new IOException("Invalid GARC file: Empty");
         }
 
+        readGARCHeader(fw);
+        readFATO(fw);
+        readFATB(fw);
+        readFIMB(fw);
+    }
+
+    private void readGARCHeader(RandomAccessFileWindow fw) throws IOException {
         // GARC
         String magic = fw.readMagic();
         if (!magic.equals(GARC_MAGIC)) {
@@ -101,10 +109,12 @@ public class GARCArchive {
         } else {
             throw new IOException("Invalid GARC file: invalid version. Expected " + VER_4 + " or " + VER_6 + ", got " + garc.version);
         }
+    }
 
+    private void readFATO(RandomAccessFileWindow fw) throws IOException {
         // FATO
         fato = new FATOFrame();
-        magic = fw.readMagic();
+        String magic = fw.readMagic();
         if (!magic.equals(FATO_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FATO magic. Expected " + FATO_MAGIC + ", got " + magic);
         }
@@ -115,10 +125,12 @@ public class GARCArchive {
         for (int i = 0; i < fato.entryCount; i++) {
             fato.entries[i] = fw.readInt();
         }
+    }
 
+    private void readFATB(RandomAccessFileWindow fw) throws IOException {
         // FATB
         fatb = new FATBFrame();
-        magic = fw.readMagic();
+        String magic = fw.readMagic();
         if (!magic.equals(FATB_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FATB magic. Expected " + FATB_MAGIC + ", got " + magic);
         }
@@ -144,10 +156,12 @@ public class GARCArchive {
             }
             fatb.entries[i].isFolder = counter > 1;
         }
+    }
 
+    private void readFIMB(RandomAccessFileWindow fw) throws IOException {
         // FIMB
         fimb = new FIMBFrame();
-        magic = fw.readMagic();
+        String magic = fw.readMagic();
         if (!magic.equals(FIMB_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FIMB magic. Expected " + FIMB_MAGIC + ", got " + magic);
         }
@@ -160,7 +174,7 @@ public class GARCArchive {
             for (int k: entry.subEntries.keySet()) {
                 FATBSubEntry subEntry = entry.subEntries.get(k);
                 fw.seek(garc.dataOffset + subEntry.start);
-                byte compressByte = fw.readByteInPlace();
+                boolean compressFlag = fw.readByteInPlace() == 0x11;
 
                 // And this is another problem. We don't want to copy all files in the GARC,
                 // when we don't know that all of them will ever be read
@@ -170,13 +184,13 @@ public class GARCArchive {
                 byte[] file = new byte[subEntry.length];
 
                 boolean compressed = compressThese == null ?
-                        compressByte == 0x11 && !skipDecompression :
-                        compressByte == 0x11 && compressThese.get(i);
+                        compressFlag && !skipDecompression :
+                        compressFlag && compressThese.get(i);
                 fw.read(file);
                 if (compressed) {
                     try {
-                        files.put(k,new BLZCoder(null).BLZ_DecodePub(file,"GARC"));
-                        isCompressed.put(i,true);
+                        files.put(k, new BLZCoder(null).BLZ_DecodePub(file, "GARC"));
+                        isCompressed.put(i, true);
                     } catch (Exception e) {
                         throw new IOException("Invalid GARC file.", e);
                     }

@@ -41,23 +41,27 @@ public class RandomAccessFileWindow {
     }
 
     public void seek(int pos) throws IOException {
-        raf.seek(baseOffset + pos);
-        if (raf.getFilePointer() > baseOffset + size) {
-            throw new IOException("Attempted to seek past the end of the window");
+        if (pos < 0) {
+            throw new IllegalArgumentException("pos must be >= 0");
         }
+        if (pos >= size) {
+            throw new IllegalArgumentException("pos must be < size");
+        }
+        raf.seek(baseOffset + pos);
+        this.pos = pos;
     }
 
     public byte[] readFully() throws IOException {
         byte[] b = new byte[size];
         raf.seek(baseOffset);
-        raf.read(b, 0, size);
+        raf.read(b);
         return b;
     }
 
     // read normally, not in little endian
     public void read(byte[] b) throws IOException {
         seek(pos);
-        raf.read(b, 0, b.length);
+        raf.read(b);
         pos += b.length;
     }
 
@@ -72,6 +76,7 @@ public class RandomAccessFileWindow {
      * Reads a byte without advancing the position.
      */
     public byte readByteInPlace() throws IOException {
+        seek(pos);
         return raf.readByte();
     }
 

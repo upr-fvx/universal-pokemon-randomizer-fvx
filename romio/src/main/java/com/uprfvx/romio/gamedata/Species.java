@@ -730,8 +730,8 @@ public class Species implements Comparable<Species> {
      * Registers an altForme Species with a given formeNumber.
      */
     public void addAltForme(int formeNumber, Species altForme) {
-        System.out.printf("New forme to %s, formeNumber=%d, %s%n",
-                getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
+//        System.out.printf("New forme to %s, formeNumber=%d, %s%n",
+//                getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
         if (altForme.equals(this)) {
             throw new IllegalArgumentException(String.format(
                     "Can't add Species %s as its own alt forme.", getNumberAndFullName()));
@@ -760,7 +760,7 @@ public class Species implements Comparable<Species> {
      * Species objects (e.g. those of Burmy), but still need to be known of.
      */
     public void addCosmeticAltForme(int formeNumber) {
-        System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
+//        System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
         if (!isBaseForme()) {
             throw new IllegalStateException(String.format(
                     "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));

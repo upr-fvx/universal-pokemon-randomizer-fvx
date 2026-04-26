@@ -1,22 +1,28 @@
 package com.uprfvx.romio.ctr;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 
 /**
  * A read-only view of a part of a {@link RandomAccessFile}. A window if you will.
  * This class is meant to be used when the underlying RandomAccessFile has an internal file system,
  * to access specific files without having to copy them over to a separate buffer or file.
  * <br><br>
+ * In addition to limiting the available data, it wraps the reading methods to be more amenable
+ * to the needs of reading 3DS ROMs. The reading methods advance the pos by the appropriate
+ * amount of bytes, facilitating sequential reading. Also, reading is done little-endian.
+ * <br><br>
  * <b>Warning</b>: this changes the pointer offset of the underlying RandomAccessFile,
  * so make sure to reset the pointer after using this class.
  */
-public class RandomAccessFileWindow implements DataInput {
-    private final DataInput raf;
+public class RandomAccessFileWindow {
+    private static final int MAGIC_LEN = 4;
+
+    private final RandomAccessFile raf;
     private final long baseOffset;
-    private final long size;
-    private long pos = 0;
+    private final int size;
+    private int pos;
 
     /**
      * Creates a RandomAccessFileWindow from a RandomAccessFile.
@@ -24,19 +30,7 @@ public class RandomAccessFileWindow implements DataInput {
      * @param baseOffset The offset in the underlying RandomAccessFile where this window starts.
      * @param size The size of this window.
      */
-    public RandomAccessFileWindow(RandomAccessFile raf, long baseOffset, long size) {
-        this.raf = raf;
-        this.baseOffset = baseOffset;
-        this.size = size;
-    }
-
-    /**
-     * Creates a RandomAccessFileWindow from a RandomAccessFileWindow.
-     * @param raf The underlying RandomAccessFile to read from.
-     * @param baseOffset The offset in the underlying RandomAccessFile where this window starts.
-     * @param size The size of this window.
-     */
-    public RandomAccessFileWindow(RandomAccessFileWindow raf, long baseOffset, long size) {
+    public RandomAccessFileWindow(RandomAccessFile raf, long baseOffset, int size) {
         this.raf = raf;
         this.baseOffset = baseOffset;
         this.size = size;
@@ -46,104 +40,65 @@ public class RandomAccessFileWindow implements DataInput {
         return size;
     }
 
-    public void seek(long pos) throws IOException {
-        if (pos < 0 || pos > size) {
-            throw new IllegalArgumentException("position is out of bounds");
-        }
-        if (raf instanceof RandomAccessFile nonWindow) {
-            this.pos = pos;
-            nonWindow.seek(baseOffset + pos);
-        } else if (raf instanceof RandomAccessFileWindow window) {
-            this.pos = pos;
-            window.seek(baseOffset + pos);
-        } else {
-            throw new IllegalStateException("underlying DataInput is not a RandomAccessFile or RandomAccessFileWindow");
+    public void seek(int pos) throws IOException {
+        raf.seek(baseOffset + pos);
+        if (raf.getFilePointer() > baseOffset + size) {
+            throw new IOException("Attempted to seek past the end of the window");
         }
     }
 
-    @Override
-    public void readFully(byte[] b) throws IOException {
-        raf.readFully(b, (int) baseOffset, (int) size);
+    public byte[] readFully() throws IOException {
+        byte[] b = new byte[size];
+        raf.seek(baseOffset);
+        raf.read(b, 0, size);
+        return b;
     }
 
-    @Override
-    public void readFully(byte[] b, int off, int len) throws IOException {
-        if (off > size) {
-            throw new IndexOutOfBoundsException("offset is out of bounds");
-        }
-        if (len > size - off) {
-            throw new IndexOutOfBoundsException("length is more than the remaining size");
-        }
-        raf.readFully(b, (int) baseOffset + off, (int) size + len);
+    // read normally, not in little endian
+    public void read(byte[] b) throws IOException {
+        seek(pos);
+        raf.read(b, 0, b.length);
+        pos += b.length;
     }
 
-    @Override
-    public int skipBytes(int n) throws IOException {
-        int skipped = raf.skipBytes(n);
-        pos += skipped;
-        if (pos > size) {
-            throw new IllegalArgumentException("skipped past the end of the window");
-        }
-        return skipped;
-    }
-
-    @Override
-    public boolean readBoolean() throws IOException {
-        return raf.readBoolean();
-    }
-
-    @Override
     public byte readByte() throws IOException {
+        seek(pos);
+        byte b = raf.readByte();
+        pos += 1;
+        return b;
+    }
+
+    /**
+     * Reads a byte without advancing the position.
+     */
+    public byte readByteInPlace() throws IOException {
         return raf.readByte();
     }
 
-    @Override
-    public int readUnsignedByte() throws IOException {
-        return raf.readUnsignedByte();
+    public int readShort() throws IOException {
+        byte[] bytes = new byte[2];
+        seek(pos);
+        raf.read(bytes, 0, 2);
+        pos += 2;
+        ByteBuffer buf = ByteBuffer.wrap(bytes).order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        return buf.getShort() & 0xFFFF;
     }
 
-    @Override
-    public short readShort() throws IOException {
-        return raf.readShort();
-    }
-
-    @Override
-    public int readUnsignedShort() throws IOException {
-        return raf.readUnsignedShort();
-    }
-
-    @Override
-    public char readChar() throws IOException {
-        return raf.readChar();
-    }
-
-    @Override
     public int readInt() throws IOException {
-        return raf.readInt();
+        byte[] bytes = new byte[4];
+        seek(pos);
+        raf.read(bytes, 0, 4);
+        pos += 4;
+        ByteBuffer buf = ByteBuffer.wrap(bytes).order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        return buf.getInt();
     }
 
-    @Override
-    public long readLong() throws IOException {
-        return raf.readLong();
+    public String readMagic() throws IOException {
+        byte[] chars = new byte[MAGIC_LEN];
+        for (int i = 0; i < MAGIC_LEN; i++) {
+            chars[MAGIC_LEN - 1 - i] = readByte();
+        }
+        return new String(chars);
     }
 
-    @Override
-    public float readFloat() throws IOException {
-        return raf.readFloat();
-    }
-
-    @Override
-    public double readDouble() throws IOException {
-        return raf.readDouble();
-    }
-
-    @Override
-    public String readLine() throws IOException {
-        return raf.readLine();
-    }
-
-    @Override
-    public String readUTF() throws IOException {
-        return raf.readUTF();
-    }
 }

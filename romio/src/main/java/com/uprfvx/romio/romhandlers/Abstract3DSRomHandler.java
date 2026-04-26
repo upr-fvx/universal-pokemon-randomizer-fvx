@@ -192,10 +192,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
     }
 
 	protected byte[] readFile(String location) throws IOException {
-        RandomAccessFileWindow fileWindow = readFileWindow(location);
-        byte[] data = new byte[(int) fileWindow.size()];
-        fileWindow.readFully(data);
-        return data;
+        return readFileWindow(location).readFully();
     }
 
 	protected void writeFile(String location, byte[] data) throws IOException {

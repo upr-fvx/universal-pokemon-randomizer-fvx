@@ -34,21 +34,22 @@ import java.util.TreeMap;
 
 public class GARCArchive {
 
+    private static final int FRAME_COUNT = 4;
     private static final int VER_4 = 0x0400;
     private static final int VER_6 = 0x0600;
-    private static final int garcHeaderSize_4 = 0x1C;
-    private static final int garcHeaderSize_6 = 0x24;
-    private static final String garcMagic = "CRAG";
-    private static final String fatoMagic = "OTAF";
-    private static final String fatbMagic = "BTAF";
-    private static final String fimbMagic = "BMIF";
+    private static final int GARC_HEADER_SIZE_4 = 0x1C;
+    private static final int GARC_HEADER_SIZE_6 = 0x24;
+    private static final String GARC_MAGIC = "GARC";
+    private static final String FATO_MAGIC = "FATO";
+    private static final String FATB_MAGIC = "FATB";
+    private static final String FIMB_MAGIC = "FIMB";
 
     private int version;
     private boolean skipDecompression = true;
 
     public List<Map<Integer, byte[]>> files;
 
-    private Map<Integer, Boolean> isCompressed = new TreeMap<>();
+    private final Map<Integer, Boolean> isCompressed = new TreeMap<>();
     private List<Boolean> compressThese = null;
 
     private GARCFrame garc;
@@ -58,92 +59,75 @@ public class GARCArchive {
 
     public GARCArchive(RandomAccessFileWindow fileWindow, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
-        boolean success = readFrames(fileWindow);
-        if (!success) {
-            throw new IOException("Invalid GARC file");
-        }
+        readFrames(fileWindow);
         files = fimb.files;
     }
 
     public GARCArchive(RandomAccessFileWindow fileWindow, List<Boolean> compressedThese) throws IOException {
         this.compressThese = compressedThese;
-        boolean success = readFrames(fileWindow);
-        if (!success) {
-            throw new IOException("Invalid GARC file");
-        }
+        readFrames(fileWindow);
         files = fimb.files;
     }
 
-    private boolean readFrames(RandomAccessFileWindow fileWindow) throws IOException {
-        if (fileWindow.size() <= 0) {
-            System.out.println("Empty GARC");
-            return false;
+    private void readFrames(RandomAccessFileWindow fw) throws IOException {
+        if (fw.size() <= 0) {
+            throw new IOException("Invalid GARC file: Empty");
         }
-        byte[] data = new byte[(int) fileWindow.size()];
-        fileWindow.readFully(data);
 
-        // TODO: convert GARCArchive to use RandomAccessFileWindow fully
-
-        ByteBuffer bbuf = ByteBuffer.wrap(data);
-        bbuf.order(ByteOrder.LITTLE_ENDIAN);
         // GARC
-        byte[] magicBuf = new byte[4];
-        bbuf.get(magicBuf);
-        String magic = new String(magicBuf);
-        if (!magic.equals(garcMagic)) {
-            return false;
+        String magic = fw.readMagic();
+        if (!magic.equals(GARC_MAGIC)) {
+            throw new IOException("Invalid GARC file: incorrect GARC magic. Expected " + GARC_MAGIC + ", got " + magic);
         }
         garc = new GARCFrame();
-        garc.headerSize = bbuf.getInt();
-        garc.endianness = bbuf.getShort();
-        garc.version = bbuf.getShort();
-        int frameCount = bbuf.getInt();
-        if (frameCount != 4) {
-            return false;
+        garc.headerSize = fw.readInt();
+        garc.endianness = fw.readShort();
+        garc.version = fw.readShort();
+        int frameCount = fw.readInt();
+        if (frameCount != FRAME_COUNT) {
+            throw new IOException("Invalid GARC file: invalid frameCount. Expected " + FRAME_COUNT + ", got " + frameCount);
         }
-        garc.dataOffset = bbuf.getInt();
-        garc.fileSize = bbuf.getInt();
+        garc.dataOffset = fw.readInt();
+        garc.fileSize = fw.readInt();
         if (garc.version == VER_4) {
-            garc.contentLargestUnpadded = bbuf.getInt();
+            garc.contentLargestUnpadded = fw.readInt();
             garc.contentPadToNearest = 4;
             version = 4;
         } else if (garc.version == VER_6) {
-            garc.contentLargestPadded = bbuf.getInt();
-            garc.contentLargestUnpadded = bbuf.getInt();
-            garc.contentPadToNearest = bbuf.getInt();
+            garc.contentLargestPadded = fw.readInt();
+            garc.contentLargestUnpadded = fw.readInt();
+            garc.contentPadToNearest = fw.readInt();
             version = 6;
         } else {
-            return false;
+            throw new IOException("Invalid GARC file: invalid version. Expected " + VER_4 + " or " + VER_6 + ", got " + garc.version);
         }
 
         // FATO
         fato = new FATOFrame();
-        bbuf.get(magicBuf);
-        magic = new String(magicBuf);
-        if (!magic.equals(fatoMagic)) {
-            return false;
+        magic = fw.readMagic();
+        if (!magic.equals(FATO_MAGIC)) {
+            throw new IOException("Invalid GARC file: incorrect FATO magic. Expected " + FATO_MAGIC + ", got " + magic);
         }
-        fato.headerSize = bbuf.getInt();
-        fato.entryCount = bbuf.getShort();
-        fato.padding = bbuf.getShort();
+        fato.headerSize = fw.readInt();
+        fato.entryCount = fw.readShort();
+        fato.padding = fw.readShort();
         fato.entries = new int[fato.entryCount];
         for (int i = 0; i < fato.entryCount; i++) {
-            fato.entries[i] = bbuf.getInt();
+            fato.entries[i] = fw.readInt();
         }
 
         // FATB
         fatb = new FATBFrame();
-        bbuf.get(magicBuf);
-        magic = new String(magicBuf);
-        if (!magic.equals(fatbMagic)) {
-            return false;
+        magic = fw.readMagic();
+        if (!magic.equals(FATB_MAGIC)) {
+            throw new IOException("Invalid GARC file: incorrect FATB magic. Expected " + FATB_MAGIC + ", got " + magic);
         }
-        fatb.headerSize = bbuf.getInt();
-        fatb.fileCount = bbuf.getInt();
+        fatb.headerSize = fw.readInt();
+        fatb.fileCount = fw.readInt();
         fatb.entries = new FATBEntry[fatb.fileCount];
         for (int i = 0; i < fatb.fileCount; i++) {
             fatb.entries[i] = new FATBEntry();
-            fatb.entries[i].vector = bbuf.getInt();
+            fatb.entries[i].vector = fw.readInt();
             fatb.entries[i].subEntries = new TreeMap<>();
             int bitVector = fatb.entries[i].vector;
             int counter = 0;
@@ -152,9 +136,9 @@ public class GARCArchive {
                 bitVector >>>= 1;
                 if (!exists) continue;
                 FATBSubEntry subEntry = new FATBSubEntry();
-                subEntry.start = bbuf.getInt();
-                subEntry.end = bbuf.getInt();
-                subEntry.length = bbuf.getInt();
+                subEntry.start = fw.readInt();
+                subEntry.end = fw.readInt();
+                subEntry.length = fw.readInt();
                 fatb.entries[i].subEntries.put(b,subEntry);
                 counter++;
             }
@@ -163,20 +147,20 @@ public class GARCArchive {
 
         // FIMB
         fimb = new FIMBFrame();
-        bbuf.get(magicBuf);
-        magic = new String(magicBuf);
-        if (!magic.equals(fimbMagic)) {
-            return false;
+        magic = fw.readMagic();
+        if (!magic.equals(FIMB_MAGIC)) {
+            throw new IOException("Invalid GARC file: incorrect FIMB magic. Expected " + FIMB_MAGIC + ", got " + magic);
         }
-        fimb.headerSize = bbuf.getInt();
-        fimb.dataSize = bbuf.getInt();
+        fimb.headerSize = fw.readInt();
+        fimb.dataSize = fw.readInt();
         fimb.files = new ArrayList<>();
         for (int i = 0; i < fatb.fileCount; i++) {
             FATBEntry entry = fatb.entries[i];
             Map<Integer,byte[]> files = new TreeMap<>();
             for (int k: entry.subEntries.keySet()) {
                 FATBSubEntry subEntry = entry.subEntries.get(k);
-                bbuf.position(garc.dataOffset + subEntry.start);
+                fw.seek(garc.dataOffset + subEntry.start);
+                byte compressByte = fw.readByteInPlace();
 
                 // And this is another problem. We don't want to copy all files in the GARC,
                 // when we don't know that all of them will ever be read
@@ -186,16 +170,15 @@ public class GARCArchive {
                 byte[] file = new byte[subEntry.length];
 
                 boolean compressed = compressThese == null ?
-                        bbuf.get(bbuf.position()) == 0x11 && !skipDecompression :
-                        bbuf.get(bbuf.position()) == 0x11 && compressThese.get(i);
-                bbuf.get(file);
+                        compressByte == 0x11 && !skipDecompression :
+                        compressByte == 0x11 && compressThese.get(i);
+                fw.read(file);
                 if (compressed) {
                     try {
                         files.put(k,new BLZCoder(null).BLZ_DecodePub(file,"GARC"));
                         isCompressed.put(i,true);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        return false;
+                        throw new IOException("Invalid GARC file.", e);
                     }
                 } else {
                     files.put(k,file);
@@ -204,7 +187,6 @@ public class GARCArchive {
             }
             fimb.files.add(files);
         }
-        return true;
     }
 
     public void updateFiles(List<Map<Integer,byte[]>> files) {
@@ -212,10 +194,10 @@ public class GARCArchive {
     }
 
     public byte[] getBytes() throws IOException {
-        int garcHeaderSize = garc.version == VER_4 ? garcHeaderSize_4 : garcHeaderSize_6;
+        int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
         ByteBuffer garcBuf = ByteBuffer.allocate(garcHeaderSize);
         garcBuf.order(ByteOrder.LITTLE_ENDIAN);
-        garcBuf.put(garcMagic.getBytes());
+        putMagic(garcBuf, GARC_MAGIC);
         garcBuf.putInt(garcHeaderSize);
         garcBuf.putShort((short)0xFEFF);
         garcBuf.putShort(version == 4 ? (short)VER_4 : (short)VER_6);
@@ -223,20 +205,20 @@ public class GARCArchive {
 
         ByteBuffer fatoBuf = ByteBuffer.allocate(fato.headerSize);
         fatoBuf.order(ByteOrder.LITTLE_ENDIAN);
-        fatoBuf.put(fatoMagic.getBytes());
+        putMagic(fatoBuf, FATO_MAGIC);
         fatoBuf.putInt(fato.headerSize);
         fatoBuf.putShort((short)fato.entryCount);
         fatoBuf.putShort((short)fato.padding);
 
         ByteBuffer fatbBuf = ByteBuffer.allocate(fatb.headerSize);
         fatbBuf.order(ByteOrder.LITTLE_ENDIAN);
-        fatbBuf.put(fatbMagic.getBytes());
+        putMagic(fatbBuf, FATB_MAGIC);
         fatbBuf.putInt(fatb.headerSize);
         fatbBuf.putInt(fatb.fileCount);
 
         ByteBuffer fimbHeaderBuf = ByteBuffer.allocate(fimb.headerSize);
         fimbHeaderBuf.order(ByteOrder.LITTLE_ENDIAN);
-        fimbHeaderBuf.put(fimbMagic.getBytes());
+        putMagic(fimbHeaderBuf, FIMB_MAGIC);
         fimbHeaderBuf.putInt(fimb.headerSize);
 
         ByteArrayOutputStream fimbPayloadStream = new ByteArrayOutputStream(); // Unknown size, can't use ByteBuffer
@@ -333,7 +315,9 @@ public class GARCArchive {
         return fullArray;
     }
 
-
+    private void putMagic(ByteBuffer buf, String magic) {
+        buf.put(new StringBuffer(magic).reverse().toString().getBytes());
+    }
 
     public byte[] getFile(int index) {
         return fimb.files.get(index).get(0);

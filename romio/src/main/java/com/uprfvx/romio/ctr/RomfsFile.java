@@ -86,8 +86,7 @@ public class RomfsFile {
             throw new IllegalStateException("CRC has already been calculated");
         }
         try {
-            byte[] data = new byte[size];
-            getContents().readFully(data);
+            byte[] data = getContents().readFully();
             originalCRC = IOFunctions.getCRC32(data);
         } catch (IOException e) {
             throw new RuntimeException("Failed to calculate CRC for file " + fullPath, e);

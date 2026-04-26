@@ -21,17 +21,13 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.RomFunctions;
 import cuecompressors.BLZCoder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class GARCArchive {
 
@@ -56,13 +52,17 @@ public class GARCArchive {
     private FATBFrame fatb;
     private FIMBFrame fimb;
 
+    private final RandomAccessFileWindow fw;
+
     public GARCArchive(RandomAccessFileWindow fileWindow, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
+        this.fw = fileWindow;
         readFrames(fileWindow);
     }
 
     public GARCArchive(RandomAccessFileWindow fileWindow, List<Boolean> compressedThese) throws IOException {
         this.compressThese = compressedThese;
+        this.fw = fileWindow;
         readFrames(fileWindow);
     }
 
@@ -163,43 +163,64 @@ public class GARCArchive {
         }
         fimb.headerSize = fw.readInt();
         fimb.dataSize = fw.readInt();
-        fimb.files = new ArrayList<>();
+        fimb.files = new HashMap<>();
         for (int i = 0; i < fatb.fileCount; i++) {
-            FATBEntry entry = fatb.entries[i];
-            Map<Integer,byte[]> files = new TreeMap<>();
-            for (int k: entry.subEntries.keySet()) {
-                FATBSubEntry subEntry = entry.subEntries.get(k);
-                fw.seek(garc.dataOffset + subEntry.start);
-                boolean compressFlag = fw.readByteInPlace() == 0x11;
+            fimb.files.put(i, new TreeMap<>());
+        }
+    }
 
-                // And this is another problem. We don't want to copy all files in the GARC,
-                // when we don't know that all of them will ever be read
-                // (before writing, everything needs to be read before we write).
-                // In general, reading late is always good, because then test cases can
-                // skip unnecessary reading.
-                byte[] file = new byte[subEntry.length];
+    // Separating out file reading so it is done as needed
+    // seems to have offloaded RAM (as expected),
+    // but it is not obvious the load times have decreased.
+    // This could be because while fewer bytes are read from disk,
+    // the reads are also spread out in time, leading to a less
+    // optimized disk read?
+    // TODO: optimize around this
+    private void readFile(int fileIndex, int subIndex) throws IOException {
+        if (fileIndex < 0 || fileIndex >= fatb.fileCount) {
+            throw new IndexOutOfBoundsException("fileIndex must be between 0 and fatb.filecount-1.");
+        }
+        FATBEntry entry = fatb.entries[fileIndex];
+        if (!entry.subEntries.containsKey(subIndex)) {
+            throw new IllegalArgumentException("subIndex is not valid for this file, must be in: " +
+                    entry.subEntries.keySet());
+        }
+        FATBSubEntry subEntry = entry.subEntries.get(subIndex);
 
-                boolean compressed = compressThese == null ?
-                        compressFlag && !skipDecompression :
-                        compressFlag && compressThese.get(i);
-                fw.read(file);
-                if (compressed) {
-                    try {
-                        files.put(k, new BLZCoder(null).BLZ_DecodePub(file, "GARC"));
-                        isCompressed.put(i, true);
-                    } catch (Exception e) {
-                        throw new IOException("Invalid GARC file.", e);
-                    }
-                } else {
-                    files.put(k,file);
-                    isCompressed.put(i,false);
-                }
+        fw.seek(garc.dataOffset + subEntry.start);
+        boolean compressFlag = fw.readByteInPlace() == 0x11;
+
+        byte[] file = new byte[subEntry.length];
+
+        boolean compressed = compressThese == null ?
+                compressFlag && !skipDecompression :
+                compressFlag && compressThese.get(fileIndex);
+        fw.read(file);
+
+        if (compressed) {
+            try {
+                file = new BLZCoder(null).BLZ_DecodePub(file, "GARC");
+            } catch (Exception e) {
+                throw new IOException("Invalid GARC file.", e);
             }
-            fimb.files.add(files);
+        }
+        isCompressed.put(fileIndex, compressed);
+        fimb.files.get(fileIndex).put(subIndex, file);
+    }
+
+    private void readAllUnreadFiles() throws IOException {
+        for (int i = 0; i < fatb.fileCount; i++) {
+            fimb.files.put(i, new TreeMap<>());
+            FATBEntry entry = fatb.entries[i];
+            for (int j : entry.subEntries.keySet()) {
+                getFile(i, j);
+            }
         }
     }
 
     public byte[] getBytes() throws IOException {
+        readAllUnreadFiles();
+
         int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
         ByteBuffer garcBuf = ByteBuffer.allocate(garcHeaderSize);
         garcBuf.order(ByteOrder.LITTLE_ENDIAN);
@@ -325,24 +346,26 @@ public class GARCArchive {
         buf.put(new StringBuffer(magic).reverse().toString().getBytes());
     }
 
-    public List<Map<Integer,byte[]>> getFiles() {
-        return fimb.files;
+    /**
+     * Gets the specified file, reading it from ROM (disk) if necessary.
+     */
+    public byte[] getFile(int index) throws IOException {
+        return getFile(index, 0);
     }
 
-    public void setFiles(List<Map<Integer,byte[]>> files) {
-        fimb.files = files;
-    }
-
-    public byte[] getFile(int index) {
-        return fimb.files.get(index).get(0);
-    }
-
-    public byte[] getFile(int index, int subIndex) {
+    /**
+     * Gets the specified file, reading it from ROM (disk) if necessary.
+     */
+    public byte[] getFile(int index, int subIndex) throws IOException {
+        byte[] file = fimb.files.get(index).get(subIndex);
+        if (file == null) {
+            readFile(index, subIndex);
+        }
         return fimb.files.get(index).get(subIndex);
     }
 
     public void setFile(int index, byte[] data) {
-        fimb.files.get(index).put(0,data);
+        fimb.files.get(index).put(0, data);
     }
 
     public Map<Integer,byte[]> getDirectory(int index) {
@@ -399,6 +422,6 @@ public class GARCArchive {
     private static class FIMBFrame {
         int headerSize;
         int dataSize;
-        List<Map<Integer,byte[]>> files;
+        Map<Integer, Map<Integer,byte[]>> files;
     }
 }

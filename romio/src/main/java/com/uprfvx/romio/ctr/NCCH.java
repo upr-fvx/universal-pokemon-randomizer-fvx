@@ -217,7 +217,7 @@ public class NCCH {
     private void visitDirectory(int offset, String rootPath, byte[] directoryMetadataBlock, byte[] fileMetadataBlock) {
         DirectoryMetadata metadata = new DirectoryMetadata(directoryMetadataBlock, offset);
         String currentPath = rootPath;
-        if (!metadata.name.equals("")) {
+        if (!metadata.name.isEmpty()) {
             currentPath = rootPath + metadata.name + "/";
         }
 
@@ -273,8 +273,8 @@ public class NCCH {
 
         // The logo is small enough (8KB) to just read the whole thing into memory. Write it to the new ROM directly
         // after the header, then update the new ROM's logo offset
-        long logoOffset = ncchStartingOffset + FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x198) * media_unit_size;
-        long logoLength = FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x19C) * media_unit_size;
+        long logoOffset = ncchStartingOffset + (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x198) * media_unit_size;
+        long logoLength = (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x19C) * media_unit_size;
         if (logoLength > 0) {
             byte[] logo = new byte[(int) logoLength];
             baseRom.seek(logoOffset);
@@ -287,8 +287,8 @@ public class NCCH {
         }
 
         // The plain region is even smaller (1KB) so repeat the same process
-        long plainOffset = ncchStartingOffset + FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x190) * media_unit_size;
-        long plainLength = FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x194) * media_unit_size;
+        long plainOffset = ncchStartingOffset + (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x190) * media_unit_size;
+        long plainLength = (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x194) * media_unit_size;
         if (plainLength > 0) {
             byte[] plain = new byte[(int) plainLength];
             baseRom.seek(plainOffset);
@@ -599,7 +599,7 @@ public class NCCH {
 
         if (codeChanged) {
             byte[] code = getCode();
-            FileOutputStream fos = new FileOutputStream(new File(layeredFSRootPath + "code.bin"));
+            FileOutputStream fos = new FileOutputStream(layeredFSRootPath + "code.bin");
             fos.write(code);
             fos.close();
         }
@@ -634,7 +634,7 @@ public class NCCH {
         }
         buffer.append(romfsPathComponents[romfsPathComponents.length - 1]);
         String romfsFilePath = buffer.toString();
-        FileOutputStream fos = new FileOutputStream(new File(romfsFilePath));
+        FileOutputStream fos = new FileOutputStream(romfsFilePath);
         fos.write(file.getOverrideContents());
         fos.close();
     }
@@ -734,7 +734,7 @@ public class NCCH {
     }
 
     // returns null if file doesn't exist
-    public byte[] getFile(String filename) throws IOException {
+    public RandomAccessFileWindow getFile(String filename) throws IOException {
         if (romfsFiles.containsKey(filename)) {
             return romfsFiles.get(filename).getContents();
         } else {
@@ -927,7 +927,7 @@ public class NCCH {
         }
     }
 
-    private class ExefsFileHeader {
+    private static class ExefsFileHeader {
         public String filename;
         public int offset;
         public int size;
@@ -943,7 +943,7 @@ public class NCCH {
         }
 
         public boolean isValid() {
-            return this.filename != "" && this.size != 0;
+            return !this.filename.isEmpty() && this.size != 0;
         }
 
         public byte[] asBytes() {
@@ -956,7 +956,7 @@ public class NCCH {
         }
     }
 
-    private class DirectoryMetadata {
+    private static class DirectoryMetadata {
         public int parentDirectoryOffset;
         public int siblingDirectoryOffset;
         public int firstChildDirectoryOffset;
@@ -981,7 +981,7 @@ public class NCCH {
         }
     }
 
-    private class FileMetadata {
+    private static class FileMetadata {
         public int offset;
         public int parentDirectoryOffset;
         public int siblingFileOffset;
@@ -1020,7 +1020,7 @@ public class NCCH {
             IOFunctions.writeFullLong(output, 0x10, this.fileDataLength);
             IOFunctions.writeFullInt(output, 0x18, this.nextFileInHashBucketOffset);
             IOFunctions.writeFullInt(output, 0x1C, this.nameLength);
-            if (!name.equals("")) {
+            if (!name.isEmpty()) {
                 byte[] nameBytes = name.getBytes(StandardCharsets.UTF_16LE);
                 System.arraycopy(nameBytes, 0, output, 0x20, nameBytes.length);
             }

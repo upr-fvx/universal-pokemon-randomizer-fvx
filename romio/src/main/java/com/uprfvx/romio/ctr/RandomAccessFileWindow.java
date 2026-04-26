@@ -24,7 +24,7 @@ public class RandomAccessFileWindow implements DataInput {
      * @param baseOffset The offset in the underlying RandomAccessFile where this window starts.
      * @param size The size of this window.
      */
-    public RandomAccessFileWindow(RandomAccessFile raf, int baseOffset, int size) {
+    public RandomAccessFileWindow(RandomAccessFile raf, long baseOffset, long size) {
         this.raf = raf;
         this.baseOffset = baseOffset;
         this.size = size;
@@ -36,10 +36,14 @@ public class RandomAccessFileWindow implements DataInput {
      * @param baseOffset The offset in the underlying RandomAccessFile where this window starts.
      * @param size The size of this window.
      */
-    public RandomAccessFileWindow(RandomAccessFileWindow raf, int baseOffset, int size) {
+    public RandomAccessFileWindow(RandomAccessFileWindow raf, long baseOffset, long size) {
         this.raf = raf;
         this.baseOffset = baseOffset;
         this.size = size;
+    }
+
+    public long size() {
+        return size;
     }
 
     public void seek(long pos) throws IOException {

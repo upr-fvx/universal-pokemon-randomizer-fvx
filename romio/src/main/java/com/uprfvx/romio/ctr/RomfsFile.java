@@ -1,8 +1,6 @@
 package com.uprfvx.romio.ctr;
 
 /*----------------------------------------------------------------------------*/
-/*--  RomfsFile.java - an entry in the romfs filesystem                     --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -21,30 +19,26 @@ package com.uprfvx.romio.ctr;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import filefunctions.FileFunctions;
 import filefunctions.IOFunctions;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
+/**
+ * An entry in the romfs filesystem. The contents of a RomfsFile is essentially a byte array,
+ * but to avoid unnecessary copying to RAM, getting its contents is done using a {@link RandomAccessFileWindow} -
+ * unless the file has been overwritten in which case it is indeed gotten as a byte array.
+ */
 public class RomfsFile {
-
-    private enum Extracted {
-        NOT, TO_FILE, TO_RAM
-    }
 
     private final NCCH parent;
     private final long offset;
     private int size;
     private final String fullPath;
 
-    private Extracted status = Extracted.NOT;
-    private String extFilename;
     private byte[] data;
 
     private boolean changed;
+    private boolean crcCalculated;
     private long originalCRC;
 
     public RomfsFile(NCCH parent, long offset, int size, String fullPath) {
@@ -60,78 +54,45 @@ public class RomfsFile {
         this.fullPath = fullPath;
     }
 
-    public byte[] getContents() throws IOException {
-        if (this.status == Extracted.NOT) {
-            // extract file
-            parent.reopenROM();
-            RandomAccessFile rom = parent.getBaseRom();
-            byte[] buf = new byte[this.size];
-            rom.seek(this.offset);
-
-            // This isn't nice, when files are archives, and we only need a tiny bit of them.
-            // TODO: figure out if we can avoid this copying, can we get a RandomAccessFile back?
-            rom.readFully(buf);
-
-            originalCRC = IOFunctions.getCRC32(buf);
-            if (parent.isWritingEnabled()) {
-                // make a file
-                String tmpDir = parent.getTmpFolder();
-                this.extFilename = fullPath.replaceAll("[^A-Za-z0-9_\\.]+", "");
-                File tmpFile = new File(tmpDir + extFilename);
-                FileOutputStream fos = new FileOutputStream(tmpFile);
-                fos.write(buf);
-                fos.close();
-                tmpFile.deleteOnExit();
-                this.status = Extracted.TO_FILE;
-                this.data = null;
-                return buf;
-            } else {
-                this.status = Extracted.TO_RAM;
-                this.data = buf;
-                byte[] newcopy = new byte[buf.length];
-                System.arraycopy(buf, 0, newcopy, 0, buf.length);
-                return newcopy;
-            }
-        } else if (this.status == Extracted.TO_RAM) {
-            byte[] newcopy = new byte[this.data.length];
-            System.arraycopy(this.data, 0, newcopy, 0, this.data.length);
-            return newcopy;
-        } else { // this.status == Extracted.TO_FILE
-            String tmpDir = parent.getTmpFolder();
-            return FileFunctions.readFileFullyIntoBuffer(tmpDir + this.extFilename);
-        }
+    public RandomAccessFileWindow getContents() throws IOException {
+        return new RandomAccessFileWindow(parent.getBaseRom(), offset, size);
     }
 
-    public void writeOverride(byte[] data) throws IOException {
-        if (status == Extracted.NOT) {
-            // temp extract
-            getContents();
+    public void writeOverride(byte[] data) {
+        if (!crcCalculated) {
+            // must be done before overriding the data,
+            // so we get the original CRC
+            calculateCRC();
         }
         changed = true;
         size = data.length;
-        if (status == Extracted.TO_FILE) {
-            String tmpDir = parent.getTmpFolder();
-            FileOutputStream fos = new FileOutputStream(new File(tmpDir + this.extFilename));
-            fos.write(data);
-            fos.close();
-        } else {
-            if (this.data.length == data.length) {
-                // copy new in
-                System.arraycopy(data, 0, this.data, 0, data.length);
-            } else {
-                // make new array
-                this.data = new byte[data.length];
-                System.arraycopy(data, 0, this.data, 0, data.length);
-            }
-        }
+        this.data = new byte[data.length];
+        System.arraycopy(data, 0, this.data, 0, data.length);
     }
 
-    // returns null if no override
-    public byte[] getOverrideContents() throws IOException {
-        if (status == Extracted.NOT) {
-            return null;
+    /**
+     * Returns the data as overridden by {@link #writeOverride(byte[])}.
+     * @throws IllegalStateException if the file has not been overridden.
+     */
+    public byte[] getOverrideContents() {
+        if (!changed) {
+            throw new IllegalStateException("file has not been overridden");
         }
-        return getContents();
+        return data;
+    }
+
+    private void calculateCRC() {
+        if (!crcCalculated) {
+            throw new IllegalStateException("CRC has already been calculated");
+        }
+        try {
+            byte[] data = new byte[size];
+            getContents().readFully(data);
+            originalCRC = IOFunctions.getCRC32(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to calculate CRC for file " + fullPath, e);
+        }
+        crcCalculated = true;
     }
 
     public long getOffset() {
@@ -151,6 +112,9 @@ public class RomfsFile {
     }
 
     public long getOriginalCRC() {
+        if (!crcCalculated) {
+            calculateCRC();
+        }
         return originalCRC;
     }
 }

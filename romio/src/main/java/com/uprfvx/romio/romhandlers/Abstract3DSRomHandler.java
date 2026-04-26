@@ -21,10 +21,10 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.Gen6Constants;
 import com.uprfvx.romio.ctr.GARCArchive;
 import com.uprfvx.romio.ctr.NCCH;
+import com.uprfvx.romio.ctr.RandomAccessFileWindow;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.exceptions.RomIOException;
@@ -162,66 +162,6 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		return true;
 	}
 
-	public void findTypeTable() {
-		TypeTable typeTable = TypeTable.getVanillaGen6PlusTable();
-
-		int tableWidth = typeTable.getTypes().size();
-		byte[] tablebytes = new byte[tableWidth * tableWidth];
-
-		for (Type attacker : typeTable.getTypes()) {
-			for (Type defender : typeTable.getTypes()) {
-				int offset = (Gen6Constants.typeToByte(attacker) * tableWidth) + Gen6Constants.typeToByte(defender);
-				Effectiveness effectiveness = typeTable.getEffectiveness(attacker, defender);
-				byte effectivenessInternal;
-				switch (effectiveness) {
-					case DOUBLE:
-						effectivenessInternal = 8;
-						break;
-					case NEUTRAL:
-						effectivenessInternal = 4;
-						break;
-					case HALF:
-						effectivenessInternal = 2;
-						break;
-					case ZERO:
-						effectivenessInternal = 0;
-						break;
-					default:
-						effectivenessInternal = 0;
-				}
-				tablebytes[offset] = effectivenessInternal;
-			}
-		}
-
-		System.out.println(bytesToHex(tablebytes));
-		Map<String, List<Integer>> found = new TreeMap<>();
-
-		for (String fileName : baseRom.getFileNames()) {
-			System.out.println(fileName);
-			if (fileName.startsWith("a"))
-				continue;
-
-			try {
-				byte[] file = readFile(fileName);
-				List<Integer> offsets = RomFunctions.search(file, tablebytes);
-				if (!offsets.isEmpty()) {
-					System.out.println(offsets);
-					found.put(fileName, offsets);
-				}
-			} catch (Exception ignored) {
-				System.out.println("could not read GARC");
-			}
-		}
-
-
-		for (Map.Entry<String, List<Integer>> entry : found.entrySet()) {
-			System.out.println(entry.getKey());
-			for (Integer offset : entry.getValue()) {
-				System.out.println("\t0x" + Integer.toHexString(offset));
-			}
-		}
-	}
-
 	protected byte[] readCode() throws IOException {
 		if (gameUpdate != null) {
 			return gameUpdate.getCode();
@@ -233,23 +173,30 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		baseRom.writeCode(data);
 	}
 	protected GARCArchive readGARC(String subpath, boolean skipDecompression) throws IOException {
-		return new GARCArchive(readFile(subpath), skipDecompression);
+		return new GARCArchive(readFileWindow(subpath), skipDecompression);
 	}
 
 	protected GARCArchive readGARC(String subpath, List<Boolean> compressThese) throws IOException {
-		return new GARCArchive(readFile(subpath), compressThese);
+		return new GARCArchive(readFileWindow(subpath), compressThese);
 	}
 
 	protected void writeGARC(String subpath, GARCArchive garc) throws IOException {
 		this.writeFile(subpath, garc.getBytes());
 	}
 
+    private RandomAccessFileWindow readFileWindow(String location) throws IOException {
+        if (gameUpdate != null && gameUpdate.hasFile(location)) {
+            return gameUpdate.getFile(location);
+        }
+        return baseRom.getFile(location);
+    }
+
 	protected byte[] readFile(String location) throws IOException {
-		if (gameUpdate != null && gameUpdate.hasFile(location)) {
-			return gameUpdate.getFile(location);
-		}
-		return baseRom.getFile(location);
-	}
+        RandomAccessFileWindow fileWindow = readFileWindow(location);
+        byte[] data = new byte[(int) fileWindow.size()];
+        fileWindow.readFully(data);
+        return data;
+    }
 
 	protected void writeFile(String location, byte[] data) throws IOException {
 		writeFile(location, data, 0, data.length);
@@ -364,45 +311,26 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		if (t == null) {
 			return 322; // CURSE
 		}
-		switch (t) {
-		case DARK:
-			return 309;
-		case DRAGON:
-			return 310;
-		case PSYCHIC:
-			return 311;
-		case NORMAL:
-			return 312;
-		case POISON:
-			return 313;
-		case ICE:
-			return 314;
-		case FIGHTING:
-			return 315;
-		case FIRE:
-			return 316;
-		case WATER:
-			return 317;
-		case FLYING:
-			return 323;
-		case GRASS:
-			return 318;
-		case ROCK:
-			return 319;
-		case ELECTRIC:
-			return 320;
-		case GROUND:
-			return 321;
-		case GHOST:
-		default:
-			return 322; // for CURSE
-		case STEEL:
-			return 324;
-		case BUG:
-			return 325;
-		case FAIRY:
-			return isGen7 ? 555 : 546;
-		}
+        return switch (t) {
+            case DARK -> 309;
+            case DRAGON -> 310;
+            case PSYCHIC -> 311;
+            case NORMAL -> 312;
+            case POISON -> 313;
+            case ICE -> 314;
+            case FIGHTING -> 315;
+            case FIRE -> 316;
+            case WATER -> 317;
+            case FLYING -> 323;
+            case GRASS -> 318;
+            case ROCK -> 319;
+            case ELECTRIC -> 320;
+            case GROUND -> 321;
+            case STEEL -> 324;
+            case BUG -> 325;
+            case FAIRY -> isGen7 ? 555 : 546;
+            default -> 322; // for CURSE
+        };
 	}
 
 	@Override

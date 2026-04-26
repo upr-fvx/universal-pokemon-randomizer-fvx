@@ -56,29 +56,34 @@ public class GARCArchive {
     private FATBFrame fatb;
     private FIMBFrame fimb;
 
-    public GARCArchive(byte[] data, boolean skipDecompression) throws IOException {
+    public GARCArchive(RandomAccessFileWindow fileWindow, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
-        boolean success = readFrames(data);
+        boolean success = readFrames(fileWindow);
         if (!success) {
             throw new IOException("Invalid GARC file");
         }
         files = fimb.files;
     }
 
-    public GARCArchive(byte[] data, List<Boolean> compressedThese) throws IOException {
+    public GARCArchive(RandomAccessFileWindow fileWindow, List<Boolean> compressedThese) throws IOException {
         this.compressThese = compressedThese;
-        boolean success = readFrames(data);
+        boolean success = readFrames(fileWindow);
         if (!success) {
             throw new IOException("Invalid GARC file");
         }
         files = fimb.files;
     }
 
-    private boolean readFrames(byte[] data) {
-        if (data.length <= 0) {
+    private boolean readFrames(RandomAccessFileWindow fileWindow) throws IOException {
+        if (fileWindow.size() <= 0) {
             System.out.println("Empty GARC");
             return false;
         }
+        byte[] data = new byte[(int) fileWindow.size()];
+        fileWindow.readFully(data);
+
+        // TODO: convert GARCArchive to use RandomAccessFileWindow fully
+
         ByteBuffer bbuf = ByteBuffer.wrap(data);
         bbuf.order(ByteOrder.LITTLE_ENDIAN);
         // GARC

@@ -1142,6 +1142,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     public List<Item> getStarterHeldItems() {
         List<Item> starterHeldItems = new ArrayList<>();
         try {
+            System.out.println("\ngetStarterHeldItems");
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.getFile(0);
             for (int i = 0; i < 3; i++) {
@@ -1158,6 +1159,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public void setStarterHeldItems(List<Item> items) {
         try {
+            System.out.println("\nsetStarterHeldItems");
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.getFile(0);
             for (int i = 0; i < 3; i++) {

@@ -25,7 +25,7 @@ import java.io.IOException;
 
 /**
  * An entry in the romfs filesystem. The contents of a RomfsFile is essentially a byte array,
- * but to avoid unnecessary copying to RAM, getting its contents is done using a {@link RandomAccessFileWindow} -
+ * but to avoid unnecessary copying to RAM, getting its contents is done using a {@link RandomAccessWindowInput} -
  * unless the file has been overwritten in which case it is indeed gotten as a byte array.
  */
 public class RomfsFile {
@@ -54,8 +54,14 @@ public class RomfsFile {
         this.fullPath = fullPath;
     }
 
-    public RandomAccessFileWindow getContents() throws IOException {
-        return new RandomAccessFileWindow(parent.getBaseRom(), offset, size);
+    public RomfsFileInput getContents() throws IOException {
+        if (changed) {
+            System.out.println("getting ByteArrayFileInput");
+            return new ByteArrayFileInput(data);
+        } else {
+            System.out.println("getting RandomAccessWindowInput");
+            return new RandomAccessWindowInput(parent.getBaseRom(), offset, size);
+        }
     }
 
     public void writeOverride(byte[] data) {
@@ -68,6 +74,7 @@ public class RomfsFile {
         size = data.length;
         this.data = new byte[data.length];
         System.arraycopy(data, 0, this.data, 0, data.length);
+        System.out.println("Overwrote file " + fullPath);
     }
 
     /**
@@ -86,8 +93,8 @@ public class RomfsFile {
             throw new IllegalStateException("CRC has already been calculated");
         }
         try {
-            byte[] data = getContents().readFully();
-            originalCRC = IOFunctions.getCRC32(data);
+            byte[] originalData = getContents().readFully();
+            originalCRC = IOFunctions.getCRC32(originalData);
         } catch (IOException e) {
             throw new RuntimeException("Failed to calculate CRC for file " + fullPath, e);
         }

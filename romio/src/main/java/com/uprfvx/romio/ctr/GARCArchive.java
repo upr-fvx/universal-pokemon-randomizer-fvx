@@ -52,90 +52,90 @@ public class GARCArchive {
     private FATBFrame fatb;
     private FIMBFrame fimb;
 
-    private final RandomAccessFileWindow fw;
+    private final RomfsFileInput input;
 
-    public GARCArchive(RandomAccessFileWindow fileWindow, boolean skipDecompression) throws IOException {
+    public GARCArchive(RomfsFileInput input, boolean skipDecompression) throws IOException {
         this.skipDecompression = skipDecompression;
-        this.fw = fileWindow;
-        readFrames(fileWindow);
+        this.input = input;
+        readFrames();
     }
 
-    public GARCArchive(RandomAccessFileWindow fileWindow, List<Boolean> compressedThese) throws IOException {
+    public GARCArchive(RomfsFileInput input, List<Boolean> compressedThese) throws IOException {
         this.compressThese = compressedThese;
-        this.fw = fileWindow;
-        readFrames(fileWindow);
+        this.input = input;
+        readFrames();
     }
 
-    private void readFrames(RandomAccessFileWindow fw) throws IOException {
-        if (fw.size() <= 0) {
+    private void readFrames() throws IOException {
+        if (input.size() <= 0) {
             throw new IOException("Invalid GARC file: Empty");
         }
 
-        readGARCHeader(fw);
-        readFATO(fw);
-        readFATB(fw);
-        readFIMB(fw);
+        readGARCHeader();
+        readFATO();
+        readFATB();
+        readFIMB();
     }
 
-    private void readGARCHeader(RandomAccessFileWindow fw) throws IOException {
+    private void readGARCHeader() throws IOException {
         // GARC
-        String magic = fw.readMagic();
+        String magic = input.readMagic();
         if (!magic.equals(GARC_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect GARC magic. Expected " + GARC_MAGIC + ", got " + magic);
         }
         garc = new GARCFrame();
-        garc.headerSize = fw.readInt();
-        garc.endianness = fw.readShort();
-        garc.version = fw.readShort();
-        int frameCount = fw.readInt();
+        garc.headerSize = input.readInt();
+        garc.endianness = input.readShort();
+        garc.version = input.readShort();
+        int frameCount = input.readInt();
         if (frameCount != FRAME_COUNT) {
             throw new IOException("Invalid GARC file: invalid frameCount. Expected " + FRAME_COUNT + ", got " + frameCount);
         }
-        garc.dataOffset = fw.readInt();
-        garc.fileSize = fw.readInt();
+        garc.dataOffset = input.readInt();
+        garc.fileSize = input.readInt();
         if (garc.version == VER_4) {
-            garc.contentLargestUnpadded = fw.readInt();
+            garc.contentLargestUnpadded = input.readInt();
             garc.contentPadToNearest = 4;
             version = 4;
         } else if (garc.version == VER_6) {
-            garc.contentLargestPadded = fw.readInt();
-            garc.contentLargestUnpadded = fw.readInt();
-            garc.contentPadToNearest = fw.readInt();
+            garc.contentLargestPadded = input.readInt();
+            garc.contentLargestUnpadded = input.readInt();
+            garc.contentPadToNearest = input.readInt();
             version = 6;
         } else {
             throw new IOException("Invalid GARC file: invalid version. Expected " + VER_4 + " or " + VER_6 + ", got " + garc.version);
         }
     }
 
-    private void readFATO(RandomAccessFileWindow fw) throws IOException {
+    private void readFATO() throws IOException {
         // FATO
         fato = new FATOFrame();
-        String magic = fw.readMagic();
+        String magic = input.readMagic();
         if (!magic.equals(FATO_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FATO magic. Expected " + FATO_MAGIC + ", got " + magic);
         }
-        fato.headerSize = fw.readInt();
-        fato.entryCount = fw.readShort();
-        fato.padding = fw.readShort();
+        fato.headerSize = input.readInt();
+        fato.entryCount = input.readShort();
+        fato.padding = input.readShort();
         fato.entries = new int[fato.entryCount];
         for (int i = 0; i < fato.entryCount; i++) {
-            fato.entries[i] = fw.readInt();
+            fato.entries[i] = input.readInt();
         }
     }
 
-    private void readFATB(RandomAccessFileWindow fw) throws IOException {
+    private void readFATB() throws IOException {
         // FATB
         fatb = new FATBFrame();
-        String magic = fw.readMagic();
+        String magic = input.readMagic();
         if (!magic.equals(FATB_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FATB magic. Expected " + FATB_MAGIC + ", got " + magic);
         }
-        fatb.headerSize = fw.readInt();
-        fatb.fileCount = fw.readInt();
+        fatb.headerSize = input.readInt();
+        fatb.fileCount = input.readInt();
         fatb.entries = new FATBEntry[fatb.fileCount];
         for (int i = 0; i < fatb.fileCount; i++) {
             fatb.entries[i] = new FATBEntry();
-            fatb.entries[i].vector = fw.readInt();
+            fatb.entries[i].vector = input.readInt();
             fatb.entries[i].subEntries = new TreeMap<>();
             int bitVector = fatb.entries[i].vector;
             int counter = 0;
@@ -144,9 +144,9 @@ public class GARCArchive {
                 bitVector >>>= 1;
                 if (!exists) continue;
                 FATBSubEntry subEntry = new FATBSubEntry();
-                subEntry.start = fw.readInt();
-                subEntry.end = fw.readInt();
-                subEntry.length = fw.readInt();
+                subEntry.start = input.readInt();
+                subEntry.end = input.readInt();
+                subEntry.length = input.readInt();
                 fatb.entries[i].subEntries.put(b,subEntry);
                 counter++;
             }
@@ -154,19 +154,20 @@ public class GARCArchive {
         }
     }
 
-    private void readFIMB(RandomAccessFileWindow fw) throws IOException {
+    private void readFIMB() throws IOException {
         // FIMB
         fimb = new FIMBFrame();
-        String magic = fw.readMagic();
+        String magic = input.readMagic();
         if (!magic.equals(FIMB_MAGIC)) {
             throw new IOException("Invalid GARC file: incorrect FIMB magic. Expected " + FIMB_MAGIC + ", got " + magic);
         }
-        fimb.headerSize = fw.readInt();
-        fimb.dataSize = fw.readInt();
+        fimb.headerSize = input.readInt();
+        fimb.dataSize = input.readInt();
         fimb.files = new HashMap<>();
         for (int i = 0; i < fatb.fileCount; i++) {
             fimb.files.put(i, new TreeMap<>());
         }
+        System.out.println("fimb.files: " + fimb.files);
     }
 
     // Separating out file reading so it is done as needed
@@ -187,15 +188,15 @@ public class GARCArchive {
         }
         FATBSubEntry subEntry = entry.subEntries.get(subIndex);
 
-        fw.seek(garc.dataOffset + subEntry.start);
-        boolean compressFlag = fw.readByteInPlace() == 0x11;
+        input.setPosition(garc.dataOffset + subEntry.start);
+        boolean compressFlag = input.readByteInPlace() == 0x11;
 
         byte[] file = new byte[subEntry.length];
 
         boolean compressed = compressThese == null ?
                 compressFlag && !skipDecompression :
                 compressFlag && compressThese.get(fileIndex);
-        fw.read(file);
+        input.read(file);
 
         if (compressed) {
             try {
@@ -206,11 +207,12 @@ public class GARCArchive {
         }
         isCompressed.put(fileIndex, compressed);
         fimb.files.get(fileIndex).put(subIndex, file);
+        System.out.println("read file " + fileIndex + ", " + subIndex);
+        System.out.println("fimb.files: " + fimb.files);
     }
 
     private void readAllUnreadFiles() throws IOException {
         for (int i = 0; i < fatb.fileCount; i++) {
-            fimb.files.put(i, new TreeMap<>());
             FATBEntry entry = fatb.entries[i];
             for (int j : entry.subEntries.keySet()) {
                 getFile(i, j);
@@ -219,6 +221,7 @@ public class GARCArchive {
     }
 
     public byte[] getBytes() throws IOException {
+        System.out.println("getBytes()");
         readAllUnreadFiles();
 
         int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
@@ -358,6 +361,7 @@ public class GARCArchive {
      */
     public byte[] getFile(int index, int subIndex) throws IOException {
         byte[] file = fimb.files.get(index).get(subIndex);
+        System.out.println("index=" + index + ", subIndex=" + subIndex + ", file=" + file);
         if (file == null) {
             readFile(index, subIndex);
         }

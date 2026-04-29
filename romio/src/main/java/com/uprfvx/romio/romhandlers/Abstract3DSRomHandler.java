@@ -24,7 +24,7 @@ package com.uprfvx.romio.romhandlers;
 import com.uprfvx.romio.constants.Gen6Constants;
 import com.uprfvx.romio.ctr.GARCArchive;
 import com.uprfvx.romio.ctr.NCCH;
-import com.uprfvx.romio.ctr.RandomAccessFileWindow;
+import com.uprfvx.romio.ctr.RomfsFileInput;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.exceptions.RomIOException;
@@ -173,18 +173,18 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		baseRom.writeCode(data);
 	}
 	protected GARCArchive readGARC(String subpath, boolean skipDecompression) throws IOException {
-		return new GARCArchive(readFileWindow(subpath), skipDecompression);
+		return new GARCArchive(readFileInput(subpath), skipDecompression);
 	}
 
 	protected GARCArchive readGARC(String subpath, List<Boolean> compressThese) throws IOException {
-		return new GARCArchive(readFileWindow(subpath), compressThese);
+		return new GARCArchive(readFileInput(subpath), compressThese);
 	}
 
 	protected void writeGARC(String subpath, GARCArchive garc) throws IOException {
 		this.writeFile(subpath, garc.getBytes());
 	}
 
-    private RandomAccessFileWindow readFileWindow(String location) throws IOException {
+    private RomfsFileInput readFileInput(String location) throws IOException {
         if (gameUpdate != null && gameUpdate.hasFile(location)) {
             return gameUpdate.getFile(location);
         }
@@ -192,7 +192,7 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
     }
 
 	protected byte[] readFile(String location) throws IOException {
-        return readFileWindow(location).readFully();
+        return readFileInput(location).readFully();
     }
 
 	protected void writeFile(String location, byte[] data) throws IOException {

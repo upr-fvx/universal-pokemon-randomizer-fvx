@@ -8,50 +8,23 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 //TODO: once supported by JUnit, convert to ParameterizedContainer
 //support is intended to be added sometime this year? that's all I got
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RandomizerTest {
 
-    // update if the amount of supported generation increases,
-    // and expect some test cases to need updating too, though hopefully only in a minor way
-    protected static final int HIGHEST_GENERATION = 7;
 
     protected static final Random RND = new Random();
 
     private static final String TEST_ROMS_PATH = System.getProperty("romsPath");
-    private static final String LAST_DOT_REGEX = "\\.+(?![^.]*\\.)";
 
     //extremely hacky workaround for lack of ParameterizedContainer
     private final static Map<String, TestRomHandler> romHandlers = new HashMap<>();
 
     public static String[] getRomNames() {
-        return Roms.getRoms(new int[]{4,5}, new Roms.Region[]{Roms.Region.USA}, true, true, false);
-    }
-
-    public static String[] getAllRomNames() {
-        return Roms.getAllRoms();
-    }
-
-    public static String[] getRomNamesInFolder() {
-        List<String> names;
-        try (Stream<Path> paths = Files.walk(Paths.get(TEST_ROMS_PATH))) {
-            names = paths.filter(Files::isRegularFile)
-                    .map(p -> p.toFile().getName()).filter(s -> !s.endsWith(".txt"))
-                    .map(s -> s.split(LAST_DOT_REGEX)[0])
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return names.toArray(new String[0]);
+        return Roms.getRoms(new int[]{4,5,6,7}, new Roms.Region[]{Roms.Region.USA}, true, true, false);
     }
 
     protected TestRomHandler romHandler;
@@ -112,13 +85,6 @@ public class RandomizerTest {
      */
     protected static int getGenerationNumberOf(String romName) {
         return getGenerationOf(romName).getNumber();
-    }
-
-    /**
-     * A fast check whether a ROM uses an AbstractGBRomHandler.
-     */
-    protected static boolean isGBGame(String romName) {
-        return getGenerationNumberOf(romName) <= 3;
     }
 
     /**

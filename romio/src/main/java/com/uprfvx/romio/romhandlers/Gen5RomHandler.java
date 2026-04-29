@@ -426,7 +426,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             graphicalFormeCounts.put(pkmn, formeCount);
             formeGraphicsIndices.put(pkmn, romEntry.getIntValue("FormeGraphicsOffset") + readWord(stats, Gen5Constants.bsFormeSpriteOffset));
             int firstFormeOffset = readWord(stats, Gen5Constants.bsFormeOffset);
-            System.out.println("\tfirstFormeOffset=" + firstFormeOffset);
             if (firstFormeOffset != 0) {
                 for (int i = 1; i < formeCount; i++) {
                     altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers

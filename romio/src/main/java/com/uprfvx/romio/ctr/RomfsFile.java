@@ -82,7 +82,7 @@ public class RomfsFile {
     }
 
     private void calculateCRC() {
-        if (!crcCalculated) {
+        if (crcCalculated) {
             throw new IllegalStateException("CRC has already been calculated");
         }
         try {

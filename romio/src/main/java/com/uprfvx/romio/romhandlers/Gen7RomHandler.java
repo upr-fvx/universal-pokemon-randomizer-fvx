@@ -1824,6 +1824,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive eggMovesGarc = this.readGARC(romEntry.getFile("EggMoves"),true);
             TreeMap<Species, Integer> altFormeEggMoveFiles = new TreeMap<>();
+
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()); i++) {
                 Species pkmn = pokes[i];
                 byte[] movedata = eggMovesGarc.getFile(i);
@@ -1839,14 +1840,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 eggMoves.put(pkmn.getNumber(), moves);
             }
-            Iterator<Species> iter = altFormeEggMoveFiles.keySet().iterator();
-            while (iter.hasNext()) {
-                Species originalForme = iter.next();
-                int formeNumber = 1;
-                int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = originalForme.getForme(formeNumber);
-                while (!originalForme.equals(altForme)) {
-                    byte[] movedata = eggMovesGarc.getFile(fileNumber);
+
+            for (Species originalForme : altFormeEggMoveFiles.keySet()) {
+                int firstFormeFileNumber = altFormeEggMoveFiles.get(originalForme);
+
+                for (Species altForme : originalForme.getAltFormes()) {
+                    byte[] movedata = eggMovesGarc.getFile(firstFormeFileNumber + altForme.getFormeNumber() - 1);
                     int numberOfEggMoves = readWord(movedata, 2);
                     List<Integer> moves = new ArrayList<>();
                     for (int j = 0; j < numberOfEggMoves; j++) {
@@ -1854,12 +1853,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         moves.add(move);
                     }
                     eggMoves.put(altForme.getNumber(), moves);
-                    formeNumber++;
-                    fileNumber++;
-                    altForme = originalForme.getForme(formeNumber);
                 }
-                iter.remove();
             }
+
         } catch (IOException e) {
             throw new RomIOException(e);
         }
@@ -1871,6 +1867,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive eggMovesGarc = this.readGARC(romEntry.getFile("EggMoves"), true);
             TreeMap<Species, Integer> altFormeEggMoveFiles = new TreeMap<>();
+
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()); i++) {
                 Species pkmn = pokes[i];
                 byte[] movedata = eggMovesGarc.getFile(i);
@@ -1883,23 +1880,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(movedata, 4 + (j * 2), moves.get(j));
                 }
             }
-            Iterator<Species> iter = altFormeEggMoveFiles.keySet().iterator();
-            while (iter.hasNext()) {
-                Species originalForme = iter.next();
-                int formeNumber = 1;
-                int fileNumber = altFormeEggMoveFiles.get(originalForme);
-                Species altForme = originalForme.getForme(formeNumber);
-                while (!originalForme.equals(altForme)) {
-                    byte[] movedata = eggMovesGarc.getFile(fileNumber);
+
+            for (Species originalForme : altFormeEggMoveFiles.keySet()) {
+                int firstFormeFileNumber = altFormeEggMoveFiles.get(originalForme);
+
+                for (Species altForme : originalForme.getAltFormes()) {
+                    byte[] movedata = eggMovesGarc.getFile(firstFormeFileNumber + altForme.getFormeNumber() - 1);
                     List<Integer> moves = eggMoves.get(altForme.getNumber());
                     for (int j = 0; j < moves.size(); j++) {
                         writeWord(movedata, 4 + (j * 2), moves.get(j));
                     }
-                    formeNumber++;
-                    fileNumber++;
-                    altForme = originalForme.getForme(formeNumber);
                 }
-                iter.remove();
             }
             // Save
             this.writeGARC(romEntry.getFile("EggMoves"), eggMovesGarc);

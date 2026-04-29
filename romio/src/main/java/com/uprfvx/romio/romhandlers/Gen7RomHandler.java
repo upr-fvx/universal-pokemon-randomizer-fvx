@@ -77,8 +77,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
-    private final Map<Integer, Map<Integer, Integer>> internalSpeciesIDsByBaseForme = new HashMap<>();
-    private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
     private List<MegaEvolution> megaEvolutions;
     private List<Item> items;
     private List<AreaData> areaDataList;
@@ -694,10 +692,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         stats[Gen7Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
         stats[Gen7Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
 
-        // TODO: this is a very risky way of checking for the form, fix it
-        if (pkmn.getFullName().equals("Meowstic")) {
+        if (pkmn.getNumber() == SpeciesIDs.meowstic) { // meowstic M
             stats[Gen7Constants.bsGenderOffset] = 0;
-        } else if (pkmn.getFullName().equals("Meowstic-F")) {
+        } else if ((!isUSUM() && pkmn.getNumber() == SpeciesIDs.SMFormes.meowsticF) ||
+                (isUSUM() && pkmn.getNumber() == SpeciesIDs.USUMFormes.meowsticF)) {
             stats[Gen7Constants.bsGenderOffset] = (byte)0xFE;
         }
     }

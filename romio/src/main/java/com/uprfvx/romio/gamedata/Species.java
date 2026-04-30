@@ -1256,7 +1256,6 @@ public class Species implements Comparable<Species> {
 
         transferSimpleAttributesToCopy(copy, original);
         transferReferentialAttributesToCopy(copy, original, originalToCopies);
-        // TODO: write unit tests
     }
 
     private static void transferSimpleAttributesToCopy(Species copy, Species original) {

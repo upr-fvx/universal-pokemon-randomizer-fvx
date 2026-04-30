@@ -177,7 +177,12 @@ public class GARCArchive {
     // the reads are also spread out in time, leading to a less
     // optimized disk read?
     // TODO: optimize around this
-    private void readFile(int fileIndex, int subIndex) throws IOException {
+
+    /**
+     * Reads the specified file if it hasn't already been read. If the file has been read,
+     * but not the compress flag, reads only the compress flag.
+     */
+    private void readUnreadFile(int fileIndex, int subIndex) throws IOException {
         if (fileIndex < 0 || fileIndex >= fatb.fileCount) {
             throw new IndexOutOfBoundsException("fileIndex must be between 0 and fatb.filecount-1.");
         }
@@ -186,18 +191,31 @@ public class GARCArchive {
             throw new IllegalArgumentException("subIndex is not valid for this file, must be in: " +
                     entry.subEntries.keySet());
         }
+        if (isCompressed.containsKey(fileIndex)) {
+            // compress flag already read, so file should have been read as well.
+            return;
+        }
+
         FATBSubEntry subEntry = entry.subEntries.get(subIndex);
-
+        // We read the compress flag and file at the same time/after each other,
+        // to minimize the number of setPosition calls. I am not 100% sure how relevant this is,
+        // but jumping around less when reading from disk seems wise.
+        // Even if the code gets a little messier for it.
         input.setPosition(garc.dataOffset + subEntry.start);
+
         boolean compressFlag = input.readByteInPlace() == 0x11;
-
-        byte[] file = new byte[subEntry.length];
-
         boolean compressed = compressThese == null ?
                 compressFlag && !skipDecompression :
                 compressFlag && compressThese.get(fileIndex);
-        input.read(file);
+        isCompressed.put(fileIndex, compressed);
 
+        if (fimb.files.get(fileIndex).containsKey(subIndex)) {
+            // file already read.
+            return;
+        }
+
+        byte[] file = new byte[subEntry.length];
+        input.read(file);
         if (compressed) {
             try {
                 file = new BLZCoder(null).BLZ_DecodePub(file, "GARC");
@@ -205,17 +223,14 @@ public class GARCArchive {
                 throw new IOException("Invalid GARC file.", e);
             }
         }
-        isCompressed.put(fileIndex, compressed);
         fimb.files.get(fileIndex).put(subIndex, file);
-        System.out.println("read file " + fileIndex + ", " + subIndex);
-        System.out.println("fimb.files: " + fimb.files);
     }
 
     private void readAllUnreadFiles() throws IOException {
         for (int i = 0; i < fatb.fileCount; i++) {
             FATBEntry entry = fatb.entries[i];
             for (int j : entry.subEntries.keySet()) {
-                getFile(i, j);
+                readUnreadFile(i, j);
             }
         }
     }
@@ -223,6 +238,10 @@ public class GARCArchive {
     public byte[] getBytes() throws IOException {
         System.out.println("getBytes()");
         readAllUnreadFiles();
+        System.out.println("isCompressed.size()=" + isCompressed.size());
+        System.out.println("fimb.files.size()=" + fimb.files.size());
+        System.out.println("isCompressed: " + isCompressed);
+        System.out.println("fimb.files: " + fimb.files);
 
         int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
         ByteBuffer garcBuf = ByteBuffer.allocate(garcHeaderSize);
@@ -360,16 +379,13 @@ public class GARCArchive {
      * Gets the specified file, reading it from ROM (disk) if necessary.
      */
     public byte[] getFile(int index, int subIndex) throws IOException {
-        byte[] file = fimb.files.get(index).get(subIndex);
-        System.out.println("index=" + index + ", subIndex=" + subIndex + ", file=" + file);
-        if (file == null) {
-            readFile(index, subIndex);
-        }
+        readUnreadFile(index, subIndex);
         return fimb.files.get(index).get(subIndex);
     }
 
     public void setFile(int index, byte[] data) {
         fimb.files.get(index).put(0, data);
+        isCompressed.putIfAbsent(index, false);
     }
 
     public Map<Integer,byte[]> getDirectory(int index) {

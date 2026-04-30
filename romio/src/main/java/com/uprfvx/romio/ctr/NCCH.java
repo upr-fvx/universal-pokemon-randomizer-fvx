@@ -736,7 +736,6 @@ public class NCCH {
     // returns null if file doesn't exist
     public RomfsFileInput getFile(String filename) throws IOException {
         if (romfsFiles.containsKey(filename)) {
-            System.out.println("key: " + filename + ", file: " + romfsFiles.get(filename));
             return romfsFiles.get(filename).getContents();
         } else {
             return null;

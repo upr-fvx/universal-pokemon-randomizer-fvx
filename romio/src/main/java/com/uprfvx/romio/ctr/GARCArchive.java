@@ -167,7 +167,6 @@ public class GARCArchive {
         for (int i = 0; i < fatb.fileCount; i++) {
             fimb.files.put(i, new TreeMap<>());
         }
-        System.out.println("fimb.files: " + fimb.files);
     }
 
     // Separating out file reading so it is done as needed
@@ -236,12 +235,7 @@ public class GARCArchive {
     }
 
     public byte[] getBytes() throws IOException {
-        System.out.println("getBytes()");
         readAllUnreadFiles();
-        System.out.println("isCompressed.size()=" + isCompressed.size());
-        System.out.println("fimb.files.size()=" + fimb.files.size());
-        System.out.println("isCompressed: " + isCompressed);
-        System.out.println("fimb.files: " + fimb.files);
 
         int garcHeaderSize = garc.version == VER_4 ? GARC_HEADER_SIZE_4 : GARC_HEADER_SIZE_6;
         ByteBuffer garcBuf = ByteBuffer.allocate(garcHeaderSize);

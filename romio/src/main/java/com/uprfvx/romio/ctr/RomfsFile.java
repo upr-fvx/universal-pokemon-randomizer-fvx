@@ -56,10 +56,8 @@ public class RomfsFile {
 
     public RomfsFileInput getContents() throws IOException {
         if (changed) {
-            System.out.println("getting ByteArrayFileInput");
             return new ByteArrayFileInput(data);
         } else {
-            System.out.println("getting RandomAccessWindowInput");
             return new RandomAccessWindowInput(parent.getBaseRom(), offset, size);
         }
     }
@@ -74,7 +72,6 @@ public class RomfsFile {
         size = data.length;
         this.data = new byte[data.length];
         System.arraycopy(data, 0, this.data, 0, data.length);
-        System.out.println("Overwrote file " + fullPath);
     }
 
     /**

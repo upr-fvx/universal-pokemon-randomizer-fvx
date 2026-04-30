@@ -272,7 +272,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
         assumeTrue(romHandler.canAddHeldItemsToRegularTrainers());
 
-        enhanceTrainersAndSaveAndLoad(this::addHeldItemsToTrainers, tr -> true);
+        enhanceTrainersAndSaveAndLoad(this::addHeldItemsToTrainers, _ -> true);
 
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr.getFullDisplayName());

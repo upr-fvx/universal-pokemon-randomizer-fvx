@@ -210,7 +210,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(genRestrictionsFromBools(true, new int[]{1}));
-        // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
+
+        SpeciesSet unrelatedFromWrongGen = new SpeciesSet();
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
             boolean anyFromRightGen = false;
@@ -220,9 +221,18 @@ public class RomHandlerMiscTest extends RomHandlerTest {
                     break;
                 }
             }
-            assertTrue(anyFromRightGen, pk.getName() + " is from the wrong Gen, and is unrelated to " +
-                    "Pokémon from the right (Gen I).");
+            if (!anyFromRightGen) {
+                unrelatedFromWrongGen.add(pk);
+            }
         }
+
+        if (!unrelatedFromWrongGen.isEmpty()) {
+            System.out.println("Unrelated species from wrong generation:");
+            for (Species pk : unrelatedFromWrongGen) {
+                System.out.println(pk.getNumberAndFullName() + " (Gen " + pk.getGeneration() + ")");
+            }
+        }
+        assertTrue(unrelatedFromWrongGen.isEmpty());
     }
 
     @ParameterizedTest
@@ -254,12 +264,15 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     }
 
     private GenRestrictions genRestrictionsFromBools(boolean relativesAllowed, int[] gensAllowed) {
-        int state = 0;
-        for (int gen : gensAllowed) {
-            state += 1 << (gen - 1);
+        GenRestrictions gr = new GenRestrictions();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            gr.setGenAllowed(gen, false);
         }
-        state += relativesAllowed ? 1 << HIGHEST_GENERATION : 0;
-        return new GenRestrictions(state);
+        gr.setAllowEvolutionaryRelatives(relativesAllowed);
+        for (int gen : gensAllowed) {
+            gr.setGenAllowed(gen, true);
+        }
+        return gr;
     }
 
     @ParameterizedTest

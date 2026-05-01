@@ -84,19 +84,6 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void baseFormeOfAlolanFormesHasCorrectAlolanForme(String romName) {
-        loadROM(romName);
-        SpeciesSet speciesSet = romHandler.getSpeciesSetInclFormes();
-        for (Species pk : speciesSet) {
-            if (pk.getFormeSuffix().equals("-Alolan")) {
-                // Alolan formes must have a base forme that must have the alolan forme as alolanForme
-                assertEquals(pk, pk.getBaseForme().getAlolanForme());
-            }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
     public void allAlolanFormesHaveAlolanSuffix(String romName) {
         loadROM(romName);
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {

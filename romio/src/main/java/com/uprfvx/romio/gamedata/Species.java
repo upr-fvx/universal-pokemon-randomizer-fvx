@@ -227,17 +227,21 @@ public class Species implements Comparable<Species> {
     private List<Evolution> getEvolutionsOfForme(Function<Species, List<Evolution>> evolutionsAccessor) {
         Species species = this;
         if (evolutionsAccessor.apply(species).isEmpty()) {
-            Species alolanForme = species.getAlolanForme();
-            if (alolanForme != null && !evolutionsAccessor.apply(alolanForme).isEmpty()) {
-                // species might be base forme with Alolan forme that carries evolution info, e.g., Alolan Raichu
-                species = alolanForme;
+            if (isBaseForme()) {
+                // some alt forme might carry evolution info that the base forme doesn't have, e.g. Alolan Raichu
+                for (Species altFormes : getAltFormes()) {
+                    if (!evolutionsAccessor.apply(altFormes).isEmpty()) {
+                        species = altFormes;
+                        break;
+                    }
+                }
             } else {
                 // If species does not have the relevant evolutions but a base forme, try to determine if the base forme
                 // has the relevant evolutions, e.g., Eternal Flower Floette for evolutionsFrom or Megas for evolutionsTo
-                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getBaseForme()).isEmpty()) {
-                    species = species.getBaseForme();
+                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getConceptualBaseForme()).isEmpty()) {
+                    species = species.getConceptualBaseForme();
                 }
-                species = species.getBaseForme(); // = species if species.isBaseForme(), else species.getBaseForme()
+                species = species.getConceptualBaseForme();
             }
         }
 
@@ -815,18 +819,6 @@ public class Species implements Comparable<Species> {
             throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
         }
         this.alolan = true;
-    }
-
-    /**
-     * Returns the Alolan alt forme if this Species has one, or null otherwise.
-     */
-    public Species getAlolanForme() {
-        for (Species forme : getAltFormes()) {
-            if (forme.isAlolan()) {
-                return forme;
-            }
-        }
-        return null;
     }
 
     /**

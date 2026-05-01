@@ -3164,6 +3164,10 @@ public class RandomizerGUI {
 
             gameMascotLabel.setIcon(makeMascotIcon());
 
+            // Since we don't cache the files of the 3DS ROM inside separate files,
+            // closing the inner Rom here means they are no longer available,
+            // and obvious crashes once anything tries accessing the relevant data.
+            // TODO: move the closing somewhere else, to whenever we're done with this romhandler.
             if (romHandler instanceof AbstractDSRomHandler) {
                 ((AbstractDSRomHandler) romHandler).closeInnerRom();
             } else if (romHandler instanceof Abstract3DSRomHandler) {

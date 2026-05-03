@@ -40,6 +40,8 @@ import java.util.zip.CRC32;
 
 public class CustomNamesSet {
 
+    // TODO: standardize CustomNamesSet to work like the /data resources
+
     private static final int CUSTOM_NAMES_VERSION = 1;
     private static final String DEFAULT_FILE_PATH = "/com/uprfvx/random/customnames/";
 
@@ -53,9 +55,16 @@ public class CustomNamesSet {
     public static CustomNamesSet importOldNames() throws IOException {
         CustomNamesSet cns = new CustomNamesSet();
 
-        // Trainer Names
+        importOldTrainerNames(cns);
+        importOldTrainerClasses(cns);
+        importOldNicknames(cns);
+
+        return cns;
+    }
+
+    private static void importOldTrainerNames(CustomNamesSet cns) throws IOException {
         if (fileExists(SysConstants.tnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tnamesFile), "UTF-8");
+            Scanner sc = new Scanner(openFile(SysConstants.tnamesFile), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String trainername = sc.nextLine().trim();
                 if (trainername.isEmpty()) {
@@ -72,10 +81,11 @@ public class CustomNamesSet {
             }
             sc.close();
         }
+    }
 
-        // Trainer Classes
+    private static void importOldTrainerClasses(CustomNamesSet cns) throws IOException {
         if (fileExists(SysConstants.tclassesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tclassesFile), "UTF-8");
+            Scanner sc = new Scanner(openFile(SysConstants.tclassesFile), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String trainerClassName = sc.nextLine().trim();
                 if (trainerClassName.isEmpty()) {
@@ -96,10 +106,11 @@ public class CustomNamesSet {
             }
             sc.close();
         }
+    }
 
-        // Nicknames
+    private static void importOldNicknames(CustomNamesSet cns) throws IOException {
         if (fileExists(SysConstants.nnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.nnamesFile), "UTF-8");
+            Scanner sc = new Scanner(openFile(SysConstants.nnamesFile), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String nickname = sc.nextLine().trim();
                 if (nickname.isEmpty()) {
@@ -112,8 +123,6 @@ public class CustomNamesSet {
             }
             sc.close();
         }
-
-        return cns;
     }
 
     private static InputStream openFile(String filename) throws IOException {
@@ -145,7 +154,7 @@ public class CustomNamesSet {
 
     public static int getFileChecksum() {
         try {
-            Scanner sc = new Scanner(openFile(SysConstants.customNamesFile), "UTF-8");
+            Scanner sc = new Scanner(openFile(SysConstants.customNamesFile), StandardCharsets.UTF_8);
             CRC32 checksum = new CRC32();
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
@@ -182,13 +191,20 @@ public class CustomNamesSet {
     private final List<String> doublesTrainerClasses;
     private final List<String> pokemonNicknames;
 
-    // Standard constructor: read binary data from an input stream.
-    public CustomNamesSet(InputStream data) throws IOException {
+    public CustomNamesSet(List<String> trainerNames, List<String> trainerClasses,
+                          List<String> doublesTrainerNames, List<String> doublesTrainerClasses,
+                          List<String> pokemonNicknames) {
+        this.trainerNames = trainerNames;
+        this.trainerClasses = trainerClasses;
+        this.doublesTrainerNames = doublesTrainerNames;
+        this.doublesTrainerClasses = doublesTrainerClasses;
+        this.pokemonNicknames = pokemonNicknames;
+    }
 
+    public CustomNamesSet(InputStream data) throws IOException {
         if (data.read() != CUSTOM_NAMES_VERSION) {
             throw new IOException("Invalid custom names file provided.");
         }
-
         trainerNames = readNamesBlock(data);
         trainerClasses = readNamesBlock(data);
         doublesTrainerNames = readNamesBlock(data);
@@ -196,8 +212,6 @@ public class CustomNamesSet {
         pokemonNicknames = readNamesBlock(data);
     }
 
-    // Alternate constructor: blank all lists
-    // Used for importing old names and on the editor dialog.
     public CustomNamesSet() {
         trainerNames = new ArrayList<>();
         trainerClasses = new ArrayList<>();
@@ -217,7 +231,7 @@ public class CustomNamesSet {
         // Read the block and translate it into a list of names.
         byte[] namesData = FileFunctions.readFullyIntoBuffer(in, size);
         List<String> names = new ArrayList<>();
-        Scanner sc = new Scanner(new ByteArrayInputStream(namesData),"UTF-8");
+        Scanner sc = new Scanner(new ByteArrayInputStream(namesData), StandardCharsets.UTF_8);
         while (sc.hasNextLine()) {
             String name = sc.nextLine().trim();
             if (!name.isEmpty()) {
@@ -278,31 +292,6 @@ public class CustomNamesSet {
 
     public List<String> getPokemonNicknames() {
         return Collections.unmodifiableList(pokemonNicknames);
-    }
-    
-    public void setTrainerNames(List<String> names) {
-        trainerNames.clear();
-        trainerNames.addAll(names);
-    }
-    
-    public void setTrainerClasses(List<String> names) {
-        trainerClasses.clear();
-        trainerClasses.addAll(names);
-    }
-    
-    public void setDoublesTrainerNames(List<String> names) {
-        doublesTrainerNames.clear();
-        doublesTrainerNames.addAll(names);
-    }
-    
-    public void setDoublesTrainerClasses(List<String> names) {
-        doublesTrainerClasses.clear();
-        doublesTrainerClasses.addAll(names);
-    }
-    
-    public void setPokemonNicknames(List<String> names) {
-        pokemonNicknames.clear();
-        pokemonNicknames.addAll(names);
     }
 
 }

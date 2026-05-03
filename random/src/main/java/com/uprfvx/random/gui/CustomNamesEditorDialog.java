@@ -118,12 +118,11 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
     }// GEN-LAST:event_closeBtnActionPerformed
 
     private boolean save() {
-        CustomNamesSet cns = new CustomNamesSet();
-        cns.setTrainerNames(getNameList(trainerNamesText));
-        cns.setTrainerClasses(getNameList(trainerClassesText));
-        cns.setDoublesTrainerNames(getNameList(doublesTrainerNamesText));
-        cns.setDoublesTrainerClasses(getNameList(doublesTrainerClassesText));
-        cns.setPokemonNicknames(getNameList(nicknamesText));
+        CustomNamesSet cns = new CustomNamesSet(
+                getNameList(trainerNamesText), getNameList(trainerClassesText),
+                getNameList(doublesTrainerNamesText), getNameList(doublesTrainerClassesText),
+                getNameList(nicknamesText)
+        );
         try {
             byte[] data = cns.getBytes();
             FileFunctions.writeBytesToFile(RootPath.path + SysConstants.customNamesFile, data);

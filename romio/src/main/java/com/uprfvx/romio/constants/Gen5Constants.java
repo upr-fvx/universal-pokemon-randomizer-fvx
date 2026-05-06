@@ -776,7 +776,7 @@ public class Gen5Constants {
         // specific pokemon hold items, berries, apricorns, mail
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
                 ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
-                ItemIDs.passOrb));
+                ItemIDs.passOrb, ItemIDs.prettyFeather));
         addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
         addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
         addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects

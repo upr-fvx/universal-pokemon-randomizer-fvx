@@ -806,7 +806,7 @@ public class Gen6Constants {
     private static Set<Integer> setupBadItemsORAS() {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
                 ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
-                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir));
+                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir, ItemIDs.prettyFeather));
         addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
         addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
         addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects

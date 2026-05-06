@@ -977,7 +977,8 @@ public class Gen7Constants {
     private static Set<Integer> setupBadItems() {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.oddKeystone, ItemIDs.griseousOrb, ItemIDs.adamantOrb,
                 ItemIDs.lustrousOrb, ItemIDs.soulDew, ItemIDs.lightBall, ItemIDs.oranBerry, ItemIDs.quickPowder,
-                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir, ItemIDs.festivalTicket));
+                ItemIDs.passOrb, ItemIDs.discountCoupon, ItemIDs.strangeSouvenir, ItemIDs.festivalTicket,
+                ItemIDs.prettyFeather));
         addBetween(set, ItemIDs.growthMulch, ItemIDs.gooeyMulch); // mulch
         addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mails
         addBetween(set, ItemIDs.figyBerry, ItemIDs.belueBerry); // berries without useful battle effects

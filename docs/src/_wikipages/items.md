@@ -239,6 +239,7 @@ There are a variety of settings called "Ban Bad Items". When enabled, these sett
 - Yellow Scarf
 - Quick Powder
 - Pass Orb
+- Pretty Wing
 
 ### Generation 6
 
@@ -320,6 +321,7 @@ There are a variety of settings called "Ban Bad Items". When enabled, these sett
 - Amaze Mulch
 - Discount Coupon
 - Strange Souvenir
+- Pretty Wing
 
 ### Generation 7
 
@@ -467,3 +469,4 @@ There are a variety of settings called "Ban Bad Items". When enabled, these sett
 - Dragon Memory
 - Dark Memory
 - Fairy Memory
+- Pretty Wing

@@ -37,7 +37,7 @@ public class SysConstants {
     public static final String ISSUES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues";
 
     public static final String customNamesFile = "customnames.rncn";
-    public static final String customPCGDirectory = "data/players";
+    public static final String customPCGDirectory = "data/custom_player_graphics";
 
     // OLD custom names files
     public static final String tnamesFile = "trainernames.txt";

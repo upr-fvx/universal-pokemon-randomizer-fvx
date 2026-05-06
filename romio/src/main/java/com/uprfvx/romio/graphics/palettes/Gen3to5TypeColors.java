@@ -33,7 +33,7 @@ import java.util.Random;
 public class Gen3to5TypeColors {
 
 	private static final Map<Type, TypeColor[]> TYPE_COLORS =
-            TypeColor.readTypeColorMapFromResource("/data/Gen3to5TypeColors.txt");
+            TypeColor.readTypeColorMapFromResource("/data/type_colors/Gen3To5TypeColors.txt");
 	private static final Color DEFAULT_COLOR = new Color(0xC0C0C0);
 
 	public static TypeColor getRandomTypeColor(Type type, Random random) {

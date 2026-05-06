@@ -36,10 +36,12 @@ public class SysConstants {
     public static final String WIKI_3DS_INFO_URL = WIKI_URL + "/3ds_games.html";
     public static final String ISSUES_URL = "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues";
 
-    public static final String customNamesFile = "customnames.rncn";
-    public static final String customPCGDirectory = "data/custom_player_graphics";
+    public static final String cpgDirectory = "data/custom_player_graphics";
 
-    // OLD custom names files
+    // OLD custom names file
+    public static final String customNamesFile = "customnames.rncn";
+
+    // EVEN OLDER custom names files
     public static final String tnamesFile = "trainernames.txt";
     public static final String tclassesFile = "trainerclasses.txt";
     public static final String nnamesFile = "nicknames.txt";

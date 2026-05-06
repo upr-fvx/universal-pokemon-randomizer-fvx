@@ -32,6 +32,7 @@ import filefunctions.IOFunctions;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,17 +43,37 @@ public class CustomNamesSet {
 
     // TODO: standardize CustomNamesSet to work like the /data resources
 
+    private static final String FOLDER_PATH = "data/trainer_and_mon_names";
+    private static final String TRAINER_NAMES_PATH = FOLDER_PATH + "/TrainerNames.txt";
+    private static final String TRAINER_CLASSES_PATH = FOLDER_PATH + "/TrainerClasses.txt";
+    private static final String DOUBLES_TRAINER_NAMES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
+    private static final String DOUBLES_TRAINER_CLASSES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
+    private static final String POKEMON_NICKNAMES_PATH = FOLDER_PATH + "/PokemonNicknames.txt";
+
     private static final int CUSTOM_NAMES_VERSION = 1;
     private static final String DEFAULT_FILE_PATH = "/com/uprfvx/random/customnames/";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
-        InputStream is = openFile(SysConstants.customNamesFile);
-        CustomNamesSet cns = new CustomNamesSet(is);
-        is.close();
-        return cns;
+        // TODO: do some input checking, don't just read lines
+        try {
+            List<String> trainerNames = Files.readAllLines(Path.of(TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
+            List<String> trainerClasses = Files.readAllLines(Path.of(TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
+            List<String> doublesTrainerNames = Files.readAllLines(Path.of(DOUBLES_TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
+            List<String> doublesTrainerClasses = Files.readAllLines(Path.of(DOUBLES_TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
+            List<String> pokemonNicknames = Files.readAllLines(Path.of(POKEMON_NICKNAMES_PATH), StandardCharsets.UTF_8);
+            return new CustomNamesSet(trainerNames, trainerClasses,
+                    doublesTrainerNames, doublesTrainerClasses,
+                    pokemonNicknames);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static CustomNamesSet importOldNames() throws IOException {
+        // TODO: import RNCN files too
         CustomNamesSet cns = new CustomNamesSet();
 
         importOldTrainerNames(cns);
@@ -95,10 +116,10 @@ public class CustomNamesSet {
                     trainerClassName = trainerClassName.substring(1);
                 }
                 String checkName = trainerClassName.toLowerCase();
-                int idx = (checkName.endsWith("couple") || checkName.contains(" and ") || checkName.endsWith("kin")
+                boolean isDoubles = (checkName.endsWith("couple") || checkName.contains(" and ") || checkName.endsWith("kin")
                         || checkName.endsWith("team") || checkName.contains("&") || (checkName.endsWith("s") && !checkName
-                        .endsWith("ss"))) ? 1 : 0;
-                if (idx == 1) {
+                        .endsWith("ss")));
+                if (isDoubles) {
                     cns.doublesTrainerClasses.add(trainerClassName);
                 } else {
                     cns.trainerClasses.add(trainerClassName);
@@ -243,6 +264,7 @@ public class CustomNamesSet {
         return names;
     }
 
+    @Deprecated
     public byte[] getBytes() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         

@@ -25,7 +25,7 @@ public class CPGSelection {
         // TODO: this doesn't really belong in this class
         List<GraphicsPack> allPacks = new ArrayList<>();
 
-        File players = new File(SysConstants.customPCGDirectory);
+        File players = new File(SysConstants.cpgDirectory);
         File[] playerDirectories = players.listFiles(File::isDirectory);
         if (playerDirectories != null) {
             for (File playerDir : playerDirectories) {

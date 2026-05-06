@@ -121,7 +121,7 @@ public abstract class IniEntryReader<T extends IniEntry> {
     }
 
     public List<T> readEntriesFromFile(String fileName) throws IOException {
-        System.out.println(Paths.get(fileName).toFile().getAbsolutePath());
+//        System.out.println(Paths.get(fileName).toFile().getAbsolutePath());
         Scanner scanner = new Scanner(Files.newInputStream(Paths.get(fileName)), StandardCharsets.UTF_8);
         setFileName(fileName);
         return readEntriesFromScanner(scanner);

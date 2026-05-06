@@ -3977,8 +3977,7 @@ public class RandomizerGUI {
             if (response == JOptionPane.YES_OPTION) {
                 try {
                     CustomNamesSet newNamesData = CustomNamesSet.importOldNames();
-                    byte[] data = newNamesData.getBytes();
-                    FileFunctions.writeBytesToFile(SysConstants.customNamesFile, data);
+                    CustomNamesSet.writeNamesToFile(newNamesData);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, bundle.getString("GUI.convertNameFilesFailed"));
                 }

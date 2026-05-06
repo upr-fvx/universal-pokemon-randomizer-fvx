@@ -35,6 +35,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,8 +125,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
                 getNameList(nicknamesText)
         );
         try {
-            byte[] data = cns.getBytes();
-            FileFunctions.writeBytesToFile(RootPath.path + SysConstants.customNamesFile, data);
+            CustomNamesSet.writeNamesToFile(cns);
             pendingChanges = false;
             JOptionPane.showMessageDialog(this, "Custom names saved.");
             return true;

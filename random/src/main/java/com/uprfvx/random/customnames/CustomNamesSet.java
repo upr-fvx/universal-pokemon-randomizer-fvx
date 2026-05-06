@@ -26,7 +26,6 @@ package com.uprfvx.random.customnames;
 
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.romio.RootPath;
-import filefunctions.FileFunctions;
 import filefunctions.IOFunctions;
 
 import java.io.*;
@@ -55,21 +54,22 @@ public class CustomNamesSet {
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
         // TODO: do some input checking, don't just read lines
-        try {
-            List<String> trainerNames = Files.readAllLines(Path.of(TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
-            List<String> trainerClasses = Files.readAllLines(Path.of(TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
-            List<String> doublesTrainerNames = Files.readAllLines(Path.of(DOUBLES_TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
-            List<String> doublesTrainerClasses = Files.readAllLines(Path.of(DOUBLES_TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
-            List<String> pokemonNicknames = Files.readAllLines(Path.of(POKEMON_NICKNAMES_PATH), StandardCharsets.UTF_8);
-            return new CustomNamesSet(trainerNames, trainerClasses,
-                    doublesTrainerNames, doublesTrainerClasses,
-                    pokemonNicknames);
+        List<String> trainerNames = Files.readAllLines(Path.of(TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
+        List<String> trainerClasses = Files.readAllLines(Path.of(TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
+        List<String> doublesTrainerNames = Files.readAllLines(Path.of(DOUBLES_TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
+        List<String> doublesTrainerClasses = Files.readAllLines(Path.of(DOUBLES_TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
+        List<String> pokemonNicknames = Files.readAllLines(Path.of(POKEMON_NICKNAMES_PATH), StandardCharsets.UTF_8);
+        return new CustomNamesSet(trainerNames, trainerClasses,
+                doublesTrainerNames, doublesTrainerClasses,
+                pokemonNicknames);
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public static void writeNamesToFile(CustomNamesSet customNamesSet) throws IOException {
+        Files.write(Path.of(TRAINER_NAMES_PATH), customNamesSet.trainerNames, StandardCharsets.UTF_8);
+        Files.write(Path.of(TRAINER_CLASSES_PATH), customNamesSet.trainerClasses, StandardCharsets.UTF_8);
+        Files.write(Path.of(DOUBLES_TRAINER_NAMES_PATH), customNamesSet.doublesTrainerNames, StandardCharsets.UTF_8);
+        Files.write(Path.of(DOUBLES_TRAINER_CLASSES_PATH), customNamesSet.doublesTrainerClasses, StandardCharsets.UTF_8);
+        Files.write(Path.of(POKEMON_NICKNAMES_PATH), customNamesSet.pokemonNicknames, StandardCharsets.UTF_8);
     }
 
     public static CustomNamesSet importOldNames() throws IOException {
@@ -222,78 +222,12 @@ public class CustomNamesSet {
         this.pokemonNicknames = pokemonNicknames;
     }
 
-    public CustomNamesSet(InputStream data) throws IOException {
-        if (data.read() != CUSTOM_NAMES_VERSION) {
-            throw new IOException("Invalid custom names file provided.");
-        }
-        trainerNames = readNamesBlock(data);
-        trainerClasses = readNamesBlock(data);
-        doublesTrainerNames = readNamesBlock(data);
-        doublesTrainerClasses = readNamesBlock(data);
-        pokemonNicknames = readNamesBlock(data);
-    }
-
     public CustomNamesSet() {
         trainerNames = new ArrayList<>();
         trainerClasses = new ArrayList<>();
         doublesTrainerNames = new ArrayList<>();
         doublesTrainerClasses = new ArrayList<>();
         pokemonNicknames = new ArrayList<>();
-    }
-
-    private List<String> readNamesBlock(InputStream in) throws IOException {
-        // Read the size of the block to come.
-        byte[] szData = FileFunctions.readFullyIntoBuffer(in, 4);
-        int size = IOFunctions.readFullIntBigEndian(szData, 0);
-        if (in.available() < size) {
-            throw new IOException("Invalid size specified.");
-        }
-
-        // Read the block and translate it into a list of names.
-        byte[] namesData = FileFunctions.readFullyIntoBuffer(in, size);
-        List<String> names = new ArrayList<>();
-        Scanner sc = new Scanner(new ByteArrayInputStream(namesData), StandardCharsets.UTF_8);
-        while (sc.hasNextLine()) {
-            String name = sc.nextLine().trim();
-            if (!name.isEmpty()) {
-                names.add(name);
-            }
-        }
-        sc.close();
-
-        return names;
-    }
-
-    @Deprecated
-    public byte[] getBytes() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        baos.write(CUSTOM_NAMES_VERSION);
-
-        writeNamesBlock(baos, trainerNames);
-        writeNamesBlock(baos, trainerClasses);
-        writeNamesBlock(baos, doublesTrainerNames);
-        writeNamesBlock(baos, doublesTrainerClasses);
-        writeNamesBlock(baos, pokemonNicknames);
-
-        return baos.toByteArray();
-    }
-
-    private void writeNamesBlock(OutputStream out, List<String> names) throws IOException {
-        StringBuilder outNames = new StringBuilder();
-        boolean first = true;
-        for (String name : names) {
-            if (!first) {
-                outNames.append(System.lineSeparator());
-            }
-            first = false;
-            outNames.append(name);
-        }
-        byte[] namesData = outNames.toString().getBytes(StandardCharsets.UTF_8);
-        byte[] szData = new byte[4];
-        IOFunctions.writeFullIntBigEndian(szData, 0, namesData.length);
-        out.write(szData);
-        out.write(namesData);
     }
 
     public List<String> getTrainerNames() {

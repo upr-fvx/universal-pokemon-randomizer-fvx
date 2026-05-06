@@ -15,8 +15,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,18 +85,18 @@ public class PresetLoadDialog extends JDialog {
     }
 
     private void initListeners() {
-        presetFileButton.addActionListener(e -> onPresetFileButton());
-        romButton.addActionListener(e -> onRomButton());
+        presetFileButton.addActionListener(_ -> onPresetFileButton());
+        romButton.addActionListener(_ -> onRomButton());
 
         DocumentListener checkListener = new CheckDocumentListener();
         seedField.getDocument().addDocumentListener(checkListener);
         settingsStringField.getDocument().addDocumentListener(checkListener);
 
-        cpgUseCheckButton.addActionListener(e -> onCPGUseCheckButton());
-        cpgSelectLastButton.addActionListener(e -> onCPGSelectLastButton());
+        cpgUseCheckButton.addActionListener(_ -> onCPGUseCheckButton());
+        cpgSelectLastButton.addActionListener(_ -> onCPGSelectLastButton());
 
-        applyButton.addActionListener(e -> onApply());
-        cancelButton.addActionListener(e -> dispose());
+        applyButton.addActionListener(_ -> onApply());
+        cancelButton.addActionListener(_ -> dispose());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -233,10 +233,9 @@ public class PresetLoadDialog extends JDialog {
                 }
                 long seed = dis.readLong();
                 String preset = dis.readUTF();
-                customNames = new CustomNamesSet(dis);
                 enforceFieldCheck = false;
                 seedField.setText(Long.toString(seed));
-                settingsStringField.setText(checkInt + "" + preset);
+                settingsStringField.setText(checkInt + preset);
                 enforceFieldCheck = true;
                 if (checkValues()) {
                     seedField.setEnabled(false);
@@ -327,7 +326,7 @@ public class PresetLoadDialog extends JDialog {
         PlayerCharacterType typeToReplace = null;
         File config = new File(RootPath.path + "config.ini");
         try {
-            Scanner scanner = new Scanner(config, "UTF-8");
+            Scanner scanner = new Scanner(config, StandardCharsets.UTF_8);
             while (scanner.hasNext()) {
                 String q = scanner.nextLine().trim();
                 if (q.contains("//")) {
@@ -342,7 +341,7 @@ public class PresetLoadDialog extends JDialog {
                     }
                 }
             }
-        } catch (FileNotFoundException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
         if (cpgName == null || typeToReplace == null) {

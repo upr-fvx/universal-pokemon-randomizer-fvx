@@ -2,11 +2,13 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
+import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.InGameTrade;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +25,7 @@ public class TradeRandomizer extends Randomizer {
         boolean randomOT = settings.isRandomizeInGameTradesOTs();
         boolean randomStats = settings.isRandomizeInGameTradesIVs();
         boolean randomItem = settings.isRandomizeInGameTradesItems();
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         // Process trainer names
         List<String> trainerNames = new ArrayList<>();

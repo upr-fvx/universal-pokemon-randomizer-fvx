@@ -15,7 +15,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
     @SuppressWarnings("unchecked")
     public void randomizeTrainerNames() {
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         if (!romHandler.canChangeTrainerText()) {
             return;
@@ -141,7 +141,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
     @SuppressWarnings("unchecked")
     public void randomizeTrainerClassNames() {
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         if (!romHandler.canChangeTrainerText()) {
             return;

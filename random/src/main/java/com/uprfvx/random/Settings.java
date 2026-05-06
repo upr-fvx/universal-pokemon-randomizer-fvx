@@ -50,8 +50,6 @@ public class Settings {
 
     public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
 
-    private CustomNamesSet customNames;
-
     private String romName;
     private boolean updatedFromOldVersion = false;
     private GenRestrictions currentRestrictions = new GenRestrictions();
@@ -1283,15 +1281,6 @@ public class Settings {
     }
 
     // getters and setters
-
-    public CustomNamesSet getCustomNames() {
-        return customNames;
-    }
-
-    public Settings setCustomNames(CustomNamesSet customNames) {
-        this.customNames = customNames;
-        return this;
-    }
 
     public String getRomName() {
         return romName;

@@ -1,12 +1,15 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.random.customnames.CustomNamesSet;
+import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
 
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -41,5 +44,15 @@ public abstract class Randomizer {
     protected int applyPercentageLevelModifier(int level, int percentageLevelModifier) {
         int modifiedLevel = (int) Math.round(level * (1 + percentageLevelModifier / 100.0));
         return Math.max(1, Math.min(100, modifiedLevel));
+    }
+
+    protected CustomNamesSet getCustomNames() {
+        // just works for now as a quick refactor to remove custom names from Settings
+        // TODO: maybe not the best way of doing this; reconsider
+        try {
+            return CustomNamesSet.readNamesFromFile();
+        } catch (IOException e) {
+            throw new RandomizationException("Could not read custom names from file.");
+        }
     }
 }

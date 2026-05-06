@@ -2254,8 +2254,6 @@ public class RandomizerGUI {
 
         settings.setCurrentMiscTweaks(currentMiscTweaks);
 
-        settings.setCustomNames(customNames);
-
         return settings;
     }
 

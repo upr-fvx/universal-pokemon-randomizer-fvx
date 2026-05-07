@@ -26,9 +26,11 @@ package com.uprfvx.random.customnames;
 
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.romio.RootPath;
-import filefunctions.IOFunctions;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.zip.CRC32;
 
 public class CustomNamesSet {
 
@@ -167,43 +168,6 @@ public class CustomNamesSet {
         }
 
         return CustomNamesSet.class.getResource(DEFAULT_FILE_PATH + filename) != null;
-    }
-
-    // Custom Names use TWO custom check sum methods for whatever reason.
-    // It might be possible to replace them with something more standard,
-    // but am not looking into that now. -- voliol 2025-04-27
-
-    public static int getFileChecksum() {
-        try {
-            Scanner sc = new Scanner(openFile(SysConstants.customNamesFile), StandardCharsets.UTF_8);
-            CRC32 checksum = new CRC32();
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine().trim();
-                if (!line.isEmpty()) {
-                    checksum.update(line.getBytes(StandardCharsets.UTF_8));
-                }
-            }
-            sc.close();
-            return (int) checksum.getValue();
-        } catch (IOException e) {
-            return 0;
-        }
-    }
-
-    public static boolean checkOtherCRC(byte[] data, int byteIndex, int switchIndex, int offsetInData) {
-        // If the switch at data[byteIndex].switchIndex is on, then check that
-        // the CRC at data[offsetInData] ... data[offsetInData+3] matches the
-        // CRC of filename.
-        // If not, return false.
-        // If any other case, return true.
-        int switches = data[byteIndex] & 0xFF;
-        if (((switches >> switchIndex) & 0x01) == 0x01) {
-            // have to check the CRC
-            int crc = IOFunctions.readFullIntBigEndian(data, offsetInData);
-
-            return getFileChecksum() == crc;
-        }
-        return true;
     }
 
     private final List<String> trainerNames;

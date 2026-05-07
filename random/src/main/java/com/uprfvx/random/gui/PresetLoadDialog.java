@@ -1,8 +1,8 @@
 package com.uprfvx.random.gui;
 
+import com.uprfvx.random.Settings;
 import com.uprfvx.random.Version;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -18,10 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
@@ -149,13 +146,9 @@ public class PresetLoadDialog extends JDialog {
         }
 
         try {
-            name = parentGUI.getValidRequiredROMName(configString.substring(3), customNames);
-        } catch (InvalidSupplementFilesException ex) {
-            safelyClearFields();
-            invalidValues();
-            return false;
+            name = getValidRequiredROMName(configString.substring(3));
         } catch (Exception ex) {
-            // other exception, just call it invalid for now
+            safelyClearFields();
             invalidValues();
             return false;
         }
@@ -175,6 +168,29 @@ public class PresetLoadDialog extends JDialog {
             disableCPGSelection();
         }
         return true;
+    }
+
+    private String getValidRequiredROMName(String config) {
+        validateConfigString(config);
+        byte[] data = Base64.getDecoder().decode(config);
+
+        int nameLength = data[Settings.LENGTH_OF_SETTINGS_DATA] & 0xFF;
+        if (data.length != Settings.TOTAL_LENGTH_EXCEPT_NAME + nameLength) {
+            return null; // not valid length
+        }
+        return new String(data, Settings.LENGTH_OF_SETTINGS_DATA + Settings.LENGTH_OF_NAME_LENGTH, nameLength,
+                StandardCharsets.US_ASCII);
+    }
+
+    private void validateConfigString(String config) {
+        byte[] data = Base64.getDecoder().decode(config);
+
+        if (data.length < Settings.TOTAL_LENGTH_EXCEPT_NAME) {
+            throw new IllegalArgumentException("The preset config is too short to be valid");
+        }
+        if (Settings.hasInvalidChecksum(data)) {
+            throw new IllegalArgumentException("Checksum failure.");
+        }
     }
 
     private void promptForDifferentRandomizerVersion(int presetVN) {

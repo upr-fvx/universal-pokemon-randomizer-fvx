@@ -25,7 +25,6 @@ package com.uprfvx.random.gui;
 import com.uprfvx.random.*;
 import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
@@ -39,7 +38,6 @@ import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
 import com.uprfvx.romio.romio.RomOpener;
-import filefunctions.FileFunctions;
 import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
@@ -2319,55 +2317,6 @@ public class RandomizerGUI {
             } else {
                 JOptionPane.showMessageDialog(mainPanel, bundle.getString(noLogMessageKey));
             }
-        }
-    }
-
-    public String getValidRequiredROMName(String config, CustomNamesSet customNames)
-            throws InvalidSupplementFilesException {
-        try {
-            validatePresetSupplementFiles(config, customNames);
-        } catch (InvalidSupplementFilesException e) {
-            switch (e.getType()) {
-                case CUSTOM_NAMES:
-                    JOptionPane.showMessageDialog(null, bundle.getString("GUI.presetDifferentCustomNames"));
-                    break;
-                default:
-                    throw e;
-            }
-        }
-        byte[] data = Base64.getDecoder().decode(config);
-
-        int nameLength = data[Settings.LENGTH_OF_SETTINGS_DATA] & 0xFF;
-        if (data.length != Settings.LENGTH_OF_SETTINGS_DATA + 9 + nameLength) {
-            return null; // not valid length
-        }
-        return new String(data, Settings.LENGTH_OF_SETTINGS_DATA + 1, nameLength, StandardCharsets.US_ASCII);
-    }
-
-    public void validatePresetSupplementFiles(String config, CustomNamesSet customNames)
-            throws InvalidSupplementFilesException {
-        byte[] data = Base64.getDecoder().decode(config);
-
-        if (data.length < Settings.LENGTH_OF_SETTINGS_DATA + 9) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.UNKNOWN,
-                    "The preset config is too short to be valid");
-        }
-
-        // Check the checksum
-        ByteBuffer buf = ByteBuffer.allocate(4).put(data, data.length - 8, 4);
-        buf.rewind();
-        int crc = buf.getInt();
-
-        CRC32 checksum = new CRC32();
-        checksum.update(data, 0, data.length - 8);
-        if ((int) checksum.getValue() != crc) {
-            throw new IllegalArgumentException("Checksum failure.");
-        }
-
-        // Check the trainerclass & trainernames & nicknames crc
-        if (customNames == null && !CustomNamesSet.checkOtherCRC(data, 16, 4, data.length - 4)) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
-                    "Can't use this preset because you have a different set of custom names to the creator.");
         }
     }
 

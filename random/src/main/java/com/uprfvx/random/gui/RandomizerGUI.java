@@ -1176,14 +1176,8 @@ public class RandomizerGUI {
         long seed = SeedPicker.pickSeed();
         presetMode = false;
 
-        try {
-            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            CustomPlayerGraphics cpg = getCPGFromGUI();
-            performRandomization(fh.getAbsolutePath(), seed, cns, cpg, outputType == SaveType.DIRECTORY);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
-        }
+        CustomPlayerGraphics cpg = getCPGFromGUI();
+        performRandomization(fh.getAbsolutePath(), seed, cpg, outputType == SaveType.DIRECTORY);
     }
 
     private CustomPlayerGraphics getCPGFromGUI() {
@@ -1256,9 +1250,9 @@ public class RandomizerGUI {
     }
 
     private void performRandomization(final String filename, final long seed,
-                                      CustomNamesSet customNames, CustomPlayerGraphics cpg,
+                                      CustomPlayerGraphics cpg,
                                       boolean saveAsDirectory) {
-        final Settings settings = createSettingsFromState(customNames);
+        final Settings settings = createSettingsFromState();
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup log
@@ -1371,14 +1365,9 @@ public class RandomizerGUI {
 
         } else if (!batchRandomization) {
             // Compile a config string
-            try {
-                String configString = getCurrentSettings().toString();
-                // Show the preset maker
-                new PresetMakeDialog(frame, seed, configString);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.cantLoadCustomNames"));
-            }
+            String configString = getCurrentSettings().toString();
+            // Show the preset maker
+            new PresetMakeDialog(frame, seed, configString);
         }
 
         // Done
@@ -1470,7 +1459,7 @@ public class RandomizerGUI {
             if (allowed && fh != null) {
                 // Apply the seed we were given
                 presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), customPlayerGraphics, outputType == SaveType.DIRECTORY);
+                performRandomization(fh.getAbsolutePath(), seed, customPlayerGraphics, outputType == SaveType.DIRECTORY);
             }
         }
 
@@ -1585,13 +1574,9 @@ public class RandomizerGUI {
         String currentSettingsString = "Current Settings String:";
         JTextField currentSettingsStringField = new JTextField();
         currentSettingsStringField.setEditable(false);
-        try {
-            String theSettingsString = getCurrentSettings().toString();
-            currentSettingsStringField.setColumns(Settings.LENGTH_OF_SETTINGS_DATA * 2);
-            currentSettingsStringField.setText(theSettingsString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String theSettingsString = getCurrentSettings().toString();
+        currentSettingsStringField.setColumns(Settings.LENGTH_OF_SETTINGS_DATA * 2);
+        currentSettingsStringField.setText(theSettingsString);
         String loadSettingsString = "Load Settings String:";
         JTextField loadSettingsStringField = new JTextField();
         Object[] messages = {currentSettingsString,currentSettingsStringField,loadSettingsString,loadSettingsStringField};
@@ -2010,7 +1995,7 @@ public class RandomizerGUI {
         this.enableOrDisableSubControls();
     }
 
-    private Settings createSettingsFromState(CustomNamesSet customNames) {
+    private Settings createSettingsFromState() {
         Settings settings = new Settings();
         settings.setRomName(this.romHandler.getROMName());
 
@@ -2255,8 +2240,8 @@ public class RandomizerGUI {
         return settings;
     }
 
-    private Settings getCurrentSettings() throws IOException {
-        return createSettingsFromState(CustomNamesSet.readNamesFromFile());
+    private Settings getCurrentSettings() {
+        return createSettingsFromState();
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,

@@ -263,7 +263,6 @@ public class PresetLoadDialog extends JDialog {
                     seedField.setEnabled(true);
                     settingsStringField.setEnabled(true);
                     presetFileField.setText("");
-                    customNames = null;
                     JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
                 }
                 dis.close();
@@ -389,13 +388,6 @@ public class PresetLoadDialog extends JDialog {
     }
 
     private void onApply() {
-        if (customNames == null) {
-            try {
-                customNames = CustomNamesSet.readNamesFromFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         if (cpgUseCheckButton.isSelected()) {
             customPlayerGraphics = cpgSelection.getCustomPlayerGraphics();
         }
@@ -417,10 +409,6 @@ public class PresetLoadDialog extends JDialog {
 
     public String getSettingsString() {
         return settingsStringField.getText();
-    }
-
-    public CustomNamesSet getCustomNames() {
-        return customNames;
     }
 
     public CustomPlayerGraphics getCustomPlayerGraphics() {

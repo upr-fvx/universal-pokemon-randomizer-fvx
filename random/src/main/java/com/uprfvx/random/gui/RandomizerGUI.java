@@ -25,6 +25,7 @@ package com.uprfvx.random.gui;
 import com.uprfvx.random.*;
 import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
+import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
@@ -3892,25 +3893,13 @@ public class RandomizerGUI {
     }
 
     private void checkCustomNames() {
-        String[] cnamefiles = new String[] { SysConstants.tnamesFile, SysConstants.tclassesFile,
-                SysConstants.nnamesFile, SysConstants.customNamesFile };
-
-        boolean foundFile = false;
-        for (int file = 0; file < 3; file++) {
-            File currentFile = new File(RootPath.path + cnamefiles[file]);
-            if (currentFile.exists()) {
-                foundFile = true;
-                break;
-            }
-        }
-
-        if (foundFile) {
+        if (OldCustomNamesImporter.hasOldNamesToImport()) {
             int response = JOptionPane.showConfirmDialog(frame,
                     bundle.getString("GUI.convertNameFilesDialog.text"),
                     bundle.getString("GUI.convertNameFilesDialog.title"), JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 try {
-                    CustomNamesSet newNamesData = CustomNamesSet.importOldNames();
+                    CustomNamesSet newNamesData = OldCustomNamesImporter.importOldNames();
                     CustomNamesSet.writeNamesToFile(newNamesData);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, bundle.getString("GUI.convertNameFilesFailed"));
@@ -3920,7 +3909,6 @@ public class RandomizerGUI {
             haveCheckedCustomNames = true;
             attemptWriteConfig();
         }
-
     }
 
     private void attemptReadConfig() {

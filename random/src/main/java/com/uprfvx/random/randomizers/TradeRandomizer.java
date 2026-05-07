@@ -2,13 +2,11 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.InGameTrade;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +30,7 @@ public class TradeRandomizer extends Randomizer {
         // Check for the file
         if (randomOT) {
             int maxOT = romHandler.maxTradeOTNameLength();
-            for (String trainername : customNames.getTrainerNames()) {
+            for (String trainername : customNames.trainerNames()) {
                 int len = romHandler.internalStringLength(trainername);
                 if (len <= maxOT && !trainerNames.contains(trainername)) {
                     trainerNames.add(trainername);
@@ -45,7 +43,7 @@ public class TradeRandomizer extends Randomizer {
         // Check for the file
         if (randomNickname) {
             int maxNN = romHandler.maxTradeNicknameLength();
-            for (String nickname : customNames.getPokemonNicknames()) {
+            for (String nickname : customNames.pokemonNicknames()) {
                 int len = romHandler.internalStringLength(nickname);
                 if (len <= maxNN && !nicknames.contains(nickname)) {
                     nicknames.add(nickname);

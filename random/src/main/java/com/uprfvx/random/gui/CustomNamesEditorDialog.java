@@ -28,14 +28,12 @@ package com.uprfvx.random.gui;
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.romio.RootPath;
-import filefunctions.FileFunctions;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,24 +55,25 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         // load trainer names etc
         try {
             CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            populateNames(trainerNamesText, cns.getTrainerNames());
-            populateNames(trainerClassesText, cns.getTrainerClasses());
-            populateNames(doublesTrainerNamesText, cns.getDoublesTrainerNames());
-            populateNames(doublesTrainerClassesText, cns.getDoublesTrainerClasses());
-            populateNames(nicknamesText, cns.getPokemonNicknames());
+            populateNames(trainerNamesText, cns.trainerNames());
+            populateNames(trainerClassesText, cns.trainerClasses());
+            populateNames(doublesTrainerNamesText, cns.doublesTrainerNames());
+            populateNames(doublesTrainerClassesText, cns.doublesTrainerClasses());
+            populateNames(nicknamesText, cns.pokemonNicknames());
         } catch (IOException ex) {
             java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(CustomNamesEditorDialog.this,
                     "Your custom names file is for a different randomizer version or otherwise corrupt."));
         }
 
         // dialog if there's no custom names file yet
-        if (!new File(RootPath.path + SysConstants.customNamesFile).exists()) {
-            java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(
-                    CustomNamesEditorDialog.this,
-                    String.format(
-                            "Welcome to the custom names editor!\nThis is where you can edit the names used for options like \"Randomize Trainer Names\".\nThe names are initially populated with a few default names included with the randomizer.\nYou can share your customized name sets with others, too!\nJust send them the %s file created in the randomizer directory.",
-                            SysConstants.customNamesFile)));
-        }
+        // TODO: re-enable this logic somehow without depending on RNCN
+//        if (!new File(RootPath.path + SysConstants.customNamesFile).exists()) {
+//            java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(
+//                    CustomNamesEditorDialog.this,
+//                    String.format(
+//                            "Welcome to the custom names editor!\nThis is where you can edit the names used for options like \"Randomize Trainer Names\".\nThe names are initially populated with a few default names included with the randomizer.\nYou can share your customized name sets with others, too!\nJust send them the %s file created in the randomizer directory.",
+//                            SysConstants.customNamesFile)));
+//        }
 
         pendingChanges = false;
 

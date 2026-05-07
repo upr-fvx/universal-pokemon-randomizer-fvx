@@ -38,12 +38,4 @@ public class SysConstants {
 
     public static final String cpgDirectory = "data/custom_player_graphics";
 
-    // OLD custom names file
-    public static final String customNamesFile = "customnames.rncn";
-
-    // EVEN OLDER custom names files
-    public static final String tnamesFile = "trainernames.txt";
-    public static final String tclassesFile = "trainerclasses.txt";
-    public static final String nnamesFile = "nicknames.txt";
-
 }

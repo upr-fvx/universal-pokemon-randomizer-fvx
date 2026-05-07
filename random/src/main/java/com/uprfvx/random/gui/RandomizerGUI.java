@@ -3893,7 +3893,7 @@ public class RandomizerGUI {
 
     private void checkCustomNames() {
         String[] cnamefiles = new String[] { SysConstants.tnamesFile, SysConstants.tclassesFile,
-                SysConstants.nnamesFile };
+                SysConstants.nnamesFile, SysConstants.customNamesFile };
 
         boolean foundFile = false;
         for (int file = 0; file < 3; file++) {

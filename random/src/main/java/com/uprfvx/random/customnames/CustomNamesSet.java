@@ -26,11 +26,10 @@ package com.uprfvx.random.customnames;
 
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.romio.RootPath;
+import filefunctions.FileFunctions;
+import filefunctions.IOFunctions;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,6 +49,7 @@ public class CustomNamesSet {
     private static final String DOUBLES_TRAINER_CLASSES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
     private static final String POKEMON_NICKNAMES_PATH = FOLDER_PATH + "/PokemonNicknames.txt";
 
+    // TODO: rename these wacky ones
     private static final int CUSTOM_NAMES_VERSION = 1;
     private static final String DEFAULT_FILE_PATH = "/com/uprfvx/random/customnames/";
 
@@ -74,19 +74,68 @@ public class CustomNamesSet {
     }
 
     public static CustomNamesSet importOldNames() throws IOException {
-        // TODO: import RNCN files too
-        CustomNamesSet cns = new CustomNamesSet();
-
-        importOldTrainerNames(cns);
-        importOldTrainerClasses(cns);
-        importOldNicknames(cns);
-
-        return cns;
+        if (fileExists(SysConstants.tnamesFile)) {
+            return readRNCNFile(SysConstants.tnamesFile);
+        } else if (fileExists(SysConstants.tnamesFile) ||
+                fileExists(SysConstants.tclassesFile) || fileExists(SysConstants.nnamesFile)) {
+            return readPreRNCNTextFiles(SysConstants.tnamesFile, SysConstants.tclassesFile, SysConstants.nnamesFile);
+        } else {
+            throw new IOException("Neither RNCN file nor pre-RNCN text name files could be found.");
+        }
     }
 
-    private static void importOldTrainerNames(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.tnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tnamesFile), StandardCharsets.UTF_8);
+    // public for testing
+    public static CustomNamesSet readRNCNFile(String path) throws IOException {
+        InputStream data = openFile(path);
+        if (data.read() != CUSTOM_NAMES_VERSION) {
+            throw new IOException("Invalid custom names file provided.");
+        }
+        return new CustomNamesSet(readRNCNBlock(data), readRNCNBlock(data),
+                readRNCNBlock(data), readRNCNBlock(data),
+                readRNCNBlock(data));
+    }
+
+    private static List<String> readRNCNBlock(InputStream in) throws IOException {
+        // Read the size of the block to come.
+        byte[] szData = FileFunctions.readFullyIntoBuffer(in, 4);
+        int size = IOFunctions.readFullIntBigEndian(szData, 0);
+        if (in.available() < size) {
+            throw new IOException("Invalid size specified.");
+        }
+
+        // Read the block and translate it into a list of names.
+        byte[] namesData = FileFunctions.readFullyIntoBuffer(in, size);
+        List<String> names = new ArrayList<>();
+        Scanner sc = new Scanner(new ByteArrayInputStream(namesData), StandardCharsets.UTF_8);
+        while (sc.hasNextLine()) {
+            String name = sc.nextLine().trim();
+            if (!name.isEmpty()) {
+                names.add(name);
+            }
+        }
+        sc.close();
+
+        return names;
+    }
+
+    // public for testing
+    public static CustomNamesSet readPreRNCNTextFiles(String trainerPath, String classesPath, String nicknamesPath)
+            throws IOException {
+        SinglesAndDoublesNames trainerNames = importOldTrainerNames(trainerPath);
+        SinglesAndDoublesNames trainerClasses = importOldTrainerClasses(classesPath);
+        List<String> pokemonNicknames = importOldNicknames(nicknamesPath);
+
+        return new CustomNamesSet(trainerNames.singles, trainerClasses.singles,
+                trainerNames.doubles, trainerClasses.doubles,
+                pokemonNicknames);
+    }
+
+    private record SinglesAndDoublesNames(List<String> singles, List<String> doubles) { }
+
+    private static SinglesAndDoublesNames importOldTrainerNames(String path) throws IOException {
+        SinglesAndDoublesNames trainerNames = new SinglesAndDoublesNames(new ArrayList<>(), new ArrayList<>());
+        if (fileExists(path)) {
+            Scanner sc = new Scanner(openFile(path), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String trainername = sc.nextLine().trim();
                 if (trainername.isEmpty()) {
@@ -96,18 +145,20 @@ public class CustomNamesSet {
                     trainername = trainername.substring(1);
                 }
                 if (trainername.contains("&")) {
-                    cns.doublesTrainerNames.add(trainername);
+                    trainerNames.doubles.add(trainername);
                 } else {
-                    cns.trainerNames.add(trainername);
+                    trainerNames.singles.add(trainername);
                 }
             }
             sc.close();
         }
+        return trainerNames;
     }
 
-    private static void importOldTrainerClasses(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.tclassesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tclassesFile), StandardCharsets.UTF_8);
+    private static SinglesAndDoublesNames importOldTrainerClasses(String path) throws IOException {
+        SinglesAndDoublesNames trainerClasses = new SinglesAndDoublesNames(new ArrayList<>(), new ArrayList<>());
+        if (fileExists(path)) {
+            Scanner sc = new Scanner(openFile(path), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String trainerClassName = sc.nextLine().trim();
                 if (trainerClassName.isEmpty()) {
@@ -121,18 +172,20 @@ public class CustomNamesSet {
                         || checkName.endsWith("team") || checkName.contains("&") || (checkName.endsWith("s") && !checkName
                         .endsWith("ss")));
                 if (isDoubles) {
-                    cns.doublesTrainerClasses.add(trainerClassName);
+                    trainerClasses.doubles.add(trainerClassName);
                 } else {
-                    cns.trainerClasses.add(trainerClassName);
+                    trainerClasses.singles.add(trainerClassName);
                 }
             }
             sc.close();
         }
+        return trainerClasses;
     }
 
-    private static void importOldNicknames(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.nnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.nnamesFile), StandardCharsets.UTF_8);
+    private static List<String> importOldNicknames(String path) throws IOException {
+        List<String> pokemonNicknames = new ArrayList<>();
+        if (fileExists(path)) {
+            Scanner sc = new Scanner(openFile(path), StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 String nickname = sc.nextLine().trim();
                 if (nickname.isEmpty()) {
@@ -141,10 +194,11 @@ public class CustomNamesSet {
                 if (nickname.startsWith("\uFEFF")) {
                     nickname = nickname.substring(1);
                 }
-                cns.pokemonNicknames.add(nickname);
+                pokemonNicknames.add(nickname);
             }
             sc.close();
         }
+        return pokemonNicknames;
     }
 
     private static InputStream openFile(String filename) throws IOException {
@@ -184,14 +238,6 @@ public class CustomNamesSet {
         this.doublesTrainerNames = doublesTrainerNames;
         this.doublesTrainerClasses = doublesTrainerClasses;
         this.pokemonNicknames = pokemonNicknames;
-    }
-
-    public CustomNamesSet() {
-        trainerNames = new ArrayList<>();
-        trainerClasses = new ArrayList<>();
-        doublesTrainerNames = new ArrayList<>();
-        doublesTrainerClasses = new ArrayList<>();
-        pokemonNicknames = new ArrayList<>();
     }
 
     public List<String> getTrainerNames() {

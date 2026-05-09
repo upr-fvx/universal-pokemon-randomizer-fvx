@@ -1391,9 +1391,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						int pknum = readLong(b, 108 + 4 * i);
 						if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
 							Species pk = pokes[pknum];
-							Encounter enc = new Encounter();
-							enc.setLevel(walkingArea.get(Gen4Constants.dpptAlternateSlots[i + 2]).getLevel());
-							enc.setSpecies(pk);
+                            int level = walkingArea.get(Gen4Constants.dpptAlternateSlots[i + 2]).getLevel();
+							Encounter enc = new Encounter(pk, level);
 							walkingArea.add(enc);
 						}
 					}
@@ -1415,9 +1414,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					int pknum = readLong(b, offs);
 					if (pknum >= 1 && pknum <= Gen4Constants.pokemonCount) {
 						Species pk = pokes[pknum];
-						Encounter enc = new Encounter();
-						enc.setLevel(walkingArea.get(Gen4Constants.dpptAlternateSlots[i]).getLevel());
-						enc.setSpecies(pk);
+                        int level = walkingArea.get(Gen4Constants.dpptAlternateSlots[i]).getLevel();
+						Encounter enc = new Encounter(pk, level);
 						condsArea.add(enc);
 					}
 				}
@@ -1576,9 +1574,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < amount; i++) {
 			int level = readLong(data, offset + i * 8);
 			int pokemon = readLong(data, offset + 4 + i * 8);
-			Encounter enc = new Encounter();
-			enc.setLevel(level);
-			enc.setSpecies(pokes[pokemon]);
+			Encounter enc = new Encounter(pokes[pokemon], level);
 			encounters.add(enc);
 		}
 		return encounters;
@@ -1587,12 +1583,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private List<Encounter> readSeaEncountersDPPt(byte[] data, int offset, int amount) {
 		List<Encounter> encounters = new ArrayList<>();
 		for (int i = 0; i < amount; i++) {
-			int level = readLong(data, offset + i * 8);
+			int level = readLong(data, offset + i * 8) >> 8;
+            int maxLevel = readLong(data, offset + i * 8) & 0xFF;
 			int pokemon = readLong(data, offset + 4 + i * 8);
-			Encounter enc = new Encounter();
-			enc.setLevel(level >> 8);
-			enc.setMaxLevel(level & 0xFF);
-			enc.setSpecies(pokes[pokemon]);
+			Encounter enc = new Encounter(pokes[pokemon], level);
+			enc.setMaxLevel(maxLevel);
 			encounters.add(enc);
 		}
 		return encounters;
@@ -1603,9 +1598,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		area.setRate(1);
 		for (int i = 0; i < amount; i++) {
 			int pokemon = readLong(data, offset + i * 4);
-			Encounter e = new Encounter();
-			e.setLevel(1);
-			e.setSpecies(pokes[pokemon]);
+			Encounter e = new Encounter(pokes[pokemon], 1);
 			area.add(e);
 		}
 		return area;
@@ -1826,9 +1819,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < amount; i++) {
 			int pokemon = readWord(data, offset + i * 2);
 			if (pokemon != 0) {
-				Encounter enc = new Encounter();
-				enc.setLevel(1);
-				enc.setSpecies(pokes[pokemon]);
+				Encounter enc = new Encounter(pokes[pokemon], 1);
 				area.add(enc);
 			}
 		}
@@ -1846,12 +1837,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private List<Encounter> readSeaEncountersHGSS(byte[] data, int offset, int amount) {
 		List<Encounter> encounters = new ArrayList<>();
 		for (int i = 0; i < amount; i++) {
-			int level = readWord(data, offset + i * 4);
+			int level = readWord(data, offset + i * 4) & 0xFF;
+            int maxLevel = readWord(data, offset + i * 4) >> 8;
 			int pokemon = readWord(data, offset + 2 + i * 4);
-			Encounter enc = new Encounter();
-			enc.setLevel(level & 0xFF);
-			enc.setMaxLevel(level >> 8);
-			enc.setSpecies(pokes[pokemon]);
+			Encounter enc = new Encounter(pokes[pokemon], level);
+			enc.setMaxLevel(maxLevel);
 			encounters.add(enc);
 		}
 		return encounters;
@@ -1863,10 +1853,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < amount; i++) {
 			int pokemon = readWord(data, offset + i * 4);
 			if (pokemon != 0) {
-				Encounter enc = new Encounter();
-				enc.setLevel(data[offset + 2 + i * 4]);
+                int level = readWord(data, offset + 2 + i * 4) & 0xFF;
+				Encounter enc = new Encounter(pokes[pokemon], level);
 				enc.setMaxLevel(data[offset + 3 + i * 4]);
-				enc.setSpecies(pokes[pokemon]);
 				area.add(enc);
 			}
 		}
@@ -1879,10 +1868,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < amount; i++) {
 			int pokemon = readWord(data, offset + i * 8);
 			if (pokemon != 0) {
-				Encounter enc = new Encounter();
-				enc.setLevel(data[offset + 2 + i * 8]);
+                int level = data[offset + 2 + i * 8];
+				Encounter enc = new Encounter(pokes[pokemon], level);
 				enc.setMaxLevel(data[offset + 3 + i * 8]);
-				enc.setSpecies(pokes[pokemon]);
 				area.add(enc);
 			}
 		}
@@ -1907,10 +1895,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private Encounter cloneEncounterAndReplacePokemon(Encounter enc, Species pkmn) {
-		Encounter clone = new Encounter();
-		clone.setLevel(enc.getLevel());
+		Encounter clone = new Encounter(pkmn, enc.getLevel());
 		clone.setMaxLevel(enc.getMaxLevel());
-		clone.setSpecies(pkmn);
 		return clone;
 	}
 
@@ -2303,9 +2289,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private List<Encounter> stitchEncsToLevels(Species[] species, int[] levels) {
 		List<Encounter> encounters = new ArrayList<>();
 		for (int i = 0; i < species.length; i++) {
-			Encounter enc = new Encounter();
-			enc.setLevel(levels[i]);
-			enc.setSpecies(species[i]);
+			Encounter enc = new Encounter(species[i], levels[i]);
 			encounters.add(enc);
 		}
 		return encounters;

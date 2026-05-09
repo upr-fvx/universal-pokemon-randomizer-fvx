@@ -30,6 +30,7 @@ import java.util.Objects;
  */
 public class StaticEncounter {
     // TODO: internally some encounters can't be alt formes; enforce it at this level
+    // TODO: test cases
 
     private Species baseSpecies;
     private int formeNumber = 0;
@@ -89,7 +90,6 @@ public class StaticEncounter {
         }
     }
 
-
     public Species getSpecies() {
         return baseSpecies.getForme(formeNumber);
     }
@@ -114,7 +114,7 @@ public class StaticEncounter {
      * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
      */
     public void setFormeNumber(int formeNumber) {
-        if (baseSpecies.isValidFormeNumber(formeNumber)) {
+        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
             throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
                     + baseSpecies.getNumberAndFullName());
         }

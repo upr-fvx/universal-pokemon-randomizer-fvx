@@ -372,10 +372,8 @@ public class TestRomHandler extends AbstractRomHandler {
             copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
 
             for(Encounter origEnc : originalArea) {
-                Encounter copyEnc = new Encounter();
-                copyEnc.setLevel(origEnc.getLevel());
+                Encounter copyEnc = new Encounter(originalToTest.get(origEnc.getSpecies()), origEnc.getLevel());
                 copyEnc.setMaxLevel(origEnc.getMaxLevel());
-                copyEnc.setSpecies(originalToTest.get(origEnc.getSpecies()));
                 copyEnc.setFormeNumber(origEnc.getFormeNumber());
                 copyEnc.setSOS(origEnc.isSOS());
                 copyEnc.setSosType(origEnc.getSosType());

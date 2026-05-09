@@ -1,8 +1,6 @@
 package com.uprfvx.romio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  Encounter.java - contains one wild Pokemon slot                       --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,16 +22,54 @@ package com.uprfvx.romio.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Contains one wild Pokemon slot
+ */
 public class Encounter {
 
+    private Species baseSpecies;
+    private int formeNumber;
     private int level;
     private int maxLevel;
-    private Species species;
-    private int formeNumber;
 
     // Used only for Gen 7's SOS mechanic
     private boolean isSOS;
     private SOSType sosType;
+
+    public Encounter (Species species, int level) {
+        setSpecies(species);
+        this.level = level;
+    }
+
+    public Species getSpecies() {
+        return baseSpecies.getForme(formeNumber);
+    }
+
+    public void setSpecies(Species species) {
+        this.baseSpecies = species.getBaseForme();
+        this.formeNumber = species.getFormeNumber();
+    }
+
+    public Species getBaseSpecies() {
+        return baseSpecies;
+    }
+
+    public int getFormeNumber() {
+        return formeNumber;
+    }
+
+    /**
+     * Sets the formeNumber.
+     * @param formeNumber The forme number to set.
+     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     */
+    public void setFormeNumber(int formeNumber) {
+        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
+            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
+                    + baseSpecies.getNumberAndFullName());
+        }
+        this.formeNumber = formeNumber;
+    }
 
     public int getLevel() {
         return level;
@@ -49,25 +85,6 @@ public class Encounter {
 
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
-    }
-
-    public Species getSpecies() {
-        return species;
-    }
-    //TODO: determine which uses of this need base forme, have those call Species.baseForme
-    //(Thus allowing us to store the actually-used forme here,
-    //solving some problems)
-
-    public void setSpecies(Species species) {
-        this.species = species;
-    }
-
-    public int getFormeNumber() {
-        return formeNumber;
-    }
-
-    public void setFormeNumber(int formeNumber) {
-        this.formeNumber = formeNumber;
     }
 
     public boolean isSOS() {
@@ -88,21 +105,17 @@ public class Encounter {
 
     @Override
     public String toString() {
-        if (species == null) {
-            return "ERROR";
-        }
         if (maxLevel == 0) {
-            return species.getName() + " Lv" + level;
+            return getSpecies().getFullName() + " Lv" + level;
         } else {
-            return species.getName() + " Lvs " + level + "-" + maxLevel;
+            return getSpecies().getFullName() + " Lvs " + level + "-" + maxLevel;
         }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Encounter) {
-            Encounter other = (Encounter) o;
-            return level == other.level && maxLevel == other.maxLevel && species.equals(other.species)
+        if (o instanceof Encounter other) {
+            return level == other.level && maxLevel == other.maxLevel && baseSpecies.equals(other.baseSpecies)
                     && formeNumber == other.formeNumber && isSOS == other.isSOS && sosType == other.sosType;
         }
         return false;

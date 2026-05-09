@@ -1385,20 +1385,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < amount; i++) {
             int species = readWord(data, offset + i * 4) & 0x7FF;
             int forme = readWord(data, offset + i * 4) >> 11;
+            int level = data[offset + 2 + i * 4];
+            int maxLevel = data[offset + 3 + i * 4];
             if (species != 0) {
-                Encounter e = new Encounter();
                 Species pk = pokes[species];
                 // Formes 30 and 31, aren't actually formes, but
                 // rather act as indicators for what forme should appear when encountered:
                 // 30 = Spawn the cosmetic forme specific to the user's region (Scatterbug line)
                 // 31 = Spawn *any* cosmetic forme with equal probability (Unown Mirage Cave)
-                if (forme != 30 && forme != 31) {
-                    pk = pk.getForme(forme);
+                if (forme == 30 || forme == 31) {
+                    forme = 0;
                 }
+                Encounter e = new Encounter(pk, level);
                 e.setSpecies(pk);
                 e.setFormeNumber(forme);
-                e.setLevel(data[offset + 2 + i * 4]);
-                e.setMaxLevel(data[offset + 3 + i * 4]);
+                e.setMaxLevel(maxLevel);
                 area.add(e);
             }
         }
@@ -1411,10 +1412,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int species = readWord(data, offset + 4 + i * 8);
             int level = data[offset + 8 + i * 8];
             if (species != 0) {
-                Encounter e = new Encounter();
-                e.setSpecies(pokes[species]);
+                Encounter e = new Encounter(pokes[species], level);
                 e.setFormeNumber(0);
-                e.setLevel(level);
                 e.setMaxLevel(level);
                 area.add(e);
             }

@@ -842,21 +842,21 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     private List<Encounter> readEncounters(byte[] data, int offset, int number) {
         List<Encounter> encounters = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            Encounter enc = new Encounter();
             int speciesID = readWord(data, offset + i * 4) & 0x7FF;
             int forme = readWord(data, offset + i * 4) >> 11;
+            int level = data[offset + 2 + i * 4] & 0xFF;
+            int maxLevel = data[offset + 3 + i * 4] & 0xFF;
             Species pk = pokes[speciesID];
             // In Black 2, there is one (1) faulty encounter for Corphish "forme 1",
             // (probably because of Basculin data right next to it, it also has forme 1 only in Black 2).
             // In any case we don't want that GameFreak typo to crash the Randomizer,
-            // so we ignore forme checking for Corphish.
-            if (forme != 30 && forme != 31 && speciesID != SpeciesIDs.corphish) {
-                pk = pk.getForme(forme);
+            // so we ignore forme setting for Corphish.
+            if (forme == 30 || forme == 31 || speciesID == SpeciesIDs.corphish) {
+                forme = 0;
             }
-            enc.setSpecies(pk);
+            Encounter enc = new Encounter(pk, level);
             enc.setFormeNumber(forme);
-            enc.setLevel(data[offset + 2 + i * 4] & 0xFF);
-            enc.setMaxLevel(data[offset + 3 + i * 4] & 0xFF);
+            enc.setMaxLevel(maxLevel);
             encounters.add(enc);
         }
         return encounters;

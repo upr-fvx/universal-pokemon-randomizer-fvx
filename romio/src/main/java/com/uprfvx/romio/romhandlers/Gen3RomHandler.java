@@ -1503,10 +1503,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // Read the entries
         for (int i = 0; i < numOfEntries; i++) {
             // min, max, species, species
-            Encounter enc = new Encounter();
-            enc.setLevel(rom[dataOffset + i * 4]);
+            Species pk = pokesInternal[readWord(dataOffset + i * 4 + 2)];
+            int level = rom[dataOffset + i * 4] & 0xFF;
+            Encounter enc = new Encounter(pk, level);
             enc.setMaxLevel(rom[dataOffset + i * 4 + 1]);
-            enc.setSpecies(pokesInternal[readWord(dataOffset + i * 4 + 2)]);
             area.add(enc);
         }
         return area;

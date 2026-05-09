@@ -49,10 +49,8 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
 
             for(Encounter origEnc : originalArea) {
-                Encounter copyEnc = new Encounter();
-                copyEnc.setLevel(origEnc.getLevel());
+                Encounter copyEnc = new Encounter(origEnc.getSpecies(), origEnc.getLevel());
                 copyEnc.setMaxLevel(origEnc.getMaxLevel());
-                copyEnc.setSpecies(origEnc.getSpecies());
                 copyEnc.setFormeNumber(origEnc.getFormeNumber());
                 copyEnc.setSOS(origEnc.isSOS());
                 copyEnc.setSosType(origEnc.getSosType());

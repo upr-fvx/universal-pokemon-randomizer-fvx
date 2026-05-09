@@ -774,10 +774,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                     area.setDisplayName(mapName + " Grass/Cave (" + todNames[i] + ")");
                     area.setEncounterType(EncounterType.WALKING);
                     for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
-                        Encounter enc = new Encounter();
-                        enc.setLevel(rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] & 0xFF);
+                        Species pk = pokes[rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] & 0xFF];
+                        int level = rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2)] & 0xFF;
+                        Encounter enc = new Encounter(pk, level);
                         enc.setMaxLevel(0);
-                        enc.setSpecies(pokes[rom[offset + 5 + (i * Gen2Constants.landEncounterSlots * 2) + (j * 2) + 1] & 0xFF]);
                         area.add(enc);
                     }
                     areas.add(area);
@@ -789,10 +789,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 area.setDisplayName(mapName + " Grass/Cave");
                 area.setEncounterType(EncounterType.WALKING);
                 for (int j = 0; j < Gen2Constants.landEncounterSlots; j++) {
-                    Encounter enc = new Encounter();
-                    enc.setLevel(rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2)] & 0xFF);
+                    Species pk = pokes[rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2) + 1] & 0xFF];
+                    int level = rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2)] & 0xFF;
+                    Encounter enc = new Encounter(pk, level);
                     enc.setMaxLevel(0);
-                    enc.setSpecies(pokes[rom[offset + 5 + Gen2Constants.landEncounterSlots * 2 + (j * 2) + 1] & 0xFF]);
                     area.add(enc);
                 }
                 areas.add(area);
@@ -812,10 +812,10 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             area.setDisplayName(mapName + " Surfing");
             area.setEncounterType(EncounterType.SURFING);
             for (int j = 0; j < Gen2Constants.seaEncounterSlots; j++) {
-                Encounter enc = new Encounter();
-                enc.setLevel(rom[offset + 3 + (j * 2)] & 0xFF);
+                Species pk = pokes[rom[offset + 3 + (j * 2) + 1] & 0xFF];
+                int level = rom[offset + 3 + (j * 2)] & 0xFF;
+                Encounter enc = new Encounter(pk, level);
                 enc.setMaxLevel(0);
-                enc.setSpecies(pokes[rom[offset + 3 + (j * 2) + 1] & 0xFF]);
                 area.add(enc);
             }
             areas.add(area);
@@ -841,16 +841,14 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                         // read the encounter they put here for DAY
                         int specialOffset = rootOffset + Gen2Constants.fishingAreaEntryLength
                                 * Gen2Constants.pokesPerFishingArea * Gen2Constants.fishingAreaCount + level * 4 + 2;
-                        Encounter enc = new Encounter();
-                        enc.setSpecies(pokes[rom[specialOffset] & 0xFF]);
-                        enc.setLevel(rom[specialOffset + 1] & 0xFF);
+                        Species pk = pokes[rom[specialOffset] & 0xFF];
+                        int daylevel = rom[specialOffset + 1] & 0xFF;
+                        Encounter enc = new Encounter(pk, daylevel);
                         area.add(enc);
                     }
                     // else will be handled by code below
                 } else {
-                    Encounter enc = new Encounter();
-                    enc.setSpecies(pokes[pokeNum]);
-                    enc.setLevel(level);
+                    Encounter enc = new Encounter(pokes[pokeNum], level);
                     area.add(enc);
                 }
             }
@@ -864,9 +862,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 for (int i = 0; i < Gen2Constants.pokesPerTSFishingArea; i++) {
                     int pokeNum = rom[offset++] & 0xFF;
                     int level = rom[offset++] & 0xFF;
-                    Encounter enc = new Encounter();
-                    enc.setSpecies(pokes[pokeNum]);
-                    enc.setLevel(level);
+                    Encounter enc = new Encounter(pokes[pokeNum], level);
                     area.add(enc);
                 }
                 encounterAreas.add(area);
@@ -886,9 +882,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 offset++;
                 int pokeNum = rom[offset++] & 0xFF;
                 int level = rom[offset++] & 0xFF;
-                Encounter enc = new Encounter();
-                enc.setSpecies(pokes[pokeNum]);
-                enc.setLevel(level);
+                Encounter enc = new Encounter(pokes[pokeNum], level);
                 area.add(enc);
             }
             offset++;
@@ -903,9 +897,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         area.setEncounterType(EncounterType.WALKING);
         while ((rom[offset] & 0xFF) != 0xFF) {
             offset++;
-            Encounter enc = new Encounter();
-            enc.setSpecies(pokes[rom[offset++] & 0xFF]);
-            enc.setLevel(rom[offset++] & 0xFF);
+            Species pk = pokes[rom[offset++] & 0xFF];
+            int level = rom[offset++] & 0xFF;
+            Encounter enc = new Encounter(pk, level);
             enc.setMaxLevel(rom[offset++] & 0xFF);
             area.add(enc);
         }
@@ -3420,3 +3414,4 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
 }
+

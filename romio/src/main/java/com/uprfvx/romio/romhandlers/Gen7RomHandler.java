@@ -34,7 +34,6 @@ import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.romentries.Gen7RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.ThreeDSLinkedEncounter;
 import filefunctions.IOFunctions;
-import org.jetbrains.annotations.NotNull;
 import text.N3DSTextHandler;
 
 import java.awt.image.BufferedImage;
@@ -1353,13 +1352,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < numberOfEncounterSlots; i++) {
             int currentOffset = offset + 0xC + (i * 4);
             Encounter enc = encounterIterator.next();
-            int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getSpecies().getBaseNumber();
+            int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getBaseSpecies().getNumber();
             writeWord(encounterTable, currentOffset, speciesAndFormeData);
 
             // SOS encounters for this encounter
             for (int j = 1; j < 8; j++) {
                 Encounter sosEncounter = encounterIterator.next();
-                speciesAndFormeData = (sosEncounter.getFormeNumber() << 11) + sosEncounter.getSpecies().getBaseNumber();
+                speciesAndFormeData = (sosEncounter.getFormeNumber() << 11) + sosEncounter.getBaseSpecies().getNumber();
                 writeWord(encounterTable, currentOffset + (40 * j), speciesAndFormeData);
             }
         }
@@ -2066,7 +2065,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return statics;
     }
 
-    private @NotNull StaticEncounter readGiftEncounter(byte[] giftsFile, int i) {
+    private StaticEncounter readGiftEncounter(byte[] giftsFile, int i) {
         int offset = i * 0x14;
         int species = IOFunctions.read2ByteInt(giftsFile, offset);
         int forme = giftsFile[offset + 2];

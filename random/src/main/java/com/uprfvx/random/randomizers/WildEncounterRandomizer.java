@@ -890,7 +890,7 @@ public class WildEncounterRandomizer extends Randomizer {
             // This is very unlikely to happen in practice, even with very
             // restrictive settings, so it should be okay to break logic here.
             while (area.stream().distinct().count() == 1) {
-                area.get(0).setSpecies(rSpecService.randomSpecies(random));
+                area.getFirst().setSpecies(rSpecService.randomSpecies(random));
             }
         }
 
@@ -1249,6 +1249,7 @@ public class WildEncounterRandomizer extends Randomizer {
     }
 
     private void setFormeForEncounter(Encounter enc) {
+        // TODO: what's up with this? Bad name if its intent is to set a random cosmetic forme.
         Species sp = enc.getSpecies();
         enc.setFormeNumber(sp.getRandomCosmeticFormeNumber(random));
         enc.setSpecies(sp.getBaseForme());

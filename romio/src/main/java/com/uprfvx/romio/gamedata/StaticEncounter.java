@@ -29,7 +29,7 @@ import java.util.Objects;
  * Represents a static encounter or a gift Pokémon
  */
 public class StaticEncounter {
-    // TODO: internally some encounters can't be alt formes; enforce it at this level
+    // TODO: internally some static encounters can't be alt formes; enforce it at this level
     // TODO: test cases
 
     private Species baseSpecies;
@@ -56,8 +56,8 @@ public class StaticEncounter {
      * @throws NullPointerException if species is null
      */
     public StaticEncounter(Species species) {
-        setSpecies(species);
         this.linkedEncounters = new ArrayList<>();
+        setSpecies(species);
     }
 
     /**

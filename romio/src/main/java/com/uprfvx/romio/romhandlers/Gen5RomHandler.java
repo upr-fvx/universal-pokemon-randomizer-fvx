@@ -1098,7 +1098,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 Iterator<Encounter> encounterIterator = areaIterator.next().iterator();
                 for (int j = 0; j < amounts[i]; j++) {
                     Encounter enc = encounterIterator.next();
-                    int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getSpecies().getBaseNumber();
+                    int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getBaseSpecies().getNumber();
                     writeWord(entry, startOffset + offset + j * 4, speciesAndFormeData);
                     entry[startOffset + offset + j * 4 + 2] = (byte) enc.getLevel();
                     entry[startOffset + offset + j * 4 + 3] = (byte) enc.getMaxLevel();

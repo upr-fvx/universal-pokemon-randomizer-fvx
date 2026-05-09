@@ -26,6 +26,7 @@ package com.uprfvx.romio.gamedata;
  * Contains one wild Pokemon slot
  */
 public class Encounter {
+    // TODO: internally some encounters can't be alt formes; enforce it at this level
 
     private Species baseSpecies;
     private int formeNumber;

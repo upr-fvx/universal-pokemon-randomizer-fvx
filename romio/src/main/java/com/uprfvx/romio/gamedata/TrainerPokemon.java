@@ -44,7 +44,6 @@ public class TrainerPokemon {
 
     private int abilitySlot;
     private int forme;
-    private String formeSuffix = "";
 
     private int forcedGenderFlag;
     private byte nature;
@@ -88,7 +87,6 @@ public class TrainerPokemon {
         heldItem = original.heldItem;
         abilitySlot = original.abilitySlot;
         forme = original.forme;
-        formeSuffix = original.formeSuffix;
 
         hasZCrystal = original.hasZCrystal;
         hasMegaStone = original.hasMegaStone;
@@ -179,14 +177,6 @@ public class TrainerPokemon {
 
     public void setForme(int forme) {
         this.forme = forme;
-    }
-
-    public String getFormeSuffix() {
-        return formeSuffix;
-    }
-
-    public void setFormeSuffix(String formeSuffix) {
-        this.formeSuffix = formeSuffix;
     }
 
     public int getForcedGenderFlag() {

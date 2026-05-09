@@ -2750,7 +2750,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                     }
                     tpk.setAbilitySlot(abilitySlot);
                     tpk.setForme(formnum);
-                    tpk.setFormeSuffix(Gen4Constants.getFormeSuffixByBaseForme(species, formnum));
                     pokeOffs += 6;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));

@@ -758,7 +758,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
         tp.setForme(sp.getRandomCosmeticFormeNumber(random));
         tp.setSpecies(sp.getBaseForme());
-        tp.setFormeSuffix(tp.getSpecies().getForme(tp.getForme()).getFormeSuffix());
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {

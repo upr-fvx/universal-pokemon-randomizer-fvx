@@ -1575,7 +1575,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     tpk.setSpecies(pokes[species]);
                     tpk.setForme(formnum);
-                    tpk.setFormeSuffix(Gen7Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 20;
                     int heldItemID = readWord(trpoke, pokeOffs);
                     tpk.setHeldItem(items.get(heldItemID));

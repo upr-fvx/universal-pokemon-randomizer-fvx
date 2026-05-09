@@ -1911,7 +1911,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
                     tpk.setForme(formnum);
-                    tpk.setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(species,formnum));
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));

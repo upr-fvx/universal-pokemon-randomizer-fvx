@@ -170,8 +170,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 Species oldPK = old.getSpecies();
-                if (old.getForme() > 0) {
-                    oldPK = old.getSpecies().getForme(old.getForme());
+                if (old.getFormeNumber() > 0) {
+                    oldPK = old.getSpecies().getForme(old.getFormeNumber());
                 }
                 Integer oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
@@ -352,8 +352,8 @@ public class StaticPokemonRandomizer extends Randomizer {
             if (randomizeTotem) {
                 Species newPK;
                 Species oldPK = old.getSpecies();
-                if (old.getForme() > 0) {
-                    oldPK = old.getSpecies().getForme(old.getForme());
+                if (old.getFormeNumber() > 0) {
+                    oldPK = old.getSpecies().getForme(old.getFormeNumber());
                 }
 
                 if (similarStrengthTotem) {
@@ -392,12 +392,12 @@ public class StaticPokemonRandomizer extends Randomizer {
             if (randomizeAllies) {
                 for (Integer oldAllyIndex : old.getAllies().keySet()) {
                     StaticEncounter oldAlly = old.getAllies().get(oldAllyIndex);
-                    StaticEncounter newAlly = new StaticEncounter();
-                    Species newAllyPK;
                     Species oldAllyPK = oldAlly.getSpecies();
-                    if (oldAlly.getForme() > 0) {
-                        oldAllyPK = oldAlly.getSpecies().getForme(oldAlly.getForme());
+                    if (oldAlly.getFormeNumber() > 0) {
+                        oldAllyPK = oldAlly.getSpecies().getForme(oldAlly.getFormeNumber());
                     }
+
+                    Species newAllyPK;
                     if (similarStrengthAllies) {
                         newAllyPK = pickStaticPowerLvlReplacement(
                                 pokemonLeft,
@@ -408,9 +408,9 @@ public class StaticPokemonRandomizer extends Randomizer {
                         newAllyPK = pokemonLeft.getRandomSpecies(random);
                         pokemonLeft.remove(newAllyPK);
                     }
-
                     pokemonLeft.remove(newAllyPK);
-                    newAlly.setSpecies(newAllyPK);
+
+                    StaticEncounter newAlly = new StaticEncounter(newAllyPK);
                     setSpeciesAndFormeForStaticEncounter(newAlly, newAllyPK);
                     newAlly.setResetMoves(true);
                     newAlly.setLevel(oldAlly.getLevel());
@@ -472,7 +472,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         setSpeciesAndFormeForStaticEncounter(newStatic, sp);
 
         Species newSpec = newStatic.getSpecies();
-        int newForme = newStatic.getForme();
+        int newForme = newStatic.getFormeNumber();
 
         for (StaticEncounter linked : newStatic.getLinkedEncounters()) {
             linked.setSpecies(newSpec);

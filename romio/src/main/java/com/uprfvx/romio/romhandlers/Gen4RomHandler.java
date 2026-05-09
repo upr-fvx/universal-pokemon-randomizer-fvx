@@ -3343,15 +3343,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
 				int currentOffset = i;
 				DSStaticPokemon statP = romEntry.getStaticPokemon().get(i);
-				StaticEncounter se = new StaticEncounter();
-				Species newPK = statP.getPokemon(this, scriptNARC);
-				newPK = newPK.getForme(statP.getForme(scriptNARC));
-				se.setSpecies(newPK);
+                Species basePK = statP.getPokemon(this, scriptNARC);
+                int formeNumber = statP.getForme(scriptNARC);
+                StaticEncounter se = new StaticEncounter(basePK);
+                se.setFormeNumber(formeNumber);
 				se.setLevel(statP.getLevel(scriptNARC, 0));
 				se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x -> x == currentOffset));
 				for (int levelEntry = 1; levelEntry < statP.getLevelCount(); levelEntry++) {
-					StaticEncounter linkedStatic = new StaticEncounter();
-					linkedStatic.setSpecies(newPK);
+					StaticEncounter linkedStatic = new StaticEncounter(basePK);
 					linkedStatic.setLevel(statP.getLevel(scriptNARC, levelEntry));
 					se.getLinkedEncounters().add(linkedStatic);
 				}
@@ -3663,8 +3662,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
 			RoamingPokemon roamer = romEntry.getRoamingPokemon().get(i);
-			StaticEncounter se = new StaticEncounter();
-			se.setSpecies(roamer.getPokemon(this));
+			StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
 			se.setLevel(roamer.getLevel(this));
 			statics.add(se);
 		}

@@ -34,6 +34,7 @@ import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.romentries.Gen7RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.ThreeDSLinkedEncounter;
 import filefunctions.IOFunctions;
+import org.jetbrains.annotations.NotNull;
 import text.N3DSTextHandler;
 
 import java.awt.image.BufferedImage;
@@ -357,6 +358,18 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
             }
         }
+    }
+
+    // a temporary method, or it's temporarily separate from getInternalForme(int, int) at least.
+    private int getStaticEncounterForme(int formeNumber) {
+        // Forme 30 & 31 are "fake" formes - really stand-ins for
+        // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
+        // Thus, they don't modify what species should be returned here.
+        // Likewise, -1 stands for "keep the forme upon evolution" in the evo data.
+        if (formeNumber == 30 || formeNumber == 31 || formeNumber == -1) {
+            return 0;
+        }
+        return formeNumber;
     }
 
     /**
@@ -1032,11 +1045,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] giftsFile = staticGarc.getFile(0);
             for (int i = 0; i < 3; i++) {
                 int offset = i * 0x14;
-                StaticEncounter se = new StaticEncounter();
                 int species = IOFunctions.read2ByteInt(giftsFile, offset);
                 int forme = giftsFile[offset + 2];
+                StaticEncounter se = new StaticEncounter(pokes[species]);
                 se.setSpecies(getInternalForme(species, forme));
-                se.setForme(forme);
+                se.setFormeNumber(getStaticEncounterForme(forme));
                 se.setLevel(giftsFile[offset + 3]);
                 starters.add(se);
             }
@@ -1327,7 +1340,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
         se.setSpecies(enc.getSpecies());
         se.setLevel(enc.getMaxLevel());
-        se.setForme(enc.getFormeNumber());
+        se.setFormeNumber(enc.getFormeNumber());
         writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
 
         writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
@@ -1944,11 +1957,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] staticEncountersFile = staticGarc.getFile(1);
             for (int i: totemIndices) {
                 int offset = i * 0x38;
-                TotemPokemon totem = new TotemPokemon();
                 int species = IOFunctions.read2ByteInt(staticEncountersFile, offset);
                 int forme = staticEncountersFile[offset + 2];
-                totem.setSpecies(getInternalForme(species, forme));
-                totem.setForme(forme);
+
+                TotemPokemon totem = new TotemPokemon(pokes[species]);
+                totem.setFormeNumber(getStaticEncounterForme(forme));
                 totem.setLevel(staticEncountersFile[offset + 3]);
                 int heldItem = IOFunctions.read2ByteInt(staticEncountersFile, offset + 4);
                 if (heldItem == 0xFFFF) {
@@ -1981,12 +1994,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i: totemIndices) {
                 int offset = i * 0x38;
                 TotemPokemon totem = totemIter.next();
-                if (!totem.getSpecies().isBaseForme()) {
-                    totem.setForme(totem.getSpecies().getFormeNumber());
-                    totem.setSpecies(totem.getSpecies().getBaseForme());
-                }
-                writeWord(staticEncountersFile, offset, totem.getSpecies().getNumber());
-                staticEncountersFile[offset + 2] = (byte) totem.getForme();
+                writeWord(staticEncountersFile, offset, totem.getBaseSpecies().getNumber());
+                staticEncountersFile[offset + 2] = (byte) totem.getFormeNumber();
                 staticEncountersFile[offset + 3] = (byte) totem.getLevel();
                 if (totem.getHeldItem() == null) {
                     writeWord(staticEncountersFile, offset + 4, -1);
@@ -2003,12 +2012,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Integer allyIndex: totem.getAllies().keySet()) {
                     offset = allyIndex * 0x38;
                     StaticEncounter ally = totem.getAllies().get(allyIndex);
-                    if (!ally.getSpecies().isBaseForme()) {
-                        ally.setForme(ally.getSpecies().getFormeNumber());
-                        ally.setSpecies(ally.getSpecies().getBaseForme());
-                    }
-                    writeWord(staticEncountersFile, offset, ally.getSpecies().getNumber());
-                    staticEncountersFile[offset + 2] = (byte) ally.getForme();
+                    writeWord(staticEncountersFile, offset, ally.getBaseSpecies().getNumber());
+                    staticEncountersFile[offset + 2] = (byte) ally.getFormeNumber();
                     staticEncountersFile[offset + 3] = (byte) ally.getLevel();
                     if (ally.getHeldItem() == null) {
                         writeWord(staticEncountersFile, offset + 4, -1);
@@ -2045,15 +2050,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             byte[] giftsFile = staticGarc.getFile(0);
             int numberOfGifts = giftsFile.length / 0x14;
             for (int i = 3; i < numberOfGifts; i++) {
-                int offset = i * 0x14;
-                StaticEncounter se = new StaticEncounter();
-                int species = IOFunctions.read2ByteInt(giftsFile, offset);
-                int forme = giftsFile[offset + 2];
-                se.setSpecies(getInternalForme(species, forme));
-                se.setForme(forme);
-                se.setLevel(giftsFile[offset + 3]);
-                se.setHeldItem(items.get(IOFunctions.read2ByteInt(giftsFile, offset + 8)));
-                se.setEgg(giftsFile[offset + 10] == 1);
+                StaticEncounter se = readGiftEncounter(giftsFile, i);
                 statics.add(se);
             }
 
@@ -2076,19 +2073,34 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         return statics;
     }
 
+    private @NotNull StaticEncounter readGiftEncounter(byte[] giftsFile, int i) {
+        int offset = i * 0x14;
+        int species = IOFunctions.read2ByteInt(giftsFile, offset);
+        int forme = giftsFile[offset + 2];
+
+        StaticEncounter se = new StaticEncounter(pokes[species]);
+        se.setFormeNumber(getStaticEncounterForme(forme));
+        se.setLevel(giftsFile[offset + 3]);
+        se.setHeldItem(items.get(IOFunctions.read2ByteInt(giftsFile, offset + 8)));
+        se.setEgg(giftsFile[offset + 10] == 1);
+
+        return se;
+    }
+
     private StaticEncounter readStaticEncounter(byte[] staticEncountersFile, int i) {
         int offset = i * 0x38;
-        StaticEncounter se = new StaticEncounter();
         int species = IOFunctions.read2ByteInt(staticEncountersFile, offset);
         int forme = staticEncountersFile[offset + 2];
-        se.setSpecies(getInternalForme(species, forme));
-        se.setForme(forme);
+
+        StaticEncounter se = new StaticEncounter(pokes[species]);
+        se.setFormeNumber(getStaticEncounterForme(forme));
         se.setLevel(staticEncountersFile[offset + 3]);
         int heldItem = IOFunctions.read2ByteInt(staticEncountersFile, offset + 4);
         if (heldItem == 0xFFFF) {
             heldItem = 0;
         }
         se.setHeldItem(items.get(heldItem));
+
         return se;
     }
 
@@ -2138,15 +2150,14 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 forme = code[formeOffset];
             }
 
-            StaticEncounter lowLevelAssembly = new StaticEncounter();
-            Species pk = getInternalForme(species, forme);
-            lowLevelAssembly.setSpecies(pk);
-            lowLevelAssembly.setForme(forme);
+            Species pk = pokes[species];
+            forme = getStaticEncounterForme(forme);
+            StaticEncounter lowLevelAssembly = new StaticEncounter(pokes[species]);
+            lowLevelAssembly.setFormeNumber(forme);
             lowLevelAssembly.setLevel(levels[0]);
             for (int i = 1; i < levels.length; i++) {
-                StaticEncounter higherLevelAssembly = new StaticEncounter();
-                higherLevelAssembly.setSpecies(pk);
-                higherLevelAssembly.setForme(forme);
+                StaticEncounter higherLevelAssembly = new StaticEncounter(pokes[species]);
+                higherLevelAssembly.setFormeNumber(forme);
                 higherLevelAssembly.setLevel(levels[i]);
                 lowLevelAssembly.getLinkedEncounters().add(higherLevelAssembly);
             }
@@ -2174,7 +2185,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int offset = i * 0x14;
                 StaticEncounter se = staticIter.next();
                 writeWord(giftsFile, offset, se.getSpecies().getBaseNumber());
-                giftsFile[offset + 2] = (byte) se.getForme();
+                giftsFile[offset + 2] = (byte) se.getFormeNumber();
                 giftsFile[offset + 3] = (byte) se.getLevel();
                 int itemId = se.getHeldItem() == null ? 0 : se.getHeldItem().getId();
                 writeWord(giftsFile, offset + 8, itemId);
@@ -2202,7 +2213,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     private void writeStaticEncounter(byte[] staticEncountersFile, int i, StaticEncounter se) {
         int offset = i * 0x38;
         writeWord(staticEncountersFile, offset, se.getSpecies().getBaseNumber());
-        staticEncountersFile[offset + 2] = (byte) se.getForme();
+        staticEncountersFile[offset + 2] = (byte) se.getFormeNumber();
         staticEncountersFile[offset + 3] = (byte) se.getLevel();
         if (se.getHeldItem() == null) {
             writeWord(staticEncountersFile, offset + 4, -1);
@@ -2224,7 +2235,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
         Collections.sort(offsetsToInsert);
         for (Integer offsetToInsert : offsetsToInsert) {
-            statics.add(offsetToInsert, new StaticEncounter());
+            // shouldn't matter what's added here so we add bulbasaur
+            statics.add(offsetToInsert, new StaticEncounter(pokes[SpeciesIDs.bulbasaur]));
         }
         for (ThreeDSLinkedEncounter le : romEntry.getLinkedEncounters()) {
             StaticEncounter baseEncounter = statics.get(le.getBase());
@@ -2257,7 +2269,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             IOFunctions.write2ByteInt(code, speciesOffset, se.getSpecies().getBaseNumber());
 
             // Just write "mov r0, #forme" to where the game originally loaded the forme.
-            code[formeOffset] = (byte) se.getForme();
+            code[formeOffset] = (byte) se.getFormeNumber();
             code[formeOffset + 1] = 0x00;
             code[formeOffset + 2] = (byte) 0xA0;
             code[formeOffset + 3] = (byte) 0xE3;

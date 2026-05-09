@@ -1,8 +1,6 @@
 package com.uprfvx.romio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  StaticEncounter.java - stores a static encounter in Gen 6+            --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -27,9 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a static encounter or a gift Pokémon
+ */
 public class StaticEncounter {
-    private Species species;
-    private int forme = 0;
+    private Species baseSpecies;
+    private int formeNumber = 0;
     private int level;
     private int maxLevel = 0;
     private Item heldItem;
@@ -47,12 +48,17 @@ public class StaticEncounter {
     // differences in other properties like level.
     private final List<StaticEncounter> linkedEncounters;
 
-    public StaticEncounter() {
-        this.linkedEncounters = new ArrayList<>();
-    }
-
-    public StaticEncounter(Species species) {
-        this.species = species;
+    /**
+     * Creates a StaticEncounter with the given baseSpecies.
+     * @param baseSpecies The base forme of the Species this StaticEncounter is meant to hold.
+     * @throws NullPointerException if baseSpecies is null
+     * @throws IllegalArgumentException if baseSpecies is not a base forme
+     */
+    public StaticEncounter(Species baseSpecies) {
+        if (!baseSpecies.isBaseForme()) {
+            throw new IllegalArgumentException(baseSpecies.getNumberAndFullName() + " is not a base forme.");
+        }
+        this.baseSpecies = baseSpecies;
         this.linkedEncounters = new ArrayList<>();
     }
 
@@ -62,8 +68,8 @@ public class StaticEncounter {
      * @param original The StaticEncounter to copy.
      */
     public StaticEncounter(StaticEncounter original) {
-        this.species = original.species;
-        this.forme = original.forme;
+        this.baseSpecies = original.baseSpecies;
+        this.formeNumber = original.formeNumber;
         this.level = original.level;
         this.maxLevel = original.maxLevel;
         this.heldItem = original.heldItem;
@@ -73,9 +79,8 @@ public class StaticEncounter {
         this.restrictedList = new ArrayList<>(original.restrictedList);
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
-            StaticEncounter newLinked = new StaticEncounter(); //is there a reason to not use the copy constructor here?
-            newLinked.species = oldLinked.species;
-            newLinked.forme = oldLinked.forme;
+            StaticEncounter newLinked = new StaticEncounter(baseSpecies); //is there a reason to not use the copy constructor here?
+            newLinked.formeNumber = oldLinked.formeNumber;
             newLinked.level = oldLinked.level;
             newLinked.maxLevel = oldLinked.maxLevel;
             newLinked.heldItem = oldLinked.heldItem;
@@ -89,19 +94,33 @@ public class StaticEncounter {
 
 
     public Species getSpecies() {
-        return species;
+        return baseSpecies.getForme(formeNumber);
     }
 
     public void setSpecies(Species species) {
-        this.species = species;
+        this.baseSpecies = species.getBaseForme();
+        this.formeNumber = species.getFormeNumber();
     }
 
-    public int getForme() {
-        return forme;
+    public Species getBaseSpecies() {
+        return baseSpecies;
     }
 
-    public void setForme(int forme) {
-        this.forme = forme;
+    public int getFormeNumber() {
+        return formeNumber;
+    }
+
+    /**
+     * Sets the formeNumber.
+     * @param formeNumber The forme number to set.
+     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     */
+    public void setFormeNumber(int formeNumber) {
+        if (baseSpecies.isValidFormeNumber(formeNumber)) {
+            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
+                    + baseSpecies.getNumberAndFullName());
+        }
+        this.formeNumber = formeNumber;
     }
 
     public int getLevel() {
@@ -129,7 +148,15 @@ public class StaticEncounter {
     }
 
     public boolean canMegaEvolve() {
-        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+        // A bit unclear whether this should use getSpecies() or baseSpecies
+        // though it does not matter in the Vanilla Gen 6-7 games since no mon
+        // that can mega evolve has alt formes beyond the mega.
+        // If you give base forme (Plant) Wormadam a mega, can its alt formes automatically
+        // access the same mega, and mega evolve?
+        // If you force the encounter to be Venusaur-Mega from the start and give it Venusaurite,
+        // can it mega evolve? Into Venusaur-Mega again??
+        // TODO: figure out
+        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
             if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
                 return true;
             }
@@ -180,7 +207,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(species == null ? null : species.getFullName());
+        sb.append(getBaseSpecies().getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {
@@ -209,14 +236,13 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(species, level);
+        return Objects.hash(baseSpecies, level);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof StaticEncounter) {
-            StaticEncounter other = (StaticEncounter) o;
-            return Objects.equals(other.species, species) && other.forme == forme && other.level == level
+        if (o instanceof StaticEncounter other) {
+            return Objects.equals(other.baseSpecies, baseSpecies) && other.formeNumber == formeNumber && other.level == level
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);

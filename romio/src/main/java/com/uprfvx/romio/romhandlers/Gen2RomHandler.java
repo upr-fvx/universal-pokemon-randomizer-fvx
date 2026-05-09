@@ -1516,8 +1516,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             for (int i = 0; i < romEntry.getStaticPokemon().size(); i++) {
                 int currentOffset = i;
                 StaticPokemon sp = romEntry.getStaticPokemon().get(i);
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(sp.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(sp.getPokemon(this));
                 se.setLevel(sp.getLevel(rom, 0));
                 se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x -> x == currentOffset));
                 statics.add(se);
@@ -1527,8 +1526,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
             int oeOffset = romEntry.getIntValue("StaticPokemonOddEggOffset");
             int oeSize = romEntry.getIntValue("StaticPokemonOddEggDataSize");
             for (int i = 0; i < Gen2Constants.oddEggPokemonCount; i++) {
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(pokes[rom[oeOffset + i * oeSize] & 0xFF]);
+                StaticEncounter se = new StaticEncounter(pokes[rom[oeOffset + i * oeSize] & 0xFF]);
                 se.setEgg(true);
                 statics.add(se);
             }

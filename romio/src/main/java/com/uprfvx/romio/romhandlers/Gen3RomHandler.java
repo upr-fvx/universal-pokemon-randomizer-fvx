@@ -2107,8 +2107,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 0; i < staticsHere.size(); i++) {
             int currentOffset = i;
             StaticPokemon staticPK = staticsHere.get(i);
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(staticPK.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(staticPK.getPokemon(this));
             se.setLevel(staticPK.getLevel(rom, 0));
             se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x-> x == currentOffset));
             statics.add(se);
@@ -2130,8 +2129,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Species pkmn = pokesInternal[species];
             int startingLevelOffset = romEntry.getIntValue("StaticFirstBattleLevelOffset");
             int level = rom[startingLevelOffset];
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(pkmn);
+            StaticEncounter se = new StaticEncounter(pkmn);
             se.setLevel(level);
             statics.add(se);
         } else if (romEntry.hasTweakFile("GhostMarowakTweak")) {
@@ -2150,8 +2148,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Species pkmn = pokesInternal[species];
             int[] startingLevelOffsets = romEntry.getArrayValue("GhostMarowakLevelOffsets");
             int level = rom[startingLevelOffsets[0]];
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(pkmn);
+            StaticEncounter se = new StaticEncounter(pkmn);
             se.setLevel(level);
             statics.add(se);
         }
@@ -2232,14 +2229,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 applyRubyRoamerPatch();
             }
             StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(roamer.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(roamer.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_FRLG && romEntry.hasTweakFile("RoamingPokemonTweak")) {
@@ -2251,8 +2246,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(roamer.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
                 se.setLevel(roamer.getLevel(rom, 0));
                 statics.add(se);
             }
@@ -2266,8 +2260,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int[] southernIslandOffsets = romEntry.getArrayValue("StaticSouthernIslandOffsets");
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(roamer.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
                 se.setLevel(roamer.getLevel(rom, 0));
 
                 // Link each roamer to their respective Southern Island static encounter so that

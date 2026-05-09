@@ -1573,8 +1573,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<StaticEncounter> statics = new ArrayList<>();
         if (romEntry.getIntValue("StaticPokemonSupport") > 0) {
             for (StaticPokemon sp : romEntry.getStaticPokemon()) {
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(sp.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(sp.getPokemon(this));
                 se.setLevel(sp.getLevel(rom, 0));
                 statics.add(se);
             }

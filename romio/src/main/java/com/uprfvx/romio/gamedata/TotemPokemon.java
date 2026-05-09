@@ -32,10 +32,8 @@ public class TotemPokemon extends StaticEncounter {
 
     private boolean unused = false;
 
-    public TotemPokemon() {}
-
-    public TotemPokemon(Species species) {
-        this.setSpecies(species);
+    public TotemPokemon(Species baseSpecies) {
+        super(baseSpecies);
     }
 
     public Aura getAura() {

@@ -49,16 +49,11 @@ public class StaticEncounter {
     private final List<StaticEncounter> linkedEncounters;
 
     /**
-     * Creates a StaticEncounter with the given baseSpecies.
-     * @param baseSpecies The base forme of the Species this StaticEncounter is meant to hold.
-     * @throws NullPointerException if baseSpecies is null
-     * @throws IllegalArgumentException if baseSpecies is not a base forme
+     * Creates a StaticEncounter with the given species.
+     * @throws NullPointerException if species is null
      */
-    public StaticEncounter(Species baseSpecies) {
-        if (!baseSpecies.isBaseForme()) {
-            throw new IllegalArgumentException(baseSpecies.getNumberAndFullName() + " is not a base forme.");
-        }
-        this.baseSpecies = baseSpecies;
+    public StaticEncounter(Species species) {
+        setSpecies(species);
         this.linkedEncounters = new ArrayList<>();
     }
 
@@ -100,6 +95,7 @@ public class StaticEncounter {
     public void setSpecies(Species species) {
         this.baseSpecies = species.getBaseForme();
         this.formeNumber = species.getFormeNumber();
+        linkedEncounters.forEach(le -> le.setSpecies(species));
     }
 
     public Species getBaseSpecies() {
@@ -121,6 +117,7 @@ public class StaticEncounter {
                     + baseSpecies.getNumberAndFullName());
         }
         this.formeNumber = formeNumber;
+        linkedEncounters.forEach(le -> le.setFormeNumber(formeNumber));
     }
 
     public int getLevel() {

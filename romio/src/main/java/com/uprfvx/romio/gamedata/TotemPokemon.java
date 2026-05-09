@@ -36,6 +36,15 @@ public class TotemPokemon extends StaticEncounter {
         super(baseSpecies);
     }
 
+    public TotemPokemon(TotemPokemon original) {
+        super(original);
+        this.aura = original.aura;
+        this.unused = original.unused;
+        for (Map.Entry<Integer, StaticEncounter> ogAllyEntry : original.allies.entrySet()) {
+            allies.put(ogAllyEntry.getKey(), new StaticEncounter(ogAllyEntry.getValue()));
+        }
+    }
+
     public Aura getAura() {
         return aura;
     }

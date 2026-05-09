@@ -956,8 +956,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (forme == 30 || forme == 31) {
                     forme = 0;
                 }
-                StaticEncounter se = new StaticEncounter(pokes[species]);
-                se.setFormeNumber(staticCRO[offset+i*size + 4]);
+                StaticEncounter se = new StaticEncounter(pk);
+                se.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 5]);
                 starters.add(se);
             }
@@ -998,10 +998,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 Species starter = starterIter.next();
                 StaticEncounter newStatic = new StaticEncounter(starter.getBaseForme());
                 newStatic.setFormeNumber(starter.getFormeNumber());
-                writeWord(staticCRO,offset+i*size, newStatic.getSpecies().getNumber());
+                writeWord(staticCRO,offset+i*size, newStatic.getBaseSpecies().getNumber());
                 staticCRO[offset+i*size + 4] = (byte) newStatic.getFormeNumber();
 //                staticCRO[offset+i*size + 5] = (byte)newStatic.level;
-                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.getSpecies().getNumber());
+                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.getBaseSpecies().getNumber());
                 displayCRO[displayOffset+displayIndex*0x54+2] = (byte) newStatic.getFormeNumber();
                 if (displayIndex < 3) {
                     starterText.set(starterTextIndices[displayIndex],
@@ -2313,7 +2313,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int offset = romEntry.getIntValue("StaticPokemonOffset");
             for (int i = 0; i < staticCount; i++) {
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.getBaseSpecies().getNumber());
                 staticCRO[offset+i*size + 2] = (byte) se.getFormeNumber();
                 staticCRO[offset+i*size + 3] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
@@ -2332,7 +2332,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < giftCount; i++) {
                 if (skipStarters.contains(i)) continue;
                 StaticEncounter se = staticIter.next();
-                writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
+                writeWord(staticCRO,offset+i*size, se.getBaseSpecies().getNumber());
                 staticCRO[offset+i*size + 4] = (byte) se.getFormeNumber();
                 staticCRO[offset+i*size + 5] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
@@ -2351,14 +2351,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int currentCount = 0;
                     while (currentCount != Gen6Constants.xyTrashCanEncounterCount) {
                         StaticEncounter se = staticIter.next();
-                        IOFunctions.writeFullInt(code, offset, se.getSpecies().getBaseNumber());
+                        IOFunctions.writeFullInt(code, offset, se.getBaseSpecies().getNumber());
                         IOFunctions.writeFullInt(code, offset + 4, se.getFormeNumber());
                         IOFunctions.writeFullInt(code, offset + 8, se.getLevel());
                         offset += Gen6Constants.xyTrashEncounterDataLength;
                         currentCount++;
                         for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
                             StaticEncounter linkedEncounter = se.getLinkedEncounters().get(i);
-                            IOFunctions.writeFullInt(code, offset, linkedEncounter.getSpecies().getBaseNumber());
+                            IOFunctions.writeFullInt(code, offset, linkedEncounter.getBaseSpecies().getNumber());
                             IOFunctions.writeFullInt(code, offset + 4, linkedEncounter.getFormeNumber());
                             IOFunctions.writeFullInt(code, offset + 8, linkedEncounter.getLevel());
                             offset += Gen6Constants.xyTrashEncounterDataLength;
@@ -2371,11 +2371,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int[] boxLegendaryOffsets = romEntry.getArrayValue("BoxLegendaryOffsets");
                 StaticEncounter boxLegendaryEncounter = staticPokemon.get(boxLegendaryOffsets[0]);
-                fixBoxLegendariesXY(boxLegendaryEncounter.getSpecies().getNumber());
+                fixBoxLegendariesXY(boxLegendaryEncounter.getBaseSpecies().getNumber());
                 setRoamersXY(staticPokemon);
             } else {
                 StaticEncounter rayquazaEncounter = staticPokemon.get(romEntry.getIntValue("RayquazaEncounterNumber"));
-                fixRayquazaORAS(rayquazaEncounter.getSpecies().getNumber());
+                fixRayquazaORAS(rayquazaEncounter.getBaseSpecies().getNumber());
             }
 
             return true;
@@ -2483,7 +2483,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // In the free space now opened up, write the three roamer species.
             for (int i = 0; i < roamers.length; i++) {
                 int offset = freeSpaceOffset + 8 + (i * 4);
-                int species = roamers[i].getSpecies().getBaseNumber();
+                int species = roamers[i].getBaseSpecies().getNumber();
                 IOFunctions.writeFullInt(code, offset, species);
             }
 
@@ -2518,7 +2518,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             AMX seaSpiritsDenAreaScript = new AMX(seaSpiritsDenAreaFile, 1);
             for (int i = 0; i < roamers.length; i++) {
                 int offset = Gen6Constants.seaSpiritsDenScriptOffsetsXY[i];
-                int species = roamers[i].getSpecies().getBaseNumber();
+                int species = roamers[i].getBaseSpecies().getNumber();
                 IOFunctions.write2ByteInt(seaSpiritsDenAreaScript.decData, offset, species);
             }
             byte[] modifiedScript = seaSpiritsDenAreaScript.getBytes();

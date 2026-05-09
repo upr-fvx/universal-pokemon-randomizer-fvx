@@ -3439,8 +3439,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			NARCArchive scriptNARC = scriptNarc;
 			for (DSStaticPokemon statP : romEntry.getStaticPokemon()) {
 				StaticEncounter se = statics.next();
-				statP.setPokemon(this, scriptNARC, se.getSpecies());
-				statP.setForme(scriptNARC, se.getSpecies().getFormeNumber());
+				statP.setPokemon(this, scriptNARC, se.getBaseSpecies());
+				statP.setForme(scriptNARC, se.getFormeNumber());
 				statP.setLevel(scriptNARC, se.getLevel(), 0);
 				for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
 					StaticEncounter linkedStatic = se.getLinkedEncounters().get(i);
@@ -3455,7 +3455,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				for (int i = 0; i < trades.length; i++) {
 					int tradeNum = trades[i];
 					StaticEncounter se = statics.next();
-					Species thisTrade = se.getSpecies();
+					Species thisTrade = se.getBaseSpecies();
 
 					// Write species and ability,
 					// always ability1 out of simplicity even if some pokes got a second one.
@@ -3469,7 +3469,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// If it's Kenya, write new species name to text file
 					if (i == 1) {
 						Map<String, String> replacements = new TreeMap<>();
-						replacements.put(pokes[SpeciesIDs.spearow].getName().toUpperCase(), se.getSpecies().getName());
+						replacements.put(pokes[SpeciesIDs.spearow].getName().toUpperCase(), thisTrade.getName());
 						replaceAllStringsInEntry(romEntry.getIntValue("KenyaTextOffset"), replacements);
 					}
 				}
@@ -3486,7 +3486,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					byte[] ftData = readOverlay(romEntry.getIntValue("FossilTableOvlNumber"));
 					for (int f = 0; f < Gen4Constants.fossilCount; f++) {
 						StaticEncounter se = statics.next();
-						int pokenum = se.getSpecies().getNumber();
+						int pokenum = se.getBaseSpecies().getNumber();
 						writeWord(ftData, baseOffset + 2 + f * 4, pokenum);
 						fossilLevelScript[romEntry.getIntValue("FossilLevelOffset")] = (byte) se.getLevel();
 					}
@@ -3495,7 +3495,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					// write to arm9
 					for (int f = 0; f < Gen4Constants.fossilCount; f++) {
 						StaticEncounter se = statics.next();
-						int pokenum = se.getSpecies().getNumber();
+						int pokenum = se.getBaseSpecies().getNumber();
 						writeWord(arm9, baseOffset + 2 + f * 4, pokenum);
 						fossilLevelScript[romEntry.getIntValue("FossilLevelOffset")] = (byte) se.getLevel();
 					}
@@ -3530,10 +3530,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 		offset += Gen4Constants.mysteryEggCommandLength;
 
-		writeLong(ovOverlay, offset, se.getSpecies().getNumber());
+		writeLong(ovOverlay, offset, se.getBaseSpecies().getNumber());
 		offset += 4;
 
-		Move extraMove = getMysteryEggMove(se.getSpecies());
+		Move extraMove = getMysteryEggMove(se.getBaseSpecies());
 		writeLong(ovOverlay, offset, extraMove == null ? 0 : extraMove.number);
 
 		writeOverlay(romEntry.getIntValue("FieldOvlNumber"), ovOverlay);
@@ -3672,7 +3672,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
 			RoamingPokemon roamer = romEntry.getRoamingPokemon().get(i);
 			StaticEncounter roamerEncounter = statics.next();
-			roamer.setPokemon(this, scriptNarc, roamerEncounter.getSpecies());
+			roamer.setPokemon(this, scriptNarc, roamerEncounter.getBaseSpecies());
 			roamer.setLevel(this, roamerEncounter.getLevel());
 		}
 	}

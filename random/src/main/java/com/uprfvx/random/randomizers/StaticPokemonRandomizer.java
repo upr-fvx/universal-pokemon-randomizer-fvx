@@ -167,9 +167,6 @@ public class StaticPokemonRandomizer extends Randomizer {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 Species oldPK = old.getSpecies();
-                if (old.getFormeNumber() > 0) {
-                    oldPK = old.getSpecies().getForme(old.getFormeNumber());
-                }
                 int oldBST = oldPK.getBSTForPowerLevels();
                 if (oldBST >= 600 && limit600) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
@@ -348,9 +345,6 @@ public class StaticPokemonRandomizer extends Randomizer {
             if (randomizeTotem) {
                 Species newPK;
                 Species oldPK = old.getSpecies();
-                if (old.getFormeNumber() > 0) {
-                    oldPK = old.getSpecies().getForme(old.getFormeNumber());
-                }
 
                 if (similarStrengthTotem) {
                     newPK = pickStaticPowerLvlReplacement(
@@ -387,9 +381,6 @@ public class StaticPokemonRandomizer extends Randomizer {
                 for (Integer oldAllyIndex : old.getAllies().keySet()) {
                     StaticEncounter oldAlly = old.getAllies().get(oldAllyIndex);
                     Species oldAllyPK = oldAlly.getSpecies();
-                    if (oldAlly.getFormeNumber() > 0) {
-                        oldAllyPK = oldAlly.getSpecies().getForme(oldAlly.getFormeNumber());
-                    }
 
                     Species newAllyPK;
                     if (similarStrengthAllies) {

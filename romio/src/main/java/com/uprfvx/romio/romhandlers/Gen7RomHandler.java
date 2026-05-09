@@ -1048,7 +1048,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int species = IOFunctions.read2ByteInt(giftsFile, offset);
                 int forme = giftsFile[offset + 2];
                 StaticEncounter se = new StaticEncounter(pokes[species]);
-                se.setSpecies(getInternalForme(species, forme));
                 se.setFormeNumber(getStaticEncounterForme(forme));
                 se.setLevel(giftsFile[offset + 3]);
                 starters.add(se);
@@ -1340,7 +1339,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         StaticEncounter se = readStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex);
         se.setSpecies(enc.getSpecies());
         se.setLevel(enc.getMaxLevel());
-        se.setFormeNumber(enc.getFormeNumber());
         writeStaticEncounter(staticEncountersFile, Gen7Constants.route1PikipekStaticIndex, se);
 
         writeGARC(romEntry.getFile("StaticPokemon"), staticGarc);
@@ -2184,7 +2182,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 3; i < numberOfGifts; i++) {
                 int offset = i * 0x14;
                 StaticEncounter se = staticIter.next();
-                writeWord(giftsFile, offset, se.getSpecies().getBaseNumber());
+                writeWord(giftsFile, offset, se.getBaseSpecies().getNumber());
                 giftsFile[offset + 2] = (byte) se.getFormeNumber();
                 giftsFile[offset + 3] = (byte) se.getLevel();
                 int itemId = se.getHeldItem() == null ? 0 : se.getHeldItem().getId();
@@ -2212,7 +2210,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private void writeStaticEncounter(byte[] staticEncountersFile, int i, StaticEncounter se) {
         int offset = i * 0x38;
-        writeWord(staticEncountersFile, offset, se.getSpecies().getBaseNumber());
+        writeWord(staticEncountersFile, offset, se.getBaseSpecies().getNumber());
         staticEncountersFile[offset + 2] = (byte) se.getFormeNumber();
         staticEncountersFile[offset + 3] = (byte) se.getLevel();
         if (se.getHeldItem() == null) {
@@ -2266,7 +2264,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         if (speciesOffset > 0 && formeOffset > 0) {
             speciesOffset += Gen7Constants.zygardeAssemblySpeciesPrefix.length() / 2; // because it was a prefix
             formeOffset += Gen7Constants.zygardeAssemblyFormePrefix.length() / 2; // because it was a prefix
-            IOFunctions.write2ByteInt(code, speciesOffset, se.getSpecies().getBaseNumber());
+            IOFunctions.write2ByteInt(code, speciesOffset, se.getBaseSpecies().getNumber());
 
             // Just write "mov r0, #forme" to where the game originally loaded the forme.
             code[formeOffset] = (byte) se.getFormeNumber();

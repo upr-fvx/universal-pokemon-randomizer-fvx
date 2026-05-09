@@ -29,6 +29,8 @@ import java.util.Objects;
  * Represents a static encounter or a gift Pokémon
  */
 public class StaticEncounter {
+    // TODO: internally some encounters can't be alt formes; enforce it at this level
+
     private Species baseSpecies;
     private int formeNumber = 0;
     private int level;
@@ -193,6 +195,9 @@ public class StaticEncounter {
         this.restrictedList = restrictedList;
     }
 
+    // TODO: encapsulate linked encounters better
+    //  Getting should retrieve an unmodifiable list, adding done via a separate method.
+    //  Also, linked encounters should not have modifiable baseSpecies/formeNumber
     public List<StaticEncounter> getLinkedEncounters() {
         return linkedEncounters;
     }

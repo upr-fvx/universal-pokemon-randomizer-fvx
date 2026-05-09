@@ -797,6 +797,13 @@ public class Species implements Comparable<Species> {
     }
 
     /**
+     * Returns whether the given formeNumber represents a valid forme, for use with {@link #getForme(int)};
+     */
+    public boolean isValidFormeNumber(int formeNumber) {
+        return formes.containsKey(formeNumber);
+    }
+
+    /**
      * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
      */
     public SpeciesSet getAltFormes() {

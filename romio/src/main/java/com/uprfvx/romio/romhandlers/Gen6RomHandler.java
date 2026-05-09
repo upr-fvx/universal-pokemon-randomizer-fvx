@@ -1895,6 +1895,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int level = readWord(trpoke, pokeOffs + 2);
                     int species = readWord(trpoke, pokeOffs + 4);
                     int formnum = readWord(trpoke, pokeOffs + 6);
+                    if (!pokes[species].isValidFormeNumber(formnum)) {
+                        formnum = 0;
+                    }
                     TrainerPokemon tpk = new TrainerPokemon();
                     tpk.setLevel(level);
                     tpk.setSpecies(pokes[species]);

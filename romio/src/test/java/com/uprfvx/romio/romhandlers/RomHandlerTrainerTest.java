@@ -371,6 +371,27 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void allTrainerPokemonHaveValidFormes(String romName) {
+        loadROM(romName);
+        int invalidFormes = 0;
+        for (Trainer tr : romHandler.getTrainers()) {
+            boolean printedTrainer = false;
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                if (!tp.getSpecies().isValidFormeNumber(tp.getForme())) {
+                    if (!printedTrainer) {
+                        System.out.println(tr);
+                        printedTrainer = true;
+                    }
+                    System.out.println("\t" + tp.getSpecies().getNumberAndFullName() + " / formeNum=" + tp.getForme());
+                    invalidFormes++;
+                }
+            }
+        }
+        assertEquals(0, invalidFormes);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void trainerNamesAreNotEmpty(String romName) {
         loadROM(romName);
         assertFalse(romHandler.getTrainerNames().isEmpty());

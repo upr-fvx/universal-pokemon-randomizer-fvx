@@ -51,10 +51,6 @@ public class Encounter {
         this.formeNumber = species.getFormeNumber();
     }
 
-    public Species getBaseSpecies() {
-        return baseSpecies;
-    }
-
     public int getFormeNumber() {
         return formeNumber;
     }

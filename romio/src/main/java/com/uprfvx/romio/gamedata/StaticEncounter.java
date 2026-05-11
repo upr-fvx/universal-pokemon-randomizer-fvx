@@ -100,10 +100,6 @@ public class StaticEncounter {
         linkedEncounters.forEach(le -> le.setSpecies(species));
     }
 
-    public Species getBaseSpecies() {
-        return baseSpecies;
-    }
-
     public int getFormeNumber() {
         return formeNumber;
     }
@@ -209,7 +205,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getBaseSpecies().getFullName());
+        sb.append(getSpecies().getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {

@@ -1479,7 +1479,8 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     }
 
     private Species getNonCosmeticForme(Encounter enc) {
-        return enc.getSpecies().isEssentiallyCosmetic() ? enc.getBaseSpecies() : enc.getSpecies();
+        Species pk = enc.getSpecies();
+        return pk.isEssentiallyCosmetic() ? pk.getBaseForme() : pk;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {

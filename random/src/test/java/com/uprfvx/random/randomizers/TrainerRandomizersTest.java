@@ -175,7 +175,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + tr);
                 for (TrainerPokemon tp : tr.getPokemon()) {
-                    Species sp = tp.getSpecies().getForme(tp.getForme());
+                    Species sp = tp.getSpecies();
                     System.out.println("\t" + sp);
                     boolean keepsTheme = sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme;
                     if (!keepsTheme) {
@@ -227,7 +227,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         for(Trainer trainer : romHandler.getTrainers()) {
             List<Species> speciesPrimaryTypes = new ArrayList<>();
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                speciesPrimaryTypes.add(tp.getSpecies().getForme(tp.getForme()));
+                speciesPrimaryTypes.add(tp.getSpecies());
             }
             trainersWithPokemonTypes.put(trainer, speciesPrimaryTypes);
         }
@@ -304,7 +304,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     }
 
     private Type getThemedTrainerType(Trainer tr) {
-        Species first = tr.getPokemon().get(0).getSpecies();
+        Species first = tr.getPokemon().getFirst().getSpecies();
         Type primary = first.getPrimaryType(true);
         Type secondary = first.getSecondaryType(true);
         for (int i = 1; i < tr.getPokemon().size(); i++) {
@@ -391,8 +391,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
             if (eliteFourIndices.contains(tr.getIndex())) {
                 System.out.println("-E4 Member-");
-                System.out.println("Non-local: " + nonLocal.stream().map(Species::getName).collect(Collectors.toList()));
-                System.out.println("Local: " + localWithRelatives.stream().map(Species::getName).collect(Collectors.toList()));
+                System.out.println("Non-local: " + nonLocal.stream().map(Species::getName).toList());
+                System.out.println("Local: " + localWithRelatives.stream().map(Species::getName).toList());
                 int nonLocalCount = 0;
                 for (TrainerPokemon tp : tr.getPokemon()) {
                     if (nonLocal.contains(tp.getSpecies())) {
@@ -640,8 +640,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
             for(TrainerPokemon tp : trainer.getPokemon()) {
                 Species sp = tp.getSpecies();
-                if(tp.getForme() != 0) {
-                    sp = sp.getForme(tp.getForme());
+                if(tp.getFormeNumber() != 0) {
+                    sp = sp.getForme(tp.getFormeNumber());
                 }
 
                 Type primaryType = sp.getPrimaryType(false);
@@ -696,7 +696,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 // Record used original types
                 for (TrainerPokemon tp : trainer.getPokemon()) {
                     if (!tp.isAddedTeamMember()) {
-                        Species sp = tp.getSpecies().getForme(tp.getForme());
+                        Species sp = tp.getSpecies();
                         usedTypes.add(sp.getPrimaryType(false));
                         if (sp.hasSecondaryType(false)) {
                             usedTypes.add(sp.getSecondaryType(false));
@@ -707,7 +707,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
             }
 
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                Species sp = tp.getSpecies().getForme(tp.getForme());
+                Species sp = tp.getSpecies();
 
                 Type primaryType = sp.getPrimaryType(false);
                 Type secondaryType = sp.getSecondaryType(false);
@@ -758,7 +758,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                     (hasNoTypeTheme ? "no type theme" : "type theme " + theme) + ".");
 
             for (TrainerPokemon tp : trainer.getPokemon()) {
-                Species sp = tp.getSpecies().getForme(tp.getForme());
+                Species sp = tp.getSpecies();
 
                 Type primaryType = sp.getPrimaryType(false);
                 Type secondaryType = sp.getSecondaryType(false);
@@ -821,8 +821,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
             System.out.println(tr);
 
             boolean duplicateHighestLevel = false;
-            TrainerPokemon ace = new TrainerPokemon();
-            ace.setLevel(0);
+            Species dummySpecies = new Species(Integer.MAX_VALUE);
+            TrainerPokemon ace = new TrainerPokemon(dummySpecies, 0);
 
             for (TrainerPokemon tp : tr.getPokemon()) {
                 System.out.println(tp + " added=" + tp.isAddedTeamMember());
@@ -954,7 +954,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 int variant = Integer.parseInt(tr.getTag().split("-")[1]);
                 int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 Species expected = starters.get((variant + offset) % 3);
-                Species actual = tr.getPokemon().get(0).getSpecies();
+                Species actual = tr.getPokemon().getFirst().getSpecies();
 
                 assertEquals(1, tr.getPokemon().size());
                 assertEquals(expected, actual);
@@ -997,7 +997,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     private void carryStarterFamiliesCheck() {
         List<SpeciesSet> starterFamilies = romHandler.getStarters()
                 .stream().map(sp -> sp.getFamily(false))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Trainer tr : romHandler.getTrainers()) {
             if (tr.getTag() != null && (tr.getTag().contains("RIVAL") || tr.getTag().contains("FRIEND"))) {

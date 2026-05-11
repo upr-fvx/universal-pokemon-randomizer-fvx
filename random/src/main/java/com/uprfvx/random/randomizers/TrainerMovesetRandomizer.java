@@ -70,7 +70,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
                 // Add bias for STAB
 
-                Species pk = tp.getSpecies().getForme(tp.getForme());
+                Species pk = tp.getSpecies();
 
                 List<Move> stabMoves = new ArrayList<>(movesAtLevel)
                         .stream()
@@ -601,7 +601,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
         }
 
         // Level-up Moves
-        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(tp.getSpecies().getForme(tp.getForme()).getNumber())
+        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(tp.getSpecies().getNumber())
                 .stream()
                 .filter(ml -> (ml.level <= tp.getLevel() && ml.level != 0) || (ml.level == 0 && tp.getLevel() >= 30))
                 .map(ml -> moves.get(ml.move))
@@ -612,23 +612,23 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (!cyclicEvolutions) {
             Species preEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                preEvo = tp.getSpecies().getForme(tp.getForme());
-            } else {
                 preEvo = tp.getSpecies();
+            } else {
+                preEvo = tp.getSpecies().getBaseForme();
             }
             while (!preEvo.getEvolutionsTo().isEmpty()) {
                 preEvo = preEvo.getEvolutionsTo().get(0).getFrom();
                 moveSelectionPoolAtLevel.addAll(allLevelUpMoves.get(preEvo.getNumber())
                         .stream()
                         .filter(ml -> ml.level <= tp.getLevel())
-                        .filter(ml -> this.random.nextDouble() < preEvoMoveProbability)
+                        .filter(_ -> this.random.nextDouble() < preEvoMoveProbability)
                         .map(ml -> moves.get(ml.move))
-                        .distinct().collect(Collectors.toList()));
+                        .distinct().toList());
             }
         }
 
         // TM Moves
-        boolean[] tmCompat = allTMCompat.get(tp.getSpecies().getForme(tp.getForme()));
+        boolean[] tmCompat = allTMCompat.get(tp.getSpecies());
         for (int tmMove: allTMMoves) {
             if (tmCompat[allTMMoves.indexOf(tmMove) + 1]) {
                 Move thisMove = moves.get(tmMove);
@@ -644,7 +644,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
 
         // Move Tutor Moves
         if (romHandler.hasMoveTutors()) {
-            boolean[] tutorCompat = allTutorCompat.get(tp.getSpecies().getForme(tp.getForme()));
+            boolean[] tutorCompat = allTutorCompat.get(tp.getSpecies());
             for (int tutorMove: allTutorMoves) {
                 if (tutorCompat[allTutorMoves.indexOf(tutorMove) + 1]) {
                     Move thisMove = moves.get(tutorMove);
@@ -663,9 +663,9 @@ public class TrainerMovesetRandomizer extends Randomizer {
         if (!cyclicEvolutions) {
             Species firstEvo;
             if (romHandler.altFormesCanHaveDifferentEvolutions()) {
-                firstEvo = tp.getSpecies().getForme(tp.getForme());
-            } else {
                 firstEvo = tp.getSpecies();
+            } else {
+                firstEvo = tp.getSpecies().getBaseForme();
             }
             while (!firstEvo.getEvolutionsTo().isEmpty()) {
                 firstEvo = firstEvo.getEvolutionsTo().get(0).getFrom();

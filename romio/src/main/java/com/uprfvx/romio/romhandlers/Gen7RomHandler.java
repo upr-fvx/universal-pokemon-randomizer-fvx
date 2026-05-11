@@ -1352,13 +1352,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < numberOfEncounterSlots; i++) {
             int currentOffset = offset + 0xC + (i * 4);
             Encounter enc = encounterIterator.next();
-            int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getBaseSpecies().getNumber();
+            int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getSpecies().getBaseNumber();
             writeWord(encounterTable, currentOffset, speciesAndFormeData);
 
             // SOS encounters for this encounter
             for (int j = 1; j < 8; j++) {
                 Encounter sosEncounter = encounterIterator.next();
-                speciesAndFormeData = (sosEncounter.getFormeNumber() << 11) + sosEncounter.getBaseSpecies().getNumber();
+                speciesAndFormeData = (sosEncounter.getFormeNumber() << 11) + sosEncounter.getSpecies().getBaseNumber();
                 writeWord(encounterTable, currentOffset + (40 * j), speciesAndFormeData);
             }
         }
@@ -1984,7 +1984,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i: totemIndices) {
                 int offset = i * 0x38;
                 TotemPokemon totem = totemIter.next();
-                writeWord(staticEncountersFile, offset, totem.getBaseSpecies().getNumber());
+                writeWord(staticEncountersFile, offset, totem.getSpecies().getBaseNumber());
                 staticEncountersFile[offset + 2] = (byte) totem.getFormeNumber();
                 staticEncountersFile[offset + 3] = (byte) totem.getLevel();
                 if (totem.getHeldItem() == null) {
@@ -2002,7 +2002,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 for (Integer allyIndex: totem.getAllies().keySet()) {
                     offset = allyIndex * 0x38;
                     StaticEncounter ally = totem.getAllies().get(allyIndex);
-                    writeWord(staticEncountersFile, offset, ally.getBaseSpecies().getNumber());
+                    writeWord(staticEncountersFile, offset, ally.getSpecies().getBaseNumber());
                     staticEncountersFile[offset + 2] = (byte) ally.getFormeNumber();
                     staticEncountersFile[offset + 3] = (byte) ally.getLevel();
                     if (ally.getHeldItem() == null) {
@@ -2174,7 +2174,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 3; i < numberOfGifts; i++) {
                 int offset = i * 0x14;
                 StaticEncounter se = staticIter.next();
-                writeWord(giftsFile, offset, se.getBaseSpecies().getNumber());
+                writeWord(giftsFile, offset, se.getSpecies().getBaseNumber());
                 giftsFile[offset + 2] = (byte) se.getFormeNumber();
                 giftsFile[offset + 3] = (byte) se.getLevel();
                 int itemId = se.getHeldItem() == null ? 0 : se.getHeldItem().getId();
@@ -2202,7 +2202,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private void writeStaticEncounter(byte[] staticEncountersFile, int i, StaticEncounter se) {
         int offset = i * 0x38;
-        writeWord(staticEncountersFile, offset, se.getBaseSpecies().getNumber());
+        writeWord(staticEncountersFile, offset, se.getSpecies().getBaseNumber());
         staticEncountersFile[offset + 2] = (byte) se.getFormeNumber();
         staticEncountersFile[offset + 3] = (byte) se.getLevel();
         if (se.getHeldItem() == null) {
@@ -2256,7 +2256,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         if (speciesOffset > 0 && formeOffset > 0) {
             speciesOffset += Gen7Constants.zygardeAssemblySpeciesPrefix.length() / 2; // because it was a prefix
             formeOffset += Gen7Constants.zygardeAssemblyFormePrefix.length() / 2; // because it was a prefix
-            IOFunctions.write2ByteInt(code, speciesOffset, se.getBaseSpecies().getNumber());
+            IOFunctions.write2ByteInt(code, speciesOffset, se.getSpecies().getBaseNumber());
 
             // Just write "mov r0, #forme" to where the game originally loaded the forme.
             code[formeOffset] = (byte) se.getFormeNumber();

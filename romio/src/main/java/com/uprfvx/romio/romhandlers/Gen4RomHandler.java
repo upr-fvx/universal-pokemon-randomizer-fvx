@@ -1424,16 +1424,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 			}
 
-			// up to 204, 5 sets of "sea" encounters to go
+			// up to 204, 5 sets of "sea" encounters to go, each 44 bytes long
 			int offset = 204;
+            int seaAreaLen = 44;
 			for (int i = 0; i < 5; i++) {
-				int rate = readLong(b, offset);
-				offset += 4;
-				List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset, 5);
-				offset += 40;
-				if (rate == 0 || i == 1) {
-					continue;
-				}
+                if (i == 1) continue;
+
+				int rate = readLong(b, offset + i * seaAreaLen);
+                if (rate == 0) continue;
+                List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset + i * seaAreaLen + 4, 5);
+
 				EncounterArea seaArea = new EncounterArea(seaEncounters);
 				seaArea.setDisplayName(mapName + " " + Gen4Constants.dpptWaterSlotSetNames[i]);
 				seaArea.setEncounterType(i == 0 ? EncounterType.SURFING : EncounterType.FISHING);
@@ -1684,9 +1684,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Time to handle Surfing, Rock Smash, Rods
 			int offset = 100;
 			for (int i = 1; i < 6; i++) {
-				List<Encounter> seaEncounters = readSeaEncountersHGSS(b, offset, amounts[i]);
-				offset += 4 * amounts[i];
-				if (rates[i] != 0) {
+                if (rates[i] != 0) {
+                    List<Encounter> seaEncounters = readSeaEncountersHGSS(b, offset, amounts[i]);
 					// Valid area.
 					EncounterArea seaArea = new EncounterArea(seaEncounters);
 					seaArea.setIdentifiers(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i], mapIndex,
@@ -1694,6 +1693,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					seaArea.setRate(rates[i]);
 					encounterAreas.add(seaArea);
 				}
+                offset += 4 * amounts[i];
 			}
 
 			// Swarms
@@ -2582,16 +2582,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// Handle surf, rock smash, and old rod
 			int offset = 100;
 			for (int i = 1; i < 4; i++) {
-				List<Encounter> seaEncounters = readSeaEncountersHGSS(b, offset, amounts[i]);
-				offset += 4 * amounts[i];
 				if (rates[i] != 0) {
 					// Valid area.
+                    List<Encounter> seaEncounters = readSeaEncountersHGSS(b, offset, amounts[i]);
 					for (Encounter enc : seaEncounters) {
 						target.add(enc, 0, index);
 						target.add(enc, 1, index);
 						target.add(enc, 2, index);
 					}
 				}
+                offset += 4 * amounts[i];
 			}
 
 			// Handle good and super rod, because they can get an encounter slot replaced by

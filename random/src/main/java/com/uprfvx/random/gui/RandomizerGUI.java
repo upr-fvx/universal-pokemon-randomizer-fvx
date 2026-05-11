@@ -2270,7 +2270,7 @@ public class RandomizerGUI {
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey, boolean showMessage,
                                        String settingsString, String seedString) {
-
+        ex.printStackTrace(System.err);
         // Make sure the operation dialog doesn't show up over the error
         // dialog
         SwingUtilities.invokeLater(() -> RandomizerGUI.this.opDialog.setVisible(false));

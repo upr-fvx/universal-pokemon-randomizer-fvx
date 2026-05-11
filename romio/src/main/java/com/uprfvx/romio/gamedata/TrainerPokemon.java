@@ -92,10 +92,8 @@ public class TrainerPokemon {
         hasMegaStone = original.hasMegaStone;
 
         resetMoves = original.resetMoves;
-    }
 
-    public TrainerPokemon copy() {
-        return new TrainerPokemon(this);
+        isAddedTeamMember = original.isAddedTeamMember;
     }
 
     public Species getSpecies() {

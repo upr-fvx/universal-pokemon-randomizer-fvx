@@ -1004,7 +1004,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 int secondToLastIndex = t.getPokemon().size() - 1;
                 // Insert a random original Pokemon as placeholder and give it a random level
                 // between the lowest and upperLevelBound
-                TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
+                TrainerPokemon newPokemon = new TrainerPokemon(originalPokes.get(random.nextInt(originalSize)));
                 newPokemon.setLevel(random.nextInt(Math.max(upperLevelBound, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
@@ -1044,7 +1044,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
                 tr.setCurrBattleStyle(createTrainerStyle(settings.getBattleStyle()));
                 while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
-                    tr.getPokemon().add(tr.getPokemon().get(0).copy());
+                    tr.getPokemon().add(new TrainerPokemon(tr.getPokemon().getFirst()));
                 }
                 tr.setForcedDoubleBattle(true);
             }

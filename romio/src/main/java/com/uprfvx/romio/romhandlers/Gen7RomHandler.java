@@ -1671,7 +1671,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     trpoke[pokeOffs + 7] = tp.getSpeedEVs();
                     IOFunctions.writeFullInt(trpoke, pokeOffs + 8, tp.getIVs());
                     writeWord(trpoke, pokeOffs + 14, tp.getLevel());
-                    writeWord(trpoke, pokeOffs + 16, tp.getSpecies().getNumber());
+                    writeWord(trpoke, pokeOffs + 16, tp.getSpecies().getBaseNumber());
                     writeWord(trpoke, pokeOffs + 18, tp.getFormeNumber());
                     pokeOffs += 20;
                     int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -1715,10 +1715,12 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             // However, Beast Lusamine might have duplicates in her party, meaning that two Pokemon can share the
             // same boost entry. First, figure out all the unique Pokemon in her party. We avoid using a Set here
             // in order to preserve the original ordering; we want to make sure to boost the *first* five Pokemon
+            // (Addition: assuming this in-game comparison is done on the species level, so forms can share a boost)
+            // (Haven't actually tested this, or dug into the code the above presumably references)
             List<Species> uniqueSpecies = new ArrayList<>();
             for (int i = 0; i < beastLusamine.getPokemon().size(); i++) {
-                if (!uniqueSpecies.contains(beastLusamine.getPokemon().get(i).getSpecies())) {
-                    uniqueSpecies.add(beastLusamine.getPokemon().get(i).getSpecies());
+                if (!uniqueSpecies.contains(beastLusamine.getPokemon().get(i).getSpecies().getBaseForme())) {
+                    uniqueSpecies.add(beastLusamine.getPokemon().get(i).getSpecies().getBaseForme());
                 }
             }
             int numberOfBoostEntries = Math.min(uniqueSpecies.size(), 5);

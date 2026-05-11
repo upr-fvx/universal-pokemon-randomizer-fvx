@@ -1381,7 +1381,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     byte abilityAndFlag = (byte)((tp.getAbilitySlot() << 4) | tp.getForcedGenderFlag());
                     writeWord(trpoke, pokeOffs, difficulty | abilityAndFlag << 8);
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
-                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
+                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
                     writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
                     // no form info, so no byte 6/7
                     pokeOffs += 8;
@@ -1425,12 +1425,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         byte[] pkmndata = driftveil.files.get(currentFile);
                         TrainerPokemon tp = tpks.next();
                         // pokemon and held item
-                        writeWord(pkmndata, 0, tp.getSpecies().getNumber());
+                        writeWord(pkmndata, 0, tp.getSpecies().getBaseForme().getNumber());
                         int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
                         writeWord(pkmndata, 12, itemId);
                         // handle moves
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getBaseForme(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(pkmndata, 2 + m * 2, pokeMoves[m]);
                             }

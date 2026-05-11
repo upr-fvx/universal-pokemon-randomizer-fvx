@@ -2027,7 +2027,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     trpoke[pokeOffs] = (byte) tp.getStrength();
                     trpoke[pokeOffs + 1] = abilityAndFlag;
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
-                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
+                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
                     writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {

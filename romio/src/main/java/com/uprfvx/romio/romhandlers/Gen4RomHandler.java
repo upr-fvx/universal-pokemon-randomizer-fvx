@@ -2857,7 +2857,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					int difficulty = Math.min(255, 1 + (tp.getIVs() * 255) / 31);
 					writeWord(trpoke, pokeOffs, difficulty | ability << 8);
 					writeWord(trpoke, pokeOffs + 2, tp.getLevel());
-					writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
+					writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
 					trpoke[pokeOffs + 5] |= (byte) (tp.getFormeNumber() << 2);
 					pokeOffs += 6;
 					if (tr.pokemonHaveItems()) {

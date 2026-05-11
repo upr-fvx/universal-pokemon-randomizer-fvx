@@ -640,9 +640,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
             for(TrainerPokemon tp : trainer.getPokemon()) {
                 Species sp = tp.getSpecies();
-                if(tp.getFormeNumber() != 0) {
-                    sp = sp.getForme(tp.getFormeNumber());
-                }
 
                 Type primaryType = sp.getPrimaryType(false);
                 Type secondaryType = sp.getSecondaryType(false);

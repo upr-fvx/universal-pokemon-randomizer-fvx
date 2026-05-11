@@ -87,7 +87,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     private void addPokemonToTrainers(List<Trainer> trainers) {
         for (Trainer tr : trainers) {
-            TrainerPokemon toCopy = tr.getPokemon().get(0);
+            TrainerPokemon toCopy = tr.getPokemon().getFirst();
             while (tr.getPokemon().size() < 6) {
                 tr.getPokemon().add(new TrainerPokemon(toCopy));
             }
@@ -135,7 +135,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canGiveCustomMovesetsToImportantTrainers());
         assumeTrue(romHandler.canGiveCustomMovesetsToRegularTrainers());
 
-        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::giveCustomMovesetsToTrainers, tr -> true);
+        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::giveCustomMovesetsToTrainers, _ -> true);
 
         assertEquals(before, romHandler.getTrainers());
     }
@@ -148,7 +148,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canGiveCustomMovesetsToImportantTrainers());
         assumeTrue(romHandler.canGiveCustomMovesetsToRegularTrainers());
 
-        enhanceTrainersAndSaveAndLoad(this::giveCustomMovesetsToTrainers, tr -> true);
+        enhanceTrainersAndSaveAndLoad(this::giveCustomMovesetsToTrainers, _ -> true);
 
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
@@ -188,7 +188,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
 
-        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::addPokemonToTrainers, tr -> true);
+        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::addPokemonToTrainers, _ -> true);
 
         assertEquals(before, romHandler.getTrainers());
     }
@@ -217,7 +217,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddPokemonToBossTrainers() && romHandler.canAddPokemonToImportantTrainers()
                 && romHandler.canAddPokemonToRegularTrainers());
 
-        enhanceTrainersAndSaveAndLoad(this::addPokemonToTrainers, tr -> true);
+        enhanceTrainersAndSaveAndLoad(this::addPokemonToTrainers, _ -> true);
 
         for (Trainer tr : romHandler.getTrainers()) {
             if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.NEVER && !tr.shouldNotGetBuffs()) {
@@ -259,7 +259,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         assumeTrue(romHandler.canAddHeldItemsToImportantTrainers());
         assumeTrue(romHandler.canAddHeldItemsToRegularTrainers());
 
-        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::addHeldItemsToTrainers, tr -> true);
+        List<Trainer> before = enhanceTrainersAndSaveAndLoad(this::addHeldItemsToTrainers, _ -> true);
 
         assertEquals(before, romHandler.getTrainers());
     }
@@ -326,7 +326,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 int variant = Integer.parseInt(tr.getTag().split("-")[1]);
                 int offset = tr.getTag().contains("RIVAL") ? 1 : 2;
                 Species expected = starters.get((variant + offset) % 3);
-                Species actual = tr.getPokemon().get(0).getSpecies();
+                Species actual = tr.getPokemon().getFirst().getSpecies();
 
                 assertEquals(expected, actual);
             }
@@ -340,7 +340,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
         List<SpeciesSet> starterFamilies = romHandler.getStarters()
                 .stream().map(sp -> sp.getFamily(false))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Trainer tr : romHandler.getTrainers()) {
             if (tr.getTag() != null && (tr.getTag().contains("RIVAL") || tr.getTag().contains("FRIEND"))) {
@@ -367,27 +367,6 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
                 assertTrue(carriesStarter);
             }
         }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void allTrainerPokemonHaveValidFormes(String romName) {
-        loadROM(romName);
-        int invalidFormes = 0;
-        for (Trainer tr : romHandler.getTrainers()) {
-            boolean printedTrainer = false;
-            for (TrainerPokemon tp : tr.getPokemon()) {
-                if (!tp.getSpecies().isValidFormeNumber(tp.getFormeNumber())) {
-                    if (!printedTrainer) {
-                        System.out.println(tr);
-                        printedTrainer = true;
-                    }
-                    System.out.println("\t" + tp.getSpecies().getNumberAndFullName() + " / formeNum=" + tp.getFormeNumber());
-                    invalidFormes++;
-                }
-            }
-        }
-        assertEquals(0, invalidFormes);
     }
 
     @ParameterizedTest

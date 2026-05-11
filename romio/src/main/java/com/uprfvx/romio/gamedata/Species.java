@@ -178,6 +178,9 @@ public class Species implements Comparable<Species> {
         return (double)attack / ((double)attack + (double)spatk);
     }
 
+    /**
+     * Short for {@link #getBaseForme()}.{@link #getNumber()}
+     */
     public int getBaseNumber() {
         return getBaseForme().getNumber();
     }

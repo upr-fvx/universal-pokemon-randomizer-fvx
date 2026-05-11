@@ -1893,9 +1893,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     if (!pokes[species].isValidFormeNumber(formnum)) {
                         formnum = 0;
                     }
-                    TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.setLevel(level);
-                    tpk.setSpecies(pokes[species]);
+                    TrainerPokemon tpk = new TrainerPokemon(pokes[species], level);
                     tpk.setStrength(trpoke[pokeOffs]);
                     if (isORAS) {
                         tpk.setIVs((tpk.getStrength() * 31 / 255));
@@ -1905,7 +1903,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int abilityAndFlag = trpoke[pokeOffs + 1];
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
-                    tpk.setForme(formnum);
+                    tpk.setFormeNumber(formnum);
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -2030,7 +2028,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     trpoke[pokeOffs + 1] = abilityAndFlag;
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
                     writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.getForme());
+                    writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
                         int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -2039,7 +2037,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }

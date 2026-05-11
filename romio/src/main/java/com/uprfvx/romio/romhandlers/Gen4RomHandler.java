@@ -1026,15 +1026,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 						// found, adjust
 						int baseOffset = rivalOffsets.getFirst();
 						// Replace 152 (chiko) with first starter
-						writeWord(file, baseOffset + 8, newStarters.get(0).getNumber());
+						writeWord(file, baseOffset + 8, newStarters.getFirst().getNumber());
 						int jumpAmount = readLong(file, baseOffset + 13);
 						int secondBase = jumpAmount + baseOffset + 17;
 						// TODO: find out what this constant 0x11 is and remove it.
-						if (file[secondBase] != 0x11 || (file[secondBase + 4] & 0xFF) != SpeciesIDs.cyndaquil) {
-							// This isn't what we were expecting...
-						} else {
-							// Replace 155 (cynda) with 2nd starter
-							writeWord(file, secondBase + 4, newStarters.get(1).getNumber());
+                        //  Also, what should we do if the below isn't true?
+						if (file[secondBase] == 0x11 && (file[secondBase + 4] & 0xFF) == SpeciesIDs.cyndaquil) {
+                            // Replace 155 (cynda) with 2nd starter
+                            writeWord(file, secondBase + 4, newStarters.get(1).getNumber());
 						}
 					}
 				}
@@ -1257,7 +1256,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 							// Replace the two starter-words
 							if (readWord(file, baseOffset + 0x21) == SpeciesIDs.turtwig) {
 								// first starter
-								writeWord(file, baseOffset + 0x21, newStarters.get(0).getNumber());
+								writeWord(file, baseOffset + 0x21, newStarters.getFirst().getNumber());
 							} else {
 								// third starter
 								writeWord(file, baseOffset + 0x21, newStarters.get(2).getNumber());
@@ -2723,9 +2722,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                     int level = trpoke[pokeOffs + 2] & 0xFF;
                     int species = (trpoke[pokeOffs + 4] & 0xFF) + ((trpoke[pokeOffs + 5] & 0x01) << 8);
                     int formnum = (trpoke[pokeOffs + 5] >> 2);
-                    TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.setLevel(level);
-                    tpk.setSpecies(pokes[species]);
+                    TrainerPokemon tpk = new TrainerPokemon(pokes[species], level);
                     tpk.setIVs((difficulty * 31) / 255);
                     int abilitySlot = (trpoke[pokeOffs + 1] >>> 4) & 0xF;
                     if (abilitySlot == 0) {
@@ -2733,7 +2730,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                         abilitySlot = 1;
                     }
                     tpk.setAbilitySlot(abilitySlot);
-                    tpk.setForme(formnum);
+                    tpk.setFormeNumber(formnum);
                     pokeOffs += 6;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -2861,7 +2858,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					writeWord(trpoke, pokeOffs, difficulty | ability << 8);
 					writeWord(trpoke, pokeOffs + 2, tp.getLevel());
 					writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
-					trpoke[pokeOffs + 5] |= (byte) (tp.getForme() << 2);
+					trpoke[pokeOffs + 5] |= (byte) (tp.getFormeNumber() << 2);
 					pokeOffs += 6;
 					if (tr.pokemonHaveItems()) {
 						int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -2870,8 +2867,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					}
 					if (tr.pokemonHaveCustomMoves()) {
 						if (tp.isResetMoves()) {
-							int[] pokeMoves = getMovesAtLevel(
-									tp.getSpecies().getForme(tp.getForme()), movesets, tp.getLevel());
+							int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
 							for (int m = 0; m < 4; m++) {
 								writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
 							}
@@ -6088,7 +6084,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 15;
-    };
+    }
 
 	@Override
 	public boolean isEnglish() {

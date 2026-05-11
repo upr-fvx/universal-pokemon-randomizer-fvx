@@ -1095,10 +1095,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         int dataType = rom[offset] & 0xFF;
         offset++;
         while ((rom[offset] & 0xFF) != 0xFF) {
-            //System.out.println(tr);
-            TrainerPokemon tp = new TrainerPokemon();
-            tp.setLevel(rom[offset] & 0xFF);
-            tp.setSpecies(pokes[rom[offset + 1] & 0xFF]);
+            Species pk = pokes[rom[offset + 1] & 0xFF];
+            int level = rom[offset] & 0xFF;
+            TrainerPokemon tp = new TrainerPokemon(pk, level);
             offset += 2;
             if ((dataType & 2) == 2) {
                 int heldItemID = Gen2Constants.itemIDToStandard(rom[offset] & 0xFF);
@@ -3175,7 +3174,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         // even though it just moves/resizes the same chunk of data
         DataRewriter<byte[]> dataRewriter = new SpecificBankDataRewriter<>(romEntry.getIntValue("TrainerPalettesBank"));
         dataRewriter.rewriteData(primaryPointerOffset, data, secondaryPointerOffsets,
-                data1 -> resizeTrainerPalettes(data1, newSize), odo -> data.length);
+                data1 -> resizeTrainerPalettes(data1, newSize), _ -> data.length);
     }
 
     private byte[] readPlayerPalettesBeforeMove() {

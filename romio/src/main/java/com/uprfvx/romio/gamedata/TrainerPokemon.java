@@ -31,7 +31,9 @@ import java.util.Arrays;
  */
 public class TrainerPokemon {
 
-    private Species species;
+    private Species baseSpecies;
+    private int formeNumber;
+
     private int level;
 
     private int[] moves = {0, 0, 0, 0};
@@ -43,7 +45,6 @@ public class TrainerPokemon {
     //TODO: change these to methods which determine at runtime
 
     private int abilitySlot;
-    private int forme;
 
     private int forcedGenderFlag;
     private byte nature;
@@ -66,10 +67,15 @@ public class TrainerPokemon {
 
     private boolean isAddedTeamMember = false;
 
-    public TrainerPokemon() { }
+    public TrainerPokemon(Species species, int level) {
+        setSpecies(species);
+        this.level = level;
+    }
 
     public TrainerPokemon(TrainerPokemon original) {
-        species = original.species;
+        baseSpecies = original.baseSpecies;
+        formeNumber = original.formeNumber;
+
         level = original.level;
 
         moves = Arrays.copyOf(original.moves, 4);
@@ -86,7 +92,6 @@ public class TrainerPokemon {
         strength = original.strength;
         heldItem = original.heldItem;
         abilitySlot = original.abilitySlot;
-        forme = original.forme;
 
         hasZCrystal = original.hasZCrystal;
         hasMegaStone = original.hasMegaStone;
@@ -97,11 +102,33 @@ public class TrainerPokemon {
     }
 
     public Species getSpecies() {
-        return species;
+        return baseSpecies.getForme(formeNumber);
     }
 
     public void setSpecies(Species species) {
-        this.species = species;
+        this.baseSpecies = species.getBaseForme();
+        this.formeNumber = species.getFormeNumber();
+    }
+
+    public Species getBaseSpecies() {
+        return baseSpecies;
+    }
+
+    public int getFormeNumber() {
+        return formeNumber;
+    }
+
+    /**
+     * Sets the formeNumber.
+     * @param formeNumber The forme number to set.
+     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     */
+    public void setFormeNumber(int formeNumber) {
+        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
+            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
+                    + baseSpecies.getNumberAndFullName());
+        }
+        this.formeNumber = formeNumber;
     }
 
     public int getLevel() {
@@ -137,7 +164,7 @@ public class TrainerPokemon {
     }
 
     public boolean canMegaEvolve() {
-        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
             if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
                 return true;
             }
@@ -167,14 +194,6 @@ public class TrainerPokemon {
 
     public void setAbilitySlot(int abilitySlot) {
         this.abilitySlot = abilitySlot;
-    }
-
-    public int getForme() {
-        return forme;
-    }
-
-    public void setForme(int forme) {
-        this.forme = forme;
     }
 
     public int getForcedGenderFlag() {
@@ -267,7 +286,7 @@ public class TrainerPokemon {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(species.getFullName());
+        StringBuilder sb = new StringBuilder(getSpecies().getFullName());
         if (heldItem != null) {
             sb.append("@").append(heldItem.getName());
         }

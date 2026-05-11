@@ -377,12 +377,12 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
         for (Trainer tr : romHandler.getTrainers()) {
             boolean printedTrainer = false;
             for (TrainerPokemon tp : tr.getPokemon()) {
-                if (!tp.getSpecies().isValidFormeNumber(tp.getForme())) {
+                if (!tp.getSpecies().isValidFormeNumber(tp.getFormeNumber())) {
                     if (!printedTrainer) {
                         System.out.println(tr);
                         printedTrainer = true;
                     }
-                    System.out.println("\t" + tp.getSpecies().getNumberAndFullName() + " / formeNum=" + tp.getForme());
+                    System.out.println("\t" + tp.getSpecies().getNumberAndFullName() + " / formeNum=" + tp.getFormeNumber());
                     invalidFormes++;
                 }
             }

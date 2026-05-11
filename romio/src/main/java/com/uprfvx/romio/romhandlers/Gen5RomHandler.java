@@ -1205,14 +1205,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     int level = readWord(trpoke, pokeOffs + 2);
                     int species = readWord(trpoke, pokeOffs + 4);
                     int formnum = readWord(trpoke, pokeOffs + 6);
-                    TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.setLevel(level);
-                    tpk.setSpecies(pokes[species]);
+                    TrainerPokemon tpk = new TrainerPokemon(pokes[species], level);
                     tpk.setIVs((difficulty) * 31 / 255);
                     int abilityAndFlag = trpoke[pokeOffs + 1];
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
-                    tpk.setForme(formnum);
+                    tpk.setFormeNumber(formnum);
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -1249,9 +1247,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         for (int poke = 0; poke < pokemonNum; poke++) {
                             byte[] pkmndata = driftveil.files.get(currentFile);
                             int species = readWord(pkmndata, 0);
-                            TrainerPokemon tpk = new TrainerPokemon();
-                            tpk.setLevel(25);
-                            tpk.setSpecies(pokes[species]);
+                            TrainerPokemon tpk = new TrainerPokemon(pokes[species], 25);
                             tpk.setIVs(31);
                             tpk.setHeldItem(items.get(readWord(pkmndata, 12)));
                             for (int move = 0; move < 4; move++) {
@@ -1386,7 +1382,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     writeWord(trpoke, pokeOffs, difficulty | abilityAndFlag << 8);
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
                     writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.getForme());
+                    writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
                     // no form info, so no byte 6/7
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
@@ -1396,7 +1392,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getForme(tp.getForme()), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }

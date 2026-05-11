@@ -1201,22 +1201,20 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Trainer tr = new Trainer();
         tr.setOffset(offset);
         int dataType = rom[offset] & 0xFF;
+        offset++;
         if (dataType == 0xFF) {
             // "Special" trainer
-            offset++;
             while (rom[offset] != 0x0) {
-                TrainerPokemon tp = new TrainerPokemon();
-                tp.setLevel(rom[offset] & 0xFF);
-                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
+                Species pk = pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]];
+                int level = rom[offset] & 0xFF;
+                TrainerPokemon tp = new TrainerPokemon(pk, level);
                 tr.getPokemon().add(tp);
                 offset += 2;
             }
         } else {
-            offset++;
             while (rom[offset] != 0x0) {
-                TrainerPokemon tp = new TrainerPokemon();
-                tp.setLevel(dataType);
-                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset] & 0xFF]]);
+                Species pk = pokes[pokeRBYToNumTable[rom[offset] & 0xFF]];
+                TrainerPokemon tp = new TrainerPokemon(pk, dataType);
                 tr.getPokemon().add(tp);
                 offset++;
             }

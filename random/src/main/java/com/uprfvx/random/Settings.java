@@ -1200,7 +1200,7 @@ public class Settings {
         if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
             this.currentRestrictions = null;
             this.setLimitPokemon(false);
-        } else {
+        } else if (shouldLimitRestrictionsToRomGeneration(rh)) {
             this.currentRestrictions.limitToGen(rh.generationOfPokemon());
         }
 
@@ -1280,6 +1280,13 @@ public class Settings {
 
         // done
         return feedback;
+    }
+
+    private boolean shouldLimitRestrictionsToRomGeneration(RomHandler rh) {
+        if (rh instanceof Gen3RomHandler) {
+            return !((Gen3RomHandler) rh).hasExtendedBpreHackSpeciesPool();
+        }
+        return true;
     }
 
     // getters and setters

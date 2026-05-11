@@ -590,6 +590,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 && romEntry.getIntValue("PokemonCount") > Gen3Constants.unhackedMaxPokedex;
     }
 
+    public boolean hasExtendedBpreHackSpeciesPool() {
+        return usesInternalSpeciesIdentityForExtendedBpreHack();
+    }
+
     private static Map<String, Integer> speciesIdsByNormalizedName() {
         Map<String, Integer> speciesIdsByName = new HashMap<>();
         try {

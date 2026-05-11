@@ -129,6 +129,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int pokedexCount;
     private String[] pokeNames;
     private int pickupItemsTableOffset;
+    private static final String CFRU_DPE_DIAGNOSTIC_PREFIX = "[temporary CFRU/DPE species diagnostics] ";
+    private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
 
     // Misc.
     private final FreedSpace freedSpace = new FreedSpace();
@@ -541,6 +543,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         constructPokemonList();
+        printCfruDpeSpeciesDiagnostics();
     }
 
     private int generationOf(Species pk) {
@@ -550,6 +553,50 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return 2;
         }
         return 1;
+    }
+
+    private void printCfruDpeSpeciesDiagnostics() {
+        int numInternalPokes = romEntry.getIntValue("PokemonCount");
+        int maxInternalSpeciesId = 0;
+        int maxSpeciesNumber = 0;
+        Map<Integer, Integer> generationCounts = new TreeMap<>();
+        List<String> sampleSpecies = new ArrayList<>();
+
+        for (int i = 1; i < pokesInternal.length; i++) {
+            Species pk = pokesInternal[i];
+            if (pk == null) {
+                continue;
+            }
+            maxInternalSpeciesId = i;
+            maxSpeciesNumber = Math.max(maxSpeciesNumber, pk.getNumber());
+            generationCounts.merge(pk.getGeneration(), 1, Integer::sum);
+            if (pk.getNumber() > Gen3Constants.pokemonCount
+                    && sampleSpecies.size() < CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT) {
+                sampleSpecies.add(String.format(Locale.ROOT,
+                        "internal=%d speciesNumber=%d name=%s generation=%d",
+                        i, pk.getNumber(), pk.getName(), pk.getGeneration()));
+            }
+        }
+
+        System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX
+                + "ROM code=" + romEntry.getRomCode()
+                + " version=" + romEntry.getVersion()
+                + " isRomHack=" + isRomHack);
+        System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX
+                + "PokemonCount=" + numInternalPokes
+                + " pokedexCount=" + pokedexCount
+                + " speciesList.size=" + (speciesList == null ? "<not loaded>" : speciesList.size())
+                + " maxInternalSpeciesId=" + maxInternalSpeciesId
+                + " maxSpeciesNumber=" + maxSpeciesNumber);
+        System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "generationCounts=" + generationCounts);
+        if (sampleSpecies.isEmpty()) {
+            System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "sampleSpeciesAbove386=<none loaded>");
+        } else {
+            System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "sampleSpeciesAbove386:");
+            for (String sample : sampleSpecies) {
+                System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "  " + sample);
+            }
+        }
     }
 
     @Override
@@ -1519,7 +1566,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Encounter enc = new Encounter();
             enc.setLevel(rom[dataOffset + i * 4]);
             enc.setMaxLevel(rom[dataOffset + i * 4 + 1]);
-            enc.setSpecies(pokesInternal[readWord(dataOffset + i * 4 + 2)]);
+            int rawSpecies = readWord(dataOffset + i * 4 + 2);
+            Species species = pokesInternal[rawSpecies];
+            if (species == null) {
+                System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX
+                        + "wild encounter resolved to <unknown>: area=" + name
+                        + " encounterType=" + encounterType
+                        + " slot=" + i
+                        + " rawInternalSpeciesId=" + rawSpecies
+                        + " dataOffset=" + String.format(Locale.ROOT, "0x%X", dataOffset));
+            }
+            enc.setSpecies(species);
             area.add(enc);
         }
         return area;

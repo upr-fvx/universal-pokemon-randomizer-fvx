@@ -1148,7 +1148,14 @@ public class RandomizationLogger {
                 }
 
                 Species species = e.getSpecies();
-                String speciesName = species == null ? "<unknown>" : species.getFullName();
+                String speciesName = species == null
+                        ? "<unknown> [temporary CFRU/DPE diagnostics: area="
+                        + (area.getDisplayName() == null ? "<no display name>" : area.getDisplayName())
+                        + ", encounterType=" + area.getEncounterType()
+                        + ", mapIndex=" + area.getMapIndex()
+                        + ", locationTag=" + area.getLocationTag()
+                        + ", rawSpeciesId=<unavailable in logger; see Gen3RomHandler stderr rawInternalSpeciesId>]"
+                        : species.getFullName();
 
                 if (e.isSOS()) {
                     log.printf(getBS("Log.wp.sos"), getSOSString(e));
@@ -1370,5 +1377,4 @@ public class RandomizationLogger {
         return names;
     }
 }
-
 

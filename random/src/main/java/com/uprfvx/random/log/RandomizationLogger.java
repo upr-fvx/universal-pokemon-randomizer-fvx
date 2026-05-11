@@ -1130,7 +1130,7 @@ public class RandomizationLogger {
 
         int i = 0;
         for (EncounterArea area : encounterAreas) {
-            if (area.getEncounterType() == EncounterType.UNUSED) {
+            if (area == null || area.getEncounterType() == EncounterType.UNUSED) {
                 continue;
             }
 
@@ -1141,15 +1141,23 @@ public class RandomizationLogger {
             } else {
                 log.printf(getBS("Log.wp.areaWithDisplayName"), i, area.getDisplayName(), area.getRate());
             }
+
             for (Encounter e : area) {
+                if (e == null) {
+                    continue;
+                }
+
+                Species species = e.getSpecies();
+                String speciesName = species == null ? "<unknown>" : species.getFullName();
+
                 if (e.isSOS()) {
                     log.printf(getBS("Log.wp.sos"), getSOSString(e));
                 }
                 if (e.getMaxLevel() > 0 && e.getMaxLevel() != e.getLevel()) {
-                    log.printf(getBS("Log.wp.encMultiLevel"), e.getSpecies().getFullName(),
+                    log.printf(getBS("Log.wp.encMultiLevel"), speciesName,
                             e.getLevel(), e.getMaxLevel());
                 } else {
-                    log.printf(getBS("Log.wp.encSingleLevel"), e.getSpecies().getFullName(), e.getLevel());
+                    log.printf(getBS("Log.wp.encSingleLevel"), speciesName, e.getLevel());
                 }
             }
             log.println();

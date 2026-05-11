@@ -1717,8 +1717,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // min, max, species, species
             int levels = enc.getLevel() | (enc.getMaxLevel() << 8);
             writeWord(dataOffset + i * 4, levels);
-            writeWord(dataOffset + i * 4 + 2, pokedexToInternal[enc.getSpecies().getNumber()]);
+            writeWord(dataOffset + i * 4 + 2, getWildEncounterInternalSpeciesId(enc.getSpecies()));
         }
+    }
+
+    private int getWildEncounterInternalSpeciesId(Species species) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     @Override

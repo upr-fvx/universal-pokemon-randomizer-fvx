@@ -359,6 +359,8 @@ public class SpeciesTest {
         a.setGeneration(1);
         a.setPrimaryType(Type.NORMAL);
         a.setSecondaryType(null);
+        a.setPrimaryType(Type.FIRE);
+        a.setSecondaryType(Type.FIGHTING);
         a.setHp(2);
         a.setAttack(3);
         a.setDefense(4);
@@ -380,8 +382,10 @@ public class SpeciesTest {
 
         assertEquals("original", aCopy.getName());
         assertEquals(1, aCopy.getGeneration());
-        assertEquals(Type.NORMAL, aCopy.getPrimaryType(false));
-        assertNull(aCopy.getSecondaryType(false));
+        assertEquals(Type.NORMAL, aCopy.getPrimaryType(true));
+        assertNull(aCopy.getSecondaryType(true));
+        assertEquals(Type.FIRE, aCopy.getPrimaryType(false));
+        assertEquals(Type.FIGHTING, aCopy.getSecondaryType(false));
         assertEquals(2, aCopy.getHp());
         assertEquals(3, aCopy.getAttack());
         assertEquals(4, aCopy.getDefense());

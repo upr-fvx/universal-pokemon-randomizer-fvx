@@ -165,7 +165,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         for (Trainer tr : romHandler.getTrainers()) {
             List<String> beforeStrings = beforeTrainerStrings.get(tr);
-            System.out.println("Before: " + beforeStrings.get(0));
+            System.out.println("Before: " + beforeStrings.getFirst());
             for (int i = 1; i < beforeStrings.size(); i++) {
                 System.out.println("\t" + beforeStrings.get(i));
             }

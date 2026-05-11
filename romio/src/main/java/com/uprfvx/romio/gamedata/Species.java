@@ -1265,6 +1265,10 @@ public class Species implements Comparable<Species> {
         //Types
         copy.primaryType = original.primaryType;
         copy.secondaryType = original.secondaryType;
+        copy.originalPrimaryType = original.originalPrimaryType;
+        copy.originalSecondaryType = original.originalSecondaryType;
+        copy.hasSetPrimaryType = original.hasSetPrimaryType;
+        copy.hasSetSecondaryType = original.hasSetSecondaryType;
 
         //base stats
         copy.hp = original.hp;

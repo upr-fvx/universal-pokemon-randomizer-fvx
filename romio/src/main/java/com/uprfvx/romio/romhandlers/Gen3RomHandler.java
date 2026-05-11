@@ -131,6 +131,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int pickupItemsTableOffset;
     private static final String CFRU_DPE_DIAGNOSTIC_PREFIX = "[temporary CFRU/DPE species diagnostics] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
+    private static final Map<String, Integer> SPECIES_ID_BY_NORMALIZED_NAME = speciesIdsByNormalizedName();
 
     // Misc.
     private final FreedSpace freedSpace = new FreedSpace();
@@ -487,8 +488,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // only include "valid" pokes
             speciesList = new ArrayList<>();
             speciesList.add(null);
-            for (int i = 1; i < pokes.length; i++) {
-                Species pk = pokes[i];
+            Species[] listSource = usesInternalSpeciesIdentityForExtendedBpreHack() ? pokesInternal : pokes;
+            for (int i = 1; i < listSource.length; i++) {
+                Species pk = listSource[i];
                 if (pk != null) {
                     String lowerName = pk.getName().toLowerCase();
                     if (!lowerName.contains("unused") && !lowerName.equals("?")) {
@@ -514,6 +516,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 1; i <= numInternalPokes; i++) {
             int number = internalToPokedex[i];
             Species pk = new Species(number);
+            if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+                pk.setSpeciesSetIdentityNumber(i);
+            }
             pk.setName(pokeNames[i]);
             if (pk.getNumber() != 0) {
                 pokes[pk.getNumber()] = pk;
@@ -547,18 +552,77 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private int generationOf(Species pk) {
-        if (pk.getNumber() >= SpeciesIDs.treecko) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            Integer speciesId = SPECIES_ID_BY_NORMALIZED_NAME.get(normalizeSpeciesName(pk.getName()));
+            if (speciesId != null) {
+                return generationOfSpeciesId(speciesId);
+            }
+            return generationOfSpeciesId(pk.getNumber());
+        }
+        return generationOfSpeciesId(pk.getNumber());
+    }
+
+    private int generationOfSpeciesId(int speciesId) {
+        if (speciesId >= SpeciesIDs.sprigatito) {
+            return 9;
+        } else if (speciesId >= SpeciesIDs.grookey) {
+            return 8;
+        } else if (speciesId >= SpeciesIDs.rowlet) {
+            return 7;
+        } else if (speciesId >= SpeciesIDs.chespin) {
+            return 6;
+        } else if (speciesId >= SpeciesIDs.victini) {
+            return 5;
+        } else if (speciesId >= SpeciesIDs.turtwig) {
+            return 4;
+        }
+        if (speciesId >= SpeciesIDs.treecko) {
             return 3;
-        } else if (pk.getNumber() >= SpeciesIDs.chikorita) {
+        } else if (speciesId >= SpeciesIDs.chikorita) {
             return 2;
         }
         return 1;
+    }
+
+    private boolean usesInternalSpeciesIdentityForExtendedBpreHack() {
+        return isRomHack
+                && "BPRE".equals(romEntry.getRomCode())
+                && romEntry.getIntValue("PokemonCount") > Gen3Constants.unhackedMaxPokedex;
+    }
+
+    private static Map<String, Integer> speciesIdsByNormalizedName() {
+        Map<String, Integer> speciesIdsByName = new HashMap<>();
+        try {
+            for (java.lang.reflect.Field field : SpeciesIDs.class.getFields()) {
+                if (field.getType() == int.class) {
+                    speciesIdsByName.put(normalizeSpeciesName(field.getName()), field.getInt(null));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Unable to read species IDs.", e);
+        }
+        return speciesIdsByName;
+    }
+
+    private static String normalizeSpeciesName(String name) {
+        StringBuilder normalized = new StringBuilder();
+        if (name == null) {
+            return "";
+        }
+        for (int i = 0; i < name.length(); i++) {
+            char c = Character.toLowerCase(name.charAt(i));
+            if (Character.isLetterOrDigit(c)) {
+                normalized.append(c);
+            }
+        }
+        return normalized.toString();
     }
 
     private void printCfruDpeSpeciesDiagnostics() {
         int numInternalPokes = romEntry.getIntValue("PokemonCount");
         int maxInternalSpeciesId = 0;
         int maxSpeciesNumber = 0;
+        int maxSpeciesIdentityNumber = 0;
         Map<Integer, Integer> generationCounts = new TreeMap<>();
         List<String> sampleSpecies = new ArrayList<>();
 
@@ -569,12 +633,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             maxInternalSpeciesId = i;
             maxSpeciesNumber = Math.max(maxSpeciesNumber, pk.getNumber());
+            maxSpeciesIdentityNumber = Math.max(maxSpeciesIdentityNumber, pk.getSpeciesSetIdentityNumber());
             generationCounts.merge(pk.getGeneration(), 1, Integer::sum);
             if (pk.getNumber() > Gen3Constants.pokemonCount
                     && sampleSpecies.size() < CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT) {
                 sampleSpecies.add(String.format(Locale.ROOT,
-                        "internal=%d speciesNumber=%d name=%s generation=%d",
-                        i, pk.getNumber(), pk.getName(), pk.getGeneration()));
+                        "internal=%d identity=%d speciesNumber=%d name=%s generation=%d",
+                        i, pk.getSpeciesSetIdentityNumber(), pk.getNumber(), pk.getName(), pk.getGeneration()));
             }
         }
 
@@ -587,7 +652,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 + " pokedexCount=" + pokedexCount
                 + " speciesList.size=" + (speciesList == null ? "<not loaded>" : speciesList.size())
                 + " maxInternalSpeciesId=" + maxInternalSpeciesId
-                + " maxSpeciesNumber=" + maxSpeciesNumber);
+                + " maxSpeciesNumber=" + maxSpeciesNumber
+                + " maxSpeciesIdentityNumber=" + maxSpeciesIdentityNumber);
         System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "generationCounts=" + generationCounts);
         if (sampleSpecies.isEmpty()) {
             System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "sampleSpeciesAbove386=<none loaded>");

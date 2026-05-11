@@ -39,6 +39,7 @@ public class Species implements Comparable<Species> {
 
     private String name;
     private final int number;
+    private int speciesSetIdentityNumber;
 
     private String formeSuffix = "";
     private Species baseForme = null;
@@ -102,6 +103,7 @@ public class Species implements Comparable<Species> {
 
     public Species(int number) {
         this.number = number;
+        this.speciesSetIdentityNumber = number;
     }
 
     /**
@@ -517,7 +519,7 @@ public class Species implements Comparable<Species> {
         // Don't change this hash!! Things *will* break.
         final int prime = 31;
         int result = 1;
-        result = prime * result + number;
+        result = prime * result + speciesSetIdentityNumber;
         return result;
     }
 
@@ -530,7 +532,7 @@ public class Species implements Comparable<Species> {
         if (getClass() != obj.getClass())
             return false;
         Species other = (Species) obj;
-        return number == other.number;
+        return speciesSetIdentityNumber == other.speciesSetIdentityNumber;
     }
 
     @Override
@@ -611,6 +613,14 @@ public class Species implements Comparable<Species> {
 
     public int getNumber() {
         return number;
+    }
+
+    public int getSpeciesSetIdentityNumber() {
+        return speciesSetIdentityNumber;
+    }
+
+    public void setSpeciesSetIdentityNumber(int speciesSetIdentityNumber) {
+        this.speciesSetIdentityNumber = speciesSetIdentityNumber;
     }
 
     public String getFormeSuffix() {

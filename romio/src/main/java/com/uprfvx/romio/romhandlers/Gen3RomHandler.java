@@ -1448,9 +1448,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void writeStarterBytes(List<Species> starters) {
         int baseOffset = romEntry.getIntValue("StarterPokemon");
-        int starter0 = pokedexToInternal[starters.get(0).getNumber()];
-        int starter1 = pokedexToInternal[starters.get(1).getNumber()];
-        int starter2 = pokedexToInternal[starters.get(2).getNumber()];
+        int starter0 = getStarterInternalSpeciesId(starters.get(0));
+        int starter1 = getStarterInternalSpeciesId(starters.get(1));
+        int starter2 = getStarterInternalSpeciesId(starters.get(2));
         if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp
                 || romEntry.getRomType() == Gen3Constants.RomType_Em) {
 
@@ -1472,6 +1472,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeWord(baseOffset + Gen3Constants.frlgStarter3Offset, starter2);
             writeWord(baseOffset + Gen3Constants.frlgStarter3Offset + Gen3Constants.frlgStarterRepeatOffset, starter0);
         }
+    }
+
+    private int getStarterInternalSpeciesId(Species species) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     private void writeStarterText(List<Species> starters) {

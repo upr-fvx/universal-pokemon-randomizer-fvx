@@ -41,7 +41,15 @@ public class CheckValueCalculator {
 
     private void addTrainerInfo() {
         for (Trainer t : romHandler.getTrainers()) {
+            if (t == null) {
+                continue;
+            }
+
             for (TrainerPokemon tpk : t.getPokemon()) {
+                if (tpk == null || tpk.getSpecies() == null) {
+                    continue;
+                }
+
                 addToCV(tpk.getLevel(), tpk.getSpecies().getNumber());
             }
         }
@@ -51,11 +59,18 @@ public class CheckValueCalculator {
         boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
                 (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
         for (EncounterArea area : romHandler.getEncounters(useTimeBasedEncounters)) {
+            if (area == null) {
+                continue;
+            }
+
             for (Encounter e : area) {
+                if (e == null || e.getSpecies() == null) {
+                    continue;
+                }
+
                 addToCV(e.getLevel(), e.getSpecies().getNumber());
             }
         }
-
     }
 
     private void addTMMoveInfo() {
@@ -74,12 +89,20 @@ public class CheckValueCalculator {
 
     private void addStaticEncounterInfo() {
         for (StaticEncounter se : romHandler.getStaticPokemon()) {
+            if (se == null || se.getSpecies() == null) {
+                continue;
+            }
+
             addToCV(se.getSpecies().getNumber());
         }
     }
 
     private void addTotemInfo() {
         for (TotemPokemon totem : romHandler.getTotemPokemon()) {
+            if (totem == null || totem.getSpecies() == null) {
+                continue;
+            }
+
             addToCV(totem.getSpecies().getNumber());
         }
     }

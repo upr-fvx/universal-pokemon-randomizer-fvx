@@ -854,12 +854,22 @@ public class Gen3Constants {
     }
 
     private static void tag(List<Trainer> trainers, int trainerNum, String tag) {
-        trainers.get(trainerNum - 1).setTag(tag);
+        int index = trainerNum - 1;
+        if (index < 0 || index >= trainers.size()) {
+            return;
+        }
+
+        trainers.get(index).setTag(tag);
     }
 
     private static void tag(List<Trainer> allTrainers, String tag, int... numbers) {
         for (int num : numbers) {
-            allTrainers.get(num - 1).setTag(tag);
+            int index = num - 1;
+            if (index < 0 || index >= allTrainers.size()) {
+                continue;
+            }
+
+            allTrainers.get(index).setTag(tag);
         }
     }
 

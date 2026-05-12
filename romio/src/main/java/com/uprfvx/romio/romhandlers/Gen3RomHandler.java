@@ -2275,7 +2275,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				// Add 1 to offset integer division truncation
 				writeWord(pokemonData, tpIndex * 16, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 16 + 2, tp.getLevel());
-				writeWord(pokemonData, tpIndex * 16 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
+				writeWord(pokemonData, tpIndex * 16 + 4, getTrainerPokemonInternalSpeciesId(tp.getSpecies()));
 				int movesStart;
 				if (trainer.pokemonHaveItems()) {
                     int itemInternalID = tp.getHeldItem() == null ? 0 :
@@ -2307,7 +2307,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 				TrainerPokemon tp = trainer.getPokemon().get(tpIndex);
 				writeWord(pokemonData, tpIndex * 8, Math.min(255, 1 + (tp.getIVs() * 255) / 31));
 				writeWord(pokemonData, tpIndex * 8 + 2, tp.getLevel());
-				writeWord(pokemonData, tpIndex * 8 + 4, pokedexToInternal[tp.getSpecies().getNumber()]);
+				writeWord(pokemonData, tpIndex * 8 + 4, getTrainerPokemonInternalSpeciesId(tp.getSpecies()));
                 int itemInternalID = !trainer.pokemonHaveItems() || tp.getHeldItem() == null ? 0
                         : Gen3Constants.itemIDToInternal(tp.getHeldItem().getId());
                 writeWord(pokemonData, tpIndex * 8 + 6, itemInternalID);
@@ -2342,7 +2342,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
 			TrainerPokemon tp = mossdeepSteven.getPokemon().get(i);
-			writeWord(currentOffset, pokedexToInternal[tp.getSpecies().getNumber()]);
+			writeWord(currentOffset, getTrainerPokemonInternalSpeciesId(tp.getSpecies()));
 			writeByte(currentOffset + 2, (byte) tp.getIVs());
 			writeByte(currentOffset + 3, (byte) tp.getLevel());
 			for (int move = 0; move < 4; move++) {
@@ -2350,6 +2350,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			}
 		}
 	}
+
+    private int getTrainerPokemonInternalSpeciesId(Species species) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        return pokedexToInternal[species.getNumber()];
+    }
 
     @Override
     public List<Species> getSpecies() {

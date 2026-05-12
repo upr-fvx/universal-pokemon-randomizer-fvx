@@ -44,7 +44,9 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                 }
             }
-            setSpeciesAndFormeForStaticAndLinkedEncounters(se, se.getSpecies());
+            if (se.getSpecies() != null) {
+                setSpeciesAndFormeForStaticAndLinkedEncounters(se, se.getSpecies());
+            }
         }
         romHandler.setStaticPokemon(currentStaticPokemon);
     }
@@ -102,6 +104,10 @@ public class StaticPokemonRandomizer extends Randomizer {
             SpeciesSet ultraBeastsPool = new SpeciesSet(ultraBeastsLeft);
 
             for (StaticEncounter old : currentStaticPokemon) {
+                if (old.getSpecies() == null) {
+                    replacements.add(new StaticEncounter(old));
+                    continue;
+                }
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 if (old.getSpecies().isLegendary()) {
@@ -167,6 +173,10 @@ public class StaticPokemonRandomizer extends Randomizer {
 
             List<Integer> mainGameLegendaries = romHandler.getMainGameLegendaries();
             for (StaticEncounter old : currentStaticPokemon) {
+                if (old.getSpecies() == null) {
+                    replacements.add(new StaticEncounter(old));
+                    continue;
+                }
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 Species oldPK = old.getSpecies();
@@ -262,6 +272,10 @@ public class StaticPokemonRandomizer extends Randomizer {
             SpeciesSet pokemonPool = new SpeciesSet(pokemonLeft);
 
             for (StaticEncounter old : currentStaticPokemon) {
+                if (old.getSpecies() == null) {
+                    replacements.add(new StaticEncounter(old));
+                    continue;
+                }
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 if (reallySwapMegaEvos && old.canMegaEvolve()) {
@@ -525,6 +539,11 @@ public class StaticPokemonRandomizer extends Randomizer {
     }
 
     private void setSpeciesAndFormeForStaticEncounter(StaticEncounter newStatic, Species sp) {
+        if (sp == null) {
+            newStatic.setSpecies(null);
+            newStatic.setForme(0);
+            return;
+        }
         newStatic.setForme(sp.getRandomCosmeticFormeNumber(random));
         Species base = sp;
         while (!base.isBaseForme()) {

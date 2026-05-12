@@ -138,6 +138,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final String CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX = "[CFRU-DPE-PALETTE] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
     private static final int CFRU_DPE_XERNEAS_INTERNAL_ID = 824;
+    private static final int CFRU_DPE_MOVES_COUNT = 992;
+    private static final int GEN3_BATTLE_MOVE_ENTRY_SIZE = 0xC;
+    private static final int CFRU_DPE_MOVE_SPLIT_PHYSICAL = 0;
+    private static final int CFRU_DPE_MOVE_SPLIT_SPECIAL = 1;
+    private static final int CFRU_DPE_MOVE_SPLIT_STATUS = 2;
     private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
     private static final int CFRU_DPE_MAX_LEARNABLE_MOVES = 50;
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
@@ -435,17 +440,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
             // try to detect number of moves using the descriptions
             int moveCount = 0;
-            while (true) {
-                int descPointer = readPointer(descsTable + (moveCount) * 4, true);
-                if (descPointer != -1) {
-                    int descStrLen = lengthOfStringAt(descPointer);
-                    if (descStrLen > 0 && descStrLen < 100) {
-                        // okay, this does seem fine
-                        moveCount++;
-                        continue;
+            if (useCfruDpeGen9SpeciesCount) {
+                moveCount = CFRU_DPE_MOVES_COUNT - 1;
+            } else {
+                while (true) {
+                    int descPointer = readPointer(descsTable + (moveCount) * 4, true);
+                    if (descPointer != -1) {
+                        int descStrLen = lengthOfStringAt(descPointer);
+                        if (descStrLen > 0 && descStrLen < 100) {
+                            // okay, this does seem fine
+                            moveCount++;
+                            continue;
+                        }
                     }
+                    break;
                 }
-                break;
             }
             romEntry.putIntValue("MoveCount", moveCount);
 
@@ -994,22 +1003,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int nameoffs = romEntry.getIntValue("MoveNames");
         int namelen = romEntry.getIntValue("MoveNameLength");
         for (int i = 1; i <= moveCount; i++) {
+            int moveOffset = offs + i * GEN3_BATTLE_MOVE_ENTRY_SIZE;
             moves[i] = new Move();
             moves[i].name = readFixedLengthString(nameoffs + i * namelen, namelen);
             moves[i].number = i;
             moves[i].internalId = i;
-            moves[i].effectIndex = rom[offs + i * 0xC] & 0xFF;
-            moves[i].hitratio = ((rom[offs + i * 0xC + 3] & 0xFF));
-            moves[i].power = rom[offs + i * 0xC + 1] & 0xFF;
-            moves[i].pp = rom[offs + i * 0xC + 4] & 0xFF;
-            moves[i].type = Gen3Constants.typeTable[rom[offs + i * 0xC + 2]];
-            moves[i].target = rom[offs + i * 0xC + 6] & 0xFF;
-            moves[i].category = GBConstants.physicalTypes.contains(moves[i].type) ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
-            if (moves[i].power == 0 && !GlobalConstants.noPowerNonStatusMoves.contains(i)) {
-                moves[i].category = MoveCategory.STATUS;
-            }
-            moves[i].priority = rom[offs + i * 0xC + 7];
-            int flags = rom[offs + i * 0xC + 8] & 0xFF;
+            moves[i].effectIndex = rom[moveOffset] & 0xFF;
+            moves[i].hitratio = ((rom[moveOffset + 3] & 0xFF));
+            moves[i].power = rom[moveOffset + 1] & 0xFF;
+            moves[i].pp = rom[moveOffset + 4] & 0xFF;
+            moves[i].type = typeFromMoveData(rom[moveOffset + 2] & 0xFF);
+            moves[i].target = rom[moveOffset + 6] & 0xFF;
+            moves[i].category = categoryFromMoveData(moves[i], rom[moveOffset + 10] & 0xFF);
+            moves[i].priority = rom[moveOffset + 7];
+            int flags = rom[moveOffset + 8] & 0xFF;
             moves[i].makesContact = (flags & 1) != 0;
             moves[i].isSoundMove = Gen3Constants.soundMoves.contains(moves[i].number);
 
@@ -1025,11 +1032,40 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 moves[i].hitCount = 2.71; // this assumes the first hit lands
             }
 
-            int secondaryEffectChance = rom[offs + i * 0xC + 5] & 0xFF;
+            int secondaryEffectChance = rom[moveOffset + 5] & 0xFF;
             loadStatChangesFromEffect(moves[i], secondaryEffectChance);
             loadStatusFromEffect(moves[i], secondaryEffectChance);
             loadMiscMoveInfoFromEffect(moves[i], secondaryEffectChance);
         }
+    }
+
+    private Type typeFromMoveData(int typeIndex) {
+        if (typeIndex >= 0 && typeIndex < Gen3Constants.typeTable.length
+                && Gen3Constants.typeTable[typeIndex] != null) {
+            return Gen3Constants.typeTable[typeIndex];
+        }
+        return Type.NORMAL;
+    }
+
+    private MoveCategory categoryFromMoveData(Move move, int cfruDpeSplit) {
+        if (useCfruDpeGen9SpeciesCount) {
+            switch (cfruDpeSplit) {
+                case CFRU_DPE_MOVE_SPLIT_PHYSICAL:
+                    return MoveCategory.PHYSICAL;
+                case CFRU_DPE_MOVE_SPLIT_SPECIAL:
+                    return MoveCategory.SPECIAL;
+                case CFRU_DPE_MOVE_SPLIT_STATUS:
+                    return MoveCategory.STATUS;
+                default:
+                    break;
+            }
+        }
+        MoveCategory category = GBConstants.physicalTypes.contains(move.type)
+                ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
+        if (move.power == 0 && !GlobalConstants.noPowerNonStatusMoves.contains(move.number)) {
+            category = MoveCategory.STATUS;
+        }
+        return category;
     }
 
     private void loadStatChangesFromEffect(Move move, int secondaryEffectChance) {

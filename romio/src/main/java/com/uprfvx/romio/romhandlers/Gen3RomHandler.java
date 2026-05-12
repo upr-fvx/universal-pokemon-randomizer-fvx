@@ -55,6 +55,8 @@ import java.util.stream.IntStream;
  */
 public class Gen3RomHandler extends AbstractGBRomHandler {
 
+    private static final String CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX = "[CFRU-DPE-COUNT-DIAG] ";
+
     public static class Factory extends RomHandler.Factory {
 
         @Override
@@ -311,21 +313,33 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int iPokemonCount = 0;
             int namesOffset = romEntry.getIntValue("PokemonNames");
             int nameLen = romEntry.getIntValue("PokemonNameLength");
+            int nameScanStopIndex;
+            int nameScanStopOffset;
+            int nameScanStopLength;
+            int nameScanStopFirstByte;
             while (true) {
                 int nameOffset = namesOffset + (iPokemonCount + 1) * nameLen;
                 int nameStrLen = lengthOfStringAt(nameOffset);
                 if (nameStrLen > 0 && nameStrLen <= nameLen && rom[nameOffset] != 0) {
                     iPokemonCount++;
                 } else {
+                    nameScanStopIndex = iPokemonCount + 1;
+                    nameScanStopOffset = nameOffset;
+                    nameScanStopLength = nameStrLen;
+                    nameScanStopFirstByte = Byte.toUnsignedInt(rom[nameOffset]);
                     break;
                 }
             }
+            int countAfterNameScan = iPokemonCount;
 
             // Is there an unused egg slot at the end?
             String lastName = readVariableLengthString(namesOffset + iPokemonCount * nameLen);
+            boolean deductedDummySlot = false;
             if (lastName.equals("?") || lastName.equals("-")) {
                 iPokemonCount--;
+                deductedDummySlot = true;
             }
+            int countAfterDummyCheck = iPokemonCount;
             int countAfterNameAndStatsCheck = iPokemonCount;
             useCfruDpeGen9SpeciesCount = hasCfruDpeGen9SpeciesCount(countAfterNameAndStatsCheck);
 
@@ -346,16 +360,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // if a slot has an invalid moveset pointer, it's not a real slot
             // Before that, grab the moveset table from a known pointer to it.
             romEntry.putIntValue("PokemonMovesets", movesetsTable);
+            int firstInvalidMovesetIndex = -1;
+            int firstInvalidMovesetRawPointer = -1;
             if (!useCfruDpeGen9SpeciesCount) {
                 while (iPokemonCount >= 0) {
                     int movesetPtr = readPointer(movesetsTable + iPokemonCount * 4, true);
                     if (movesetPtr == -1) {
+                        if (firstInvalidMovesetIndex == -1) {
+                            firstInvalidMovesetIndex = iPokemonCount;
+                            firstInvalidMovesetRawPointer = safeReadLong(movesetsTable + iPokemonCount * 4);
+                        }
                         iPokemonCount--;
                     } else {
                         break;
                     }
                 }
             }
+            int countAfterMovesetCheck = iPokemonCount;
 
             // sanity check: pokedex order
             // pokedex entries have to be within 0-1023
@@ -364,10 +385,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // so if we run into an invalid one
             // then we can cut off the count
             int pdOffset = romEntry.getIntValue("PokedexOrder");
+            int firstInvalidPokedexIndex = -1;
+            int firstInvalidPokedexEntry = -1;
             if (!useCfruDpeGen9SpeciesCount) {
                 for (int i = 1; i <= iPokemonCount; i++) {
                     int pdEntry = readWord(pdOffset + (i - 1) * 2);
                     if (pdEntry > 1023) {
+                        firstInvalidPokedexIndex = i;
+                        firstInvalidPokedexEntry = pdEntry;
                         iPokemonCount = i - 1;
                         break;
                     }
@@ -375,6 +400,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else {
                 iPokemonCount = countAfterNameAndStatsCheck;
             }
+            int countAfterPokedexOrderCheck = iPokemonCount;
+
+            printCfruDpePokemonCountCutoffDiagnostics(namesOffset, nameLen, nameScanStopIndex,
+                    nameScanStopOffset, nameScanStopLength, nameScanStopFirstByte, countAfterNameScan,
+                    lastName, deductedDummySlot, countAfterDummyCheck, movesetsTable, firstInvalidMovesetIndex,
+                    firstInvalidMovesetRawPointer, countAfterMovesetCheck, pdOffset, firstInvalidPokedexIndex,
+                    firstInvalidPokedexEntry, countAfterPokedexOrderCheck);
 
             // write new pokemon count
             romEntry.putIntValue("PokemonCount", iPokemonCount);
@@ -731,6 +763,185 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX + "  " + sample);
             }
         }
+    }
+
+    private void printCfruDpePokemonCountCutoffDiagnostics(int namesOffset, int nameLen, int nameScanStopIndex,
+                                                           int nameScanStopOffset, int nameScanStopLength,
+                                                           int nameScanStopFirstByte, int countAfterNameScan,
+                                                           String lastName, boolean deductedDummySlot,
+                                                           int countAfterDummyCheck, int movesetsTable,
+                                                           int firstInvalidMovesetIndex,
+                                                           int firstInvalidMovesetRawPointer,
+                                                           int countAfterMovesetCheck, int pdOffset,
+                                                           int firstInvalidPokedexIndex,
+                                                           int firstInvalidPokedexEntry,
+                                                           int countAfterPokedexOrderCheck) {
+        int statsOffset = romEntry.getIntValue("PokemonStats");
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "ROM code=" + romEntry.getRomCode()
+                + " version=" + romEntry.getVersion()
+                + " isRomHack=" + isRomHack);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "namesOffset=" + hexOffset(namesOffset)
+                + " nameLen=" + nameLen
+                + " nameScanStopIndex=" + nameScanStopIndex
+                + " nameScanStopOffset=" + hexOffset(nameScanStopOffset)
+                + " nameScanStopLength=" + nameScanStopLength
+                + " nameScanStopFirstByte=" + hexByte(nameScanStopFirstByte)
+                + " countAfterNameScan=" + countAfterNameScan);
+        printCfruDpeNameWindow(namesOffset, nameLen, countAfterNameScan, nameScanStopIndex);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "lastNameAtCount=" + diagQuote(lastName)
+                + " deductedDummySlot=" + deductedDummySlot
+                + " countAfterDummyCheck=" + countAfterDummyCheck);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "movesetsTable=" + hexOffset(movesetsTable)
+                + " jamboMovesetHack=" + jamboMovesetHack
+                + " firstInvalidMovesetIndex=" + diagInt(firstInvalidMovesetIndex)
+                + " firstInvalidMovesetRawPointer=" + hexValueOrNone(firstInvalidMovesetRawPointer)
+                + " countAfterMovesetCheck=" + countAfterMovesetCheck);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "pokedexOrderOffset=" + hexOffset(pdOffset)
+                + " firstPdEntryAbove1023Index=" + diagInt(firstInvalidPokedexIndex)
+                + " firstPdEntryAbove1023Value=" + diagInt(firstInvalidPokedexEntry)
+                + " countAfterPokedexOrderCheck=" + countAfterPokedexOrderCheck);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                + "pokemonStatsOffset=" + hexOffset(statsOffset)
+                + " sampleRange=800..900");
+        printCfruDpeCountDiagnosticSampleRange(800, 900, namesOffset, nameLen, movesetsTable, pdOffset, statsOffset);
+        System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX + "sampleRange=1000..1050");
+        printCfruDpeCountDiagnosticSampleRange(1000, 1050, namesOffset, nameLen, movesetsTable, pdOffset, statsOffset);
+    }
+
+    private void printCfruDpeNameWindow(int namesOffset, int nameLen, int countAfterNameScan, int nameScanStopIndex) {
+        int start = Math.max(1, Math.min(countAfterNameScan, nameScanStopIndex) - 3);
+        int end = Math.max(nameScanStopIndex, countAfterNameScan) + 3;
+        for (int i = start; i <= end; i++) {
+            int nameOffset = namesOffset + i * nameLen;
+            System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                    + "nameWindow index=" + i
+                    + " offset=" + hexOffset(nameOffset)
+                    + " length=" + safeLengthOfStringAt(nameOffset)
+                    + " firstByte=" + hexByte(safeReadUnsignedByte(nameOffset))
+                    + " decoded=" + diagQuote(safeReadFixedLengthString(nameOffset, nameLen)));
+        }
+    }
+
+    private void printCfruDpeCountDiagnosticSampleRange(int start, int end, int namesOffset, int nameLen,
+                                                        int movesetsTable, int pdOffset, int statsOffset) {
+        for (int i = start; i <= end; i++) {
+            int nameOffset = namesOffset + i * nameLen;
+            int movesetPointerOffset = movesetsTable + i * 4;
+            int movesetRawPointer = safeReadLong(movesetPointerOffset);
+            int movesetPointer = safeReadPointer(movesetPointerOffset);
+            int pokedexOffset = pdOffset + (i - 1) * 2;
+            int statsEntryOffset = statsOffset + i * Gen3Constants.baseStatsEntrySize;
+            System.err.println(CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX
+                    + "sample internal=" + i
+                    + " nameOffset=" + hexOffset(nameOffset)
+                    + " nameLen=" + safeLengthOfStringAt(nameOffset)
+                    + " firstByte=" + hexByte(safeReadUnsignedByte(nameOffset))
+                    + " name=" + diagQuote(safeReadFixedLengthString(nameOffset, nameLen))
+                    + " movesetPtrOffset=" + hexOffset(movesetPointerOffset)
+                    + " movesetRaw=" + hexValueOrNone(movesetRawPointer)
+                    + " movesetValid=" + (movesetPointer != -1)
+                    + " movesetPtr=" + hexValueOrNone(movesetPointer)
+                    + " pdOffset=" + hexOffset(pokedexOffset)
+                    + " pdEntry=" + diagInt(safeReadWord(pokedexOffset))
+                    + " statsOffset=" + hexOffset(statsEntryOffset)
+                    + " stats=" + cfruDpeStatsSummary(statsEntryOffset));
+        }
+    }
+
+    private String cfruDpeStatsSummary(int statsEntryOffset) {
+        if (!offsetInRom(statsEntryOffset, Gen3Constants.baseStatsEntrySize)) {
+            return "<out-of-rom>";
+        }
+        return "hp=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsHPOffset)
+                + ",atk=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsAttackOffset)
+                + ",def=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsDefenseOffset)
+                + ",spe=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsSpeedOffset)
+                + ",spa=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsSpAtkOffset)
+                + ",spd=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsSpDefOffset)
+                + ",type1=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsPrimaryTypeOffset)
+                + ",type2=" + safeReadUnsignedByte(statsEntryOffset + Gen3Constants.bsSecondaryTypeOffset);
+    }
+
+    private int safeReadPointer(int offset) {
+        if (!offsetInRom(offset, 4)) {
+            return -1;
+        }
+        return readPointer(offset, true);
+    }
+
+    private int safeReadLong(int offset) {
+        if (!offsetInRom(offset, 4)) {
+            return -1;
+        }
+        return readLong(offset);
+    }
+
+    private int safeReadWord(int offset) {
+        if (!offsetInRom(offset, 2)) {
+            return -1;
+        }
+        return readWord(offset);
+    }
+
+    private int safeReadUnsignedByte(int offset) {
+        if (!offsetInRom(offset, 1)) {
+            return -1;
+        }
+        return Byte.toUnsignedInt(rom[offset]);
+    }
+
+    private int safeLengthOfStringAt(int offset) {
+        if (!offsetInRom(offset, 1)) {
+            return -1;
+        }
+        try {
+            return lengthOfStringAt(offset);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return -1;
+        }
+    }
+
+    private String safeReadFixedLengthString(int offset, int length) {
+        if (!offsetInRom(offset, length)) {
+            return "<out-of-rom>";
+        }
+        try {
+            return readFixedLengthString(offset, length);
+        } catch (RuntimeException e) {
+            return "<decode-error:" + e.getClass().getSimpleName() + ">";
+        }
+    }
+
+    private boolean offsetInRom(int offset, int length) {
+        return offset >= 0 && length >= 0 && offset <= rom.length - length;
+    }
+
+    private String hexOffset(int value) {
+        return value < 0 ? "<none>" : String.format(Locale.ROOT, "0x%X", value);
+    }
+
+    private String hexByte(int value) {
+        return value < 0 ? "<none>" : String.format(Locale.ROOT, "0x%02X", value);
+    }
+
+    private String hexValueOrNone(int value) {
+        return value < 0 ? "<none>" : String.format(Locale.ROOT, "0x%X", value);
+    }
+
+    private String diagInt(int value) {
+        return value < 0 ? "<none>" : Integer.toString(value);
+    }
+
+    private String diagQuote(String value) {
+        if (value == null) {
+            return "<null>";
+        }
+        return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
     }
 
     @Override

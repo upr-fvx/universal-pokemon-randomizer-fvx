@@ -5,6 +5,7 @@ import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveLearnt;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
+import com.uprfvx.romio.romhandlers.Gen3RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -66,9 +67,15 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     private void randomizePokemonMoveCompatibility(Species pkmn, boolean[] moveCompatibilityFlags,
                                                    List<Integer> moveIDs, List<Integer> prioritizedMoves,
                                                    boolean preferSameType) {
+        if (moveCompatibilityFlags == null || shouldSkipMoveCompatibilitySpecies(pkmn)) {
+            return;
+        }
         List<Move> moveData = romHandler.getMoves();
-        for (int i = 1; i <= moveIDs.size(); i++) {
+        for (int i = 1; i <= moveIDs.size() && i < moveCompatibilityFlags.length; i++) {
             int move = moveIDs.get(i - 1);
+            if (!isValidMove(moveData, move)) {
+                continue;
+            }
             Move mv = moveData.get(move);
             double probability = getMoveCompatibilityProbability(
                     pkmn,
@@ -83,21 +90,32 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     private void copyPokemonMoveCompatibilityUpEvolutions(Species evFrom, Species evTo, boolean[] prevCompatibilityFlags,
                                                           boolean[] toCompatibilityFlags, List<Integer> moveIDs,
                                                           boolean preferSameType) {
+        if (prevCompatibilityFlags == null || toCompatibilityFlags == null || shouldSkipMoveCompatibilitySpecies(evFrom)
+                || shouldSkipMoveCompatibilitySpecies(evTo)) {
+            return;
+        }
         List<Move> moveData = romHandler.getMoves();
-        for (int i = 1; i <= moveIDs.size(); i++) {
+        for (int i = 1; i <= moveIDs.size() && i < prevCompatibilityFlags.length && i < toCompatibilityFlags.length; i++) {
             if (!prevCompatibilityFlags[i]) {
                 // Slight chance to gain TM/HM compatibility for a move if not learned by an earlier evolution step
                 // Without prefer same type: 25% chance
                 // With prefer same type:    10% chance, 90% chance for a type new to this evolution
                 int move = moveIDs.get(i - 1);
+                if (!isValidMove(moveData, move)) {
+                    continue;
+                }
                 Move mv = moveData.get(move);
                 double probability = 0.25;
                 if (preferSameType) {
                     probability = 0.1;
-                    if (evTo.getPrimaryType(false).equals(mv.type)
-                            && !evTo.getPrimaryType(false).equals(evFrom.getPrimaryType(false)) && !evTo.getPrimaryType(false).equals(evFrom.getSecondaryType(false))
-                            || evTo.getSecondaryType(false) != null && evTo.getSecondaryType(false).equals(mv.type)
-                            && !evTo.getSecondaryType(false).equals(evFrom.getSecondaryType(false)) && !evTo.getSecondaryType(false).equals(evFrom.getPrimaryType(false))) {
+                    Type evToPrimary = evTo.getPrimaryType(false);
+                    Type evToSecondary = evTo.getSecondaryType(false);
+                    Type evFromPrimary = evFrom.getPrimaryType(false);
+                    Type evFromSecondary = evFrom.getSecondaryType(false);
+                    if (evToPrimary != null && evToPrimary.equals(mv.type)
+                            && !evToPrimary.equals(evFromPrimary) && !evToPrimary.equals(evFromSecondary)
+                            || evToSecondary != null && evToSecondary.equals(mv.type)
+                            && !evToSecondary.equals(evFromSecondary) && !evToSecondary.equals(evFromPrimary)) {
                         probability = 0.9;
                     }
                 }
@@ -111,10 +129,15 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
 
     private double getMoveCompatibilityProbability(Species pkmn, Move mv, boolean requiredEarlyOn,
                                                    boolean preferSameType) {
+        if (pkmn == null || mv == null) {
+            return 0.0;
+        }
         double probability = 0.5;
         if (preferSameType) {
-            if (pkmn.getPrimaryType(false).equals(mv.type)
-                    || (pkmn.getSecondaryType(false) != null && pkmn.getSecondaryType(false).equals(mv.type))) {
+            Type primaryType = pkmn.getPrimaryType(false);
+            Type secondaryType = pkmn.getSecondaryType(false);
+            if (primaryType != null && primaryType.equals(mv.type)
+                    || (secondaryType != null && secondaryType.equals(mv.type))) {
                 probability = 0.9;
             } else if (mv.type != null && mv.type.equals(Type.NORMAL)) {
                 probability = 0.5;
@@ -126,6 +149,19 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
             probability = Math.min(1.0, probability * 1.8);
         }
         return probability;
+    }
+
+    private boolean shouldSkipMoveCompatibilitySpecies(Species pkmn) {
+        return hasExtendedBpreHackSpeciesPool() && (pkmn == null || pkmn.getPrimaryType(false) == null);
+    }
+
+    private boolean isValidMove(List<Move> moveData, int move) {
+        return move >= 0 && move < moveData.size() && moveData.get(move) != null;
+    }
+
+    private boolean hasExtendedBpreHackSpeciesPool() {
+        return romHandler instanceof Gen3RomHandler
+                && ((Gen3RomHandler) romHandler).hasExtendedBpreHackSpeciesPool();
     }
 
     public void fullTMHMCompatibility() {

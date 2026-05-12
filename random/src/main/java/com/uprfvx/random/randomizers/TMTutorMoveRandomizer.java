@@ -3,6 +3,7 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.gamedata.Move;
+import com.uprfvx.romio.romhandlers.Gen3RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
@@ -66,10 +67,12 @@ public class TMTutorMoveRandomizer extends Randomizer {
         Set<Move> unusableDamagingMoves = new HashSet<>();
 
         for (Move mv : usableMoves) {
-            if (GlobalConstants.bannedRandomMoves[mv.number] || GlobalConstants.zMoves.contains(mv.number) ||
+            if (isUnsupportedExtendedMoveForTMs(mv) || isMoveFlagged(GlobalConstants.bannedRandomMoves, mv.number)
+                    || GlobalConstants.zMoves.contains(mv.number) ||
                     hms.contains(mv.number) || banned.contains(mv.number)) {
                 unusableMoves.add(mv);
-            } else if (GlobalConstants.bannedForDamagingMove[mv.number] || !mv.isGoodDamaging(romHandler.getPerfectAccuracy())) {
+            } else if (isMoveFlagged(GlobalConstants.bannedForDamagingMove, mv.number)
+                    || !mv.isGoodDamaging(romHandler.getPerfectAccuracy())) {
                 unusableDamagingMoves.add(mv);
             }
         }
@@ -205,6 +208,21 @@ public class TMTutorMoveRandomizer extends Randomizer {
 
         romHandler.setMoveTutorMoves(newMTs);
         tutorChangesMade = true;
+    }
+
+    private boolean isUnsupportedExtendedMoveForTMs(Move mv) {
+        return hasExtendedBpreHackSpeciesPool()
+                && (mv.number >= GlobalConstants.bannedRandomMoves.length
+                || mv.number >= GlobalConstants.bannedForDamagingMove.length);
+    }
+
+    private boolean isMoveFlagged(boolean[] flags, int moveNumber) {
+        return moveNumber >= 0 && moveNumber < flags.length && flags[moveNumber];
+    }
+
+    private boolean hasExtendedBpreHackSpeciesPool() {
+        return romHandler instanceof Gen3RomHandler
+                && ((Gen3RomHandler) romHandler).hasExtendedBpreHackSpeciesPool();
     }
 
 }
